@@ -1,0 +1,130 @@
+[
+  {
+    "nome": "ATIRAR (AGILIDADE)",
+    "descricao": "Atirar abrange todas as tentativas de acertar um alvo com uma arma de combate à distância como arco, pistola ou lança mísseis (armas arremessadas usam Atletismo). Veja o Capítulo Três para mais detalhes sobre combate à distância."
+  },
+  {
+    "nome": "ATLETISMO (AGILIDADE)",
+    "descricao": "Atletismo combina a coordenação de um indivíduo com perícias treinadas como escalar, saltar, equilíbrio, ciclismo, luta livre, esquiar, nadar, arremessar ou  pegar algo.\nPersonagens que se baseiam mais em força física do que coordenação podem escolher a Vantagem Brutamontes (pág. 42) para associar esta perícia à sua Força no  lugar da Agilidade."
+  },
+  {
+    "nome": "CAVALGAR (AGILIDADE)",
+    "descricao": "Esta perícia permite montar, controlar e cavalgar qualquer criatura ou dirigir qualquer veículo movido à tração animal comum em seu cenário. Isso inclui cavalos, camelos, dragões, carroças, carruagens e afins. Veja as regras para Combate Montado na pág. 118."
+  },
+  {
+    "nome": "CIÊNCIA (ASTÚCIA)",
+    "descricao": "Quem possui essa perícia estudou várias ciências complexas como biologia, xenobiologia, química, geologia, engenharia ou qualquer outra ciência “complexa”.\nUma rolagem bem-sucedida de Ciência revela informações básicas sobre o tópico e uma ampliação dá mais detalhes."
+  },
+  {
+    "nome": "CIÊNCIA ESTRANHA (ASTÚCIA)",
+    "descricao": "Pessoas que fazem Ciência “louca”, inventores em mundos com magia (ou tecnologia muito além da nossa), alquimistas ou artífices podem ser encontrados em\nmuitos Mundos Selvagens.\nEmbora suas técnicas possam variar, sempre usam Ciência Estranha como perícia arcana. Veja a Vantagem Antecedente Arcano (Ciência Estranha) na pág. 178 para\nsaber mais sobre suas maravilhas."
+  },
+  {
+    "nome": "CONHECIMENTO ACADÊMICO (ASTÚCIA)",
+    "descricao": "Conhecimento Acadêmico reflete o conhecimento das artes, ciências sociais, literatura, história, arqueologia e campos similares. Se uma personagem quiser se\nlembrar quando acaba o calendário Maia ou citar uma fala de Macbeth, esta é a perícia a se usar."
+  },
+  {
+    "nome": "CONHECIMENTO BATALHA (ASTÚCIA)",
+    "descricao": "Conhecimento Batalha é o comando da estratégia e das táticas de um indivíduo.\nPode ser usada como conhecimento militar no geral e é crítico quando se comanda tropas em Batalhas em Massa (veja pág. 133)."
+  },
+  {
+    "nome": "CONHECIMENTO GERAL (ASTÚCIA)",
+    "descricao": "Personagens rolam Conhecimento Geral para conhecer pessoas, lugares e coisas do seu mundo, incluindo etiqueta, geografia, cultura, tecnologia popular, contatos e costumes."
+  },
+  {
+    "nome": "CONJURAR (ASTÚCIA)",
+    "descricao": "Magia, feitiçaria e bruxaria são usos de Conjurar para utilizar poderes. Veja a Vantagem Antecedente Arcano (Magia) na pág. 178."
+  },
+  {
+    "nome": "CONSERTAR (ASTÚCIA)",
+    "descricao": "Consertar é a habilidade de desmontar e/ou reparar aparelhos mecânicos, veículos, armas e dispositivos eletrônicos simples.\nTambém cobre o uso de demolições e explosivos.\nO tempo que uma rolagem de Consertar leva depende do Mestre e da complexidade do feito. Consertar um “Ferimento” de um carro compacto em um mundo  pósapocalíptico pode levar uma hora. Fazê-lo nos dias atuais poderia levar quatro horas se houver interesse em que ele seja pintado, polido, etc. Um sucesso significa que o item volta a funcionar. Uma ampliação na rolagem de Consertar diminui à metade o tempo necessário.\nFerramentas: Personagens sofrem uma penalidade menor (-1 a -2) em suas rolagens se não tiverem acesso à ferramentas básicas, ou uma penalidade maior (-3 a -4) se o dispositivo demandar equipamento especializado.\nEletrônica: Consertar pode ser usado para reparar dispositivos eletrônicos, mas é limitada pela perícia Eletrônica. Use a menor entre as perícias."
+  },
+  {
+    "nome": "CURAR (ASTÚCIA)",
+    "descricao": "Curar tem vários usos, desde tratar Ferimentos a diagnosticar doenças e analisar certos tipos de evidência forense.\nVeja a pág. 112 para regras sobre tratar e remendar Ferimentos e as págs. 143 e 147 para tratamento de doenças ou veneno.\nCiência Forense: Curar também pode ser usada para analisar evidências que se relacionem a traumas anatômicos, incluindo a causa e hora da morte, ângulo do ataque e questões similares. Um sucesso fornece informações básicas e uma ampliação aumenta os detalhes desvendados."
+  },
+  {
+    "nome": "DIRIGIR (AGILIDADE)",
+    "descricao": "Dirigir permite controle de qualquer veículo terrestre motorizado comum em seu cenário. Isso inclui carros, motocicletas, tanques e afins (bicicletas e outras formas de transporte automotrizes usam Atletismo, transportes movidos à tração animal usam Cavalgar).\nPersonagens em cenários modernos onde veículos são comuns não precisam de Dirigir para viagens corriqueiras. Geralmente só são necessárias rolagens de Dirigir em condições estressantes ou perigosas, como nas Perseguições (pág. 148)."
+  },
+  {
+    "nome": "ELETRÔNICA (ASTÚCIA)",
+    "descricao": "Eletrônica permite o uso de dispositivos complexos ou especializados como os painéis de controle em uma máquina industrial ou os sistemas de sensores\nencontrados nas espaçonaves dos cenários futuristas.\nEletrodomésticos ou dispositivos eletrônicos comuns no cenário não requerem Eletrônica— Conhecimento Geral basta caso uma rolagem seja necessária. Em um\nmundo moderno isso se aplica a aparelhos de vídeo, celulares, etc.\nPara reparar qualquer tipo de eletrônico quebrado usa-se a perícia Consertar (veja pág. 33)."
+  },
+  {
+    "nome": "FÉ (ESPÍRITO)",
+    "descricao": "Fé é a perícia arcana requerida para o Antecedente Arcano (Milagres), descrito na pág. 178."
+  },
+  {
+    "nome": "FOCO (ESPÍRITO)",
+    "descricao": "Foco é a perícia arcana para o Antecedente Arcano (Dom), veja pág. 177."
+  },
+  {
+    "nome": "FURTIVIDADE (AGILIDADE)",
+    "descricao": "Furtividade é a habilidade de se esconder e se mover silenciosamente. Um sucesso simples em uma rolagem de Furtividade significa evitar ser detectado por rivais que não estejam particularmente alertas; uma falha nessa rolagem faz com que inimigos se deem conta de que algo está errado e comecem a procurar ativamente pela causa do distúrbio.\nPara oponentes alertas e em atividade, Furtividade é resistida por Perceber (uma rolagem em grupo pode ser feita para muitos oponentes, veja pág. 103).\nMestres devem aplicar quaisquer penalidades circunstanciais em rolagens de Perceber por conta da escuridão, cobertura, barulho, distrações e quaisquer diferenças na Escala (como no ataque, veja Escala em pág. 127). Para esgueirar-se em cima de folhas secas deve-se subtrair 2 da rolagem de Furtividade, por exemplo, enquanto notar alguém no escuro usa a penalidade por Iluminação listada na pág. 124 (-4). Contudo, não aplique o mesmo modificador a ambas as rolagens (se Furtividade está com -2 pelas folhas, não dê também Perceber +2).\nAtaque Furtivo: Esgueirar-se perto o suficiente para realizar um ataque corpo a corpo sempre requer um teste resistido de Furtividade contra o Perceber do alvo, quer ele esteja ativamente atento ou não. Se o teste de Furtividade for bem-sucedido, a vítima fica Vulnerável (pág. 120) a quem faz o ataque, mas somente até o fim de seu turno.\nCom uma ampliação é possível realizar a manobra Finalização (pág. 122).\nMovimento: Em combate, personagens rolam sua Furtividade como ação livre a cada turno no fim do seu movimento ou em qualquer ação que o Mestre ache que possa chamar atenção.\nFora de combate, a distância movida depende inteiramente da situação. Mestres podem desejar uma rolagem por minuto se o grupo estiver esgueirando-se no perímetro de uma posição defensiva ou a cada certa distância em quilômetros, se tentarem caminhar silenciosamente através de uma floresta escura sem alertar as criaturas que ali vivem."
+  },
+  {
+    "nome": "HACKEAR (ASTÚCIA)",
+    "descricao": "Hackear é a perícia usada para criar programas e invadir sistemas seguros. O uso dessa perícia sempre requer um computador ou algum tipo de interface.\nA maioria das tarefas são uma simples rolagem de Hackear. O tempo que leva é determinado pelo Mestre, vai de uma simples ação a horas, dias ou mesmo meses, dependendo da complexidade do projeto. Um sucesso significa que a tentativa funciona como desejado e uma ampliação reduz à metade o tempo necessário. Uma\nfalha geralmente significa que a tentativa de hackear deve ser feita novamente, enquanto uma Falha Crítica pode significar que o sistema expulsa quem está tentando invadi-lo, aciona um alarme ou aplica algum outro tipo de contramedida."
+  },
+  {
+    "nome": "IDIOMAS (ASTÚCIA)",
+    "descricao": "Em alguns cenários, como aqueles focados em ação pulp ou “romance planetário” (onde os personagens viajam entre diversas civilizações estranhas com frequência), falar vários idiomas pode ser simplesmente interpretado travando um diálogo com sotaques exagerados que começam com um pouco de dificuldade e logo são rapidamente esquecidos. Esta perícia pode ser ignorada nesses cenários ou pode ser usada a Regra de Ambientação Múltiplos Idiomas na pág. 167.\nEm cenários mais realistas, a comunicação pode ser uma grande barreira que requer que as personagens aloquem pontos de perícia em idiomas adicionais. Em um jogo na Terceira Guerra Mundial nos anos 80, por exemplo, um grupo de paraquedistas da ONU pode não conseguir falar com oponentes a menos que tenham Russo,\nPolonês ou outra das línguas comuns no Pacto de Varsóvia.\nVALOR HABILIDADE:\nd4 Sabe-se ler, escrever e falar palavras e frases comuns.\nd6 É possível manter uma conversa prolongada, mas pausada ocasionalmente.\nd8 Indica fluência no idioma.\nd10 Permite imitar outros dialetos no idioma.\nd12 É possível recitar trabalhos literários ou orais com maestria.\nSe a perícia Idiomas estiver em uso ela deve ser listada como Idiomas (Espanhol), Idioma (Língua de Sinais) etc. O tipo de dado também denota a fluência (personagens começam com um d8 no seu próprio Idioma).\nLimitado: Use a menor perícia quando realizar uma ação que requer o conhecimento de uma língua estrangeira. Intimidar (se for verbal), Persuadir, Pesquisar,  Provocar e quaisquer outras perícias que envolvam ações verbais serão limitadas pela perícia Idiomas de cada personagem.\nEsta limitação nunca se aplica à língua nativa de uma personagem."
+  },
+  {
+    "nome": "INTIMIDAR (ESPÍRITO)",
+    "descricao": "Intimidar é a arte de amedrontar oponentes para que desistam, revelem informações ou fujam.\nIntimidar é uma rolagem resistida pelo Espírito de tal oponente. Em combate, isto é um Desafio (veja pág. 119). Fora de combate, uma rolagem bem-sucedida faz oponentes recuarem, revelarem algum tipo de informação ou escaparem assim que tiverem uma oportunidade. Uma ampliação significa que irão recuar pelo resto da cena, falar tudo que sabem ou fugir o mais rápido possível.\nDentro ou fora de combate, uma Falha Crítica significa que o alvo é imune à tentativas de intimidação pelo resto desse encontro!\nRede de Contatos: Intimidar também pode ser usada como uma perícia “macro” para simular várias horas de investigação nas ruas. Veja Rede de Contatos na pág.  160 para ver como arrebentar algumas cabeças atrás de favores ou informação."
+  },
+  {
+    "nome": "JOGAR (ASTÚCIA)",
+    "descricao": "Jogar é comum nos saloons do Velho Oeste, nos fundos de uma organização criminosa, nos alojamentos da maioria dos exércitos ou no convés das naves de ficção  científica.\nPara simular uma hora de jogo sem ter que rolar para cada jogada de dados ou mão nas cartas, defina as apostas com o grupo como, por exemplo, $10 na moeda corrente do cenário. Quem estiver apostando faz então uma rolagem de Jogar. Quem obtiver a menor rolagem paga à quem obtiver a maior, o valor será a diferença entre as rolagens multiplicada pela aposta.\nA segunda menor rolagem paga, ao que obteve a segunda maior, a diferença de suas rolagens multiplicada pelo valor da aposta, e por aí vai. Se restar uma pessoa no meio dessa distribuição, ela não ganha nem perde.\nExemplo: Red rola mais alto com um 10 e Gabe rola o mais baixo com um 4. A diferença é 6, então Gabe paga a Red 6x a aposta de $10, isto é $60.\nTrapaceando: Personagens que trapaceiam adicionam +2 em suas rolagens, modificador que pode ser aumentado ou diminuído pelo Mestre dependendo das particularidades do jogo ou do método de trapaça. Contudo, se rolar uma Falha Crítica, é pego. As consequências dependem das circunstâncias e de quem percebeu, mas geralmente são desagradáveis!"
+  },
+  {
+    "nome": "LADINAGEM (AGILIDADE)",
+    "descricao": "Abrir fechaduras, arrombar cofres, bater carteiras, prestidigitação, armar e desarmar armadilhas e atos similares de distração, sabotagem, subterfúgio e manipulação são chamados de Ladinagem.\nSe usada para abrir uma fechadura, arrombar um cofre ou desarmar uma armadilha, faça um teste simples sem ser resistido, um sucesso abre ou desabilita o\ndispositivo e uma ampliação o faz em menos tempo, ou sem acionar alarmes ou aquilo que parecer mais apropriado ao Mestre.\nPrestidigitação, esconder ou plantar um item e bater carteiras exigem um sucesso simples. Se rivais estiverem observando a personagem ativamente, Ladinagem é resistida por Perceber.\nO Mestre deve atribuir penalidades por conta de circunstâncias particularmente difíceis. Abrir uma fechadura especialmente complexa pode ter uma penalidade de -4, enquanto esconder um revólver sob roupas pesadas de inverno pode garantir um bônus de +1. Uma falha geralmente significa que a tentativa é notada ou leva tempo demais (depois disso é possível tentar novamente).\nUma Falha Crítica geralmente aciona a armadilha, alerta a vítima ou emperra o dispositivo de modo que ele deva ser aberto ou manipulado de modo diferente.\nLimitado: Usar Ladinagem em um dispositivo eletrônico é limitado pela perícia Eletrônica do ladino. Use a menor dentre as duas perícias."
+  },
+  {
+    "nome": "LUTAR (AGILIDADE)",
+    "descricao": "Lutar cobre todos os ataques corpo a corpo, seja com as mãos, machados, espadas laser ou artes marciais. Veja no Capítulo Três as regras de combate e as várias manobras que podem ser tentadas."
+  },
+  {
+    "nome": "NAVEGAR (AGILIDADE)",
+    "descricao": "Personagens com esta perícia podem lidar com a maioria dos barcos ou navios mais comuns em seus cenários. Também sabem como lidar com tarefas corriqueiras\nassociadas à sua embarcação como amarrar nós, estiar velas ou seguir as correntes."
+  },
+  {
+    "nome": "OCULTISMO (ASTÚCIA)",
+    "descricao": "Ocultismo reflete o conhecimento e experiência com o paranormal que a maioria das pessoas sequer acredita que exista.\nPode ser usada para decifrar pictogramas estranhos, lembrar de informações a respeito de criaturas sobrenaturais, lembrar de curas para doenças monstruosas\ncomo licantropia ou vampirismo, ou ainda, para realizar rituais.\nEncontrar informações em uma biblioteca, jornal, necrotério, tomo antigo, na internet etc., usa a perícia Pesquisar. Contudo, se o Ocultismo do investigador\nfor mais alto, ele pode usá-lo em vez disso. Veja Pesquisar na pág. 40."
+  },
+  {
+    "nome": "PERCEBER (ASTÚCIA)",
+    "descricao": "Perceber é a percepção e a prontidão geral de personagens. É usada para perceber locais, sons, sabores e odores, achar pistas, detectar emboscadas, encontrar armas escondidas em um inimigo ou dizer se um rival está mentindo, assustado, feliz etc.\nUm sucesso garante informações básicas — permite ouvir movimento na floresta, sentir o odor de uma fumaça vindo de longe ou sentir que alguém não está falando com sinceridade.\nUma ampliação dá mais detalhes como a direção do som ou odor, ou sobre qual tópico a pessoa está evitando ou mentindo a respeito."
+  },
+  {
+    "nome": "PERFORMANCE (ESPÍRITO)",
+    "descricao": "Talento artístico pode elevar o moral, levar uma multidão à ação ou simplesmente ganhar um dinheiro extra de habitantes locais. Os detalhes específicos dependem da situação, cenário e do prestígio pessoal na área.\nPerformance engloba cantar, atuar, tocar um instrumento ou tarefas similares que requerem uma audiência para serem apreciadas.\nLevantando Fundos: A quantia de dinheiro que um personagem pode levantar entretendo é extremamente subjetiva, mas como regra geral uma performance bem-sucedida arrecada 20% dos Recursos Iniciais do cenário com um sucesso simples e 30% com uma ampliação. O Mestre pode multiplicar esta quantia pelo Estágio do artista se achar apropriado. Esses números funcionam para artistas normais que podem ser conhecidos em uma área ou estabelecimento pequenos.\nGrandes performances podem aumentar significativamente o cachê de artistas, mas também exigem mais tempo, energia e preparação.\nEnganação: Performance pode ser usada no lugar de Persuadir se a personagem está tentando enganar, blefar ou se disfarçar e se o Mestre concordar que faz sentido dentro do contexto da situação."
+  },
+  {
+    "nome": "PERSUADIR (ESPÍRITO)",
+    "descricao": "Persuadir é a habilidade de convencer as outras pessoas do que você quer através de explicações, bajulação, enganação, recompensas ou outros meios amigáveis.\nPersuadir não é controle da mente. Pode mudar as atitudes de uma pessoa, mas não seus objetivos. Com uma boa rolagem de persuadir, alguém que estava te roubando pode permitir que você fique com uma joia de grande valor sentimental, mas ainda levará o resto dos seus pertences.\nQuando usada para dar Suporte a aliados (pág. 126) é um teste não resistido. Se o alvo resistir, é uma rolagem resistida contra o Espírito do alvo. O Mestre deve modificar a rolagem de acordo com seu critério baseado na interpretação, quaisquer Vantagens ou Complicações que afetem a conversa e nas circunstâncias.\nNível de Reação: O quanto uma pessoa está disposta a cooperar depende da sua atitude em relação a quem está falando com ela. O Mestre pode decidir como personagens sob seu comando reagem com base no cenário, ou rolar na Tabela de Reação (veja a barra lateral) se ele não tiver nada planejado.\nUm sucesso melhora a atitude do alvo em um nível, ou dois níveis com uma ampliação.\nMelhoras adicionais geralmente não são possíveis no mesmo encontro — leva um certo tempo para que as pessoas mudem suas opiniões.\nUma falha significa que o alvo manterá sua opinião nesta cena ou até que a situação mude de forma relevante. Uma Falha Crítica também reduz a atitude do alvo em dois níveis.\nNo geral, apenas uma rolagem por interação deve ser permitida, a menos que informações novas sejam reveladas, uma recompensa substancial seja oferecida etc.\nRede de Contatos: As personagens também podem usar Persuadir como uma perícia \"macro\", simulando algumas horas de fraternização e socialização para ganhar\nfavores ou informação. Veja Rede de Contatos na pág. 160."
+  },
+  {
+    "nome": "PESQUISAR (ASTÚCIA)",
+    "descricao": "Personagens hábeis na perícia Pesquisar sabem como fazer um bom uso de bibliotecas, arquivos de necrotérios, a internet ou outras fontes de informação escritas.\nO tempo que isso leva depende do Mestre e da situação. Encontrar algo na internet ou uma passagem específica em um livro pode ser possível em uma rodada de combate.\nProcurar em livros de uma biblioteca, procurar sobre um tópico complexo na internet ou desenterrar informações sobre os antecedentes de indivíduos geralmente leva uma hora.\nUm sucesso garante informações básicas e uma ampliação dá mais detalhes. Uma falha significa não encontrar o que está procurando.\nUma Falha Crítica pode significar que quem está pesquisando encontra uma informação plausível, mas incorreta; atrai a atenção de uma entidade ou facção\nrival; encontra algo que “A Humanidade Não Deveria Conhecer” e sofre com algum tipo de doença mental (Fobia Menor, Peculiaridade etc.); ou que acidentalmente destrói a fonte. O Mestre é encorajado a ser criativo se tal infortúnio acontecer, talvez forçando o grupo a abordar a situação de modo diferente.\nPerícias Relacionadas: Personagens com uma perícia que se relaciona diretamente ao que estão pesquisando podem usá-la em vez de Pesquisar. Alguém com\nOcultismo d10 e Pesquisar d6, por exemplo, rola um d10 quando investiga conhecimento vampírico em uma biblioteca proibida.\nSe mais tarde for procurar pela escritura da casa onde dizem ser o covil dos vampiros, rola Pesquisar normalmente.\nNota: Pesquisar pode apenas dar as pistas, especialmente em um jogo repleto de mistérios. Juntar as peças da informação coletada fica a cargo de quem está jogando."
+  },
+  {
+    "nome": "PILOTAR (AGILIDADE)",
+    "descricao": "Pilotar permite que personagens manobrem aviões, helicópteros, jet packs ou espaçonaves. Regras para Perseguições e combate veicular podem ser encontradas\nno Capítulo Quatro.\nUma criatura com a habilidade inata para voar (tem asas, por exemplo) usa Atletismo em vez disso."
+  },
+  {
+    "nome": "PROVOCAR (ASTÚCIA)",
+    "descricao": "Provocar ataca o orgulho com ridicularização, tiradas cruéis ou demonstrações de superioridade.\nProvocar é uma rolagem resistida pela Astúcia de oponentes. Em combate, isto é um Desafio (veja pág. 119).\nFora de combate, um sucesso significa que a vítima recua, escapa ou começa uma briga. Uma ampliação a deixa acovardada pelo resto da cena, faz com que\nsaia da área espumando ou até chorando ou ainda faz com que ela ataque seu algoz de modo inconsequente (talvez com um Ataque Selvagem na primeira rodada\nde combate).\nUma Falha Crítica significa que o alvo é imune às provocações pessoais pelo resto do encontro."
+  },
+  {
+    "nome": "PSIÔNICOS (ASTÚCIA)",
+    "descricao": "É a perícia que \"psions\" ou \"psis\" usam para ativar e controlar suas habilidades psiônicas. Veja a Vantagem Antecedente Arcano (Psiônicos) na pág. 178."
+  },
+  {
+    "nome": "SOBREVIVÊNCIA (ASTÚCIA)",
+    "descricao": "Sobrevivência permite encontrar comida, água ou abrigo em ambientes hostis.\nTambém pode ser usada para navegar em ambientes selvagens, descobrir quais plantas são comestíveis e quais não o são e assim por diante.\nUm teste bem-sucedido de Sobrevivência garante comida e água suficientes para uma pessoa por um dia; ou para cinco com uma ampliação.\nInformações mais detalhadas sobre Fome e Sede podem ser encontradas em Perigos na pág. 142.\nRastrear: Sobrevivência também pode ser usada para detectar e seguir rastros. Cada rolagem geralmente abrange seguir rastros por um quilômetro, mas o Mestre  deve ajustar isso conforme o necessário para circunstâncias específicas.\nO Mestre pode aplicar um bônus ou penalidade baseado no alvo, ambiente e no tempo. Rastrear um grupo grande que passou recentemente por uma área coberta\nde neve pode garantir um bônus de +4, enquanto seguir uma única pessoa que caminhou sobre rochas e riachos há mais de um dia incorre em uma penalidade de -4."
+  }
+]

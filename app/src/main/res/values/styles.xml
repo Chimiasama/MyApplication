@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 1) Tema de splash nativo (API 31+). -->
+    <style name="Theme.MyApplication" parent="Theme.SplashScreen">
+        <!-- cor de fundo da splash screen -->
+        <item name="windowSplashScreenBackground">@color/black</item>
+        <!-- drawable que será centralizado e redimensionado pelo sistema -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/savage_worlds_splash</item>
+        <!-- cor de fundo do “círculo” atrás do ícone (se houver) -->
+        <item name="windowSplashScreenIconBackgroundColor">@color/black</item>
+        <!-- após a splash, aplica este tema base na MainActivity -->
+        <item name="postSplashScreenTheme">@style/Theme.MyApplication.NoSplash</item>
+    </style>
+
+    <!-- 2) Tema “real” do app, sem action bar -->
+    <style name="Theme.MyApplication.NoSplash" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/pergaminho_fundo</item>
+    </style>
+
+
+</resources>

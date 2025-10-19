@@ -1,0 +1,21 @@
+AGILIDADE:
+É uma medida da flexibilidade, destreza e coordenação de cada personagem.
+
+ASTÚCIA:
+Mede sua inteligência bruta, acuidade mental e o quão rápido se pode pensar. É usada para resistir a certos tipos de ataques mentais e sociais.
+
+ESPÍRITO:
+É autoconfiança, resiliência e força de vontade. É usado para resistir a ataques sociais e sobrenaturais, bem como ao medo.
+
+FORÇA:
+É poder físico e boa forma. Também é usada como base para o dano causado em combate corpo a corpo e para determinar quanto peso personagens podem vestir ou carregar.
+
+VIGOR:
+Representa a tolerância, resistência à doenças, veneno ou toxinas de um indivíduo e quanto dano físico ele pode suportar antes de tombar. É usado com mais frequência para resistir aos efeitos de Fadiga e como base para a estatística derivada Resistência.
+
+USANDO ATRIBUTOS
+Atributos são usados para:
+• Determinar o quão rapidamente as perícias aumentam durante o Progresso (pág. 61).
+• Limitar o acesso a Vantagens (pág. 41).
+• Calcular estatísticas secundárias como Resistência ou dano corpo a corpo.
+• Resistir a efeitos como Agarrar ou contrafeitiços, poderes ou ataques sociais como Provocar ou Intimidar.

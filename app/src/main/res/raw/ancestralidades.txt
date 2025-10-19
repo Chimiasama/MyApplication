@@ -1,0 +1,101 @@
+
+ANDROIDES:
+São criaturas semi-orgânicas criadas por tecnologia avançada. O exemplo aqui simula seres humanos em muitos aspectos, podendo ter passabilidade humana quando desejar (desde que não seja submetido a exames médicos). Sua rede neural avançada lhes dá uma inteligência artificial completa, com personalidades individuais, peculiaridades e emoções como qualquer outro ser consciente.
+A visão de androide aqui apresentada é um modelo genérico. Para criar androides com maiores especializações, use as habilidades raciais personalizadas na pág. 19.
+- CONSTRUTO: Androides adicionam +2 para se recuperar do Estado Abalado, não respiram, ignoram um nível de modificadores de Ferimentos e são imunes a venenos e doenças. Construtos não podem se curar naturalmente. Curar Androides requer a perícia Consertar, tal ação durará, a cada tentativa, uma hora
+por nível de Ferimento atual do alvo e não é limitada pela “Hora de Ouro” (veja pág. 112).
+- FORASTEIRO (Maior): Androides subtraem 2 de rolagens de Persuadir quando interagem com qualquer indivíduo que não seja androide e a maioria das áreas considera androides como propriedade de alguém, não lhes concedendo direitos legais.
+- PACIFISTA (Maior): A menos que seja de uma linha de androides projetada para combate, a maioria das sociedades avançadas requer a instalação de “Circuitos Asimov”, um conceito baseado na “Primeira Lei da Robótica” do escritor de ficção científica Isaac Asimov. O ser artificial não pode ferir um ser senciente
+ou por ação ou omissão permitir que um seja ferido.
+- VOTO (Maior): Androides recebem programação para um propósito específico. Isso significa seguir amplas diretrizes para servir a uma corporação ou facção política. Nesse caso em particular, isso funciona como um Voto Maior.
+Se isso causar conflitos de interesse, a forma como a programação da personagem se comporta deve ser decidido em acordo.
+
+ANÕES:
+São um povo baixo, robusto e resistente que vêm de cavernas imensas ou altas montanhas.
+São um povo orgulhoso e guerreiro, graças ao contato constante com criaturas hostis como orcs e goblins.
+Geralmente vivem mais de 200 anos. Na maioria das campanhas de fantasia possuem pele avermelhada e todas as cores de cabelo dos humanos.
+- MOVIMENTAÇÃO REDUZIDA: Por terem pernas mais curtas em comparação a maioria, reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo.
+- RESISTENTE: São fortes e resistentes, começando com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12 + 1
+- VISÃO NO ESCURO: Acostumados ao escuro do subterrâneo, ignoram penalidades por Penumbra e Escuridão.
+
+AQUARIANOS:
+Povo aquático oriundo das profundezas esmagadoras do oceano. São fortes e resistentes debaixo das ondas, mas geralmente são vulneráveis ao ar livre ou ao calor abrasador da superfície.
+- AQUÁTICO: Este povo não se afoga na água e pode usar sua Movimentação completa ao nadar. Veja Movimento na pág. 107 para velocidades normais de natação.
+- DEPENDÊNCIA: Devem permanecer imersos em água por uma hora a cada 24 ou recebem um nível de Fadiga por dia até que fiquem Incapacitados. No dia seguinte à Incapacitação por desidratação, morrem. A cada hora dentro d’água um nível de Fadiga é restaurado.
+- RESISTÊNCIA: A vida nas profundezas de seus mundos aquáticos fez com que sua pele se tornasse dura e resistente. Adicione +1 a sua Resistência.
+- VISÃO NO ESCURO: Habituados a escuridão das profundezas, Aquarianos ignoram penalidades por Penumbra e Escuridão.
+
+AVIANOS:
+São humanoides com asas. Tendem a ser bem leves devido a seus ossos ocos.
+Podem ter penas, pele coriácea ou até mesmo escamas.
+- FRÁGIL: Têm Resistência -1 devido a seus ossos ocos.
+- MOVIMENTAÇÃO REDUZIDA: Dependência de voo e asas pesadas tornam esse povo um pouco mais lento ao andar. Reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo.
+- NÃO SABE NADAR: Colocar as asas dentro da água é um risco para os avianos. Subtraia 2 das rolagens de Atletismo (natação) e gaste 3 quadros de Movimentação para cada quadro de deslocamento na água.
+- SENTIDOS AGUÇADOS: Mais perspicazes do que a maioria, começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12 + 1.
+- VOO: Podem voar com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.
+
+ELFOS:
+Possuem altura avantajada, almas gentis, orelhas pontudas e olhos profundos de cores variadas. Sejam habitantes de florestas ou vales ocultos, todos possuem
+delicadeza naturalmente maior que a dos humanos, embora seus corpos não sejam tão diferentes. Seus cabelos incluem todas as cores humanas, além de tonalidades de prata, azul e ouro.
+- ÁGIL: São ágeis e graciosos. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.
+- DESASTRADO: Por sua aversão inata a objetos mecânicos, possuem a Complicação Desastrado. Integrantes deste povo evitam a maioria dos itens e modelos mecânicos.
+- VISÃO NO ESCURO: Seus olhos são capazes de ampliar a luz de tal forma que afirmam poder ver estrelas nos olhos élficos. Ignoram penalidades por Penumbra e Escuridão.
+
+MEIO-ELFOS:
+Com a graciosidade élfica, mas sem sua fragilidade elegante, a maioria é bem aceita, mas pode ocorrer rejeição por qualquer lado de sua família, levando a ressentimentos, ou mesmo a maus tratos. Sua expectativa de vida se aproxima mais da sua descendência humana, vivendo cerca de cem anos.
+- FORASTEIRO (Menor): Nunca ficam completamente à vontade nas sociedades humana ou élfica, tendo um pé em cada um dos mundos, mas nunca pertencendo de fato a nenhum deles. Subtraem 2 de rolagens de Persuadir com qualquer outra ancestralidade além de sua própria.
+- HERANÇA: Possuem a graça de parentes élficos ou a adaptabilidade por sua parte humana. Podem começar com uma Vantagem em Estágio Novato gratuita de
+sua escolha ou um d6 em Agilidade em vez de um d4 (o que também aumenta sua Agilidade máxima para d12+1).
+- VISÃO NO ESCURO: Ignoram penalidades por Penumbra e Escuridão.
+
+HUMANOS:
+Em muitos cenários seres humanos recebem uma Vantagem gratuita à sua escolha.
+Esta opção reflete a sua versatilidade e adaptabilidade em comparação a outras ancestralidades.
+Para uma maior variedade, o Mestre também pode conceder habilidades humanas baseadas na cultura em vez da ancestralidade. Por exemplo, uma sociedade nômade que usa cavalos poderia começar com pontos em Cavalgar e Sobrevivência. Modelos culturais são desenvolvidos da mesma forma que a criação de novas ancestralidades, mas quem estiver mestrando deve permitir mais exceções do que o habitual já que habilidades tendem a ser aprendidas e não inatas de fato.
+- ADAPTÁVEL: Seres humanos começam com qualquer Vantagem de nível Novato a sua escolha. Devem atender aos Requisitos da Vantagem normalmente.
+
+PEQUENINOS:
+Este é um povo composto por seres baixos e ágeis com cabelos ondulados castanhos ou negros. Mesmo sendo frágeis em comparação às demais ancestralidades, seu
+otimismo entusiástico (ou astúcia ardilosa) lhes concede uma atitude de “nunca diga nunca”, fazendo com que sejam adversários à altura mesmo para criaturas com o dobro de seu tamanho. Não veem razão para atrair problemas e tendem a viver em suas pequenas comunidades afastadas dos caminhos mais usados.
+- ESPIRITUOSO: Normalmente são seres otimistas. Eles começam com um d6 em Espírito em vez de um d4. Isso aumenta o Espírito máximo para d12 + 1.
+- MOVIMENTAÇÃO REDUZIDA: Reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo.
+- SORTE: Sacam um Bene adicional por sessão de jogo.
+- TAMANHO -1: Medem cerca de um metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1.
+
+RAKASHANOS:
+Esta ancestralidade é composta por humanoides de aparência felina. Podem ter as cores lustrosas dos tigres, a pele manchada dos leopardos ou a aparência
+exótica dos gatos siameses. Possuem garras e presas afiadas e uma natureza cruel ao lidar com sua presa.
+É possível encontrar esse povo em suas próprias cidades exóticas e remotas ou como elementos marginais da sociedade normal.
+Sua beleza impede que sejam rejeitados, mas sagazes o suficiente para ganhar a confiança de outras pessoas.
+- ÁGIL: A graça felina lhes concede um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.
+- INIMIGO RACIAL: A sociedade Rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam com os da outra e geralmente se atacam à primeira vista.
+- MORDIDA/GARRAS: As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.
+- NÃO SABE NADAR: Até podem nadar, mas evitam e não têm boa habilidade nisso. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro de movimento na água custa 3 quadros de Movimentação.
+- SANGUINÁRIO: Podem ser cruéis com seus por pura diversão. Raramente capturam rivais e quando o fazem não sentem muito remorso.
+- VISÃO NO ESCURO: Seus olhos captam melhor a luminosidade, ignorando penalidades por Penumbra e Escuridão.
+
+SÁURIOS:
+Lagartos humanoides que normalmente vêm de selvas escaldantes ou de desertos ermos onde possuem civilizações únicas que são desconhecidas por outros seres
+sencientes.
+- ARMADURA +2: Sua pele escamosa funciona como uma armadura de couro.
+- FORASTEIRO (Menor): A maioria das pessoas desconfia de sáurios por alguma razão. Talvez sejam seus modos e costumes estranhos, sua fala geralmente sibilante ou um medo antigo subconsciente de ancestrais reptilianos. Sáurios subtraem 2 de rolagens de Persuadir com todas as demais ancestralidades.
+- FRAQUEZA AMBIENTAL: Embora não sejam verdadeiramente de sangue frio não são bem adaptados às condições de clima frio. Sofrem uma penalidade de -4 para resistir aos efeitos ambientais do frio e recebem +4 de dano por ataques baseados em frio.
+- MORDIDA: As presas de personagens são Armas Naturais (pág. 114) e causam Força + d4 de dano.
+- SENTIDOS AGUÇADOS: Possuem sentidos aguçados, ganhando a Vantagem Prontidão.
+
+CELESTIAIS:
+Anjos são uma espécie bastante variada, mas sempre possuem essas características em comum.
+- DESASTRADO: Celestiais não têm o costume de lidar com tecnologia ou máquinas.
+- ANTECEDENTE ARCANO (Milagres): Celestiais podem invocar uma grande variedade de milagres.
+- FÉ: Celestiais começam com um d6 em Fé. Isso aumenta seu máximo para d12 + 1.
+- VOO: Anjos voam com Movimentação 12.
+- INIMIGO RACIAL (Demônios e Diabos): Celestiais não toleram facilmente os saídos do abismo.
+- VOTO (Maior: Proteger a humanidade): Devem proteger o rebanho que resta na Terra devastada.
+
+GUARDIÕES:
+Seres humanos que servem ao Coro Celestial são chamados de guardiões.
+- ADAPTÁVEL: Começam o jogo com uma Vantagem Novato de sua escolha (os requisitos da Vantagem devem ser atendidos normalmente).
+- CAMPEÕES: Possuem a Vantagem Campeão dando a eles um bônus de +2 em dano contra forças malignas sobrenaturais como demônios e diabos.
+- VIGOROSO: As pessoas que herdaram esta Terra devastada começam o jogo com um d6 em Vigor em vez de um d4. Isso aumenta seu Vigor máximo para d12 + 1.
+- VOTO (Maior: Proteger a humanidade): Devem proteger o rebanho que resta na Terra devastada.
+

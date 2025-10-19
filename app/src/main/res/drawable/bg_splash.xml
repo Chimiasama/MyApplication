@@ -1,0 +1,14 @@
+<!-- res/drawable/bg_splash.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- fundo preto -->
+    <item android:drawable="@color/black" />
+
+    <!-- imagem centralizada, max width ou max height -->
+    <item android:gravity="center">
+        <bitmap
+            android:src="@drawable/savage_worlds_splash"
+            android:antialias="true"
+            android:gravity="center"
+            android:dither="true" />
+    </item>
+</layer-list>
