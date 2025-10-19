@@ -7,7 +7,7 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    // A linha repositoriesMode.set(...) foi removida para eliminar os avisos @Incubating.
     repositories {
         google()
         mavenCentral()

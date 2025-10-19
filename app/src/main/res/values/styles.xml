@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- 1) Tema de splash nativo (API 31+). -->
+    <!-- 1) Tema de splash nativo (API 31+). -->
+    <!-- ESTE TEMA USA ATRIBUTOS MODERNOS -->
     <style name="Theme.MyApplication" parent="Theme.SplashScreen">
         <!-- cor de fundo da splash screen -->
         <item name="windowSplashScreenBackground">@color/black</item>
@@ -11,12 +12,36 @@
         <item name="windowSplashScreenIconBackgroundColor">@color/black</item>
         <!-- após a splash, aplica este tema base na MainActivity -->
         <item name="postSplashScreenTheme">@style/Theme.MyApplication.NoSplash</item>
+
+        <!-- CORES DE TEMA (MANTIDAS AQUI PARA EVITAR ERROS DE ATRIBUTO) -->
+        <!-- Estas cores precisam ser definidas no tema principal, não no NoSplash. -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
 
     <!-- 2) Tema “real” do app, sem action bar -->
-    <style name="Theme.MyApplication.NoSplash" parent="android:Theme.Material.Light.NoActionBar">
+    <!-- MUDANÇA CRÍTICA AQUI: Usaremos MaterialComponents.Light.NoActionBar -->
+    <!-- Isso garante que a herança seja compatível com a sua versão do Gradle E força o modo CLARO. -->
+    <style name="Theme.MyApplication.NoSplash" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+        <!-- Cor de Fundo da Janela (O Pergaminho) -->
         <item name="android:windowBackground">@color/pergaminho_fundo</item>
+
+        <!-- Força o fundo da view principal do app a ser CLARO (cor do pergaminho) -->
+        <item name="android:colorBackground">@color/pergaminho_fundo</item>
+
+        <!-- Força a cor principal do texto a ser ESCURA (preto) -->
+        <item name="android:textColorPrimary">@android:color/black</item>
+
     </style>
 
+    <!-- (Opcional) Tema para DetalheActivity se necessário (usa o mesmo base Light) -->
+    <style name="Theme.DetalheActivity" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowBackground">@color/pergaminho_fundo</item>
+        <item name="android:colorBackground">@color/pergaminho_fundo</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+    </style>
 
 </resources>
