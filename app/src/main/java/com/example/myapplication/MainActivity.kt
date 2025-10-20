@@ -7,6 +7,7 @@ package com.example.myapplication
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.ui.res.booleanResource
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.net.Uri
@@ -4050,11 +4051,13 @@ fun SuperPoderesContent(
         onToggle = onToggle,
         icon     = Icons.Default.FlashOn
     ) {
+        val showLista = booleanResource(R.bool.show_lista_completa)
+
         SectionHeader(
             onHelpClick          = onHelpClick,
             centerText           = "Pontos de Super: ${state.superPontosDisponiveis}",
             onCenterClick        = onToggle,
-            onListaCompletaClick = onOpenSuperDetail,
+            onListaCompletaClick = if (showLista) onOpenSuperDetail else null,
             listaCompletaText    = "Lista Completa"
         )
 

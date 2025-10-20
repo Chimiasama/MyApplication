@@ -469,13 +469,17 @@ fun VantagensContent(
                                     .padding(vertical = 8.dp, horizontal = 4.dp)
                             ) {
                                 Text(vant.nome, Modifier.weight(1f), fontWeight = FontWeight.Medium)
-                                Icon(
-                                    Icons.Default.Visibility,
-                                    contentDescription = "Detalhes",
-                                    modifier = Modifier
-                                        .size(18.dp)
-                                        .clickable { onOpenVantagensDetail(vant.nome) }
-                                )
+                                // depois
+                                if (showLista) {
+                                    Icon(
+                                        Icons.Default.Visibility,
+                                        contentDescription = "Detalhes",
+                                        modifier = Modifier
+                                            .size(18.dp)
+                                            .clickable { onOpenVantagensDetail(vant.nome) }
+                                    )
+                                }
+
                             }
                         }
                 }

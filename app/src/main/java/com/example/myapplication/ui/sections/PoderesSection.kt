@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.CriadorState
 import com.example.myapplication.SectionHeader
@@ -35,6 +36,7 @@ import com.example.myapplication.listaDeEstagios
 import com.example.myapplication.model.Poder
 import com.example.myapplication.model.loadJsonAsset
 import com.example.myapplication.util.keyify
+
 
 @kotlinx.serialization.Serializable
 data class ArcanoInfoItem(
@@ -58,7 +60,7 @@ fun PoderesSection(
         context.loadJsonAsset<List<Poder>>("poderes.json")
     }
 
-    // 2) Cria um Map para buscar dados de um poder pelo seu ID
+    // 2) Cria um Map para buscar dados de um poder pelo seu ‘ID’
     val poderesMap: Map<String, Poder> = remember(allPoderes) {
         allPoderes.associateBy { it.id }
     }
@@ -105,11 +107,13 @@ fun PoderesSection(
 
     // 10) Diálogo de ajuda
     var showHelp by rememberSaveable { mutableStateOf(false) }
+    val showLista = booleanResource(com.example.myapplication.R.bool.show_lista_completa)
+
 
     SectionHeader(
         onHelpClick          = { showHelp = true },
         centerText           = "Pontos de Poder: $pp",
-        onListaCompletaClick = onOpenListaCompletaPoderes,
+        onListaCompletaClick = if (showLista) onOpenListaCompletaPoderes else null,
         listaCompletaText    = "Lista Completa"
     )
 
@@ -174,7 +178,7 @@ fun PoderesSection(
         val curEstagioIdx = listaDeEstagios.indexOfFirst { it.nome == state.estagioAtual().nome }
 
         // b) Filtra apenas poderes cuja origem seja “BASICO”, que caibam no estágio atual
-        //    e cujo ID ainda não esteja em nenhum slot
+        //    e cujo ‘ID’ ainda não esteja em nenhum slot
         val disponiveis: List<Poder> = allPoderes
             .filter { poder -> poder.origem.equals("BASICO", ignoreCase = true) }
             .filter { poder ->
