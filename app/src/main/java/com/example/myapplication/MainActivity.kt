@@ -2666,9 +2666,13 @@ fun UnifiedScreen(
 
         // ─── Ancestralidades ──────────────────────────────────────────────────────
         AncestralidadesSection(
-            state = state,
-            onOpenListaAncestralidadesDetail = onOpenListaAncestralidadesDetail
+            onOpenListaAncestralidadesDetail = onOpenListaAncestralidadesDetail,
+            onSelectAncestralidade = { nome ->
+                state.aplicarAncestralidade(nome.uppercase().semAcentos())
+            }
         )
+
+
 
         HorizontalDivider(thickness = 1.dp)
 

@@ -14,10 +14,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,6 +30,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
@@ -87,7 +90,7 @@ fun InformacoesSection(
                     .padding(bottom = 8.dp)
             )
 
-            // 2) Nome do personagem
+            // 2) Nome do personagem - ❗ força texto preto e container branco
             OutlinedTextField(
                 value = state.nomePersonagem,
                 onValueChange = { state.nomePersonagem = it },
@@ -102,7 +105,20 @@ fun InformacoesSection(
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = { focusManager.clearFocus() }
+                ),
+                textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black),
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    disabledTextColor = Color.Black,
+                    cursorColor = Color.Black,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                    disabledContainerColor = Color.White,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.outline
                 )
+
             )
 
             val justStarted = !state.emProgresso && state.creationComplete()
@@ -277,7 +293,7 @@ fun InformacoesSection(
             if (warning.isNotEmpty()) {
                 Text(
                     text = warning,
-                    color = androidx.compose.ui.graphics.Color.Red,
+                    color = Color.Red,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
