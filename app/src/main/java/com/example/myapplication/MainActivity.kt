@@ -1,6 +1,8 @@
 @file:OptIn(
     ExperimentalMaterial3Api::class
 )
+@file:Suppress("DEPRECATION")
+
 package com.example.myapplication
 
 import android.content.Context
@@ -86,6 +88,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -364,8 +367,7 @@ class MainActivity : ComponentActivity() {
                                     mostrouTelaInicial = false
                                 },
                                 context              = context,
-                                viewModel            = criadorViewModel,
-                                superequipCategorias = superequipCategorias
+                                viewModel            = criadorViewModel
                             )
                         } else {
                             BackHandler(
@@ -504,7 +506,6 @@ class MainActivity : ComponentActivity() {
                                     ) { screen ->
                                         when (screen) {
                                             1 -> EquipamentosDetailScreen(
-                                                state      = state,
                                                 categorias = equipamentoCategorias +
                                                         if (state.modoSuperequip) superequipCategorias else emptyList(),
                                                 onBack     = { showEquipLista = false }
@@ -512,7 +513,6 @@ class MainActivity : ComponentActivity() {
                                             2 -> AtributosDetailScreen(onBack = { showAtributosDetail = false })
                                             3 -> VantagensDetailScreen(
                                                 modoSupers = state.modoSupers,
-                                                vantagensSelecionadas = state.vantagensSelecionadas,
                                                 highlightedName       = highlightedVantagem,
                                                 onBack                = { showVantagensDetail = false }
                                             )
@@ -526,7 +526,6 @@ class MainActivity : ComponentActivity() {
                                             7 -> PoderesDetail(onBack = { showPoderesDetail = false })
 
                                             8 -> SuperPoderesDetailScreen(
-                                                listaSuperPoderes = listaSuperPoderes,
                                                 onBack            = { showSuperDetail = false }
                                             )
                                             else -> UnifiedScreen(
@@ -543,7 +542,6 @@ class MainActivity : ComponentActivity() {
                                                 onOpenPoderesDetail = { showPoderesDetail = true },
                                                 onOpenSuperDetail = { showSuperDetail = true },
                                                 onHelpSuperClick = { },
-                                                onUseProgress = {},
 
                                                 expAttrs = expAttrs,
                                                 onToggleAttrs = { expAttrs   = !expAttrs },
@@ -726,7 +724,6 @@ fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
 
     // 1) Título
     canvas.drawText("Ficha de ${personagem.nome}", marginLeft, y, paint)
-    y += lineHeight * 1.5f
 
     // 2) Corpo do texto (cada linha de buildSummaryLines é “wrapped”)
     val lines = buildSummaryLines(personagem)
@@ -2205,6 +2202,27 @@ fun AncestralidadesContent(state: CriadorState) {
             label = { Text("Ancestralidade") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expAnc) },
             enabled = !locked,
+
+            // --- CORREÇÃO APLICADA AQUI ---
+            colors = TextFieldDefaults.colors(
+                // Cores quando Ativado
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black,
+                focusedIndicatorColor = Color.Black,      // Corrigido
+                unfocusedIndicatorColor = Color.Black,    // Corrigido
+                focusedTrailingIconColor = Color.Black,
+                unfocusedTrailingIconColor = Color.Black,
+                focusedLabelColor = Color.Black,
+                unfocusedLabelColor = Color.Black,
+
+                // Cores quando Desativado (para ficar cinza)
+                disabledTextColor = Color.Gray,
+                disabledIndicatorColor = Color.Gray,    // Corrigido
+                disabledTrailingIconColor = Color.Gray,
+                disabledLabelColor = Color.Gray
+            ),
+            // --- FIM DA CORREÇÃO ---
+
             modifier = Modifier
                 .fillMaxWidth()
                 .alpha(if (locked) 0.3f else 1f)
@@ -2298,7 +2316,6 @@ fun AncestralidadesContent(state: CriadorState) {
 @Composable
 fun VantagensDetailScreen(
     modoSupers: Boolean,
-    vantagensSelecionadas: SnapshotStateList<Vantagem>,
     highlightedName: String,
     onBack: () -> Unit
 ) {
@@ -2566,7 +2583,6 @@ fun PreviewApp() {
         onOpenPoderesDetail = {},
         onOpenSuperDetail = {},
         onHelpSuperClick = {},
-        onUseProgress = {},
 
         expAttrs = true,
         onToggleAttrs = {},
@@ -2605,7 +2621,6 @@ fun UnifiedScreen(
     onOpenPoderesDetail: () -> Unit,
     onOpenSuperDetail: () -> Unit,
     onHelpSuperClick: () -> Unit,
-    onUseProgress: () -> Unit,
 
     expAttrs: Boolean,
     onToggleAttrs: () -> Unit,
@@ -3172,7 +3187,6 @@ fun PowerDropdownMenu(
 
 @Composable
 fun EquipamentosDetailScreen(
-    state: CriadorState,
     categorias: List<EquipamentoCategoria>,
     onBack: () -> Unit
 ) {
@@ -3281,8 +3295,7 @@ fun TelaInicial(
     ) -> Unit,
     onLoad: (PersonagemSalvo) -> Unit,
     context: Context,
-    viewModel: CriadorViewModel,
-    superequipCategorias: List<EquipamentoCategoria>
+    viewModel: CriadorViewModel
 ) {
     var showLoadDialog by rememberSaveable { mutableStateOf(false) }
     // carrega já de cara todos os pares (displayName, fileKey)
@@ -3943,8 +3956,7 @@ private data class ModState(
 fun SuperPoderesSection(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
-    expanded: Boolean,
-    onToggle: () -> Unit
+    expanded: Boolean
 ) {
     if (!expanded) return
 
@@ -4048,8 +4060,7 @@ fun SuperPoderesContent(
         SuperPoderesSection(
             state             = state,
             listaSuperPoderes = listaSuperPoderes,
-            expanded          = expanded,
-            onToggle          = onToggle
+            expanded          = expanded
         )
     }
 }
@@ -4199,7 +4210,6 @@ fun PoderesDetail(onBack: () -> Unit) {
 
 @Composable
 fun SuperPoderesDetailScreen(
-    listaSuperPoderes: List<SuperPoder>,
     onBack: () -> Unit
 ) {
     // Carrega o JSON de assets/superpoderes.json

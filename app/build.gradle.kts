@@ -23,12 +23,11 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     // ------------------------------------------------------------
-    // 🔹 Configuração de múltiplas versões (flavors)
+    // 🔹 Product Flavors (versões lite e full)
     // ------------------------------------------------------------
     flavorDimensions += "version"
 
@@ -48,7 +47,7 @@ android {
     }
 
     // ------------------------------------------------------------
-    // 🔹 Tipos de build
+    // 🔹 Build Types
     // ------------------------------------------------------------
     buildTypes {
         release {
@@ -61,7 +60,7 @@ android {
     }
 
     // ------------------------------------------------------------
-    // 🔹 Suporte a Compose
+    // 🔹 Compose (mantém o suporte atual)
     // ------------------------------------------------------------
     buildFeatures {
         compose = true
@@ -71,8 +70,13 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.compose.get()
     }
 
+    // 🔹 Configuração Kotlin padrão (compatível com AGP < 8.3)
     kotlinOptions {
         jvmTarget = "17"
+        freeCompilerArgs += listOf(
+            "-Xcontext-receivers",
+            "-opt-in=kotlin.RequiresOptIn"
+        )
     }
 
     compileOptions {
@@ -86,7 +90,7 @@ android {
 }
 
 // ------------------------------------------------------------
-// 🔹 Dependências do projeto
+// 🔹 Dependências
 // ------------------------------------------------------------
 dependencies {
     // --- Jetpack Compose ---
@@ -96,12 +100,12 @@ dependencies {
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.activity.compose)
-    implementation("androidx.compose.ui:ui-tooling-preview:1.9.3")
-    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling.v170)
 
-    // --- Material Components (necessário para Theme.MaterialComponents.Light.NoActionBar) ---
-    implementation("com.google.android.material:material:1.13.0")
-    implementation("androidx.appcompat:appcompat:1.7.1")
+    // --- Material Components ---
+    implementation(libs.material)
+    implementation(libs.androidx.appcompat.v171)
     implementation(libs.androidx.core.ktx)
 
     // --- Splash Screen ---
