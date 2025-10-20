@@ -31,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.CollapsibleSection
@@ -39,6 +40,7 @@ import com.example.myapplication.SectionHeader
 import com.example.myapplication.model.EquipamentoCategoria
 import com.example.myapplication.model.EquipamentoItem
 import kotlinx.serialization.json.JsonPrimitive
+
 
 // --- modelo de filtro para equipamentos ---
 data class EquipFilter(
@@ -169,6 +171,8 @@ fun EquipamentoSection(
     // estados do filtro
     var filter by remember { mutableStateOf(EquipFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
+    val showLista = booleanResource(com.example.myapplication.R.bool.show_lista_completa)
+
 
     SectionCard(
         title    = "Equipamento",
@@ -182,7 +186,7 @@ fun EquipamentoSection(
             onHelpClick          = { showHelp = true },
             centerText           = "Dinheiro: $dinheiro",
             onCenterClick        = null,
-            onListaCompletaClick = onListaCompletaClick,
+            onListaCompletaClick = if (showLista) onListaCompletaClick else null,
             listaCompletaText    = "Lista Completa"
         )
 

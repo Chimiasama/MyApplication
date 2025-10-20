@@ -29,22 +29,33 @@ android {
     // ------------------------------------------------------------
     // 🔹 Product Flavors (versões lite e full)
     // ------------------------------------------------------------
-    flavorDimensions += "version"
+    flavorDimensions += "edition" // se o seu já tiver "version", pode manter o nome
 
     productFlavors {
         create("lite") {
-            dimension = "version"
+            dimension = "edition"            // ou "version" se já usa esse nome
             applicationIdSuffix = ".lite"
             versionNameSuffix = "-lite"
+            // flags de build para usar no código (BuildConfig.SHOW_LISTA_COMPLETA/ENABLE_LONG_TEXTS)
+            buildConfigField("boolean", "SHOW_LISTA_COMPLETA", "false")
+            buildConfigField("boolean", "ENABLE_LONG_TEXTS", "false")
+
             resValue("string", "app_name", "SWADE Criador (Lite)")
+            resValue("bool", "show_lista_completa", "false")
+            resValue("bool", "enable_long_texts", "false")
         }
         create("full") {
-            dimension = "version"
+            dimension = "edition"            // ou "version" se já usa esse nome
             applicationIdSuffix = ".full"
             versionNameSuffix = "-full"
+            buildConfigField("boolean", "SHOW_LISTA_COMPLETA", "true")
+            buildConfigField("boolean", "ENABLE_LONG_TEXTS", "true")
             resValue("string", "app_name", "SWADE Criador (Completo)")
+            resValue("bool", "show_lista_completa", "true")
+            resValue("bool", "enable_long_texts", "true")
         }
     }
+
 
     // ------------------------------------------------------------
     // 🔹 Build Types
@@ -64,6 +75,7 @@ android {
     // ------------------------------------------------------------
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {

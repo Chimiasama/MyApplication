@@ -48,7 +48,9 @@ fun AncestralidadesSection(
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
 
-    // Carrega nomes do JSON em /res/raw/listaancestralidade.json
+    val ctx = androidx.compose.ui.platform.LocalContext.current
+    val showLista = ctx.resources.getBoolean(R.bool.show_lista_completa)
+
     val ancestralidades by remember {
         mutableStateOf(loadAncestralidadesNomes(context, R.raw.listaancestralidade))
     }
@@ -66,12 +68,14 @@ fun AncestralidadesSection(
     ) {
         // Cabeçalho no mesmo padrão das outras seções
         SectionHeader(
-            onHelpClick          = { showHelp = true },
-            centerText           = "Ancestralidade: ${selected ?: "-"}",
-            onCenterClick        = null,
-            onListaCompletaClick = onOpenListaAncestralidadesDetail,
-            listaCompletaText    = "Lista completa"
+            onHelpClick   = { showHelp = true },
+            centerText    = "Ancestralidade: ${selected ?: "-"}",
+            onCenterClick = null,
+            onListaCompletaClick = if (showLista) onOpenListaAncestralidadesDetail else null,
+            listaCompletaText = "Lista Completa"
         )
+
+
 
         Spacer(Modifier.height(8.dp))
 

@@ -2013,7 +2013,7 @@ fun SectionHeader(
     onHelpClick: () -> Unit,
     centerText: String,
     onCenterClick: (() -> Unit)? = null,
-    onListaCompletaClick: () -> Unit,
+    onListaCompletaClick: (() -> Unit)? = null, // ← agora é opcional
     listaCompletaText: String = "Lista Completa"
 ) {
     Row(
@@ -2030,24 +2030,21 @@ fun SectionHeader(
             centerText,
             Modifier
                 .weight(1f)
-                .then(
-                    if (onCenterClick != null) Modifier.clickable(onClick = onCenterClick)
-                    else Modifier
-                )
+                .then(if (onCenterClick != null) Modifier.clickable(onClick = onCenterClick) else Modifier)
                 .padding(horizontal = 8.dp),
             textAlign = TextAlign.Center,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )
 
-        TextButton(onClick = onListaCompletaClick) {
-            Text(
-                listaCompletaText,
-                fontSize = 13.sp
-            )
+        if (onListaCompletaClick != null) {        // ← só mostra no full
+            TextButton(onClick = onListaCompletaClick) {
+                Text(listaCompletaText, fontSize = 13.sp)
+            }
         }
     }
 }
+
 
 @Composable
 fun CollapsibleSection(

@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +45,7 @@ import com.example.myapplication.listaPericias
 import com.example.myapplication.mapaAtributosDisplay
 import com.example.myapplication.toDiceString
 import kotlin.math.max
+
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -72,13 +74,16 @@ fun PericiasContent(
     ) {
         stickyHeader {
             val pergaminho = Color(0xFFF2E3C6)
+            val showLista = booleanResource(com.example.myapplication.R.bool.show_lista_completa)
+
             Surface(tonalElevation = 0.dp, color = pergaminho) {
                 SectionHeader(
                     onHelpClick          = { showHelp = true },
                     centerText           = "Pontos restantes: ${state.pontosPericia}",
-                    onListaCompletaClick = { onOpenPericiasDetail() },
+                    onListaCompletaClick = if (showLista) ({ onOpenPericiasDetail() }) else null,
                     listaCompletaText    = "Lista Completa"
                 )
+
             }
             if (showHelp) {
                 AlertDialog(

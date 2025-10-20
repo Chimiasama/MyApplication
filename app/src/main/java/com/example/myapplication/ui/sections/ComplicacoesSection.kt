@@ -47,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.CriadorState
@@ -56,6 +57,7 @@ import com.example.myapplication.listaComplicacoes
 import com.example.myapplication.util.keyify
 import com.example.myapplication.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
+
 
 @ExperimentalMaterial3Api
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -80,6 +82,9 @@ fun ComplicacoesSection(
         .map { it.uppercase().semAcentos().substringBefore("(").trim() }
         .toSet()
 
+    val showLista = booleanResource(com.example.myapplication.R.bool.show_lista_completa)
+
+
     SectionCard(
         title    = "Complicações",
         expanded = expCompSection,
@@ -92,8 +97,11 @@ fun ComplicacoesSection(
             centerText           = "Gastar/Devolver pontos: " +
                     "${(state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0)}",
             onCenterClick        = if (!locked) ({ showGastarPcDialog = true }) else null,
-            onListaCompletaClick = onOpenComplicacoesDetail
+            onListaCompletaClick = if (showLista) onOpenComplicacoesDetail else null, // ← aqui
+            // Se o seu SectionHeader aceita este parâmetro, mantenha; senão remova a linha:
+            listaCompletaText    = "Lista Completa"
         )
+
 
         Spacer(Modifier.height(8.dp))
 

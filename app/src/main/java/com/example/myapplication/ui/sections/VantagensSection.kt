@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.CollapsibleSection
@@ -63,6 +64,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
+
 
 // modelo de filtro
 data class VantFilter(
@@ -220,14 +222,18 @@ fun VantagensContent(
     }
     val locked = state.progresso > 0 && !state.emProgresso
 
+    val showLista = booleanResource(com.example.myapplication.R.bool.show_lista_completa)
+
+
     Column(modifier = Modifier.fillMaxWidth()) {
         // cabeçalho
         SectionHeader(
             onHelpClick          = { showHelp = true },
             centerText           = "Pontos restantes: ${state.pontosVantagem}",
-            onListaCompletaClick = { onOpenVantagensDetail("") },
+            onListaCompletaClick = if (showLista) ({ onOpenVantagensDetail("") }) else null,
             listaCompletaText    = "Lista Completa"
         )
+
 
         if (showHelp) {
             AlertDialog(
@@ -608,7 +614,7 @@ fun VantagensContent(
         // 12) Único bloco: “MultipleSelectionDialog” para NOVOS PODERES (comprável infinitas vezes)
         // ---------------------------------------------------------------
         if (showNovosPoderesDialog && pendingNovosPoderes != null) {
-            // Captura local não-nulo para que o compilador faça smart cast:
+            // Captura local não nulo para que o compilador faça smart cast:
             val vant = pendingNovosPoderes!!
 
             // 1) Carrega lista completa de poderes do JSON “poderes.json”
@@ -690,7 +696,7 @@ fun VantagensContent(
                     state.rebuildAllPericiaStacks()
 
                     // Como “novos_poderes” pode ser comprado infinitas vezes, não
-                    // estamos bloqueando; basta deixá‐lo em pendingNovosPoderes para
+                    // estamos a bloquear; basta deixá‐lo em pendingNovosPoderes para
                     // poder repetir. Mas podemos limpar aqui se quisermos reabrir o diálogo
                     // sempre ao clicar novamente.
                     showNovosPoderesDialog = false

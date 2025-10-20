@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,6 +39,7 @@ import com.example.myapplication.listaAtributos
 import com.example.myapplication.mapaAtributosDisplay
 import com.example.myapplication.toDiceString
 
+
 @Composable
 fun AtributosContent(
     state: CriadorState,
@@ -47,6 +49,8 @@ fun AtributosContent(
     var showHelp by rememberSaveable { mutableStateOf(false) }
     // sua cor de pergaminho
     val pergaminho = Color(0xFFF2E3C6)
+    val showLista = booleanResource(com.example.myapplication.R.bool.show_lista_completa)
+
 
     Column(
         modifier = Modifier
@@ -58,8 +62,10 @@ fun AtributosContent(
         SectionHeader(
             onHelpClick           = { showHelp = true },
             centerText            = "Pontos restantes: ${state.pontosAtributo}",
-            onListaCompletaClick  = { onOpenAtributosDetail() }
+            onListaCompletaClick  = if (showLista) ({ onOpenAtributosDetail() }) else null,
+            listaCompletaText     = "Lista Completa"
         )
+
 
         if (showHelp) {
             AlertDialog(
