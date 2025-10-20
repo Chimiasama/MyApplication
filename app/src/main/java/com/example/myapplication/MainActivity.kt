@@ -3153,8 +3153,9 @@ fun PowerDropdownMenu(
             expanded = expanded,
             onDismissRequest = { onExpandedChange(false) },
             modifier = Modifier
-                .exposedDropdownSize(matchTextFieldWidth = true)
+                .exposedDropdownSize()
                 .heightIn(max = 200.dp)
+
         ) {
             options.forEach { option ->
                 DropdownMenuItem(
