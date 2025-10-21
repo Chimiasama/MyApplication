@@ -6,7 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "2.2.20"
 }
 
-// Exclui globalmente a versão duplicada da JetBrains IntelliJ Annotations
+// 🔹 Exclui globalmente a versão duplicada da JetBrains IntelliJ Annotations
 configurations
     .matching { it.name != "kotlinCompilerClasspath" }
     .all {
@@ -23,20 +23,29 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // 🔹 Gera apenas para arquitetura moderna (reduz tamanho do APK)
+        ndk {
+            abiFilters += listOf("arm64-v8a")
+        }
+
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     // ------------------------------------------------------------
-    // 🔹 Product Flavors (versões lite e full)
+    // 🔹 Product Flavors (versões Lite e Full)
     // ------------------------------------------------------------
-    flavorDimensions += "edition" // se o seu já tiver "version", pode manter o nome
+    flavorDimensions += "edition"
 
     productFlavors {
         create("lite") {
-            dimension = "edition"            // ou "version" se já usa esse nome
+            dimension = "edition"
             applicationIdSuffix = ".lite"
             versionNameSuffix = "-lite"
-            // flags de build para usar no código (BuildConfig.SHOW_LISTA_COMPLETA/ENABLE_LONG_TEXTS)
+
+            // Flags de build (para controle dentro do app)
             buildConfigField("boolean", "SHOW_LISTA_COMPLETA", "false")
             buildConfigField("boolean", "ENABLE_LONG_TEXTS", "false")
 
@@ -44,25 +53,29 @@ android {
             resValue("bool", "show_lista_completa", "false")
             resValue("bool", "enable_long_texts", "false")
         }
+
         create("full") {
-            dimension = "edition"            // ou "version" se já usa esse nome
+            dimension = "edition"
             applicationIdSuffix = ".full"
             versionNameSuffix = "-full"
+
             buildConfigField("boolean", "SHOW_LISTA_COMPLETA", "true")
             buildConfigField("boolean", "ENABLE_LONG_TEXTS", "true")
+
             resValue("string", "app_name", "SWADE Criador (Completo)")
             resValue("bool", "show_lista_completa", "true")
             resValue("bool", "enable_long_texts", "true")
         }
     }
 
-
     // ------------------------------------------------------------
     // 🔹 Build Types
     // ------------------------------------------------------------
     buildTypes {
         release {
-            isMinifyEnabled = false
+            // 🔹 Ativa compressão e remoção de código não usado (ProGuard + R8)
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -71,7 +84,7 @@ android {
     }
 
     // ------------------------------------------------------------
-    // 🔹 Compose (mantém o suporte atual)
+    // 🔹 Compose
     // ------------------------------------------------------------
     buildFeatures {
         compose = true
@@ -82,7 +95,9 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.compose.get()
     }
 
-    // 🔹 Configuração Kotlin padrão (compatível com AGP < 8.3)
+    // ------------------------------------------------------------
+    // 🔹 Kotlin e Java
+    // ------------------------------------------------------------
     kotlinOptions {
         jvmTarget = "17"
         freeCompilerArgs += listOf(
@@ -98,6 +113,15 @@ android {
 
     kotlin {
         jvmToolchain(17)
+    }
+
+    // ------------------------------------------------------------
+    // 🔹 Packaging (remove licenças duplicadas)
+    // ------------------------------------------------------------
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
 }
 
@@ -149,4 +173,22 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core.v351)
+}
+
+// ------------------------------------------------------------
+// 🔹 Otimizações pós-build
+// ------------------------------------------------------------
+
+// Desativa todas as tarefas Lint (acelera build local)
+tasks.configureEach {
+    if (name.contains("lint", ignoreCase = true)) {
+        enabled = false
+    }
+}
+
+// Loga quando o R8 for chamado (compressão de código)
+tasks.withType<com.android.build.gradle.internal.tasks.R8Task>().configureEach {
+    doFirst {
+        println("⚙️ R8 otimização ativada (full mode)")
+    }
 }

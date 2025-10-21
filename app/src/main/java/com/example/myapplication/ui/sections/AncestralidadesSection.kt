@@ -58,7 +58,7 @@ fun AncestralidadesSection(
     var expSection by rememberSaveable { mutableStateOf(false) }
     var expMenu    by rememberSaveable { mutableStateOf(false) }
     var showHelp   by rememberSaveable { mutableStateOf(false) }
-    var selected   by rememberSaveable { mutableStateOf<String?>(null) }
+    var selected by rememberSaveable { mutableStateOf<String?>("HUMANOS") }
 
     SectionCard(
         title    = "Ancestralidades",

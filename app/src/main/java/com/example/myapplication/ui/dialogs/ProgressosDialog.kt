@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
@@ -37,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.myapplication.CriadorState
 import com.example.myapplication.Pericia
 import com.example.myapplication.RadioButtonRow
@@ -47,7 +49,6 @@ import com.example.myapplication.listaVantagens
 import com.example.myapplication.mapaAtributosDisplay
 import com.example.myapplication.model.Complicacao
 import com.example.myapplication.model.Vantagem
-import com.example.myapplication.nivelParaEstagio
 import com.example.myapplication.periciaStartRaw
 import com.example.myapplication.util.keyify
 import com.example.myapplication.util.semAcentos
@@ -513,41 +514,47 @@ fun ProgressosDialog(
                         .fillMaxWidth()
                 ) {
                     items(listaVantagens.filter { v ->
-                        // gating manual para Pontos de Poder por aba
-                        if (v.nome.contains("Pontos de Poder", ignoreCase = true)) {
-                            val totalPP = state.comprasPpPorEstagio.values.sum()
-                            if (totalPP >= advSelectedStageIndex + 1) return@filter false
-                        }
-                        // verifica se pode selecionar e se o estágio do requisito cabe na aba:
-                        state.podeSelecionar(v)
-                                && listaDeEstagios.indexOf(nivelParaEstagio[v.requisitos.estagio]!!) <= advSelectedStageIndex
+                        // Garante que não repita vantagens já obtidas
+                        if (v in state.vantagensSelecionadas) return@filter false
+
+                        // Se tiver requisito de estágio, mostra só se for até o estágio atual;
+                        // se não tiver requisito, mostra também
+                        val reqOk = v.requisitos?.estagio?.let { req ->
+                            val idxReq = listaDeEstagios.indexOfFirst { it.nome.contains(req, ignoreCase = true) }
+                            idxReq == -1 || idxReq <= advSelectedStageIndex
+                        } ?: true
+
+                        reqOk
                     }) { vant ->
                         Column(
                             Modifier
                                 .fillMaxWidth()
                                 .clickable {
                                     state.spendProgressAcrossStages(1)
-                                    if (vant.nome.contains("Pontos de Poder", ignoreCase = true)) {
-                                        val key = estSel.nome
-                                        val before = state.comprasPpPorEstagio[key] ?: 0
-                                        val totalBefore = state.comprasPpPorEstagio.values.sum()
-                                        state.comprasPpPorEstagio[key] = before + 1
-                                        val ganho = if (totalBefore < 4) 5 else 2
-                                        state.bonusPoderExtra += ganho
-                                        state.vantagensSelecionadas += vant
-                                    } else {
-                                        state.vantagensSelecionadas += vant
-                                    }
+                                    state.vantagensSelecionadas += vant
                                     state.checkFreeze()
                                     showAdvSelection = false
                                     onDismiss()
                                 }
                                 .padding(vertical = 8.dp, horizontal = 4.dp)
                         ) {
-                            Text("${vant.nome} (${vant.requisitos.estagio})")
+                            val pode = state.podeSelecionar(vant)
+                            val textoCor = if (pode) colorScheme.onSurface else colorScheme.onSurfaceVariant
+                            Text(
+                                "${vant.nome} (${vant.requisitos?.estagio ?: "—"})",
+                                color = textoCor
+                            )
+                            if (!pode) {
+                                Text(
+                                    "Requisitos não atendidos",
+                                    fontSize = 10.sp,
+                                    color = colorScheme.onSurfaceVariant
+                                )
+                            }
                             HorizontalDivider()
                         }
                     }
+
                 }
             },
             confirmButton = { /* não precisa de botão Confirmar aqui */ },
