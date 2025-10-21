@@ -951,7 +951,7 @@ class CriadorState {
         }
     }
 
-    private fun maxComprasPpAteAgora(): Int {
+    fun maxComprasPpAteAgora(): Int {
         return listaDeEstagios.indexOf(estagioAtual()) + 1
     }
 

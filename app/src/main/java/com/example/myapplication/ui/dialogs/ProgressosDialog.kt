@@ -18,7 +18,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
@@ -496,12 +495,40 @@ fun ProgressosDialog(
     )
 
     if (showAdvSelection) {
-        val estSel = stages[advSelectedStageIndex]
+        // Usa a aba em que o usuário abriu a seleção
+        val estIndex = if (advSelectedStageIndex >= 0) advSelectedStageIndex else selectedTab
+        val estSel   = listaDeEstagios[estIndex]
         val prevStageSpent = state.stageXpSpent.getValue(estSel.nome)
+
+        // Lista final de vantagens candidatas — só o que dá pra comprar AGORA
+        val candidatas = listaVantagens.filter { v ->
+            // 0) já possui? só mostra se ainda couber dentro do maxSelections (se > 0)
+            val qtdJaTem = state.vantagensSelecionadas.count { it.nome.equals(v.nome, ignoreCase = true) }
+            val maxSel = v.maxSelections
+            val podeRepetir = (maxSel == 0) || (qtdJaTem < maxSel)  // 0 = sem limite por nome/choice aqui
+            if (qtdJaTem > 0 && !podeRepetir) return@filter false
+
+            // 1) estágio mínimo compatível com a aba selecionada
+            val stageOk = v.requisitos?.estagio?.let { req ->
+                val reqIdx = listaDeEstagios.indexOfFirst { it.nome.equals(req, ignoreCase = true) }
+                reqIdx == -1 || reqIdx <= estIndex
+            } ?: true
+            if (!stageOk) return@filter false
+
+            // 2) requisitos completos (atributos, perícias, vantagens prévias, incompatibilidades, etc.)
+            //    usa a mesma regra da seção de Vantagens
+            val podeAgora = state.podeSelecionar(v)
+
+            // 3) precisa ter ao menos 1 progresso disponível
+            val temProgresso = state.progressosDisponiveis >= 1
+
+            podeAgora && temProgresso
+        }
+
 
         AlertDialog(
             onDismissRequest = {
-                // desfaz a reserva de XP se o usuário cancelar
+                // desfaz reserva de XP se cancelar
                 state.stageXpSpent[estSel.nome] = prevStageSpent
                 state.progressosDisponiveis =
                     (state.progresso - state.stageXpSpent.values.sum()).coerceAtLeast(0)
@@ -513,51 +540,58 @@ fun ProgressosDialog(
                         .fillMaxHeight(0.6f)
                         .fillMaxWidth()
                 ) {
-                    items(listaVantagens.filter { v ->
-                        // Garante que não repita vantagens já obtidas
-                        if (v in state.vantagensSelecionadas) return@filter false
+                    items(candidatas) { vant ->
+                        // Quantas o usuário já tem (útil para vantagens múltiplas)
+                        val qtdJaTem = state.vantagensSelecionadas.count {
+                            it.nome.equals(vant.nome, ignoreCase = true)
+                        }
 
-                        // Se tiver requisito de estágio, mostra só se for até o estágio atual;
-                        // se não tiver requisito, mostra também
-                        val reqOk = v.requisitos?.estagio?.let { req ->
-                            val idxReq = listaDeEstagios.indexOfFirst { it.nome.contains(req, ignoreCase = true) }
-                            idxReq == -1 || idxReq <= advSelectedStageIndex
-                        } ?: true
-
-                        reqOk
-                    }) { vant ->
                         Column(
                             Modifier
                                 .fillMaxWidth()
                                 .clickable {
+
+                                    val qtdJaTem = state.vantagensSelecionadas.count { it.nome.equals(vant.nome, ignoreCase = true) }
+                                    val maxSel = vant.maxSelections
+                                    val podeRepetir = (maxSel == 0) || (qtdJaTem < maxSel)
+                                    if (qtdJaTem > 0 && !podeRepetir) {
+                                        tempErrorMsg = "Você já atingiu o limite para ${vant.nome}."
+                                        showTempError = true
+                                        return@clickable
+                                    }
+
+// Revalidação final com a regra oficial (mesma da seção de Vantagens)
+                                    if (!state.podeSelecionar(vant)) {
+                                        tempErrorMsg = "Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}."
+                                        showTempError = true
+                                        return@clickable
+                                    }
+
+                                    if (state.progressosDisponiveis < 1) {
+                                        tempErrorMsg = "Você não tem progressos suficientes."
+                                        showTempError = true
+                                        return@clickable
+                                    }
+
                                     state.spendProgressAcrossStages(1)
                                     state.vantagensSelecionadas += vant
                                     state.checkFreeze()
                                     showAdvSelection = false
                                     onDismiss()
+
                                 }
                                 .padding(vertical = 8.dp, horizontal = 4.dp)
                         ) {
-                            val pode = state.podeSelecionar(vant)
-                            val textoCor = if (pode) colorScheme.onSurface else colorScheme.onSurfaceVariant
-                            Text(
-                                "${vant.nome} (${vant.requisitos?.estagio ?: "—"})",
-                                color = textoCor
-                            )
-                            if (!pode) {
-                                Text(
-                                    "Requisitos não atendidos",
-                                    fontSize = 10.sp,
-                                    color = colorScheme.onSurfaceVariant
-                                )
+                            Text("${vant.nome} (${vant.requisitos?.estagio ?: "—"})")
+                            if (qtdJaTem > 0) {
+                                Text("Já possui x$qtdJaTem", fontSize = 10.sp, color = Color.Gray)
                             }
                             HorizontalDivider()
                         }
                     }
-
                 }
             },
-            confirmButton = { /* não precisa de botão Confirmar aqui */ },
+            confirmButton = {},
             dismissButton = {
                 TextButton(onClick = {
                     state.stageXpSpent[estSel.nome] = prevStageSpent
@@ -568,6 +602,7 @@ fun ProgressosDialog(
             }
         )
     }
+
 
     if (showPendingChoice && pendingAdv != null) {
         state.identifyMaxedTraits()
