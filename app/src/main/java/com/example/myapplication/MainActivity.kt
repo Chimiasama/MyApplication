@@ -1,7 +1,7 @@
 @file:OptIn(
     ExperimentalMaterial3Api::class
 )
-@file:Suppress("DEPRECATION")
+@file:Suppress("DEPRECATION", "LanguageDetectionInspection")
 
 package com.example.myapplication
 
@@ -27,22 +27,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -3334,6 +3319,8 @@ fun TelaInicial(
     // Ficção Científica
     var expFiccao by rememberSaveable { mutableStateOf(false) }
 
+    var showCreditsDialog by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -3362,6 +3349,55 @@ fun TelaInicial(
         ) {
             Text("Carregar Personagem Salvo")
         }
+        Spacer(modifier = Modifier.height(240.dp))
+
+        Button(
+            onClick = { showCreditsDialog = true },
+            modifier = Modifier.fillMaxWidth()
+                .padding(bottom = 240.dp)
+                .alpha(0.6f)
+        ) {
+            Text("Créditos e Licença")
+        }
+
+        // --- Diálogo com a imagem e o texto ---
+        if (showCreditsDialog) {
+            AlertDialog(
+                onDismissRequest = { showCreditsDialog = false },
+                confirmButton = {
+                    TextButton(onClick = { showCreditsDialog = false }) {
+                        Text("Fechar")
+                    }
+                },
+                text = {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.sw_fan_logo),
+                            contentDescription = "Savage Worlds Fan Logo",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(100.dp)
+                        )
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            text = """
+Este jogo faz referência ao sistema de regras Savage Worlds, disponibilizado mundialmente pela Pinnacle Entertainment Group (www.peginc.com) e no Brasil pela RetroPunk Publicações (www.retropunk.net). 
+
+Savage Worlds e todas as suas logos e marcas associadas são de propriedade da Pinnacle Entertainment Group. Utilizadas com permissão. A Pinnacle e a RetroPunk não fazem nenhuma representação ou garantia quanto à qualidade, viabilidade ou adequação em relação a este produto.
+
+Feito por Rafael S.W.
+                        """.trimIndent(),
+                            fontSize = 14.sp,
+                            textAlign = TextAlign.Justify,
+                            fontWeight = FontWeight.Normal
+                        )
+                    }
+                }
+            )
+        }
+
     }
 
     // ── Diálogo de configurações iniciais ────────────────────────────────────────
