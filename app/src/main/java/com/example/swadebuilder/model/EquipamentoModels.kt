@@ -1,0 +1,45 @@
+package com.example.swadebuilder.model
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
+
+@Serializable
+/**
+ * Representa um item de equipamento com todas as suas propriedades
+ */
+data class EquipamentoItem(
+    val nome: String,
+    @SerialName("custo")
+    val custo: JsonElement? = null,
+    val peso: JsonElement? = null,
+    val origem: String? = null,
+    val subtipo: String? = null,
+    val subsubtipo: String? = null,
+    val forcaMin: JsonElement? = null,
+    val armadura: JsonElement? = null,
+    val aparar: JsonElement? = null,
+    val observacoes: JsonElement? = null,
+    val dano: JsonElement? = null,
+    val pa: JsonElement? = null,
+    val cdt: JsonElement? = null,
+    val distancia: JsonElement? = null,
+    val tiros: JsonElement? = null,
+    val tamanho: JsonElement? = null,
+    val manobrabilidade: JsonElement? = null,
+    val velMaxima: JsonElement? = null,
+    val resistencia: JsonElement? = null,
+    val tripulacao: JsonElement? = null
+)
+
+@Serializable
+/**
+ * Agrupa uma lista de EquipamentoItem em uma categoria lógica
+ */
+data class EquipamentoCategoria(
+    val tipo: String,
+    val subtipo: String,
+    val origem: String? = null,
+    val subsubtipo: String? = null,
+    val itens: List<EquipamentoItem>
+)

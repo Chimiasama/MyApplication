@@ -3,7 +3,7 @@
 
     <!-- 1) Tema de splash nativo (API 31+). -->
     <!-- ESTE TEMA USA ATRIBUTOS MODERNOS -->
-    <style name="Theme.MyApplication" parent="Theme.SplashScreen">
+    <style name="Theme.SWADEbuilder" parent="Theme.SplashScreen">
         <!-- cor de fundo da splash screen -->
         <item name="windowSplashScreenBackground">@color/black</item>
         <!-- drawable que será centralizado e redimensionado pelo sistema -->
@@ -11,7 +11,7 @@
         <!-- cor de fundo do “círculo” atrás do ícone (se houver) -->
         <item name="windowSplashScreenIconBackgroundColor">@color/black</item>
         <!-- após a splash, aplica este tema base na MainActivity -->
-        <item name="postSplashScreenTheme">@style/Theme.MyApplication.NoSplash</item>
+        <item name="postSplashScreenTheme">@style/Theme.SWADEbuilder.NoSplash</item>
 
         <!-- CORES DE TEMA (MANTIDAS AQUI PARA EVITAR ERROS DE ATRIBUTO) -->
         <!-- Estas cores precisam ser definidas no tema principal, não no NoSplash. -->
@@ -24,7 +24,7 @@
     <!-- 2) Tema “real” do app, sem action bar -->
     <!-- MUDANÇA CRÍTICA AQUI: Usaremos MaterialComponents.Light.NoActionBar -->
     <!-- Isso garante que a herança seja compatível com a sua versão do Gradle E força o modo CLARO. -->
-    <style name="Theme.MyApplication.NoSplash" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.SWADEbuilder.NoSplash" parent="Theme.MaterialComponents.Light.NoActionBar">
 
         <!-- Cor de Fundo da Janela (O Pergaminho) -->
         <item name="android:windowBackground">@color/pergaminho_fundo</item>

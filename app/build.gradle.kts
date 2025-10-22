@@ -14,11 +14,11 @@ configurations
     }
 
 android {
-    namespace = "com.example.myapplication"
+    namespace = "com.example.swadebuilder"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.myapplication"
+        applicationId = "com.swadebuilder"
         minSdk = 25
         targetSdk = 36
         versionCode = 1
@@ -49,7 +49,7 @@ android {
             buildConfigField("boolean", "SHOW_LISTA_COMPLETA", "false")
             buildConfigField("boolean", "ENABLE_LONG_TEXTS", "false")
 
-            resValue("string", "app_name", "SWADE Criador (Lite)")
+            resValue("string", "app_name", "SWADEbuilder")
             resValue("bool", "show_lista_completa", "false")
             resValue("bool", "enable_long_texts", "false")
         }
@@ -62,7 +62,7 @@ android {
             buildConfigField("boolean", "SHOW_LISTA_COMPLETA", "true")
             buildConfigField("boolean", "ENABLE_LONG_TEXTS", "true")
 
-            resValue("string", "app_name", "SWADE Criador (Completo)")
+            resValue("string", "app_name", "SWADEbuilder (Completo)")
             resValue("bool", "show_lista_completa", "true")
             resValue("bool", "enable_long_texts", "true")
         }
