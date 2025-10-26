@@ -456,6 +456,16 @@ fun VantagensContent(
                                                         }
                                                         state.pontosVantagem--
                                                         state.rebuildAllPericiaStacks()
+
+                                                        // --- NOVO BLOCO: consome PV pendente vindo de XP ---
+                                                        if (state.pvFromXpOutstanding > 0) {
+                                                            state.pvFromXpOutstanding -= 1
+                                                            if (state.pvFromXpOutstanding == 0) {
+                                                                state.overrideStageForVantagem = null
+                                                                state.openVantagensAfterGrant = false
+                                                            }
+                                                        }
+
                                                     }
                                                 }
                                                 scope.launch {

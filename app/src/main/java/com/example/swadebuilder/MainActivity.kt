@@ -937,6 +937,12 @@ class CriadorState {
     var superPontosDisponiveis by mutableIntStateOf(0)
     var superLimite by mutableIntStateOf(0)
 
+    // --- NOVO BLOCO: Controle de compra de Vantagens por XP ---
+    var pvFromXpOutstanding by mutableIntStateOf(0)          // PV pendente vindo de XP
+    var overrideStageForVantagem by mutableStateOf<String?>(null) // estágio de origem do PV
+    var openVantagensAfterGrant by mutableStateOf(false)     // sinal pra abrir tela de vantagens
+
+
     fun comprarSuperPoder(nome: String, custo: Int) {
         // só compra se houver espaço e pontos disponíveis
         if (superPoderesComprados.size < superLimite && superPontosDisponiveis >= custo) {
@@ -950,6 +956,26 @@ class CriadorState {
             superPontosDisponiveis += poder.custo
         }
     }
+
+    // --- NOVO MÉTODO: concede 1 ponto de vantagem vindo de XP ---
+    fun grantVantagemPointFromXp(stageName: String) {
+        check(progressosDisponiveis > 0) { "Sem XP disponível." }
+
+        // Marca o XP como gasto neste estágio
+        stageXpSpent[stageName] = stageXpSpent.getValue(stageName) + 1
+        progressosDisponiveis -= 1
+
+        // Concede um ponto de vantagem
+        pontosVantagem += 1
+        pvFromXpOutstanding += 1
+
+        // Marca que este PV veio deste estágio
+        overrideStageForVantagem = stageName
+
+        // Sinaliza para abrir a tela de Vantagens
+        openVantagensAfterGrant = true
+    }
+
 
     fun maxComprasPpAteAgora(): Int {
         return listaDeEstagios.indexOf(estagioAtual()) + 1
@@ -1192,6 +1218,27 @@ class CriadorState {
         return listaDeEstagios.first { progresso in it.minProgress .. it.maxProgress }
     }
 
+    private fun effectiveProgressoParaVantagens(): Int {
+        val stName = overrideStageForVantagem ?: return progresso
+        val st = listaDeEstagios.firstOrNull { it.nome.equals(stName, ignoreCase = true) }
+        // usamos o minProgress do estágio travado para satisfazer checagens de “estágio mínimo”
+        return st?.minProgress ?: progresso
+    }
+
+    fun resolveVantagemPointFromXp(spent: Boolean) {
+        if (!spent) {
+            // estorna tudo se não gastou
+            overrideStageForVantagem?.let { st ->
+                stageXpSpent[st] = stageXpSpent.getValue(st) - 1
+                progressosDisponiveis += 1
+                pontosVantagem -= 1
+            }
+        }
+        pvFromXpOutstanding = (pvFromXpOutstanding - 1).coerceAtLeast(0)
+        if (pvFromXpOutstanding == 0) overrideStageForVantagem = null
+    }
+
+
     private fun currentProgressStageIndex(): Int {
         val caps = listaDeEstagios.mapIndexed { idx, st ->
             val prevMax = listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: 0
@@ -1318,7 +1365,7 @@ class CriadorState {
             .firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
             ?.let { estReqObj ->
                 // Se o progresso atual for menor que o mínimo exigido para este estágio, bloqueia
-                if (this.progresso < estReqObj.minProgress) return false
+                if (effectiveProgressoParaVantagens() < estReqObj.minProgress) return false
             }
 
         // 5) Checa “vantagens_previas” (se houver alguma, exige que o nome correspondente já esteja em vantagensSelecionadas)
@@ -1356,7 +1403,7 @@ class CriadorState {
 
         // 8) Verifica requisito de “nível de campanha” (minProgress)
         nivelParaEstagio[v.requisitos.estagio]?.let { estReqObj2 ->
-            if (estReqObj2.minProgress > progresso) return false
+            if (estReqObj2.minProgress > effectiveProgressoParaVantagens()) return false
         }
 
         // 9) Verifica requisitos de atributo mínimo

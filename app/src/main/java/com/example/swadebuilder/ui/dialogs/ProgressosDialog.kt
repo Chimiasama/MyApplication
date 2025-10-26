@@ -1,6 +1,7 @@
 package com.example.swadebuilder.ui.dialogs
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
@@ -80,7 +82,6 @@ fun ProgressosDialog(
     var showTempError by rememberSaveable { mutableStateOf(false) }
     var tempErrorMsg by rememberSaveable { mutableStateOf("") }
     var advSelectedStageIndex by rememberSaveable { mutableIntStateOf(-1) }
-    var advPrevStageSpent by rememberSaveable { mutableIntStateOf(0) }
 
     // configurações gerais de progresso
     val totalProgressLimit = 50
@@ -218,10 +219,9 @@ fun ProgressosDialog(
                 Text("XP neste estágio: $spentHere / $stageCap")
                 Spacer(Modifier.height(16.dp))
 
-                RadioButtonRow("Vantagem", escolheu == "Vantagem") {
-                    escolheu = "Vantagem"
+                RadioButtonRow("Comprar Vantagem", escolheu == "Comprar Vantagem") {
+                    escolheu = "Comprar Vantagem"
                 }
-                if (escolheu == "Vantagem") Spacer(Modifier.height(12.dp))
 
                 RadioButtonRow("Perícia ≥ Atributo", escolheu == "PericiaAlta") {
                     escolheu = "PericiaAlta"
@@ -485,13 +485,18 @@ fun ProgressosDialog(
             }
         },
         confirmButton = {
+            val context = LocalContext.current
             TextButton(
                 onClick = {
                     when (escolheu) {
-                        "Vantagem" -> {
-                            advSelectedStageIndex = selectedTab
-                            advPrevStageSpent = state.stageXpSpent.getValue(est.nome)
-                            showAdvSelection = true
+                        "Comprar Vantagem" -> {
+                            state.grantVantagemPointFromXp(est.nome)
+                            Toast.makeText(
+                                context,
+                                "Recebeu um PV, utilize para poder continuar a distribuir seu progresso.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            onDismiss()
                             return@TextButton
                         }
                         "PericiaAlta" -> {
