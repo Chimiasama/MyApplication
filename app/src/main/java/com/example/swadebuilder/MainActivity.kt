@@ -957,7 +957,6 @@ class CriadorState {
         }
     }
 
-    // --- NOVO MÉTODO: concede 1 ponto de vantagem vindo de XP ---
     fun grantVantagemPointFromXp(stageName: String) {
         check(progressosDisponiveis > 0) { "Sem XP disponível." }
 
