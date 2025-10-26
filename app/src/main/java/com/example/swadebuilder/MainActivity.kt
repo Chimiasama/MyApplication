@@ -942,6 +942,10 @@ class CriadorState {
     var overrideStageForVantagem by mutableStateOf<String?>(null) // estágio de origem do PV
     var openVantagensAfterGrant by mutableStateOf(false)     // sinal pra abrir tela de vantagens
 
+    // --- NOVO BLOCO: controle de compra de Perícias por XP ---
+    var spFromXpOutstanding by mutableIntStateOf(0)          // SPs pendentes vindos de XP
+    var openPericiasAfterGrant by mutableStateOf(false)      // sinal pra abrir tela de perícias
+
 
     fun comprarSuperPoder(nome: String, custo: Int) {
         // só compra se houver espaço e pontos disponíveis

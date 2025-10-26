@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import android.widget.Toast
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -158,22 +157,11 @@ fun InformacoesSection(
                 }
                 Spacer(Modifier.width(8.dp))
                 Button(
-                    onClick = {
-                        if (state.pvFromXpOutstanding > 0) {
-                            Toast.makeText(
-                                context,
-                                "Você ainda tem um Ponto de Vantagem pendente para gastar!",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            onUseProgress()
-                        }
-                    },
-                    enabled = canUseProg && state.pvFromXpOutstanding == 0
+                    onClick  = { if (state.pontosVantagem == 0) onUseProgress() },
+                    enabled  = canUseProg && state.pontosVantagem == 0
                 ) {
                     Text("Usar Progresso (${state.progressosDisponiveis})")
                 }
-
             }
 
             // 4) Desfazer tudo
