@@ -4335,7 +4335,7 @@ fun SuperPoderesDetailScreen(
             items = poderes,
             key = { it.nome }
         ) { poder ->
-            // Cada item tem seu próprio estado de expansão, fechado por padrão
+
             var expanded by rememberSaveable(poder.nome) { mutableStateOf(false) }
 
             Column(
