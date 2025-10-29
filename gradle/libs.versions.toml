@@ -27,6 +27,7 @@ navigationCommonAndroid = "2.9.5"
 navigationComposeAndroid = "2.9.5"
 uiTooling = "1.9.3"
 uiToolingPreview = "1.9.3"
+foundation = "1.9.4"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -74,3 +75,4 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 engage-core = { group = "com.google.android.engage", name = "engage-core", version.ref = "engageCore" }
 androidx-navigation-common-android = { group = "androidx.navigation", name = "navigation-common-android", version.ref = "navigationCommonAndroid" }
 androidx-navigation-compose-android = { group = "androidx.navigation", name = "navigation-compose-android", version.ref = "navigationComposeAndroid" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }

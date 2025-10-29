@@ -43,9 +43,11 @@ private val jsonRelaxed = Json { ignoreUnknownKeys = true }
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun AncestralidadesSection(
+    currentAncestralidade: String,
     onOpenListaAncestralidadesDetail: () -> Unit,
     onSelectAncestralidade: (String) -> Unit
-) {
+)
+ {
     val context = androidx.compose.ui.platform.LocalContext.current
 
     val ctx = androidx.compose.ui.platform.LocalContext.current
@@ -58,9 +60,11 @@ fun AncestralidadesSection(
     var expSection by rememberSaveable { mutableStateOf(false) }
     var expMenu    by rememberSaveable { mutableStateOf(false) }
     var showHelp   by rememberSaveable { mutableStateOf(false) }
-    var selected by rememberSaveable { mutableStateOf<String?>("HUMANOS") }
+     var selected by rememberSaveable(currentAncestralidade) {
+         mutableStateOf<String?>(currentAncestralidade.ifBlank { "HUMANOS" })
+     }
 
-    SectionCard(
+     SectionCard(
         title    = "Ancestralidades",
         expanded = expSection,
         onToggle = { expSection = !expSection },

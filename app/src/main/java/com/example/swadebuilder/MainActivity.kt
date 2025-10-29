@@ -24,6 +24,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -1888,16 +1889,13 @@ fun SectionCard(
 fun AncestralidadesDetailScreen(
     state: CriadorState,
     onBack: () -> Unit
-)
- {
+) {
     val context = LocalContext.current
-    val ancestralidadesTexto = remember {
-        loadRawText(context, R.raw.ancestralidades)
-    }
+    val ancestralidadesTexto = remember { loadRawText(context, R.raw.ancestralidades) }
+    val listaBlocos = remember { parseAncestralidades(ancestralidadesTexto) }
 
-    val listaBlocos = remember {
-        parseAncestralidades(ancestralidadesTexto)
-    }
+    // ► usa o estado global para saber a ancestralidade atual
+    val atual = remember(state.ancestralidade) { state.ancestralidade.trim().uppercase() }
 
     LazyColumn(
         modifier = Modifier
@@ -1925,17 +1923,19 @@ fun AncestralidadesDetailScreen(
         }
 
         items(listaBlocos) { bloco ->
+            val isTitulo = bloco.tipo == "titulo"
+            val titulo = if (isTitulo) bloco.conteudo.removeSuffix(":") else ""
+            val destacado = isTitulo && titulo.contains(atual, ignoreCase = true)
+
             Column(
                 Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
+                    .background(if (destacado) Color(0x11007AFF) else Color.Transparent)
             ) {
-                if (bloco.tipo == "titulo") {
-                    Text(
-                        text = bloco.conteudo.removeSuffix(":"),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    )
+                if (isTitulo) {
+                    val label = if (destacado) "$titulo (atual)" else titulo
+                    Text(label, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 } else {
                     Text(
                         text = bloco.conteudo,
@@ -1950,6 +1950,7 @@ fun AncestralidadesDetailScreen(
         }
     }
 }
+
 
 data class BlocoTexto(val tipo: String, val conteudo: String)
 
@@ -2352,13 +2353,14 @@ fun VantagensDetailScreen(
 ) {
     val context = LocalContext.current
 
+    // 1) Carrega TODAS as vantagens do asset
     val todasVantagens: List<Vantagem> = remember {
         val jsonString = context.assets.open("Vantagens.json")
             .bufferedReader()
             .use { it.readText() }
         val parser = Json {
-            ignoreUnknownKeys  = true   // ignora campos extras
-            explicitNulls      = false  // se JSON vier `"atributos": null`, trata como se o campo estivesse ausente
+            ignoreUnknownKeys  = true
+            explicitNulls      = false
         }
         parser.decodeFromString(
             ListSerializer(Vantagem.serializer()),
@@ -2366,10 +2368,13 @@ fun VantagensDetailScreen(
         )
     }
 
+    // 2) Filtro de grupo (mantém sua regra original)
     val listaFiltradaParaGrupo = remember(modoSupers, todasVantagens) {
         if (!modoSupers) {
+            // no “básico” mostramos todas; o filtro por origem BASICO acontece abaixo
             todasVantagens
         } else {
+            // no modo supers, remove entradas específicas do grupo (como AA e Poder)
             todasVantagens.filter { vant ->
                 vant.id != "antecedente_arcano" &&
                         !vant.requisitos.vantagensPrevias.contains("antecedente_arcano") &&
@@ -2378,6 +2383,7 @@ fun VantagensDetailScreen(
         }
     }
 
+    // 3) Constrói blocos de texto (categorias Normais = origem BASICO)
     val categoriasNormais: Map<String, List<String>> = remember(listaFiltradaParaGrupo) {
         listaFiltradaParaGrupo
             .filter { it.origem.equals("BASICO", ignoreCase = true) }
@@ -2390,14 +2396,12 @@ fun VantagensDetailScreen(
                         vant.requisitos.atributoMin.forEach { (atributo, minimo) ->
                             append("\n$atributo ≥ $minimo")
                         }
-                        vant.requisitos.periciaMin
-                            .forEach { (pericia, minimo) ->
-                                append("\n$pericia ≥ $minimo")
-                            }
-                        vant.requisitos.periciaMinOpcional
-                            .forEach { (pericia, valorMinimo) ->
-                                append("\n$pericia d$valorMinimo+")
-                            }
+                        vant.requisitos.periciaMin.forEach { (pericia, minimo) ->
+                            append("\n$pericia ≥ $minimo")
+                        }
+                        vant.requisitos.periciaMinOpcional.forEach { (pericia, valorMinimo) ->
+                            append("\n$pericia d$valorMinimo+")
+                        }
                         vant.requisitos.vantagensPrevias.forEach { req ->
                             append("\nPré‐requisito: $req")
                         }
@@ -2410,6 +2414,7 @@ fun VantagensDetailScreen(
             }
     }
 
+    // 4) Constrói blocos de texto (categorias Super — somente quando modoSupers)
     val categoriasSuper: Map<String, List<String>> = remember(modoSupers) {
         if (!modoSupers) {
             emptyMap()
@@ -2421,14 +2426,12 @@ fun VantagensDetailScreen(
                         buildString {
                             append(vant.nome)
                             append("\nEstágio: ${vant.requisitos.estagio}")
-                            vant.requisitos.periciaMin
-                                .forEach { (pericia, minimo) ->
-                                    append("\n$pericia ≥ $minimo")
-                                }
-                            vant.requisitos.periciaMinOpcional
-                                .forEach { (pericia, valorMinimo) ->
-                                    append("\n$pericia ≥ $valorMinimo")
-                                }
+                            vant.requisitos.periciaMin.forEach { (pericia, minimo) ->
+                                append("\n$pericia ≥ $minimo")
+                            }
+                            vant.requisitos.periciaMinOpcional.forEach { (pericia, valorMinimo) ->
+                                append("\n$pericia ≥ $valorMinimo")
+                            }
                             vant.requisitos.vantagensPrevias.forEach { req ->
                                 append("\nPré‐requisito: $req")
                             }
@@ -2442,6 +2445,7 @@ fun VantagensDetailScreen(
         }
     }
 
+    // 5) Merge de categorias, preservando seu formato (chave normalizada -> Pair(nomeExibicao, blocos))
     val todasCategorias: Map<String, Pair<String, List<String>>> = remember(
         categoriasNormais,
         categoriasSuper
@@ -2479,14 +2483,28 @@ fun VantagensDetailScreen(
         }
     }
 
+    // 6) ► MAPA título -> Vantagem para conseguirmos cruzar com o state
+    //     (o título é sempre a PRIMEIRA LINHA do bloco)
+    val tituloParaVant: Map<String, Vantagem> = remember(listaFiltradaParaGrupo, modoSupers) {
+        val base = mutableMapOf<String, Vantagem>()
+        // do grupo filtrado normal/super
+        listaFiltradaParaGrupo.forEach { base[it.nome] = it }
+        // adiciona também as super-detalhadas (se existirem) para bater o título
+        if (modoSupers) {
+            AppData.superVantagensParaDetalhe.forEach { base[it.nome] = it }
+        }
+        base
+    }
+
+    // 7) Estado visual de expansão por categoria + rolagem até destaque
     val expandedState = remember {
         mutableStateMapOf<String, Boolean>().apply {
             todasCategorias.keys.forEach { put(it, false) }
         }
     }
-
     val listState = rememberLazyListState()
-    LaunchedEffect(highlightedName) {
+
+    LaunchedEffect(highlightedName, todasCategorias) {
         if (highlightedName.isNotEmpty()) {
             val targetCat: String? = todasCategorias.entries.firstOrNull { (_, pair) ->
                 pair.second.any { bloco -> bloco.lines().first() == highlightedName }
@@ -2507,6 +2525,11 @@ fun VantagensDetailScreen(
                 listState.animateScrollToItem(idx)
             }
         }
+    }
+
+    // 8) ► Conjuntos para cruzar com o state (já possui / pode selecionar)
+    val nomesJaSelecionadas = remember(state.vantagensSelecionadas) {
+        state.vantagensSelecionadas.mapNotNull { it.nome }.toSet()
     }
 
     Scaffold(
@@ -2539,6 +2562,7 @@ fun VantagensDetailScreen(
                 val displayName = pair.first
                 val listaBlocos = pair.second
 
+                // Cabeçalho da categoria
                 item(key = "header-$cat") {
                     Row(
                         Modifier
@@ -2565,21 +2589,57 @@ fun VantagensDetailScreen(
                     }
                 }
 
+                // Itens da categoria
                 if (expandedState[cat] == true) {
                     listaBlocos.forEachIndexed { index, bloco ->
                         val linhas = bloco.lines()
                         val titulo = linhas.first()
 
+                        // ► “binding” com o state: já escolhida? requisitos ok?
+                        val vant = tituloParaVant[titulo]
+                        val jaTem = (titulo in nomesJaSelecionadas)
+                        val requisitosOk = vant?.let { state.podeSelecionar(it) } ?: true
+
                         item(key = "$cat-$titulo-$index") {
                             Column(
-                                Modifier.padding(start = 24.dp, bottom = 16.dp)
+                                Modifier
+                                    .padding(start = 24.dp, bottom = 16.dp)
+                                    .background(
+                                        when {
+                                            jaTem -> Color(0x11007AFF)     // já possui → leve destaque
+                                            requisitosOk -> Color.Transparent // pode pegar
+                                            else -> Color(0x11FF0000)       // pendente → leve vermelho
+                                        }
+                                    )
+                                    .padding(start = 4.dp, top = 8.dp, end = 4.dp, bottom = 8.dp)
                             ) {
-                                Text(
-                                    text = titulo,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 18.sp
-                                )
+                                // Linha de título + status
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = titulo,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 18.sp,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    // Selo de status à direita
+                                    val status = when {
+                                        jaTem -> "já selecionada"
+                                        requisitosOk -> "requisitos OK"
+                                        else -> "requisitos pendentes"
+                                    }
+                                    Text(
+                                        status,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = when {
+                                            jaTem -> Color(0xFF0047BA)
+                                            requisitosOk -> Color(0xFF2E7D32)
+                                            else -> Color(0xFFB00020)
+                                        }
+                                    )
+                                }
+
                                 Spacer(Modifier.height(4.dp))
+
                                 if (linhas.size > 1) {
                                     Text(
                                         text = linhas.drop(1).joinToString("\n"),
@@ -2587,6 +2647,7 @@ fun VantagensDetailScreen(
                                         fontSize = 14.sp
                                     )
                                 }
+
                                 Spacer(Modifier.height(12.dp))
                                 HorizontalDivider(color = Color.Gray, thickness = 1.dp)
                             }
@@ -2597,6 +2658,7 @@ fun VantagensDetailScreen(
         }
     }
 }
+
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Preview(showBackground = true)
@@ -2697,13 +2759,12 @@ fun UnifiedScreen(
 
         // ─── Ancestralidades ──────────────────────────────────────────────────────
         AncestralidadesSection(
+            currentAncestralidade = state.ancestralidade,
             onOpenListaAncestralidadesDetail = onOpenListaAncestralidadesDetail,
             onSelectAncestralidade = { nome ->
                 state.aplicarAncestralidade(nome.uppercase().semAcentos())
             }
         )
-
-
 
         HorizontalDivider(thickness = 1.dp)
 
@@ -2858,30 +2919,25 @@ fun ComplicacoesDetailScreen(
     state: CriadorState,
     onBack: () -> Unit,
     mostrarSuper: Boolean
-)
- {
+) {
     val context = LocalContext.current
 
-    // 1) Lê todas as complicações do JSON em assets/complicacoes.json
+    // Lê todas as complicações do JSON em assets/complicacoes.json
     val listaTodas = remember {
-        // Lê o arquivo JSON e converte em List<Complicacao>
         val jsonString = context.assets.open("complicacoes.json")
             .bufferedReader()
             .use { it.readText() }
-        val parser = Json {
-            ignoreUnknownKeys  = true   // ignora campos extras
-            explicitNulls      = false  // se JSON vier `"atributos": null`, trata como se o campo estivesse ausente
-        }
+        val parser = Json { ignoreUnknownKeys = true; explicitNulls = false }
         parser.decodeFromString(ListSerializer(Complicacao.serializer()), jsonString)
     }
 
+    // Aplica o filtro "Super" conforme o modo selecionado na tela inicial
     val listaFiltrada = remember(mostrarSuper, listaTodas) {
-        if (mostrarSuper) {
-            listaTodas
-            } else {
-            listaTodas.filter { it.origem.equals("SUPER", ignoreCase = true).not() }
-            }
-        }
+        if (mostrarSuper) listaTodas else listaTodas.filter { !it.origem.equals("SUPER", true) }
+    }
+
+    // ► usa o estado global para saber o que já foi escolhido
+    val jaEscolhidas = state.complicacoesSelecionadas
 
     LazyColumn(
         modifier = Modifier
@@ -2909,41 +2965,51 @@ fun ComplicacoesDetailScreen(
         }
 
         items(listaFiltrada) { comp ->
+            val tipoSel = jaEscolhidas[comp] // "Menor", "Maior" ou null
+            val marcado = tipoSel != null
+            val sevRaw = comp.severity.trim()
+            val gravidade = when (sevRaw.lowercase()) {
+                "both"  -> "Menor/Maior"
+                "menor" -> "Menor"
+                "maior" -> "Maior"
+                else    -> sevRaw.ifBlank { "-" }
+            }
+
             Column(
                 Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
+                    .background(if (marcado) Color(0x11007AFF) else Color.Transparent)
             ) {
-                // 1ª linha: nome (comp.name) + gravidade entre parênteses
-                val sevRaw = comp.severity.lowercase()
-                val gravidadeExibida = when {
-                    sevRaw.contains("menor") && sevRaw.contains("maior") -> "Menor / Maior"
-                    sevRaw.contains("menor")                              -> "Menor"
-                    sevRaw.contains("maior")                              -> "Maior"
-                    else                                                  -> ""
-                }
+                // Linha do título
                 Text(
-                    text = "${comp.name} ${if (gravidadeExibida.isNotEmpty()) "($gravidadeExibida)" else ""}",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
+                    buildString {
+                        append(comp.name)
+                        append(" (")
+                        append(gravidade)
+                        append(")")
+                        if (marcado) append(" — já escolhida: $tipoSel")
+                    },
+                    fontWeight = FontWeight.SemiBold
                 )
-                Spacer(modifier = Modifier.height(4.dp))
 
-                // 2ª linha: usar comp.description (não comp.descricao)
+                // Descrição (se existir)
                 if (comp.description.isNotBlank()) {
+                    Spacer(Modifier.height(4.dp))
                     Text(
-                        text = comp.description,                 // mudou de comp.descricao para comp.description
+                        text = comp.description,
                         style = MaterialTheme.typography.bodyMedium,
                         fontSize = 14.sp
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
                 }
 
+                Spacer(Modifier.height(8.dp))
                 HorizontalDivider()
             }
         }
     }
 }
+
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
