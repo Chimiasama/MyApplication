@@ -148,6 +148,7 @@ import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.util.UUID
 import kotlin.math.roundToInt
+import com.example.swadebuilder.model.loadJsonAsset as loadPoderesAsset
 
 
 @Serializable
@@ -167,8 +168,9 @@ private val json = Json {
 }
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    @OptIn(ExperimentalMaterial3Api::class)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -538,7 +540,6 @@ class MainActivity : ComponentActivity() {
                                                 onOpenListaAncestralidadesDetail = { showAncestralidadesDetail = true },
                                                 onOpenListaCompletaEquipamento = { showEquipLista = true },
                                                 onOpenPoderesDetail = { showPoderesDetail = true },
-                                                onOpenSuperDetail = { showSuperDetail = true },
                                                 onHelpSuperClick = { },
 
                                                 expAttrs = expAttrs,
@@ -2003,7 +2004,6 @@ private fun ProgressRow(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun ProgressosSection(state: CriadorState) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
@@ -2529,7 +2529,7 @@ fun VantagensDetailScreen(
 
     // 8) ► Conjuntos para cruzar com o state (já possui / pode selecionar)
     val nomesJaSelecionadas = remember(state.vantagensSelecionadas) {
-        state.vantagensSelecionadas.mapNotNull { it.nome }.toSet()
+        state.vantagensSelecionadas.map { it.nome }.toSet()
     }
 
     Scaffold(
@@ -2673,8 +2673,7 @@ fun PreviewApp() {
         onOpenAtributosDetail = {},
         onOpenListaAncestralidadesDetail = {},
         onOpenListaCompletaEquipamento = {},
-        onOpenPoderesDetail = {},
-        onOpenSuperDetail = {},
+        onOpenPoderesDetail = {},   // único callback para “Lista Completa” de Poderes/Supers
         onHelpSuperClick = {},
 
         expAttrs = true,
@@ -2696,8 +2695,7 @@ fun PreviewApp() {
 
         superequipCategorias = emptyList(),
         listaSuperPoderes = emptyList()
-
-        )
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -2711,8 +2709,7 @@ fun UnifiedScreen(
     onOpenAtributosDetail: () -> Unit,
     onOpenListaAncestralidadesDetail: () -> Unit,
     onOpenListaCompletaEquipamento: () -> Unit,
-    onOpenPoderesDetail: () -> Unit,
-    onOpenSuperDetail: () -> Unit,
+    onOpenPoderesDetail: () -> Unit,   // unificado (Poderes/Supers)
     onHelpSuperClick: () -> Unit,
 
     expAttrs: Boolean,
@@ -2838,7 +2835,7 @@ fun UnifiedScreen(
                 listaSuperPoderes = listaSuperPoderes,
                 expanded          = expSupers,
                 onToggle          = { expSupers = !expSupers },
-                onOpenSuperDetail = onOpenSuperDetail,
+                onOpenPoderesDetail  = onOpenPoderesDetail,
                 onHelpClick       = onHelpSuperClick
                         )
             Spacer(Modifier.height(8.dp))
@@ -3011,16 +3008,14 @@ fun ComplicacoesDetailScreen(
 }
 
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun PericiasDetailScreen(
     state: CriadorState,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
-    val periciasData by remember {
-        mutableStateOf(context.loadJsonAsset<PericiaList>("pericias.json"))
-    }
+
+    // Mapa de descrições já existente (R.raw.pericias)
     val descricoes by remember {
         mutableStateOf(loadPericiasDescriptions(context, R.raw.pericias))
     }
@@ -3031,7 +3026,7 @@ fun PericiasDetailScreen(
             .padding(16.dp)
     ) {
         stickyHeader {
-            Surface(color = Color.Transparent   ) {
+            Surface(color = Color.Transparent) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -3049,39 +3044,102 @@ fun PericiasDetailScreen(
             }
         }
 
-        items(periciasData.pericias) { pj ->
-            val rawName = pj.nome.removePrefix("*").trim()
-            val rawKey = "$rawName (${pj.atributo})"
-            val key = rawKey
-                .uppercase()
-                .semAcentos()
-
+        // ► Usa a lista oficial (Pericia), que conversa com o CriadorState
+        items(listaPericias) { per ->
+            // Chave p/ descrição
+            val rawName = per.nome.removePrefix("*").trim()
+            val key = "$rawName (${per.atributo})".uppercase().semAcentos()
             val desc = descricoes[key] ?: "Descrição indisponível."
+
+            // ► Estes dados vêm do state (uso REAL do state)
+            val currentRaw = state.rawTotal(per)                        // d0/d4/d6...
+            val attrKey    = state.atributoBaseParaPericia(per)
+            val atrRaw     = state.valoresAtributos[attrKey]!!.intValue
+            val capRaw     = state.periciaCapRaw(per)
+
+            val nextRaw    = if (currentRaw == 0 && per.basica) 4 else currentRaw + 2
+            val costNormal = if (nextRaw <= atrRaw) 1 else 2           // 1 até atributo, 2 acima
+
+            // Mínimos por vantagens (inclui opcionais)
+            val minimoBasico  = state.minPericiaPorVantagem[per] ?: 0
+            val minimoOpcional = state.vantagensSelecionadas
+                .flatMap { vant ->
+                    vant.requisitos.periciaMinOpcional
+                        .filterKeys { it.equals(per.nome, ignoreCase = true) }
+                        .values
+                }
+                .maxOrNull() ?: 0
+            val minimoTotal = maxOf(minimoBasico, minimoOpcional)
+            val needsMin    = (minimoTotal > 0 && currentRaw in 1 until minimoTotal)
+
+            // Pode aumentar agora (respeitando SP disponíveis, cap, etc.)
+            val podeAumentar = state.pontosPericia >= costNormal && nextRaw <= capRaw
+
+            // Status amigável
+            val status = buildString {
+                append(
+                    when {
+                        currentRaw == 0 && per.basica -> "Atual: d4 (básica)"
+                        currentRaw == 0              -> "Atual: —"
+                        else                         -> "Atual: d${currentRaw}"
+                    }
+                )
+                append(" • Próximo: ")
+                append(if (nextRaw > capRaw) "— (teto)" else if (currentRaw == 0 && !per.basica) "d4" else "d$nextRaw")
+                append(" • Custo: ")
+                append(if (nextRaw > capRaw) "—" else "$costNormal SP")
+                append(" • Cap: d$capRaw")
+                if (minimoTotal > 0) {
+                    append(" • Mín.: d$minimoTotal")
+                    if (needsMin) append(" (abaixo)")
+                }
+            }
+
+            // Destaque visual
+            val bg = when {
+                needsMin -> Color(0x11FF0000)         // vermelho claro
+                currentRaw > 0 || per.basica -> Color(0x11007AFF) // azul claro
+                else -> Color.Transparent
+            }
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 12.dp)
+                    .background(bg)
+                    .padding(horizontal = 8.dp, vertical = 6.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (pj.basica) {
+                    if (per.basica) {
                         Text("✯", color = MaterialTheme.colorScheme.error, fontSize = 20.sp)
                         Spacer(Modifier.width(8.dp))
                     }
                     Text(
-                        text = "${pj.nome} (${pj.atributo})",
+                        text = "${per.nome} (${per.atributo})",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        when {
+                            needsMin -> "abaixo do mínimo"
+                            podeAumentar -> "pode aumentar"
+                            else -> ""
+                        },
+                        style = MaterialTheme.typography.labelSmall,
+                        color = when {
+                            needsMin -> Color(0xFFB00020)
+                            podeAumentar -> Color(0xFF2E7D32)
+                            else -> MaterialTheme.colorScheme.onSurfaceVariant
+                        }
                     )
                 }
 
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(6.dp))
+                Text(status, style = MaterialTheme.typography.labelMedium)
 
-                Text(
-                    text = desc,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 14.sp
-                )
+                Spacer(Modifier.height(8.dp))
+                Text(desc, style = MaterialTheme.typography.bodyMedium, fontSize = 14.sp)
 
                 Spacer(Modifier.height(8.dp))
                 HorizontalDivider()
@@ -3089,6 +3147,7 @@ fun PericiasDetailScreen(
         }
     }
 }
+
 
 @Composable
 fun SummaryContent(state: CriadorState) {
@@ -4197,7 +4256,7 @@ fun SuperPoderesContent(
     listaSuperPoderes: List<SuperPoder>,
     expanded: Boolean,
     onToggle: () -> Unit,
-    onOpenSuperDetail: () -> Unit,
+    onOpenPoderesDetail: () -> Unit,   // <- usa o mesmo callback da lista completa de poderes
     onHelpClick: () -> Unit
 ) {
     SectionCard(
@@ -4212,7 +4271,7 @@ fun SuperPoderesContent(
             onHelpClick          = onHelpClick,
             centerText           = "Pontos de Super: ${state.superPontosDisponiveis}",
             onCenterClick        = onToggle,
-            onListaCompletaClick = if (showLista) onOpenSuperDetail else null,
+            onListaCompletaClick = if (showLista) onOpenPoderesDetail else null,
             listaCompletaText    = "Lista Completa"
         )
 
@@ -4224,142 +4283,250 @@ fun SuperPoderesContent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-fun PoderesDetail(onBack: () -> Unit) {
+fun PoderesDetailScreen(
+    state: CriadorState,
+    onBack: () -> Unit
+) {
     val context = LocalContext.current
 
-    // “Força” o carregamento dos poderes, mas sem chamar LocalContext.current dentro do remember
-    val allPoderes: List<Poder> = remember(context) {
-        context.loadJsonAsset("poderes.json")
+    // Se tiver Antecedente Arcano selecionado, SEMPRE mostra magias (poderes.json)
+    // mesmo que o modo supers esteja ativo.
+    val hasAntecedenteArcano = remember(state.vantagensSelecionadas) {
+        state.vantagensSelecionadas.any { it.id == "antecedente_arcano" }
+    }
+    val showSupers = remember(state.modoSupers, hasAntecedenteArcano) {
+        state.modoSupers && !hasAntecedenteArcano
     }
 
-    // Como no VantagensDetail, usamos um Surface branco-amarelado e textos escuros.
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = Color.Transparent // para não herdar fundo escuro do tema geral
+        color = Color.Transparent
     ) {
         Column {
             TopAppBar(
-                title = { Text("Lista Completa de Poderes") },
+                title = {
+                    Text(
+                        if (showSupers) "Lista Completa de Superpoderes"
+                        else "Lista Completa de Poderes"
+                    )
+                },
                 navigationIcon = {
                     TextButton(onClick = onBack) {
                         Text(
                             "Voltar",
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
-                            color = Color(0xFF050402) // texto “preto” fixo
+                            color = Color(0xFF050402)
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF2E3C6) // pergaminho (sempre claro)
+                    containerColor = Color(0xFFF2E3C6)
                 )
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(Modifier.height(8.dp))
 
-            // A lista em si — observe que não existe uso de Modifier.background(MaterialTheme...)
-            // por aqui, então o fundo continua sendo transparente, “revelando” o pergaminho lá de cima.
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(allPoderes) { poder ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                    ) {
-                        // 1) Nome do poder (texto em cor escura fixa)
-                        Text(
-                            text = "• ${poder.nome}",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = Color(0xFF050402) // texto escuro
-                        )
+            if (!showSupers) {
+                // ---------- MAGIAS (Antecedente Arcano) ----------
+                val allPoderes: List<Poder> = remember {
+                    context.loadPoderesAsset<List<Poder>>("poderes.json")
+                }
 
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        // 2) Estágio
-                        Text(
-                            text = "Estágio: ${poder.estagio}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color(0xFF050402)
-                        )
-
-                        Spacer(modifier = Modifier.height(2.dp))
-
-                        // 3) Pontos de Poder
-                        Text(
-                            text = "Pontos de Poder: ${poder.pontosDePoder}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color(0xFF050402)
-                        )
-
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        // 4) Manifestações (se houver)
-                        if (poder.manifestacoes.isNotEmpty()) {
+                LazyColumn(Modifier.fillMaxSize()) {
+                    items(allPoderes, key = { it.id }) { poder ->
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
                             Text(
-                                text = "Manifestações:",
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.Bold,
+                                text = "• ${poder.nome}",
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 18.sp,
                                 color = Color(0xFF050402)
                             )
-                            poder.manifestacoes.forEach { man ->
+
+                            Spacer(Modifier.height(4.dp))
+
+                            Text(
+                                text = "Estágio: ${poder.estagio}",
+                                fontSize = 14.sp,
+                                color = Color(0xFF050402)
+                            )
+
+                            Spacer(Modifier.height(2.dp))
+
+                            Text(
+                                text = "Pontos de Poder: ${poder.pontosDePoder}",
+                                fontSize = 14.sp,
+                                color = Color(0xFF050402)
+                            )
+
+                            Spacer(Modifier.height(4.dp))
+
+                            if (poder.manifestacoes.isNotEmpty()) {
                                 Text(
-                                    text = "- $man",
-                                    style = MaterialTheme.typography.bodySmall,
+                                    text = "Manifestações:",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
                                     color = Color(0xFF050402)
                                 )
-                            }
-                            Spacer(modifier = Modifier.height(4.dp))
-                        }
-
-                        // 5) Descrição (se houver)
-                        if (poder.descricao.isNotBlank()) {
-                            Text(
-                                text = "Descrição:",
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF050402)
-                            )
-                            Text(
-                                text = poder.descricao,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color(0xFF050402)
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                        }
-
-                        // 6) Modificadores (se houver)
-                        if (poder.modificadores.isNotEmpty()) {
-                            Text(
-                                text = "Modificadores:",
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF050402)
-                            )
-                            poder.modificadores.forEach { mod ->
-                                Text(
-                                    text = "- ${mod.nome} (Custo: ${mod.custo})",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = Color(0xFF050402)
-                                )
-                                if (mod.descricao.isNotBlank()) {
+                                poder.manifestacoes.forEach { man ->
                                     Text(
-                                        text = "  ${mod.descricao}",
-                                        style = MaterialTheme.typography.bodySmall,
+                                        text = "- $man",
+                                        fontSize = 14.sp,
                                         color = Color(0xFF050402)
                                     )
                                 }
+                                Spacer(Modifier.height(4.dp))
                             }
-                            Spacer(modifier = Modifier.height(8.dp))
-                        }
 
-                        // Linha separadora exatamente como no VantagensDetail
-                        HorizontalDivider(
-                            thickness = 1.dp,
-                            color = Color(0xFF050402).copy(alpha = 0.2f)
-                        )
+                            if (poder.descricao.isNotBlank()) {
+                                Text(
+                                    text = "Descrição:",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
+                                    color = Color(0xFF050402)
+                                )
+                                Text(
+                                    text = poder.descricao,
+                                    fontSize = 14.sp,
+                                    color = Color(0xFF050402)
+                                )
+                                Spacer(Modifier.height(4.dp))
+                            }
+
+                            if (poder.modificadores.isNotEmpty()) {
+                                Text(
+                                    text = "Modificadores:",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
+                                    color = Color(0xFF050402)
+                                )
+                                poder.modificadores.forEach { mod ->
+                                    Text(
+                                        text = "- ${mod.nome} (Custo: ${mod.custo})",
+                                        fontSize = 14.sp,
+                                        color = Color(0xFF050402)
+                                    )
+                                    if (mod.descricao.isNotBlank()) {
+                                        Text(
+                                            text = "  ${mod.descricao}",
+                                            fontSize = 14.sp,
+                                            color = Color(0xFF050402)
+                                        )
+                                    }
+                                }
+                                Spacer(Modifier.height(8.dp))
+                            }
+
+                            HorizontalDivider(
+                                thickness = 1.dp,
+                                color = Color(0xFF050402).copy(alpha = 0.2f)
+                            )
+                        }
+                    }
+                }
+            } else {
+                // ---------- SUPERPODERES ----------
+                val superPoderes: List<SuperPoder> = remember {
+                    context.loadJsonAsset("superpoderes.json")
+                }
+
+                LazyColumn(Modifier.fillMaxSize()) {
+                    items(superPoderes, key = { it.nome }) { poder ->
+                        var expanded by rememberSaveable(poder.nome) { mutableStateOf(false) }
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp, horizontal = 16.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { expanded = !expanded },
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = poder.nome,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 18.sp
+                                )
+                                Spacer(Modifier.weight(1f))
+                                Icon(
+                                    imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                                    contentDescription = null
+                                )
+                            }
+
+                            AnimatedVisibility(visible = expanded) {
+                                Column(modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)) {
+                                    poder.custoBase?.let { custo ->
+                                        Text(
+                                            text = "Custo Base: $custo",
+                                            fontWeight = FontWeight.SemiBold,
+                                            fontSize = 14.sp
+                                        )
+                                        Spacer(Modifier.height(4.dp))
+                                    }
+
+                                    val listaManifestacoes: List<String> =
+                                        poder.manifestacoes.toStringList()
+                                    if (listaManifestacoes.isNotEmpty()) {
+                                        Text(
+                                            text = "Manifestações:",
+                                            fontWeight = FontWeight.SemiBold,
+                                            fontSize = 14.sp
+                                        )
+                                        listaManifestacoes.forEach { man ->
+                                            Text(
+                                                text = "- $man",
+                                                fontSize = 14.sp,
+                                                modifier = Modifier.padding(start = 8.dp)
+                                            )
+                                        }
+                                        Spacer(Modifier.height(4.dp))
+                                    }
+
+                                    poder.descricao?.let { desc ->
+                                        Text(
+                                            text = "Descrição:",
+                                            fontWeight = FontWeight.SemiBold,
+                                            fontSize = 14.sp
+                                        )
+                                        Text(
+                                            text = desc,
+                                            fontSize = 14.sp,
+                                            modifier = Modifier.padding(start = 8.dp, top = 2.dp)
+                                        )
+                                        Spacer(Modifier.height(4.dp))
+                                    }
+
+                                    if (!poder.modificadores.isNullOrEmpty()) {
+                                        Text(
+                                            text = "Modificadores:",
+                                            fontWeight = FontWeight.SemiBold,
+                                            fontSize = 14.sp
+                                        )
+                                        poder.modificadores.forEach { mod ->
+                                            Text(
+                                                text = "- $mod",
+                                                fontSize = 14.sp,
+                                                modifier = Modifier.padding(start = 8.dp)
+                                            )
+                                        }
+                                        Spacer(Modifier.height(4.dp))
+                                    }
+                                }
+                            }
+
+                            HorizontalDivider()
+                        }
                     }
                 }
             }
@@ -4367,142 +4534,3 @@ fun PoderesDetail(onBack: () -> Unit) {
     }
 }
 
-@Composable
-fun PoderesDetailScreen(
-    state: CriadorState,
-    onBack: () -> Unit
-) {
-    // Carrega o JSON de assets/superpoderes.json
-    val context = LocalContext.current
-    val superPoderesJson = remember {
-        context.assets.open("superpoderes.json")
-            .bufferedReader()
-            .use { it.readText() }
-    }
-    // Converte o JSON em lista de SuperPoderes, lembrando o resultado
-    val poderes: List<SuperPoder> = remember(superPoderesJson) {
-        json.decodeFromString(superPoderesJson)
-    }
-
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        // Cabeçalho fixo "Voltar"
-        stickyHeader {
-            Surface(color = Color.Transparent) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onBack() }
-                        .padding(vertical = 12.dp, horizontal = 16.dp)
-                ) {
-                    Text(
-                        text = "Voltar",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    )
-                }
-                HorizontalDivider()
-            }
-        }
-
-        items(
-            items = poderes,
-            key = { it.nome }
-        ) { poder ->
-
-            var expanded by rememberSaveable(poder.nome) { mutableStateOf(false) }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 16.dp)
-            ) {
-                // ── 1) Cabeçalho: exibe o NOME e o ícone de expandir/fechar
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { expanded = !expanded },
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = poder.nome,                    // Nome do superpoder
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    )
-                    Spacer(Modifier.weight(1f))
-                    Icon(
-                        imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                        contentDescription = null
-                    )
-                }
-
-                // ── 2) Detalhes (visíveis apenas quando expanded == true), na ordem solicitada
-                AnimatedVisibility(visible = expanded) {
-                    Column(modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)) {
-                        // 2.1) Custo Base
-                        poder.custoBase?.let { custo ->
-                            Text(
-                                text = "Custo Base: $custo",
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 14.sp
-                            )
-                            Spacer(Modifier.height(4.dp))
-                        }
-
-                        // 2.2) Manifestações
-                        val listaManifestacoes: List<String> = poder.manifestacoes.toStringList()
-                        if (listaManifestacoes.isNotEmpty()) {
-                            Text(
-                                text = "Manifestações:",
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 14.sp
-                            )
-                            listaManifestacoes.forEach { man ->
-                                Text(
-                                    text = "- $man",
-                                    fontSize = 14.sp,
-                                    modifier = Modifier.padding(start = 8.dp)
-                                )
-                            }
-                            Spacer(Modifier.height(4.dp))
-                        }
-
-                        // 2.3) Descrição
-                        poder.descricao?.let { desc ->
-                            Text(
-                                text = "Descrição:",
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 14.sp
-                            )
-                            Text(
-                                text = desc,
-                                fontSize = 14.sp,
-                                modifier = Modifier.padding(start = 8.dp, top = 2.dp)
-                            )
-                            Spacer(Modifier.height(4.dp))
-                        }
-
-                        // 2.4) Modificadores
-                        if (!poder.modificadores.isNullOrEmpty()) {
-                            Text(
-                                text = "Modificadores:",
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 14.sp
-                            )
-                            poder.modificadores.forEach { mod ->
-                                Text(
-                                    text = "- $mod",
-                                    fontSize = 14.sp,
-                                    modifier = Modifier.padding(start = 8.dp)
-                                )
-                            }
-                            Spacer(Modifier.height(4.dp))
-                        }
-                    }
-                }
-
-                HorizontalDivider()
-            }
-        }
-    }
-}
