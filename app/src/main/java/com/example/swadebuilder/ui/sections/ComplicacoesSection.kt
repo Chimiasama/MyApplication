@@ -84,6 +84,14 @@ fun ComplicacoesSection(
 
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
+    // ░░░ CORREÇÃO: filtra a lista conforme o modo Super Complicações ░░░
+    // - Se modoSuperComplicacoes = true  → mostra todas
+    // - Se modoSuperComplicacoes = false → mostra apenas origem BASICO
+    val complicacoesFiltradas = if (state.modoSuperComplicacoes) {
+        listaComplicacoes
+    } else {
+        listaComplicacoes.filter { it.origem.equals("BASICO", ignoreCase = true) }
+    }
 
     SectionCard(
         title    = "Complicações",
@@ -101,7 +109,6 @@ fun ComplicacoesSection(
             // Se o seu SectionHeader aceita este parâmetro, mantenha; senão remova a linha:
             listaCompletaText    = "Lista Completa"
         )
-
 
         Spacer(Modifier.height(8.dp))
 
@@ -387,7 +394,8 @@ fun ComplicacoesSection(
                                             state.syncFromCPRefund(sp = true)
                                         }
                                         "jovem" -> {
-                                            val pequComp = listaComplicacoes.first { it.id == "pequeno" }
+                                            // usa a lista filtrada (BASICO quando não for modo super)
+                                            val pequComp = complicacoesFiltradas.first { it.id == "pequeno" }
                                             state.removeYoung(pequComp)
                                             state.complicacoesSelecionadas.remove(comp)
                                             state.applyYoungMinor()
@@ -437,10 +445,11 @@ fun ComplicacoesSection(
                     onDismissRequest = { expCompMenu = false },
                     modifier         = Modifier.heightIn(max = 300.dp)
                 ) {
-                    val pequComp = listaComplicacoes.first { it.id == "pequeno" }
+                    // usa a lista filtrada para achar "pequeno"
+                    val pequComp = complicacoesFiltradas.first { it.id == "pequeno" }
 
                     // Filtra para remover automáticas e só traz “SUPER” se ativo
-                    listaComplicacoes
+                    complicacoesFiltradas
                         .filter { comp ->
                             comp.id.keyify() !in autoBaseKeys &&
                                     (state.modoSuperComplicacoes || !comp.origem.equals("SUPER", ignoreCase = true))

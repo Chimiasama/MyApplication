@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import com.example.swadebuilder.CriadorState
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,8 +38,10 @@ import kotlinx.serialization.json.Json
 
 @Composable
 fun PoderesDetailScreen(
+    state: CriadorState,
     onBack: () -> Unit
-) {
+)
+ {
     val context = LocalContext.current
 
     // 1) Criamos UMA ÚNICA instância de Json com ignoreUnknownKeys = true

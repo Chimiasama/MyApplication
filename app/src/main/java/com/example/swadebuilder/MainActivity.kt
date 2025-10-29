@@ -498,22 +498,33 @@ class MainActivity : ComponentActivity() {
                                             )
                                             2 -> AtributosDetailScreen(onBack = { showAtributosDetail = false })
                                             3 -> VantagensDetailScreen(
+                                                state = state,
                                                 modoSupers = state.modoSupers,
-                                                highlightedName       = highlightedVantagem,
-                                                onBack                = { showVantagensDetail = false }
+                                                highlightedName = highlightedVantagem,
+                                                onBack = { showVantagensDetail = false }
                                             )
-                                            4 -> PericiasDetailScreen(onBack = { showPericiasDetail = false })
+                                            4 -> PericiasDetailScreen(
+                                                state = state,
+                                                onBack = { showPericiasDetail = false }
+                                            )
                                             5 -> ComplicacoesDetailScreen(
+                                                state = state,
                                                 onBack = { showComplicacoesDetail = false },
                                                 mostrarSuper = state.modoSuperComplicacoes
                                             )
-                                            6 -> AncestralidadesDetailScreen(onBack = { showAncestralidadesDetail = false })
-
-                                            7 -> PoderesDetail(onBack = { showPoderesDetail = false })
-
-                                            8 -> SuperPoderesDetailScreen(
-                                                onBack            = { showSuperDetail = false }
+                                            6 -> AncestralidadesDetailScreen(
+                                                state = state,
+                                                onBack = { showAncestralidadesDetail = false }
                                             )
+                                            7 -> PoderesDetailScreen(
+                                                state = state,
+                                                onBack = { showPoderesDetail = false }
+                                            )
+                                            8 -> PoderesDetailScreen(
+                                                state = state,
+                                                onBack = { showSuperDetail = false }
+                                            )
+
                                             else -> UnifiedScreen(
                                                 state = state,
                                                 onOpenVantagensDetail = { nomeVantagem ->
@@ -942,10 +953,6 @@ class CriadorState {
     var overrideStageForVantagem by mutableStateOf<String?>(null) // estágio de origem do PV
     var openVantagensAfterGrant by mutableStateOf(false)     // sinal pra abrir tela de vantagens
 
-    // --- NOVO BLOCO: controle de compra de Perícias por XP ---
-    var spFromXpOutstanding by mutableIntStateOf(0)          // SPs pendentes vindos de XP
-    var openPericiasAfterGrant by mutableStateOf(false)      // sinal pra abrir tela de perícias
-
 
     fun comprarSuperPoder(nome: String, custo: Int) {
         // só compra se houver espaço e pontos disponíveis
@@ -1227,20 +1234,6 @@ class CriadorState {
         // usamos o minProgress do estágio travado para satisfazer checagens de “estágio mínimo”
         return st?.minProgress ?: progresso
     }
-
-    fun resolveVantagemPointFromXp(spent: Boolean) {
-        if (!spent) {
-            // estorna tudo se não gastou
-            overrideStageForVantagem?.let { st ->
-                stageXpSpent[st] = stageXpSpent.getValue(st) - 1
-                progressosDisponiveis += 1
-                pontosVantagem -= 1
-            }
-        }
-        pvFromXpOutstanding = (pvFromXpOutstanding - 1).coerceAtLeast(0)
-        if (pvFromXpOutstanding == 0) overrideStageForVantagem = null
-    }
-
 
     private fun currentProgressStageIndex(): Int {
         val caps = listaDeEstagios.mapIndexed { idx, st ->
@@ -1892,7 +1885,11 @@ fun SectionCard(
 }
 
 @Composable
-fun AncestralidadesDetailScreen(onBack: () -> Unit) {
+fun AncestralidadesDetailScreen(
+    state: CriadorState,
+    onBack: () -> Unit
+)
+ {
     val context = LocalContext.current
     val ancestralidadesTexto = remember {
         loadRawText(context, R.raw.ancestralidades)
@@ -2348,6 +2345,7 @@ fun AncestralidadesContent(state: CriadorState) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VantagensDetailScreen(
+    state: CriadorState,
     modoSupers: Boolean,
     highlightedName: String,
     onBack: () -> Unit
@@ -2857,9 +2855,11 @@ fun RadioButtonRow(
 
 @Composable
 fun ComplicacoesDetailScreen(
+    state: CriadorState,
     onBack: () -> Unit,
     mostrarSuper: Boolean
-) {
+)
+ {
     val context = LocalContext.current
 
     // 1) Lê todas as complicações do JSON em assets/complicacoes.json
@@ -2947,7 +2947,10 @@ fun ComplicacoesDetailScreen(
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-fun PericiasDetailScreen(onBack: () -> Unit) {
+fun PericiasDetailScreen(
+    state: CriadorState,
+    onBack: () -> Unit
+) {
     val context = LocalContext.current
     val periciasData by remember {
         mutableStateOf(context.loadJsonAsset<PericiaList>("pericias.json"))
@@ -4299,7 +4302,8 @@ fun PoderesDetail(onBack: () -> Unit) {
 }
 
 @Composable
-fun SuperPoderesDetailScreen(
+fun PoderesDetailScreen(
+    state: CriadorState,
     onBack: () -> Unit
 ) {
     // Carrega o JSON de assets/superpoderes.json
