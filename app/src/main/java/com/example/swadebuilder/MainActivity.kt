@@ -3078,10 +3078,10 @@ fun PericiasDetailScreen(
             // Status amigável
             val status = buildString {
                 append(
-                    when {
-                        currentRaw == 0 && per.basica -> "Atual: d4 (básica)"
-                        currentRaw == 0              -> "Atual: —"
-                        else                         -> "Atual: d${currentRaw}"
+                    when (currentRaw) {
+                        0 if per.basica -> "Atual: d4 (básica)"
+                        0 -> "Atual: —"
+                        else -> "Atual: d${currentRaw}"
                     }
                 )
                 append(" • Próximo: ")
@@ -4292,8 +4292,6 @@ fun PoderesDetailScreen(
 ) {
     val context = LocalContext.current
 
-    // Se tiver Antecedente Arcano selecionado, SEMPRE mostra magias (poderes.json)
-    // mesmo que o modo supers esteja ativo.
     val hasAntecedenteArcano = remember(state.vantagensSelecionadas) {
         state.vantagensSelecionadas.any { it.id == "antecedente_arcano" }
     }
@@ -4331,7 +4329,7 @@ fun PoderesDetailScreen(
             Spacer(Modifier.height(8.dp))
 
             if (!showSupers) {
-                // ---------- MAGIAS (Antecedente Arcano) ----------
+
                 val allPoderes: List<Poder> = remember {
                     context.loadPoderesAsset<List<Poder>>("poderes.json")
                 }

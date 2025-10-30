@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Permite compartilhar TODO arquivo em getExternalFilesDir(null) -->
+    <!-- Permite compartilhar arquivo em getExternalFilesDir(null) -->
     <external-files-path
         name="meus_pdfs"
         path="." />

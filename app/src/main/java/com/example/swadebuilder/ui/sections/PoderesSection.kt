@@ -55,7 +55,7 @@ fun PoderesSection(
     val locked = state.progresso > 0 && !state.emProgresso
     val context = LocalContext.current
 
-    // 1) Carrega todo o JSON de poderes diretamente como List<Poder>
+    // 1) Carrega o JSON de poderes diretamente como List<Poder>
     val allPoderes: List<Poder> = remember {
         context.loadJsonAsset<List<Poder>>("poderes.json")
     }

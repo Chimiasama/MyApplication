@@ -1,9 +1,14 @@
+@file:Suppress("UnstableApiUsage")
+
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     // Plugin de serialization
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.20"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.21"
 }
 
 // 🔹 Exclui globalmente a versão duplicada da JetBrains IntelliJ Annotations
@@ -21,12 +26,18 @@ android {
         applicationId = "com.swadebuilder"
         minSdk = 25
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "1.2"
 
-        // 🔹 Gera apenas para arquitetura moderna (reduz tamanho do APK)
+
         ndk {
-            abiFilters += listOf("arm64-v8a")
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+        }
+
+        bundle {
+            abi {
+                enableSplit = false
+            }
         }
 
         vectorDrawables {
@@ -73,9 +84,8 @@ android {
     // ------------------------------------------------------------
     buildTypes {
         release {
-            // 🔹 Ativa compressão e remoção de código não usado (ProGuard + R8)
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -98,13 +108,16 @@ android {
     // ------------------------------------------------------------
     // 🔹 Kotlin e Java
     // ------------------------------------------------------------
-    kotlinOptions {
-        jvmTarget = "17"
-        freeCompilerArgs += listOf(
-            "-Xcontext-receivers",
-            "-opt-in=kotlin.RequiresOptIn"
-        )
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+            freeCompilerArgs.addAll(
+                "-Xcontext-receivers",
+                "-opt-in=kotlin.RequiresOptIn"
+            )
+        }
     }
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
