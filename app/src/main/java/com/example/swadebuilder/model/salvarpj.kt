@@ -17,5 +17,6 @@ data class PersonagemSalvo(
     val dinheiro: Int,
     val pontosRestantes: Int,
     val maisPontosPericias: Boolean,
-    val cartaSelvagem: Boolean
+    val cartaSelvagem: Boolean,
+    val heroisSemArmadura: Boolean = false
 )

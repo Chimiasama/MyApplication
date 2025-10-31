@@ -149,6 +149,7 @@ class CriadorViewModel : ViewModel() {
         // 2) Ancestralidade, vantagens e complicações
         state.maisPontosPericias = salvo.maisPontosPericias
         state.cartaSelvagem      = salvo.cartaSelvagem
+        state.heroisSemArmadura  = salvo.heroisSemArmadura
         state.ancestralidade     = salvo.ancestralidade
         state.aplicarAncestralidade(salvo.ancestralidade)
 

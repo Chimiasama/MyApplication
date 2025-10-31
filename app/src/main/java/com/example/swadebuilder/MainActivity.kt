@@ -342,12 +342,14 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, modoSuperequip, modoSuperComplicacoes ->
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, modoSuperequip, modoSuperComplicacoes, heroisSemArmadura ->
+
                                     criadorViewModel.resetStateParaNovoPersonagem(
                                         cartaSelvagem      = cartaSelvagem,
                                         maisPontosPericias = maisPontosPericias,
                                         modoSupers         = modoSupers
                                     )
+                                    criadorViewModel.state.heroisSemArmadura = heroisSemArmadura
                                     criadorViewModel.state.modoSuperequip = modoSuperequip
                                     criadorViewModel.state.modoSuperComplicacoes = modoSuperComplicacoes
 
@@ -457,8 +459,9 @@ class MainActivity : ComponentActivity() {
                                                         dinheiro           = state.dinheiro,
                                                         pontosRestantes    = state.pontosVantagem,
                                                         maisPontosPericias = state.maisPontosPericias,
-                                                        cartaSelvagem      = state.cartaSelvagem
-                                                    )
+                                                        cartaSelvagem      = state.cartaSelvagem,
+                                                        heroisSemArmadura = state.heroisSemArmadura,
+                                                        )
                                                     state.idAtual = personagemId
                                                     StorageUtils.salvarPersonagem(context, salvo)
                                                     Toast.makeText(
@@ -937,6 +940,7 @@ class CriadorState {
     var dinheiro by mutableIntStateOf(500)
     val poderesSelecionados = mutableStateListOf<String>()
     val equipamentosComprados = mutableStateListOf<EquipamentoItem>()
+    var heroisSemArmadura by mutableStateOf(false)
     val cpRecursosStack = mutableStateListOf<Unit>()
     private val _maxedTraits = mutableStateListOf<String>()
     val maxedTraits: List<String> get() = _maxedTraits
@@ -3469,7 +3473,8 @@ fun TelaInicial(
         maisPontosPericias: Boolean,
         modoSupers: Boolean,
         modoSuperequipamentos: Boolean,
-        modoSuperComplicacoes: Boolean
+        modoSuperComplicacoes: Boolean,
+        heroisSemArmadura: Boolean
     ) -> Unit,
     onLoad: (PersonagemSalvo) -> Unit,
     context: Context,
@@ -3874,12 +3879,14 @@ Feito por Rafael S.W.
                 TextButton(onClick = {
 
                     onCriarNovo(
-                        optCartaSelvagem,         // cartaSelvagem
-                        optMaisPontosPericias,    // maisPontosPericias
-                        optSuperPoderes,          // modoSupers
-                        optSuperequipamentos,     // modoSuperequipamentos  ← é este que aciona a aba!
-                        optSuperComplicacoes      // modoSuperComplicacoes
-                    )
+                        optCartaSelvagem,
+                        optMaisPontosPericias,
+                        optSuperPoderes,
+                        optSuperequipamentos,
+                        optSuperComplicacoes,
+                        optHeroiSemArmadura
+
+                        )
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
                     if (optSuperPoderes) {
                         viewModel.state.aplicarSuperpoderes(

@@ -193,10 +193,13 @@ fun InformacoesSection(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
+                    val temArmaduraDeEquip = state.equipamentosComprados.any { it.armadura != null }
+                    val bonusSemArmadura = if (state.heroisSemArmadura && !temArmaduraDeEquip) 2 else 0
+
                     val base  = state.valorResistenciaBase()
-                    val total = base + state.armadura
+                    val total = base + state.armadura + bonusSemArmadura
                     CircleStat(
-                        value = if (state.armadura != 0) "$base($total)" else "$base",
+                        value = if ((state.armadura + bonusSemArmadura) != 0) "$base($total)" else "$base",
                         label = "Resistência"
                     )
                     val tam = state.valorTamanho()
