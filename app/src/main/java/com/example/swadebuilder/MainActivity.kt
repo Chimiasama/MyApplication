@@ -147,6 +147,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.util.UUID
+import kotlin.math.min
 import kotlin.math.roundToInt
 import com.example.swadebuilder.model.loadJsonAsset as loadPoderesAsset
 
@@ -289,6 +290,7 @@ class MainActivity : ComponentActivity() {
             val activity = (context as? ComponentActivity)
             var mostrouTelaInicial by rememberSaveable { mutableStateOf(true) }
             var showExitDialog     by rememberSaveable { mutableStateOf(false) }
+
 
             val emTelaDePreenchimento = !(
                     showVantagensDetail ||
@@ -945,10 +947,28 @@ class CriadorState {
 
     val superPoderesComprados = mutableStateListOf<PurchasedPower>()
     var superNivelCampanha by mutableStateOf<Int?>(null)
-    private var superUsarProgresso by mutableStateOf(false)
+
     var superPontosTotais by mutableIntStateOf(0)
     var superPontosDisponiveis by mutableIntStateOf(0)
     var superLimite by mutableIntStateOf(0)
+    var superLimitePorPoder by mutableIntStateOf(0)
+
+
+    // Cole dentro de class CriadorState, depois de superLimite
+    fun setSupersByLevel(nivel: Int, usarProgresso: Boolean) {
+        val n = nivel.coerceIn(1, 5)
+        superNivelCampanha = n
+        val pontos = 15 * n
+        val limite = 5 * n
+        superPontosTotais = pontos
+        superLimite = limite
+        superLimitePorPoder = limite
+
+        // Se o herói já comprou algum superpoder, respeita o saldo:
+        val gastos = superPoderesComprados.sumOf { it.custo }
+        val baseDisponivel = if (usarProgresso) (pontos * 2) / 3 else pontos
+        superPontosDisponiveis = (baseDisponivel - gastos).coerceAtLeast(0)
+    }
 
     // --- NOVO BLOCO: Controle de compra de Vantagens por XP ---
     var pvFromXpOutstanding by mutableIntStateOf(0)          // PV pendente vindo de XP
@@ -1038,22 +1058,16 @@ class CriadorState {
         vantagensSelecionadas += v
     }
 
+    // em CriadorState
     fun aplicarSuperpoderes(v: Vantagem, nivel: Int, usarProgresso: Boolean) {
-        if (v.nome != "Superpoderes") return
-
-        // 1) atualiza o estado com o número de campanha
-        superNivelCampanha   = nivel
-        superUsarProgresso   = usarProgresso
-
-        // 2) calcula total de pontos e limite de super
-        val pontos = listOf(15, 30, 45, 60, 75)[nivel - 1]
-        val limite = listOf(5, 10, 15, 20, 25)[nivel - 1]
-        superPontosTotais     = pontos
-        superLimite           = limite
-        superPontosDisponiveis = if (usarProgresso) (pontos * 2) / 3 else pontos
-
-        // 3) adiciona a vantagem “Superpoderes” à lista
-        vantagensSelecionadas += v
+        val total   = nivel * 15   // 15/30/45/60/75
+        val limite  = nivel * 5    //  5/10/15/20/25  (limite total de superpoderes)
+        superPontosTotais       = total
+        superPontosDisponiveis  = if (usarProgresso) superPontosDisponiveis else total
+        superLimite             = limite
+        superLimitePorPoder     = limite         // <-- UM TERÇO DO TOTAL (5/10/15/20/25)
+        modoSupers              = true
+        superNivelCampanha      = nivel
     }
 
     val comprasAttrPorEstagio = mutableStateMapOf<String, Int>().apply {
@@ -2659,7 +2673,6 @@ fun VantagensDetailScreen(
     }
 }
 
-
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Preview(showBackground = true)
 @Composable
@@ -4013,6 +4026,7 @@ fun SelecaoCard(
 fun BuySuperPowerDialog(
     poder: SuperPoder,
     pontosDisponiveis: Int,
+    limitePorPoder: Int,
     onConfirm: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -4022,38 +4036,39 @@ fun BuySuperPowerDialog(
     val baseMax = rawBaseMax
         .coerceAtMost(pontosDisponiveis)
         .coerceAtLeast(baseMin)
+
     var baseCost by rememberSaveable { mutableIntStateOf(baseMin) }
 
+    // Estados de modificadores (reusa seu parsing já existente)
     val modStates = remember(poder.modificadores) {
         poder.modificadores.orEmpty().map { modObj ->
-
             val name = modObj.substringBefore(":").trim()
-
             val paren = Regex("\\(([^)]*)\\)").find(name)?.groupValues?.get(1).orEmpty()
-            val opts = paren
-                .split("/")
+            val opts = paren.split("/")
                 .mapNotNull { it.trim().removePrefix("+").toIntOrNull() }
-                .takeIf { it.isNotEmpty() }
-                ?: listOf(0)
-
+                .takeIf { it.isNotEmpty() } ?: listOf(0)
             ModState(
-                name     = name,
-                options  = opts,
+                name = name,
+                options = opts,
                 included = mutableStateOf(false),
                 selected = mutableIntStateOf(opts.first())
             )
         }
     }
 
-    val totalCost = baseCost +
-            modStates.filter { it.included.value }
-                .sumOf { it.selected.value }
+    val modCost by remember(modStates) {
+        derivedStateOf { modStates.filter { it.included.value }.sumOf { it.selected.value } }
+    }
+
+    // Cap dinâmico por poder: total (base + mods) não pode passar do limitePorPoder nem do pool disponível
+    val maxPermitidoTotal = min(limitePorPoder, pontosDisponiveis)
+    val maxBasePeloCap    = (maxPermitidoTotal - modCost).coerceAtLeast(baseMin)
+    val baseMaxCapped     = min(baseMax, maxBasePeloCap)
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Comprar “${poder.nome}”") },
         text = {
-            // Scroll interno
             val scroll = rememberScrollState()
             Column(
                 modifier = Modifier
@@ -4067,10 +4082,10 @@ fun BuySuperPowerDialog(
                 Slider(
                     value = baseCost.toFloat(),
                     onValueChange = { novo ->
-                        baseCost = novo.roundToInt().coerceIn(baseMin, baseMax)
+                        baseCost = novo.roundToInt().coerceIn(baseMin, baseMaxCapped)
                     },
-                    valueRange = baseMin.toFloat()..baseMax.toFloat(),
-                    steps = (baseMax - baseMin).coerceAtLeast(1) - 1,
+                    valueRange = baseMin.toFloat()..baseMaxCapped.toFloat(),
+                    steps = (baseMaxCapped - baseMin).coerceAtLeast(1) - 1,
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -4080,9 +4095,9 @@ fun BuySuperPowerDialog(
                     Text("Modificadores:", style = MaterialTheme.typography.bodyMedium)
                     Spacer(Modifier.height(4.dp))
 
+                    // Renderização simplificada de mods (mantém sua lógica de options)
                     modStates.forEach { mod ->
                         if (mod.options.size == 1) {
-                            // único valor: checkbox + nome + custo fixo
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
@@ -4095,65 +4110,50 @@ fun BuySuperPowerDialog(
                                     onCheckedChange = { mod.included.value = it }
                                 )
                                 Spacer(Modifier.width(8.dp))
-                                Text(mod.name)
-                                Spacer(Modifier.weight(1f))
-                                if (mod.included.value) {
-                                    Text("+${mod.selected.value}")
-                                }
+                                Text("${mod.name} (${mod.options.first()})")
                             }
                         } else {
-                            // múltiplas opções: checkbox + nome
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { mod.included.value = !mod.included.value }
-                                    .padding(vertical = 4.dp)
-                            ) {
-                                Checkbox(
-                                    checked = mod.included.value,
-                                    onCheckedChange = { mod.included.value = it }
-                                )
-                                Spacer(Modifier.width(8.dp))
-                                Text(mod.name)
-                            }
-                            // se estiver incluído, exibe as radio options
-                            if (mod.included.value) {
-                                Spacer(Modifier.height(4.dp))
-                                mod.options.forEach { opt ->
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(start = 28.dp, top = 2.dp, bottom = 2.dp)
-                                            .clickable { mod.selected.value = opt }
-                                    ) {
-                                        RadioButton(
-                                            selected = (mod.selected.value == opt),
-                                            onClick  = { mod.selected.value = opt }
-                                        )
-                                        Spacer(Modifier.width(6.dp))
-                                        Text("+$opt")
-                                    }
+                            Column(Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Checkbox(
+                                        checked = mod.included.value,
+                                        onCheckedChange = { mod.included.value = it }
+                                    )
+                                    Spacer(Modifier.width(8.dp))
+                                    Text(mod.name)
+                                }
+                                if (mod.included.value) {
+                                    val sel = mod.selected.value
+                                    Slider(
+                                        value = sel.toFloat(),
+                                        onValueChange = { novo ->
+                                            val novoInt = novo.roundToInt()
+                                            val clamp = novoInt
+                                                .coerceIn(mod.options.minOrNull() ?: 0, mod.options.maxOrNull() ?: 0)
+                                            // respeitar o cap total: (base + mods) <= maxPermitidoTotal
+                                            val futuroModCost = (modStates.filter { it.included.value && it != mod }.sumOf { it.selected.value }) + clamp
+                                            val futuroTotal = baseCost + futuroModCost
+                                            mod.selected.value = if (futuroTotal <= maxPermitidoTotal) clamp else mod.selected.value
+                                        },
+                                        valueRange = (mod.options.minOrNull() ?: 0).toFloat()..(mod.options.maxOrNull()
+                                            ?: 0).toFloat(),
+                                        steps = (mod.options.size - 1).coerceAtLeast(0),
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
                                 }
                             }
                         }
                     }
                 }
-
-                Spacer(Modifier.height(8.dp))
-
-                Text(
-                    "Custo total: $totalCost",
-                    style = MaterialTheme.typography.titleMedium
-                )
             }
         },
         confirmButton = {
+            val totalAtual = baseCost + modCost
+            val podeConfirmar = totalAtual in baseMin..maxPermitidoTotal
             TextButton(
-                enabled = pontosDisponiveis >= totalCost,
-                onClick = { onConfirm(totalCost) }
-            ) { Text("Confirmar") }
+                enabled = podeConfirmar,
+                onClick = { onConfirm(totalAtual) }
+            ) { Text("Comprar ($totalAtual)") }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text("Cancelar") }
@@ -4179,6 +4179,18 @@ fun SuperPoderesSection(
     var poderParaComprar by remember { mutableStateOf<SuperPoder?>(null) }
     val nivelAtual    = state.superNivelCampanha ?: 1
     val sliderEnabled = state.creationComplete()
+    LaunchedEffect(Unit) {
+        // só inicializa se ainda não tiver pontos calculados
+        if ((state.superNivelCampanha ?: 0) == 0 || state.superPontosTotais == 0) {
+            val v = state.vantagensSelecionadas.firstOrNull {
+                it.nome.equals("Superpoderes", ignoreCase = true)
+            }
+            if (v != null) {
+                state.superNivelCampanha = 1
+                state.aplicarSuperpoderes(v = v, nivel = 1, usarProgresso = false)
+            }
+        }
+    }
 
     Column(Modifier.fillMaxWidth().padding(8.dp)) {
         // 1) chips dos poderes já comprados
@@ -4201,16 +4213,28 @@ fun SuperPoderesSection(
         Text("Nível de Superpoderes: $nivelAtual")
         Slider(
             value = nivelAtual.toFloat(),
-            onValueChange = { novo ->
-                state.aplicarSuperpoderes(
-                    v = state.vantagensSelecionadas
-                        .first { it.nome.equals("Superpoderes", ignoreCase = true) },
-                    nivel = novo.roundToInt().coerceIn(1,5),
-                    usarProgresso = false
-                )
+            onValueChange = { valor ->
+                val novoNivel = valor.roundToInt().coerceIn(1, 5)
+
+                // 1) marque o nível para refletir no UI
+                state.superNivelCampanha = novoNivel
+
+                // 2) (re)calcule TOTAL e LIMITE a partir do nível
+                val total = 15 * novoNivel           // 15 pts por nível
+                val limite = 5 * novoNivel           // 1/3 do total (equivale a 5 * nível)
+
+                state.superPontosTotais = total
+                state.superLimite = limite
+                var superLimitePorPoder by mutableIntStateOf(0)
+
+
+                // 3) recalcule os disponíveis (subtraindo o que já foi comprado)
+                val gastos = state.superPoderesComprados.sumOf { it.custo }
+                state.superPontosDisponiveis = (total - gastos).coerceAtLeast(0)
             },
+
             valueRange = 1f..5f,
-            steps = 3,
+            steps = 4,
             enabled = sliderEnabled,
             modifier = Modifier.fillMaxWidth()
         )
@@ -4237,10 +4261,12 @@ fun SuperPoderesSection(
     }
 
     // diálogo de compra
+    // diálogo de compra
     poderParaComprar?.let { poder ->
         BuySuperPowerDialog(
             poder = poder,
             pontosDisponiveis = state.superPontosDisponiveis,
+            limitePorPoder = state.superLimitePorPoder,
             onConfirm = { custo ->
                 state.comprarSuperPoder(poder.nome, custo)
                 poderParaComprar = null

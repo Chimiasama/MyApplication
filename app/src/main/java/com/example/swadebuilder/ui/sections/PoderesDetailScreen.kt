@@ -194,9 +194,56 @@ fun PoderesDetailScreen(
                     context.loadJsonAsset("superpoderes.json")
                 }
 
+                // Cabeçalho de controle de nível e pool
+                Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                    val nivelAtual = state.superNivelCampanha ?: 1
+
+                    Text("Nível de Superpoderes", fontWeight = FontWeight.Bold)
+                    Spacer(Modifier.height(4.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        (1..5).forEach { n ->
+                            TextButton(onClick = {
+                                // define nível e recalcula pool e limite
+                                state.superNivelCampanha = n
+                                state.superPontosTotais = 15 * n
+                                state.superLimite = 5 * n
+                                val gasto = state.superPoderesComprados.sumOf { it.custo }
+                                state.superPontosDisponiveis =
+                                    (state.superPontosTotais - gasto).coerceAtLeast(0)
+                            }) {
+                                Text(if (n == nivelAtual) "[$n]" else " $n ")
+                            }
+                        }
+                    }
+
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = "Pontos: ${state.superPontosDisponiveis}/${state.superPontosTotais} • Limite: ${state.superPoderesComprados.size}/${state.superLimite}",
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+
                 LazyColumn(Modifier.fillMaxSize()) {
                     items(superPoderes, key = { it.nome }) { poder ->
                         var expanded by rememberSaveable(poder.nome) { mutableStateOf(false) }
+
+                        // Custo base: pega o primeiro número (ex.: "5/10/15" -> 5, "1–3" -> 1)
+                        val custoBaseStr = poder.custoBase ?: "0"
+                        val custoInt = run {
+                            val slash = custoBaseStr.split("/")
+                                .firstOrNull()
+                                ?.trim()
+                                ?.replace("–", "-")
+                                ?: custoBaseStr
+                            // tenta extrair o primeiro inteiro
+                            Regex("""\d+""").find(slash)?.value?.toIntOrNull() ?: 0
+                        }
+
+                        val jaComprado = state.superPoderesComprados.any { it.nome == poder.nome }
+                        val podeComprar =
+                            !jaComprado &&
+                                    state.superPoderesComprados.size < state.superLimite &&
+                                    state.superPontosDisponiveis >= custoInt
 
                         Column(
                             modifier = Modifier
@@ -215,6 +262,26 @@ fun PoderesDetailScreen(
                                     fontSize = 18.sp
                                 )
                                 Spacer(Modifier.weight(1f))
+
+                                if (!jaComprado) {
+                                    TextButton(
+                                        enabled = podeComprar,
+                                        onClick = {
+                                            if (podeComprar) {
+                                                state.comprarSuperPoder(poder.nome, custoInt)
+                                            }
+                                        }
+                                    ) { Text("Comprar (${custoInt})") }
+                                } else {
+                                    TextButton(
+                                        onClick = {
+                                            state.superPoderesComprados
+                                                .firstOrNull { it.nome == poder.nome }
+                                                ?.let { state.removerSuperPoder(it) }
+                                        }
+                                    ) { Text("Remover") }
+                                }
+
                                 Icon(
                                     imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
                                     contentDescription = null
