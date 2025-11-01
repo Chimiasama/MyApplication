@@ -88,9 +88,7 @@ class CriadorViewModel : ViewModel() {
         // 11) Se estivermos no modo Supers, aplica as vantagens especiais
         if (modoSupers) {
             // 11.1) Remove qualquer antecedente arcano previamente selecionado
-            state.vantagensSelecionadas.removeAll {
-                it.nome.keyify().startsWith("antecedente arcano")
-            }
+            state.vantagensSelecionadas.removeAll { it.id == "antecedente_arcano" }
 
             // 11.2 Adiciona a vantagem “Superpoderes” (automática, não removível)
             val superVant: Vantagem = listaVantagens
@@ -154,8 +152,9 @@ class CriadorViewModel : ViewModel() {
         state.aplicarAncestralidade(salvo.ancestralidade)
 
         state.vantagensSelecionadas.clear()
+        state.vantagensSelecionadas.clear()
         state.vantagensSelecionadas.addAll(
-            listaVantagens.filter { it.nome in salvo.vantagens }
+            listaVantagens.filter { it.id in salvo.vantagens }
         )
 
         state.complicacoesSelecionadas.clear()

@@ -233,7 +233,14 @@ fun VantagensContent(
             onListaCompletaClick = if (showLista) ({ onOpenVantagensDetail("") }) else null,
             listaCompletaText    = "Lista Completa"
         )
-
+        if (state.nasceUmHeroi && !state.emProgresso) {
+            AssistChip(
+                onClick = { /* no-op */ },
+                label = { Text("Nasce um Herói ativo: Estágio ignorado na criação") },
+                leadingIcon = { Icon(Icons.Default.Visibility, contentDescription = null) }
+            )
+            Spacer(Modifier.size(8.dp))
+        }
 
         if (showHelp) {
             AlertDialog(
@@ -288,9 +295,8 @@ fun VantagensContent(
             state.vantagensSelecionadas.forEachIndexed { index, vant ->
                 val isRacialFree = vant.nome.keyify() in state.vantagensAutomaticas.map { it.keyify() }
                 val requiredByAnother = state.vantagensSelecionadas.any { other ->
-                    other != vant && other.requisitos.vantagensPrevias.any { req ->
-                        req.uppercase().semAcentos().trim() ==
-                                vant.nome.uppercase().semAcentos().trim()
+                    other != vant && other.requisitos.vantagensPrevias.any { reqId ->
+                        reqId == vant.id
                     }
                 }
                 val canRemove = !locked
@@ -574,18 +580,18 @@ fun VantagensContent(
                         .filter { per -> state.rawTotal(per) >= 8 }
                         .map { it.nome }
                 }
-                vant.nome.equals("ARMA PREDILETA APRIMORADA", ignoreCase = true) -> {
+                vant.id == "arma_predileta_aprimorada" -> {
                     state.vantagensSelecionadas
-                        .filter { it.nome.equals("ARMA PREDILETA", ignoreCase = true) && it.choice != null }
+                        .filter { it.id == "arma_predileta" && it.choice != null }
                         .mapNotNull { it.choice }
                         .distinct()
                 }
-                vant.nome.trim().removeSuffix(":").keyify() == "profissional" -> {
+                vant.id == "profissional" -> {
                     vant.choiceOptions.filter { it in state.maxedTraits }
                 }
-                vant.nome.keyify() == "especialista" -> {
+                vant.id == "especialista" -> {
                     state.vantagensSelecionadas
-                        .filter { it.nome.keyify() == "profissional" && it.choice != null }
+                        .filter { it.id == "profissional" && it.choice != null }
                         .mapNotNull { it.choice }
                 }
                 vant.maxSelections > 0 -> {

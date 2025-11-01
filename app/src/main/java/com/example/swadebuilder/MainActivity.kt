@@ -342,7 +342,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, modoSuperequip, modoSuperComplicacoes, heroisSemArmadura ->
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, modoSuperequip, modoSuperComplicacoes, nasceUmHeroi, heroisSemArmadura ->
 
                                     criadorViewModel.resetStateParaNovoPersonagem(
                                         cartaSelvagem      = cartaSelvagem,
@@ -350,6 +350,7 @@ class MainActivity : ComponentActivity() {
                                         modoSupers         = modoSupers
                                     )
                                     criadorViewModel.state.heroisSemArmadura = heroisSemArmadura
+                                    criadorViewModel.state.nasceUmHeroi = nasceUmHeroi
                                     criadorViewModel.state.modoSuperequip = modoSuperequip
                                     criadorViewModel.state.modoSuperComplicacoes = modoSuperComplicacoes
 
@@ -422,7 +423,7 @@ class MainActivity : ComponentActivity() {
                                                         atributos       = state.valoresAtributos.mapValues { it.value.intValue },
                                                         pericias        = listaPericias.associate { per -> per.nome to state.rawTotal(per) },
                                                         ancestralidade  = state.ancestralidade,
-                                                        vantagens       = state.vantagensSelecionadas.map { it.nome },
+                                                        vantagens       = state.vantagensSelecionadas.map { it.id },   // << IDs
                                                         complicacoes    = state.complicacoesSelecionadas
                                                             .filterValues { it != null }
                                                             .keys
@@ -644,10 +645,13 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
 
     // ── Vantagens ─────────────────────────────────────────────────
     lines += "Vantagens"
-    lines += if (personagem.vantagens.isEmpty()) {
-        "– Nenhuma"
+    if (personagem.vantagens.isEmpty()) {
+        lines += "– Nenhuma"
     } else {
-        personagem.vantagens.joinToString(", ")
+        val nomesVantagens = listaVantagens
+            .filter { it.id in personagem.vantagens }
+            .map { vant -> vant.choice?.let { "${vant.nome} ($it)" } ?: vant.nome }
+        lines += nomesVantagens.joinToString(", ")
     }
     lines += ""
 
@@ -1284,6 +1288,8 @@ class CriadorState {
 
     var armadura by mutableIntStateOf(0)
 
+    var nasceUmHeroi by mutableStateOf(false)
+
     val valoresAtributos = listaAtributos.associateWith { mutableIntStateOf(4) }
 
     val complicacoesSelecionadas: SnapshotStateMap<Complicacao, String?> = mutableStateMapOf()
@@ -1346,11 +1352,10 @@ class CriadorState {
                 if (already) return false
             }
 
-            // 3.2 Regra extra para “ESPECIALISTA”: só vale se já houver “PROFISSIONAL” na mesma escolha
+            // 3.2 Regra extra para “ESPECIALISTA”: requer “profissional” com MESMA escolha
             if (key == "especialista" && choiceSeguro != null) {
                 val profExist = vantagensSelecionadas.any {
-                    it.nome.keyify() == "profissional" &&
-                            it.choice?.keyify() == choiceSeguro.keyify()
+                    it.id == "profissional" && it.choice?.keyify() == choiceSeguro.keyify()
                 }
                 if (!profExist) return false
             }
@@ -1376,21 +1381,22 @@ class CriadorState {
             }
         }
 
-        // 4) Checa requisito de estágio mínimo:
-        listaDeEstagios
-            .firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
-            ?.let { estReqObj ->
-                // Se o progresso atual for menor que o mínimo exigido para este estágio, bloqueia
-                if (effectiveProgressoParaVantagens() < estReqObj.minProgress) return false
-            }
-
-        // 5) Checa “vantagens_previas” (se houver alguma, exige que o nome correspondente já esteja em vantagensSelecionadas)
-        if (v.requisitos.vantagensPrevias.isNotEmpty()) {
-            val faltam = v.requisitos.vantagensPrevias.any { prevNomeRaw ->
-                val prevKey = prevNomeRaw.uppercase().semAcentos().trim()
-                vantagensSelecionadas.none { sel ->
-                    sel.nome.uppercase().semAcentos().trim() == prevKey
+        val ignorarEstagioPorNasce =
+            (nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0)
+        if (!ignorarEstagioPorNasce) {
+            // 4) Checa requisito de estágio mínimo:
+            listaDeEstagios
+                .firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
+                ?.let { estReqObj ->
+                    // Se o progresso atual for menor que o mínimo exigido para este estágio, bloqueia
+                    if (effectiveProgressoParaVantagens() < estReqObj.minProgress) return false
                 }
+        }
+
+        // 5) Checa “vantagens_previas” comparando por ID
+        if (v.requisitos.vantagensPrevias.isNotEmpty()) {
+            val faltam = v.requisitos.vantagensPrevias.any { prevId ->
+                vantagensSelecionadas.none { sel -> sel.id == prevId }
             }
             if (faltam) return false
         }
@@ -1403,7 +1409,7 @@ class CriadorState {
         }
         // 7) Para as demais vantagens, respeita o maxSelections padrão
         else if (v.maxSelections > 0) {
-            val ja = vantagensSelecionadas.count { it.nome == v.nome }
+            val ja = vantagensSelecionadas.count { it.id == v.id }
             if (ja >= v.maxSelections) return false
         }
 
@@ -1411,13 +1417,12 @@ class CriadorState {
         val choiceSeguro2 = v.choice
         if (v.requiresChoice && choiceSeguro2 != null) {
             val repetida = vantagensSelecionadas.any {
-                it.nome == v.nome && it.choice == choiceSeguro2
+                it.id == v.id && it.choice == choiceSeguro2
             }
             if (repetida) return false
         }
 
-
-        // 8) Verifica requisito de “nível de campanha” (minProgress)
+        // 8.1) Verifica requisito de “nível de campanha” (minProgress)
         nivelParaEstagio[v.requisitos.estagio]?.let { estReqObj2 ->
             if (estReqObj2.minProgress > effectiveProgressoParaVantagens()) return false
         }
@@ -3474,6 +3479,7 @@ fun TelaInicial(
         modoSupers: Boolean,
         modoSuperequipamentos: Boolean,
         modoSuperComplicacoes: Boolean,
+        nasceUmHeroi: Boolean,
         heroisSemArmadura: Boolean
     ) -> Unit,
     onLoad: (PersonagemSalvo) -> Unit,
@@ -3884,6 +3890,7 @@ Feito por Rafael S.W.
                         optSuperPoderes,
                         optSuperequipamentos,
                         optSuperComplicacoes,
+                        optNasceUmHeroi,
                         optHeroiSemArmadura
 
                         )
