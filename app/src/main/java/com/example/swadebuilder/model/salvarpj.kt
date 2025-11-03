@@ -18,5 +18,15 @@ data class PersonagemSalvo(
     val pontosRestantes: Int,
     val maisPontosPericias: Boolean,
     val cartaSelvagem: Boolean,
-    val heroisSemArmadura: Boolean = false
+    val heroisSemArmadura: Boolean = false,
+
+    // --- Novos campos para a regra opcional de Especialização de Perícias ---
+    val usarEspecializacoesDePericia: Boolean = false,
+    val especializacoesPorPericia: Map<String, EspecializacoesDto> = emptyMap()
+)
+
+@Serializable
+data class EspecializacoesDto(
+    val principal: String? = null,
+    val lista: List<String> = emptyList()
 )

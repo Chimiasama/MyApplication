@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -27,6 +28,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +52,7 @@ import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.Complicacao
+import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.periciaStartRaw
 import com.example.swadebuilder.util.keyify
@@ -83,6 +86,25 @@ fun ProgressosDialog(
     var tempErrorMsg by rememberSaveable { mutableStateOf("") }
     var advSelectedStageIndex by rememberSaveable { mutableIntStateOf(-1) }
 
+    // Estados para especialização “solta”
+    var perEspExp by rememberSaveable { mutableStateOf(false) }
+    var perEspSelected by rememberSaveable { mutableStateOf<Pericia?>(null) }
+    var espNome by rememberSaveable { mutableStateOf("") }
+
+    // Integração 2×: pode ser perícia OU especialização em cada slot
+    var slot1IsSpec by rememberSaveable { mutableStateOf(false) }
+    var slot2IsSpec by rememberSaveable { mutableStateOf(false) }
+    var slot1SpecPerExp by rememberSaveable { mutableStateOf(false) }
+    var slot2SpecPerExp by rememberSaveable { mutableStateOf(false) }
+    var slot1SpecPer by rememberSaveable { mutableStateOf<Pericia?>(null) }
+    var slot2SpecPer by rememberSaveable { mutableStateOf<Pericia?>(null) }
+    var slot1SpecName by rememberSaveable { mutableStateOf("") }
+    var slot2SpecName by rememberSaveable { mutableStateOf("") }
+
+    // NOVO: especialização inline quando a perícia escolhida está em 0
+    var slot1NewPerSpecName by rememberSaveable { mutableStateOf("") }
+    var slot2NewPerSpecName by rememberSaveable { mutableStateOf("") }
+
     // configurações gerais de progresso
     val totalProgressLimit = 50
     val stages = listaDeEstagios
@@ -102,6 +124,10 @@ fun ProgressosDialog(
 
     var selectedTab by rememberSaveable { mutableIntStateOf(currentStageIndex) }
 
+    val spSpecsPorPericia: MutableMap<Pericia, Int> =
+        listaPericias.associateWith { 0 }.toMutableMap()
+
+
     // ── Cálculos para compra de atributos via XP ────────────────────────────────
     val est = stages[selectedTab]
     val prevMaxGlobal = if (selectedTab > 0) stages[selectedTab - 1].maxProgress else 0
@@ -112,42 +138,31 @@ fun ProgressosDialog(
     val spentHere = state.stageXpSpent.getValue(est.nome)
     val creditsLeft = stageCap - spentHere
 
-    // quantas compras de atributo já foram feitas até o estágio atual (incluindo ele)
     val boughtSoFar = stages
         .take(selectedTab + 1)
         .sumOf { state.comprasAttrPorEstagio.getValue(it.nome) }
 
-    // máximo permitido: uma compra por estágio até o atual, ou ilimitado em Lendário
     val maxAllowed = if (est.nome == "Lendário") Int.MAX_VALUE else (selectedTab + 1)
-
-    // custo de XP por compra: 1 normalmente, 2 em Lendário
     val costAttr = if (est.nome == "Lendário") 2 else 1
-
-    // só pode comprar se houver XP suficiente neste estágio e ainda não tiver alcançado o limite
     val canBuyAttr = creditsLeft >= costAttr &&
             state.progressosDisponiveis >= costAttr &&
             boughtSoFar < maxAllowed
 
     // ────────────────────────────────────────────────────────────────────────────
-    // BLINDAGEM: verificação rígida local (replica a lógica da seção de Vantagens)
+    // BLINDAGEM: verificação rígida local (vantagens)
     // ────────────────────────────────────────────────────────────────────────────
     fun strictRequirementsOk(v: Vantagem, estIndex: Int): Boolean {
-        // 1) Estágio requerido (mesma interpretação da seção)
         val reqEst = v.requisitos.estagio
         if (reqEst.isNotBlank()) {
             val reqIdx = listaDeEstagios.indexOfFirst { it.nome.equals(reqEst, ignoreCase = true) }
             if (reqIdx != -1 && reqIdx > estIndex) return false
         }
-
-        // 2) Atributos mínimos
         if (v.requisitos.atributoMin.any { (nome, min) ->
                 val chaveNorm = nome.uppercase().semAcentos().trim()
                 val valor = state.valoresAtributos[chaveNorm]?.intValue
                 valor == null || valor < min
             }
         ) return false
-
-        // 3) Perícias mínimas (respeitando vinculadoPericia = OU)
         val perMin = v.requisitos.periciaMin
         if (perMin.isNotEmpty()) {
             if (v.vinculadoPericia) {
@@ -165,8 +180,6 @@ fun ProgressosDialog(
                 if (falhaAlguma) return false
             }
         }
-
-        // 4) Perícia mínima opcional (basta uma)
         val perMinOpc = v.requisitos.periciaMinOpcional
         if (perMinOpc.isNotEmpty()) {
             val ok = perMinOpc.any { (perNome, minRaw) ->
@@ -175,8 +188,6 @@ fun ProgressosDialog(
             }
             if (!ok) return false
         }
-
-        // 5) Vantagens prévias
         if (v.requisitos.vantagensPrevias.isNotEmpty()) {
             val tenhoTodas = v.requisitos.vantagensPrevias.all { req ->
                 val reqNorm = req.uppercase().semAcentos().trim()
@@ -186,11 +197,43 @@ fun ProgressosDialog(
             }
             if (!tenhoTodas) return false
         }
-
-        // 6) Carta Selvagem
         if (v.requisitos.exigeCS && !state.cartaSelvagem) return false
-
         return true
+    }
+
+    // Helpers da seção 2×
+    fun possui(per: Pericia): Boolean = state.rawTotal(per) > 0
+    fun sendoCompradaAgora(per: Pericia): Boolean =
+        (!slot1IsSpec && perBaixa1 == per) || (!slot2IsSpec && perBaixa2 == per)
+
+    fun podeAumentarAbaixo(per: Pericia): Boolean {
+        val startRaw = periciaStartRaw(state.ancestralidade, per)
+        val baseIncs = state.baseIncsPorPericia.getValue(per)
+        val extraIncs =
+            (if (!slot1IsSpec && perBaixa1 == per) 1 else 0) +
+                    (if (!slot2IsSpec && perBaixa2 == per) 1 else 0)
+        val totalIncs = baseIncs + extraIncs + 1
+        val extraStep = if (startRaw == 0 && totalIncs > 0) 2 else 0
+        val newRaw = startRaw + 2 * totalIncs + extraStep
+        return state.rawTotal(per) < state.valoresAtributos[per.atributo]!!.intValue &&
+                newRaw <= state.valoresAtributos[per.atributo]!!.intValue
+    }
+
+    fun deveMostrarSpecNesteSlot(slotEh1: Boolean, perDesteSlot: Pericia?): Boolean {
+        if (!state.usarEspecializacoesDePericia) return false
+        if (perDesteSlot == null) return false
+        if (state.rawTotal(perDesteSlot) != 0) return false
+
+        val outroJaInformou = if (slotEh1) {
+            // Slot 2 já preencheu?
+            (!slot2IsSpec && perBaixa2 == perDesteSlot && slot2NewPerSpecName.trim().isNotEmpty()) ||
+                    ( slot2IsSpec && slot2SpecPer == perDesteSlot && slot2SpecName.trim().isNotEmpty())
+        } else {
+            // Slot 1 já preencheu?
+            (!slot1IsSpec && perBaixa1 == perDesteSlot && slot1NewPerSpecName.trim().isNotEmpty()) ||
+                    ( slot1IsSpec && slot1SpecPer == perDesteSlot && slot1SpecName.trim().isNotEmpty())
+        }
+        return !outroJaInformou
     }
 
     AlertDialog(
@@ -268,99 +311,222 @@ fun ProgressosDialog(
                     Spacer(Modifier.height(12.dp))
                 }
 
-                RadioButtonRow("2× Perícias < Atributo", escolheu == "PericiasBaixas") {
+                // ===== INTEGRAÇÃO: 2× Perícias/Especializações < Atributo =====
+                RadioButtonRow("2× Perícias/Especializações < Atributo", escolheu == "PericiasBaixas") {
                     escolheu = "PericiasBaixas"
                 }
                 if (escolheu == "PericiasBaixas") {
-                    // 1ª perícia
-                    ExposedDropdownMenuBox(
-                        expanded = perBaixaExp1,
-                        onExpandedChange = { perBaixaExp1 = !perBaixaExp1 }
-                    ) {
-                        OutlinedTextField(
-                            value = perBaixa1?.nome ?: "Perícia 1…",
-                            onValueChange = {},
-                            readOnly = true,
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(perBaixaExp1) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
-                                .clickable { perBaixaExp1 = true }
+                    // ---------- SLOT 1 ----------
+                    Text("Escolha 1")
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        RadioButton(
+                            selected = !slot1IsSpec,
+                            onClick = { slot1IsSpec = false }
                         )
-                        ExposedDropdownMenu(
+                        Text("Perícia")
+                        Spacer(Modifier.width(16.dp))
+                        RadioButton(
+                            selected = slot1IsSpec,
+                            onClick = { slot1IsSpec = true }
+                        )
+                        Text("Especialização")
+                    }
+
+                    if (!slot1IsSpec) {
+                        ExposedDropdownMenuBox(
                             expanded = perBaixaExp1,
-                            onDismissRequest = { perBaixaExp1 = false },
-                            modifier = Modifier.heightIn(max = 200.dp)
+                            onExpandedChange = { perBaixaExp1 = !perBaixaExp1 }
                         ) {
-                            listaPericias
-                                .filter { per ->
-                                    val startRaw = periciaStartRaw(state.ancestralidade, per)
-                                    val baseIncs = state.baseIncsPorPericia.getValue(per)
-                                    val extraIncs = if (per == perBaixa2) 2 else 1
-                                    val totalIncs = baseIncs + extraIncs
-                                    val extraStep = if (startRaw == 0 && totalIncs > 0) 2 else 0
-                                    val newRaw = startRaw + 2 * totalIncs + extraStep
-
-                                    state.rawTotal(per) < state.valoresAtributos[per.atributo]!!.intValue &&
-                                            newRaw <= state.valoresAtributos[per.atributo]!!.intValue
-                                }
-                                .forEach { per ->
-                                    DropdownMenuItem(
-                                        text = { Text(per.nome) },
-                                        onClick = {
-                                            perBaixa1 = per
-                                            perBaixaExp1 = false
-                                        }
-                                    )
-                                }
+                            OutlinedTextField(
+                                value = perBaixa1?.nome ?: "Perícia 1…",
+                                onValueChange = {},
+                                readOnly = true,
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(perBaixaExp1) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                    .clickable { perBaixaExp1 = true }
+                            )
+                            ExposedDropdownMenu(
+                                expanded = perBaixaExp1,
+                                onDismissRequest = { perBaixaExp1 = false },
+                                modifier = Modifier.heightIn(max = 200.dp)
+                            ) {
+                                listaPericias
+                                    .filter { per -> podeAumentarAbaixo(per) }
+                                    .forEach { per ->
+                                        DropdownMenuItem(
+                                            text = { Text(per.nome) },
+                                            onClick = {
+                                                perBaixa1 = per
+                                                // se for uma perícia nova (0), limpe a caixa para forçar definição
+                                                if (state.rawTotal(per) == 0) slot1NewPerSpecName = ""
+                                                perBaixaExp1 = false
+                                            }
+                                        )
+                                    }
+                            }
                         }
-                    }
-
-                    Spacer(Modifier.height(4.dp))
-
-                    // 2ª perícia
-                    ExposedDropdownMenuBox(
-                        expanded = perBaixaExp2,
-                        onExpandedChange = { perBaixaExp2 = !perBaixaExp2 }
-                    ) {
+                        // NOVO: se a perícia selecionada está em 0, mostra caixa para especialização inicial
+                        if (deveMostrarSpecNesteSlot(true, perBaixa1)) {
+                            Spacer(Modifier.height(6.dp))
+                            OutlinedTextField(
+                                value = slot1NewPerSpecName,
+                                onValueChange = { slot1NewPerSpecName = it },
+                                label = { Text("Especialização inicial (para ${perBaixa1!!.nome})") },
+                                singleLine = true,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    } else {
+                        ExposedDropdownMenuBox(
+                            expanded = slot1SpecPerExp,
+                            onExpandedChange = { slot1SpecPerExp = !slot1SpecPerExp }
+                        ) {
+                            OutlinedTextField(
+                                value = slot1SpecPer?.nome ?: "Perícia para a especialização…",
+                                onValueChange = {},
+                                readOnly = true,
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(slot1SpecPerExp) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                    .clickable { slot1SpecPerExp = true }
+                            )
+                            ExposedDropdownMenu(
+                                expanded = slot1SpecPerExp,
+                                onDismissRequest = { slot1SpecPerExp = false },
+                                modifier = Modifier.heightIn(max = 200.dp)
+                            ) {
+                                listaPericias
+                                    .filter { per -> possui(per) || sendoCompradaAgora(per) }
+                                    .forEach { per ->
+                                        DropdownMenuItem(
+                                            text = { Text(per.nome) },
+                                            onClick = {
+                                                slot1SpecPer = per
+                                                slot1SpecPerExp = false
+                                            }
+                                        )
+                                    }
+                            }
+                        }
+                        Spacer(Modifier.height(6.dp))
                         OutlinedTextField(
-                            value = perBaixa2?.nome ?: "Perícia 2…",
-                            onValueChange = {},
-                            readOnly = true,
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(perBaixaExp2) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
-                                .clickable { perBaixaExp2 = true }
+                            value = slot1SpecName,
+                            onValueChange = { slot1SpecName = it },
+                            label = { Text("Nome da especialização (1)") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
                         )
-                        ExposedDropdownMenu(
-                            expanded = perBaixaExp2,
-                            onDismissRequest = { perBaixaExp2 = false },
-                            modifier = Modifier.heightIn(max = 200.dp)
-                        ) {
-                            listaPericias
-                                .filter { per ->
-                                    val startRaw = periciaStartRaw(state.ancestralidade, per)
-                                    val baseIncs = state.baseIncsPorPericia.getValue(per)
-                                    val extraIncs = if (per == perBaixa1) 2 else 1
-                                    val totalIncs = baseIncs + extraIncs
-                                    val extraStep = if (startRaw == 0 && totalIncs > 0) 2 else 0
-                                    val newRaw = startRaw + 2 * totalIncs + extraStep
-
-                                    state.rawTotal(per) < state.valoresAtributos[per.atributo]!!.intValue &&
-                                            newRaw <= state.valoresAtributos[per.atributo]!!.intValue
-                                }
-                                .forEach { per ->
-                                    DropdownMenuItem(
-                                        text = { Text(per.nome) },
-                                        onClick = {
-                                            perBaixa2 = per
-                                            perBaixaExp2 = false
-                                        }
-                                    )
-                                }
-                        }
                     }
+
+                    Spacer(Modifier.height(12.dp))
+
+                    // ---------- SLOT 2 ----------
+                    Text("Escolha 2")
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        RadioButton(
+                            selected = !slot2IsSpec,
+                            onClick = { slot2IsSpec = false }
+                        )
+                        Text("Perícia")
+                        Spacer(Modifier.width(16.dp))
+                        RadioButton(
+                            selected = slot2IsSpec,
+                            onClick = { slot2IsSpec = true }
+                        )
+                        Text("Especialização")
+                    }
+
+                    if (!slot2IsSpec) {
+                        ExposedDropdownMenuBox(
+                            expanded = perBaixaExp2,
+                            onExpandedChange = { perBaixaExp2 = !perBaixaExp2 }
+                        ) {
+                            OutlinedTextField(
+                                value = perBaixa2?.nome ?: "Perícia 2…",
+                                onValueChange = {},
+                                readOnly = true,
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(perBaixaExp2) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                    .clickable { perBaixaExp2 = true }
+                            )
+                            ExposedDropdownMenu(
+                                expanded = perBaixaExp2,
+                                onDismissRequest = { perBaixaExp2 = false },
+                                modifier = Modifier.heightIn(max = 200.dp)
+                            ) {
+                                listaPericias
+                                    .filter { per -> podeAumentarAbaixo(per) }
+                                    .forEach { per ->
+                                        DropdownMenuItem(
+                                            text = { Text(per.nome) },
+                                            onClick = {
+                                                perBaixa2 = per
+                                                if (state.rawTotal(per) == 0) slot2NewPerSpecName = ""
+                                                perBaixaExp2 = false
+                                            }
+                                        )
+                                    }
+                            }
+                        }
+                        // NOVO: se a perícia selecionada está em 0, mostra caixa para especialização inicial
+                        if (deveMostrarSpecNesteSlot(false, perBaixa2)) {
+                            Spacer(Modifier.height(6.dp))
+                            OutlinedTextField(
+                                value = slot2NewPerSpecName,
+                                onValueChange = { slot2NewPerSpecName = it },
+                                label = { Text("Especialização inicial (para ${perBaixa2!!.nome})") },
+                                singleLine = true,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    } else {
+                        ExposedDropdownMenuBox(
+                            expanded = slot2SpecPerExp,
+                            onExpandedChange = { slot2SpecPerExp = !slot2SpecPerExp }
+                        ) {
+                            OutlinedTextField(
+                                value = slot2SpecPer?.nome ?: "Perícia para a especialização…",
+                                onValueChange = {},
+                                readOnly = true,
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(slot2SpecPerExp) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                    .clickable { slot2SpecPerExp = true }
+                            )
+                            ExposedDropdownMenu(
+                                expanded = slot2SpecPerExp,
+                                onDismissRequest = { slot2SpecPerExp = false },
+                                modifier = Modifier.heightIn(max = 200.dp)
+                            ) {
+                                listaPericias
+                                    .filter { per -> possui(per) || sendoCompradaAgora(per) }
+                                    .forEach { per ->
+                                        DropdownMenuItem(
+                                            text = { Text(per.nome) },
+                                            onClick = {
+                                                slot2SpecPer = per
+                                                slot2SpecPerExp = false
+                                            }
+                                        )
+                                    }
+                            }
+                        }
+                        Spacer(Modifier.height(6.dp))
+                        OutlinedTextField(
+                            value = slot2SpecName,
+                            onValueChange = { slot2SpecName = it },
+                            label = { Text("Nome da especialização (2)") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+
                     Spacer(Modifier.height(12.dp))
                 }
 
@@ -508,11 +674,82 @@ fun ProgressosDialog(
                             }
                         }
                         "PericiasBaixas" -> {
+                            // Gasta 1 progresso e aplica as DUAS escolhas
                             state.spendProgressAcrossStages(1)
-                            listOfNotNull(perBaixa1, perBaixa2).forEach { per ->
-                                state.baseIncsPorPericia[per] =
-                                    state.baseIncsPorPericia.getValue(per) + 1
-                                state.spCostStackPorPericia.getValue(per).add(0)
+
+                            // Helper: captura especialização para uma perícia alvo
+                            fun especNomePara(per: Pericia): String? {
+                                val s1 = if (slot1IsSpec && slot1SpecPer == per) slot1SpecName.trim() else null
+                                val s2 = if (slot2IsSpec && slot2SpecPer == per) slot2SpecName.trim() else null
+                                val i1 = if (!slot1IsSpec && perBaixa1 == per) slot1NewPerSpecName.trim() else null
+                                val i2 = if (!slot2IsSpec && perBaixa2 == per) slot2NewPerSpecName.trim() else null
+                                return listOf(i1, i2, s1, s2).firstOrNull { !it.isNullOrEmpty() }
+                            }
+
+                            // SLOT 1
+                            if (!slot1IsSpec) {
+                                perBaixa1?.let { per ->
+                                    val eraZero = state.rawTotal(per) == 0
+                                    state.baseIncsPorPericia[per] =
+                                        state.baseIncsPorPericia.getValue(per) + 1
+                                    state.spCostStackPorPericia.getValue(per).add(0)
+
+                                    if (eraZero) {
+                                        val nomeEsp = especNomePara(per)
+                                        if (!nomeEsp.isNullOrEmpty()) {
+                                            val atuais = state.especializacoesPorPericia[per.nome]
+                                                ?: EspecializacoesDto(principal = null, lista = emptyList())
+                                            val principal = atuais.principal ?: nomeEsp
+                                            val lista = (atuais.lista + nomeEsp + principal).distinct()
+                                            state.especializacoesPorPericia[per.nome] =
+                                                atuais.copy(principal = principal, lista = lista)
+                                        }
+                                    }
+                                }
+                            } else {
+                                val nome = slot1SpecName.trim()
+                                slot1SpecPer?.let { per ->
+                                    if (nome.isNotEmpty()) {
+                                        val atuais = state.especializacoesPorPericia[per.nome]
+                                            ?: EspecializacoesDto(principal = null, lista = emptyList())
+                                        val novas = (atuais.lista + nome).distinct()
+                                        state.especializacoesPorPericia[per.nome] =
+                                            atuais.copy(lista = novas)
+                                    }
+                                }
+                            }
+
+                            // SLOT 2
+                            if (!slot2IsSpec) {
+                                perBaixa2?.let { per ->
+                                    val eraZero = state.rawTotal(per) == 0
+                                    state.baseIncsPorPericia[per] =
+                                        state.baseIncsPorPericia.getValue(per) + 1
+                                    state.spCostStackPorPericia.getValue(per).add(0)
+
+                                    if (eraZero) {
+                                        val nomeEsp = especNomePara(per)
+                                        if (!nomeEsp.isNullOrEmpty()) {
+                                            val atuais = state.especializacoesPorPericia[per.nome]
+                                                ?: EspecializacoesDto(principal = null, lista = emptyList())
+                                            val principal = atuais.principal ?: nomeEsp
+                                            val lista = (atuais.lista + nomeEsp + principal).distinct()
+                                            state.especializacoesPorPericia[per.nome] =
+                                                atuais.copy(principal = principal, lista = lista)
+                                        }
+                                    }
+                                }
+                            } else {
+                                val nome = slot2SpecName.trim()
+                                slot2SpecPer?.let { per ->
+                                    if (nome.isNotEmpty()) {
+                                        val atuais = state.especializacoesPorPericia[per.nome]
+                                            ?: EspecializacoesDto(principal = null, lista = emptyList())
+                                        val novas = (atuais.lista + nome).distinct()
+                                        state.especializacoesPorPericia[per.nome] =
+                                            atuais.copy(lista = novas)
+                                    }
+                                }
                             }
                         }
                         "Atributo" -> {
@@ -554,9 +791,46 @@ fun ProgressosDialog(
                     onDismiss()
                 },
                 enabled = when (escolheu) {
-                    "PericiasBaixas" -> perBaixa1 != null && perBaixa2 != null
-                    "Atributo"       -> canBuyAttr
-                    else             -> true
+                    "PericiasBaixas" -> {
+                        // 1) função que verifica se EXISTE uma especialização (em qualquer slot) para a perícia
+                        fun temSpecPara(per: Pericia?): Boolean {
+                            if (per == null) return false
+                            val m1 = slot1IsSpec && slot1SpecPer == per && slot1SpecName.trim().isNotEmpty()
+                            val m2 = slot2IsSpec && slot2SpecPer == per && slot2SpecName.trim().isNotEmpty()
+                            val i1 = (!slot1IsSpec && perBaixa1 == per && state.rawTotal(per) == 0 && slot1NewPerSpecName.trim().isNotEmpty())
+                            val i2 = (!slot2IsSpec && perBaixa2 == per && state.rawTotal(per) == 0 && slot2NewPerSpecName.trim().isNotEmpty())
+                            return m1 || m2 || i1 || i2
+                        }
+
+                        // 2) validação do SLOT 1
+                        val slot1Ok = if (!slot1IsSpec) {
+                            val p1 = perBaixa1
+                            // se a perícia já existia (>0), ok; se era nova (=0), basta haver ESPECIALIZAÇÃO
+                            p1 != null && (state.rawTotal(p1) > 0 || temSpecPara(p1))
+                        } else {
+                            slot1SpecPer != null && slot1SpecName.trim().isNotEmpty()
+                        }
+
+                        // 3) validação do SLOT 2
+                        val slot2Ok = if (!slot2IsSpec) {
+                            val p2 = perBaixa2
+                            p2 != null && (state.rawTotal(p2) > 0 || temSpecPara(p2))
+                        } else {
+                            slot2SpecPer != null && slot2SpecName.trim().isNotEmpty()
+                        }
+
+                        // 4) obrigatoriedade global: toda NOVA perícia (raw==0) precisa ter especialização em ALGUM slot
+                        val nova1 = if (!slot1IsSpec && perBaixa1 != null && state.rawTotal(perBaixa1!!) == 0) perBaixa1 else null
+                        val nova2 = if (!slot2IsSpec && perBaixa2 != null && state.rawTotal(perBaixa2!!) == 0) perBaixa2 else null
+
+                        val exigeSpecOk =
+                            (nova1 == null || temSpecPara(nova1)) &&
+                                    (nova2 == null || temSpecPara(nova2))
+
+                        slot1Ok && slot2Ok && exigeSpecOk && state.progressosDisponiveis >= 1
+                    }
+                    "Atributo" -> canBuyAttr
+                    else -> true
                 }
             ) {
                 Text("Confirmar")
@@ -568,18 +842,14 @@ fun ProgressosDialog(
     )
 
     if (showAdvSelection) {
-        // Usa a aba em que o usuário abriu a seleção
         val estIndex = if (advSelectedStageIndex >= 0) advSelectedStageIndex else selectedTab
         val estSel   = listaDeEstagios[estIndex]
         val prevStageSpent = state.stageXpSpent.getValue(estSel.nome)
 
-        // Lista final de vantagens candidatas — apenas as que o personagem pode realmente comprar
         val candidatas = buildList {
             listaVantagens.forEach { v ->
                 val podeAgora = state.podeSelecionar(v)
                 val strictOk  = strictRequirementsOk(v, estIndex)
-
-                // Máximo efetivo por nome (limiteCompra + maxSelections)
                 val qtdJaTem = state.vantagensSelecionadas.count {
                     it.nome.equals(v.nome, ignoreCase = true)
                 }
@@ -588,25 +858,16 @@ fun ProgressosDialog(
                     null -> true
                     else -> qtdJaTem < maxEff
                 }
-
-                // Estágio (compatibilidade com a aba escolhida)
                 val stageOk = v.requisitos.estagio.let { req ->
                     val reqIdx = listaDeEstagios.indexOfFirst { it.nome.equals(req, ignoreCase = true) }
                     reqIdx == -1 || reqIdx <= estIndex
                 }
-
-                // Choices válidos (quando necessário)
                 val requiresChoice = v.requiresChoice
                 val validChoicesCount = if (requiresChoice) validChoiceOptionsFor(v).size else 0
                 val choiceOk = !requiresChoice || validChoicesCount > 0
-
-                // Progressos
                 val temProgresso = state.progressosDisponiveis >= 1
-
-                // Decisão final (AGORA exige também strictOk)
                 val deveListar = podeAgora && strictOk && repeticaoOk && stageOk && choiceOk && temProgresso
                 if (deveListar) add(v)
-
                 if (DEBUG) {
                     Log.d(
                         TAG,
@@ -621,53 +882,6 @@ fun ProgressosDialog(
                             append(" | RESULT="); append(if (deveListar) "LISTADA" else "OCULTA")
                         }
                     )
-                    if (!deveListar) {
-                        val motivo = when {
-                            !podeAgora    -> "MOTIVO: podeSelecionar=false (regra global falhou)"
-                            !strictOk     -> "MOTIVO: strictOk=false (atributo/perícia/vant.pré falhou)"
-                            !repeticaoOk  -> "MOTIVO: atingiu limite de compras (qtdJaTem=$qtdJaTem, maxEff=${maxEff ?: "∞"})"
-                            !stageOk      -> "MOTIVO: estágio requerido não compatível"
-                            !choiceOk     -> "MOTIVO: requiresChoice sem opções válidas"
-                            !temProgresso -> "MOTIVO: sem progressos suficientes"
-                            else          -> "MOTIVO: (desconhecido)"
-                        }
-                        Log.d(TAG, motivo)
-                        if (!strictOk) {
-                            // Loga exatamente quais requisitos falharam para debugar rápido
-                            Log.d(TAG, "Requisitos brutos: ${v.requisitos}")
-                            // Atributos
-                            v.requisitos.atributoMin.forEach { (nome, min) ->
-                                val chave = nome.uppercase().semAcentos().trim()
-                                val valor = state.valoresAtributos[chave]?.intValue
-                                Log.d(TAG, "  • Atributo $nome: atual=${valor ?: "—"} vs min=$min")
-                            }
-                            // Perícias mínimas
-                            if (v.requisitos.periciaMin.isNotEmpty()) {
-                                v.requisitos.periciaMin.forEach { (p, m) ->
-                                    val per = listaPericias.firstOrNull { it.nome.equals(p, true) }
-                                    val raw = per?.let { state.rawTotal(it) }
-                                    Log.d(TAG, "  • Perícia $p: atual=${raw ?: "—"} vs min=$m (vinculadoPericia=${v.vinculadoPericia})")
-                                }
-                            }
-                            // Perícia opcional
-                            if (v.requisitos.periciaMinOpcional.isNotEmpty()) {
-                                v.requisitos.periciaMinOpcional.forEach { (p, m) ->
-                                    val per = listaPericias.firstOrNull { it.nome.equals(p, true) }
-                                    val raw = per?.let { state.rawTotal(it) }
-                                    Log.d(TAG, "  • Perícia (opcional) $p: atual=${raw ?: "—"} vs min=$m")
-                                }
-                            }
-                            // Vantagens prévias
-                            if (v.requisitos.vantagensPrevias.isNotEmpty()) {
-                                v.requisitos.vantagensPrevias.forEach { prev ->
-                                    val ok = state.vantagensSelecionadas.any {
-                                        it.nome.equals(prev, ignoreCase = true)
-                                    }
-                                    Log.d(TAG, "  • Vantagem prévia '$prev': tenho=$ok")
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -678,7 +892,6 @@ fun ProgressosDialog(
 
         AlertDialog(
             onDismissRequest = {
-                // desfaz reserva de XP se cancelar
                 state.stageXpSpent[estSel.nome] = prevStageSpent
                 state.progressosDisponiveis =
                     (state.progresso - state.stageXpSpent.values.sum()).coerceAtLeast(0)
@@ -707,12 +920,11 @@ fun ProgressosDialog(
                                 Modifier
                                     .fillMaxWidth()
                                     .clickable {
-
                                         val qtdJaTemClick = state.vantagensSelecionadas.count {
                                             it.nome.equals(vant.nome, ignoreCase = true)
                                         }
                                         when (val maxEff = maxEffectiveSelections(vant)) {
-                                            null -> {} // ilimitado
+                                            null -> {}
                                             else -> if (qtdJaTemClick >= maxEff) {
                                                 tempErrorMsg = "Você já atingiu o limite para ${vant.nome}."
                                                 showTempError = true
@@ -722,8 +934,6 @@ fun ProgressosDialog(
                                                 return@clickable
                                             }
                                         }
-
-                                        // Blindagem também no clique
                                         if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndex)) {
                                             tempErrorMsg = "Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}."
                                             showTempError = true
@@ -732,7 +942,6 @@ fun ProgressosDialog(
                                             }
                                             return@clickable
                                         }
-
                                         if (state.progressosDisponiveis < 1) {
                                             tempErrorMsg = "Você não tem progressos suficientes."
                                             showTempError = true
@@ -741,16 +950,6 @@ fun ProgressosDialog(
                                             }
                                             return@clickable
                                         }
-
-                                        if (vant.requiresChoice) {
-                                            pendingAdv = vant
-                                            showPendingChoice = true
-                                            if (DEBUG) {
-                                                Log.d(TAG, "Abrindo ChoiceDialog para ${vant.nome}")
-                                            }
-                                            return@clickable
-                                        }
-
                                         state.spendProgressAcrossStages(1)
                                         state.vantagensSelecionadas += vant
                                         state.checkFreeze()
@@ -810,12 +1009,11 @@ fun ProgressosDialog(
                 ChoiceDialog(
                     options = options,
                     onConfirm = onConfirm@{ choice ->
-                        // Revalida ANTES de aplicar efeito/gastar
                         val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
                         if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndexFinal)) {
                             showTempError = true
                             tempErrorMsg = "Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}."
-                            return@onConfirm // <- SAÍDA CORRETA DO LAMBDA
+                            return@onConfirm
                         }
 
                         state.spendProgressAcrossStages(1)
@@ -921,8 +1119,6 @@ fun ProgressosDialog(
             }
         }
     }
-
-
 }
 
 // Helpers usados acima (iguais aos que você já tem no arquivo original)

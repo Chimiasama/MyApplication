@@ -342,12 +342,13 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, modoSuperequip, modoSuperComplicacoes, nasceUmHeroi, heroisSemArmadura ->
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, modoSuperequip, modoSuperComplicacoes, nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer ->
 
-                                    criadorViewModel.resetStateParaNovoPersonagem(
+                                criadorViewModel.resetStateParaNovoPersonagem(
                                         cartaSelvagem      = cartaSelvagem,
                                         maisPontosPericias = maisPontosPericias,
-                                        modoSupers         = modoSupers
+                                        modoSupers         = modoSupers,
+                                    usarEspecializacoesDePericia = usarEspecializacaoPer
                                     )
                                     criadorViewModel.state.heroisSemArmadura = heroisSemArmadura
                                     criadorViewModel.state.nasceUmHeroi = nasceUmHeroi
@@ -461,8 +462,10 @@ class MainActivity : ComponentActivity() {
                                                         pontosRestantes    = state.pontosVantagem,
                                                         maisPontosPericias = state.maisPontosPericias,
                                                         cartaSelvagem      = state.cartaSelvagem,
-                                                        heroisSemArmadura = state.heroisSemArmadura,
-                                                        )
+                                                        heroisSemArmadura  = state.heroisSemArmadura,
+                                                        usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
+                                                        especializacoesPorPericia    = state.especializacoesPorPericia.toMap()
+                                                    )
                                                     state.idAtual = personagemId
                                                     StorageUtils.salvarPersonagem(context, salvo)
                                                     Toast.makeText(
@@ -1067,7 +1070,7 @@ class CriadorState {
     }
 
     // em CriadorState
-    fun aplicarSuperpoderes(v: Vantagem, nivel: Int, usarProgresso: Boolean) {
+    fun aplicarSuperpoderes(nivel: Int, usarProgresso: Boolean) {
         val total   = nivel * 15   // 15/30/45/60/75
         val limite  = nivel * 5    //  5/10/15/20/25  (limite total de superpoderes)
         superPontosTotais       = total
@@ -1210,6 +1213,12 @@ class CriadorState {
 
     val poderSlotsPorArcano = mutableStateMapOf<String, SnapshotStateList<String?>>()
     var permiteMultiAntecedenteArcano by mutableStateOf(false)
+    // HABILITA A REGRA OPCIONAL DE ESPECIALIZAÇÃO DE PERÍCIAS
+    var usarEspecializacoesDePericia by mutableStateOf(false)
+
+    // Mapa com as especializações definidas por perícia (chave = nome da perícia)
+    val especializacoesPorPericia: SnapshotStateMap<String, com.example.swadebuilder.model.EspecializacoesDto> = mutableStateMapOf()
+
     var bonusPoderExtra by mutableIntStateOf(0)
 
     var obesoBonusSize by mutableIntStateOf(0)
@@ -1239,11 +1248,11 @@ class CriadorState {
         }
 
     val pontosPericia by derivedStateOf {
-        // totalSpPool vem de BASE_SP_POOL + cpSpStack.size
         val used = spCostStackPorPericia.values.sumOf { it.sum() } +
                 compCostStackPorPericia.values.sumOf { it.sum() }
         totalSpPool - used
     }
+
 
     var nomePersonagem by mutableStateOf("")
 
@@ -2828,8 +2837,7 @@ fun UnifiedScreen(
         ) {
             VantagensContent(
                 state = state,
-                onOpenVantagensDetail = onOpenVantagensDetail,
-                onTogglePoderes = onTogglePoderes
+                onOpenVantagensDetail = onOpenVantagensDetail
             )
         }
 
@@ -3480,7 +3488,8 @@ fun TelaInicial(
         modoSuperequipamentos: Boolean,
         modoSuperComplicacoes: Boolean,
         nasceUmHeroi: Boolean,
-        heroisSemArmadura: Boolean
+        heroisSemArmadura: Boolean,
+        expecializacaoPer: Boolean
     ) -> Unit,
     onLoad: (PersonagemSalvo) -> Unit,
     context: Context,
@@ -3891,14 +3900,13 @@ Feito por Rafael S.W.
                         optSuperequipamentos,
                         optSuperComplicacoes,
                         optNasceUmHeroi,
-                        optHeroiSemArmadura
+                        optHeroiSemArmadura,
+                        optEspecializacaoPer
 
                         )
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
                     if (optSuperPoderes) {
                         viewModel.state.aplicarSuperpoderes(
-                            v = viewModel.state.vantagensSelecionadas
-                                .first { it.nome.equals("SUPERPODERES", true) },
                             nivel = 1,
                             usarProgresso = false
                         )
@@ -4201,7 +4209,7 @@ fun SuperPoderesSection(
             }
             if (v != null) {
                 state.superNivelCampanha = 1
-                state.aplicarSuperpoderes(v = v, nivel = 1, usarProgresso = false)
+                state.aplicarSuperpoderes(nivel = 1, usarProgresso = false)
             }
         }
     }

@@ -54,6 +54,7 @@ import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Poder
+import com.example.swadebuilder.model.Serde
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.dialogs.MultipleSelectionDialog
@@ -62,8 +63,6 @@ import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.json.Json
 
 
 // modelo de filtro
@@ -175,8 +174,7 @@ fun VantFilterDialog(
 @Composable
 fun VantagensContent(
     state: CriadorState,
-    onOpenVantagensDetail: (String) -> Unit,
-    onTogglePoderes: () -> Unit
+    onOpenVantagensDetail: (String) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -184,8 +182,7 @@ fun VantagensContent(
     val listaVantagens: List<Vantagem> = remember {
         val jsonString = context.assets.open("Vantagens.json")
             .bufferedReader().use { it.readText() }
-        Json { ignoreUnknownKeys = true; explicitNulls = false }
-            .decodeFromString(ListSerializer(Vantagem.serializer()), jsonString)
+        Serde.json.decodeFromString<List<Vantagem>>(jsonString)
     }
 
     // Estados principais
@@ -379,10 +376,8 @@ fun VantagensContent(
                         // especialista só com profissional
                         .filter { vant ->
                             vant.categoria == cat &&
-                                    (vant.nome.keyify() != "especialista" ||
-                                            state.vantagensSelecionadas.any {
-                                                it.nome.keyify() == "profissional"
-                                            })
+                                    (vant.id != "especialista" ||
+                                            state.vantagensSelecionadas.any { it.id == "profissional" })
                         }
                         // aplica filtros compostos
                         .filter { vant ->
@@ -419,7 +414,14 @@ fun VantagensContent(
                                         "${it.key} d${it.value}+"
                                     })
                                 }
-                                vant.requisitos.vantagensPrevias.forEach { add("Pré‐requisito: $it") }
+                                // (substitua APENAS o bloco de pré-requisitos dentro do buildList)
+                                val idParaNome = remember(listaVantagens) { listaVantagens.associate { it.id to it.nome } }
+
+                                vant.requisitos.vantagensPrevias.forEach { prevId ->
+                                    val legivel = idParaNome[prevId] ?: prevId.replace('_', ' ').uppercase()
+                                    add("Pré‐requisito: $legivel")
+                                }
+
                                 if (vant.requisitos.exigeCS) add("Requer Carta Selvagem")
                                 if (vant.nome.trim().removeSuffix(":").keyify() == "profissional") {
                                     add("Traço no teto máximo: escolha entre ${state.maxedTraits.joinToString()}")
@@ -575,31 +577,41 @@ fun VantagensContent(
             state.identifyMaxedTraits()
             val vant = pendingVantagem!!
             val validOptions: List<String> = when {
-                vant.nome.equals("ARMA PREDILETA", ignoreCase = true) -> {
+                // ARMA PREDILETA → opções vêm das perícias com d8+ (mantém a sua lógica original)
+                vant.id == "arma_predileta" -> {
                     listaPericias
                         .filter { per -> state.rawTotal(per) >= 8 }
                         .map { it.nome }
                 }
+
+                // ARMA PREDILETA APRIMORADA → só pode escolher entre as escolhas já feitas em ARMA PREDILETA
                 vant.id == "arma_predileta_aprimorada" -> {
                     state.vantagensSelecionadas
                         .filter { it.id == "arma_predileta" && it.choice != null }
                         .mapNotNull { it.choice }
                         .distinct()
                 }
+
+                // PROFISSIONAL → restringe às perícias no teto (maxedTraits)
                 vant.id == "profissional" -> {
                     vant.choiceOptions.filter { it in state.maxedTraits }
                 }
+
+                // ESPECIALISTA → só entre as escolhas já compradas em PROFISSIONAL
                 vant.id == "especialista" -> {
                     state.vantagensSelecionadas
                         .filter { it.id == "profissional" && it.choice != null }
                         .mapNotNull { it.choice }
                 }
+
+                // Genérico: evita repetir a mesma combinação (mesma vantagem + mesma choice)
                 vant.maxSelections > 0 -> {
                     val used = state.vantagensSelecionadas
-                        .filter { it.nome.equals(vant.nome, ignoreCase = true) && it.choice != null }
+                        .filter { it.id == vant.id && it.choice != null }
                         .mapNotNull { it.choice }
                     vant.choiceOptions.filter { it !in used }
                 }
+
                 else -> vant.choiceOptions
             }
 

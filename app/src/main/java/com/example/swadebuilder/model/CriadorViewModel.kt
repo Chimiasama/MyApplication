@@ -22,9 +22,10 @@ class CriadorViewModel : ViewModel() {
      * Reinicia o estado para criação de um novo personagem.
      */
     fun resetStateParaNovoPersonagem(
-        cartaSelvagem: Boolean = true,
-        maisPontosPericias: Boolean = true,
-        modoSupers: Boolean = false
+        cartaSelvagem: Boolean,
+        maisPontosPericias: Boolean,
+        modoSupers: Boolean,
+        usarEspecializacoesDePericia: Boolean = false
     ) {
         // 1) Define se estamos no modo “Supers”
         state.modoSupers = modoSupers
@@ -36,6 +37,8 @@ class CriadorViewModel : ViewModel() {
         // 3) Flags iniciais
         state.cartaSelvagem = cartaSelvagem
         state.maisPontosPericias = maisPontosPericias
+        state.usarEspecializacoesDePericia = usarEspecializacoesDePericia
+        state.especializacoesPorPericia.clear()
 
         // 4) Volta ancestralidade para “HUMANOS” e limpa listas
         state.ancestralidade = "HUMANOS"
@@ -131,7 +134,13 @@ class CriadorViewModel : ViewModel() {
         salvo: PersonagemSalvo,
         categoriasEquip: List<EquipamentoCategoria>
     ) {
-        resetStateParaNovoPersonagem()
+        // PersonagemSalvo não possui 'modoSupers': usamos false aqui.
+        resetStateParaNovoPersonagem(
+            cartaSelvagem = salvo.cartaSelvagem,
+            maisPontosPericias = salvo.maisPontosPericias,
+            modoSupers = false,
+            usarEspecializacoesDePericia = salvo.usarEspecializacoesDePericia
+        )
         state.idAtual = salvo.id
         state.nomePersonagem = salvo.nome
 
@@ -152,9 +161,8 @@ class CriadorViewModel : ViewModel() {
         state.aplicarAncestralidade(salvo.ancestralidade)
 
         state.vantagensSelecionadas.clear()
-        state.vantagensSelecionadas.clear()
         state.vantagensSelecionadas.addAll(
-            listaVantagens.filter { it.id in salvo.vantagens }
+            listaVantagens.filter { it.nome in salvo.vantagens }
         )
 
         state.complicacoesSelecionadas.clear()
@@ -192,5 +200,10 @@ class CriadorViewModel : ViewModel() {
         // 5) Pontos restantes e dinheiro
         state.pontosVantagem = salvo.pontosRestantes
         state.dinheiro = salvo.dinheiro
+
+        // 6) Especialização (regra opcional)
+        state.usarEspecializacoesDePericia = salvo.usarEspecializacoesDePericia
+        state.especializacoesPorPericia.clear()
+        state.especializacoesPorPericia.putAll(salvo.especializacoesPorPericia)
     }
 }

@@ -2,7 +2,9 @@ package com.example.swadebuilder.ui.sections
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,13 +15,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -43,9 +49,9 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.SectionHeader
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.mapaAtributosDisplay
+import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.toDiceString
 import kotlin.math.max
-
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -56,10 +62,21 @@ fun PericiasContent(
     val locked = state.progresso > 0
     var showHelp by rememberSaveable { mutableStateOf(false) }
 
-    // Detecta se “Idoso” está ativo pelo bônus de SP
-    val idosoActive = state.idosoBonusSp > 0
+    // Diálogo para PRIMEIRA especialização (quando compra a perícia)
+    var showSpecDialog by rememberSaveable { mutableStateOf(false) }
+    var specText by rememberSaveable { mutableStateOf("") }
+    var specTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
+    var buyingExtraSpec by rememberSaveable { mutableStateOf(false) }
 
-    // Soma de SP gastos em perícias cujo atributo-base seja “ASTUCIA”
+    // Diálogo de EDIÇÃO (renomear) de especialização (principal OU extra)
+    var showEditDialog by rememberSaveable { mutableStateOf(false) }
+    var editIsPrincipal by rememberSaveable { mutableStateOf(false) }
+    var editPerTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
+    var editOldName by rememberSaveable { mutableStateOf("") }
+    var editNewName by rememberSaveable { mutableStateOf("") }
+
+    // Idoso (bônus de SP até 5 na ÁSTUCIA)
+    val idosoActive = state.idosoBonusSp > 0
     val astuciaSpent = state.spCostStackPorPericia
         .filterKeys { per -> per.atributo == "ASTUCIA" }
         .values
@@ -83,13 +100,12 @@ fun PericiasContent(
                     onListaCompletaClick = if (showLista) ({ onOpenPericiasDetail() }) else null,
                     listaCompletaText    = "Lista Completa"
                 )
-
             }
             if (showHelp) {
                 AlertDialog(
                     onDismissRequest = { showHelp = false },
                     title            = { Text("Como funciona") },
-                    text             = { Text("Cada avanço de perícia custa 1 SP se abaixo do atributo relacionado ou 2 SP se acima.") },
+                    text             = { Text("Cada avanço de perícia custa 1 SP se abaixo do atributo relacionado ou 2 SP se acima. A primeira especialização é obrigatória quando você compra a perícia; especializações extras custam 1 SP cada.") },
                     confirmButton    = {
                         TextButton(onClick = { showHelp = false }) { Text("OK") }
                     }
@@ -119,7 +135,6 @@ fun PericiasContent(
                     .map { it.value }
             }
             val minimoOpcional: Int = opcionalList.maxOrNull() ?: 0
-
             val minimoTotal = max(minimoBasico, minimoOpcional)
 
             val canDecrease = !locked &&
@@ -134,71 +149,319 @@ fun PericiasContent(
                     else
                         true)
 
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 2.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(vertical = 2.dp)
             ) {
-                val defaultSize = MaterialTheme.typography.bodyLarge.fontSize
-
-                Text(
-                    text = buildAnnotatedString {
-                        if (per.basica) {
-                            withStyle(SpanStyle(color = Color.Red, fontWeight = FontWeight.Bold)) {
-                                append("✯ ${per.nome}")
-                            }
-                        } else {
-                            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append(per.nome)
-                            }
-                        }
-                        withStyle(SpanStyle(fontSize = defaultSize / 2)) {
-                            val displayAtr = mapaAtributosDisplay[attrKey] ?: attrKey
-                            append(" ($displayAtr)")
-                        }
-                    },
-                    modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.bodyLarge,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                IconButton(
-                    onClick = { state.decreasePericia(per) },
-                    enabled = canDecrease,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(4.dp)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(Icons.Default.Remove, contentDescription = null, modifier = Modifier.fillMaxSize())
+                    val defaultSize = MaterialTheme.typography.bodyLarge.fontSize
+
+                    Text(
+                        text = buildAnnotatedString {
+                            if (per.basica) {
+                                withStyle(SpanStyle(color = Color.Red, fontWeight = FontWeight.Bold)) {
+                                    append("✯ ${per.nome}")
+                                }
+                            } else {
+                                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append(per.nome)
+                                }
+                            }
+                            withStyle(SpanStyle(fontSize = defaultSize / 2)) {
+                                val displayAtr = mapaAtributosDisplay[attrKey] ?: attrKey
+                                append(" ($displayAtr)")
+                            }
+                        },
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.bodyLarge,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                    // −
+                    IconButton(
+                        onClick = {
+                            // reduzir a perícia
+                            state.decreasePericia(per)
+                            // se zerou, remover TODAS as especializações da perícia
+                            if (state.rawTotal(per) == 0) {
+                                state.especializacoesPorPericia.remove(per.nome)
+                            }
+                        },
+                        enabled = canDecrease,
+                        modifier = Modifier
+                            .size(32.dp)
+                            .padding(4.dp)
+                    ) {
+                        Icon(Icons.Default.Remove, contentDescription = null, modifier = Modifier.fillMaxSize())
+                    }
+
+                    // valor
+                    Text(
+                        text = when {
+                            currentRaw == 0 && per.basica -> "d4"
+                            currentRaw == 0               -> "-"
+                            else                          -> currentRaw.toDiceString()
+                        },
+                        modifier = Modifier.width(40.dp),
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center
+                    )
+
+                    // +
+                    IconButton(
+                        onClick = {
+                            // avanço normal de perícia
+                            state.baseIncsPorPericia[per] = state.baseIncsPorPericia.getValue(per) + 1
+                            state.spCostStackPorPericia.getValue(per).add(costNormal)
+
+                            // se a regra estiver ativa e ainda não existe especialização principal, solicitar agora
+                            if (state.usarEspecializacoesDePericia) {
+                                val esp = state.especializacoesPorPericia[per.nome]
+                                if (esp?.principal == null) {
+                                    specTarget = per
+                                    specText = ""
+                                    buyingExtraSpec = false
+                                    showSpecDialog = true
+                                }
+                            }
+                        },
+                        enabled = canIncrease,
+                        modifier = Modifier
+                            .size(32.dp)
+                            .padding(4.dp)
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.fillMaxSize())
+                    }
+
+                    // Esp+
+                    val jaTemPrincipal = state.especializacoesPorPericia[per.nome]?.principal != null
+                    if (state.usarEspecializacoesDePericia && jaTemPrincipal) {
+                        TextButton(
+                            onClick = {
+                                specTarget = per
+                                specText = ""
+                                buyingExtraSpec = true
+                                showSpecDialog = true
+                            },
+                            enabled = !locked && state.pontosPericia >= 1
+                        ) {
+                            Text("Esp+")
+                        }
+                    }
                 }
 
-                Text(
-                    text = when {
-                        currentRaw == 0 && per.basica -> "d4"
-                        currentRaw == 0               -> "-"
-                        else                          -> currentRaw.toDiceString()
-                    },
-                    modifier = Modifier.width(40.dp),
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center
-                )
+                // ====== RESUMO / CHIPS DE ESPECIALIZAÇÕES ======
+                val espDto: EspecializacoesDto? = state.especializacoesPorPericia[per.nome]
+                val principal = espDto?.principal
+                // lista de extras = lista sem o principal (e sem duplicatas)
+                val extras: List<String> = when {
+                    espDto == null -> emptyList()
+                    else -> espDto.lista
+                        .filter { it.isNotBlank() }
+                        .distinct()
+                        .filter { it != principal }
+                }
 
-                IconButton(
+                if (principal != null || extras.isNotEmpty()) {
+                    Spacer(Modifier.width(8.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Chip da principal (SEM remover, mas com editar)
+                        if (principal != null) {
+                            SpecChip(
+                                label = principal,
+                                isPrincipal = true,
+                                onEdit = {
+                                    editIsPrincipal = true
+                                    editPerTarget = per
+                                    editOldName = principal
+                                    editNewName = principal
+                                    showEditDialog = true
+                                },
+                                onRemove = null // travado
+                            )
+                        }
+
+                        // Chips das extras (podem editar e remover)
+                        extras.forEach { nome ->
+                            SpecChip(
+                                label = nome,
+                                isPrincipal = false,
+                                onEdit = {
+                                    editIsPrincipal = false
+                                    editPerTarget = per
+                                    editOldName = nome
+                                    editNewName = nome
+                                    showEditDialog = true
+                                },
+                                onRemove = {
+                                    // remover especialização extra
+                                    val atuais = state.especializacoesPorPericia[per.nome]
+                                        ?: EspecializacoesDto()
+                                    val novaLista = atuais.lista.filter { it != nome }
+                                    state.especializacoesPorPericia[per.nome] =
+                                        atuais.copy(lista = novaLista)
+
+                                    // devolver 1 SP → remove uma entrada "1" do stack de SP
+                                    val stack = state.spCostStackPorPericia.getValue(per)
+                                    val idx = stack.indexOfLast { it == 1 }
+                                    if (idx != -1) stack.removeAt(idx)
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Diálogo para inserir a ESPECIALIZAÇÃO PRINCIPAL (ou extra, quando Esp+)
+    if (showSpecDialog && specTarget != null) {
+        AlertDialog(
+            onDismissRequest = { showSpecDialog = false },
+            title = { Text(if (buyingExtraSpec) "Nova especialização" else "Especialização principal") },
+            text = {
+                Column {
+                    Text("Perícia: ${specTarget!!.nome}")
+                    Spacer(Modifier.width(8.dp))
+                    OutlinedTextField(
+                        value = specText,
+                        onValueChange = { specText = it },
+                        label = { Text("Nome da especialização") },
+                        singleLine = true
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
                     onClick = {
-                        state.baseIncsPorPericia[per] = state.baseIncsPorPericia.getValue(per) + 1
-                        state.spCostStackPorPericia.getValue(per).add(costNormal)
-                    },
-                    enabled = canIncrease,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(4.dp)
-                ) {
-                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.fillMaxSize())
-                }
+                        val per = specTarget!!
+                        val nomeEsp = specText.trim()
+                        if (nomeEsp.isNotEmpty()) {
+                            val atual = state.especializacoesPorPericia[per.nome] ?: EspecializacoesDto()
+                            val novo =
+                                if (!buyingExtraSpec) {
+                                    // definindo a PRINCIPAL
+                                    val baseLista = (atual.lista + nomeEsp).distinct()
+                                    EspecializacoesDto(
+                                        principal = nomeEsp,
+                                        lista = baseLista
+                                    )
+                                } else {
+                                    // adicionando EXTRA (1 SP)
+                                    val novas = (atual.lista + nomeEsp).distinct()
+                                    atual.copy(lista = novas).also {
+                                        state.spCostStackPorPericia.getValue(per).add(1)
+                                    }
+                                }
+                            state.especializacoesPorPericia[per.nome] = novo
+                        }
+                        showSpecDialog = false
+                    }
+                ) { Text("Confirmar") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showSpecDialog = false }) { Text("Cancelar") }
+            }
+        )
+    }
 
-                Spacer(Modifier.width(4.dp))
+    // Diálogo para RENOMEAR especialização (principal OU extra)
+    if (showEditDialog && editPerTarget != null) {
+        AlertDialog(
+            onDismissRequest = { showEditDialog = false },
+            title = { Text(if (editIsPrincipal) "Renomear especialização principal" else "Renomear especialização") },
+            text = {
+                Column {
+                    Text("Perícia: ${editPerTarget!!.nome}")
+                    Spacer(Modifier.width(8.dp))
+                    OutlinedTextField(
+                        value = editNewName,
+                        onValueChange = { editNewName = it },
+                        label = { Text("Novo nome") },
+                        singleLine = true
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val per = editPerTarget!!
+                        val novo = editNewName.trim()
+                        if (novo.isNotEmpty()) {
+                            val atual = state.especializacoesPorPericia[per.nome] ?: EspecializacoesDto()
+                            if (editIsPrincipal) {
+                                // renomeia principal e mantém/coerentiza na lista
+                                val antiga = atual.principal
+                                val listaSemAntiga = atual.lista.filter { it != antiga }
+                                val novaLista = (listaSemAntiga + novo).distinct()
+                                state.especializacoesPorPericia[per.nome] =
+                                    atual.copy(principal = novo, lista = novaLista)
+                            } else {
+                                // renomeia um item extra na lista
+                                val novaLista = atual.lista.map { if (it == editOldName) novo else it }.distinct()
+                                state.especializacoesPorPericia[per.nome] =
+                                    atual.copy(lista = novaLista)
+                            }
+                        }
+                        showEditDialog = false
+                    }
+                ) { Text("Salvar") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showEditDialog = false }) { Text("Cancelar") }
+            }
+        )
+    }
+}
+
+/** Chip compacto para exibir/editar/remover especializações. */
+@Composable
+private fun SpecChip(
+    label: String,
+    isPrincipal: Boolean,
+    onEdit: (() -> Unit)?,
+    onRemove: (() -> Unit)?
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .background(
+                color = if (isPrincipal) Color(0xFFE6F4EA) else Color(0xFFE9EEF6),
+                shape = RoundedCornerShape(16.dp)
+            )
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+    ) {
+        Text(
+            text = if (isPrincipal) "$label (principal)" else label,
+            style = MaterialTheme.typography.labelMedium
+        )
+        if (onEdit != null) {
+            Spacer(Modifier.width(2.dp))
+            IconButton(
+                onClick = onEdit,
+                modifier = Modifier.size(18.dp)
+            ) {
+                Icon(Icons.Default.Edit, contentDescription = "Renomear", tint = Color.Gray)
+            }
+        }
+        if (onRemove != null) {
+            Spacer(Modifier.width(2.dp))
+            IconButton(
+                onClick = onRemove,
+                modifier = Modifier.size(18.dp)
+            ) {
+                Icon(Icons.Default.Close, contentDescription = "Remover", tint = Color.Gray)
             }
         }
     }
