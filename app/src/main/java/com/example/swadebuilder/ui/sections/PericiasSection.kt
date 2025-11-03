@@ -202,10 +202,10 @@ fun PericiasContent(
 
                     // valor
                     Text(
-                        text = when {
-                            currentRaw == 0 && per.basica -> "d4"
-                            currentRaw == 0               -> "-"
-                            else                          -> currentRaw.toDiceString()
+                        text = when (currentRaw) {
+                            0 if per.basica -> "d4"
+                            0 -> "-"
+                            else -> currentRaw.toDiceString()
                         },
                         modifier = Modifier.width(40.dp),
                         style = MaterialTheme.typography.bodyLarge,
@@ -258,7 +258,7 @@ fun PericiasContent(
                 // ====== RESUMO / CHIPS DE ESPECIALIZAÇÕES ======
                 val espDto: EspecializacoesDto? = state.especializacoesPorPericia[per.nome]
                 val principal = espDto?.principal
-                // lista de extras = lista sem o principal (e sem duplicatas)
+// lista de extras = lista sem o principal (e sem duplicatas)
                 val extras: List<String> = when {
                     espDto == null -> emptyList()
                     else -> espDto.lista
@@ -266,6 +266,9 @@ fun PericiasContent(
                         .distinct()
                         .filter { it != principal }
                 }
+
+// Pode remover especializações extras? Somente no modo de construção inicial.
+                val canRemoveSpecs = !locked
 
                 if (principal != null || extras.isNotEmpty()) {
                     Spacer(Modifier.width(8.dp))
@@ -288,11 +291,13 @@ fun PericiasContent(
                                     editNewName = principal
                                     showEditDialog = true
                                 },
-                                onRemove = null // travado
+                                onRemove = null // travado sempre, mesmo em modo inicial
                             )
                         }
 
-                        // Chips das extras (podem editar e remover)
+                        // Chips das extras:
+                        // - SEM “X” quando locked == true (após construção)
+                        // - COM “X” e devolução de 1 SP quando locked == false (construção)
                         extras.forEach { nome ->
                             SpecChip(
                                 label = nome,
@@ -304,19 +309,21 @@ fun PericiasContent(
                                     editNewName = nome
                                     showEditDialog = true
                                 },
-                                onRemove = {
-                                    // remover especialização extra
-                                    val atuais = state.especializacoesPorPericia[per.nome]
-                                        ?: EspecializacoesDto()
-                                    val novaLista = atuais.lista.filter { it != nome }
-                                    state.especializacoesPorPericia[per.nome] =
-                                        atuais.copy(lista = novaLista)
+                                onRemove = if (canRemoveSpecs) {
+                                    {
+                                        // remover especialização extra
+                                        val atuais = state.especializacoesPorPericia[per.nome]
+                                            ?: EspecializacoesDto()
+                                        val novaLista = atuais.lista.filter { it != nome }
+                                        state.especializacoesPorPericia[per.nome] =
+                                            atuais.copy(lista = novaLista)
 
-                                    // devolver 1 SP → remove uma entrada "1" do stack de SP
-                                    val stack = state.spCostStackPorPericia.getValue(per)
-                                    val idx = stack.indexOfLast { it == 1 }
-                                    if (idx != -1) stack.removeAt(idx)
-                                }
+                                        // devolver 1 SP → remove uma entrada "1" do stack de SP
+                                        val stack = state.spCostStackPorPericia.getValue(per)
+                                        val idx = stack.indexOfLast { it == 1 }
+                                        if (idx != -1) stack.removeAt(idx)
+                                    }
+                                } else null
                             )
                         }
                     }
