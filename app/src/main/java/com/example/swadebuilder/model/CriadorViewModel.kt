@@ -235,6 +235,5 @@ class CriadorViewModel : ViewModel() {
         // 9) Recalcular derivados conforme seu fluxo atual
         state.recalcularPontosAtributo()
         state.rebuildAllPericiaStacks()
-        // (Removida) rebuildResumoEAtributosDerivados() — método não existe no seu projeto.
     }
 }
