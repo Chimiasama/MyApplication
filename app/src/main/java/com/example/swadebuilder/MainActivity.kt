@@ -249,9 +249,11 @@ class MainActivity : ComponentActivity() {
             complicacoesJson
         )
 
-        val ancestralRaw = loadRawText(this, R.raw.listaancestralidade)
-        listaAncestralidadesJson = Json
-            .decodeFromString<List<RacialModifier>>(ancestralRaw)
+        val ancestralRaw = assets.open("listaancestralidade.json")
+            .bufferedReader(Charsets.UTF_8)
+            .use { it.readText() }
+
+        listaAncestralidadesJson = Json.decodeFromString<List<RacialModifier>>(ancestralRaw)
 
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
             val m = rm.atributos
@@ -358,7 +360,12 @@ class MainActivity : ComponentActivity() {
                                     mostrouTelaInicial = false
                                 },
                                 onLoad = { salvo ->
-                                    criadorViewModel.loadFromSalvo(salvo, equipamentoCategorias)
+                                    // Aqui passamos as duas listas: básico e super
+                                    criadorViewModel.loadFromSalvo(
+                                        salvo,
+                                        categoriasBasico = equipamentoCategorias,
+                                        categoriasSuper  = superequipCategorias
+                                    )
                                     mostrouTelaInicial = false
                                 },
                                 context              = context,
@@ -448,24 +455,45 @@ class MainActivity : ComponentActivity() {
                                                         .keys
                                                         .map { it.id }
 
+                                                    // ... dentro do onClick do botão Salvar ...
                                                     val salvo = PersonagemSalvo(
                                                         id                 = personagemId,
                                                         nome               = state.nomePersonagem,
                                                         atributos          = atributosMap,
                                                         pericias           = periciasMap,
                                                         ancestralidade     = state.ancestralidade,
-                                                        vantagens          = vantagensList,
+
+                                                        // AGORA GRAVAMOS IDs de vantagens (para casar 1:1 com Vantagens.json)
+                                                        vantagens          = state.vantagensSelecionadas.map { it.id },
+
+                                                        // Já são IDs
                                                         complicacoes       = complicacoesList,
+
+                                                        // Nomes dos equipamentos comprados (como antes)
                                                         equipamentos       = state.equipamentosComprados.map { it.nome },
+
+                                                        // Poderes arcanos (slots por AA)
                                                         poderes            = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
+
                                                         dinheiro           = state.dinheiro,
                                                         pontosRestantes    = state.pontosVantagem,
                                                         maisPontosPericias = state.maisPontosPericias,
                                                         cartaSelvagem      = state.cartaSelvagem,
                                                         heroisSemArmadura  = state.heroisSemArmadura,
+
                                                         usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
-                                                        especializacoesPorPericia    = state.especializacoesPorPericia.toMap()
+                                                        especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
+
+                                                        // --- NOVOS CAMPOS (SUPERS) ---
+                                                        modoSupers              = state.modoSupers,
+                                                        modoSuperequip          = state.modoSuperequip,
+                                                        modoSuperComplicacoes   = state.modoSuperComplicacoes,
+
+                                                        // Se sua UI guarda explicitamente os nomes comprados de superpoderes, mapeie aqui.
+                                                        // Caso você não tenha essa lista no state, deixe vazio (a carga não quebra).
+                                                        superpoderesComprados   = emptyList()
                                                     )
+
                                                     state.idAtual = personagemId
                                                     StorageUtils.salvarPersonagem(context, salvo)
                                                     Toast.makeText(
@@ -697,7 +725,7 @@ fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
     val marginTop    = 50f
     val marginBottom = 40f
 
-    // Configura Paint e altura de linha
+    // Configura Paint base e altura de linha
     val paint = Paint().apply { textSize = 12f }
     val fm = paint.fontMetrics
     val lineHeight = fm.descent - fm.ascent + fm.leading
@@ -720,10 +748,8 @@ fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
         var start = 0
         val maxWidth = pageInfo.pageWidth - marginLeft - marginRight
         while (start < text.length) {
-            // quantos caracteres cabem em uma linha
             val count = paint.breakText(text, start, text.length, true, maxWidth, null)
             val line = text.substring(start, start + count)
-            // se ultrapassar margem inferior, troca de página
             if (y + lineHeight > pageInfo.pageHeight - marginBottom) {
                 newPage()
             }
@@ -733,10 +759,23 @@ fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
         }
     }
 
-    // 1) Título
-    canvas.drawText("Ficha de ${personagem.nome}", marginLeft, y, paint)
+    // 1) Título (sem linhas separadoras)
+    val titlePaint = Paint(paint).apply {
+        textSize = 16f
+        isFakeBoldText = true
+    }
+    val title = "Ficha de ${personagem.nome}"
 
-    // 2) Corpo do texto (cada linha de buildSummaryLines é “wrapped”)
+    // Se o título não couber na página atual, quebra antes
+    val titleFm = titlePaint.fontMetrics
+    val titleHeight = titleFm.descent - titleFm.ascent + titleFm.leading
+    if (y + titleHeight > pageInfo.pageHeight - marginBottom) {
+        newPage()
+    }
+    canvas.drawText(title, marginLeft, y, titlePaint)
+    y += titleHeight + 12f  // respiro generoso após o título
+
+    // 2) Corpo do texto (cada linha d buildSummaryLines é “wrapped”)
     val lines = buildSummaryLines(personagem)
     for (linha in lines) {
         drawWrapped(linha)

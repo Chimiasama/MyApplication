@@ -1,6 +1,5 @@
 package com.example.swadebuilder.ui.dialogs
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -17,7 +16,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -28,7 +26,6 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -65,9 +62,6 @@ fun ProgressosDialog(
     state: CriadorState,
     onDismiss: () -> Unit
 ) {
-    val TAG = "ProgressosDialog"
-    val DEBUG = true
-
     var escolheu by rememberSaveable { mutableStateOf<String?>(null) }
     var perAltaExp by rememberSaveable { mutableStateOf(false) }
     var perAltaSelected by rememberSaveable { mutableStateOf<Pericia?>(null) }
@@ -86,12 +80,7 @@ fun ProgressosDialog(
     var tempErrorMsg by rememberSaveable { mutableStateOf("") }
     var advSelectedStageIndex by rememberSaveable { mutableIntStateOf(-1) }
 
-    // Estados para especialização “solta”
-    var perEspExp by rememberSaveable { mutableStateOf(false) }
-    var perEspSelected by rememberSaveable { mutableStateOf<Pericia?>(null) }
-    var espNome by rememberSaveable { mutableStateOf("") }
-
-    // Integração 2×: pode ser perícia OU especialização em cada slot
+    // Slots: perícia OU especialização (quando a regra estiver ON)
     var slot1IsSpec by rememberSaveable { mutableStateOf(false) }
     var slot2IsSpec by rememberSaveable { mutableStateOf(false) }
     var slot1SpecPerExp by rememberSaveable { mutableStateOf(false) }
@@ -101,56 +90,40 @@ fun ProgressosDialog(
     var slot1SpecName by rememberSaveable { mutableStateOf("") }
     var slot2SpecName by rememberSaveable { mutableStateOf("") }
 
-    // NOVO: especialização inline quando a perícia escolhida está em 0
+    // Especialização inicial para perícia nova (=0) quando a regra estiver ON
     var slot1NewPerSpecName by rememberSaveable { mutableStateOf("") }
     var slot2NewPerSpecName by rememberSaveable { mutableStateOf("") }
 
-    // configurações gerais de progresso
+    // Configuração de estágios
     val totalProgressLimit = 50
     val stages = listaDeEstagios
     val stageCaps = stages.mapIndexed { idx, st ->
         val prevMax = stages.getOrNull(idx - 1)?.maxProgress ?: 0
-        if (idx < stages.lastIndex)
-            st.maxProgress - prevMax
-        else
-            (totalProgressLimit - prevMax).coerceAtLeast(0)
+        if (idx < stages.lastIndex) st.maxProgress - prevMax else (totalProgressLimit - prevMax).coerceAtLeast(0)
     }
     val currentStageIndex = stageCaps
         .mapIndexed { i, cap -> i to cap }
-        .firstOrNull { (i, cap) ->
-            state.stageXpSpent.getValue(stages[i].nome) < cap
-        }?.first
-        ?: stages.lastIndex
+        .firstOrNull { (i, cap) -> state.stageXpSpent.getValue(stages[i].nome) < cap }
+        ?.first ?: stages.lastIndex
 
     var selectedTab by rememberSaveable { mutableIntStateOf(currentStageIndex) }
 
-    val spSpecsPorPericia: MutableMap<Pericia, Int> =
-        listaPericias.associateWith { 0 }.toMutableMap()
+    listaPericias.associateWith { 0 }.toMutableMap()
 
-
-    // ── Cálculos para compra de atributos via XP ────────────────────────────────
+    // ── Cálculos de atributo via XP ────────────────────────────────────────────
     val est = stages[selectedTab]
     val prevMaxGlobal = if (selectedTab > 0) stages[selectedTab - 1].maxProgress else 0
-    val stageCap = if (selectedTab < stages.lastIndex)
-        est.maxProgress - prevMaxGlobal
-    else
-        (totalProgressLimit - prevMaxGlobal).coerceAtLeast(0)
+    val stageCap = if (selectedTab < stages.lastIndex) est.maxProgress - prevMaxGlobal
+    else (totalProgressLimit - prevMaxGlobal).coerceAtLeast(0)
     val spentHere = state.stageXpSpent.getValue(est.nome)
     val creditsLeft = stageCap - spentHere
 
-    val boughtSoFar = stages
-        .take(selectedTab + 1)
-        .sumOf { state.comprasAttrPorEstagio.getValue(it.nome) }
-
+    val boughtSoFar = stages.take(selectedTab + 1).sumOf { state.comprasAttrPorEstagio.getValue(it.nome) }
     val maxAllowed = if (est.nome == "Lendário") Int.MAX_VALUE else (selectedTab + 1)
     val costAttr = if (est.nome == "Lendário") 2 else 1
-    val canBuyAttr = creditsLeft >= costAttr &&
-            state.progressosDisponiveis >= costAttr &&
-            boughtSoFar < maxAllowed
+    val canBuyAttr = creditsLeft >= costAttr && state.progressosDisponiveis >= costAttr && boughtSoFar < maxAllowed
 
-    // ────────────────────────────────────────────────────────────────────────────
-    // BLINDAGEM: verificação rígida local (vantagens)
-    // ────────────────────────────────────────────────────────────────────────────
+    // ── Requisitos de vantagens (mesma lógica, sem logs) ──────────────────────
     fun strictRequirementsOk(v: Vantagem, estIndex: Int): Boolean {
         val reqEst = v.requisitos.estagio
         if (reqEst.isNotBlank()) {
@@ -191,9 +164,7 @@ fun ProgressosDialog(
         if (v.requisitos.vantagensPrevias.isNotEmpty()) {
             val tenhoTodas = v.requisitos.vantagensPrevias.all { req ->
                 val reqNorm = req.uppercase().semAcentos().trim()
-                state.vantagensSelecionadas.any {
-                    it.nome.uppercase().semAcentos().trim() == reqNorm
-                }
+                state.vantagensSelecionadas.any { it.nome.uppercase().semAcentos().trim() == reqNorm }
             }
             if (!tenhoTodas) return false
         }
@@ -201,7 +172,7 @@ fun ProgressosDialog(
         return true
     }
 
-    // Helpers da seção 2×
+    // Helpers 2×
     fun possui(per: Pericia): Boolean = state.rawTotal(per) > 0
     fun sendoCompradaAgora(per: Pericia): Boolean =
         (!slot1IsSpec && perBaixa1 == per) || (!slot2IsSpec && perBaixa2 == per)
@@ -225,11 +196,9 @@ fun ProgressosDialog(
         if (state.rawTotal(perDesteSlot) != 0) return false
 
         val outroJaInformou = if (slotEh1) {
-            // Slot 2 já preencheu?
             (!slot2IsSpec && perBaixa2 == perDesteSlot && slot2NewPerSpecName.trim().isNotEmpty()) ||
                     ( slot2IsSpec && slot2SpecPer == perDesteSlot && slot2SpecName.trim().isNotEmpty())
         } else {
-            // Slot 1 já preencheu?
             (!slot1IsSpec && perBaixa1 == perDesteSlot && slot1NewPerSpecName.trim().isNotEmpty()) ||
                     ( slot1IsSpec && slot1SpecPer == perDesteSlot && slot1SpecName.trim().isNotEmpty())
         }
@@ -311,25 +280,33 @@ fun ProgressosDialog(
                     Spacer(Modifier.height(12.dp))
                 }
 
-                // ===== INTEGRAÇÃO: 2× Perícias/Especializações < Atributo =====
-                RadioButtonRow("2× Perícias/Especializações < Atributo", escolheu == "PericiasBaixas") {
+                // ===== 2× Perícias/Especializações < Atributo (texto dinâmico) =====
+                val titulo2x = if (state.usarEspecializacoesDePericia)
+                    "2× Perícias/Especializações < Atributo"
+                else
+                    "2× Perícias < Atributo"
+
+                RadioButtonRow(titulo2x, escolheu == "PericiasBaixas") {
                     escolheu = "PericiasBaixas"
                 }
                 if (escolheu == "PericiasBaixas") {
+                    if (!state.usarEspecializacoesDePericia) {
+                        slot1IsSpec = false; slot2IsSpec = false
+                        slot1SpecPer = null; slot2SpecPer = null
+                        slot1SpecName = ""; slot2SpecName = ""
+                        slot1NewPerSpecName = ""; slot2NewPerSpecName = ""
+                    }
+
                     // ---------- SLOT 1 ----------
                     Text("Escolha 1")
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        RadioButton(
-                            selected = !slot1IsSpec,
-                            onClick = { slot1IsSpec = false }
-                        )
+                        RadioButton(selected = !slot1IsSpec, onClick = { slot1IsSpec = false })
                         Text("Perícia")
                         Spacer(Modifier.width(16.dp))
-                        RadioButton(
-                            selected = slot1IsSpec,
-                            onClick = { slot1IsSpec = true }
-                        )
-                        Text("Especialização")
+                        if (state.usarEspecializacoesDePericia) {
+                            RadioButton(selected = slot1IsSpec, onClick = { slot1IsSpec = true })
+                            Text("Especialização")
+                        }
                     }
 
                     if (!slot1IsSpec) {
@@ -352,22 +329,18 @@ fun ProgressosDialog(
                                 onDismissRequest = { perBaixaExp1 = false },
                                 modifier = Modifier.heightIn(max = 200.dp)
                             ) {
-                                listaPericias
-                                    .filter { per -> podeAumentarAbaixo(per) }
-                                    .forEach { per ->
-                                        DropdownMenuItem(
-                                            text = { Text(per.nome) },
-                                            onClick = {
-                                                perBaixa1 = per
-                                                // se for uma perícia nova (0), limpe a caixa para forçar definição
-                                                if (state.rawTotal(per) == 0) slot1NewPerSpecName = ""
-                                                perBaixaExp1 = false
-                                            }
-                                        )
-                                    }
+                                listaPericias.filter { per -> podeAumentarAbaixo(per) }.forEach { per ->
+                                    DropdownMenuItem(
+                                        text = { Text(per.nome) },
+                                        onClick = {
+                                            perBaixa1 = per
+                                            if (state.rawTotal(per) == 0) slot1NewPerSpecName = ""
+                                            perBaixaExp1 = false
+                                        }
+                                    )
+                                }
                             }
                         }
-                        // NOVO: se a perícia selecionada está em 0, mostra caixa para especialização inicial
                         if (deveMostrarSpecNesteSlot(true, perBaixa1)) {
                             Spacer(Modifier.height(6.dp))
                             OutlinedTextField(
@@ -378,7 +351,7 @@ fun ProgressosDialog(
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
-                    } else {
+                    } else if (state.usarEspecializacoesDePericia) {
                         ExposedDropdownMenuBox(
                             expanded = slot1SpecPerExp,
                             onExpandedChange = { slot1SpecPerExp = !slot1SpecPerExp }
@@ -426,17 +399,13 @@ fun ProgressosDialog(
                     // ---------- SLOT 2 ----------
                     Text("Escolha 2")
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        RadioButton(
-                            selected = !slot2IsSpec,
-                            onClick = { slot2IsSpec = false }
-                        )
+                        RadioButton(selected = !slot2IsSpec, onClick = { slot2IsSpec = false })
                         Text("Perícia")
                         Spacer(Modifier.width(16.dp))
-                        RadioButton(
-                            selected = slot2IsSpec,
-                            onClick = { slot2IsSpec = true }
-                        )
-                        Text("Especialização")
+                        if (state.usarEspecializacoesDePericia) {
+                            RadioButton(selected = slot2IsSpec, onClick = { slot2IsSpec = true })
+                            Text("Especialização")
+                        }
                     }
 
                     if (!slot2IsSpec) {
@@ -459,21 +428,18 @@ fun ProgressosDialog(
                                 onDismissRequest = { perBaixaExp2 = false },
                                 modifier = Modifier.heightIn(max = 200.dp)
                             ) {
-                                listaPericias
-                                    .filter { per -> podeAumentarAbaixo(per) }
-                                    .forEach { per ->
-                                        DropdownMenuItem(
-                                            text = { Text(per.nome) },
-                                            onClick = {
-                                                perBaixa2 = per
-                                                if (state.rawTotal(per) == 0) slot2NewPerSpecName = ""
-                                                perBaixaExp2 = false
-                                            }
-                                        )
-                                    }
+                                listaPericias.filter { per -> podeAumentarAbaixo(per) }.forEach { per ->
+                                    DropdownMenuItem(
+                                        text = { Text(per.nome) },
+                                        onClick = {
+                                            perBaixa2 = per
+                                            if (state.rawTotal(per) == 0) slot2NewPerSpecName = ""
+                                            perBaixaExp2 = false
+                                        }
+                                    )
+                                }
                             }
                         }
-                        // NOVO: se a perícia selecionada está em 0, mostra caixa para especialização inicial
                         if (deveMostrarSpecNesteSlot(false, perBaixa2)) {
                             Spacer(Modifier.height(6.dp))
                             OutlinedTextField(
@@ -484,7 +450,7 @@ fun ProgressosDialog(
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
-                    } else {
+                    } else if (state.usarEspecializacoesDePericia) {
                         ExposedDropdownMenuBox(
                             expanded = slot2SpecPerExp,
                             onExpandedChange = { slot2SpecPerExp = !slot2SpecPerExp }
@@ -530,8 +496,7 @@ fun ProgressosDialog(
                     Spacer(Modifier.height(12.dp))
                 }
 
-                // ── Aumento de Atributo via XP ─────────────────────────────────────────
-
+                // ── Atributo via XP ────────────────────────────────────────────────
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -606,7 +571,7 @@ fun ProgressosDialog(
                     Spacer(Modifier.height(12.dp))
                 }
 
-                // ── Remover Complicação ────────────────────────────────────────────────
+                // ── Remover Complicação ───────────────────────────────────────────
                 if (state.complicacoesSelecionadas.values.any { it != null }) {
                     RadioButtonRow("Remover Complicação", escolheu == "Complicacao") {
                         escolheu = "Complicacao"
@@ -674,11 +639,10 @@ fun ProgressosDialog(
                             }
                         }
                         "PericiasBaixas" -> {
-                            // Gasta 1 progresso e aplica as DUAS escolhas
                             state.spendProgressAcrossStages(1)
 
-                            // Helper: captura especialização para uma perícia alvo
                             fun especNomePara(per: Pericia): String? {
+                                if (!state.usarEspecializacoesDePericia) return null
                                 val s1 = if (slot1IsSpec && slot1SpecPer == per) slot1SpecName.trim() else null
                                 val s2 = if (slot2IsSpec && slot2SpecPer == per) slot2SpecName.trim() else null
                                 val i1 = if (!slot1IsSpec && perBaixa1 == per) slot1NewPerSpecName.trim() else null
@@ -694,9 +658,8 @@ fun ProgressosDialog(
                                         state.baseIncsPorPericia.getValue(per) + 1
                                     state.spCostStackPorPericia.getValue(per).add(0)
 
-                                    if (eraZero) {
-                                        val nomeEsp = especNomePara(per)
-                                        if (!nomeEsp.isNullOrEmpty()) {
+                                    if (eraZero && state.usarEspecializacoesDePericia) {
+                                        especNomePara(per)?.let { nomeEsp ->
                                             val atuais = state.especializacoesPorPericia[per.nome]
                                                 ?: EspecializacoesDto(principal = null, lista = emptyList())
                                             val principal = atuais.principal ?: nomeEsp
@@ -706,7 +669,7 @@ fun ProgressosDialog(
                                         }
                                     }
                                 }
-                            } else {
+                            } else if (state.usarEspecializacoesDePericia) {
                                 val nome = slot1SpecName.trim()
                                 slot1SpecPer?.let { per ->
                                     if (nome.isNotEmpty()) {
@@ -727,9 +690,8 @@ fun ProgressosDialog(
                                         state.baseIncsPorPericia.getValue(per) + 1
                                     state.spCostStackPorPericia.getValue(per).add(0)
 
-                                    if (eraZero) {
-                                        val nomeEsp = especNomePara(per)
-                                        if (!nomeEsp.isNullOrEmpty()) {
+                                    if (eraZero && state.usarEspecializacoesDePericia) {
+                                        especNomePara(per)?.let { nomeEsp ->
                                             val atuais = state.especializacoesPorPericia[per.nome]
                                                 ?: EspecializacoesDto(principal = null, lista = emptyList())
                                             val principal = atuais.principal ?: nomeEsp
@@ -739,7 +701,7 @@ fun ProgressosDialog(
                                         }
                                     }
                                 }
-                            } else {
+                            } else if (state.usarEspecializacoesDePericia) {
                                 val nome = slot2SpecName.trim()
                                 slot2SpecPer?.let { per ->
                                     if (nome.isNotEmpty()) {
@@ -792,53 +754,47 @@ fun ProgressosDialog(
                 },
                 enabled = when (escolheu) {
                     "PericiasBaixas" -> {
-                        // 1) função que verifica se EXISTE uma especialização (em qualquer slot) para a perícia
-                        fun temSpecPara(per: Pericia?): Boolean {
-                            if (per == null) return false
-                            val m1 = slot1IsSpec && slot1SpecPer == per && slot1SpecName.trim().isNotEmpty()
-                            val m2 = slot2IsSpec && slot2SpecPer == per && slot2SpecName.trim().isNotEmpty()
-                            val i1 = (!slot1IsSpec && perBaixa1 == per && state.rawTotal(per) == 0 && slot1NewPerSpecName.trim().isNotEmpty())
-                            val i2 = (!slot2IsSpec && perBaixa2 == per && state.rawTotal(per) == 0 && slot2NewPerSpecName.trim().isNotEmpty())
-                            return m1 || m2 || i1 || i2
-                        }
-
-                        // 2) validação do SLOT 1
-                        val slot1Ok = if (!slot1IsSpec) {
-                            val p1 = perBaixa1
-                            // se a perícia já existia (>0), ok; se era nova (=0), basta haver ESPECIALIZAÇÃO
-                            p1 != null && (state.rawTotal(p1) > 0 || temSpecPara(p1))
+                        if (!state.usarEspecializacoesDePericia) {
+                            val slot1Ok = (!slot1IsSpec) && (perBaixa1 != null)
+                            val slot2Ok = (!slot2IsSpec) && (perBaixa2 != null)
+                            slot1Ok && slot2Ok && state.progressosDisponiveis >= 1
                         } else {
-                            slot1SpecPer != null && slot1SpecName.trim().isNotEmpty()
+                            fun temSpecPara(per: Pericia?): Boolean {
+                                if (per == null) return false
+                                val m1 = slot1IsSpec && slot1SpecPer == per && slot1SpecName.trim().isNotEmpty()
+                                val m2 = slot2IsSpec && slot2SpecPer == per && slot2SpecName.trim().isNotEmpty()
+                                val i1 = (!slot1IsSpec && perBaixa1 == per && state.rawTotal(per) == 0 && slot1NewPerSpecName.trim().isNotEmpty())
+                                val i2 = (!slot2IsSpec && perBaixa2 == per && state.rawTotal(per) == 0 && slot2NewPerSpecName.trim().isNotEmpty())
+                                return m1 || m2 || i1 || i2
+                            }
+                            val slot1Ok = if (!slot1IsSpec) {
+                                val p1 = perBaixa1
+                                p1 != null && (state.rawTotal(p1) > 0 || temSpecPara(p1))
+                            } else {
+                                slot1SpecPer != null && slot1SpecName.trim().isNotEmpty()
+                            }
+                            val slot2Ok = if (!slot2IsSpec) {
+                                val p2 = perBaixa2
+                                p2 != null && (state.rawTotal(p2) > 0 || temSpecPara(p2))
+                            } else {
+                                slot2SpecPer != null && slot2SpecName.trim().isNotEmpty()
+                            }
+                            val nova1 = (!slot1IsSpec && perBaixa1 != null && state.rawTotal(perBaixa1!!) == 0)
+                            val nova2 = (!slot2IsSpec && perBaixa2 != null && state.rawTotal(perBaixa2!!) == 0)
+                            val exigeSpecOk =
+                                (!nova1 && !nova2) ||
+                                        (nova1 && temSpecPara(perBaixa1)) ||
+                                        (nova2 && temSpecPara(perBaixa2)) ||
+                                        (nova1 && nova2 && (temSpecPara(perBaixa1) || temSpecPara(perBaixa2)))
+                            slot1Ok && slot2Ok && exigeSpecOk && state.progressosDisponiveis >= 1
                         }
-
-                        // 3) validação do SLOT 2
-                        val slot2Ok = if (!slot2IsSpec) {
-                            val p2 = perBaixa2
-                            p2 != null && (state.rawTotal(p2) > 0 || temSpecPara(p2))
-                        } else {
-                            slot2SpecPer != null && slot2SpecName.trim().isNotEmpty()
-                        }
-
-                        // 4) obrigatoriedade global: toda NOVA perícia (raw==0) precisa ter especialização em ALGUM slot
-                        val nova1 = if (!slot1IsSpec && perBaixa1 != null && state.rawTotal(perBaixa1!!) == 0) perBaixa1 else null
-                        val nova2 = if (!slot2IsSpec && perBaixa2 != null && state.rawTotal(perBaixa2!!) == 0) perBaixa2 else null
-
-                        val exigeSpecOk =
-                            (nova1 == null || temSpecPara(nova1)) &&
-                                    (nova2 == null || temSpecPara(nova2))
-
-                        slot1Ok && slot2Ok && exigeSpecOk && state.progressosDisponiveis >= 1
                     }
                     "Atributo" -> canBuyAttr
                     else -> true
                 }
-            ) {
-                Text("Confirmar")
-            }
+            ) { Text("Confirmar") }
         },
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancelar") }
-        }
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar") } }
     )
 
     if (showAdvSelection) {
@@ -850,14 +806,8 @@ fun ProgressosDialog(
             listaVantagens.forEach { v ->
                 val podeAgora = state.podeSelecionar(v)
                 val strictOk  = strictRequirementsOk(v, estIndex)
-                val qtdJaTem = state.vantagensSelecionadas.count {
-                    it.nome.equals(v.nome, ignoreCase = true)
-                }
-                val maxEff = maxEffectiveSelections(v)
-                val repeticaoOk = when (maxEff) {
-                    null -> true
-                    else -> qtdJaTem < maxEff
-                }
+                val qtdJaTem = state.vantagensSelecionadas.count { it.nome.equals(v.nome, ignoreCase = true) }
+                val repeticaoOk = when (val maxEff = maxEffectiveSelections(v)) { null -> true; else -> qtdJaTem < maxEff }
                 val stageOk = v.requisitos.estagio.let { req ->
                     val reqIdx = listaDeEstagios.indexOfFirst { it.nome.equals(req, ignoreCase = true) }
                     reqIdx == -1 || reqIdx <= estIndex
@@ -868,26 +818,7 @@ fun ProgressosDialog(
                 val temProgresso = state.progressosDisponiveis >= 1
                 val deveListar = podeAgora && strictOk && repeticaoOk && stageOk && choiceOk && temProgresso
                 if (deveListar) add(v)
-                if (DEBUG) {
-                    Log.d(
-                        TAG,
-                        buildString {
-                            append("Vant=\"${v.nome}\" | podeSelecionar="); append(podeAgora)
-                            append(" | strictOk="); append(strictOk)
-                            append(" | repeticaoOk="); append(repeticaoOk)
-                            append(" (qtdJaTem="); append(qtdJaTem); append(", maxEff="); append(maxEff ?: "∞"); append(")")
-                            append(" | stageOk="); append(stageOk); append(" (reqEstagio="); append(v.requisitos.estagio.ifBlank { "—" }); append(", abaIdx="); append(estIndex); append(")")
-                            append(" | choiceOk="); append(choiceOk); append(" (requires="); append(requiresChoice); append(", validChoices="); append(validChoicesCount); append(")")
-                            append(" | temProgresso="); append(temProgresso)
-                            append(" | RESULT="); append(if (deveListar) "LISTADA" else "OCULTA")
-                        }
-                    )
-                }
             }
-        }
-
-        if (DEBUG) {
-            Log.d(TAG, "Total candidatas listadas: ${candidatas.size}")
         }
 
         AlertDialog(
@@ -903,14 +834,6 @@ fun ProgressosDialog(
                         .fillMaxHeight(0.6f)
                         .fillMaxWidth()
                 ) {
-                    if (DEBUG) {
-                        Text(
-                            "DEBUG • Candidatas: ${candidatas.size} | Estágio:${estSel.nome} (idx=$estIndex)",
-                            fontSize = 12.sp,
-                            color = Color.Gray
-                        )
-                        Spacer(Modifier.height(4.dp))
-                    }
                     LazyColumn {
                         items(candidatas) { vant ->
                             val qtdJaTem = state.vantagensSelecionadas.count {
@@ -928,26 +851,17 @@ fun ProgressosDialog(
                                             else -> if (qtdJaTemClick >= maxEff) {
                                                 tempErrorMsg = "Você já atingiu o limite para ${vant.nome}."
                                                 showTempError = true
-                                                if (DEBUG) {
-                                                    Log.d(TAG, "CLICK BLOQUEADO por repetição: ${vant.nome} (qtdJaTem=$qtdJaTemClick, maxEff=$maxEff)")
-                                                }
                                                 return@clickable
                                             }
                                         }
                                         if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndex)) {
                                             tempErrorMsg = "Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}."
                                             showTempError = true
-                                            if (DEBUG) {
-                                                Log.d(TAG, "CLICK BLOQUEADO por requisito: ${vant.nome} (podeSel=${state.podeSelecionar(vant)}, strict=${strictRequirementsOk(vant, estIndex)})")
-                                            }
                                             return@clickable
                                         }
                                         if (state.progressosDisponiveis < 1) {
                                             tempErrorMsg = "Você não tem progressos suficientes."
                                             showTempError = true
-                                            if (DEBUG) {
-                                                Log.d(TAG, "CLICK BLOQUEADO por progressos=0: ${vant.nome}")
-                                            }
                                             return@clickable
                                         }
                                         state.spendProgressAcrossStages(1)
@@ -1121,12 +1035,8 @@ fun ProgressosDialog(
     }
 }
 
-// Helpers usados acima (iguais aos que você já tem no arquivo original)
-private fun maxEffectiveSelections(v: Vantagem): Int? {
-    // Regra: se maxSelections > 0 respeita; se nome contém "Pontos de Poder", trata fora (por estágio).
-    return if (v.maxSelections > 0) v.maxSelections else null
-}
+// Helpers usados acima
+private fun maxEffectiveSelections(v: Vantagem): Int? =
+    if (v.maxSelections > 0) v.maxSelections else null
 
-private fun validChoiceOptionsFor(v: Vantagem): List<String> {
-    return v.choiceOptions
-}
+private fun validChoiceOptionsFor(v: Vantagem): List<String> = v.choiceOptions

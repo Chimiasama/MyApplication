@@ -1,9 +1,8 @@
 package com.example.swadebuilder.ui.sections
 
-import android.content.Context
 import android.os.Build
-import androidx.annotation.RawRes
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,31 +12,31 @@ import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.R
 import com.example.swadebuilder.SectionCard
 import com.example.swadebuilder.SectionHeader
+import com.example.swadebuilder.model.loadJsonAsset
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
 @Serializable
-private data class RacialModifierLite(
+data class RacialModifierLite(
     val nome: String
-    // demais campos do JSON são ignorados propositalmente
 )
 
-private val jsonRelaxed = Json { ignoreUnknownKeys = true }
+private const val ASSET_ANCESTRALIDADES = "listaancestralidade.json"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -46,71 +45,66 @@ fun AncestralidadesSection(
     currentAncestralidade: String,
     onOpenListaAncestralidadesDetail: () -> Unit,
     onSelectAncestralidade: (String) -> Unit
-)
- {
-    val context = androidx.compose.ui.platform.LocalContext.current
+) {
+    val context = LocalContext.current
+    val showLista = booleanResource(R.bool.show_lista_completa)
 
-    val ctx = androidx.compose.ui.platform.LocalContext.current
-    val showLista = ctx.resources.getBoolean(R.bool.show_lista_completa)
-
-    val ancestralidades by remember {
-        mutableStateOf(loadAncestralidadesNomes(context, R.raw.listaancestralidade))
+    // lista do assets (é lida no dropdown)
+    val ancestralidadesState = remember {
+        mutableStateOf(
+            context.loadJsonAsset<List<RacialModifierLite>>(ASSET_ANCESTRALIDADES)
+        )
     }
 
-    var expSection by rememberSaveable { mutableStateOf(false) }
-    var expMenu    by rememberSaveable { mutableStateOf(false) }
-    var showHelp   by rememberSaveable { mutableStateOf(false) }
-     var selected by rememberSaveable(currentAncestralidade) {
-         mutableStateOf<String?>(currentAncestralidade.ifBlank { "HUMANOS" })
-     }
+    // estados explícitos (MutableState)
+    val expSection = rememberSaveable { mutableStateOf(false) }
+    val expMenu    = rememberSaveable { mutableStateOf(false) }
+    val showHelp   = rememberSaveable { mutableStateOf(false) }
+    val selected   = rememberSaveable(currentAncestralidade) {
+        mutableStateOf(currentAncestralidade.ifBlank { "HUMANOS" })
+    }
 
-     SectionCard(
-        title    = "Ancestralidades",
-        expanded = expSection,
-        onToggle = { expSection = !expSection },
-        icon     = Icons.AutoMirrored.Filled.MenuBook
+    SectionCard(
+        title = "Ancestralidades",
+        expanded = expSection.value,
+        onToggle = { expSection.value = !expSection.value },
+        icon = Icons.AutoMirrored.Filled.MenuBook
     ) {
-        // Cabeçalho no mesmo padrão das outras seções
         SectionHeader(
-            onHelpClick   = { showHelp = true },
-            centerText    = "Ancestralidade: ${selected ?: "-"}",
+            onHelpClick = { showHelp.value = true },
+            centerText = "Ancestralidade: ${selected.value}",
             onCenterClick = null,
             onListaCompletaClick = if (showLista) onOpenListaAncestralidadesDetail else null,
             listaCompletaText = "Lista Completa"
         )
 
-
-
         Spacer(Modifier.height(8.dp))
 
-        // Campo read-only com texto PRETO — usa o mesmo composable já existente no projeto
         ExposedDropdownMenuBox(
-            expanded         = expMenu,
-            onExpandedChange = { expMenu = !expMenu }
+            expanded = expMenu.value,
+            onExpandedChange = { expMenu.value = !expMenu.value }
         ) {
-            // ⚠️ Usa o TransparentOutlinedReadOnlyField QUE JÁ EXISTE na Complicações.
-            // Não declare outro com o mesmo nome — isso que causava "Conflicting overloads".
             TransparentOutlinedReadOnlyField(
-                text     = selected ?: "Selecione uma ancestralidade",
-                enabled  = true,
-                onClick  = { expMenu = true },
+                text = selected.value,
+                enabled = true,
+                onClick = { expMenu.value = true },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expMenu.value) } // <—
             )
 
-            // Menu suspenso — limita altura; nada de verticalScroll interno (evita crash).
             ExposedDropdownMenu(
-                expanded         = expMenu,
-                onDismissRequest = { expMenu = false },
-                modifier         = Modifier.heightIn(max = 300.dp)
+                expanded = expMenu.value,
+                onDismissRequest = { expMenu.value = false },
+                modifier = Modifier.heightIn(max = 300.dp)
             ) {
-                ancestralidades.forEach { item ->
+                ancestralidadesState.value.forEach { item ->
                     DropdownMenuItem(
                         text = { Text(item.nome) },
                         onClick = {
-                            selected = item.nome
-                            expMenu  = false
+                            selected.value = item.nome
+                            expMenu.value = false
                             onSelectAncestralidade(item.nome)
                         }
                     )
@@ -118,30 +112,42 @@ fun AncestralidadesSection(
             }
         }
 
-        if (showHelp) {
+        if (showHelp.value) {
             AlertDialog(
-                onDismissRequest = { showHelp = false },
-                title            = { Text("Sobre Ancestralidades") },
-                text             = {
+                onDismissRequest = { showHelp.value = false },
+                title = { Text("Sobre Ancestralidades") },
+                text = {
                     Text(
                         "Escolha uma ancestralidade. Os efeitos e cálculos são aplicados no personagem. " +
                                 "Para textos descritivos, use “Lista completa”."
                     )
                 },
-                confirmButton    = {
-                    TextButton(onClick = { showHelp = false }) { Text("OK") }
+                confirmButton = {
+                    TextButton(onClick = { showHelp.value = false }) { Text("OK") }
                 }
             )
         }
     }
 }
-
-// -------- Helpers --------
-
-private fun loadAncestralidadesNomes(
-    context: Context,
-    @RawRes rawId: Int
-): List<RacialModifierLite> {
-    val jsonStr = context.resources.openRawResource(rawId).bufferedReader().use { it.readText() }
-    return jsonRelaxed.decodeFromString(jsonStr)
+@Composable
+fun TransparentOutlinedReadOnlyField(
+    text: String,
+    enabled: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    trailingIcon: (@Composable (() -> Unit))? = null // <- NOVO slot
+) {
+    androidx.compose.material3.OutlinedTextField(
+        value = text,
+        onValueChange = {},
+        readOnly = true,
+        enabled = enabled,
+        modifier = modifier
+            .fillMaxWidth()
+            .then(Modifier) // mantém extensível
+            .clickable(enabled) { onClick() },
+        trailingIcon = trailingIcon, // <- injeta o ícone do dropdown
+        singleLine = true
+        // mantenha aqui suas cores/shape/estilo atuais, se tiver
+    )
 }

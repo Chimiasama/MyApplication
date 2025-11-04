@@ -1,0 +1,169 @@
+[
+  {
+    "nome": "ANDROIDES",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "CONSTRUTO"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Maior)",
+      "PACIFISTA (Maior)",
+      "VOTO (Maior)"
+    ]
+  },
+  {
+    "nome": "ANÕES",
+    "atributos": {
+      "Vigor": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "VISÃO NO ESCURO",
+      "RESISTENTE"
+    ],
+    "desvantagens": [
+      "MOVIMENTAÇÃO REDUZIDA"
+    ]
+  },
+  {
+    "nome": "AQUARIANOS",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "AQUÁTICO",
+      "VISÃO NO ESCURO",
+      "RESISTÊNCIA"
+    ],
+    "desvantagens": [
+      "DEPENDÊNCIA"
+    ]
+  },
+  {
+    "nome": "AVIANOS",
+    "atributos": {},
+    "pericias": {
+      "Perceber": 2
+    },
+    "vantagensGratis": [
+      "VOO",
+      "SENTIDOS AGUÇADOS:"
+    ],
+    "desvantagens": [
+      "FRÁGIL",
+      "MOVIMENTAÇÃO REDUZIDA",
+      "NÃO SABE NADAR"
+    ]
+  },
+  {
+    "nome": "ELFOS",
+    "atributos": {
+      "Agilidade": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "VISÃO NO ESCURO",
+      "ÁGIL"
+    ],
+    "desvantagens": [
+      "DESASTRADO"
+    ]
+  },
+  {
+    "nome": "MEIO-ELFOS",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "VISÃO NO ESCURO",
+      "HERANÇA"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)"
+    ]
+  },
+  {
+    "nome": "HUMANOS",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ADAPTÁVEL"
+    ],
+    "desvantagens": []
+  },
+  {
+    "nome": "PEQUENINOS",
+    "atributos": {
+      "Espírito": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "SORTE",
+      "ESPIRITUOSO"
+    ],
+    "desvantagens": [
+      "MOVIMENTAÇÃO REDUZIDA",
+      "TAMANHO -1"
+    ]
+  },
+  {
+    "nome": "RAKASHANOS",
+    "atributos": {
+      "Agilidade": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "MORDIDA/GARRAS",
+      "VISÃO NO ESCURO",
+      "ÁGIL"
+    ],
+    "desvantagens": [
+      "INIMIGO RACIAL",
+      "NÃO SABE NADAR",
+      "SANGUINÁRIO"
+    ]
+  },
+  {
+    "nome": "SÁURIOS",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ARMADURA +2",
+      "MORDIDA",
+      "SENTIDOS AGUÇADOS"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)",
+      "FRAQUEZA AMBIENTAL"
+    ]
+  },
+  {
+    "nome": "CELESTIAIS",
+    "atributos": {},
+    "pericias": {
+      "Fé": 2
+    },
+    "vantagensGratis": [
+      "ANTECEDENTE ARCANO MILAGRES",
+      "VOO"
+    ],
+    "desvantagens": [
+      "DESASTRADO",
+      "INIMIGO RACIAL (Demônios e Diabos)",
+      "VOTO (Maior: Proteger a humanidade)"
+    ]
+  },
+  {
+    "nome": "GUARDIÕES",
+    "atributos": {
+      "Vigor": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "ADAPTÁVEL",
+      "CAMPEÕES"
+    ],
+    "desvantagens": [
+      "VOTO (Maior: Proteger a humanidade)"
+    ]
+  }
+]

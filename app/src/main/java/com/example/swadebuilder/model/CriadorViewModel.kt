@@ -29,6 +29,9 @@ class CriadorViewModel : ViewModel() {
     ) {
         // 1) Define se estamos no modo “Supers”
         state.modoSupers = modoSupers
+        // Flags correlatas para telas/filtros
+        state.modoSuperequip = modoSupers
+        state.modoSuperComplicacoes = modoSupers
 
         // 2) Identificador e nome
         state.idAtual = null
@@ -93,15 +96,15 @@ class CriadorViewModel : ViewModel() {
             // 11.1) Remove qualquer antecedente arcano previamente selecionado
             state.vantagensSelecionadas.removeAll { it.id == "antecedente_arcano" }
 
-            // 11.2 Adiciona a vantagem “Superpoderes” (automática, não removível)
+            // 11.2) Adiciona a vantagem “Superpoderes” (automática, não removível)
             val superVant: Vantagem = listaVantagens
                 .firstOrNull { it.nome.equals("Superpoderes", ignoreCase = true) }
                 ?: Vantagem(
                     id               = UUID.randomUUID().toString(),
                     nome             = "Superpoderes",
                     categoria        = Categoria.PODER,
-                    origem           = "SUPERS",
-                    nivel            = "N",  // nível “Novato” por padrão
+                    origem           = "SUPER",
+                    nivel            = "N",  // “Novato”
                     requisitos       = Requisito(
                         estagio            = "N",
                         atributoMin        = emptyMap(),
@@ -114,12 +117,11 @@ class CriadorViewModel : ViewModel() {
                     vinculadoPericia = false,
                     ganhaAoComprar   = emptyList(),
                     descricao        = "Modo Supers: libera Superpoderes."
-                    // os campos @Transient (“choice”, etc.) usarão os defaults da data class
                 )
             state.vantagensSelecionadas.add(superVant)
             state.vantagensAutomaticas.add(superVant.nome)
 
-            // 11.3 Cria slots vazios para todos os arcanos (mesmo que não usemos arcano normalmente)
+            // 11.3) Cria slots vazios para todos os arcanos (compatibilidade visual)
             state.poderSlotsPorArcano.clear()
             arcanoInfo.forEach { (arcKey, triple) ->
                 val slots = triple.first
@@ -130,17 +132,28 @@ class CriadorViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Reidrata um personagem salvo, incluindo modos Supers e superequipamentos.
+     * - categoriasBasico: categorias de equipamento com origem BASICO
+     * - categoriasSuper:  categorias de equipamento com origem SUPER
+     */
     fun loadFromSalvo(
         salvo: PersonagemSalvo,
-        categoriasEquip: List<EquipamentoCategoria>
+        categoriasBasico: List<EquipamentoCategoria>,
+        categoriasSuper:  List<EquipamentoCategoria>
     ) {
-        // PersonagemSalvo não possui 'modoSupers': usamos false aqui.
+        // Reinicia o estado com as flags corretas vindas do save
         resetStateParaNovoPersonagem(
             cartaSelvagem = salvo.cartaSelvagem,
             maisPontosPericias = salvo.maisPontosPericias,
-            modoSupers = false,
+            modoSupers = salvo.modoSupers,
             usarEspecializacoesDePericia = salvo.usarEspecializacoesDePericia
         )
+        // Demais flags de modo (mantêm comportamento de telas/filtros)
+        state.modoSuperequip = salvo.modoSuperequip
+        state.modoSuperComplicacoes = salvo.modoSuperComplicacoes
+
+        // Identidade e nome
         state.idAtual = salvo.id
         state.nomePersonagem = salvo.nome
 
@@ -153,57 +166,75 @@ class CriadorViewModel : ViewModel() {
         }
         state.rebuildPericias(desiredPericias)
 
-        // 2) Ancestralidade, vantagens e complicações
+        // 2) Ancestralidade e flags gerais
         state.maisPontosPericias = salvo.maisPontosPericias
         state.cartaSelvagem      = salvo.cartaSelvagem
         state.heroisSemArmadura  = salvo.heroisSemArmadura
         state.ancestralidade     = salvo.ancestralidade
         state.aplicarAncestralidade(salvo.ancestralidade)
 
+        // 3) Vantagens — prioriza ID; fallback por nome (case-insensitive)
         state.vantagensSelecionadas.clear()
-        state.vantagensSelecionadas.addAll(
-            listaVantagens.filter { it.nome in salvo.vantagens }
-        )
+        val mapPorId   = listaVantagens.associateBy { it.id }
+        val mapPorNome = listaVantagens.associateBy { it.nome.trim().uppercase() }
 
-        state.complicacoesSelecionadas.clear()
-        salvo.complicacoes.forEach { nomeComp ->
-            listaComplicacoes
-                .find { it.id == nomeComp }
-                ?.let { comp ->
-                    // Por default, restaura como “Menor”
-                    state.complicacoesSelecionadas[comp] = "Menor"
-                }
-        }
-
-        // 3) Equipamentos
-        state.equipamentosComprados.clear()
-        salvo.equipamentos.forEach { nomeEq ->
-            categoriasEquip
-                .flatMap { it.itens }
-                .firstOrNull { it.nome == nomeEq }
-                ?.let { eq ->
-                    state.equipamentosComprados.add(eq)
-                }
-        }
-
-        // 4) Poderes (antecedentes arcanos)
-        state.poderSlotsPorArcano.clear()
-        salvo.poderes.forEach { (arcano, poderesLista) ->
-            val capacidade = arcanoInfo[arcano]?.first ?: 0
-            state.poderSlotsPorArcano[arcano] = mutableStateListOf<String?>().apply {
-                repeat(capacidade) { idx ->
-                    add(poderesLista.getOrNull(idx))
+        salvo.vantagens.forEach { saved ->
+            val trimmed = saved.trim()
+            val byId = mapPorId[trimmed]
+            if (byId != null) {
+                state.vantagensSelecionadas.add(byId)
+            } else {
+                val byName = mapPorNome[trimmed.uppercase()]
+                if (byName != null) {
+                    state.vantagensSelecionadas.add(byName)
                 }
             }
         }
 
-        // 5) Pontos restantes e dinheiro
+        // 4) Complicações — já são IDs no formato atual
+        state.complicacoesSelecionadas.clear()
+        salvo.complicacoes.forEach { compId ->
+            listaComplicacoes.find { it.id == compId }?.let { comp ->
+                // Por default, restaura como “Menor”
+                state.complicacoesSelecionadas[comp] = "Menor"
+            }
+        }
+
+        // 5) Equipamentos — busca em BÁSICO + SUPER (corrige sumiço pós-load)
+        state.equipamentosComprados.clear()
+        val todasCategorias = (categoriasBasico + categoriasSuper)
+        val mapaItensPorNome = todasCategorias
+            .flatMap { it.itens }
+            .associateBy { it.nome.trim().uppercase() }
+
+        salvo.equipamentos.forEach { nomeSalvo ->
+            mapaItensPorNome[nomeSalvo.trim().uppercase()]?.let { item ->
+                state.equipamentosComprados.add(item)
+            }
+        }
+
+        // 6) Poderes arcanos (slots por AA)
+        state.poderSlotsPorArcano.clear()
+        salvo.poderes.forEach { (arcano, poderesLista) ->
+            val capacidade = arcanoInfo[arcano]?.first ?: 0
+            state.poderSlotsPorArcano[arcano] = mutableStateListOf<String?>().apply {
+                repeat(capacidade) { idx -> add(poderesLista.getOrNull(idx)) }
+            }
+        }
+
+        // 7) (Removido) superPoderesComprados — seu state espera PurchasedPower, não Strings.
+
+        // 8) Dinheiro, pontos, especializações
         state.pontosVantagem = salvo.pontosRestantes
         state.dinheiro = salvo.dinheiro
 
-        // 6) Especialização (regra opcional)
         state.usarEspecializacoesDePericia = salvo.usarEspecializacoesDePericia
         state.especializacoesPorPericia.clear()
         state.especializacoesPorPericia.putAll(salvo.especializacoesPorPericia)
+
+        // 9) Recalcular derivados conforme seu fluxo atual
+        state.recalcularPontosAtributo()
+        state.rebuildAllPericiaStacks()
+        // (Removida) rebuildResumoEAtributosDerivados() — método não existe no seu projeto.
     }
 }
