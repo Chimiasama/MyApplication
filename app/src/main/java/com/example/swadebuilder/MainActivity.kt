@@ -344,18 +344,19 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, modoSuperequip, modoSuperComplicacoes, nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer ->
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, modoSuperequip, modoSuperComplicacoes, nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer, semPontosDePoder ->
 
-                                criadorViewModel.resetStateParaNovoPersonagem(
+                                    criadorViewModel.resetStateParaNovoPersonagem(
                                         cartaSelvagem      = cartaSelvagem,
                                         maisPontosPericias = maisPontosPericias,
                                         modoSupers         = modoSupers,
-                                    usarEspecializacoesDePericia = usarEspecializacaoPer
+                                        usarEspecializacoesDePericia = usarEspecializacaoPer
                                     )
-                                    criadorViewModel.state.heroisSemArmadura = heroisSemArmadura
-                                    criadorViewModel.state.nasceUmHeroi = nasceUmHeroi
-                                    criadorViewModel.state.modoSuperequip = modoSuperequip
+                                    criadorViewModel.state.heroisSemArmadura     = heroisSemArmadura
+                                    criadorViewModel.state.nasceUmHeroi          = nasceUmHeroi
+                                    criadorViewModel.state.modoSuperequip        = modoSuperequip
                                     criadorViewModel.state.modoSuperComplicacoes = modoSuperComplicacoes
+                                    criadorViewModel.state.usarSemPontosDePoder = semPontosDePoder
 
                                     mostrouTelaInicial = false
                                 },
@@ -480,7 +481,7 @@ class MainActivity : ComponentActivity() {
                                                         maisPontosPericias = state.maisPontosPericias,
                                                         cartaSelvagem      = state.cartaSelvagem,
                                                         heroisSemArmadura  = state.heroisSemArmadura,
-
+                                                        semPontosDePoder = state.usarSemPontosDePoder,
                                                         usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
                                                         especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
 
@@ -997,7 +998,7 @@ class CriadorState {
 
     val superPoderesComprados = mutableStateListOf<PurchasedPower>()
     var superNivelCampanha by mutableStateOf<Int?>(null)
-
+    var usarSemPontosDePoder by mutableStateOf(false)
     var superPontosTotais by mutableIntStateOf(0)
     var superPontosDisponiveis by mutableIntStateOf(0)
     var superLimite by mutableIntStateOf(0)
@@ -3569,7 +3570,8 @@ fun TelaInicial(
         modoSuperComplicacoes: Boolean,
         nasceUmHeroi: Boolean,
         heroisSemArmadura: Boolean,
-        expecializacaoPer: Boolean
+        expecializacaoPer: Boolean,
+        semPontosDePoder: Boolean
     ) -> Unit,
     onLoad: (PersonagemSalvo) -> Unit,
     context: Context,
@@ -3981,7 +3983,8 @@ Feito por Rafael S.W.
                         optSuperComplicacoes,
                         optNasceUmHeroi,
                         optHeroiSemArmadura,
-                        optEspecializacaoPer
+                        optEspecializacaoPer,
+                        optSemPontosPoder
 
                         )
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano

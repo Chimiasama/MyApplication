@@ -29,7 +29,7 @@ data class PersonagemSalvo(
     val maisPontosPericias: Boolean,
     val cartaSelvagem: Boolean,
     val heroisSemArmadura: Boolean = false,
-
+    val semPontosDePoder: Boolean = false,
     // --- Especializações (já existentes) ---
     val usarEspecializacoesDePericia: Boolean = false,
     val especializacoesPorPericia: Map<String, EspecializacoesDto> = emptyMap(),

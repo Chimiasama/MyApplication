@@ -109,10 +109,15 @@ fun PoderesSection(
     var showHelp by rememberSaveable { mutableStateOf(false) }
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
+    val center = if (state.usarSemPontosDePoder) {
+        "Sem Pontos de Poder (teste penalidade -1/2 do custo pra cima)"
+    } else {
+        "Pontos de Poder: $pp"
+    }
 
     SectionHeader(
         onHelpClick          = { showHelp = true },
-        centerText           = "Pontos de Poder: $pp",
+        centerText           = center,
         onListaCompletaClick = if (showLista) onOpenListaCompletaPoderes else null,
         listaCompletaText    = "Lista Completa"
     )

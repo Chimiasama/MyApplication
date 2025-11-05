@@ -43,6 +43,41 @@ import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.loadJsonAsset
 import com.google.gson.JsonArray
 
+private fun custoParaPenalidadeTexto(custo: String): String {
+    val clean = custo.trim()
+
+    // inteiro simples (ex.: "3")
+    clean.toIntOrNull()?.let { base ->
+        val pen = (base + 1) / 2 // ceil(base/2)
+        return "-$pen"
+    }
+
+    // formatos com "/" (ex.: "+2/+3")
+    if (clean.contains("/")) {
+        val parts = clean.split("/")
+        val mapped = parts.map { p ->
+            val n = p.replace("+", "").trim().toIntOrNull()
+            n?.let { "-${(it + 1) / 2}" } ?: "—"
+        }
+        return mapped.joinToString("/")
+    }
+
+    // sufixo "+" (ex.: "2+")
+    if (clean.endsWith("+")) {
+        val n = clean.removeSuffix("+").toIntOrNull()
+        return n?.let { "-${(it + 1) / 2}+" } ?: "—"
+    }
+
+    // prefixo "+" (ex.: "+1")
+    if (clean.startsWith("+")) {
+        val n = clean.removePrefix("+").toIntOrNull()
+        return n?.let { "-${(it + 1) / 2}" } ?: "—"
+    }
+
+    // casos textuais ("Especial", "—", "")
+    return "—"
+}
+
 /**
  * UM ÚNICO DETAIL:
  * - Se state.modoSupers == false  -> mostra lista de MAGIAS (poderes.json, classe Poder)
@@ -117,11 +152,20 @@ fun PoderesDetailScreen(
 
                             Spacer(Modifier.height(2.dp))
 
-                            Text(
-                                text = "Pontos de Poder: ${poder.pontosDePoder}",
-                                fontSize = 14.sp,
-                                color = Color(0xFF050402)
-                            )
+                            if (state.usarSemPontosDePoder) {
+                                val custoStr = poder.pontosDePoder.toString()
+                                Text(
+                                    text = "Penalidade base: ${custoParaPenalidadeTexto(custoStr)}",
+                                    fontSize = 14.sp,
+                                    color = Color(0xFF050402)
+                                )
+                            } else {
+                                Text(
+                                    text = "Pontos de Poder: ${poder.pontosDePoder}",
+                                    fontSize = 14.sp,
+                                    color = Color(0xFF050402)
+                                )
+                            }
 
                             Spacer(Modifier.height(4.dp))
 
@@ -170,6 +214,13 @@ fun PoderesDetailScreen(
                                         fontSize = 14.sp,
                                         color = Color(0xFF050402)
                                     )
+                                    if (state.usarSemPontosDePoder) {
+                                        Text(
+                                            text = "  Penalidade: ${custoParaPenalidadeTexto(mod.custo)}",
+                                            fontSize = 14.sp,
+                                            color = Color(0xFF050402)
+                                        )
+                                    }
                                     if (mod.descricao.isNotBlank()) {
                                         Text(
                                             text = "  ${mod.descricao}",

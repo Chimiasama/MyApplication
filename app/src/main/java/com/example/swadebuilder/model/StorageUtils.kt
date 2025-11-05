@@ -43,3 +43,37 @@ object StorageUtils {
         if (file.exists()) file.delete()
     }
 }
+private fun custoParaPenalidadeTexto(custo: String): String {
+    val clean = custo.trim()
+
+    // Números simples (ex.: "3")
+    clean.toIntOrNull()?.let { base ->
+        val pen = (base + 1) / 2  // ceil(base/2)
+        return "-$pen"
+    }
+
+    // Prefixos + e faixas (ex.: "+2/+3")
+    if (clean.contains("/")) {
+        val parts = clean.split("/")
+        val mapped = parts.map { p ->
+            val n = p.replace("+","").trim().toIntOrNull()
+            n?.let { "-${(it+1)/2}" } ?: "—"
+        }
+        return mapped.joinToString("/")
+    }
+
+    // Sufixo "+" (ex.: "2+")
+    if (clean.endsWith("+")) {
+        val n = clean.removeSuffix("+").toIntOrNull()
+        return n?.let { "-${(it+1)/2}+" } ?: "—"
+    }
+
+    // Prefixo "+" (ex.: "+1")
+    if (clean.startsWith("+")) {
+        val n = clean.removePrefix("+").toIntOrNull()
+        return n?.let { "-${(it+1)/2}" } ?: "—"
+    }
+
+    // Casos textuais ("Especial", "—", vazio)
+    return "—"
+}
