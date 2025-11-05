@@ -16,14 +16,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -31,6 +33,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -55,6 +59,7 @@ import com.example.swadebuilder.periciaStartRaw
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,6 +67,11 @@ fun ProgressosDialog(
     state: CriadorState,
     onDismiss: () -> Unit
 ) {
+    // Snackbar para mensagens temporárias (substitui showTempError/tempErrorMsg)
+    val snackHost = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    fun showSnack(msg: String) = scope.launch { snackHost.showSnackbar(message = msg) }
+
     var escolheu by rememberSaveable { mutableStateOf<String?>(null) }
     var perAltaExp by rememberSaveable { mutableStateOf(false) }
     var perAltaSelected by rememberSaveable { mutableStateOf<Pericia?>(null) }
@@ -76,8 +86,6 @@ fun ProgressosDialog(
     var showAdvSelection by rememberSaveable { mutableStateOf(false) }
     var pendingAdv by rememberSaveable { mutableStateOf<Vantagem?>(null) }
     var showPendingChoice by rememberSaveable { mutableStateOf(false) }
-    var showTempError by rememberSaveable { mutableStateOf(false) }
-    var tempErrorMsg by rememberSaveable { mutableStateOf("") }
     var advSelectedStageIndex by rememberSaveable { mutableIntStateOf(-1) }
 
     // Slots: perícia OU especialização (quando a regra estiver ON)
@@ -208,12 +216,13 @@ fun ProgressosDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            TabRow(selectedTabIndex = selectedTab) {
+            PrimaryTabRow(selectedTabIndex = selectedTab) {
                 stages.forEachIndexed { i, st ->
                     val enabled = i == currentStageIndex
                     Tab(
                         selected = (selectedTab == i),
-                        onClick = { if (enabled) selectedTab = i },
+                        onClick  = { if (enabled) selectedTab = i },
+                        enabled  = enabled,
                         text = {
                             Text(
                                 st.nome.first().toString(),
@@ -226,6 +235,9 @@ fun ProgressosDialog(
         },
         text = {
             Column {
+                // host para mensagens rápidas
+                SnackbarHost(hostState = snackHost)
+
                 Spacer(Modifier.height(8.dp))
 
                 Text("XP neste estágio: $spentHere / $stageCap")
@@ -250,7 +262,7 @@ fun ProgressosDialog(
                             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(perAltaExp) },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                                 .clickable { perAltaExp = true }
                         )
                         ExposedDropdownMenu(
@@ -321,7 +333,7 @@ fun ProgressosDialog(
                                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(perBaixaExp1) },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                                     .clickable { perBaixaExp1 = true }
                             )
                             ExposedDropdownMenu(
@@ -363,7 +375,7 @@ fun ProgressosDialog(
                                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(slot1SpecPerExp) },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                                     .clickable { slot1SpecPerExp = true }
                             )
                             ExposedDropdownMenu(
@@ -420,7 +432,7 @@ fun ProgressosDialog(
                                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(perBaixaExp2) },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                                     .clickable { perBaixaExp2 = true }
                             )
                             ExposedDropdownMenu(
@@ -462,7 +474,7 @@ fun ProgressosDialog(
                                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(slot2SpecPerExp) },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                                     .clickable { slot2SpecPerExp = true }
                             )
                             ExposedDropdownMenu(
@@ -507,8 +519,7 @@ fun ProgressosDialog(
                         ) {
                             when {
                                 est.nome == "Lendário" && state.progressosDisponiveis < costAttr -> {
-                                    tempErrorMsg = "Atributos lendários custam 2 progressos para adquirir"
-                                    showTempError = true
+                                    showSnack("Atributos lendários custam 2 progressos para adquirir")
                                 }
                                 canBuyAttr -> escolheu = "Atributo"
                             }
@@ -519,8 +530,7 @@ fun ProgressosDialog(
                         selected = (escolheu == "Atributo"),
                         onClick  = {
                             if (est.nome == "Lendário" && state.progressosDisponiveis < costAttr) {
-                                tempErrorMsg = "Atributos lendários custam 2 progressos para adquirir"
-                                showTempError = true
+                                showSnack("Atributos lendários custam 2 progressos para adquirir")
                             } else if (canBuyAttr) {
                                 escolheu = "Atributo"
                             }
@@ -543,7 +553,7 @@ fun ProgressosDialog(
                             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(attrExp) },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                                 .clickable { attrExp = true }
                         )
                         ExposedDropdownMenu(
@@ -588,7 +598,7 @@ fun ProgressosDialog(
                                 trailingIcon  = { ExposedDropdownMenuDefaults.TrailingIcon(compExp) },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                                     .clickable { compExp = true }
                             )
                             ExposedDropdownMenu(
@@ -724,8 +734,7 @@ fun ProgressosDialog(
                                 }
                                 onDismiss()
                             } else {
-                                tempErrorMsg = "Atributos lendários custam 2 progressos para adquirir"
-                                showTempError = true
+                                showSnack("Atributos lendários custam 2 progressos para adquirir")
                             }
                             return@TextButton
                         }
@@ -849,19 +858,16 @@ fun ProgressosDialog(
                                         when (val maxEff = maxEffectiveSelections(vant)) {
                                             null -> {}
                                             else -> if (qtdJaTemClick >= maxEff) {
-                                                tempErrorMsg = "Você já atingiu o limite para ${vant.nome}."
-                                                showTempError = true
+                                                showSnack("Você já atingiu o limite para ${vant.nome}.")
                                                 return@clickable
                                             }
                                         }
                                         if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndex)) {
-                                            tempErrorMsg = "Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}."
-                                            showTempError = true
+                                            showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
                                             return@clickable
                                         }
                                         if (state.progressosDisponiveis < 1) {
-                                            tempErrorMsg = "Você não tem progressos suficientes."
-                                            showTempError = true
+                                            showSnack("Você não tem progressos suficientes.")
                                             return@clickable
                                         }
                                         state.spendProgressAcrossStages(1)
@@ -925,8 +931,7 @@ fun ProgressosDialog(
                     onConfirm = onConfirm@{ choice ->
                         val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
                         if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndexFinal)) {
-                            showTempError = true
-                            tempErrorMsg = "Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}."
+                            showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
                             return@onConfirm
                         }
 
@@ -962,10 +967,8 @@ fun ProgressosDialog(
 
                 if (profChoices.isEmpty()) {
                     LaunchedEffect(vant) {
-                        showTempError = true
-                        tempErrorMsg = "Você precisa primeiro de Profissional em algum traço"
+                        showSnack("Você precisa primeiro de Profissional em algum traço")
                         delay(2_000)
-                        showTempError = false
                         showPendingChoice = false
                         pendingAdv = null
                     }
@@ -975,8 +978,7 @@ fun ProgressosDialog(
                         onConfirm = onConfirm@{ choice ->
                             val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
                             if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndexFinal)) {
-                                showTempError = true
-                                tempErrorMsg = "Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}."
+                                showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
                                 return@onConfirm
                             }
 
@@ -1012,8 +1014,7 @@ fun ProgressosDialog(
                     onConfirm = onConfirm@{ choice ->
                         val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
                         if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndexFinal)) {
-                            showTempError = true
-                            tempErrorMsg = "Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}."
+                            showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
                             return@onConfirm
                         }
 

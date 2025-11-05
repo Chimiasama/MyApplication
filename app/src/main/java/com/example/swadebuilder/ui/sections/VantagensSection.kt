@@ -1,5 +1,7 @@
 package com.example.swadebuilder.ui.sections
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -170,6 +172,7 @@ fun VantFilterDialog(
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VantagensContent(
@@ -296,22 +299,54 @@ fun VantagensContent(
                         reqId == vant.id
                     }
                 }
-                val canRemove = !locked
-                        && index >= initialCount
-                        && index >= state.frozenAdvCount
-                        && !isRacialFree
-                        && !requiredByAnother
-                        && vant.nome != "Superpoderes"
+
+                // 🔒 Bloqueio padrão + não permitir remover "Novos Poderes" em Progresso
+                val baseRemovable = !locked &&
+                        index >= initialCount &&
+                        index >= state.frozenAdvCount &&
+                        !isRacialFree &&
+                        !requiredByAnother &&
+                        vant.nome != "Superpoderes"
+
+                val canRemove = baseRemovable && !(state.emProgresso && vant.id == "novos_poderes")
 
                 AssistChip(
                     onClick = {
-                        if (canRemove) {
-                            if (vant.nome.contains("Pontos de Poder", true)) {
-                                state.removerPontosDePoder(vant)
-                            } else {
-                                state.removeVantagemDinheiro(vant)
-                                state.vantagensSelecionadas.remove(vant)
-                            }
+                        if (!canRemove) return@AssistChip
+
+                        if (vant.id == "novos_poderes") {
+                            // 🔁 Só permitido na criação (canRemove já garante isso)
+                            // 1) Descobre o arcano escolhido no Antecedente Arcano
+                            val escolhidoArcano = state.vantagensSelecionadas
+                                .firstOrNull { it.id == "antecedente_arcano" }
+                                ?.choice
+                                ?.uppercase()
+                                ?.semAcentos()
+                                ?.trim()
+                                ?: ""
+
+                            // 2) Lê slots iniciais desse arcano (do arcanoInfo)
+                            val initialSlots = arcanoInfo[escolhidoArcano]?.first ?: 0
+
+                            // 3) Desfaz a ÚLTIMA compra de "Novos Poderes" (remove aqueles poderes e compacta slots)
+                            state.desfazerUltimosNovosPoderes(
+                                versionKey = escolhidoArcano, // use a MESMA chave usada em getOrPut(...)
+                                initialSlots = initialSlots
+                            )
+
+                            // 4) Remove a própria vantagem e reconta
+                            state.vantagensSelecionadas.remove(vant)
+                            state.pontosVantagem++
+                            state.rebuildAllPericiaStacks()
+                        }
+                        else if (vant.nome.contains("Pontos de Poder", true)) {
+                            state.removerPontosDePoder(vant)
+                            state.pontosVantagem++
+                            state.rebuildAllPericiaStacks()
+                        }
+                        else {
+                            state.removeVantagemDinheiro(vant)
+                            state.vantagensSelecionadas.remove(vant)
                             state.pontosVantagem++
                             state.rebuildAllPericiaStacks()
                         }
@@ -719,6 +754,7 @@ fun VantagensContent(
                     // ----------------------------------------------------------
                     state.poderesSelecionados.clear()
                     state.poderesSelecionados.addAll(slots.filterNotNull())
+                    state.registrarNovosPoderes(versionKey, escolhas)
 
                     // ----------------------------------------------------------
                     // 7) Finalmente, registra a própria vantagem “novos_poderes” e decrementa PV

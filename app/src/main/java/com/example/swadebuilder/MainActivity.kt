@@ -1251,6 +1251,47 @@ class CriadorState {
     )
 
     val poderSlotsPorArcano = mutableStateMapOf<String, SnapshotStateList<String?>>()
+
+    // Mapa por Arcano (versionKey: "dom", "magia"...), pilha de compras; cada compra guarda a lista de IDs escolhidos
+    val novosPoderesStacksPorArcano = mutableStateMapOf<String, MutableList<List<String>>>()
+
+    // Registra uma compra de Novos Poderes (na criação)
+    fun registrarNovosPoderes(versionKey: String, escolhas: List<String>) {
+        val pilha = novosPoderesStacksPorArcano.getOrPut(versionKey) { mutableListOf() }
+        pilha.add(escolhas)
+    }
+
+    // Desfaz a última compra de Novos Poderes daquele arcano (na criação)
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    fun desfazerUltimosNovosPoderes(versionKey: String, initialSlots: Int) {
+        val pilha = novosPoderesStacksPorArcano[versionKey] ?: return
+        if (pilha.isEmpty()) return
+
+        // 1) pegue a última compra e remova esses poderes dos slots
+        val ultima = pilha.removeLast()
+        val slots = poderSlotsPorArcano[versionKey] ?: return
+
+        // Remover as ocorrências desses IDs; preferimos do fim para o começo
+        ultima.forEach { poderId ->
+            val idx = slots.indexOfLast { it == poderId }
+            if (idx >= 0) slots[idx] = null
+        }
+
+        // 2) Compactar: remover nulls finais além do mínimo exigido pelos slots iniciais + compras restantes
+        val extrasAinda = pilha.sumOf { it.size }
+        val tamanhoMinimo = (initialSlots + extrasAinda).coerceAtLeast(initialSlots)
+
+        while (slots.size > tamanhoMinimo && slots.lastOrNull() == null) {
+            slots.removeLast()
+        }
+
+        // Atualiza a lista plana
+        poderesSelecionados.apply {
+            clear()
+            addAll(slots.filterNotNull())
+        }
+    }
+
     var permiteMultiAntecedenteArcano by mutableStateOf(false)
     // HABILITA A REGRA OPCIONAL DE ESPECIALIZAÇÃO DE PERÍCIAS
     var usarEspecializacoesDePericia by mutableStateOf(false)

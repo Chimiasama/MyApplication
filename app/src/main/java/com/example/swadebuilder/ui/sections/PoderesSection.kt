@@ -138,7 +138,7 @@ fun PoderesSection(
             .padding(vertical = 8.dp)
     ) {
         slots.forEachIndexed { idx, poderId ->
-            val canRemove = (poderId != null && !locked)
+            val canRemove = (poderId != null && !locked && !state.emProgresso)
             AssistChip(
                 onClick = {
                     if (canRemove) {

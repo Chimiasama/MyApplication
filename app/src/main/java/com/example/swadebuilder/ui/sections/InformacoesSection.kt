@@ -124,18 +124,22 @@ fun InformacoesSection(
             val justStarted = !state.emProgresso && state.creationComplete()
             val hasAnyXp    = state.progresso > 0
 
-            // verifica se os poderes arcanos já foram todos escolhidos
-            val arcanoVersions = state.vantagensSelecionadas
-                .mapNotNull { vant ->
-                    if (vant.nome.keyify().startsWith("ANTECEDENTE ARCANO")) {
-                        vant.nome
-                            .substringAfter("ANTECEDENTE ARCANO")
-                            .trim()
-                            .keyify()
-                    } else null
+            // verifica se os poderes arcanos já foram escolhidos
+            // Em vez de olhar para o NOME ("ANTECEDENTE ARCANO ..."), usamos a CHOICE selecionada.
+            // Isso alinha com a chave usada em PoderesSection para criar/checar os slots.
+            val arcanoVersions: List<String> = state.vantagensSelecionadas
+                .filter { it.id == "antecedente_arcano" }
+                .mapNotNull { it.choice?.keyify() }   // ex.: "Dom" -> "dom"
+
+// Regra: se não houver Antecedente Arcano, não há nada a checar -> true.
+// Se houver AA, todos os slots do(s) arcano(s) escolhido(s) precisam estar preenchidos.
+            val poderesOk = if (arcanoVersions.isEmpty()) {
+                true
+            } else {
+                arcanoVersions.all { ver ->
+                    val slots = state.poderSlotsPorArcano[ver]
+                    slots != null && slots.isNotEmpty() && slots.all { it != null }
                 }
-            val poderesOk = arcanoVersions.all { ver ->
-                state.poderSlotsPorArcano[ver]?.all { it != null } == true
             }
 
             val canOpenSlider = (justStarted || hasAnyXp) && poderesOk
