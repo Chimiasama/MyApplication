@@ -56,7 +56,6 @@ import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Poder
-import com.example.swadebuilder.model.Serde
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.dialogs.MultipleSelectionDialog
@@ -178,15 +177,34 @@ fun VantFilterDialog(
 @Composable
 fun VantagensContent(
     state: CriadorState,
+    multiplosAAHabilitados: Boolean,
     onOpenVantagensDetail: (String) -> Unit
 ) {
     val context = LocalContext.current
 
-    // 1) carrega lista de vantagens
-    val listaVantagens: List<Vantagem> = remember {
+    // 1) carrega lista de vantagens (bruto)
+    val listaVantagensRaw: List<Vantagem> = remember {
         val jsonString = context.assets.open("Vantagens.json")
-            .bufferedReader().use { it.readText() }
-        Serde.json.decodeFromString<List<Vantagem>>(jsonString)
+            .bufferedReader()
+            .use { it.readText() }
+        val json = kotlinx.serialization.json.Json {
+            ignoreUnknownKeys = true
+            explicitNulls = false
+            isLenient = true
+            coerceInputValues = true
+        }
+        json.decodeFromString(jsonString)
+    }
+
+// 1.1) aplica filtro de exibição conforme o toggle de múltiplos AA
+    val listaVantagens: List<Vantagem> = remember(multiplosAAHabilitados, listaVantagensRaw) {
+        if (multiplosAAHabilitados) {
+            // modo NOVO: esconder o seletor base e exibir as 5 variantes específicas
+            listaVantagensRaw.filterNot { it.id == "antecedente_arcano" }
+        } else {
+            // modo LEGADO: mostrar o seletor base e esconder as variantes
+            listaVantagensRaw.filterNot { it.id.startsWith("antecedente_arcano_") }
+        }
     }
 
     // Estados principais

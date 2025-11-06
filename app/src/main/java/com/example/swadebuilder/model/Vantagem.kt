@@ -29,6 +29,17 @@ data class Vantagem(
 
     val descricao: String = "",
 
+
+    // Identificação de "grupo" e variantes do Antecedente Arcano
+    @SerialName("grupoId")
+    val grupoId: String? = null,           // ex.: "antecedente_arcano" (para os 5 subtipos)
+
+    @SerialName("subtipoArcano")
+    val subtipoArcano: String? = null,     // ex.: "DOM", "MAGIA", "MILAGRES", "PSIÔNICOS", "CIÊNCIA ESTRANHA"
+
+    @SerialName("isGrupoSelector")
+
+    val isGrupoSelector: Boolean = false,  // true apenas para a entrada-base "antecedente_arcano" (com choiceOptions)
     // 1) Lê diretamente do JSON a lista de opções, sem marcar @Transient:
     @SerialName("choiceOptions")
     val choiceOptions: List<String> = emptyList(),

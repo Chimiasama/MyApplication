@@ -18,6 +18,62 @@ import java.util.UUID
 class CriadorViewModel : ViewModel() {
     val state = CriadorState()
 
+    // === NOVO: toggle global (por enquanto via MainActivity) ===
+    var multiplosAAHabilitados: Boolean = false
+        private set
+
+    fun setMultiplosAAHabilitados(enabled: Boolean) {
+        multiplosAAHabilitados = enabled
+    }
+
+    // === NOVO: utilitários para reconhecer IDs de AA ===
+    private fun isIdArcano(id: String): Boolean =
+        id == "antecedente_arcano" || id.startsWith("antecedente_arcano_")
+
+    private fun mapChoiceToArcanoId(choice: String?): String? {
+        return when (choice?.trim()?.uppercase()) {
+            "DOM"                -> "antecedente_arcano_dom"
+            "MAGIA"              -> "antecedente_arcano_magia"
+            "MILAGRES"           -> "antecedente_arcano_milagres"
+            "PSIÔNICOS", "PSIONICOS" -> "antecedente_arcano_psionicos"
+            "CIÊNCIA ESTRANHA", "CIENCIA ESTRANHA" -> "antecedente_arcano_ciencia_estranha"
+            else -> null
+        }
+    }
+
+    // === NOVO: compatibilidade ao carregar saves antigos ===
+    fun normalizeArcanoIdsNoCarregamento() {
+        // 1) converte AA base + choice em AA específico
+        val convertidos = state.vantagensSelecionadas.map { v ->
+            if (v.id == "antecedente_arcano" && v.choice != null) {
+                val novoId = mapChoiceToArcanoId(v.choice)
+                val novo = listaVantagens.find { it.id == novoId }
+                novo ?: v
+            } else v
+        }
+        state.vantagensSelecionadas.clear()
+        state.vantagensSelecionadas.addAll(convertidos.distinctBy { it.id })
+    }
+
+    // === NOVO: consultas para requisitos ===
+    fun hasAnyArcano(): Boolean =
+        state.vantagensSelecionadas.any { isIdArcano(it.id) && it.id != "antecedente_arcano" || (it.id == "antecedente_arcano" && it.choice != null) }
+
+    fun hasArcano(subtipo: String): Boolean {
+        val alvo = when (subtipo.trim().uppercase()) {
+            "DOM"                -> "antecedente_arcano_dom"
+            "MAGIA"              -> "antecedente_arcano_magia"
+            "MILAGRES"           -> "antecedente_arcano_milagres"
+            "PSIÔNICOS", "PSIONICOS" -> "antecedente_arcano_psionicos"
+            "CIÊNCIA ESTRANHA", "CIENCIA ESTRANHA" -> "antecedente_arcano_ciencia_estranha"
+            else -> null
+        } ?: return false
+        return state.vantagensSelecionadas.any { it.id == alvo }
+    }
+
+    fun countArcanos(): Int =
+        state.vantagensSelecionadas.count { it.id.startsWith("antecedente_arcano_") }
+
     /**
      * Reinicia o estado para criação de um novo personagem.
      */
@@ -93,8 +149,8 @@ class CriadorViewModel : ViewModel() {
 
         // 11) Se estivermos no modo Supers, aplica as vantagens especiais
         if (modoSupers) {
-            // 11.1) Remove qualquer antecedente arcano previamente selecionado
-            state.vantagensSelecionadas.removeAll { it.id == "antecedente_arcano" }
+            // 11.1) Remove qualquer antecedente arcano previamente selecionado (base + variantes)
+            state.vantagensSelecionadas.removeAll { it.id == "antecedente_arcano" || it.id.startsWith("antecedente_arcano_") }
 
             // 11.2) Adiciona a vantagem “Superpoderes” (automática, não removível)
             val superVant: Vantagem = listaVantagens
@@ -148,6 +204,7 @@ class CriadorViewModel : ViewModel() {
             maisPontosPericias = salvo.maisPontosPericias,
             modoSupers = salvo.modoSupers,
             usarEspecializacoesDePericia = salvo.usarEspecializacoesDePericia
+
         )
         // Demais flags de modo (mantêm comportamento de telas/filtros)
         state.modoSuperequip = salvo.modoSuperequip
@@ -235,5 +292,6 @@ class CriadorViewModel : ViewModel() {
         // 9) Recalcular derivados conforme seu fluxo atual
         state.recalcularPontosAtributo()
         state.rebuildAllPericiaStacks()
+        normalizeArcanoIdsNoCarregamento()
     }
 }

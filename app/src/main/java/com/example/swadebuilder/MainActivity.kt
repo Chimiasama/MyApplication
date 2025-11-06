@@ -168,6 +168,9 @@ private val json = Json {
     ignoreUnknownKeys = true
 }
 
+// === NOVO: toggle global para múltiplos Antecedentes Arcanos ===
+private const val MULTIPLOS_AA_HABILITADOS: Boolean = false
+
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     @OptIn(ExperimentalMaterial3Api::class)
@@ -271,6 +274,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val criadorViewModel: CriadorViewModel = viewModel()
+            criadorViewModel.setMultiplosAAHabilitados(MULTIPLOS_AA_HABILITADOS)
             val state = criadorViewModel.state
 
             var expAttrs    by rememberSaveable { mutableStateOf(false) }
@@ -357,6 +361,7 @@ class MainActivity : ComponentActivity() {
                                     criadorViewModel.state.modoSuperequip        = modoSuperequip
                                     criadorViewModel.state.modoSuperComplicacoes = modoSuperComplicacoes
                                     criadorViewModel.state.usarSemPontosDePoder = semPontosDePoder
+                                    criadorViewModel.normalizeArcanoIdsNoCarregamento()
 
                                     mostrouTelaInicial = false
                                 },
@@ -1440,12 +1445,27 @@ class CriadorState {
             if (totalFeitas >= maxPermitidas) return false
         }
 
-        // 2) Restrição “Antecedente Arcano”: só pode ter um antecedente arcano ativo de cada vez
+        // 2) Restrição “Antecedente Arcano”
         if (key.startsWith("antecedente arcano")) {
-            val anyArcano = vantagensSelecionadas
-                .any { it.nome.keyify().startsWith("antecedente arcano") }
-            if (anyArcano && vantagensSelecionadas.none { it.nome.keyify() == key }) {
-                return false
+            if (!permiteMultiAntecedenteArcano) {
+                // MODO LEGADO: segue permitindo apenas 1 AA no total (como era antes)
+                val anyArcano = vantagensSelecionadas.any { it.nome.keyify().startsWith("antecedente arcano") }
+                if (anyArcano && vantagensSelecionadas.none { it.nome.keyify() == key }) {
+                    return false
+                }
+            } else {
+                // MODO NOVO: permite múltiplos AAs, mas sem duplicar o MESMO subtipo
+                // Se você estiver exibindo as variantes com IDs específicas (antecedente_arcano_dom, etc.),
+                // basta impedir duplicata de ID:
+                val jaTemMesmoId = vantagensSelecionadas.any { it.id == v.id }
+                if (jaTemMesmoId) return false
+                // Se em algum fluxo ainda for o seletor base com choice, impede MESMA choice repetida:
+                if (v.id == "antecedente_arcano" && v.choice != null) {
+                    val jaTemMesmaChoice = vantagensSelecionadas.any {
+                        it.id == "antecedente_arcano" && it.choice?.keyify() == v.choice?.keyify()
+                    }
+                    if (jaTemMesmaChoice) return false
+                }
             }
         }
 
@@ -1503,10 +1523,26 @@ class CriadorState {
                 }
         }
 
-        // 5) Checa “vantagens_previas” comparando por ID
+        // 5) Checa “vantagens_previas” comparando por ID (com alias para "antecedente_arcano")
         if (v.requisitos.vantagensPrevias.isNotEmpty()) {
             val faltam = v.requisitos.vantagensPrevias.any { prevId ->
-                vantagensSelecionadas.none { sel -> sel.id == prevId }
+                when (prevId) {
+                    // Requisito "genérico": aceita QUALQUER subtipo de AA ou o seletor com choice definido
+                    "antecedente_arcano", "antecedente_arcano:*" -> {
+                        vantagensSelecionadas.none { poss ->
+                            poss.id.startsWith("antecedente_arcano_") ||
+                                    (poss.id == "antecedente_arcano" && !poss.choice.isNullOrBlank())
+                        }
+                    }
+                    else -> {
+                        // Requisito "específico": exige ID exata (ex.: antecedente_arcano_milagres)
+                        vantagensSelecionadas.none { poss ->
+                            poss.id == prevId ||
+                                    // fallback: se alguém ainda vier com o base, considerar atendido por qualquer subtipo
+                                    (prevId == "antecedente_arcano" && poss.id.startsWith("antecedente_arcano_"))
+                        }
+                    }
+                }
             }
             if (faltam) return false
         }
@@ -2938,6 +2974,7 @@ fun UnifiedScreen(
         ) {
             VantagensContent(
                 state = state,
+                multiplosAAHabilitados = state.permiteMultiAntecedenteArcano, // usa o que vem da tela inicial
                 onOpenVantagensDetail = onOpenVantagensDetail
             )
         }

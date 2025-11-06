@@ -34,6 +34,7 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.SectionHeader
 import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.model.Poder
+import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.util.keyify
 
@@ -72,28 +73,47 @@ fun PoderesSection(
         listaArcano.associateBy { it.key.keyify() }
     }
 
-    // 4) Identifica se existe alguma Vantagem de AA e qual foi a opção escolhida (ex: "Dom")
-    val vantAA = state.vantagensSelecionadas
-        .firstOrNull { it.id == "antecedente_arcano" }
+    // === SUPORTE A MÚLTIPLOS ANTECEDENTES ARCANOS ===
+    // Helper para mapear uma vantagem (base ou específica) para a "key" usada no arcano_info.json
+    fun arcanoKeyFromVant(v: Vantagem): String? {
+        return when {
+            v.id == "antecedente_arcano" -> v.choice?.keyify()
+            v.id.endsWith("_dom") -> "dom".keyify()
+            v.id.endsWith("_magia") -> "magia".keyify()
+            v.id.endsWith("_milagres") -> "milagres".keyify()
+            v.id.endsWith("_psionicos") -> "psionicos".keyify()
+            v.id.endsWith("_ciancia_estranha") || v.id.endsWith("_ciencia_estranha") -> "ciencia estranha".keyify()
+            else -> null
+        }
+    }
 
-    // 5) Se não existir, versionKey será "", senão, normaliza a escolha (e.g. "Dom" → "dom")
-    val versionKey = vantAA
-        ?.choice
-        ?.keyify()
-        ?: ""
+    // 4) Descobre TODOS os arcanos ativos no personagem (base+específicos)
+    val arcanosAtivos: List<String> = remember(state.vantagensSelecionadas) {
+        state.vantagensSelecionadas.mapNotNull { arcanoKeyFromVant(it) }.distinct()
+    }
 
-    // 6) Busca no mapa de arcanoInfo os dados daquele Arcano (slots e PP)
-    val infoDoArcano: ArcanoInfoItem? = arcanoInfoMap[versionKey]
+    // 5) Seleciona qual arcano está "ativo" na UI (se houver mais de um, o usuário escolhe)
+    var selectedArcanoKey by rememberSaveable(arcanosAtivos) {
+        mutableStateOf(arcanosAtivos.firstOrNull())
+    }
+    // Se a seleção ficou inválida (ex.: removeu um AA), realinha
+    if (selectedArcanoKey != null && selectedArcanoKey !in arcanosAtivos) {
+        selectedArcanoKey = arcanosAtivos.firstOrNull()
+    }
+
+    // 6) Dados do arcano selecionado (slots/pp) — se não houver arcano, fica tudo 0
+    val infoDoArcano: ArcanoInfoItem? = selectedArcanoKey?.let { key -> arcanoInfoMap[key] }
     val initialSlots: Int = infoDoArcano?.slots ?: 0
     val basePP: Int       = infoDoArcano?.pp    ?: 0
 
-    // 7) Usa o estado para criar e persistir a lista de slots conforme initialSlots
-    val slots = state.poderSlotsPorArcano.getOrPut(versionKey) {
-        mutableStateListOf<String?>().apply {
-            repeat(initialSlots) {
-                add(null)
-            }
+    // 7) Slots do arcano selecionado: persistimos por 'selectedArcanoKey'
+    val slots = if (selectedArcanoKey != null) {
+        state.poderSlotsPorArcano.getOrPut(selectedArcanoKey!!) {
+            mutableStateListOf<String?>().apply { repeat(initialSlots) { add(null) } }
         }
+    } else {
+        // sem AA selecionado — lista vazia somente para não quebrar a UI
+        remember { mutableStateListOf() }
     }
 
     // 8) Quantos slots há, quantos estão preenchidos e quantos sobraram
@@ -101,7 +121,7 @@ fun PoderesSection(
     val usedCount  = slots.count { it != null }
     val remainingSlots = totalSlots - usedCount
 
-    // 9) Cálculo de Pontos de Poder: base (do arcano) + bônus de estado
+    // 9) Pontos de Poder = base (do arcano selecionado) + bônus do estado
     val bonusPP: Int = state.bonusPoderExtra
     val pp = basePP + bonusPP
 
@@ -113,6 +133,31 @@ fun PoderesSection(
         "Sem Pontos de Poder (teste penalidade -1/2 do custo pra cima)"
     } else {
         "Pontos de Poder: $pp"
+    }
+    // Se houver mais de um arcano ativo, mostre chips para alternar a visão
+    if (arcanosAtivos.size > 1) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp, bottom = 8.dp)
+        ) {
+            arcanosAtivos.forEach { key ->
+                val label = when (key) {
+                    "dom" -> "Dom"
+                    "magia" -> "Magia"
+                    "milagres" -> "Milagres"
+                    "psionicos" -> "Psiônicos"
+                    "cienciaestranha", "ciencia_estranha", "ciencia estranha" -> "Ciência Estranha"
+                    else -> key
+                }
+                AssistChip(
+                    onClick = { selectedArcanoKey = key },
+                    label = { Text(label) },
+                    enabled = selectedArcanoKey != key
+                )
+            }
+        }
     }
 
     SectionHeader(
