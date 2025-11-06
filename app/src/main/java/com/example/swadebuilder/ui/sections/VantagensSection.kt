@@ -116,6 +116,7 @@ fun VantFilterDialog(
                 }
                 Spacer(Modifier.size(8.dp))
                 Text("Estágio", fontWeight = FontWeight.Bold)
+
                 allEstagios.forEach { e ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
@@ -291,7 +292,16 @@ fun VantagensContent(
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement   = Arrangement.spacedBy(8.dp)
+
         ) {
+            if (state.regraMultiplosIdiomas) {
+                AssistChip(
+                    onClick = { /* não removível */ },
+                    enabled = false,
+                    label = { Text("LINGUISTA (Regra de Ambientação)") }
+                )
+            }
+
             state.vantagensSelecionadas.forEachIndexed { index, vant ->
                 val isRacialFree = vant.nome.keyify() in state.vantagensAutomaticas.map { it.keyify() }
                 val requiredByAnother = state.vantagensSelecionadas.any { other ->

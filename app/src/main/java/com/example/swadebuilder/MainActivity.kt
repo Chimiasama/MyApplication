@@ -451,6 +451,7 @@ class MainActivity : ComponentActivity() {
                                                     val atributosMap     = state.valoresAtributos.mapValues { it.value.intValue }
                                                     val periciasMap      = listaPericias.associate { per -> per.nome to state.rawTotal(per) }
                                                     val vantagensList    = state.vantagensSelecionadas.map { it.nome }
+                                                    val vantagensParaMostrar = state.vantagensParaExibir()
                                                     val complicacoesList = state.complicacoesSelecionadas
                                                         .filterValues { it != null }
                                                         .keys
@@ -999,13 +1000,32 @@ class CriadorState {
     val superPoderesComprados = mutableStateListOf<PurchasedPower>()
     var superNivelCampanha by mutableStateOf<Int?>(null)
     var usarSemPontosDePoder by mutableStateOf(false)
+
     var superPontosTotais by mutableIntStateOf(0)
     var superPontosDisponiveis by mutableIntStateOf(0)
     var superLimite by mutableIntStateOf(0)
     var superLimitePorPoder by mutableIntStateOf(0)
 
+    var regraMultiplosIdiomas by mutableStateOf(false)
 
-    // Cole dentro de class CriadorState, depois de superLimite
+    fun idiomasConhecidosPorRegra(): Int {
+        if (!regraMultiplosIdiomas) return 0
+        val ast = valoresAtributos["ASTUCIA"]?.intValue
+            ?: valoresAtributos["ASTÚCIA"]?.intValue
+            ?: 4
+        val temLinguistaPago = vantagensSelecionadas.any { it.id == "linguista" }
+        return if (temLinguistaPago) ast else ast / 2
+    }
+
+    fun vantagensParaExibir(): List<String> {
+        val base = vantagensSelecionadas.map { it.nome }
+        return if (regraMultiplosIdiomas) {
+            base + "LINGUISTA (Regra de Ambientação)"
+        } else {
+            base
+        }
+    }
+
     fun setSupersByLevel(nivel: Int, usarProgresso: Boolean) {
         val n = nivel.coerceIn(1, 5)
         superNivelCampanha = n
@@ -3987,7 +4007,10 @@ Feito por Rafael S.W.
                         optSemPontosPoder
 
                         )
+
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
+                    viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
+
                     if (optSuperPoderes) {
                         viewModel.state.aplicarSuperpoderes(
                             nivel = 1,
