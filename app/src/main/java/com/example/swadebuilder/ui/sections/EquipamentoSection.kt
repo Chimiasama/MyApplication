@@ -173,7 +173,6 @@ fun EquipamentoSection(
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
-
     SectionCard(
         title    = "Equipamento",
         expanded = expanded,
@@ -200,16 +199,23 @@ fun EquipamentoSection(
                 .clickable { showFilterDialog = true }
         )
 
-        // diálogo de filtro
+        // diálogo de filtro — agora com listas unificadas (básico + super)
         if (showFilterDialog) {
+
+            val allCategoriasVisiveis = (categorias + superequipCategorias)
+                .filterNot { it.tipo.equals("Equipamento Supers", true) || it.tipo.equals("Equipamentos Supers", true) }
+
+            val allTipos    = allCategoriasVisiveis.map { it.tipo }.distinct()
+            val allSubtipos = allCategoriasVisiveis.map { it.subtipo }.distinct()
+
             val allOrigens  = (categorias.mapNotNull { it.origem } + superequipCategorias.mapNotNull { it.origem })
+                .map { it.uppercase() }
                 .distinct()
-            val allTipos    = categorias.map { it.tipo }.distinct()
-            val allSubtipos = categorias.map { it.subtipo }.distinct()
+
             EquipFilterDialog(
-                allOrigens,
-                allTipos,
-                allSubtipos,
+                allOrigens = allOrigens,
+                allTipos = allTipos,
+                allSubtipos = allSubtipos,
                 current = filter,
                 onChange = { filter = it },
                 onDismiss = { showFilterDialog = false }
@@ -268,12 +274,16 @@ fun EquipamentoSection(
                 .padding(bottom = 8.dp)
         )
 
-        // ── agrupamento por tipo / subtipo / subsubtipo ─────────────────────────────
-        val tipos = categorias.map { it.tipo }.distinct()
+        // ── agrupamento por tipo / subtipo / subsubtipo (usando BÁSICO + SUPER) ────
+        val allCategorias = (categorias + superequipCategorias)
+            .filterNot { it.tipo.equals("Equipamento Supers", true) || it.tipo.equals("Equipamentos Supers", true) }
+
+        val tipos = allCategorias.map { it.tipo }.distinct()
+
         val expandedTipoMap = remember { tipos.associateWith { mutableStateOf(false) } }
 
         tipos.forEach { tipo ->
-            // filtrar tipo
+            // filtro por Tipo (se houver)
             if (filter.tipos.isNotEmpty() && tipo !in filter.tipos) return@forEach
 
             val isTipoExpanded = expandedTipoMap.getValue(tipo).value
@@ -294,17 +304,17 @@ fun EquipamentoSection(
                         .verticalScroll(scroll)
                         .padding(start = 8.dp, bottom = 8.dp)
                 ) {
-                    // categorias deste tipo, já filtradas por origem
-                    val catsPorTipo = categorias
+                    // categorias deste tipo (básico + super), aplicando filtro de Origem
+                    val catsPorTipo = allCategorias
                         .filter { it.tipo == tipo }
                         .let { list ->
                             if (filter.origens.isNotEmpty())
-                                list.filter { it.origem?.uppercase() in filter.origens }
+                                list.filter { (it.origem?.uppercase() ?: "") in filter.origens }
                             else list
                         }
                     if (catsPorTipo.isEmpty()) return@Column
 
-                    // subtipo
+                    // subtipos
                     val subtipos = catsPorTipo.map { it.subtipo }.distinct()
                     val expandedSubtipoMap = remember(tipo) {
                         subtipos.associateWith { mutableStateOf(false) }
@@ -332,20 +342,17 @@ fun EquipamentoSection(
                                     .verticalScroll(scroll2)
                                     .padding(start = 8.dp, bottom = 8.dp)
                             ) {
-                                // categorias deste subtipo
                                 val catsPorSub = catsPorTipo.filter { it.subtipo == subtipo }
-                                // subsubtipos
                                 val subsub = catsPorSub.mapNotNull { it.subsubtipo }.distinct()
                                 val expandedSubsub = remember(tipo, subtipo) {
                                     subsub.associateWith { mutableStateOf(false) }
                                 }
 
                                 if (subsub.isEmpty()) {
-                                    // listagem direta de itens
+                                    // listagem direta
                                     catsPorSub
                                         .flatMap { it.itens }
                                         .filter { eq ->
-                                            // somente acessíveis?
                                             if (filter.somenteAcessiveis) {
                                                 val c = (eq.custo as? JsonPrimitive)
                                                     ?.content?.toIntOrNull() ?: Int.MAX_VALUE
@@ -376,7 +383,7 @@ fun EquipamentoSection(
                                             }
                                         }
                                 } else {
-                                    // se houver subsubtipos, renderize cada seção
+                                    // com subsubtipo
                                     subsub.forEach { ss ->
                                         val isSsExpanded = expandedSubsub.getValue(ss).value
                                         CollapsibleSection(
@@ -443,13 +450,14 @@ fun EquipamentoSection(
             Spacer(Modifier.padding(vertical = 4.dp))
         }
 
-        // ── Superequipamentos ───────────────────────────────────────────────────────
-        val supCatsFiltradas = superequipCategorias
-            .let { list ->
-                if (filter.origens.isNotEmpty())
-                    list.filter { it.origem?.uppercase() in filter.origens }
-                else list
-            }
+        // ── Superequipamentos (flat) — mantido para compat; agora só aparece se sobrar algo não coberto acima ──
+        val supCatsFiltradas = (superequipCategorias).let { list ->
+            val byOrigem = if (filter.origens.isNotEmpty())
+                list.filter { (it.origem?.uppercase() ?: "") in filter.origens }
+            else list
+            // se todos os tipos/supertipos já foram exibidos no agrupamento principal, essa lista ficará vazia
+            byOrigem
+        }
 
         if (supCatsFiltradas.isNotEmpty()) {
             CollapsibleSection(

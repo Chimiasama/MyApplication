@@ -118,17 +118,16 @@ fun ComplicacoesSection(
                 onDismissRequest = { showHelp = false },
                 title            = { Text("Como funciona") },
                 text             = {
+                    val teto = if (state.grandesResponsabilidades) 6 else 4
                     Text(
                         "Escolha Complicações para ganhar Pontos de Complicação (PC).\n" +
-                                "Cada Complicação Menor vale 1 PC, cada complicação Maior vale 2 pontos\n" +
-                                "Você pode obter no máximo 4 pontos.\n" +
+                                "Cada Complicação Menor vale 1 PC, cada Complicação Maior vale 2 PC.\n" +
+                                "Você pode obter no máximo $teto pontos.\n" +
                                 "Para usar os pontos ganhos, clique no botão Gastar/Devolver pontos."
                     )
                 },
                 confirmButton    = {
-                    TextButton(onClick = { showHelp = false }) {
-                        Text("OK")
-                    }
+                    TextButton(onClick = { showHelp = false }) { Text("OK") }
                 }
             )
         }

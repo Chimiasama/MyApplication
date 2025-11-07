@@ -348,23 +348,26 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, modoSuperequip, modoSuperComplicacoes, nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer, semPontosDePoder ->
+                                    onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, modoSuperequip, modoSuperComplicacoes, nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer, semPontosDePoder, grandesResponsabilidades ->
 
-                                    criadorViewModel.resetStateParaNovoPersonagem(
-                                        cartaSelvagem      = cartaSelvagem,
-                                        maisPontosPericias = maisPontosPericias,
-                                        modoSupers         = modoSupers,
-                                        usarEspecializacoesDePericia = usarEspecializacaoPer
-                                    )
-                                    criadorViewModel.state.heroisSemArmadura     = heroisSemArmadura
-                                    criadorViewModel.state.nasceUmHeroi          = nasceUmHeroi
-                                    criadorViewModel.state.modoSuperequip        = modoSuperequip
-                                    criadorViewModel.state.modoSuperComplicacoes = modoSuperComplicacoes
-                                    criadorViewModel.state.usarSemPontosDePoder = semPontosDePoder
-                                    criadorViewModel.normalizeArcanoIdsNoCarregamento()
+                                        criadorViewModel.resetStateParaNovoPersonagem(
+                                            cartaSelvagem      = cartaSelvagem,
+                                            maisPontosPericias = maisPontosPericias,
+                                            modoSupers         = modoSupers,
+                                            usarEspecializacoesDePericia = usarEspecializacaoPer
+                                        )
+                                        criadorViewModel.state.heroisSemArmadura     = heroisSemArmadura
+                                        criadorViewModel.state.nasceUmHeroi          = nasceUmHeroi
 
-                                    mostrouTelaInicial = false
-                                },
+                                        criadorViewModel.state.modoSuperequip        = modoSupers
+                                        criadorViewModel.state.modoSuperComplicacoes = modoSupers
+
+                                        criadorViewModel.state.usarSemPontosDePoder  = semPontosDePoder
+                                        criadorViewModel.normalizeArcanoIdsNoCarregamento()
+                                        criadorViewModel.state.grandesResponsabilidades = grandesResponsabilidades
+
+                                        mostrouTelaInicial = false
+                                    },
                                 onLoad = { salvo ->
                                     // Aqui passamos as duas listas: básico e super
                                     criadorViewModel.loadFromSalvo(
@@ -462,7 +465,6 @@ class MainActivity : ComponentActivity() {
                                                         .keys
                                                         .map { it.id }
 
-                                                    // ... dentro do onClick do botão Salvar ...
                                                     val salvo = PersonagemSalvo(
                                                         id                 = personagemId,
                                                         nome               = state.nomePersonagem,
@@ -470,16 +472,12 @@ class MainActivity : ComponentActivity() {
                                                         pericias           = periciasMap,
                                                         ancestralidade     = state.ancestralidade,
 
-                                                        // AGORA GRAVAMOS IDs de vantagens (para casar 1:1 com Vantagens.json)
                                                         vantagens          = state.vantagensSelecionadas.map { it.id },
 
-                                                        // Já são IDs
                                                         complicacoes       = complicacoesList,
 
-                                                        // Nomes dos equipamentos comprados (como antes)
                                                         equipamentos       = state.equipamentosComprados.map { it.nome },
 
-                                                        // Poderes arcanos (slots por AA)
                                                         poderes            = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
 
                                                         dinheiro           = state.dinheiro,
@@ -491,13 +489,10 @@ class MainActivity : ComponentActivity() {
                                                         usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
                                                         especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
 
-                                                        // --- NOVOS CAMPOS (SUPERS) ---
                                                         modoSupers              = state.modoSupers,
                                                         modoSuperequip          = state.modoSuperequip,
                                                         modoSuperComplicacoes   = state.modoSuperComplicacoes,
 
-                                                        // Se sua UI guarda explicitamente os nomes comprados de superpoderes, mapeie aqui.
-                                                        // Caso você não tenha essa lista no state, deixe vazio (a carga não quebra).
                                                         superpoderesComprados   = emptyList()
                                                     )
 
@@ -987,6 +982,7 @@ class CriadorState {
     var modoSupers by mutableStateOf(false)
     var modoSuperComplicacoes by mutableStateOf(false)
     var modoSuperequip by mutableStateOf(false)
+    var grandesResponsabilidades by mutableStateOf(false)
     companion object { const val BASE_SP_POOL = 15 }
     var maisPontosPericias by mutableStateOf(true)
     var cartaSelvagem       by mutableStateOf(true)
@@ -1408,29 +1404,29 @@ class CriadorState {
     val valoresAtributos = listaAtributos.associateWith { mutableIntStateOf(4) }
 
     val complicacoesSelecionadas: SnapshotStateMap<Complicacao, String?> = mutableStateMapOf()
+
     val pontosComplicacao: Int
         get() {
-            // autoKeys continua o mesmo: conjunto de IDs (chaves) de complicações automáticas
+            // Complicações automáticas não contam
             val autoKeys = desvantagensAutomaticas
                 .map { it.substringBefore("(").trim().keyify() }
                 .toSet()
 
             var total = 0
-            for ((comp, tipo) in complicacoesSelecionadas) {
-                // “comp.id” é a chave normalizada da complicação
-                if (comp.id.keyify() in autoKeys) continue
+            var temMaior = false
 
-                total += when (tipo) {
-                    "Maior" -> 2
-                    "Menor" -> 1
-                    else    -> 0
-                }
-                if (total >= 4) {
-                    total = 4
-                    break
+            // soma bruta (sem teto) e detecta se há ao menos 1 Maior
+            for ((comp, tipo) in complicacoesSelecionadas) {
+                if (comp.id.keyify() in autoKeys) continue
+                when (tipo) {
+                    "Maior" -> { total += 2; temMaior = true }
+                    "Menor" -> { total += 1 }
                 }
             }
-            return total
+
+            // regra: com Grandes Responsabilidades + pelo menos 1 Maior → teto 6; senão teto 4
+            val teto = if (grandesResponsabilidades && temMaior) 6 else 4
+            return minOf(total, teto)
         }
 
     val vantagensSelecionadas      = mutableStateListOf<Vantagem>()
@@ -3628,7 +3624,8 @@ fun TelaInicial(
         nasceUmHeroi: Boolean,
         heroisSemArmadura: Boolean,
         expecializacaoPer: Boolean,
-        semPontosDePoder: Boolean
+        semPontosDePoder: Boolean,
+        grandesResponsabilidades: Boolean
     ) -> Unit,
     onLoad: (PersonagemSalvo) -> Unit,
     context: Context,
@@ -3658,7 +3655,9 @@ fun TelaInicial(
     var optSuperPoderes by rememberSaveable { mutableStateOf(false) }
     var optSuperequipamentos by rememberSaveable { mutableStateOf(false) }
     var optSuperComplicacoes by rememberSaveable { mutableStateOf(false) }
-    var optSuperVantagens by rememberSaveable { mutableStateOf(false) }
+    var optGrandesResponsabilidades by rememberSaveable { mutableStateOf(false) }
+    var optModoSupers               by rememberSaveable { mutableStateOf(false) }
+
 
     // Horror
     var expHorror by rememberSaveable { mutableStateOf(false) }
@@ -3774,6 +3773,8 @@ Feito por Rafael S.W.
                     }
                     if (expLivroBasico) {
                         Spacer(Modifier.height(4.dp))
+
+                        // Carta Selvagem (NEGRITO)
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
@@ -3786,8 +3787,10 @@ Feito por Rafael S.W.
                                 onCheckedChange = { optCartaSelvagem = it }
                             )
                             Spacer(Modifier.width(8.dp))
-                            Text("Carta Selvagem")
+                            Text("Carta Selvagem", fontWeight = FontWeight.Bold)
                         }
+
+                        // Mais pontos de perícias (NEGRITO)
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
@@ -3800,8 +3803,10 @@ Feito por Rafael S.W.
                                 onCheckedChange = { optMaisPontosPericias = it }
                             )
                             Spacer(Modifier.width(8.dp))
-                            Text("Mais pontos de perícias")
+                            Text("Mais pontos de perícias", fontWeight = FontWeight.Bold)
                         }
+
+                        // (mantém as demais opções do Livro Básico como já existiam)
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
@@ -3809,10 +3814,7 @@ Feito por Rafael S.W.
                                 .clickable { optMultiAntecedenteArcano = !optMultiAntecedenteArcano }
                                 .padding(vertical = 4.dp)
                         ) {
-                            Checkbox(
-                                checked = optMultiAntecedenteArcano,
-                                onCheckedChange = { optMultiAntecedenteArcano = it }
-                            )
+                            Checkbox(checked = optMultiAntecedenteArcano, onCheckedChange = { optMultiAntecedenteArcano = it })
                             Spacer(Modifier.width(8.dp))
                             Text("Múltiplos Antecedentes Arcanos")
                         }
@@ -3823,10 +3825,7 @@ Feito por Rafael S.W.
                                 .clickable { optEspecializacaoPer = !optEspecializacaoPer }
                                 .padding(vertical = 4.dp)
                         ) {
-                            Checkbox(
-                                checked = optEspecializacaoPer,
-                                onCheckedChange = { optEspecializacaoPer = it }
-                            )
+                            Checkbox(checked = optEspecializacaoPer, onCheckedChange = { optEspecializacaoPer = it })
                             Spacer(Modifier.width(8.dp))
                             Text("Especialização de Perícias")
                         }
@@ -3837,10 +3836,7 @@ Feito por Rafael S.W.
                                 .clickable { optHeroiSemArmadura = !optHeroiSemArmadura }
                                 .padding(vertical = 4.dp)
                         ) {
-                            Checkbox(
-                                checked = optHeroiSemArmadura,
-                                onCheckedChange = { optHeroiSemArmadura = it }
-                            )
+                            Checkbox(checked = optHeroiSemArmadura, onCheckedChange = { optHeroiSemArmadura = it })
                             Spacer(Modifier.width(8.dp))
                             Text("Heróis sem Armadura")
                         }
@@ -3851,10 +3847,7 @@ Feito por Rafael S.W.
                                 .clickable { optMultiplosIdiomas = !optMultiplosIdiomas }
                                 .padding(vertical = 4.dp)
                         ) {
-                            Checkbox(
-                                checked = optMultiplosIdiomas,
-                                onCheckedChange = { optMultiplosIdiomas = it }
-                            )
+                            Checkbox(checked = optMultiplosIdiomas, onCheckedChange = { optMultiplosIdiomas = it })
                             Spacer(Modifier.width(8.dp))
                             Text("Múltiplos Idiomas")
                         }
@@ -3865,10 +3858,7 @@ Feito por Rafael S.W.
                                 .clickable { optNasceUmHeroi = !optNasceUmHeroi }
                                 .padding(vertical = 4.dp)
                         ) {
-                            Checkbox(
-                                checked = optNasceUmHeroi,
-                                onCheckedChange = { optNasceUmHeroi = it }
-                            )
+                            Checkbox(checked = optNasceUmHeroi, onCheckedChange = { optNasceUmHeroi = it })
                             Spacer(Modifier.width(8.dp))
                             Text("Nasce um Herói")
                         }
@@ -3879,10 +3869,7 @@ Feito por Rafael S.W.
                                 .clickable { optSemPontosPoder = !optSemPontosPoder }
                                 .padding(vertical = 4.dp)
                         ) {
-                            Checkbox(
-                                checked = optSemPontosPoder,
-                                onCheckedChange = { optSemPontosPoder = it }
-                            )
+                            Checkbox(checked = optSemPontosPoder, onCheckedChange = { optSemPontosPoder = it })
                             Spacer(Modifier.width(8.dp))
                             Text("Sem pontos de Poder")
                         }
@@ -3890,7 +3877,7 @@ Feito por Rafael S.W.
 
                     Spacer(Modifier.height(16.dp))
 
-                    // Super
+// Super
                     Row(
                         Modifier
                             .fillMaxWidth()
@@ -3907,6 +3894,7 @@ Feito por Rafael S.W.
                     }
                     if (expSuper) {
                         Spacer(Modifier.height(4.dp))
+
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
@@ -3919,49 +3907,22 @@ Feito por Rafael S.W.
                                 onCheckedChange = { optSuperPoderes = it }
                             )
                             Spacer(Modifier.width(8.dp))
-                            Text("Superpoderes")
+                            Text("Superpoderes", fontWeight = FontWeight.Bold)
                         }
+
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { optSuperequipamentos = !optSuperequipamentos }
+                                .clickable { optGrandesResponsabilidades = !optGrandesResponsabilidades }
                                 .padding(vertical = 4.dp)
                         ) {
                             Checkbox(
-                                checked = optSuperequipamentos,
-                                onCheckedChange = { optSuperequipamentos = it }
+                                checked = optGrandesResponsabilidades,
+                                onCheckedChange = { optGrandesResponsabilidades = it }
                             )
                             Spacer(Modifier.width(8.dp))
-                            Text("Superequipamentos")
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optSuperComplicacoes = !optSuperComplicacoes }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optSuperComplicacoes,
-                                onCheckedChange = { optSuperComplicacoes = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Supercomplicações")
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optSuperVantagens = !optSuperVantagens }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optSuperVantagens,
-                                onCheckedChange = { optSuperVantagens = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Supervantagens")
+                            Text("Grandes Responsabilidades")
                         }
                     }
 
@@ -4041,9 +4002,9 @@ Feito por Rafael S.W.
                         optNasceUmHeroi,
                         optHeroiSemArmadura,
                         optEspecializacaoPer,
-                        optSemPontosPoder
-
-                        )
+                        optSemPontosPoder,
+                        optGrandesResponsabilidades
+                    )
 
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
                     viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas

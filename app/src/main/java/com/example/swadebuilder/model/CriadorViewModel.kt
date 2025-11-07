@@ -10,7 +10,6 @@ import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.util.keyify
-import java.util.UUID
 
 /**
  * ViewModel que gerencia o estado de criação de personagem.
@@ -25,10 +24,6 @@ class CriadorViewModel : ViewModel() {
     fun setMultiplosAAHabilitados(enabled: Boolean) {
         multiplosAAHabilitados = enabled
     }
-
-    // === NOVO: utilitários para reconhecer IDs de AA ===
-    private fun isIdArcano(id: String): Boolean =
-        id == "antecedente_arcano" || id.startsWith("antecedente_arcano_")
 
     private fun mapChoiceToArcanoId(choice: String?): String? {
         return when (choice?.trim()?.uppercase()) {
@@ -55,51 +50,28 @@ class CriadorViewModel : ViewModel() {
         state.vantagensSelecionadas.addAll(convertidos.distinctBy { it.id })
     }
 
-    // === NOVO: consultas para requisitos ===
-    fun hasAnyArcano(): Boolean =
-        state.vantagensSelecionadas.any { isIdArcano(it.id) && it.id != "antecedente_arcano" || (it.id == "antecedente_arcano" && it.choice != null) }
-
-    fun hasArcano(subtipo: String): Boolean {
-        val alvo = when (subtipo.trim().uppercase()) {
-            "DOM"                -> "antecedente_arcano_dom"
-            "MAGIA"              -> "antecedente_arcano_magia"
-            "MILAGRES"           -> "antecedente_arcano_milagres"
-            "PSIÔNICOS", "PSIONICOS" -> "antecedente_arcano_psionicos"
-            "CIÊNCIA ESTRANHA", "CIENCIA ESTRANHA" -> "antecedente_arcano_ciencia_estranha"
-            else -> null
-        } ?: return false
-        return state.vantagensSelecionadas.any { it.id == alvo }
-    }
-
-    fun countArcanos(): Int =
-        state.vantagensSelecionadas.count { it.id.startsWith("antecedente_arcano_") }
-
-    /**
-     * Reinicia o estado para criação de um novo personagem.
-     */
     fun resetStateParaNovoPersonagem(
         cartaSelvagem: Boolean,
         maisPontosPericias: Boolean,
         modoSupers: Boolean,
-        usarEspecializacoesDePericia: Boolean = false
+        usarEspecializacoesDePericia: Boolean = false,
+        grandesResponsabilidades: Boolean = false, // ← NOVO
     ) {
-        // 1) Define se estamos no modo “Supers”
+
         state.modoSupers = modoSupers
-        // Flags correlatas para telas/filtros
         state.modoSuperequip = modoSupers
         state.modoSuperComplicacoes = modoSupers
+        state.grandesResponsabilidades = grandesResponsabilidades
+        state.modoSuperComplicacoes = modoSupers
 
-        // 2) Identificador e nome
         state.idAtual = null
         state.nomePersonagem = ""
 
-        // 3) Flags iniciais
         state.cartaSelvagem = cartaSelvagem
         state.maisPontosPericias = maisPontosPericias
         state.usarEspecializacoesDePericia = usarEspecializacoesDePericia
         state.especializacoesPorPericia.clear()
 
-        // 4) Volta ancestralidade para “HUMANOS” e limpa listas
         state.ancestralidade = "HUMANOS"
         state.vantagensSelecionadas.clear()
         state.complicacoesSelecionadas.clear()
@@ -107,34 +79,29 @@ class CriadorViewModel : ViewModel() {
         state.desvantagensAutomaticas.clear()
         state.aplicarAncestralidade("HUMANOS")
 
-        // 5) Equipamentos
         state.equipamentosComprados.clear()
 
-        // 6) Pilhas de compra / recursos
         state.cpRecursosStack.clear()
         state.cpPaStack.clear()
         state.cpPvStack.clear()
         state.cpSpStack.clear()
-        state.comprasPpPorEstagio.keys.forEach    { state.comprasPpPorEstagio[it] = 0 }
-        state.comprasAttrPorEstagio.keys.forEach  { state.comprasAttrPorEstagio[it] = 0 }
-        state.paCostStackPorAtributo.values.forEach    { it.clear() }
-        state.compCostStackPorPericia.values.forEach   { it.clear() }
-        state.spCostStackPorPericia.values.forEach     { it.clear() }
+        state.comprasPpPorEstagio.keys.forEach   { state.comprasPpPorEstagio[it] = 0 }
+        state.comprasAttrPorEstagio.keys.forEach { state.comprasAttrPorEstagio[it] = 0 }
+        state.paCostStackPorAtributo.values.forEach  { it.clear() }
+        state.compCostStackPorPericia.values.forEach { it.clear() }
+        state.spCostStackPorPericia.values.forEach   { it.clear() }
         state.poderSlotsPorArcano.clear()
         state.novosPoderesStacksPorArcano.clear()
 
-        // 7) Recursos gerais
         state.dinheiro = 500
         state.progresso = 0
         state.progressosDisponiveis = 0
         state.frozenAdvCount = 0
         state.emProgresso = false
 
-        // 8) Atributos de base (todos em 4) e recalcula pontos
         state.valoresAtributos.forEach { (_, holder) -> holder.intValue = 4 }
         state.recalcularPontosAtributo()
 
-        // 9) Perícias: zera incrementos e faz rebuild
         listaPericias.forEach { per ->
             state.baseIncsPorPericia[per] = 0
             state.spCostStackPorPericia.getValue(per).clear()
@@ -142,58 +109,10 @@ class CriadorViewModel : ViewModel() {
         }
         state.rebuildAllPericiaStacks()
 
-        // 10) Pontos de vantagem / atributo / complicação
         state.pontosVantagem =
             if (state.vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" }) 1 else 0
-        state.pontosAtributo = 5
-        state.pontosComplicacaoGastos = 0
-
-        // 11) Se estivermos no modo Supers, aplica as vantagens especiais
-        if (modoSupers) {
-            // 11.1) Remove qualquer antecedente arcano previamente selecionado (base + variantes)
-            state.vantagensSelecionadas.removeAll { it.id == "antecedente_arcano" || it.id.startsWith("antecedente_arcano_") }
-
-            // 11.2) Adiciona a vantagem “Superpoderes” (automática, não removível)
-            val superVant: Vantagem = listaVantagens
-                .firstOrNull { it.nome.equals("Superpoderes", ignoreCase = true) }
-                ?: Vantagem(
-                    id               = UUID.randomUUID().toString(),
-                    nome             = "Superpoderes",
-                    categoria        = Categoria.PODER,
-                    origem           = "SUPER",
-                    nivel            = "N",  // “Novato”
-                    requisitos       = Requisito(
-                        estagio            = "N",
-                        atributoMin        = emptyMap(),
-                        periciaMin         = emptyMap(),
-                        periciaMinOpcional = emptyMap(),
-                        vantagensPrevias   = emptyList(),
-                        observacoes        = ""
-                    ),
-                    limiteCompra     = "uma_vez",
-                    vinculadoPericia = false,
-                    ganhaAoComprar   = emptyList(),
-                    descricao        = "Modo Supers: libera Superpoderes."
-                )
-            state.vantagensSelecionadas.add(superVant)
-            state.vantagensAutomaticas.add(superVant.nome)
-
-            // 11.3) Cria slots vazios para todos os arcanos (compatibilidade visual)
-            state.poderSlotsPorArcano.clear()
-            arcanoInfo.forEach { (arcKey, triple) ->
-                val slots = triple.first
-                state.poderSlotsPorArcano[arcKey] = mutableStateListOf<String?>().apply {
-                    repeat(slots) { add(null) }
-                }
-            }
-        }
     }
 
-    /**
-     * Reidrata um personagem salvo, incluindo modos Supers e superequipamentos.
-     * - categoriasBasico: categorias de equipamento com origem BASICO
-     * - categoriasSuper:  categorias de equipamento com origem SUPER
-     */
     fun loadFromSalvo(
         salvo: PersonagemSalvo,
         categoriasBasico: List<EquipamentoCategoria>,
