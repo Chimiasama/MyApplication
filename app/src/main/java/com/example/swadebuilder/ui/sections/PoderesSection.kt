@@ -126,7 +126,7 @@ fun PoderesSection(
     val pp = basePP + bonusPP
 
     // 10) Diálogo de ajuda
-    var showHelp by rememberSaveable { mutableStateOf(false) }
+    val showPoderesHelp = rememberSaveable { mutableStateOf(false) }
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
     val center = if (state.usarSemPontosDePoder) {
@@ -161,19 +161,19 @@ fun PoderesSection(
     }
 
     SectionHeader(
-        onHelpClick          = { showHelp = true },
+        onHelpClick          = { showPoderesHelp.value = true },
         centerText           = center,
         onListaCompletaClick = if (showLista) onOpenListaCompletaPoderes else null,
         listaCompletaText    = "Lista Completa"
     )
 
-    if (showHelp) {
+    if (showPoderesHelp.value) {
         AlertDialog(
-            onDismissRequest = { showHelp = false },
+            onDismissRequest = { showPoderesHelp.value = false },
             title            = { Text("Como funciona") },
             text             = { Text("Toque em um poder para alocá-lo em um dos espaços obtidos pelo Antecedente Arcano correspondente.") },
             confirmButton    = {
-                TextButton(onClick = { showHelp = false }) {
+                TextButton(onClick = { showPoderesHelp.value = false }) {
                     Text("OK")
                 }
             }

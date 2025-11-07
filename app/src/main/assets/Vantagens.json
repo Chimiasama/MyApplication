@@ -1600,7 +1600,7 @@
       "observacoes": ""
     },
     "limite_compra": "uma_vez",
-    "vinculado_pericia": true,
+    "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Improvisa Dispositivo Arcano com custo até 3 PP de componentes, ativado com Ciência Estranha –2."
   },
@@ -1619,7 +1619,7 @@
       "observacoes": ""
     },
     "limite_compra": "uma_vez",
-    "vinculado_pericia": true,
+    "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "+1 Foco por 1 PP ou +2 por 3 PP em rolagens (não em Falha Crítica)."
   },
@@ -1639,7 +1639,7 @@
       "observacoes": ""
     },
     "limite_compra": "uma_vez",
-    "vinculado_pericia": true,
+    "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "+1 Absorção por PP gasto, até +4."
   },
@@ -1658,7 +1658,7 @@
       "observacoes": ""
     },
     "limite_compra": "uma_vez",
-    "vinculado_pericia": true,
+    "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Gasta 1 PP extra ao conjurar para mudar Manifestação."
   },

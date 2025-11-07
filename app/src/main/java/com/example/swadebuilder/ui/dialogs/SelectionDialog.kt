@@ -111,9 +111,8 @@ fun AdvantageSelectionDialog(
     onSelect: (Vantagem) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val candidatas = remember(state) {
-        listaVantagens.filter { state.podeSelecionar(it) }
-    }
+    val candidatas = listaVantagens.filter { state.podeSelecionar(it) }
+
     SelectDialog(
         title = "Escolha sua Vantagem",
         items = candidatas,

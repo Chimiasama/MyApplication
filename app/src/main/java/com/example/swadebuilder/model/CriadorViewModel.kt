@@ -121,6 +121,7 @@ class CriadorViewModel : ViewModel() {
         state.compCostStackPorPericia.values.forEach   { it.clear() }
         state.spCostStackPorPericia.values.forEach     { it.clear() }
         state.poderSlotsPorArcano.clear()
+        state.novosPoderesStacksPorArcano.clear()
 
         // 7) Recursos gerais
         state.dinheiro = 500
