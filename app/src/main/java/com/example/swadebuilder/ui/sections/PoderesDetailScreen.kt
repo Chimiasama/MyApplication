@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -33,26 +34,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.SuperPoder
+import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.loadJsonAsset
-import com.google.gson.JsonArray
+import com.example.swadebuilder.ui.dialogs.SupersDialog
 
 private fun custoParaPenalidadeTexto(custo: String): String {
     val clean = custo.trim()
 
-    // inteiro simples (ex.: "3")
     clean.toIntOrNull()?.let { base ->
         val pen = (base + 1) / 2 // ceil(base/2)
         return "-$pen"
     }
 
-    // formatos com "/" (ex.: "+2/+3")
     if (clean.contains("/")) {
         val parts = clean.split("/")
         val mapped = parts.map { p ->
@@ -62,19 +61,16 @@ private fun custoParaPenalidadeTexto(custo: String): String {
         return mapped.joinToString("/")
     }
 
-    // sufixo "+" (ex.: "2+")
     if (clean.endsWith("+")) {
         val n = clean.removeSuffix("+").toIntOrNull()
         return n?.let { "-${(it + 1) / 2}+" } ?: "—"
     }
 
-    // prefixo "+" (ex.: "+1")
     if (clean.startsWith("+")) {
         val n = clean.removePrefix("+").toIntOrNull()
         return n?.let { "-${(it + 1) / 2}" } ?: "—"
     }
 
-    // casos textuais ("Especial", "—", "")
     return "—"
 }
 
@@ -88,9 +84,10 @@ private fun custoParaPenalidadeTexto(custo: String): String {
 @Composable
 fun PoderesDetailScreen(
     state: CriadorState,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    viewModel: CriadorViewModel? = null // <- opcional: usado para abrir o SupersDialog
 ) {
-    val context = LocalContext.current
+    val context = androidx.compose.ui.platform.LocalContext.current
     val isSupers = state.modoSupers
 
     Surface(
@@ -153,7 +150,8 @@ fun PoderesDetailScreen(
                             Spacer(Modifier.height(2.dp))
 
                             if (state.usarSemPontosDePoder) {
-                                val custoStr = poder.pontosDePoder.toString()
+                                // pontosDePoder já é String no seu modelo — remove toString() redundante
+                                val custoStr: String = poder.pontosDePoder
                                 Text(
                                     text = "Penalidade base: ${custoParaPenalidadeTexto(custoStr)}",
                                     fontSize = 14.sp,
@@ -245,56 +243,33 @@ fun PoderesDetailScreen(
                     context.loadJsonAsset("superpoderes.json")
                 }
 
-                // Cabeçalho de controle de nível e pool
-                Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    val nivelAtual = state.superNivelCampanha ?: 1
-
-                    Text("Nível de Superpoderes", fontWeight = FontWeight.Bold)
-                    Spacer(Modifier.height(4.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        (1..5).forEach { n ->
-                            TextButton(onClick = {
-                                // define nível e recalcula pool e limite
-                                state.superNivelCampanha = n
-                                state.superPontosTotais = 15 * n
-                                state.superLimite = 5 * n
-                                val gasto = state.superPoderesComprados.sumOf { it.custo }
-                                state.superPontosDisponiveis =
-                                    (state.superPontosTotais - gasto).coerceAtLeast(0)
-                            }) {
-                                Text(if (n == nivelAtual) "[$n]" else " $n ")
-                            }
-                        }
-                    }
-
-                    Spacer(Modifier.height(4.dp))
+                // Cabeçalho de controle/atalho para diálogo
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                ) {
                     Text(
-                        text = "Pontos: ${state.superPontosDisponiveis}/${state.superPontosTotais} • Limite: ${state.superPoderesComprados.size}/${state.superLimite}",
+                        "Pontos: ${state.superPontosDisponiveis}/${state.superPontosTotais} • Limite padrão: ${state.limitePorPoderPadrao} • Favorecido: ${state.limiteFavorecido}",
                         fontWeight = FontWeight.SemiBold
                     )
+                    Spacer(Modifier.weight(1f))
+                    var showSupers by rememberSaveable { mutableStateOf(false) }
+                    Button(onClick = { showSupers = true }) { Text("Ir para Superpoderes") }
+                    if (showSupers && viewModel != null) {
+                        SupersDialog(
+                            state = state,
+                            viewModel = viewModel,
+                            onConfirmLock = { /* travar fase de supers: mover para seu fluxo */ },
+                            onDismiss = { showSupers = false }
+                        )
+                    }
                 }
 
                 LazyColumn(Modifier.fillMaxSize()) {
                     items(superPoderes, key = { it.nome }) { poder ->
                         var expanded by rememberSaveable(poder.nome) { mutableStateOf(false) }
-
-                        // Custo base: pega o primeiro número (ex.: "5/10/15" -> 5, "1–3" -> 1)
-                        val custoBaseStr = poder.custoBase ?: "0"
-                        val custoInt = run {
-                            val slash = custoBaseStr.split("/")
-                                .firstOrNull()
-                                ?.trim()
-                                ?.replace("–", "-")
-                                ?: custoBaseStr
-                            // tenta extrair o primeiro inteiro
-                            Regex("""\d+""").find(slash)?.value?.toIntOrNull() ?: 0
-                        }
-
-                        val jaComprado = state.superPoderesComprados.any { it.nome == poder.nome }
-                        val podeComprar =
-                            !jaComprado &&
-                                    state.superPoderesComprados.size < state.superLimite &&
-                                    state.superPontosDisponiveis >= custoInt
 
                         Column(
                             modifier = Modifier
@@ -313,26 +288,6 @@ fun PoderesDetailScreen(
                                     fontSize = 18.sp
                                 )
                                 Spacer(Modifier.weight(1f))
-
-                                if (!jaComprado) {
-                                    TextButton(
-                                        enabled = podeComprar,
-                                        onClick = {
-                                            if (podeComprar) {
-                                                state.comprarSuperPoder(poder.nome, custoInt)
-                                            }
-                                        }
-                                    ) { Text("Comprar (${custoInt})") }
-                                } else {
-                                    TextButton(
-                                        onClick = {
-                                            state.superPoderesComprados
-                                                .firstOrNull { it.nome == poder.nome }
-                                                ?.let { state.removerSuperPoder(it) }
-                                        }
-                                    ) { Text("Remover") }
-                                }
-
                                 Icon(
                                     imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
                                     contentDescription = null
@@ -351,8 +306,10 @@ fun PoderesDetailScreen(
                                     }
 
                                     val mans = when (val m = poder.manifestacoes) {
-                                        is JsonArray -> m.map { it.asString }
-                                        else -> poder.manifestacoes?.toString()?.let { listOf(it) } ?: emptyList()
+                                        is List<*> -> m.filterIsInstance<String>()
+                                        is String -> listOf(m)
+                                        null -> emptyList()
+                                        else -> emptyList()
                                     }
                                     if (mans.isNotEmpty()) {
                                         Text(

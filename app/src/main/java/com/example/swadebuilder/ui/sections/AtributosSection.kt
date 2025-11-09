@@ -23,13 +23,17 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.booleanResource
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -39,18 +43,34 @@ import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.toDiceString
 
-
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun AtributosContent(
     state: CriadorState,
     onOpenAtributosDetail: () -> Unit
 ) {
-    val locked = state.progresso > 0
+    val locked = (state.progresso > 0) || state.faseSupersAtiva || state.emProgresso
     var showHelp by rememberSaveable { mutableStateOf(false) }
     // sua cor de pergaminho
     val pergaminho = Color(0xFFF2E3C6)
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
+    // ===== LARGURA DINÂMICA PARA O VALOR (evitar quebrar "d12+4" e esmagar botões) =====
+    val textMeasurer = rememberTextMeasurer()
+    val density = LocalDensity.current
+    val measureStyle = MaterialTheme.typography.bodyLarge  // capturado fora do remember
+
+    // mede a maior string entre todos os atributos (com supers aplicados)
+    val valorColWidthDp = remember(state.superAtributoIncs, measureStyle) {
+        val samples = listaAtributos.map { nome ->
+            state.atributoRawComSupers(nome).toDiceString()
+        }
+        val maxPx = samples.maxOf { s ->
+            textMeasurer.measure(text = s, style = measureStyle).size.width
+        }
+        with(density) { (maxPx + 12).toDp() } // folga de 12dp para respirar
+    }
+    // ===============================================================================
 
     Column(
         modifier = Modifier
@@ -65,7 +85,6 @@ fun AtributosContent(
             onListaCompletaClick  = if (showLista) ({ onOpenAtributosDetail() }) else null,
             listaCompletaText     = "Lista Completa"
         )
-
 
         if (showHelp) {
             AlertDialog(
@@ -88,6 +107,9 @@ fun AtributosContent(
             val minReq  = state.minAttrPorVantagem[nome] ?: 4
             val maxRaw  = state.atributoMaxRaw(nome)
             val stack   = state.paCostStackPorAtributo.getValue(nome)
+
+            // valor efetivo com supers (para exibição)
+            val efetivoRaw = state.atributoRawComSupers(nome)
 
             val canReduce   = !locked && stack.isNotEmpty() && (baseRaw - 2 >= minReq)
             val canIncrease = !locked && state.pontosAtributo > 0 && (baseRaw + 2 <= maxRaw)
@@ -125,9 +147,12 @@ fun AtributosContent(
                 }
 
                 Text(
-                    text = baseRaw.toDiceString(),
-                    modifier = Modifier.width(40.dp),
+                    // mostra o valor com supers (antes era baseRaw.toDiceString())
+                    text = efetivoRaw.toDiceString(),
+                    modifier = Modifier.width(valorColWidthDp),
                     style = MaterialTheme.typography.bodyLarge,
+                    maxLines = 1,
+                    overflow = TextOverflow.Clip,
                     textAlign = TextAlign.Center
                 )
 

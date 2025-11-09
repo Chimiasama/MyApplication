@@ -11,17 +11,16 @@ data class PersonagemSalvo(
     val pericias: Map<String, Int>,
     val ancestralidade: String,
 
-    // Mantemos o mesmo nome de campo para compatibilidade.
-    // A partir de agora GRAVE IDs de vantagens aqui. Em saves antigos pode haver nomes.
+    // IDs de vantagens
     val vantagens: List<String>,
 
-    // Já eram IDs (pela sua MainActivity) — mantemos.
+    // IDs de complicações
     val complicacoes: List<String>,
 
-    // Equipamentos por nome (como já estava).
+    // Equipamentos por nome (como antes)
     val equipamentos: List<String>,
 
-    // Poderes arcanos (slots por chave de AA) — já existia.
+    // Poderes arcanos (slots por chave de AA) — como antes
     val poderes: Map<String, List<String>>,
 
     val dinheiro: Int,
@@ -30,19 +29,39 @@ data class PersonagemSalvo(
     val cartaSelvagem: Boolean,
     val heroisSemArmadura: Boolean = false,
     val semPontosDePoder: Boolean = false,
-    // --- Especializações (já existentes) ---
+
+    // Especializações existentes
     val usarEspecializacoesDePericia: Boolean = false,
     val especializacoesPorPericia: Map<String, EspecializacoesDto> = emptyMap(),
 
-    // --- NOVOS CAMPOS (SUPERS) ---
-    // Flags de modo para restaurar telas e filtros corretamente:
+    // ===== MODOS SUPER =====
     val modoSupers: Boolean = false,
     val modoSuperequip: Boolean = false,
     val modoSuperComplicacoes: Boolean = false,
 
-    // Snapshot simples dos superpoderes comprados (por nome).
-    // Mesmo que sua UI calcule slots/PP, manter este espelho ajuda a reexibir corretamente.
-    val superpoderesComprados: List<String> = emptyList()
+    // Snapshot simples (nomes dos superpoderes comprados)
+    val superpoderesComprados: List<String> = emptyList(),
+
+    // ===== NOVOS CAMPOS (SUPERS) =====
+    val superPontosTotais: Int = 0,
+    val superPontosDisponiveis: Int = 0,
+
+    // Limites & favorecido
+    val limitePorPoderPadrao: Int = 0,      // floor(superPontosTotais / 3) se não houver tabela
+    val limiteFavorecido: Int = 0,          // ceil(superPontosTotais / 2.0)
+    val idPoderFavorecido: String? = null,  // para O MELHOR QUE HÁ
+
+    // Ledger de efeitos de poder
+    val superAtributoIncs: Map<String, Int> = emptyMap(),  // atributo keyify -> passos
+    val superPericiaIncs: Map<String, Int> = emptyMap(),   // periciaId/pericia.keyify -> passos
+    val bonusPararFromPower: Int = 0,
+    val bonusResFromPower: Int = 0,
+    val armorFromPower: Int = 0,
+    val vantagensDePoder: Set<String> = emptySet(),
+    val gastosPorPoder: Map<String, Int> = emptyMap(),
+
+    // Teto de mitigação por supers (campanha)
+    val limiteDePoderDaCampanha: Int = Int.MAX_VALUE
 )
 
 @Serializable

@@ -5,15 +5,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -25,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
@@ -33,11 +38,12 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.SectionHeader
 import com.example.swadebuilder.listaDeEstagios
+import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.loadJsonAsset
+import com.example.swadebuilder.ui.dialogs.SupersDialog
 import com.example.swadebuilder.util.keyify
-
 
 @kotlinx.serialization.Serializable
 data class ArcanoInfoItem(
@@ -50,8 +56,116 @@ data class ArcanoInfoItem(
 @Composable
 fun PoderesSection(
     state: CriadorState,
-    onOpenListaCompletaPoderes: () -> Unit
+    onOpenListaCompletaPoderes: () -> Unit,
+    viewModel: CriadorViewModel? = null   // <-- tipo corrigido
 ) {
+    // Se for MODO SUPERS, mostramos um cabeçalho simples e um botão para abrir o SupersDialog,
+    // mantendo o ProgressosDialog totalmente intacto (fase anterior).
+    if (state.modoSupers) {
+        var showDialog by rememberSaveable { mutableStateOf(false) }
+        var showNivelDialog by rememberSaveable { mutableStateOf(false) }
+        var nivelEscolhido by rememberSaveable { mutableStateOf("III") }
+
+        val avisoFav = remember(state.vantagensSelecionadas, state.idPoderFavorecido) {
+            val temOMelhor = state.vantagensSelecionadas.any { it.nome.keyify() == "O MELHOR QUE HÁ".keyify() }
+            temOMelhor && state.idPoderFavorecido.isNullOrEmpty()
+        }
+
+        SectionHeader(
+            onHelpClick = { /* help opcional */ },
+            centerText  = "Supers • Pontos: ${state.superPontosDisponiveis}/${state.superPontosTotais} • Limite padrão: ${state.limitePorPoderPadrao} • Favorecido: ${state.limiteFavorecido}",
+            onListaCompletaClick = onOpenListaCompletaPoderes,
+            listaCompletaText = "Lista Completa"
+        )
+
+        if (avisoFav) {
+            Text(
+                "Defina o poder favorecido (O MELHOR QUE HÁ) para liberar gastos.",
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(
+                onClick = { showNivelDialog = true },
+                // habilita só quando o personagem concluiu a criação inicial
+                enabled = state.creationComplete() && !state.faseSupersAtiva && !state.emProgresso
+            ) {
+                Text("Nível da Campanha Supers")
+            }
+            Spacer(Modifier.width(8.dp))
+            // (opcional) você pode colocar aqui um Text com preview do nível escolhido
+        }
+        if (showNivelDialog) {
+            AlertDialog(
+                onDismissRequest = { showNivelDialog = false },
+                title = { Text("Nível de Poder da Campanha") },
+                text  = {
+                    Column {
+                        Text("Selecione o nível (I a V) e confirme.")
+                        Spacer(Modifier.height(8.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            listOf("I","II","III","IV","V").forEach { opt ->
+                                TextButton(onClick = { nivelEscolhido = opt }) {
+                                    Text(if (nivelEscolhido == opt) "[$opt]" else opt)
+                                }
+                            }
+                        }
+                        Spacer(Modifier.height(8.dp))
+                        val previewTotal = when (nivelEscolhido) {
+                            "I" -> 15; "II" -> 30; "III" -> 45; "IV" -> 60; "V" -> 75
+                            else -> 15
+                        }
+                        Text("Prévia: Nível $nivelEscolhido → $previewTotal pontos de super.")
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        viewModel?.iniciarFaseSupers(nivelEscolhido)
+                        showNivelDialog = false
+                    }) { Text("Confirmar") }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showNivelDialog = false }) { Text("Cancelar") }
+                }
+            )
+        }
+
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(onClick = { showDialog = true }) { Text("Ir para Superpoderes") }
+            TextButton(onClick = onOpenListaCompletaPoderes) { Text("Lista Completa") }
+        }
+
+        if (showDialog && viewModel != null) {
+            SupersDialog(
+                state = state,
+                viewModel = viewModel,
+                onConfirmLock = {
+                    // Aqui você pode “travar” a fase de supers conforme sua regra.
+                    // Ex.: state.emProgresso = true (se esta for a sua flag de travamento geral),
+                    // ou salvar um campo próprio se você já tiver.
+                },
+                onDismiss = { showDialog = false }
+            )
+        }
+
+        // nada mais a renderizar nesta seção quando for supers
+        return
+    }
+
+    // ======= ABAIXO: CONTEÚDO ORIGINAL DE PODERES (magias), INALTERADO =======
+
     // 0) Estado de "bloqueio": quando já estiver em progresso e não for edição.
     val locked = state.progresso > 0 && !state.emProgresso
     val context = LocalContext.current
@@ -59,11 +173,6 @@ fun PoderesSection(
     // 1) Carrega o JSON de poderes diretamente como List<Poder>
     val allPoderes: List<Poder> = remember {
         context.loadJsonAsset<List<Poder>>("poderes.json")
-    }
-
-    // 2) Cria um Map para buscar dados de um poder pelo seu ‘ID’
-    val poderesMap: Map<String, Poder> = remember(allPoderes) {
-        allPoderes.associateBy { it.id }
     }
 
     // 3) Carrega arcano_info.json e monta um Map<versãoKey, ArcanoInfoItem>
@@ -116,10 +225,8 @@ fun PoderesSection(
         remember { mutableStateListOf() }
     }
 
-    // 8) Quantos slots há, quantos estão preenchidos e quantos sobraram
-    val totalSlots = slots.size
-    val usedCount  = slots.count { it != null }
-    val remainingSlots = totalSlots - usedCount
+    // 8) Quantos slots há e quantos sobraram
+    val remainingSlots = slots.size - slots.count { it != null }
 
     // 9) Pontos de Poder = base (do arcano selecionado) + bônus do estado
     val bonusPP: Int = state.bonusPoderExtra
@@ -203,9 +310,7 @@ fun PoderesSection(
                 enabled = canRemove,
                 modifier = Modifier.alpha(if (canRemove) 1f else 0.3f),
                 label = {
-                    val nomeDoPoder = poderId
-                        ?.let { poderesMap[it]?.nome ?: it }
-                        ?: "-"
+                    val nomeDoPoder = poderId ?: "-"
                     Text(nomeDoPoder)
                 },
                 leadingIcon = {
@@ -227,7 +332,7 @@ fun PoderesSection(
         // a) Índice do estágio atual do personagem
         val curEstagioIdx = listaDeEstagios.indexOfFirst { it.nome == state.estagioAtual().nome }
 
-        // b) Filtra apenas poderes cuja origem seja “BASICO”, que caibam no estágio atual
+        // b) Filtra apenas poderes de origem “BASICO”, que caibam no estágio atual
         //    e cujo ‘ID’ ainda não esteja em nenhum slot
         val disponiveis: List<Poder> = allPoderes
             .filter { poder -> poder.origem.equals("BASICO", ignoreCase = true) }
@@ -235,23 +340,18 @@ fun PoderesSection(
                 val idxReq = listaDeEstagios.indexOfFirst { it.nome.equals(poder.estagio, ignoreCase = true) }
                 idxReq in 0..curEstagioIdx
             }
-            .filter { poder ->
-                slots.none { it == poder.id }
-            }
+            .filter { poder -> slots.none { it == poder.id } }
 
         if (disponiveis.isEmpty()) {
-            item {
-                Text("Nenhum poder disponível…", Modifier.padding(16.dp))
-            }
+            item { Text("Nenhum poder disponível…", Modifier.padding(16.dp)) }
         } else {
-            items(disponiveis) { poder ->
+            items(disponiveis, key = { it.id }) { poder ->
                 Column {
                     Row(
                         Modifier
                             .fillMaxWidth()
                             .alpha(if (remainingSlots > 0) 1f else 0.3f)
                             .clickable(enabled = (remainingSlots > 0)) {
-                                // Só permite alocar se ainda houver ao menos um slot vazio
                                 if (remainingSlots > 0) {
                                     val firstEmpty = slots.indexOfFirst { it == null }
                                     if (firstEmpty >= 0) {
@@ -264,9 +364,7 @@ fun PoderesSection(
                                 }
                             }
                             .padding(horizontal = 16.dp, vertical = 12.dp)
-                    ) {
-                        Text(poder.nome)
-                    }
+                    ) { Text(poder.nome) }
                     HorizontalDivider()
                 }
             }

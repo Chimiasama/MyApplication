@@ -86,6 +86,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -111,6 +112,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.model.AtributoList
+import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
@@ -119,11 +121,13 @@ import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.PersonagemSalvo
 import com.example.swadebuilder.model.Poder
+import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.loadPericiasDescriptions
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
+import com.example.swadebuilder.ui.dialogs.SuperAtributosPickerDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
 import com.example.swadebuilder.ui.sections.ComplicacoesSection
@@ -147,7 +151,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.util.UUID
-import kotlin.math.min
 import kotlin.math.roundToInt
 import com.example.swadebuilder.model.loadJsonAsset as loadPoderesAsset
 
@@ -440,7 +443,7 @@ class MainActivity : ComponentActivity() {
                                                         atributos       = state.valoresAtributos.mapValues { it.value.intValue },
                                                         pericias        = listaPericias.associate { per -> per.nome to state.rawTotal(per) },
                                                         ancestralidade  = state.ancestralidade,
-                                                        vantagens       = state.vantagensSelecionadas.map { it.id },   // << IDs
+                                                        vantagens       = state.vantagensSelecionadas.map { it.id },
                                                         complicacoes    = state.complicacoesSelecionadas
                                                             .filterValues { it != null }
                                                             .keys
@@ -448,18 +451,33 @@ class MainActivity : ComponentActivity() {
                                                         equipamentos    = state.equipamentosComprados.toList(),
                                                         poderes         = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
                                                         dinheiro        = state.dinheiro,
-                                                        pontosRestantes = state.pontosVantagem
+                                                        pontosRestantes = state.pontosVantagem,
+
+                                                        // ===== NOVOS CAMPOS (SUPERS) =====
+                                                        modoSupers              = state.modoSupers,
+                                                        superPontosTotais       = state.superPontosTotais,
+                                                        superPontosDisponiveis  = state.superPontosDisponiveis,
+                                                        limitePorPoderPadrao    = state.limitePorPoderPadrao,
+                                                        limiteFavorecido        = state.limiteFavorecido,
+                                                        idPoderFavorecido       = state.idPoderFavorecido,
+                                                        superAtributoIncs       = state.superAtributoIncs.toMap(),
+                                                        superPericiaIncs        = state.superPericiaIncs.toMap(),
+                                                        bonusPararFromPower     = state.bonusPararFromPower,
+                                                        bonusResFromPower       = state.bonusResFromPower,
+                                                        armorFromPower          = state.armorFromPower,
+                                                        vantagensDePoder        = state.vantagensDePoder.toSet(),
+                                                        gastosPorPoder          = state.gastosPorPoder.toMap(),
+                                                        limiteDePoderDaCampanha = state.limiteDePoderDaCampanha
                                                     )
                                                     salvarEExibirFichaPdf(this@MainActivity, personagem)
                                                 }) {
                                                     Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
                                                 }
+
                                                 IconButton(onClick = {
-                                                    val personagemId     = state.idAtual ?: UUID.randomUUID().toString()
-                                                    val atributosMap     = state.valoresAtributos.mapValues { it.value.intValue }
-                                                    val periciasMap      = listaPericias.associate { per -> per.nome to state.rawTotal(per) }
-                                                    val vantagensList    = state.vantagensSelecionadas.map { it.nome }
-                                                    val vantagensParaMostrar = state.vantagensParaExibir()
+                                                    val personagemId  = state.idAtual ?: UUID.randomUUID().toString()
+                                                    val atributosMap  = state.valoresAtributos.mapValues { it.value.intValue }
+                                                    val periciasMap   = listaPericias.associate { per -> per.nome to state.rawTotal(per) }
                                                     val complicacoesList = state.complicacoesSelecionadas
                                                         .filterValues { it != null }
                                                         .keys
@@ -473,11 +491,9 @@ class MainActivity : ComponentActivity() {
                                                         ancestralidade     = state.ancestralidade,
 
                                                         vantagens          = state.vantagensSelecionadas.map { it.id },
-
                                                         complicacoes       = complicacoesList,
 
                                                         equipamentos       = state.equipamentosComprados.map { it.nome },
-
                                                         poderes            = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
 
                                                         dinheiro           = state.dinheiro,
@@ -485,24 +501,41 @@ class MainActivity : ComponentActivity() {
                                                         maisPontosPericias = state.maisPontosPericias,
                                                         cartaSelvagem      = state.cartaSelvagem,
                                                         heroisSemArmadura  = state.heroisSemArmadura,
-                                                        semPontosDePoder = state.usarSemPontosDePoder,
+                                                        semPontosDePoder   = state.usarSemPontosDePoder,
                                                         usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
                                                         especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
 
+                                                        // ===== MODO SUPER =====
                                                         modoSupers              = state.modoSupers,
                                                         modoSuperequip          = state.modoSuperequip,
                                                         modoSuperComplicacoes   = state.modoSuperComplicacoes,
 
-                                                        superpoderesComprados   = emptyList()
+                                                        // Snapshot por conveniência (nomes escolhidos nas suas telas de supers)
+                                                        superpoderesComprados   = state.superPoderesComprados.map { it.nome },
+
+                                                        // ===== PERSISTÊNCIA DOS CAMPOS NOVOS =====
+                                                        superPontosTotais       = state.superPontosTotais,
+                                                        superPontosDisponiveis  = state.superPontosDisponiveis,
+
+                                                        limitePorPoderPadrao    = state.limitePorPoderPadrao,
+
+                                                        limiteFavorecido        = state.limiteFavorecido,
+                                                        idPoderFavorecido       = state.idPoderFavorecido,
+
+                                                        superAtributoIncs       = state.superAtributoIncs.toMap(),
+                                                        superPericiaIncs        = state.superPericiaIncs.toMap(),
+                                                        bonusPararFromPower     = state.bonusPararFromPower,
+                                                        bonusResFromPower       = state.bonusResFromPower,
+                                                        armorFromPower          = state.armorFromPower,
+                                                        vantagensDePoder        = state.vantagensDePoder.toSet(),
+                                                        gastosPorPoder          = state.gastosPorPoder.toMap(),
+
+                                                        limiteDePoderDaCampanha = state.limiteDePoderDaCampanha
                                                     )
 
                                                     state.idAtual = personagemId
                                                     StorageUtils.salvarPersonagem(context, salvo)
-                                                    Toast.makeText(
-                                                        context,
-                                                        "Personagem salvo com sucesso!",
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
+                                                    Toast.makeText(context, "Personagem salvo com sucesso!", Toast.LENGTH_SHORT).show()
                                                 }) {
                                                     Icon(Icons.Default.Save, contentDescription = "Salvar")
                                                 }
@@ -609,7 +642,7 @@ class MainActivity : ComponentActivity() {
 }
 
 fun Int.toDiceString(): String =
-    if (this <= 12) "d$this" else "d12+${(this - 12) / 2}"
+    if (this <= 12) "d$this" else "d12+${(this - 12)}"
 
 data class Pericia(val nome: String, val atributo: String, val basica: Boolean)
 
@@ -858,24 +891,16 @@ fun CriadorState.valorMovimentacao(): Int {
 }
 
 fun CriadorState.valorAparar(): Int {
-    val perLutar = listaPericias
-        .firstOrNull { it.nome.equals("Lutar", ignoreCase = true) }
-    val lutarRaw = perLutar?.let { rawTotal(it) } ?: 0
+    val perLutar = listaPericias.firstOrNull { it.nome.equals("Lutar", ignoreCase = true) }
+    val lutarRaw = perLutar?.let { rawTotalComSupers(it) } ?: 0   // << usa supers
     val base     = 2 + (lutarRaw / 2)
 
     val bloquearBonus =
-        if (vantagensSelecionadas.any { it.nome.keyify() == "BLOQUEAR" })
-            1
-        else
-            0
-
+        if (vantagensSelecionadas.any { it.nome.keyify() == "BLOQUEAR" }) 1 else 0
     val bloquearAprimoradoBonus =
-        if (vantagensSelecionadas.any { it.nome.keyify() == "BLOQUEAR APRIMORADO" })
-            1
-        else
-            0
+        if (vantagensSelecionadas.any { it.nome.keyify() == "BLOQUEAR APRIMORADO" }) 1 else 0
 
-    return base + bloquearBonus + bloquearAprimoradoBonus
+    return base + bloquearBonus + bloquearAprimoradoBonus + bonusPararFromPower
 }
 
 fun CriadorState.valorResistenciaBase(): Int {
@@ -901,6 +926,45 @@ fun CriadorState.valorResistenciaBase(): Int {
     return (base + bonusPos + bonusNeg + brigaoBonus + sizeRaw)
         .coerceAtLeast(0)
 }
+
+fun CriadorState.valorResistenciaFinal(): Int {
+    // base (Vigor/Tamanho/etc.) + bônus vindo de superpoder
+    return valorResistenciaBase() + bonusResFromPower
+}
+
+fun CriadorState.valorArmaduraEfetiva(): Int {
+    val armorFromEquipment = armadura
+    val melhorExterna = kotlin.math.max(armorFromPower, armorFromEquipment)
+    return (melhorExterna + naturalArmorFromRace).coerceAtLeast(0)
+}
+
+fun CriadorState.adicionarVantagemPorSuper(v: Vantagem): Boolean {
+    // Recusa LENDÁRIAS quando a origem é SUPER
+    if (v.categoria == Categoria.LENDARIAS) return false
+
+    // Ignora SOMENTE Estágio reaproveitando o mecanismo do “Nasce Um Herói”
+    val progressoAnterior = overrideStageForVantagem
+    overrideStageForVantagem = "Lendário"
+
+    val permitido = podeSelecionar(v) // respeita atributos, perícias, outras vantagens, observações
+    overrideStageForVantagem = progressoAnterior
+
+    if (!permitido) return false
+
+    // Marca origem="SUPER" na persistência
+    if (!vantagensSelecionadas.contains(v)) {
+        vantagensSelecionadas += v
+        vantagensDePoder += v.id
+        return true
+    }
+    return false
+}
+
+fun CriadorState.removerVantagemPorSuper(v: Vantagem) {
+    vantagensSelecionadas.remove(v)
+    vantagensDePoder.remove(v.id)
+}
+
 
 fun CriadorState.valorTamanho(): Int {
     val desc = listaAncestralidadesJson
@@ -1006,6 +1070,75 @@ class CriadorState {
     var superPontosDisponiveis by mutableIntStateOf(0)
     var superLimite by mutableIntStateOf(0)
     var superLimitePorPoder by mutableIntStateOf(0)
+    var idPoderFavorecido by mutableStateOf<String?>(null)
+    val limitePorPoderPadrao: Int
+        get() = kotlin.math.floor(superPontosTotais / 3.0).toInt()
+    val limiteFavorecido: Int
+        get() = kotlin.math.ceil(superPontosTotais / 2.0).toInt()
+    var limiteDePoderDaCampanha by mutableIntStateOf(Int.MAX_VALUE)
+
+    // --- Fases do fluxo: supers depois progresso---
+    var faseSupersAtiva by mutableStateOf(false)  // true depois que o jogador CONFIRMA o nível I–V
+
+    val superAtributoIncs = mutableStateMapOf<String, Int>()
+    val superPericiaIncs = mutableStateMapOf<String, Int>()
+    var bonusPararFromPower by mutableIntStateOf(0)
+    var bonusResFromPower  by mutableIntStateOf(0)
+    var armorFromPower     by mutableIntStateOf(0)
+    val vantagensDePoder   = mutableStateSetOf<String>()
+    val gastosPorPoder     = mutableStateMapOf<String, Int>()
+    var naturalArmorFromRace by mutableIntStateOf(0)
+
+    fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
+        var raw = rawStart
+        repeat(steps.coerceAtLeast(0)) {
+            raw += if (raw < 12) 2 else 1
+        }
+        return raw.coerceAtLeast(4)
+    }
+
+    // Usa a regra acima para projetar o valor "com supers" (sem mexer no holder).
+    fun atributoRawComSupers(attrKey: String): Int {
+        val base = valoresAtributos[attrKey]?.intValue ?: 4
+        val incs = superAtributoIncs[attrKey] ?: 0
+        return applySuperStepsFrom(base, incs)
+    }
+
+    /** Respeita o teto de mitigação por supers (clampa apenas a soma dos componentes de supers) */
+    private fun clampMitigacaoSupers() {
+        val soma = armorFromPower + bonusResFromPower
+        if (soma > limiteDePoderDaCampanha) {
+            val excesso = soma - limiteDePoderDaCampanha
+            // prioridade: reduzir primeiro armorFromPower, depois bonusResFromPower
+            val reduzirArmor = excesso.coerceAtMost(armorFromPower)
+            armorFromPower -= reduzirArmor
+            val rest = excesso - reduzirArmor
+            if (rest > 0) bonusResFromPower = (bonusResFromPower - rest).coerceAtLeast(0)
+        }
+    }
+
+    /** Facilita adicionar/remover efeitos de um PoderId no ledger */
+    fun registrarGastoDePoder(poderId: String, custo: Int) {
+        val atual = gastosPorPoder[poderId] ?: 0
+        gastosPorPoder[poderId] = atual + custo
+        superPontosDisponiveis = (superPontosTotais - gastosPorPoder.values.sum()).coerceAtLeast(0)
+    }
+
+    fun desfazerGastoDePoder(poderId: String, custo: Int) {
+        val atual = (gastosPorPoder[poderId] ?: 0) - custo
+        if (atual <= 0) gastosPorPoder.remove(poderId) else gastosPorPoder[poderId] = atual
+        superPontosDisponiveis = (superPontosTotais - gastosPorPoder.values.sum()).coerceAtLeast(0)
+    }
+
+    fun updateBonusPararFromPower(value: Int) { bonusPararFromPower = value.coerceAtLeast(0) }
+    fun updateBonusResFromPower (value: Int) { bonusResFromPower  = value.coerceAtLeast(0); clampMitigacaoSupers() }
+    fun updateArmorFromPower    (value: Int) { armorFromPower     = value.coerceAtLeast(0); clampMitigacaoSupers() }
+
+    fun rawTotalComSupers(per: Pericia): Int {
+        val base = rawTotal(per)
+        val incs = superPericiaIncs[per.nome.keyify()] ?: 0
+        return applySuperStepsFrom(base, incs)
+    }
 
     var regraMultiplosIdiomas by mutableStateOf(false)
 
@@ -3000,7 +3133,7 @@ fun UnifiedScreen(
                 expanded          = expSupers,
                 onToggle          = { expSupers = !expSupers },
                 onOpenPoderesDetail  = onOpenPoderesDetail,
-                onHelpClick       = onHelpSuperClick
+                onHelpClick       = onHelpSuperClick,
                         )
             Spacer(Modifier.height(8.dp))
             HorizontalDivider(thickness = 1.dp)
@@ -4156,16 +4289,49 @@ fun BuySuperPowerDialog(
     onConfirm: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
-    // limites para o custo base
-    val baseMin = poder.custoBase?.toIntOrNull() ?: 1
-    val rawBaseMax = poder.custoBase?.toIntOrNull() ?: pontosDisponiveis
-    val baseMax = rawBaseMax
-        .coerceAtMost(pontosDisponiveis)
-        .coerceAtLeast(baseMin)
+    // ---------- parse discreto do custoBase ----------
+    fun parseCustoBaseOptions(raw: String?): List<Int> {
+        if (raw.isNullOrBlank()) return listOf(1)
+        val s = raw.trim()
 
-    var baseCost by rememberSaveable { mutableIntStateOf(baseMin) }
+        // faixa com EN DASH “a–b”
+        val enDash = '–'
+        if (s.contains(enDash)) {
+            val parts = s.split(enDash).map { it.trim() }
+            val a = parts.getOrNull(0)?.toIntOrNull()
+            val b = parts.getOrNull(1)?.toIntOrNull()
+            if (a != null && b != null) {
+                val start = minOf(a, b)
+                val end   = maxOf(a, b)
+                return (start..end).toList()
+            }
+        }
 
-    // Estados de modificadores (reusa seu parsing já existente)
+        // lista “x/y/z/...”
+        if (s.contains('/')) {
+            return s.split('/')
+                .mapNotNull { it.trim().toIntOrNull() }
+                .distinct()
+                .sorted()
+        }
+
+        // valor único
+        return s.toIntOrNull()?.let { listOf(it) } ?: listOf(1)
+    }
+
+    // opções declaradas no JSON para este poder
+    val baseOptionsAll = remember(poder.custoBase) { parseCustoBaseOptions(poder.custoBase) }
+    val baseMinDeclarado = baseOptionsAll.minOrNull() ?: 1
+    val baseMaxDeclarado = baseOptionsAll.maxOrNull() ?: baseMinDeclarado
+
+    // ---------- modificadores (igual ao seu fluxo) ----------
+    data class ModState(
+        val name: String,
+        val options: List<Int>,
+        val included: MutableState<Boolean>,
+        val selected: MutableState<Int>
+    )
+
     val modStates = remember(poder.modificadores) {
         poder.modificadores.orEmpty().map { modObj ->
             val name = modObj.substringBefore(":").trim()
@@ -4177,7 +4343,7 @@ fun BuySuperPowerDialog(
                 name = name,
                 options = opts,
                 included = mutableStateOf(false),
-                selected = mutableIntStateOf(opts.first())
+                selected = mutableStateOf(opts.first())
             )
         }
     }
@@ -4186,10 +4352,18 @@ fun BuySuperPowerDialog(
         derivedStateOf { modStates.filter { it.included.value }.sumOf { it.selected.value } }
     }
 
-    // Cap dinâmico por poder: total (base + mods) não pode passar do limitePorPoder nem do pool disponível
-    val maxPermitidoTotal = min(limitePorPoder, pontosDisponiveis)
-    val maxBasePeloCap    = (maxPermitidoTotal - modCost).coerceAtLeast(baseMin)
-    val baseMaxCapped     = min(baseMax, maxBasePeloCap)
+    // ---------- CAP: por poder + pool disponível ----------
+    val totalCap = minOf(limitePorPoder, pontosDisponiveis) // teto do TOTAL (base + mods)
+
+    // reduza as opções declaradas pelo teto (considerando custo dos mods)
+    val capParaBase = (totalCap - modCost).coerceAtLeast(baseMinDeclarado)
+    val allowedBaseOptions = baseOptionsAll
+        .filter { it in baseMinDeclarado..minOf(baseMaxDeclarado, capParaBase) }
+        .ifEmpty { listOf(baseMinDeclarado.coerceAtMost(capParaBase)) }
+
+    // ---------- Slider por ÍNDICE das opções discretas ----------
+    var baseIdx by rememberSaveable(allowedBaseOptions) { mutableIntStateOf(0) }
+    val baseCost = allowedBaseOptions.getOrElse(baseIdx) { allowedBaseOptions.last() }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -4203,15 +4377,16 @@ fun BuySuperPowerDialog(
                     .verticalScroll(scroll)
                     .padding(8.dp)
             ) {
-                // Slider de custo base
                 Text("Custo base: $baseCost")
+
                 Slider(
-                    value = baseCost.toFloat(),
+                    value = baseIdx.toFloat(),
                     onValueChange = { novo ->
-                        baseCost = novo.roundToInt().coerceIn(baseMin, baseMaxCapped)
+                        val idx = novo.roundToInt().coerceIn(0, allowedBaseOptions.lastIndex)
+                        baseIdx = idx
                     },
-                    valueRange = baseMin.toFloat()..baseMaxCapped.toFloat(),
-                    steps = (baseMaxCapped - baseMin).coerceAtLeast(1) - 1,
+                    valueRange = 0f..allowedBaseOptions.lastIndex.toFloat(),
+                    steps = (allowedBaseOptions.size - 1).coerceAtLeast(1) - 1,
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -4221,7 +4396,6 @@ fun BuySuperPowerDialog(
                     Text("Modificadores:", style = MaterialTheme.typography.bodyMedium)
                     Spacer(Modifier.height(4.dp))
 
-                    // Renderização simplificada de mods (mantém sua lógica de options)
                     modStates.forEach { mod ->
                         if (mod.options.size == 1) {
                             Row(
@@ -4253,16 +4427,15 @@ fun BuySuperPowerDialog(
                                     Slider(
                                         value = sel.toFloat(),
                                         onValueChange = { novo ->
-                                            val novoInt = novo.roundToInt()
-                                            val clamp = novoInt
+                                            val clamp = novo.roundToInt()
                                                 .coerceIn(mod.options.minOrNull() ?: 0, mod.options.maxOrNull() ?: 0)
-                                            // respeitar o cap total: (base + mods) <= maxPermitidoTotal
-                                            val futuroModCost = (modStates.filter { it.included.value && it != mod }.sumOf { it.selected.value }) + clamp
-                                            val futuroTotal = baseCost + futuroModCost
-                                            mod.selected.value = if (futuroTotal <= maxPermitidoTotal) clamp else mod.selected.value
+                                            val outros = modStates.filter { it.included.value && it != mod }
+                                                .sumOf { it.selected.value }
+                                            val futuroTotal = allowedBaseOptions[baseIdx] + outros + clamp
+                                            if (futuroTotal <= totalCap) mod.selected.value = clamp
                                         },
-                                        valueRange = (mod.options.minOrNull() ?: 0).toFloat()..(mod.options.maxOrNull()
-                                            ?: 0).toFloat(),
+                                        valueRange = (mod.options.minOrNull() ?: 0).toFloat()..
+                                                (mod.options.maxOrNull() ?: 0).toFloat(),
                                         steps = (mod.options.size - 1).coerceAtLeast(0),
                                         modifier = Modifier.fillMaxWidth()
                                     )
@@ -4274,16 +4447,14 @@ fun BuySuperPowerDialog(
             }
         },
         confirmButton = {
-            val totalAtual = baseCost + modCost
-            val podeConfirmar = totalAtual in baseMin..maxPermitidoTotal
+            val totalAtual = allowedBaseOptions[baseIdx] + modCost
+            val podeConfirmar = totalAtual in allowedBaseOptions.first()..totalCap
             TextButton(
                 enabled = podeConfirmar,
                 onClick = { onConfirm(totalAtual) }
             ) { Text("Comprar ($totalAtual)") }
         },
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancelar") }
-        }
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar") } }
     )
 }
 
@@ -4298,7 +4469,8 @@ private data class ModState(
 fun SuperPoderesSection(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
-    expanded: Boolean
+    expanded: Boolean,
+    viewModel: CriadorViewModel
 ) {
     if (!expanded) return
 
@@ -4346,12 +4518,12 @@ fun SuperPoderesSection(
                 state.superNivelCampanha = novoNivel
 
                 // 2) (re)calcule TOTAL e LIMITE a partir do nível
-                val total = 15 * novoNivel           // 15 pts por nível
-                val limite = 5 * novoNivel           // 1/3 do total (equivale a 5 * nível)
+                val total   = 15 * novoNivel           // 15 pts por nível
+                val limite  = 5  * novoNivel           // 1/3 do total (5 * nível)
 
-                state.superPontosTotais = total
-                state.superLimite = limite
-                var superLimitePorPoder by mutableIntStateOf(0)
+                state.superPontosTotais      = total
+                state.superLimite            = limite
+                state.superLimitePorPoder    = limite   // <-- CORREÇÃO: grave no state (remova a var local)
 
 
                 // 3) recalcule os disponíveis (subtraindo o que já foi comprado)
@@ -4371,33 +4543,129 @@ fun SuperPoderesSection(
 
         Spacer(Modifier.height(8.dp))
 
-        // 3) lista de poderes que ainda posso comprar
-        listaSuperPoderes.forEach { poder ->
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .clickable { poderParaComprar = poder }
-                    .padding(vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(poder.nome, Modifier.weight(1f))
-                Icon(Icons.Default.FlashOn, contentDescription = "Comprar")
+        // 3) lista de poderes que ainda posso comprar (agora dentro de uma caixinha rolável)
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 220.dp),   // a “caixinha” que rola
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+        ) {
+            items(listaSuperPoderes, key = { it.nome }) { poder ->  // <- usar nome como chave
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable { poderParaComprar = poder }     // <- usa o objeto (ou poder.nome)
+                        .padding(vertical = 6.dp, horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(poder.nome, Modifier.weight(1f))
+                    Icon(Icons.Default.FlashOn, contentDescription = "Comprar")
+                }
             }
         }
     }
 
     // diálogo de compra
-    // diálogo de compra
+    // Estados para o picker de Superatributo (pool único)
+    var showSuperAttrPicker by rememberSaveable { mutableStateOf(false) }
+    var poolSuperAttr by rememberSaveable { mutableIntStateOf(0) }
+
     poderParaComprar?.let { poder ->
+        // Limite compartilhado entre Armadura e Resistência (A+R)
+        val gastosArmor = state.gastosPorPoder["sp_armor"] ?: 0
+        val gastosRes   = state.gastosPorPoder["sp_res"]   ?: 0
+        val shareLimit  = state.superLimitePorPoder
+        val shareUsed   = gastosArmor + gastosRes
+
+        // Quanto já investi neste poder específico (para permitir “deslizar” até o próprio valor + o que falta no compartilhado)
+        val nomeUp = poder.nome.trim().uppercase()
+        val alreadyInThis = when {
+            nomeUp == "ARMADURA" -> gastosArmor
+            nomeUp == "RESISTÊNCIA" || nomeUp == "RESISTENCIA" -> gastosRes
+            else -> 0
+        }
+
         BuySuperPowerDialog(
             poder = poder,
             pontosDisponiveis = state.superPontosDisponiveis,
             limitePorPoder = state.superLimitePorPoder,
             onConfirm = { custo ->
-                state.comprarSuperPoder(poder.nome, custo)
+                val nome = poder.nome.trim().uppercase()
+                when {
+                    nome == "APARAR" -> {
+                        viewModel.tentarInvestirSuper(
+                            poderId = "sp_aparar",
+                            custo   = custo,
+                            efeito  = PowerEffect.BonusAparar(custo)
+                        )
+                    }
+                    nome == "ARMADURA" -> {
+                        viewModel.tentarInvestirSuper(
+                            poderId = "sp_armor",
+                            custo   = custo,
+                            efeito  = PowerEffect.BonusArmadura(custo * 2)
+                        )
+                    }
+                    nome == "RESISTÊNCIA" || nome == "RESISTENCIA" -> {
+                        viewModel.tentarInvestirSuper(
+                            poderId = "sp_res",
+                            custo   = custo,
+                            efeito  = PowerEffect.BonusResistencia(custo)
+                        )
+                    }
+                    // Superatributo: abre o picker de distribuição
+                    nome == "SUPERATRIBUTO" || nome == "SUPER ATRIBUTO" -> {
+                        poolSuperAttr = custo / 2
+                        showSuperAttrPicker = true
+                    }
+                    else -> {
+                        state.comprarSuperPoder(poder.nome, custo)
+                    }
+                }
                 poderParaComprar = null
             },
             onDismiss = { poderParaComprar = null }
+        )
+    }
+
+// Quando o picker abrir, distribui os steps por atributo e aplica no VM
+    if (showSuperAttrPicker) {
+        SuperAtributosPickerDialog(
+            state = state,
+            poolInicial = poolSuperAttr,
+            onConfirmDistribuicao = { mapa ->
+                mapa.forEach { (attrKey, stepsSolicitados) ->
+                    val poderId = "sp_attr_${attrKey.uppercase()}"
+
+                    // custo pretendido (2:1)
+                    val custoPretendido = stepsSolicitados * 2
+
+                    // respeita limite por poder e saldo disponível
+                    val gastoAtual      = state.gastosPorPoder[poderId] ?: 0
+                    val limitePorPoder  = viewModel.perPowerLimit(poderId)
+                    val restoPorPoder   = (limitePorPoder - gastoAtual).coerceAtLeast(0)
+                    val restoDePool     = state.superPontosDisponiveis.coerceAtLeast(0)
+
+                    val custoAplicavel  = minOf(custoPretendido, restoPorPoder, restoDePool)
+                    val stepsAplicaveis = (custoAplicavel / 2).coerceAtLeast(0)
+
+                    if (stepsAplicaveis > 0) {
+                        // aplica nos INCS (overlay), sem mexer no valor-base
+                        val atual = state.superAtributoIncs[attrKey.uppercase()] ?: 0
+                        state.superAtributoIncs[attrKey.uppercase()] = atual + stepsAplicaveis
+
+                        // registra o gasto e recalcula saldo
+                        state.registrarGastoDePoder(poderId, stepsAplicaveis * 2)
+                    }
+                }
+
+                // recalc rápido do saldo de SP
+                state.superPontosDisponiveis =
+                    (state.superPontosTotais - state.gastosPorPoder.values.sum()).coerceAtLeast(0)
+
+                showSuperAttrPicker = false
+            },
+            onDismiss = { showSuperAttrPicker = false }
         )
     }
 }
@@ -4430,7 +4698,8 @@ fun SuperPoderesContent(
         SuperPoderesSection(
             state             = state,
             listaSuperPoderes = listaSuperPoderes,
-            expanded          = expanded
+            expanded          = expanded,
+            viewModel         = viewModel()
         )
     }
 }

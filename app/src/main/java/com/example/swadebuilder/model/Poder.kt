@@ -48,8 +48,3 @@ data class Poder(
     val descricao: String,
     val modificadores: List<Modificador>
 )
-
-@Serializable
-data class PoderesList(
-    val poderes: List<Poder>
-)

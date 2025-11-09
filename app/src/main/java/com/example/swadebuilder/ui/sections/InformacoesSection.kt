@@ -44,8 +44,9 @@ import com.example.swadebuilder.SectionCard
 import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.valorAparar
+import com.example.swadebuilder.valorArmaduraEfetiva
 import com.example.swadebuilder.valorMovimentacao
-import com.example.swadebuilder.valorResistenciaBase
+import com.example.swadebuilder.valorResistenciaFinal
 import com.example.swadebuilder.valorTamanho
 import kotlinx.serialization.json.JsonPrimitive
 import kotlin.math.roundToInt
@@ -142,27 +143,41 @@ fun InformacoesSection(
                 }
             }
 
-            val canOpenSlider = (justStarted || hasAnyXp) && poderesOk
-            val canUseProg    = ((justStarted && state.progressosDisponiveis > 0)
-                    || (state.emProgresso && state.progressosDisponiveis > 0))
+            // --- Fluxo: só libera progressos depois de terminar supers ---
+// Terminou supers quando já confirmou nível (tem total) e zerou o disponível
+            val supersTerminados = (state.superPontosTotais > 0) && (state.superPontosDisponiveis == 0)
+
+// Pode abrir o diálogo de progressos se já terminou supers OU se já está em progresso
+            val podeAbrirProgressos = state.emProgresso || supersTerminados
+
+// Pode usar progresso quando terminou supers, tem progressos disponíveis e não há PV pendente
+            val podeUsarProgresso = supersTerminados &&
+                    (state.progressosDisponiveis > 0) &&
+                    (state.pontosVantagem == 0)
 
             Row(
                 Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
                 horizontalArrangement = Arrangement.End,
-                verticalAlignment   = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
                     onClick = { showProgressDialog = true },
-                    enabled = canOpenSlider
+                    enabled = podeAbrirProgressos
                 ) {
                     Text("Progressos: ${state.progresso}")
                 }
                 Spacer(Modifier.width(8.dp))
                 Button(
-                    onClick  = { if (state.pontosVantagem == 0) onUseProgress() },
-                    enabled  = canUseProg && state.pontosVantagem == 0
+                    onClick = {
+                        // Inicia fase de progressos -> SupersDialog ficará travado (supersEditaveis = false)
+                        state.emProgresso = true
+                        if (state.progressosDisponiveis > 0 && state.pontosVantagem == 0) {
+                            onUseProgress()
+                        }
+                    },
+                    enabled = podeUsarProgresso
                 ) {
                     Text("Usar Progresso (${state.progressosDisponiveis})")
                 }
@@ -200,12 +215,16 @@ fun InformacoesSection(
                     val temArmaduraDeEquip = state.equipamentosComprados.any { it.armadura != null }
                     val bonusSemArmadura = if (state.heroisSemArmadura && !temArmaduraDeEquip) 2 else 0
 
-                    val base  = state.valorResistenciaBase()
-                    val total = base + state.armadura + bonusSemArmadura
+                    // ► Agora usa os derivados com SUPERS
+                    val baseFinal = state.valorResistenciaFinal()                 // inclui bonusResFromPower
+                    val armaduraEfetiva = state.valorArmaduraEfetiva()            // inclui armorFromPower (ou do equipamento) + naturalArmorFromRace
+                    val total = baseFinal + armaduraEfetiva + bonusSemArmadura
+
                     CircleStat(
-                        value = if ((state.armadura + bonusSemArmadura) != 0) "$base($total)" else "$base",
+                        value = if ((armaduraEfetiva + bonusSemArmadura) != 0) "$baseFinal($total)" else "$baseFinal",
                         label = "Resistência"
                     )
+
                     val tam = state.valorTamanho()
                     CircleStat(
                         value = if (tam > 0) "+$tam" else tam.toString(),
