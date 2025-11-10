@@ -40,7 +40,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.ExpandLess
@@ -53,7 +52,6 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -70,7 +68,6 @@ import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -79,7 +76,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -100,7 +96,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -120,27 +115,26 @@ import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.PersonagemSalvo
-import com.example.swadebuilder.model.Poder
-import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.loadPericiasDescriptions
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
-import com.example.swadebuilder.ui.dialogs.SuperAtributosPickerDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
 import com.example.swadebuilder.ui.sections.ComplicacoesSection
 import com.example.swadebuilder.ui.sections.EquipamentoSection
 import com.example.swadebuilder.ui.sections.InformacoesSection
 import com.example.swadebuilder.ui.sections.PericiasContent
+import com.example.swadebuilder.ui.sections.PoderesDetailScreen
 import com.example.swadebuilder.ui.sections.PoderesSection
+import com.example.swadebuilder.ui.sections.SuperPoderesContent
+import com.example.swadebuilder.ui.sections.SuperPoderesDetailScreen
 import com.example.swadebuilder.ui.sections.VantagensContent
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
-import com.example.swadebuilder.util.toStringList
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
@@ -151,8 +145,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.util.UUID
-import kotlin.math.roundToInt
-import com.example.swadebuilder.model.loadJsonAsset as loadPoderesAsset
 
 
 @Serializable
@@ -595,7 +587,7 @@ class MainActivity : ComponentActivity() {
                                                 state = state,
                                                 onBack = { showPoderesDetail = false }
                                             )
-                                            8 -> PoderesDetailScreen(
+                                            8 -> SuperPoderesDetailScreen(
                                                 state = state,
                                                 onBack = { showSuperDetail = false }
                                             )
@@ -4281,675 +4273,3 @@ fun SelecaoCard(
         }
     }
 }
-@Composable
-fun BuySuperPowerDialog(
-    poder: SuperPoder,
-    pontosDisponiveis: Int,
-    limitePorPoder: Int,
-    onConfirm: (Int) -> Unit,
-    onDismiss: () -> Unit
-) {
-    // ---------- parse discreto do custoBase ----------
-    fun parseCustoBaseOptions(raw: String?): List<Int> {
-        if (raw.isNullOrBlank()) return listOf(1)
-        val s = raw.trim()
-
-        // faixa com EN DASH “a–b”
-        val enDash = '–'
-        if (s.contains(enDash)) {
-            val parts = s.split(enDash).map { it.trim() }
-            val a = parts.getOrNull(0)?.toIntOrNull()
-            val b = parts.getOrNull(1)?.toIntOrNull()
-            if (a != null && b != null) {
-                val start = minOf(a, b)
-                val end   = maxOf(a, b)
-                return (start..end).toList()
-            }
-        }
-
-        // lista “x/y/z/...”
-        if (s.contains('/')) {
-            return s.split('/')
-                .mapNotNull { it.trim().toIntOrNull() }
-                .distinct()
-                .sorted()
-        }
-
-        // valor único
-        return s.toIntOrNull()?.let { listOf(it) } ?: listOf(1)
-    }
-
-    // opções declaradas no JSON para este poder
-    val baseOptionsAll = remember(poder.custoBase) { parseCustoBaseOptions(poder.custoBase) }
-    val baseMinDeclarado = baseOptionsAll.minOrNull() ?: 1
-    val baseMaxDeclarado = baseOptionsAll.maxOrNull() ?: baseMinDeclarado
-
-    // ---------- modificadores (igual ao seu fluxo) ----------
-    data class ModState(
-        val name: String,
-        val options: List<Int>,
-        val included: MutableState<Boolean>,
-        val selected: MutableState<Int>
-    )
-
-    val modStates = remember(poder.modificadores) {
-        poder.modificadores.orEmpty().map { modObj ->
-            val name = modObj.substringBefore(":").trim()
-            val paren = Regex("\\(([^)]*)\\)").find(name)?.groupValues?.get(1).orEmpty()
-            val opts = paren.split("/")
-                .mapNotNull { it.trim().removePrefix("+").toIntOrNull() }
-                .takeIf { it.isNotEmpty() } ?: listOf(0)
-            ModState(
-                name = name,
-                options = opts,
-                included = mutableStateOf(false),
-                selected = mutableStateOf(opts.first())
-            )
-        }
-    }
-
-    val modCost by remember(modStates) {
-        derivedStateOf { modStates.filter { it.included.value }.sumOf { it.selected.value } }
-    }
-
-    // ---------- CAP: por poder + pool disponível ----------
-    val totalCap = minOf(limitePorPoder, pontosDisponiveis) // teto do TOTAL (base + mods)
-
-    // reduza as opções declaradas pelo teto (considerando custo dos mods)
-    val capParaBase = (totalCap - modCost).coerceAtLeast(baseMinDeclarado)
-    val allowedBaseOptions = baseOptionsAll
-        .filter { it in baseMinDeclarado..minOf(baseMaxDeclarado, capParaBase) }
-        .ifEmpty { listOf(baseMinDeclarado.coerceAtMost(capParaBase)) }
-
-    // ---------- Slider por ÍNDICE das opções discretas ----------
-    var baseIdx by rememberSaveable(allowedBaseOptions) { mutableIntStateOf(0) }
-    val baseCost = allowedBaseOptions.getOrElse(baseIdx) { allowedBaseOptions.last() }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Comprar “${poder.nome}”") },
-        text = {
-            val scroll = rememberScrollState()
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 280.dp)
-                    .verticalScroll(scroll)
-                    .padding(8.dp)
-            ) {
-                Text("Custo base: $baseCost")
-
-                Slider(
-                    value = baseIdx.toFloat(),
-                    onValueChange = { novo ->
-                        val idx = novo.roundToInt().coerceIn(0, allowedBaseOptions.lastIndex)
-                        baseIdx = idx
-                    },
-                    valueRange = 0f..allowedBaseOptions.lastIndex.toFloat(),
-                    steps = (allowedBaseOptions.size - 1).coerceAtLeast(1) - 1,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(Modifier.height(8.dp))
-
-                if (modStates.isNotEmpty()) {
-                    Text("Modificadores:", style = MaterialTheme.typography.bodyMedium)
-                    Spacer(Modifier.height(4.dp))
-
-                    modStates.forEach { mod ->
-                        if (mod.options.size == 1) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { mod.included.value = !mod.included.value }
-                                    .padding(vertical = 4.dp)
-                            ) {
-                                Checkbox(
-                                    checked = mod.included.value,
-                                    onCheckedChange = { mod.included.value = it }
-                                )
-                                Spacer(Modifier.width(8.dp))
-                                Text("${mod.name} (${mod.options.first()})")
-                            }
-                        } else {
-                            Column(Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Checkbox(
-                                        checked = mod.included.value,
-                                        onCheckedChange = { mod.included.value = it }
-                                    )
-                                    Spacer(Modifier.width(8.dp))
-                                    Text(mod.name)
-                                }
-                                if (mod.included.value) {
-                                    val sel = mod.selected.value
-                                    Slider(
-                                        value = sel.toFloat(),
-                                        onValueChange = { novo ->
-                                            val clamp = novo.roundToInt()
-                                                .coerceIn(mod.options.minOrNull() ?: 0, mod.options.maxOrNull() ?: 0)
-                                            val outros = modStates.filter { it.included.value && it != mod }
-                                                .sumOf { it.selected.value }
-                                            val futuroTotal = allowedBaseOptions[baseIdx] + outros + clamp
-                                            if (futuroTotal <= totalCap) mod.selected.value = clamp
-                                        },
-                                        valueRange = (mod.options.minOrNull() ?: 0).toFloat()..
-                                                (mod.options.maxOrNull() ?: 0).toFloat(),
-                                        steps = (mod.options.size - 1).coerceAtLeast(0),
-                                        modifier = Modifier.fillMaxWidth()
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            val totalAtual = allowedBaseOptions[baseIdx] + modCost
-            val podeConfirmar = totalAtual in allowedBaseOptions.first()..totalCap
-            TextButton(
-                enabled = podeConfirmar,
-                onClick = { onConfirm(totalAtual) }
-            ) { Text("Comprar ($totalAtual)") }
-        },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar") } }
-    )
-}
-
-private data class ModState(
-    val name: String,
-    val options: List<Int>,
-    val included: MutableState<Boolean>,
-    val selected: MutableState<Int>
-)
-
-@Composable
-fun SuperPoderesSection(
-    state: CriadorState,
-    listaSuperPoderes: List<SuperPoder>,
-    expanded: Boolean,
-    viewModel: CriadorViewModel
-) {
-    if (!expanded) return
-
-    var poderParaComprar by remember { mutableStateOf<SuperPoder?>(null) }
-    val nivelAtual    = state.superNivelCampanha ?: 1
-    val sliderEnabled = state.creationComplete()
-    LaunchedEffect(Unit) {
-        // só inicializa se ainda não tiver pontos calculados
-        if ((state.superNivelCampanha ?: 0) == 0 || state.superPontosTotais == 0) {
-            val v = state.vantagensSelecionadas.firstOrNull {
-                it.nome.equals("Superpoderes", ignoreCase = true)
-            }
-            if (v != null) {
-                state.superNivelCampanha = 1
-                state.aplicarSuperpoderes(nivel = 1, usarProgresso = false)
-            }
-        }
-    }
-
-    Column(Modifier.fillMaxWidth().padding(8.dp)) {
-        // 1) chips dos poderes já comprados
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalArrangement   = Arrangement.spacedBy(4.dp)
-        ) {
-            state.superPoderesComprados.forEach { p ->
-                AssistChip(
-                    onClick = { state.removerSuperPoder(p) },
-                    label = { Text("${p.nome} (+${p.custo})") },
-                    leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover") }
-                )
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        // 2) slider de nível e info de pontos/limite
-        Text("Nível de Superpoderes: $nivelAtual")
-        Slider(
-            value = nivelAtual.toFloat(),
-            onValueChange = { valor ->
-                val novoNivel = valor.roundToInt().coerceIn(1, 5)
-
-                // 1) marque o nível para refletir no UI
-                state.superNivelCampanha = novoNivel
-
-                // 2) (re)calcule TOTAL e LIMITE a partir do nível
-                val total   = 15 * novoNivel           // 15 pts por nível
-                val limite  = 5  * novoNivel           // 1/3 do total (5 * nível)
-
-                state.superPontosTotais      = total
-                state.superLimite            = limite
-                state.superLimitePorPoder    = limite   // <-- CORREÇÃO: grave no state (remova a var local)
-
-
-                // 3) recalcule os disponíveis (subtraindo o que já foi comprado)
-                val gastos = state.superPoderesComprados.sumOf { it.custo }
-                state.superPontosDisponiveis = (total - gastos).coerceAtLeast(0)
-            },
-
-            valueRange = 1f..5f,
-            steps = 4,
-            enabled = sliderEnabled,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(Modifier.height(4.dp))
-        Text("Pontos disponíveis: ${state.superPontosDisponiveis}")
-        Text("Limite de superpoderes: ${state.superLimite}")
-
-        Spacer(Modifier.height(8.dp))
-
-        // 3) lista de poderes que ainda posso comprar (agora dentro de uma caixinha rolável)
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 220.dp),   // a “caixinha” que rola
-            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
-        ) {
-            items(listaSuperPoderes, key = { it.nome }) { poder ->  // <- usar nome como chave
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .clickable { poderParaComprar = poder }     // <- usa o objeto (ou poder.nome)
-                        .padding(vertical = 6.dp, horizontal = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(poder.nome, Modifier.weight(1f))
-                    Icon(Icons.Default.FlashOn, contentDescription = "Comprar")
-                }
-            }
-        }
-    }
-
-    // diálogo de compra
-    // Estados para o picker de Superatributo (pool único)
-    var showSuperAttrPicker by rememberSaveable { mutableStateOf(false) }
-    var poolSuperAttr by rememberSaveable { mutableIntStateOf(0) }
-
-    poderParaComprar?.let { poder ->
-        // Limite compartilhado entre Armadura e Resistência (A+R)
-        val gastosArmor = state.gastosPorPoder["sp_armor"] ?: 0
-        val gastosRes   = state.gastosPorPoder["sp_res"]   ?: 0
-        val shareLimit  = state.superLimitePorPoder
-        val shareUsed   = gastosArmor + gastosRes
-
-        // Quanto já investi neste poder específico (para permitir “deslizar” até o próprio valor + o que falta no compartilhado)
-        val nomeUp = poder.nome.trim().uppercase()
-        val alreadyInThis = when {
-            nomeUp == "ARMADURA" -> gastosArmor
-            nomeUp == "RESISTÊNCIA" || nomeUp == "RESISTENCIA" -> gastosRes
-            else -> 0
-        }
-
-        BuySuperPowerDialog(
-            poder = poder,
-            pontosDisponiveis = state.superPontosDisponiveis,
-            limitePorPoder = state.superLimitePorPoder,
-            onConfirm = { custo ->
-                val nome = poder.nome.trim().uppercase()
-                when {
-                    nome == "APARAR" -> {
-                        viewModel.tentarInvestirSuper(
-                            poderId = "sp_aparar",
-                            custo   = custo,
-                            efeito  = PowerEffect.BonusAparar(custo)
-                        )
-                    }
-                    nome == "ARMADURA" -> {
-                        viewModel.tentarInvestirSuper(
-                            poderId = "sp_armor",
-                            custo   = custo,
-                            efeito  = PowerEffect.BonusArmadura(custo * 2)
-                        )
-                    }
-                    nome == "RESISTÊNCIA" || nome == "RESISTENCIA" -> {
-                        viewModel.tentarInvestirSuper(
-                            poderId = "sp_res",
-                            custo   = custo,
-                            efeito  = PowerEffect.BonusResistencia(custo)
-                        )
-                    }
-                    // Superatributo: abre o picker de distribuição
-                    nome == "SUPERATRIBUTO" || nome == "SUPER ATRIBUTO" -> {
-                        poolSuperAttr = custo / 2
-                        showSuperAttrPicker = true
-                    }
-                    else -> {
-                        state.comprarSuperPoder(poder.nome, custo)
-                    }
-                }
-                poderParaComprar = null
-            },
-            onDismiss = { poderParaComprar = null }
-        )
-    }
-
-// Quando o picker abrir, distribui os steps por atributo e aplica no VM
-    if (showSuperAttrPicker) {
-        SuperAtributosPickerDialog(
-            state = state,
-            poolInicial = poolSuperAttr,
-            onConfirmDistribuicao = { mapa ->
-                mapa.forEach { (attrKey, stepsSolicitados) ->
-                    val poderId = "sp_attr_${attrKey.uppercase()}"
-
-                    // custo pretendido (2:1)
-                    val custoPretendido = stepsSolicitados * 2
-
-                    // respeita limite por poder e saldo disponível
-                    val gastoAtual      = state.gastosPorPoder[poderId] ?: 0
-                    val limitePorPoder  = viewModel.perPowerLimit(poderId)
-                    val restoPorPoder   = (limitePorPoder - gastoAtual).coerceAtLeast(0)
-                    val restoDePool     = state.superPontosDisponiveis.coerceAtLeast(0)
-
-                    val custoAplicavel  = minOf(custoPretendido, restoPorPoder, restoDePool)
-                    val stepsAplicaveis = (custoAplicavel / 2).coerceAtLeast(0)
-
-                    if (stepsAplicaveis > 0) {
-                        // aplica nos INCS (overlay), sem mexer no valor-base
-                        val atual = state.superAtributoIncs[attrKey.uppercase()] ?: 0
-                        state.superAtributoIncs[attrKey.uppercase()] = atual + stepsAplicaveis
-
-                        // registra o gasto e recalcula saldo
-                        state.registrarGastoDePoder(poderId, stepsAplicaveis * 2)
-                    }
-                }
-
-                // recalc rápido do saldo de SP
-                state.superPontosDisponiveis =
-                    (state.superPontosTotais - state.gastosPorPoder.values.sum()).coerceAtLeast(0)
-
-                showSuperAttrPicker = false
-            },
-            onDismiss = { showSuperAttrPicker = false }
-        )
-    }
-}
-
-@Composable
-fun SuperPoderesContent(
-    state: CriadorState,
-    listaSuperPoderes: List<SuperPoder>,
-    expanded: Boolean,
-    onToggle: () -> Unit,
-    onOpenPoderesDetail: () -> Unit,   // <- usa o mesmo callback da lista completa de poderes
-    onHelpClick: () -> Unit
-) {
-    SectionCard(
-        title    = "Superpoderes",
-        expanded = expanded,
-        onToggle = onToggle,
-        icon     = Icons.Default.FlashOn
-    ) {
-        val showLista = booleanResource(R.bool.show_lista_completa)
-
-        SectionHeader(
-            onHelpClick          = onHelpClick,
-            centerText           = "Pontos de Super: ${state.superPontosDisponiveis}",
-            onCenterClick        = onToggle,
-            onListaCompletaClick = if (showLista) onOpenPoderesDetail else null,
-            listaCompletaText    = "Lista Completa"
-        )
-
-        SuperPoderesSection(
-            state             = state,
-            listaSuperPoderes = listaSuperPoderes,
-            expanded          = expanded,
-            viewModel         = viewModel()
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-@Composable
-fun PoderesDetailScreen(
-    state: CriadorState,
-    onBack: () -> Unit
-) {
-    val context = LocalContext.current
-
-    val hasAntecedenteArcano = remember(state.vantagensSelecionadas) {
-        state.vantagensSelecionadas.any { it.id == "antecedente_arcano" }
-    }
-    val showSupers = remember(state.modoSupers, hasAntecedenteArcano) {
-        state.modoSupers && !hasAntecedenteArcano
-    }
-
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = Color.Transparent
-    ) {
-        Column {
-            TopAppBar(
-                title = {
-                    Text(
-                        if (showSupers) "Lista Completa de Superpoderes"
-                        else "Lista Completa de Poderes"
-                    )
-                },
-                navigationIcon = {
-                    TextButton(onClick = onBack) {
-                        Text(
-                            "Voltar",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp,
-                            color = Color(0xFF050402)
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF2E3C6)
-                )
-            )
-
-            Spacer(Modifier.height(8.dp))
-
-            if (!showSupers) {
-
-                val allPoderes: List<Poder> = remember {
-                    context.loadPoderesAsset<List<Poder>>("poderes.json")
-                }
-
-                LazyColumn(Modifier.fillMaxSize()) {
-                    items(allPoderes, key = { it.id }) { poder ->
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                        ) {
-                            Text(
-                                text = "• ${poder.nome}",
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 18.sp,
-                                color = Color(0xFF050402)
-                            )
-
-                            Spacer(Modifier.height(4.dp))
-
-                            Text(
-                                text = "Estágio: ${poder.estagio}",
-                                fontSize = 14.sp,
-                                color = Color(0xFF050402)
-                            )
-
-                            Spacer(Modifier.height(2.dp))
-
-                            Text(
-                                text = "Pontos de Poder: ${poder.pontosDePoder}",
-                                fontSize = 14.sp,
-                                color = Color(0xFF050402)
-                            )
-
-                            Spacer(Modifier.height(4.dp))
-
-                            if (poder.manifestacoes.isNotEmpty()) {
-                                Text(
-                                    text = "Manifestações:",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp,
-                                    color = Color(0xFF050402)
-                                )
-                                poder.manifestacoes.forEach { man ->
-                                    Text(
-                                        text = "- $man",
-                                        fontSize = 14.sp,
-                                        color = Color(0xFF050402)
-                                    )
-                                }
-                                Spacer(Modifier.height(4.dp))
-                            }
-
-                            if (poder.descricao.isNotBlank()) {
-                                Text(
-                                    text = "Descrição:",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp,
-                                    color = Color(0xFF050402)
-                                )
-                                Text(
-                                    text = poder.descricao,
-                                    fontSize = 14.sp,
-                                    color = Color(0xFF050402)
-                                )
-                                Spacer(Modifier.height(4.dp))
-                            }
-
-                            if (poder.modificadores.isNotEmpty()) {
-                                Text(
-                                    text = "Modificadores:",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp,
-                                    color = Color(0xFF050402)
-                                )
-                                poder.modificadores.forEach { mod ->
-                                    Text(
-                                        text = "- ${mod.nome} (Custo: ${mod.custo})",
-                                        fontSize = 14.sp,
-                                        color = Color(0xFF050402)
-                                    )
-                                    if (mod.descricao.isNotBlank()) {
-                                        Text(
-                                            text = "  ${mod.descricao}",
-                                            fontSize = 14.sp,
-                                            color = Color(0xFF050402)
-                                        )
-                                    }
-                                }
-                                Spacer(Modifier.height(8.dp))
-                            }
-
-                            HorizontalDivider(
-                                thickness = 1.dp,
-                                color = Color(0xFF050402).copy(alpha = 0.2f)
-                            )
-                        }
-                    }
-                }
-            } else {
-                // ---------- SUPERPODERES ----------
-                val superPoderes: List<SuperPoder> = remember {
-                    context.loadJsonAsset("superpoderes.json")
-                }
-
-                LazyColumn(Modifier.fillMaxSize()) {
-                    items(superPoderes, key = { it.nome }) { poder ->
-                        var expanded by rememberSaveable(poder.nome) { mutableStateOf(false) }
-
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp, horizontal = 16.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { expanded = !expanded },
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = poder.nome,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 18.sp
-                                )
-                                Spacer(Modifier.weight(1f))
-                                Icon(
-                                    imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                                    contentDescription = null
-                                )
-                            }
-
-                            AnimatedVisibility(visible = expanded) {
-                                Column(modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)) {
-                                    poder.custoBase?.let { custo ->
-                                        Text(
-                                            text = "Custo Base: $custo",
-                                            fontWeight = FontWeight.SemiBold,
-                                            fontSize = 14.sp
-                                        )
-                                        Spacer(Modifier.height(4.dp))
-                                    }
-
-                                    val listaManifestacoes: List<String> =
-                                        poder.manifestacoes.toStringList()
-                                    if (listaManifestacoes.isNotEmpty()) {
-                                        Text(
-                                            text = "Manifestações:",
-                                            fontWeight = FontWeight.SemiBold,
-                                            fontSize = 14.sp
-                                        )
-                                        listaManifestacoes.forEach { man ->
-                                            Text(
-                                                text = "- $man",
-                                                fontSize = 14.sp,
-                                                modifier = Modifier.padding(start = 8.dp)
-                                            )
-                                        }
-                                        Spacer(Modifier.height(4.dp))
-                                    }
-
-                                    poder.descricao?.let { desc ->
-                                        Text(
-                                            text = "Descrição:",
-                                            fontWeight = FontWeight.SemiBold,
-                                            fontSize = 14.sp
-                                        )
-                                        Text(
-                                            text = desc,
-                                            fontSize = 14.sp,
-                                            modifier = Modifier.padding(start = 8.dp, top = 2.dp)
-                                        )
-                                        Spacer(Modifier.height(4.dp))
-                                    }
-
-                                    if (!poder.modificadores.isNullOrEmpty()) {
-                                        Text(
-                                            text = "Modificadores:",
-                                            fontWeight = FontWeight.SemiBold,
-                                            fontSize = 14.sp
-                                        )
-                                        poder.modificadores.forEach { mod ->
-                                            Text(
-                                                text = "- $mod",
-                                                fontSize = 14.sp,
-                                                modifier = Modifier.padding(start = 8.dp)
-                                            )
-                                        }
-                                        Spacer(Modifier.height(4.dp))
-                                    }
-                                }
-                            }
-
-                            HorizontalDivider()
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
