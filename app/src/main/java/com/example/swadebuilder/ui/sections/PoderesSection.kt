@@ -1,18 +1,15 @@
 package com.example.swadebuilder.ui.sections
 
-import android.content.res.Resources
-import android.util.Log
-import androidx.annotation.BoolRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -27,7 +24,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
@@ -38,24 +37,6 @@ import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem         // tem subtipoArcano/choice
 import com.example.swadebuilder.model.loadJsonAsset    // loader com JSON leniente
 import com.example.swadebuilder.util.semAcentos
-import kotlinx.serialization.Serializable
-
-private const val TAG = "PoderesSection"
-
-@Composable
-private fun boolResOrDefault(@BoolRes id: Int, default: Boolean): Boolean {
-    val context = LocalContext.current
-    return remember(id, default) {
-        try { context.resources.getBoolean(id) }
-        catch (_: Resources.NotFoundException) {
-            Log.w(TAG, "Bool resource ausente (id=$id) — usando default=$default")
-            default
-        }
-    }
-}
-
-@Serializable
-data class Modificador(val nome: String, val custo: String, val descricao: String)
 
 // ---------- Normalizações ----------
 private fun String.normAAKey(): String =
@@ -72,13 +53,13 @@ private fun Vantagem.toArcanoKeyFromModel(): String? {
         "(DOM" in n -> "DOM"
         "(MAGIA" in n -> "MAGIA"
         "(MILAGRES" in n -> "MILAGRES"
-        "(PSIONICOS" in n || "(PSIÔNICOS" in nome -> "PSIONICOS"
-        "(CIENCIA ESTRANHA" in n || "(CIÊNCIA ESTRANHA" in nome -> "CIENCIA ESTRANHA"
+        ("(PSIONICOS" in n) || ("(PSIÔNICOS" in nome) -> "PSIONICOS"
+        ("(CIENCIA ESTRANHA" in n) || ("(CIÊNCIA ESTRANHA" in nome) -> "CIENCIA ESTRANHA"
         else -> null
     }
 }
 
-// Custo -> penalidade (quando sem PP)
+// Conversor de custo (em PP) -> penalidade de teste (-⌈PP/2⌉)
 private fun custoParaPenalidadeTexto(custo: String): String {
     val clean = custo.trim()
     clean.toIntOrNull()?.let { base -> return "-${(base + 1) / 2}" }
@@ -93,6 +74,7 @@ private fun custoParaPenalidadeTexto(custo: String): String {
 }
 
 /** Seção **exclusiva** para PODERES de Antecedente Arcano. */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PoderesSection(
     state: CriadorState,
@@ -101,17 +83,13 @@ fun PoderesSection(
     val context = LocalContext.current
     val locked = state.progresso > 0 && !state.emProgresso
 
-    // 1) Detecta arcanos ativos de forma robusta (modelo -> chave compatível com arcanoInfo)
+    // 1) Detecta arcanos ativos
     val arcanosAtivos = remember(state.vantagensSelecionadas) {
         val ativos = state.vantagensSelecionadas.mapNotNull { it.toArcanoKeyFromModel() }.distinct()
-        Log.d(TAG, "Vantagens selecionadas: ${state.vantagensSelecionadas.joinToString { it.nome }}")
-        Log.d(TAG, "Arcanos ativos: $ativos")
         ativos
     }
 
-    // Se não houver AA, esta seção idealmente nem apareceria; por segurança, só retorna.
     if (arcanosAtivos.isEmpty()) {
-        Log.w(TAG, "Nenhum Antecedente Arcano ativo — seção não renderizada.")
         return
     }
 
@@ -122,23 +100,27 @@ fun PoderesSection(
         if (selectedArcanoKey !in arcanosAtivos) selectedArcanoKey = arcanosAtivos.first()
     }
 
-    // 2) Carrega poderes (modelo com StringOrIntSerializer para pontosDePoder)
+    // 2) Carrega poderes
     val allPoderes: List<Poder> = remember {
         val res: Result<List<Poder>> = runCatching {
             context.loadJsonAsset<List<Poder>>("poderes.json")
         }
-        res.onFailure { Log.e(TAG, "Falha lendo poderes.json", it) }
-            .getOrElse { emptyList() }
+        res.getOrElse { emptyList() }
     }
 
-    // 3) Header padronizado mostrando PP e Foco reais vindos do arcanoInfo global
-    val arcKey = selectedArcanoKey.normAAKey() // mesma normalização das chaves do arcanoInfo
+    // 3) Cabeçalho com Foco e (condicional) PP/penalidade
+    val arcKey = selectedArcanoKey.normAAKey()
     val (slotsCount, ppTotal, foco) = arcanoInfo[arcKey] ?: Triple(0, 0, "—")
 
-    val showListaCompleta = boolResOrDefault(R.bool.show_lista_completa, true)
+    val showListaCompleta = booleanResource(R.bool.show_lista_completa)
+    val center = if (state.usarSemPontosDePoder) {
+        "Teste $foco = -(custo/2)"
+    } else {
+        "PP: $ppTotal  •  $foco"
+    }
     SectionHeader(
-        onHelpClick = { /* abre ajuda se quiser */ },
-        centerText  = "PP: $ppTotal  •  Foco: $foco",
+        onHelpClick = { /* ajuda */ },
+        centerText  = center,
         onCenterClick = null,
         onListaCompletaClick = if (showListaCompleta) onOpenListaCompletaPoderes else null,
         listaCompletaText = "Lista Completa"
@@ -146,7 +128,7 @@ fun PoderesSection(
 
     HorizontalDivider(thickness = 1.dp)
 
-    // 4) Slots do arcano selecionado
+    // 4) Slots do arcano
     val slots = remember(arcKey, slotsCount) {
         val existente = state.poderSlotsPorArcano[arcKey]
         if (existente != null && existente.size == slotsCount) {
@@ -160,10 +142,10 @@ fun PoderesSection(
         }
     }
 
-    // 5) (opcional) aqui você poderia filtrar por estágio/foco se desejar
+    // 5) Lista elegível (pode filtrar por foco/estágio depois)
     val poderesElegiveis = remember(allPoderes) { allPoderes }
 
-    // 6) UI — sem LazyColumn para evitar altura infinita (a tela pai já rola)
+    // 6) UI — lista simples, um toque alterna; item já escolhido fica esmaecido
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -188,7 +170,6 @@ fun PoderesSection(
                             onClick = {
                                 if (!locked && poderId != null) {
                                     slots[idx] = null
-                                    Log.d(TAG, "[$arcKey] limpou slot ${idx + 1}")
                                 }
                             },
                             label = { Text("${idx + 1}: $label") },
@@ -199,56 +180,40 @@ fun PoderesSection(
             }
         }
 
-        // Lista de poderes
+        // Lista de poderes — só o nome; toque simples alterna entre adicionar/remover
         poderesElegiveis.forEach { poder ->
+            val selecionado = slots.any { it == poder.id }
+
             Card(
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp, vertical = 6.dp)
+                    .alpha(if (selecionado) 0.45f else 1f)
+                    .clickable(enabled = !locked) {
+                        if (selecionado) {
+                            val idx = slots.indexOfFirst { it == poder.id }
+                            if (idx >= 0) {
+                                slots[idx] = null
+                            }
+                        } else {
+                            val firstEmpty = slots.indexOfFirst { it == null }
+                            if (firstEmpty >= 0) {
+                                slots[firstEmpty] = poder.id
+                            }
+                        }
+                    }
             ) {
                 Column(Modifier.padding(12.dp)) {
                     Text(poder.nome, fontWeight = FontWeight.Bold)
-                    Spacer(Modifier.height(2.dp))
-
                     if (state.usarSemPontosDePoder) {
-                        Text("Penalidade: ${custoParaPenalidadeTexto(poder.pontosDePoder)}")
-                    } else {
-                        Text("Custo (PP): ${poder.pontosDePoder}")
-                    }
-
-                    Spacer(Modifier.height(6.dp))
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Button(
-                            enabled = !locked && slots.any { it == null },
-                            onClick = {
-                                val firstEmpty = slots.indexOfFirst { it == null }
-                                if (firstEmpty >= 0) {
-                                    slots[firstEmpty] = poder.id
-                                    Log.d(TAG, "[$arcKey] slot ${firstEmpty + 1} <- ${poder.id}")
-                                }
-                            }
-                        ) { Text("Comprar") }
-
-                        Button(
-                            enabled = !locked && slots.any { it == poder.id },
-                            onClick = {
-                                val idx = slots.indexOfFirst { it == poder.id }
-                                if (idx >= 0) {
-                                    slots[idx] = null
-                                    Log.d(TAG, "[$arcKey] removeu ${poder.id} do slot ${idx + 1}")
-                                }
-                            }
-                        ) { Text("Remover") }
+                        // Mostra a fórmula de teste no modo Sem PP
+                        Text("Penalidade base: ${custoParaPenalidadeTexto(poder.pontosDePoder)}")
                     }
                 }
             }
         }
-    }
-
-    // 7) Log final rápido pra depuração
-    LaunchedEffect(poderesElegiveis.size, selectedArcanoKey, slots.size) {
-        val usados = slots.count { it != null }
-        Log.d(TAG, "ready: arcano=$arcKey slots=${slots.size} usados=$usados poderes=${poderesElegiveis.size}")
     }
 }
