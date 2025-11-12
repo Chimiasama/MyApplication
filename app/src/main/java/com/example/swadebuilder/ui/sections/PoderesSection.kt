@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,22 +35,19 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.SectionHeader
-import com.example.swadebuilder.arcanoInfo              // mapa global montado no MainActivity
+import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.model.Poder
-import com.example.swadebuilder.model.Vantagem         // tem subtipoArcano/choice
-import com.example.swadebuilder.model.loadJsonAsset    // loader com JSON leniente
+import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 
 // ---------- Normalizações ----------
 private fun String.normAAKey(): String =
-    this.uppercase().semAcentos().trim()   // compatível com chaves de arcanoInfo
+    this.uppercase().semAcentos().trim()
 
 private fun Vantagem.toArcanoKeyFromModel(): String? {
-    // prioridade 1: subtipoArcano vindo direto do JSON (Dom/Magia/Milagres/Psiônicos/Ciência Estranha)
     if (!subtipoArcano.isNullOrBlank()) return subtipoArcano.normAAKey()
-    // prioridade 2: escolha feita na vantagem base (se estiver usando o agrupador com choice)
-    if (!choice.isNullOrBlank()) return choice!!.normAAKey()
-    // fallback: tenta deduzir do nome
+    if (!choice.isNullOrBlank()) return choice!!.normAAKey() // ← fix: !! correto
     val n = nome.normAAKey()
     return when {
         "(DOM" in n -> "DOM"
@@ -85,39 +85,66 @@ fun PoderesSection(
 
     // 1) Detecta arcanos ativos
     val arcanosAtivos = remember(state.vantagensSelecionadas) {
-        val ativos = state.vantagensSelecionadas.mapNotNull { it.toArcanoKeyFromModel() }.distinct()
-        ativos
+        state.vantagensSelecionadas.mapNotNull { it.toArcanoKeyFromModel() }.distinct()
     }
+    if (arcanosAtivos.isEmpty()) return
 
-    if (arcanosAtivos.isEmpty()) {
+    // 2) Carrega poderes (uma vez)
+    val allPoderes: List<Poder> = remember {
+        runCatching { context.loadJsonAsset<List<Poder>>("poderes.json") }.getOrElse { emptyList() }
+    }
+    val poderesElegiveis = remember(allPoderes) { allPoderes }
+
+    // === MODO LEGADO: um único AA visível (mantém comportamento anterior) ===
+    if (!state.permiteMultiAntecedenteArcano) {
+        var selectedArcanoKey by rememberSaveable(arcanosAtivos) { mutableStateOf(arcanosAtivos.first()) }
+        LaunchedEffect(arcanosAtivos) {
+            if (selectedArcanoKey !in arcanosAtivos) selectedArcanoKey = arcanosAtivos.first()
+        }
+
+        ArcanoArea(
+            arcKeyRaw = selectedArcanoKey,
+            state = state,
+            poderesElegiveis = poderesElegiveis,
+            onOpenListaCompletaPoderes = onOpenListaCompletaPoderes,
+            locked = locked
+        )
         return
     }
 
-    var selectedArcanoKey by rememberSaveable(arcanosAtivos) {
-        mutableStateOf(arcanosAtivos.first())
+    // === MODO MULTI-AA: um bloco completo por AA adquirido ===
+    arcanosAtivos.forEach { arcKeyRaw ->
+        ArcanoArea(
+            arcKeyRaw = arcKeyRaw,
+            state = state,
+            poderesElegiveis = poderesElegiveis,
+            onOpenListaCompletaPoderes = onOpenListaCompletaPoderes,
+            locked = locked
+        )
+        Spacer(Modifier.height(4.dp)) // separação visual mínima entre áreas
     }
-    LaunchedEffect(arcanosAtivos) {
-        if (selectedArcanoKey !in arcanosAtivos) selectedArcanoKey = arcanosAtivos.first()
-    }
+}
 
-    // 2) Carrega poderes
-    val allPoderes: List<Poder> = remember {
-        val res: Result<List<Poder>> = runCatching {
-            context.loadJsonAsset<List<Poder>>("poderes.json")
-        }
-        res.getOrElse { emptyList() }
-    }
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun ArcanoArea(
+    arcKeyRaw: String,
+    state: CriadorState,
+    poderesElegiveis: List<Poder>,
+    onOpenListaCompletaPoderes: () -> Unit,
+    locked: Boolean
+) {
+    val arcKey = arcKeyRaw.normAAKey()
 
-    // 3) Cabeçalho com Foco e (condicional) PP/penalidade
-    val arcKey = selectedArcanoKey.normAAKey()
+    // Cabeçalho com foco e PP (ou fórmula Sem PP)
     val (slotsCount, ppTotal, foco) = arcanoInfo[arcKey] ?: Triple(0, 0, "—")
-
     val showListaCompleta = booleanResource(R.bool.show_lista_completa)
     val center = if (state.usarSemPontosDePoder) {
         "Teste $foco = -(custo/2)"
     } else {
         "PP: $ppTotal  •  $foco"
     }
+
     SectionHeader(
         onHelpClick = { /* ajuda */ },
         centerText  = center,
@@ -128,60 +155,56 @@ fun PoderesSection(
 
     HorizontalDivider(thickness = 1.dp)
 
-    // 4) Slots do arcano
+    // Slots deste AA (fora da área rolável)
     val slots = remember(arcKey, slotsCount) {
         val existente = state.poderSlotsPorArcano[arcKey]
         if (existente != null && existente.size == slotsCount) {
             existente
         } else {
-            val nova = mutableStateListOf<String?>().apply {
-                repeat(slotsCount) { add(null) }
-            }
+            val nova = mutableStateListOf<String?>().apply { repeat(slotsCount) { add(null) } }
             state.poderSlotsPorArcano[arcKey] = nova
             nova
         }
     }
 
-    // 5) Lista elegível (pode filtrar por foco/estágio depois)
-    val poderesElegiveis = remember(allPoderes) { allPoderes }
-
-    // 6) UI — lista simples, um toque alterna; item já escolhido fica esmaecido
-    Column(
+    Card(
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
-        // Bloco de slots
-        Card(
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 8.dp)
-        ) {
-            Column(Modifier.padding(12.dp)) {
-                Text("Slots: $slotsCount", fontWeight = FontWeight.SemiBold)
-                Spacer(Modifier.height(6.dp))
-
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    slots.forEachIndexed { idx, poderId ->
-                        val label = poderId ?: "— vazio —"
-                        AssistChip(
-                            onClick = {
-                                if (!locked && poderId != null) {
-                                    slots[idx] = null
-                                }
-                            },
-                            label = { Text("${idx + 1}: $label") },
-                            enabled = !locked && poderId != null
-                        )
-                    }
+        Column(Modifier.padding(12.dp)) {
+            Text("Slots: $slotsCount", fontWeight = FontWeight.SemiBold)
+            Spacer(Modifier.height(6.dp))
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                slots.forEachIndexed { idx, poderId ->
+                    val label = poderId ?: "— vazio —"
+                    AssistChip(
+                        onClick = {
+                            if (!locked && poderId != null) {
+                                slots[idx] = null
+                            }
+                        },
+                        label = { Text("${idx + 1}: $label") },
+                        enabled = !locked && poderId != null
+                    )
                 }
             }
         }
+    }
 
-        // Lista de poderes — só o nome; toque simples alterna entre adicionar/remover
-        poderesElegiveis.forEach { poder ->
+    // Lista rolável de poderes (janela 400.dp) — independente por AA
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(max = 400.dp)
+            .padding(bottom = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(
+            items = poderesElegiveis,
+            key = { it.id }
+        ) { poder ->
             val selecionado = slots.any { it == poder.id }
 
             Card(
@@ -195,21 +218,17 @@ fun PoderesSection(
                     .clickable(enabled = !locked) {
                         if (selecionado) {
                             val idx = slots.indexOfFirst { it == poder.id }
-                            if (idx >= 0) {
-                                slots[idx] = null
-                            }
+                            if (idx >= 0) slots[idx] = null
                         } else {
                             val firstEmpty = slots.indexOfFirst { it == null }
-                            if (firstEmpty >= 0) {
-                                slots[firstEmpty] = poder.id
-                            }
+                            if (firstEmpty >= 0) slots[firstEmpty] = poder.id
                         }
                     }
             ) {
                 Column(Modifier.padding(12.dp)) {
                     Text(poder.nome, fontWeight = FontWeight.Bold)
+                    Text("Custo: ${poder.pontosDePoder}") // ← custo abaixo do nome
                     if (state.usarSemPontosDePoder) {
-                        // Mostra a fórmula de teste no modo Sem PP
                         Text("Penalidade base: ${custoParaPenalidadeTexto(poder.pontosDePoder)}")
                     }
                 }
