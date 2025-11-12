@@ -343,7 +343,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                    onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, modoSuperequip, modoSuperComplicacoes, nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer, semPontosDePoder, grandesResponsabilidades ->
+                                    onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, _, modoSuperComplicacoes, nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer, semPontosDePoder, grandesResponsabilidades ->
 
                                         criadorViewModel.resetStateParaNovoPersonagem(
                                             cartaSelvagem      = cartaSelvagem,
@@ -635,6 +635,36 @@ class MainActivity : ComponentActivity() {
 
 fun Int.toDiceString(): String =
     if (this <= 12) "d$this" else "d12+${(this - 12)}"
+
+// === Helpers de exibição/compat (veículos) ===
+
+// Converte JsonElement para texto simples
+private fun kotlinx.serialization.json.JsonElement?.asText(): String? =
+    when (this) {
+        is kotlinx.serialization.json.JsonPrimitive -> this.content
+        else -> this?.toString()
+    }?.takeIf { it.isNotBlank() }
+
+// ALIAS LEGADOS para veículos (evitam "Unresolved reference" em código antigo)
+private val com.example.swadebuilder.model.EquipamentoItem.passageiros
+    get() = this.tripulacao
+private val com.example.swadebuilder.model.EquipamentoItem.blindagem
+    get() = this.resistencia
+private val com.example.swadebuilder.model.EquipamentoItem.carga
+    get() = null // não existe no JSON atual; mantém compat, mas não exibe nada
+
+// Linha padronizada de detalhes de veículo (mesma lógica do Superquip/Veículos)
+private fun com.example.swadebuilder.model.EquipamentoItem.veiculoDetalhesTexto(): String? {
+    val partes = listOfNotNull(
+        tamanho.asText()?.let { "Tamanho: $it" },
+        manobrabilidade.asText()?.let { "Manobrabilidade: $it" },
+        velMaxima.asText()?.let { "Vel. máx.: $it" },
+        resistencia.asText()?.let { "Resistência: $it" },
+        tripulacao.asText()?.let { "Tripulação: $it" },
+    ).joinToString("  •  ")
+    return partes.takeIf { it.isNotBlank() }
+}
+
 
 data class Pericia(val nome: String, val atributo: String, val basica: Boolean)
 
@@ -1133,39 +1163,6 @@ class CriadorState {
     }
 
     var regraMultiplosIdiomas by mutableStateOf(false)
-
-    fun idiomasConhecidosPorRegra(): Int {
-        if (!regraMultiplosIdiomas) return 0
-        val ast = valoresAtributos["ASTUCIA"]?.intValue
-            ?: valoresAtributos["ASTÚCIA"]?.intValue
-            ?: 4
-        val temLinguistaPago = vantagensSelecionadas.any { it.id == "linguista" }
-        return if (temLinguistaPago) ast else ast / 2
-    }
-
-    fun vantagensParaExibir(): List<String> {
-        val base = vantagensSelecionadas.map { it.nome }
-        return if (regraMultiplosIdiomas) {
-            base + "LINGUISTA (Regra de Ambientação)"
-        } else {
-            base
-        }
-    }
-
-    fun setSupersByLevel(nivel: Int, usarProgresso: Boolean) {
-        val n = nivel.coerceIn(1, 5)
-        superNivelCampanha = n
-        val pontos = 15 * n
-        val limite = 5 * n
-        superPontosTotais = pontos
-        superLimite = limite
-        superLimitePorPoder = limite
-
-        // Se o herói já comprou algum superpoder, respeita o saldo:
-        val gastos = superPoderesComprados.sumOf { it.custo }
-        val baseDisponivel = if (usarProgresso) (pontos * 2) / 3 else pontos
-        superPontosDisponiveis = (baseDisponivel - gastos).coerceAtLeast(0)
-    }
 
     // --- NOVO BLOCO: Controle de compra de Vantagens por XP ---
     var pvFromXpOutstanding by mutableIntStateOf(0)          // PV pendente vindo de XP
@@ -3644,12 +3641,56 @@ fun EquipamentosDetailScreen(
     categorias: List<EquipamentoCategoria>,
     onBack: () -> Unit
 ) {
-    val itensPorTipo = categorias
-        .groupBy { it.tipo }
-        .mapValues { (_, cats) -> cats.flatMap { it.itens } }
+    // Helper para ler JsonElement como texto
+    fun JsonElement?.asText(): String? = when (this) {
+        is JsonPrimitive -> this.content
+        else -> this?.toString()
+    }?.takeIf { it.isNotBlank() }
 
-    val expandedState = remember {
-        itensPorTipo.keys.associateWith { mutableStateOf(false) }
+    // --- AGRUPAMENTO (mantido com tua correção) ---
+
+    // Mapa: Tipo -> (Subtipo -> (Subsubtipo -> Itens))
+    val mapa =
+        remember(categorias) {
+            categorias
+                .sortedWith(
+                    compareBy<EquipamentoCategoria> { it.tipo.lowercase() }
+                        .thenBy { it.subtipo.lowercase() }
+                        .thenBy { (it.subsubtipo ?: "").lowercase() }
+                )
+                .groupBy { cat ->
+                    val tipoOriginal = cat.tipo
+                    val isSuper = cat.origem.equals("SUPER", ignoreCase = true)
+
+                    // Normaliza o rótulo exibido para o grupo
+                    val labelTipo = if (isSuper) {
+                        if (tipoOriginal.contains("Equipamento Supers", ignoreCase = true)) {
+                            "Superequip - Veículos"     // ← fica igual ao padrão, mas com nome claro
+                        } else {
+                            "Superequip - $tipoOriginal"
+                        }
+                    } else {
+                        tipoOriginal
+                    }
+
+                    labelTipo
+                }
+                .mapValues { (_, porTipo) ->
+                    porTipo.groupBy { it.subtipo }.mapValues { (_, porSubtipo) ->
+                        porSubtipo.groupBy { it.subsubtipo ?: "" }.mapValues { (_, listaFinal) ->
+                            listaFinal.flatMap { it.itens }.sortedBy { it.nome }
+                        }
+                    }
+                }
+        }
+
+    // --- ESTADOS DE EXPANSÃO (mantidos) ---
+    val expTipo  = remember(mapa) { mapa.keys.associateWith { mutableStateOf(false) } }
+    val expSub   = remember(mapa) { mapa.mapValues { (_, sub) -> sub.keys.associateWith { mutableStateOf(false) } } }
+    val expSub2  = remember(mapa) {
+        mapa.mapValues { (_, sub) ->
+            sub.mapValues { (_, sub2) -> sub2.keys.associateWith { mutableStateOf(false) } }
+        }
     }
 
     LazyColumn(
@@ -3657,6 +3698,7 @@ fun EquipamentosDetailScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        // Header "Voltar"
         stickyHeader {
             Surface(color = Color.Transparent) {
                 Row(
@@ -3666,68 +3708,141 @@ fun EquipamentosDetailScreen(
                         .padding(vertical = 12.dp, horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "Voltar",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    )
+                    Text("Voltar", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 }
                 HorizontalDivider()
             }
         }
 
-        itensPorTipo.forEach { (tipo, itens) ->
+        // TIPOS
+        mapa.toSortedMap(compareBy { it.lowercase() }).forEach { (tipo, subMapa) ->
             item {
-                val exp = expandedState.getValue(tipo)
+                val et = expTipo.getValue(tipo)
                 Column {
                     Row(
                         Modifier
                             .fillMaxWidth()
-                            .clickable { exp.value = !exp.value }
+                            .clickable { et.value = !et.value }
                             .padding(vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(tipo, style = MaterialTheme.typography.titleMedium)
                         Icon(
-                            imageVector = if (exp.value) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                            contentDescription = if (exp.value) "Fechar" else "Abrir"
+                            imageVector = if (et.value) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                            contentDescription = if (et.value) "Fechar" else "Abrir"
                         )
                     }
 
-                    if (exp.value) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .heightIn(min = 100.dp, max = 300.dp)
-                        ) {
-                            LazyColumn {
-                                items(itens) { equipamento ->
-                                    Column(
-                                        Modifier
-                                            .fillMaxWidth()
-                                            .padding(vertical = 4.dp)
-                                    ) {
-                                        Text(
-                                            equipamento.nome,
-                                            fontWeight = FontWeight.SemiBold,
-                                            fontSize = 16.sp
-                                        )
-                                        Spacer(Modifier.height(2.dp))
-                                        Text(
-                                            buildString {
-                                                append("Custo: ${equipamento.custo}")
-                                                append(", Peso: ${equipamento.peso}")
-                                                equipamento.dano?.let { append(", Dano: $it") }
-                                                equipamento.forcaMin?.let { append(", Força mínima: $it") }
-                                                equipamento.armadura?.let { append(", Armadura: $it") }
-                                                equipamento.aparar?.let { append(", Aparar: $it") }
-                                                val obs = (equipamento.observacoes as? JsonPrimitive)?.content
-                                                if (!obs.isNullOrBlank()) append(", Observações: $obs")
+                    if (et.value) {
+                        // SUBTIPOS
+                        subMapa.toSortedMap(compareBy { it.lowercase() }).forEach { (subtipo, sub2Mapa) ->
+                            val es = expSub.getValue(tipo).getValue(subtipo)
+                            Column(Modifier.padding(start = 8.dp, bottom = 8.dp)) {
+                                Row(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .clickable { es.value = !es.value }
+                                        .padding(vertical = 6.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(subtipo, fontWeight = FontWeight.Bold)
+                                    Icon(
+                                        imageVector = if (es.value) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                                        contentDescription = if (es.value) "Fechar" else "Abrir"
+                                    )
+                                }
+
+                                if (es.value) {
+                                    // SUBSUBTIPOS
+                                    sub2Mapa.toSortedMap(compareBy { it.lowercase() }).forEach { (subsub, itens) ->
+                                        val ess = expSub2.getValue(tipo).getValue(subtipo).getValue(subsub)
+                                        Column(Modifier.padding(start = 8.dp, bottom = 4.dp)) {
+                                            if (subsub.isNotBlank()) {
+                                                Row(
+                                                    Modifier
+                                                        .fillMaxWidth()
+                                                        .clickable { ess.value = !ess.value }
+                                                        .padding(vertical = 4.dp),
+                                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                                    verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                    Text(subsub)
+                                                    Icon(
+                                                        imageVector = if (ess.value) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                                                        contentDescription = if (ess.value) "Fechar" else "Abrir"
+                                                    )
+                                                }
+                                            } else {
+                                                ess.value = true // sem subsubtipo: já aberto
                                             }
-                                        )
+
+                                            if (ess.value) {
+                                                // LISTA DE ITENS (com DETALHES)
+                                                Column(
+                                                    Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(start = 8.dp, bottom = 8.dp)
+                                                ) {
+                                                    itens.forEach { eq ->
+                                                        Column(
+                                                            Modifier
+                                                                .fillMaxWidth()
+                                                                .padding(vertical = 6.dp)
+                                                        ) {
+                                                            Row(
+                                                                Modifier.fillMaxWidth(),
+                                                                horizontalArrangement = Arrangement.SpaceBetween
+                                                            ) {
+                                                                Text(eq.nome, style = MaterialTheme.typography.bodyLarge)
+                                                                eq.custo.asText()?.let { Text(it) }
+                                                            }
+
+                                                            // ===== PADRONIZAÇÃO DAS LINHAS =====
+                                                            // 1) Linha de "arma" (se aplicável)
+                                                            val linhaArma = listOfNotNull(
+                                                                eq.dano.asText()?.let { "Dano: $it" },
+                                                                eq.pa.asText()?.let { "PA: $it" },
+                                                                eq.cdt.asText()?.let { "CdT: $it" },
+                                                                eq.distancia.asText()?.let { "Distância: $it" },
+                                                                eq.tiros.asText()?.let { "Tiros: $it" },
+                                                            ).joinToString("  •  ").takeIf { it.isNotBlank() }
+
+                                                            // 2) Linha geral (peso/força/armadura/aparar)
+                                                            val linhaGeral = listOfNotNull(
+                                                                eq.peso.asText()?.let { "Peso: $it" },
+                                                                eq.forcaMin.asText()?.let { "Força mín.: $it" },
+                                                                eq.armadura.asText()?.let { "Armadura: $it" },
+                                                                eq.aparar.asText()?.let { "Aparar: $it" },
+                                                            ).joinToString("  •  ").takeIf { it.isNotBlank() }
+
+                                                            // 3) Linha veículo — mesma lógica/ordem usada no superquip de veículos
+                                                            val linhaVeiculo = listOfNotNull(
+                                                                eq.velMaxima.asText()?.let { "Vel. máx.: $it" },
+                                                                eq.manobrabilidade.asText()?.let { "Manobrabilidade: $it" },
+                                                                eq.tamanho.asText()?.let { "Tamanho: $it" },
+                                                                eq.resistencia.asText()?.let { "Resistência: $it" },
+                                                                eq.tripulacao.asText()?.let { "Tripulação: $it" },
+                                                                eq.carga.asText()?.let { "Carga: $it" },
+                                                                eq.blindagem.asText()?.let { "Blindagem: $it" },
+                                                                eq.passageiros.asText()?.let { "Passageiros: $it" },
+                                                            ).joinToString("  •  ").takeIf { it.isNotBlank() }
+                                                            // ===== FIM PADRONIZAÇÃO =====
+
+                                                            linhaArma?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+                                                            linhaGeral?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+                                                            linhaVeiculo?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+
+                                                            eq.observacoes.asText()?.takeIf { it.isNotBlank() }?.let {
+                                                                Text(it, style = MaterialTheme.typography.bodySmall)
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
-                                    HorizontalDivider(Modifier.padding(vertical = 8.dp))
                                 }
                             }
                         }
@@ -3737,6 +3852,8 @@ fun EquipamentosDetailScreen(
         }
     }
 }
+
+
 
 @Composable
 fun TelaInicial(
@@ -3781,7 +3898,6 @@ fun TelaInicial(
     var optSuperequipamentos by rememberSaveable { mutableStateOf(false) }
     var optSuperComplicacoes by rememberSaveable { mutableStateOf(false) }
     var optGrandesResponsabilidades by rememberSaveable { mutableStateOf(false) }
-    var optModoSupers               by rememberSaveable { mutableStateOf(false) }
 
 
     // Horror
