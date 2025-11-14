@@ -90,10 +90,15 @@ fun PericiasContent(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         stickyHeader {
-            val pergaminho = Color(0xFFF2E3C6)
+            // Usa a cor do tema em vez de amarelo fixo
+            val pergaminho = MaterialTheme.colorScheme.surfaceVariant
             val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
-            Surface(tonalElevation = 0.dp, color = pergaminho) {
+            Surface(
+                tonalElevation = 0.dp,
+                color = pergaminho,
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            ) {
                 SectionHeader(
                     onHelpClick          = { showHelp = true },
                     centerText           = "Pontos restantes: ${state.pontosPericia}",
@@ -258,7 +263,7 @@ fun PericiasContent(
                 // ====== RESUMO / CHIPS DE ESPECIALIZAÇÕES ======
                 val espDto: EspecializacoesDto? = state.especializacoesPorPericia[per.nome]
                 val principal = espDto?.principal
-// lista de extras = lista sem o principal (e sem duplicatas)
+                // lista de extras = lista sem o principal (e sem duplicatas)
                 val extras: List<String> = when {
                     espDto == null -> emptyList()
                     else -> espDto.lista
@@ -267,7 +272,7 @@ fun PericiasContent(
                         .filter { it != principal }
                 }
 
-// Pode remover especializações extras? Somente no modo de construção inicial.
+                // Pode remover especializações extras? Somente no modo de construção inicial.
                 val canRemoveSpecs = !locked
 
                 if (principal != null || extras.isNotEmpty()) {
@@ -440,18 +445,27 @@ private fun SpecChip(
     onEdit: (() -> Unit)?,
     onRemove: (() -> Unit)?
 ) {
+    val colors = MaterialTheme.colorScheme
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .background(
-                color = if (isPrincipal) Color(0xFFE6F4EA) else Color(0xFFE9EEF6),
+                color = if (isPrincipal)
+                    colors.secondaryContainer
+                else
+                    colors.surfaceVariant,
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Text(
             text = if (isPrincipal) "$label (principal)" else label,
-            style = MaterialTheme.typography.labelMedium
+            style = MaterialTheme.typography.labelMedium,
+            color = if (isPrincipal)
+                colors.onSecondaryContainer
+            else
+                colors.onSurfaceVariant
         )
         if (onEdit != null) {
             Spacer(Modifier.width(2.dp))
@@ -459,7 +473,11 @@ private fun SpecChip(
                 onClick = onEdit,
                 modifier = Modifier.size(18.dp)
             ) {
-                Icon(Icons.Default.Edit, contentDescription = "Renomear", tint = Color.Gray)
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Renomear",
+                    tint = colors.onSurfaceVariant.copy(alpha = 0.7f)
+                )
             }
         }
         if (onRemove != null) {
@@ -468,7 +486,11 @@ private fun SpecChip(
                 onClick = onRemove,
                 modifier = Modifier.size(18.dp)
             ) {
-                Icon(Icons.Default.Close, contentDescription = "Remover", tint = Color.Gray)
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Remover",
+                    tint = colors.onSurfaceVariant.copy(alpha = 0.7f)
+                )
             }
         }
     }

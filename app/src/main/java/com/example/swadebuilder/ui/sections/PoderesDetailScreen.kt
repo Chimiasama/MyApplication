@@ -20,6 +20,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -108,12 +109,14 @@ fun PoderesDetailScreen(
                             "Voltar",
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
-                            color = Color(0xFF050402)
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF2E3C6)
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
 
@@ -136,7 +139,7 @@ fun PoderesDetailScreen(
                                 text = "• ${poder.nome}",
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 18.sp,
-                                color = Color(0xFF050402)
+                                color = MaterialTheme.colorScheme.onSurface
                             )
 
                             Spacer(Modifier.height(4.dp))
@@ -144,7 +147,7 @@ fun PoderesDetailScreen(
                             Text(
                                 text = "Estágio: ${poder.estagio}",
                                 fontSize = 14.sp,
-                                color = Color(0xFF050402)
+                                color = MaterialTheme.colorScheme.onSurface
                             )
 
                             Spacer(Modifier.height(2.dp))
@@ -155,13 +158,13 @@ fun PoderesDetailScreen(
                                 Text(
                                     text = "Penalidade base: ${custoParaPenalidadeTexto(custoStr)}",
                                     fontSize = 14.sp,
-                                    color = Color(0xFF050402)
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             } else {
                                 Text(
                                     text = "Pontos de Poder: ${poder.pontosDePoder}",
                                     fontSize = 14.sp,
-                                    color = Color(0xFF050402)
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
 
@@ -172,13 +175,13 @@ fun PoderesDetailScreen(
                                     text = "Manifestações:",
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 14.sp,
-                                    color = Color(0xFF050402)
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 poder.manifestacoes.forEach { man ->
                                     Text(
                                         text = "- $man",
                                         fontSize = 14.sp,
-                                        color = Color(0xFF050402)
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
                                 Spacer(Modifier.height(4.dp))
@@ -189,12 +192,12 @@ fun PoderesDetailScreen(
                                     text = "Descrição:",
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 14.sp,
-                                    color = Color(0xFF050402)
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
                                     text = poder.descricao,
                                     fontSize = 14.sp,
-                                    color = Color(0xFF050402)
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Spacer(Modifier.height(4.dp))
                             }
@@ -204,26 +207,26 @@ fun PoderesDetailScreen(
                                     text = "Modificadores:",
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 14.sp,
-                                    color = Color(0xFF050402)
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 poder.modificadores.forEach { mod ->
                                     Text(
                                         text = "- ${mod.nome} (Custo: ${mod.custo})",
                                         fontSize = 14.sp,
-                                        color = Color(0xFF050402)
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                     if (state.usarSemPontosDePoder) {
                                         Text(
                                             text = "  Penalidade: ${custoParaPenalidadeTexto(mod.custo)}",
                                             fontSize = 14.sp,
-                                            color = Color(0xFF050402)
+                                            color = MaterialTheme.colorScheme.onSurface
                                         )
                                     }
                                     if (mod.descricao.isNotBlank()) {
                                         Text(
                                             text = "  ${mod.descricao}",
                                             fontSize = 14.sp,
-                                            color = Color(0xFF050402)
+                                            color = MaterialTheme.colorScheme.onSurface
                                         )
                                     }
                                 }
@@ -232,7 +235,7 @@ fun PoderesDetailScreen(
 
                             HorizontalDivider(
                                 thickness = 1.dp,
-                                color = Color(0xFF050402).copy(alpha = 0.2f)
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
                             )
                         }
                     }

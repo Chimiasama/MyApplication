@@ -584,12 +584,14 @@ fun TransparentOutlinedReadOnlyField(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val colors = MaterialTheme.colorScheme
+
     BasicTextField(
         value         = text,
         onValueChange = {},  // read‐only
         enabled       = enabled,
         readOnly      = true,
-        textStyle     = LocalTextStyle.current.copy(color = Color.Black),
+        textStyle     = LocalTextStyle.current.copy(color = colors.onSurface),
         singleLine    = true,
         modifier      = modifier,
         decorationBox = { inner ->
@@ -599,20 +601,27 @@ fun TransparentOutlinedReadOnlyField(
                     .background(Color.Transparent, shape = MaterialTheme.shapes.small)
                     .border(
                         width = 1.dp,
-                        color = if (enabled) Color.Black else Color.Gray,
+                        color = if (enabled)
+                            colors.outline.copy(alpha = 0.8f)
+                        else
+                            colors.outline.copy(alpha = 0.5f),
                         shape = MaterialTheme.shapes.small
                     )
                     .padding(horizontal = 16.dp, vertical = 12.dp)
                     .clickable(enabled = enabled, onClick = onClick)
             ) {
-                inner()  // o texto
+                inner()  // texto
                 Spacer(Modifier.weight(1f))
                 Icon(
                     imageVector        = Icons.Default.ArrowDropDown,
                     contentDescription = null,
-                    tint               = if (enabled) Color.Black else Color.Gray
+                    tint = if (enabled)
+                        colors.onSurface
+                    else
+                        colors.onSurface.copy(alpha = 0.5f)
                 )
             }
         }
     )
 }
+

@@ -107,19 +107,19 @@ fun InformacoesSection(
                 keyboardActions = KeyboardActions(
                     onDone = { focusManager.clearFocus() }
                 ),
-                textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black),
+                // deixa o estilo e as cores virem do tema
+                textStyle = MaterialTheme.typography.bodyLarge,
                 colors = TextFieldDefaults.colors(
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.Black,
-                    disabledTextColor = Color.Black,
-                    cursorColor = Color.Black,
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    disabledContainerColor = Color.White,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    disabledContainerColor = MaterialTheme.colorScheme.surface,
                     focusedIndicatorColor = MaterialTheme.colorScheme.primary,
                     unfocusedIndicatorColor = MaterialTheme.colorScheme.outline
                 )
-
             )
 
             val justStarted = !state.emProgresso && state.creationComplete()

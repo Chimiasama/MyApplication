@@ -6,6 +6,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -70,14 +71,17 @@ fun SuperPoderesDetailScreen(
                             "Voltar",
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
-                            color = Color(0xFF050402)
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF2E3C6)
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
+
 
             // Atalho para abrir o SupersDialog direto daqui (igual ao seu detalhe anterior)
             Row(

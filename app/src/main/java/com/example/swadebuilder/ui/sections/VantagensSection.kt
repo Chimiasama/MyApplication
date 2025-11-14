@@ -42,7 +42,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
@@ -394,7 +393,9 @@ fun VantagensContent(
                 .fillMaxWidth()
                 .padding(vertical = 4.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFFAF4E6))
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            )
         ) {
             Column(Modifier.padding(8.dp)) {
                 when {

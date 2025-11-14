@@ -94,7 +94,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -328,14 +327,11 @@ class MainActivity : ComponentActivity() {
             }
 
             SWADEbuilderTheme {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Image(
-                        painter            = painterResource(R.drawable.bg_pergaminho),
-                        contentDescription = null,
-                        modifier           = Modifier.matchParentSize(),
-                        contentScale       = ContentScale.Crop
-                    )
-
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.surface)  // ✅ fundo agora vem do tema
+                ) {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -343,26 +339,26 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                    onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, _, modoSuperComplicacoes, nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer, semPontosDePoder, grandesResponsabilidades ->
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, _, modoSuperComplicacoes, nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer, semPontosDePoder, grandesResponsabilidades ->
 
-                                        criadorViewModel.resetStateParaNovoPersonagem(
-                                            cartaSelvagem      = cartaSelvagem,
-                                            maisPontosPericias = maisPontosPericias,
-                                            modoSupers         = modoSupers,
-                                            usarEspecializacoesDePericia = usarEspecializacaoPer
-                                        )
-                                        criadorViewModel.state.heroisSemArmadura     = heroisSemArmadura
-                                        criadorViewModel.state.nasceUmHeroi          = nasceUmHeroi
+                                    criadorViewModel.resetStateParaNovoPersonagem(
+                                        cartaSelvagem      = cartaSelvagem,
+                                        maisPontosPericias = maisPontosPericias,
+                                        modoSupers         = modoSupers,
+                                        usarEspecializacoesDePericia = usarEspecializacaoPer
+                                    )
+                                    criadorViewModel.state.heroisSemArmadura     = heroisSemArmadura
+                                    criadorViewModel.state.nasceUmHeroi          = nasceUmHeroi
 
-                                        criadorViewModel.state.modoSuperequip        = modoSupers
-                                        criadorViewModel.state.modoSuperComplicacoes = modoSupers
+                                    criadorViewModel.state.modoSuperequip        = modoSupers
+                                    criadorViewModel.state.modoSuperComplicacoes = modoSupers
 
-                                        criadorViewModel.state.usarSemPontosDePoder  = semPontosDePoder
-                                        criadorViewModel.normalizeArcanoIdsNoCarregamento()
-                                        criadorViewModel.state.grandesResponsabilidades = grandesResponsabilidades
+                                    criadorViewModel.state.usarSemPontosDePoder  = semPontosDePoder
+                                    criadorViewModel.normalizeArcanoIdsNoCarregamento()
+                                    criadorViewModel.state.grandesResponsabilidades = grandesResponsabilidades
 
-                                        mostrouTelaInicial = false
-                                    },
+                                    mostrouTelaInicial = false
+                                },
                                 onLoad = { salvo ->
                                     // Aqui passamos as duas listas: básico e super
                                     criadorViewModel.loadFromSalvo(
@@ -372,8 +368,8 @@ class MainActivity : ComponentActivity() {
                                     )
                                     mostrouTelaInicial = false
                                 },
-                                context              = context,
-                                viewModel            = criadorViewModel
+                                context   = context,
+                                viewModel = criadorViewModel
                             )
                         } else {
                             BackHandler(
@@ -565,30 +561,30 @@ class MainActivity : ComponentActivity() {
                                             )
                                             2 -> AtributosDetailScreen(onBack = { showAtributosDetail = false })
                                             3 -> VantagensDetailScreen(
-                                                state = state,
-                                                modoSupers = state.modoSupers,
+                                                state           = state,
+                                                modoSupers      = state.modoSupers,
                                                 highlightedName = highlightedVantagem,
-                                                onBack = { showVantagensDetail = false }
+                                                onBack          = { showVantagensDetail = false }
                                             )
                                             4 -> PericiasDetailScreen(
-                                                state = state,
+                                                state  = state,
                                                 onBack = { showPericiasDetail = false }
                                             )
                                             5 -> ComplicacoesDetailScreen(
-                                                state = state,
-                                                onBack = { showComplicacoesDetail = false },
+                                                state        = state,
+                                                onBack       = { showComplicacoesDetail = false },
                                                 mostrarSuper = state.modoSuperComplicacoes
                                             )
                                             6 -> AncestralidadesDetailScreen(
-                                                state = state,
+                                                state  = state,
                                                 onBack = { showAncestralidadesDetail = false }
                                             )
                                             7 -> PoderesDetailScreen(
-                                                state = state,
+                                                state  = state,
                                                 onBack = { showPoderesDetail = false }
                                             )
                                             8 -> SuperPoderesDetailScreen(
-                                                state = state,
+                                                state  = state,
                                                 onBack = { showSuperDetail = false }
                                             )
 
@@ -598,28 +594,28 @@ class MainActivity : ComponentActivity() {
                                                     highlightedVantagem = nomeVantagem.toString()
                                                     showVantagensDetail = true
                                                 },
-                                                onOpenPericiasDetail = { showPericiasDetail = true },
-                                                onOpenComplicacoesDetail = { showComplicacoesDetail = true },
-                                                onOpenAtributosDetail = { showAtributosDetail = true },
+                                                onOpenPericiasDetail             = { showPericiasDetail        = true },
+                                                onOpenComplicacoesDetail         = { showComplicacoesDetail    = true },
+                                                onOpenAtributosDetail            = { showAtributosDetail       = true },
                                                 onOpenListaAncestralidadesDetail = { showAncestralidadesDetail = true },
-                                                onOpenListaCompletaEquipamento = { showEquipLista = true },
-                                                onOpenPoderesDetail = { showPoderesDetail = true },
-                                                onHelpSuperClick = { },
+                                                onOpenListaCompletaEquipamento   = { showEquipLista            = true },
+                                                onOpenPoderesDetail              = { showPoderesDetail         = true },
+                                                onHelpSuperClick                 = { },
 
-                                                expAttrs = expAttrs,
-                                                onToggleAttrs = { expAttrs   = !expAttrs },
-                                                expPer = expPer,
-                                                onTogglePer = { expPer     = !expPer },
-                                                expVants = expVants,
-                                                onToggleVants = { expVants   = !expVants },
-                                                expResumo = expResumo,
+                                                expAttrs       = expAttrs,
+                                                onToggleAttrs  = { expAttrs   = !expAttrs },
+                                                expPer         = expPer,
+                                                onTogglePer    = { expPer     = !expPer },
+                                                expVants       = expVants,
+                                                onToggleVants  = { expVants   = !expVants },
+                                                expResumo      = expResumo,
                                                 onToggleResumo = { expResumo  = !expResumo },
-                                                expPoderes = expPoderes,
+                                                expPoderes     = expPoderes,
                                                 onTogglePoderes = { expPoderes = !expPoderes },
 
                                                 equipamentoCategorias = equipamentoCategorias,
-                                                superequipCategorias = superequipCategorias,
-                                                listaSuperPoderes = listaSuperPoderes
+                                                superequipCategorias  = superequipCategorias,
+                                                listaSuperPoderes     = listaSuperPoderes
                                             )
                                         }
                                     }
@@ -652,18 +648,6 @@ private val com.example.swadebuilder.model.EquipamentoItem.blindagem
     get() = this.resistencia
 private val com.example.swadebuilder.model.EquipamentoItem.carga
     get() = null // não existe no JSON atual; mantém compat, mas não exibe nada
-
-// Linha padronizada de detalhes de veículo (mesma lógica do Superquip/Veículos)
-private fun com.example.swadebuilder.model.EquipamentoItem.veiculoDetalhesTexto(): String? {
-    val partes = listOfNotNull(
-        tamanho.asText()?.let { "Tamanho: $it" },
-        manobrabilidade.asText()?.let { "Manobrabilidade: $it" },
-        velMaxima.asText()?.let { "Vel. máx.: $it" },
-        resistencia.asText()?.let { "Resistência: $it" },
-        tripulacao.asText()?.let { "Tripulação: $it" },
-    ).joinToString("  •  ")
-    return partes.takeIf { it.isNotBlank() }
-}
 
 
 data class Pericia(val nome: String, val atributo: String, val basica: Boolean)
@@ -2122,6 +2106,9 @@ fun SectionCard(
     icon: ImageVector,
     content: @Composable ColumnScope.() -> Unit
 ) {
+    val headerColor = MaterialTheme.colorScheme.onBackground
+    val cardColor   = MaterialTheme.colorScheme.surfaceVariant
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             Modifier
@@ -2136,20 +2123,20 @@ fun SectionCard(
                 modifier = Modifier
                     .size(36.dp)
                     .padding(end = 12.dp),
-                tint = Color.Black
+                tint = headerColor
             )
             Text(
-                title,
-                fontSize = 27.sp,
+                text       = title,
+                fontSize   = 27.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color      = headerColor
             )
             Spacer(Modifier.weight(1f))
             Icon(
                 imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
                 contentDescription = null,
                 modifier = Modifier.size(36.dp),
-                tint = Color.Black
+                tint = headerColor
             )
         }
 
@@ -2162,7 +2149,7 @@ fun SectionCard(
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFF2E3C6) // pergaminho
+                    containerColor = cardColor
                 )
             ) {
                 Column(modifier = Modifier.padding(8.dp)) {

@@ -7,7 +7,6 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.Json // <— adicionada para a instância única de Json
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
@@ -44,12 +43,3 @@ object IntOrStringSerializer : KSerializer<Int> {
     }
 }
 
-/**
- * Instância única de Json para ser reutilizada no app, evitando recriações redundantes.
- */
-object Serde {
-    val json: Json = Json {
-        ignoreUnknownKeys = true
-        explicitNulls = false
-    }
-}
