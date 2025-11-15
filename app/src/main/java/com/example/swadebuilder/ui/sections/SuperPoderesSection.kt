@@ -65,7 +65,7 @@ fun BuySuperPowerDialog(
     poder: SuperPoder,
     pontosDisponiveis: Int,
     limitePorPoder: Int,
-    onConfirm: (Int) -> Unit,
+    onConfirm: (baseCost: Int, totalCost: Int) -> Unit,
     onDismiss: () -> Unit
 ) {
     // ---------- parse discreto do custoBase ----------
@@ -192,7 +192,11 @@ fun BuySuperPowerDialog(
                                 Text("${mod.name} (${mod.options.first()})")
                             }
                         } else {
-                            Column(Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                            Column(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp)
+                            ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Checkbox(
                                         checked = mod.included.value,
@@ -207,11 +211,17 @@ fun BuySuperPowerDialog(
                                         value = sel.toFloat(),
                                         onValueChange = { novo ->
                                             val clamp = novo.roundToInt()
-                                                .coerceIn(mod.options.minOrNull() ?: 0, mod.options.maxOrNull() ?: 0)
-                                            val outros = modStates.filter { it.included.value && it != mod }
+                                                .coerceIn(
+                                                    mod.options.minOrNull() ?: 0,
+                                                    mod.options.maxOrNull() ?: 0
+                                                )
+                                            val outros = modStates
+                                                .filter { it.included.value && it != mod }
                                                 .sumOf { it.selected.value }
                                             val futuroTotal = allowedBaseOptions[baseIdx] + outros + clamp
-                                            if (futuroTotal <= totalCap) mod.selected.value = clamp
+                                            if (futuroTotal <= totalCap) {
+                                                mod.selected.value = clamp
+                                            }
                                         },
                                         valueRange = (mod.options.minOrNull() ?: 0).toFloat()..
                                                 (mod.options.maxOrNull() ?: 0).toFloat(),
@@ -226,11 +236,11 @@ fun BuySuperPowerDialog(
             }
         },
         confirmButton = {
-            val totalAtual = allowedBaseOptions[baseIdx] + modCost
+            val totalAtual = baseCost + modCost
             val podeConfirmar = totalAtual in allowedBaseOptions.first()..totalCap
             TextButton(
                 enabled = podeConfirmar,
-                onClick = { onConfirm(totalAtual) }
+                onClick = { onConfirm(baseCost, totalAtual) }
             ) { Text("Comprar ($totalAtual)") }
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar") } }
@@ -351,38 +361,43 @@ fun SuperPoderesSection(
             poder = poder,
             pontosDisponiveis = state.superPontosDisponiveis,
             limitePorPoder = state.superLimitePorPoder,
-            onConfirm = { custo ->
+            onConfirm = { baseCost, custoTotal ->
                 val nome = poder.nome.trim().uppercase()
                 when {
+                    // >>> AQUI A CORREÇÃO DO APARAR <<<
                     nome == "APARAR" -> {
                         viewModel.tentarInvestirSuper(
                             poderId = "sp_aparar",
-                            custo   = custo,
-                            efeito  = PowerEffect.BonusAparar(custo)
+                            custo   = custoTotal,              // o que gasta do pool
+                            efeito  = PowerEffect.BonusAparar(baseCost) // só o custo base entra no Aparar
                         )
                     }
+
                     nome == "ARMADURA" -> {
                         viewModel.tentarInvestirSuper(
                             poderId = "sp_armor",
-                            custo   = custo,
-                            efeito  = PowerEffect.BonusArmadura(custo * 2)
+                            custo   = custoTotal,
+                            efeito  = PowerEffect.BonusArmadura(custoTotal * 2)
                         )
                     }
+
                     nome == "RESISTÊNCIA" || nome == "RESISTENCIA" -> {
                         viewModel.tentarInvestirSuper(
                             poderId = "sp_res",
-                            custo   = custo,
-                            efeito  = PowerEffect.BonusResistencia(custo)
+                            custo   = custoTotal,
+                            efeito  = PowerEffect.BonusResistencia(custoTotal)
                         )
                     }
+
                     // Super Atributo: custo vira pool/2 em steps
                     nome == "SUPERATRIBUTO" || nome == "SUPER ATRIBUTO" -> {
-                        poolSuperAttr = custo / 2
+                        poolSuperAttr = custoTotal / 2
                         showSuperAttrPicker = true
                     }
+
                     else -> {
                         // fallback simples (apenas registrar gasto com id do poder)
-                        state.comprarSuperPoder(poder.nome, custo)
+                        state.comprarSuperPoder(poder.nome, custoTotal)
                     }
                 }
                 poderParaComprar = null

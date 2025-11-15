@@ -2,19 +2,21 @@
 <resources>
 
     <!-- 1) Tema de splash nativo (API 31+). -->
-    <!-- ESTE TEMA USA ATRIBUTOS MODERNOS -->
     <style name="Theme.SWADEbuilder" parent="Theme.SplashScreen">
-        <!-- cor de fundo da splash screen -->
-        <item name="windowSplashScreenBackground">@color/black</item>
-        <!-- drawable que será centralizado e redimensionado pelo sistema -->
-        <item name="windowSplashScreenAnimatedIcon">@drawable/savage_worlds_splash</item>
-        <!-- cor de fundo do “círculo” atrás do ícone (se houver) -->
-        <item name="windowSplashScreenIconBackgroundColor">@color/black</item>
-        <!-- após a splash, aplica este tema base na MainActivity -->
+
+        <!-- Fundo do splash: usa a mesma cor de pergaminho do app -->
+        <item name="windowSplashScreenBackground">@color/pergaminho_fundo</item>
+
+        <!-- Drawable com o logo centralizado -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/swade_splash_logo_img</item>
+
+        <!-- Sem círculo colorido por trás do ícone -->
+        <item name="windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
+
+        <!-- Após o splash, aplica este tema base na MainActivity -->
         <item name="postSplashScreenTheme">@style/Theme.SWADEbuilder.NoSplash</item>
 
-        <!-- CORES DE TEMA (MANTIDAS AQUI PARA EVITAR ERROS DE ATRIBUTO) -->
-        <!-- Estas cores precisam ser definidas no tema principal, não no NoSplash. -->
+        <!-- CORES LEGADAS (pra não dar erro em attrs antigos) -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -22,22 +24,20 @@
     </style>
 
     <!-- 2) Tema “real” do app, sem action bar -->
-    <!-- MUDANÇA CRÍTICA AQUI: Usaremos MaterialComponents.Light.NoActionBar -->
-    <!-- Isso garante que a herança seja compatível com a sua versão do Gradle E força o modo CLARO. -->
     <style name="Theme.SWADEbuilder.NoSplash" parent="Theme.MaterialComponents.Light.NoActionBar">
 
-        <!-- Cor de Fundo da Janela (O Pergaminho) -->
+        <!-- Fundo da janela (pergaminho claro do app) -->
         <item name="android:windowBackground">@color/pergaminho_fundo</item>
 
-        <!-- Força o fundo da view principal do app a ser CLARO (cor do pergaminho) -->
+        <!-- Fundo padrão das views -->
         <item name="android:colorBackground">@color/pergaminho_fundo</item>
 
-        <!-- Força a cor principal do texto a ser ESCURA (preto) -->
+        <!-- Texto escuro -->
         <item name="android:textColorPrimary">@android:color/black</item>
 
     </style>
 
-    <!-- (Opcional) Tema para DetalheActivity se necessário (usa o mesmo base Light) -->
+    <!-- (Opcional) Tema para alguma Activity de detalhe -->
     <style name="Theme.DetalheActivity" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowBackground">@color/pergaminho_fundo</item>
         <item name="android:colorBackground">@color/pergaminho_fundo</item>
