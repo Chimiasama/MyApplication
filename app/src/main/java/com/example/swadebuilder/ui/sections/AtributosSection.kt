@@ -51,17 +51,16 @@ fun AtributosContent(
     val locked = (state.progresso > 0) || state.faseSupersAtiva || state.emProgresso
     var showHelp by rememberSaveable { mutableStateOf(false) }
 
-    // Agora usa a surface do tema (claro/escuro)
+    // Usa a surface do tema
     val pergaminho = MaterialTheme.colorScheme.surfaceVariant
 
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
-    // ===== LARGURA DINÂMICA PARA O VALOR (evitar quebrar "d12+4" e esmagar botões) =====
+    // ===== LARGURA DINÂMICA PARA O VALOR (evitar esmagar "d12+4") =====
     val textMeasurer = rememberTextMeasurer()
     val density = LocalDensity.current
-    val measureStyle = MaterialTheme.typography.bodyLarge  // capturado fora do remember
+    val measureStyle = MaterialTheme.typography.bodyLarge
 
-    // mede a maior string entre todos os atributos (com supers aplicados)
     val valorColWidthDp = remember(state.superAtributoIncs, measureStyle) {
         val samples = listaAtributos.map { nome ->
             state.atributoRawComSupers(nome).toDiceString()
@@ -69,9 +68,10 @@ fun AtributosContent(
         val maxPx = samples.maxOf { s ->
             textMeasurer.measure(text = s, style = measureStyle).size.width
         }
-        with(density) { (maxPx + 12).toDp() } // folga de 12dp para respirar
+        // um pouco mais largo pra afastar os botões
+        with(density) { (maxPx + 100).toDp() }
     }
-    // ===============================================================================
+    // ===================================================================
 
     Column(
         modifier = Modifier
@@ -81,20 +81,23 @@ fun AtributosContent(
     ) {
         // cabeçalho
         SectionHeader(
-            onHelpClick           = { showHelp = true },
-            centerText            = "Pontos restantes: ${state.pontosAtributo}",
-            onListaCompletaClick  = if (showLista) ({ onOpenAtributosDetail() }) else null,
-            listaCompletaText     = "Lista Completa"
+            onHelpClick = { showHelp = true },
+            centerText = "Pontos restantes: ${state.pontosAtributo}",
+            onListaCompletaClick = if (showLista) ({ onOpenAtributosDetail() }) else null,
+            listaCompletaText = "Lista Completa"
         )
 
         if (showHelp) {
             AlertDialog(
                 onDismissRequest = { showHelp = false },
-                title            = { Text("Como funciona") },
-                text             = {
-                    Text("Cada avanço (d4→d6 etc.) custa 1 Ponto de Atributos (PA). Você pode aumentar até o limite de sua ancestralidade.")
+                title = { Text("Como funciona") },
+                text = {
+                    Text(
+                        "Cada avanço (d4→d6 etc.) custa 1 Ponto de Atributos (PA). " +
+                                "Você pode aumentar até o limite da sua ancestralidade."
+                    )
                 },
-                confirmButton    = {
+                confirmButton = {
                     TextButton(onClick = { showHelp = false }) {
                         Text("OK")
                     }
@@ -107,15 +110,26 @@ fun AtributosContent(
         // linhas dos atributos
         listaAtributos.forEach { nome ->
             val baseRaw = state.valoresAtributos[nome]!!.intValue
-            val minReq  = state.minAttrPorVantagem[nome] ?: 4
+
+            // mínimo exigido (racial ou por vantagem)
+            val minReq = maxOf(
+                state.atributoMinRaw(nome),
+                state.minAttrPorVantagem[nome] ?: 4
+            )
+
             val maxRaw  = state.atributoMaxRaw(nome)
             val stack   = state.paCostStackPorAtributo.getValue(nome)
 
             // valor efetivo com supers (para exibição)
             val efetivoRaw = state.atributoRawComSupers(nome)
 
-            val canReduce   = !locked && stack.isNotEmpty() && (baseRaw - 2 >= minReq)
-            val canIncrease = !locked && state.pontosAtributo > 0 && (baseRaw + 2 <= maxRaw)
+            // ===== NOVOS PASSOS: até d12 sobe de 2 em 2, depois de 1 em 1 =====
+            val nextRaw = if (baseRaw < 12) baseRaw + 2 else baseRaw + 1
+            val prevRaw = if (baseRaw <= 12) baseRaw - 2 else baseRaw - 1
+
+            val canReduce   = !locked && stack.isNotEmpty() && (prevRaw >= minReq)
+            val canIncrease = !locked && state.pontosAtributo > 0 && (nextRaw <= maxRaw)
+            // =================================================================
 
             Row(
                 modifier = Modifier
@@ -131,13 +145,12 @@ fun AtributosContent(
                     overflow = TextOverflow.Ellipsis
                 )
 
+                // botão de diminuir
                 IconButton(
                     onClick = {
-                        // reduzir
-                        val novo = baseRaw - 2
-                        if (novo < minReq) return@IconButton
+                        if (prevRaw < minReq) return@IconButton
                         stack.removeAt(stack.lastIndex)
-                        state.valoresAtributos[nome]!!.intValue = novo
+                        state.valoresAtributos[nome]!!.intValue = prevRaw
                         state.pontosAtributo++
                         state.recalcularPontosAtributo()
                     },
@@ -146,11 +159,15 @@ fun AtributosContent(
                         .size(32.dp)
                         .padding(4.dp)
                 ) {
-                    Icon(Icons.Default.Remove, contentDescription = null, modifier = Modifier.fillMaxSize())
+                    Icon(
+                        Icons.Default.Remove,
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
 
+                // valor (com supers) – agora com mais espaço
                 Text(
-                    // mostra o valor com supers
                     text = efetivoRaw.toDiceString(),
                     modifier = Modifier.width(valorColWidthDp),
                     style = MaterialTheme.typography.bodyLarge,
@@ -159,11 +176,12 @@ fun AtributosContent(
                     textAlign = TextAlign.Center
                 )
 
+                // botão de aumentar
                 IconButton(
                     onClick = {
-                        // aumentar
+                        if (nextRaw > maxRaw || state.pontosAtributo <= 0) return@IconButton
                         stack.add(1)
-                        state.valoresAtributos[nome]!!.intValue = baseRaw + 2
+                        state.valoresAtributos[nome]!!.intValue = nextRaw
                         state.pontosAtributo--
                         state.recalcularPontosAtributo()
                     },
@@ -172,7 +190,11 @@ fun AtributosContent(
                         .size(32.dp)
                         .padding(4.dp)
                 ) {
-                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.fillMaxSize())
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
             }
         }

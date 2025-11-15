@@ -339,7 +339,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, _, modoSuperComplicacoes, nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer, semPontosDePoder, grandesResponsabilidades ->
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, _, _ , nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer, semPontosDePoder, grandesResponsabilidades ->
 
                                     criadorViewModel.resetStateParaNovoPersonagem(
                                         cartaSelvagem      = cartaSelvagem,
@@ -634,21 +634,11 @@ fun Int.toDiceString(): String =
 
 // === Helpers de exibição/compat (veículos) ===
 
-// Converte JsonElement para texto simples
-private fun kotlinx.serialization.json.JsonElement?.asText(): String? =
-    when (this) {
-        is kotlinx.serialization.json.JsonPrimitive -> this.content
-        else -> this?.toString()
-    }?.takeIf { it.isNotBlank() }
-
 // ALIAS LEGADOS para veículos (evitam "Unresolved reference" em código antigo)
-private val com.example.swadebuilder.model.EquipamentoItem.passageiros
+private val EquipamentoItem.passageiros
     get() = this.tripulacao
-private val com.example.swadebuilder.model.EquipamentoItem.blindagem
+private val EquipamentoItem.blindagem
     get() = this.resistencia
-private val com.example.swadebuilder.model.EquipamentoItem.carga
-    get() = null // não existe no JSON atual; mantém compat, mas não exibe nada
-
 
 data class Pericia(val nome: String, val atributo: String, val basica: Boolean)
 
@@ -1754,26 +1744,35 @@ class CriadorState {
     fun rebuildPericias(desiredRaw: Map<Pericia, Int>) {
         val poolSize = BASE_SP_POOL + cpSpStack.size
         var cumulativeCost = 0
+
         listaPericias.forEach { per ->
 
             val cap = periciaCapRaw(per)
             val target = desiredRaw.getValue(per).coerceAtMost(cap)
+
             val stack = spCostStackPorPericia.getValue(per)
             stack.clear()
             baseIncsPorPericia[per] = 0
+
             var curr = periciaStartRaw(ancestralidade, per)
+
             while (curr < target && cumulativeCost < poolSize) {
-                val next = if (curr == 0) 4 else curr + 2
+                val next = when {
+                    curr == 0 -> 4           // primeira compra em perícia não básica
+                    curr < 12 -> curr + 2    // d4..d10 → próximo tipo de dado
+                    else      -> curr + 1    // acima de d12 → d12+1, d12+2...
+                }
+
                 val attrKey = atributoBaseParaPericia(per)
                 val cost    = if (next <= valoresAtributos[attrKey]!!.intValue) 1 else 2
                 if (cumulativeCost + cost > poolSize) break
+
                 stack.add(cost)
                 baseIncsPorPericia[per] = baseIncsPorPericia.getValue(per) + 1
                 cumulativeCost += cost
                 curr = next
             }
         }
-
     }
 
     fun decreasePericia(per: Pericia) {
@@ -1786,9 +1785,19 @@ class CriadorState {
         }
     }
 
-    private fun atributoMinRaw(a: String): Int = racialAttrMinMap[ancestralidade]?.get(a) ?: 4
+    fun atributoMinRaw(a: String): Int =
+        racialAttrMinMap[ancestralidade]?.get(a) ?: 4
+
     fun atributoMaxRaw(a: String): Int {
-        val baseCap = 12 + (atributoMinRaw(a) - 4)
+        val minRaw = atributoMinRaw(a)
+        // cada 2 pontos acima de 4 = 1 step de dado acima de d4
+        // d4  -> extras = 0 -> teto 12  (d12)
+        // d6  -> extras = 1 -> teto 13  (d12+1)
+        // d8  -> extras = 2 -> teto 14  (d12+2)
+        // d10 -> extras = 3 -> teto 15  (d12+3), etc.
+        val extras = ((minRaw - 4).coerceAtLeast(0) / 2)
+        val baseCap = 12 + extras
+
         val chave = a.keyify()
         val profCount = vantagensSelecionadas.count {
             it.nome.keyify() == "PROFISSIONAL" && it.choice?.keyify() == chave
@@ -1796,13 +1805,17 @@ class CriadorState {
         val espCount = vantagensSelecionadas.count {
             it.nome.keyify() == "ESPECIALISTA" && it.choice?.keyify() == chave
         }
+
         return baseCap + (profCount + espCount) * 2
     }
 
     fun periciaCapRaw(per: Pericia): Int {
         val startRaw = periciaStartRaw(ancestralidade, per)
-        val freebies = ((startRaw - 4).coerceAtLeast(0) / 2)
-        val baseCap  = 12 + freebies * 2
+
+        // Regra da criação:
+        // - Começa em 0 ou d4  -> teto d12 (12)
+        // - Começa em d6+      -> teto d12+1 (13)
+        val baseCap = if (startRaw >= 6) 13 else 12
 
         val chave = per.nome.keyify()
         val profCount = vantagensSelecionadas.count {
@@ -1812,21 +1825,35 @@ class CriadorState {
             it.nome.keyify() == "ESPECIALISTA" && it.choice?.keyify() == chave
         }
 
+        // Profissional / Especialista ainda podem aumentar o teto em campanhas avançadas
         return baseCap + (profCount + espCount) * 2
     }
 
     fun rawTotal(per: Pericia): Int {
-        val startRaw    = periciaStartRaw(ancestralidade, per)
-        val normalIncs  = baseIncsPorPericia.getValue(per)
-        val complicsIncs= compIncsPorPericia.getValue(per)
-        val totalIncs   = normalIncs + complicsIncs
+        val startRaw     = periciaStartRaw(ancestralidade, per)
+        val normalIncs   = baseIncsPorPericia.getValue(per)
+        val complicsIncs = compIncsPorPericia.getValue(per)
+        val totalIncs    = normalIncs + complicsIncs
 
-        val extraStep   = if (startRaw == 0 && totalIncs > 0) 2 else 0
-        return startRaw + 2 * totalIncs + extraStep
+        // Perícia não básica e sem nenhum investimento: continua 0 ("-")
+        if (startRaw == 0 && totalIncs == 0) return 0
+
+        // Se a perícia começa em 0 e tem pelo menos 1 incremento:
+        // - primeiro incremento leva de 0 -> d4 (4)
+        // - os demais seguem a regra normal (applySuperStepsFrom)
+        val (startForSteps, steps) = if (startRaw == 0) {
+            4 to (totalIncs - 1).coerceAtLeast(0)
+        } else {
+            startRaw to totalIncs.coerceAtLeast(0)
+        }
+
+        return applySuperStepsFrom(startForSteps, steps)
     }
 
     fun aplicarAncestralidade(anc: String) {
         val prevAnc = ancestralidade
+
+        // Ajuste do ponto extra de vantagem dos humanos
         if (prevAnc == "HUMANOS" && anc != "HUMANOS") {
             if (vantagensSelecionadas.isNotEmpty()) {
                 vantagensSelecionadas.removeAt(vantagensSelecionadas.lastIndex)
@@ -1836,26 +1863,64 @@ class CriadorState {
         } else if (prevAnc != "HUMANOS" && anc == "HUMANOS") {
             pontosVantagem += 1
         }
+
+        // Guarda o valor "dado bruto" das perícias antes da troca
         val desiredRaw = listaPericias.associateWith { rawTotal(it) }
-        val oldAttrMods = racialAttrMinMap[prevAnc] ?: emptyMap()
-        val newAttrMods = racialAttrMinMap[anc]     ?: emptyMap()
+
+        // ===== ATRIBUTOS: recalcula a partir do mínimo da nova raça + passos já comprados =====
+        val newAttrMods = racialAttrMinMap[anc] ?: emptyMap()
+
         listaAtributos.forEach { nome ->
-            val st = valoresAtributos[nome]!!
-            val oldMin = oldAttrMods[nome] ?: 4
+            val st    = valoresAtributos[nome]!!
             val newMin = newAttrMods[nome] ?: 4
-            val reverted = (st.intValue - oldMin).coerceAtLeast(0)
-            st.intValue = (reverted + newMin).coerceIn(newMin, 12 + (newMin - 4))
+
+            // teto novo baseado no mínimo racial (d12, d12+1, d12+2, ...)
+            val extras = ((newMin - 4).coerceAtLeast(0) / 2)
+            val newMax = 12 + extras
+
+            val stack = paCostStackPorAtributo.getValue(nome)
+            var raw   = newMin
+            var appliedSteps = 0
+
+            // reaplica cada ponto gasto nesse atributo,
+            // respeitando o novo teto e a lógica de steps (até 12: +2, acima de 12: +1)
+            for (i in 0 until stack.size) {
+                val candidate = if (raw < 12) raw + 2 else raw + 1
+                if (candidate > newMax) {
+                    break
+                }
+                raw = candidate
+                appliedSteps++
+            }
+
+            // corta passos que não cabem mais no teto da nova raça
+            if (appliedSteps < stack.size) {
+                repeat(stack.size - appliedSteps) {
+                    stack.removeAt(stack.lastIndex)
+                }
+            }
+
+            // valor final do atributo para a nova ancestralidade
+            st.intValue = raw
         }
+        // =====================================================================
+
+        // troca efetiva da ancestralidade
         ancestralidade = anc
+
+        // Vantagens automáticas da ancestralidade anterior que devem ser removidas
         val prevFree = vantagensAutomaticas.toSet() +
                 when (prevAnc) {
                     "SAURIOS"    -> setOf("Sentidos Aguçados", "Prontidão")
                     "PEQUENINOS" -> setOf("Sorte")
                     else         -> emptySet()
                 }
+
         vantagensSelecionadas.removeAll { it.nome in prevFree }
         desvantagensAutomaticas.clear()
         vantagensAutomaticas.clear()
+
+        // Carrega as vantagens / desvantagens automáticas da nova ancestralidade
         listaAncestralidadesJson
             .firstOrNull { it.nome.keyify() == anc }
             ?.let { rm ->
@@ -1867,6 +1932,8 @@ class CriadorState {
         vantagensSelecionadas.removeAll { sel ->
             sel.nome.keyify() !in keepFreeKeys
         }
+
+        // Aplica efeitos específicos de cada ancestralidade
         when (anc) {
             "SAURIOS" -> {
                 listaVantagens.firstOrNull { it.nome.equals("Sentidos Aguçados", ignoreCase = true) }
@@ -1891,22 +1958,27 @@ class CriadorState {
                 vantagensAutomaticas.add("ANTECEDENTE ARCANO MILAGRES")
                 armadura = 0
             }
-
             else -> {
                 armadura = 0
             }
         }
+
+        // Adaptável (humano) dá 1 ponto extra de vantagem
         pontosVantagem = if (vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" }) 1 else 0
+
+        // Remove complicações automáticas da ancestralidade anterior
         val oldAutoKeys = listaAncestralidadesJson
             .firstOrNull { it.nome.keyify() == prevAnc }
             ?.desvantagens
             ?.map { it.substringBefore("(").trim().keyify() }
             ?.toSet()
             ?: emptySet()
+
         complicacoesSelecionadas.keys
             .filter { it.id.keyify() in oldAutoKeys }
             .forEach { complicacoesSelecionadas.remove(it) }
 
+        // Aplica complicações automáticas da nova ancestralidade
         val autoBaseKeys = desvantagensAutomaticas
             .map { it.substringBefore("(").trim().keyify() }
             .toSet()
@@ -1914,18 +1986,14 @@ class CriadorState {
         listaComplicacoes
             .filter { it.id.keyify() in autoBaseKeys }
             .forEach { comp ->
-                // “hasMenor” detecta se, no texto das desvantagens automáticas, há a palavra “Menor”
                 val hasMenor = desvantagensAutomaticas.any {
                     it.substringBefore("(").trim().keyify() == comp.id.keyify()
                             && it.contains("Menor", ignoreCase = true)
                 }
 
                 val grau = when (comp.severity.lowercase()) {
-                    // se severity == “both”, então permitimos “Menor” ou “Maior”
-                    "both" -> if (hasMenor) "Menor" else "Maior"
-                    // se severity == “menor”, só faz sentido atribuir “Menor”
+                    "both"  -> if (hasMenor) "Menor" else "Maior"
                     "menor" -> "Menor"
-                    // se severity == “maior”, só faz sentido atribuir “Maior”
                     "maior" -> "Maior"
                     else    -> "Menor"
                 }
@@ -1933,7 +2001,9 @@ class CriadorState {
                 complicacoesSelecionadas[comp] = grau
             }
 
+        // Reconstroi perícias com base nos valores "brutos" desejados
         rebuildPericias(desiredRaw)
+        // Recalcula os pontos de atributo a partir dos valores atuais e do novo mínimo racial
         recalcularPontosAtributo()
     }
 
@@ -1964,38 +2034,64 @@ class CriadorState {
         }
     }
 
-    fun recalcularPontosAtributo() {
+    // Calcula quantos Pontos de Atributo ainda restam,
+// considerando os valores atuais dos atributos e o mínimo racial.
+    private fun calcularPontosAtributoRestantes(): Int {
         val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
         var usados = 0
+
         for (nome in listaAtributos) {
             val atual = valoresAtributos[nome]!!.intValue
-            val base = mods[nome] ?: 4
-            usados += ((atual - base).coerceAtLeast(0)) / 2
-        }
-        pontosAtributo = (5 + cpPaStack.size - jovemMalusPa) - usados
+            val base  = mods[nome] ?: 4
 
+            var cur = base
+            while (cur < atual) {
+                cur += if (cur < 12) 2 else 1   // até d12: +2; acima de d12: +1
+                usados += 1                      // cada passo = 1 PA gasto
+            }
+        }
+
+        // 5 PA base + extras de CP - penalidades de Jovem
+        return (5 + cpPaStack.size - jovemMalusPa) - usados
+    }
+
+    fun recalcularPontosAtributo() {
+        // Recalcula a partir dos valores atuais
+        pontosAtributo = calcularPontosAtributoRestantes()
+
+        // Se ficou negativo, precisamos "desfazer" passos em atributos
         trimAttributeStacks()
+
+        // Mudar atributos pode mudar limite de perícias
         rebuildAllPericiaStacks()
     }
 
     private fun trimAttributeStacks() {
+        // Enquanto tiver PA negativo, desfazemos o último aumento de algum atributo
         while (pontosAtributo < 0) {
-            // invés de .removeLast() use:
             val entry = paCostStackPorAtributo
                 .entries
                 .firstOrNull { it.value.isNotEmpty() }
                 ?: break
-            val stack = entry.value
+
+            val nomeAttr = entry.key
+            val stack    = entry.value
+
+            // Remove o último "passo" registrado nesse atributo
             stack.removeAt(stack.size - 1)
-            valoresAtributos[entry.key]!!.intValue -= 2
+
             val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
-            var usados = 0
-            for (nome in listaAtributos) {
-                val atual = valoresAtributos[nome]!!.intValue
-                val base = mods[nome] ?: 4
-                usados += ((atual - base).coerceAtLeast(0)) / 2
-            }
-            pontosAtributo = (5 + cpPaStack.size - jovemMalusPa) - usados
+            val base = mods[nomeAttr] ?: 4
+
+            val atual = valoresAtributos[nomeAttr]!!.intValue
+
+            // Reverte um passo usando a mesma lógica de steps:
+            // se estava acima de d12, o último passo foi +1; caso contrário, foi +2.
+            val novo = if (atual > 12) atual - 1 else atual - 2
+            valoresAtributos[nomeAttr]!!.intValue = novo.coerceAtLeast(base)
+
+            // Recalcula os PA restantes depois desse rollback
+            pontosAtributo = calcularPontosAtributoRestantes()
         }
     }
 
@@ -3811,7 +3907,6 @@ fun EquipamentosDetailScreen(
                                                                 eq.tamanho.asText()?.let { "Tamanho: $it" },
                                                                 eq.resistencia.asText()?.let { "Resistência: $it" },
                                                                 eq.tripulacao.asText()?.let { "Tripulação: $it" },
-                                                                eq.carga.asText()?.let { "Carga: $it" },
                                                                 eq.blindagem.asText()?.let { "Blindagem: $it" },
                                                                 eq.passageiros.asText()?.let { "Passageiros: $it" },
                                                             ).joinToString("  •  ").takeIf { it.isNotBlank() }

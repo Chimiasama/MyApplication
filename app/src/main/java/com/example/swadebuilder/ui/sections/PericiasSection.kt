@@ -82,6 +82,9 @@ fun PericiasContent(
         .values
         .sumOf { costs -> costs.sum() }
 
+    // Largura da coluna de valor (para caber "d12+1" tranquilo, como nos atributos)
+    val valorColWidthDp = 80.dp
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -123,7 +126,11 @@ fun PericiasContent(
             val attrKey    = state.atributoBaseParaPericia(per)
             val atrRaw     = state.valoresAtributos[attrKey]!!.intValue
             val capRaw     = state.periciaCapRaw(per)
-            val nextRaw    = if (currentRaw == 0 && per.basica) 4 else currentRaw + 2
+            val nextRaw = when {
+                currentRaw == 0 && per.basica -> 4        // básicas ficam em d4 quando "zeradas"
+                currentRaw < 12               -> currentRaw + 2
+                else                          -> currentRaw + 1
+            }
             val costNormal = if (nextRaw <= atrRaw) 1 else 2
 
             val compStack = state.compCostStackPorPericia.getValue(per)
@@ -205,14 +212,14 @@ fun PericiasContent(
                         Icon(Icons.Default.Remove, contentDescription = null, modifier = Modifier.fillMaxSize())
                     }
 
-                    // valor
+                    // valor (agora com largura maior pra caber "d12+1")
                     Text(
                         text = when (currentRaw) {
                             0 if per.basica -> "d4"
                             0 -> "-"
                             else -> currentRaw.toDiceString()
                         },
-                        modifier = Modifier.width(40.dp),
+                        modifier = Modifier.width(valorColWidthDp),
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center
                     )
