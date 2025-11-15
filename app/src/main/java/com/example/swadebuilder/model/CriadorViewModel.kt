@@ -83,6 +83,7 @@ class CriadorViewModel : ViewModel() {
 
         state.idAtual = null
         state.nomePersonagem = ""
+        state.anotacoes = ""              // ← **ESSENCIAL** pra não vazar texto de outro personagem
 
         state.cartaSelvagem = cartaSelvagem
         state.maisPontosPericias = maisPontosPericias
@@ -147,9 +148,10 @@ class CriadorViewModel : ViewModel() {
         state.modoSuperequip = salvo.modoSuperequip
         state.modoSuperComplicacoes = salvo.modoSuperComplicacoes
 
-        // Identidade e nome
-        state.idAtual = salvo.id
+        // Identidade, nome e anotações
+        state.idAtual        = salvo.id
         state.nomePersonagem = salvo.nome
+        state.anotacoes      = salvo.anotacoes      // ← recupera as anotações salvas
 
         // 1) Atributos e perícias
         state.valoresAtributos.forEach { (key, holder) ->
@@ -218,7 +220,7 @@ class CriadorViewModel : ViewModel() {
 
         // 8) Dinheiro, pontos, especializações
         state.pontosVantagem = salvo.pontosRestantes
-        state.dinheiro = salvo.dinheiro
+        state.dinheiro       = salvo.dinheiro
 
         state.usarEspecializacoesDePericia = salvo.usarEspecializacoesDePericia
         state.especializacoesPorPericia.clear()

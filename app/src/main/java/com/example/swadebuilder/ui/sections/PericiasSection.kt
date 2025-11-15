@@ -75,12 +75,8 @@ fun PericiasContent(
     var editOldName by rememberSaveable { mutableStateOf("") }
     var editNewName by rememberSaveable { mutableStateOf("") }
 
-    // Idoso (bônus de SP até 5 na ÁSTUCIA)
+    // Idoso (bônus de SP até 5 na ASTÚCIA)
     val idosoActive = state.idosoBonusSp > 0
-    val astuciaSpent = state.spCostStackPorPericia
-        .filterKeys { per -> per.atributo == "ASTUCIA" }
-        .values
-        .sumOf { costs -> costs.sum() }
 
     // Largura da coluna de valor (para caber "d12+1" tranquilo, como nos atributos)
     val valorColWidthDp = 80.dp
@@ -113,7 +109,13 @@ fun PericiasContent(
                 AlertDialog(
                     onDismissRequest = { showHelp = false },
                     title            = { Text("Como funciona") },
-                    text             = { Text("Cada avanço de perícia custa 1 SP se abaixo do atributo relacionado ou 2 SP se acima. A primeira especialização é obrigatória quando você compra a perícia; especializações extras custam 1 SP cada.") },
+                    text             = {
+                        Text(
+                            "Cada avanço de perícia custa 1 SP se abaixo do atributo relacionado ou 2 SP se acima. " +
+                                    "A primeira especialização é obrigatória quando você compra a perícia; " +
+                                    "especializações extras custam 1 SP cada."
+                        )
+                    },
                     confirmButton    = {
                         TextButton(onClick = { showHelp = false }) { Text("OK") }
                     }
@@ -126,6 +128,7 @@ fun PericiasContent(
             val attrKey    = state.atributoBaseParaPericia(per)
             val atrRaw     = state.valoresAtributos[attrKey]!!.intValue
             val capRaw     = state.periciaCapRaw(per)
+
             val nextRaw = when {
                 currentRaw == 0 && per.basica -> 4        // básicas ficam em d4 quando "zeradas"
                 currentRaw < 12               -> currentRaw + 2
@@ -153,6 +156,12 @@ fun PericiasContent(
                     (compStack.isNotEmpty() || spStack.any { it > 0 }) &&
                     (currentRaw - 2 >= minimoTotal)
 
+            // Idoso: quanto já foi gasto em perícias de ASTÚCIA?
+            val astuciaSpent = state.spCostStackPorPericia
+                .filterKeys { p -> p.atributo == "ASTUCIA" }
+                .values
+                .sumOf { costs -> costs.sum() }
+
             val canIncrease = !locked &&
                     state.pontosPericia >= costNormal &&
                     nextRaw <= capRaw &&
@@ -175,7 +184,12 @@ fun PericiasContent(
                     Text(
                         text = buildAnnotatedString {
                             if (per.basica) {
-                                withStyle(SpanStyle(color = Color.Red, fontWeight = FontWeight.Bold)) {
+                                withStyle(
+                                    SpanStyle(
+                                        color = Color.Red,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                ) {
                                     append("✯ ${per.nome}")
                                 }
                             } else {
@@ -209,7 +223,11 @@ fun PericiasContent(
                             .size(32.dp)
                             .padding(4.dp)
                     ) {
-                        Icon(Icons.Default.Remove, contentDescription = null, modifier = Modifier.fillMaxSize())
+                        Icon(
+                            Icons.Default.Remove,
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize()
+                        )
                     }
 
                     // valor (agora com largura maior pra caber "d12+1")
@@ -227,9 +245,44 @@ fun PericiasContent(
                     // +
                     IconButton(
                         onClick = {
-                            // avanço normal de perícia
-                            state.baseIncsPorPericia[per] = state.baseIncsPorPericia.getValue(per) + 1
-                            state.spCostStackPorPericia.getValue(per).add(costNormal)
+                            // ===== RECHECAGEM RÁPIDA CONTRA CLIQUES MUITO RÁPIDOS =====
+                            val currRawNow = state.rawTotal(per)
+                            val attrKeyNow = state.atributoBaseParaPericia(per)
+                            val atrRawNow  = state.valoresAtributos[attrKeyNow]!!.intValue
+                            val capRawNow  = state.periciaCapRaw(per)
+
+                            val nextRawNow = when {
+                                currRawNow == 0 && per.basica -> 4
+                                currRawNow < 12               -> currRawNow + 2
+                                else                          -> currRawNow + 1
+                            }
+                            val costNow = if (nextRawNow <= atrRawNow) 1 else 2
+
+                            val astuciaSpentNow = state.spCostStackPorPericia
+                                .filterKeys { p -> p.atributo == "ASTUCIA" }
+                                .values
+                                .sumOf { costs -> costs.sum() }
+
+                            val canIncreaseNow = !locked &&
+                                    state.pontosPericia >= costNow &&
+                                    nextRawNow <= capRawNow &&
+                                    (if (idosoActive && astuciaSpentNow < 5)
+                                        per.atributo == "ASTUCIA"
+                                    else
+                                        true)
+
+                            if (!canIncreaseNow) {
+                                // se por lag / spam de cliques o botão ainda estiver "enabled",
+                                // essa checagem impede estouro de limite
+                                return@IconButton
+                            }
+
+                            // avanço normal de perícia (já passou pela checagem acima)
+                            state.baseIncsPorPericia[per] =
+                                state.baseIncsPorPericia.getValue(per) + 1
+                            state.spCostStackPorPericia
+                                .getValue(per)
+                                .add(costNow)
 
                             // se a regra estiver ativa e ainda não existe especialização principal, solicitar agora
                             if (state.usarEspecializacoesDePericia) {
@@ -247,11 +300,16 @@ fun PericiasContent(
                             .size(32.dp)
                             .padding(4.dp)
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.fillMaxSize())
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize()
+                        )
                     }
 
                     // Esp+
-                    val jaTemPrincipal = state.especializacoesPorPericia[per.nome]?.principal != null
+                    val jaTemPrincipal =
+                        state.especializacoesPorPericia[per.nome]?.principal != null
                     if (state.usarEspecializacoesDePericia && jaTemPrincipal) {
                         TextButton(
                             onClick = {
@@ -303,39 +361,34 @@ fun PericiasContent(
                                     editNewName = principal
                                     showEditDialog = true
                                 },
-                                onRemove = null // travado sempre, mesmo em modo inicial
+                                onRemove = null
                             )
                         }
 
-                        // Chips das extras:
-                        // - SEM “X” quando locked == true (após construção)
-                        // - COM “X” e devolução de 1 SP quando locked == false (construção)
-                        extras.forEach { nome ->
+                        // Chips das extras (podem ser editadas e removidas)
+                        extras.forEach { extra ->
                             SpecChip(
-                                label = nome,
+                                label = extra,
                                 isPrincipal = false,
                                 onEdit = {
                                     editIsPrincipal = false
                                     editPerTarget = per
-                                    editOldName = nome
-                                    editNewName = nome
+                                    editOldName = extra
+                                    editNewName = extra
                                     showEditDialog = true
                                 },
-                                onRemove = if (canRemoveSpecs) {
-                                    {
-                                        // remover especialização extra
-                                        val atuais = state.especializacoesPorPericia[per.nome]
-                                            ?: EspecializacoesDto()
-                                        val novaLista = atuais.lista.filter { it != nome }
-                                        state.especializacoesPorPericia[per.nome] =
-                                            atuais.copy(lista = novaLista)
-
-                                        // devolver 1 SP → remove uma entrada "1" do stack de SP
-                                        val stack = state.spCostStackPorPericia.getValue(per)
-                                        val idx = stack.indexOfLast { it == 1 }
-                                        if (idx != -1) stack.removeAt(idx)
-                                    }
-                                } else null
+                                onRemove =
+                                    if (canRemoveSpecs) {
+                                        {
+                                            val atual =
+                                                state.especializacoesPorPericia[per.nome]
+                                                    ?: EspecializacoesDto()
+                                            val novaLista =
+                                                atual.lista.filter { it != extra }
+                                            state.especializacoesPorPericia[per.nome] =
+                                                atual.copy(lista = novaLista)
+                                        }
+                                    } else null
                             )
                         }
                     }
@@ -344,11 +397,18 @@ fun PericiasContent(
         }
     }
 
-    // Diálogo para inserir a ESPECIALIZAÇÃO PRINCIPAL (ou extra, quando Esp+)
+    // Diálogo quando compra/define especialização (principal ou Esp+)
     if (showSpecDialog && specTarget != null) {
         AlertDialog(
             onDismissRequest = { showSpecDialog = false },
-            title = { Text(if (buyingExtraSpec) "Nova especialização" else "Especialização principal") },
+            title = {
+                Text(
+                    if (buyingExtraSpec)
+                        "Nova especialização"
+                    else
+                        "Especialização principal"
+                )
+            },
             text = {
                 Column {
                     Text("Perícia: ${specTarget!!.nome}")
@@ -367,20 +427,26 @@ fun PericiasContent(
                         val per = specTarget!!
                         val nomeEsp = specText.trim()
                         if (nomeEsp.isNotEmpty()) {
-                            val atual = state.especializacoesPorPericia[per.nome] ?: EspecializacoesDto()
+                            val atual =
+                                state.especializacoesPorPericia[per.nome]
+                                    ?: EspecializacoesDto()
                             val novo =
                                 if (!buyingExtraSpec) {
                                     // definindo a PRINCIPAL
-                                    val baseLista = (atual.lista + nomeEsp).distinct()
+                                    val baseLista =
+                                        (atual.lista + nomeEsp).distinct()
                                     EspecializacoesDto(
                                         principal = nomeEsp,
                                         lista = baseLista
                                     )
                                 } else {
                                     // adicionando EXTRA (1 SP)
-                                    val novas = (atual.lista + nomeEsp).distinct()
+                                    val novas =
+                                        (atual.lista + nomeEsp).distinct()
                                     atual.copy(lista = novas).also {
-                                        state.spCostStackPorPericia.getValue(per).add(1)
+                                        state.spCostStackPorPericia
+                                            .getValue(per)
+                                            .add(1)
                                     }
                                 }
                             state.especializacoesPorPericia[per.nome] = novo
@@ -390,7 +456,9 @@ fun PericiasContent(
                 ) { Text("Confirmar") }
             },
             dismissButton = {
-                TextButton(onClick = { showSpecDialog = false }) { Text("Cancelar") }
+                TextButton(onClick = { showSpecDialog = false }) {
+                    Text("Cancelar")
+                }
             }
         )
     }
@@ -399,7 +467,14 @@ fun PericiasContent(
     if (showEditDialog && editPerTarget != null) {
         AlertDialog(
             onDismissRequest = { showEditDialog = false },
-            title = { Text(if (editIsPrincipal) "Renomear especialização principal" else "Renomear especialização") },
+            title = {
+                Text(
+                    if (editIsPrincipal)
+                        "Renomear especialização principal"
+                    else
+                        "Renomear especialização"
+                )
+            },
             text = {
                 Column {
                     Text("Perícia: ${editPerTarget!!.nome}")
@@ -418,17 +493,26 @@ fun PericiasContent(
                         val per = editPerTarget!!
                         val novo = editNewName.trim()
                         if (novo.isNotEmpty()) {
-                            val atual = state.especializacoesPorPericia[per.nome] ?: EspecializacoesDto()
+                            val atual =
+                                state.especializacoesPorPericia[per.nome]
+                                    ?: EspecializacoesDto()
                             if (editIsPrincipal) {
                                 // renomeia principal e mantém/coerentiza na lista
                                 val antiga = atual.principal
-                                val listaSemAntiga = atual.lista.filter { it != antiga }
-                                val novaLista = (listaSemAntiga + novo).distinct()
+                                val listaSemAntiga =
+                                    atual.lista.filter { it != antiga }
+                                val novaLista =
+                                    (listaSemAntiga + novo).distinct()
                                 state.especializacoesPorPericia[per.nome] =
-                                    atual.copy(principal = novo, lista = novaLista)
+                                    atual.copy(
+                                        principal = novo,
+                                        lista = novaLista
+                                    )
                             } else {
                                 // renomeia um item extra na lista
-                                val novaLista = atual.lista.map { if (it == editOldName) novo else it }.distinct()
+                                val novaLista =
+                                    atual.lista.map { if (it == editOldName) novo else it }
+                                        .distinct()
                                 state.especializacoesPorPericia[per.nome] =
                                     atual.copy(lista = novaLista)
                             }
@@ -438,7 +522,9 @@ fun PericiasContent(
                 ) { Text("Salvar") }
             },
             dismissButton = {
-                TextButton(onClick = { showEditDialog = false }) { Text("Cancelar") }
+                TextButton(onClick = { showEditDialog = false }) {
+                    Text("Cancelar")
+                }
             }
         )
     }

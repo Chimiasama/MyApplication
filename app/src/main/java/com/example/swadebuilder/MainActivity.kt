@@ -25,7 +25,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -33,7 +32,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -84,6 +82,7 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -91,7 +90,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -127,6 +125,7 @@ import com.example.swadebuilder.ui.sections.InformacoesSection
 import com.example.swadebuilder.ui.sections.PericiasContent
 import com.example.swadebuilder.ui.sections.PoderesDetailScreen
 import com.example.swadebuilder.ui.sections.PoderesSection
+import com.example.swadebuilder.ui.sections.SummaryContent
 import com.example.swadebuilder.ui.sections.SuperPoderesContent
 import com.example.swadebuilder.ui.sections.SuperPoderesDetailScreen
 import com.example.swadebuilder.ui.sections.VantagensContent
@@ -134,6 +133,9 @@ import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
@@ -425,105 +427,122 @@ class MainActivity : ComponentActivity() {
                                                 }
                                             },
                                             actions = {
-                                                IconButton(onClick = {
-                                                    val personagem = MeuPersonagem(
-                                                        nome            = state.nomePersonagem,
-                                                        atributos       = state.valoresAtributos.mapValues { it.value.intValue },
-                                                        pericias        = listaPericias.associate { per -> per.nome to state.rawTotal(per) },
-                                                        ancestralidade  = state.ancestralidade,
-                                                        vantagens       = state.vantagensSelecionadas.map { it.id },
-                                                        complicacoes    = state.complicacoesSelecionadas
-                                                            .filterValues { it != null }
-                                                            .keys
-                                                            .map { it.id },
-                                                        equipamentos    = state.equipamentosComprados.toList(),
-                                                        poderes         = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
-                                                        dinheiro        = state.dinheiro,
-                                                        pontosRestantes = state.pontosVantagem,
+                                                // Adiciona o CoroutineScope aqui
+                                                val scope = rememberCoroutineScope()
 
-                                                        // ===== NOVOS CAMPOS (SUPERS) =====
-                                                        modoSupers              = state.modoSupers,
-                                                        superPontosTotais       = state.superPontosTotais,
-                                                        superPontosDisponiveis  = state.superPontosDisponiveis,
-                                                        limitePorPoderPadrao    = state.limitePorPoderPadrao,
-                                                        limiteFavorecido        = state.limiteFavorecido,
-                                                        idPoderFavorecido       = state.idPoderFavorecido,
-                                                        superAtributoIncs       = state.superAtributoIncs.toMap(),
-                                                        superPericiaIncs        = state.superPericiaIncs.toMap(),
-                                                        bonusPararFromPower     = state.bonusPararFromPower,
-                                                        bonusResFromPower       = state.bonusResFromPower,
-                                                        armorFromPower          = state.armorFromPower,
-                                                        vantagensDePoder        = state.vantagensDePoder.toSet(),
-                                                        gastosPorPoder          = state.gastosPorPoder.toMap(),
-                                                        limiteDePoderDaCampanha = state.limiteDePoderDaCampanha
-                                                    )
-                                                    salvarEExibirFichaPdf(this@MainActivity, personagem)
+                                                IconButton(onClick = {
+                                                    // Lança a geração do PDF em uma thread de background (IO)
+                                                    scope.launch(Dispatchers.IO) {
+                                                        val personagem = MeuPersonagem(
+                                                            nome            = state.nomePersonagem,
+                                                            atributos       = state.valoresAtributos.mapValues { it.value.intValue },
+                                                            pericias        = listaPericias.associate { per -> per.nome to state.rawTotal(per) },
+                                                            ancestralidade  = state.ancestralidade,
+                                                            vantagens       = state.vantagensSelecionadas.map { it.id },
+                                                            complicacoes    = state.complicacoesSelecionadas
+                                                                .filterValues { it != null }
+                                                                .keys
+                                                                .map { it.id },
+                                                            equipamentos    = state.equipamentosComprados.toList(),
+                                                            poderes         = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
+                                                            dinheiro        = state.dinheiro,
+                                                            pontosRestantes = state.pontosVantagem,
+
+                                                            // ===== NOVOS CAMPOS (SUPERS) =====
+                                                            modoSupers              = state.modoSupers,
+                                                            superPontosTotais       = state.superPontosTotais,
+                                                            superPontosDisponiveis  = state.superPontosDisponiveis,
+                                                            limitePorPoderPadrao    = state.limitePorPoderPadrao,
+                                                            limiteFavorecido        = state.limiteFavorecido,
+                                                            idPoderFavorecido       = state.idPoderFavorecido,
+                                                            superAtributoIncs       = state.superAtributoIncs.toMap(),
+                                                            superPericiaIncs        = state.superPericiaIncs.toMap(),
+                                                            bonusPararFromPower     = state.bonusPararFromPower,
+                                                            bonusResFromPower       = state.bonusResFromPower,
+                                                            armorFromPower          = state.armorFromPower,
+                                                            vantagensDePoder        = state.vantagensDePoder.toSet(),
+                                                            gastosPorPoder          = state.gastosPorPoder.toMap(),
+                                                            limiteDePoderDaCampanha = state.limiteDePoderDaCampanha,
+                                                            anotacoes              = state.anotacoes
+                                                        )
+                                                        salvarEExibirFichaPdf(this@MainActivity, personagem)
+                                                    }
                                                 }) {
                                                     Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
                                                 }
 
                                                 IconButton(onClick = {
-                                                    val personagemId  = state.idAtual ?: UUID.randomUUID().toString()
-                                                    val atributosMap  = state.valoresAtributos.mapValues { it.value.intValue }
-                                                    val periciasMap   = listaPericias.associate { per -> per.nome to state.rawTotal(per) }
-                                                    val complicacoesList = state.complicacoesSelecionadas
-                                                        .filterValues { it != null }
-                                                        .keys
-                                                        .map { it.id }
+                                                    // Lança o salvamento em uma thread de background (IO)
+                                                    scope.launch(Dispatchers.IO) {
+                                                        val personagemId  = state.idAtual ?: UUID.randomUUID().toString()
+                                                        val atributosMap  = state.valoresAtributos.mapValues { it.value.intValue }
+                                                        val periciasMap   = listaPericias.associate { per -> per.nome to state.rawTotal(per) }
+                                                        val complicacoesList = state.complicacoesSelecionadas
+                                                            .filterValues { it != null }
+                                                            .keys
+                                                            .map { it.id }
 
-                                                    val salvo = PersonagemSalvo(
-                                                        id                 = personagemId,
-                                                        nome               = state.nomePersonagem,
-                                                        atributos          = atributosMap,
-                                                        pericias           = periciasMap,
-                                                        ancestralidade     = state.ancestralidade,
+                                                        val salvo = PersonagemSalvo(
+                                                            id                 = personagemId,
+                                                            nome               = state.nomePersonagem,
+                                                            atributos          = atributosMap,
+                                                            pericias           = periciasMap,
+                                                            ancestralidade     = state.ancestralidade,
 
-                                                        vantagens          = state.vantagensSelecionadas.map { it.id },
-                                                        complicacoes       = complicacoesList,
+                                                            vantagens          = state.vantagensSelecionadas.map { it.id },
+                                                            complicacoes       = complicacoesList,
 
-                                                        equipamentos       = state.equipamentosComprados.map { it.nome },
-                                                        poderes            = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
+                                                            equipamentos       = state.equipamentosComprados.map { it.nome },
+                                                            poderes            = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
 
-                                                        dinheiro           = state.dinheiro,
-                                                        pontosRestantes    = state.pontosVantagem,
-                                                        maisPontosPericias = state.maisPontosPericias,
-                                                        cartaSelvagem      = state.cartaSelvagem,
-                                                        heroisSemArmadura  = state.heroisSemArmadura,
-                                                        semPontosDePoder   = state.usarSemPontosDePoder,
-                                                        usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
-                                                        especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
+                                                            dinheiro           = state.dinheiro,
+                                                            pontosRestantes    = state.pontosVantagem,
+                                                            maisPontosPericias = state.maisPontosPericias,
+                                                            cartaSelvagem      = state.cartaSelvagem,
+                                                            heroisSemArmadura  = state.heroisSemArmadura,
+                                                            semPontosDePoder   = state.usarSemPontosDePoder,
+                                                            usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
+                                                            especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
 
-                                                        // ===== MODO SUPER =====
-                                                        modoSupers              = state.modoSupers,
-                                                        modoSuperequip          = state.modoSuperequip,
-                                                        modoSuperComplicacoes   = state.modoSuperComplicacoes,
+                                                            // ===== MODO SUPER =====
+                                                            modoSupers              = state.modoSupers,
+                                                            modoSuperequip          = state.modoSuperequip,
+                                                            modoSuperComplicacoes   = state.modoSuperComplicacoes,
 
-                                                        // Snapshot por conveniência (nomes escolhidos nas suas telas de supers)
-                                                        superpoderesComprados   = state.superPoderesComprados.map { it.nome },
+                                                            // Snapshot por conveniência
+                                                            superpoderesComprados   = state.superPoderesComprados.map { it.nome },
 
-                                                        // ===== PERSISTÊNCIA DOS CAMPOS NOVOS =====
-                                                        superPontosTotais       = state.superPontosTotais,
-                                                        superPontosDisponiveis  = state.superPontosDisponiveis,
+                                                            // ===== PERSISTÊNCIA DOS CAMPOS NOVOS =====
+                                                            superPontosTotais       = state.superPontosTotais,
+                                                            superPontosDisponiveis  = state.superPontosDisponiveis,
 
-                                                        limitePorPoderPadrao    = state.limitePorPoderPadrao,
+                                                            limitePorPoderPadrao    = state.limitePorPoderPadrao,
 
-                                                        limiteFavorecido        = state.limiteFavorecido,
-                                                        idPoderFavorecido       = state.idPoderFavorecido,
+                                                            limiteFavorecido        = state.limiteFavorecido,
+                                                            idPoderFavorecido       = state.idPoderFavorecido,
 
-                                                        superAtributoIncs       = state.superAtributoIncs.toMap(),
-                                                        superPericiaIncs        = state.superPericiaIncs.toMap(),
-                                                        bonusPararFromPower     = state.bonusPararFromPower,
-                                                        bonusResFromPower       = state.bonusResFromPower,
-                                                        armorFromPower          = state.armorFromPower,
-                                                        vantagensDePoder        = state.vantagensDePoder.toSet(),
-                                                        gastosPorPoder          = state.gastosPorPoder.toMap(),
+                                                            superAtributoIncs       = state.superAtributoIncs.toMap(),
+                                                            superPericiaIncs        = state.superPericiaIncs.toMap(),
+                                                            bonusPararFromPower     = state.bonusPararFromPower,
+                                                            bonusResFromPower       = state.bonusResFromPower,
+                                                            armorFromPower          = state.armorFromPower,
+                                                            vantagensDePoder        = state.vantagensDePoder.toSet(),
+                                                            gastosPorPoder          = state.gastosPorPoder.toMap(),
 
-                                                        limiteDePoderDaCampanha = state.limiteDePoderDaCampanha
-                                                    )
+                                                            limiteDePoderDaCampanha = state.limiteDePoderDaCampanha,
 
-                                                    state.idAtual = personagemId
-                                                    StorageUtils.salvarPersonagem(context, salvo)
-                                                    Toast.makeText(context, "Personagem salvo com sucesso!", Toast.LENGTH_SHORT).show()
+                                                            // ===== ANOTAÇÕES LIVRES =====
+                                                            anotacoes               = state.anotacoes
+                                                        )
+
+                                                        state.idAtual = personagemId
+                                                        StorageUtils.salvarPersonagem(context, salvo)
+
+                                                        // Volta para a Main thread para mostrar o Toast
+                                                        withContext(Dispatchers.Main) {
+                                                            Toast.makeText(context, "Personagem salvo com sucesso!", Toast.LENGTH_SHORT).show()
+                                                        }
+                                                    }
                                                 }) {
                                                     Icon(Icons.Default.Save, contentDescription = "Salvar")
                                                 }
@@ -684,62 +703,235 @@ fun salvarEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
 fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val lines = mutableListOf<String>()
 
-    // ── Atributos ────────────────────────────────────────────────
+    // ---------- Helpers compartilhados ----------
+    // Nome bonitinho da ancestralidade (igual ao resumo)
+    val ancestralidadeNome: String = listaAncestralidadesJson
+        .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
+        ?.nome ?: personagem.ancestralidade
+
+    // Vantagens por nome.keyify (para regras de Aparar / Resistência / Movimento)
+    val vantagensNomeKey: List<String> = listaVantagens
+        .filter { it.id in personagem.vantagens }
+        .map { it.nome.keyify() }
+
+    fun temComp(key: String): Boolean =
+        personagem.complicacoes.any { it.keyify() == key }
+
+    fun racialSize(): Int =
+        listaAncestralidadesJson
+            .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
+            ?.desvantagens
+            ?.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
+            ?.substringAfter("TAMANHO")
+            ?.trim()
+            ?.toIntOrNull()
+            ?: 0
+
+    fun tamanhoTotal(): Int {
+        val base = racialSize()
+        val obesoBonus = if (temComp("OBESO")) 1 else 0
+        val pequenoPenalty = if (temComp("PEQUENO")) -1 else 0
+        return base + obesoBonus + pequenoPenalty
+    }
+
+    fun resistenciaBase(): Int {
+        val vigorRaw = personagem.atributos["VIGOR"] ?: 4
+        val base = 2 + (vigorRaw / 2)
+
+        val bonusPos =
+            if (vantagensNomeKey.any { it == "RESISTENCIA" }) 1 else 0
+        val bonusNeg =
+            if (personagem.complicacoes.any { it.keyify() == "FRAGIL" }) -1 else 0
+
+        val brigaoBonus = vantagensNomeKey.count { it in listOf("BRIGAO", "PUGILISTA") }
+
+        return (base + bonusPos + bonusNeg + brigaoBonus + tamanhoTotal())
+            .coerceAtLeast(0)
+    }
+
+    fun resistenciaFinal(): Int =
+        resistenciaBase() + personagem.bonusResFromPower
+
+    fun calcMovimento(): Int {
+        val base = 6
+
+        val racialPenalty =
+            listaAncestralidadesJson
+                .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
+                ?.desvantagens
+                ?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
+                .takeIf { it == true }
+                ?.let { 1 }
+                ?: 0
+
+        // No save a gente não guarda o grau de Lento, então tratamos como 1 passo se existir.
+        val lentoPenalty = if (temComp("LENTO")) 1 else 0
+        val idosoPenalty = if (temComp("IDOSO")) 1 else 0
+        val obesoPenalty = if (temComp("OBESO")) 1 else 0
+        val ligeiroBonus =
+            if (vantagensNomeKey.any { it == "LIGEIRO" }) 2 else 0
+
+        return (base - racialPenalty - lentoPenalty - idosoPenalty - obesoPenalty + ligeiroBonus)
+            .coerceAtLeast(0)
+    }
+
+    // Mesmo algoritmo de steps de supers do CriadorState
+    fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
+        var raw = rawStart
+        repeat(steps.coerceAtLeast(0)) {
+            raw += if (raw < 12) 2 else 1
+        }
+        return raw.coerceAtLeast(4)
+    }
+
+    fun calcAparar(): Int {
+        val lutarRawBase = personagem.pericias["Lutar"] ?: 0
+        val lutarStepsFromSupers = personagem.superPericiaIncs["LUTAR"] ?: 0
+        val lutarComSupers = applySuperStepsFrom(lutarRawBase, lutarStepsFromSupers)
+
+        val base = 2 + (lutarComSupers / 2)
+
+        val bloquearBonus =
+            if (vantagensNomeKey.any { it == "BLOQUEAR" }) 1 else 0
+        val bloquearAprimoradoBonus =
+            if (vantagensNomeKey.any { it == "BLOQUEAR APRIMORADO" }) 1 else 0
+
+        return base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusPararFromPower
+    }
+
+    fun calcArmaduraEfetiva(): Int {
+        return personagem.armorFromPower.coerceAtLeast(0)
+    }
+
+    val aparar = calcAparar()
+    val resFinal = resistenciaFinal()
+    val tamanho = tamanhoTotal()
+    val mov = calcMovimento()
+    val armadura = calcArmaduraEfetiva()
+    val resistenciaTexto =
+        if (armadura > 0) "${resFinal}(${armadura})" else resFinal.toString()
+
+    // ---------- IDENTIDADE ----------
+    lines += "Identidade"
+    lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"
+    lines += "Ancestralidade: $ancestralidadeNome"
+    lines += ""
+
+    // ---------- DERIVADOS ----------
+    lines += "Atributos derivados"
+    lines += "Aparar: $aparar"
+    lines += "Resistência: $resistenciaTexto"
+    lines += "Tamanho: $tamanho"
+    lines += "Movimento: $mov"
+    if (armadura > 0) {
+        lines += "Armadura: $armadura"
+    }
+    lines += ""
+
+    // ---------- ATRIBUTOS ----------
     lines += "Atributos"
-    lines += personagem.atributos.entries
-        .joinToString(", ") { (nome, valor) -> "$nome d$valor" }
+    lines += listaAtributos.joinToString(", ") { attrKey ->
+        val label = mapaAtributosDisplay[attrKey] ?: attrKey
+        val valor = personagem.atributos[attrKey] ?: 4
+        "$label d$valor"
+    }
     lines += ""
 
-    // ── Perícias ──────────────────────────────────────────────────
+    // ---------- PERÍCIAS (mesma lógica do resumo / ficha) ----------
     val periciasParaMostrar = listaPericias.filter { per ->
-        per.basica || (personagem.pericias[per.nome] ?: 0) > periciaStartRaw(personagem.ancestralidade, per)
+        per.basica || (personagem.pericias[per.nome] ?: 0) >
+                periciaStartRaw(personagem.ancestralidade, per)
     }
+
     lines += "Perícias"
-    lines += if (periciasParaMostrar.isEmpty()) {
-        "– Nenhuma"
+    if (periciasParaMostrar.isEmpty()) {
+        lines += "– Nenhuma"
     } else {
-        periciasParaMostrar
-            .joinToString(", ") { per ->
-                "${per.nome} d${personagem.pericias[per.nome] ?: 0}"
-            }
+        periciasParaMostrar.forEach { per ->
+            val raw = personagem.pericias[per.nome] ?: 0
+            lines += "• ${per.nome} d$raw"
+        }
     }
     lines += ""
 
-    // ── Vantagens ─────────────────────────────────────────────────
+    // ---------- RECURSOS & EQUIPAMENTOS (igual resumo) ----------
+    lines += "Recursos & Equipamentos"
+    lines += "Dinheiro restante: ${personagem.dinheiro}"
+    if (personagem.equipamentos.isEmpty()) {
+        lines += "Equipamentos: – Nenhum"
+    } else {
+        lines += "Equipamentos:"
+        personagem.equipamentos.forEach { eq ->
+            lines += "• ${eq.nome}"
+        }
+    }
+    lines += ""
+
+    // ---------- VANTAGENS ----------
     lines += "Vantagens"
     if (personagem.vantagens.isEmpty()) {
         lines += "– Nenhuma"
     } else {
         val nomesVantagens = listaVantagens
             .filter { it.id in personagem.vantagens }
-            .map { vant -> vant.choice?.let { "${vant.nome} ($it)" } ?: vant.nome }
+            .map { it.nome }
         lines += nomesVantagens.joinToString(", ")
     }
     lines += ""
 
-    // ── Complicações ──────────────────────────────────────────────
+    // ---------- COMPLICAÇÕES ----------
     lines += "Complicações"
     lines += if (personagem.complicacoes.isEmpty()) {
         "– Nenhuma"
     } else {
+        // Aqui temos só IDs; imprimimos como vieram salvos.
         personagem.complicacoes.joinToString(", ")
     }
     lines += ""
 
-    // ── Equipamentos Comprados ───────────────────────────────────
-    lines += "Equipamentos Comprados"
-    if (personagem.equipamentos.isEmpty()) {
-        lines += "– Nenhum"
-    } else {
-        lines += personagem.equipamentos.joinToString(", ") { eq ->
-            val detalhes = mutableListOf(
-                "Custo: ${eq.custo}",
-                "Peso: ${eq.peso}"
-            )
-            eq.dano?.let     { detalhes += "Dano: $it" }
-            eq.armadura?.let { detalhes += "Armadura: $it" }
-            "${eq.nome} (${detalhes.joinToString(", ")})"
+    // ---------- PODERES ARCANOS (só se houver) ----------
+    if (personagem.poderes.isNotEmpty()) {
+        lines += "Poderes arcanos"
+        personagem.poderes.forEach { (arcanoKey, lista) ->
+            val label = arcanoKey
+                .lowercase()
+                .replace('_', ' ')
+                .replaceFirstChar { it.titlecase() }
+
+            lines += if (lista.isEmpty()) {
+                "• $label: – nenhum poder escolhido"
+            } else {
+                "• $label: ${lista.joinToString(", ")}"
+            }
         }
+        lines += ""
+    }
+
+    // ---------- SUPERPODERES (só se modo supers ativo) ----------
+    if (personagem.modoSupers &&
+        (personagem.superPontosTotais > 0 || personagem.gastosPorPoder.isNotEmpty())
+    ) {
+        lines += "Superpoderes"
+
+        if (personagem.gastosPorPoder.isEmpty()) {
+            lines += "– Nenhum superpoder registrado"
+        } else {
+            personagem.gastosPorPoder.forEach { (poderId, custo) ->
+                lines += "• $poderId: $custo SP"
+            }
+        }
+
+        lines += "Superpontos: ${personagem.superPontosTotais} (disponíveis: ${personagem.superPontosDisponiveis})"
+        lines += "Limite por poder: ${personagem.limitePorPoderPadrao}"
+        lines += ""
+    }
+
+    // ---------- ANOTAÇÕES (se houver) ----------
+    if (personagem.anotacoes.isNotBlank()) {
+        lines += "Anotações"
+        personagem.anotacoes
+            .lines()
+            .forEach { linha -> lines += linha }
     }
 
     return lines
@@ -1054,6 +1246,10 @@ class CriadorState {
     private val _maxedTraits = mutableStateListOf<String>()
     val maxedTraits: List<String> get() = _maxedTraits
     var idAtual by mutableStateOf<String?>(null)
+
+    // Campo de anotações livres do jogador
+    var anotacoes by mutableStateOf("")
+
     val comprasPpPorEstagio = mutableStateMapOf<String, Int>().apply {
         listaDeEstagios.forEach { this[it.nome] = 0 }
     }
@@ -3517,162 +3713,6 @@ fun PericiasDetailScreen(
     }
 }
 
-
-@Composable
-fun SummaryContent(state: CriadorState) {
-    // Para recalcular traits ao chegar em Lendário
-    LaunchedEffect(state.estagioAtual().nome, state.stageXpSpent.values.sum()) {
-        if (state.estagioAtual().nome == "Lendário") {
-            state.identifyMaxedTraits()
-        }
-    }
-
-    val scroll = rememberScrollState()
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(max = 600.dp)
-            .verticalScroll(scroll)
-            .padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        // — Ancestralidade sempre aparece —
-        Text("Ancestralidade: ${state.ancestralidade}")
-
-        // — Vantagens Raciais —
-        val raciais = state.vantagensAutomaticas.distinct()
-        Text("Vantagens raciais:")
-        if (raciais.isEmpty()) {
-            Text("  – Nenhuma", Modifier.padding(start = 8.dp))
-        } else {
-            raciais.forEach { v ->
-                Text("  • ${v.uppercase()}", Modifier.padding(start = 8.dp))
-            }
-        }
-
-        // — Vantagens —
-        val raciaisKeys = raciais.map { it.keyify() }
-        val outrasVants = state.vantagensSelecionadas.filter { it.nome.keyify() !in raciaisKeys }
-        Text("Vantagens:")
-        if (outrasVants.isEmpty()) {
-            Text("  – Nenhuma", Modifier.padding(start = 8.dp))
-        } else {
-            outrasVants.forEach { v ->
-                val label = v.choice?.let { "${v.nome} ($it)" } ?: v.nome
-                Text("  • ${label.uppercase()}", Modifier.padding(start = 8.dp))
-            }
-        }
-
-        // — Desvantagens Automáticas —
-        Text("Desvantagens automáticas:")
-        if (state.desvantagensAutomaticas.isEmpty()) {
-            Text("  – Nenhuma", Modifier.padding(start = 8.dp))
-        } else {
-            state.desvantagensAutomaticas.forEach { d ->
-                Text("  • $d", Modifier.padding(start = 8.dp))
-            }
-        }
-
-        // — Complicações —
-        Text("Complicações:")
-        val comps = state.complicacoesSelecionadas.filterValues { it != null }
-        if (comps.isEmpty()) {
-            Text("  – Nenhuma", Modifier.padding(start = 8.dp))
-        } else {
-            comps.forEach { (c, grau) ->
-                Text("  • ${c.name} ($grau)", Modifier.padding(start = 8.dp))
-            }
-        }
-
-        // — Atributos —
-        Text("Atributos:")
-        listaAtributos.forEach { nome ->
-            val raw = state.valoresAtributos[nome]!!.intValue
-            val display = mapaAtributosDisplay[nome] ?: nome
-            Text("  • $display: ${raw.toDiceString()}", Modifier.padding(start = 8.dp))
-        }
-
-        // — Perícias —
-        Text("Perícias:")
-        val toShow = listaPericias.filter { per ->
-            val humanStart = periciaStartRaw("HUMANOS", per)
-            per.basica || state.rawTotal(per) != humanStart
-        }
-        if (toShow.isEmpty()) {
-            Text("  – Nenhuma", Modifier.padding(start = 8.dp))
-        } else {
-            toShow.forEach { per ->
-                val raw = state.rawTotal(per)
-                Text("  • ${per.nome}: ${raw.toDiceString()}", Modifier.padding(start = 8.dp))
-            }
-        }
-
-        // — Aqui vem OU os Antecedentes Arcanos OU os Superpoderes —
-        if (state.modoSupers) {
-            Text("Superpoderes Comprados:", fontWeight = FontWeight.Bold)
-            val comprados = state.superPoderesComprados
-            if (comprados.isEmpty()) {
-                Text("  – Nenhum", Modifier.padding(start = 8.dp))
-            } else {
-                comprados.forEach { pp: PurchasedPower ->
-                    // pp.nome é a string "Balançar", pp.custo é o inteiro 3
-                    Text("  • ${pp.nome} ${pp.custo}", Modifier.padding(start = 8.dp))
-                }
-            }
-            Text(
-                "Custo total gasto: ${state.superPontosTotais - state.superPontosDisponiveis}",
-                Modifier.padding(start = 8.dp)
-            )
-        } else {
-            Spacer(Modifier.height(4.dp))
-            if (state.poderSlotsPorArcano.isNotEmpty()) {
-                Text("Antecedentes Arcanos:", fontWeight = FontWeight.Bold)
-                state.poderSlotsPorArcano.forEach { (arcKey, slots) ->
-                    val pp = arcanoInfo[arcKey]?.second ?: 0
-                    Text("  • ${arcKey.uppercase()} – PP: $pp", Modifier.padding(start = 8.dp))
-                    slots.filterNotNull().forEach { poder ->
-                        Text("    • $poder", Modifier.padding(start = 16.dp))
-                    }
-                }
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        // — Equipamentos Comprados —
-        Text("Equipamentos Comprados:", fontWeight = FontWeight.Bold)
-        if (state.equipamentosComprados.isEmpty()) {
-            Text("  – Nenhum", Modifier.padding(start = 8.dp))
-        } else {
-            state.equipamentosComprados.forEach { eq ->
-                Text("  • ${eq.nome}", Modifier.padding(start = 8.dp))
-            }
-        }
-    }
-}
-
-@Composable
-fun CircleStat(value: String, label: String) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .padding(4.dp)
-            .size(70.dp)
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .border(2.dp, Color.Red, CircleShape)
-        ) {
-            Text(value, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-        }
-        Text(label, fontSize = 12.sp, fontWeight = FontWeight.Medium)
-    }
-}
-
 @Composable
 fun PowerDropdownMenu(
     label: String,
@@ -3956,9 +3996,20 @@ fun TelaInicial(
     viewModel: CriadorViewModel
 ) {
     var showLoadDialog by rememberSaveable { mutableStateOf(false) }
-    // carrega já de cara todos os pares (displayName, fileKey)
-    var nomesSalvos by remember { mutableStateOf(StorageUtils.listarPersonagens(context)) }
+
+    // CORREÇÃO: Inicializa como lista vazia e carrega em background
+    var nomesSalvos by remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
     var pendingDelete by rememberSaveable { mutableStateOf<Pair<String, String>?>(null) }
+
+    // CORREÇÃO: Adiciona um CoroutineScope
+    val scope = rememberCoroutineScope()
+
+    // CORREÇÃO: Carrega a lista inicial de forma assíncrona
+    LaunchedEffect(Unit) {
+        nomesSalvos = withContext(Dispatchers.IO) {
+            StorageUtils.listarPersonagens(context)
+        }
+    }
 
     // Estados do diálogo de opções iniciais
     var showNewOptionsDialog by rememberSaveable { mutableStateOf(false) }
@@ -4009,14 +4060,20 @@ fun TelaInicial(
         Spacer(Modifier.height(16.dp))
         Button(
             onClick = {
-                nomesSalvos = StorageUtils.listarPersonagens(context)
-                if (nomesSalvos.isEmpty()) {
-                    Toast.makeText(context, "Nenhum personagem salvo.", Toast.LENGTH_SHORT).show()
-                } else {
-                    showLoadDialog = true
+                // CORREÇÃO: Atualiza a lista em background antes de mostrar
+                scope.launch(Dispatchers.IO) {
+                    val listaAtualizada = StorageUtils.listarPersonagens(context)
+                    withContext(Dispatchers.Main) {
+                        nomesSalvos = listaAtualizada // Atualiza o state na Main thread
+                        if (listaAtualizada.isEmpty()) {
+                            Toast.makeText(context, "Nenhum personagem salvo.", Toast.LENGTH_SHORT).show()
+                        } else {
+                            showLoadDialog = true
+                        }
+                    }
                 }
             },
-            enabled = nomesSalvos.isNotEmpty(),
+            enabled = nomesSalvos.isNotEmpty(), // <-- CORRIGIDO
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Carregar Personagem Salvo")
@@ -4363,12 +4420,16 @@ Feito por Rafael S.W.
                             Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    StorageUtils
-                                        .carregarPersonagem(context, fileKey)
-                                        ?.let { salvo ->
-                                            onLoad(salvo)
-                                            showLoadDialog = false
+                                    // CORREÇÃO: Carrega em background
+                                    scope.launch(Dispatchers.IO) {
+                                        val salvo = StorageUtils.carregarPersonagem(context, fileKey)
+                                        withContext(Dispatchers.Main) {
+                                            salvo?.let {
+                                                onLoad(it)
+                                                showLoadDialog = false
+                                            }
                                         }
+                                    }
                                 }
                                 .padding(12.dp),
                             verticalAlignment = Alignment.CenterVertically
@@ -4400,9 +4461,15 @@ Feito por Rafael S.W.
             text             = { Text("Deseja realmente excluir \"$displayName\"?") },
             confirmButton    = {
                 TextButton(onClick = {
-                    StorageUtils.deletarPersonagem(context, fileKey)
-                    nomesSalvos = StorageUtils.listarPersonagens(context)
-                    pendingDelete = null
+                    // CORREÇÃO: Deleta em background e atualiza a lista
+                    scope.launch(Dispatchers.IO) {
+                        StorageUtils.deletarPersonagem(context, fileKey)
+                        val listaAtualizada = StorageUtils.listarPersonagens(context)
+                        withContext(Dispatchers.Main) {
+                            nomesSalvos = listaAtualizada
+                            pendingDelete = null
+                        }
+                    }
                 }) {
                     Text("Excluir")
                 }

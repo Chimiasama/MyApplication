@@ -43,5 +43,8 @@ data class MeuPersonagem(
     val gastosPorPoder: Map<String, Int> = emptyMap(),      // PoderId -> custo gasto (para auditoria)
 
     // Para conferência de teto de mitigação definido pela campanha:
-    val limiteDePoderDaCampanha: Int = Int.MAX_VALUE
+    val limiteDePoderDaCampanha: Int = Int.MAX_VALUE,
+
+    // ===== ANOTAÇÕES LIVRES PARA RESUMO / FICHA =====
+    val anotacoes: String = ""
 )

@@ -38,7 +38,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.swadebuilder.CircleStat
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.SectionCard
 import com.example.swadebuilder.model.StorageUtils
@@ -48,6 +47,8 @@ import com.example.swadebuilder.valorArmaduraEfetiva
 import com.example.swadebuilder.valorMovimentacao
 import com.example.swadebuilder.valorResistenciaFinal
 import com.example.swadebuilder.valorTamanho
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonPrimitive
 import kotlin.math.roundToInt
 
@@ -59,12 +60,19 @@ fun InformacoesSection(
     val context = LocalContext.current
 
     // Gera um nome padrão "Nome 1", "Nome 2", ... Se estiver em branco
-    val nomesSalvos = remember { StorageUtils.listarPersonagens(context) }
+    // CORREÇÃO: Carrega a lista de forma assíncrona
+    val nomesSalvos = remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
 
-    LaunchedEffect(nomesSalvos) {
+    LaunchedEffect(Unit) {
+        nomesSalvos.value = withContext(Dispatchers.IO) {
+            StorageUtils.listarPersonagens(context)
+        }
+    }
+
+    LaunchedEffect(nomesSalvos.value) { // <- Reage à lista carregada
         if (state.nomePersonagem.isBlank()) {
             var idx = 1
-            while (nomesSalvos.any { it.first == "Nome $idx" }) {
+            while (nomesSalvos.value.any { it.first == "Nome $idx" }) {
                 idx++
             }
             state.nomePersonagem = "Nome $idx"
@@ -91,7 +99,7 @@ fun InformacoesSection(
                     .padding(bottom = 8.dp)
             )
 
-            // 2) Nome do personagem - ❗ força texto preto e container branco
+            // 2) Nome do personagem
             OutlinedTextField(
                 value = state.nomePersonagem,
                 onValueChange = { state.nomePersonagem = it },
@@ -107,7 +115,6 @@ fun InformacoesSection(
                 keyboardActions = KeyboardActions(
                     onDone = { focusManager.clearFocus() }
                 ),
-                // deixa o estilo e as cores virem do tema
                 textStyle = MaterialTheme.typography.bodyLarge,
                 colors = TextFieldDefaults.colors(
                     focusedTextColor = MaterialTheme.colorScheme.onSurface,
@@ -125,15 +132,10 @@ fun InformacoesSection(
             val justStarted = !state.emProgresso && state.creationComplete()
             val hasAnyXp    = state.progresso > 0
 
-            // verifica se os poderes arcanos já foram escolhidos
-            // Em vez de olhar para o NOME ("ANTECEDENTE ARCANO ..."), usamos a CHOICE selecionada.
-            // Isso alinha com a chave usada em PoderesSection para criar/checar os slots.
             val arcanoVersions: List<String> = state.vantagensSelecionadas
                 .filter { it.id == "antecedente_arcano" }
-                .mapNotNull { it.choice?.keyify() }   // ex.: "Dom" -> "dom"
+                .mapNotNull { it.choice?.keyify() }
 
-// Regra: se não houver Antecedente Arcano, não há nada a checar -> true.
-// Se houver AA, todos os slots do(s) arcano(s) escolhido(s) precisam estar preenchidos.
             val poderesOk = if (arcanoVersions.isEmpty()) {
                 true
             } else {
@@ -143,14 +145,8 @@ fun InformacoesSection(
                 }
             }
 
-            // --- Fluxo: só libera progressos depois de terminar supers ---
-// Terminou supers quando já confirmou nível (tem total) e zerou o disponível
             val supersTerminados = (state.superPontosTotais > 0) && (state.superPontosDisponiveis == 0)
-
-// Pode abrir o diálogo de progressos se já terminou supers OU se já está em progresso
             val podeAbrirProgressos = state.emProgresso || supersTerminados
-
-// Pode usar progresso quando terminou supers, tem progressos disponíveis e não há PV pendente
             val podeUsarProgresso = supersTerminados &&
                     (state.progressosDisponiveis > 0) &&
                     (state.pontosVantagem == 0)
@@ -171,7 +167,6 @@ fun InformacoesSection(
                 Spacer(Modifier.width(8.dp))
                 Button(
                     onClick = {
-                        // Inicia fase de progressos -> SupersDialog ficará travado (supersEditaveis = false)
                         state.emProgresso = true
                         if (state.progressosDisponiveis > 0 && state.pontosVantagem == 0) {
                             onUseProgress()
@@ -215,9 +210,8 @@ fun InformacoesSection(
                     val temArmaduraDeEquip = state.equipamentosComprados.any { it.armadura != null }
                     val bonusSemArmadura = if (state.heroisSemArmadura && !temArmaduraDeEquip) 2 else 0
 
-                    // ► Agora usa os derivados com SUPERS
-                    val baseFinal = state.valorResistenciaFinal()                 // inclui bonusResFromPower
-                    val armaduraEfetiva = state.valorArmaduraEfetiva()            // inclui armorFromPower (ou do equipamento) + naturalArmorFromRace
+                    val baseFinal = state.valorResistenciaFinal()
+                    val armaduraEfetiva = state.valorArmaduraEfetiva()
                     val total = baseFinal + armaduraEfetiva + bonusSemArmadura
 
                     CircleStat(
@@ -286,7 +280,6 @@ fun InformacoesSection(
                 }
                 .sum()
 
-            // bonus de carga por vantagens
             val hasMusculoso = state.vantagensSelecionadas.any {
                 it.nome.keyify() == "musculoso"
             }
