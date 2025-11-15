@@ -26,7 +26,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -83,7 +82,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -2331,8 +2329,6 @@ class CriadorState {
         recalcularPontosAtributo()
     }
 
-    fun canChangeAncestralidade(): Boolean = true
-
     var emProgresso by mutableStateOf(false)
 
     fun creationComplete(): Boolean =
@@ -2794,135 +2790,7 @@ fun AtributosDetailScreen(onBack: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AncestralidadesContent(state: CriadorState) {
-    val locked = state.progresso > 0
-    var expAnc by rememberSaveable { mutableStateOf(false) }
-    var showMeioElfoDialog by rememberSaveable { mutableStateOf(false) }
-    var pendingMeioElfoKey by rememberSaveable { mutableStateOf<String?>(null) }
 
-    ExposedDropdownMenuBox(
-        expanded = expAnc,
-        onExpandedChange = { if (!locked) expAnc = !expAnc }
-    ) {
-        OutlinedTextField(
-            value = state.ancestralidade,
-            onValueChange = {},
-            readOnly = true,
-            label = { Text("Ancestralidade") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expAnc) },
-            enabled = !locked,
-            colors = TextFieldDefaults.colors(
-                // Cores quando Ativado
-                focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black,
-                focusedIndicatorColor = Color.Black,      // Corrigido
-                unfocusedIndicatorColor = Color.Black,    // Corrigido
-                focusedTrailingIconColor = Color.Black,
-                unfocusedTrailingIconColor = Color.Black,
-                focusedLabelColor = Color.Black,
-                unfocusedLabelColor = Color.Black,
-
-                // Cores quando Desativado (para ficar cinza)
-                disabledTextColor = Color.Gray,
-                disabledIndicatorColor = Color.Gray,    // Corrigido
-                disabledTrailingIconColor = Color.Gray,
-                disabledLabelColor = Color.Gray
-            ),
-            // --- FIM DA CORREÇÃO ---
-
-            modifier = Modifier
-                .fillMaxWidth()
-                .alpha(if (locked) 0.3f else 1f)
-                .menuAnchor(
-                    ExposedDropdownMenuAnchorType.PrimaryNotEditable,
-                    enabled = !locked      // mesmo estado do enabled do campo
-                )
-                .combinedClickable(
-                    enabled = !locked,
-                    onClick = { expAnc = true },
-                    onLongClick = {
-                        if (state.canChangeAncestralidade())
-                            state.aplicarAncestralidade("HUMANOS")
-                    }
-                )
-        )
-        ExposedDropdownMenu(
-            expanded = expAnc,
-            onDismissRequest = { expAnc = false },
-            modifier = Modifier
-                .heightIn(max = 300.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            listaAncestralidadesJson.forEach { anc ->
-                DropdownMenuItem(
-                    text = { Text(anc.nome) },
-                    onClick = {
-                        expAnc = false
-                        val key = anc.nome.keyify()
-                        if (key == state.ancestralidade) return@DropdownMenuItem
-
-                        if (key == "MEIO-ELFOS") {
-                            pendingMeioElfoKey = key
-                            showMeioElfoDialog = true
-                        } else {
-                            pendingMeioElfoKey = null
-                            state.aplicarAncestralidade(key)
-                        }
-                    },
-                    enabled = !locked
-                )
-            }
-        }
-    }
-
-    if (showMeioElfoDialog && pendingMeioElfoKey != null) {
-        val key = pendingMeioElfoKey!!
-        AlertDialog(
-            onDismissRequest = { showMeioElfoDialog = false },
-            title   = { Text("Meio-Elfo: escolha sua herança") },
-            text    = { Text("Selecione qual benefício você gostaria de herdar:") },
-            confirmButton = {
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Button(
-                        onClick = {
-                            state.aplicarAncestralidade(key)
-                            state.pontosVantagem += 1
-                            showMeioElfoDialog = false
-                        },
-                        modifier = Modifier.defaultMinSize(minWidth = 100.dp)
-                    ) {
-                        Text("ADAPTÁVEL")
-                    }
-                    Button(
-                        onClick = {
-                            state.aplicarAncestralidade(key)
-                            state.valoresAtributos["AGILIDADE"]!!.intValue = 6
-                            (racialAttrMinMap as MutableMap)[key] =
-                                (racialAttrMinMap[key] ?: emptyMap()) + ("AGILIDADE" to 6)
-                            state.recalcularPontosAtributo()
-                            showMeioElfoDialog = false
-                        },
-                        modifier = Modifier.defaultMinSize(minWidth = 100.dp)
-                    ) {
-                        Text("AGILIDADE")
-                    }
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showMeioElfoDialog = false }) {
-                    Text("Cancelar")
-                }
-            }
-        )
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -3343,15 +3211,12 @@ fun UnifiedScreen(
             onSelectAncestralidade = { nome ->
                 val key = nome.uppercase().semAcentos()
 
-                // se escolheu a mesma, não faz nada
                 if (key == state.ancestralidade) return@AncestralidadesSection
 
                 if (key == "MEIO-ELFOS") {
-                    // guarda a escolha e abre o diálogo de herança
                     pendingMeioElfoKey = key
                     showMeioElfoDialog = true
                 } else {
-                    // qualquer outra ancestralidade aplica direto
                     pendingMeioElfoKey = null
                     state.aplicarAncestralidade(key)
                 }

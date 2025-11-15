@@ -68,8 +68,14 @@ fun SupersDialog(
     onConfirmLock: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    // <- NOVO: só permite editar supers durante a fase de supers e antes dos progressos
-    val supersEditaveis = state.faseSupersAtiva && !state.emProgresso
+    // <- AGORA: só permite editar supers se:
+    //    1) a fase de supers já foi iniciada
+    //    2) ainda não está em Progressos
+    //    3) a ficha básica está completa (creationComplete)
+    val supersEditaveis =
+        state.faseSupersAtiva &&
+                !state.emProgresso &&
+                state.creationComplete()
 
     val snackHost = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -82,11 +88,17 @@ fun SupersDialog(
     val candidatosFav: List<Pair<String, String>> = remember {
         buildList {
             add("sp_armor" to "Armadura (super)")
-            add("sp_res" to "Resistência (super)")
+            add("sp_res"   to "Resistência (super)")
             add("sp_aparar" to "Aparar (super)")
-            listaAtributos.forEach { a -> add("sp_attr_${a.uppercase()}" to "Superatributo: $a") }
-            listaPericias.forEach { p -> add("sp_pericia_${p.nome.uppercase()}" to "Superperícia: ${p.nome}") }
-            listaVantagens.forEach { v -> add("sp_vant_${v.id}" to "Supervantagem: ${v.nome}") }
+            listaAtributos.forEach { a ->
+                add("sp_attr_${a.uppercase()}" to "Superatributo: $a")
+            }
+            listaPericias.forEach { p ->
+                add("sp_pericia_${p.nome.uppercase()}" to "Superperícia: ${p.nome}")
+            }
+            listaVantagens.forEach { v ->
+                add("sp_vant_${v.id}" to "Supervantagem: ${v.nome}")
+            }
         }
     }
 
@@ -134,13 +146,30 @@ fun SupersDialog(
                         Text("Limite por poder (padrão): ${state.limitePorPoderPadrao}")
                         Text("Limite favorecido: ${state.limiteFavorecido}")
                         Spacer(Modifier.height(6.dp))
-                        Text("Teto combinado (A+R por supers): ${state.armorFromPower + state.bonusResFromPower} / ${state.limiteDePoderDaCampanha}")
+                        Text(
+                            "Teto combinado (A+R por supers): " +
+                                    "${state.armorFromPower + state.bonusResFromPower} / ${state.limiteDePoderDaCampanha}"
+                        )
                     }
+                }
+
+                // >>> mensagem de bloqueio enquanto a ficha inicial não estiver completa
+                if (!state.creationComplete()) {
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        "Antes de investir em superpoderes, termine de distribuir os pontos iniciais " +
+                                "(Atributos, Perícias, Vantagens e Complicações).",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
 
                 if (temOMelhorQueHa) {
                     Spacer(Modifier.height(12.dp))
-                    Text("Poder favorecido (O MELHOR QUE HÁ) — obrigatório", fontWeight = FontWeight.SemiBold)
+                    Text(
+                        "Poder favorecido (O MELHOR QUE HÁ) — obrigatório",
+                        fontWeight = FontWeight.SemiBold
+                    )
                     Spacer(Modifier.height(6.dp))
                     ExposedDropdownMenuBox(
                         expanded = favExpanded,
@@ -152,9 +181,14 @@ fun SupersDialog(
                             value = label,
                             onValueChange = {},
                             readOnly = true,
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = favExpanded) },
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = favExpanded)
+                            },
                             modifier = Modifier
-                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, enabled = true)
+                                .menuAnchor(
+                                    ExposedDropdownMenuAnchorType.PrimaryNotEditable,
+                                    enabled = true
+                                )
                                 .fillMaxWidth()
                         )
                         DropdownMenu(
@@ -162,30 +196,24 @@ fun SupersDialog(
                             onDismissRequest = { favExpanded = false }
                         ) {
                             candidatosFav.forEach { (id, nome) ->
-                                val podeTrocar =
-                                    state.idPoderFavorecido == null ||
-                                            state.idPoderFavorecido == id ||
-                                            (state.gastosPorPoder[state.idPoderFavorecido]?.let { it == 0 } ?: true)
-
                                 DropdownMenuItem(
-                                    text = { Text("$nome  [${badgeText(id)}]") },
+                                    text = { Text(nome) },
                                     onClick = {
-                                        if (!podeTrocar) {
-                                            scope.launch { snackHost.showSnackbar("Só é possível trocar o favorecido se o atual tiver 0 pontos investidos.") }
-                                            return@DropdownMenuItem
-                                        }
                                         localFavId = id
                                         state.idPoderFavorecido = id
                                         favExpanded = false
-                                    },
-                                    enabled = podeTrocar
+                                    }
                                 )
                             }
                         }
                     }
-                    if (precisaDefinirFav) {
+
+                    if (precisaDefinirFav && supersEditaveis) {
                         Spacer(Modifier.height(6.dp))
-                        Text("Defina o poder favorecido para liberar gastos.", color = Color(0xFFB00020))
+                        Text(
+                            "Defina o poder favorecido para liberar gastos.",
+                            color = Color(0xFFB00020)
+                        )
                     }
                 }
 
@@ -194,7 +222,7 @@ fun SupersDialog(
                 HorizontalDivider()
                 Spacer(Modifier.height(8.dp))
 
-                // --- ÁREA ROLÁVEL (apenas a lista)
+                // --- ÁREA ROLÁVEL (lista de poderes) ---
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -465,10 +493,15 @@ fun SupersDialog(
                 }
 
                 // rodapé
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
                     TextButton(onClick = onDismiss) { Text("Cancelar") }
                     Spacer(Modifier.width(8.dp))
-                    TextButton(onClick = { onConfirmLock(); onDismiss() }) { Text("Confirmar") }
+                    TextButton(onClick = { onConfirmLock(); onDismiss() }) {
+                        Text("Confirmar")
+                    }
                 }
             }
         }

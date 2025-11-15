@@ -20,6 +20,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
@@ -33,7 +34,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -128,7 +128,9 @@ fun BuySuperPowerDialog(
     }
 
     val modCost by remember(modStates) {
-        derivedStateOf { modStates.filter { it.included.value }.sumOf { it.selected.value } }
+        androidx.compose.runtime.derivedStateOf {
+            modStates.filter { it.included.value }.sumOf { it.selected.value }
+        }
     }
 
     // ---------- CAP: por poder + pool disponível ----------
@@ -218,7 +220,8 @@ fun BuySuperPowerDialog(
                                             val outros = modStates
                                                 .filter { it.included.value && it != mod }
                                                 .sumOf { it.selected.value }
-                                            val futuroTotal = allowedBaseOptions[baseIdx] + outros + clamp
+                                            val futuroTotal =
+                                                allowedBaseOptions[baseIdx] + outros + clamp
                                             if (futuroTotal <= totalCap) {
                                                 mod.selected.value = clamp
                                             }
@@ -265,8 +268,32 @@ fun SuperPoderesSection(
 
     var poderParaComprar by remember { mutableStateOf<SuperPoder?>(null) }
     val nivelAtual = state.superNivelCampanha ?: 1
-    val sliderEnabled = state.creationComplete()
+    // criação básica precisa estar pronta
+    val supersLiberados = state.creationComplete()
+    // se já gastou qualquer ponto de super, o nível trava
+    val jaInvestiuSupers = state.superPontosDisponiveis < state.superPontosTotais
+    val podeEditarNivel = supersLiberados && !jaInvestiuSupers
+
+    var showNivelDialog by rememberSaveable { mutableStateOf(false) }
+
     val scope = rememberCoroutineScope()
+
+    // função helper: aplicar o nível (igual ao que o slider fazia)
+    fun aplicarNivelSuper(novoNivel: Int) {
+        val nivel = novoNivel.coerceIn(1, 5)
+        state.superNivelCampanha = nivel
+
+        val total  = 15 * nivel           // 15 pts por nível
+        val limite = 5  * nivel           // 1/3 do total
+
+        state.superPontosTotais   = total
+        state.superLimite         = limite
+        state.superLimitePorPoder = limite
+
+        // recalcula gastos pelos poderes (mais robusto)
+        val gastos = state.gastosPorPoder.values.sum()
+        state.superPontosDisponiveis = (total - gastos).coerceAtLeast(0)
+    }
 
     LaunchedEffect(Unit) {
         // Inicialização mínima se veio “cru” do load
@@ -275,8 +302,7 @@ fun SuperPoderesSection(
                 it.nome.equals("Superpoderes", ignoreCase = true)
             }
             if (v != null) {
-                state.superNivelCampanha = 1
-                state.aplicarSuperpoderes(nivel = 1, usarProgresso = false)
+                aplicarNivelSuper(1)
             }
         }
     }
@@ -299,29 +325,47 @@ fun SuperPoderesSection(
             Spacer(Modifier.height(8.dp))
         }
 
-        // 2) slider de nível e info de pontos/limite
-        Text("Nível de Superpoderes: $nivelAtual")
-        Slider(
-            value = nivelAtual.toFloat(),
-            onValueChange = { valor ->
-                val novoNivel = valor.roundToInt().coerceIn(1, 5)
-                // 1) atualiza nível
-                state.superNivelCampanha = novoNivel
-                // 2) (re)calcula TOTAL e LIMITE a partir do nível
-                val total  = 15 * novoNivel          // 15 pts por nível
-                val limite = 5  * novoNivel          // 1/3 do total (5 * nível)
-                state.superPontosTotais   = total
-                state.superLimite         = limite
-                state.superLimitePorPoder = limite
-                // 3) recalc dos disponíveis (subtraindo já gastos)
-                val gastos = state.superPoderesComprados.sumOf { it.custo }
-                state.superPontosDisponiveis = (total - gastos).coerceAtLeast(0)
-            },
-            valueRange = 1f..5f,
-            steps = 4,
-            enabled = sliderEnabled,
-            modifier = Modifier.fillMaxWidth()
-        )
+        // 2) seleção de nível (no lugar do slider)
+        Text("Nível de Superpoderes")
+        Spacer(Modifier.height(4.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(enabled = podeEditarNivel) {
+                    if (podeEditarNivel) showNivelDialog = true
+                }
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(Modifier.weight(1f)) {
+                Text(
+                    text = "Nível atual: $nivelAtual",
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = "Pontos: ${state.superPontosTotais} • Limite por poder: ${state.superLimite}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Icon(
+                imageVector = Icons.Filled.ExpandMore,
+                contentDescription = "Selecionar nível",
+            )
+        }
+
+        if (!supersLiberados) {
+            Text(
+                "Termine a distribuição inicial do personagem para escolher o nível de superpoderes.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error
+            )
+        } else if (jaInvestiuSupers) {
+            Text(
+                "Para alterar o nível, devolva todos os pontos de superpoder já gastos.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
 
         Spacer(Modifier.height(4.dp))
         Text("Pontos disponíveis: ${state.superPontosDisponiveis}")
@@ -340,7 +384,8 @@ fun SuperPoderesSection(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .clickable { poderParaComprar = poder }
+                        // clique só funciona se supersLiberados == true
+                        .clickable(enabled = supersLiberados) { poderParaComprar = poder }
                         .padding(vertical = 6.dp, horizontal = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -352,61 +397,107 @@ fun SuperPoderesSection(
         }
     }
 
-    // 4) diálogo de compra (base/mods) + casos especiais
+    // 4) diálogo de escolha de nível
+    if (showNivelDialog) {
+        AlertDialog(
+            onDismissRequest = { showNivelDialog = false },
+            title = { Text("Escolher nível de Superpoderes") },
+            text = {
+                Column(Modifier.fillMaxWidth()) {
+                    (1..5).forEach { nivel ->
+                        val total  = 15 * nivel
+                        val limite = 5  * nivel
+                        TextButton(
+                            onClick = {
+                                aplicarNivelSuper(nivel)
+                                showNivelDialog = false
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(Modifier.fillMaxWidth()) {
+                                Text(
+                                    text = "Nível $nivel",
+                                    fontWeight = if (nivel == nivelAtual)
+                                        FontWeight.Bold else FontWeight.Normal
+                                )
+                                Text(
+                                    text = "Pontos: $total • Limite por poder: $limite",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showNivelDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
+    // 5) diálogo de compra (base/mods) + casos especiais
     var showSuperAttrPicker by rememberSaveable { mutableStateOf(false) }
     var poolSuperAttr by rememberSaveable { mutableIntStateOf(0) }
 
     poderParaComprar?.let { poder ->
-        BuySuperPowerDialog(
-            poder = poder,
-            pontosDisponiveis = state.superPontosDisponiveis,
-            limitePorPoder = state.superLimitePorPoder,
-            onConfirm = { baseCost, custoTotal ->
-                val nome = poder.nome.trim().uppercase()
-                when {
-                    // >>> AQUI A CORREÇÃO DO APARAR <<<
-                    nome == "APARAR" -> {
-                        viewModel.tentarInvestirSuper(
-                            poderId = "sp_aparar",
-                            custo   = custoTotal,              // o que gasta do pool
-                            efeito  = PowerEffect.BonusAparar(baseCost) // só o custo base entra no Aparar
-                        )
-                    }
+        // Se por algum motivo o estado mudar e os supers forem bloqueados,
+        // garantimos que o diálogo não abre / é fechado.
+        if (!supersLiberados) {
+            poderParaComprar = null
+        } else {
+            BuySuperPowerDialog(
+                poder = poder,
+                pontosDisponiveis = state.superPontosDisponiveis,
+                limitePorPoder = state.superLimitePorPoder,
+                onConfirm = { baseCost, custoTotal ->
+                    val nome = poder.nome.trim().uppercase()
+                    when {
+                        nome == "APARAR" -> {
+                            viewModel.tentarInvestirSuper(
+                                poderId = "sp_aparar",
+                                custo   = custoTotal,
+                                efeito  = PowerEffect.BonusAparar(baseCost)
+                            )
+                        }
 
-                    nome == "ARMADURA" -> {
-                        viewModel.tentarInvestirSuper(
-                            poderId = "sp_armor",
-                            custo   = custoTotal,
-                            efeito  = PowerEffect.BonusArmadura(custoTotal * 2)
-                        )
-                    }
+                        nome == "ARMADURA" -> {
+                            viewModel.tentarInvestirSuper(
+                                poderId = "sp_armor",
+                                custo   = custoTotal,
+                                efeito  = PowerEffect.BonusArmadura(custoTotal * 2)
+                            )
+                        }
 
-                    nome == "RESISTÊNCIA" || nome == "RESISTENCIA" -> {
-                        viewModel.tentarInvestirSuper(
-                            poderId = "sp_res",
-                            custo   = custoTotal,
-                            efeito  = PowerEffect.BonusResistencia(custoTotal)
-                        )
-                    }
+                        nome == "RESISTÊNCIA" || nome == "RESISTENCIA" -> {
+                            viewModel.tentarInvestirSuper(
+                                poderId = "sp_res",
+                                custo   = custoTotal,
+                                efeito  = PowerEffect.BonusResistencia(custoTotal)
+                            )
+                        }
 
-                    // Super Atributo: custo vira pool/2 em steps
-                    nome == "SUPERATRIBUTO" || nome == "SUPER ATRIBUTO" -> {
-                        poolSuperAttr = custoTotal / 2
-                        showSuperAttrPicker = true
-                    }
+                        // Super Atributo: custo vira pool/2 em steps
+                        nome == "SUPERATRIBUTO" || nome == "SUPER ATRIBUTO" -> {
+                            poolSuperAttr = custoTotal / 2
+                            showSuperAttrPicker = true
+                        }
 
-                    else -> {
-                        // fallback simples (apenas registrar gasto com id do poder)
-                        state.comprarSuperPoder(poder.nome, custoTotal)
+                        else -> {
+                            // fallback simples (apenas registrar gasto com id do poder)
+                            state.comprarSuperPoder(poder.nome, custoTotal)
+                        }
                     }
-                }
-                poderParaComprar = null
-            },
-            onDismiss = { poderParaComprar = null }
-        )
+                    poderParaComprar = null
+                },
+                onDismiss = { poderParaComprar = null }
+            )
+        }
     }
 
-    // 5) picker de SuperAtributos (2:1)
+    // 6) picker de SuperAtributos (2:1)
     if (showSuperAttrPicker) {
         SuperAtributosPickerDialog(
             state = state,
