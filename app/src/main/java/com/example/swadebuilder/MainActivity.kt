@@ -1,7 +1,7 @@
 @file:OptIn(
     ExperimentalMaterial3Api::class
 )
-@file:Suppress("DEPRECATION", "LanguageDetectionInspection")
+@file:Suppress("LanguageDetectionInspection")
 
 package com.example.swadebuilder
 
@@ -27,7 +27,21 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -56,13 +70,13 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
@@ -311,7 +325,7 @@ class MainActivity : ComponentActivity() {
 
             if (showExitDialog) {
                 AlertDialog(
-                    onDismissRequest = { showExitDialog = false },
+                    onDismissRequest = { },
                     title            = { Text("Deseja encerrar o app?") },
                     confirmButton    = {
                         TextButton(onClick = {
@@ -321,7 +335,7 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     dismissButton    = {
-                        TextButton(onClick = { showExitDialog = false }) {
+                        TextButton(onClick = { }) {
                             Text("Não")
                         }
                     }
@@ -1816,7 +1830,8 @@ class CriadorState {
         if (v.requisitos.vantagensPrevias.isNotEmpty()) {
             val faltam = v.requisitos.vantagensPrevias.any { prevId ->
                 when (prevId) {
-                    // Requisito "genérico": aceita QUALQUER subtipo de AA ou o seletor com choice definido
+                    // Requisito "genérico": aceita QUALQUER subtipo de AA
+                    // ou o seletor base com choice definido
                     "antecedente_arcano", "antecedente_arcano:*" -> {
                         vantagensSelecionadas.none { poss ->
                             poss.id.startsWith("antecedente_arcano_") ||
@@ -1824,11 +1839,10 @@ class CriadorState {
                         }
                     }
                     else -> {
-                        // Requisito "específico": exige ID exata (ex.: antecedente_arcano_milagres)
+                        // Requisito "específico": exige ID exata (ex.: antecedente_arcano_milagres,
+                        // comando, etc.)
                         vantagensSelecionadas.none { poss ->
-                            poss.id == prevId ||
-                                    // fallback: se alguém ainda vier com o base, considerar atendido por qualquer subtipo
-                                    (prevId == "antecedente_arcano" && poss.id.startsWith("antecedente_arcano_"))
+                            poss.id == prevId
                         }
                     }
                 }
@@ -2068,7 +2082,7 @@ class CriadorState {
         val newAttrMods = racialAttrMinMap[anc] ?: emptyMap()
 
         listaAtributos.forEach { nome ->
-            val st    = valoresAtributos[nome]!!
+            val st     = valoresAtributos[nome]!!
             val newMin = newAttrMods[nome] ?: 4
 
             // teto novo baseado no mínimo racial (d12, d12+1, d12+2, ...)
@@ -2081,10 +2095,10 @@ class CriadorState {
 
             // reaplica cada ponto gasto nesse atributo,
             // respeitando o novo teto e a lógica de steps (até 12: +2, acima de 12: +1)
-            for (i in 0 until stack.size) {
+            repeat(stack.size) {
                 val candidate = if (raw < 12) raw + 2 else raw + 1
                 if (candidate > newMax) {
-                    break
+                    return@repeat
                 }
                 raw = candidate
                 appliedSteps++
@@ -2603,7 +2617,6 @@ fun ProgressosSection(state: CriadorState) {
             ProgressosDialog(state) {
                 state.frozenAdvCount = state.vantagensSelecionadas.size
                 state.emProgresso    = true
-                showDialog          = false
             }
         }
     }
@@ -2800,8 +2813,6 @@ fun AncestralidadesContent(state: CriadorState) {
             label = { Text("Ancestralidade") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expAnc) },
             enabled = !locked,
-
-            // --- CORREÇÃO APLICADA AQUI ---
             colors = TextFieldDefaults.colors(
                 // Cores quando Ativado
                 focusedTextColor = Color.Black,
@@ -2824,11 +2835,14 @@ fun AncestralidadesContent(state: CriadorState) {
             modifier = Modifier
                 .fillMaxWidth()
                 .alpha(if (locked) 0.3f else 1f)
-                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                .menuAnchor(
+                    ExposedDropdownMenuAnchorType.PrimaryNotEditable,
+                    enabled = !locked      // mesmo estado do enabled do campo
+                )
                 .combinedClickable(
                     enabled = !locked,
-                    onClick    = { expAnc = true },
-                    onLongClick= {
+                    onClick = { expAnc = true },
+                    onLongClick = {
                         if (state.canChangeAncestralidade())
                             state.aplicarAncestralidade("HUMANOS")
                     }
@@ -3231,7 +3245,6 @@ fun VantagensDetailScreen(
 @Composable
 fun PreviewApp() {
     val state = remember { CriadorState() }
-
     UnifiedScreen(
         state = state,
         onOpenVantagensDetail = {},
@@ -3240,25 +3253,22 @@ fun PreviewApp() {
         onOpenAtributosDetail = {},
         onOpenListaAncestralidadesDetail = {},
         onOpenListaCompletaEquipamento = {},
-        onOpenPoderesDetail = {},          // Lista completa de PODERES (magias)
-        onOpenSuperPoderesDetail = {},     // Lista completa de SUPERPODERES
+
+        onOpenPoderesDetail = {},
+        onOpenSuperPoderesDetail = {},
+
         onHelpSuperClick = {},
 
         expAttrs = true,
         onToggleAttrs = {},
-
         expPer = true,
         onTogglePer = {},
-
         expVants = true,
         onToggleVants = {},
-
         expResumo = true,
         onToggleResumo = {},
-
         expPoderes = true,
         onTogglePoderes = {},
-
         equipamentoCategorias = emptyList(),
         superequipCategorias = emptyList(),
         listaSuperPoderes = emptyList()
@@ -3276,8 +3286,8 @@ fun UnifiedScreen(
     onOpenAtributosDetail: () -> Unit,
     onOpenListaAncestralidadesDetail: () -> Unit,
     onOpenListaCompletaEquipamento: () -> Unit,
-    onOpenPoderesDetail: () -> Unit,        // lista completa de MAGIAS
-    onOpenSuperPoderesDetail: () -> Unit,   // lista completa de SUPERPODERES
+    onOpenPoderesDetail: () -> Unit,
+    onOpenSuperPoderesDetail: () -> Unit,
     onHelpSuperClick: () -> Unit,
 
     expAttrs: Boolean,
@@ -3296,7 +3306,6 @@ fun UnifiedScreen(
     onTogglePoderes: () -> Unit,
 
     equipamentoCategorias: List<EquipamentoCategoria>,
-
     superequipCategorias: List<EquipamentoCategoria>,
     listaSuperPoderes: List<SuperPoder>
 ) {
@@ -3307,6 +3316,11 @@ fun UnifiedScreen(
     }
     var showAllocDialog by rememberSaveable { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+
+    // --- estados para o MEIO-ELFO ---
+    var showMeioElfoDialog by rememberSaveable { mutableStateOf(false) }
+    var pendingMeioElfoKey by rememberSaveable { mutableStateOf<String?>(null) }
+    // ---------------------------------
 
     Column(
         modifier = Modifier
@@ -3327,7 +3341,20 @@ fun UnifiedScreen(
             currentAncestralidade = state.ancestralidade,
             onOpenListaAncestralidadesDetail = onOpenListaAncestralidadesDetail,
             onSelectAncestralidade = { nome ->
-                state.aplicarAncestralidade(nome.uppercase().semAcentos())
+                val key = nome.uppercase().semAcentos()
+
+                // se escolheu a mesma, não faz nada
+                if (key == state.ancestralidade) return@AncestralidadesSection
+
+                if (key == "MEIO-ELFOS") {
+                    // guarda a escolha e abre o diálogo de herança
+                    pendingMeioElfoKey = key
+                    showMeioElfoDialog = true
+                } else {
+                    // qualquer outra ancestralidade aplica direto
+                    pendingMeioElfoKey = null
+                    state.aplicarAncestralidade(key)
+                }
             }
         )
 
@@ -3374,8 +3401,8 @@ fun UnifiedScreen(
         ) {
             VantagensContent(
                 state = state,
-                multiplosAAHabilitados = state.permiteMultiAntecedenteArcano, // usa o que vem da tela inicial
-                onOpenVantagensDetail = onOpenVantagensDetail
+                multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
+                onOpenVantagensDetail  = onOpenVantagensDetail
             )
         }
 
@@ -3383,13 +3410,17 @@ fun UnifiedScreen(
         if (state.vantagensSelecionadas.any { it.nome.keyify().startsWith("ANTECEDENTE ARCANO") }) {
             HorizontalDivider(thickness = 1.dp)
 
+            // ─── Poderes (magias) ─────────────────────────────────────────────────────
             SectionCard(
                 title    = "Poderes",
                 expanded = expPoderes,
                 onToggle = onTogglePoderes,
                 icon     = Icons.Default.FlashOn
             ) {
-                PoderesSection(state, onOpenPoderesDetail)
+                PoderesSection(
+                    state = state,
+                    onOpenListaCompletaPoderes = onOpenPoderesDetail
+                )
             }
         }
 
@@ -3404,15 +3435,14 @@ fun UnifiedScreen(
                 expanded              = expSupers,
                 onToggle              = { expSupers = !expSupers },
                 onOpenSuperPoderesDetail = onOpenSuperPoderesDetail,
-                onHelpClick           = onHelpSuperClick,
+                onHelpClick           = onHelpSuperClick
             )
-            Spacer(Modifier.height(8.dp))
-            HorizontalDivider(thickness = 1.dp)
         }
 
+        // ─── Equipamentos ─────────────────────────────────────────────────────────
         EquipamentoSection(
             dinheiro                 = state.dinheiro,
-            onHelpClick              = { /* ... */ },
+            onHelpClick              = { /* help opcional aqui */ },
             onListaCompletaClick     = onOpenListaCompletaEquipamento,
             onEquipamentoDoubleClick = { equipamento ->
                 val custo = (equipamento.custo as? JsonPrimitive)
@@ -3429,8 +3459,8 @@ fun UnifiedScreen(
                 state.equipamentosComprados.remove(equipamento)
                 state.dinheiro += custo
             },
-            categorias               = equipamentoCategorias,
-            superequipCategorias     = if (state.modoSuperequip) superequipCategorias else emptyList()
+            categorias           = equipamentoCategorias,
+            superequipCategorias = if (state.modoSuperequip) superequipCategorias else emptyList()
         )
 
         Spacer(Modifier.height(16.dp))
@@ -3454,6 +3484,55 @@ fun UnifiedScreen(
                 showAllocDialog      = false
             }
         }
+    }
+
+    // ─── Diálogo especial do MEIO-ELFO ───────────────────────────────────────────
+    if (showMeioElfoDialog && pendingMeioElfoKey != null) {
+        val key = pendingMeioElfoKey!!
+        AlertDialog(
+            onDismissRequest = { showMeioElfoDialog = false },
+            title   = { Text("Meio-Elfo: escolha sua herança") },
+            text    = { Text("Selecione qual benefício você gostaria de herdar:") },
+            confirmButton = {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            // herda ADAPTÁVEL (humano) → +1 ponto de vantagem
+                            state.aplicarAncestralidade(key)
+                            state.pontosVantagem += 1
+                            showMeioElfoDialog = false
+                        },
+                        modifier = Modifier.defaultMinSize(minWidth = 100.dp)
+                    ) {
+                        Text("ADAPTÁVEL")
+                    }
+                    Button(
+                        onClick = {
+                            // herda AGILIDADE d6 (como elfos)
+                            state.aplicarAncestralidade(key)
+                            state.valoresAtributos["AGILIDADE"]!!.intValue = 6
+                            (racialAttrMinMap as MutableMap)[key] =
+                                (racialAttrMinMap[key] ?: emptyMap()) + ("AGILIDADE" to 6)
+                            state.recalcularPontosAtributo()
+                            showMeioElfoDialog = false
+                        },
+                        modifier = Modifier.defaultMinSize(minWidth = 100.dp)
+                    ) {
+                        Text("AGILIDADE")
+                    }
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showMeioElfoDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }
 
@@ -3738,7 +3817,7 @@ fun PowerDropdownMenu(
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             modifier = modifier
                 .fillMaxWidth()
-                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, enabled = true)
                 .clickable { onExpandedChange(true) }
         )
         ExposedDropdownMenu(
@@ -4135,7 +4214,7 @@ Feito por Rafael S.W.
     // ── Diálogo de configurações iniciais ────────────────────────────────────────
     if (showNewOptionsDialog) {
         AlertDialog(
-            onDismissRequest = { showNewOptionsDialog = false },
+            onDismissRequest = { },
             title            = { Text("Configurações Iniciais") },
             text             = {
                 Column {
@@ -4398,13 +4477,12 @@ Feito por Rafael S.W.
                             usarProgresso = false
                         )
                     }
-                    showNewOptionsDialog = false
                 }) {
                     Text("Confirmar")
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showNewOptionsDialog = false }) {
+                TextButton(onClick = { }) {
                     Text("Cancelar")
                 }
             }
@@ -4414,7 +4492,7 @@ Feito por Rafael S.W.
     // ── Diálogo de carregamento existente ────────────────────────────────────────
     if (showLoadDialog) {
         AlertDialog(
-            onDismissRequest = { showLoadDialog = false },
+            onDismissRequest = { },
             title            = { Text("Selecione um personagem") },
             text             = {
                 LazyColumn {
@@ -4429,7 +4507,6 @@ Feito por Rafael S.W.
                                         withContext(Dispatchers.Main) {
                                             salvo?.let {
                                                 onLoad(it)
-                                                showLoadDialog = false
                                             }
                                         }
                                     }
@@ -4448,7 +4525,7 @@ Feito por Rafael S.W.
             },
             confirmButton = {},
             dismissButton = {
-                TextButton(onClick = { showLoadDialog = false }) {
+                TextButton(onClick = { }) {
                     Text("Cancelar")
                 }
             }
@@ -4459,7 +4536,7 @@ Feito por Rafael S.W.
     if (pendingDelete != null) {
         val (displayName, fileKey) = pendingDelete!!
         AlertDialog(
-            onDismissRequest = { pendingDelete = null },
+            onDismissRequest = { },
             title            = { Text("Confirmar exclusão") },
             text             = { Text("Deseja realmente excluir \"$displayName\"?") },
             confirmButton    = {
@@ -4470,7 +4547,6 @@ Feito por Rafael S.W.
                         val listaAtualizada = StorageUtils.listarPersonagens(context)
                         withContext(Dispatchers.Main) {
                             nomesSalvos = listaAtualizada
-                            pendingDelete = null
                         }
                     }
                 }) {
@@ -4478,7 +4554,7 @@ Feito por Rafael S.W.
                 }
             },
             dismissButton = {
-                TextButton(onClick = { pendingDelete = null }) {
+                TextButton(onClick = { }) {
                     Text("Cancelar")
                 }
             }

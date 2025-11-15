@@ -40,16 +40,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.SuperPoder
-import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.loadJsonAsset
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.contentOrNull
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun SuperPoderesDetailScreen(
     state: CriadorState,
-    onBack: () -> Unit,
-    viewModel: CriadorViewModel? = null
+    onBack: () -> Unit
 ) {
     val context = LocalContext.current
     val superPoderes: List<SuperPoder> = remember {
@@ -131,10 +132,17 @@ fun SuperPoderesDetailScreen(
                                     Spacer(Modifier.height(4.dp))
                                 }
 
-                                val mans = when (val m = poder.manifestacoes) {
-                                    is List<*> -> m.filterIsInstance<String>()
-                                    is String -> listOf(m)
-                                    null -> emptyList()
+                                val mans: List<String> = when (val m = poder.manifestacoes) {
+                                    is JsonArray -> {
+                                        // array de coisas → pegamos só os elementos que são string
+                                        m.mapNotNull { elem ->
+                                            (elem as? JsonPrimitive)?.contentOrNull ?: (elem as? JsonPrimitive)?.content
+                                        }
+                                    }
+                                    is JsonPrimitive -> {
+                                        // valor único → vira lista com 1 item
+                                        listOf(m.content)
+                                    }
                                     else -> emptyList()
                                 }
                                 if (mans.isNotEmpty()) {
