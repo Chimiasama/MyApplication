@@ -619,6 +619,7 @@ class MainActivity : ComponentActivity() {
                                                 onOpenListaAncestralidadesDetail = { showAncestralidadesDetail = true },
                                                 onOpenListaCompletaEquipamento   = { showEquipLista            = true },
                                                 onOpenPoderesDetail              = { showPoderesDetail         = true },
+                                                onOpenSuperPoderesDetail         = { showSuperDetail           = true },
                                                 onHelpSuperClick                 = { },
 
                                                 expAttrs       = expAttrs,
@@ -3230,15 +3231,17 @@ fun VantagensDetailScreen(
 @Composable
 fun PreviewApp() {
     val state = remember { CriadorState() }
+
     UnifiedScreen(
-        state,
+        state = state,
         onOpenVantagensDetail = {},
         onOpenPericiasDetail = {},
         onOpenComplicacoesDetail = {},
         onOpenAtributosDetail = {},
         onOpenListaAncestralidadesDetail = {},
         onOpenListaCompletaEquipamento = {},
-        onOpenPoderesDetail = {},   // único callback para “Lista Completa” de Poderes/Supers
+        onOpenPoderesDetail = {},          // Lista completa de PODERES (magias)
+        onOpenSuperPoderesDetail = {},     // Lista completa de SUPERPODERES
         onHelpSuperClick = {},
 
         expAttrs = true,
@@ -3257,7 +3260,6 @@ fun PreviewApp() {
         onTogglePoderes = {},
 
         equipamentoCategorias = emptyList(),
-
         superequipCategorias = emptyList(),
         listaSuperPoderes = emptyList()
     )
@@ -3274,7 +3276,8 @@ fun UnifiedScreen(
     onOpenAtributosDetail: () -> Unit,
     onOpenListaAncestralidadesDetail: () -> Unit,
     onOpenListaCompletaEquipamento: () -> Unit,
-    onOpenPoderesDetail: () -> Unit,   // unificado (Poderes/Supers)
+    onOpenPoderesDetail: () -> Unit,        // lista completa de MAGIAS
+    onOpenSuperPoderesDetail: () -> Unit,   // lista completa de SUPERPODERES
     onHelpSuperClick: () -> Unit,
 
     expAttrs: Boolean,
@@ -3396,13 +3399,13 @@ fun UnifiedScreen(
         // ─── SuperPoderes (modo Supers) ─────────────────────────────────────────
         if (state.modoSupers) {
             SuperPoderesContent(
-                state             = state,
-                listaSuperPoderes = listaSuperPoderes,
-                expanded          = expSupers,
-                onToggle          = { expSupers = !expSupers },
-                onOpenPoderesDetail  = onOpenPoderesDetail,
-                onHelpClick       = onHelpSuperClick,
-                        )
+                state                 = state,
+                listaSuperPoderes     = listaSuperPoderes,
+                expanded              = expSupers,
+                onToggle              = { expSupers = !expSupers },
+                onOpenSuperPoderesDetail = onOpenSuperPoderesDetail,
+                onHelpClick           = onHelpSuperClick,
+            )
             Spacer(Modifier.height(8.dp))
             HorizontalDivider(thickness = 1.dp)
         }

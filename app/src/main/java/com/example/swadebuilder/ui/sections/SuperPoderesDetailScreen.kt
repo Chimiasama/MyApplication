@@ -6,7 +6,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,10 +16,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -43,7 +42,6 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.SuperPoder
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.loadJsonAsset
-import com.example.swadebuilder.ui.dialogs.SupersDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -82,8 +80,7 @@ fun SuperPoderesDetailScreen(
                 )
             )
 
-
-            // Atalho para abrir o SupersDialog direto daqui (igual ao seu detalhe anterior)
+            // Linha apenas com o resumo de pontos (sem botão vermelho)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -94,19 +91,6 @@ fun SuperPoderesDetailScreen(
                     "Pontos: ${state.superPontosDisponiveis}/${state.superPontosTotais} • Limite padrão: ${state.limitePorPoderPadrao} • Favorecido: ${state.limiteFavorecido}",
                     fontWeight = FontWeight.SemiBold
                 )
-                Spacer(Modifier.weight(1f))
-                if (viewModel != null) {
-                    var showSupers by rememberSaveable { mutableStateOf(false) }
-                    Button(onClick = { showSupers = true }) { Text("Ir para Superpoderes") }
-                    if (showSupers) {
-                        SupersDialog(
-                            state = state,
-                            viewModel = viewModel,
-                            onConfirmLock = { /* opcional: travar fase aqui */ },
-                            onDismiss = { showSupers = false }
-                        )
-                    }
-                }
             }
 
             LazyColumn(Modifier.fillMaxSize()) {
@@ -154,23 +138,47 @@ fun SuperPoderesDetailScreen(
                                     else -> emptyList()
                                 }
                                 if (mans.isNotEmpty()) {
-                                    Text("Manifestações:", fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                                    Text(
+                                        "Manifestações:",
+                                        fontWeight = FontWeight.SemiBold,
+                                        fontSize = 14.sp
+                                    )
                                     mans.forEach { man ->
-                                        Text(text = "- $man", fontSize = 14.sp, modifier = Modifier.padding(start = 8.dp))
+                                        Text(
+                                            text = "- $man",
+                                            fontSize = 14.sp,
+                                            modifier = Modifier.padding(start = 8.dp)
+                                        )
                                     }
                                     Spacer(Modifier.height(4.dp))
                                 }
 
                                 poder.descricao?.let { desc ->
-                                    Text("Descrição:", fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
-                                    Text(desc, fontSize = 14.sp, modifier = Modifier.padding(start = 8.dp, top = 2.dp))
+                                    Text(
+                                        "Descrição:",
+                                        fontWeight = FontWeight.SemiBold,
+                                        fontSize = 14.sp
+                                    )
+                                    Text(
+                                        desc,
+                                        fontSize = 14.sp,
+                                        modifier = Modifier.padding(start = 8.dp, top = 2.dp)
+                                    )
                                     Spacer(Modifier.height(4.dp))
                                 }
 
                                 if (!poder.modificadores.isNullOrEmpty()) {
-                                    Text("Modificadores:", fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                                    Text(
+                                        "Modificadores:",
+                                        fontWeight = FontWeight.SemiBold,
+                                        fontSize = 14.sp
+                                    )
                                     poder.modificadores.forEach { mod ->
-                                        Text(text = "- $mod", fontSize = 14.sp, modifier = Modifier.padding(start = 8.dp))
+                                        Text(
+                                            text = "- $mod",
+                                            fontSize = 14.sp,
+                                            modifier = Modifier.padding(start = 8.dp)
+                                        )
                                     }
                                 }
                             }

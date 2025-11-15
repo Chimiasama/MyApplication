@@ -459,7 +459,7 @@ fun SuperPoderesContent(
     listaSuperPoderes: List<SuperPoder>,
     expanded: Boolean,
     onToggle: () -> Unit,
-    onOpenPoderesDetail: () -> Unit,
+    onOpenSuperPoderesDetail: () -> Unit,
     onHelpClick: () -> Unit
 ) {
     SectionCard(
@@ -474,7 +474,7 @@ fun SuperPoderesContent(
             onHelpClick          = onHelpClick,
             centerText           = "Pontos de Super: ${state.superPontosDisponiveis}",
             onCenterClick        = onToggle,
-            onListaCompletaClick = if (showLista) onOpenPoderesDetail else null,
+            onListaCompletaClick = if (showLista) onOpenSuperPoderesDetail else null,
             listaCompletaText    = "Lista Completa"
         )
 

@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -259,7 +258,7 @@ fun PoderesDetailScreen(
                     )
                     Spacer(Modifier.weight(1f))
                     var showSupers by rememberSaveable { mutableStateOf(false) }
-                    Button(onClick = { showSupers = true }) { Text("Ir para Superpoderes") }
+
                     if (showSupers && viewModel != null) {
                         SupersDialog(
                             state = state,
