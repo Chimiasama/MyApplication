@@ -124,10 +124,14 @@ fun PericiasContent(
         }
 
         items(listaPericias) { per ->
+            // Valor base (só criação/complicações, sem supers) – usado para custo/limites
             val currentRaw = state.rawTotal(per)
             val attrKey    = state.atributoBaseParaPericia(per)
             val atrRaw     = state.valoresAtributos[attrKey]!!.intValue
             val capRaw     = state.periciaCapRaw(per)
+
+            // Valor FINAL para jogar, incluindo Superperícia
+            val displayRaw = state.rawTotalComSupers(per)
 
             val nextRaw = when {
                 currentRaw == 0 && per.basica -> 4        // básicas ficam em d4 quando "zeradas"
@@ -211,7 +215,7 @@ fun PericiasContent(
                     // −
                     IconButton(
                         onClick = {
-                            // reduzir a perícia
+                            // reduzir a perícia (apenas parte de criação/complicações)
                             state.decreasePericia(per)
                             // se zerou, remover TODAS as especializações da perícia
                             if (state.rawTotal(per) == 0) {
@@ -230,12 +234,12 @@ fun PericiasContent(
                         )
                     }
 
-                    // valor (agora com largura maior pra caber "d12+1")
+                    // valor (agora exibindo o TOTAL com supers)
                     Text(
-                        text = when (currentRaw) {
-                            0 if per.basica -> "d4"
-                            0 -> "-"
-                            else -> currentRaw.toDiceString()
+                        text = when {
+                            displayRaw == 0 && per.basica -> "d4"
+                            displayRaw == 0 -> "-"
+                            else -> displayRaw.toDiceString()
                         },
                         modifier = Modifier.width(valorColWidthDp),
                         style = MaterialTheme.typography.bodyLarge,

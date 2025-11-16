@@ -261,9 +261,11 @@ class CriadorViewModel : ViewModel() {
     fun currentAttrSteps(attrKey: String): Int = state.superAtributoIncs[attrKey] ?: 0
 
     /** Quantos "steps" de super já foram aplicados a uma perícia (por id/keyify). */
+    @Suppress("unused")
     fun currentPericiaSteps(periciaId: String): Int = state.superPericiaIncs[periciaId] ?: 0
 
     /** Busca o raw final de atributo com supers (para conferência de cap). */
+    @Suppress("unused")
     fun atributoRawComSupers(attrKey: String): Int = state.atributoRawComSupers(attrKey)
 
     /** Verifica se a perícia é Lutar (para efeitos que impactam Aparar). */
@@ -274,9 +276,11 @@ class CriadorViewModel : ViewModel() {
     }
 
     /** Máximo racial/campanha para um atributo (não é alterado por Superatributo). */
+    @Suppress("unused")
     fun maxAtributoRacial(attrKey: String): Int = state.atributoMaxRaw(attrKey)
 
     /** Verifica se o personagem possui a vantagem “Atributo Lendário” aplicável ao atributo alvo. */
+    @Suppress("unused")
     fun possuiAtributoLendarioPara(attrKey: String): Boolean {
         val alvo = attrKey.trim().uppercase()
         return state.vantagensSelecionadas.any { v ->
@@ -297,7 +301,6 @@ class CriadorViewModel : ViewModel() {
      * - Bloqueio acima de d12 sem “Atributo Lendário”
      * - Não “salta” o bloqueio de Lendário: se cruzar 12, precisa possuir a vantagem
      */
-
     fun podeSubirAtributoPorSuper(attrKey: String, steps: Int): InvestCheck {
         if (steps == 0) return InvestCheck(true)
 
@@ -318,7 +321,6 @@ class CriadorViewModel : ViewModel() {
      * - teto combinado de supers (armadura/resistência) pós-compra
      * - regras de tipo (perícia, atributo, vantagem)
      */
-    // CriadorViewModel.kt — SUBSTITUA a função inteira
     fun canInvestInPower(
         poderId: String,
         custo: Int,
@@ -409,7 +411,10 @@ class CriadorViewModel : ViewModel() {
      * Aplica o investimento no ledger e atualiza derivados.
      * NÃO chama validação; chame canInvestInPower antes.
      */
-    // CriadorViewModel.kt — SUBSTITUA a função inteira
+    /**
+     * Aplica o investimento no ledger e atualiza derivados.
+     * NÃO chama validação; chame canInvestInPower antes.
+     */
     fun applyPowerInvestment(
         poderId: String,
         custo: Int,
@@ -427,7 +432,7 @@ class CriadorViewModel : ViewModel() {
                 val atualSteps = state.superAtributoIncs[key] ?: 0
                 state.superAtributoIncs[key] = (atualSteps + efeito.steps).coerceAtLeast(0)
 
-                // (b) **refletir imediatamente** no atributo visível:
+                // (b) refletir imediatamente no atributo visível:
                 // +2 por step até d12; +1 por step acima de d12.
                 val holder = state.valoresAtributos[key]
                 if (holder != null) {
@@ -466,9 +471,10 @@ class CriadorViewModel : ViewModel() {
             }
         }
 
-        // 3) derivados
+        // 3) derivados de perícia / etc.
         state.rebuildAllPericiaStacks()
-        state.recalcularPontosAtributo()
+        // IMPORTANTE: NÃO recalcular atributos básicos aqui,
+        // para não “somar de novo” os supers nem mexer na etapa de criação com PAs.
 
         return InvestResult(true, "Investimento aplicado.")
     }
@@ -477,7 +483,6 @@ class CriadorViewModel : ViewModel() {
      * Reverte um investimento (desfaz no ledger e atualiza derivados).
      * Use o mesmo 'efeito' que foi aplicado, com valores em módulo correspondente.
      */
-    // CriadorViewModel.kt — SUBSTITUA a função inteira
     fun revertPowerInvestment(
         poderId: String,
         custo: Int,
@@ -532,8 +537,9 @@ class CriadorViewModel : ViewModel() {
             }
         }
 
+        // Atualiza apenas derivados que dependem de supers / perícias
         state.rebuildAllPericiaStacks()
-        state.recalcularPontosAtributo()
+        // De novo: nada de recalcular atributos de criação aqui.
 
         return InvestResult(true, "Investimento revertido.")
     }
@@ -554,6 +560,8 @@ class CriadorViewModel : ViewModel() {
     fun desfazerInvestimentoSuper(poderId: String, custo: Int, efeito: PowerEffect): InvestResult {
         return revertPowerInvestment(poderId = poderId, custo = custo, efeito = efeito)
     }
+
+    @Suppress("unused")
     fun iniciarFaseSupers(nivelRoman: String) {
         val total = when (nivelRoman.trim().uppercase()) {
             "I" -> 15
@@ -569,6 +577,7 @@ class CriadorViewModel : ViewModel() {
         state.emProgresso = false
     }
 
+    @Suppress("unused")
     fun iniciarFaseProgresso() {
         // Só permite iniciar progresso quando terminou supers
         if (state.superPontosTotais > 0 && state.superPontosDisponiveis == 0) {
@@ -576,3 +585,5 @@ class CriadorViewModel : ViewModel() {
         }
     }
 }
+
+

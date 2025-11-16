@@ -170,7 +170,12 @@ data class ArcanoInfo(
 
 lateinit var arcanoInfo: Map<String, Triple<Int, Int, String>>
 
-data class PurchasedPower(val nome: String, val custo: Int)
+data class PurchasedPower(
+    val nome: String,
+    val custo: Int,      // custo total em PP (base + modificadores)
+    val baseCost: Int,   // quanto foi gasto na barrinha (sem modificadores)
+    val poderId: String  // id canônico no ledger, tipo "sp_res", "sp_aparar" etc
+)
 
 private val json = Json {
     ignoreUnknownKeys = true
@@ -791,9 +796,23 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     // Mesmo algoritmo de steps de supers do CriadorState
     fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
         var raw = rawStart
-        repeat(steps.coerceAtLeast(0)) {
+        var remaining = steps.coerceAtLeast(0)
+
+        // CORREÇÃO: se a perícia/atributo está abaixo de d4 (0),
+        // o primeiro passo de Superperícia/Superatributo
+        // já leva direto para d4 e consome 1 passo.
+        if (raw < 4 && remaining > 0) {
+            raw = 4
+            remaining -= 1
+        }
+
+        // Depois disso, seguimos a regra padrão:
+        // até d12: +2 por passo; acima de d12: +1 por passo.
+        repeat(remaining) {
             raw += if (raw < 12) 2 else 1
         }
+
+        // Garante que nada fique abaixo de d4.
         return raw.coerceAtLeast(4)
     }
 
@@ -1296,18 +1315,31 @@ class CriadorState {
 
     fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
         var raw = rawStart
-        repeat(steps.coerceAtLeast(0)) {
+        var remaining = steps.coerceAtLeast(0)
+
+        // CORREÇÃO: se a perícia/atributo está abaixo de d4 (0),
+        // o primeiro passo de Superperícia/Superatributo
+        // já leva direto para d4 e consome 1 passo.
+        if (raw < 4 && remaining > 0) {
+            raw = 4
+            remaining -= 1
+        }
+
+        // Depois disso, seguimos a regra padrão:
+        // até d12: +2 por passo; acima de d12: +1 por passo.
+        repeat(remaining) {
             raw += if (raw < 12) 2 else 1
         }
+
+        // Garante que nada fique abaixo de d4.
         return raw.coerceAtLeast(4)
     }
 
-    // Usa a regra acima para projetar o valor "com supers" (sem mexer no holder).
+
     fun atributoRawComSupers(attrKey: String): Int {
-        val base = valoresAtributos[attrKey]?.intValue ?: 4
-        val incs = superAtributoIncs[attrKey] ?: 0
-        return applySuperStepsFrom(base, incs)
+        return valoresAtributos[attrKey]?.intValue ?: 4
     }
+
 
     /** Respeita o teto de mitigação por supers (clampa apenas a soma dos componentes de supers) */
     private fun clampMitigacaoSupers() {
@@ -1353,17 +1385,38 @@ class CriadorState {
     var openVantagensAfterGrant by mutableStateOf(false)     // sinal pra abrir tela de vantagens
 
 
-    fun comprarSuperPoder(nome: String, custo: Int) {
+    fun comprarSuperPoder(
+        nome: String,
+        custo: Int,
+        baseCost: Int = custo,
+        poderId: String = "sp_${nome.keyify()}",
+        registrarNoLedger: Boolean = true
+    ) {
         // só compra se houver espaço e pontos disponíveis
         if (superPoderesComprados.size < superLimite && superPontosDisponiveis >= custo) {
-            superPoderesComprados.add(PurchasedPower(nome, custo))
-            superPontosDisponiveis -= custo
+            superPoderesComprados.add(
+                PurchasedPower(
+                    nome = nome,
+                    custo = custo,
+                    baseCost = baseCost,
+                    poderId = poderId
+                )
+            )
+
+            if (registrarNoLedger) {
+                registrarGastoDePoder(poderId, custo)
+            }
         }
     }
 
-    fun removerSuperPoder(poder: PurchasedPower) {
+    fun removerSuperPoder(
+        poder: PurchasedPower,
+        desfazerNoLedger: Boolean = true
+    ) {
         if (superPoderesComprados.remove(poder)) {
-            superPontosDisponiveis += poder.custo
+            if (desfazerNoLedger) {
+                desfazerGastoDePoder(poder.poderId, poder.custo)
+            }
         }
     }
 
@@ -1433,18 +1486,6 @@ class CriadorState {
         if (!podeSelecionar(v)) return
         selecionarPontosDePoder(v)
         vantagensSelecionadas += v
-    }
-
-    // em CriadorState
-    fun aplicarSuperpoderes(nivel: Int, usarProgresso: Boolean) {
-        val total   = nivel * 15   // 15/30/45/60/75
-        val limite  = nivel * 5    //  5/10/15/20/25  (limite total de superpoderes)
-        superPontosTotais       = total
-        superPontosDisponiveis  = if (usarProgresso) superPontosDisponiveis else total
-        superLimite             = limite
-        superLimitePorPoder     = limite         // <-- UM TERÇO DO TOTAL (5/10/15/20/25)
-        modoSupers              = true
-        superNivelCampanha      = nivel
     }
 
     val comprasAttrPorEstagio = mutableStateMapOf<String, Int>().apply {

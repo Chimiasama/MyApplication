@@ -53,6 +53,7 @@ import com.example.swadebuilder.SuperPoder
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.ui.dialogs.SuperAtributosPickerDialog
+import com.example.swadebuilder.ui.dialogs.SuperPericiasPickerDialog
 import kotlin.math.roundToInt
 
 // ==========================================================
@@ -291,20 +292,17 @@ fun SuperPoderesSection(
         val nivel = novoNivel.coerceIn(1, 5)
         state.superNivelCampanha = nivel
 
-        val total  = 15 * nivel           // 15 pts por nível
-        val limite = 5  * nivel           // 1/3 do total
+        val total = 15 * nivel           // 15 pts por nível
+        val limite = 5 * nivel           // 1/3 do total
 
-        state.superPontosTotais   = total
-        state.superLimite         = limite
+        state.superPontosTotais = total
+        state.superLimite = limite
         state.superLimitePorPoder = limite
 
         // recalcula gastos pelos poderes (mais robusto)
         val gastos = state.gastosPorPoder.values.sum()
         state.superPontosDisponiveis = (total - gastos).coerceAtLeast(0)
     }
-
-    // ❌ NÃO há mais LaunchedEffect aqui.
-    // Personagem novo fica com nível vazio até o jogador escolher.
 
     Column(
         Modifier
@@ -315,15 +313,75 @@ fun SuperPoderesSection(
         if (state.superPoderesComprados.isNotEmpty()) {
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalArrangement   = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 state.superPoderesComprados.forEach { p ->
                     AssistChip(
-                        onClick = { state.removerSuperPoder(p) },
-                        label = { Text("${p.nome} (+${p.custo})") },
+                        onClick = {
+                            // Tratamento especial para poderes que têm efeito na ficha
+                            when (p.poderId) {
+                                "sp_aparar" -> {
+                                    viewModel.desfazerInvestimentoSuper(
+                                        poderId = p.poderId,
+                                        custo = p.custo,
+                                        efeito = PowerEffect.BonusAparar(p.baseCost)
+                                    )
+                                    state.removerSuperPoder(p, desfazerNoLedger = false)
+                                }
+
+                                "sp_armor" -> {
+                                    viewModel.desfazerInvestimentoSuper(
+                                        poderId = p.poderId,
+                                        custo = p.custo,
+                                        efeito = PowerEffect.BonusArmadura(p.baseCost * 2)
+                                    )
+                                    state.removerSuperPoder(p, desfazerNoLedger = false)
+                                }
+
+                                "sp_res" -> {
+                                    viewModel.desfazerInvestimentoSuper(
+                                        poderId = p.poderId,
+                                        custo = p.custo,
+                                        efeito = PowerEffect.BonusResistencia(p.baseCost)
+                                    )
+                                    state.removerSuperPoder(p, desfazerNoLedger = false)
+                                }
+
+                                else -> {
+                                    // Superatributos comprados via lista:
+                                    // poderId = "sp_attr_FORCA", baseCost = steps aplicados
+                                    if (p.poderId.startsWith("sp_attr_")) {
+                                        val attrKey = p.poderId.removePrefix("sp_attr_")
+                                        viewModel.desfazerInvestimentoSuper(
+                                            poderId = p.poderId,
+                                            custo = p.custo,
+                                            efeito = PowerEffect.SuperAtributo(attrKey, p.baseCost)
+                                        )
+                                        state.removerSuperPoder(p, desfazerNoLedger = false)
+                                    }
+                                    // Superperícias compradas via picker:
+                                    // poderId = "sp_pericia_LUTAR", baseCost = steps aplicados
+                                    else if (p.poderId.startsWith("sp_pericia_")) {
+                                        val perKey = p.poderId.removePrefix("sp_pericia_").lowercase()
+                                        viewModel.desfazerInvestimentoSuper(
+                                            poderId = p.poderId,
+                                            custo = p.custo,
+                                            efeito = PowerEffect.SuperPericia(perKey, p.baseCost)
+                                        )
+                                        state.removerSuperPoder(p, desfazerNoLedger = false)
+                                    } else {
+                                        // poderes "normais": comportamento antigo
+                                        state.removerSuperPoder(p)
+                                    }
+                                }
+                            }
+                        },
+                        label = {
+                            Text("${p.nome} (+${p.custo})")
+                        },
                         leadingIcon = {
                             Icon(
-                                Icons.Filled.Close,
+                                imageVector = Icons.Filled.Close,
                                 contentDescription = "Remover"
                             )
                         }
@@ -406,7 +464,7 @@ fun SuperPoderesSection(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        // AGORA: clique só funciona se supersLiberados E nível definido
+                        // clique só funciona se supersLiberados E nível definido
                         .clickable(enabled = podeComprarSupers) {
                             if (podeComprarSupers) {
                                 poderParaComprar = poder
@@ -438,8 +496,8 @@ fun SuperPoderesSection(
             text = {
                 Column(Modifier.fillMaxWidth()) {
                     (1..5).forEach { nivel ->
-                        val total  = 15 * nivel
-                        val limite = 5  * nivel
+                        val total = 15 * nivel
+                        val limite = 5 * nivel
                         TextButton(
                             onClick = {
                                 aplicarNivelSuper(nivel)
@@ -471,14 +529,17 @@ fun SuperPoderesSection(
         )
     }
 
-    // 5) diálogo de compra (base/mods) + casos especiais
+    // 5) diálogos de compra "especiais"
     var showSuperAttrPicker by rememberSaveable { mutableStateOf(false) }
     var poolSuperAttr by rememberSaveable { mutableIntStateOf(0) }
+
+    var showSuperPericiaPicker by rememberSaveable { mutableStateOf(false) }
+    var poolSuperPericia by rememberSaveable { mutableIntStateOf(0) }
 
     poderParaComprar?.let { poder ->
         // Se por algum motivo o estado mudar e os supers forem bloqueados,
         // garantimos que o diálogo não abre / é fechado.
-        if (!podeComprarSupers) {
+        if (!supersLiberados) {
             poderParaComprar = null
         } else {
             BuySuperPowerDialog(
@@ -489,33 +550,69 @@ fun SuperPoderesSection(
                     val nome = poder.nome.trim().uppercase()
                     when {
                         nome == "APARAR" -> {
-                            viewModel.tentarInvestirSuper(
+                            val r = viewModel.tentarInvestirSuper(
                                 poderId = "sp_aparar",
-                                custo   = custoTotal,
-                                efeito  = PowerEffect.BonusAparar(baseCost)
+                                custo = custoTotal,
+                                efeito = PowerEffect.BonusAparar(baseCost)
                             )
+                            if (r.ok) {
+                                state.comprarSuperPoder(
+                                    nome = poder.nome,
+                                    custo = custoTotal,
+                                    baseCost = baseCost,
+                                    poderId = "sp_aparar",
+                                    registrarNoLedger = false
+                                )
+                            }
                         }
 
                         nome == "ARMADURA" -> {
-                            viewModel.tentarInvestirSuper(
+                            val r = viewModel.tentarInvestirSuper(
                                 poderId = "sp_armor",
-                                custo   = custoTotal,
-                                efeito  = PowerEffect.BonusArmadura(custoTotal * 2)
+                                custo = custoTotal,
+                                efeito = PowerEffect.BonusArmadura(baseCost * 2)
                             )
+                            if (r.ok) {
+                                state.comprarSuperPoder(
+                                    nome = poder.nome,
+                                    custo = custoTotal,
+                                    baseCost = baseCost,
+                                    poderId = "sp_armor",
+                                    registrarNoLedger = false
+                                )
+                            }
                         }
 
                         nome == "RESISTÊNCIA" || nome == "RESISTENCIA" -> {
-                            viewModel.tentarInvestirSuper(
+                            val r = viewModel.tentarInvestirSuper(
                                 poderId = "sp_res",
-                                custo   = custoTotal,
-                                efeito  = PowerEffect.BonusResistencia(custoTotal)
+                                custo = custoTotal,
+                                efeito = PowerEffect.BonusResistencia(baseCost)
                             )
+                            if (r.ok) {
+                                state.comprarSuperPoder(
+                                    nome = poder.nome,
+                                    custo = custoTotal,
+                                    baseCost = baseCost,
+                                    poderId = "sp_res",
+                                    registrarNoLedger = false
+                                )
+                            }
                         }
 
-                        // Super Atributo: custo vira pool/2 em steps
+                        // Super Atributo: o pool de steps vem apenas do baseCost.
+                        // Modificadores encarecem o poder, mas não geram steps extras.
                         nome == "SUPERATRIBUTO" || nome == "SUPER ATRIBUTO" -> {
-                            poolSuperAttr = custoTotal / 2
+                            poolSuperAttr = baseCost / 2
                             showSuperAttrPicker = true
+                        }
+
+                        // SUPERPERÍCIA (1:1): abre o picker de perícias
+                        nome == "SUPERPERÍCIA" || nome == "SUPER PERÍCIA" ||
+                                nome == "SUPERPERICIA" || nome == "SUPER PERICIA" -> {
+                            // cada ponto de baseCost = 1 passo de Superperícia
+                            poolSuperPericia = baseCost
+                            showSuperPericiaPicker = true
                         }
 
                         else -> {
@@ -536,39 +633,86 @@ fun SuperPoderesSection(
             state = state,
             poolInicial = poolSuperAttr,
             onConfirmDistribuicao = { mapa ->
-                // mapa: attrKey -> stepsSolicitados
                 mapa.forEach { (attrKey, stepsSolicitados) ->
                     val poderId = "sp_attr_${attrKey.uppercase()}"
 
                     // custo pretendido (2:1)
                     val custoPretendido = stepsSolicitados * 2
 
-                    // respeita limite por poder e saldo disponível
-                    val gastoAtual     = state.gastosPorPoder[poderId] ?: 0
+                    val gastoAtual = state.gastosPorPoder[poderId] ?: 0
                     val limitePorPoder = viewModel.perPowerLimit(poderId)
-                    val restoPorPoder  = (limitePorPoder - gastoAtual).coerceAtLeast(0)
-                    val restoDePool    = state.superPontosDisponiveis.coerceAtLeast(0)
+                    val restoPorPoder = (limitePorPoder - gastoAtual).coerceAtLeast(0)
+                    val restoDePool = state.superPontosDisponiveis.coerceAtLeast(0)
 
-                    val custoAplicavel  = minOf(custoPretendido, restoPorPoder, restoDePool)
+                    val custoAplicavel = minOf(custoPretendido, restoPorPoder, restoDePool)
                     val stepsAplicaveis = (custoAplicavel / 2).coerceAtLeast(0)
 
-                    if (stepsAplicaveis > 0) {
-                        // aplica overlay de superatributo
-                        val atual = state.superAtributoIncs[attrKey.uppercase()] ?: 0
-                        state.superAtributoIncs[attrKey.uppercase()] = atual + stepsAplicaveis
-
-                        // registra gasto e recalcula saldo
-                        state.registrarGastoDePoder(poderId, stepsAplicaveis * 2)
+                    if (stepsAplicaveis > 0 && custoAplicavel > 0) {
+                        val r = viewModel.tentarInvestirSuper(
+                            poderId = poderId,
+                            custo = custoAplicavel,
+                            efeito = PowerEffect.SuperAtributo(attrKey.uppercase(), stepsAplicaveis)
+                        )
+                        if (r.ok) {
+                            state.comprarSuperPoder(
+                                nome = "Superatributo: $attrKey",
+                                custo = custoAplicavel,
+                                baseCost = stepsAplicaveis,
+                                poderId = poderId,
+                                registrarNoLedger = false
+                            )
+                        }
                     }
                 }
-
-                // recálculo rápido do saldo de SP
-                state.superPontosDisponiveis =
-                    (state.superPontosTotais - state.gastosPorPoder.values.sum()).coerceAtLeast(0)
 
                 showSuperAttrPicker = false
             },
             onDismiss = { showSuperAttrPicker = false }
+        )
+    }
+
+    // 7) picker de SUPERPERÍCIA (1:1)
+    if (showSuperPericiaPicker) {
+        SuperPericiasPickerDialog(
+            poolInicial = poolSuperPericia,
+            onConfirmDistribuicao = { mapa ->
+                // mapa: periciaKey (keyify) -> stepsSolicitados
+                mapa.forEach { (periciaKey, stepsSolicitados) ->
+                    val poderId = "sp_pericia_${periciaKey.uppercase()}"
+
+                    // custo pretendido (1:1)
+                    val custoPretendido = stepsSolicitados
+
+                    val gastoAtual = state.gastosPorPoder[poderId] ?: 0
+                    val limitePorPoder = viewModel.perPowerLimit(poderId)
+                    val restoPorPoder = (limitePorPoder - gastoAtual).coerceAtLeast(0)
+                    val restoDePool = state.superPontosDisponiveis.coerceAtLeast(0)
+
+                    val custoAplicavel = minOf(custoPretendido, restoPorPoder, restoDePool)
+                    val stepsAplicaveis = custoAplicavel.coerceAtLeast(0)
+
+                    if (stepsAplicaveis > 0 && custoAplicavel > 0) {
+                        val r = viewModel.tentarInvestirSuper(
+                            poderId = poderId,
+                            custo = custoAplicavel,
+                            efeito = PowerEffect.SuperPericia(periciaKey, stepsAplicaveis)
+                        )
+                        if (r.ok) {
+                            // Cria um "poder comprado" para permitir devolução via X
+                            state.comprarSuperPoder(
+                                nome = "Superperícia: $periciaKey",
+                                custo = custoAplicavel,
+                                baseCost = stepsAplicaveis,
+                                poderId = poderId,
+                                registrarNoLedger = false
+                            )
+                        }
+                    }
+                }
+
+                showSuperPericiaPicker = false
+            },
+            onDismiss = { showSuperPericiaPicker = false }
         )
     }
 }
