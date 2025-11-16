@@ -32,13 +32,11 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -267,16 +265,26 @@ fun SuperPoderesSection(
     if (!expanded) return
 
     var poderParaComprar by remember { mutableStateOf<SuperPoder?>(null) }
-    val nivelAtual = state.superNivelCampanha ?: 1
+
+    // agora o nível é realmente opcional (começa null)
+    val nivelAtual = state.superNivelCampanha
+
     // criação básica precisa estar pronta
     val supersLiberados = state.creationComplete()
+
     // se já gastou qualquer ponto de super, o nível trava
     val jaInvestiuSupers = state.superPontosDisponiveis < state.superPontosTotais
     val podeEditarNivel = supersLiberados && !jaInvestiuSupers
 
-    var showNivelDialog by rememberSaveable { mutableStateOf(false) }
+    // nível conta como "definido" só se há um valor e pontos calculados
+    val nivelDefinido = (nivelAtual != null && state.superPontosTotais > 0)
 
-    val scope = rememberCoroutineScope()
+    // só pode comprar supers depois de:
+    // 1) criação básica completa
+    // 2) nível de superpoderes definido
+    val podeComprarSupers = supersLiberados && nivelDefinido
+
+    var showNivelDialog by rememberSaveable { mutableStateOf(false) }
 
     // função helper: aplicar o nível (igual ao que o slider fazia)
     fun aplicarNivelSuper(novoNivel: Int) {
@@ -295,19 +303,14 @@ fun SuperPoderesSection(
         state.superPontosDisponiveis = (total - gastos).coerceAtLeast(0)
     }
 
-    LaunchedEffect(Unit) {
-        // Inicialização mínima se veio “cru” do load
-        if ((state.superNivelCampanha ?: 0) == 0 || state.superPontosTotais == 0) {
-            val v = state.vantagensSelecionadas.firstOrNull {
-                it.nome.equals("Superpoderes", ignoreCase = true)
-            }
-            if (v != null) {
-                aplicarNivelSuper(1)
-            }
-        }
-    }
+    // ❌ NÃO há mais LaunchedEffect aqui.
+    // Personagem novo fica com nível vazio até o jogador escolher.
 
-    Column(Modifier.fillMaxWidth().padding(8.dp)) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
         // 1) chips dos poderes comprados
         if (state.superPoderesComprados.isNotEmpty()) {
             FlowRow(
@@ -318,7 +321,12 @@ fun SuperPoderesSection(
                     AssistChip(
                         onClick = { state.removerSuperPoder(p) },
                         label = { Text("${p.nome} (+${p.custo})") },
-                        leadingIcon = { Icon(Icons.Filled.Close, contentDescription = "Remover") }
+                        leadingIcon = {
+                            Icon(
+                                Icons.Filled.Close,
+                                contentDescription = "Remover"
+                            )
+                        }
                     )
                 }
             }
@@ -339,11 +347,17 @@ fun SuperPoderesSection(
         ) {
             Column(Modifier.weight(1f)) {
                 Text(
-                    text = "Nível atual: $nivelAtual",
+                    text = if (nivelAtual == null)
+                        "Nível atual: –"
+                    else
+                        "Nível atual: $nivelAtual",
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = "Pontos: ${state.superPontosTotais} • Limite por poder: ${state.superLimite}",
+                    text = if (!nivelDefinido)
+                        "Pontos: – • Limite por poder: –"
+                    else
+                        "Pontos: ${state.superPontosTotais} • Limite por poder: ${state.superLimite}",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -359,12 +373,20 @@ fun SuperPoderesSection(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.error
             )
-        } else if (jaInvestiuSupers) {
-            Text(
-                "Para alterar o nível, devolva todos os pontos de superpoder já gastos.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error
-            )
+        } else {
+            if (!nivelDefinido) {
+                Text(
+                    "Defina o nível de superpoderes para liberar a compra de poderes.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
+            } else if (jaInvestiuSupers) {
+                Text(
+                    "Para alterar o nível, devolva todos os pontos de superpoder já gastos.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
         }
 
         Spacer(Modifier.height(4.dp))
@@ -384,13 +406,24 @@ fun SuperPoderesSection(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        // clique só funciona se supersLiberados == true
-                        .clickable(enabled = supersLiberados) { poderParaComprar = poder }
+                        // AGORA: clique só funciona se supersLiberados E nível definido
+                        .clickable(enabled = podeComprarSupers) {
+                            if (podeComprarSupers) {
+                                poderParaComprar = poder
+                            }
+                        }
                         .padding(vertical = 6.dp, horizontal = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(poder.nome, Modifier.weight(1f), fontWeight = FontWeight.SemiBold)
-                    Icon(Icons.Filled.FlashOn, contentDescription = "Comprar")
+                    Text(
+                        poder.nome,
+                        Modifier.weight(1f),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Icon(
+                        Icons.Filled.FlashOn,
+                        contentDescription = "Comprar"
+                    )
                 }
                 HorizontalDivider()
             }
@@ -445,7 +478,7 @@ fun SuperPoderesSection(
     poderParaComprar?.let { poder ->
         // Se por algum motivo o estado mudar e os supers forem bloqueados,
         // garantimos que o diálogo não abre / é fechado.
-        if (!supersLiberados) {
+        if (!podeComprarSupers) {
             poderParaComprar = null
         } else {
             BuySuperPowerDialog(

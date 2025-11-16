@@ -4336,12 +4336,6 @@ Feito por Rafael S.W.
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
                     viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
 
-                    if (optSuperPoderes) {
-                        viewModel.state.aplicarSuperpoderes(
-                            nivel = 1,
-                            usarProgresso = false
-                        )
-                    }
                 }) {
                     Text("Confirmar")
                 }
