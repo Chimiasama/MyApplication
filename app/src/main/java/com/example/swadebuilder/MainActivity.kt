@@ -798,22 +798,17 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         var raw = rawStart
         var remaining = steps.coerceAtLeast(0)
 
-        // CORREÇÃO: se a perícia/atributo está abaixo de d4 (0),
-        // o primeiro passo de Superperícia/Superatributo
-        // já leva direto para d4 e consome 1 passo.
-        if (raw < 4 && remaining > 0) {
+        // CASO ESPECIAL: perícia/atributo em 0
+        if (raw <= 0 && remaining > 0) {
             raw = 4
             remaining -= 1
         }
 
-        // Depois disso, seguimos a regra padrão:
-        // até d12: +2 por passo; acima de d12: +1 por passo.
         repeat(remaining) {
             raw += if (raw < 12) 2 else 1
         }
 
-        // Garante que nada fique abaixo de d4.
-        return raw.coerceAtLeast(4)
+        return raw
     }
 
     fun calcAparar(): Int {
@@ -1313,33 +1308,27 @@ class CriadorState {
     val gastosPorPoder     = mutableStateMapOf<String, Int>()
     var naturalArmorFromRace by mutableIntStateOf(0)
 
+    // Mesmo algoritmo de steps de supers do CriadorState
     fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
         var raw = rawStart
         var remaining = steps.coerceAtLeast(0)
 
-        // CORREÇÃO: se a perícia/atributo está abaixo de d4 (0),
-        // o primeiro passo de Superperícia/Superatributo
-        // já leva direto para d4 e consome 1 passo.
-        if (raw < 4 && remaining > 0) {
+        // CASO ESPECIAL: perícia/atributo em 0
+        if (raw <= 0 && remaining > 0) {
             raw = 4
             remaining -= 1
         }
 
-        // Depois disso, seguimos a regra padrão:
-        // até d12: +2 por passo; acima de d12: +1 por passo.
         repeat(remaining) {
             raw += if (raw < 12) 2 else 1
         }
 
-        // Garante que nada fique abaixo de d4.
-        return raw.coerceAtLeast(4)
+        return raw
     }
-
 
     fun atributoRawComSupers(attrKey: String): Int {
         return valoresAtributos[attrKey]?.intValue ?: 4
     }
-
 
     /** Respeita o teto de mitigação por supers (clampa apenas a soma dos componentes de supers) */
     private fun clampMitigacaoSupers() {

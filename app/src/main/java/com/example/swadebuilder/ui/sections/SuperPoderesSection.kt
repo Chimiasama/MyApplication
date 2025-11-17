@@ -362,14 +362,17 @@ fun SuperPoderesSection(
                                     // Superperícias compradas via picker:
                                     // poderId = "sp_pericia_LUTAR", baseCost = steps aplicados
                                     else if (p.poderId.startsWith("sp_pericia_")) {
-                                        val perKey = p.poderId.removePrefix("sp_pericia_").lowercase()
+                                        // IMPORTANTÍSSIMO: manter a mesma key usada na compra (keyify/uppercase)
+                                        val perKey = p.poderId.removePrefix("sp_pericia_")  // sem lowercase()
+
                                         viewModel.desfazerInvestimentoSuper(
                                             poderId = p.poderId,
                                             custo = p.custo,
                                             efeito = PowerEffect.SuperPericia(perKey, p.baseCost)
                                         )
                                         state.removerSuperPoder(p, desfazerNoLedger = false)
-                                    } else {
+                                    }
+                                    else {
                                         // poderes "normais": comportamento antigo
                                         state.removerSuperPoder(p)
                                     }
