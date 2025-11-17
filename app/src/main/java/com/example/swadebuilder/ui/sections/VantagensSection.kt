@@ -63,7 +63,7 @@ import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
+import kotlinx.serialization.json.Json
 
 // modelo de filtro
 data class VantFilter(
@@ -72,8 +72,11 @@ data class VantFilter(
     val atributos: Set<String> = emptySet(),
     val pericias: Set<String> = emptySet()
 ) {
-    fun isEmpty() = origens.isEmpty() && estagios.isEmpty() && atributos.isEmpty() && pericias.isEmpty()
-    fun totalSelections() = origens.size + estagios.size + atributos.size + pericias.size
+    fun isEmpty() =
+        origens.isEmpty() && estagios.isEmpty() && atributos.isEmpty() && pericias.isEmpty()
+
+    fun totalSelections() =
+        origens.size + estagios.size + atributos.size + pericias.size
 }
 
 @Composable
@@ -93,8 +96,8 @@ fun VantFilterDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 300.dp)            // primeiro fixa o tamanho máximo…
-                    .verticalScroll(rememberScrollState()) // …depois habilita o scroll interno
+                    .heightIn(max = 300.dp)
+                    .verticalScroll(rememberScrollState())
                     .padding(end = 8.dp)
             ) {
                 Text("Origem", fontWeight = FontWeight.Bold)
@@ -113,8 +116,8 @@ fun VantFilterDialog(
                     }
                 }
                 Spacer(Modifier.size(8.dp))
-                Text("Estágio", fontWeight = FontWeight.Bold)
 
+                Text("Estágio", fontWeight = FontWeight.Bold)
                 allEstagios.forEach { e ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
@@ -130,6 +133,7 @@ fun VantFilterDialog(
                     }
                 }
                 Spacer(Modifier.size(8.dp))
+
                 Text("Atributos", fontWeight = FontWeight.Bold)
                 allAtributos.forEach { a ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -146,6 +150,7 @@ fun VantFilterDialog(
                     }
                 }
                 Spacer(Modifier.size(8.dp))
+
                 Text("Perícias", fontWeight = FontWeight.Bold)
                 allPericias.forEach { p ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -164,9 +169,7 @@ fun VantFilterDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text("OK")
-            }
+            TextButton(onClick = onDismiss) { Text("OK") }
         }
     )
 }
@@ -186,7 +189,7 @@ fun VantagensContent(
         val jsonString = context.assets.open("Vantagens.json")
             .bufferedReader()
             .use { it.readText() }
-        val json = kotlinx.serialization.json.Json {
+        val json = Json {
             ignoreUnknownKeys = true
             explicitNulls = false
             isLenient = true
@@ -195,42 +198,50 @@ fun VantagensContent(
         json.decodeFromString(jsonString)
     }
 
-// 1.1) aplica filtro de exibição conforme o toggle de múltiplos AA
-    val listaVantagens: List<Vantagem> = remember(multiplosAAHabilitados, listaVantagensRaw) {
-        if (multiplosAAHabilitados) {
-            // modo NOVO: esconder o seletor base e exibir as 5 variantes específicas
-            listaVantagensRaw.filterNot { it.id == "antecedente_arcano" }
-        } else {
-            // modo LEGADO: mostrar o seletor base e esconder as variantes
-            listaVantagensRaw.filterNot { it.id.startsWith("antecedente_arcano_") }
+    // 1.1) aplica filtro de exibição conforme o toggle de múltiplos AA
+    val listaVantagens: List<Vantagem> =
+        remember(multiplosAAHabilitados, listaVantagensRaw) {
+            if (multiplosAAHabilitados) {
+                // modo NOVO: esconder o seletor base e exibir as 5 variantes específicas
+                listaVantagensRaw.filterNot { it.id == "antecedente_arcano" }
+            } else {
+                // modo LEGADO: mostrar o seletor base e esconder as variantes
+                listaVantagensRaw.filterNot { it.id.startsWith("antecedente_arcano_") }
+            }
+        }
+
+    // Mapa id -> nome para mensagens de pré-requisito
+    val idParaNome = remember(listaVantagens) {
+        listaVantagens.associate { it.id to it.nome }
+    }
+
+    // agrupamentos e filtros básico/super
+    val categoriasBy = remember(listaVantagens) {
+        listaVantagens.groupBy { it.categoria }
+    }
+    val categoriasFiltradas = remember(categoriasBy, state.modoSupers) {
+        categoriasBy.mapValues { (_, v) ->
+            if (state.modoSupers) v else v.filter { it.origem.equals("BASICO", true) }
         }
     }
 
     // Estados principais
-    var showHelp            by rememberSaveable { mutableStateOf(false) }
-    var filter              by remember          { mutableStateOf(VantFilter()) }    // <<== aqui
-    var showFilterDialog    by rememberSaveable { mutableStateOf(false) }
-    var tempErrorMsg        by remember          { mutableStateOf("") }
-    var showTempError       by remember          { mutableStateOf(false) }
-    var selectedReqs        by remember          { mutableStateOf<List<String>>(emptyList()) }
-    var pendingVantagem     by remember          { mutableStateOf<Vantagem?>(null) }
-    var showChoiceDialog    by rememberSaveable { mutableStateOf(false) }
+    var showHelp by rememberSaveable { mutableStateOf(false) }
+    var filter by remember { mutableStateOf(VantFilter()) }
+    var showFilterDialog by rememberSaveable { mutableStateOf(false) }
+    var tempErrorMsg by remember { mutableStateOf("") }
+    var showTempError by remember { mutableStateOf(false) }
+    var selectedReqs by remember { mutableStateOf<List<String>>(emptyList()) }
+    var pendingVantagem by remember { mutableStateOf<Vantagem?>(null) }
+    var showChoiceDialog by rememberSaveable { mutableStateOf(false) }
     var pendingNovosPoderes by rememberSaveable { mutableStateOf<Vantagem?>(null) }
     var showNovosPoderesDialog by rememberSaveable { mutableStateOf(false) }
-    var dialogMostrandoAntecedente by remember   { mutableStateOf<Vantagem?>(null) }
+    var dialogMostrandoAntecedente by remember { mutableStateOf<Vantagem?>(null) }
     var subOpcaoSelecionada by rememberSaveable { mutableStateOf<String?>(null) }
 
     val scope = rememberCoroutineScope()
     val expandedMap = remember {
         Categoria.entries.associateWith { mutableStateOf(false) }
-    }
-
-    // agrupamentos e filtros básico/super
-    val categoriasBy = remember { listaVantagens.groupBy { it.categoria } }
-    val categoriasFiltradas = remember(state.modoSupers) {
-        categoriasBy.mapValues { (_, v) ->
-            if (state.modoSupers) v else v.filter { it.origem.equals("BASICO", true) }
-        }
     }
 
     // contar iniciais para remoção
@@ -242,15 +253,15 @@ fun VantagensContent(
 
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
-
     Column(modifier = Modifier.fillMaxWidth()) {
         // cabeçalho
         SectionHeader(
-            onHelpClick          = { showHelp = true },
-            centerText           = "Pontos restantes: ${state.pontosVantagem}",
+            onHelpClick = { showHelp = true },
+            centerText = "Pontos restantes: ${state.pontosVantagem}",
             onListaCompletaClick = if (showLista) ({ onOpenVantagensDetail("") }) else null,
-            listaCompletaText    = "Lista Completa"
+            listaCompletaText = "Lista Completa"
         )
+
         if (state.nasceUmHeroi && !state.emProgresso) {
             AssistChip(
                 onClick = { /* no-op */ },
@@ -263,8 +274,14 @@ fun VantagensContent(
         if (showHelp) {
             AlertDialog(
                 onDismissRequest = { showHelp = false },
-                title  = { Text("Como funciona") },
-                text   = { Text("Toque nas vantagens para ver requisitos, ...\nUse filtro para refinar.") },
+                title = { Text("Como funciona") },
+                text = {
+                    Text(
+                        "Toque nas vantagens para ver os requisitos. " +
+                                "Dê dois toques na vantagem para comprá-la, desde que tenha pontos de vantagem " +
+                                "e atenda aos pré-requisitos."
+                    )
+                },
                 confirmButton = {
                     TextButton(onClick = { showHelp = false }) { Text("OK") }
                 }
@@ -275,7 +292,8 @@ fun VantagensContent(
 
         // botão de filtro
         Text(
-            text = if (filter.isEmpty()) "Filtrar vantagens" else "Filtros (${filter.totalSelections()})",
+            text = if (filter.isEmpty()) "Filtrar vantagens"
+            else "Filtros (${filter.totalSelections()})",
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 4.dp)
@@ -295,8 +313,12 @@ fun VantagensContent(
             val allPericias = listaPericias
                 .map { it.nome }
                 .filter { it in requiredPericias }
+
             VantFilterDialog(
-                allOrigens, allEstagios, allAtributos, allPericias,
+                allOrigens = allOrigens,
+                allEstagios = allEstagios,
+                allAtributos = allAtributos,
+                allPericias = allPericias,
                 current = filter,
                 onChange = { filter = it },
                 onDismiss = { showFilterDialog = false }
@@ -308,8 +330,7 @@ fun VantagensContent(
         // chips de selecionadas...
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement   = Arrangement.spacedBy(8.dp)
-
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             if (state.regraMultiplosIdiomas) {
                 AssistChip(
@@ -320,30 +341,34 @@ fun VantagensContent(
             }
 
             state.vantagensSelecionadas.forEachIndexed { index, vant ->
-                val isRacialFree = vant.nome.keyify() in state.vantagensAutomaticas.map { it.keyify() }
+                val isRacialFree =
+                    vant.nome.keyify() in state.vantagensAutomaticas.map { it.keyify() }
                 val requiredByAnother = state.vantagensSelecionadas.any { other ->
                     other != vant && other.requisitos.vantagensPrevias.any { reqId ->
                         reqId == vant.id
                     }
                 }
 
-                // 🔒 Bloqueio padrão + não permitir remover "Novos Poderes" em Progresso
+                // NOVO: se veio de superpoder, não pode ser removida aqui
+                val isFromSuperPoder = state.vantagensDePoder.contains(vant.id)
+
                 val baseRemovable = !locked &&
                         index >= initialCount &&
                         index >= state.frozenAdvCount &&
                         !isRacialFree &&
                         !requiredByAnother &&
+                        !isFromSuperPoder &&
                         vant.nome != "Superpoderes"
 
-                val canRemove = baseRemovable && !(state.emProgresso && vant.id == "novos_poderes")
+                // não permite remover Novos Poderes durante progresso
+                val canRemove =
+                    baseRemovable && !(state.emProgresso && vant.id == "novos_poderes")
 
                 AssistChip(
                     onClick = {
                         if (!canRemove) return@AssistChip
 
                         if (vant.id == "novos_poderes") {
-                            // 🔁 Só permitido na criação (canRemove já garante isso)
-                            // 1) Descobre o arcano escolhido no Antecedente Arcano
                             val escolhidoArcano = state.vantagensSelecionadas
                                 .firstOrNull { it.id == "antecedente_arcano" }
                                 ?.choice
@@ -352,26 +377,21 @@ fun VantagensContent(
                                 ?.trim()
                                 ?: ""
 
-                            // 2) Lê slots iniciais desse arcano (do arcanoInfo)
                             val initialSlots = arcanoInfo[escolhidoArcano]?.first ?: 0
 
-                            // 3) Desfaz a ÚLTIMA compra de "Novos Poderes" (remove aqueles poderes e compacta slots)
                             state.desfazerUltimosNovosPoderes(
-                                versionKey = escolhidoArcano, // use a MESMA chave usada em getOrPut(...)
+                                versionKey = escolhidoArcano,
                                 initialSlots = initialSlots
                             )
 
-                            // 4) Remove a própria vantagem e reconta
                             state.vantagensSelecionadas.remove(vant)
                             state.pontosVantagem++
                             state.rebuildAllPericiaStacks()
-                        }
-                        else if (vant.nome.contains("Pontos de Poder", true)) {
+                        } else if (vant.nome.contains("Pontos de Poder", true)) {
                             state.removerPontosDePoder(vant)
                             state.pontosVantagem++
                             state.rebuildAllPericiaStacks()
-                        }
-                        else {
+                        } else {
                             state.removeVantagemDinheiro(vant)
                             state.vantagensSelecionadas.remove(vant)
                             state.pontosVantagem++
@@ -379,8 +399,15 @@ fun VantagensContent(
                         }
                     },
                     enabled = canRemove,
-                    label   = { Text(vant.choice?.let { "${vant.nome} ($it)" } ?: vant.nome) },
-                    leadingIcon = { Icon(Icons.Default.Close, contentDescription = null) }
+                    label = {
+                        Text(vant.choice?.let { "${vant.nome} ($it)" } ?: vant.nome)
+                    },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = if (canRemove) "Remover" else null
+                        )
+                    }
                 )
             }
         }
@@ -399,11 +426,14 @@ fun VantagensContent(
         ) {
             Column(Modifier.padding(8.dp)) {
                 when {
-                    showTempError -> Text(tempErrorMsg, color = MaterialTheme.colorScheme.error)
+                    showTempError ->
+                        Text(tempErrorMsg, color = MaterialTheme.colorScheme.error)
+
                     selectedReqs.isEmpty() -> Text(
                         "Selecione uma vantagem para ver requisitos",
                         style = MaterialTheme.typography.bodySmall
                     )
+
                     else -> selectedReqs.forEach { req ->
                         Text("• $req", style = MaterialTheme.typography.bodySmall)
                     }
@@ -415,10 +445,12 @@ fun VantagensContent(
 
         // seções por categoria
         categoriasFiltradas.forEach { (cat, lista) ->
+            // em modo supers, a categoria PODER é toda desabilitada
             if (state.modoSupers && cat == Categoria.PODER) return@forEach
+
             val expanded = expandedMap.getValue(cat)
             CollapsibleSection(
-                title    = cat.name,
+                title = cat.name,
                 expanded = expanded.value,
                 onToggle = { expanded.value = !expanded.value }
             ) {
@@ -447,50 +479,68 @@ fun VantagensContent(
                         .filter { vant ->
                             // origem
                             if (filter.origens.isNotEmpty() &&
-                                vant.origem.uppercase() !in filter.origens) return@filter false
+                                vant.origem.uppercase() !in filter.origens
+                            ) return@filter false
+
                             // estágio
                             if (filter.estagios.isNotEmpty() &&
-                                vant.requisitos.estagio !in filter.estagios) return@filter false
+                                vant.requisitos.estagio !in filter.estagios
+                            ) return@filter false
+
                             // atributos
                             if (filter.atributos.isNotEmpty() &&
-                                filter.atributos.intersect(vant.requisitos.atributoMin.keys).isEmpty())
-                                return@filter false
+                                filter.atributos.intersect(vant.requisitos.atributoMin.keys)
+                                    .isEmpty()
+                            ) return@filter false
+
                             // perícias
                             if (filter.pericias.isNotEmpty()) {
                                 val reqMin = vant.requisitos.periciaMin.keys
                                 val reqOpt = vant.requisitos.periciaMinOpcional.keys
-                                val vinc   = if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
+                                val vinc =
+                                    if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
                                 if (filter.pericias.intersect(reqMin + reqOpt + vinc).isEmpty())
                                     return@filter false
                             }
                             true
                         }
                         .forEach { vant ->
-                            // monta requisitos...
                             val reqList = buildList {
                                 listaDeEstagios.firstOrNull {
                                     it.nome.equals(vant.requisitos.estagio, true)
                                 }?.let { add("Estágio ≥ ${it.nome}") }
-                                vant.requisitos.atributoMin.forEach { (a,m) -> add("$a ≥ $m") }
-                                vant.requisitos.periciaMin.forEach  { (p,m) -> add("$p ≥ $m") }
-                                if (vant.requisitos.periciaMinOpcional.isNotEmpty()) {
-                                    add(vant.requisitos.periciaMinOpcional.entries.joinToString(" ou ") {
-                                        "${it.key} d${it.value}+"
-                                    })
-                                }
-                                // (substitua APENAS o bloco de pré-requisitos dentro do buildList)
-                                val idParaNome = remember(listaVantagens) { listaVantagens.associate { it.id to it.nome } }
 
+                                vant.requisitos.atributoMin.forEach { (a, m) ->
+                                    add("$a ≥ $m")
+                                }
+                                vant.requisitos.periciaMin.forEach { (p, m) ->
+                                    add("$p ≥ $m")
+                                }
+
+                                if (vant.requisitos.periciaMinOpcional.isNotEmpty()) {
+                                    add(
+                                        vant.requisitos.periciaMinOpcional.entries.joinToString(" ou ") {
+                                            "${it.key} d${it.value}+"
+                                        }
+                                    )
+                                }
+
+                                // pré-requisitos de outras vantagens
                                 vant.requisitos.vantagensPrevias.forEach { prevId ->
-                                    val legivel = idParaNome[prevId] ?: prevId.replace('_', ' ').uppercase()
-                                    add("Pré‐requisito: $legivel")
+                                    val legivel = idParaNome[prevId]
+                                        ?: prevId.replace('_', ' ').uppercase()
+                                    add("Pré-requisito: $legivel")
                                 }
 
                                 if (vant.requisitos.exigeCS) add("Requer Carta Selvagem")
                                 if (vant.nome.trim().removeSuffix(":").keyify() == "profissional") {
-                                    add("Traço no teto máximo: escolha entre ${state.maxedTraits.joinToString()}")
+                                    add(
+                                        "Traço no teto máximo: escolha entre " +
+                                                state.maxedTraits.joinToString()
+                                    )
                                 }
                             }
+
                             Row(
                                 Modifier
                                     .fillMaxWidth()
@@ -504,23 +554,33 @@ fun VantagensContent(
                                                         tempErrorMsg = "Sem PV disponível"
                                                         showTempError = true
                                                     }
+
                                                     !state.podeSelecionar(vant) -> {
-                                                        tempErrorMsg = "Faltam requisitos para '${vant.nome}'"
+                                                        tempErrorMsg =
+                                                            "Faltam requisitos para '${vant.nome}'"
                                                         showTempError = true
                                                     }
+
                                                     vant.vinculadoPericia -> {
                                                         pendingVantagem = vant
                                                         showChoiceDialog = true
                                                     }
+
                                                     vant.id == "antecedente_arcano" -> {
                                                         dialogMostrandoAntecedente = vant
                                                     }
+
                                                     vant.id == "novos_poderes" -> {
                                                         pendingNovosPoderes = vant
                                                         showNovosPoderesDialog = true
                                                     }
+
                                                     else -> {
-                                                        if (vant.nome.contains("Pontos de Poder", true)) {
+                                                        if (vant.nome.contains(
+                                                                "Pontos de Poder",
+                                                                true
+                                                            )
+                                                        ) {
                                                             state.comprarPontoDePoder(vant)
                                                         } else {
                                                             state.applyVantagemDinheiro(vant)
@@ -529,17 +589,19 @@ fun VantagensContent(
                                                         state.pontosVantagem--
                                                         state.rebuildAllPericiaStacks()
 
-                                                        // --- NOVO BLOCO: consome PV pendente vindo de XP ---
+                                                        // consome PV pendente vindo de XP, se houver
                                                         if (state.pvFromXpOutstanding > 0) {
                                                             state.pvFromXpOutstanding -= 1
                                                             if (state.pvFromXpOutstanding == 0) {
-                                                                state.overrideStageForVantagem = null
-                                                                state.openVantagensAfterGrant = false
+                                                                state.overrideStageForVantagem =
+                                                                    null
+                                                                state.openVantagensAfterGrant =
+                                                                    false
                                                             }
                                                         }
-
                                                     }
                                                 }
+
                                                 scope.launch {
                                                     delay(2_000)
                                                     showTempError = false
@@ -547,21 +609,28 @@ fun VantagensContent(
                                             }
                                         }
                                     )
-                                    .alpha(if (!locked && state.podeSelecionar(vant)) 1f else 0.3f)
+                                    .alpha(
+                                        if (!locked && state.podeSelecionar(vant)) 1f
+                                        else 0.3f
+                                    )
                                     .padding(vertical = 8.dp, horizontal = 4.dp)
                             ) {
-                                Text(vant.nome, Modifier.weight(1f), fontWeight = FontWeight.Medium)
-                                // depois
+                                Text(
+                                    vant.nome,
+                                    Modifier.weight(1f),
+                                    fontWeight = FontWeight.Medium
+                                )
                                 if (showLista) {
                                     Icon(
                                         Icons.Default.Visibility,
                                         contentDescription = "Detalhes",
                                         modifier = Modifier
                                             .size(18.dp)
-                                            .clickable { onOpenVantagensDetail(vant.nome) }
+                                            .clickable {
+                                                onOpenVantagensDetail(vant.nome)
+                                            }
                                     )
                                 }
-
                             }
                         }
                 }
@@ -569,9 +638,7 @@ fun VantagensContent(
             Spacer(Modifier.size(8.dp))
         }
 
-        // ---------------------------------------------------------------
-        // 10) Dialog “Escolha Antecedente Arcano” (Dom, Magia, Milagres, Psiônicos, Ciência)
-        // ---------------------------------------------------------------
+        // 10) Dialog “Escolha Antecedente Arcano”
         if (dialogMostrandoAntecedente != null) {
             val vantOriginal = dialogMostrandoAntecedente!!
             val opcoesArcano: List<String> = vantOriginal.choiceOptions
@@ -606,7 +673,6 @@ fun VantagensContent(
                     TextButton(
                         enabled = (subOpcaoSelecionada != null),
                         onClick = {
-                            // Copia a vantagem “antecedente_arcano” com a escolha em.choice
                             val novaVantagem = vantOriginal.copy(
                                 choice = subOpcaoSelecionada
                             )
@@ -619,36 +685,33 @@ fun VantagensContent(
                             dialogMostrandoAntecedente = null
                             subOpcaoSelecionada = null
                         }
-                    ) {
-                        Text("OK")
-                    }
+                    ) { Text("OK") }
                 },
                 dismissButton = {
-                    TextButton(onClick = {
-                        dialogMostrandoAntecedente = null
-                        subOpcaoSelecionada = null
-                    }) {
-                        Text("Cancelar")
-                    }
+                    TextButton(
+                        onClick = {
+                            dialogMostrandoAntecedente = null
+                            subOpcaoSelecionada = null
+                        }
+                    ) { Text("Cancelar") }
                 }
             )
         }
 
-        // ---------------------------------------------------------------
-        // 11) Diálogo ChoiceDialog genérico (casos “vinculado_pericia” ou outras escolhas)
-        // ---------------------------------------------------------------
+        // 11) ChoiceDialog genérico (vinculado_pericia / profissional / etc.)
         if (showChoiceDialog && pendingVantagem != null) {
             state.identifyMaxedTraits()
             val vant = pendingVantagem!!
+
             val validOptions: List<String> = when {
-                // ARMA PREDILETA → opções vêm das perícias com d8+ (mantém a sua lógica original)
+                // ARMA PREDILETA → perícias com d8+
                 vant.id == "arma_predileta" -> {
                     listaPericias
                         .filter { per -> state.rawTotal(per) >= 8 }
                         .map { it.nome }
                 }
 
-                // ARMA PREDILETA APRIMORADA → só pode escolher entre as escolhas já feitas em ARMA PREDILETA
+                // ARMA PREDILETA APRIMORADA → escolhas já feitas em ARMA PREDILETA
                 vant.id == "arma_predileta_aprimorada" -> {
                     state.vantagensSelecionadas
                         .filter { it.id == "arma_predileta" && it.choice != null }
@@ -656,19 +719,19 @@ fun VantagensContent(
                         .distinct()
                 }
 
-                // PROFISSIONAL → restringe às perícias no teto (maxedTraits)
+                // PROFISSIONAL → só perícias no teto
                 vant.id == "profissional" -> {
                     vant.choiceOptions.filter { it in state.maxedTraits }
                 }
 
-                // ESPECIALISTA → só entre as escolhas já compradas em PROFISSIONAL
+                // ESPECIALISTA → escolhas já compradas em PROFISSIONAL
                 vant.id == "especialista" -> {
                     state.vantagensSelecionadas
                         .filter { it.id == "profissional" && it.choice != null }
                         .mapNotNull { it.choice }
                 }
 
-                // Genérico: evita repetir a mesma combinação (mesma vantagem + mesma choice)
+                // Genérico com maxSelections (evita repetir combinação)
                 vant.maxSelections > 0 -> {
                     val used = state.vantagensSelecionadas
                         .filter { it.id == vant.id && it.choice != null }
@@ -690,7 +753,7 @@ fun VantagensContent(
                 }
             } else {
                 ChoiceDialog(
-                    options   = validOptions,
+                    options = validOptions,
                     onConfirm = { choice ->
                         state.vantagensSelecionadas += vant.copy(choice = choice)
                         state.pontosVantagem--
@@ -706,22 +769,27 @@ fun VantagensContent(
             }
         }
 
-        // ---------------------------------------------------------------
-        // 12) Único bloco: “MultipleSelectionDialog” para NOVOS PODERES (comprável infinitas vezes)
-        // ---------------------------------------------------------------
+        // 12) MultipleSelectionDialog para NOVOS PODERES
         if (showNovosPoderesDialog && pendingNovosPoderes != null) {
-            // Captura local não nulo para que o compilador faça smart cast:
             val vant = pendingNovosPoderes!!
 
-            // 1) Carrega lista completa de poderes do JSON “poderes.json”
+            // 1) Carrega lista completa de poderes
             val allPoderes: List<Poder> =
                 LocalContext.current.loadJsonAsset("poderes.json")
 
-            // 2) Filtra apenas poderes cujo estágio seja ≤ estágio atual do personagem
-            val curEst = listaPericias.indexOfFirst { it.nome == state.estagioAtual().nome }
+            // 2) Filtra por estágio ≤ estágio atual
+            val curEstIndex = listaDeEstagios.indexOfFirst {
+                it.nome == state.estagioAtual().nome
+            }
+
             val disponiveis = allPoderes
                 .filter { poder ->
-                    listaPericias.indexOfFirst { it.nome == poder.estagio } <= curEst
+                    val poderIndex = listaDeEstagios.indexOfFirst { it.nome == poder.estagio }
+                    if (curEstIndex == -1 || poderIndex == -1) {
+                        true
+                    } else {
+                        poderIndex <= curEstIndex
+                    }
                 }
                 .map { it.nome }
                 .filter { nome -> nome !in state.poderesSelecionados }
@@ -731,71 +799,42 @@ fun VantagensContent(
                 options = disponiveis,
                 maxSelections = 2,
                 onConfirm = { escolhas ->
-                    // ----------------------------------------------------------
-                    // Aqui extraímos qual “Antecedente Arcano” o jogador já comprou:
-                    // Procuramos dentro de state.vantagensSelecionadas o Vantagem
-                    // cujo id == "antecedente_arcano" e pegamos.choice (Dom, Magia etc).
-                    // ----------------------------------------------------------
                     val escolhidoArcano = state.vantagensSelecionadas
                         .firstOrNull { it.id == "antecedente_arcano" }
                         ?.choice
-                        ?: "" // Se der algo errado, ficará vazio, mas só irá funcionar se antecedente_arcano já estiver comprado.
+                        ?: ""
 
-                    // Normalizamos o texto para gerar a mesma chave que existe em arcanoInfo.json
-                    // (ex: "DOM", "MAGIA", "MILAGRES", "PSIONICOS", "CIENCIAESTRANHA", etc.)
                     val versionKey = escolhidoArcano
                         .uppercase()
                         .semAcentos()
                         .trim()
 
-                    // ----------------------------------------------------------
-                    // 3) Obtém quantos slots iniciais esse Arcano deveria ter (de arcanoInfo.json)
-                    // ----------------------------------------------------------
                     val initialSlots = arcanoInfo[versionKey]?.first ?: 0
 
-                    // ----------------------------------------------------------
-                    // 4) Garante que exista uma lista de slots no estado para esse versionKey
-                    // ----------------------------------------------------------
                     val slots = state.poderSlotsPorArcano.getOrPut(versionKey) {
                         mutableStateListOf<String?>().apply {
                             repeat(initialSlots) { add(null) }
                         }
                     }
 
-                    // ----------------------------------------------------------
-                    // 5) Preenche cada slot vazio com um dos poderes escolhidos
-                    // ----------------------------------------------------------
                     escolhas.forEach { poder ->
                         val firstEmpty = slots.indexOfFirst { it == null }
                         if (firstEmpty >= 0) {
                             slots[firstEmpty] = poder
                         } else {
-                            // Se não houver mais slot “nulo”, adicionamos ao final
                             slots.add(poder)
                         }
                     }
 
-                    // Atualiza o mapa de slots (embora getOrPut já tenha feito internamente, mas reforça)
                     state.poderSlotsPorArcano[versionKey] = slots
-
-                    // ----------------------------------------------------------
-                    // 6) Atualiza a lista geral de poderes selecionados no estado
-                    // ----------------------------------------------------------
                     state.poderesSelecionados.clear()
                     state.poderesSelecionados.addAll(slots.filterNotNull())
                     state.registrarNovosPoderes(versionKey, escolhas)
 
-                    // ----------------------------------------------------------
-                    // 7) Finalmente, registra a própria vantagem “novos_poderes” e decrementa PV
-                    // ----------------------------------------------------------
                     state.vantagensSelecionadas += vant
                     state.pontosVantagem--
                     state.rebuildAllPericiaStacks()
 
-                    // Como “novos_poderes” pode ser comprado infinitas vezes, não
-                    // estamos a bloquear; basta deixá‐lo em pendingNovosPoderes para
-                    // poder repetir. Mas podemos limpar aqui se quisermos reabrir o diálogo
-                    // sempre ao clicar novamente.
                     showNovosPoderesDialog = false
                     pendingNovosPoderes = null
                 },

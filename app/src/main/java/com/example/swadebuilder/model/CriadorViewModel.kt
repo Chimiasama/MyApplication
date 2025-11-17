@@ -393,14 +393,24 @@ class CriadorViewModel : ViewModel() {
             is PowerEffect.BonusAparar -> { /* ok */ }
 
             is PowerEffect.SuperVantagem -> {
-                val vant = listaVantagens.firstOrNull { it.id == efeito.vantagemId }
-                    ?: return InvestCheck(false, "Vantagem não encontrada: ${efeito.vantagemId}.")
+                val vant = listaVantagens.firstOrNull {
+                    it.id.equals(efeito.vantagemId, ignoreCase = true)
+                } ?: return InvestCheck(false, "Vantagem não encontrada: ${efeito.vantagemId}.")
+
+                // NÃO permitir comprar de novo se já tiver a vantagem de qualquer forma
+                if (state.vantagensSelecionadas.any { it.id == vant.id }) {
+                    return InvestCheck(false, "Você já possui a vantagem ${vant.nome}.")
+                }
+
                 // valida requisitos ignorando Estágio (simula “Lendário” para não travar pelo estágio)
                 val progressoAnterior = state.overrideStageForVantagem
                 state.overrideStageForVantagem = "Lendário"
                 val permitido = state.podeSelecionar(vant)
                 state.overrideStageForVantagem = progressoAnterior
-                if (!permitido) return InvestCheck(false, "Requisitos não atendidos para a vantagem (exceto Estágio).")
+
+                if (!permitido) {
+                    return InvestCheck(false, "Requisitos não atendidos para a vantagem (exceto Estágio).")
+                }
             }
         }
 
@@ -531,7 +541,9 @@ class CriadorViewModel : ViewModel() {
             }
 
             is PowerEffect.SuperVantagem -> {
-                listaVantagens.firstOrNull { it.id == efeito.vantagemId }?.let { v ->
+                listaVantagens.firstOrNull {
+                    it.id.equals(efeito.vantagemId, ignoreCase = true)
+                }?.let { v ->
                     state.removerVantagemPorSuper(v)
                 }
             }

@@ -50,10 +50,14 @@ import com.example.swadebuilder.R
 import com.example.swadebuilder.SectionCard
 import com.example.swadebuilder.SectionHeader
 import com.example.swadebuilder.SuperPoder
+import com.example.swadebuilder.listaVantagens
+import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.PowerEffect
+import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.dialogs.SuperAtributosPickerDialog
 import com.example.swadebuilder.ui.dialogs.SuperPericiasPickerDialog
+import com.example.swadebuilder.ui.dialogs.SuperVantagensPickerDialog
 import kotlin.math.roundToInt
 
 // ==========================================================
@@ -80,7 +84,7 @@ fun BuySuperPowerDialog(
             val b = parts.getOrNull(1)?.toIntOrNull()
             if (a != null && b != null) {
                 val start = minOf(a, b)
-                val end   = maxOf(a, b)
+                val end = maxOf(a, b)
                 return (start..end).toList()
             }
         }
@@ -253,6 +257,24 @@ fun BuySuperPowerDialog(
 private fun Int.coLeastOne(): Int = if (this < 1) 1 else this
 private fun Int.coLeastZero(): Int = if (this < 0) 0 else this
 
+// Vantagens que não podem ser compradas como Supervantagem em campanhas de supers
+private fun Vantagem.bloqueadaComoSuperVantagem(): Boolean {
+    // Qualquer coisa ligada ao grupo Antecedente Arcano
+    if (grupoId?.equals("antecedente_arcano", ignoreCase = true) == true) return true
+    if (id.contains("antecedente_arcano", ignoreCase = true)) return true
+
+    // Qualquer vantagem que exija Antecedente Arcano como pré-requisito
+    if (requisitos.vantagensPrevias.any { req ->
+            req.equals("antecedente_arcano", ignoreCase = true) ||
+                    req.contains("antecedente_arcano", ignoreCase = true)
+        }
+    ) {
+        return true
+    }
+
+    return false
+}
+
 // ==========================================================
 // SECTION: Lista e compra de Superpoderes (com picker 2:1)
 // ==========================================================
@@ -319,8 +341,8 @@ fun SuperPoderesSection(
                     AssistChip(
                         onClick = {
                             // Tratamento especial para poderes que têm efeito na ficha
-                            when (p.poderId) {
-                                "sp_aparar" -> {
+                            when {
+                                p.poderId == "sp_aparar" -> {
                                     viewModel.desfazerInvestimentoSuper(
                                         poderId = p.poderId,
                                         custo = p.custo,
@@ -329,7 +351,7 @@ fun SuperPoderesSection(
                                     state.removerSuperPoder(p, desfazerNoLedger = false)
                                 }
 
-                                "sp_armor" -> {
+                                p.poderId == "sp_armor" -> {
                                     viewModel.desfazerInvestimentoSuper(
                                         poderId = p.poderId,
                                         custo = p.custo,
@@ -338,7 +360,7 @@ fun SuperPoderesSection(
                                     state.removerSuperPoder(p, desfazerNoLedger = false)
                                 }
 
-                                "sp_res" -> {
+                                p.poderId == "sp_res" -> {
                                     viewModel.desfazerInvestimentoSuper(
                                         poderId = p.poderId,
                                         custo = p.custo,
@@ -347,35 +369,44 @@ fun SuperPoderesSection(
                                     state.removerSuperPoder(p, desfazerNoLedger = false)
                                 }
 
-                                else -> {
-                                    // Superatributos comprados via lista:
-                                    // poderId = "sp_attr_FORCA", baseCost = steps aplicados
-                                    if (p.poderId.startsWith("sp_attr_")) {
-                                        val attrKey = p.poderId.removePrefix("sp_attr_")
-                                        viewModel.desfazerInvestimentoSuper(
-                                            poderId = p.poderId,
-                                            custo = p.custo,
-                                            efeito = PowerEffect.SuperAtributo(attrKey, p.baseCost)
-                                        )
-                                        state.removerSuperPoder(p, desfazerNoLedger = false)
-                                    }
-                                    // Superperícias compradas via picker:
-                                    // poderId = "sp_pericia_LUTAR", baseCost = steps aplicados
-                                    else if (p.poderId.startsWith("sp_pericia_")) {
-                                        // IMPORTANTÍSSIMO: manter a mesma key usada na compra (keyify/uppercase)
-                                        val perKey = p.poderId.removePrefix("sp_pericia_")  // sem lowercase()
+                                // Superatributos comprados via lista:
+                                // poderId = "sp_attr_FORCA", baseCost = steps aplicados
+                                p.poderId.startsWith("sp_attr_") -> {
+                                    val attrKey = p.poderId.removePrefix("sp_attr_")
+                                    viewModel.desfazerInvestimentoSuper(
+                                        poderId = p.poderId,
+                                        custo = p.custo,
+                                        efeito = PowerEffect.SuperAtributo(attrKey, p.baseCost)
+                                    )
+                                    state.removerSuperPoder(p, desfazerNoLedger = false)
+                                }
 
-                                        viewModel.desfazerInvestimentoSuper(
-                                            poderId = p.poderId,
-                                            custo = p.custo,
-                                            efeito = PowerEffect.SuperPericia(perKey, p.baseCost)
-                                        )
-                                        state.removerSuperPoder(p, desfazerNoLedger = false)
-                                    }
-                                    else {
-                                        // poderes "normais": comportamento antigo
-                                        state.removerSuperPoder(p)
-                                    }
+                                // Superperícias compradas via picker:
+                                // poderId = "sp_pericia_LUTAR", baseCost = steps aplicados
+                                p.poderId.startsWith("sp_pericia_") -> {
+                                    val perKey = p.poderId.removePrefix("sp_pericia_").lowercase()
+                                    viewModel.desfazerInvestimentoSuper(
+                                        poderId = p.poderId,
+                                        custo = p.custo,
+                                        efeito = PowerEffect.SuperPericia(perKey, p.baseCost)
+                                    )
+                                    state.removerSuperPoder(p, desfazerNoLedger = false)
+                                }
+
+                                // Supervantagem – cada chip representa UMA vantagem
+                                p.poderId.startsWith("sp_vant_") -> {
+                                    val vantId = p.poderId.removePrefix("sp_vant_")
+                                    viewModel.desfazerInvestimentoSuper(
+                                        poderId = p.poderId,
+                                        custo = p.custo,
+                                        efeito = PowerEffect.SuperVantagem(vantId)
+                                    )
+                                    state.removerSuperPoder(p, desfazerNoLedger = false)
+                                }
+
+                                else -> {
+                                    // poderes "normais": comportamento antigo
+                                    state.removerSuperPoder(p)
                                 }
                             }
                         },
@@ -539,6 +570,10 @@ fun SuperPoderesSection(
     var showSuperPericiaPicker by rememberSaveable { mutableStateOf(false) }
     var poolSuperPericia by rememberSaveable { mutableIntStateOf(0) }
 
+    // NOVO: picker de SUPERVANTAGEM (2 PP = 1 Vantagem)
+    var showSuperVantPicker by rememberSaveable { mutableStateOf(false) }
+    var poolSuperVant by rememberSaveable { mutableIntStateOf(0) }
+
     poderParaComprar?.let { poder ->
         // Se por algum motivo o estado mudar e os supers forem bloqueados,
         // garantimos que o diálogo não abre / é fechado.
@@ -616,6 +651,15 @@ fun SuperPoderesSection(
                             // cada ponto de baseCost = 1 passo de Superperícia
                             poolSuperPericia = baseCost
                             showSuperPericiaPicker = true
+                        }
+
+                        // SUPERVANTAGEM (2 PP = 1 vantagem escolhida)
+                        nome == "SUPERVANTAGEM" || nome == "SUPER VANTAGEM" -> {
+                            // cada 2 pontos compram 1 slot de Vantagem
+                            poolSuperVant = baseCost / 2
+                            if (poolSuperVant > 0) {
+                                showSuperVantPicker = true
+                            }
                         }
 
                         else -> {
@@ -718,6 +762,57 @@ fun SuperPoderesSection(
             onDismiss = { showSuperPericiaPicker = false }
         )
     }
+
+    // 8) picker de SUPERVANTAGEM (2 PP = 1 vantagem)
+    if (showSuperVantPicker) {
+        // candidatos: todas as vantagens não Lendárias que ainda não foram pegas
+        // e que não sejam Antecedentes Arcanos nem vantagens que dependam deles
+        val vantagensDisponiveis: List<Vantagem> = listaVantagens.filter { v ->
+            v.categoria != Categoria.LENDARIAS &&
+                    !v.bloqueadaComoSuperVantagem() &&
+                    state.vantagensSelecionadas.none { it.id == v.id }
+        }
+
+        SuperVantagensPickerDialog(
+            poolInicial = poolSuperVant,
+            vantagensDisponiveis = vantagensDisponiveis,
+            onConfirm = { selecionadas ->
+                // cada Vantagem aqui custa 2 PP
+                val custoPorVantagem = 2
+
+                selecionadas.forEach { v ->
+                    val poderId = "sp_vant_${v.id.lowercase()}"
+
+                    val gastoAtual = state.gastosPorPoder[poderId] ?: 0
+                    val limitePorPoder = viewModel.perPowerLimit(poderId)
+                    val restoPorPoder = (limitePorPoder - gastoAtual).coerceAtLeast(0)
+                    val restoDePool = state.superPontosDisponiveis.coerceAtLeast(0)
+
+                    val custoAplicavel = minOf(custoPorVantagem, restoPorPoder, restoDePool)
+
+                    if (custoAplicavel >= custoPorVantagem) {
+                        val r = viewModel.tentarInvestirSuper(
+                            poderId = poderId,
+                            custo = custoPorVantagem,
+                            efeito = PowerEffect.SuperVantagem(v.id)
+                        )
+                        if (r.ok) {
+                            state.comprarSuperPoder(
+                                nome = "Supervantagem: ${v.nome}",
+                                custo = custoPorVantagem,
+                                baseCost = 1,
+                                poderId = poderId,
+                                registrarNoLedger = false
+                            )
+                        }
+                    }
+                }
+
+                showSuperVantPicker = false
+            },
+            onDismiss = { showSuperVantPicker = false }
+        )
+    }
 }
 
 // ==========================================================
@@ -734,25 +829,25 @@ fun SuperPoderesContent(
     onHelpClick: () -> Unit
 ) {
     SectionCard(
-        title    = "Superpoderes",
+        title = "Superpoderes",
         expanded = expanded,
         onToggle = onToggle,
-        icon     = Icons.Filled.FlashOn
+        icon = Icons.Filled.FlashOn
     ) {
         val showLista = booleanResource(R.bool.show_lista_completa)
 
         SectionHeader(
-            onHelpClick          = onHelpClick,
-            centerText           = "Pontos de Super: ${state.superPontosDisponiveis}",
-            onCenterClick        = onToggle,
+            onHelpClick = onHelpClick,
+            centerText = "Pontos de Super: ${state.superPontosDisponiveis}",
+            onCenterClick = onToggle,
             onListaCompletaClick = if (showLista) onOpenSuperPoderesDetail else null,
-            listaCompletaText    = "Lista Completa"
+            listaCompletaText = "Lista Completa"
         )
 
         SuperPoderesSection(
-            state             = state,
+            state = state,
             listaSuperPoderes = listaSuperPoderes,
-            expanded          = expanded
+            expanded = expanded
         )
     }
 }
