@@ -3219,6 +3219,7 @@ fun UnifiedScreen(
     var showMeioElfoDialog by rememberSaveable { mutableStateOf(false) }
     var pendingMeioElfoKey by rememberSaveable { mutableStateOf<String?>(null) }
     // ---------------------------------
+    val supersLocked = state.criacaoBasicaCongelada
 
     Column(
         modifier = Modifier
@@ -3237,6 +3238,7 @@ fun UnifiedScreen(
         // ─── Ancestralidades ──────────────────────────────────────────────────────
         AncestralidadesSection(
             currentAncestralidade = state.ancestralidade,
+            supersLocked = supersLocked,
             onOpenListaAncestralidadesDetail = onOpenListaAncestralidadesDetail,
             onSelectAncestralidade = { nome ->
                 val key = nome.uppercase().semAcentos()

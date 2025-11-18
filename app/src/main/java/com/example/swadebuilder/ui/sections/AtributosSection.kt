@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.SectionHeader
+import com.example.swadebuilder.criacaoBasicaCongelada   // <<< IMPORT NOVO
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.toDiceString
@@ -48,7 +49,9 @@ fun AtributosContent(
     state: CriadorState,
     onOpenAtributosDetail: () -> Unit
 ) {
-    val locked = (state.progresso > 0) || state.faseSupersAtiva || state.emProgresso
+    // Agora travamos tudo com base na fase global
+    val locked = state.criacaoBasicaCongelada
+
     var showHelp by rememberSaveable { mutableStateOf(false) }
 
     // Usa a surface do tema

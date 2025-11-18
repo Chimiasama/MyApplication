@@ -50,6 +50,7 @@ import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.SectionHeader
 import com.example.swadebuilder.arcanoInfo
+import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.mapaAtributosDisplay
@@ -249,7 +250,9 @@ fun VantagensContent(
     LaunchedEffect(state.emProgresso) {
         if (state.emProgresso) initialCount = state.vantagensSelecionadas.size
     }
-    val locked = state.progresso > 0 && !state.emProgresso
+
+    // Agora usamos a fase global + emProgresso
+    val locked = state.criacaoBasicaCongeladaComXp
 
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 

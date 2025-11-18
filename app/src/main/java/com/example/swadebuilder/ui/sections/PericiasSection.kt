@@ -47,6 +47,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.SectionHeader
+import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.EspecializacoesDto
@@ -59,7 +60,8 @@ fun PericiasContent(
     state: CriadorState,
     onOpenPericiasDetail: () -> Unit
 ) {
-    val locked = state.progresso > 0
+    val locked = state.criacaoBasicaCongelada
+
     var showHelp by rememberSaveable { mutableStateOf(false) }
 
     // Diálogo para PRIMEIRA especialização (quando compra a perícia)

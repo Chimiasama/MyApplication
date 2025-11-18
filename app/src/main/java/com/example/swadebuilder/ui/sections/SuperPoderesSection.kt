@@ -310,7 +310,23 @@ fun SuperPoderesSection(
     var showNivelDialog by rememberSaveable { mutableStateOf(false) }
 
     // função helper: aplicar o nível (igual ao que o slider fazia)
+    // função helper: aplicar o nível (igual ao que o slider fazia)
     fun aplicarNivelSuper(novoNivel: Int) {
+        // NÍVEL 0 = "voltar para criação": zera supers e volta a fase BASE
+        if (novoNivel <= 0) {
+            state.superNivelCampanha = null
+            state.superPontosTotais = 0
+            state.superPontosDisponiveis = 0
+            state.superLimite = 0
+            state.superLimitePorPoder = 0
+            state.faseSupersAtiva = false    // só pra manter a flag coerente
+
+            // como superPontosTotais = 0 e superNivelCampanha = null,
+            // o faseFluxo volta pra BASE e destrava as seções
+            return
+        }
+
+        // níveis "reais" 1..5
         val nivel = novoNivel.coerceIn(1, 5)
         state.superNivelCampanha = nivel
 
@@ -324,6 +340,9 @@ fun SuperPoderesSection(
         // recalcula gastos pelos poderes (mais robusto)
         val gastos = state.gastosPorPoder.values.sum()
         state.superPontosDisponiveis = (total - gastos).coerceAtLeast(0)
+
+        // marca que a fase de supers realmente está ativa
+        state.faseSupersAtiva = true
     }
 
     Column(
@@ -529,6 +548,31 @@ fun SuperPoderesSection(
             title = { Text("Escolher nível de Superpoderes") },
             text = {
                 Column(Modifier.fillMaxWidth()) {
+
+                    // NÍVEL 0: volta para fase de criação
+                    TextButton(
+                        onClick = {
+                            aplicarNivelSuper(0)
+                            showNivelDialog = false
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(Modifier.fillMaxWidth()) {
+                            Text(
+                                text = "Nível 0 – voltar à criação",
+                                fontWeight = if (nivelAtual == null)
+                                    FontWeight.Bold else FontWeight.Normal
+                            )
+                            Text(
+                                text = "Zera os pontos de superpoder e desbloqueia Atributos, Perícias, Ancestralidades, etc.",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+
+                    HorizontalDivider()
+
+                    // Níveis 1 a 5: campanha supers ativa
                     (1..5).forEach { nivel ->
                         val total = 15 * nivel
                         val limite = 5 * nivel

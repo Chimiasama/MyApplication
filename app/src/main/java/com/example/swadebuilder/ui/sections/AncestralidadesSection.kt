@@ -43,6 +43,7 @@ private const val ASSET_ANCESTRALIDADES = "listaancestralidade.json"
 @Composable
 fun AncestralidadesSection(
     currentAncestralidade: String,
+    supersLocked: Boolean, // <- trava da fase de supers
     onOpenListaAncestralidadesDetail: () -> Unit,
     onSelectAncestralidade: (String) -> Unit
 ) {
@@ -70,9 +71,15 @@ fun AncestralidadesSection(
         onToggle = { expSection.value = !expSection.value },
         icon = Icons.AutoMirrored.Filled.MenuBook
     ) {
+        val centerLabel = if (supersLocked) {
+            "Ancestralidade: ${selected.value} (travado na fase Supers)"
+        } else {
+            "Ancestralidade: ${selected.value}"
+        }
+
         SectionHeader(
             onHelpClick = { showHelp.value = true },
-            centerText = "Ancestralidade: ${selected.value}",
+            centerText = centerLabel,
             onCenterClick = null,
             onListaCompletaClick = if (showLista) onOpenListaAncestralidadesDetail else null,
             listaCompletaText = "Lista Completa"
@@ -82,16 +89,26 @@ fun AncestralidadesSection(
 
         ExposedDropdownMenuBox(
             expanded = expMenu.value,
-            onExpandedChange = { expMenu.value = !expMenu.value }
+            onExpandedChange = {
+                if (!supersLocked) {
+                    expMenu.value = !expMenu.value
+                }
+            }
         ) {
             TransparentOutlinedReadOnlyField(
                 text = selected.value,
-                enabled = true,
-                onClick = { expMenu.value = true },
+                enabled = !supersLocked, // desabilita o campo quando travado
+                onClick = {
+                    if (!supersLocked) {
+                        expMenu.value = true
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expMenu.value) } // <—
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expMenu.value)
+                }
             )
 
             ExposedDropdownMenu(
@@ -103,9 +120,11 @@ fun AncestralidadesSection(
                     DropdownMenuItem(
                         text = { Text(item.nome) },
                         onClick = {
-                            selected.value = item.nome
-                            expMenu.value = false
-                            onSelectAncestralidade(item.nome)
+                            if (!supersLocked) {
+                                selected.value = item.nome
+                                expMenu.value = false
+                                onSelectAncestralidade(item.nome)
+                            }
                         }
                     )
                 }
@@ -129,13 +148,14 @@ fun AncestralidadesSection(
         }
     }
 }
+
 @Composable
 fun TransparentOutlinedReadOnlyField(
     text: String,
     enabled: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    trailingIcon: (@Composable (() -> Unit))? = null // <- NOVO slot
+    trailingIcon: (@Composable (() -> Unit))? = null
 ) {
     androidx.compose.material3.OutlinedTextField(
         value = text,
@@ -144,9 +164,9 @@ fun TransparentOutlinedReadOnlyField(
         enabled = enabled,
         modifier = modifier
             .fillMaxWidth()
-            .then(Modifier) // mantém extensível
+            .then(Modifier)
             .clickable(enabled) { onClick() },
-        trailingIcon = trailingIcon, // <- injeta o ícone do dropdown
+        trailingIcon = trailingIcon,
         singleLine = true
         // mantenha aqui suas cores/shape/estilo atuais, se tiver
     )
