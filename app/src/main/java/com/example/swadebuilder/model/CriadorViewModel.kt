@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
+import com.example.swadebuilder.PurchasedPower
 import com.example.swadebuilder.adicionarVantagemPorSuper
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.listaComplicacoes
@@ -83,7 +84,7 @@ class CriadorViewModel : ViewModel() {
 
         state.idAtual = null
         state.nomePersonagem = ""
-        state.anotacoes = ""              // ← **ESSENCIAL** pra não vazar texto de outro personagem
+        state.anotacoes = ""              // ← evita vazar anotações de outro personagem
 
         state.cartaSelvagem = cartaSelvagem
         state.maisPontosPericias = maisPontosPericias
@@ -110,6 +111,31 @@ class CriadorViewModel : ViewModel() {
         state.spCostStackPorPericia.values.forEach   { it.clear() }
         state.poderSlotsPorArcano.clear()
         state.novosPoderesStacksPorArcano.clear()
+
+        // ─────────────────────────────────────────────────────────────
+        // RESET COMPLETO DE SUPERS – NÃO VAZAR ENTRE PERSONAGENS
+        // ─────────────────────────────────────────────────────────────
+        state.superPoderesComprados.clear()
+        state.superNivelCampanha = null
+        state.usarSemPontosDePoder = false
+
+        state.superPontosTotais = 0
+        state.superPontosDisponiveis = 0
+        state.superLimite = 0
+        state.superLimitePorPoder = 0
+        state.idPoderFavorecido = null
+        state.limiteDePoderDaCampanha = Int.MAX_VALUE
+
+        state.faseSupersAtiva = false
+        state.superAtributoIncs.clear()
+        state.superPericiaIncs.clear()
+        state.bonusPararFromPower = 0
+        state.bonusResFromPower = 0
+        state.armorFromPower = 0
+        state.vantagensDePoder.clear()
+        state.gastosPorPoder.clear()
+        state.naturalArmorFromRace = 0
+        // ─────────────────────────────────────────────────────────────
 
         state.dinheiro = 500
         state.progresso = 0
@@ -145,15 +171,23 @@ class CriadorViewModel : ViewModel() {
         )
 
         // Demais flags de modo (mantêm comportamento de telas/filtros)
-        state.modoSuperequip = salvo.modoSuperequip
+        state.modoSuperequip        = salvo.modoSuperequip
         state.modoSuperComplicacoes = salvo.modoSuperComplicacoes
+        state.usarSemPontosDePoder  = salvo.semPontosDePoder
 
         // Identidade, nome e anotações
         state.idAtual        = salvo.id
         state.nomePersonagem = salvo.nome
-        state.anotacoes      = salvo.anotacoes      // ← recupera as anotações salvas
+        state.anotacoes      = salvo.anotacoes
 
-        // 1) Atributos e perícias
+        // 2) Ancestralidade e flags gerais — APLICAR ANTES dos atributos/perícias
+        state.maisPontosPericias = salvo.maisPontosPericias
+        state.cartaSelvagem      = salvo.cartaSelvagem
+        state.heroisSemArmadura  = salvo.heroisSemArmadura
+        state.ancestralidade     = salvo.ancestralidade
+        state.aplicarAncestralidade(salvo.ancestralidade)
+
+        // 1) Atributos e perícias — só agora, para não serem sobrescritos pela ancestralidade
         state.valoresAtributos.forEach { (key, holder) ->
             holder.intValue = salvo.atributos[key] ?: 4
         }
@@ -161,13 +195,6 @@ class CriadorViewModel : ViewModel() {
             salvo.pericias[per.nome] ?: state.rawTotal(per)
         }
         state.rebuildPericias(desiredPericias)
-
-        // 2) Ancestralidade e flags gerais
-        state.maisPontosPericias = salvo.maisPontosPericias
-        state.cartaSelvagem      = salvo.cartaSelvagem
-        state.heroisSemArmadura  = salvo.heroisSemArmadura
-        state.ancestralidade     = salvo.ancestralidade
-        state.aplicarAncestralidade(salvo.ancestralidade)
 
         // 3) Vantagens — prioriza ID; fallback por nome (case-insensitive)
         state.vantagensSelecionadas.clear()
@@ -196,7 +223,7 @@ class CriadorViewModel : ViewModel() {
             }
         }
 
-        // 5) Equipamentos — busca em BÁSICO + SUPER (corrige sumiço pós-load)
+        // 5) Equipamentos — busca em BÁSICO + SUPER
         state.equipamentosComprados.clear()
         val todasCategorias = (categoriasBasico + categoriasSuper)
         val mapaItensPorNome = todasCategorias
@@ -216,6 +243,67 @@ class CriadorViewModel : ViewModel() {
             state.poderSlotsPorArcano[arcano] = mutableStateListOf<String?>().apply {
                 repeat(capacidade) { idx -> add(poderesLista.getOrNull(idx)) }
             }
+        }
+
+        // 7) SUPERS — campanha, ledger e snapshot
+        // 7.1 Ledger principal
+        state.idPoderFavorecido = salvo.idPoderFavorecido
+
+        state.superAtributoIncs.clear()
+        state.superAtributoIncs.putAll(salvo.superAtributoIncs)
+
+        state.superPericiaIncs.clear()
+        state.superPericiaIncs.putAll(salvo.superPericiaIncs)
+
+        state.updateBonusPararFromPower(salvo.bonusPararFromPower)
+        state.updateBonusResFromPower (salvo.bonusResFromPower)
+        state.updateArmorFromPower    (salvo.armorFromPower)
+
+        state.vantagensDePoder.clear()
+        state.vantagensDePoder.addAll(salvo.vantagensDePoder)
+
+        state.gastosPorPoder.clear()
+        state.gastosPorPoder.putAll(salvo.gastosPorPoder)
+
+        state.limiteDePoderDaCampanha = salvo.limiteDePoderDaCampanha
+
+        // 7.2 Pontos de supers, nível de campanha e limites
+        val totalSupers = salvo.superPontosTotais
+        state.superPontosTotais = totalSupers
+
+        if (salvo.modoSupers && totalSupers > 0) {
+            // 15 pontos por nível (I..V)
+            val nivel = (totalSupers / 15).coerceIn(1, 5)
+            state.superNivelCampanha = nivel
+
+            val limite = 5 * nivel
+            state.superLimite        = limite
+            state.superLimitePorPoder = limite
+
+            // Recalcula saldo a partir do ledger, ignorando possível desync no save antigo
+            val gastos = state.gastosPorPoder.values.sum()
+            state.superPontosDisponiveis = (totalSupers - gastos).coerceAtLeast(0)
+
+            state.faseSupersAtiva = true
+        } else {
+            state.superNivelCampanha   = null
+            state.superPontosDisponiveis = 0
+            state.superLimite          = 0
+            state.superLimitePorPoder  = 0
+            state.faseSupersAtiva      = false
+        }
+
+        // 7.3 Snapshot visual dos superpoderes comprados
+        state.superPoderesComprados.clear()
+        salvo.superpoderesComprados.forEach { nomePoder ->
+            state.superPoderesComprados.add(
+                PurchasedPower(
+                    nome     = nomePoder,
+                    custo    = 0, // custo já está refletido em gastosPorPoder
+                    baseCost = 0,
+                    poderId  = "sp_${nomePoder.keyify()}"
+                )
+            )
         }
 
         // 8) Dinheiro, pontos, especializações

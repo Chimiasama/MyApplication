@@ -4111,7 +4111,7 @@ Feito por Rafael S.W.
     // ── Diálogo de configurações iniciais ────────────────────────────────────────
     if (showNewOptionsDialog) {
         AlertDialog(
-            onDismissRequest = { },
+            onDismissRequest = { showNewOptionsDialog = false },
             title            = { Text("Configurações Iniciais") },
             text             = {
                 Column {
@@ -4373,7 +4373,7 @@ Feito por Rafael S.W.
                 }
             },
             dismissButton = {
-                TextButton(onClick = { }) {
+                TextButton(onClick = { showNewOptionsDialog = false }) {
                     Text("Cancelar")
                 }
             }
@@ -4381,22 +4381,29 @@ Feito por Rafael S.W.
     }
 
     // ── Diálogo de carregamento existente ────────────────────────────────────────
+    // ── Diálogo de carregamento existente ────────────────────────────────────────
     if (showLoadDialog) {
         AlertDialog(
-            onDismissRequest = { },
-            title            = { Text("Selecione um personagem") },
-            text             = {
+            onDismissRequest = {
+                showLoadDialog = false
+                pendingDelete = null
+            },
+            title = { Text("Selecione um personagem") },
+            text = {
                 LazyColumn {
                     items(nomesSalvos) { (displayName, fileKey) ->
                         Row(
                             Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    // CORREÇÃO: Carrega em background
+                                    // Carrega em background
                                     scope.launch(Dispatchers.IO) {
                                         val salvo = StorageUtils.carregarPersonagem(context, fileKey)
                                         withContext(Dispatchers.Main) {
                                             salvo?.let {
+                                                // Fecha o diálogo ao carregar
+                                                showLoadDialog = false
+                                                pendingDelete = null
                                                 onLoad(it)
                                             }
                                         }
@@ -4416,7 +4423,12 @@ Feito por Rafael S.W.
             },
             confirmButton = {},
             dismissButton = {
-                TextButton(onClick = { }) {
+                TextButton(
+                    onClick = {
+                        showLoadDialog = false
+                        pendingDelete = null
+                    }
+                ) {
                     Text("Cancelar")
                 }
             }
@@ -4424,20 +4436,22 @@ Feito por Rafael S.W.
     }
 
     // ── Diálogo de confirmação de exclusão ──────────────────────────────────────
+    // ── Diálogo de confirmação de exclusão ──────────────────────────────────────
     if (pendingDelete != null) {
         val (displayName, fileKey) = pendingDelete!!
         AlertDialog(
-            onDismissRequest = { },
-            title            = { Text("Confirmar exclusão") },
-            text             = { Text("Deseja realmente excluir \"$displayName\"?") },
-            confirmButton    = {
+            onDismissRequest = { pendingDelete = null },
+            title = { Text("Confirmar exclusão") },
+            text  = { Text("Deseja realmente excluir \"$displayName\"?") },
+            confirmButton = {
                 TextButton(onClick = {
-                    // CORREÇÃO: Deleta em background e atualiza a lista
                     scope.launch(Dispatchers.IO) {
                         StorageUtils.deletarPersonagem(context, fileKey)
                         val listaAtualizada = StorageUtils.listarPersonagens(context)
                         withContext(Dispatchers.Main) {
                             nomesSalvos = listaAtualizada
+                            // Fecha o diálogo depois de excluir
+                            pendingDelete = null
                         }
                     }
                 }) {
@@ -4445,7 +4459,7 @@ Feito por Rafael S.W.
                 }
             },
             dismissButton = {
-                TextButton(onClick = { }) {
+                TextButton(onClick = { pendingDelete = null }) {
                     Text("Cancelar")
                 }
             }
