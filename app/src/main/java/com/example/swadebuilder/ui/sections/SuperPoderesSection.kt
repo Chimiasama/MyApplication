@@ -47,10 +47,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.R
 import com.example.swadebuilder.SectionCard
 import com.example.swadebuilder.SectionHeader
 import com.example.swadebuilder.SuperPoder
+import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
@@ -376,7 +378,6 @@ fun SuperPoderesSection(
     var showNivelDialog by rememberSaveable { mutableStateOf(false) }
 
     // função helper: aplicar o nível (igual ao que o slider fazia)
-    // função helper: aplicar o nível (igual ao que o slider fazia)
     fun aplicarNivelSuper(novoNivel: Int) {
         // NÍVEL 0 = "voltar para criação": zera supers e volta a fase BASE
         if (novoNivel <= 0) {
@@ -386,10 +387,8 @@ fun SuperPoderesSection(
             state.superLimite = 0
             state.superLimitePorPoder = 0
             state.limiteDePoderDaCampanha = 0
-            state.faseSupersAtiva = false    // só pra manter a flag coerente
+            state.faseSupersAtiva = false
 
-            // como superPontosTotais = 0 e superNivelCampanha = null,
-            // o botão vai reabrir o diálogo normalmente
             return
         }
 
@@ -488,7 +487,7 @@ fun SuperPoderesSection(
                                 }
 
                                 else -> {
-                                    // poderes "normais": comportamento antigo
+                                    // poderes "normais" ou Bônus de Perícia: comportamento antigo
                                     state.removerSuperPoder(p)
                                 }
                             }
@@ -682,9 +681,14 @@ fun SuperPoderesSection(
     var showSuperVantPicker by rememberSaveable { mutableStateOf(false) }
     var poolSuperVant by rememberSaveable { mutableIntStateOf(0) }
 
+    // NOVO: BÔNUS DE PERÍCIA – só lembrete (vincula a uma perícia)
+    var showBonusPericiaPicker by rememberSaveable { mutableStateOf(false) }
+    var bonusPericiaBaseCost by rememberSaveable { mutableIntStateOf(0) }
+    var bonusPericiaTotalCost by rememberSaveable { mutableIntStateOf(0) }
+    var bonusPericiaNivel by rememberSaveable { mutableIntStateOf(0) }
+
     poderParaComprar?.let { poder ->
-        // Se por algum motivo o estado mudar e os supers forem bloqueados,
-        // garantimos que o diálogo não abre / é fechado.
+
         if (!supersLiberados) {
             poderParaComprar = null
         } else {
@@ -699,11 +703,9 @@ fun SuperPoderesSection(
             val saldoSp = state.superPontosDisponiveis
             val limiteBasePorPoder = state.superLimitePorPoder
 
-            // Se não for Armadura/Resistência, mantém o comportamento antigo.
-            val limiteParaDialog: Int =
-                if (poderIdEspecifico == null) {
-                    limiteBasePorPoder
-                } else {
+            val limiteParaDialog: Int = when {
+                // Armadura / Resistência (compartilham limite de campanha)
+                poderIdEspecifico != null -> {
                     // Quanto já foi gasto nesse poder específico (custo em SP)
                     val gastoAtualNeste = state.gastosPorPoder[poderIdEspecifico] ?: 0
                     val limiteIndividual = viewModel.perPowerLimit(poderIdEspecifico)
@@ -711,7 +713,7 @@ fun SuperPoderesSection(
 
                     // Quanto já foi gasto no par Armadura+Resistência (custo em SP)
                     val gastoArmor = state.gastosPorPoder["sp_armor"] ?: 0
-                    val gastoRes   = state.gastosPorPoder["sp_res"] ?: 0
+                    val gastoRes = state.gastosPorPoder["sp_res"] ?: 0
                     val gastoCompartilhado = gastoArmor + gastoRes
 
                     // Limite de campanha em termos de CUSTO total desses dois poderes
@@ -724,14 +726,26 @@ fun SuperPoderesSection(
                     // - o saldo de SP do personagem
                     minOf(restoIndividual, restoCompartilhado, saldoSp)
                 }
+
+                // NOVO: BÔNUS DE PERÍCIA conta como um único poder,
+                // mas o limite fino é checado no picker (upgrade por perícia).
+                nomeUpper == "BÔNUS DE PERÍCIA" ||
+                        nomeUpper == "BÔNUS DE PERICIA" ||
+                        nomeUpper == "BONUS DE PERÍCIA" ||
+                        nomeUpper == "BONUS DE PERICIA" -> {
+                    val limiteIndividual = viewModel.perPowerLimit("sp_bonus_pericia")
+                    minOf(limiteIndividual, saldoSp)
+                }
+
+                // Demais poderes: limite padrão
+                else -> limiteBasePorPoder
+            }
             // ----- FIM DO NOVO CÁLCULO -----
 
             BuySuperPowerDialog(
                 poder = poder,
                 pontosDisponiveis = saldoSp,
                 // Aqui passamos o limite já "apertado" para o diálogo.
-                // O próprio diálogo usa isso como teto para (base + modificadores),
-                // então a barrinha já respeita o limite compartilhado.
                 limitePorPoder = limiteParaDialog,
                 onConfirm = { baseCost, custoTotal ->
                     val nome = poder.nome.trim().uppercase()
@@ -809,6 +823,18 @@ fun SuperPoderesSection(
                             if (poolSuperVant > 0) {
                                 showSuperVantPicker = true
                             }
+                        }
+
+                        // NOVO: BÔNUS DE PERÍCIA – só registra lembrete vinculado à perícia
+                        nome == "BÔNUS DE PERÍCIA" ||
+                                nome == "BÔNUS DE PERICIA" ||
+                                nome == "BONUS DE PERÍCIA" ||
+                                nome == "BONUS DE PERICIA" -> {
+                            bonusPericiaBaseCost = baseCost
+                            bonusPericiaTotalCost = custoTotal
+                            // nível implícito: 2 PP -> +1 / 4 PP -> +2
+                            bonusPericiaNivel = if (baseCost >= 4) 2 else 1
+                            showBonusPericiaPicker = true
                         }
 
                         else -> {
@@ -961,6 +987,143 @@ fun SuperPoderesSection(
                 showSuperVantPicker = false
             },
             onDismiss = { showSuperVantPicker = false }
+        )
+    }
+
+    // 9) picker de BÔNUS DE PERÍCIA (só lembrete, com upgrade)
+    if (showBonusPericiaPicker) {
+        var selectedPericia by remember { mutableStateOf<Pericia?>(null) }
+
+        AlertDialog(
+            onDismissRequest = { showBonusPericiaPicker = false },
+            title = { Text("Escolher perícia para Bônus de Perícia") },
+            text = {
+                val scroll = rememberScrollState()
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 260.dp)
+                        .verticalScroll(scroll)
+                ) {
+                    Text(
+                        "Escolha a perícia que recebe o bônus. " +
+                                "Este poder não altera automaticamente a ficha, " +
+                                "serve apenas como lembrete.\n\n" +
+                                "Se a perícia já tiver um Bônus de Perícia, " +
+                                "ele será substituído pela nova versão."
+                    )
+                    Spacer(Modifier.height(8.dp))
+
+                    listaPericias.forEach { per ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { selectedPericia = per }
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(
+                                checked = selectedPericia == per,
+                                onCheckedChange = { checked ->
+                                    if (checked) selectedPericia = per
+                                }
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(per.nome)
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                val per = selectedPericia
+                val gastosTotais = state.gastosPorPoder["sp_bonus_pericia"] ?: 0
+                val limiteIndividual = viewModel.perPowerLimit("sp_bonus_pericia")
+                val custoNovo = bonusPericiaTotalCost
+
+                val podeConfirmar = if (per == null) {
+                    false
+                } else {
+                    val existente = state.superPoderesComprados.firstOrNull { p ->
+                        p.poderId == "sp_bonus_pericia" &&
+                                p.nome.contains("em ${per.nome}")
+                    }
+                    if (existente != null) {
+                        val custoAtual = existente.custo
+                        val gastosSemEsta = gastosTotais - custoAtual
+                        val novoTotalGastos = gastosSemEsta + custoNovo
+                        val custoExtra = (custoNovo - custoAtual).coerceAtLeast(0)
+                        novoTotalGastos <= limiteIndividual &&
+                                custoExtra <= state.superPontosDisponiveis
+                    } else {
+                        val novoTotalGastos = gastosTotais + custoNovo
+                        novoTotalGastos <= limiteIndividual &&
+                                custoNovo <= state.superPontosDisponiveis
+                    }
+                }
+
+                TextButton(
+                    enabled = podeConfirmar,
+                    onClick = {
+                        val pericia = selectedPericia ?: return@TextButton
+                        val poderId = "sp_bonus_pericia"
+                        val custoNovoLocal = bonusPericiaTotalCost
+                        val limiteIndLocal = viewModel.perPowerLimit(poderId)
+                        val gastosTotaisLocal = state.gastosPorPoder[poderId] ?: 0
+
+                        val existente = state.superPoderesComprados.firstOrNull { p ->
+                            p.poderId == poderId &&
+                                    p.nome.contains("em ${pericia.nome}")
+                        }
+
+                        if (existente != null) {
+                            // Upgrade: remover o antigo, checar limite e SP, depois criar o novo
+                            val custoAtual = existente.custo
+                            val gastosSemEsta = gastosTotaisLocal - custoAtual
+                            val novoTotalGastos = gastosSemEsta + custoNovoLocal
+                            val custoExtra = (custoNovoLocal - custoAtual).coerceAtLeast(0)
+
+                            if (novoTotalGastos > limiteIndLocal ||
+                                custoExtra > state.superPontosDisponiveis
+                            ) {
+                                showBonusPericiaPicker = false
+                                return@TextButton
+                            }
+
+                            // Remove o antigo (refaz ledger e SP)
+                            state.removerSuperPoder(existente, desfazerNoLedger = true)
+                        } else {
+                            // Compra nova
+                            val novoTotalGastos = gastosTotaisLocal + custoNovoLocal
+                            if (novoTotalGastos > limiteIndLocal ||
+                                custoNovoLocal > state.superPontosDisponiveis
+                            ) {
+                                showBonusPericiaPicker = false
+                                return@TextButton
+                            }
+                        }
+
+                        val nivel = bonusPericiaNivel.coerceAtLeast(1)
+                        val textoNivel = if (nivel == 1) "+1" else "+$nivel"
+                        val nomeChip = "Bônus de Perícia ($textoNivel em ${pericia.nome})"
+
+                        state.comprarSuperPoder(
+                            nome = nomeChip,
+                            custo = custoNovoLocal,
+                            baseCost = bonusPericiaBaseCost,
+                            poderId = poderId,
+                            registrarNoLedger = true
+                        )
+                        showBonusPericiaPicker = false
+                    }
+                ) {
+                    Text("Confirmar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showBonusPericiaPicker = false }) {
+                    Text("Cancelar")
+                }
+            }
         )
     }
 }

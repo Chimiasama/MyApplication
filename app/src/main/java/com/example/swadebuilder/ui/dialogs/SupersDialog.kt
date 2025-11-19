@@ -90,6 +90,10 @@ fun SupersDialog(
             add("sp_armor" to "Armadura (super)")
             add("sp_res"   to "Resistência (super)")
             add("sp_aparar" to "Aparar (super)")
+
+            // NOVO: Bônus de Perícia pode ser favorecido
+            add("sp_bonus_pericia" to "Bônus de Perícia")
+
             listaAtributos.forEach { a ->
                 add("sp_attr_${a.uppercase()}" to "Superatributo: $a")
             }

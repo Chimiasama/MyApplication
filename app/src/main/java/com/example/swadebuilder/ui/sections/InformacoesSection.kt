@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.SectionCard
+import com.example.swadebuilder.SectionHeader
 import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.valorAparar
@@ -59,8 +60,7 @@ fun InformacoesSection(
 ) {
     val context = LocalContext.current
 
-    // Gera um nome padrão "Nome 1", "Nome 2", ... Se estiver em branco
-    // CORREÇÃO: Carrega a lista de forma assíncrona
+    // Gera um nome padrão "Nome 1", "Nome 2", ... se estiver em branco
     val nomesSalvos = remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
 
     LaunchedEffect(Unit) {
@@ -69,7 +69,7 @@ fun InformacoesSection(
         }
     }
 
-    LaunchedEffect(nomesSalvos.value) { // <- Reage à lista carregada
+    LaunchedEffect(nomesSalvos.value) {
         if (state.nomePersonagem.isBlank()) {
             var idx = 1
             while (nomesSalvos.value.any { it.first == "Nome $idx" }) {
@@ -81,32 +81,27 @@ fun InformacoesSection(
 
     var expanded by rememberSaveable { mutableStateOf(false) }
     var showProgressDialog by rememberSaveable { mutableStateOf(false) }
-    var showXpHelpDialog  by rememberSaveable { mutableStateOf(false) }
+    var showXpHelpDialog by rememberSaveable { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
     SectionCard(
-        title    = "Informações",
+        title = "Informações",
         expanded = expanded,
         onToggle = { expanded = !expanded },
-        icon     = Icons.Default.Person
+        icon = Icons.Default.Person
     ) {
         Column(Modifier.padding(8.dp)) {
-            // 1) Estágio atual + botão de ajuda de XP
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Estágio: ${state.estagioAtual().nome}",
-                    fontWeight = FontWeight.Bold,
-                )
-                TextButton(onClick = { showXpHelpDialog = true }) {
-                    Text("?")
-                }
-            }
+
+            // 1) Cabeçalho no padrão das outras seções (com botão de ajuda)
+            SectionHeader(
+                onHelpClick = { showXpHelpDialog = true },
+                centerText = "Estágio: ${state.estagioAtual().nome}",
+                onCenterClick = null,
+                onListaCompletaClick = null,
+                listaCompletaText = ""
+            )
+
+            Spacer(Modifier.height(8.dp))
 
             // 2) Nome do personagem
             OutlinedTextField(
@@ -138,9 +133,6 @@ fun InformacoesSection(
                 )
             )
 
-            val justStarted = !state.emProgresso && state.creationComplete()
-            val hasAnyXp    = state.progresso > 0
-
             val arcanoVersions: List<String> = state.vantagensSelecionadas
                 .filter { it.id == "antecedente_arcano" }
                 .mapNotNull { it.choice?.keyify() }
@@ -154,11 +146,11 @@ fun InformacoesSection(
                 }
             }
 
-            val supersTerminados = (state.superPontosTotais > 0) && (state.superPontosDisponiveis == 0)
+            val supersTerminados =
+                (state.superPontosTotais > 0) && (state.superPontosDisponiveis == 0)
             val podeAbrirProgressos = state.emProgresso || supersTerminados
-            val podeUsarProgresso = supersTerminados &&
-                    (state.progressosDisponiveis > 0) &&
-                    (state.pontosVantagem == 0)
+            val podeUsarProgresso =
+                supersTerminados && (state.progressosDisponiveis > 0) && (state.pontosVantagem == 0)
 
             Row(
                 Modifier
@@ -169,7 +161,7 @@ fun InformacoesSection(
             ) {
                 Button(
                     onClick = { showProgressDialog = true },
-                    enabled = podeAbrirProgressos
+                    enabled = podeAbrirProgressos && poderesOk
                 ) {
                     Text("Progressos: ${state.progresso}")
                 }
@@ -181,7 +173,7 @@ fun InformacoesSection(
                             onUseProgress()
                         }
                     },
-                    enabled = podeUsarProgresso
+                    enabled = podeUsarProgresso && poderesOk
                 ) {
                     Text("Usar Progresso (${state.progressosDisponiveis})")
                 }
@@ -210,14 +202,16 @@ fun InformacoesSection(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     CircleStat(value = state.valorMovimentacao().toString(), label = "Movim.")
-                    CircleStat(value = state.valorAparar().toString(),       label = "Aparar")
+                    CircleStat(value = state.valorAparar().toString(), label = "Aparar")
                 }
                 Row(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    val temArmaduraDeEquip = state.equipamentosComprados.any { it.armadura != null }
-                    val bonusSemArmadura = if (state.heroisSemArmadura && !temArmaduraDeEquip) 2 else 0
+                    val temArmaduraDeEquip =
+                        state.equipamentosComprados.any { it.armadura != null }
+                    val bonusSemArmadura =
+                        if (state.heroisSemArmadura && !temArmaduraDeEquip) 2 else 0
 
                     val baseFinal = state.valorResistenciaFinal()
                     val armaduraEfetiva = state.valorArmaduraEfetiva()
@@ -242,18 +236,18 @@ fun InformacoesSection(
             if (showProgressDialog) {
                 AlertDialog(
                     onDismissRequest = { showProgressDialog = false },
-                    title            = { Text("Defina o Progresso (0–50)") },
-                    text             = {
+                    title = { Text("Defina o Progresso (0–50)") },
+                    text = {
                         Column {
                             Slider(
-                                value         = tempProgresso.toFloat(),
+                                value = tempProgresso.toFloat(),
                                 onValueChange = { new ->
                                     tempProgresso = new.roundToInt()
                                         .coerceIn(spentOnCreation, 50)
                                 },
                                 valueRange = spentOnCreation.toFloat()..50f,
-                                steps      = 50,
-                                modifier   = Modifier.fillMaxWidth()
+                                steps = 50,
+                                modifier = Modifier.fillMaxWidth()
                             )
                             Spacer(Modifier.height(8.dp))
                             Text(
@@ -289,19 +283,21 @@ fun InformacoesSection(
                             """
 Nesta seção você controla a “vida em campanha” do personagem.
 
-• O botão "Progressos: X" mostra quantos progressos totais o personagem já teve.
-  – Cada progresso corresponde a um avanço (normalmente 5 XP na mesa).
-  – Você pode ajustar esse valor no slider, para refletir o nível atual do personagem.
+• O cabeçalho mostra o Estágio atual (Novato, Experiente, Veterano etc.).
+• O botão "Progressos: X" indica quantos progressos totais o personagem já ganhou.
+  – Cada progresso normalmente corresponde a um avanço (geralmente 5 XP na mesa).
+  – Você pode ajustar esse valor no slider para deixar o app alinhado com a ficha da mesa.
 
-• "Usar Progresso (Y)" mostra quantos progressos ainda estão livres para gastar.
-  – Ao tocar nesse botão, o app abre a tela de uso de progressos.
-  – Lá você converte progressos em aumentos de atributo, perícias, vantagens ou outros efeitos que a mesa estiver usando.
+• "Usar Progresso (Y)" mostra quantos progressos ainda estão livres.
+  – Ao tocar, o app abre a tela de uso de progressos.
+  – Lá você converte progressos em aumentos de atributo, perícias, vantagens ou outros efeitos definidos pelo grupo.
 
-• "Desfazer Progresso" zera os progressos e volta o personagem para antes dos avanços, apenas dentro do app.
+• "Desfazer Progresso" limpa os avanços aplicados via app e volta o personagem
+  para antes desses progressos (apenas aqui no criador).
 
-A ideia é: 
+A ideia geral é:
 1) Ajustar o total de progressos que o personagem tem.
-2) Usar os progressos disponíveis quando a mesa conceder um novo avanço.
+2) Gastar os progressos disponíveis sempre que a mesa conceder um novo avanço.
 """.trimIndent(),
                             textAlign = TextAlign.Justify
                         )
@@ -350,8 +346,8 @@ A ideia é:
             val warning = when {
                 ratio >= 4f -> "Impossível carregar tanto peso, remova itens ou aumente a força."
                 ratio >= 3f -> "Peso extremo! Penalidades severas de sobrecarga."
-                ratio > 1f  -> "Peso excedido! Você está sobrecarregado."
-                else        -> ""
+                ratio > 1f -> "Peso excedido! Você está sobrecarregado."
+                else -> ""
             }
             if (warning.isNotEmpty()) {
                 Text(
