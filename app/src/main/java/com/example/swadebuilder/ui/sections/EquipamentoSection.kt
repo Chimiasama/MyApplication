@@ -225,11 +225,20 @@ fun EquipamentoSection(
         if (showHelp) {
             AlertDialog(
                 onDismissRequest = { showHelp = false },
-                title            = { Text("Ajuda – Equipamentos") },
+                title            = { Text("Ajuda – Equipamento") },
                 text             = {
                     Text(
-                        "Aqui você vai escolher seus equipamentos divididos por tipo, subtipo e subsubtipo. " +
-                                "Dê duplo‐toque em um item para comprá-lo. Use o filtro para refinar a lista."
+                        """
+Aqui você compra e gerencia o equipamento do personagem.
+
+• Os itens são organizados por tipo e subtipo.
+• Dê duplo toque em um item para comprá-lo; o custo em dinheiro é descontado automaticamente.
+• Itens comprados aparecem como “chips” no topo da seção; toque neles para remover e recuperar o valor.
+• O peso total carregado é mostrado abaixo dos itens comprados.
+• Use o filtro para limitar a visualização por origem, tipo, subtipo ou apenas itens acessíveis ao personagem.
+
+Itens especiais de Supers aparecem nas mesmas listas, mas seguem as regras próprias de custo/origem.
+""".trimIndent()
                     )
                 },
                 confirmButton = {

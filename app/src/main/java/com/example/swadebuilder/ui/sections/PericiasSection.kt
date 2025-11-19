@@ -110,12 +110,20 @@ fun PericiasContent(
             if (showHelp) {
                 AlertDialog(
                     onDismissRequest = { showHelp = false },
-                    title            = { Text("Como funciona") },
+                    title            = { Text("Ajuda – Perícias") },
                     text             = {
                         Text(
-                            "Cada avanço de perícia custa 1 SP se abaixo do atributo relacionado ou 2 SP se acima. " +
-                                    "A primeira especialização é obrigatória quando você compra a perícia; " +
-                                    "especializações extras custam 1 SP cada."
+                            """
+Nesta seção você distribui seus pontos de perícia (SP).
+
+• Cada avanço aumenta o dado da perícia (por exemplo, d4→d6).
+• O custo é 1 SP se o novo valor for até o atributo ligado, ou 2 SP se passar do atributo.
+• Perícias básicas nunca ficam abaixo de d4 durante a criação; as demais voltam para "-" se você devolver todos os pontos.
+• Botão “+” investe SP; botão “–” devolve apenas os pontos gastos na criação/complicações, respeitando mínimos exigidos por vantagens ou ancestralidade.
+• Perícias com especializações pedem um nome na primeira compra; especializações extras também custam SP e podem ser renomeadas.
+
+Regras especiais (como o bônus de Idoso em Astúcia) já são aplicadas automaticamente pelo app.
+""".trimIndent()
                         )
                     },
                     confirmButton    = {

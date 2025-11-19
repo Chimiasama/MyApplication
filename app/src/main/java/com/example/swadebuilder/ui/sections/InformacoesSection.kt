@@ -81,6 +81,7 @@ fun InformacoesSection(
 
     var expanded by rememberSaveable { mutableStateOf(false) }
     var showProgressDialog by rememberSaveable { mutableStateOf(false) }
+    var showXpHelpDialog  by rememberSaveable { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
     SectionCard(
@@ -90,14 +91,22 @@ fun InformacoesSection(
         icon     = Icons.Default.Person
     ) {
         Column(Modifier.padding(8.dp)) {
-            // 1) Estágio atual
-            Text(
-                text = "Estágio: ${state.estagioAtual().nome}",
-                fontWeight = FontWeight.Bold,
+            // 1) Estágio atual + botão de ajuda de XP
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
-            )
+                    .padding(bottom = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Estágio: ${state.estagioAtual().nome}",
+                    fontWeight = FontWeight.Bold,
+                )
+                TextButton(onClick = { showXpHelpDialog = true }) {
+                    Text("?")
+                }
+            }
 
             // 2) Nome do personagem
             OutlinedTextField(
@@ -265,6 +274,41 @@ fun InformacoesSection(
                     dismissButton = {
                         TextButton(onClick = { showProgressDialog = false }) {
                             Text("Cancelar")
+                        }
+                    }
+                )
+            }
+
+            // 6b) Diálogo de ajuda sobre XP / Progressos
+            if (showXpHelpDialog) {
+                AlertDialog(
+                    onDismissRequest = { showXpHelpDialog = false },
+                    title = { Text("Ajuda – XP / Progressos") },
+                    text = {
+                        Text(
+                            """
+Nesta seção você controla a “vida em campanha” do personagem.
+
+• O botão "Progressos: X" mostra quantos progressos totais o personagem já teve.
+  – Cada progresso corresponde a um avanço (normalmente 5 XP na mesa).
+  – Você pode ajustar esse valor no slider, para refletir o nível atual do personagem.
+
+• "Usar Progresso (Y)" mostra quantos progressos ainda estão livres para gastar.
+  – Ao tocar nesse botão, o app abre a tela de uso de progressos.
+  – Lá você converte progressos em aumentos de atributo, perícias, vantagens ou outros efeitos que a mesa estiver usando.
+
+• "Desfazer Progresso" zera os progressos e volta o personagem para antes dos avanços, apenas dentro do app.
+
+A ideia é: 
+1) Ajustar o total de progressos que o personagem tem.
+2) Usar os progressos disponíveis quando a mesa conceder um novo avanço.
+""".trimIndent(),
+                            textAlign = TextAlign.Justify
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { showXpHelpDialog = false }) {
+                            Text("Fechar")
                         }
                     }
                 )

@@ -24,7 +24,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -37,6 +36,7 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.SectionHeader
 import com.example.swadebuilder.arcanoInfo
+import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.loadJsonAsset
@@ -137,8 +137,7 @@ private fun ArcanoArea(
     locked: Boolean
 ) {
     val arcKey = arcKeyRaw.normAAKey()
-
-    // Cabeçalho com foco e PP (ou fórmula Sem PP)
+    var showHelp by rememberSaveable { mutableStateOf(false) }
     val (slotsCount, ppTotal, foco) = arcanoInfo[arcKey] ?: Triple(0, 0, "—")
     val showListaCompleta = booleanResource(R.bool.show_lista_completa)
     val center = if (state.usarSemPontosDePoder) {
@@ -148,11 +147,11 @@ private fun ArcanoArea(
     }
 
     SectionHeader(
-        onHelpClick = { /* ajuda */ },
+        onHelpClick = { showHelp = true },
         centerText  = center,
         onCenterClick = null,
         onListaCompletaClick = if (showListaCompleta) onOpenListaCompletaPoderes else null,
-        listaCompletaText = "Lista Completa"
+        listaCompletaText = "Poderes"
     )
 
     HorizontalDivider(thickness = 1.dp)

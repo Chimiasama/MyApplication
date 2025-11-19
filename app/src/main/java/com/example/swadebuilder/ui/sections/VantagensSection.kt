@@ -277,12 +277,19 @@ fun VantagensContent(
         if (showHelp) {
             AlertDialog(
                 onDismissRequest = { showHelp = false },
-                title = { Text("Como funciona") },
+                title = { Text("Ajuda – Vantagens") },
                 text = {
                     Text(
-                        "Toque nas vantagens para ver os requisitos. " +
-                                "Dê dois toques na vantagem para comprá-la, desde que tenha pontos de vantagem " +
-                                "e atenda aos pré-requisitos."
+                        """
+Nesta seção você gasta seus pontos de vantagem para comprar Vantagens.
+
+• Toque em uma vantagem para ver o resumo e os pré-requisitos.
+• Dê dois toques na mesma vantagem para comprá-la, se tiver pontos de vantagem suficientes e cumprir os requisitos.
+• Algumas vantagens são concedidas automaticamente (por ancestralidade, poderes etc.) e não podem ser removidas.
+• Certas vantagens servem só como “gatilho” para outras escolhas (como Antecedente Arcano ou Novos Poderes). O app cuida automaticamente dos efeitos mecânicos.
+
+Os pontos de vantagem restantes aparecem sempre no cabeçalho da seção.
+""".trimIndent()
                     )
                 },
                 confirmButton = {
