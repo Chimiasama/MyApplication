@@ -227,7 +227,6 @@ fun VantagensContent(
     }
 
     // Estados principais
-    var showHelp by rememberSaveable { mutableStateOf(false) }
     var filter by remember { mutableStateOf(VantFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
     var tempErrorMsg by remember { mutableStateOf("") }
@@ -259,7 +258,7 @@ fun VantagensContent(
     Column(modifier = Modifier.fillMaxWidth()) {
         // cabeçalho
         SectionHeader(
-            onHelpClick = { showHelp = true },
+            onHelpClick = null,
             centerText = "Pontos restantes: ${state.pontosVantagem}",
             onListaCompletaClick = if (showLista) ({ onOpenVantagensDetail("") }) else null,
             listaCompletaText = "Lista Completa"
@@ -272,30 +271,6 @@ fun VantagensContent(
                 leadingIcon = { Icon(Icons.Default.Visibility, contentDescription = null) }
             )
             Spacer(Modifier.size(8.dp))
-        }
-
-        if (showHelp) {
-            AlertDialog(
-                onDismissRequest = { showHelp = false },
-                title = { Text("Ajuda – Vantagens") },
-                text = {
-                    Text(
-                        """
-Nesta seção você gasta seus pontos de vantagem para comprar Vantagens.
-
-• Toque em uma vantagem para ver o resumo e os pré-requisitos.
-• Dê dois toques na mesma vantagem para comprá-la, se tiver pontos de vantagem suficientes e cumprir os requisitos.
-• Algumas vantagens são concedidas automaticamente (por ancestralidade, poderes etc.) e não podem ser removidas.
-• Certas vantagens servem só como “gatilho” para outras escolhas (como Antecedente Arcano ou Novos Poderes). O app cuida automaticamente dos efeitos mecânicos.
-
-Os pontos de vantagem restantes aparecem sempre no cabeçalho da seção.
-""".trimIndent()
-                    )
-                },
-                confirmButton = {
-                    TextButton(onClick = { showHelp = false }) { Text("OK") }
-                }
-            )
         }
 
         Spacer(Modifier.size(8.dp))

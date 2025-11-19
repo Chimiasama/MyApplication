@@ -322,7 +322,6 @@ fun BuySuperPowerDialog(
     )
 }
 
-// helpers locais para steps/slider de modificadores
 private fun Int.coLeastZero(): Int = if (this < 0) 0 else this
 
 // Vantagens que não podem ser compradas como Supervantagem em campanhas de supers
@@ -351,6 +350,7 @@ fun SuperPoderesSection(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
     expanded: Boolean,
+    onOpenSuperPoderesDetail: (String) -> Unit,
     viewModel: CriadorViewModel = viewModel()
 ) {
     if (!expanded) return
@@ -377,7 +377,10 @@ fun SuperPoderesSection(
 
     var showNivelDialog by rememberSaveable { mutableStateOf(false) }
 
-    // função helper: aplicar o nível (igual ao que o slider fazia)
+    // full vs lite: no full (show_lista_completa = true) mostramos o raio clicável
+    // e abrimos a tela de lista completa focada no poder
+    val showLista = booleanResource(R.bool.show_lista_completa)
+
     fun aplicarNivelSuper(novoNivel: Int) {
         // NÍVEL 0 = "voltar para criação": zera supers e volta a fase BASE
         if (novoNivel <= 0) {
@@ -570,6 +573,8 @@ fun SuperPoderesSection(
         Spacer(Modifier.height(8.dp))
 
         // 3) lista rolável de superpoderes para comprar
+        val showLista = booleanResource(R.bool.show_lista_completa)
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -580,7 +585,7 @@ fun SuperPoderesSection(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        // clique só funciona se supersLiberados E nível definido
+                        // clique no NOME: abre o diálogo de compra (quando permitido)
                         .clickable(enabled = podeComprarSupers) {
                             if (podeComprarSupers) {
                                 poderParaComprar = poder
@@ -594,10 +599,18 @@ fun SuperPoderesSection(
                         Modifier.weight(1f),
                         fontWeight = FontWeight.SemiBold
                     )
-                    Icon(
-                        Icons.Filled.FlashOn,
-                        contentDescription = "Comprar"
-                    )
+
+                    if (showLista) {
+                        Icon(
+                            imageVector = Icons.Filled.FlashOn,
+                            contentDescription = "Ver detalhes do superpoder",
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .clickable {
+                                    onOpenSuperPoderesDetail(poder.nome)
+                                }
+                        )
+                    }
                 }
                 HorizontalDivider()
             }
@@ -1138,8 +1151,7 @@ fun SuperPoderesContent(
     listaSuperPoderes: List<SuperPoder>,
     expanded: Boolean,
     onToggle: () -> Unit,
-    onOpenSuperPoderesDetail: () -> Unit,
-    onHelpClick: () -> Unit
+    onOpenSuperPoderesDetail: (String) -> Unit
 ) {
     SectionCard(
         title = "Superpoderes",
@@ -1150,17 +1162,21 @@ fun SuperPoderesContent(
         val showLista = booleanResource(R.bool.show_lista_completa)
 
         SectionHeader(
-            onHelpClick = onHelpClick,
+            onHelpClick = null,
             centerText = "Pontos de Super: ${state.superPontosDisponiveis}",
             onCenterClick = onToggle,
-            onListaCompletaClick = if (showLista) onOpenSuperPoderesDetail else null,
+            // clique na "Lista completa" abre a tela sem foco específico
+            onListaCompletaClick = if (showLista) {
+                { onOpenSuperPoderesDetail("") }
+            } else null,
             listaCompletaText = "Lista Completa"
         )
 
         SuperPoderesSection(
             state = state,
             listaSuperPoderes = listaSuperPoderes,
-            expanded = expanded
+            expanded = expanded,
+            onOpenSuperPoderesDetail = onOpenSuperPoderesDetail
         )
     }
 }

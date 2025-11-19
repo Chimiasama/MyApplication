@@ -306,6 +306,7 @@ class MainActivity : ComponentActivity() {
             var showSuperDetail           by rememberSaveable { mutableStateOf(false) }
             var showHelpSupersDialog by rememberSaveable { mutableStateOf(false) }
             var highlightedVantagem by rememberSaveable { mutableStateOf("") }
+            var highlightedSuperPoder by rememberSaveable { mutableStateOf("") }
             val context = LocalContext.current
             val activity = (context as? ComponentActivity)
             var mostrouTelaInicial by rememberSaveable { mutableStateOf(true) }
@@ -324,6 +325,42 @@ O limite favorecido (se houver) permite que um poder específico tenha um teto m
 
 O app calcula tudo automaticamente para você: gasto total, SP restantes, limites e validação.
 """.trimIndent()
+
+            var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
+
+            val helpAppText = """
+Este app ajuda você a criar personagens de Savage Worlds passo a passo.
+
+1) Tela Inicial
+   • Escolha se o personagem é Carta Selvagem, se terá mais pontos de Perícia, se usa modo Supers etc.
+   • Depois toque em "Criar Personagem".
+
+2) Ordem sugerida de preenchimento
+   • Ancestralidade → define bônus e limites de atributos/perícias.
+   • Atributos → distribua os pontos de atributo iniciais.
+   • Perícias → gaste os pontos de perícia disponíveis.
+   • Complicações → escolha Complicações para ganhar Pontos Bônus de Criação.
+   • Vantagens, Poderes e Equipamentos → usam esses recursos para finalizar a ficha.
+
+3) Pontos Bônus de Criação
+   • Cada Complicação Menor gera 1 Ponto Bônus.
+   • Cada Complicação Maior gera 2 Pontos Bônus.
+   • O contador em "Complicações" mostra quantos Pontos Bônus você tem livres.
+   • Esses Pontos Bônus podem ser usados em Atributos, Perícias, Vantagens ou Recursos
+     pelos botões específicos de cada seção.
+
+4) Ajustes e devoluções
+   • Se você usou Pontos Bônus em Atributos/Perícias/Vantagens/Recursos e quiser desfazer,
+     use as opções de "desfazer Pontos Bônus" nas seções correspondentes.
+   • Se ainda houver Pontos Bônus em uso, algumas Complicações não poderão ser removidas:
+     primeiro desfaça os pontos comprados com elas.
+
+5) Dicas gerais
+   • Toque no título de cada seção para expandir/fechar.
+   • Use "Lista Completa" para ler o texto completo das Vantagens, Perícias e Complicações.
+   • Use os ícones de salvar/imprimir no topo para guardar ou gerar a ficha em PDF.
+""".trimIndent()
+
 
             val emTelaDePreenchimento = !(
                     showVantagensDetail ||
@@ -351,6 +388,30 @@ O app calcula tudo automaticamente para você: gasto total, SP restantes, limite
                     title = { Text("Ajuda — Superpoderes") },
                     text = {
                         Text(helpSupersText)
+                    }
+                )
+            }
+
+            if (showHelpAppDialog) {
+                val scrollState = rememberScrollState()
+
+                AlertDialog(
+                    onDismissRequest = { showHelpAppDialog = false },
+                    confirmButton = {
+                        TextButton(onClick = { showHelpAppDialog = false }) {
+                            Text("OK")
+                        }
+                    },
+                    title = { Text("Como usar o app") },
+                    text = {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 400.dp)          // limite de altura do miolo do diálogo
+                                .verticalScroll(scrollState)      // agora o conteúdo rola
+                        ) {
+                            Text(helpAppText)
+                        }
                     }
                 )
             }
@@ -462,7 +523,20 @@ O app calcula tudo automaticamente para você: gasto total, SP restantes, limite
                                             colors = TopAppBarDefaults.topAppBarColors(
                                                 containerColor = Color.Transparent
                                             ),
-                                            title = {},
+                                            title = {
+                                                Box(
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    contentAlignment = Alignment.Center
+                                                ) {
+                                                    TextButton(onClick = { showHelpAppDialog = true }) {
+                                                        Text(
+                                                            text = "Como usar o app",
+                                                            fontSize = 16.sp,
+                                                            fontWeight = FontWeight.Medium
+                                                        )
+                                                    }
+                                                }
+                                            },
                                             navigationIcon = {
                                                 TextButton(onClick = { mostrouTelaInicial = true }) {
                                                     Text(
@@ -473,11 +547,9 @@ O app calcula tudo automaticamente para você: gasto total, SP restantes, limite
                                                 }
                                             },
                                             actions = {
-                                                // Adiciona o CoroutineScope aqui
                                                 val scope = rememberCoroutineScope()
 
                                                 IconButton(onClick = {
-                                                    // Lança a geração do PDF em uma thread de background (IO)
                                                     scope.launch(Dispatchers.IO) {
                                                         val personagem = MeuPersonagem(
                                                             nome            = state.nomePersonagem,
@@ -493,8 +565,6 @@ O app calcula tudo automaticamente para você: gasto total, SP restantes, limite
                                                             poderes         = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
                                                             dinheiro        = state.dinheiro,
                                                             pontosRestantes = state.pontosVantagem,
-
-                                                            // ===== NOVOS CAMPOS (SUPERS) =====
                                                             modoSupers              = state.modoSupers,
                                                             superPontosTotais       = state.superPontosTotais,
                                                             superPontosDisponiveis  = state.superPontosDisponiveis,
@@ -509,7 +579,7 @@ O app calcula tudo automaticamente para você: gasto total, SP restantes, limite
                                                             vantagensDePoder        = state.vantagensDePoder.toSet(),
                                                             gastosPorPoder          = state.gastosPorPoder.toMap(),
                                                             limiteDePoderDaCampanha = state.limiteDePoderDaCampanha,
-                                                            anotacoes              = state.anotacoes
+                                                            anotacoes               = state.anotacoes
                                                         )
                                                         salvarEExibirFichaPdf(this@MainActivity, personagem)
                                                     }
@@ -518,7 +588,6 @@ O app calcula tudo automaticamente para você: gasto total, SP restantes, limite
                                                 }
 
                                                 IconButton(onClick = {
-                                                    // Lança o salvamento em uma thread de background (IO)
                                                     scope.launch(Dispatchers.IO) {
                                                         val personagemId  = state.idAtual ?: UUID.randomUUID().toString()
                                                         val atributosMap  = state.valoresAtributos.mapValues { it.value.intValue }
@@ -536,17 +605,12 @@ O app calcula tudo automaticamente para você: gasto total, SP restantes, limite
                                                             ancestralidade     = state.ancestralidade,
                                                             vantagens          = state.vantagensSelecionadas.map { it.id },
                                                             complicacoes       = complicacoesList,
-
-                                                            // --- PREENCHENDO OS NOVOS CAMPOS ---
-                                                            cpPaCount       = state.cpPaStack.size,
-                                                            cpPvCount       = state.cpPvStack.size,
-                                                            cpSpCount       = state.cpSpStack.size,
-                                                            cpRecursosCount = state.cpRecursosStack.size,
-                                                            // -----------------------------------
-
+                                                            cpPaCount          = state.cpPaStack.size,
+                                                            cpPvCount          = state.cpPvStack.size,
+                                                            cpSpCount          = state.cpSpStack.size,
+                                                            cpRecursosCount    = state.cpRecursosStack.size,
                                                             equipamentos       = state.equipamentosComprados.map { it.nome },
                                                             poderes            = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
-
                                                             dinheiro           = state.dinheiro,
                                                             pontosRestantes    = state.pontosVantagem,
                                                             maisPontosPericias = state.maisPontosPericias,
@@ -555,24 +619,15 @@ O app calcula tudo automaticamente para você: gasto total, SP restantes, limite
                                                             semPontosDePoder   = state.usarSemPontosDePoder,
                                                             usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
                                                             especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
-
-                                                            // ===== MODO SUPER =====
                                                             modoSupers              = state.modoSupers,
                                                             modoSuperequip          = state.modoSuperequip,
                                                             modoSuperComplicacoes   = state.modoSuperComplicacoes,
-
-                                                            // Snapshot por conveniência
                                                             superpoderesComprados   = state.superPoderesComprados.map { it.nome },
-
-                                                            // ===== PERSISTÊNCIA DOS CAMPOS NOVOS =====
                                                             superPontosTotais       = state.superPontosTotais,
                                                             superPontosDisponiveis  = state.superPontosDisponiveis,
-
                                                             limitePorPoderPadrao    = state.limitePorPoderPadrao,
-
                                                             limiteFavorecido        = state.limiteFavorecido,
                                                             idPoderFavorecido       = state.idPoderFavorecido,
-
                                                             superAtributoIncs       = state.superAtributoIncs.toMap(),
                                                             superPericiaIncs        = state.superPericiaIncs.toMap(),
                                                             bonusPararFromPower     = state.bonusPararFromPower,
@@ -580,17 +635,13 @@ O app calcula tudo automaticamente para você: gasto total, SP restantes, limite
                                                             armorFromPower          = state.armorFromPower,
                                                             vantagensDePoder        = state.vantagensDePoder.toSet(),
                                                             gastosPorPoder          = state.gastosPorPoder.toMap(),
-
                                                             limiteDePoderDaCampanha = state.limiteDePoderDaCampanha,
-
-                                                            // ===== ANOTAÇÕES LIVRES =====
                                                             anotacoes               = state.anotacoes
                                                         )
 
                                                         state.idAtual = personagemId
                                                         StorageUtils.salvarPersonagem(context, salvo)
 
-                                                        // Volta para a Main thread para mostrar o Toast
                                                         withContext(Dispatchers.Main) {
                                                             Toast.makeText(context, "Personagem salvo com sucesso!", Toast.LENGTH_SHORT).show()
                                                         }
@@ -601,8 +652,8 @@ O app calcula tudo automaticamente para você: gasto total, SP restantes, limite
                                             }
                                         )
                                     }
-                                }
-                            ) { innerPadding ->
+                                },
+                                content = { innerPadding ->
                                 Box(
                                     modifier = Modifier
                                         .fillMaxSize()
@@ -655,8 +706,9 @@ O app calcula tudo automaticamente para você: gasto total, SP restantes, limite
                                                 onBack = { showPoderesDetail = false }
                                             )
                                             8 -> SuperPoderesDetailScreen(
-                                                state  = state,
-                                                onBack = { showSuperDetail = false }
+                                                state           = state,
+                                                highlightedName = highlightedSuperPoder,
+                                                onBack          = { showSuperDetail = false }
                                             )
 
                                             else -> UnifiedScreen(
@@ -671,7 +723,11 @@ O app calcula tudo automaticamente para você: gasto total, SP restantes, limite
                                                 onOpenListaAncestralidadesDetail = { showAncestralidadesDetail = true },
                                                 onOpenListaCompletaEquipamento   = { showEquipLista            = true },
                                                 onOpenPoderesDetail              = { showPoderesDetail         = true },
-                                                onOpenSuperPoderesDetail         = { showSuperDetail           = true },
+
+                                                onOpenSuperPoderesDetail         = { nomePoder ->
+                                                    highlightedSuperPoder = nomePoder
+                                                    showSuperDetail       = true
+                                                },
                                                 onHelpSuperClick                 = { showHelpSupersDialog = true },
 
                                                 expAttrs       = expAttrs,
@@ -693,6 +749,7 @@ O app calcula tudo automaticamente para você: gasto total, SP restantes, limite
                                     }
                                 }
                             }
+                            )
                         }
                     }
                 }
@@ -2681,10 +2738,10 @@ fun ProgressosSection(state: CriadorState) {
 
 @Composable
 fun SectionHeader(
-    onHelpClick: () -> Unit,
+    onHelpClick: (() -> Unit)? = null,
     centerText: String,
     onCenterClick: (() -> Unit)? = null,
-    onListaCompletaClick: (() -> Unit)? = null, // ← agora é opcional
+    onListaCompletaClick: (() -> Unit)? = null,
     listaCompletaText: String = "Lista Completa"
 ) {
     Row(
@@ -2693,29 +2750,51 @@ fun SectionHeader(
             .padding(horizontal = 8.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = onHelpClick) {
-            Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Ajuda")
+        // Coluna da esquerda: botão de ajuda (ou espaço em branco se não tiver ajuda)
+        if (onHelpClick != null) {
+            IconButton(onClick = onHelpClick) {
+                Icon(
+                    Icons.AutoMirrored.Filled.Help,
+                    contentDescription = "Ajuda"
+                )
+            }
+        } else {
+            // Espaçador para não bagunçar o alinhamento
+            Spacer(
+                modifier = Modifier.size(48.dp)
+            )
         }
 
+        // Texto central (clicável se onCenterClick != null)
         Text(
-            centerText,
-            Modifier
+            text = centerText,
+            modifier = Modifier
                 .weight(1f)
-                .then(if (onCenterClick != null) Modifier.clickable(onClick = onCenterClick) else Modifier)
+                .then(
+                    if (onCenterClick != null) {
+                        Modifier.clickable(onClick = onCenterClick)
+                    } else {
+                        Modifier
+                    }
+                )
                 .padding(horizontal = 8.dp),
             textAlign = TextAlign.Center,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )
 
-        if (onListaCompletaClick != null) {        // ← só mostra no full
+        // Botão "Lista completa" à direita (ou espaçador)
+        if (onListaCompletaClick != null && listaCompletaText.isNotEmpty()) {
             TextButton(onClick = onListaCompletaClick) {
                 Text(listaCompletaText, fontSize = 13.sp)
             }
+        } else {
+            Spacer(
+                modifier = Modifier.size(48.dp)
+            )
         }
     }
 }
-
 
 @Composable
 fun CollapsibleSection(
@@ -3182,12 +3261,9 @@ fun PreviewApp() {
         onOpenAtributosDetail = {},
         onOpenListaAncestralidadesDetail = {},
         onOpenListaCompletaEquipamento = {},
-
         onOpenPoderesDetail = {},
-        onOpenSuperPoderesDetail = {},
-
+        onOpenSuperPoderesDetail = { _ -> },
         onHelpSuperClick = {},
-
         expAttrs = true,
         onToggleAttrs = {},
         expPer = true,
@@ -3216,7 +3292,7 @@ fun UnifiedScreen(
     onOpenListaAncestralidadesDetail: () -> Unit,
     onOpenListaCompletaEquipamento: () -> Unit,
     onOpenPoderesDetail: () -> Unit,
-    onOpenSuperPoderesDetail: () -> Unit,
+    onOpenSuperPoderesDetail: (String) -> Unit,
     onHelpSuperClick: () -> Unit,
 
     expAttrs: Boolean,
@@ -3362,15 +3438,13 @@ fun UnifiedScreen(
                 listaSuperPoderes     = listaSuperPoderes,
                 expanded              = expSupers,
                 onToggle              = { expSupers = !expSupers },
-                onOpenSuperPoderesDetail = onOpenSuperPoderesDetail,
-                onHelpClick           = onHelpSuperClick
+                onOpenSuperPoderesDetail = onOpenSuperPoderesDetail
             )
         }
 
         // ─── Equipamentos ─────────────────────────────────────────────────────────
         EquipamentoSection(
             dinheiro                 = state.dinheiro,
-            onHelpClick              = { /* help opcional aqui */ },
             onListaCompletaClick     = onOpenListaCompletaEquipamento,
             onEquipamentoDoubleClick = { equipamento ->
                 val custo = (equipamento.custo as? JsonPrimitive)
@@ -4056,6 +4130,41 @@ fun TelaInicial(
 
     var showHelpSupersDialog by remember { mutableStateOf(false) }
 
+    var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
+
+    val helpAppText = """
+Este app ajuda você a criar personagens de Savage Worlds passo a passo.
+
+1) Tela Inicial
+   • Escolha se o personagem é Carta Selvagem, se terá mais pontos de Perícia, modo Supers, etc.
+   • Depois toque em "Criar Personagem".
+
+2) Ordem sugerida de preenchimento
+   • Ancestralidade → define bônus e limites de atributos/perícias.
+   • Atributos → distribua os pontos de atributo iniciais.
+   • Perícias → gaste os pontos de perícia disponíveis.
+   • Complicações → escolha Complicações para ganhar Pontos Bônus.
+   • Vantagens, Poderes e Equipamentos → gastam os recursos gerados nas etapas anteriores.
+
+3) Pontos Bônus (vindos de Complicações)
+   • Cada Complicação Menor gera 1 Ponto Bônus.
+   • Cada Complicação Maior gera 2 Pontos Bônus.
+   • O contador em "Complicações" mostra quantos Pontos Bônus você ainda tem livres.
+   • Esses Pontos Bônus podem ser usados em Atributos, Perícias, Vantagens ou Recursos,
+     através dos botões específicos em cada seção.
+
+4) Ajustes e devoluções
+   • Se você usou Pontos Bônus em Atributos/Perícias/Vantagens/Recursos e quiser desfazer,
+     use as opções de "desfazer Pontos Bônus" nas seções correspondentes.
+   • Se ainda houver Pontos Bônus em uso, algumas Complicações não poderão ser removidas:
+     primeiro desfaça os pontos comprados com elas.
+
+5) Dicas gerais
+   • Toque no título de cada seção para expandir/fechar.
+   • Use a opção "Lista Completa" para ler textos mais longos direto no app.
+   • Quando terminar, use o botão de salvar (ícone de disquete) ou de imprimir (ícone de impressora).
+""".trimIndent()
+
 
     Column(
         modifier = Modifier
@@ -4327,6 +4436,28 @@ Toque em um chip para desfazer aquela compra e recuperar os SP gastos.
                             confirmButton = {
                                 TextButton(onClick = { showHelpSupersDialog = false }) {
                                     Text("Fechar")
+                                }
+                            }
+                        )
+                    }
+
+                    if (showHelpAppDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showHelpAppDialog = false },
+                            confirmButton = {
+                                TextButton(onClick = { showHelpAppDialog = false }) {
+                                    Text("OK")
+                                }
+                            },
+                            title = { Text("Como usar o app") },
+                            text = {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .heightIn(max = 400.dp) // limita a altura do conteúdo do dialog
+                                        .verticalScroll(rememberScrollState())
+                                ) {
+                                    Text(helpAppText)
                                 }
                             }
                         )

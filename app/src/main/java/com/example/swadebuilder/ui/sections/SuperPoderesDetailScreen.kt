@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
@@ -26,6 +27,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,11 +52,26 @@ import kotlinx.serialization.json.contentOrNull
 @Composable
 fun SuperPoderesDetailScreen(
     state: CriadorState,
+    highlightedName: String,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
     val superPoderes: List<SuperPoder> = remember {
         context.loadJsonAsset("superpoderes.json")
+    }
+
+    val listState = rememberLazyListState()
+
+    // Se veio um nome destacado, rola até ele
+    LaunchedEffect(highlightedName, superPoderes) {
+        if (highlightedName.isNotEmpty()) {
+            val index = superPoderes.indexOfFirst {
+                it.nome.equals(highlightedName, ignoreCase = true)
+            }
+            if (index >= 0) {
+                listState.scrollToItem(index)
+            }
+        }
     }
 
     Surface(
@@ -89,14 +106,26 @@ fun SuperPoderesDetailScreen(
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Text(
-                    "Pontos: ${state.superPontosDisponiveis}/${state.superPontosTotais} • Limite padrão: ${state.limitePorPoderPadrao} • Favorecido: ${state.limiteFavorecido}",
+                    "Pontos: ${state.superPontosDisponiveis}/${state.superPontosTotais} • " +
+                            "Limite padrão: ${state.limitePorPoderPadrao} • " +
+                            "Favorecido: ${state.limiteFavorecido}",
                     fontWeight = FontWeight.SemiBold
                 )
             }
 
-            LazyColumn(Modifier.fillMaxSize()) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                state = listState
+            ) {
                 items(superPoderes, key = { it.nome }) { poder ->
-                    var expanded by rememberSaveable(poder.nome) { mutableStateOf(false) }
+                    // Começa expandido se for o poder destacado
+                    val startExpanded =
+                        highlightedName.isNotEmpty() &&
+                                poder.nome.equals(highlightedName, ignoreCase = true)
+
+                    var expanded by rememberSaveable(poder.nome, highlightedName) {
+                        mutableStateOf(startExpanded)
+                    }
 
                     Column(
                         modifier = Modifier
@@ -123,6 +152,7 @@ fun SuperPoderesDetailScreen(
 
                         AnimatedVisibility(visible = expanded) {
                             Column(Modifier.padding(top = 4.dp, bottom = 8.dp)) {
+                                // Custo base
                                 poder.custoBase?.let { custo ->
                                     Text(
                                         text = "Custo Base: $custo",
@@ -132,22 +162,41 @@ fun SuperPoderesDetailScreen(
                                     Spacer(Modifier.height(4.dp))
                                 }
 
+                                // Modificadores
+                                val mods = poder.modificadores ?: emptyList()
+                                if (mods.isNotEmpty()) {
+                                    Text(
+                                        text = "Modificadores:",
+                                        fontWeight = FontWeight.SemiBold,
+                                        fontSize = 14.sp
+                                    )
+                                    mods.forEach { mod ->
+                                        Text(
+                                            text = "- $mod",
+                                            fontSize = 14.sp,
+                                            modifier = Modifier.padding(start = 8.dp)
+                                        )
+                                    }
+                                    Spacer(Modifier.height(4.dp))
+                                }
+
+                                // Manifestações: pode ser string única ou array no JSON
                                 val mans: List<String> = when (val m = poder.manifestacoes) {
                                     is JsonArray -> {
-                                        // array de coisas → pegamos só os elementos que são string
                                         m.mapNotNull { elem ->
-                                            (elem as? JsonPrimitive)?.contentOrNull ?: (elem as? JsonPrimitive)?.content
+                                            (elem as? JsonPrimitive)?.contentOrNull
+                                                ?: (elem as? JsonPrimitive)?.content
                                         }
                                     }
                                     is JsonPrimitive -> {
-                                        // valor único → vira lista com 1 item
                                         listOf(m.content)
                                     }
                                     else -> emptyList()
                                 }
+
                                 if (mans.isNotEmpty()) {
                                     Text(
-                                        "Manifestações:",
+                                        text = "Manifestações:",
                                         fontWeight = FontWeight.SemiBold,
                                         fontSize = 14.sp
                                     )
@@ -161,33 +210,18 @@ fun SuperPoderesDetailScreen(
                                     Spacer(Modifier.height(4.dp))
                                 }
 
+                                // Descrição
                                 poder.descricao?.let { desc ->
                                     Text(
-                                        "Descrição:",
+                                        text = "Descrição:",
                                         fontWeight = FontWeight.SemiBold,
                                         fontSize = 14.sp
-                                    )
-                                    Text(
-                                        desc,
-                                        fontSize = 14.sp,
-                                        modifier = Modifier.padding(start = 8.dp, top = 2.dp)
                                     )
                                     Spacer(Modifier.height(4.dp))
-                                }
-
-                                if (!poder.modificadores.isNullOrEmpty()) {
                                     Text(
-                                        "Modificadores:",
-                                        fontWeight = FontWeight.SemiBold,
+                                        text = desc,
                                         fontSize = 14.sp
                                     )
-                                    poder.modificadores.forEach { mod ->
-                                        Text(
-                                            text = "- $mod",
-                                            fontSize = 14.sp,
-                                            modifier = Modifier.padding(start = 8.dp)
-                                        )
-                                    }
                                 }
                             }
                         }

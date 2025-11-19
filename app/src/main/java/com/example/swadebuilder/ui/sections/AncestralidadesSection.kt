@@ -60,7 +60,6 @@ fun AncestralidadesSection(
     // estados explícitos (MutableState)
     val expSection = rememberSaveable { mutableStateOf(false) }
     val expMenu    = rememberSaveable { mutableStateOf(false) }
-    val showHelp   = rememberSaveable { mutableStateOf(false) }
     val selected   = rememberSaveable(currentAncestralidade) {
         mutableStateOf(currentAncestralidade.ifBlank { "HUMANOS" })
     }
@@ -78,7 +77,7 @@ fun AncestralidadesSection(
         }
 
         SectionHeader(
-            onHelpClick = { showHelp.value = true },
+            onHelpClick = null,
             centerText = centerLabel,
             onCenterClick = null,
             onListaCompletaClick = if (showLista) onOpenListaAncestralidadesDetail else null,
@@ -131,29 +130,6 @@ fun AncestralidadesSection(
             }
         }
 
-        if (showHelp.value) {
-            AlertDialog(
-                onDismissRequest = { showHelp.value = false },
-                title = { Text("Ajuda – Ancestralidades") },
-                text = {
-                    Text(
-                        """
-Aqui você escolhe a ancestralidade do personagem.
-
-• A escolha aplica automaticamente ajustes em atributos, perícias, tamanho, movimento e outras características.
-• Vantagens e Complicações raciais também são adicionadas automaticamente quando existem.
-• Ao trocar de ancestralidade durante a criação, o app recalcula os valores e reduz atributos/perícias que ultrapassarem os novos limites permitidos.
-• Quando a fase de Supers estiver travada, a ancestralidade também fica travada para evitar inconsistências.
-
-Você pode revisar a qualquer momento durante a criação, enquanto não estiver travado pela fase de supers.
-""".trimIndent()
-                    )
-                },
-                confirmButton = {
-                    TextButton(onClick = { showHelp.value = false }) { Text("OK") }
-                }
-            )
-        }
     }
 }
 

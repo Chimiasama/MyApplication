@@ -137,7 +137,6 @@ private fun ArcanoArea(
     locked: Boolean
 ) {
     val arcKey = arcKeyRaw.normAAKey()
-    var showHelp by rememberSaveable { mutableStateOf(false) }
     val (slotsCount, ppTotal, foco) = arcanoInfo[arcKey] ?: Triple(0, 0, "—")
     val showListaCompleta = booleanResource(R.bool.show_lista_completa)
     val center = if (state.usarSemPontosDePoder) {
@@ -147,7 +146,7 @@ private fun ArcanoArea(
     }
 
     SectionHeader(
-        onHelpClick = { showHelp = true },
+        onHelpClick = null,
         centerText  = center,
         onCenterClick = null,
         onListaCompletaClick = if (showListaCompleta) onOpenListaCompletaPoderes else null,

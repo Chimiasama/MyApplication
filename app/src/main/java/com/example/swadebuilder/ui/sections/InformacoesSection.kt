@@ -81,7 +81,6 @@ fun InformacoesSection(
 
     var expanded by rememberSaveable { mutableStateOf(false) }
     var showProgressDialog by rememberSaveable { mutableStateOf(false) }
-    var showXpHelpDialog by rememberSaveable { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
     SectionCard(
@@ -94,7 +93,7 @@ fun InformacoesSection(
 
             // 1) Cabeçalho no padrão das outras seções (com botão de ajuda)
             SectionHeader(
-                onHelpClick = { showXpHelpDialog = true },
+                onHelpClick = null,
                 centerText = "Estágio: ${state.estagioAtual().nome}",
                 onCenterClick = null,
                 onListaCompletaClick = null,
@@ -268,43 +267,6 @@ fun InformacoesSection(
                     dismissButton = {
                         TextButton(onClick = { showProgressDialog = false }) {
                             Text("Cancelar")
-                        }
-                    }
-                )
-            }
-
-            // 6b) Diálogo de ajuda sobre XP / Progressos
-            if (showXpHelpDialog) {
-                AlertDialog(
-                    onDismissRequest = { showXpHelpDialog = false },
-                    title = { Text("Ajuda – XP / Progressos") },
-                    text = {
-                        Text(
-                            """
-Nesta seção você controla a “vida em campanha” do personagem.
-
-• O cabeçalho mostra o Estágio atual (Novato, Experiente, Veterano etc.).
-• O botão "Progressos: X" indica quantos progressos totais o personagem já ganhou.
-  – Cada progresso normalmente corresponde a um avanço (geralmente 5 XP na mesa).
-  – Você pode ajustar esse valor no slider para deixar o app alinhado com a ficha da mesa.
-
-• "Usar Progresso (Y)" mostra quantos progressos ainda estão livres.
-  – Ao tocar, o app abre a tela de uso de progressos.
-  – Lá você converte progressos em aumentos de atributo, perícias, vantagens ou outros efeitos definidos pelo grupo.
-
-• "Desfazer Progresso" limpa os avanços aplicados via app e volta o personagem
-  para antes desses progressos (apenas aqui no criador).
-
-A ideia geral é:
-1) Ajustar o total de progressos que o personagem tem.
-2) Gastar os progressos disponíveis sempre que a mesa conceder um novo avanço.
-""".trimIndent(),
-                            textAlign = TextAlign.Justify
-                        )
-                    },
-                    confirmButton = {
-                        TextButton(onClick = { showXpHelpDialog = false }) {
-                            Text("Fechar")
                         }
                     }
                 )

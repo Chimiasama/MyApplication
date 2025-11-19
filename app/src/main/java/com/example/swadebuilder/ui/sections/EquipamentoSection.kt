@@ -156,7 +156,6 @@ fun EquipFilterDialog(
 @Composable
 fun EquipamentoSection(
     dinheiro: Int,
-    onHelpClick: () -> Unit,
     onListaCompletaClick: () -> Unit,
     onEquipamentoDoubleClick: (EquipamentoItem) -> Unit,
     equipamentosComprados: List<EquipamentoItem>,
@@ -165,7 +164,6 @@ fun EquipamentoSection(
     superequipCategorias: List<EquipamentoCategoria>
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
-    var showHelp by rememberSaveable { mutableStateOf(false) }
     var expSuperequip by rememberSaveable { mutableStateOf(false) }
 
     // estados do filtro
@@ -182,7 +180,7 @@ fun EquipamentoSection(
         if (!expanded) return@SectionCard
 
         SectionHeader(
-            onHelpClick          = { showHelp = true },
+            onHelpClick = null,
             centerText           = "Dinheiro: $dinheiro",
             onCenterClick        = null,
             onListaCompletaClick = if (showLista) onListaCompletaClick else null,
@@ -219,33 +217,6 @@ fun EquipamentoSection(
                 current = filter,
                 onChange = { filter = it },
                 onDismiss = { showFilterDialog = false }
-            )
-        }
-
-        if (showHelp) {
-            AlertDialog(
-                onDismissRequest = { showHelp = false },
-                title            = { Text("Ajuda – Equipamento") },
-                text             = {
-                    Text(
-                        """
-Aqui você compra e gerencia o equipamento do personagem.
-
-• Os itens são organizados por tipo e subtipo.
-• Dê duplo toque em um item para comprá-lo; o custo em dinheiro é descontado automaticamente.
-• Itens comprados aparecem como “chips” no topo da seção; toque neles para remover e recuperar o valor.
-• O peso total carregado é mostrado abaixo dos itens comprados.
-• Use o filtro para limitar a visualização por origem, tipo, subtipo ou apenas itens acessíveis ao personagem.
-
-Itens especiais de Supers aparecem nas mesmas listas, mas seguem as regras próprias de custo/origem.
-""".trimIndent()
-                    )
-                },
-                confirmButton = {
-                    TextButton(onClick = { showHelp = false }) {
-                        Text("OK")
-                    }
-                }
             )
         }
 

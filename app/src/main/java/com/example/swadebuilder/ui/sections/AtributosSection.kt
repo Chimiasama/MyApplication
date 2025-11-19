@@ -52,8 +52,6 @@ fun AtributosContent(
     // Agora travamos tudo com base na fase global
     val locked = state.criacaoBasicaCongelada
 
-    var showHelp by rememberSaveable { mutableStateOf(false) }
-
     // Usa a surface do tema
     val pergaminho = MaterialTheme.colorScheme.surfaceVariant
 
@@ -84,38 +82,11 @@ fun AtributosContent(
     ) {
         // cabeçalho
         SectionHeader(
-            onHelpClick = { showHelp = true },
+            onHelpClick = null,
             centerText = "Pontos restantes: ${state.pontosAtributo}",
             onListaCompletaClick = if (showLista) ({ onOpenAtributosDetail() }) else null,
             listaCompletaText = "Lista Completa"
         )
-
-        if (showHelp) {
-            AlertDialog(
-                onDismissRequest = { showHelp = false },
-                title = { Text("Ajuda – Atributos") },
-                text = {
-                    Text(
-                        """
-Nesta seção você distribui seus Pontos de Atributo (PA).
-
-• Cada avanço do dado (d4→d6, d6→d8 etc.) custa 1 PA.
-• Até d12 os atributos sobem de 2 em 2; depois de d12 sobem de 1 em 1.
-• Você só pode aumentar até o limite definido pela ancestralidade e por outras regras do personagem.
-• Botão “+” gasta 1 PA e sobe um passo; botão “–” devolve o último gasto, sem quebrar mínimos impostos por ancestralidade ou vantagens.
-• Bônus vindos de superpoderes aparecem no valor exibido, mas não podem ser ajustados aqui.
-
-Os PA restantes aparecem sempre no cabeçalho da seção.
-""".trimIndent()
-                    )
-                },
-                confirmButton = {
-                    TextButton(onClick = { showHelp = false }) {
-                        Text("OK")
-                    }
-                }
-            )
-        }
 
         Spacer(Modifier.height(8.dp))
 

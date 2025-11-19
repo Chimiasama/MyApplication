@@ -71,7 +71,6 @@ fun ComplicacoesSection(
 
     var expCompSection by rememberSaveable { mutableStateOf(false) }
     var expCompMenu    by rememberSaveable { mutableStateOf(false) }
-    var showHelp       by rememberSaveable { mutableStateOf(false) }
     var showGastarPcDialog by rememberSaveable { mutableStateOf(false) }
     var allocAtributo by rememberSaveable { mutableIntStateOf(0) }
     var allocPericia  by rememberSaveable { mutableIntStateOf(0) }
@@ -103,48 +102,13 @@ fun ComplicacoesSection(
     ) {
         // 1. Cabeçalho usando SectionHeader
         SectionHeader(
-            onHelpClick          = { showHelp = true },
+            onHelpClick          = null,
             centerText           = "Gastar/Devolver pontos: " +
                     "${(state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0)}",
             onCenterClick        = if (!locked) ({ showGastarPcDialog = true }) else null,
-            onListaCompletaClick = if (showLista) onOpenComplicacoesDetail else null, // ← aqui
-            // Se o seu SectionHeader aceita este parâmetro, mantenha; senão remova a linha:
+            onListaCompletaClick = if (showLista) onOpenComplicacoesDetail else null,
             listaCompletaText    = "Lista Completa"
         )
-
-        Spacer(Modifier.height(8.dp))
-
-        // 2. Diálogo de ajuda
-        if (showHelp) {
-            AlertDialog(
-                onDismissRequest = { showHelp = false },
-                title            = { Text("Ajuda – Complicações") },
-                text             = {
-                    val teto = if (state.grandesResponsabilidades) 6 else 4
-                    Text(
-                        """
-Nesta seção você escolhe Complicações para ganhar Pontos de Complicação (PC).
-
-• Cada Complicação Menor vale 1 PC.
-• Cada Complicação Maior vale 2 PC.
-• Você pode receber no máximo $teto PC na criação (algumas regras, como Grandes Responsabilidades, ajustam esse limite).
-• Complicações marcadas como raciais/automáticas não podem ser removidas.
-
-Os PC não são gastos direto aqui: use o botão “Gastar/Devolver pontos” para convertê-los em:
-• Aumentos de atributo,
-• Aumentos de perícia,
-• Novas vantagens ou
-• Recursos extras.
-
-O app controla quanto já foi gasto ou devolvido e impede passar do limite.
-""".trimIndent()
-                    )
-                },
-                confirmButton    = {
-                    TextButton(onClick = { showHelp = false }) { Text("OK") }
-                }
-            )
-        }
 
         // 3. Diálogo de gastar ou devolver PC
         if (showGastarPcDialog) {

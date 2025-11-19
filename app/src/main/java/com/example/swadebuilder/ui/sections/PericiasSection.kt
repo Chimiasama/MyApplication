@@ -62,8 +62,6 @@ fun PericiasContent(
 ) {
     val locked = state.criacaoBasicaCongelada
 
-    var showHelp by rememberSaveable { mutableStateOf(false) }
-
     // Diálogo para PRIMEIRA especialização (quando compra a perícia)
     var showSpecDialog by rememberSaveable { mutableStateOf(false) }
     var specText by rememberSaveable { mutableStateOf("") }
@@ -101,34 +99,10 @@ fun PericiasContent(
                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant
             ) {
                 SectionHeader(
-                    onHelpClick          = { showHelp = true },
+                    onHelpClick          = null,
                     centerText           = "Pontos restantes: ${state.pontosPericia}",
                     onListaCompletaClick = if (showLista) ({ onOpenPericiasDetail() }) else null,
                     listaCompletaText    = "Lista Completa"
-                )
-            }
-            if (showHelp) {
-                AlertDialog(
-                    onDismissRequest = { showHelp = false },
-                    title            = { Text("Ajuda – Perícias") },
-                    text             = {
-                        Text(
-                            """
-Nesta seção você distribui seus pontos de perícia (SP).
-
-• Cada avanço aumenta o dado da perícia (por exemplo, d4→d6).
-• O custo é 1 SP se o novo valor for até o atributo ligado, ou 2 SP se passar do atributo.
-• Perícias básicas nunca ficam abaixo de d4 durante a criação; as demais voltam para "-" se você devolver todos os pontos.
-• Botão “+” investe SP; botão “–” devolve apenas os pontos gastos na criação/complicações, respeitando mínimos exigidos por vantagens ou ancestralidade.
-• Perícias com especializações pedem um nome na primeira compra; especializações extras também custam SP e podem ser renomeadas.
-
-Regras especiais (como o bônus de Idoso em Astúcia) já são aplicadas automaticamente pelo app.
-""".trimIndent()
-                        )
-                    },
-                    confirmButton    = {
-                        TextButton(onClick = { showHelp = false }) { Text("OK") }
-                    }
                 )
             }
         }
