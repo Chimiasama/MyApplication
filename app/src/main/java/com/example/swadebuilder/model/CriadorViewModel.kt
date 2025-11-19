@@ -457,30 +457,20 @@ class CriadorViewModel : ViewModel() {
             return InvestCheck(false, "Limite de gasto neste poder excedido em $falta (limite: $limiteIndividual).")
         }
 
-        // 3) Limite Compartilhado de EFEITO (Armadura + Resistência)
-        // A regra: "Os bônus combinados... não podem exceder o Limite de Poder."
+        // 3) Limite Compartilhado de CUSTO (Armadura + Resistência)
+        // Regra: a soma de SP gastos em Resistência e Armadura não pode ultrapassar o Limite de Poder da campanha.
         if (poderId == "sp_armor" || poderId == "sp_res") {
-            // Valor atual dos EFEITOS na ficha (Ex: Armadura 20, Resistência 3)
-            val currentArmorVal = state.armorFromPower
-            val currentResVal   = state.bonusResFromPower
+            val gastosArmor = state.gastosPorPoder["sp_armor"] ?: 0
+            val gastosRes   = state.gastosPorPoder["sp_res"] ?: 0
+            val shareAtual  = gastosArmor + gastosRes
+            val shareLimite = state.limiteDePoderDaCampanha
+            val shareDepois = shareAtual + custo
 
-            // Quanto efeito este novo investimento vai adicionar?
-            val addedEffect = when (efeito) {
-                is PowerEffect.BonusArmadura -> efeito.value      // Ex: +2
-                is PowerEffect.BonusResistencia -> efeito.value   // Ex: +1
-                else -> 0
-            }
-
-            // Soma total prevista
-            val newTotalEffect = currentArmorVal + currentResVal + addedEffect
-
-            // O teto para o EFEITO combinado é o Limite da Campanha
-            val campaignLimit = state.superLimitePorPoder
-
-            if (newTotalEffect > campaignLimit) {
+            if (shareDepois > shareLimite) {
+                val excedeu = shareDepois - shareLimite
                 return InvestCheck(
-                    false,
-                    "Limite de bônus (Armadura+Resistência) excedido: $newTotalEffect > $campaignLimit."
+                    ok = false,
+                    motivoBloqueio = "Limite compartilhado de Armadura+Resistência excedido em $excedeu (gasto previsto: $shareDepois / limite $shareLimite)."
                 )
             }
         }
@@ -501,23 +491,10 @@ class CriadorViewModel : ViewModel() {
                 }
             }
 
-            is PowerEffect.BonusArmadura -> {
-                val afterArmor = state.armorFromPower + efeito.value
-                val afterRes   = state.bonusResFromPower
-                val soma       = projectedMitigacaoSupersSum(afterArmor, afterRes)
-                if (soma > state.limiteDePoderDaCampanha) {
-                    return InvestCheck(false, "Teto combinado de mitigação excedido: $soma > ${state.limiteDePoderDaCampanha}.")
-                }
-            }
-
-            is PowerEffect.BonusResistencia -> {
-                val afterArmor = state.armorFromPower
-                val afterRes   = state.bonusResFromPower + efeito.value
-                val soma       = projectedMitigacaoSupersSum(afterArmor, afterRes)
-                if (soma > state.limiteDePoderDaCampanha) {
-                    return InvestCheck(false, "Teto combinado de mitigação excedido: $soma > ${state.limiteDePoderDaCampanha}.")
-                }
-            }
+            // Armadura/Resistência: não há checagem adicional aqui,
+            // o limite compartilhado já foi tratado acima pelo custo.
+            is PowerEffect.BonusArmadura    -> { /* nada extra */ }
+            is PowerEffect.BonusResistencia -> { /* nada extra */ }
 
             is PowerEffect.BonusAparar -> { /* ok */ }
 

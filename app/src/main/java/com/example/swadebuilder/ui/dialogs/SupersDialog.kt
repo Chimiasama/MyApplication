@@ -147,8 +147,7 @@ fun SupersDialog(
                         Text("Limite favorecido: ${state.limiteFavorecido}")
                         Spacer(Modifier.height(6.dp))
                         Text(
-                            "Teto combinado (A+R por supers): " +
-                                    "${state.armorFromPower + state.bonusResFromPower} / ${state.limiteDePoderDaCampanha}"
+                            "Limite compartilhado Armadura+Resistência (SP gastos): $shareUsed / $shareLimit"
                         )
                     }
                 }

@@ -1337,18 +1337,6 @@ class CriadorState {
     }
 
     /** Respeita o teto de mitigação por supers (clampa apenas a soma dos componentes de supers) */
-    private fun clampMitigacaoSupers() {
-        val soma = armorFromPower + bonusResFromPower
-        if (soma > limiteDePoderDaCampanha) {
-            val excesso = soma - limiteDePoderDaCampanha
-            // prioridade: reduzir primeiro armorFromPower, depois bonusResFromPower
-            val reduzirArmor = excesso.coerceAtMost(armorFromPower)
-            armorFromPower -= reduzirArmor
-            val rest = excesso - reduzirArmor
-            if (rest > 0) bonusResFromPower = (bonusResFromPower - rest).coerceAtLeast(0)
-        }
-    }
-
     /** Facilita adicionar/remover efeitos de um PoderId no ledger */
     fun registrarGastoDePoder(poderId: String, custo: Int) {
         val atual = gastosPorPoder[poderId] ?: 0
@@ -1362,9 +1350,17 @@ class CriadorState {
         superPontosDisponiveis = (superPontosTotais - gastosPorPoder.values.sum()).coerceAtLeast(0)
     }
 
-    fun updateBonusPararFromPower(value: Int) { bonusPararFromPower = value.coerceAtLeast(0) }
-    fun updateBonusResFromPower (value: Int) { bonusResFromPower  = value.coerceAtLeast(0); clampMitigacaoSupers() }
-    fun updateArmorFromPower    (value: Int) { armorFromPower     = value.coerceAtLeast(0); clampMitigacaoSupers() }
+    fun updateBonusPararFromPower(value: Int) {
+        bonusPararFromPower = value.coerceAtLeast(0)
+    }
+
+    fun updateBonusResFromPower(value: Int) {
+        bonusResFromPower = value.coerceAtLeast(0)
+    }
+
+    fun updateArmorFromPower(value: Int) {
+        armorFromPower = value.coerceAtLeast(0)
+    }
 
     fun rawTotalComSupers(per: Pericia): Int {
         val base = rawTotal(per)

@@ -319,29 +319,27 @@ fun SuperPoderesSection(
             state.superPontosDisponiveis = 0
             state.superLimite = 0
             state.superLimitePorPoder = 0
+            state.limiteDePoderDaCampanha = 0
             state.faseSupersAtiva = false    // só pra manter a flag coerente
 
             // como superPontosTotais = 0 e superNivelCampanha = null,
-            // o faseFluxo volta pra BASE e destrava as seções
+            // o botão vai reabrir o diálogo normalmente
             return
         }
 
-        // níveis "reais" 1..5
-        val nivel = novoNivel.coerceIn(1, 5)
-        state.superNivelCampanha = nivel
+        // cada nível aumenta o total de SP e o limite de poder
+        val total = 15 * novoNivel
+        val limite = 5 * novoNivel
 
-        val total = 15 * nivel           // 15 pts por nível
-        val limite = 5 * nivel           // 1/3 do total
-
+        state.superNivelCampanha = novoNivel
         state.superPontosTotais = total
         state.superLimite = limite
         state.superLimitePorPoder = limite
+        state.limiteDePoderDaCampanha = limite
 
-        // recalcula gastos pelos poderes (mais robusto)
         val gastos = state.gastosPorPoder.values.sum()
         state.superPontosDisponiveis = (total - gastos).coerceAtLeast(0)
 
-        // marca que a fase de supers realmente está ativa
         state.faseSupersAtiva = true
     }
 
@@ -624,10 +622,51 @@ fun SuperPoderesSection(
         if (!supersLiberados) {
             poderParaComprar = null
         } else {
+            // ----- NOVO: calcular limite efetivo para o diálogo -----
+            val nomeUpper = poder.nome.trim().uppercase()
+            val poderIdEspecifico = when {
+                nomeUpper == "ARMADURA" -> "sp_armor"
+                nomeUpper == "RESISTÊNCIA" || nomeUpper == "RESISTENCIA" -> "sp_res"
+                else -> null
+            }
+
+            val saldoSp = state.superPontosDisponiveis
+            val limiteBasePorPoder = state.superLimitePorPoder
+
+            // Se não for Armadura/Resistência, mantém o comportamento antigo.
+            val limiteParaDialog: Int =
+                if (poderIdEspecifico == null) {
+                    limiteBasePorPoder
+                } else {
+                    // Quanto já foi gasto nesse poder específico (custo em SP)
+                    val gastoAtualNeste = state.gastosPorPoder[poderIdEspecifico] ?: 0
+                    val limiteIndividual = viewModel.perPowerLimit(poderIdEspecifico)
+                    val restoIndividual = (limiteIndividual - gastoAtualNeste).coerceAtLeast(0)
+
+                    // Quanto já foi gasto no par Armadura+Resistência (custo em SP)
+                    val gastoArmor = state.gastosPorPoder["sp_armor"] ?: 0
+                    val gastoRes   = state.gastosPorPoder["sp_res"] ?: 0
+                    val gastoCompartilhado = gastoArmor + gastoRes
+
+                    // Limite de campanha em termos de CUSTO total desses dois poderes
+                    val restoCompartilhado =
+                        (state.limiteDePoderDaCampanha - gastoCompartilhado).coerceAtLeast(0)
+
+                    // Limite efetivo = menor entre:
+                    // - o que ainda cabe no poder individual
+                    // - o que ainda cabe no limite compartilhado
+                    // - o saldo de SP do personagem
+                    minOf(restoIndividual, restoCompartilhado, saldoSp)
+                }
+            // ----- FIM DO NOVO CÁLCULO -----
+
             BuySuperPowerDialog(
                 poder = poder,
-                pontosDisponiveis = state.superPontosDisponiveis,
-                limitePorPoder = state.superLimitePorPoder,
+                pontosDisponiveis = saldoSp,
+                // Aqui passamos o limite já "apertado" para o diálogo.
+                // O próprio diálogo usa isso como teto para (base + modificadores),
+                // então a barrinha já respeita o limite compartilhado.
+                limitePorPoder = limiteParaDialog,
                 onConfirm = { baseCost, custoTotal ->
                     val nome = poder.nome.trim().uppercase()
                     when {
