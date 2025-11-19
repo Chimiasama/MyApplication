@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -145,9 +146,18 @@ fun BuySuperPowerDialog(
         .filter { it in baseMinDeclarado..minOf(baseMaxDeclarado, capParaBase) }
         .ifEmpty { listOf(baseMinDeclarado.coerceAtMost(capParaBase)) }
 
-    // ---------- Slider por ÍNDICE das opções discretas ----------
+    // ---------- modo curto x modo longo ----------
+    val minAllowed = allowedBaseOptions.first()
+    val maxAllowed = allowedBaseOptions.last()
+    val isLongRange = allowedBaseOptions.size > 7 ||
+            (maxAllowed - minAllowed) > 10
+
+    // índice da opção base escolhida
     var baseIdx by rememberSaveable(allowedBaseOptions) { mutableIntStateOf(0) }
     val baseCost = allowedBaseOptions.getOrElse(baseIdx) { allowedBaseOptions.last() }
+
+    val totalAtual = baseCost + modCost
+    val podeConfirmar = totalAtual in allowedBaseOptions.first()..totalCap
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -161,21 +171,80 @@ fun BuySuperPowerDialog(
                     .verticalScroll(scroll)
                     .padding(8.dp)
             ) {
-                Text("Custo base: $baseCost")
+                // --------- BLOCO: CUSTO BASE (sem slider) ---------
+                Text("Custo base:", fontWeight = FontWeight.SemiBold)
+                Spacer(Modifier.height(4.dp))
 
-                Slider(
-                    value = baseIdx.toFloat(),
-                    onValueChange = { novo ->
-                        val idx = novo.roundToInt().coerceIn(0, allowedBaseOptions.lastIndex)
-                        baseIdx = idx
-                    },
-                    valueRange = 0f..allowedBaseOptions.lastIndex.toFloat(),
-                    steps = (allowedBaseOptions.size - 1).coLeastOne() - 1,
-                    modifier = Modifier.fillMaxWidth()
+                when {
+                    // só 1 opção possível → custo fixo
+                    allowedBaseOptions.size == 1 -> {
+                        Text("Custo fixo: ${allowedBaseOptions.first()} SP")
+                    }
+
+                    // intervalo curto → chips por opção
+                    !isLongRange -> {
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            allowedBaseOptions.forEachIndexed { idx, opt ->
+                                FilterChip(
+                                    selected = (idx == baseIdx),
+                                    onClick = { baseIdx = idx },
+                                    label = { Text("$opt SP") }
+                                )
+                            }
+                        }
+                    }
+
+                    // intervalo longo (1..25, 1..37 etc) → stepper [-] valor [+]
+                    else -> {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "Custo base: $baseCost SP",
+                                modifier = Modifier.weight(1f)
+                            )
+                            TextButton(
+                                onClick = {
+                                    if (baseIdx > 0) {
+                                        baseIdx--
+                                    }
+                                },
+                                enabled = baseIdx > 0
+                            ) {
+                                Text("−")
+                            }
+                            TextButton(
+                                onClick = {
+                                    if (baseIdx < allowedBaseOptions.lastIndex) {
+                                        baseIdx++
+                                    }
+                                },
+                                enabled = baseIdx < allowedBaseOptions.lastIndex
+                            ) {
+                                Text("+")
+                            }
+                        }
+                        Text(
+                            text = "Mín: $minAllowed • Máx: $maxAllowed",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(8.dp))
+
+                Text(
+                    text = "Total do poder: $totalAtual SP (máx: $totalCap)",
+                    style = MaterialTheme.typography.bodySmall
                 )
 
                 Spacer(Modifier.height(8.dp))
 
+                // --------- BLOCO: MODIFICADORES (mantém sliders) ---------
                 if (modStates.isNotEmpty()) {
                     Text("Modificadores:", style = MaterialTheme.typography.bodyMedium)
                     Spacer(Modifier.height(4.dp))
@@ -242,8 +311,6 @@ fun BuySuperPowerDialog(
             }
         },
         confirmButton = {
-            val totalAtual = baseCost + modCost
-            val podeConfirmar = totalAtual in allowedBaseOptions.first()..totalCap
             TextButton(
                 enabled = podeConfirmar,
                 onClick = { onConfirm(baseCost, totalAtual) }
@@ -253,8 +320,7 @@ fun BuySuperPowerDialog(
     )
 }
 
-// helpers locais para steps/slider
-private fun Int.coLeastOne(): Int = if (this < 1) 1 else this
+// helpers locais para steps/slider de modificadores
 private fun Int.coLeastZero(): Int = if (this < 0) 0 else this
 
 // Vantagens que não podem ser compradas como Supervantagem em campanhas de supers

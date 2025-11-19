@@ -304,12 +304,26 @@ class MainActivity : ComponentActivity() {
             var showPoderesDetail         by rememberSaveable { mutableStateOf(false) }
             var showEquipLista            by rememberSaveable { mutableStateOf(false) }
             var showSuperDetail           by rememberSaveable { mutableStateOf(false) }
+            var showHelpSupersDialog by rememberSaveable { mutableStateOf(false) }
             var highlightedVantagem by rememberSaveable { mutableStateOf("") }
             val context = LocalContext.current
             val activity = (context as? ComponentActivity)
             var mostrouTelaInicial by rememberSaveable { mutableStateOf(true) }
             var showExitDialog     by rememberSaveable { mutableStateOf(false) }
 
+            val helpSupersText = """
+Nesta seção você compra e gerencia Superpoderes usando SuperPontos (SP).
+
+Cada poder possui um custo base — como 5, 10 ou 15 SP — que representa versões mais fortes do mesmo efeito. Ao tocar nas opções, você escolhe qual versão está comprando.
+
+Depois você pode adicionar “Modificadores”: ajustes que aumentam (+) ou reduzem (–) o custo final do poder, alterando como ele funciona.
+
+O custo total (custo base + modificadores) é descontado do seu total de SP.  
+O limite por poder impede que você gaste mais SP do que o permitido em um único poder.  
+O limite favorecido (se houver) permite que um poder específico tenha um teto maior.
+
+O app calcula tudo automaticamente para você: gasto total, SP restantes, limites e validação.
+""".trimIndent()
 
             val emTelaDePreenchimento = !(
                     showVantagensDetail ||
@@ -324,6 +338,21 @@ class MainActivity : ComponentActivity() {
 
             BackHandler(enabled = mostrouTelaInicial) {
                 showExitDialog = true
+            }
+
+            if (showHelpSupersDialog) {
+                AlertDialog(
+                    onDismissRequest = { showHelpSupersDialog = false },
+                    confirmButton = {
+                        TextButton(onClick = { showHelpSupersDialog = false }) {
+                            Text("OK")
+                        }
+                    },
+                    title = { Text("Ajuda — Superpoderes") },
+                    text = {
+                        Text(helpSupersText)
+                    }
+                )
             }
 
             if (showExitDialog) {
@@ -643,7 +672,7 @@ class MainActivity : ComponentActivity() {
                                                 onOpenListaCompletaEquipamento   = { showEquipLista            = true },
                                                 onOpenPoderesDetail              = { showPoderesDetail         = true },
                                                 onOpenSuperPoderesDetail         = { showSuperDetail           = true },
-                                                onHelpSuperClick                 = { },
+                                                onHelpSuperClick                 = { showHelpSupersDialog = true },
 
                                                 expAttrs       = expAttrs,
                                                 onToggleAttrs  = { expAttrs   = !expAttrs },
@@ -4025,6 +4054,9 @@ fun TelaInicial(
 
     var showCreditsDialog by remember { mutableStateOf(false) }
 
+    var showHelpSupersDialog by remember { mutableStateOf(false) }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -4238,7 +4270,68 @@ Feito por Rafael S.W.
 
                     Spacer(Modifier.height(16.dp))
 
-// Super
+// --- Diálogo de ajuda: Superpoderes ---
+                    if (showHelpSupersDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showHelpSupersDialog = false },
+                            title = { Text("Como funcionam os Superpoderes") },
+                            text = {
+                                Text(
+                                    text = """
+Nesta seção você distribui os Pontos de Superpoder (SP) da campanha.
+
+1) Nível da campanha
+Primeiro, escolha o nível de superpoderes (I a V). 
+Cada nível define:
+• Quantos SP totais você terá.
+• Qual é o limite de SP que pode ser gasto em cada poder (Limite por poder).
+
+Depois que você começar a gastar SP, o nível da campanha trava.
+
+2) Lista de poderes
+A lista mostra todos os superpoderes do livro básico. 
+Toque no nome de um poder para abrir a tela de compra.
+
+3) Compra de um poder
+Na tela de compra você escolhe:
+• A opção de custo base (por exemplo 5 / 10 / 15 SP). São versões alternativas do mesmo poder, não são acumulativas.
+• Os modificadores opcionais. Modificadores positivos aumentam o custo final, modificadores negativos reduzem o custo final.
+
+O “Total do poder” é: custo base escolhido + modificadores.
+Esse total:
+• Não pode passar do Limite por poder da campanha.
+• Não pode gastar mais SP do que você tem disponível.
+
+4) Interação com Armadura e Resistência (super)
+Os poderes Armadura (super) e Resistência (super) somam sua proteção e compartilham o mesmo limite:
+• Cada compra de Armadura (super) adiciona +2 de armadura.
+• Cada ponto de Resistência (super) aumenta a Resistência em +1.
+• A soma de Armadura (super) + Resistência (super) vinda de superpoderes não pode ultrapassar o Limite de Poder da campanha.
+
+O app bloqueia compras que estourariam esse limite, mesmo que os controles pareçam permitir valores maiores.
+
+5) Outros usos de SP
+Alguns poderes especiais abrem telas próprias:
+• Superatributo: você distribui “steps” extras em atributos.
+• Superperícia: você distribui “steps” em perícias.
+• Supervantagem: cada 2 SP compram uma vantagem normal da lista.
+
+6) Reverter compras
+Os superpoderes comprados aparecem em forma de “chips” acima da lista.
+Toque em um chip para desfazer aquela compra e recuperar os SP gastos.
+""".trimIndent(),
+                                    fontSize = 14.sp,
+                                    textAlign = TextAlign.Justify
+                                )
+                            },
+                            confirmButton = {
+                                TextButton(onClick = { showHelpSupersDialog = false }) {
+                                    Text("Fechar")
+                                }
+                            }
+                        )
+                    }
+
                     Row(
                         Modifier
                             .fillMaxWidth()
