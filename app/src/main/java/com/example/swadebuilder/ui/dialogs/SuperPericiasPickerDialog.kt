@@ -23,8 +23,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.listaPericias
+import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.util.keyify
 
 /**
@@ -39,6 +42,7 @@ import com.example.swadebuilder.util.keyify
  */
 @Composable
 fun SuperPericiasPickerDialog(
+    state: CriadorState,
     poolInicial: Int,
     onConfirmDistribuicao: (Map<String, Int>) -> Unit,
     onDismiss: () -> Unit
@@ -93,7 +97,13 @@ fun SuperPericiasPickerDialog(
                 ) {
                     items(listaPericias, key = { it.nome }) { per ->
                         val key = per.nome.keyify()
-                        val atual = alocacoes[key] ?: 0
+                        val steps = alocacoes[key] ?: 0
+
+                        // valor atual da perícia já com supers anteriores/aplicados
+                        val baseRaw = state.rawTotal(per)
+                        // simula aplicação dos steps desta compra
+                        val projectedRaw = state.applySuperStepsFrom(baseRaw, steps)
+                        val textoValor = projectedRaw.toDiceString()
 
                         Row(
                             modifier = Modifier
@@ -110,24 +120,25 @@ fun SuperPericiasPickerDialog(
                             ) {
                                 TextButton(
                                     onClick = {
-                                        if (atual > 0) {
-                                            alocacoes[key] = atual - 1
+                                        if (steps > 0) {
+                                            alocacoes[key] = steps - 1
                                         }
                                     },
-                                    enabled = atual > 0
+                                    enabled = steps > 0
                                 ) {
                                     Text("−")
                                 }
 
                                 Text(
-                                    atual.toString(),
-                                    modifier = Modifier.widthIn(min = 24.dp)
+                                    textoValor,
+                                    modifier = Modifier.widthIn(min = 48.dp),
+                                    textAlign = TextAlign.Center
                                 )
 
                                 TextButton(
                                     onClick = {
                                         if (restante > 0) {
-                                            alocacoes[key] = atual + 1
+                                            alocacoes[key] = steps + 1
                                         }
                                     },
                                     enabled = restante > 0
@@ -142,8 +153,7 @@ fun SuperPericiasPickerDialog(
                 Spacer(Modifier.height(8.dp))
                 Text(
                     "Cada ponto aqui é 1 nível de Superperícia naquela perícia. " +
-                            "Isso ignora o atributo ligado para custo e pode ultrapassar o limite racial, " +
-                            "mas ainda conta para derivados (ex.: Lutar aumenta Aparar).",
+                            "O valor mostrado já é o dado final considerando a perícia atual + estes steps.",
                     style = MaterialTheme.typography.bodySmall
                 )
             }

@@ -765,6 +765,7 @@ fun SuperPoderesSection(
     // 7) picker de SUPERPERÍCIA (1:1)
     if (showSuperPericiaPicker) {
         SuperPericiasPickerDialog(
+            state = state,
             poolInicial = poolSuperPericia,
             onConfirmDistribuicao = { mapa ->
                 // mapa: periciaKey (keyify) -> stepsSolicitados

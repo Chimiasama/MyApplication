@@ -505,9 +505,15 @@ class MainActivity : ComponentActivity() {
                                                             atributos          = atributosMap,
                                                             pericias           = periciasMap,
                                                             ancestralidade     = state.ancestralidade,
-
                                                             vantagens          = state.vantagensSelecionadas.map { it.id },
                                                             complicacoes       = complicacoesList,
+
+                                                            // --- PREENCHENDO OS NOVOS CAMPOS ---
+                                                            cpPaCount       = state.cpPaStack.size,
+                                                            cpPvCount       = state.cpPvStack.size,
+                                                            cpSpCount       = state.cpSpStack.size,
+                                                            cpRecursosCount = state.cpRecursosStack.size,
+                                                            // -----------------------------------
 
                                                             equipamentos       = state.equipamentosComprados.map { it.nome },
                                                             poderes            = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },

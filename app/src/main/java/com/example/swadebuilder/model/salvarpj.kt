@@ -17,6 +17,13 @@ data class PersonagemSalvo(
     // IDs de complicações
     val complicacoes: List<String>,
 
+    // --- NOVOS CAMPOS: Persistência dos gastos de Pontos de Complicação ---
+    val cpPaCount: Int = 0,       // Quantos aumentos de Atributo (PA) via PC
+    val cpPvCount: Int = 0,       // Quantos Pontos de Vantagem (PV) via PC
+    val cpSpCount: Int = 0,       // Quantos Pontos de Perícia (SP) via PC
+    val cpRecursosCount: Int = 0, // Quantos aumentos de dinheiro ($$) via PC
+    // ----------------------------------------------------------------------
+
     // Equipamentos por nome (como antes)
     val equipamentos: List<String>,
 

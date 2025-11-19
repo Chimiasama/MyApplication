@@ -100,6 +100,12 @@ class CriadorViewModel : ViewModel() {
 
         state.equipamentosComprados.clear()
 
+        // -------------------------------------------------------
+        // CORREÇÃO: Zerar explicitamente o contador de gastos de PC
+        // para não "herdar" gastos do personagem anterior.
+        state.pontosComplicacaoGastos = 0
+        // -------------------------------------------------------
+
         state.cpRecursosStack.clear()
         state.cpPaStack.clear()
         state.cpPvStack.clear()
@@ -186,6 +192,29 @@ class CriadorViewModel : ViewModel() {
         state.heroisSemArmadura  = salvo.heroisSemArmadura
         state.ancestralidade     = salvo.ancestralidade
         state.aplicarAncestralidade(salvo.ancestralidade)
+
+        // --------------------------------------------------------------------
+        // CORREÇÃO: Restaurar a distribuição dos pontos de Complicação (CP)
+        // ANTES de carregar atributos/perícias para evitar cálculos negativos.
+        // --------------------------------------------------------------------
+        state.cpPaStack.clear()
+        repeat(salvo.cpPaCount) { state.cpPaStack.add("PA") }
+
+        state.cpPvStack.clear()
+        repeat(salvo.cpPvCount) { state.cpPvStack.add(Unit) }
+
+        state.cpSpStack.clear()
+        repeat(salvo.cpSpCount) { state.cpSpStack.add(Unit) }
+
+        state.cpRecursosStack.clear()
+        repeat(salvo.cpRecursosCount) { state.cpRecursosStack.add(Unit) }
+
+        // Recalcula o total gasto de PC para a UI
+        state.pontosComplicacaoGastos = (state.cpPaStack.size * 2) +
+                (state.cpPvStack.size * 2) +
+                (state.cpSpStack.size * 1) +
+                (state.cpRecursosStack.size * 1)
+        // --------------------------------------------------------------------
 
         // 1) Atributos e perícias — só agora, para não serem sobrescritos pela ancestralidade
         state.valoresAtributos.forEach { (key, holder) ->
@@ -414,37 +443,49 @@ class CriadorViewModel : ViewModel() {
         custo: Int,
         efeito: PowerEffect
     ): InvestCheck {
-        // 1) saldo
+        // 1) Saldo de Pontos de Super (SP)
         if (custo <= 0) return InvestCheck(false, "Custo inválido.")
         if (state.superPontosDisponiveis < custo) {
             return InvestCheck(false, "Sem saldo: precisa de $custo, tem ${state.superPontosDisponiveis}.")
         }
 
-        // 2) limite por poder (individual)
+        // 2) Limite Individual de CUSTO (quantos SP gastei neste poder)
         val jaGastoNestePoder = state.gastosPorPoder[poderId] ?: 0
         val limiteIndividual = perPowerLimit(poderId)
         if (jaGastoNestePoder + custo > limiteIndividual) {
             val falta = (jaGastoNestePoder + custo) - limiteIndividual
-            return InvestCheck(false, "Limite deste poder excedido em $falta (limite: $limiteIndividual).")
+            return InvestCheck(false, "Limite de gasto neste poder excedido em $falta (limite: $limiteIndividual).")
         }
 
-        // 2.b) LIMITE COMPARTILHADO: Armadura + Resistência (em pontos INVESTIDOS)
+        // 3) Limite Compartilhado de EFEITO (Armadura + Resistência)
+        // A regra: "Os bônus combinados... não podem exceder o Limite de Poder."
         if (poderId == "sp_armor" || poderId == "sp_res") {
-            val gastosArmor = state.gastosPorPoder["sp_armor"] ?: 0
-            val gastosRes   = state.gastosPorPoder["sp_res"]   ?: 0
-            val totalApos   = gastosArmor + gastosRes + custo
-            val limiteShare = state.superLimitePorPoder
+            // Valor atual dos EFEITOS na ficha (Ex: Armadura 20, Resistência 3)
+            val currentArmorVal = state.armorFromPower
+            val currentResVal   = state.bonusResFromPower
 
-            if (totalApos > limiteShare) {
-                val restante = (limiteShare - (gastosArmor + gastosRes)).coerceAtLeast(0)
+            // Quanto efeito este novo investimento vai adicionar?
+            val addedEffect = when (efeito) {
+                is PowerEffect.BonusArmadura -> efeito.value      // Ex: +2
+                is PowerEffect.BonusResistencia -> efeito.value   // Ex: +1
+                else -> 0
+            }
+
+            // Soma total prevista
+            val newTotalEffect = currentArmorVal + currentResVal + addedEffect
+
+            // O teto para o EFEITO combinado é o Limite da Campanha
+            val campaignLimit = state.superLimitePorPoder
+
+            if (newTotalEffect > campaignLimit) {
                 return InvestCheck(
                     false,
-                    "Limite compartilhado de Armadura+Resistência atingido (resta $restante de $limiteShare)."
+                    "Limite de bônus (Armadura+Resistência) excedido: $newTotalEffect > $campaignLimit."
                 )
             }
         }
 
-        // 3) checagens específicas por efeito — **sem alterar estado**
+        // 4) Checagens específicas de outros efeitos
         when (efeito) {
             is PowerEffect.SuperAtributo -> {
                 val valida = podeSubirAtributoPorSuper(efeito.attrKey, efeito.steps)
@@ -505,10 +546,6 @@ class CriadorViewModel : ViewModel() {
         return InvestCheck(true, null)
     }
 
-    /**
-     * Aplica o investimento no ledger e atualiza derivados.
-     * NÃO chama validação; chame canInvestInPower antes.
-     */
     /**
      * Aplica o investimento no ledger e atualiza derivados.
      * NÃO chama validação; chame canInvestInPower antes.
@@ -685,5 +722,3 @@ class CriadorViewModel : ViewModel() {
         }
     }
 }
-
-

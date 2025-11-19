@@ -23,13 +23,15 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.listaAtributos
+import com.example.swadebuilder.toDiceString
 
 @Composable
 fun SuperAtributosPickerDialog(
-    state: CriadorState,                // ainda não usamos, mas deixei aqui para futuro
+    state: CriadorState,
     poolInicial: Int,
     onConfirmDistribuicao: (Map<String, Int>) -> Unit,
     onDismiss: () -> Unit
@@ -41,7 +43,6 @@ fun SuperAtributosPickerDialog(
         }
     }
 
-    // >>> corrigido: todos os derivedStateOf agora estão dentro de remember
     val totalAlocado by remember {
         derivedStateOf { alocacoes.values.sum() }
     }
@@ -65,9 +66,16 @@ fun SuperAtributosPickerDialog(
                 Text("Pool: $poolInicial   •   Restante: $restante")
                 Spacer(Modifier.height(8.dp))
 
-                // lista com + / -
+                // lista com + / - mostrando o VALOR FINAL (dado) e não mais só o número de steps
                 listaAtributos.forEach { attr ->
-                    val atual = alocacoes[attr] ?: 0
+                    val steps = alocacoes[attr] ?: 0
+
+                    // valor atual (já com supers existentes)
+                    val baseRaw = state.atributoRawComSupers(attr)
+                    // simula aplicação dos steps desta compra
+                    val projectedRaw = state.applySuperStepsFrom(baseRaw, steps)
+                    val textoValor = projectedRaw.toDiceString()
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -81,9 +89,9 @@ fun SuperAtributosPickerDialog(
                         )
                         IconButton(
                             onClick = {
-                                if (atual > 0) alocacoes[attr] = atual - 1
+                                if (steps > 0) alocacoes[attr] = steps - 1
                             },
-                            enabled = atual > 0
+                            enabled = steps > 0
                         ) {
                             Icon(
                                 Icons.Default.Remove,
@@ -92,14 +100,14 @@ fun SuperAtributosPickerDialog(
                         }
 
                         Text(
-                            "$atual",
-                            modifier = Modifier.width(24.dp),
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            textoValor,
+                            modifier = Modifier.width(48.dp),
+                            textAlign = TextAlign.Center
                         )
 
                         IconButton(
                             onClick = {
-                                if (restante > 0) alocacoes[attr] = atual + 1
+                                if (restante > 0) alocacoes[attr] = steps + 1
                             },
                             enabled = restante > 0
                         ) {
@@ -113,8 +121,8 @@ fun SuperAtributosPickerDialog(
 
                 Spacer(Modifier.height(6.dp))
                 Text(
-                    "Regra: cada ponto alocado aqui é 1 ‘step’ de superatributo para aquele atributo. " +
-                            "Aplica as regras de Superatributo (pode exceder limites raciais, etc.).",
+                    "Cada ponto aqui é 1 step de Superatributo para aquele atributo. " +
+                            "O valor mostrado já é o dado final considerando os supers existentes + estes steps.",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
