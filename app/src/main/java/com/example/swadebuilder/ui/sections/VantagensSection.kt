@@ -390,8 +390,9 @@ fun VantagensContent(
                     }
                 }
 
-                // NOVO: se veio de superpoder, não pode ser removida aqui
                 val isFromSuperPoder = state.vantagensDePoder.contains(vant.id)
+
+                val isSuperpoderesLocked = state.modoSupers && vant.id == "superpoderes"
 
                 val baseRemovable = !locked &&
                         index >= initialCount &&
@@ -399,9 +400,8 @@ fun VantagensContent(
                         !isRacialFree &&
                         !requiredByAnother &&
                         !isFromSuperPoder &&
-                        vant.nome != "Superpoderes"
+                        !isSuperpoderesLocked
 
-                // não permite remover Novos Poderes durante progresso
                 val canRemove =
                     baseRemovable && !(state.emProgresso && vant.id == "novos_poderes")
 
@@ -510,6 +510,11 @@ fun VantagensContent(
                             else vant.id != "antecedente_arcano" &&
                                     vant.requisitos.vantagensPrevias.isEmpty()
                         }
+                        // em modo supers não mostra Superpoderes na lista comprável
+                        .filter { vant ->
+                            if (state.modoSupers) vant.id != "superpoderes" else true
+                        }
+
                         // especialista só com profissional
                         .filter { vant ->
                             vant.categoria == cat &&

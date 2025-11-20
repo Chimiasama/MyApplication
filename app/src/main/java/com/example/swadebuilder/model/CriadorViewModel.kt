@@ -20,7 +20,10 @@ sealed class PowerEffect {
     data class SuperPericia(val periciaId: String, val steps: Int) : PowerEffect()
     data class BonusArmadura(val value: Int) : PowerEffect()                 // armorFromPower += value
     data class BonusResistencia(val value: Int) : PowerEffect()              // bonusResFromPower += value
-    data class BonusAparar(val value: Int) : PowerEffect()                   // bonusPararFromPower += value
+    data class BonusAparar(val value: Int) : PowerEffect()
+
+    data class BonusMovimentacao(val value: Int) : PowerEffect()
+    // bonusPararFromPower += value
     data class SuperVantagem(val vantagemId: String) : PowerEffect()
 }
 
@@ -54,9 +57,8 @@ class CriadorViewModel : ViewModel() {
         }
     }
 
-    // === NOVO: compatibilidade ao carregar saves antigos ===
     fun normalizeArcanoIdsNoCarregamento() {
-        // 1) converte AA base + choice em AA específico
+
         val convertidos = state.vantagensSelecionadas.map { v ->
             if (v.id == "antecedente_arcano" && v.choice != null) {
                 val novoId = mapChoiceToArcanoId(v.choice)
@@ -73,7 +75,7 @@ class CriadorViewModel : ViewModel() {
         maisPontosPericias: Boolean,
         modoSupers: Boolean,
         usarEspecializacoesDePericia: Boolean = false,
-        grandesResponsabilidades: Boolean = false, // ← NOVO
+        grandesResponsabilidades: Boolean = false,
     ) {
 
         state.modoSupers = modoSupers
@@ -84,7 +86,7 @@ class CriadorViewModel : ViewModel() {
 
         state.idAtual = null
         state.nomePersonagem = ""
-        state.anotacoes = ""              // ← evita vazar anotações de outro personagem
+        state.anotacoes = ""
 
         state.cartaSelvagem = cartaSelvagem
         state.maisPontosPericias = maisPontosPericias
@@ -98,13 +100,17 @@ class CriadorViewModel : ViewModel() {
         state.desvantagensAutomaticas.clear()
         state.aplicarAncestralidade("HUMANOS")
 
+        if (state.modoSupers) {
+            listaVantagens.firstOrNull { it.id == "superpoderes" }?.let { sp ->
+                if (state.vantagensSelecionadas.none { it.id == "superpoderes" }) {
+                    state.vantagensSelecionadas.add(sp)
+                }
+            }
+        }
+
         state.equipamentosComprados.clear()
 
-        // -------------------------------------------------------
-        // CORREÇÃO: Zerar explicitamente o contador de gastos de PC
-        // para não "herdar" gastos do personagem anterior.
         state.pontosComplicacaoGastos = 0
-        // -------------------------------------------------------
 
         state.cpRecursosStack.clear()
         state.cpPaStack.clear()
@@ -138,6 +144,7 @@ class CriadorViewModel : ViewModel() {
         state.bonusPararFromPower = 0
         state.bonusResFromPower = 0
         state.armorFromPower = 0
+        state.bonusMovimentacaoFromPower = 0
         state.vantagensDePoder.clear()
         state.gastosPorPoder.clear()
         state.naturalArmorFromRace = 0
@@ -193,10 +200,6 @@ class CriadorViewModel : ViewModel() {
         state.ancestralidade     = salvo.ancestralidade
         state.aplicarAncestralidade(salvo.ancestralidade)
 
-        // --------------------------------------------------------------------
-        // CORREÇÃO: Restaurar a distribuição dos pontos de Complicação (CP)
-        // ANTES de carregar atributos/perícias para evitar cálculos negativos.
-        // --------------------------------------------------------------------
         state.cpPaStack.clear()
         repeat(salvo.cpPaCount) { state.cpPaStack.add("PA") }
 
@@ -209,14 +212,11 @@ class CriadorViewModel : ViewModel() {
         state.cpRecursosStack.clear()
         repeat(salvo.cpRecursosCount) { state.cpRecursosStack.add(Unit) }
 
-        // Recalcula o total gasto de PC para a UI
         state.pontosComplicacaoGastos = (state.cpPaStack.size * 2) +
                 (state.cpPvStack.size * 2) +
                 (state.cpSpStack.size * 1) +
                 (state.cpRecursosStack.size * 1)
-        // --------------------------------------------------------------------
 
-        // 1) Atributos e perícias — só agora, para não serem sobrescritos pela ancestralidade
         state.valoresAtributos.forEach { (key, holder) ->
             holder.intValue = salvo.atributos[key] ?: 4
         }
@@ -225,7 +225,6 @@ class CriadorViewModel : ViewModel() {
         }
         state.rebuildPericias(desiredPericias)
 
-        // 3) Vantagens — prioriza ID; fallback por nome (case-insensitive)
         state.vantagensSelecionadas.clear()
         val mapPorId   = listaVantagens.associateBy { it.id }
         val mapPorNome = listaVantagens.associateBy { it.nome.trim().uppercase() }
@@ -243,7 +242,6 @@ class CriadorViewModel : ViewModel() {
             }
         }
 
-        // 4) Complicações — já são IDs no formato atual
         state.complicacoesSelecionadas.clear()
         salvo.complicacoes.forEach { compId ->
             listaComplicacoes.find { it.id == compId }?.let { comp ->
@@ -252,7 +250,6 @@ class CriadorViewModel : ViewModel() {
             }
         }
 
-        // 5) Equipamentos — busca em BÁSICO + SUPER
         state.equipamentosComprados.clear()
         val todasCategorias = (categoriasBasico + categoriasSuper)
         val mapaItensPorNome = todasCategorias
@@ -265,7 +262,6 @@ class CriadorViewModel : ViewModel() {
             }
         }
 
-        // 6) Poderes arcanos (slots por AA)
         state.poderSlotsPorArcano.clear()
         salvo.poderes.forEach { (arcano, poderesLista) ->
             val capacidade = arcanoInfo[arcano]?.first ?: 0
@@ -274,8 +270,6 @@ class CriadorViewModel : ViewModel() {
             }
         }
 
-        // 7) SUPERS — campanha, ledger e snapshot
-        // 7.1 Ledger principal
         state.idPoderFavorecido = salvo.idPoderFavorecido
 
         state.superAtributoIncs.clear()
@@ -287,6 +281,7 @@ class CriadorViewModel : ViewModel() {
         state.updateBonusPararFromPower(salvo.bonusPararFromPower)
         state.updateBonusResFromPower (salvo.bonusResFromPower)
         state.updateArmorFromPower    (salvo.armorFromPower)
+        state.updateBonusMovimentacaoFromPower(salvo.bonusMovimentacaoFromPower)
 
         state.vantagensDePoder.clear()
         state.vantagensDePoder.addAll(salvo.vantagensDePoder)
@@ -296,12 +291,11 @@ class CriadorViewModel : ViewModel() {
 
         state.limiteDePoderDaCampanha = salvo.limiteDePoderDaCampanha
 
-        // 7.2 Pontos de supers, nível de campanha e limites
         val totalSupers = salvo.superPontosTotais
         state.superPontosTotais = totalSupers
 
         if (salvo.modoSupers && totalSupers > 0) {
-            // 15 pontos por nível (I..V)
+
             val nivel = (totalSupers / 15).coerceIn(1, 5)
             state.superNivelCampanha = nivel
 
@@ -309,7 +303,6 @@ class CriadorViewModel : ViewModel() {
             state.superLimite        = limite
             state.superLimitePorPoder = limite
 
-            // Recalcula saldo a partir do ledger, ignorando possível desync no save antigo
             val gastos = state.gastosPorPoder.values.sum()
             state.superPontosDisponiveis = (totalSupers - gastos).coerceAtLeast(0)
 
@@ -322,20 +315,18 @@ class CriadorViewModel : ViewModel() {
             state.faseSupersAtiva      = false
         }
 
-        // 7.3 Snapshot visual dos superpoderes comprados
         state.superPoderesComprados.clear()
         salvo.superpoderesComprados.forEach { nomePoder ->
             state.superPoderesComprados.add(
                 PurchasedPower(
                     nome     = nomePoder,
-                    custo    = 0, // custo já está refletido em gastosPorPoder
+                    custo    = 0,
                     baseCost = 0,
                     poderId  = "sp_${nomePoder.keyify()}"
                 )
             )
         }
 
-        // 8) Dinheiro, pontos, especializações
         state.pontosVantagem = salvo.pontosRestantes
         state.dinheiro       = salvo.dinheiro
 
@@ -343,17 +334,18 @@ class CriadorViewModel : ViewModel() {
         state.especializacoesPorPericia.clear()
         state.especializacoesPorPericia.putAll(salvo.especializacoesPorPericia)
 
-        // 9) Recalcular derivados conforme seu fluxo atual
         state.recalcularPontosAtributo()
         state.rebuildAllPericiaStacks()
         normalizeArcanoIdsNoCarregamento()
+        if (state.modoSupers) {
+            listaVantagens.firstOrNull { it.id == "superpoderes" }?.let { sp ->
+                if (state.vantagensSelecionadas.none { it.id == "superpoderes" }) {
+                    state.vantagensSelecionadas.add(sp)
+                }
+            }
+        }
     }
 
-    // ---------------- SUPERS: VALIDAÇÃO E INVESTIMENTO ----------------
-    /**
-     * Limite por poder: se for o favorecido, usa limiteFavorecido; senão, limitePorPoderPadrao.
-     * Observação: o favorecido é comparado por 'poderId'.
-     */
     fun perPowerLimit(poderId: String): Int {
         return if (state.idPoderFavorecido != null && state.idPoderFavorecido == poderId)
             state.limiteFavorecido
@@ -498,6 +490,8 @@ class CriadorViewModel : ViewModel() {
 
             is PowerEffect.BonusAparar -> { /* ok */ }
 
+            is PowerEffect.BonusMovimentacao -> { /* ok */ }
+
             is PowerEffect.SuperVantagem -> {
                 val vant = listaVantagens.firstOrNull {
                     it.id.equals(efeito.vantagemId, ignoreCase = true)
@@ -576,6 +570,12 @@ class CriadorViewModel : ViewModel() {
                 state.updateBonusPararFromPower((state.bonusPararFromPower + efeito.value).coerceAtLeast(0))
             }
 
+            is PowerEffect.BonusMovimentacao -> {
+                state.updateBonusMovimentacaoFromPower(
+                    (state.bonusMovimentacaoFromPower + efeito.value).coerceAtLeast(0)
+                )
+            }
+
             is PowerEffect.SuperVantagem -> {
                 listaVantagens.firstOrNull { it.id == efeito.vantagemId }?.let { v ->
                     state.adicionarVantagemPorSuper(v)
@@ -640,6 +640,12 @@ class CriadorViewModel : ViewModel() {
 
             is PowerEffect.BonusAparar -> {
                 state.updateBonusPararFromPower((state.bonusPararFromPower - efeito.value).coerceAtLeast(0))
+            }
+
+            is PowerEffect.BonusMovimentacao -> {
+                state.updateBonusMovimentacaoFromPower(
+                    (state.bonusMovimentacaoFromPower - efeito.value).coerceAtLeast(0)
+                )
             }
 
             is PowerEffect.SuperVantagem -> {

@@ -54,16 +54,17 @@ data class PersonagemSalvo(
     val superPontosDisponiveis: Int = 0,
 
     // Limites & favorecido
-    val limitePorPoderPadrao: Int = 0,      // floor(superPontosTotais / 3) se não houver tabela
-    val limiteFavorecido: Int = 0,          // ceil(superPontosTotais / 2.0)
-    val idPoderFavorecido: String? = null,  // para O MELHOR QUE HÁ
+    val limitePorPoderPadrao: Int = 0,
+    val limiteFavorecido: Int = 0,
+    val idPoderFavorecido: String? = null,
 
     // Ledger de efeitos de poder
-    val superAtributoIncs: Map<String, Int> = emptyMap(),  // atributo keyify -> passos
-    val superPericiaIncs: Map<String, Int> = emptyMap(),   // periciaId/pericia.keyify -> passos
+    val superAtributoIncs: Map<String, Int> = emptyMap(),
+    val superPericiaIncs: Map<String, Int> = emptyMap(),
     val bonusPararFromPower: Int = 0,
     val bonusResFromPower: Int = 0,
     val armorFromPower: Int = 0,
+    val bonusMovimentacaoFromPower: Int = 0,
     val vantagensDePoder: Set<String> = emptySet(),
     val gastosPorPoder: Map<String, Int> = emptyMap(),
 

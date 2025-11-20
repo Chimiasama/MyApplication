@@ -436,6 +436,15 @@ fun SuperPoderesSection(
                                     state.removerSuperPoder(p, desfazerNoLedger = false)
                                 }
 
+                                p.poderId == "sp_movimentacao" -> {
+                                    viewModel.desfazerInvestimentoSuper(
+                                        poderId = p.poderId,
+                                        custo = p.custo,
+                                        efeito = PowerEffect.BonusMovimentacao(p.baseCost)
+                                    )
+                                    state.removerSuperPoder(p, desfazerNoLedger = false)
+                                }
+
                                 p.poderId == "sp_armor" -> {
                                     viewModel.desfazerInvestimentoSuper(
                                         poderId = p.poderId,
@@ -454,8 +463,6 @@ fun SuperPoderesSection(
                                     state.removerSuperPoder(p, desfazerNoLedger = false)
                                 }
 
-                                // Superatributos comprados via lista:
-                                // poderId = "sp_attr_FORCA", baseCost = steps aplicados
                                 p.poderId.startsWith("sp_attr_") -> {
                                     val attrKey = p.poderId.removePrefix("sp_attr_")
                                     viewModel.desfazerInvestimentoSuper(
@@ -775,6 +782,23 @@ fun SuperPoderesSection(
                                     custo = custoTotal,
                                     baseCost = baseCost,
                                     poderId = "sp_aparar",
+                                    registrarNoLedger = false
+                                )
+                            }
+                        }
+
+                        nome == "MOVIMENTAÇÃO" || nome == "MOVIMENTACAO" -> {
+                            val r = viewModel.tentarInvestirSuper(
+                                poderId = "sp_movimentacao",
+                                custo = custoTotal,
+                                efeito = PowerEffect.BonusMovimentacao(baseCost)
+                            )
+                            if (r.ok) {
+                                state.comprarSuperPoder(
+                                    nome = poder.nome,
+                                    custo = custoTotal,
+                                    baseCost = baseCost,
+                                    poderId = "sp_movimentacao",
                                     registrarNoLedger = false
                                 )
                             }

@@ -542,6 +542,7 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                                             bonusPararFromPower     = state.bonusPararFromPower,
                                                             bonusResFromPower       = state.bonusResFromPower,
                                                             armorFromPower          = state.armorFromPower,
+                                                            bonusMovimentacaoFromPower = state.bonusMovimentacaoFromPower,
                                                             vantagensDePoder        = state.vantagensDePoder.toSet(),
                                                             gastosPorPoder          = state.gastosPorPoder.toMap(),
                                                             limiteDePoderDaCampanha = state.limiteDePoderDaCampanha,
@@ -835,8 +836,15 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         val ligeiroBonus =
             if (vantagensNomeKey.any { it == "LIGEIRO" }) 2 else 0
 
-        return (base - racialPenalty - lentoPenalty - idosoPenalty - obesoPenalty + ligeiroBonus)
-            .coerceAtLeast(0)
+        return (
+                base
+                        - racialPenalty
+                        - lentoPenalty
+                        - idosoPenalty
+                        - obesoPenalty
+                        + ligeiroBonus
+                        + personagem.bonusMovimentacaoFromPower
+                ).coerceAtLeast(0)
     }
 
     fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
@@ -1123,7 +1131,8 @@ fun CriadorState.valorMovimentacao(): Int {
             - idosoPenalty
             - lentoPenalty
             - obesoPenalty
-            + ligeiroBonus)
+            + ligeiroBonus
+            + bonusMovimentacaoFromPower)
         .coerceAtLeast(0)
 }
 
@@ -1319,6 +1328,9 @@ class CriadorState {
     var bonusPararFromPower by mutableIntStateOf(0)
     var bonusResFromPower  by mutableIntStateOf(0)
     var armorFromPower     by mutableIntStateOf(0)
+
+    var bonusMovimentacaoFromPower by mutableIntStateOf(0)
+
     val vantagensDePoder   = mutableStateSetOf<String>()
     val gastosPorPoder     = mutableStateMapOf<String, Int>()
     var naturalArmorFromRace by mutableIntStateOf(0)
@@ -1367,6 +1379,10 @@ class CriadorState {
 
     fun updateArmorFromPower(value: Int) {
         armorFromPower = value.coerceAtLeast(0)
+    }
+
+    fun updateBonusMovimentacaoFromPower(value: Int) {
+        bonusMovimentacaoFromPower = value.coerceAtLeast(0)
     }
 
     fun rawTotalComSupers(per: Pericia): Int {
@@ -2169,6 +2185,14 @@ class CriadorState {
 
                 complicacoesSelecionadas[comp] = grau
             }
+
+        if (modoSupers) {
+            listaVantagens.firstOrNull { it.id == "superpoderes" }?.let { sp ->
+                if (vantagensSelecionadas.none { it.id == "superpoderes" }) {
+                    vantagensSelecionadas.add(sp)
+                }
+            }
+        }
 
         rebuildPericias(desiredRaw)
 

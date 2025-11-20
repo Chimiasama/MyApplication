@@ -39,6 +39,7 @@ data class MeuPersonagem(
     val bonusPararFromPower: Int = 0,
     val bonusResFromPower: Int = 0,
     val armorFromPower: Int = 0,
+    val bonusMovimentacaoFromPower: Int = 0,
     val vantagensDePoder: Set<String> = emptySet(),         // ids de vantagens “compradas” por super
     val gastosPorPoder: Map<String, Int> = emptyMap(),      // PoderId -> custo gasto (para auditoria)
 
