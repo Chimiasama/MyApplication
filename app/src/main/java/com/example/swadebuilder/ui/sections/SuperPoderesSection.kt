@@ -1,6 +1,7 @@
 package com.example.swadebuilder.ui.sections
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +43,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -61,6 +63,7 @@ import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.dialogs.SuperAtributosPickerDialog
 import com.example.swadebuilder.ui.dialogs.SuperPericiasPickerDialog
 import com.example.swadebuilder.ui.dialogs.SuperVantagensPickerDialog
+import com.example.swadebuilder.util.keyify
 import kotlin.math.roundToInt
 
 // ==========================================================
@@ -354,7 +357,7 @@ fun SuperPoderesSection(
     viewModel: CriadorViewModel = viewModel()
 ) {
     if (!expanded) return
-
+    val context = LocalContext.current
     var poderParaComprar by remember { mutableStateOf<SuperPoder?>(null) }
 
     // agora o nível é realmente opcional (começa null)
@@ -476,13 +479,20 @@ fun SuperPoderesSection(
                                 // Superperícias compradas via picker:
                                 // poderId = "sp_pericia_LUTAR", baseCost = steps aplicados
                                 p.poderId.startsWith("sp_pericia_") -> {
-                                    val perKey = p.poderId.removePrefix("sp_pericia_").lowercase()
-                                    viewModel.desfazerInvestimentoSuper(
+                                    // KEYIFY é obrigatório aqui pra bater com superPericiaIncs
+                                    val perKey = p.poderId.removePrefix("sp_pericia_").keyify()
+
+                                    val r = viewModel.desfazerInvestimentoSuper(
                                         poderId = p.poderId,
                                         custo = p.custo,
                                         efeito = PowerEffect.SuperPericia(perKey, p.baseCost)
                                     )
-                                    state.removerSuperPoder(p, desfazerNoLedger = false)
+
+                                    if (!r.ok) {
+                                        Toast.makeText(context, r.mensagem, Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        state.removerSuperPoder(p, desfazerNoLedger = false)
+                                    }
                                 }
 
                                 // Supervantagem – cada chip representa UMA vantagem
@@ -708,6 +718,7 @@ fun SuperPoderesSection(
     var bonusPericiaNivel by rememberSaveable { mutableIntStateOf(0) }
 
     poderParaComprar?.let { poder ->
+        val context = LocalContext.current
 
         if (!supersLiberados) {
             poderParaComprar = null
@@ -875,8 +886,10 @@ fun SuperPoderesSection(
                         }
 
                         else -> {
-                            // fallback simples (apenas registrar gasto com id do poder)
-                            state.comprarSuperPoder(poder.nome, custoTotal)
+                            val (ok, msg) = state.comprarSuperPoder(poder.nome, custoTotal)
+                            if (!ok) {
+                                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                     poderParaComprar = null

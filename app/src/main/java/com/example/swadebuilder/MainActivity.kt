@@ -177,6 +177,15 @@ data class PurchasedPower(
     val poderId: String
 )
 
+// ===== NOVO: Superpoderes Restritivos (pré-requisito de perícia mínima) =====
+private const val MIN_RAW_RESTRITIVO = 10  // d10
+
+// chave do superpoder (keyify) -> chave da perícia (keyify)
+private val SUPER_PODERES_RESTRITIVOS: Map<String, String> = mapOf(
+    "Superfeitiçaria".keyify() to "Ocultismo".keyify(),
+    "Superciência".keyify()    to "Ciência".keyify()
+)
+
 private val json = Json {
     ignoreUnknownKeys = true
 }
@@ -1404,21 +1413,46 @@ class CriadorState {
         baseCost: Int = custo,
         poderId: String = "sp_${nome.keyify()}",
         registrarNoLedger: Boolean = true
-    ) {
-        if (superPoderesComprados.size < superLimite && superPontosDisponiveis >= custo) {
-            superPoderesComprados.add(
-                PurchasedPower(
-                    nome = nome,
-                    custo = custo,
-                    baseCost = baseCost,
-                    poderId = poderId
-                )
-            )
+    ): Pair<Boolean, String> {
 
-            if (registrarNoLedger) {
-                registrarGastoDePoder(poderId, custo)
+        // 0) Regra restritiva de perícia mínima (Superciência / Superfeitiçaria)
+        val nomeKey = nome.keyify()
+        val periciaReqKey = SUPER_PODERES_RESTRITIVOS[nomeKey]
+        if (periciaReqKey != null) {
+            val perReq = listaPericias.firstOrNull { it.nome.keyify() == periciaReqKey }
+            val rawFinalReq = perReq?.let { rawTotalComSupers(it) } ?: 0
+
+            if (rawFinalReq < MIN_RAW_RESTRITIVO) {
+                val perNome = perReq?.nome ?: periciaReqKey
+                return false to "Para comprar $nome, você precisa ter a perícia $perNome em d10 ou mais."
             }
         }
+
+        // 1) Limite de quantidade de superpoderes
+        if (superPoderesComprados.size >= superLimite) {
+            return false to "Limite de superpoderes atingido (${superLimite})."
+        }
+
+        // 2) Saldo de SP
+        if (superPontosDisponiveis < custo) {
+            return false to "Sem saldo: precisa de $custo SP, tem $superPontosDisponiveis."
+        }
+
+        // 3) Compra normal
+        superPoderesComprados.add(
+            PurchasedPower(
+                nome = nome,
+                custo = custo,
+                baseCost = baseCost,
+                poderId = poderId
+            )
+        )
+
+        if (registrarNoLedger) {
+            registrarGastoDePoder(poderId, custo)
+        }
+
+        return true to "Superpoder adquirido."
     }
 
     fun removerSuperPoder(

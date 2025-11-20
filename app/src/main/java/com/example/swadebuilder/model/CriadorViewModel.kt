@@ -353,14 +353,6 @@ class CriadorViewModel : ViewModel() {
             state.limitePorPoderPadrao
     }
 
-    /**
-     * Retorna a soma prevista (após compra) de Armadura+Resistência vindas de SUPERS apenas.
-     * Obs.: NÃO inclui "Heróis sem Armadura" (bônus global de cenário) e nem armadura de equipamento.
-     */
-    fun projectedMitigacaoSupersSum(afterArmorFromPower: Int, afterBonusResFromPower: Int): Int {
-        return (afterArmorFromPower.coerceAtLeast(0) + afterBonusResFromPower.coerceAtLeast(0))
-    }
-
     /** Cap genérico de atributo final por campanha/racial/estágio. */
     @Suppress("unused_parameter")
     fun atributoCapFinal(attrKey: String): Int = 12
@@ -591,10 +583,20 @@ class CriadorViewModel : ViewModel() {
         return InvestResult(true, "Investimento aplicado.")
     }
 
-    /**
-     * Reverte um investimento (desfaz no ledger e atualiza derivados).
-     * Use o mesmo 'efeito' que foi aplicado, com valores em módulo correspondente.
-     */
+    // ===== NOVO: bloqueio de remoção de Superperícia ligada a superpoderes restritivos =====
+    private fun motivoBloqueioRemocaoSuperPericia(perKey: String, rawDepois: Int): String? {
+        val temFeiticaria = state.superPoderesComprados.any { it.nome.keyify() == "SUPERFEITICARIA" }
+        val temCiencia    = state.superPoderesComprados.any { it.nome.keyify() == "SUPERCIENCIA" }
+
+        if (temFeiticaria && perKey == "OCULTISMO" && rawDepois < 10) {
+            return "Primeiro remova o superpoder Superfeitiçaria."
+        }
+        if (temCiencia && perKey == "CIENCIAS" && rawDepois < 10) {
+            return "Primeiro remova o superpoder Superciência."
+        }
+        return null
+    }
+
     fun revertPowerInvestment(
         poderId: String,
         custo: Int,
@@ -625,6 +627,25 @@ class CriadorViewModel : ViewModel() {
 
             is PowerEffect.SuperPericia -> {
                 val k = efeito.periciaId
+                val stepsToRemove = efeito.steps.coerceAtLeast(0)
+
+                // 0) Simula quanto a perícia ficaria após remover esses steps
+                val perObj = listaPericias.firstOrNull { it.nome.keyify() == k.keyify() }
+                if (perObj != null && stepsToRemove > 0) {
+                    val baseRaw       = state.rawTotal(perObj)
+                    val stepsAtuais   = state.superPericiaIncs[k] ?: 0
+                    val stepsDepois   = (stepsAtuais - stepsToRemove).coerceAtLeast(0)
+                    val rawDepois     = state.applySuperStepsFrom(baseRaw, stepsDepois)
+
+                    val perKey = perObj.nome.keyify()
+                    val bloqueio = motivoBloqueioRemocaoSuperPericia(perKey, rawDepois)
+                    if (bloqueio != null) {
+                        // Não desfaz no ledger, não altera nada
+                        return InvestResult(false, bloqueio)
+                    }
+                }
+
+                // 1) Se passou, desfaz normalmente
                 val atual = state.superPericiaIncs[k] ?: 0
                 state.superPericiaIncs[k] = (atual - efeito.steps).coerceAtLeast(0)
                 if (state.superPericiaIncs[k] == 0) state.superPericiaIncs.remove(k)
