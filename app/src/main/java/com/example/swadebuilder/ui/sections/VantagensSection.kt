@@ -4,7 +4,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -586,78 +585,67 @@ fun VantagensContent(
                             Row(
                                 Modifier
                                     .fillMaxWidth()
-                                    .combinedClickable(
-                                        enabled = !locked,
-                                        onClick = { selectedReqs = reqList },
-                                        onDoubleClick = {
-                                            if (!locked) {
-                                                when {
-                                                    state.pontosVantagem <= 0 -> {
-                                                        tempErrorMsg = "Sem PV disponível"
-                                                        showTempError = true
-                                                    }
-
-                                                    !state.podeSelecionar(vant) -> {
-                                                        tempErrorMsg =
-                                                            "Faltam requisitos para '${vant.nome}'"
-                                                        showTempError = true
-                                                    }
-
-                                                    vant.vinculadoPericia -> {
-                                                        pendingVantagem = vant
-                                                        showChoiceDialog = true
-                                                    }
-
-                                                    vant.id == "antecedente_arcano" -> {
-                                                        dialogMostrandoAntecedente = vant
-                                                    }
-
-                                                    vant.id == "novos_poderes" -> {
-                                                        pendingNovosPoderes = vant
-                                                        showNovosPoderesDialog = true
-                                                    }
-
-                                                    else -> {
-                                                        if (vant.nome.contains(
-                                                                "Pontos de Poder",
-                                                                true
-                                                            )
-                                                        ) {
-                                                            state.comprarPontoDePoder(vant)
-                                                        } else {
-                                                            state.applyVantagemDinheiro(vant)
-                                                            state.vantagensSelecionadas += vant
-                                                        }
-                                                        state.pontosVantagem--
-                                                        state.rebuildAllPericiaStacks()
-
-                                                        // consome PV pendente vindo de XP, se houver
-                                                        if (state.pvFromXpOutstanding > 0) {
-                                                            state.pvFromXpOutstanding -= 1
-                                                            if (state.pvFromXpOutstanding == 0) {
-                                                                state.overrideStageForVantagem =
-                                                                    null
-                                                                state.openVantagensAfterGrant =
-                                                                    false
-                                                            }
-                                                        }
-                                                    }
+                                    .clickable(enabled = !locked) {
+                                        selectedReqs = reqList
+                                        if (!locked) {
+                                            when {
+                                                state.pontosVantagem <= 0 -> {
+                                                    tempErrorMsg = "Sem PV disponível"
+                                                    showTempError = true
                                                 }
 
-                                                scope.launch {
-                                                    delay(2_000)
-                                                    showTempError = false
+                                                !state.podeSelecionar(vant) -> {
+                                                    tempErrorMsg = "Faltam requisitos para '${vant.nome}'"
+                                                    showTempError = true
+                                                }
+
+                                                vant.vinculadoPericia -> {
+                                                    pendingVantagem = vant
+                                                    showChoiceDialog = true
+                                                }
+
+                                                vant.id == "antecedente_arcano" -> {
+                                                    dialogMostrandoAntecedente = vant
+                                                }
+
+                                                vant.id == "novos_poderes" -> {
+                                                    pendingNovosPoderes = vant
+                                                    showNovosPoderesDialog = true
+                                                }
+
+                                                else -> {
+                                                    if (vant.nome.contains("Pontos de Poder", true)) {
+                                                        state.comprarPontoDePoder(vant)
+                                                    } else {
+                                                        state.applyVantagemDinheiro(vant)
+                                                        state.vantagensSelecionadas += vant
+                                                    }
+                                                    state.pontosVantagem--
+                                                    state.rebuildAllPericiaStacks()
+
+                                                    if (state.pvFromXpOutstanding > 0) {
+                                                        state.pvFromXpOutstanding -= 1
+                                                        if (state.pvFromXpOutstanding == 0) {
+                                                            state.overrideStageForVantagem = null
+                                                            state.openVantagensAfterGrant = false
+                                                        }
+                                                    }
                                                 }
                                             }
+
+                                            scope.launch {
+                                                delay(2_000)
+                                                showTempError = false
+                                            }
                                         }
-                                    )
+                                    }
                                     .alpha(
                                         if (!locked && state.podeSelecionar(vant)) 1f
                                         else 0.3f
                                     )
                                     .padding(vertical = 8.dp, horizontal = 4.dp)
                             ) {
-                                Text(
+                            Text(
                                     vant.nome,
                                     Modifier.weight(1f),
                                     fontWeight = FontWeight.Medium
