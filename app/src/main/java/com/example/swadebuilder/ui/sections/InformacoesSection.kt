@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -151,20 +150,21 @@ fun InformacoesSection(
             val podeUsarProgresso =
                 supersTerminados && (state.progressosDisponiveis > 0) && (state.pontosVantagem == 0)
 
+            // BOTÕES CENTRALIZADOS / ALINHADOS ÀS LATERAIS
             Row(
                 Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                horizontalArrangement = Arrangement.End,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
                     onClick = { showProgressDialog = true },
-                    enabled = podeAbrirProgressos && poderesOk
+                    enabled = podeAbrirProgressos && poderesOk,
+                    modifier = Modifier.weight(1f)
                 ) {
                     Text("Progressos: ${state.progresso}")
                 }
-                Spacer(Modifier.width(8.dp))
                 Button(
                     onClick = {
                         state.emProgresso = true
@@ -172,7 +172,8 @@ fun InformacoesSection(
                             onUseProgress()
                         }
                     },
-                    enabled = podeUsarProgresso && poderesOk
+                    enabled = podeUsarProgresso && poderesOk,
+                    modifier = Modifier.weight(1f)
                 ) {
                     Text("Usar Progresso (${state.progressosDisponiveis})")
                 }
@@ -189,43 +190,68 @@ fun InformacoesSection(
                 }
             }
 
-            // 5) Parâmetros extras (Movim., Aparar, Resistência, Tamanho)
+            // -------- 5) Parâmetros extras (Movimentação, Aparar, Resistência, Tamanho) --------
+
+            val movimento = state.valorMovimentacao()
+            val aparar = state.valorAparar()
+
+            val temArmaduraDeEquip =
+                state.equipamentosComprados.any { it.armadura != null }
+            val bonusSemArmadura =
+                if (state.heroisSemArmadura && !temArmaduraDeEquip) 2 else 0
+
+            val baseResFinal = state.valorResistenciaFinal()
+            val armaduraEfetiva = state.valorArmaduraEfetiva()
+            val totalRes = baseResFinal + armaduraEfetiva + bonusSemArmadura
+            val resistenciaTexto =
+                if ((armaduraEfetiva + bonusSemArmadura) != 0)
+                    "$baseResFinal ($totalRes)"
+                else
+                    baseResFinal.toString()
+
+            val tamanho = state.valorTamanho()
+            val tamanhoTexto = if (tamanho > 0) "+$tamanho" else tamanho.toString()
+
+            // GRID DE DUAS COLUNAS ALINHADAS
             Column(
-                Modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
-                    Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    CircleStat(value = state.valorMovimentacao().toString(), label = "Movim.")
-                    CircleStat(value = state.valorAparar().toString(), label = "Aparar")
-                }
-                Row(
-                    Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    val temArmaduraDeEquip =
-                        state.equipamentosComprados.any { it.armadura != null }
-                    val bonusSemArmadura =
-                        if (state.heroisSemArmadura && !temArmaduraDeEquip) 2 else 0
+                    // Coluna ESQUERDA: Movimentação / Resistência
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        StatItem(
+                            title = "Movimentação",
+                            value = movimento.toString()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        StatItem(
+                            title = "Resistência",
+                            value = resistenciaTexto
+                        )
+                    }
 
-                    val baseFinal = state.valorResistenciaFinal()
-                    val armaduraEfetiva = state.valorArmaduraEfetiva()
-                    val total = baseFinal + armaduraEfetiva + bonusSemArmadura
-
-                    CircleStat(
-                        value = if ((armaduraEfetiva + bonusSemArmadura) != 0) "$baseFinal($total)" else "$baseFinal",
-                        label = "Resistência"
-                    )
-
-                    val tam = state.valorTamanho()
-                    CircleStat(
-                        value = if (tam > 0) "+$tam" else tam.toString(),
-                        label = "Tamanho"
-                    )
+                    // Coluna DIREITA: Aparar / Tamanho
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        StatItem(
+                            title = "Aparar",
+                            value = aparar.toString()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        StatItem(
+                            title = "Tamanho",
+                            value = tamanhoTexto
+                        )
+                    }
                 }
             }
 
@@ -322,5 +348,33 @@ fun InformacoesSection(
                 )
             }
         }
+    }
+}
+
+/**
+ * Item simples de stat: valor em destaque + título, centralizados.
+ */
+@Composable
+fun StatItem(
+    title: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = value,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(
+            text = title,
+            style = MaterialTheme.typography.labelMedium,
+            textAlign = TextAlign.Center
+        )
     }
 }
