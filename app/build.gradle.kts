@@ -118,12 +118,11 @@ android {
             )
         }
 
-        // Usa a toolchain Java 21 (é o JDK que você já está usando)
         jvmToolchain(21)
     }
 
     compileOptions {
-        // Deixa o Java no mesmo nível do Kotlin
+
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
