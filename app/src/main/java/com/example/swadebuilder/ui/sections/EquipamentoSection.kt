@@ -41,7 +41,6 @@ import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import kotlinx.serialization.json.JsonPrimitive
 
-
 // --- modelo de filtro para equipamentos ---
 data class EquipFilter(
     val somenteAcessiveis: Boolean = false,
@@ -156,6 +155,11 @@ fun EquipFilterDialog(
 @Composable
 fun EquipamentoSection(
     dinheiro: Int,
+    pcTotal: Int,
+    pcLivres: Int,
+    recursosPcUsados: Int,
+    onUsarPontosBonusEmRecursos: () -> Unit,
+    onDesfazerPontosBonusEmRecursos: () -> Unit,
     onListaCompletaClick: () -> Unit,
     onEquipamentoDoubleClick: (EquipamentoItem) -> Unit,
     equipamentosComprados: List<EquipamentoItem>,
@@ -181,13 +185,50 @@ fun EquipamentoSection(
 
         SectionHeader(
             onHelpClick = null,
-            centerText           = "Dinheiro: $dinheiro",
-            onCenterClick        = null,
+            centerText = "Dinheiro: $dinheiro • Pontos Bônus: $pcLivres de $pcTotal",
+            onCenterClick = null,
             onListaCompletaClick = if (showLista) onListaCompletaClick else null,
-            listaCompletaText    = "Lista Completa"
+            listaCompletaText = "Lista Completa"
         )
 
+        // Botões de Pontos Bônus em Recursos
+        Spacer(modifier = Modifier.size(4.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val podeUsarPcRecursos = pcLivres > 0 && recursosPcUsados == 0
+            val podeDesfazerPcRecursos = recursosPcUsados > 0
+
+            TextButton(
+                onClick = onUsarPontosBonusEmRecursos,
+                enabled = podeUsarPcRecursos
+            ) {
+                Text("Usar Pontos Bônus em Recursos")
+            }
+
+            TextButton(
+                onClick = onDesfazerPontosBonusEmRecursos,
+                enabled = podeDesfazerPcRecursos
+            ) {
+                Text("Desfazer Pontos Bônus em Recursos")
+            }
+        }
+
+        if (pcTotal == 0) {
+            Spacer(Modifier.size(4.dp))
+            Text(
+                text = "Para ganhar Pontos Bônus, escolha Complicações na seção apropriada.",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        }
+
         // botão de filtro
+        Spacer(Modifier.size(8.dp))
         Text(
             text = if (filter.isEmpty()) "Filtrar equipamentos"
             else "Filtros (${filter.totalSelections()})",
@@ -201,12 +242,16 @@ fun EquipamentoSection(
         if (showFilterDialog) {
 
             val allCategoriasVisiveis = (categorias + superequipCategorias)
-                .filterNot { it.tipo.equals("Equipamento Supers", true) || it.tipo.equals("Equipamentos Supers", true) }
+                .filterNot {
+                    it.tipo.equals("Equipamento Supers", true) ||
+                            it.tipo.equals("Equipamentos Supers", true)
+                }
 
-            val allTipos    = allCategoriasVisiveis.map { it.tipo }.distinct()
+            val allTipos = allCategoriasVisiveis.map { it.tipo }.distinct()
             val allSubtipos = allCategoriasVisiveis.map { it.subtipo }.distinct()
 
-            val allOrigens  = (categorias.mapNotNull { it.origem } + superequipCategorias.mapNotNull { it.origem })
+            val allOrigens = (categorias.mapNotNull { it.origem } +
+                    superequipCategorias.mapNotNull { it.origem })
                 .map { it.uppercase() }
                 .distinct()
 
@@ -226,16 +271,21 @@ fun EquipamentoSection(
         if (equipamentosComprados.isNotEmpty()) {
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement   = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
             ) {
                 equipamentosComprados.forEach { eq ->
                     AssistChip(
-                        onClick     = { onRemoveEquipamentoClick(eq) },
-                        label       = { Text(eq.nome) },
-                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover") }
+                        onClick = { onRemoveEquipamentoClick(eq) },
+                        label = { Text(eq.nome) },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Default.Close,
+                                contentDescription = "Remover"
+                            )
+                        }
                     )
                 }
             }
@@ -244,11 +294,13 @@ fun EquipamentoSection(
 
         // peso total
         val totalWeight = equipamentosComprados
-            .mapNotNull { (it.peso as? JsonPrimitive)?.content?.replace(",", ".")?.toFloatOrNull() }
+            .mapNotNull {
+                (it.peso as? JsonPrimitive)?.content?.replace(",", ".")?.toFloatOrNull()
+            }
             .sum()
         Text(
             "Peso total: $totalWeight",
-            style    = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 8.dp)
@@ -256,7 +308,10 @@ fun EquipamentoSection(
 
         // ── agrupamento por tipo / subtipo / subsubtipo (usando BÁSICO + SUPER) ────
         val allCategorias = (categorias + superequipCategorias)
-            .filterNot { it.tipo.equals("Equipamento Supers", true) || it.tipo.equals("Equipamentos Supers", true) }
+            .filterNot {
+                it.tipo.equals("Equipamento Supers", true) ||
+                        it.tipo.equals("Equipamentos Supers", true)
+            }
 
         val tipos = allCategorias.map { it.tipo }.distinct()
 
@@ -268,7 +323,7 @@ fun EquipamentoSection(
 
             val isTipoExpanded = expandedTipoMap.getValue(tipo).value
             CollapsibleSection(
-                title    = tipo,
+                title = tipo,
                 expanded = isTipoExpanded,
                 onToggle = {
                     expandedTipoMap.forEach { (t, st) ->
@@ -289,7 +344,9 @@ fun EquipamentoSection(
                         .filter { it.tipo == tipo }
                         .let { list ->
                             if (filter.origens.isNotEmpty())
-                                list.filter { (it.origem?.uppercase() ?: "") in filter.origens }
+                                list.filter {
+                                    (it.origem?.uppercase() ?: "") in filter.origens
+                                }
                             else list
                         }
                     if (catsPorTipo.isEmpty()) return@Column
@@ -306,11 +363,12 @@ fun EquipamentoSection(
 
                         val isSubExpanded = expandedSubtipoMap.getValue(subtipo).value
                         CollapsibleSection(
-                            title    = subtipo,
+                            title = subtipo,
                             expanded = isSubExpanded,
                             onToggle = {
                                 expandedSubtipoMap.forEach { (st, stState) ->
-                                    stState.value = if (st == subtipo) !isSubExpanded else false
+                                    stState.value =
+                                        if (st == subtipo) !isSubExpanded else false
                                 }
                             }
                         ) {
@@ -335,7 +393,8 @@ fun EquipamentoSection(
                                         .filter { eq ->
                                             if (filter.somenteAcessiveis) {
                                                 val c = (eq.custo as? JsonPrimitive)
-                                                    ?.content?.toIntOrNull() ?: Int.MAX_VALUE
+                                                    ?.content?.toIntOrNull()
+                                                    ?: Int.MAX_VALUE
                                                 if (c > dinheiro) return@filter false
                                             }
                                             true
@@ -345,10 +404,17 @@ fun EquipamentoSection(
                                                 Modifier
                                                     .fillMaxWidth()
                                                     .combinedClickable(
-                                                        onClick       = { /* nada */ },
-                                                        onDoubleClick = { onEquipamentoDoubleClick(equipamento) }
+                                                        onClick = { /* nada */ },
+                                                        onDoubleClick = {
+                                                            onEquipamentoDoubleClick(
+                                                                equipamento
+                                                            )
+                                                        }
                                                     )
-                                                    .padding(vertical = 4.dp, horizontal = 4.dp),
+                                                    .padding(
+                                                        vertical = 4.dp,
+                                                        horizontal = 4.dp
+                                                    ),
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
                                                 Text(
@@ -365,13 +431,15 @@ fun EquipamentoSection(
                                 } else {
                                     // com subsubtipo
                                     subsub.forEach { ss ->
-                                        val isSsExpanded = expandedSubsub.getValue(ss).value
+                                        val isSsExpanded =
+                                            expandedSubsub.getValue(ss).value
                                         CollapsibleSection(
-                                            title    = ss,
+                                            title = ss,
                                             expanded = isSsExpanded,
                                             onToggle = {
                                                 expandedSubsub.forEach { (s, sState) ->
-                                                    sState.value = if (s == ss) !isSsExpanded else false
+                                                    sState.value =
+                                                        if (s == ss) !isSsExpanded else false
                                                 }
                                             }
                                         ) {
@@ -381,16 +449,20 @@ fun EquipamentoSection(
                                                     .fillMaxWidth()
                                                     .heightIn(max = 200.dp)
                                                     .verticalScroll(scroll3)
-                                                    .padding(start = 8.dp, bottom = 8.dp)
+                                                    .padding(
+                                                        start = 8.dp,
+                                                        bottom = 8.dp
+                                                    )
                                             ) {
                                                 catsPorSub
                                                     .filter { it.subsubtipo == ss }
                                                     .flatMap { it.itens }
                                                     .filter { eq ->
                                                         if (filter.somenteAcessiveis) {
-                                                            val c = (eq.custo as? JsonPrimitive)
-                                                                ?.content?.toIntOrNull()
-                                                                ?: Int.MAX_VALUE
+                                                            val c =
+                                                                (eq.custo as? JsonPrimitive)
+                                                                    ?.content?.toIntOrNull()
+                                                                    ?: Int.MAX_VALUE
                                                             if (c > dinheiro) return@filter false
                                                         }
                                                         true
@@ -400,10 +472,17 @@ fun EquipamentoSection(
                                                             Modifier
                                                                 .fillMaxWidth()
                                                                 .combinedClickable(
-                                                                    onClick       = { /* nada */ },
-                                                                    onDoubleClick = { onEquipamentoDoubleClick(equipamento) }
+                                                                    onClick = { /* nada */ },
+                                                                    onDoubleClick = {
+                                                                        onEquipamentoDoubleClick(
+                                                                            equipamento
+                                                                        )
+                                                                    }
                                                                 )
-                                                                .padding(vertical = 4.dp, horizontal = 4.dp),
+                                                                .padding(
+                                                                    vertical = 4.dp,
+                                                                    horizontal = 4.dp
+                                                                ),
                                                             verticalAlignment = Alignment.CenterVertically
                                                         ) {
                                                             Text(
@@ -441,7 +520,7 @@ fun EquipamentoSection(
 
         if (supCatsFiltradas.isNotEmpty()) {
             CollapsibleSection(
-                title    = "Superequipamentos",
+                title = "Superequipamentos",
                 expanded = expSuperequip,
                 onToggle = { expSuperequip = !expSuperequip }
             ) {
@@ -468,8 +547,10 @@ fun EquipamentoSection(
                                 Modifier
                                     .fillMaxWidth()
                                     .combinedClickable(
-                                        onClick       = { /* nada */ },
-                                        onDoubleClick = { onEquipamentoDoubleClick(equipamento) }
+                                        onClick = { /* nada */ },
+                                        onDoubleClick = {
+                                            onEquipamentoDoubleClick(equipamento)
+                                        }
                                     )
                                     .padding(vertical = 4.dp, horizontal = 4.dp),
                                 verticalAlignment = Alignment.CenterVertically

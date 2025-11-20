@@ -1,6 +1,7 @@
 package com.example.swadebuilder.ui.sections
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,18 +15,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -38,7 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.SectionHeader
-import com.example.swadebuilder.criacaoBasicaCongelada   // <<< IMPORT NOVO
+import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.toDiceString
@@ -57,12 +52,19 @@ fun AtributosContent(
 
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
+    // ===== PONTOS BÔNUS (PC) =====
+    val pcTotal  = state.pontosComplicacao
+    val pcGastos = state.pontosComplicacaoGastos
+    val pcLivres = (pcTotal - pcGastos).coerceAtLeast(0)
+    val paUsados = state.cpPaStack.size
+    // =============================
+
     // ===== LARGURA DINÂMICA PARA O VALOR (evitar esmagar "d12+4") =====
     val textMeasurer = rememberTextMeasurer()
     val density = LocalDensity.current
     val measureStyle = MaterialTheme.typography.bodyLarge
 
-    val valorColWidthDp = remember(state.superAtributoIncs, measureStyle) {
+    val valorColWidthDp = androidx.compose.runtime.remember(state.superAtributoIncs, measureStyle) {
         val samples = listaAtributos.map { nome ->
             state.atributoRawComSupers(nome).toDiceString()
         }
@@ -83,10 +85,58 @@ fun AtributosContent(
         // cabeçalho
         SectionHeader(
             onHelpClick = null,
-            centerText = "Pontos restantes: ${state.pontosAtributo}",
+            centerText = "Pontos de Atributo: ${state.pontosAtributo} • Pontos Bônus: $pcLivres de $pcTotal",
             onListaCompletaClick = if (showLista) ({ onOpenAtributosDetail() }) else null,
             listaCompletaText = "Lista Completa"
         )
+
+        Spacer(Modifier.height(4.dp))
+
+        // Botões de usar / desfazer Pontos Bônus em Atributos
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val podeUsarPc = !locked && pcLivres >= 2
+            val podeDesfazerPc = !locked && paUsados > 0
+
+            TextButton(
+                onClick = {
+                    if (!podeUsarPc) return@TextButton
+
+                    state.cpPaStack.add("PB")
+                    state.pontosComplicacaoGastos += 2
+                    state.recalcularPontosAtributo()
+                },
+                enabled = podeUsarPc
+            ) {
+                Text("Usar Pontos Bônus em Atributos")
+            }
+
+            TextButton(
+                onClick = {
+                    if (!podeDesfazerPc) return@TextButton
+                    state.cpPaStack.removeAt(state.cpPaStack.lastIndex)
+                    state.pontosComplicacaoGastos =
+                        (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)
+                    state.recalcularPontosAtributo()
+                },
+                enabled = podeDesfazerPc
+            ) {
+                Text("Desfazer Pontos Bônus em Atributos")
+            }
+        }
+
+        if (pcTotal == 0) {
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = "Para ganhar Pontos Bônus, escolha Complicações na seção apropriada.",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
 
         Spacer(Modifier.height(8.dp))
 

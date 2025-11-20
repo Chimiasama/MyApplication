@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -62,6 +63,13 @@ fun PericiasContent(
 ) {
     val locked = state.criacaoBasicaCongelada
 
+    // ===== PONTOS BÔNUS (PC) =====
+    val pcTotal  = state.pontosComplicacao
+    val pcGastos = state.pontosComplicacaoGastos
+    val pcLivres = (pcTotal - pcGastos).coerceAtLeast(0)
+    val spUsados = state.cpSpStack.size
+    // =============================
+
     // Diálogo para PRIMEIRA especialização (quando compra a perícia)
     var showSpecDialog by rememberSaveable { mutableStateOf(false) }
     var specText by rememberSaveable { mutableStateOf("") }
@@ -98,12 +106,63 @@ fun PericiasContent(
                 color = pergaminho,
                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant
             ) {
-                SectionHeader(
-                    onHelpClick          = null,
-                    centerText           = "Pontos restantes: ${state.pontosPericia}",
-                    onListaCompletaClick = if (showLista) ({ onOpenPericiasDetail() }) else null,
-                    listaCompletaText    = "Lista Completa"
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
+                    SectionHeader(
+                        onHelpClick          = null,
+                        centerText           = "Pontos de Perícia: ${state.pontosPericia} • Pontos Bônus: $pcLivres de $pcTotal",
+                        onListaCompletaClick = if (showLista) ({ onOpenPericiasDetail() }) else null,
+                        listaCompletaText    = "Lista Completa"
+                    )
+
+                    Spacer(Modifier.height(4.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val podeUsarPc = !locked && pcLivres > 0
+                        val podeDesfazerPc = !locked && spUsados > 0
+
+                        TextButton(
+                            onClick = {
+                                if (!podeUsarPc) return@TextButton
+
+                                state.cpSpStack.add(Unit)
+                                state.pontosComplicacaoGastos += 1
+
+                            },
+                            enabled = podeUsarPc
+                        ) {
+                            Text("Usar Pontos Bônus em Perícias")
+                        }
+
+                        TextButton(
+                            onClick = {
+                                if (!podeDesfazerPc) return@TextButton
+                                state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
+                                state.pontosComplicacaoGastos =
+                                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                                state.syncFromCPRefund(sp = true)
+                            },
+                            enabled = podeDesfazerPc
+                        ) {
+                            Text("Desfazer Pontos Bônus em Perícias")
+                        }
+                    }
+
+                    if (pcTotal == 0) {
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            text = "Para ganhar Pontos Bônus, escolha Complicações na seção apropriada.",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
             }
         }
 

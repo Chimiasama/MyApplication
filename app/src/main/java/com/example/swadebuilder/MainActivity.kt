@@ -172,16 +172,15 @@ lateinit var arcanoInfo: Map<String, Triple<Int, Int, String>>
 
 data class PurchasedPower(
     val nome: String,
-    val custo: Int,      // custo total em PP (base + modificadores)
-    val baseCost: Int,   // quanto foi gasto na barrinha (sem modificadores)
-    val poderId: String  // id canônico no ledger, tipo "sp_res", "sp_aparar" etc
+    val custo: Int,
+    val baseCost: Int,
+    val poderId: String
 )
 
 private val json = Json {
     ignoreUnknownKeys = true
 }
 
-// === NOVO: toggle global para múltiplos Antecedentes Arcanos ===
 private const val MULTIPLOS_AA_HABILITADOS: Boolean = false
 
 class MainActivity : ComponentActivity() {
@@ -243,13 +242,11 @@ class MainActivity : ComponentActivity() {
 
         val todasVantagens: List<Vantagem> = this.loadJsonAsset("Vantagens.json")
 
-        // Preenche basicasVantagens e superVantagens a partir desse JSON
         AppData.basicasVantagens          = todasVantagens.filter { it.origem.equals("BASICO", true) }
         AppData.superVantagens = todasVantagens.filter {
             it.origem.equals("SUPER", ignoreCase = true)
         }
 
-        // Guarda a lista completa localmente
         listaVantagens = todasVantagens
 
         AppData.superVantagensParaDetalhe = AppData.superVantagens
@@ -304,27 +301,12 @@ class MainActivity : ComponentActivity() {
             var showPoderesDetail         by rememberSaveable { mutableStateOf(false) }
             var showEquipLista            by rememberSaveable { mutableStateOf(false) }
             var showSuperDetail           by rememberSaveable { mutableStateOf(false) }
-            var showHelpSupersDialog by rememberSaveable { mutableStateOf(false) }
             var highlightedVantagem by rememberSaveable { mutableStateOf("") }
             var highlightedSuperPoder by rememberSaveable { mutableStateOf("") }
             val context = LocalContext.current
             val activity = (context as? ComponentActivity)
             var mostrouTelaInicial by rememberSaveable { mutableStateOf(true) }
             var showExitDialog     by rememberSaveable { mutableStateOf(false) }
-
-            val helpSupersText = """
-Nesta seção você compra e gerencia Superpoderes usando SuperPontos (SP).
-
-Cada poder possui um custo base — como 5, 10 ou 15 SP — que representa versões mais fortes do mesmo efeito. Ao tocar nas opções, você escolhe qual versão está comprando.
-
-Depois você pode adicionar “Modificadores”: ajustes que aumentam (+) ou reduzem (–) o custo final do poder, alterando como ele funciona.
-
-O custo total (custo base + modificadores) é descontado do seu total de SP.  
-O limite por poder impede que você gaste mais SP do que o permitido em um único poder.  
-O limite favorecido (se houver) permite que um poder específico tenha um teto maior.
-
-O app calcula tudo automaticamente para você: gasto total, SP restantes, limites e validação.
-""".trimIndent()
 
             var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -377,21 +359,6 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                 showExitDialog = true
             }
 
-            if (showHelpSupersDialog) {
-                AlertDialog(
-                    onDismissRequest = { showHelpSupersDialog = false },
-                    confirmButton = {
-                        TextButton(onClick = { showHelpSupersDialog = false }) {
-                            Text("OK")
-                        }
-                    },
-                    title = { Text("Ajuda — Superpoderes") },
-                    text = {
-                        Text(helpSupersText)
-                    }
-                )
-            }
-
             if (showHelpAppDialog) {
                 val scrollState = rememberScrollState()
 
@@ -407,8 +374,8 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .heightIn(max = 400.dp)          // limite de altura do miolo do diálogo
-                                .verticalScroll(scrollState)      // agora o conteúdo rola
+                                .heightIn(max = 400.dp)
+                                .verticalScroll(scrollState)
                         ) {
                             Text(helpAppText)
                         }
@@ -439,7 +406,7 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.surface)  // ✅ fundo agora vem do tema
+                        .background(MaterialTheme.colorScheme.surface)
                 ) {
                     Box(
                         modifier = Modifier
@@ -469,7 +436,6 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                     mostrouTelaInicial = false
                                 },
                                 onLoad = { salvo ->
-                                    // Aqui passamos as duas listas: básico e super
                                     criadorViewModel.loadFromSalvo(
                                         salvo,
                                         categoriasBasico = equipamentoCategorias,
@@ -728,7 +694,6 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                                     highlightedSuperPoder = nomePoder
                                                     showSuperDetail       = true
                                                 },
-                                                onHelpSuperClick                 = { showHelpSupersDialog = true },
 
                                                 expAttrs       = expAttrs,
                                                 onToggleAttrs  = { expAttrs   = !expAttrs },
@@ -761,9 +726,6 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
 fun Int.toDiceString(): String =
     if (this <= 12) "d$this" else "d12+${(this - 12)}"
 
-// === Helpers de exibição/compat (veículos) ===
-
-// ALIAS LEGADOS para veículos (evitam "Unresolved reference" em código antigo)
 private val EquipamentoItem.passageiros
     get() = this.tripulacao
 private val EquipamentoItem.blindagem
@@ -784,20 +746,16 @@ data class SuperPoder(
 )
 
 fun salvarEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
-    // 1) Cria o arquivo na pasta externa interna do app
     val pdfFile = File(context.getExternalFilesDir(null), "ficha_preenchida.pdf")
 
-    // 2) Gera o PDF com nossas linhas
     gerarFichaEmPdf(pdfFile, dadosDoPersonagem)
 
-    // 3) Obtém um URI protegido pelo FileProvider
     val uri: Uri = FileProvider.getUriForFile(
         context,
         "${context.packageName}.fileprovider",
         pdfFile
     )
 
-    // 4) Envia Intent para visualizar
     val intent = Intent(Intent.ACTION_VIEW).apply {
         setDataAndType(uri, "application/pdf")
         flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
@@ -813,13 +771,10 @@ fun salvarEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
 fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val lines = mutableListOf<String>()
 
-    // ---------- Helpers compartilhados ----------
-    // Nome bonitinho da ancestralidade (igual ao resumo)
     val ancestralidadeNome: String = listaAncestralidadesJson
         .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
         ?.nome ?: personagem.ancestralidade
 
-    // Vantagens por nome.keyify (para regras de Aparar / Resistência / Movimento)
     val vantagensNomeKey: List<String> = listaVantagens
         .filter { it.id in personagem.vantagens }
         .map { it.nome.keyify() }
@@ -874,7 +829,6 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
                 ?.let { 1 }
                 ?: 0
 
-        // No save a gente não guarda o grau de Lento, então tratamos como 1 passo se existir.
         val lentoPenalty = if (temComp("LENTO")) 1 else 0
         val idosoPenalty = if (temComp("IDOSO")) 1 else 0
         val obesoPenalty = if (temComp("OBESO")) 1 else 0
@@ -885,12 +839,10 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
             .coerceAtLeast(0)
     }
 
-    // Mesmo algoritmo de steps de supers do CriadorState
     fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
         var raw = rawStart
         var remaining = steps.coerceAtLeast(0)
 
-        // CASO ESPECIAL: perícia/atributo em 0
         if (raw <= 0 && remaining > 0) {
             raw = 4
             remaining -= 1
@@ -930,13 +882,11 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val resistenciaTexto =
         if (armadura > 0) "${resFinal}(${armadura})" else resFinal.toString()
 
-    // ---------- IDENTIDADE ----------
     lines += "Identidade"
     lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"
     lines += "Ancestralidade: $ancestralidadeNome"
     lines += ""
 
-    // ---------- DERIVADOS ----------
     lines += "Atributos derivados"
     lines += "Aparar: $aparar"
     lines += "Resistência: $resistenciaTexto"
@@ -947,7 +897,6 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     }
     lines += ""
 
-    // ---------- ATRIBUTOS ----------
     lines += "Atributos"
     lines += listaAtributos.joinToString(", ") { attrKey ->
         val label = mapaAtributosDisplay[attrKey] ?: attrKey
@@ -956,7 +905,6 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     }
     lines += ""
 
-    // ---------- PERÍCIAS (mesma lógica do resumo / ficha) ----------
     val periciasParaMostrar = listaPericias.filter { per ->
         per.basica || (personagem.pericias[per.nome] ?: 0) >
                 periciaStartRaw(personagem.ancestralidade, per)
@@ -973,7 +921,6 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     }
     lines += ""
 
-    // ---------- RECURSOS & EQUIPAMENTOS (igual resumo) ----------
     lines += "Recursos & Equipamentos"
     lines += "Dinheiro restante: ${personagem.dinheiro}"
     if (personagem.equipamentos.isEmpty()) {
@@ -986,7 +933,6 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     }
     lines += ""
 
-    // ---------- VANTAGENS ----------
     lines += "Vantagens"
     if (personagem.vantagens.isEmpty()) {
         lines += "– Nenhuma"
@@ -998,17 +944,14 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     }
     lines += ""
 
-    // ---------- COMPLICAÇÕES ----------
     lines += "Complicações"
     lines += if (personagem.complicacoes.isEmpty()) {
         "– Nenhuma"
     } else {
-        // Aqui temos só IDs; imprimimos como vieram salvos.
         personagem.complicacoes.joinToString(", ")
     }
     lines += ""
 
-    // ---------- PODERES ARCANOS (só se houver) ----------
     if (personagem.poderes.isNotEmpty()) {
         lines += "Poderes arcanos"
         personagem.poderes.forEach { (arcanoKey, lista) ->
@@ -1026,7 +969,6 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         lines += ""
     }
 
-    // ---------- SUPERPODERES (só se modo supers ativo) ----------
     if (personagem.modoSupers &&
         (personagem.superPontosTotais > 0 || personagem.gastosPorPoder.isNotEmpty())
     ) {
@@ -1045,7 +987,6 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         lines += ""
     }
 
-    // ---------- ANOTAÇÕES (se houver) ----------
     if (personagem.anotacoes.isNotBlank()) {
         lines += "Anotações"
         personagem.anotacoes
@@ -1058,26 +999,21 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
 
 fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
     val doc = PdfDocument()
-    // A4 aproximado: 595 × 842 pontos
     val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
 
-    // Margens em pontos
     val marginLeft   = 40f
     val marginRight  = 40f
     val marginTop    = 50f
     val marginBottom = 40f
 
-    // Configura Paint base e altura de linha
     val paint = Paint().apply { textSize = 12f }
     val fm = paint.fontMetrics
     val lineHeight = fm.descent - fm.ascent + fm.leading
 
-    // Inicia primeira página
     var page = doc.startPage(pageInfo)
     var canvas = page.canvas
     var y = marginTop
 
-    // Helper: cria nova página e reseta o Y
     fun newPage() {
         doc.finishPage(page)
         page = doc.startPage(pageInfo)
@@ -1085,7 +1021,6 @@ fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
         y = marginTop
     }
 
-    // Helper: desenha um texto, quebrando em várias linhas se necessário
     fun drawWrapped(text: String) {
         var start = 0
         val maxWidth = pageInfo.pageWidth - marginLeft - marginRight
@@ -1101,29 +1036,25 @@ fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
         }
     }
 
-    // 1) Título (sem linhas separadoras)
     val titlePaint = Paint(paint).apply {
         textSize = 16f
         isFakeBoldText = true
     }
     val title = "Ficha de ${personagem.nome}"
 
-    // Se o título não couber na página atual, quebra antes
     val titleFm = titlePaint.fontMetrics
     val titleHeight = titleFm.descent - titleFm.ascent + titleFm.leading
     if (y + titleHeight > pageInfo.pageHeight - marginBottom) {
         newPage()
     }
     canvas.drawText(title, marginLeft, y, titlePaint)
-    y += titleHeight + 12f  // respiro generoso após o título
+    y += titleHeight + 12f
 
-    // 2) Corpo do texto (cada linha d buildSummaryLines é “wrapped”)
     val lines = buildSummaryLines(personagem)
     for (linha in lines) {
         drawWrapped(linha)
     }
 
-    // 3) Finaliza última página e grava
     doc.finishPage(page)
     FileOutputStream(destino).use { out ->
         doc.writeTo(out)
@@ -1153,7 +1084,6 @@ fun CriadorState.valorMovimentacao(): Int {
             ?.let { 1 }
             ?: 0
 
-    // penalidade de Idoso
     val idosoPenalty =
         complicacoesSelecionadas
             .filterKeys { it.id.keyify() == "IDOSO" }
@@ -1199,7 +1129,7 @@ fun CriadorState.valorMovimentacao(): Int {
 
 fun CriadorState.valorAparar(): Int {
     val perLutar = listaPericias.firstOrNull { it.nome.equals("Lutar", ignoreCase = true) }
-    val lutarRaw = perLutar?.let { rawTotalComSupers(it) } ?: 0   // << usa supers
+    val lutarRaw = perLutar?.let { rawTotalComSupers(it) } ?: 0
     val base     = 2 + (lutarRaw / 2)
 
     val bloquearBonus =
@@ -1235,7 +1165,6 @@ fun CriadorState.valorResistenciaBase(): Int {
 }
 
 fun CriadorState.valorResistenciaFinal(): Int {
-    // base (Vigor/Tamanho/etc.) + bônus vindo de superpoder
     return valorResistenciaBase() + bonusResFromPower
 }
 
@@ -1246,19 +1175,16 @@ fun CriadorState.valorArmaduraEfetiva(): Int {
 }
 
 fun CriadorState.adicionarVantagemPorSuper(v: Vantagem): Boolean {
-    // Recusa LENDÁRIAS quando a origem é SUPER
     if (v.categoria == Categoria.LENDARIAS) return false
 
-    // Ignora SOMENTE Estágio reaproveitando o mecanismo do “Nasce Um Herói”
     val progressoAnterior = overrideStageForVantagem
     overrideStageForVantagem = "Lendário"
 
-    val permitido = podeSelecionar(v) // respeita atributos, perícias, outras vantagens, observações
+    val permitido = podeSelecionar(v)
     overrideStageForVantagem = progressoAnterior
 
     if (!permitido) return false
 
-    // Marca origem="SUPER" na persistência
     if (!vantagensSelecionadas.contains(v)) {
         vantagensSelecionadas += v
         vantagensDePoder += v.id
@@ -1361,12 +1287,10 @@ class CriadorState {
     val poderesSelecionados = mutableStateListOf<String>()
     val equipamentosComprados = mutableStateListOf<EquipamentoItem>()
     var heroisSemArmadura by mutableStateOf(false)
-    val cpRecursosStack = mutableStateListOf<Unit>()
     private val _maxedTraits = mutableStateListOf<String>()
     val maxedTraits: List<String> get() = _maxedTraits
     var idAtual by mutableStateOf<String?>(null)
 
-    // Campo de anotações livres do jogador
     var anotacoes by mutableStateOf("")
 
     val comprasPpPorEstagio = mutableStateMapOf<String, Int>().apply {
@@ -1388,8 +1312,7 @@ class CriadorState {
         get() = kotlin.math.ceil(superPontosTotais / 2.0).toInt()
     var limiteDePoderDaCampanha by mutableIntStateOf(Int.MAX_VALUE)
 
-    // --- Fases do fluxo: supers depois progresso---
-    var faseSupersAtiva by mutableStateOf(false)  // true depois que o jogador CONFIRMA o nível I–V
+    var faseSupersAtiva by mutableStateOf(false)
 
     val superAtributoIncs = mutableStateMapOf<String, Int>()
     val superPericiaIncs = mutableStateMapOf<String, Int>()
@@ -1400,12 +1323,10 @@ class CriadorState {
     val gastosPorPoder     = mutableStateMapOf<String, Int>()
     var naturalArmorFromRace by mutableIntStateOf(0)
 
-    // Mesmo algoritmo de steps de supers do CriadorState
     fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
         var raw = rawStart
         var remaining = steps.coerceAtLeast(0)
 
-        // CASO ESPECIAL: perícia/atributo em 0
         if (raw <= 0 && remaining > 0) {
             raw = 4
             remaining -= 1
@@ -1456,10 +1377,9 @@ class CriadorState {
 
     var regraMultiplosIdiomas by mutableStateOf(false)
 
-    // --- NOVO BLOCO: Controle de compra de Vantagens por XP ---
-    var pvFromXpOutstanding by mutableIntStateOf(0)          // PV pendente vindo de XP
-    var overrideStageForVantagem by mutableStateOf<String?>(null) // estágio de origem do PV
-    var openVantagensAfterGrant by mutableStateOf(false)     // sinal pra abrir tela de vantagens
+    var pvFromXpOutstanding by mutableIntStateOf(0)
+    var overrideStageForVantagem by mutableStateOf<String?>(null)
+    var openVantagensAfterGrant by mutableStateOf(false)
 
 
     fun comprarSuperPoder(
@@ -1469,7 +1389,6 @@ class CriadorState {
         poderId: String = "sp_${nome.keyify()}",
         registrarNoLedger: Boolean = true
     ) {
-        // só compra se houver espaço e pontos disponíveis
         if (superPoderesComprados.size < superLimite && superPontosDisponiveis >= custo) {
             superPoderesComprados.add(
                 PurchasedPower(
@@ -1500,18 +1419,14 @@ class CriadorState {
     fun grantVantagemPointFromXp(stageName: String) {
         check(progressosDisponiveis > 0) { "Sem XP disponível." }
 
-        // Marca o XP como gasto neste estágio
         stageXpSpent[stageName] = stageXpSpent.getValue(stageName) + 1
         progressosDisponiveis -= 1
 
-        // Concede um ponto de vantagem
         pontosVantagem += 1
         pvFromXpOutstanding += 1
 
-        // Marca que este PV veio deste estágio
         overrideStageForVantagem = stageName
 
-        // Sinaliza para abrir a tela de Vantagens
         openVantagensAfterGrant = true
     }
 
@@ -1524,13 +1439,11 @@ class CriadorState {
         val estagio = estagioAtual().nome
         val totalFeitas = comprasPpPorEstagio.values.sum()
 
-        // quantidade permitida = uma por estágio até o atual
         if (totalFeitas >= maxComprasPpAteAgora()) return
 
         val feitasNoEstagio = comprasPpPorEstagio[estagio] ?: 0
         comprasPpPorEstagio[estagio] = feitasNoEstagio + 1
 
-        // aplica os PP ganhos: 5 nas 4 primeiras, depois 2
         val ganho = if (totalFeitas < 4) 5 else 2
         bonusPoderExtra += ganho
 
@@ -1548,7 +1461,6 @@ class CriadorState {
         if (feitas > 0) {
             comprasPpPorEstagio[estagio] = feitas - 1
         } else {
-            // fallback: remove de qualquer estágio (último com compra > 0)
             val fallback = comprasPpPorEstagio.entries.lastOrNull { it.value > 0 }
             fallback?.let {
                 comprasPpPorEstagio[it.key] = it.value - 1
@@ -1632,7 +1544,6 @@ class CriadorState {
 
     val minPericiaPorVantagem: Map<Pericia, Int> by derivedStateOf {
         vantagensSelecionadas.flatMap { vant ->
-            // 1) “Obrigatórias”
             val obrigatorias = vant.requisitos.periciaMin   // se for null, vira um Map vazio
                 .mapNotNull { (nomeRaw, min) ->
                     val chaveNorm = nomeRaw.uppercase().semAcentos().trim()
@@ -1641,7 +1552,6 @@ class CriadorState {
                         ?.let { per -> per to min }
                 }
 
-            // 2) “Opcionais”
             val opcionais = vant.requisitos.periciaMinOpcional   // se null, vira Map vazio
                 .mapNotNull { (nomeRaw, min) ->
                     val chaveNorm = nomeRaw.uppercase().semAcentos().trim()
@@ -1650,7 +1560,6 @@ class CriadorState {
                         ?.let { per -> per to min }
                 }
 
-            // 3) “Arma Predileta”
             val fav = run {
                 val choiceSnapshot = vant.choice
                 if (
@@ -1697,32 +1606,26 @@ class CriadorState {
 
     val poderSlotsPorArcano = mutableStateMapOf<String, SnapshotStateList<String?>>()
 
-    // Mapa por Arcano (versionKey: "dom", "magia"...), pilha de compras; cada compra guarda a lista de IDs escolhidos
     val novosPoderesStacksPorArcano = mutableStateMapOf<String, MutableList<List<String>>>()
 
-    // Registra uma compra de Novos Poderes (na criação)
     fun registrarNovosPoderes(versionKey: String, escolhas: List<String>) {
         val pilha = novosPoderesStacksPorArcano.getOrPut(versionKey) { mutableListOf() }
         pilha.add(escolhas)
     }
 
-    // Desfaz a última compra de Novos Poderes daquele arcano (na criação)
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun desfazerUltimosNovosPoderes(versionKey: String, initialSlots: Int) {
         val pilha = novosPoderesStacksPorArcano[versionKey] ?: return
         if (pilha.isEmpty()) return
 
-        // 1) pegue a última compra e remova esses poderes dos slots
         val ultima = pilha.removeLast()
         val slots = poderSlotsPorArcano[versionKey] ?: return
 
-        // Remover as ocorrências desses IDs; preferimos do fim para o começo
         ultima.forEach { poderId ->
             val idx = slots.indexOfLast { it == poderId }
             if (idx >= 0) slots[idx] = null
         }
 
-        // 2) Compactar: remover nulls finais além do mínimo exigido pelos slots iniciais + compras restantes
         val extrasAinda = pilha.sumOf { it.size }
         val tamanhoMinimo = (initialSlots + extrasAinda).coerceAtLeast(initialSlots)
 
@@ -1738,10 +1641,8 @@ class CriadorState {
     }
 
     var permiteMultiAntecedenteArcano by mutableStateOf(false)
-    // HABILITA A REGRA OPCIONAL DE ESPECIALIZAÇÃO DE PERÍCIAS
     var usarEspecializacoesDePericia by mutableStateOf(false)
 
-    // Mapa com as especializações definidas por perícia (chave = nome da perícia)
     val especializacoesPorPericia: SnapshotStateMap<String, com.example.swadebuilder.model.EspecializacoesDto> = mutableStateMapOf()
 
     var bonusPoderExtra by mutableIntStateOf(0)
@@ -1761,9 +1662,10 @@ class CriadorState {
         if (sp) rebuildAllPericiaStacks()
     }
 
-    val cpPaStack = mutableStateListOf<String>()
-    val cpPvStack = mutableStateListOf<Unit>()
-    val cpSpStack = mutableStateListOf<Unit>()
+    val cpPaStack       = mutableStateListOf<String>()  // você já trocou pra add("PB")
+    val cpSpStack       = mutableStateListOf<Unit>()
+    val cpPvStack       = mutableStateListOf<Unit>()
+    val cpRecursosStack = mutableStateListOf<Unit>()
 
     private val totalSpPool: Int
         get() {
@@ -1778,7 +1680,6 @@ class CriadorState {
         totalSpPool - used
     }
 
-
     var nomePersonagem by mutableStateOf("")
 
     var progresso by mutableIntStateOf(0)
@@ -1789,7 +1690,6 @@ class CriadorState {
     private fun effectiveProgressoParaVantagens(): Int {
         val stName = overrideStageForVantagem ?: return progresso
         val st = listaDeEstagios.firstOrNull { it.nome.equals(stName, ignoreCase = true) }
-        // usamos o minProgress do estágio travado para satisfazer checagens de “estágio mínimo”
         return st?.minProgress ?: progresso
     }
 
@@ -1830,7 +1730,6 @@ class CriadorState {
 
     val pontosComplicacao: Int
         get() {
-            // Complicações automáticas não contam
             val autoKeys = desvantagensAutomaticas
                 .map { it.substringBefore("(").trim().keyify() }
                 .toSet()
@@ -1838,7 +1737,6 @@ class CriadorState {
             var total = 0
             var temMaior = false
 
-            // soma bruta (sem teto) e detecta se há ao menos 1 Maior
             for ((comp, tipo) in complicacoesSelecionadas) {
                 if (comp.id.keyify() in autoKeys) continue
                 when (tipo) {
@@ -1847,7 +1745,6 @@ class CriadorState {
                 }
             }
 
-            // regra: com Grandes Responsabilidades + pelo menos 1 Maior → teto 6; senão teto 4
             val teto = if (grandesResponsabilidades && temMaior) 6 else 4
             return minOf(total, teto)
         }
@@ -1857,28 +1754,21 @@ class CriadorState {
     fun podeSelecionar(v: Vantagem): Boolean {
         val key = v.nome.keyify()
 
-        // 1) Verifica limite de “Pontos de Poder” por estágio
         if (v.nome.contains("Pontos de Poder", ignoreCase = true)) {
             val totalFeitas = comprasPpPorEstagio.values.sum()
             val maxPermitidas = maxComprasPpAteAgora()
             if (totalFeitas >= maxPermitidas) return false
         }
 
-        // 2) Restrição “Antecedente Arcano”
         if (key.startsWith("antecedente arcano")) {
             if (!permiteMultiAntecedenteArcano) {
-                // MODO LEGADO: segue permitindo apenas 1 AA no total (como era antes)
                 val anyArcano = vantagensSelecionadas.any { it.nome.keyify().startsWith("antecedente arcano") }
                 if (anyArcano && vantagensSelecionadas.none { it.nome.keyify() == key }) {
                     return false
                 }
             } else {
-                // MODO NOVO: permite múltiplos AAs, mas sem duplicar o MESMO subtipo
-                // Se você estiver exibindo as variantes com IDs específicas (antecedente_arcano_dom, etc.),
-                // basta impedir duplicata de ID:
                 val jaTemMesmoId = vantagensSelecionadas.any { it.id == v.id }
                 if (jaTemMesmoId) return false
-                // Se em algum fluxo ainda for o seletor base com choice, impede MESMA choice repetida:
                 if (v.id == "antecedente_arcano" && v.choice != null) {
                     val jaTemMesmaChoice = vantagensSelecionadas.any {
                         it.id == "antecedente_arcano" && it.choice?.keyify() == v.choice?.keyify()
@@ -1888,11 +1778,9 @@ class CriadorState {
             }
         }
 
-        // 3) Regras de “PROFISSIONAL” e “ESPECIALISTA”
         if (key == "profissional" || key == "especialista") {
             val choiceSeguro = v.choice
 
-            // 3.1 Se requer escolha, evite repetir a combinação nome+escolha
             if (v.requiresChoice && choiceSeguro != null) {
                 val already = vantagensSelecionadas.any {
                     it.nome.keyify() == key &&
@@ -1901,7 +1789,6 @@ class CriadorState {
                 if (already) return false
             }
 
-            // 3.2 Regra extra para “ESPECIALISTA”: requer “profissional” com MESMA escolha
             if (key == "especialista" && choiceSeguro != null) {
                 val profExist = vantagensSelecionadas.any {
                     it.id == "profissional" && it.choice?.keyify() == choiceSeguro.keyify()
@@ -1909,7 +1796,6 @@ class CriadorState {
                 if (!profExist) return false
             }
 
-            // 3.3 Se não tem escolha (choiceSeguro == null), basta atender atributo/perícia máximo
             if (choiceSeguro == null) {
                 val anyMaxAttr = listaAtributos.any { a ->
                     valoresAtributos[a]!!.intValue == atributoMaxRaw(a)
@@ -1920,7 +1806,6 @@ class CriadorState {
                 return anyMaxAttr || anyMaxPer
             }
 
-            // 3.4 Caso escolha != null: só pode se atributo ou perícia estiver no teto
             val choiceKey = choiceSeguro.keyify()
             return if (listaAtributos.contains(choiceKey)) {
                 valoresAtributos[choiceKey]!!.intValue == atributoMaxRaw(choiceKey)
@@ -1933,21 +1818,17 @@ class CriadorState {
         val ignorarEstagioPorNasce =
             (nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0)
         if (!ignorarEstagioPorNasce) {
-            // 4) Checa requisito de estágio mínimo:
+
             listaDeEstagios
                 .firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
                 ?.let { estReqObj ->
-                    // Se o progresso atual for menor que o mínimo exigido para este estágio, bloqueia
                     if (effectiveProgressoParaVantagens() < estReqObj.minProgress) return false
                 }
         }
 
-        // 5) Checa “vantagens_previas” comparando por ID (com alias para "antecedente_arcano")
         if (v.requisitos.vantagensPrevias.isNotEmpty()) {
             val faltam = v.requisitos.vantagensPrevias.any { prevId ->
                 when (prevId) {
-                    // Requisito "genérico": aceita QUALQUER subtipo de AA
-                    // ou o seletor base com choice definido
                     "antecedente_arcano", "antecedente_arcano:*" -> {
                         vantagensSelecionadas.none { poss ->
                             poss.id.startsWith("antecedente_arcano_") ||
@@ -1955,8 +1836,6 @@ class CriadorState {
                         }
                     }
                     else -> {
-                        // Requisito "específico": exige ID exata (ex.: antecedente_arcano_milagres,
-                        // comando, etc.)
                         vantagensSelecionadas.none { poss ->
                             poss.id == prevId
                         }
@@ -1966,19 +1845,17 @@ class CriadorState {
             if (faltam) return false
         }
 
-        // 6) Verifica novamente limite de “Pontos de Poder” (caso não tenha sido tratado acima)
         if (v.nome.contains("Pontos de Poder", ignoreCase = true)) {
             val totalCompras = comprasPpPorEstagio.values.sum()
             val limite = maxComprasPpAteAgora()
             if (totalCompras >= limite) return false
         }
-        // 7) Para as demais vantagens, respeita o maxSelections padrão
+
         else if (v.maxSelections > 0) {
             val ja = vantagensSelecionadas.count { it.id == v.id }
             if (ja >= v.maxSelections) return false
         }
 
-        // 8) Se requer escolha e já escolheu, não pode repetir a mesma combinação
         val choiceSeguro2 = v.choice
         if (v.requiresChoice && choiceSeguro2 != null) {
             val repetida = vantagensSelecionadas.any {
@@ -1987,22 +1864,19 @@ class CriadorState {
             if (repetida) return false
         }
 
-        // 8.1) Verifica requisito de “nível de campanha” (minProgress)
         nivelParaEstagio[v.requisitos.estagio]?.let { estReqObj2 ->
             if (estReqObj2.minProgress > effectiveProgressoParaVantagens()) return false
         }
 
-        // 9) Verifica requisitos de atributo mínimo
         if (v.requisitos.atributoMin.any { (nome, min) ->
                 val chaveNorm = nome.uppercase().semAcentos().trim()
                 valoresAtributos[chaveNorm]?.intValue?.let { it < min } != false
             }) return false
 
-        // 10) Verifica requisitos de perícia mínima ou vinculada
         val periciaMinMap = v.requisitos.periciaMin
 
         if (v.vinculadoPericia && periciaMinMap.isNotEmpty()) {
-            // Caso seja “vinculadoPericia”, basta que UMA das perícias seja satisfeita (OR)
+
             val atendeUma = periciaMinMap.any { (perNome, minRaw) ->
                 val per = listaPericias.firstOrNull {
                     it.nome.equals(perNome, ignoreCase = true)
@@ -2011,7 +1885,7 @@ class CriadorState {
             }
             if (!atendeUma) return false
         } else {
-            // Caso normal, exige que TODAS as perícias mínimas sejam satisfeitas (AND)
+
             if (periciaMinMap.any { (perNome, minRaw) ->
                     val per = listaPericias.firstOrNull {
                         it.nome.equals(perNome, ignoreCase = true)
@@ -2022,7 +1896,6 @@ class CriadorState {
             }
         }
 
-        // 11) Verifica requisito de perícia mínima opcional (“periciaMinOpcional”) – basta atender 1
         val periciaMinOpcMap = v.requisitos.periciaMinOpcional
         if (periciaMinOpcMap.isNotEmpty()) {
             val atendeUmaOpc = periciaMinOpcMap.any { (perNome, minRaw) ->
@@ -2034,10 +1907,8 @@ class CriadorState {
             if (!atendeUmaOpc) return false
         }
 
-        // 12) Verifica requisito “exige Carta Selvagem”
         if (v.requisitos.exigeCS && !cartaSelvagem) return false
 
-        // 13) Verifica incompatibilidades (ex.: “RICO” x “POBREZA”)
         val compsConfl = incompatibilidades[key] ?: emptySet()
         val vantKey = v.nome.trim().uppercase()
         if (vantKey == "RICO" || vantKey == "PODRE DE RICO") {
@@ -2051,7 +1922,6 @@ class CriadorState {
                 .any { it in compsConfl }
         ) return false
 
-        // Se passou por todas as checagens, pode selecionar
         return true
     }
 
@@ -2085,9 +1955,9 @@ class CriadorState {
 
             while (curr < target && cumulativeCost < poolSize) {
                 val next = when {
-                    curr == 0 -> 4           // primeira compra em perícia não básica
-                    curr < 12 -> curr + 2    // d4..d10 → próximo tipo de dado
-                    else      -> curr + 1    // acima de d12 → d12+1, d12+2...
+                    curr == 0 -> 4
+                    curr < 12 -> curr + 2
+                    else      -> curr + 1
                 }
 
                 val attrKey = atributoBaseParaPericia(per)
@@ -2117,11 +1987,7 @@ class CriadorState {
 
     fun atributoMaxRaw(a: String): Int {
         val minRaw = atributoMinRaw(a)
-        // cada 2 pontos acima de 4 = 1 step de dado acima de d4
-        // d4  -> extras = 0 -> teto 12  (d12)
-        // d6  -> extras = 1 -> teto 13  (d12+1)
-        // d8  -> extras = 2 -> teto 14  (d12+2)
-        // d10 -> extras = 3 -> teto 15  (d12+3), etc.
+
         val extras = ((minRaw - 4).coerceAtLeast(0) / 2)
         val baseCap = 12 + extras
 
@@ -2139,9 +2005,6 @@ class CriadorState {
     fun periciaCapRaw(per: Pericia): Int {
         val startRaw = periciaStartRaw(ancestralidade, per)
 
-        // Regra da criação:
-        // - Começa em 0 ou d4  -> teto d12 (12)
-        // - Começa em d6+      -> teto d12+1 (13)
         val baseCap = if (startRaw >= 6) 13 else 12
 
         val chave = per.nome.keyify()
@@ -2152,7 +2015,6 @@ class CriadorState {
             it.nome.keyify() == "ESPECIALISTA" && it.choice?.keyify() == chave
         }
 
-        // Profissional / Especialista ainda podem aumentar o teto em campanhas avançadas
         return baseCap + (profCount + espCount) * 2
     }
 
@@ -2162,12 +2024,8 @@ class CriadorState {
         val complicsIncs = compIncsPorPericia.getValue(per)
         val totalIncs    = normalIncs + complicsIncs
 
-        // Perícia não básica e sem nenhum investimento: continua 0 ("-")
         if (startRaw == 0 && totalIncs == 0) return 0
 
-        // Se a perícia começa em 0 e tem pelo menos 1 incremento:
-        // - primeiro incremento leva de 0 -> d4 (4)
-        // - os demais seguem a regra normal (applySuperStepsFrom)
         val (startForSteps, steps) = if (startRaw == 0) {
             4 to (totalIncs - 1).coerceAtLeast(0)
         } else {
@@ -2180,7 +2038,6 @@ class CriadorState {
     fun aplicarAncestralidade(anc: String) {
         val prevAnc = ancestralidade
 
-        // Ajuste do ponto extra de vantagem dos humanos
         if (prevAnc == "HUMANOS" && anc != "HUMANOS") {
             if (vantagensSelecionadas.isNotEmpty()) {
                 vantagensSelecionadas.removeAt(vantagensSelecionadas.lastIndex)
@@ -2191,17 +2048,14 @@ class CriadorState {
             pontosVantagem += 1
         }
 
-        // Guarda o valor "dado bruto" das perícias antes da troca
         val desiredRaw = listaPericias.associateWith { rawTotal(it) }
 
-        // ===== ATRIBUTOS: recalcula a partir do mínimo da nova raça + passos já comprados =====
         val newAttrMods = racialAttrMinMap[anc] ?: emptyMap()
 
         listaAtributos.forEach { nome ->
             val st     = valoresAtributos[nome]!!
             val newMin = newAttrMods[nome] ?: 4
 
-            // teto novo baseado no mínimo racial (d12, d12+1, d12+2, ...)
             val extras = ((newMin - 4).coerceAtLeast(0) / 2)
             val newMax = 12 + extras
 
@@ -2209,8 +2063,6 @@ class CriadorState {
             var raw   = newMin
             var appliedSteps = 0
 
-            // reaplica cada ponto gasto nesse atributo,
-            // respeitando o novo teto e a lógica de steps (até 12: +2, acima de 12: +1)
             repeat(stack.size) {
                 val candidate = if (raw < 12) raw + 2 else raw + 1
                 if (candidate > newMax) {
@@ -2220,22 +2072,17 @@ class CriadorState {
                 appliedSteps++
             }
 
-            // corta passos que não cabem mais no teto da nova raça
             if (appliedSteps < stack.size) {
                 repeat(stack.size - appliedSteps) {
                     stack.removeAt(stack.lastIndex)
                 }
             }
 
-            // valor final do atributo para a nova ancestralidade
             st.intValue = raw
         }
-        // =====================================================================
 
-        // troca efetiva da ancestralidade
         ancestralidade = anc
 
-        // Vantagens automáticas da ancestralidade anterior que devem ser removidas
         val prevFree = vantagensAutomaticas.toSet() +
                 when (prevAnc) {
                     "SAURIOS"    -> setOf("Sentidos Aguçados", "Prontidão")
@@ -2247,7 +2094,6 @@ class CriadorState {
         desvantagensAutomaticas.clear()
         vantagensAutomaticas.clear()
 
-        // Carrega as vantagens / desvantagens automáticas da nova ancestralidade
         listaAncestralidadesJson
             .firstOrNull { it.nome.keyify() == anc }
             ?.let { rm ->
@@ -2260,7 +2106,6 @@ class CriadorState {
             sel.nome.keyify() !in keepFreeKeys
         }
 
-        // Aplica efeitos específicos de cada ancestralidade
         when (anc) {
             "SAURIOS" -> {
                 listaVantagens.firstOrNull { it.nome.equals("Sentidos Aguçados", ignoreCase = true) }
@@ -2290,10 +2135,8 @@ class CriadorState {
             }
         }
 
-        // Adaptável (humano) dá 1 ponto extra de vantagem
         pontosVantagem = if (vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" }) 1 else 0
 
-        // Remove complicações automáticas da ancestralidade anterior
         val oldAutoKeys = listaAncestralidadesJson
             .firstOrNull { it.nome.keyify() == prevAnc }
             ?.desvantagens
@@ -2305,7 +2148,6 @@ class CriadorState {
             .filter { it.id.keyify() in oldAutoKeys }
             .forEach { complicacoesSelecionadas.remove(it) }
 
-        // Aplica complicações automáticas da nova ancestralidade
         val autoBaseKeys = desvantagensAutomaticas
             .map { it.substringBefore("(").trim().keyify() }
             .toSet()
@@ -2328,9 +2170,8 @@ class CriadorState {
                 complicacoesSelecionadas[comp] = grau
             }
 
-        // Reconstroi perícias com base nos valores "brutos" desejados
         rebuildPericias(desiredRaw)
-        // Recalcula os pontos de atributo a partir dos valores atuais e do novo mínimo racial
+
         recalcularPontosAtributo()
     }
 
@@ -2361,8 +2202,6 @@ class CriadorState {
         }
     }
 
-    // Calcula quantos Pontos de Atributo ainda restam,
-// considerando os valores atuais dos atributos e o mínimo racial.
     private fun calcularPontosAtributoRestantes(): Int {
         val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
         var usados = 0
@@ -2373,28 +2212,25 @@ class CriadorState {
 
             var cur = base
             while (cur < atual) {
-                cur += if (cur < 12) 2 else 1   // até d12: +2; acima de d12: +1
-                usados += 1                      // cada passo = 1 PA gasto
+                cur += if (cur < 12) 2 else 1
+                usados += 1
             }
         }
 
-        // 5 PA base + extras de CP - penalidades de Jovem
         return (5 + cpPaStack.size - jovemMalusPa) - usados
     }
 
     fun recalcularPontosAtributo() {
-        // Recalcula a partir dos valores atuais
+
         pontosAtributo = calcularPontosAtributoRestantes()
 
-        // Se ficou negativo, precisamos "desfazer" passos em atributos
         trimAttributeStacks()
 
-        // Mudar atributos pode mudar limite de perícias
         rebuildAllPericiaStacks()
     }
 
     private fun trimAttributeStacks() {
-        // Enquanto tiver PA negativo, desfazemos o último aumento de algum atributo
+
         while (pontosAtributo < 0) {
             val entry = paCostStackPorAtributo
                 .entries
@@ -2404,7 +2240,6 @@ class CriadorState {
             val nomeAttr = entry.key
             val stack    = entry.value
 
-            // Remove o último "passo" registrado nesse atributo
             stack.removeAt(stack.size - 1)
 
             val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
@@ -2412,12 +2247,9 @@ class CriadorState {
 
             val atual = valoresAtributos[nomeAttr]!!.intValue
 
-            // Reverte um passo usando a mesma lógica de steps:
-            // se estava acima de d12, o último passo foi +1; caso contrário, foi +2.
             val novo = if (atual > 12) atual - 1 else atual - 2
             valoresAtributos[nomeAttr]!!.intValue = novo.coerceAtLeast(base)
 
-            // Recalcula os PA restantes depois desse rollback
             pontosAtributo = calcularPontosAtributoRestantes()
         }
     }
@@ -2590,7 +2422,6 @@ fun AncestralidadesDetailScreen(
     val ancestralidadesTexto = remember { loadRawText(context, R.raw.ancestralidades) }
     val listaBlocos = remember { parseAncestralidades(ancestralidadesTexto) }
 
-    // ► usa o estado global para saber a ancestralidade atual
     val atual = remember(state.ancestralidade) { state.ancestralidade.trim().uppercase() }
 
     LazyColumn(
@@ -3263,7 +3094,6 @@ fun PreviewApp() {
         onOpenListaCompletaEquipamento = {},
         onOpenPoderesDetail = {},
         onOpenSuperPoderesDetail = { _ -> },
-        onHelpSuperClick = {},
         expAttrs = true,
         onToggleAttrs = {},
         expPer = true,
@@ -3293,8 +3123,6 @@ fun UnifiedScreen(
     onOpenListaCompletaEquipamento: () -> Unit,
     onOpenPoderesDetail: () -> Unit,
     onOpenSuperPoderesDetail: (String) -> Unit,
-    onHelpSuperClick: () -> Unit,
-
     expAttrs: Boolean,
     onToggleAttrs: () -> Unit,
 
@@ -3442,16 +3270,38 @@ fun UnifiedScreen(
             )
         }
 
-        // ─── Equipamentos ─────────────────────────────────────────────────────────
         EquipamentoSection(
             dinheiro                 = state.dinheiro,
+            pcTotal                  = state.pontosComplicacao,
+            pcLivres                 = (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0),
+            recursosPcUsados         = state.cpRecursosStack.size,
+            onUsarPontosBonusEmRecursos = {
+                val pcLivresLocal =
+                    (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0)
+
+                // Só permite 1 PB em Recursos
+                if (pcLivresLocal > 0 && state.cpRecursosStack.isEmpty()) {
+                    state.cpRecursosStack.add(Unit)
+                    state.pontosComplicacaoGastos += 1
+                    state.dinheiro += 500
+                }
+            },
+            onDesfazerPontosBonusEmRecursos = {
+                // Só devolve se ainda tiver pelo menos 500 em dinheiro
+                if (state.cpRecursosStack.isNotEmpty() && state.dinheiro >= 500) {
+                    state.cpRecursosStack.removeAt(state.cpRecursosStack.lastIndex)
+                    state.pontosComplicacaoGastos =
+                        (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                    state.dinheiro -= 500
+                }
+            },
             onListaCompletaClick     = onOpenListaCompletaEquipamento,
             onEquipamentoDoubleClick = { equipamento ->
                 val custo = (equipamento.custo as? JsonPrimitive)
                     ?.content?.toIntOrNull() ?: 0
-                if (state.dinheiro >= custo) {
-                    state.dinheiro -= custo
+                if (custo <= state.dinheiro) {
                     state.equipamentosComprados.add(equipamento)
+                    state.dinheiro -= custo
                 }
             },
             equipamentosComprados    = state.equipamentosComprados,
@@ -3461,8 +3311,8 @@ fun UnifiedScreen(
                 state.equipamentosComprados.remove(equipamento)
                 state.dinheiro += custo
             },
-            categorias           = equipamentoCategorias,
-            superequipCategorias = if (state.modoSuperequip) superequipCategorias else emptyList()
+            categorias               = equipamentoCategorias,
+            superequipCategorias     = superequipCategorias
         )
 
         Spacer(Modifier.height(16.dp))
@@ -3848,15 +3698,11 @@ fun EquipamentosDetailScreen(
     categorias: List<EquipamentoCategoria>,
     onBack: () -> Unit
 ) {
-    // Helper para ler JsonElement como texto
-    fun JsonElement?.asText(): String? = when (this) {
+        fun JsonElement?.asText(): String? = when (this) {
         is JsonPrimitive -> this.content
         else -> this?.toString()
     }?.takeIf { it.isNotBlank() }
 
-    // --- AGRUPAMENTO (mantido com tua correção) ---
-
-    // Mapa: Tipo -> (Subtipo -> (Subsubtipo -> Itens))
     val mapa =
         remember(categorias) {
             categorias
@@ -4128,8 +3974,6 @@ fun TelaInicial(
 
     var showCreditsDialog by remember { mutableStateOf(false) }
 
-    var showHelpSupersDialog by remember { mutableStateOf(false) }
-
     var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
 
     val helpAppText = """
@@ -4379,68 +4223,6 @@ Feito por Rafael S.W.
 
                     Spacer(Modifier.height(16.dp))
 
-// --- Diálogo de ajuda: Superpoderes ---
-                    if (showHelpSupersDialog) {
-                        AlertDialog(
-                            onDismissRequest = { showHelpSupersDialog = false },
-                            title = { Text("Como funcionam os Superpoderes") },
-                            text = {
-                                Text(
-                                    text = """
-Nesta seção você distribui os Pontos de Superpoder (SP) da campanha.
-
-1) Nível da campanha
-Primeiro, escolha o nível de superpoderes (I a V). 
-Cada nível define:
-• Quantos SP totais você terá.
-• Qual é o limite de SP que pode ser gasto em cada poder (Limite por poder).
-
-Depois que você começar a gastar SP, o nível da campanha trava.
-
-2) Lista de poderes
-A lista mostra todos os superpoderes do livro básico. 
-Toque no nome de um poder para abrir a tela de compra.
-
-3) Compra de um poder
-Na tela de compra você escolhe:
-• A opção de custo base (por exemplo 5 / 10 / 15 SP). São versões alternativas do mesmo poder, não são acumulativas.
-• Os modificadores opcionais. Modificadores positivos aumentam o custo final, modificadores negativos reduzem o custo final.
-
-O “Total do poder” é: custo base escolhido + modificadores.
-Esse total:
-• Não pode passar do Limite por poder da campanha.
-• Não pode gastar mais SP do que você tem disponível.
-
-4) Interação com Armadura e Resistência (super)
-Os poderes Armadura (super) e Resistência (super) somam sua proteção e compartilham o mesmo limite:
-• Cada compra de Armadura (super) adiciona +2 de armadura.
-• Cada ponto de Resistência (super) aumenta a Resistência em +1.
-• A soma de Armadura (super) + Resistência (super) vinda de superpoderes não pode ultrapassar o Limite de Poder da campanha.
-
-O app bloqueia compras que estourariam esse limite, mesmo que os controles pareçam permitir valores maiores.
-
-5) Outros usos de SP
-Alguns poderes especiais abrem telas próprias:
-• Superatributo: você distribui “steps” extras em atributos.
-• Superperícia: você distribui “steps” em perícias.
-• Supervantagem: cada 2 SP compram uma vantagem normal da lista.
-
-6) Reverter compras
-Os superpoderes comprados aparecem em forma de “chips” acima da lista.
-Toque em um chip para desfazer aquela compra e recuperar os SP gastos.
-""".trimIndent(),
-                                    fontSize = 14.sp,
-                                    textAlign = TextAlign.Justify
-                                )
-                            },
-                            confirmButton = {
-                                TextButton(onClick = { showHelpSupersDialog = false }) {
-                                    Text("Fechar")
-                                }
-                            }
-                        )
-                    }
-
                     if (showHelpAppDialog) {
                         AlertDialog(
                             onDismissRequest = { showHelpAppDialog = false },
@@ -4454,7 +4236,7 @@ Toque em um chip para desfazer aquela compra e recuperar os SP gastos.
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .heightIn(max = 400.dp) // limita a altura do conteúdo do dialog
+                                        .heightIn(max = 400.dp)
                                         .verticalScroll(rememberScrollState())
                                 ) {
                                     Text(helpAppText)
@@ -4513,7 +4295,6 @@ Toque em um chip para desfazer aquela compra e recuperar os SP gastos.
 
                     Spacer(Modifier.height(16.dp))
 
-                    // Horror
                     Row(
                         Modifier
                             .fillMaxWidth()
@@ -4534,7 +4315,6 @@ Toque em um chip para desfazer aquela compra e recuperar os SP gastos.
 
                     Spacer(Modifier.height(16.dp))
 
-                    // Fantasia
                     Row(
                         Modifier
                             .fillMaxWidth()
@@ -4555,7 +4335,6 @@ Toque em um chip para desfazer aquela compra e recuperar os SP gastos.
 
                     Spacer(Modifier.height(16.dp))
 
-                    // Ficção Científica
                     Row(
                         Modifier
                             .fillMaxWidth()
@@ -4606,8 +4385,6 @@ Toque em um chip para desfazer aquela compra e recuperar os SP gastos.
         )
     }
 
-    // ── Diálogo de carregamento existente ────────────────────────────────────────
-    // ── Diálogo de carregamento existente ────────────────────────────────────────
     if (showLoadDialog) {
         AlertDialog(
             onDismissRequest = {
@@ -4622,12 +4399,10 @@ Toque em um chip para desfazer aquela compra e recuperar os SP gastos.
                             Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    // Carrega em background
                                     scope.launch(Dispatchers.IO) {
                                         val salvo = StorageUtils.carregarPersonagem(context, fileKey)
                                         withContext(Dispatchers.Main) {
                                             salvo?.let {
-                                                // Fecha o diálogo ao carregar
                                                 showLoadDialog = false
                                                 pendingDelete = null
                                                 onLoad(it)
@@ -4661,8 +4436,6 @@ Toque em um chip para desfazer aquela compra e recuperar os SP gastos.
         )
     }
 
-    // ── Diálogo de confirmação de exclusão ──────────────────────────────────────
-    // ── Diálogo de confirmação de exclusão ──────────────────────────────────────
     if (pendingDelete != null) {
         val (displayName, fileKey) = pendingDelete!!
         AlertDialog(
@@ -4676,7 +4449,6 @@ Toque em um chip para desfazer aquela compra e recuperar os SP gastos.
                         val listaAtualizada = StorageUtils.listarPersonagens(context)
                         withContext(Dispatchers.Main) {
                             nomesSalvos = listaAtualizada
-                            // Fecha o diálogo depois de excluir
                             pendingDelete = null
                         }
                     }
@@ -4707,14 +4479,13 @@ fun SelecaoCard(
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         border = BorderStroke(1.dp, Color.Black),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF2E3C6)), // cor pergaminho
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF2E3C6)),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Ícone da seção
             Icon(
                 imageVector = icon,
                 contentDescription = null,
@@ -4723,7 +4494,6 @@ fun SelecaoCard(
             )
             Spacer(modifier = Modifier.width(16.dp))
 
-            // Título e subtítulo
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
@@ -4739,9 +4509,8 @@ fun SelecaoCard(
                 )
             }
 
-            // Seta à direita
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.MenuBook, // troque por KeyboardArrowRight se preferir
+                imageVector = Icons.AutoMirrored.Filled.MenuBook,
                 contentDescription = null,
                 tint = Color.Black
             )

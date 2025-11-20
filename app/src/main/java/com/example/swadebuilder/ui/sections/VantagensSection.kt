@@ -255,14 +255,71 @@ fun VantagensContent(
 
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
+    // ===== PONTOS BÔNUS (PC) =====
+    val pcTotal = state.pontosComplicacao
+    val pcGastos = state.pontosComplicacaoGastos
+    val pcLivres = (pcTotal - pcGastos).coerceAtLeast(0)
+    val pvUsados = state.cpPvStack.size
+    // =============================
+
     Column(modifier = Modifier.fillMaxWidth()) {
         // cabeçalho
         SectionHeader(
             onHelpClick = null,
-            centerText = "Pontos restantes: ${state.pontosVantagem}",
+            centerText = "Pontos de Vantagem: ${state.pontosVantagem} • Pontos Bônus: $pcLivres de $pcTotal",
             onListaCompletaClick = if (showLista) ({ onOpenVantagensDetail("") }) else null,
             listaCompletaText = "Lista Completa"
         )
+
+        Spacer(Modifier.size(4.dp))
+
+        // Botões de usar / desfazer Pontos Bônus em Vantagens
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val podeUsarPc = !locked && pcLivres > 0
+            val podeDesfazerPc = !locked && pvUsados > 0
+
+            TextButton(
+                onClick = {
+                    if (!podeUsarPc) return@TextButton
+                    // 1 Ponto Bônus -> +1 PV
+                    state.cpPvStack.add(Unit)
+                    state.pontosComplicacaoGastos += 1
+                    state.pontosVantagem += 1
+                },
+                enabled = podeUsarPc
+            ) {
+                Text("Usar Pontos Bônus em Vantagens")
+            }
+
+            TextButton(
+                onClick = {
+                    if (!podeDesfazerPc) return@TextButton
+                    state.cpPvStack.removeAt(state.cpPvStack.lastIndex)
+                    state.pontosComplicacaoGastos =
+                        (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                    state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
+                },
+                enabled = podeDesfazerPc
+            ) {
+                Text("Desfazer Pontos Bônus em Vantagens")
+            }
+        }
+
+        if (pcTotal == 0) {
+            Spacer(Modifier.size(4.dp))
+            Text(
+                text = "Para ganhar Pontos Bônus, escolha Complicações na seção apropriada.",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+
+        Spacer(Modifier.size(8.dp))
 
         if (state.nasceUmHeroi && !state.emProgresso) {
             AssistChip(
