@@ -106,26 +106,26 @@ android {
     }
 
     // ------------------------------------------------------------
-    // 🔹 Kotlin e Java
-    // ------------------------------------------------------------
+// 🔹 Kotlin e Java
+// ------------------------------------------------------------
     kotlin {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+            // Agora Kotlin também compila para Java 21
+            jvmTarget.set(JvmTarget.JVM_21)
             freeCompilerArgs.addAll(
                 "-Xcontext-receivers",
                 "-opt-in=kotlin.RequiresOptIn"
             )
         }
-    }
 
+        // Usa a toolchain Java 21 (é o JDK que você já está usando)
+        jvmToolchain(21)
+    }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlin {
-        jvmToolchain(17)
+        // Deixa o Java no mesmo nível do Kotlin
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     // ------------------------------------------------------------
