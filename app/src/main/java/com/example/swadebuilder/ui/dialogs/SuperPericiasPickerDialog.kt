@@ -99,11 +99,17 @@ fun SuperPericiasPickerDialog(
                         val key = per.nome.keyify()
                         val steps = alocacoes[key] ?: 0
 
-                        // valor atual da perícia já com supers anteriores/aplicados
+                        // valor atual da perícia (base sem supers)
                         val baseRaw = state.rawTotal(per)
                         // simula aplicação dos steps desta compra
                         val projectedRaw = state.applySuperStepsFrom(baseRaw, steps)
-                        val textoValor = projectedRaw.toDiceString()
+
+                        // >>> AJUSTE VISUAL: se 0, não mostra "d0"
+                        val textoValor = when {
+                            projectedRaw == 0 && per.basica -> "d4"
+                            projectedRaw == 0 -> "-"
+                            else -> projectedRaw.toDiceString()
+                        }
 
                         Row(
                             modifier = Modifier
