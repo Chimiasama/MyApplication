@@ -6,12 +6,10 @@ import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.PurchasedPower
-import com.example.swadebuilder.adicionarVantagemPorSuper
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
-import com.example.swadebuilder.removerVantagemPorSuper
 import com.example.swadebuilder.util.keyify
 
 // ---- EFEITOS POSSÍVEIS DE INVESTIMENTO DE SUPER ----

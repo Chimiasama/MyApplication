@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.Vantagem
@@ -68,6 +69,196 @@ class CriadorState {
     val vantagensDePoder   = mutableStateSetOf<String>()
     val gastosPorPoder     = mutableStateMapOf<String, Int>()
     var naturalArmorFromRace by mutableIntStateOf(0)
+
+    fun valorMovimentacao(): Int {
+        val base = 6
+
+        val racialPenalty =
+            listaAncestralidadesJson
+                .firstOrNull { it.nome.keyify() == ancestralidade }
+                ?.desvantagens
+                ?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
+                .takeIf { it == true }
+                ?.let { 1 }
+                ?: 0
+
+        val idosoPenalty =
+            complicacoesSelecionadas
+                .filterKeys { it.id.keyify() == "IDOSO" }
+                .isNotEmpty()
+                .takeIf { it }
+                ?.let { 1 }
+                ?: 0
+
+        val lentoPenalty = complicacoesSelecionadas
+            .entries
+            .firstOrNull { it.key.id.keyify() == "LENTO" }
+            ?.let { (_, grau) ->
+                when (grau) {
+                    "Menor" -> 1
+                    "Maior" -> 2
+                    else    -> 0
+                }
+            }
+            ?: 0
+
+        val obesoPenalty =
+            complicacoesSelecionadas
+                .filterKeys { it.id.keyify() == "OBESO" }
+                .isNotEmpty()
+                .takeIf { it }
+                ?.let { 1 }
+                ?: 0
+
+        val ligeiroBonus =
+            if (vantagensSelecionadas.any { it.nome.keyify() == "LIGEIRO" })
+                2
+            else
+                0
+
+        return (base
+                - racialPenalty
+                - idosoPenalty
+                - lentoPenalty
+                - obesoPenalty
+                + ligeiroBonus
+                + bonusMovimentacaoFromPower)
+            .coerceAtLeast(0)
+    }
+
+    fun valorAparar(): Int {
+        val perLutar = listaPericias.firstOrNull { it.nome.equals("Lutar", ignoreCase = true) }
+        val lutarRaw = perLutar?.let { rawTotalComSupers(it) } ?: 0
+        val base     = 2 + (lutarRaw / 2)
+
+        val bloquearBonus =
+            if (vantagensSelecionadas.any { it.nome.keyify() == "BLOQUEAR" }) 1 else 0
+        val bloquearAprimoradoBonus =
+            if (vantagensSelecionadas.any { it.nome.keyify() == "BLOQUEAR APRIMORADO" }) 1 else 0
+
+        return base + bloquearBonus + bloquearAprimoradoBonus + bonusPararFromPower
+    }
+
+    fun valorResistenciaBase(): Int {
+        val vigorRaw = valoresAtributos["VIGOR"]?.intValue ?: 4
+        val base     = 2 + (vigorRaw / 2)
+        val bonusPos = if (vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" }) 1 else 0
+        val bonusNeg = if (desvantagensAutomaticas.any { it.keyify() == "FRAGIL" }) -1 else 0
+        val racialSize = listaAncestralidadesJson
+            .firstOrNull { it.nome.keyify() == ancestralidade }
+            ?.desvantagens
+            ?.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
+            ?.substringAfter("TAMANHO")
+            ?.trim()
+            ?.toIntOrNull()
+            ?: 0
+        val obesoBonus =
+            if (complicacoesSelecionadas.keys.any { it.id.keyify() == "OBESO" }) +1 else 0
+        val pequenoPenalty =
+            if (complicacoesSelecionadas.keys.any { it.id.keyify() == "PEQUENO" }) -1 else 0
+        val brigaoBonus = vantagensSelecionadas
+            .count { it.nome.keyify() in listOf("BRIGAO", "PUGILISTA") }
+        val sizeRaw = racialSize + obesoBonus + pequenoPenalty
+        return (base + bonusPos + bonusNeg + brigaoBonus + sizeRaw)
+            .coerceAtLeast(0)
+    }
+
+    fun valorResistenciaFinal(): Int {
+        return valorResistenciaBase() + bonusResFromPower
+    }
+
+    fun valorArmaduraEfetiva(): Int {
+        val armorFromEquipment = armadura
+        val melhorExterna = kotlin.math.max(armorFromPower, armorFromEquipment)
+        return (melhorExterna + naturalArmorFromRace).coerceAtLeast(0)
+    }
+
+    fun valorTamanho(): Int {
+        val desc = listaAncestralidadesJson
+            .firstOrNull { it.nome.keyify() == ancestralidade }
+            ?.desvantagens
+            ?.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
+
+        val racialSize = desc
+            ?.substringAfter("TAMANHO")
+            ?.trim()
+            ?.toIntOrNull()
+            ?: 0
+        val obesoBonus =
+            if (complicacoesSelecionadas.keys.any { it.id.keyify() == "OBESO" })
+                1
+            else
+                0
+        val pequenoPenalty =
+            if (complicacoesSelecionadas.keys.any { it.id.keyify() == "PEQUENO" })
+                -1
+            else
+                0
+        val musculosoBonus =
+            if (vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" })
+                1
+            else
+                0
+        val raw = racialSize + obesoBonus + pequenoPenalty + musculosoBonus
+        return raw.coerceIn(-1, 3)
+    }
+
+    fun gastarPcParaVantagem(): Boolean {
+        // custo de 2 PC para 1 PV
+        if (pontosComplicacao - pontosComplicacaoGastos < 2) return false
+
+        pontosComplicacaoGastos += 2
+        cpPvStack.add(Unit)   // registra que 1 vantagem foi comprada
+        pontosVantagem += 1
+        return true
+    }
+
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    fun devolverPcDeVantagem() {
+        if (cpPvStack.isNotEmpty()) {
+            cpPvStack.removeLast()
+            pontosComplicacaoGastos -= 2
+            pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
+        }
+    }
+
+    fun gastarPcParaAtributo(): Boolean {
+        // Custo de 2 Pontos de Complicação para 1 aumento de atributo
+        val custo = 2
+        val disponivel = (pontosComplicacao - pontosComplicacaoGastos)
+
+        if (disponivel < custo) return false
+
+        cpPaStack.add("PB")              // registra 1 compra de atributo com PC
+        pontosComplicacaoGastos += custo // soma 2 ao total gasto
+        recalcularPontosAtributo()       // recalcula PA restantes e stacks
+
+        return true
+    }
+
+    fun removerVantagemPorSuper(v: Vantagem) {
+        vantagensSelecionadas.remove(v)
+        vantagensDePoder.remove(v.id)
+    }
+
+    fun adicionarVantagemPorSuper(v: Vantagem): Boolean {
+        if (v.categoria == Categoria.LENDARIAS) return false
+
+        val progressoAnterior = overrideStageForVantagem
+        overrideStageForVantagem = "Lendário"
+
+        val permitido = podeSelecionar(v)
+        overrideStageForVantagem = progressoAnterior
+
+        if (!permitido) return false
+
+        if (!vantagensSelecionadas.contains(v)) {
+            vantagensSelecionadas += v
+            vantagensDePoder += v.id
+            return true
+        }
+        return false
+    }
 
     fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
         var raw = rawStart
@@ -1129,6 +1320,7 @@ class CriadorState {
             cumulativeCost += cost
         }
     }
+
     init {
         aplicarAncestralidade(ancestralidade)
     }

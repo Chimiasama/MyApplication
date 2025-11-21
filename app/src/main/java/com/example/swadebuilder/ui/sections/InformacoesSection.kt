@@ -42,11 +42,6 @@ import com.example.swadebuilder.SectionCard
 import com.example.swadebuilder.SectionHeader
 import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.valorAparar
-import com.example.swadebuilder.valorArmaduraEfetiva
-import com.example.swadebuilder.valorMovimentacao
-import com.example.swadebuilder.valorResistenciaFinal
-import com.example.swadebuilder.valorTamanho
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonPrimitive

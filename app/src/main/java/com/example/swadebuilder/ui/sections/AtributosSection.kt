@@ -107,9 +107,8 @@ fun AtributosContent(
                 onClick = {
                     if (!podeUsarPc) return@TextButton
 
-                    state.cpPaStack.add("PB")
-                    state.pontosComplicacaoGastos += 2
-                    state.recalcularPontosAtributo()
+                    // Centraliza toda a lógica de gasto de PC em CriadorState
+                    state.gastarPcParaAtributo()
                 },
                 enabled = podeUsarPc
             ) {

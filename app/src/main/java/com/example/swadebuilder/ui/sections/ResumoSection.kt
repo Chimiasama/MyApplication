@@ -34,11 +34,6 @@ import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.periciaStartRaw
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.valorAparar
-import com.example.swadebuilder.valorArmaduraEfetiva
-import com.example.swadebuilder.valorMovimentacao
-import com.example.swadebuilder.valorResistenciaFinal
-import com.example.swadebuilder.valorTamanho
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

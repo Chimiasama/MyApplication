@@ -273,6 +273,7 @@ fun VantagensContent(
         Spacer(Modifier.size(4.dp))
 
         // Botões de usar / desfazer Pontos Bônus em Vantagens
+        // Botões de usar / desfazer Pontos Bônus em Vantagens
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -280,16 +281,15 @@ fun VantagensContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val podeUsarPc = !locked && pcLivres > 0
-            val podeDesfazerPc = !locked && pvUsados > 0
+            // Agora exige 2 PC livres pra poder comprar 1 PV
+            val podeUsarPc      = !locked && pcLivres >= 2
+            val podeDesfazerPc  = !locked && pvUsados > 0
 
             TextButton(
                 onClick = {
                     if (!podeUsarPc) return@TextButton
-                    // 1 Ponto Bônus -> +1 PV
-                    state.cpPvStack.add(Unit)
-                    state.pontosComplicacaoGastos += 1
-                    state.pontosVantagem += 1
+                    // Usa a lógica centralizada no CriadorState (2 PC -> 1 PV)
+                    state.gastarPcParaVantagem()
                 },
                 enabled = podeUsarPc
             ) {
@@ -299,10 +299,8 @@ fun VantagensContent(
             TextButton(
                 onClick = {
                     if (!podeDesfazerPc) return@TextButton
-                    state.cpPvStack.removeAt(state.cpPvStack.lastIndex)
-                    state.pontosComplicacaoGastos =
-                        (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                    state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
+                    // Devolve 1 PV e recupera 2 PC
+                    state.devolverPcDeVantagem()
                 },
                 enabled = podeDesfazerPc
             ) {
