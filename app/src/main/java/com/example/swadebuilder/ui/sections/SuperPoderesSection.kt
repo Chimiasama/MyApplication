@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
+import com.example.swadebuilder.PurchasedPower
 import com.example.swadebuilder.R
 import com.example.swadebuilder.SectionCard
 import com.example.swadebuilder.SectionHeader
@@ -426,118 +427,166 @@ fun SuperPoderesSection(
     ) {
         // 1) chips dos poderes comprados
         if (state.superPoderesComprados.isNotEmpty()) {
+
+            fun isEspecial(p: PurchasedPower): Boolean {
+                val nome = p.nome.trim()
+                return when {
+                    // efeitos diretos na ficha
+                    p.poderId == "sp_aparar" -> true
+                    p.poderId == "sp_movimentacao" -> true
+                    p.poderId == "sp_armor" -> true
+                    p.poderId == "sp_res" -> true
+
+                    // pickers / ledger pai
+                    nome.startsWith("Superatributo:", ignoreCase = true) -> true
+                    nome.startsWith("Superperícia:", ignoreCase = true) ||
+                            nome.startsWith("Superpericia:", ignoreCase = true) -> true
+                    nome.startsWith("Supervantagem:", ignoreCase = true) -> true
+
+                    // bônus de perícia é “único por perícia”, então não agrupa
+                    p.poderId == "sp_bonus_pericia" ||
+                            nome.startsWith("Bônus de Perícia", ignoreCase = true) ||
+                            nome.startsWith("Bonus de Perícia", ignoreCase = true) -> true
+
+                    else -> false
+                }
+            }
+
+            val genericosPorId = state.superPoderesComprados
+                .filterNot { isEspecial(it) }
+                .groupBy { it.poderId }
+
+            val emittedGenericIds = mutableSetOf<String>()
+
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 state.superPoderesComprados.forEach { p ->
-                    AssistChip(
-                        onClick = {
-                            // Tratamento especial para poderes que têm efeito na ficha
-                            when {
-                                p.poderId == "sp_aparar" -> {
-                                    viewModel.desfazerInvestimentoSuper(
-                                        poderId = p.poderId,
-                                        custo = p.custo,
-                                        efeito = PowerEffect.BonusAparar(p.baseCost)
-                                    )
-                                    state.removerSuperPoder(p, desfazerNoLedger = false)
-                                }
 
-                                p.poderId == "sp_movimentacao" -> {
-                                    viewModel.desfazerInvestimentoSuper(
-                                        poderId = p.poderId,
-                                        custo = p.custo,
-                                        efeito = PowerEffect.BonusMovimentacao(p.baseCost)
-                                    )
-                                    state.removerSuperPoder(p, desfazerNoLedger = false)
-                                }
-
-                                p.poderId == "sp_armor" -> {
-                                    viewModel.desfazerInvestimentoSuper(
-                                        poderId = p.poderId,
-                                        custo = p.custo,
-                                        efeito = PowerEffect.BonusArmadura(p.baseCost * 2)
-                                    )
-                                    state.removerSuperPoder(p, desfazerNoLedger = false)
-                                }
-
-                                p.poderId == "sp_res" -> {
-                                    viewModel.desfazerInvestimentoSuper(
-                                        poderId = p.poderId,
-                                        custo = p.custo,
-                                        efeito = PowerEffect.BonusResistencia(p.baseCost)
-                                    )
-                                    state.removerSuperPoder(p, desfazerNoLedger = false)
-                                }
-
-                                // Superatributo – chip individual, mas ledger global
-                                p.nome.startsWith("Superatributo:", ignoreCase = true) -> {
-                                    val attrKey = p.nome.substringAfter(":").trim()
-                                    viewModel.desfazerInvestimentoSuper(
-                                        poderId = "sp_superatributo",
-                                        custo = p.custo,
-                                        efeito = PowerEffect.SuperAtributo(attrKey.uppercase(), p.baseCost)
-                                    )
-                                    state.removerSuperPoder(p, desfazerNoLedger = false)
-                                }
-
-                                // Superperícia – chip individual, ledger global
-                                p.nome.startsWith("Superperícia:", ignoreCase = true) ||
-                                        p.nome.startsWith("Superpericia:", ignoreCase = true) -> {
-                                    val perNome = p.nome.substringAfter(":").trim()
-                                    val perKey = perNome.keyify()
-
-                                    val r = viewModel.desfazerInvestimentoSuper(
-                                        poderId = "sp_superpericia",
-                                        custo = p.custo,
-                                        efeito = PowerEffect.SuperPericia(perKey, p.baseCost)
-                                    )
-
-                                    if (!r.ok) {
-                                        Toast.makeText(context, r.mensagem, Toast.LENGTH_SHORT).show()
-                                    } else {
-                                        state.removerSuperPoder(p, desfazerNoLedger = false)
-                                    }
-                                }
-
-                                // Supervantagem – chip individual, ledger global
-                                p.nome.startsWith("Supervantagem:", ignoreCase = true) -> {
-                                    val vantNome = p.nome.substringAfter(":").trim()
-                                    val vantId = listaVantagens
-                                        .firstOrNull { it.nome.equals(vantNome, ignoreCase = true) }
-                                        ?.id
-
-                                    if (vantId == null) {
-                                        Toast.makeText(context, "Não foi possível desfazer $vantNome.", Toast.LENGTH_SHORT).show()
-                                    } else {
+                    if (isEspecial(p)) {
+                        // ---- CHIP ESPECIAL: mantém exatamente o comportamento atual ----
+                        AssistChip(
+                            onClick = {
+                                when {
+                                    p.poderId == "sp_aparar" -> {
                                         viewModel.desfazerInvestimentoSuper(
-                                            poderId = "sp_supervantagem",
+                                            poderId = p.poderId,
                                             custo = p.custo,
-                                            efeito = PowerEffect.SuperVantagem(vantId)
+                                            efeito = PowerEffect.BonusAparar(p.baseCost)
                                         )
                                         state.removerSuperPoder(p, desfazerNoLedger = false)
                                     }
-                                }
 
-                                else -> {
-                                    // poderes "normais" ou Bônus de Perícia: comportamento antigo
-                                    state.removerSuperPoder(p)
+                                    p.poderId == "sp_movimentacao" -> {
+                                        viewModel.desfazerInvestimentoSuper(
+                                            poderId = p.poderId,
+                                            custo = p.custo,
+                                            efeito = PowerEffect.BonusMovimentacao(p.baseCost)
+                                        )
+                                        state.removerSuperPoder(p, desfazerNoLedger = false)
+                                    }
+
+                                    p.poderId == "sp_armor" -> {
+                                        viewModel.desfazerInvestimentoSuper(
+                                            poderId = p.poderId,
+                                            custo = p.custo,
+                                            efeito = PowerEffect.BonusArmadura(p.baseCost * 2)
+                                        )
+                                        state.removerSuperPoder(p, desfazerNoLedger = false)
+                                    }
+
+                                    p.poderId == "sp_res" -> {
+                                        viewModel.desfazerInvestimentoSuper(
+                                            poderId = p.poderId,
+                                            custo = p.custo,
+                                            efeito = PowerEffect.BonusResistencia(p.baseCost)
+                                        )
+                                        state.removerSuperPoder(p, desfazerNoLedger = false)
+                                    }
+
+                                    p.nome.startsWith("Superatributo:", ignoreCase = true) -> {
+                                        val attrKey = p.nome.substringAfter(":").trim()
+                                        viewModel.desfazerInvestimentoSuper(
+                                            poderId = "sp_superatributo",
+                                            custo = p.custo,
+                                            efeito = PowerEffect.SuperAtributo(attrKey.uppercase(), p.baseCost)
+                                        )
+                                        state.removerSuperPoder(p, desfazerNoLedger = false)
+                                    }
+
+                                    p.nome.startsWith("Superperícia:", ignoreCase = true) ||
+                                            p.nome.startsWith("Superpericia:", ignoreCase = true) -> {
+                                        val perNome = p.nome.substringAfter(":").trim()
+                                        val perKey = perNome.keyify()
+                                        val r = viewModel.desfazerInvestimentoSuper(
+                                            poderId = "sp_superpericia",
+                                            custo = p.custo,
+                                            efeito = PowerEffect.SuperPericia(perKey, p.baseCost)
+                                        )
+                                        if (!r.ok) {
+                                            Toast.makeText(context, r.mensagem, Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            state.removerSuperPoder(p, desfazerNoLedger = false)
+                                        }
+                                    }
+
+                                    p.nome.startsWith("Supervantagem:", ignoreCase = true) -> {
+                                        val vantNome = p.nome.substringAfter(":").trim()
+                                        val vantId = listaVantagens
+                                            .firstOrNull { it.nome.equals(vantNome, ignoreCase = true) }
+                                            ?.id
+                                        if (vantId == null) {
+                                            Toast.makeText(context, "Não foi possível desfazer $vantNome.", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            viewModel.desfazerInvestimentoSuper(
+                                                poderId = "sp_supervantagem",
+                                                custo = p.custo,
+                                                efeito = PowerEffect.SuperVantagem(vantId)
+                                            )
+                                            state.removerSuperPoder(p, desfazerNoLedger = false)
+                                        }
+                                    }
+
+                                    else -> {
+                                        state.removerSuperPoder(p)
+                                    }
                                 }
+                            },
+                            label = { Text("${p.nome} (+${p.custo})") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = "Remover"
+                                )
                             }
-                        },
-                        label = {
-                            Text("${p.nome} (+${p.custo})")
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Close,
-                                contentDescription = "Remover"
+                        )
+                    } else {
+                        // ---- CHIP GENÉRICO AGRUPADO ----
+                        if (emittedGenericIds.add(p.poderId)) {
+                            val listaMesmoPoder = genericosPorId[p.poderId].orEmpty()
+                            val custoSomado = listaMesmoPoder.sumOf { it.custo }
+
+                            AssistChip(
+                                onClick = {
+                                    // remove todas as compras desse poder
+                                    listaMesmoPoder.forEach { pp ->
+                                        state.removerSuperPoder(pp)
+                                    }
+                                },
+                                label = { Text("${p.nome} (+$custoSomado)") },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Filled.Close,
+                                        contentDescription = "Remover"
+                                    )
+                                }
                             )
                         }
-                    )
+                    }
                 }
             }
+
             Spacer(Modifier.height(8.dp))
         }
 
@@ -819,8 +868,14 @@ fun SuperPoderesSection(
                     minOf(limiteIndividual, saldoSp)
                 }
 
-                // Demais poderes: limite padrão
-                else -> limiteBasePorPoder
+                // Demais poderes: usar RESTANTE do poder (limite acumulado)
+                else -> {
+                    val poderIdGenerico = "sp_${poder.nome.keyify()}"
+                    val gastoAtual = state.gastosPorPoder[poderIdGenerico] ?: 0
+                    val limiteInd = viewModel.perPowerLimit(poderIdGenerico)
+                    val restoInd = (limiteInd - gastoAtual).coerceAtLeast(0)
+                    minOf(restoInd, saldoSp)
+                }
             }
             // ----- FIM DO NOVO CÁLCULO -----
 

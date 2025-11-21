@@ -339,6 +339,31 @@ class CriadorState {
             }
         }
 
+        if (registrarNoLedger) {
+            val limiteIndividual =
+                if (idPoderFavorecido != null && idPoderFavorecido == poderId)
+                    limiteFavorecido
+                else
+                    limitePorPoderPadrao
+
+            val gastoAtual = gastosPorPoder[poderId] ?: 0
+            if (gastoAtual + custo > limiteIndividual) {
+                return false to "Limite deste superpoder atingido (${limiteIndividual} SP)."
+            }
+
+            // Segurança extra: Armadura + Resistência compartilham limite de campanha
+            if (poderId == "sp_armor" || poderId == "sp_res") {
+                val gastoArmor = gastosPorPoder["sp_armor"] ?: 0
+                val gastoRes = gastosPorPoder["sp_res"] ?: 0
+                val gastoCompartilhadoAtual = gastoArmor + gastoRes
+
+                if (gastoCompartilhadoAtual + custo > limiteDePoderDaCampanha) {
+                    return false to
+                            "Limite compartilhado de Armadura + Resistência atingido (${limiteDePoderDaCampanha} SP)."
+                }
+            }
+        }
+
         // 1) Limite de quantidade de superpoderes
         if (superPoderesComprados.size >= superLimite) {
             return false to "Limite de superpoderes atingido (${superLimite})."
