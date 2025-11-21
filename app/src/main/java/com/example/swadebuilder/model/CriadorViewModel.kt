@@ -351,55 +351,6 @@ class CriadorViewModel : ViewModel() {
             state.limitePorPoderPadrao
     }
 
-    /** Cap genérico de atributo final por campanha/racial/estágio. */
-    @Suppress("unused_parameter")
-    fun atributoCapFinal(attrKey: String): Int = 12
-
-    /** Quantos "steps" de super já foram aplicados a um atributo. */
-    @Suppress("unused")
-    fun currentAttrSteps(attrKey: String): Int = state.superAtributoIncs[attrKey] ?: 0
-
-    /** Quantos "steps" de super já foram aplicados a uma perícia (por id/keyify). */
-    @Suppress("unused")
-    fun currentPericiaSteps(periciaId: String): Int = state.superPericiaIncs[periciaId] ?: 0
-
-    /** Busca o raw final de atributo com supers (para conferência de cap). */
-    @Suppress("unused")
-    fun atributoRawComSupers(attrKey: String): Int = state.atributoRawComSupers(attrKey)
-
-    /** Verifica se a perícia é Lutar (para efeitos que impactam Aparar). */
-    @Suppress("unused")
-    fun periciaIdEhLutar(periciaId: String): Boolean {
-        return periciaId.trim().equals("LUTAR", ignoreCase = true) ||
-                periciaId.trim().equals("lutar", ignoreCase = true)
-    }
-
-    /** Máximo racial/campanha para um atributo (não é alterado por Superatributo). */
-    @Suppress("unused")
-    fun maxAtributoRacial(attrKey: String): Int = state.atributoMaxRaw(attrKey)
-
-    /** Verifica se o personagem possui a vantagem “Atributo Lendário” aplicável ao atributo alvo. */
-    @Suppress("unused")
-    fun possuiAtributoLendarioPara(attrKey: String): Boolean {
-        val alvo = attrKey.trim().uppercase()
-        return state.vantagensSelecionadas.any { v ->
-            val idOk   = v.id.contains("atributo_lendario", ignoreCase = true)
-            val nomeOk = v.nome.contains("Atributo Lend", ignoreCase = true) // tolera variações
-            if (!(idOk || nomeOk)) return@any false
-
-            // Se a sua implementação usa choice (ex.: “Atributo Lendário (Agilidade)”),
-            // validamos a escolha; se não houver choice, consideramos que vale pra qualquer:
-            val choice = v.choice?.trim()?.uppercase()
-            (choice == null || choice == alvo)
-        }
-    }
-
-    /**
-     * Pode subir o atributo por Super? Respeita:
-     * - Máximo racial/campanha (state.atributoMaxRaw)
-     * - Bloqueio acima de d12 sem “Atributo Lendário”
-     * - Não “salta” o bloqueio de Lendário: se cruzar 12, precisa possuir a vantagem
-     */
     fun podeSubirAtributoPorSuper(attrKey: String, steps: Int): InvestCheck {
         if (steps == 0) return InvestCheck(true)
 
@@ -413,13 +364,6 @@ class CriadorViewModel : ViewModel() {
         return InvestCheck(true)
     }
 
-    /**
-     * Valida se é possível investir "custo" pontos em um poder específico com um "efeito".
-     * - saldo
-     * - limite por poder (favorecido vs padrão)
-     * - teto combinado de supers (armadura/resistência) pós-compra
-     * - regras de tipo (perícia, atributo, vantagem)
-     */
     fun canInvestInPower(
         poderId: String,
         custo: Int,
@@ -700,27 +644,4 @@ class CriadorViewModel : ViewModel() {
         return revertPowerInvestment(poderId = poderId, custo = custo, efeito = efeito)
     }
 
-    @Suppress("unused")
-    fun iniciarFaseSupers(nivelRoman: String) {
-        val total = when (nivelRoman.trim().uppercase()) {
-            "I" -> 15
-            "II" -> 30
-            "III" -> 45
-            "IV" -> 60
-            "V" -> 75
-            else -> 15
-        }
-        state.superPontosTotais = total
-        state.superPontosDisponiveis = total - state.gastosPorPoder.values.sum()
-        state.faseSupersAtiva = true
-        state.emProgresso = false
-    }
-
-    @Suppress("unused")
-    fun iniciarFaseProgresso() {
-        // Só permite iniciar progresso quando terminou supers
-        if (state.superPontosTotais > 0 && state.superPontosDisponiveis == 0) {
-            state.emProgresso = true
-        }
-    }
 }

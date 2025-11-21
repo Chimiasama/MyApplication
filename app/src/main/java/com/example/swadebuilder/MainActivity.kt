@@ -289,6 +289,7 @@ class MainActivity : ComponentActivity() {
             criadorViewModel.setMultiplosAAHabilitados(MULTIPLOS_AA_HABILITADOS)
             val state = criadorViewModel.state
 
+            var expInfos   by rememberSaveable { mutableStateOf(false) }
             var expAttrs    by rememberSaveable { mutableStateOf(false) }
             var expPer      by rememberSaveable { mutableStateOf(false) }
             var expVants    by rememberSaveable { mutableStateOf(false) }
@@ -686,8 +687,8 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                             else -> UnifiedScreen(
                                                 state = state,
                                                 onOpenVantagensDetail = { nomeVantagem ->
-                                                    highlightedVantagem = nomeVantagem          // já é String
-                                                    state.vantagemEmFoco = nomeVantagem         // String? compatível
+                                                    highlightedVantagem = nomeVantagem
+                                                    state.vantagemEmFoco = nomeVantagem
                                                     showVantagensDetail = true
                                                 },
                                                 onOpenPericiasDetail             = { showPericiasDetail        = true },
@@ -699,21 +700,28 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
 
                                                 onOpenSuperPoderesDetail         = { nomePoder ->
                                                     highlightedSuperPoder = nomePoder
-                                                    // se vier com string vazia (lista completa genérica), limpa foco
                                                     state.superPoderEmFoco = nomePoder.ifBlank { null }
-                                                    expPoderes = true          // garante que a seção estará aberta ao voltar
+                                                    expPoderes = true
                                                     showSuperDetail = true
                                                 },
 
+                                                // ✅ NOVO — Informações hoistadas
+                                                expInfos       = expInfos,
+                                                onToggleInfos  = { expInfos = !expInfos },
+
                                                 expAttrs       = expAttrs,
                                                 onToggleAttrs  = { expAttrs   = !expAttrs },
+
                                                 expPer         = expPer,
                                                 onTogglePer    = { expPer     = !expPer },
+
                                                 expVants       = expVants,
                                                 onToggleVants  = { expVants   = !expVants },
+
                                                 expResumo      = expResumo,
                                                 onToggleResumo = { expResumo  = !expResumo },
-                                                expPoderes     = expPoderes,
+
+                                                expPoderes      = expPoderes,
                                                 onTogglePoderes = { expPoderes = !expPoderes },
 
                                                 equipamentoCategorias = equipamentoCategorias,
@@ -1870,6 +1878,7 @@ fun VantagensDetailScreen(
 @Composable
 fun PreviewApp() {
     val state = remember { CriadorState() }
+
     UnifiedScreen(
         state = state,
         onOpenVantagensDetail = { _ -> },
@@ -1880,21 +1889,32 @@ fun PreviewApp() {
         onOpenListaCompletaEquipamento = {},
         onOpenPoderesDetail = {},
         onOpenSuperPoderesDetail = { _ -> },
+
+        // ✅ novos parâmetros
+        expInfos = true,
+        onToggleInfos = {},
+
         expAttrs = true,
         onToggleAttrs = {},
+
         expPer = true,
         onTogglePer = {},
+
         expVants = true,
         onToggleVants = {},
+
         expResumo = true,
         onToggleResumo = {},
+
         expPoderes = true,
         onTogglePoderes = {},
+
         equipamentoCategorias = emptyList(),
         superequipCategorias = emptyList(),
         listaSuperPoderes = emptyList()
     )
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -1909,6 +1929,11 @@ fun UnifiedScreen(
     onOpenListaCompletaEquipamento: () -> Unit,
     onOpenPoderesDetail: () -> Unit,
     onOpenSuperPoderesDetail: (String) -> Unit,
+
+    // ✅ NOVO — expansão de Informações vem de fora
+    expInfos: Boolean,
+    onToggleInfos: () -> Unit,
+
     expAttrs: Boolean,
     onToggleAttrs: () -> Unit,
 
@@ -1950,6 +1975,8 @@ fun UnifiedScreen(
         // ─── Informações iniciais ────────────────────────────────────────────────
         InformacoesSection(
             state = state,
+            expanded = expInfos,
+            onToggle = onToggleInfos,
             onUseProgress = { showAllocDialog = true }
         )
 

@@ -47,14 +47,19 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonPrimitive
 import kotlin.math.roundToInt
 
+/**
+ * Versão "hoistada": expanded/onToggle vêm de fora (MainActivity/UnifiedScreen),
+ * garantindo que a seção continue aberta ao navegar e voltar.
+ */
 @Composable
 fun InformacoesSection(
     state: CriadorState,
+    expanded: Boolean,
+    onToggle: () -> Unit,
     onUseProgress: () -> Unit
 ) {
     val context = LocalContext.current
 
-    // Gera um nome padrão "Nome 1", "Nome 2", ... se estiver em branco
     val nomesSalvos = remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
 
     LaunchedEffect(Unit) {
@@ -73,19 +78,17 @@ fun InformacoesSection(
         }
     }
 
-    var expanded by rememberSaveable { mutableStateOf(false) }
     var showProgressDialog by rememberSaveable { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
     SectionCard(
         title = "Informações",
         expanded = expanded,
-        onToggle = { expanded = !expanded },
+        onToggle = onToggle,
         icon = Icons.Default.Person
     ) {
         Column(Modifier.padding(8.dp)) {
 
-            // 1) Cabeçalho no padrão das outras seções (com botão de ajuda)
             SectionHeader(
                 onHelpClick = null,
                 centerText = "Estágio: ${state.estagioAtual().nome}",
@@ -96,7 +99,6 @@ fun InformacoesSection(
 
             Spacer(Modifier.height(8.dp))
 
-            // 2) Nome do personagem
             OutlinedTextField(
                 value = state.nomePersonagem,
                 onValueChange = { state.nomePersonagem = it },
@@ -145,7 +147,6 @@ fun InformacoesSection(
             val podeUsarProgresso =
                 supersTerminados && (state.progressosDisponiveis > 0) && (state.pontosVantagem == 0)
 
-            // BOTÕES CENTRALIZADOS / ALINHADOS ÀS LATERAIS
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -174,7 +175,6 @@ fun InformacoesSection(
                 }
             }
 
-            // 4) Desfazer tudo
             if (state.progresso > 0) {
                 TextButton(onClick = {
                     state.progresso = 0
@@ -184,8 +184,6 @@ fun InformacoesSection(
                     Text("Desfazer Progresso")
                 }
             }
-
-            // -------- 5) Parâmetros extras (Movimentação, Aparar, Resistência, Tamanho) --------
 
             val movimento = state.valorMovimentacao()
             val aparar = state.valorAparar()
@@ -207,7 +205,6 @@ fun InformacoesSection(
             val tamanho = state.valorTamanho()
             val tamanhoTexto = if (tamanho > 0) "+$tamanho" else tamanho.toString()
 
-            // GRID DE DUAS COLUNAS ALINHADAS
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -218,39 +215,20 @@ fun InformacoesSection(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    // Coluna ESQUERDA: Movimentação / Resistência
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        StatItem(
-                            title = "Movimentação",
-                            value = movimento.toString()
-                        )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        StatItem("Movimentação", movimento.toString())
                         Spacer(modifier = Modifier.height(8.dp))
-                        StatItem(
-                            title = "Resistência",
-                            value = resistenciaTexto
-                        )
+                        StatItem("Resistência", resistenciaTexto)
                     }
 
-                    // Coluna DIREITA: Aparar / Tamanho
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        StatItem(
-                            title = "Aparar",
-                            value = aparar.toString()
-                        )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        StatItem("Aparar", aparar.toString())
                         Spacer(modifier = Modifier.height(8.dp))
-                        StatItem(
-                            title = "Tamanho",
-                            value = tamanhoTexto
-                        )
+                        StatItem("Tamanho", tamanhoTexto)
                     }
                 }
             }
 
-            // 6) Diálogo para ajustar valor de progresso
             val spentOnCreation = state.progresso - state.progressosDisponiveis
             var tempProgresso by rememberSaveable { mutableIntStateOf(state.progresso) }
             if (showProgressDialog) {
@@ -293,7 +271,6 @@ fun InformacoesSection(
                 )
             }
 
-            // 7) Peso carregado automático e alertas de sobrecarga
             val totalWeight = state.equipamentosComprados
                 .mapNotNull { item ->
                     (item.peso as? JsonPrimitive)
@@ -344,6 +321,25 @@ fun InformacoesSection(
             }
         }
     }
+}
+
+/**
+ * Overload opcional (compatibilidade):
+ * Se ainda existir algum lugar chamando InformacoesSection(state, onUseProgress),
+ * isso evita erro e mantém o expanded salvo com chave estável.
+ */
+@Composable
+fun InformacoesSection(
+    state: CriadorState,
+    onUseProgress: () -> Unit
+) {
+    var expanded by rememberSaveable("expInformacoes") { mutableStateOf(false) }
+    InformacoesSection(
+        state = state,
+        expanded = expanded,
+        onToggle = { expanded = !expanded },
+        onUseProgress = onUseProgress
+    )
 }
 
 /**
