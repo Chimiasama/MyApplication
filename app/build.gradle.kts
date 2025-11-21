@@ -150,6 +150,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.foundation)
     debugImplementation(libs.androidx.compose.ui.tooling.v170)
 
     // --- Material Components ---

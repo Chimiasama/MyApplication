@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -23,13 +26,10 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -62,7 +62,6 @@ fun ComplicacoesSection(
     val locked = state.criacaoBasicaCongelada
 
     var expCompSection by rememberSaveable { mutableStateOf(false) }
-    var expCompMenu    by rememberSaveable { mutableStateOf(false) }
     var showPcInUseDialog by rememberSaveable { mutableStateOf(false) }
 
     val autoBaseKeys = state.desvantagensAutomaticas
@@ -119,62 +118,62 @@ fun ComplicacoesSection(
             verticalArrangement   = Arrangement.spacedBy(8.dp),
             modifier = Modifier.alpha(if (locked) 0.3f else 1f)
         ) {
-                state.complicacoesSelecionadas
-                    .filterValues { it != null }
-                    .forEach { (comp, tipo) ->
-                        val isAuto = comp.id.keyify() in autoBaseKeys
-                        val isYoungAuto = comp.id == "pequeno" && state.jovemAutoPequeno
-                        val cost = if (tipo == "Maior") 2 else 1
-                        val canRemove = !locked &&
-                                !isAuto &&
-                                !isYoungAuto &&
-                                state.pontosComplicacaoGastos <= state.pontosComplicacao - cost
+            state.complicacoesSelecionadas
+                .filterValues { it != null }
+                .forEach { (comp, tipo) ->
+                    val isAuto = comp.id.keyify() in autoBaseKeys
+                    val isYoungAuto = comp.id == "pequeno" && state.jovemAutoPequeno
+                    val cost = if (tipo == "Maior") 2 else 1
+                    val canRemove = !locked &&
+                            !isAuto &&
+                            !isYoungAuto &&
+                            state.pontosComplicacaoGastos <= state.pontosComplicacao - cost
 
-                        val isClickable = !locked && !isAuto && !isYoungAuto
+                    val isClickable = !locked && !isAuto && !isYoungAuto
 
-                        AssistChip(
-                            onClick = {
-                                if (!isClickable) return@AssistChip
+                    AssistChip(
+                        onClick = {
+                            if (!isClickable) return@AssistChip
 
-                                if (canRemove) {
-                                    when (comp.id) {
-                                        "idoso" -> {
-                                            state.complicacoesSelecionadas.remove(comp)
-                                            state.idosoBonusSp = 0
-                                            state.syncFromCPRefund(sp = true)
-                                        }
-                                        "jovem" -> {
-                                            val pequComp = complicacoesFiltradas.first { it.id == "pequeno" }
-                                            state.removeYoung(pequComp)
-                                            state.complicacoesSelecionadas.remove(comp)
-                                            state.applyYoungMinor()
-                                        }
-                                        "pobreza" -> {
-                                            state.complicacoesSelecionadas.remove(comp)
-                                            state.dinheiro += 250
-                                        }
-                                        "obeso" -> {
-                                            state.complicacoesSelecionadas.remove(comp)
-                                            state.obesoBonusSize = 0
-                                            state.obesoMalusMov = 0
-                                        }
-                                        else -> {
-                                            state.complicacoesSelecionadas.remove(comp)
-                                        }
+                            if (canRemove) {
+                                when (comp.id) {
+                                    "idoso" -> {
+                                        state.complicacoesSelecionadas.remove(comp)
+                                        state.idosoBonusSp = 0
+                                        state.syncFromCPRefund(sp = true)
                                     }
-                                } else {
-                                    // Não pode remover porque os Pontos Bônus já foram gastos
-                                    showPcInUseDialog = true
+                                    "jovem" -> {
+                                        val pequComp = complicacoesFiltradas.first { it.id == "pequeno" }
+                                        state.removeYoung(pequComp)
+                                        state.complicacoesSelecionadas.remove(comp)
+                                        state.applyYoungMinor()
+                                    }
+                                    "pobreza" -> {
+                                        state.complicacoesSelecionadas.remove(comp)
+                                        state.dinheiro += 250
+                                    }
+                                    "obeso" -> {
+                                        state.complicacoesSelecionadas.remove(comp)
+                                        state.obesoBonusSize = 0
+                                        state.obesoMalusMov = 0
+                                    }
+                                    else -> {
+                                        state.complicacoesSelecionadas.remove(comp)
+                                    }
                                 }
-                            },
-                            enabled     = isClickable,
-                            label       = { Text("${comp.name} ($tipo)") },
-                            leadingIcon = { Icon(Icons.Default.Close, contentDescription = null) }
-                        )
-                    }
-            }
+                            } else {
+                                // Não pode remover porque os Pontos Bônus já foram gastos
+                                showPcInUseDialog = true
+                            }
+                        },
+                        enabled     = isClickable,
+                        label       = { Text("${comp.name} ($tipo)") },
+                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = null) }
+                    )
+                }
+        }
 
-            Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(8.dp))
 
         if (showPcInUseDialog) {
             val paCount  = state.cpPaStack.size
@@ -217,158 +216,138 @@ fun ComplicacoesSection(
             )
         }
 
-            // 5. Dropdown para escolher novas complicações
-            ExposedDropdownMenuBox(
-                expanded         = expCompMenu,
-                onExpandedChange = { if (!locked) expCompMenu = !expCompMenu },
-                modifier         = Modifier.alpha(if (locked) .3f else 1f)
+        // 5. LISTA ROLÁVEL DE COMPLICAÇÕES (substitui o dropdown)
+        Spacer(Modifier.height(8.dp))
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 260.dp)
+                .alpha(if (locked) 0.3f else 1f)
+        ) {
+            Text(
+                "Lista de complicações disponíveis:",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(Modifier.height(4.dp))
+
+            // usamos a lista filtrada para achar "pequeno" (para a lógica de Jovem Maior)
+            val pequComp = complicacoesFiltradas.first { it.id == "pequeno" }
+
+            val listaParaMostrar = complicacoesFiltradas
+                .filter { comp ->
+                    comp.id.keyify() !in autoBaseKeys &&
+                            (state.modoSuperComplicacoes ||
+                                    !comp.origem.equals("SUPER", ignoreCase = true))
+                }
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 240.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                TransparentOutlinedReadOnlyField(
-                    text     = if (state.complicacoesSelecionadas.values.any { it != null })
-                        "Selecionadas" else "Escolher…",
-                    enabled  = !locked,
-                    onClick  = { expCompMenu = true },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor(MenuAnchorType.PrimaryNotEditable)
-                )
+                items(listaParaMostrar) { comp ->
+                    val cur    = state.complicacoesSelecionadas[comp]
+                    val sevRaw = comp.severity.lowercase().trim()
+                    val menorOnly = sevRaw.contains("menor") && !sevRaw.contains("maior")
+                    val maiorOnly = sevRaw.contains("maior") && !sevRaw.contains("menor")
+                    val ambos     = sevRaw.contains("menor") && sevRaw.contains("maior")
 
-                ExposedDropdownMenu(
-                    expanded         = expCompMenu,
-                    onDismissRequest = { expCompMenu = false },
-                    modifier         = Modifier.heightIn(max = 300.dp)
-                ) {
-                    // usa a lista filtrada para achar "pequeno"
-                    val pequComp = complicacoesFiltradas.first { it.id == "pequeno" }
-
-                    // Filtra para remover automáticas e só traz “SUPER” se ativo
-                    complicacoesFiltradas
-                        .filter { comp ->
-                            comp.id.keyify() !in autoBaseKeys &&
-                                    (state.modoSuperComplicacoes || !comp.origem.equals("SUPER", ignoreCase = true))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Nome da complicação
+                        Column(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = comp.name,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
                         }
-                        .forEach { comp ->
-                            val cur    = state.complicacoesSelecionadas[comp]
-                            val sevRaw = comp.severity.lowercase().trim()
-                            val menorOnly = sevRaw.contains("menor") && !sevRaw.contains("maior")
-                            val maiorOnly = sevRaw.contains("maior") && !sevRaw.contains("menor")
-                            val ambos     = sevRaw.contains("menor") && sevRaw.contains("maior")
 
-                            when {
-                                maiorOnly -> {
-                                    if (cur == null) {
-                                        DropdownMenuItem(
-                                            text = { Text("${comp.name} (Maior)") },
-                                            onClick = {
-                                                if (locked) return@DropdownMenuItem
-                                                when (comp.id) {
-                                                    "idoso" -> {
-                                                        state.complicacoesSelecionadas[comp] = "Maior"
-                                                        state.idosoBonusSp = 5
-                                                        state.rebuildAllPericiaStacks()
-                                                    }
-                                                    "jovem" -> {
-                                                        state.complicacoesSelecionadas[comp] = "Maior"
-                                                        state.applyYoungMajor(pequComp)
-                                                    }
-                                                    "obeso" -> {
-                                                        state.complicacoesSelecionadas[comp] = "Maior"
-                                                        state.obesoBonusSize = 1
-                                                        state.obesoMalusMov = 1
-                                                    }
-                                                    else -> {
-                                                        state.complicacoesSelecionadas[comp] = "Maior"
-                                                    }
-                                                }
-                                            },
-                                            enabled = !locked
-                                        )
-                                    }
+                        Spacer(Modifier.width(8.dp))
+
+                        // Botões de severidade
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // MENOR (se existir)
+                            if (menorOnly || ambos) {
+                                val enabledMenor = !locked && cur == null
+                                TextButton(
+                                    onClick = {
+                                        if (!enabledMenor) return@TextButton
+                                        when (comp.id) {
+                                            "jovem" -> {
+                                                state.complicacoesSelecionadas[comp] = "Menor"
+                                                state.applyYoungMinor()
+                                            }
+                                            "obeso" -> {
+                                                state.complicacoesSelecionadas[comp] = "Menor"
+                                                state.obesoBonusSize = 1
+                                                state.obesoMalusMov = 1
+                                            }
+                                            else -> {
+                                                state.complicacoesSelecionadas[comp] = "Menor"
+                                            }
+                                        }
+                                    },
+                                    enabled = enabledMenor
+                                ) {
+                                    Text("Menor")
                                 }
-                                menorOnly -> {
-                                    if (cur == null) {
-                                        DropdownMenuItem(
-                                            text = { Text("${comp.name} (Menor)") },
-                                            onClick = {
-                                                if (locked) return@DropdownMenuItem
-                                                when (comp.id) {
-                                                    "jovem" -> {
-                                                        state.complicacoesSelecionadas[comp] = "Menor"
-                                                        state.applyYoungMinor()
-                                                    }
-                                                    "obeso" -> {
-                                                        state.complicacoesSelecionadas[comp] = "Menor"
-                                                        state.obesoBonusSize = 1
-                                                        state.obesoMalusMov = 1
-                                                    }
-                                                    else -> {
-                                                        state.complicacoesSelecionadas[comp] = "Menor"
-                                                    }
-                                                }
-                                            },
-                                            enabled = !locked
+                            }
+
+                            // MAIOR (se existir)
+                            if (maiorOnly || ambos) {
+                                val enabledMaior = !locked && (
+                                        (maiorOnly && cur == null) ||
+                                                (ambos && cur == "Menor")
                                         )
-                                    }
-                                }
-                                ambos -> {
-                                    if (cur == null) {
-                                        DropdownMenuItem(
-                                            text = { Text("${comp.name} (Menor)") },
-                                            onClick = {
-                                                if (locked) return@DropdownMenuItem
-                                                when (comp.id) {
-                                                    "jovem" -> {
-                                                        state.complicacoesSelecionadas[comp] = "Menor"
-                                                        state.applyYoungMinor()
-                                                    }
-                                                    "obeso" -> {
-                                                        state.complicacoesSelecionadas[comp] = "Menor"
-                                                        state.obesoBonusSize = 1
-                                                        state.obesoMalusMov = 1
-                                                    }
-                                                    else -> {
-                                                        state.complicacoesSelecionadas[comp] = "Menor"
-                                                    }
-                                                }
-                                            },
-                                            enabled = !locked
-                                        )
-                                    }
-                                    if (cur == "Menor") {
-                                        DropdownMenuItem(
-                                            text = { Text("${comp.name} (Maior)") },
-                                            onClick = {
-                                                if (locked) return@DropdownMenuItem
-                                                when (comp.id) {
-                                                    "idoso" -> {
-                                                        state.complicacoesSelecionadas[comp] = "Maior"
-                                                        state.idosoBonusSp = 5
-                                                        state.rebuildAllPericiaStacks()
-                                                    }
-                                                    "jovem" -> {
-                                                        state.complicacoesSelecionadas[comp] = "Maior"
-                                                        state.applyYoungMajor(pequComp)
-                                                    }
-                                                    "obeso" -> {
-                                                        state.complicacoesSelecionadas[comp] = "Maior"
-                                                        state.obesoBonusSize = 1
-                                                        state.obesoMalusMov = 1
-                                                    }
-                                                    else -> {
-                                                        state.complicacoesSelecionadas[comp] = "Maior"
-                                                    }
-                                                }
-                                            },
-                                            enabled = !locked
-                                        )
-                                    }
+                                TextButton(
+                                    onClick = {
+                                        if (!enabledMaior) return@TextButton
+                                        when (comp.id) {
+                                            "idoso" -> {
+                                                state.complicacoesSelecionadas[comp] = "Maior"
+                                                state.idosoBonusSp = 5
+                                                state.rebuildAllPericiaStacks()
+                                            }
+                                            "jovem" -> {
+                                                state.complicacoesSelecionadas[comp] = "Maior"
+                                                state.applyYoungMajor(pequComp)
+                                            }
+                                            "obeso" -> {
+                                                state.complicacoesSelecionadas[comp] = "Maior"
+                                                state.obesoBonusSize = 1
+                                                state.obesoMalusMov = 1
+                                            }
+                                            else -> {
+                                                state.complicacoesSelecionadas[comp] = "Maior"
+                                            }
+                                        }
+                                    },
+                                    enabled = enabledMaior
+                                ) {
+                                    Text("Maior")
                                 }
                             }
                         }
+                    }
                 }
             }
         }
     }
+}
 
 @Composable
 fun TransparentOutlinedReadOnlyField(
