@@ -17,12 +17,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FlashOn
+import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Checkbox
@@ -34,6 +36,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -360,6 +363,20 @@ fun SuperPoderesSection(
     val context = LocalContext.current
     var poderParaComprar by remember { mutableStateOf<SuperPoder?>(null) }
 
+    // estado de scroll da lista de superpoderes
+    val listState = rememberLazyListState()
+
+    // quando superPoderEmFoco mudar, rola até o poder correspondente
+    LaunchedEffect(state.superPoderEmFoco) {
+        val foco = state.superPoderEmFoco
+        if (!foco.isNullOrBlank()) {
+            val index = listaSuperPoderes.indexOfFirst { it.nome == foco }
+            if (index >= 0) {
+                listState.scrollToItem(index)
+            }
+        }
+    }
+
     // agora o nível é realmente opcional (começa null)
     val nivelAtual = state.superNivelCampanha
 
@@ -380,7 +397,7 @@ fun SuperPoderesSection(
 
     var showNivelDialog by rememberSaveable { mutableStateOf(false) }
 
-    // full vs lite: no full (show_lista_completa = true) mostramos o raio clicável
+    // full vs lite: no full (show_lista_completa = true) mostramos o ícone clicável
     // e abrimos a tela de lista completa focada no poder
     val showLista = booleanResource(R.bool.show_lista_completa)
 
@@ -590,9 +607,10 @@ fun SuperPoderesSection(
         Spacer(Modifier.height(8.dp))
 
         // 3) lista rolável de superpoderes para comprar
-        val showLista = booleanResource(R.bool.show_lista_completa)
+        val showLista2 = booleanResource(R.bool.show_lista_completa)
 
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(max = 220.dp),
@@ -617,13 +635,15 @@ fun SuperPoderesSection(
                         fontWeight = FontWeight.SemiBold
                     )
 
-                    if (showLista) {
+                    if (showLista2) {
                         Icon(
-                            imageVector = Icons.Filled.FlashOn,
+                            imageVector = Icons.Filled.Visibility,
                             contentDescription = "Ver detalhes do superpoder",
                             modifier = Modifier
                                 .padding(start = 8.dp)
                                 .clickable {
+                                    // marcar foco pra, ao voltar, rolar até este poder
+                                    state.superPoderEmFoco = poder.nome
                                     onOpenSuperPoderesDetail(poder.nome)
                                 }
                         )
@@ -718,7 +738,7 @@ fun SuperPoderesSection(
     var bonusPericiaNivel by rememberSaveable { mutableIntStateOf(0) }
 
     poderParaComprar?.let { poder ->
-        val context = LocalContext.current
+        val context2 = LocalContext.current
 
         if (!supersLiberados) {
             poderParaComprar = null
@@ -779,6 +799,8 @@ fun SuperPoderesSection(
                 // Aqui passamos o limite já "apertado" para o diálogo.
                 limitePorPoder = limiteParaDialog,
                 onConfirm = { baseCost, custoTotal ->
+
+
                     val nome = poder.nome.trim().uppercase()
                     when {
                         nome == "APARAR" -> {
@@ -888,7 +910,7 @@ fun SuperPoderesSection(
                         else -> {
                             val (ok, msg) = state.comprarSuperPoder(poder.nome, custoTotal)
                             if (!ok) {
-                                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context2, msg, Toast.LENGTH_SHORT).show()
                             }
                         }
                     }

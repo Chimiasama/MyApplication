@@ -26,6 +26,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -239,8 +240,19 @@ fun VantagensContent(
     var subOpcaoSelecionada by rememberSaveable { mutableStateOf<String?>(null) }
 
     val scope = rememberCoroutineScope()
-    val expandedMap = remember {
-        Categoria.entries.associateWith { mutableStateOf(false) }
+
+    // mapa persistente de categorias expandidas + vantagem em foco
+    val expandedMap = state.categoriasVantagensExpandidas
+    val vantagemEmFoco = state.vantagemEmFoco
+
+    // garante que a categoria da vantagem em foco fique aberta
+    LaunchedEffect(vantagemEmFoco) {
+        if (!vantagemEmFoco.isNullOrBlank()) {
+            val v = listaVantagens.firstOrNull { it.nome == vantagemEmFoco }
+            if (v != null) {
+                expandedMap[v.categoria] = true
+            }
+        }
     }
 
     // contar iniciais para remoção
@@ -249,9 +261,7 @@ fun VantagensContent(
         if (state.emProgresso) initialCount = state.vantagensSelecionadas.size
     }
 
-    // Agora usamos a fase global + emProgresso
     val locked = state.criacaoBasicaCongeladaComXp
-
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
     // ===== PONTOS BÔNUS (PC) =====
@@ -273,7 +283,6 @@ fun VantagensContent(
         Spacer(Modifier.size(4.dp))
 
         // Botões de usar / desfazer Pontos Bônus em Vantagens
-        // Botões de usar / desfazer Pontos Bônus em Vantagens
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -281,14 +290,12 @@ fun VantagensContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Agora exige 2 PC livres pra poder comprar 1 PV
-            val podeUsarPc      = !locked && pcLivres >= 2
-            val podeDesfazerPc  = !locked && pvUsados > 0
+            val podeUsarPc = !locked && pcLivres >= 2
+            val podeDesfazerPc = !locked && pvUsados > 0
 
             TextButton(
                 onClick = {
                     if (!podeUsarPc) return@TextButton
-                    // Usa a lógica centralizada no CriadorState (2 PC -> 1 PV)
                     state.gastarPcParaVantagem()
                 },
                 enabled = podeUsarPc
@@ -299,7 +306,6 @@ fun VantagensContent(
             TextButton(
                 onClick = {
                     if (!podeDesfazerPc) return@TextButton
-                    // Devolve 1 PV e recupera 2 PC
                     state.devolverPcDeVantagem()
                 },
                 enabled = podeDesfazerPc
@@ -366,7 +372,7 @@ fun VantagensContent(
 
         Spacer(Modifier.size(8.dp))
 
-        // chips de selecionadas...
+        // chips de selecionadas
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -389,7 +395,6 @@ fun VantagensContent(
                 }
 
                 val isFromSuperPoder = state.vantagensDePoder.contains(vant.id)
-
                 val isSuperpoderesLocked = state.modoSupers && vant.id == "superpoderes"
 
                 val baseRemovable = !locked &&
@@ -487,11 +492,12 @@ fun VantagensContent(
             // em modo supers, a categoria PODER é toda desabilitada
             if (state.modoSupers && cat == Categoria.PODER) return@forEach
 
-            val expanded = expandedMap.getValue(cat)
+            val expanded = expandedMap[cat] ?: false
+
             CollapsibleSection(
                 title = cat.name,
-                expanded = expanded.value,
-                onToggle = { expanded.value = !expanded.value }
+                expanded = expanded,
+                onToggle = { expandedMap[cat] = !expanded }
             ) {
                 val scroll = rememberScrollState()
                 Column(
@@ -512,7 +518,6 @@ fun VantagensContent(
                         .filter { vant ->
                             if (state.modoSupers) vant.id != "superpoderes" else true
                         }
-
                         // especialista só com profissional
                         .filter { vant ->
                             vant.categoria == cat &&
@@ -547,6 +552,14 @@ fun VantagensContent(
                                     return@filter false
                             }
                             true
+                        }
+                        // aqui a gente reorganiza para trazer a vantagem em foco pro topo
+                        .let { listaFiltrada ->
+                            if (vantagemEmFoco.isNullOrBlank()) listaFiltrada
+                            else {
+                                val (match, others) = listaFiltrada.partition { it.nome == vantagemEmFoco }
+                                match + others
+                            }
                         }
                         .forEach { vant ->
                             val reqList = buildList {
@@ -648,7 +661,7 @@ fun VantagensContent(
                                     )
                                     .padding(vertical = 8.dp, horizontal = 4.dp)
                             ) {
-                            Text(
+                                Text(
                                     vant.nome,
                                     Modifier.weight(1f),
                                     fontWeight = FontWeight.Medium
@@ -692,7 +705,7 @@ fun VantagensContent(
                                     .padding(vertical = 4.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                androidx.compose.material3.RadioButton(
+                                RadioButton(
                                     selected = (subOpcaoSelecionada == opcao),
                                     onClick = { subOpcaoSelecionada = opcao }
                                 )
@@ -731,20 +744,18 @@ fun VantagensContent(
             )
         }
 
-        // 11) ChoiceDialog genérico (vinculado_pericia / profissional / etc.)
+        // 11) ChoiceDialog genérico
         if (showChoiceDialog && pendingVantagem != null) {
             state.identifyMaxedTraits()
             val vant = pendingVantagem!!
 
             val validOptions: List<String> = when {
-                // ARMA PREDILETA → perícias com d8+
                 vant.id == "arma_predileta" -> {
                     listaPericias
                         .filter { per -> state.rawTotal(per) >= 8 }
                         .map { it.nome }
                 }
 
-                // ARMA PREDILETA APRIMORADA → escolhas já feitas em ARMA PREDILETA
                 vant.id == "arma_predileta_aprimorada" -> {
                     state.vantagensSelecionadas
                         .filter { it.id == "arma_predileta" && it.choice != null }
@@ -752,19 +763,16 @@ fun VantagensContent(
                         .distinct()
                 }
 
-                // PROFISSIONAL → só perícias no teto
                 vant.id == "profissional" -> {
                     vant.choiceOptions.filter { it in state.maxedTraits }
                 }
 
-                // ESPECIALISTA → escolhas já compradas em PROFISSIONAL
                 vant.id == "especialista" -> {
                     state.vantagensSelecionadas
                         .filter { it.id == "profissional" && it.choice != null }
                         .mapNotNull { it.choice }
                 }
 
-                // Genérico com maxSelections (evita repetir combinação)
                 vant.maxSelections > 0 -> {
                     val used = state.vantagensSelecionadas
                         .filter { it.id == vant.id && it.choice != null }
@@ -806,11 +814,9 @@ fun VantagensContent(
         if (showNovosPoderesDialog && pendingNovosPoderes != null) {
             val vant = pendingNovosPoderes!!
 
-            // 1) Carrega lista completa de poderes
             val allPoderes: List<Poder> =
                 LocalContext.current.loadJsonAsset("poderes.json")
 
-            // 2) Filtra por estágio ≤ estágio atual
             val curEstIndex = listaDeEstagios.indexOfFirst {
                 it.nome == state.estagioAtual().nome
             }
@@ -879,3 +885,5 @@ fun VantagensContent(
         }
     }
 }
+
+

@@ -142,23 +142,17 @@ class CriadorState {
     fun valorResistenciaBase(): Int {
         val vigorRaw = valoresAtributos["VIGOR"]?.intValue ?: 4
         val base     = 2 + (vigorRaw / 2)
+
         val bonusPos = if (vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" }) 1 else 0
         val bonusNeg = if (desvantagensAutomaticas.any { it.keyify() == "FRAGIL" }) -1 else 0
-        val racialSize = listaAncestralidadesJson
-            .firstOrNull { it.nome.keyify() == ancestralidade }
-            ?.desvantagens
-            ?.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
-            ?.substringAfter("TAMANHO")
-            ?.trim()
-            ?.toIntOrNull()
-            ?: 0
-        val obesoBonus =
-            if (complicacoesSelecionadas.keys.any { it.id.keyify() == "OBESO" }) +1 else 0
-        val pequenoPenalty =
-            if (complicacoesSelecionadas.keys.any { it.id.keyify() == "PEQUENO" }) -1 else 0
+
+        // Bônus de “Brigão / Pugilista” continua igual
         val brigaoBonus = vantagensSelecionadas
             .count { it.nome.keyify() in listOf("BRIGAO", "PUGILISTA") }
-        val sizeRaw = racialSize + obesoBonus + pequenoPenalty
+
+        // Em vez de recalcular tamanho aqui, usamos a função centralizada:
+        val sizeRaw = valorTamanho()   // já inclui racial, OBESO, PEQUENO, MUSCULOSO, com clamp -1..+3
+
         return (base + bonusPos + bonusNeg + brigaoBonus + sizeRaw)
             .coerceAtLeast(0)
     }
@@ -321,6 +315,7 @@ class CriadorState {
     var pvFromXpOutstanding by mutableIntStateOf(0)
     var overrideStageForVantagem by mutableStateOf<String?>(null)
     var openVantagensAfterGrant by mutableStateOf(false)
+    var superPoderEmFoco by mutableStateOf<String?>(null)
 
 
     fun comprarSuperPoder(
@@ -716,6 +711,15 @@ class CriadorState {
         }
 
     val vantagensSelecionadas      = mutableStateListOf<Vantagem>()
+
+    // controla quais categorias da seção de Vantagens estão expandidas
+    val categoriasVantagensExpandidas: SnapshotStateMap<Categoria, Boolean> =
+        mutableStateMapOf<Categoria, Boolean>().apply {
+            Categoria.entries.forEach { this[it] = false }
+        }
+
+    // guarda o nome da vantagem que está em foco (usada ao voltar da tela de detalhes)
+    var vantagemEmFoco by mutableStateOf<String?>(null)
 
     fun podeSelecionar(v: Vantagem): Boolean {
         val key = v.nome.keyify()

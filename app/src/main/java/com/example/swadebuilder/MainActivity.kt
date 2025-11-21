@@ -677,13 +677,17 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                             8 -> SuperPoderesDetailScreen(
                                                 state           = state,
                                                 highlightedName = highlightedSuperPoder,
-                                                onBack          = { showSuperDetail = false }
+                                                onBack          = {
+                                                    showSuperDetail = false
+                                                    expPoderes = true        // mantém a seção de superpoderes aberta ao voltar
+                                                }
                                             )
 
                                             else -> UnifiedScreen(
                                                 state = state,
                                                 onOpenVantagensDetail = { nomeVantagem ->
-                                                    highlightedVantagem = nomeVantagem.toString()
+                                                    highlightedVantagem = nomeVantagem          // já é String
+                                                    state.vantagemEmFoco = nomeVantagem         // String? compatível
                                                     showVantagensDetail = true
                                                 },
                                                 onOpenPericiasDetail             = { showPericiasDetail        = true },
@@ -695,7 +699,10 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
 
                                                 onOpenSuperPoderesDetail         = { nomePoder ->
                                                     highlightedSuperPoder = nomePoder
-                                                    showSuperDetail       = true
+                                                    // se vier com string vazia (lista completa genérica), limpa foco
+                                                    state.superPoderEmFoco = nomePoder.ifBlank { null }
+                                                    expPoderes = true          // garante que a seção estará aberta ao voltar
+                                                    showSuperDetail = true
                                                 },
 
                                                 expAttrs       = expAttrs,
@@ -1865,7 +1872,7 @@ fun PreviewApp() {
     val state = remember { CriadorState() }
     UnifiedScreen(
         state = state,
-        onOpenVantagensDetail = {},
+        onOpenVantagensDetail = { _ -> },
         onOpenPericiasDetail = {},
         onOpenComplicacoesDetail = {},
         onOpenAtributosDetail = {},
@@ -1894,7 +1901,7 @@ fun PreviewApp() {
 @Composable
 fun UnifiedScreen(
     state: CriadorState,
-    onOpenVantagensDetail: (Any?) -> Unit,
+    onOpenVantagensDetail: (String) -> Unit,
     onOpenPericiasDetail: () -> Unit,
     onOpenComplicacoesDetail: () -> Unit,
     onOpenAtributosDetail: () -> Unit,
@@ -1921,7 +1928,6 @@ fun UnifiedScreen(
     superequipCategorias: List<EquipamentoCategoria>,
     listaSuperPoderes: List<SuperPoder>
 ) {
-    var expSupers by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(state.modoSupers) {
         Log.d("DEBUG", "modoSupers é ${state.modoSupers}")
@@ -2043,8 +2049,8 @@ fun UnifiedScreen(
             SuperPoderesContent(
                 state                 = state,
                 listaSuperPoderes     = listaSuperPoderes,
-                expanded              = expSupers,
-                onToggle              = { expSupers = !expSupers },
+                expanded              = expPoderes,
+                onToggle              = onTogglePoderes,
                 onOpenSuperPoderesDetail = onOpenSuperPoderesDetail
             )
         }
