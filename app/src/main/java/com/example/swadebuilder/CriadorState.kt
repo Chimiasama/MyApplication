@@ -1260,8 +1260,7 @@ class CriadorState {
     var emProgresso by mutableStateOf(false)
 
     fun creationComplete(): Boolean =
-        !emProgresso &&
-                pontosAtributo == 0 &&
+        pontosAtributo == 0 &&
                 pontosPericia == 0 &&
                 pontosVantagem == 0 &&
                 (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0) == 0
@@ -1276,6 +1275,21 @@ class CriadorState {
     private fun reachedStages(): List<Estagio> =
         listaDeEstagios.filter { progresso >= it.minProgress }
 
+    fun atributoRawBaseSemSupers(attrKey: String): Int {
+        val key = attrKey.uppercase().trim()
+        val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
+        val baseMin = mods[key] ?: 4
+
+        // Quantos "steps" base foram comprados na criação
+        val stepsBase = paCostStackPorAtributo[key]?.size ?: 0
+
+        var raw = baseMin
+        repeat(stepsBase) {
+            raw += if (raw < 12) 2 else 1
+        }
+        return raw
+    }
+
     fun rebuildAllPericiaStacks() {
         var cumulativeCost = 0
         val pool = totalSpPool
@@ -1287,13 +1301,23 @@ class CriadorState {
             val minRaw    = if (per.basica) 4 else 0
 
             var target = desiredRaw.coerceIn(minRaw, cap)
+
             fun costFor(tgt: Int): Int {
                 var curr = periciaStartRaw(ancestralidade, per)
                 var sum  = 0
                 while (curr < tgt) {
                     val next     = if (curr == 0) 4 else curr + 2
                     val attrKey  = atributoBaseParaPericia(per)
-                    val stepCost = if (next <= valoresAtributos[attrKey]!!.intValue) 1 else 2
+
+                    // >>> AQUI: atributo para custo ignora supers enquanto estiver na fase supers de criação
+                    val attrRawForCost =
+                        if (faseSupersAtiva && !emProgresso) {
+                            atributoRawBaseSemSupers(attrKey)
+                        } else {
+                            valoresAtributos[attrKey]!!.intValue
+                        }
+
+                    val stepCost = if (next <= attrRawForCost) 1 else 2
                     sum += stepCost
                     curr = next
                 }
@@ -1315,7 +1339,16 @@ class CriadorState {
             while (currRaw < target) {
                 val next     = if (currRaw == 0) 4 else currRaw + 2
                 val attrKey  = atributoBaseParaPericia(per)
-                val stepCost = if (next <= valoresAtributos[attrKey]!!.intValue) 1 else 2
+
+                // >>> MESMA REGRA AQUI
+                val attrRawForCost =
+                    if (faseSupersAtiva && !emProgresso) {
+                        atributoRawBaseSemSupers(attrKey)
+                    } else {
+                        valoresAtributos[attrKey]!!.intValue
+                    }
+
+                val stepCost = if (next <= attrRawForCost) 1 else 2
                 stack.add(stepCost)
                 baseIncsPorPericia[per] = baseIncsPorPericia.getValue(per) + 1
                 currRaw = next
@@ -1323,9 +1356,5 @@ class CriadorState {
 
             cumulativeCost += cost
         }
-    }
-
-    init {
-        aplicarAncestralidade(ancestralidade)
     }
 }
