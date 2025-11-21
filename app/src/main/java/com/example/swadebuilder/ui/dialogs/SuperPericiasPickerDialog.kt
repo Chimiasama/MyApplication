@@ -70,7 +70,7 @@ fun SuperPericiasPickerDialog(
     }
 
     val podeConfirmar by remember {
-        derivedStateOf { totalAlocado in 0..poolInicial }
+        derivedStateOf { poolInicial > 0 && totalAlocado in 1..poolInicial }
     }
 
     AlertDialog(
@@ -91,87 +91,80 @@ fun SuperPericiasPickerDialog(
 
                 Spacer(Modifier.height(8.dp))
 
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    items(listaPericias, key = { it.nome }) { per ->
-                        val key = per.nome.keyify()
-                        val steps = alocacoes[key] ?: 0
+                if (poolInicial <= 0) {
+                    Text(
+                        "Sem pontos disponíveis para Superperícia (limite já atingido).",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        items(listaPericias, key = { it.nome }) { per ->
+                            val key = per.nome.keyify()
+                            val steps = alocacoes[key] ?: 0
 
-                        // valor atual da perícia (base sem supers)
-                        val baseRaw = state.rawTotal(per)
-                        // simula aplicação dos steps desta compra
-                        val projectedRaw = state.applySuperStepsFrom(baseRaw, steps)
+                            val baseRaw = state.rawTotal(per)
+                            val projectedRaw = state.applySuperStepsFrom(baseRaw, steps)
 
-                        // >>> AJUSTE VISUAL: se 0, não mostra "d0"
-                        val textoValor = when {
-                            projectedRaw == 0 && per.basica -> "d4"
-                            projectedRaw == 0 -> "-"
-                            else -> projectedRaw.toDiceString()
-                        }
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 2.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column(Modifier.weight(1f)) {
-                                Text(per.nome, style = MaterialTheme.typography.bodyMedium)
+                            val textoValor = when {
+                                projectedRaw == 0 && per.basica -> "d4"
+                                projectedRaw == 0 -> "-"
+                                else -> projectedRaw.toDiceString()
                             }
 
                             Row(
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 2.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                TextButton(
-                                    onClick = {
-                                        if (steps > 0) {
-                                            alocacoes[key] = steps - 1
-                                        }
-                                    },
-                                    enabled = steps > 0
-                                ) {
-                                    Text("−")
+                                Column(Modifier.weight(1f)) {
+                                    Text(per.nome, style = MaterialTheme.typography.bodyMedium)
                                 }
 
-                                Text(
-                                    textoValor,
-                                    modifier = Modifier.widthIn(min = 48.dp),
-                                    textAlign = TextAlign.Center
-                                )
-
-                                TextButton(
-                                    onClick = {
-                                        if (restante > 0) {
-                                            alocacoes[key] = steps + 1
-                                        }
-                                    },
-                                    enabled = restante > 0
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
-                                    Text("+")
+                                    TextButton(
+                                        onClick = {
+                                            if (steps > 0) alocacoes[key] = steps - 1
+                                        },
+                                        enabled = steps > 0
+                                    ) { Text("−") }
+
+                                    Text(
+                                        textoValor,
+                                        modifier = Modifier.widthIn(min = 48.dp),
+                                        textAlign = TextAlign.Center
+                                    )
+
+                                    TextButton(
+                                        onClick = {
+                                            if (restante > 0) alocacoes[key] = steps + 1
+                                        },
+                                        enabled = restante > 0
+                                    ) { Text("+") }
                                 }
                             }
                         }
                     }
-                }
 
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    "Cada ponto aqui é 1 nível de Superperícia naquela perícia. " +
-                            "O valor mostrado já é o dado final considerando a perícia atual + estes steps.",
-                    style = MaterialTheme.typography.bodySmall
-                )
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        "Cada ponto aqui é 1 nível de Superperícia naquela perícia.",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
         },
         confirmButton = {
             TextButton(
                 enabled = podeConfirmar,
                 onClick = {
-                    val resultado = alocacoes
-                        .filterValues { it > 0 }
-                        .toMap()
-
+                    val resultado = alocacoes.filterValues { it > 0 }.toMap()
                     onConfirmDistribuicao(resultado)
                 }
             ) {
@@ -179,9 +172,7 @@ fun SuperPericiasPickerDialog(
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancelar")
-            }
+            TextButton(onClick = onDismiss) { Text("Cancelar") }
         }
     )
 }

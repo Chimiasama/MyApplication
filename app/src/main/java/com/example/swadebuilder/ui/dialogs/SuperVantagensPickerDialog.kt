@@ -54,7 +54,7 @@ fun SuperVantagensPickerDialog(
     }
 
     val podeConfirmar by remember {
-        derivedStateOf { totalSelecionadas in 0..maxSlots }
+        derivedStateOf { maxSlots > 0 && totalSelecionadas in 1..maxSlots }
     }
 
     AlertDialog(
@@ -78,100 +78,92 @@ fun SuperVantagensPickerDialog(
 
                 Spacer(Modifier.height(8.dp))
 
-                // Lista de selecionadas (se houver)
-                if (selecionadas.isNotEmpty()) {
+                if (maxSlots == 0) {
                     Text(
-                        "Selecionadas:",
-                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold)
+                        "Sem slots disponíveis para Supervantagem (limite já atingido).",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
                     )
-                    Spacer(Modifier.height(4.dp))
-
-                    selecionadas.forEach { v ->
+                } else {
+                    if (selecionadas.isNotEmpty()) {
                         Text(
-                            "• ${v.nome}",
-                            style = MaterialTheme.typography.bodySmall
+                            "Selecionadas:",
+                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold)
                         )
+                        Spacer(Modifier.height(4.dp))
+                        selecionadas.forEach { v ->
+                            Text("• ${v.nome}", style = MaterialTheme.typography.bodySmall)
+                        }
+                        Spacer(Modifier.height(8.dp))
+                    }
+
+                    Text(
+                        "Toque para adicionar/remover vantagens (exceto Lendárias).",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Spacer(Modifier.height(8.dp))
+
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        items(vantagensDisponiveis, key = { it.id }) { v ->
+                            val jaSelecionada = selecionadas.any { it.id == v.id }
+                            val podeAdicionar = !jaSelecionada && restante > 0
+
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 2.dp)
+                                    .clickable(enabled = jaSelecionada || podeAdicionar) {
+                                        if (jaSelecionada) {
+                                            selecionadas.removeAll { it.id == v.id }
+                                        } else if (podeAdicionar) {
+                                            selecionadas.add(v)
+                                        }
+                                    },
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column(Modifier.weight(1f)) {
+                                    Text(v.nome, style = MaterialTheme.typography.bodyMedium)
+                                    Text(
+                                        "${v.categoriaRotulo()} • ${v.origem}",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+
+                                Text(
+                                    when {
+                                        jaSelecionada -> "Remover"
+                                        podeAdicionar -> "Adicionar"
+                                        else          -> "Cheio"
+                                    },
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                )
+                            }
+                        }
                     }
 
                     Spacer(Modifier.height(8.dp))
+                    Text(
+                        "Cada Vantagem escolhida aqui custará 2 Pontos de Superpoder ao confirmar.",
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
-
-                Text(
-                    "Toque para adicionar/remover vantagens (exceto Lendárias).",
-                    style = MaterialTheme.typography.bodySmall
-                )
-
-                Spacer(Modifier.height(8.dp))
-
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    items(vantagensDisponiveis, key = { it.id }) { v ->
-                        val jaSelecionada = selecionadas.any { it.id == v.id }
-                        val podeAdicionar = !jaSelecionada && restante > 0
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 2.dp)
-                                .clickable(enabled = jaSelecionada || podeAdicionar) {
-                                    if (jaSelecionada) {
-                                        selecionadas.removeAll { it.id == v.id }
-                                    } else if (podeAdicionar) {
-                                        selecionadas.add(v)
-                                    }
-                                },
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column(Modifier.weight(1f)) {
-                                Text(
-                                    v.nome,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                                Text(
-                                    "${v.categoriaRotulo()} • ${v.origem}",
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                            }
-
-                            Text(
-                                when {
-                                    jaSelecionada -> "Remover"
-                                    podeAdicionar -> "Adicionar"
-                                    else          -> "Cheio"
-                                },
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                            )
-                        }
-                    }
-                }
-
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    "Cada Vantagem escolhida aqui custará 2 Pontos de Superpoder " +
-                            "ao confirmar. Requisitos de Estágio são ignorados, mas " +
-                            "atributos, perícias e outras Vantagens ainda são exigidos.",
-                    style = MaterialTheme.typography.bodySmall
-                )
             }
         },
         confirmButton = {
             TextButton(
                 enabled = podeConfirmar,
-                onClick = {
-                    onConfirm(selecionadas.toList())
-                }
+                onClick = { onConfirm(selecionadas.toList()) }
             ) {
                 Text("Aplicar ($totalSelecionadas/$maxSlots)")
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancelar")
-            }
+            TextButton(onClick = onDismiss) { Text("Cancelar") }
         }
     )
 }

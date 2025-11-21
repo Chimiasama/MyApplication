@@ -483,24 +483,25 @@ fun SuperPoderesSection(
                                     state.removerSuperPoder(p, desfazerNoLedger = false)
                                 }
 
-                                p.poderId.startsWith("sp_attr_") -> {
-                                    val attrKey = p.poderId.removePrefix("sp_attr_")
+                                // Superatributo – chip individual, mas ledger global
+                                p.nome.startsWith("Superatributo:", ignoreCase = true) -> {
+                                    val attrKey = p.nome.substringAfter(":").trim()
                                     viewModel.desfazerInvestimentoSuper(
-                                        poderId = p.poderId,
+                                        poderId = "sp_superatributo",
                                         custo = p.custo,
-                                        efeito = PowerEffect.SuperAtributo(attrKey, p.baseCost)
+                                        efeito = PowerEffect.SuperAtributo(attrKey.uppercase(), p.baseCost)
                                     )
                                     state.removerSuperPoder(p, desfazerNoLedger = false)
                                 }
 
-                                // Superperícias compradas via picker:
-                                // poderId = "sp_pericia_LUTAR", baseCost = steps aplicados
-                                p.poderId.startsWith("sp_pericia_") -> {
-                                    // KEYIFY é obrigatório aqui pra bater com superPericiaIncs
-                                    val perKey = p.poderId.removePrefix("sp_pericia_").keyify()
+                                // Superperícia – chip individual, ledger global
+                                p.nome.startsWith("Superperícia:", ignoreCase = true) ||
+                                        p.nome.startsWith("Superpericia:", ignoreCase = true) -> {
+                                    val perNome = p.nome.substringAfter(":").trim()
+                                    val perKey = perNome.keyify()
 
                                     val r = viewModel.desfazerInvestimentoSuper(
-                                        poderId = p.poderId,
+                                        poderId = "sp_superpericia",
                                         custo = p.custo,
                                         efeito = PowerEffect.SuperPericia(perKey, p.baseCost)
                                     )
@@ -512,15 +513,23 @@ fun SuperPoderesSection(
                                     }
                                 }
 
-                                // Supervantagem – cada chip representa UMA vantagem
-                                p.poderId.startsWith("sp_vant_") -> {
-                                    val vantId = p.poderId.removePrefix("sp_vant_")
-                                    viewModel.desfazerInvestimentoSuper(
-                                        poderId = p.poderId,
-                                        custo = p.custo,
-                                        efeito = PowerEffect.SuperVantagem(vantId)
-                                    )
-                                    state.removerSuperPoder(p, desfazerNoLedger = false)
+                                // Supervantagem – chip individual, ledger global
+                                p.nome.startsWith("Supervantagem:", ignoreCase = true) -> {
+                                    val vantNome = p.nome.substringAfter(":").trim()
+                                    val vantId = listaVantagens
+                                        .firstOrNull { it.nome.equals(vantNome, ignoreCase = true) }
+                                        ?.id
+
+                                    if (vantId == null) {
+                                        Toast.makeText(context, "Não foi possível desfazer $vantNome.", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        viewModel.desfazerInvestimentoSuper(
+                                            poderId = "sp_supervantagem",
+                                            custo = p.custo,
+                                            efeito = PowerEffect.SuperVantagem(vantId)
+                                        )
+                                        state.removerSuperPoder(p, desfazerNoLedger = false)
+                                    }
                                 }
 
                                 else -> {
@@ -755,31 +764,65 @@ fun SuperPoderesSection(
             val limiteBasePorPoder = state.superLimitePorPoder
 
             val limiteParaDialog: Int = when {
+
                 // Armadura / Resistência (compartilham limite de campanha)
                 poderIdEspecifico != null -> {
-                    // Quanto já foi gasto nesse poder específico (custo em SP)
                     val gastoAtualNeste = state.gastosPorPoder[poderIdEspecifico] ?: 0
                     val limiteIndividual = viewModel.perPowerLimit(poderIdEspecifico)
                     val restoIndividual = (limiteIndividual - gastoAtualNeste).coerceAtLeast(0)
 
-                    // Quanto já foi gasto no par Armadura+Resistência (custo em SP)
                     val gastoArmor = state.gastosPorPoder["sp_armor"] ?: 0
                     val gastoRes = state.gastosPorPoder["sp_res"] ?: 0
                     val gastoCompartilhado = gastoArmor + gastoRes
 
-                    // Limite de campanha em termos de CUSTO total desses dois poderes
                     val restoCompartilhado =
                         (state.limiteDePoderDaCampanha - gastoCompartilhado).coerceAtLeast(0)
 
-                    // Limite efetivo = menor entre:
-                    // - o que ainda cabe no poder individual
-                    // - o que ainda cabe no limite compartilhado
-                    // - o saldo de SP do personagem
                     minOf(restoIndividual, restoCompartilhado, saldoSp)
                 }
 
-                // NOVO: BÔNUS DE PERÍCIA conta como um único poder,
-                // mas o limite fino é checado no picker (upgrade por perícia).
+                // Aparar (super) — único poder, respeita o restante
+                nomeUpper == "APARAR" -> {
+                    val gastoAtual = state.gastosPorPoder["sp_aparar"] ?: 0
+                    val limiteInd = viewModel.perPowerLimit("sp_aparar")
+                    val restoInd = (limiteInd - gastoAtual).coerceAtLeast(0)
+                    minOf(restoInd, saldoSp)
+                }
+
+                // Movimentação (super) — único poder, respeita o restante
+                nomeUpper == "MOVIMENTAÇÃO" || nomeUpper == "MOVIMENTACAO" -> {
+                    val gastoAtual = state.gastosPorPoder["sp_movimentacao"] ?: 0
+                    val limiteInd = viewModel.perPowerLimit("sp_movimentacao")
+                    val restoInd = (limiteInd - gastoAtual).coerceAtLeast(0)
+                    minOf(restoInd, saldoSp)
+                }
+
+                // Superatributo (poder pai único)
+                nomeUpper == "SUPERATRIBUTO" || nomeUpper == "SUPER ATRIBUTO" -> {
+                    val gastoAtual = state.gastosPorPoder["sp_superatributo"] ?: 0
+                    val limiteInd = viewModel.perPowerLimit("sp_superatributo")
+                    val restoInd = (limiteInd - gastoAtual).coerceAtLeast(0)
+                    minOf(restoInd, saldoSp)
+                }
+
+                // SUPERPERÍCIA (poder pai único)
+                nomeUpper == "SUPERPERÍCIA" || nomeUpper == "SUPER PERÍCIA" ||
+                        nomeUpper == "SUPERPERICIA" || nomeUpper == "SUPER PERICIA" -> {
+                    val gastoAtual = state.gastosPorPoder["sp_superpericia"] ?: 0
+                    val limiteInd = viewModel.perPowerLimit("sp_superpericia")
+                    val restoInd = (limiteInd - gastoAtual).coerceAtLeast(0)
+                    minOf(restoInd, saldoSp)
+                }
+
+                // SUPERVANTAGEM (poder pai único)
+                nomeUpper == "SUPERVANTAGEM" || nomeUpper == "SUPER VANTAGEM" -> {
+                    val gastoAtual = state.gastosPorPoder["sp_supervantagem"] ?: 0
+                    val limiteInd = viewModel.perPowerLimit("sp_supervantagem")
+                    val restoInd = (limiteInd - gastoAtual).coerceAtLeast(0)
+                    minOf(restoInd, saldoSp)
+                }
+
+                // BÔNUS DE PERÍCIA (poder pai único)
                 nomeUpper == "BÔNUS DE PERÍCIA" ||
                         nomeUpper == "BÔNUS DE PERICIA" ||
                         nomeUpper == "BONUS DE PERÍCIA" ||
@@ -883,7 +926,11 @@ fun SuperPoderesSection(
                                 nome == "SUPERPERICIA" || nome == "SUPER PERICIA" -> {
                             // cada ponto de baseCost = 1 passo de Superperícia
                             poolSuperPericia = baseCost
-                            showSuperPericiaPicker = true
+                            if (poolSuperPericia > 0) {
+                                showSuperPericiaPicker = true
+                            } else {
+                                Toast.makeText(context2, "Limite deste poder já foi atingido.", Toast.LENGTH_SHORT).show()
+                            }
                         }
 
                         // SUPERVANTAGEM (2 PP = 1 vantagem escolhida)
@@ -928,13 +975,13 @@ fun SuperPoderesSection(
             poolInicial = poolSuperAttr,
             onConfirmDistribuicao = { mapa ->
                 mapa.forEach { (attrKey, stepsSolicitados) ->
-                    val poderId = "sp_attr_${attrKey.uppercase()}"
+                    val poderIdPai = "sp_superatributo"
 
                     // custo pretendido (2:1)
                     val custoPretendido = stepsSolicitados * 2
 
-                    val gastoAtual = state.gastosPorPoder[poderId] ?: 0
-                    val limitePorPoder = viewModel.perPowerLimit(poderId)
+                    val gastoAtual = state.gastosPorPoder[poderIdPai] ?: 0
+                    val limitePorPoder = viewModel.perPowerLimit(poderIdPai)
                     val restoPorPoder = (limitePorPoder - gastoAtual).coerceAtLeast(0)
                     val restoDePool = state.superPontosDisponiveis.coerceAtLeast(0)
 
@@ -943,7 +990,7 @@ fun SuperPoderesSection(
 
                     if (stepsAplicaveis > 0 && custoAplicavel > 0) {
                         val r = viewModel.tentarInvestirSuper(
-                            poderId = poderId,
+                            poderId = poderIdPai,
                             custo = custoAplicavel,
                             efeito = PowerEffect.SuperAtributo(attrKey.uppercase(), stepsAplicaveis)
                         )
@@ -952,7 +999,7 @@ fun SuperPoderesSection(
                                 nome = "Superatributo: $attrKey",
                                 custo = custoAplicavel,
                                 baseCost = stepsAplicaveis,
-                                poderId = poderId,
+                                poderId = poderIdPai,
                                 registrarNoLedger = false
                             )
                         }
@@ -971,15 +1018,17 @@ fun SuperPoderesSection(
             state = state,
             poolInicial = poolSuperPericia,
             onConfirmDistribuicao = { mapa ->
+
+                val poderIdPai = "sp_superpericia"
+
                 // mapa: periciaKey (keyify) -> stepsSolicitados
                 mapa.forEach { (periciaKey, stepsSolicitados) ->
-                    val poderId = "sp_pericia_${periciaKey.uppercase()}"
 
                     // custo pretendido (1:1)
                     val custoPretendido = stepsSolicitados
 
-                    val gastoAtual = state.gastosPorPoder[poderId] ?: 0
-                    val limitePorPoder = viewModel.perPowerLimit(poderId)
+                    val gastoAtual = state.gastosPorPoder[poderIdPai] ?: 0
+                    val limitePorPoder = viewModel.perPowerLimit(poderIdPai)
                     val restoPorPoder = (limitePorPoder - gastoAtual).coerceAtLeast(0)
                     val restoDePool = state.superPontosDisponiveis.coerceAtLeast(0)
 
@@ -988,17 +1037,16 @@ fun SuperPoderesSection(
 
                     if (stepsAplicaveis > 0 && custoAplicavel > 0) {
                         val r = viewModel.tentarInvestirSuper(
-                            poderId = poderId,
+                            poderId = poderIdPai,
                             custo = custoAplicavel,
                             efeito = PowerEffect.SuperPericia(periciaKey, stepsAplicaveis)
                         )
                         if (r.ok) {
-                            // Cria um "poder comprado" para permitir devolução via X
                             state.comprarSuperPoder(
                                 nome = "Superperícia: $periciaKey",
                                 custo = custoAplicavel,
                                 baseCost = stepsAplicaveis,
-                                poderId = poderId,
+                                poderId = poderIdPai,
                                 registrarNoLedger = false
                             )
                         }
@@ -1029,27 +1077,27 @@ fun SuperPoderesSection(
                 val custoPorVantagem = 2
 
                 selecionadas.forEach { v ->
-                    val poderId = "sp_vant_${v.id.lowercase()}"
+                    val poderIdPai = "sp_supervantagem"
 
-                    val gastoAtual = state.gastosPorPoder[poderId] ?: 0
-                    val limitePorPoder = viewModel.perPowerLimit(poderId)
+                    val gastoAtual = state.gastosPorPoder[poderIdPai] ?: 0
+                    val limitePorPoder = viewModel.perPowerLimit(poderIdPai)
                     val restoPorPoder = (limitePorPoder - gastoAtual).coerceAtLeast(0)
                     val restoDePool = state.superPontosDisponiveis.coerceAtLeast(0)
 
                     val custoAplicavel = minOf(custoPorVantagem, restoPorPoder, restoDePool)
 
-                    if (custoAplicavel >= custoPorVantagem) {
+                    if (custoAplicavel == custoPorVantagem) {
                         val r = viewModel.tentarInvestirSuper(
-                            poderId = poderId,
-                            custo = custoPorVantagem,
+                            poderId = poderIdPai,
+                            custo = custoAplicavel,
                             efeito = PowerEffect.SuperVantagem(v.id)
                         )
                         if (r.ok) {
                             state.comprarSuperPoder(
                                 nome = "Supervantagem: ${v.nome}",
-                                custo = custoPorVantagem,
+                                custo = custoAplicavel,
                                 baseCost = 1,
-                                poderId = poderId,
+                                poderId = poderIdPai,
                                 registrarNoLedger = false
                             )
                         }

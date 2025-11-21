@@ -94,15 +94,10 @@ fun SupersDialog(
             // NOVO: Bônus de Perícia pode ser favorecido
             add("sp_bonus_pericia" to "Bônus de Perícia")
 
-            listaAtributos.forEach { a ->
-                add("sp_attr_${a.uppercase()}" to "Superatributo: $a")
-            }
-            listaPericias.forEach { p ->
-                add("sp_pericia_${p.nome.uppercase()}" to "Superperícia: ${p.nome}")
-            }
-            listaVantagens.forEach { v ->
-                add("sp_vant_${v.id}" to "Supervantagem: ${v.nome}")
-            }
+            add("sp_superatributo" to "Superatributo")
+            add("sp_superpericia" to "Superperícia")
+            add("sp_supervantagem" to "Supervantagem")
+
         }
     }
 
@@ -326,7 +321,8 @@ fun SupersDialog(
                         Spacer(Modifier.height(6.dp))
                     }
                     items(listaAtributos) { attr ->
-                        val poderId = "sp_attr_${attr.uppercase()}"
+                        val poderId = "sp_superatributo"
+
                         PoderRowPlusMinus(
                             titulo = attr,
                             badge = badgeText(poderId),
@@ -372,7 +368,8 @@ fun SupersDialog(
                         Spacer(Modifier.height(6.dp))
                     }
                     items(listaPericias) { per ->
-                        val poderId = "sp_pericia_${per.nome.uppercase()}"
+                        val poderId = "sp_superpericia"
+
                         PoderRowPlusMinus(
                             titulo = per.nome,
                             badge = badgeText(poderId),
@@ -459,13 +456,13 @@ fun SupersDialog(
                                 onClick = {
                                     val v = selectedVant ?: return@Button
                                     val c = viewModel.canInvestInPower(
-                                        "sp_vant_${v.id}", custoVant,
+                                        "sp_supervantagem", custoVant,
                                         PowerEffect.SuperVantagem(v.id)
                                     )
                                     if (!c.ok) showSnack(c.motivoBloqueio ?: "Bloqueado.")
                                     else {
                                         val r = viewModel.tentarInvestirSuper(
-                                            "sp_vant_${v.id}", custoVant,
+                                            "sp_supervantagem", custoVant,
                                             PowerEffect.SuperVantagem(v.id)
                                         )
                                         if (!r.ok) showSnack(r.mensagem)
@@ -476,7 +473,7 @@ fun SupersDialog(
                             Button(
                                 enabled = supersEditaveis &&
                                         selectedVant != null &&
-                                        (state.gastosPorPoder["sp_vant_${selectedVant!!.id}"] ?: 0) > 0 &&
+                                        (state.gastosPorPoder["sp_supervantagem"] ?: 0) > 0 &&
                                         !precisaDefinirFav,
                                 onClick = {
                                     val v = selectedVant ?: return@Button
