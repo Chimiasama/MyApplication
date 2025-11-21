@@ -164,8 +164,15 @@ fun BuySuperPowerDialog(
     var baseIdx by rememberSaveable(allowedBaseOptions) { mutableIntStateOf(0) }
     val baseCost = allowedBaseOptions.getOrElse(baseIdx) { allowedBaseOptions.last() }
 
-    val totalAtual = baseCost + modCost
-    val podeConfirmar = totalAtual in allowedBaseOptions.first()..totalCap
+    // Total do poder (base + mods). Negativos podem reduzir, mas nunca deixa custo final < 1.
+    val totalAtualRaw = baseCost + modCost
+    val totalAtual = totalAtualRaw.coerceAtLeast(1)
+
+    // Pode confirmar se:
+    // 1) a base escolhida é uma das opções permitidas
+    // 2) o total final cabe no cap (e é >= 1)
+    val podeConfirmar =
+        (baseCost in allowedBaseOptions) && (totalAtual in 1..totalCap)
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -179,17 +186,13 @@ fun BuySuperPowerDialog(
                     .verticalScroll(scroll)
                     .padding(8.dp)
             ) {
-                // --------- BLOCO: CUSTO BASE (sem slider) ---------
                 Text("Custo base:", fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(4.dp))
 
                 when {
-                    // só 1 opção possível → custo fixo
                     allowedBaseOptions.size == 1 -> {
                         Text("Custo fixo: ${allowedBaseOptions.first()} SP")
                     }
-
-                    // intervalo curto → chips por opção
                     !isLongRange -> {
                         FlowRow(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -204,8 +207,6 @@ fun BuySuperPowerDialog(
                             }
                         }
                     }
-
-                    // intervalo longo (1..25, 1..37 etc) → stepper [-] valor [+]
                     else -> {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -216,25 +217,13 @@ fun BuySuperPowerDialog(
                                 modifier = Modifier.weight(1f)
                             )
                             TextButton(
-                                onClick = {
-                                    if (baseIdx > 0) {
-                                        baseIdx--
-                                    }
-                                },
+                                onClick = { if (baseIdx > 0) baseIdx-- },
                                 enabled = baseIdx > 0
-                            ) {
-                                Text("−")
-                            }
+                            ) { Text("−") }
                             TextButton(
-                                onClick = {
-                                    if (baseIdx < allowedBaseOptions.lastIndex) {
-                                        baseIdx++
-                                    }
-                                },
+                                onClick = { if (baseIdx < allowedBaseOptions.lastIndex) baseIdx++ },
                                 enabled = baseIdx < allowedBaseOptions.lastIndex
-                            ) {
-                                Text("+")
-                            }
+                            ) { Text("+") }
                         }
                         Text(
                             text = "Mín: $minAllowed • Máx: $maxAllowed",
@@ -252,7 +241,6 @@ fun BuySuperPowerDialog(
 
                 Spacer(Modifier.height(8.dp))
 
-                // --------- BLOCO: MODIFICADORES (mantém sliders) ---------
                 if (modStates.isNotEmpty()) {
                     Text("Modificadores:", style = MaterialTheme.typography.bodyMedium)
                     Spacer(Modifier.height(4.dp))
