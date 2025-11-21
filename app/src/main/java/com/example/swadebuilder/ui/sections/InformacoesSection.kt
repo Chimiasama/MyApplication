@@ -47,10 +47,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonPrimitive
 import kotlin.math.roundToInt
 
-/**
- * Versão "hoistada": expanded/onToggle vêm de fora (MainActivity/UnifiedScreen),
- * garantindo que a seção continue aberta ao navegar e voltar.
- */
 @Composable
 fun InformacoesSection(
     state: CriadorState,
@@ -323,28 +319,6 @@ fun InformacoesSection(
     }
 }
 
-/**
- * Overload opcional (compatibilidade):
- * Se ainda existir algum lugar chamando InformacoesSection(state, onUseProgress),
- * isso evita erro e mantém o expanded salvo com chave estável.
- */
-@Composable
-fun InformacoesSection(
-    state: CriadorState,
-    onUseProgress: () -> Unit
-) {
-    var expanded by rememberSaveable("expInformacoes") { mutableStateOf(false) }
-    InformacoesSection(
-        state = state,
-        expanded = expanded,
-        onToggle = { expanded = !expanded },
-        onUseProgress = onUseProgress
-    )
-}
-
-/**
- * Item simples de stat: valor em destaque + título, centralizados.
- */
 @Composable
 fun StatItem(
     title: String,

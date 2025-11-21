@@ -157,6 +157,8 @@ fun EquipamentoSection(
     pcTotal: Int,
     pcLivres: Int,
     recursosPcUsados: Int,
+    expanded: Boolean,                 // ✅ vem de fora
+    onToggle: () -> Unit,              // ✅ vem de fora
     onUsarPontosBonusEmRecursos: () -> Unit,
     onDesfazerPontosBonusEmRecursos: () -> Unit,
     onListaCompletaClick: () -> Unit,
@@ -166,7 +168,6 @@ fun EquipamentoSection(
     categorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>
 ) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
     var expSuperequip by rememberSaveable { mutableStateOf(false) }
 
     // estados do filtro
@@ -177,7 +178,7 @@ fun EquipamentoSection(
     SectionCard(
         title    = "Equipamento",
         expanded = expanded,
-        onToggle = { expanded = !expanded },
+        onToggle = onToggle,
         icon     = Icons.Default.ShoppingCart
     ) {
         if (!expanded) return@SectionCard
@@ -206,14 +207,14 @@ fun EquipamentoSection(
                 onClick = onUsarPontosBonusEmRecursos,
                 enabled = podeUsarPcRecursos
             ) {
-                Text("Usar Pontos Bônus em Recursos")
+                Text("Usar PB em Recursos")
             }
 
             TextButton(
                 onClick = onDesfazerPontosBonusEmRecursos,
                 enabled = podeDesfazerPcRecursos
             ) {
-                Text("Desfazer Pontos Bônus em Recursos")
+                Text("Desfazer uso de PB")
             }
         }
 
@@ -405,7 +406,6 @@ fun EquipamentoSection(
                                                     .clickable {
                                                         onEquipamentoDoubleClick(equipamento)
                                                     }
-
                                                     .padding(
                                                         vertical = 4.dp,
                                                         horizontal = 4.dp

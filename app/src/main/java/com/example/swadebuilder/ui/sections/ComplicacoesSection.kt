@@ -15,10 +15,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -51,17 +51,17 @@ import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 
-
 @ExperimentalMaterial3Api
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun ComplicacoesSection(
     state: CriadorState,
+    expanded: Boolean,
+    onToggle: () -> Unit,
     onOpenComplicacoesDetail: () -> Unit
 ) {
     val locked = state.criacaoBasicaCongelada
 
-    var expCompSection by rememberSaveable { mutableStateOf(false) }
     var showPcInUseDialog by rememberSaveable { mutableStateOf(false) }
 
     val autoBaseKeys = state.desvantagensAutomaticas
@@ -78,8 +78,8 @@ fun ComplicacoesSection(
 
     SectionCard(
         title    = "Complicações",
-        expanded = expCompSection,
-        onToggle = { expCompSection = !expCompSection },
+        expanded = expanded,
+        onToggle = onToggle,
         icon     = Icons.Default.Warning
     ) {
         val totalPc = state.pontosComplicacao
@@ -88,7 +88,7 @@ fun ComplicacoesSection(
 
         SectionHeader(
             onHelpClick          = null,
-            centerText           = "Pontos Bônus: livres $livresPc / $totalPc",
+            centerText           = "Pontos Complicação: livres $livresPc / $totalPc",
             onCenterClick        = null,
             onListaCompletaClick = if (showLista) onOpenComplicacoesDetail else null,
             listaCompletaText    = "Lista Completa"
@@ -98,13 +98,13 @@ fun ComplicacoesSection(
 
         if (totalPc == 0) {
             Text(
-                "Escolha Complicações abaixo para ganhar Pontos Bônus de Criação.",
+                "Escolha Complicações para ganhar Pontos Bônus de Complicação.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         } else {
             Text(
-                "Use seus Pontos Bônus de Criação nas seções de Atributos, Perícias, Vantagens ou Equipamento.",
+                "Use seus Pontos Bônus de Complicação nas seções de Atributos, Perícias, Vantagens ou Equipamento.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -112,7 +112,6 @@ fun ComplicacoesSection(
 
         Spacer(Modifier.height(8.dp))
 
-        // 4. Chips das complicações já selecionadas
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement   = Arrangement.spacedBy(8.dp),
@@ -162,7 +161,6 @@ fun ComplicacoesSection(
                                     }
                                 }
                             } else {
-                                // Não pode remover porque os Pontos Bônus já foram gastos
                                 showPcInUseDialog = true
                             }
                         },
@@ -216,7 +214,6 @@ fun ComplicacoesSection(
             )
         }
 
-        // 5. LISTA ROLÁVEL DE COMPLICAÇÕES (substitui o dropdown)
         Spacer(Modifier.height(8.dp))
 
         Column(
@@ -233,7 +230,6 @@ fun ComplicacoesSection(
 
             Spacer(Modifier.height(4.dp))
 
-            // usamos a lista filtrada para achar "pequeno" (para a lógica de Jovem Maior)
             val pequComp = complicacoesFiltradas.first { it.id == "pequeno" }
 
             val listaParaMostrar = complicacoesFiltradas
@@ -262,7 +258,6 @@ fun ComplicacoesSection(
                             .padding(vertical = 4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Nome da complicação
                         Column(
                             modifier = Modifier.weight(1f)
                         ) {
@@ -275,12 +270,10 @@ fun ComplicacoesSection(
 
                         Spacer(Modifier.width(8.dp))
 
-                        // Botões de severidade
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            // MENOR (se existir)
                             if (menorOnly || ambos) {
                                 val enabledMenor = !locked && cur == null
                                 TextButton(
@@ -307,7 +300,6 @@ fun ComplicacoesSection(
                                 }
                             }
 
-                            // MAIOR (se existir)
                             if (maiorOnly || ambos) {
                                 val enabledMaior = !locked && (
                                         (maiorOnly && cur == null) ||
@@ -360,7 +352,7 @@ fun TransparentOutlinedReadOnlyField(
 
     BasicTextField(
         value         = text,
-        onValueChange = {},  // read‐only
+        onValueChange = {},
         enabled       = enabled,
         readOnly      = true,
         textStyle     = LocalTextStyle.current.copy(color = colors.onSurface),
@@ -382,7 +374,7 @@ fun TransparentOutlinedReadOnlyField(
                     .padding(horizontal = 16.dp, vertical = 12.dp)
                     .clickable(enabled = enabled, onClick = onClick)
             ) {
-                inner()  // texto
+                inner()
                 Spacer(Modifier.weight(1f))
                 Icon(
                     imageVector        = Icons.Default.ArrowDropDown,
@@ -396,4 +388,3 @@ fun TransparentOutlinedReadOnlyField(
         }
     )
 }
-

@@ -9,14 +9,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +41,8 @@ private const val ASSET_ANCESTRALIDADES = "listaancestralidade.json"
 @Composable
 fun AncestralidadesSection(
     currentAncestralidade: String,
+    expanded: Boolean,
+    onToggle: () -> Unit,
     supersLocked: Boolean, // <- trava da fase de supers
     onOpenListaAncestralidadesDetail: () -> Unit,
     onSelectAncestralidade: (String) -> Unit
@@ -57,17 +57,16 @@ fun AncestralidadesSection(
         )
     }
 
-    // estados explícitos (MutableState)
-    val expSection = rememberSaveable { mutableStateOf(false) }
-    val expMenu    = rememberSaveable { mutableStateOf(false) }
-    val selected   = rememberSaveable(currentAncestralidade) {
+    // estados internos que PODEM continuar internos sem problema
+    val expMenu = rememberSaveable { mutableStateOf(false) }
+    val selected = rememberSaveable(currentAncestralidade) {
         mutableStateOf(currentAncestralidade.ifBlank { "HUMANOS" })
     }
 
     SectionCard(
         title = "Ancestralidades",
-        expanded = expSection.value,
-        onToggle = { expSection.value = !expSection.value },
+        expanded = expanded,
+        onToggle = onToggle,
         icon = Icons.AutoMirrored.Filled.MenuBook
     ) {
         val centerLabel = if (supersLocked) {
@@ -96,7 +95,7 @@ fun AncestralidadesSection(
         ) {
             TransparentOutlinedReadOnlyField(
                 text = selected.value,
-                enabled = !supersLocked, // desabilita o campo quando travado
+                enabled = !supersLocked,
                 onClick = {
                     if (!supersLocked) {
                         expMenu.value = true
@@ -129,7 +128,6 @@ fun AncestralidadesSection(
                 }
             }
         }
-
     }
 }
 

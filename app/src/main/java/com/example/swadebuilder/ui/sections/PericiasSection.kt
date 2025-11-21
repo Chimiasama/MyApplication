@@ -138,7 +138,7 @@ fun PericiasContent(
                             },
                             enabled = podeUsarPc
                         ) {
-                            Text("Usar Pontos Bônus em Perícias")
+                            Text("Usar PB em Perícias")
                         }
 
                         TextButton(
@@ -151,7 +151,7 @@ fun PericiasContent(
                             },
                             enabled = podeDesfazerPc
                         ) {
-                            Text("Desfazer Pontos Bônus em Perícias")
+                            Text("Desfazer uso de PB")
                         }
                     }
 

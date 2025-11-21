@@ -112,7 +112,7 @@ fun AtributosContent(
                 },
                 enabled = podeUsarPc
             ) {
-                Text("Usar Pontos Bônus em Atributos")
+                Text("Usar PB em Atributos")
             }
 
             TextButton(
@@ -125,7 +125,7 @@ fun AtributosContent(
                 },
                 enabled = podeDesfazerPc
             ) {
-                Text("Desfazer Pontos Bônus em Atributos")
+                Text("Desfazer uso de PB")
             }
         }
 

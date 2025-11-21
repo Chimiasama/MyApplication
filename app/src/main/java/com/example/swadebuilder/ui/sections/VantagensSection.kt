@@ -300,7 +300,7 @@ fun VantagensContent(
                 },
                 enabled = podeUsarPc
             ) {
-                Text("Usar Pontos Bônus em Vantagens")
+                Text("Usar PB em Vantagens")
             }
 
             TextButton(
@@ -310,7 +310,7 @@ fun VantagensContent(
                 },
                 enabled = podeDesfazerPc
             ) {
-                Text("Desfazer Pontos Bônus em Vantagens")
+                Text("Desfazer uso de PB")
             }
         }
 
