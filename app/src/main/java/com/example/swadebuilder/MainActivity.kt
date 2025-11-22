@@ -12,7 +12,6 @@ import android.graphics.pdf.PdfDocument
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -51,16 +50,12 @@ import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.Print
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.material.icons.filled.School
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -101,7 +96,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
@@ -121,18 +115,8 @@ import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.loadPericiasDescriptions
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
-import com.example.swadebuilder.ui.sections.AncestralidadesSection
-import com.example.swadebuilder.ui.sections.AtributosContent
-import com.example.swadebuilder.ui.sections.ComplicacoesSection
-import com.example.swadebuilder.ui.sections.EquipamentoSection
-import com.example.swadebuilder.ui.sections.InformacoesSection
-import com.example.swadebuilder.ui.sections.PericiasContent
 import com.example.swadebuilder.ui.sections.PoderesDetailScreen
-import com.example.swadebuilder.ui.sections.PoderesSection
-import com.example.swadebuilder.ui.sections.SummaryContent
-import com.example.swadebuilder.ui.sections.SuperPoderesContent
 import com.example.swadebuilder.ui.sections.SuperPoderesDetailScreen
-import com.example.swadebuilder.ui.sections.VantagensContent
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.loadJsonAsset
@@ -288,29 +272,33 @@ class MainActivity : ComponentActivity() {
             criadorViewModel.setMultiplosAAHabilitados(MULTIPLOS_AA_HABILITADOS)
             val state = criadorViewModel.state
 
-            // estados de expansão (hoistados)
-            var expInfos   by rememberSaveable { mutableStateOf(false) }
-            var expAncs    by rememberSaveable { mutableStateOf(false) }
-            var expComps   by rememberSaveable { mutableStateOf(false) }
-            var expEquip   by rememberSaveable { mutableStateOf(false) }
+            // ✅ cada vez que você entra em um personagem novo/carregado,
+            //    incrementamos creationSession para zerar as seções/telas.
+            var creationSession by rememberSaveable { mutableStateOf(0) }
 
-            var expAttrs    by rememberSaveable { mutableStateOf(false) }
-            var expPer      by rememberSaveable { mutableStateOf(false) }
-            var expVants    by rememberSaveable { mutableStateOf(false) }
-            var expPoderes  by rememberSaveable { mutableStateOf(false) }
-            var expResumo   by rememberSaveable { mutableStateOf(false) }
+            var expInfos   by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expAncs    by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expComps   by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expEquip   by rememberSaveable(creationSession) { mutableStateOf(false) }
 
+            var expAttrs   by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expPer     by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expVants   by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expPoderes by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expResumo  by rememberSaveable(creationSession) { mutableStateOf(false) }
 
-            var showVantagensDetail       by rememberSaveable { mutableStateOf(false) }
-            var showPericiasDetail        by rememberSaveable { mutableStateOf(false) }
-            var showComplicacoesDetail    by rememberSaveable { mutableStateOf(false) }
-            var showAtributosDetail       by rememberSaveable { mutableStateOf(false) }
-            var showAncestralidadesDetail by rememberSaveable { mutableStateOf(false) }
-            var showPoderesDetail         by rememberSaveable { mutableStateOf(false) }
-            var showEquipLista            by rememberSaveable { mutableStateOf(false) }
-            var showSuperDetail           by rememberSaveable { mutableStateOf(false) }
-            var highlightedVantagem by rememberSaveable { mutableStateOf("") }
-            var highlightedSuperPoder by rememberSaveable { mutableStateOf("") }
+            var showVantagensDetail       by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var showPericiasDetail        by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var showComplicacoesDetail    by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var showAtributosDetail       by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var showAncestralidadesDetail by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var showPoderesDetail         by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var showEquipLista            by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var showSuperDetail           by rememberSaveable(creationSession) { mutableStateOf(false) }
+
+            var highlightedVantagem   by rememberSaveable(creationSession) { mutableStateOf("") }
+            var highlightedSuperPoder by rememberSaveable(creationSession) { mutableStateOf("") }
+
             val context = LocalContext.current
             val activity = (context as? ComponentActivity)
             var mostrouTelaInicial by rememberSaveable { mutableStateOf(true) }
@@ -471,6 +459,7 @@ Esta seção nunca é bloqueada independetemente da fase de criação que o pers
 10) Resumo
 
 O resumo mostra tudo consolidado: atributos, perícias, vantagens, complicações, poderes, equipamentos e derivados (Aparar, Resistência, Movimento etc.). É sua checagem final antes de salvar ou imprimir.
+Você apagar e escrever nas anotações.
 
 11) Salvar e Imprimir PDF
 
@@ -555,7 +544,11 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, _, _ , nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer, semPontosDePoder, grandesResponsabilidades ->
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, _, _,
+                                                nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
+                                                semPontosDePoder, grandesResponsabilidades ->
+
+                                    creationSession++  // ✅ zera expansões/telas para personagem novo
 
                                     criadorViewModel.resetStateParaNovoPersonagem(
                                         cartaSelvagem      = cartaSelvagem,
@@ -576,6 +569,8 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                     mostrouTelaInicial = false
                                 },
                                 onLoad = { salvo ->
+                                    creationSession++  // ✅ zera expansões/telas ao trocar de personagem
+
                                     criadorViewModel.loadFromSalvo(
                                         salvo,
                                         categoriasBasico = equipamentoCategorias,
@@ -1704,8 +1699,6 @@ fun AtributosDetailScreen(onBack: () -> Unit) {
     }
 }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VantagensDetailScreen(
@@ -2018,310 +2011,6 @@ fun VantagensDetailScreen(
                     }
                 }
             }
-        }
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-@Preview(showBackground = true)
-@Composable
-fun PreviewApp() {
-    val state = remember { CriadorState() }
-    UnifiedScreen(
-        state = state,
-        onOpenVantagensDetail = { _ -> },
-        onOpenPericiasDetail = {},
-        onOpenComplicacoesDetail = {},
-        onOpenAtributosDetail = {},
-        onOpenListaAncestralidadesDetail = {},
-        onOpenListaCompletaEquipamento = {},
-        onOpenPoderesDetail = {},
-        onOpenSuperPoderesDetail = { _ -> },
-
-        expInfos = true,
-        onToggleInfos = {},
-
-        expAncs = true,
-        onToggleAncs = {},
-
-        expComps = true,
-        onToggleComps = {},
-
-        expEquip = true,
-        onToggleEquip = {},
-
-        expAttrs = true,
-        onToggleAttrs = {},
-        expPer = true,
-        onTogglePer = {},
-        expVants = true,
-        onToggleVants = {},
-        expResumo = true,
-        onToggleResumo = {},
-        expPoderes = true,
-        onTogglePoderes = {},
-
-        equipamentoCategorias = emptyList(),
-        superequipCategorias = emptyList(),
-        listaSuperPoderes = emptyList()
-    )
-}
-
-
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-@Composable
-fun UnifiedScreen(
-    state: CriadorState,
-
-    onOpenVantagensDetail: (String) -> Unit,
-    onOpenPericiasDetail: () -> Unit,
-    onOpenComplicacoesDetail: () -> Unit,
-    onOpenAtributosDetail: () -> Unit,
-    onOpenListaAncestralidadesDetail: () -> Unit,
-    onOpenListaCompletaEquipamento: () -> Unit,
-    onOpenPoderesDetail: () -> Unit,
-    onOpenSuperPoderesDetail: (String) -> Unit,
-
-    // ✅ expansões hoistadas
-    expInfos: Boolean,
-    onToggleInfos: () -> Unit,
-
-    expAncs: Boolean,
-    onToggleAncs: () -> Unit,
-
-    expComps: Boolean,
-    onToggleComps: () -> Unit,
-
-    expEquip: Boolean,
-    onToggleEquip: () -> Unit,
-
-    expAttrs: Boolean,
-    onToggleAttrs: () -> Unit,
-
-    expPer: Boolean,
-    onTogglePer: () -> Unit,
-
-    expVants: Boolean,
-    onToggleVants: () -> Unit,
-
-    expResumo: Boolean,
-    onToggleResumo: () -> Unit,
-
-    expPoderes: Boolean,
-    onTogglePoderes: () -> Unit,
-
-    equipamentoCategorias: List<EquipamentoCategoria>,
-    superequipCategorias: List<EquipamentoCategoria>,
-    listaSuperPoderes: List<SuperPoder>
-) {
-    if (state.modoSupers) {
-        Log.d("DEBUG", "modoSupers é ${state.modoSupers}")
-    }
-
-    var showAllocDialog by rememberSaveable { mutableStateOf(false) }
-    val scrollState = rememberScrollState()
-
-    // --- estados para o MEIO-ELFO ---
-    var showMeioElfoDialog by rememberSaveable { mutableStateOf(false) }
-    var pendingMeioElfoKey by rememberSaveable { mutableStateOf<String?>(null) }
-    // --------------------------------
-    val supersLocked = state.criacaoBasicaCongelada
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-            .padding(16.dp)
-    ) {
-        InformacoesSection(
-            state = state,
-            expanded = expInfos,
-            onToggle = onToggleInfos,
-            onUseProgress = { showAllocDialog = true }
-        )
-
-        HorizontalDivider(thickness = 1.dp)
-
-        AncestralidadesSection(
-            currentAncestralidade = state.ancestralidade,
-            expanded = expAncs,
-            onToggle = onToggleAncs,
-            supersLocked = supersLocked,
-            onOpenListaAncestralidadesDetail = onOpenListaAncestralidadesDetail,
-            onSelectAncestralidade = { nome ->
-                val key = nome.uppercase().semAcentos()
-
-                if (key == state.ancestralidade) return@AncestralidadesSection
-
-                if (key == "MEIO-ELFOS") {
-                    pendingMeioElfoKey = key
-                    showMeioElfoDialog = true
-                } else {
-                    pendingMeioElfoKey = null
-                    state.aplicarAncestralidade(key)
-                }
-            }
-        )
-
-        HorizontalDivider(thickness = 1.dp)
-
-        ComplicacoesSection(
-            state = state,
-            expanded = expComps,
-            onToggle = onToggleComps,
-            onOpenComplicacoesDetail = onOpenComplicacoesDetail
-        )
-
-        HorizontalDivider(thickness = 1.dp)
-
-        SectionCard(
-            title    = "Atributos",
-            expanded = expAttrs,
-            onToggle = onToggleAttrs,
-            icon     = Icons.Default.FitnessCenter
-        ) {
-            AtributosContent(state, onOpenAtributosDetail)
-        }
-
-        HorizontalDivider(thickness = 1.dp)
-
-        SectionCard(
-            title    = "Perícias",
-            expanded = expPer,
-            onToggle = onTogglePer,
-            icon     = Icons.Default.School
-        ) {
-            PericiasContent(state, onOpenPericiasDetail)
-        }
-
-        HorizontalDivider(thickness = 1.dp)
-
-        SectionCard(
-            title    = "Vantagens",
-            expanded = expVants,
-            onToggle = onToggleVants,
-            icon     = Icons.Default.Star
-        ) {
-            VantagensContent(
-                state = state,
-                multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-                onOpenVantagensDetail  = onOpenVantagensDetail
-            )
-        }
-
-        if (state.vantagensSelecionadas.any { it.nome.keyify().startsWith("ANTECEDENTE ARCANO") }) {
-            HorizontalDivider(thickness = 1.dp)
-
-            SectionCard(
-                title    = "Poderes",
-                expanded = expPoderes,
-                onToggle = onTogglePoderes,
-                icon     = Icons.Default.FlashOn
-            ) {
-                PoderesSection(
-                    state = state,
-                    onOpenListaCompletaPoderes = onOpenPoderesDetail
-                )
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-        HorizontalDivider(thickness = 1.dp)
-
-        if (state.modoSupers) {
-            SuperPoderesContent(
-                state                    = state,
-                listaSuperPoderes        = listaSuperPoderes,
-                expanded                 = expPoderes,
-                onToggle                 = onTogglePoderes,
-                onOpenSuperPoderesDetail = onOpenSuperPoderesDetail
-            )
-        }
-
-        EquipamentoSection(
-            dinheiro = state.dinheiro,
-            pcTotal = state.pontosComplicacao,
-            pcLivres = (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0),
-            recursosPcUsados = state.cpRecursosStack.size,
-
-            expanded = expEquip,
-            onToggle = onToggleEquip,
-
-            onUsarPontosBonusEmRecursos = {
-                val pcLivresLocal =
-                    (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0)
-
-                if (pcLivresLocal > 0 && state.cpRecursosStack.isEmpty()) {
-                    state.cpRecursosStack.add(Unit)
-                    state.pontosComplicacaoGastos += 1
-                    state.dinheiro += 500
-                }
-            },
-            onDesfazerPontosBonusEmRecursos = {
-                if (state.cpRecursosStack.isNotEmpty() && state.dinheiro >= 500) {
-                    state.cpRecursosStack.removeAt(state.cpRecursosStack.lastIndex)
-                    state.pontosComplicacaoGastos =
-                        (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                    state.dinheiro -= 500
-                }
-            },
-            onListaCompletaClick = onOpenListaCompletaEquipamento,
-            onEquipamentoDoubleClick = { equipamento ->
-                val custo = (equipamento.custo as? JsonPrimitive)
-                    ?.content?.toIntOrNull() ?: 0
-                if (custo <= state.dinheiro) {
-                    state.equipamentosComprados.add(equipamento)
-                    state.dinheiro -= custo
-                }
-            },
-            equipamentosComprados = state.equipamentosComprados,
-            onRemoveEquipamentoClick = { equipamento ->
-                val custo = (equipamento.custo as? JsonPrimitive)
-                    ?.content?.toIntOrNull() ?: 0
-                state.equipamentosComprados.remove(equipamento)
-                state.dinheiro += custo
-            },
-            categorias = equipamentoCategorias,
-            superequipCategorias = superequipCategorias
-        )
-
-        Spacer(Modifier.height(16.dp))
-        HorizontalDivider(thickness = 3.dp)
-
-        SectionCard(
-            title    = "Resumo do Personagem",
-            expanded = expResumo,
-            onToggle = onToggleResumo,
-            icon     = Icons.Default.Description
-        ) {
-            SummaryContent(state)
-        }
-    }
-
-    if (showMeioElfoDialog) {
-        AlertDialog(
-            onDismissRequest = {
-                pendingMeioElfoKey = null
-                showMeioElfoDialog = false
-            },
-            title = { Text("Meio-Elfo") },
-            text = {
-                Text("Meio-elfos precisam escolher qual herança seguir. Vá na lista completa para escolher.")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    pendingMeioElfoKey = null
-                    showMeioElfoDialog = false
-                    onOpenListaAncestralidadesDetail()
-                }) { Text("OK") }
-            }
-        )
-    }
-
-    // ✅ assinatura real do teu app
-    if (showAllocDialog) {
-        ProgressosDialog(state) {
-            showAllocDialog = false
         }
     }
 }
