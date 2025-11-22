@@ -211,20 +211,41 @@ fun VantagensContent(
             }
         }
 
+    // 1.2) ORIGENS ATIVAS (flags de módulos)
+    // Agora:
+    // - sempre BASICO
+    // - SUPER só quando modoSupers = true
+    // Futuro: é só adicionar HORROR/FANTASIA/SCIFI aqui quando criar as flags.
+    val origensAtivas: Set<String> = remember(state.modoSupers) {
+        buildSet {
+            add("BASICO")
+            if (state.modoSupers) add("SUPER")
+            // exemplo futuro:
+            // if (state.modoHorror) add("HORROR")
+            // if (state.modoFantasia) add("FANTASIA")
+            // if (state.modoFiccao) add("SCIFI")
+        }
+    }
+
+    // 1.3) lista final realmente exibida no app (respeita flags)
+    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, origensAtivas) {
+        listaVantagens.filter { vant ->
+            val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase()
+            origemNorm in origensAtivas
+        }
+    }
+
     // Mapa id -> nome para mensagens de pré-requisito
+    // (usa lista pós-AA, mas antes do filtro de origem, para manter nomes legíveis)
     val idParaNome = remember(listaVantagens) {
         listaVantagens.associate { it.id to it.nome }
     }
 
-    // agrupamentos e filtros básico/super
-    val categoriasBy = remember(listaVantagens) {
-        listaVantagens.groupBy { it.categoria }
+    // agrupamentos já filtrados por origem ativa
+    val categoriasBy = remember(listaVantagensAtivas) {
+        listaVantagensAtivas.groupBy { it.categoria }
     }
-    val categoriasFiltradas = remember(categoriasBy, state.modoSupers) {
-        categoriasBy.mapValues { (_, v) ->
-            if (state.modoSupers) v else v.filter { it.origem.equals("BASICO", true) }
-        }
-    }
+    val categoriasFiltradas = categoriasBy
 
     // Estados principais
     var filter by remember { mutableStateOf(VantFilter()) }
@@ -248,7 +269,7 @@ fun VantagensContent(
     // garante que a categoria da vantagem em foco fique aberta
     LaunchedEffect(vantagemEmFoco) {
         if (!vantagemEmFoco.isNullOrBlank()) {
-            val v = listaVantagens.firstOrNull { it.nome == vantagemEmFoco }
+            val v = listaVantagensAtivas.firstOrNull { it.nome == vantagemEmFoco }
             if (v != null) {
                 expandedMap[v.categoria] = true
             }
@@ -347,10 +368,11 @@ fun VantagensContent(
 
         // diálogo de filtro
         if (showFilterDialog) {
-            val allOrigens = listaVantagens.map { it.origem.uppercase() }.distinct()
+            // usa lista ativa, então não aparecem origens de módulos desligados
+            val allOrigens = listaVantagensAtivas.map { it.origem.uppercase() }.distinct()
             val allEstagios = listaDeEstagios.map { it.nome }
             val allAtributos = mapaAtributosDisplay.values.toList()
-            val requiredPericias = listaVantagens.flatMap { vant ->
+            val requiredPericias = listaVantagensAtivas.flatMap { vant ->
                 vant.requisitos.periciaMin.keys +
                         vant.requisitos.periciaMinOpcional.keys +
                         if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
