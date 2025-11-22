@@ -70,10 +70,20 @@ fun ComplicacoesSection(
 
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
-    val complicacoesFiltradas = if (state.modoSuperComplicacoes) {
-        listaComplicacoes
-    } else {
-        listaComplicacoes.filter { it.origem.equals("BASICO", ignoreCase = true) }
+    // ✅ NOVO: origens ativas por enquanto:
+    // BASICO sempre, SUPER só se modoSuperComplicacoes estiver ligado.
+    // No futuro, basta adicionar flags e incluir novas origens aqui.
+    val origensAtivas: Set<String> = buildSet {
+        add("BASICO")
+        if (state.modoSuperComplicacoes) add("SUPER")
+        // Futuro:
+        // if (state.modoHorrorComplicacoes) add("HORROR")
+        // if (state.modoFantasiaComplicacoes) add("FANTASIA")
+        // if (state.modoSciFiComplicacoes) add("SCIFI")
+    }
+
+    val complicacoesFiltradas = listaComplicacoes.filter { comp ->
+        comp.origem.uppercase().semAcentos().trim() in origensAtivas
     }
 
     SectionCard(
@@ -234,9 +244,7 @@ fun ComplicacoesSection(
 
             val listaParaMostrar = complicacoesFiltradas
                 .filter { comp ->
-                    comp.id.keyify() !in autoBaseKeys &&
-                            (state.modoSuperComplicacoes ||
-                                    !comp.origem.equals("SUPER", ignoreCase = true))
+                    comp.id.keyify() !in autoBaseKeys
                 }
 
             LazyColumn(
