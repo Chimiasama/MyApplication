@@ -1,0 +1,6 @@
+{
+  "name": "Android Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile"
+  }
+}
