@@ -1081,11 +1081,11 @@ class CriadorState {
             }
             "CELESTIAIS" -> {
                 listaVantagens
-                    .firstOrNull { it.nome.equals("ANTECEDENTE ARCANO MILAGRES", ignoreCase = true) }
+                    .firstOrNull { it.id == "antecedente_arcano_milagres" }
                     ?.let {
                         vantagensSelecionadas.add(it)
+                        vantagensAutomaticas.add(it.id)
                     }
-                vantagensAutomaticas.add("ANTECEDENTE ARCANO MILAGRES")
                 armadura = 0
             }
             else -> {

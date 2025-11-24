@@ -74,8 +74,9 @@ class CriadorViewModel : ViewModel() {
         modoSupers: Boolean,
         usarEspecializacoesDePericia: Boolean = false,
         grandesResponsabilidades: Boolean = false,
+        permiteMultiAntecedenteArcano: Boolean = false
     ) {
-
+        state.permiteMultiAntecedenteArcano = permiteMultiAntecedenteArcano
         state.modoSupers = modoSupers
         state.modoSuperequip = modoSupers
         state.modoSuperComplicacoes = modoSupers

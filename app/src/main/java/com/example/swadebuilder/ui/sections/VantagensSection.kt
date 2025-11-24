@@ -201,14 +201,8 @@ fun VantagensContent(
 
     // 1.1) aplica filtro de exibição conforme o toggle de múltiplos AA
     val listaVantagens: List<Vantagem> =
-        remember(multiplosAAHabilitados, listaVantagensRaw) {
-            if (multiplosAAHabilitados) {
-                // modo NOVO: esconder o seletor base e exibir as 5 variantes específicas
-                listaVantagensRaw.filterNot { it.id == "antecedente_arcano" }
-            } else {
-                // modo LEGADO: mostrar o seletor base e esconder as variantes
-                listaVantagensRaw.filterNot { it.id.startsWith("antecedente_arcano_") }
-            }
+        remember(listaVantagensRaw) {
+            listaVantagensRaw.filterNot { it.id.startsWith("antecedente_arcano_") }
         }
 
     // Mapa id -> nome para mensagens de pré-requisito
@@ -238,6 +232,9 @@ fun VantagensContent(
     var showNovosPoderesDialog by rememberSaveable { mutableStateOf(false) }
     var dialogMostrandoAntecedente by remember { mutableStateOf<Vantagem?>(null) }
     var subOpcaoSelecionada by rememberSaveable { mutableStateOf<String?>(null) }
+
+    var showArcanoChoiceDialog by rememberSaveable { mutableStateOf(false) }
+    var pendingArcanoChoice by remember { mutableStateOf<String?>(null) }
 
     val scope = rememberCoroutineScope()
 
@@ -615,8 +612,14 @@ fun VantagensContent(
                                                     } else if (vant.id == "antecedente_arcano") {
                                                         dialogMostrandoAntecedente = vant
                                                     } else if (vant.id == "novos_poderes") {
-                                                        pendingNovosPoderes = vant
-                                                        showNovosPoderesDialog = true
+                                                        val arcanos = state.vantagensSelecionadas.filter { it.id.startsWith("antecedente_arcano_") }
+                                                        if (arcanos.size > 1) {
+                                                            pendingNovosPoderes = vant
+                                                            showArcanoChoiceDialog = true
+                                                        } else {
+                                                            pendingNovosPoderes = vant
+                                                            showNovosPoderesDialog = true
+                                                        }
                                                     } else {
                                                         if (vant.nome.contains("Pontos de Poder", true)) {
                                                             state.comprarPontoDePoder(vant)
@@ -715,6 +718,9 @@ fun VantagensContent(
         if (dialogMostrandoAntecedente != null) {
             val vantOriginal = dialogMostrandoAntecedente!!
             val opcoesArcano: List<String> = vantOriginal.choiceOptions
+            val arcanosJaSelecionados = state.vantagensSelecionadas
+                .mapNotNull { it.choice }
+                .toSet()
 
             AlertDialog(
                 onDismissRequest = {
@@ -725,19 +731,21 @@ fun VantagensContent(
                 text = {
                     Column {
                         opcoesArcano.forEach { opcao ->
+                            val jaPossui = arcanosJaSelecionados.contains(opcao)
                             Row(
                                 Modifier
                                     .fillMaxWidth()
-                                    .clickable { subOpcaoSelecionada = opcao }
+                                    .clickable(enabled = !jaPossui) { if (!jaPossui) subOpcaoSelecionada = opcao }
                                     .padding(vertical = 4.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 RadioButton(
                                     selected = (subOpcaoSelecionada == opcao),
-                                    onClick = { subOpcaoSelecionada = opcao }
+                                    onClick = { if (!jaPossui) subOpcaoSelecionada = opcao },
+                                    enabled = !jaPossui
                                 )
                                 Spacer(Modifier.size(8.dp))
-                                Text(opcao)
+                                Text(opcao, color = if (jaPossui) Color.Gray else Color.Unspecified)
                             }
                         }
                     }
@@ -746,14 +754,15 @@ fun VantagensContent(
                     TextButton(
                         enabled = (subOpcaoSelecionada != null),
                         onClick = {
-                            val novaVantagem = vantOriginal.copy(
-                                choice = subOpcaoSelecionada
-                            )
+                            subOpcaoSelecionada?.let { escolha ->
+                                val idEspecifico = "antecedente_arcano_${escolha.keyify()}"
+                                val vantagemEspecifica = listaVantagensRaw.find { it.id == idEspecifico }
 
-                            if (state.podeSelecionar(novaVantagem) is com.example.swadebuilder.SelectionError.None) {
-                                state.vantagensSelecionadas += novaVantagem
-                                state.pontosVantagem--
-                                state.rebuildAllPericiaStacks()
+                                if (vantagemEspecifica != null && state.podeSelecionar(vantagemEspecifica) is com.example.swadebuilder.SelectionError.None) {
+                                    state.vantagensSelecionadas.add(vantagemEspecifica)
+                                    state.pontosVantagem--
+                                    state.rebuildAllPericiaStacks()
+                                }
                             }
                             dialogMostrandoAntecedente = null
                             subOpcaoSelecionada = null
@@ -865,8 +874,8 @@ fun VantagensContent(
                 options = disponiveis,
                 maxSelections = 2,
                 onConfirm = { escolhas ->
-                    val escolhidoArcano = state.vantagensSelecionadas
-                        .firstOrNull { it.id == "antecedente_arcano" }
+                    val escolhidoArcano = pendingArcanoChoice ?: state.vantagensSelecionadas
+                        .firstOrNull { it.id.startsWith("antecedente_arcano_") }
                         ?.choice
                         ?: ""
 
@@ -906,6 +915,24 @@ fun VantagensContent(
                 },
                 onDismiss = {
                     showNovosPoderesDialog = false
+                    pendingNovosPoderes = null
+                }
+            )
+        }
+        if (showArcanoChoiceDialog) {
+            val arcanos = state.vantagensSelecionadas
+                .filter { it.id.startsWith("antecedente_arcano_") }
+                .mapNotNull { it.choice }
+
+            ChoiceDialog(
+                options = arcanos,
+                onConfirm = { escolha ->
+                    pendingArcanoChoice = escolha
+                    showArcanoChoiceDialog = false
+                    showNovosPoderesDialog = true
+                },
+                onDismiss = {
+                    showArcanoChoiceDialog = false
                     pendingNovosPoderes = null
                 }
             )

@@ -314,13 +314,14 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, _, _ , nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer, semPontosDePoder, grandesResponsabilidades ->
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer, semPontosDePoder, grandesResponsabilidades, multiplosAAs ->
 
                                     criadorViewModel.resetStateParaNovoPersonagem(
                                         cartaSelvagem      = cartaSelvagem,
                                         maisPontosPericias = maisPontosPericias,
                                         modoSupers         = modoSupers,
-                                        usarEspecializacoesDePericia = usarEspecializacaoPer
+                                        usarEspecializacoesDePericia = usarEspecializacaoPer,
+                                        permiteMultiAntecedenteArcano = multiplosAAs
                                     )
                                     criadorViewModel.state.heroisSemArmadura     = heroisSemArmadura
                                     criadorViewModel.state.nasceUmHeroi          = nasceUmHeroi
@@ -2597,13 +2598,12 @@ fun TelaInicial(
         cartaSelvagem: Boolean,
         maisPontosPericias: Boolean,
         modoSupers: Boolean,
-        modoSuperequipamentos: Boolean,
-        modoSuperComplicacoes: Boolean,
         nasceUmHeroi: Boolean,
         heroisSemArmadura: Boolean,
         expecializacaoPer: Boolean,
         semPontosDePoder: Boolean,
-        grandesResponsabilidades: Boolean
+        grandesResponsabilidades: Boolean,
+        multiplosAAs: Boolean
     ) -> Unit,
     onLoad: (PersonagemSalvo) -> Unit,
     context: Context,
@@ -3045,18 +3045,14 @@ Feito por Rafael S.W.
                         optCartaSelvagem,
                         optMaisPontosPericias,
                         optSuperPoderes,
-                        optSuperequipamentos,
-                        optSuperComplicacoes,
                         optNasceUmHeroi,
                         optHeroiSemArmadura,
                         optEspecializacaoPer,
                         optSemPontosPoder,
-                        optGrandesResponsabilidades
+                        optGrandesResponsabilidades,
+                        optMultiAntecedenteArcano
                     )
-
-                    viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
                     viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
-
                 }) {
                     Text("Confirmar")
                 }
