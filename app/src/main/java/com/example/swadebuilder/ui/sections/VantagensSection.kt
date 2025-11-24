@@ -317,7 +317,7 @@ fun VantagensContent(
         if (pcTotal == 0) {
             Spacer(Modifier.size(4.dp))
             Text(
-                text = "Para ganhar Pontos Bônus, escolha Complicações na seção apropriada.",
+                text = stringResource(com.example.swadebuilder.R.string.vantagens_section_pontos_bonus_info),
                 style = MaterialTheme.typography.bodySmall
             )
         }
@@ -474,7 +474,7 @@ fun VantagensContent(
                         Text(tempErrorMsg, color = MaterialTheme.colorScheme.error)
 
                     selectedReqs.isEmpty() -> Text(
-                        "Selecione uma vantagem para ver requisitos",
+                        stringResource(com.example.swadebuilder.R.string.vantagens_section_selecione_para_ver),
                         style = MaterialTheme.typography.bodySmall
                     )
 
@@ -604,17 +604,44 @@ fun VantagensContent(
                                     .clickable(enabled = !locked) {
                                         selectedReqs = reqList
                                         if (!locked) {
+                                            when (val error = state.podeSelecionar(vant)) {
+                                                is com.example.swadebuilder.SelectionError.None -> {
+                                                    if (state.pontosVantagem <= 0) {
+                                                        tempErrorMsg = "Sem PV disponível"
+                                                        showTempError = true
+                                                    } else if (vant.vinculadoPericia) {
+                                                        pendingVantagem = vant
+                                                        showChoiceDialog = true
+                                                    } else if (vant.id == "antecedente_arcano") {
+                                                        dialogMostrandoAntecedente = vant
+                                                    } else if (vant.id == "novos_poderes") {
+                                                        pendingNovosPoderes = vant
+                                                        showNovosPoderesDialog = true
+                                                    } else {
+                                                        if (vant.nome.contains("Pontos de Poder", true)) {
+                                                            state.comprarPontoDePoder(vant)
+                                                        } else {
+                                                            state.applyVantagemDinheiro(vant)
+                                                            state.vantagensSelecionadas += vant
+                                                        }
+                                                        state.pontosVantagem--
+                                                        state.rebuildAllPericiaStacks()
+
+                                                        if (state.pvFromXpOutstanding > 0) {
+                                                            state.pvFromXpOutstanding -= 1
+                                                            if (state.pvFromXpOutstanding == 0) {
+                                                                state.overrideStageForVantagem = null
+                                                                state.openVantagensAfterGrant = false
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                else -> {
+                                                    tempErrorMsg = com.example.swadebuilder.ui.mapErrorToString(context, error)
+                                                    showTempError = true
+                                                }
+                                            }
                                             when {
-                                                state.pontosVantagem <= 0 -> {
-                                                    tempErrorMsg = "Sem PV disponível"
-                                                    showTempError = true
-                                                }
-
-                                                !state.podeSelecionar(vant) -> {
-                                                    tempErrorMsg = "Faltam requisitos para '${vant.nome}'"
-                                                    showTempError = true
-                                                }
-
                                                 vant.vinculadoPericia -> {
                                                     pendingVantagem = vant
                                                     showChoiceDialog = true
@@ -656,7 +683,7 @@ fun VantagensContent(
                                         }
                                     }
                                     .alpha(
-                                        if (!locked && state.podeSelecionar(vant)) 1f
+                                        if (!locked && state.podeSelecionar(vant) is com.example.swadebuilder.SelectionError.None) 1f
                                         else 0.3f
                                     )
                                     .padding(vertical = 8.dp, horizontal = 4.dp)
@@ -723,7 +750,7 @@ fun VantagensContent(
                                 choice = subOpcaoSelecionada
                             )
 
-                            if (state.podeSelecionar(novaVantagem)) {
+                            if (state.podeSelecionar(novaVantagem) is com.example.swadebuilder.SelectionError.None) {
                                 state.vantagensSelecionadas += novaVantagem
                                 state.pontosVantagem--
                                 state.rebuildAllPericiaStacks()
@@ -785,7 +812,7 @@ fun VantagensContent(
 
             if (validOptions.isEmpty()) {
                 LaunchedEffect(vant) {
-                    tempErrorMsg = "Nenhuma opção disponível para escolher"
+                    tempErrorMsg = stringResource(com.example.swadebuilder.R.string.vantagens_section_nenhuma_opcao)
                     showTempError = true
                     delay(2_000)
                     showTempError = false

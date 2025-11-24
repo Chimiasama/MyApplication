@@ -1,3 +1,99 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">SWADE Builder</string>
+
+    <!-- Help Dialog -->
+    <string name="help_dialog_title">Como usar o app</string>
+    <string name="help_dialog_ok">OK</string>
+    <string name="help_dialog_content">
+        Este app ajuda você a criar personagens de Savage Worlds passo a passo.\n\n
+        <b>1) Tela Inicial</b>\n
+        • Escolha se o personagem é Carta Selvagem, se terá mais pontos de Perícia, se usa modo Supers etc.\n
+        • Depois toque em "Criar Personagem".\n\n
+        <b>2) Ordem sugerida de preenchimento</b>\n
+        • Ancestralidade → define bônus e limites de atributos/perícias.\n
+        • Atributos → distribua os pontos de atributo iniciais.\n
+        • Perícias → gaste os pontos de perícia disponíveis.\n
+        • Complicações → escolha Complicações para ganhar Pontos Bônus de Criação.\n
+        • Vantagens, Poderes e Equipamentos → usam esses recursos para finalizar a ficha.\n\n
+        <b>3) Pontos Bônus de Criação</b>\n
+        • Cada Complicação Menor gera 1 Ponto Bônus.\n
+        • Cada Complicação Maior gera 2 Pontos Bônus.\n
+        • O contador em "Complicações" mostra quantos Pontos Bônus você tem livres.\n
+        • Esses Pontos Bônus podem ser usados em Atributos, Perícias, Vantagens ou Recursos pelos botões específicos de cada seção.\n\n
+        <b>4) Ajustes e devoluções</b>\n
+        • Se você usou Pontos Bônus em Atributos/Perícias/Vantagens/Recursos e quiser desfazer, use as opções de "desfazer Pontos Bônus" nas seções correspondentes.\n
+        • Se ainda houver Pontos Bônus em uso, algumas Complicações não poderão ser removidas: primeiro desfaça os pontos comprados com elas.\n\n
+        <b>5) Dicas gerais</b>\n
+        • Toque no título de cada seção para expandir/fechar.\n
+        • Use "Lista Completa" para ler o texto completo das Vantagens, Perícias e Complicações.\n
+        • Use os ícones de salvar/imprimir no topo para guardar ou gerar a ficha em PDF.
+    </string>
+
+    <!-- Exit Dialog -->
+    <string name="exit_dialog_title">Deseja encerrar o app?</string>
+    <string name="exit_dialog_yes">Sim</string>
+    <string name="exit_dialog_no">Não</string>
+
+    <!-- Top App Bar -->
+    <string name="top_bar_back">Voltar</string>
+    <string name="top_bar_print">Imprimir ficha</string>
+    <string name="top_bar_save">Salvar</string>
+    <string name="character_saved_success">Personagem salvo com sucesso!</string>
+    <string name="pdf_app_not_found">Nenhum app de PDF encontrado.</string>
+
+    <!-- Tela Inicial -->
+    <string name="tela_inicial_create_new">Criar Novo Personagem</string>
+    <string name="tela_inicial_load_saved">Carregar Personagem Salvo</string>
+    <string name="tela_inicial_no_character_saved">Nenhum personagem salvo.</string>
+    <string name="tela_inicial_credits">Créditos e Licença</string>
+    <string name="tela_inicial_close">Fechar</string>
+
+    <!-- Vantagens Detail Screen -->
+    <string name="vantagens_detail_already_selected">já selecionada</string>
+    <string name="vantagens_detail_req_ok">requisitos OK</string>
+    <string name="vantagens_detail_req_pending">requisitos pendentes</string>
+
+    <!-- Vantagens Selection Errors -->
+    <string name="vantagem_error_limite_pontos_poder_estagio">Limite de compras de Pontos de Poder atingido para este estágio.</string>
+    <string name="vantagem_error_multiplos_arcanos_desabilitado">Múltiplos Antecedentes Arcanos não estão habilitados.</string>
+    <string name="vantagem_error_ja_selecionada">Vantagem já selecionada.</string>
+    <string name="vantagem_error_arcano_com_escolha_ja_selecionado">Antecedente Arcano com esta escolha já selecionado.</string>
+    <string name="vantagem_error_ja_selecionada_com_especializacao">Vantagem já selecionada com esta especialização.</string>
+    <string name="vantagem_error_requer_profissional_com_especializacao">Requer a Vantagem Profissional com a mesma especialização.</string>
+    <string name="vantagem_error_nenhum_atributo_ou_pericia_no_maximo">Nenhum atributo ou perícia no máximo para selecionar esta Vantagem.</string>
+    <string name="vantagem_error_atributo_nao_esta_no_maximo">Atributo %1$s não está no valor máximo.</string>
+    <string name="vantagem_error_pericia_nao_esta_no_maximo">Perícia %1$s não está no valor máximo.</string>
+    <string name="vantagem_error_requer_estagio">Requer Estágio %1$s.</string>
+    <string name="vantagem_error_requer_vantagens_previas">Requer Vantagens prévias não selecionadas.</string>
+    <string name="vantagem_error_limite_compras_pontos_poder">Limite de compras de Pontos de Poder atingido.</string>
+    <string name="vantagem_error_maximo_selecoes">Máximo de %1$d seleções para esta Vantagem.</string>
+    <string name="vantagem_error_com_escolha_ja_selecionada">Vantagem com esta escolha já selecionada.</string>
+    <string name="vantagem_error_requer_atributo">Requer Atributo %1$s em d%2$d ou maior.</string>
+    <string name="vantagem_error_requer_uma_das_pericias">Requer uma das Perícias especificadas.</string>
+    <string name="vantagem_error_requer_pericia">Requer Perícia %1$s em d%2$d ou maior.</string>
+    <string name="vantagem_error_requer_uma_das_pericias_opcionais">Requer uma das Perícias opcionais especificadas.</string>
+    <string name="vantagem_error_requer_carta_selvagem">Requer ser uma Carta Selvagem.</string>
+    <string name="vantagem_error_conflito_complicacao">Conflito com uma Complicação selecionada.</string>
+    <string name="vantagem_error_conflito_pobreza">Não pode ser Rico e Pobre ao mesmo tempo.</string>
+
+    <!-- Super Poderes Purchase Errors -->
+    <string name="super_poder_error_requer_pericia">Para comprar %1$s, você precisa ter a perícia %2$s em d10 ou mais.</string>
+    <string name="super_poder_error_limite_atingido">Limite de superpoderes atingido (%1$d).</string>
+    <string name="super_poder_error_sem_saldo">Sem saldo: precisa de %1$d SP, tem %2$d.</string>
+    <string name="super_poder_compra_sucesso">Superpoder adquirido.</string>
+
+    <!-- Progressos Dialog -->
+    <string name="progressos_dialog_vantagem_recebida">Recebeu um PV, utilize para poder continuar a distribuir seu progresso.</string>
+    <string name="progressos_dialog_limite_vantagem">Você já atingiu o limite para %1$s.</string>
+    <string name="progressos_dialog_requisitos_nao_cumpridos">Você não cumpre os requisitos (ou já atingiu o limite) para %1$s.</string>
+    <string name="progressos_dialog_sem_progressos">Você não tem progressos suficientes.</string>
+    <string name="progressos_dialog_precisa_de_profissional">Você precisa primeiro de Profissional em algum traço</string>
+
+    <!-- Vantagens Section -->
+    <string name="vantagens_section_sem_pv">Sem PV disponível</string>
+    <string name="vantagens_section_faltam_requisitos">Faltam requisitos para \'%1$s\'</string>
+    <string name="vantagens_section_nenhuma_opcao">Nenhuma opção disponível para escolher</string>
+    <string name="vantagens_section_selecione_para_ver">Selecione uma vantagem para ver requisitos</string>
+    <string name="vantagens_section_pontos_bonus_info">Para ganhar Pontos Bônus, escolha Complicações na seção apropriada.</string>
+
 </resources>

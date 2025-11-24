@@ -100,6 +100,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -109,13 +110,12 @@ import androidx.core.content.FileProvider
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.swadebuilder.model.AtributoList
+import com.example.swadebuilder.model.DataRepository
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MeuPersonagem
-import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.PersonagemSalvo
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.StorageUtils
@@ -195,96 +195,28 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val allEquipJson = assets
-            .open("equipamentos.json")
-            .bufferedReader()
-            .use { it.readText() }
-        val allEquipCategorias: List<EquipamentoCategoria> =
-            json.decodeFromString(allEquipJson)
-
-        val equipamentoCategorias = allEquipCategorias.filter { cat ->
-            cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
-        }
-        val superequipCategorias = allEquipCategorias.filter { cat ->
-            cat.origem?.equals("super", ignoreCase = true) ?: false
-        }
-
-        val superPoderesJson = assets
-            .open("superpoderes.json")
-            .bufferedReader()
-            .use { it.readText() }
-        val listaSuperPoderes: List<SuperPoder> =
-            json.decodeFromString(superPoderesJson)
-
-        val arcanoJson = assets.open("arcano_info.json")
-            .bufferedReader().use { it.readText() }
-        val arcanoList: List<ArcanoInfo> =
-            Json.decodeFromString(arcanoJson)
-        arcanoInfo = arcanoList.associate {
-            it.key
-                .uppercase()
-                .semAcentos()
-                .trim() to Triple(it.slots, it.pp, it.foco)
-        }
-
-        val atributosData = this.loadJsonAsset<AtributoList>("atributos.json")
-        listaAtributos = atributosData.atributos
-            .map { it.nome.keyify() }
-        mapaAtributosDisplay = atributosData.atributos
-            .associate { it.nome.keyify() to it.nome }
-
-        val periciasData = this.loadJsonAsset<PericiaList>("pericias.json")
-        listaPericias = periciasData.pericias.map { pj ->
-            Pericia(
-                nome     = pj.nome,
-                atributo = pj.atributo.uppercase().semAcentos(),
-                basica   = pj.basica
-            )
-        }
-
-        val todasVantagens: List<Vantagem> = this.loadJsonAsset("Vantagens.json")
-
-        AppData.basicasVantagens          = todasVantagens.filter { it.origem.equals("BASICO", true) }
-        AppData.superVantagens = todasVantagens.filter {
-            it.origem.equals("SUPER", ignoreCase = true)
-        }
-
-        listaVantagens = todasVantagens
-
-        AppData.superVantagensParaDetalhe = AppData.superVantagens
-
-
-        val complicacoesJson = assets
-            .open("complicacoes.json")
-            .bufferedReader()
-            .use { it.readText() }
-
-        listaComplicacoes = json.decodeFromString(
-            ListSerializer(Complicacao.serializer()),
-            complicacoesJson
-        )
-
-        val ancestralRaw = assets.open("listaancestralidade.json")
-            .bufferedReader(Charsets.UTF_8)
-            .use { it.readText() }
-
-        listaAncestralidadesJson = Json.decodeFromString<List<RacialModifier>>(ancestralRaw)
-
-        racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
-            val m = rm.atributos
-                .mapKeys   { it.key.keyify() }
-                .mapValues { 4 + it.value }
-            rm.nome.keyify() to m
-        }
-
-        racialSkillStartMap = listaAncestralidadesJson.associate { rm ->
-            val m = rm.pericias
-                .mapKeys   { it.key.keyify() }
-                .mapValues { 4 + it.value }
-            rm.nome.keyify() to m
-        }
-
         setContent {
+            val context = LocalContext.current
+            val dataRepository = remember { DataRepository(context) }
+            var dataLoaded by remember { mutableStateOf(false) }
+
+            LaunchedEffect(Unit) {
+                dataRepository.loadAllData()
+                arcanoInfo = dataRepository.arcanoInfo
+                listaAtributos = dataRepository.listaAtributos
+                mapaAtributosDisplay = dataRepository.mapaAtributosDisplay
+                listaPericias = dataRepository.listaPericias
+                AppData.basicasVantagens = dataRepository.todasVantagens.filter { it.origem.equals("BASICO", true) }
+                AppData.superVantagens = dataRepository.todasVantagens.filter { it.origem.equals("SUPER", ignoreCase = true) }
+                listaVantagens = dataRepository.todasVantagens
+                AppData.superVantagensParaDetalhe = AppData.superVantagens
+                listaComplicacoes = dataRepository.listaComplicacoes
+                listaAncestralidadesJson = dataRepository.listaAncestralidadesJson
+                racialAttrMinMap = dataRepository.racialAttrMinMap
+                racialSkillStartMap = dataRepository.racialSkillStartMap
+                dataLoaded = true
+            }
+
             val criadorViewModel: CriadorViewModel = viewModel()
             criadorViewModel.setMultiplosAAHabilitados(MULTIPLOS_AA_HABILITADOS)
             val state = criadorViewModel.state
@@ -305,46 +237,11 @@ class MainActivity : ComponentActivity() {
             var showSuperDetail           by rememberSaveable { mutableStateOf(false) }
             var highlightedVantagem by rememberSaveable { mutableStateOf("") }
             var highlightedSuperPoder by rememberSaveable { mutableStateOf("") }
-            val context = LocalContext.current
             val activity = (context as? ComponentActivity)
             var mostrouTelaInicial by rememberSaveable { mutableStateOf(true) }
             var showExitDialog     by rememberSaveable { mutableStateOf(false) }
 
             var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
-
-            val helpAppText = """
-Este app ajuda você a criar personagens de Savage Worlds passo a passo.
-
-1) Tela Inicial
-   • Escolha se o personagem é Carta Selvagem, se terá mais pontos de Perícia, se usa modo Supers etc.
-   • Depois toque em "Criar Personagem".
-
-2) Ordem sugerida de preenchimento
-   • Ancestralidade → define bônus e limites de atributos/perícias.
-   • Atributos → distribua os pontos de atributo iniciais.
-   • Perícias → gaste os pontos de perícia disponíveis.
-   • Complicações → escolha Complicações para ganhar Pontos Bônus de Criação.
-   • Vantagens, Poderes e Equipamentos → usam esses recursos para finalizar a ficha.
-
-3) Pontos Bônus de Criação
-   • Cada Complicação Menor gera 1 Ponto Bônus.
-   • Cada Complicação Maior gera 2 Pontos Bônus.
-   • O contador em "Complicações" mostra quantos Pontos Bônus você tem livres.
-   • Esses Pontos Bônus podem ser usados em Atributos, Perícias, Vantagens ou Recursos
-     pelos botões específicos de cada seção.
-
-4) Ajustes e devoluções
-   • Se você usou Pontos Bônus em Atributos/Perícias/Vantagens/Recursos e quiser desfazer,
-     use as opções de "desfazer Pontos Bônus" nas seções correspondentes.
-   • Se ainda houver Pontos Bônus em uso, algumas Complicações não poderão ser removidas:
-     primeiro desfaça os pontos comprados com elas.
-
-5) Dicas gerais
-   • Toque no título de cada seção para expandir/fechar.
-   • Use "Lista Completa" para ler o texto completo das Vantagens, Perícias e Complicações.
-   • Use os ícones de salvar/imprimir no topo para guardar ou gerar a ficha em PDF.
-""".trimIndent()
-
 
             val emTelaDePreenchimento = !(
                     showVantagensDetail ||
@@ -368,10 +265,10 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                     onDismissRequest = { showHelpAppDialog = false },
                     confirmButton = {
                         TextButton(onClick = { showHelpAppDialog = false }) {
-                            Text("OK")
+                            Text(stringResource(R.string.help_dialog_ok))
                         }
                     },
-                    title = { Text("Como usar o app") },
+                    title = { Text(stringResource(R.string.help_dialog_title)) },
                     text = {
                         Column(
                             modifier = Modifier
@@ -379,7 +276,7 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                 .heightIn(max = 400.dp)
                                 .verticalScroll(scrollState)
                         ) {
-                            Text(helpAppText)
+                            Text(stringResource(R.string.help_dialog_content))
                         }
                     }
                 )
@@ -388,17 +285,17 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
             if (showExitDialog) {
                 AlertDialog(
                     onDismissRequest = { },
-                    title            = { Text("Deseja encerrar o app?") },
+                    title            = { Text(stringResource(R.string.exit_dialog_title)) },
                     confirmButton    = {
                         TextButton(onClick = {
                             activity?.finishAffinity()
                         }) {
-                            Text("Sim")
+                            Text(stringResource(R.string.exit_dialog_yes))
                         }
                     },
                     dismissButton    = {
                         TextButton(onClick = { }) {
-                            Text("Não")
+                            Text(stringResource(R.string.exit_dialog_no))
                         }
                     }
                 )
@@ -440,12 +337,12 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                 onLoad = { salvo ->
                                     criadorViewModel.loadFromSalvo(
                                         salvo,
-                                        categoriasBasico = equipamentoCategorias,
-                                        categoriasSuper  = superequipCategorias
+                                        categoriasBasico = dataRepository.equipamentoCategorias,
+                                        categoriasSuper  = dataRepository.superequipCategorias
                                     )
                                     mostrouTelaInicial = false
                                 },
-                                context   = context,
+                                context = context,
                                 viewModel = criadorViewModel
                             )
                         } else {
@@ -498,7 +395,7 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                                 ) {
                                                     TextButton(onClick = { showHelpAppDialog = true }) {
                                                         Text(
-                                                            text = "Como usar o app",
+                                                            text = stringResource(R.string.help_dialog_title),
                                                             fontSize = 16.sp,
                                                             fontWeight = FontWeight.Medium
                                                         )
@@ -508,7 +405,7 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                             navigationIcon = {
                                                 TextButton(onClick = { mostrouTelaInicial = true }) {
                                                     Text(
-                                                        text       = "Voltar",
+                                                        text       = stringResource(R.string.top_bar_back),
                                                         fontWeight = FontWeight.Bold,
                                                         fontSize   = 18.sp
                                                     )
@@ -553,7 +450,7 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                                         salvarEExibirFichaPdf(this@MainActivity, personagem)
                                                     }
                                                 }) {
-                                                    Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
+                                                    Icon(Icons.Default.Print, contentDescription = stringResource(R.string.top_bar_print))
                                                 }
 
                                                 IconButton(onClick = {
@@ -612,11 +509,11 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                                         StorageUtils.salvarPersonagem(context, salvo)
 
                                                         withContext(Dispatchers.Main) {
-                                                            Toast.makeText(context, "Personagem salvo com sucesso!", Toast.LENGTH_SHORT).show()
+                                                            Toast.makeText(context, R.string.character_saved_success, Toast.LENGTH_SHORT).show()
                                                         }
                                                     }
                                                 }) {
-                                                    Icon(Icons.Default.Save, contentDescription = "Salvar")
+                                                    Icon(Icons.Default.Save, contentDescription = stringResource(R.string.top_bar_save))
                                                 }
                                             }
                                         )
@@ -646,8 +543,8 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                     ) { screen ->
                                         when (screen) {
                                             1 -> EquipamentosDetailScreen(
-                                                categorias = equipamentoCategorias +
-                                                        if (state.modoSuperequip) superequipCategorias else emptyList(),
+                                                categorias = dataRepository.equipamentoCategorias +
+                                                        if (state.modoSuperequip) dataRepository.superequipCategorias else emptyList(),
                                                 onBack     = { showEquipLista = false }
                                             )
                                             2 -> AtributosDetailScreen(onBack = { showAtributosDetail = false })
@@ -716,15 +613,14 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                                 expPoderes     = expPoderes,
                                                 onTogglePoderes = { expPoderes = !expPoderes },
 
-                                                equipamentoCategorias = equipamentoCategorias,
-                                                superequipCategorias  = superequipCategorias,
-                                                listaSuperPoderes     = listaSuperPoderes
+                                                equipamentoCategorias = dataRepository.equipamentoCategorias,
+                                                superequipCategorias  = dataRepository.superequipCategorias,
+                                                listaSuperPoderes     = dataRepository.listaSuperPoderes
                                             )
                                         }
                                     }
                                 }
-                            }
-                            )
+                            })
                         }
                     }
                 }
@@ -774,7 +670,7 @@ fun salvarEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
     if (intent.resolveActivity(context.packageManager) != null) {
         context.startActivity(intent)
     } else {
-        Toast.makeText(context, "Nenhum app de PDF encontrado.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, R.string.pdf_app_not_found, Toast.LENGTH_SHORT).show()
     }
 }
 
@@ -1226,7 +1122,7 @@ fun AncestralidadesDetailScreen(
                 ) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Voltar",
+                        text = stringResource(R.string.top_bar_back),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
                     )
@@ -1510,7 +1406,7 @@ fun AtributosDetailScreen(onBack: () -> Unit) {
                 ) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Voltar",
+                        text = stringResource(R.string.top_bar_back),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
                     )
@@ -1744,7 +1640,7 @@ fun VantagensDetailScreen(
                 navigationIcon = {
                     TextButton(onClick = onBack) {
                         Text(
-                            "Voltar",
+                            stringResource(R.string.top_bar_back),
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
                             color = Color(0xFF050402)
@@ -1804,7 +1700,8 @@ fun VantagensDetailScreen(
                         // ► “binding” com o state: já escolhida? requisitos ok?
                         val vant = tituloParaVant[titulo]
                         val jaTem = (titulo in nomesJaSelecionadas)
-                        val requisitosOk = vant?.let { state.podeSelecionar(it) } ?: true
+                        val error = vant?.let { state.podeSelecionar(it) }
+                        val requisitosOk = error is SelectionError.None
 
                         item(key = "$cat-$titulo-$index") {
                             Column(
@@ -1812,9 +1709,9 @@ fun VantagensDetailScreen(
                                     .padding(start = 24.dp, bottom = 16.dp)
                                     .background(
                                         when {
-                                            jaTem -> Color(0x11007AFF)     // já possui → leve destaque
-                                            requisitosOk -> Color.Transparent // pode pegar
-                                            else -> Color(0x11FF0000)       // pendente → leve vermelho
+                                            jaTem -> Color(0x11007AFF)
+                                            requisitosOk -> Color.Transparent
+                                            else -> Color(0x11FF0000)
                                         }
                                     )
                                     .padding(start = 4.dp, top = 8.dp, end = 4.dp, bottom = 8.dp)
@@ -1829,9 +1726,9 @@ fun VantagensDetailScreen(
                                     )
                                     // Selo de status à direita
                                     val status = when {
-                                        jaTem -> "já selecionada"
-                                        requisitosOk -> "requisitos OK"
-                                        else -> "requisitos pendentes"
+                                        jaTem -> stringResource(R.string.vantagens_detail_already_selected)
+                                        requisitosOk -> stringResource(R.string.vantagens_detail_req_ok)
+                                        else -> error?.let { com.example.swadebuilder.ui.mapErrorToString(context, it) } ?: ""
                                     }
                                     Text(
                                         status,
@@ -1928,6 +1825,7 @@ fun UnifiedScreen(
     superequipCategorias: List<EquipamentoCategoria>,
     listaSuperPoderes: List<SuperPoder>
 ) {
+    val context = LocalContext.current
 
     LaunchedEffect(state.modoSupers) {
         Log.d("DEBUG", "modoSupers é ${state.modoSupers}")
@@ -2097,7 +1995,8 @@ fun UnifiedScreen(
                 state.dinheiro += custo
             },
             categorias               = equipamentoCategorias,
-            superequipCategorias     = superequipCategorias
+            superequipCategorias     = superequipCategorias,
+            state = state
         )
 
         Spacer(Modifier.height(16.dp))
@@ -2236,7 +2135,7 @@ fun ComplicacoesDetailScreen(
                 ) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Voltar",
+                        text = stringResource(R.string.top_bar_back),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
                     )
@@ -2319,7 +2218,7 @@ fun PericiasDetailScreen(
                         .padding(vertical = 12.dp, horizontal = 16.dp)
                 ) {
                     Text(
-                        text = "Voltar",
+                        text = stringResource(R.string.top_bar_back),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
                     )
@@ -2546,7 +2445,7 @@ fun EquipamentosDetailScreen(
                         .padding(vertical = 12.dp, horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Voltar", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    Text(stringResource(R.string.top_bar_back), fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 }
                 HorizontalDivider()
             }
@@ -2806,7 +2705,7 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
             onClick = { showNewOptionsDialog = true },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Criar Novo Personagem")
+            Text(stringResource(R.string.tela_inicial_create_new))
         }
         Spacer(Modifier.height(16.dp))
         Button(
@@ -2817,7 +2716,7 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                     withContext(Dispatchers.Main) {
                         nomesSalvos = listaAtualizada // Atualiza o state na Main thread
                         if (listaAtualizada.isEmpty()) {
-                            Toast.makeText(context, "Nenhum personagem salvo.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, R.string.tela_inicial_no_character_saved, Toast.LENGTH_SHORT).show()
                         } else {
                             showLoadDialog = true
                         }
@@ -2827,7 +2726,7 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
             enabled = nomesSalvos.isNotEmpty(), // <-- CORRIGIDO
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Carregar Personagem Salvo")
+            Text(stringResource(R.string.tela_inicial_load_saved))
         }
         Spacer(modifier = Modifier.height(240.dp))
 
@@ -2837,7 +2736,7 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                 .padding(bottom = 240.dp)
                 .alpha(0.6f)
         ) {
-            Text("Créditos e Licença")
+            Text(stringResource(R.string.tela_inicial_credits))
         }
 
         // --- Diálogo com a imagem e o texto ---
@@ -2846,7 +2745,7 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                 onDismissRequest = { showCreditsDialog = false },
                 confirmButton = {
                     TextButton(onClick = { showCreditsDialog = false }) {
-                        Text("Fechar")
+                        Text(stringResource(R.string.tela_inicial_close))
                     }
                 },
                 text = {

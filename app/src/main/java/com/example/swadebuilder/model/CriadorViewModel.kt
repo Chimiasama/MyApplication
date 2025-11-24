@@ -26,7 +26,7 @@ sealed class PowerEffect {
 }
 
 // ---- OBJETOS DE RETORNO ----
-data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
+data class InvestCheck(val ok: Boolean, val error: com.example.swadebuilder.SelectionError? = null)
 data class InvestResult(val ok: Boolean, val mensagem: String)
 
 /**
@@ -495,11 +495,11 @@ class CriadorViewModel : ViewModel() {
                 // valida requisitos ignorando Estágio (simula “Lendário” para não travar pelo estágio)
                 val progressoAnterior = state.overrideStageForVantagem
                 state.overrideStageForVantagem = "Lendário"
-                val permitido = state.podeSelecionar(vant)
+                val error = state.podeSelecionar(vant)
                 state.overrideStageForVantagem = progressoAnterior
 
-                if (!permitido) {
-                    return InvestCheck(false, "Requisitos não atendidos para a vantagem (exceto Estágio).")
+                if (error !is com.example.swadebuilder.SelectionError.None) {
+                    return InvestCheck(false, error)
                 }
             }
         }

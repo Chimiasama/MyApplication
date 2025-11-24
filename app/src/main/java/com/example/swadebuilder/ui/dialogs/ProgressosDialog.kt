@@ -634,7 +634,7 @@ fun ProgressosDialog(
                             state.grantVantagemPointFromXp(est.nome)
                             Toast.makeText(
                                 context,
-                                "Recebeu um PV, utilize para poder continuar a distribuir seu progresso.",
+                                context.getString(com.example.swadebuilder.R.string.progressos_dialog_vantagem_recebida),
                                 Toast.LENGTH_LONG
                             ).show()
                             onDismiss()
@@ -813,7 +813,7 @@ fun ProgressosDialog(
 
         val candidatas = buildList {
             listaVantagens.forEach { v ->
-                val podeAgora = state.podeSelecionar(v)
+                val podeAgora = state.podeSelecionar(v) is com.example.swadebuilder.SelectionError.None
                 val strictOk  = strictRequirementsOk(v, estIndex)
                 val qtdJaTem = state.vantagensSelecionadas.count { it.nome.equals(v.nome, ignoreCase = true) }
                 val repeticaoOk = when (val maxEff = maxEffectiveSelections(v)) { null -> true; else -> qtdJaTem < maxEff }
@@ -858,16 +858,16 @@ fun ProgressosDialog(
                                         when (val maxEff = maxEffectiveSelections(vant)) {
                                             null -> {}
                                             else -> if (qtdJaTemClick >= maxEff) {
-                                                showSnack("Você já atingiu o limite para ${vant.nome}.")
+                                                showSnack(context.getString(com.example.swadebuilder.R.string.progressos_dialog_limite_vantagem, vant.nome))
                                                 return@clickable
                                             }
                                         }
-                                        if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndex)) {
-                                            showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
+                                        if (state.podeSelecionar(vant) !is com.example.swadebuilder.SelectionError.None || !strictRequirementsOk(vant, estIndex)) {
+                                            showSnack(context.getString(com.example.swadebuilder.R.string.progressos_dialog_requisitos_nao_cumpridos, vant.nome))
                                             return@clickable
                                         }
                                         if (state.progressosDisponiveis < 1) {
-                                            showSnack("Você não tem progressos suficientes.")
+                                            showSnack(context.getString(com.example.swadebuilder.R.string.progressos_dialog_sem_progressos))
                                             return@clickable
                                         }
                                         state.spendProgressAcrossStages(1)
@@ -930,7 +930,7 @@ fun ProgressosDialog(
                     options = options,
                     onConfirm = onConfirm@{ choice ->
                         val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
-                        if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndexFinal)) {
+                        if (state.podeSelecionar(vant) !is com.example.swadebuilder.SelectionError.None || !strictRequirementsOk(vant, estIndexFinal)) {
                             showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
                             return@onConfirm
                         }
@@ -967,7 +967,7 @@ fun ProgressosDialog(
 
                 if (profChoices.isEmpty()) {
                     LaunchedEffect(vant) {
-                        showSnack("Você precisa primeiro de Profissional em algum traço")
+                        showSnack(context.getString(com.example.swadebuilder.R.string.progressos_dialog_precisa_de_profissional))
                         delay(2_000)
                         showPendingChoice = false
                         pendingAdv = null
@@ -977,7 +977,7 @@ fun ProgressosDialog(
                         options = profChoices,
                         onConfirm = onConfirm@{ choice ->
                             val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
-                            if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndexFinal)) {
+                            if (state.podeSelecionar(vant) !is com.example.swadebuilder.SelectionError.None || !strictRequirementsOk(vant, estIndexFinal)) {
                                 showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
                                 return@onConfirm
                             }
@@ -1013,7 +1013,7 @@ fun ProgressosDialog(
                     options = vant.choiceOptions,
                     onConfirm = onConfirm@{ choice ->
                         val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
-                        if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndexFinal)) {
+                        if (state.podeSelecionar(vant) !is com.example.swadebuilder.SelectionError.None || !strictRequirementsOk(vant, estIndexFinal)) {
                             showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
                             return@onConfirm
                         }

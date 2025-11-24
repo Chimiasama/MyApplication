@@ -29,6 +29,8 @@ uiTooling = "1.9.3"
 uiToolingPreview = "1.9.4"
 foundation = "1.9.4"
 foundationVersion = "1.9.5"
+mockitoCore = "5.11.0"
+archCoreTesting = "2.2.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -79,3 +81,5 @@ androidx-navigation-common-android = { group = "androidx.navigation", name = "na
 androidx-navigation-compose-android = { group = "androidx.navigation", name = "navigation-compose-android", version.ref = "navigationComposeAndroid" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundationVersion" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
+androidx-arch-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "archCoreTesting" }

@@ -324,9 +324,7 @@ class CriadorState {
         baseCost: Int = custo,
         poderId: String = "sp_${nome.keyify()}",
         registrarNoLedger: Boolean = true
-    ): Pair<Boolean, String> {
-
-        // 0) Regra restritiva de perícia mínima (Superciência / Superfeitiçaria)
+    ): SelectionError {
         val nomeKey = nome.keyify()
         val periciaReqKey = SUPER_PODERES_RESTRITIVOS[nomeKey]
         if (periciaReqKey != null) {
@@ -335,21 +333,18 @@ class CriadorState {
 
             if (rawFinalReq < MIN_RAW_RESTRITIVO) {
                 val perNome = perReq?.nome ?: periciaReqKey
-                return false to "Para comprar $nome, você precisa ter a perícia $perNome em d10 ou mais."
+                return SelectionError.SuperPoderError.RequerPericia(nome, perNome)
             }
         }
 
-        // 1) Limite de quantidade de superpoderes
         if (superPoderesComprados.size >= superLimite) {
-            return false to "Limite de superpoderes atingido (${superLimite})."
+            return SelectionError.SuperPoderError.LimiteAtingido(superLimite)
         }
 
-        // 2) Saldo de SP
         if (superPontosDisponiveis < custo) {
-            return false to "Sem saldo: precisa de $custo SP, tem $superPontosDisponiveis."
+            return SelectionError.SuperPoderError.SemSaldo(custo, superPontosDisponiveis)
         }
 
-        // 3) Compra normal
         superPoderesComprados.add(
             PurchasedPower(
                 nome = nome,
@@ -363,7 +358,7 @@ class CriadorState {
             registrarGastoDePoder(poderId, custo)
         }
 
-        return true to "Superpoder adquirido."
+        return SelectionError.None
     }
 
     fun removerSuperPoder(
@@ -721,29 +716,29 @@ class CriadorState {
     // guarda o nome da vantagem que está em foco (usada ao voltar da tela de detalhes)
     var vantagemEmFoco by mutableStateOf<String?>(null)
 
-    fun podeSelecionar(v: Vantagem): Boolean {
+    fun podeSelecionar(v: Vantagem): SelectionError {
         val key = v.nome.keyify()
 
         if (v.nome.contains("Pontos de Poder", ignoreCase = true)) {
             val totalFeitas = comprasPpPorEstagio.values.sum()
             val maxPermitidas = maxComprasPpAteAgora()
-            if (totalFeitas >= maxPermitidas) return false
+            if (totalFeitas >= maxPermitidas) return SelectionError.VantagemError.LimitePontosPoderEstagio
         }
 
         if (key.startsWith("antecedente arcano")) {
             if (!permiteMultiAntecedenteArcano) {
                 val anyArcano = vantagensSelecionadas.any { it.nome.keyify().startsWith("antecedente arcano") }
                 if (anyArcano && vantagensSelecionadas.none { it.nome.keyify() == key }) {
-                    return false
+                    return SelectionError.VantagemError.MultiplosArcanosDesabilitado
                 }
             } else {
                 val jaTemMesmoId = vantagensSelecionadas.any { it.id == v.id }
-                if (jaTemMesmoId) return false
+                if (jaTemMesmoId) return SelectionError.VantagemError.JaSelecionada
                 if (v.id == "antecedente_arcano" && v.choice != null) {
                     val jaTemMesmaChoice = vantagensSelecionadas.any {
                         it.id == "antecedente_arcano" && it.choice?.keyify() == v.choice?.keyify()
                     }
-                    if (jaTemMesmaChoice) return false
+                    if (jaTemMesmaChoice) return SelectionError.VantagemError.ArcanoComEscolhaJaSelecionado
                 }
             }
         }
@@ -756,14 +751,14 @@ class CriadorState {
                     it.nome.keyify() == key &&
                             it.choice?.keyify() == choiceSeguro.keyify()
                 }
-                if (already) return false
+                if (already) return SelectionError.VantagemError.JaSelecionadaComEspecializacao
             }
 
             if (key == "especialista" && choiceSeguro != null) {
                 val profExist = vantagensSelecionadas.any {
                     it.id == "profissional" && it.choice?.keyify() == choiceSeguro.keyify()
                 }
-                if (!profExist) return false
+                if (!profExist) return SelectionError.VantagemError.RequerProfissionalComEspecializacao
             }
 
             if (choiceSeguro == null) {
@@ -773,26 +768,25 @@ class CriadorState {
                 val anyMaxPer = listaPericias.any { p ->
                     rawTotal(p) == periciaCapRaw(p)
                 }
-                return anyMaxAttr || anyMaxPer
-            }
-
-            val choiceKey = choiceSeguro.keyify()
-            return if (listaAtributos.contains(choiceKey)) {
-                valoresAtributos[choiceKey]!!.intValue == atributoMaxRaw(choiceKey)
+                if (!anyMaxAttr && !anyMaxPer) return SelectionError.VantagemError.NenhumAtributoOuPericiaNoMaximo
             } else {
-                val per = listaPericias.first { it.nome.keyify() == choiceKey }
-                rawTotal(per) == periciaCapRaw(per)
+                val choiceKey = choiceSeguro.keyify()
+                if (listaAtributos.contains(choiceKey)) {
+                    if (valoresAtributos[choiceKey]!!.intValue != atributoMaxRaw(choiceKey)) return SelectionError.VantagemError.AtributoNaoEstaNoMaximo(choiceSeguro)
+                } else {
+                    val per = listaPericias.first { it.nome.keyify() == choiceKey }
+                    if (rawTotal(per) != periciaCapRaw(per)) return SelectionError.VantagemError.PericiaNaoEstaNoMaximo(choiceSeguro)
+                }
             }
         }
 
         val ignorarEstagioPorNasce =
             (nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0)
         if (!ignorarEstagioPorNasce) {
-
             listaDeEstagios
                 .firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
                 ?.let { estReqObj ->
-                    if (effectiveProgressoParaVantagens() < estReqObj.minProgress) return false
+                    if (effectiveProgressoParaVantagens() < estReqObj.minProgress) return SelectionError.VantagemError.RequerEstagio(estReqObj.nome)
                 }
         }
 
@@ -812,18 +806,16 @@ class CriadorState {
                     }
                 }
             }
-            if (faltam) return false
+            if (faltam) return SelectionError.VantagemError.RequerVantagensPrevias
         }
 
         if (v.nome.contains("Pontos de Poder", ignoreCase = true)) {
             val totalCompras = comprasPpPorEstagio.values.sum()
             val limite = maxComprasPpAteAgora()
-            if (totalCompras >= limite) return false
-        }
-
-        else if (v.maxSelections > 0) {
+            if (totalCompras >= limite) return SelectionError.VantagemError.LimiteComprasPontosPoder
+        } else if (v.maxSelections > 0) {
             val ja = vantagensSelecionadas.count { it.id == v.id }
-            if (ja >= v.maxSelections) return false
+            if (ja >= v.maxSelections) return SelectionError.VantagemError.MaximoSelecoes(v.maxSelections)
         }
 
         val choiceSeguro2 = v.choice
@@ -831,38 +823,33 @@ class CriadorState {
             val repetida = vantagensSelecionadas.any {
                 it.id == v.id && it.choice == choiceSeguro2
             }
-            if (repetida) return false
+            if (repetida) return SelectionError.VantagemError.ComEscolhaJaSelecionada
         }
 
         nivelParaEstagio[v.requisitos.estagio]?.let { estReqObj2 ->
-            if (estReqObj2.minProgress > effectiveProgressoParaVantagens()) return false
+            if (estReqObj2.minProgress > effectiveProgressoParaVantagens()) return SelectionError.VantagemError.RequerEstagio(estReqObj2.nome)
         }
 
-        if (v.requisitos.atributoMin.any { (nome, min) ->
-                val chaveNorm = nome.uppercase().semAcentos().trim()
-                valoresAtributos[chaveNorm]?.intValue?.let { it < min } != false
-            }) return false
+        v.requisitos.atributoMin.forEach { (nome, min) ->
+            val chaveNorm = nome.uppercase().semAcentos().trim()
+            if (valoresAtributos[chaveNorm]?.intValue?.let { it < min } != false) return SelectionError.VantagemError.RequerAtributo(nome, min)
+        }
 
         val periciaMinMap = v.requisitos.periciaMin
-
         if (v.vinculadoPericia && periciaMinMap.isNotEmpty()) {
-
             val atendeUma = periciaMinMap.any { (perNome, minRaw) ->
                 val per = listaPericias.firstOrNull {
                     it.nome.equals(perNome, ignoreCase = true)
                 }
                 per != null && rawTotal(per) >= minRaw
             }
-            if (!atendeUma) return false
+            if (!atendeUma) return SelectionError.VantagemError.RequerUmaDasPericias
         } else {
-
-            if (periciaMinMap.any { (perNome, minRaw) ->
-                    val per = listaPericias.firstOrNull {
-                        it.nome.equals(perNome, ignoreCase = true)
-                    } ?: return@any false
-                    rawTotal(per) < minRaw
-                }) {
-                return false
+            periciaMinMap.forEach { (perNome, minRaw) ->
+                val per = listaPericias.firstOrNull {
+                    it.nome.equals(perNome, ignoreCase = true)
+                }
+                if (per == null || rawTotal(per) < minRaw) return SelectionError.VantagemError.RequerPericia(perNome, minRaw)
             }
         }
 
@@ -874,25 +861,26 @@ class CriadorState {
                 }
                 per != null && rawTotal(per) >= minRaw
             }
-            if (!atendeUmaOpc) return false
+            if (!atendeUmaOpc) return SelectionError.VantagemError.RequerUmaDasPericiasOpcionais
         }
 
-        if (v.requisitos.exigeCS && !cartaSelvagem) return false
+        if (v.requisitos.exigeCS && !cartaSelvagem) return SelectionError.VantagemError.RequerCartaSelvagem
 
         val compsConfl = incompatibilidades[key] ?: emptySet()
+        if (complicacoesSelecionadas.keys
+                .map { it.id.keyify() }
+                .any { it in compsConfl }
+        ) return SelectionError.VantagemError.ConflitoComplicacao
+
         val vantKey = v.nome.trim().uppercase()
         if (vantKey == "RICO" || vantKey == "PODRE DE RICO") {
             val tenhoPobreza = complicacoesSelecionadas.keys.any {
                 it.id.trim().uppercase() == "POBREZA"
             }
-            if (tenhoPobreza) return false
+            if (tenhoPobreza) return SelectionError.VantagemError.ConflitoPobreza
         }
-        if (complicacoesSelecionadas.keys
-                .map { it.id.keyify() }
-                .any { it in compsConfl }
-        ) return false
 
-        return true
+        return SelectionError.None
     }
 
     var pontosComplicacaoGastos by mutableIntStateOf(0)
