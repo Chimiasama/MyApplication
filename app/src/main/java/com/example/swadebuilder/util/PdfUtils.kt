@@ -1,0 +1,343 @@
+package com.example.swadebuilder.util
+
+import android.content.Context
+import android.content.Intent
+import android.graphics.Paint
+import android.graphics.pdf.PdfDocument
+import android.net.Uri
+import android.widget.Toast
+import androidx.core.content.FileProvider
+import com.example.swadebuilder.R
+import com.example.swadebuilder.listaAncestralidadesJson
+import com.example.swadebuilder.listaAtributos
+import com.example.swadebuilder.listaPericias
+import com.example.swadebuilder.listaVantagens
+import com.example.swadebuilder.mapaAtributosDisplay
+import com.example.swadebuilder.model.MeuPersonagem
+import com.example.swadebuilder.periciaStartRaw
+import java.io.File
+import java.io.FileOutputStream
+
+fun salvarEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
+    val pdfFile = File(context.getExternalFilesDir(null), "ficha_preenchida.pdf")
+
+    gerarFichaEmPdf(pdfFile, dadosDoPersonagem)
+
+    val uri: Uri = FileProvider.getUriForFile(
+        context,
+        "${context.packageName}.fileprovider",
+        pdfFile
+    )
+
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        setDataAndType(uri, "application/pdf")
+        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+    }
+
+    if (intent.resolveActivity(context.packageManager) != null) {
+        context.startActivity(intent)
+    } else {
+        Toast.makeText(context, R.string.pdf_app_not_found, Toast.LENGTH_SHORT).show()
+    }
+}
+
+fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
+    val lines = mutableListOf<String>()
+
+    val ancestralidadeNome: String = listaAncestralidadesJson
+        .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
+        ?.nome ?: personagem.ancestralidade
+
+    val vantagensNomeKey: List<String> = listaVantagens
+        .filter { it.id in personagem.vantagens }
+        .map { it.nome.keyify() }
+
+    fun temComp(key: String): Boolean =
+        personagem.complicacoes.any { it.keyify() == key }
+
+    fun racialSize(): Int =
+        listaAncestralidadesJson
+            .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
+            ?.desvantagens
+            ?.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
+            ?.substringAfter("TAMANHO")
+            ?.trim()
+            ?.toIntOrNull()
+            ?: 0
+
+    fun tamanhoTotal(): Int {
+        val base = racialSize()
+        val obesoBonus = if (temComp("OBESO")) 1 else 0
+        val pequenoPenalty = if (temComp("PEQUENO")) -1 else 0
+        return base + obesoBonus + pequenoPenalty
+    }
+
+    fun resistenciaBase(): Int {
+        val vigorRaw = personagem.atributos["VIGOR"] ?: 4
+        val base = 2 + (vigorRaw / 2)
+
+        val bonusPos =
+            if (vantagensNomeKey.any { it == "RESISTENCIA" }) 1 else 0
+        val bonusNeg =
+            if (personagem.complicacoes.any { it.keyify() == "FRAGIL" }) -1 else 0
+
+        val brigaoBonus = vantagensNomeKey.count { it in listOf("BRIGAO", "PUGILISTA") }
+
+        return (base + bonusPos + bonusNeg + brigaoBonus + tamanhoTotal())
+            .coerceAtLeast(0)
+    }
+
+    fun resistenciaFinal(): Int =
+        resistenciaBase() + personagem.bonusResFromPower
+
+    fun calcMovimento(): Int {
+        val base = 6
+
+        val racialPenalty =
+            listaAncestralidadesJson
+                .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
+                ?.desvantagens
+                ?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
+                .takeIf { it == true }
+                ?.let { 1 }
+                ?: 0
+
+        val lentoPenalty = if (temComp("LENTO")) 1 else 0
+        val idosoPenalty = if (temComp("IDOSO")) 1 else 0
+        val obesoPenalty = if (temComp("OBESO")) 1 else 0
+        val ligeiroBonus =
+            if (vantagensNomeKey.any { it == "LIGEIRO" }) 2 else 0
+
+        return (
+                base
+                        - racialPenalty
+                        - lentoPenalty
+                        - idosoPenalty
+                        - obesoPenalty
+                        + ligeiroBonus
+                        + personagem.bonusMovimentacaoFromPower
+                ).coerceAtLeast(0)
+    }
+
+    fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
+        var raw = rawStart
+        var remaining = steps.coerceAtLeast(0)
+
+        if (raw <= 0 && remaining > 0) {
+            raw = 4
+            remaining -= 1
+        }
+
+        repeat(remaining) {
+            raw += if (raw < 12) 2 else 1
+        }
+
+        return raw
+    }
+
+    fun calcAparar(): Int {
+        val lutarRawBase = personagem.pericias["Lutar"] ?: 0
+        val lutarStepsFromSupers = personagem.superPericiaIncs["LUTAR"] ?: 0
+        val lutarComSupers = applySuperStepsFrom(lutarRawBase, lutarStepsFromSupers)
+
+        val base = 2 + (lutarComSupers / 2)
+
+        val bloquearBonus =
+            if (vantagensNomeKey.any { it == "BLOQUEAR" }) 1 else 0
+        val bloquearAprimoradoBonus =
+            if (vantagensNomeKey.any { it == "BLOQUEAR APRIMORADO" }) 1 else 0
+
+        return base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusPararFromPower
+    }
+
+    fun calcArmaduraEfetiva(): Int {
+        return personagem.armorFromPower.coerceAtLeast(0)
+    }
+
+    val aparar = calcAparar()
+    val resFinal = resistenciaFinal()
+    val tamanho = tamanhoTotal()
+    val mov = calcMovimento()
+    val armadura = calcArmaduraEfetiva()
+    val resistenciaTexto =
+        if (armadura > 0) "${resFinal}(${armadura})" else resFinal.toString()
+
+    lines += "Identidade"
+    lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"
+    lines += "Ancestralidade: $ancestralidadeNome"
+    lines += ""
+
+    lines += "Atributos derivados"
+    lines += "Aparar: $aparar"
+    lines += "Resistência: $resistenciaTexto"
+    lines += "Tamanho: $tamanho"
+    lines += "Movimento: $mov"
+    if (armadura > 0) {
+        lines += "Armadura: $armadura"
+    }
+    lines += ""
+
+    lines += "Atributos"
+    lines += listaAtributos.joinToString(", ") { attrKey ->
+        val label = mapaAtributosDisplay[attrKey] ?: attrKey
+        val valor = personagem.atributos[attrKey] ?: 4
+        "$label d$valor"
+    }
+    lines += ""
+
+    val periciasParaMostrar = listaPericias.filter { per ->
+        per.basica || (personagem.pericias[per.nome] ?: 0) >
+                periciaStartRaw(personagem.ancestralidade, per)
+    }
+
+    lines += "Perícias"
+    if (periciasParaMostrar.isEmpty()) {
+        lines += "– Nenhuma"
+    } else {
+        periciasParaMostrar.forEach { per ->
+            val raw = personagem.pericias[per.nome] ?: 0
+            lines += "• ${per.nome} d$raw"
+        }
+    }
+    lines += ""
+
+    lines += "Recursos & Equipamentos"
+    lines += "Dinheiro restante: ${personagem.dinheiro}"
+    if (personagem.equipamentos.isEmpty()) {
+        lines += "Equipamentos: – Nenhum"
+    } else {
+        lines += "Equipamentos:"
+        personagem.equipamentos.forEach { eq ->
+            lines += "• ${eq.nome}"
+        }
+    }
+    lines += ""
+
+    lines += "Vantagens"
+    if (personagem.vantagens.isEmpty()) {
+        lines += "– Nenhuma"
+    } else {
+        val nomesVantagens = listaVantagens
+            .filter { it.id in personagem.vantagens }
+            .map { it.nome }
+        lines += nomesVantagens.joinToString(", ")
+    }
+    lines += ""
+
+    lines += "Complicações"
+    lines += if (personagem.complicacoes.isEmpty()) {
+        "– Nenhuma"
+    } else {
+        personagem.complicacoes.joinToString(", ")
+    }
+    lines += ""
+
+    if (personagem.poderes.isNotEmpty()) {
+        lines += "Poderes arcanos"
+        personagem.poderes.forEach { (arcanoKey, lista) ->
+            val label = arcanoKey
+                .lowercase()
+                .replace('_', ' ')
+                .replaceFirstChar { it.titlecase() }
+
+            lines += if (lista.isEmpty()) {
+                "• $label: – nenhum poder escolhido"
+            } else {
+                "• $label: ${lista.joinToString(", ")}"
+            }
+        }
+        lines += ""
+    }
+
+    if (personagem.modoSupers &&
+        (personagem.superPontosTotais > 0 || personagem.gastosPorPoder.isNotEmpty())
+    ) {
+        lines += "Superpoderes"
+
+        if (personagem.gastosPorPoder.isEmpty()) {
+            lines += "– Nenhum superpoder registrado"
+        } else {
+            personagem.gastosPorPoder.forEach { (poderId, custo) ->
+                lines += "• $poderId: $custo SP"
+            }
+        }
+
+        lines += "Superpontos: ${personagem.superPontosTotais} (disponíveis: ${personagem.superPontosDisponiveis})"
+        lines += "Limite por poder: ${personagem.limitePorPoderPadrao}"
+        lines += ""
+    }
+
+    if (personagem.anotacoes.isNotBlank()) {
+        lines += "Anotações"
+        personagem.anotacoes
+            .lines()
+            .forEach { linha -> lines += linha }
+    }
+
+    return lines
+}
+
+fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
+    val doc = PdfDocument()
+    val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
+
+    val marginLeft   = 40f
+    val marginRight  = 40f
+    val marginTop    = 50f
+    val marginBottom = 40f
+
+    val paint = Paint().apply { textSize = 12f }
+    val fm = paint.fontMetrics
+    val lineHeight = fm.descent - fm.ascent + fm.leading
+
+    var page = doc.startPage(pageInfo)
+    var canvas = page.canvas
+    var y = marginTop
+
+    fun newPage() {
+        doc.finishPage(page)
+        page = doc.startPage(pageInfo)
+        canvas = page.canvas
+        y = marginTop
+    }
+
+    fun drawWrapped(text: String) {
+        var start = 0
+        val maxWidth = pageInfo.pageWidth - marginLeft - marginRight
+        while (start < text.length) {
+            val count = paint.breakText(text, start, text.length, true, maxWidth, null)
+            val line = text.substring(start, start + count)
+            if (y + lineHeight > pageInfo.pageHeight - marginBottom) {
+                newPage()
+            }
+            canvas.drawText(line, marginLeft, y, paint)
+            y += lineHeight
+            start += count
+        }
+    }
+
+    val titlePaint = Paint(paint).apply {
+        textSize = 16f
+        isFakeBoldText = true
+    }
+    val title = "Ficha de ${personagem.nome}"
+
+    val titleFm = titlePaint.fontMetrics
+    val titleHeight = titleFm.descent - titleFm.ascent + titleFm.leading
+    if (y + titleHeight > pageInfo.pageHeight - marginBottom) {
+        newPage()
+    }
+    canvas.drawText(title, marginLeft, y, titlePaint)
+    y += titleHeight + 12f
+
+    val lines = buildSummaryLines(personagem)
+    for (linha in lines) {
+        drawWrapped(linha)
+    }
+
+    doc.finishPage(page)
+    FileOutputStream(destino).use { out ->
+        doc.writeTo(out)
+    }
+    doc.close()
+}
