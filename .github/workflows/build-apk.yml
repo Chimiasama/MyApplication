@@ -4,7 +4,7 @@ on:
   workflow_dispatch:   # Executar manualmente
   push:
     branches:
-      - master-jules-1   # <-- ou a branch que você quiser testar
+      - fix/build-error-1   # <-- ou a branch que você quiser testar
 
 jobs:
   build:
