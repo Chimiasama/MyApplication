@@ -7,6 +7,17 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 @Serializable
+data class AtributoJson(
+    val nome: String,
+    val min: Int = 4
+)
+
+@Serializable
+data class AtributoList(
+    val atributos: List<AtributoJson>
+)
+
+@Serializable
 data class PericiaJson(
     val nome: String,
     val atributo: String = "",

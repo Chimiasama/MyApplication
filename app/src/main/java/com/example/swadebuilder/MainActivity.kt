@@ -100,13 +100,20 @@ import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.PersonagemSalvo
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.StorageUtils
+import com.example.swadebuilder.model.DataRepository
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.loadPericiasDescriptions
+import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.ui.sections.AncestralidadesDetailScreen
+import com.example.swadebuilder.ui.sections.AtributosDetailScreen
+import com.example.swadebuilder.ui.sections.ComplicacoesDetailScreen
+import com.example.swadebuilder.ui.sections.EquipamentosDetailScreen
+import com.example.swadebuilder.ui.sections.PericiasDetailScreen
 import com.example.swadebuilder.ui.sections.PoderesDetailScreen
 import com.example.swadebuilder.ui.sections.SuperPoderesDetailScreen
+import com.example.swadebuilder.ui.sections.VantagensDetailScreen
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -154,6 +161,8 @@ private val json = Json {
 private const val MULTIPLOS_AA_HABILITADOS: Boolean = false
 
 class MainActivity : ComponentActivity() {
+    private lateinit var dataRepository: DataRepository
+
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     @OptIn(ExperimentalMaterial3Api::class)
 
@@ -163,12 +172,9 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val allEquipJson = assets
-            .open("equipamentos.json")
-            .bufferedReader()
-            .use { it.readText() }
-        val allEquipCategorias: List<EquipamentoCategoria> =
-            json.decodeFromString(allEquipJson)
+        dataRepository = DataRepository(applicationContext)
+
+        val allEquipCategorias: List<EquipamentoCategoria> = dataRepository.loadEquipamentoCategorias()
 
         val equipamentoCategorias = allEquipCategorias.filter { cat ->
             cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
@@ -177,17 +183,9 @@ class MainActivity : ComponentActivity() {
             cat.origem?.equals("super", ignoreCase = true) ?: false
         }
 
-        val superPoderesJson = assets
-            .open("superpoderes.json")
-            .bufferedReader()
-            .use { it.readText() }
-        val listaSuperPoderes: List<SuperPoder> =
-            json.decodeFromString(superPoderesJson)
+        val listaSuperPoderes: List<SuperPoder> = dataRepository.loadSuperPoderes()
 
-        val arcanoJson = assets.open("arcano_info.json")
-            .bufferedReader().use { it.readText() }
-        val arcanoList: List<ArcanoInfo> =
-            Json.decodeFromString(arcanoJson)
+        val arcanoList: List<ArcanoInfo> = dataRepository.loadArcanoInfo()
         arcanoInfo = arcanoList.associate {
             it.key
                 .uppercase()
@@ -195,22 +193,15 @@ class MainActivity : ComponentActivity() {
                 .trim() to Triple(it.slots, it.pp, it.foco)
         }
 
-        val atributosData = this.loadJsonAsset<AtributoList>("atributos.json")
+        val atributosData = dataRepository.loadAtributos()
         listaAtributos = atributosData.atributos
             .map { it.nome.keyify() }
         mapaAtributosDisplay = atributosData.atributos
             .associate { it.nome.keyify() to it.nome }
 
-        val periciasData = this.loadJsonAsset<PericiaList>("pericias.json")
-        listaPericias = periciasData.pericias.map { pj ->
-            Pericia(
-                nome     = pj.nome,
-                atributo = pj.atributo.uppercase().semAcentos(),
-                basica   = pj.basica
-            )
-        }
+        listaPericias = dataRepository.loadPericias()
 
-        val todasVantagens: List<Vantagem> = this.loadJsonAsset("Vantagens.json")
+        val todasVantagens: List<Vantagem> = dataRepository.loadVantagens()
 
         AppData.basicasVantagens          = todasVantagens.filter { it.origem.equals("BASICO", true) }
         AppData.superVantagens = todasVantagens.filter {
@@ -221,22 +212,9 @@ class MainActivity : ComponentActivity() {
 
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
+        listaComplicacoes = dataRepository.loadComplicacoes()
 
-        val complicacoesJson = assets
-            .open("complicacoes.json")
-            .bufferedReader()
-            .use { it.readText() }
-
-        listaComplicacoes = json.decodeFromString(
-            ListSerializer(Complicacao.serializer()),
-            complicacoesJson
-        )
-
-        val ancestralRaw = assets.open("listaancestralidade.json")
-            .bufferedReader(Charsets.UTF_8)
-            .use { it.readText() }
-
-        listaAncestralidadesJson = Json.decodeFromString<List<RacialModifier>>(ancestralRaw)
+        listaAncestralidadesJson = dataRepository.loadRacialModifiers()
 
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
             val m = rm.atributos
@@ -740,26 +718,44 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                                         if (state.modoSuperequip) superequipCategorias else emptyList(),
                                                 onBack     = { showEquipLista = false }
                                             )
-                                            2 -> AtributosDetailScreen(onBack = { showAtributosDetail = false })
-                                            3 -> VantagensDetailScreen(
-                                                state           = state,
-                                                modoSupers      = state.modoSupers,
-                                                highlightedName = highlightedVantagem,
-                                                onBack          = { showVantagensDetail = false }
-                                            )
+                                            2 -> {
+                                                val atributosText = remember { dataRepository.loadAtributosText() }
+                                                AtributosDetailScreen(
+                                                    onBack = { showAtributosDetail = false },
+                                                    atributosText = atributosText
+                                                )
+                                            }
+                                            3 -> {
+                                                val vantagensJson = remember { dataRepository.loadVantagensText() }
+                                                VantagensDetailScreen(
+                                                    state = state,
+                                                    modoSupers = state.modoSupers,
+                                                    highlightedName = highlightedVantagem,
+                                                    onBack = { showVantagensDetail = false },
+                                                    vantagensJson = vantagensJson
+                                                )
+                                            }
                                             4 -> PericiasDetailScreen(
                                                 state  = state,
                                                 onBack = { showPericiasDetail = false }
                                             )
-                                            5 -> ComplicacoesDetailScreen(
-                                                state        = state,
-                                                onBack       = { showComplicacoesDetail = false },
-                                                mostrarSuper = state.modoSuperComplicacoes
-                                            )
-                                            6 -> AncestralidadesDetailScreen(
-                                                state  = state,
-                                                onBack = { showAncestralidadesDetail = false }
-                                            )
+                                            5 -> {
+                                                val complicacoesJson = remember { dataRepository.loadComplicacoesText() }
+                                                ComplicacoesDetailScreen(
+                                                    state = state,
+                                                    onBack = { showComplicacoesDetail = false },
+                                                    mostrarSuper = state.modoSuperComplicacoes,
+                                                    complicacoesJson = complicacoesJson
+                                                )
+                                            }
+                                            6 -> {
+                                                val ancestralidadesText = remember { dataRepository.loadAncestralidadesText() }
+                                                AncestralidadesDetailScreen(
+                                                    state = state,
+                                                    onBack = { showAncestralidadesDetail = false },
+                                                    ancestralidadesText = ancestralidadesText
+                                                )
+                                            }
                                             7 -> PoderesDetailScreen(
                                                 state  = state,
                                                 onBack = { showPoderesDetail = false }
@@ -922,132 +918,7 @@ val dynamicStageCaps = listaDeEstagios.mapIndexed { idx, st ->
 
 
 
-@Composable
-fun SectionCard(
-    title: String,
-    expanded: Boolean,
-    onToggle: () -> Unit,
-    icon: ImageVector,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    val headerColor = MaterialTheme.colorScheme.onBackground
-    val cardColor   = MaterialTheme.colorScheme.surfaceVariant
 
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onToggle)
-                .padding(vertical = 8.dp, horizontal = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(36.dp)
-                    .padding(end = 12.dp),
-                tint = headerColor
-            )
-            Text(
-                text       = title,
-                fontSize   = 27.sp,
-                fontWeight = FontWeight.Bold,
-                color      = headerColor
-            )
-            Spacer(Modifier.weight(1f))
-            Icon(
-                imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                contentDescription = null,
-                modifier = Modifier.size(36.dp),
-                tint = headerColor
-            )
-        }
-
-        AnimatedVisibility(visible = expanded) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 4.dp, vertical = 8.dp),
-                shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = cardColor
-                )
-            ) {
-                Column(modifier = Modifier.padding(8.dp)) {
-                    content()
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun AncestralidadesDetailScreen(
-    state: CriadorState,
-    onBack: () -> Unit
-) {
-    val context = LocalContext.current
-    val ancestralidadesTexto = remember { loadRawText(context, R.raw.ancestralidades) }
-    val listaBlocos = remember { parseAncestralidades(ancestralidadesTexto) }
-
-    val atual = remember(state.ancestralidade) { state.ancestralidade.trim().uppercase() }
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        stickyHeader {
-            Surface(color = Color.Transparent) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onBack() }
-                        .padding(vertical = 12.dp)
-                ) {
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Voltar",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    )
-                }
-                HorizontalDivider()
-            }
-        }
-
-        items(listaBlocos) { bloco ->
-            val isTitulo = bloco.tipo == "titulo"
-            val titulo = if (isTitulo) bloco.conteudo.removeSuffix(":") else ""
-            val destacado = isTitulo && titulo.contains(atual, ignoreCase = true)
-
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-                    .background(if (destacado) Color(0x11007AFF) else Color.Transparent)
-            ) {
-                if (isTitulo) {
-                    val label = if (destacado) "$titulo (atual)" else titulo
-                    Text(label, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                } else {
-                    Text(
-                        text = bloco.conteudo,
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontSize = 14.sp
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-                HorizontalDivider()
-            }
-        }
-    }
-}
 
 data class BlocoTexto(val tipo: String, val conteudo: String)
 
@@ -1208,384 +1079,7 @@ fun parseAtributos(texto: String): List<AtributoCompleto> {
     return lista
 }
 
-@Composable
-fun AtributosDetailScreen(onBack: () -> Unit) {
-    val context = LocalContext.current
-    val atributosTexto = remember {
-        loadRawText(context, R.raw.atributos)
-    }
-    val listaAtributosCompleta = remember {
-        parseAtributos(atributosTexto)
-    }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        stickyHeader {
-            Surface(color = Color.Transparent) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onBack() }
-                        .padding(vertical = 12.dp)
-                ) {
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Voltar",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    )
-                }
-                HorizontalDivider()
-            }
-        }
-
-        items(listaAtributosCompleta) { atributoCompleto ->
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-            ) {
-                Text(
-                    text = atributoCompleto.nome,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-
-                if (atributoCompleto.descricao.isNotBlank()) {
-                    Text(
-                        text = atributoCompleto.descricao,
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontSize = 14.sp
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-                HorizontalDivider()
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun VantagensDetailScreen(
-    state: CriadorState,
-    modoSupers: Boolean,
-    highlightedName: String,
-    onBack: () -> Unit
-) {
-    val context = LocalContext.current
-
-    // 1) Carrega TODAS as vantagens do asset
-    val todasVantagens: List<Vantagem> = remember {
-        val jsonString = context.assets.open("Vantagens.json")
-            .bufferedReader()
-            .use { it.readText() }
-        val parser = Json {
-            ignoreUnknownKeys  = true
-            explicitNulls      = false
-        }
-        parser.decodeFromString(
-            ListSerializer(Vantagem.serializer()),
-            jsonString
-        )
-    }
-
-    // 2) Filtro de grupo (mantém sua regra original)
-    val listaFiltradaParaGrupo = remember(modoSupers, todasVantagens) {
-        if (!modoSupers) {
-            // no “básico” mostramos todas; o filtro por origem BASICO acontece abaixo
-            todasVantagens
-        } else {
-            // no modo supers, remove entradas específicas do grupo (como AA e Poder)
-            todasVantagens.filter { vant ->
-                vant.id != "antecedente_arcano" &&
-                        !vant.requisitos.vantagensPrevias.contains("antecedente_arcano") &&
-                        vant.categoria.name.uppercase() != "PODER"
-            }
-        }
-    }
-
-    // 3) Constrói blocos de texto (categorias Normais = origem BASICO)
-    val categoriasNormais: Map<String, List<String>> = remember(listaFiltradaParaGrupo) {
-        listaFiltradaParaGrupo
-            .filter { it.origem.equals("BASICO", ignoreCase = true) }
-            .groupBy { it.categoria.name }
-            .mapValues { entry ->
-                entry.value.map { vant ->
-                    buildString {
-                        append(vant.nome)
-                        append("\nEstágio: ${vant.requisitos.estagio}")
-                        vant.requisitos.atributoMin.forEach { (atributo, minimo) ->
-                            append("\n$atributo ≥ $minimo")
-                        }
-                        vant.requisitos.periciaMin.forEach { (pericia, minimo) ->
-                            append("\n$pericia ≥ $minimo")
-                        }
-                        vant.requisitos.periciaMinOpcional.forEach { (pericia, valorMinimo) ->
-                            append("\n$pericia d$valorMinimo+")
-                        }
-                        vant.requisitos.vantagensPrevias.forEach { req ->
-                            append("\nPré‐requisito: $req")
-                        }
-                        if (vant.requisitos.observacoes.isNotBlank()) {
-                            append("\nObservações: ${vant.requisitos.observacoes}")
-                        }
-                        append("\n\n${vant.descricao}")
-                    }
-                }
-            }
-    }
-
-    // 4) Constrói blocos de texto (categorias Super — somente quando modoSupers)
-    val categoriasSuper: Map<String, List<String>> = remember(modoSupers) {
-        if (!modoSupers) {
-            emptyMap()
-        } else {
-            val supList = AppData.superVantagensParaDetalhe
-            supList.groupBy { it.categoria.name }
-                .mapValues { entry ->
-                    entry.value.map { vant ->
-                        buildString {
-                            append(vant.nome)
-                            append("\nEstágio: ${vant.requisitos.estagio}")
-                            vant.requisitos.periciaMin.forEach { (pericia, minimo) ->
-                                append("\n$pericia ≥ $minimo")
-                            }
-                            vant.requisitos.periciaMinOpcional.forEach { (pericia, valorMinimo) ->
-                                append("\n$pericia ≥ $valorMinimo")
-                            }
-                            vant.requisitos.vantagensPrevias.forEach { req ->
-                                append("\nPré‐requisito: $req")
-                            }
-                            if (vant.requisitos.observacoes.isNotBlank()) {
-                                append("\nObservações: ${vant.requisitos.observacoes}")
-                            }
-                            append("\n\n${vant.descricao}")
-                        }
-                    }
-                }
-        }
-    }
-
-    // 5) Merge de categorias, preservando seu formato (chave normalizada -> Pair(nomeExibicao, blocos))
-    val todasCategorias: Map<String, Pair<String, List<String>>> = remember(
-        categoriasNormais,
-        categoriasSuper
-    ) {
-        val tempMap = mutableMapOf<String, Pair<String, MutableList<String>>>()
-
-        categoriasNormais.forEach { (categoriaEnumName, blocosTexto) ->
-            val chaveNorm = categoriaEnumName
-                .uppercase()
-                .semAcentos()
-                .removePrefix("DE ")
-                .trim()
-            tempMap[chaveNorm] = Pair(categoriaEnumName, blocosTexto.toMutableList())
-        }
-
-        categoriasSuper.forEach { (categoriaEnumName, blocosTextoSuper) ->
-            val chaveNorm = categoriaEnumName
-                .uppercase()
-                .semAcentos()
-                .removePrefix("DE ")
-                .trim()
-            if (tempMap.containsKey(chaveNorm)) {
-                val (_, blocosMutaveis) = tempMap.getValue(chaveNorm)
-                blocosMutaveis.addAll(blocosTextoSuper)
-            } else {
-                tempMap[chaveNorm] = Pair(
-                    categoriaEnumName.lowercase().replaceFirstChar { it.uppercase() },
-                    blocosTextoSuper.toMutableList()
-                )
-            }
-        }
-
-        tempMap.mapValues { (_, pair) ->
-            pair.first to pair.second.toList()
-        }
-    }
-
-    // 6) ► MAPA título -> Vantagem para conseguirmos cruzar com o state
-    //     (o título é sempre a PRIMEIRA LINHA do bloco)
-    val tituloParaVant: Map<String, Vantagem> = remember(listaFiltradaParaGrupo, modoSupers) {
-        val base = mutableMapOf<String, Vantagem>()
-        // do grupo filtrado normal/super
-        listaFiltradaParaGrupo.forEach { base[it.nome] = it }
-        // adiciona também as super-detalhadas (se existirem) para bater o título
-        if (modoSupers) {
-            AppData.superVantagensParaDetalhe.forEach { base[it.nome] = it }
-        }
-        base
-    }
-
-    // 7) Estado visual de expansão por categoria + rolagem até destaque
-    val expandedState = remember {
-        mutableStateMapOf<String, Boolean>().apply {
-            todasCategorias.keys.forEach { put(it, false) }
-        }
-    }
-    val listState = rememberLazyListState()
-
-    LaunchedEffect(highlightedName, todasCategorias) {
-        if (highlightedName.isNotEmpty()) {
-            val targetCat: String? = todasCategorias.entries.firstOrNull { (_, pair) ->
-                pair.second.any { bloco -> bloco.lines().first() == highlightedName }
-            }?.key
-            targetCat?.let { expandedState[it] = true }
-
-            val keysList = mutableListOf<String>()
-            todasCategorias.forEach { (cat, pair) ->
-                keysList.add("header-$cat")
-                if (expandedState[cat] == true) {
-                    pair.second.forEach { bloco ->
-                        keysList.add(bloco.lines().first())
-                    }
-                }
-            }
-            val idx = keysList.indexOf(highlightedName)
-            if (idx >= 0) {
-                listState.animateScrollToItem(idx)
-            }
-        }
-    }
-
-    // 8) ► Conjuntos para cruzar com o state (já possui / pode selecionar)
-    val nomesJaSelecionadas = remember(state.vantagensSelecionadas) {
-        state.vantagensSelecionadas.map { it.nome }.toSet()
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    TextButton(onClick = onBack) {
-                        Text(
-                            "Voltar",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp,
-                            color = Color(0xFF050402)
-                        )
-                    }
-                },
-                title = { },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF2E3C6)
-                )
-            )
-        },
-        containerColor = Color.Transparent
-    ) { innerPadding ->
-        LazyColumn(
-            state = listState,
-            contentPadding = innerPadding,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            todasCategorias.forEach { (cat, pair) ->
-                val displayName = pair.first
-                val listaBlocos = pair.second
-
-                // Cabeçalho da categoria
-                item(key = "header-$cat") {
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                val atual = expandedState[cat] ?: false
-                                expandedState[cat] = !atual
-                            }
-                            .padding(horizontal = 16.dp, vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = displayName,
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Icon(
-                            imageVector = if (expandedState[cat] == true)
-                                Icons.Filled.ExpandLess
-                            else
-                                Icons.Filled.ExpandMore,
-                            contentDescription = null
-                        )
-                    }
-                }
-
-                // Itens da categoria
-                if (expandedState[cat] == true) {
-                    listaBlocos.forEachIndexed { index, bloco ->
-                        val linhas = bloco.lines()
-                        val titulo = linhas.first()
-
-                        // ► “binding” com o state: já escolhida? requisitos ok?
-                        val vant = tituloParaVant[titulo]
-                        val jaTem = (titulo in nomesJaSelecionadas)
-                        val requisitosOk = vant?.let { state.podeSelecionar(it) } ?: true
-
-                        item(key = "$cat-$titulo-$index") {
-                            Column(
-                                Modifier
-                                    .padding(start = 24.dp, bottom = 16.dp)
-                                    .background(
-                                        when {
-                                            jaTem -> Color(0x11007AFF)     // já possui → leve destaque
-                                            requisitosOk -> Color.Transparent // pode pegar
-                                            else -> Color(0x11FF0000)       // pendente → leve vermelho
-                                        }
-                                    )
-                                    .padding(start = 4.dp, top = 8.dp, end = 4.dp, bottom = 8.dp)
-                            ) {
-                                // Linha de título + status
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text(
-                                        text = titulo,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 18.sp,
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    // Selo de status à direita
-                                    val status = when {
-                                        jaTem -> "já selecionada"
-                                        requisitosOk -> "requisitos OK"
-                                        else -> "requisitos pendentes"
-                                    }
-                                    Text(
-                                        status,
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = when {
-                                            jaTem -> Color(0xFF0047BA)
-                                            requisitosOk -> Color(0xFF2E7D32)
-                                            else -> Color(0xFFB00020)
-                                        }
-                                    )
-                                }
-
-                                Spacer(Modifier.height(4.dp))
-
-                                if (linhas.size > 1) {
-                                    Text(
-                                        text = linhas.drop(1).joinToString("\n"),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        fontSize = 14.sp
-                                    )
-                                }
-
-                                Spacer(Modifier.height(12.dp))
-                                HorizontalDivider(color = Color.Gray, thickness = 1.dp)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun RadioButtonRow(
@@ -1609,242 +1103,8 @@ fun RadioButtonRow(
     }
 }
 
-@Composable
-fun ComplicacoesDetailScreen(
-    state: CriadorState,
-    onBack: () -> Unit,
-    mostrarSuper: Boolean
-) {
-    val context = LocalContext.current
-
-    // Lê todas as complicações do JSON em assets/complicacoes.json
-    val listaTodas = remember {
-        val jsonString = context.assets.open("complicacoes.json")
-            .bufferedReader()
-            .use { it.readText() }
-        val parser = Json { ignoreUnknownKeys = true; explicitNulls = false }
-        parser.decodeFromString(ListSerializer(Complicacao.serializer()), jsonString)
-    }
-
-    // Aplica o filtro "Super" conforme o modo selecionado na tela inicial
-    val listaFiltrada = remember(mostrarSuper, listaTodas) {
-        if (mostrarSuper) listaTodas else listaTodas.filter { !it.origem.equals("SUPER", true) }
-    }
-
-    // ► usa o estado global para saber o que já foi escolhido
-    val jaEscolhidas = state.complicacoesSelecionadas
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        stickyHeader {
-            Surface(color = Color.Transparent) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onBack() }
-                        .padding(vertical = 12.dp)
-                ) {
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Voltar",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    )
-                }
-                HorizontalDivider()
-            }
-        }
-
-        items(listaFiltrada) { comp ->
-            val tipoSel = jaEscolhidas[comp] // "Menor", "Maior" ou null
-            val marcado = tipoSel != null
-            val sevRaw = comp.severity.trim()
-            val gravidade = when (sevRaw.lowercase()) {
-                "both"  -> "Menor/Maior"
-                "menor" -> "Menor"
-                "maior" -> "Maior"
-                else    -> sevRaw.ifBlank { "-" }
-            }
-
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-                    .background(if (marcado) Color(0x11007AFF) else Color.Transparent)
-            ) {
-                // Linha do título
-                Text(
-                    buildString {
-                        append(comp.name)
-                        append(" (")
-                        append(gravidade)
-                        append(")")
-                        if (marcado) append(" — já escolhida: $tipoSel")
-                    },
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                // Descrição (se existir)
-                if (comp.description.isNotBlank()) {
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        text = comp.description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontSize = 14.sp
-                    )
-                }
-
-                Spacer(Modifier.height(8.dp))
-                HorizontalDivider()
-            }
-        }
-    }
-}
 
 
-@Composable
-fun PericiasDetailScreen(
-    state: CriadorState,
-    onBack: () -> Unit
-) {
-    val context = LocalContext.current
-
-    // Mapa de descrições já existente (R.raw.pericias)
-    val descricoes by remember {
-        mutableStateOf(loadPericiasDescriptions(context, R.raw.pericias))
-    }
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        stickyHeader {
-            Surface(color = Color.Transparent) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onBack() }
-                        .padding(vertical = 12.dp, horizontal = 16.dp)
-                ) {
-                    Text(
-                        text = "Voltar",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    )
-                }
-                HorizontalDivider()
-            }
-        }
-
-        // ► Usa a lista oficial (Pericia), que conversa com o CriadorState
-        items(listaPericias) { per ->
-            // Chave p/ descrição
-            val rawName = per.nome.removePrefix("*").trim()
-            val key = "$rawName (${per.atributo})".uppercase().semAcentos()
-            val desc = descricoes[key] ?: "Descrição indisponível."
-
-            // ► Estes dados vêm do state (uso REAL do state)
-            val currentRaw = state.rawTotal(per)                        // d0/d4/d6...
-            val attrKey    = state.atributoBaseParaPericia(per)
-            val atrRaw     = state.valoresAtributos[attrKey]!!.intValue
-            val capRaw     = state.periciaCapRaw(per)
-
-            val nextRaw    = if (currentRaw == 0 && per.basica) 4 else currentRaw + 2
-            val costNormal = if (nextRaw <= atrRaw) 1 else 2           // 1 até atributo, 2 acima
-
-            // Mínimos por vantagens (inclui opcionais)
-            val minimoBasico  = state.minPericiaPorVantagem[per] ?: 0
-            val minimoOpcional = state.vantagensSelecionadas
-                .flatMap { vant ->
-                    vant.requisitos.periciaMinOpcional
-                        .filterKeys { it.equals(per.nome, ignoreCase = true) }
-                        .values
-                }
-                .maxOrNull() ?: 0
-            val minimoTotal = maxOf(minimoBasico, minimoOpcional)
-            val needsMin    = (minimoTotal > 0 && currentRaw in 1 until minimoTotal)
-
-            // Pode aumentar agora (respeitando SP disponíveis, cap, etc.)
-            val podeAumentar = state.pontosPericia >= costNormal && nextRaw <= capRaw
-
-            // Status amigável
-            val status = buildString {
-                append(
-                    when (currentRaw) {
-                        0 if per.basica -> "Atual: d4 (básica)"
-                        0 -> "Atual: —"
-                        else -> "Atual: d${currentRaw}"
-                    }
-                )
-                append(" • Próximo: ")
-                append(if (nextRaw > capRaw) "— (teto)" else if (currentRaw == 0 && !per.basica) "d4" else "d$nextRaw")
-                append(" • Custo: ")
-                append(if (nextRaw > capRaw) "—" else "$costNormal SP")
-                append(" • Cap: d$capRaw")
-                if (minimoTotal > 0) {
-                    append(" • Mín.: d$minimoTotal")
-                    if (needsMin) append(" (abaixo)")
-                }
-            }
-
-            // Destaque visual
-            val bg = when {
-                needsMin -> Color(0x11FF0000)         // vermelho claro
-                currentRaw > 0 || per.basica -> Color(0x11007AFF) // azul claro
-                else -> Color.Transparent
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp)
-                    .background(bg)
-                    .padding(horizontal = 8.dp, vertical = 6.dp)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (per.basica) {
-                        Text("✯", color = MaterialTheme.colorScheme.error, fontSize = 20.sp)
-                        Spacer(Modifier.width(8.dp))
-                    }
-                    Text(
-                        text = "${per.nome} (${per.atributo})",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Text(
-                        when {
-                            needsMin -> "abaixo do mínimo"
-                            podeAumentar -> "pode aumentar"
-                            else -> ""
-                        },
-                        style = MaterialTheme.typography.labelSmall,
-                        color = when {
-                            needsMin -> Color(0xFFB00020)
-                            podeAumentar -> Color(0xFF2E7D32)
-                            else -> MaterialTheme.colorScheme.onSurfaceVariant
-                        }
-                    )
-                }
-
-                Spacer(Modifier.height(6.dp))
-                Text(status, style = MaterialTheme.typography.labelMedium)
-
-                Spacer(Modifier.height(8.dp))
-                Text(desc, style = MaterialTheme.typography.bodyMedium, fontSize = 14.sp)
-
-                Spacer(Modifier.height(8.dp))
-                HorizontalDivider()
-            }
-        }
-    }
-}
 
 @Composable
 fun PowerDropdownMenu(
@@ -1892,217 +1152,6 @@ fun PowerDropdownMenu(
     }
 }
 
-@Composable
-fun EquipamentosDetailScreen(
-    categorias: List<EquipamentoCategoria>,
-    onBack: () -> Unit
-) {
-        fun JsonElement?.asText(): String? = when (this) {
-        is JsonPrimitive -> this.content
-        else -> this?.toString()
-    }?.takeIf { it.isNotBlank() }
-
-    val mapa =
-        remember(categorias) {
-            categorias
-                .sortedWith(
-                    compareBy<EquipamentoCategoria> { it.tipo.lowercase() }
-                        .thenBy { it.subtipo.lowercase() }
-                        .thenBy { (it.subsubtipo ?: "").lowercase() }
-                )
-                .groupBy { cat ->
-                    val tipoOriginal = cat.tipo
-                    val isSuper = cat.origem.equals("SUPER", ignoreCase = true)
-
-                    // Normaliza o rótulo exibido para o grupo
-                    val labelTipo = if (isSuper) {
-                        if (tipoOriginal.contains("Equipamento Supers", ignoreCase = true)) {
-                            "Superequip - Veículos"     // ← fica igual ao padrão, mas com nome claro
-                        } else {
-                            "Superequip - $tipoOriginal"
-                        }
-                    } else {
-                        tipoOriginal
-                    }
-
-                    labelTipo
-                }
-                .mapValues { (_, porTipo) ->
-                    porTipo.groupBy { it.subtipo }.mapValues { (_, porSubtipo) ->
-                        porSubtipo.groupBy { it.subsubtipo ?: "" }.mapValues { (_, listaFinal) ->
-                            listaFinal.flatMap { it.itens }.sortedBy { it.nome }
-                        }
-                    }
-                }
-        }
-
-    // --- ESTADOS DE EXPANSÃO (mantidos) ---
-    val expTipo  = remember(mapa) { mapa.keys.associateWith { mutableStateOf(false) } }
-    val expSub   = remember(mapa) { mapa.mapValues { (_, sub) -> sub.keys.associateWith { mutableStateOf(false) } } }
-    val expSub2  = remember(mapa) {
-        mapa.mapValues { (_, sub) ->
-            sub.mapValues { (_, sub2) -> sub2.keys.associateWith { mutableStateOf(false) } }
-        }
-    }
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // Header "Voltar"
-        stickyHeader {
-            Surface(color = Color.Transparent) {
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .clickable(onClick = onBack)
-                        .padding(vertical = 12.dp, horizontal = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("Voltar", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                }
-                HorizontalDivider()
-            }
-        }
-
-        // TIPOS
-        mapa.toSortedMap(compareBy { it.lowercase() }).forEach { (tipo, subMapa) ->
-            item {
-                val et = expTipo.getValue(tipo)
-                Column {
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable { et.value = !et.value }
-                            .padding(vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(tipo, style = MaterialTheme.typography.titleMedium)
-                        Icon(
-                            imageVector = if (et.value) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                            contentDescription = if (et.value) "Fechar" else "Abrir"
-                        )
-                    }
-
-                    if (et.value) {
-                        // SUBTIPOS
-                        subMapa.toSortedMap(compareBy { it.lowercase() }).forEach { (subtipo, sub2Mapa) ->
-                            val es = expSub.getValue(tipo).getValue(subtipo)
-                            Column(Modifier.padding(start = 8.dp, bottom = 8.dp)) {
-                                Row(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .clickable { es.value = !es.value }
-                                        .padding(vertical = 6.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(subtipo, fontWeight = FontWeight.Bold)
-                                    Icon(
-                                        imageVector = if (es.value) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                                        contentDescription = if (es.value) "Fechar" else "Abrir"
-                                    )
-                                }
-
-                                if (es.value) {
-                                    // SUBSUBTIPOS
-                                    sub2Mapa.toSortedMap(compareBy { it.lowercase() }).forEach { (subsub, itens) ->
-                                        val ess = expSub2.getValue(tipo).getValue(subtipo).getValue(subsub)
-                                        Column(Modifier.padding(start = 8.dp, bottom = 4.dp)) {
-                                            if (subsub.isNotBlank()) {
-                                                Row(
-                                                    Modifier
-                                                        .fillMaxWidth()
-                                                        .clickable { ess.value = !ess.value }
-                                                        .padding(vertical = 4.dp),
-                                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                                    verticalAlignment = Alignment.CenterVertically
-                                                ) {
-                                                    Text(subsub)
-                                                    Icon(
-                                                        imageVector = if (ess.value) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                                                        contentDescription = if (ess.value) "Fechar" else "Abrir"
-                                                    )
-                                                }
-                                            } else {
-                                                ess.value = true // sem subsubtipo: já aberto
-                                            }
-
-                                            if (ess.value) {
-                                                // LISTA DE ITENS (com DETALHES)
-                                                Column(
-                                                    Modifier
-                                                        .fillMaxWidth()
-                                                        .padding(start = 8.dp, bottom = 8.dp)
-                                                ) {
-                                                    itens.forEach { eq ->
-                                                        Column(
-                                                            Modifier
-                                                                .fillMaxWidth()
-                                                                .padding(vertical = 6.dp)
-                                                        ) {
-                                                            Row(
-                                                                Modifier.fillMaxWidth(),
-                                                                horizontalArrangement = Arrangement.SpaceBetween
-                                                            ) {
-                                                                Text(eq.nome, style = MaterialTheme.typography.bodyLarge)
-                                                                eq.custo.asText()?.let { Text(it) }
-                                                            }
-
-                                                            // ===== PADRONIZAÇÃO DAS LINHAS =====
-                                                            // 1) Linha de "arma" (se aplicável)
-                                                            val linhaArma = listOfNotNull(
-                                                                eq.dano.asText()?.let { "Dano: $it" },
-                                                                eq.pa.asText()?.let { "PA: $it" },
-                                                                eq.cdt.asText()?.let { "CdT: $it" },
-                                                                eq.distancia.asText()?.let { "Distância: $it" },
-                                                                eq.tiros.asText()?.let { "Tiros: $it" },
-                                                            ).joinToString("  •  ").takeIf { it.isNotBlank() }
-
-                                                            // 2) Linha geral (peso/força/armadura/aparar)
-                                                            val linhaGeral = listOfNotNull(
-                                                                eq.peso.asText()?.let { "Peso: $it" },
-                                                                eq.forcaMin.asText()?.let { "Força mín.: $it" },
-                                                                eq.armadura.asText()?.let { "Armadura: $it" },
-                                                                eq.aparar.asText()?.let { "Aparar: $it" },
-                                                            ).joinToString("  •  ").takeIf { it.isNotBlank() }
-
-                                                            // 3) Linha veículo — mesma lógica/ordem usada no superquip de veículos
-                                                            val linhaVeiculo = listOfNotNull(
-                                                                eq.velMaxima.asText()?.let { "Vel. máx.: $it" },
-                                                                eq.manobrabilidade.asText()?.let { "Manobrabilidade: $it" },
-                                                                eq.tamanho.asText()?.let { "Tamanho: $it" },
-                                                                eq.resistencia.asText()?.let { "Resistência: $it" },
-                                                                eq.tripulacao.asText()?.let { "Tripulação: $it" },
-                                                                eq.blindagem.asText()?.let { "Blindagem: $it" },
-                                                                eq.passageiros.asText()?.let { "Passageiros: $it" },
-                                                            ).joinToString("  •  ").takeIf { it.isNotBlank() }
-                                                            // ===== FIM PADRONIZAÇÃO =====
-
-                                                            linhaArma?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
-                                                            linhaGeral?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
-                                                            linhaVeiculo?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
-
-                                                            eq.observacoes.asText()?.takeIf { it.isNotBlank() }?.let {
-                                                                Text(it, style = MaterialTheme.typography.bodySmall)
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 
 
