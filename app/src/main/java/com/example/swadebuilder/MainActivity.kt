@@ -102,6 +102,8 @@ import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.loadPericiasDescriptions
+import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.sections.PoderesDetailScreen
 import com.example.swadebuilder.ui.sections.SuperPoderesDetailScreen
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
@@ -922,67 +924,6 @@ val dynamicStageCaps = listaDeEstagios.mapIndexed { idx, st ->
 
 
 
-@Composable
-fun SectionCard(
-    title: String,
-    expanded: Boolean,
-    onToggle: () -> Unit,
-    icon: ImageVector,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    val headerColor = MaterialTheme.colorScheme.onBackground
-    val cardColor   = MaterialTheme.colorScheme.surfaceVariant
-
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onToggle)
-                .padding(vertical = 8.dp, horizontal = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(36.dp)
-                    .padding(end = 12.dp),
-                tint = headerColor
-            )
-            Text(
-                text       = title,
-                fontSize   = 27.sp,
-                fontWeight = FontWeight.Bold,
-                color      = headerColor
-            )
-            Spacer(Modifier.weight(1f))
-            Icon(
-                imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                contentDescription = null,
-                modifier = Modifier.size(36.dp),
-                tint = headerColor
-            )
-        }
-
-        AnimatedVisibility(visible = expanded) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 4.dp, vertical = 8.dp),
-                shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = cardColor
-                )
-            ) {
-                Column(modifier = Modifier.padding(8.dp)) {
-                    content()
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun AncestralidadesDetailScreen(
@@ -1077,65 +1018,6 @@ fun parseAncestralidades(texto: String): List<BlocoTexto> {
     return blocos
 }
 
-@Composable
-fun SectionHeader(
-    onHelpClick: (() -> Unit)? = null,
-    centerText: String,
-    onCenterClick: (() -> Unit)? = null,
-    onListaCompletaClick: (() -> Unit)? = null,
-    listaCompletaText: String = "Lista Completa"
-) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // Coluna da esquerda: botão de ajuda (ou espaço em branco se não tiver ajuda)
-        if (onHelpClick != null) {
-            IconButton(onClick = onHelpClick) {
-                Icon(
-                    Icons.AutoMirrored.Filled.Help,
-                    contentDescription = "Ajuda"
-                )
-            }
-        } else {
-            // Espaçador para não bagunçar o alinhamento
-            Spacer(
-                modifier = Modifier.size(48.dp)
-            )
-        }
-
-        // Texto central (clicável se onCenterClick != null)
-        Text(
-            text = centerText,
-            modifier = Modifier
-                .weight(1f)
-                .then(
-                    if (onCenterClick != null) {
-                        Modifier.clickable(onClick = onCenterClick)
-                    } else {
-                        Modifier
-                    }
-                )
-                .padding(horizontal = 8.dp),
-            textAlign = TextAlign.Center,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
-        )
-
-        // Botão "Lista completa" à direita (ou espaçador)
-        if (onListaCompletaClick != null && listaCompletaText.isNotEmpty()) {
-            TextButton(onClick = onListaCompletaClick) {
-                Text(listaCompletaText, fontSize = 13.sp)
-            }
-        } else {
-            Spacer(
-                modifier = Modifier.size(48.dp)
-            )
-        }
-    }
-}
 
 @Composable
 fun CollapsibleSection(
