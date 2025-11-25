@@ -1,0 +1,30 @@
+name: Android CI com Jules
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Fazer Checkout do Repositório
+      uses: actions/checkout@v3
+
+    - name: Configurar o JDK 17 (Java)
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Configurar o SDK do Android
+      uses: android-actions/setup-android@v2
+
+    - name: Dar permissão de execução ao Gradle Wrapper
+      run: chmod +x gradlew
+
+    - name: Compilar o projeto com Gradle
+      run: ./gradlew build --no-daemon 
