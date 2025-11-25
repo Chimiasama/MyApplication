@@ -48,7 +48,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.SectionHeader
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.listaDeEstagios
@@ -57,6 +56,7 @@ import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.dialogs.MultipleSelectionDialog
 import com.example.swadebuilder.util.keyify
@@ -245,7 +245,6 @@ fun VantagensContent(
     val categoriasBy = remember(listaVantagensAtivas) {
         listaVantagensAtivas.groupBy { it.categoria }
     }
-    val categoriasFiltradas = categoriasBy
 
     // Estados principais
     var filter by remember { mutableStateOf(VantFilter()) }
@@ -510,7 +509,7 @@ fun VantagensContent(
         Spacer(Modifier.size(16.dp))
 
         // seções por categoria
-        categoriasFiltradas.forEach { (cat, lista) ->
+        categoriasBy.forEach { (cat, lista) ->
             // em modo supers, a categoria PODER é toda desabilitada
             if (state.modoSupers && cat == Categoria.PODER) return@forEach
 
@@ -633,7 +632,8 @@ fun VantagensContent(
                                                 }
 
                                                 !state.podeSelecionar(vant) -> {
-                                                    tempErrorMsg = "Faltam requisitos para '${vant.nome}'"
+                                                    tempErrorMsg =
+                                                        "Faltam requisitos para '${vant.nome}'"
                                                     showTempError = true
                                                 }
 
@@ -652,7 +652,11 @@ fun VantagensContent(
                                                 }
 
                                                 else -> {
-                                                    if (vant.nome.contains("Pontos de Poder", true)) {
+                                                    if (vant.nome.contains(
+                                                            "Pontos de Poder",
+                                                            true
+                                                        )
+                                                    ) {
                                                         state.comprarPontoDePoder(vant)
                                                     } else {
                                                         state.applyVantagemDinheiro(vant)

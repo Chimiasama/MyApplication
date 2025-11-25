@@ -31,9 +31,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.R
-import com.example.swadebuilder.SectionCard
-import com.example.swadebuilder.SectionHeader
 import com.example.swadebuilder.model.loadJsonAsset
+import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -64,10 +65,18 @@ fun AncestralidadesSection(
         )
     }
 
-    // seleção atual (default "HUMANOS")
-    val selected = rememberSaveable(currentAncestralidade) {
-        mutableStateOf(currentAncestralidade.ifBlank { "HUMANOS" })
+    // chave normalizada da ancestralidade atual (ex: "ANÕES" -> "ANOES")
+    val selectedKey = rememberSaveable(currentAncestralidade) {
+        mutableStateOf(
+            currentAncestralidade.uppercase().semAcentos().ifBlank { "HUMANOS" }
+        )
     }
+
+    // Nome bonitinho pra exibir no cabeçalho
+    val selectedDisplayName =
+        ancestralidadesState.value.firstOrNull { item ->
+            item.nome.uppercase().semAcentos() == selectedKey.value
+        }?.nome ?: "HUMANOS"
 
     SectionCard(
         title = "Ancestralidades",
@@ -76,9 +85,9 @@ fun AncestralidadesSection(
         icon = Icons.AutoMirrored.Filled.MenuBook
     ) {
         val centerLabel = if (supersLocked) {
-            "Ancestralidade: ${selected.value} (travado na fase Supers)"
+            "Ancestralidade: $selectedDisplayName (travado na fase Supers)"
         } else {
-            "Ancestralidade: ${selected.value}"
+            "Ancestralidade: $selectedDisplayName"
         }
 
         SectionHeader(
@@ -112,7 +121,8 @@ fun AncestralidadesSection(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 items(ancestralidadesState.value) { item ->
-                    val isSelected = item.nome == selected.value
+                    val itemKey = item.nome.uppercase().semAcentos()
+                    val isSelected = itemKey == selectedKey.value
 
                     Row(
                         modifier = Modifier
@@ -126,7 +136,9 @@ fun AncestralidadesSection(
                             )
                             .clickable(enabled = !supersLocked) {
                                 if (supersLocked) return@clickable
-                                selected.value = item.nome
+                                // grava a chave normalizada
+                                selectedKey.value = itemKey
+                                // avisa o caller com o nome "bonito"
                                 onSelectAncestralidade(item.nome)
                             }
                             .padding(vertical = 8.dp, horizontal = 8.dp),
