@@ -1041,7 +1041,7 @@ class CriadorState {
                     when (prevAnc) {
                         "SAURIOS"    -> setOf("Sentidos Aguçados", "Prontidão")
                         "PEQUENINOS" -> setOf("Sorte")
-                        "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES")
+            "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
                         else         -> emptySet()
                     }
                     ).map { it.keyify() }
@@ -1168,12 +1168,13 @@ class CriadorState {
                 armadura = 0
             }
             "CELESTIAIS" -> {
-                listaVantagens
-                    .firstOrNull { it.nome.equals("ANTECEDENTE ARCANO MILAGRES", ignoreCase = true) }
-                    ?.let {
-                        vantagensSelecionadas.add(it)
-                    }
-                vantagensAutomaticas.add("ANTECEDENTE ARCANO MILAGRES")
+                val aaMilagres = listaVantagens.firstOrNull {
+                    it.id == "antecedente_arcano_milagres"
+                }
+                if (aaMilagres != null && vantagensSelecionadas.none { it.id == aaMilagres.id }) {
+                    vantagensSelecionadas.add(aaMilagres)
+                }
+                vantagensAutomaticas.add("ANTECEDENTE ARCANO (MILAGRES)")
                 armadura = 0
             }
             else -> {
