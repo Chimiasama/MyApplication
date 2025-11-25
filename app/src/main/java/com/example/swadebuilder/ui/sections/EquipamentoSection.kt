@@ -34,9 +34,9 @@ import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CollapsibleSection
-import com.example.swadebuilder.SectionCard
-import com.example.swadebuilder.SectionHeader
 import com.example.swadebuilder.model.EquipamentoCategoria
+import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.model.EquipamentoItem
 import kotlinx.serialization.json.JsonPrimitive
 

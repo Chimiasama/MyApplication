@@ -55,9 +55,9 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.PurchasedPower
 import com.example.swadebuilder.R
-import com.example.swadebuilder.SectionCard
-import com.example.swadebuilder.SectionHeader
 import com.example.swadebuilder.SuperPoder
+import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.model.Categoria

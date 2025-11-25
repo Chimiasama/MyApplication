@@ -43,6 +43,8 @@ import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.SuperPoder
 import com.example.swadebuilder.model.loadJsonAsset
+import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.ui.components.SectionHeader
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
