@@ -112,6 +112,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.model.AtributoList
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.DataRepository
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MeuPersonagem
@@ -129,6 +130,7 @@ import com.example.swadebuilder.ui.sections.EquipamentoSection
 import com.example.swadebuilder.ui.sections.InformacoesSection
 import com.example.swadebuilder.ui.sections.PericiasContent
 import com.example.swadebuilder.ui.sections.PoderesDetailScreen
+import com.example.swadebuilder.ui.screens.TelaInicial
 import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.SummaryContent
 import com.example.swadebuilder.ui.sections.SuperPoderesContent
@@ -195,12 +197,9 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val allEquipJson = assets
-            .open("equipamentos.json")
-            .bufferedReader()
-            .use { it.readText() }
-        val allEquipCategorias: List<EquipamentoCategoria> =
-            json.decodeFromString(allEquipJson)
+        val dataRepository = DataRepository(this)
+
+        val allEquipCategorias: List<EquipamentoCategoria> = dataRepository.loadEquipamentoCategorias()
 
         val equipamentoCategorias = allEquipCategorias.filter { cat ->
             cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
@@ -209,31 +208,17 @@ class MainActivity : ComponentActivity() {
             cat.origem?.equals("super", ignoreCase = true) ?: false
         }
 
-        val superPoderesJson = assets
-            .open("superpoderes.json")
-            .bufferedReader()
-            .use { it.readText() }
-        val listaSuperPoderes: List<SuperPoder> =
-            json.decodeFromString(superPoderesJson)
+        val listaSuperPoderes: List<SuperPoder> = dataRepository.loadSuperPoderes()
 
-        val arcanoJson = assets.open("arcano_info.json")
-            .bufferedReader().use { it.readText() }
-        val arcanoList: List<ArcanoInfo> =
-            Json.decodeFromString(arcanoJson)
-        arcanoInfo = arcanoList.associate {
-            it.key
-                .uppercase()
-                .semAcentos()
-                .trim() to Triple(it.slots, it.pp, it.foco)
-        }
+        arcanoInfo = dataRepository.loadArcanoInfo()
 
-        val atributosData = this.loadJsonAsset<AtributoList>("atributos.json")
+        val atributosData = dataRepository.loadAtributos()
         listaAtributos = atributosData.atributos
             .map { it.nome.keyify() }
         mapaAtributosDisplay = atributosData.atributos
             .associate { it.nome.keyify() to it.nome }
 
-        val periciasData = this.loadJsonAsset<PericiaList>("pericias.json")
+        val periciasData = dataRepository.loadPericias()
         listaPericias = periciasData.pericias.map { pj ->
             Pericia(
                 nome     = pj.nome,
@@ -242,7 +227,7 @@ class MainActivity : ComponentActivity() {
             )
         }
 
-        val todasVantagens: List<Vantagem> = this.loadJsonAsset("Vantagens.json")
+        val todasVantagens: List<Vantagem> = dataRepository.loadVantagens()
 
         AppData.basicasVantagens          = todasVantagens.filter { it.origem.equals("BASICO", true) }
         AppData.superVantagens = todasVantagens.filter {
@@ -254,21 +239,9 @@ class MainActivity : ComponentActivity() {
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
 
-        val complicacoesJson = assets
-            .open("complicacoes.json")
-            .bufferedReader()
-            .use { it.readText() }
+        listaComplicacoes = dataRepository.loadComplicacoes()
 
-        listaComplicacoes = json.decodeFromString(
-            ListSerializer(Complicacao.serializer()),
-            complicacoesJson
-        )
-
-        val ancestralRaw = assets.open("listaancestralidade.json")
-            .bufferedReader(Charsets.UTF_8)
-            .use { it.readText() }
-
-        listaAncestralidadesJson = Json.decodeFromString<List<RacialModifier>>(ancestralRaw)
+        listaAncestralidadesJson = dataRepository.loadRacialModifiers()
 
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
             val m = rm.atributos
@@ -550,7 +523,7 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                                             limiteDePoderDaCampanha = state.limiteDePoderDaCampanha,
                                                             anotacoes               = state.anotacoes
                                                         )
-                                                        salvarEExibirFichaPdf(this@MainActivity, personagem)
+                                                        criadorViewModel.salvarEExibirFichaPdf(this@MainActivity, personagem)
                                                     }
                                                 }) {
                                                     Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
@@ -650,7 +623,10 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                                         if (state.modoSuperequip) superequipCategorias else emptyList(),
                                                 onBack     = { showEquipLista = false }
                                             )
-                                            2 -> AtributosDetailScreen(onBack = { showAtributosDetail = false })
+                                            2 -> AtributosDetailScreen(
+                                                onBack = { showAtributosDetail = false },
+                                                atributosTexto = dataRepository.loadRawText(R.raw.atributos)
+                                            )
                                             3 -> VantagensDetailScreen(
                                                 state           = state,
                                                 modoSupers      = state.modoSupers,
@@ -668,7 +644,8 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                                             )
                                             6 -> AncestralidadesDetailScreen(
                                                 state  = state,
-                                                onBack = { showAncestralidadesDetail = false }
+                                                onBack = { showAncestralidadesDetail = false },
+                                                ancestralidadesTexto = dataRepository.loadRawText(R.raw.ancestralidades)
                                             )
                                             7 -> PoderesDetailScreen(
                                                 state  = state,
@@ -755,330 +732,6 @@ data class SuperPoder(
     val manifestacoes: JsonElement? = null
 )
 
-fun salvarEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
-    val pdfFile = File(context.getExternalFilesDir(null), "ficha_preenchida.pdf")
-
-    gerarFichaEmPdf(pdfFile, dadosDoPersonagem)
-
-    val uri: Uri = FileProvider.getUriForFile(
-        context,
-        "${context.packageName}.fileprovider",
-        pdfFile
-    )
-
-    val intent = Intent(Intent.ACTION_VIEW).apply {
-        setDataAndType(uri, "application/pdf")
-        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-    }
-
-    if (intent.resolveActivity(context.packageManager) != null) {
-        context.startActivity(intent)
-    } else {
-        Toast.makeText(context, "Nenhum app de PDF encontrado.", Toast.LENGTH_SHORT).show()
-    }
-}
-
-fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
-    val lines = mutableListOf<String>()
-
-    val ancestralidadeNome: String = listaAncestralidadesJson
-        .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
-        ?.nome ?: personagem.ancestralidade
-
-    val vantagensNomeKey: List<String> = listaVantagens
-        .filter { it.id in personagem.vantagens }
-        .map { it.nome.keyify() }
-
-    fun temComp(key: String): Boolean =
-        personagem.complicacoes.any { it.keyify() == key }
-
-    fun racialSize(): Int =
-        listaAncestralidadesJson
-            .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
-            ?.desvantagens
-            ?.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
-            ?.substringAfter("TAMANHO")
-            ?.trim()
-            ?.toIntOrNull()
-            ?: 0
-
-    fun tamanhoTotal(): Int {
-        val base = racialSize()
-        val obesoBonus = if (temComp("OBESO")) 1 else 0
-        val pequenoPenalty = if (temComp("PEQUENO")) -1 else 0
-        return base + obesoBonus + pequenoPenalty
-    }
-
-    fun resistenciaBase(): Int {
-        val vigorRaw = personagem.atributos["VIGOR"] ?: 4
-        val base = 2 + (vigorRaw / 2)
-
-        val bonusPos =
-            if (vantagensNomeKey.any { it == "RESISTENCIA" }) 1 else 0
-        val bonusNeg =
-            if (personagem.complicacoes.any { it.keyify() == "FRAGIL" }) -1 else 0
-
-        val brigaoBonus = vantagensNomeKey.count { it in listOf("BRIGAO", "PUGILISTA") }
-
-        return (base + bonusPos + bonusNeg + brigaoBonus + tamanhoTotal())
-            .coerceAtLeast(0)
-    }
-
-    fun resistenciaFinal(): Int =
-        resistenciaBase() + personagem.bonusResFromPower
-
-    fun calcMovimento(): Int {
-        val base = 6
-
-        val racialPenalty =
-            listaAncestralidadesJson
-                .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
-                ?.desvantagens
-                ?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
-                .takeIf { it == true }
-                ?.let { 1 }
-                ?: 0
-
-        val lentoPenalty = if (temComp("LENTO")) 1 else 0
-        val idosoPenalty = if (temComp("IDOSO")) 1 else 0
-        val obesoPenalty = if (temComp("OBESO")) 1 else 0
-        val ligeiroBonus =
-            if (vantagensNomeKey.any { it == "LIGEIRO" }) 2 else 0
-
-        return (
-                base
-                        - racialPenalty
-                        - lentoPenalty
-                        - idosoPenalty
-                        - obesoPenalty
-                        + ligeiroBonus
-                        + personagem.bonusMovimentacaoFromPower
-                ).coerceAtLeast(0)
-    }
-
-    fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
-        var raw = rawStart
-        var remaining = steps.coerceAtLeast(0)
-
-        if (raw <= 0 && remaining > 0) {
-            raw = 4
-            remaining -= 1
-        }
-
-        repeat(remaining) {
-            raw += if (raw < 12) 2 else 1
-        }
-
-        return raw
-    }
-
-    fun calcAparar(): Int {
-        val lutarRawBase = personagem.pericias["Lutar"] ?: 0
-        val lutarStepsFromSupers = personagem.superPericiaIncs["LUTAR"] ?: 0
-        val lutarComSupers = applySuperStepsFrom(lutarRawBase, lutarStepsFromSupers)
-
-        val base = 2 + (lutarComSupers / 2)
-
-        val bloquearBonus =
-            if (vantagensNomeKey.any { it == "BLOQUEAR" }) 1 else 0
-        val bloquearAprimoradoBonus =
-            if (vantagensNomeKey.any { it == "BLOQUEAR APRIMORADO" }) 1 else 0
-
-        return base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusPararFromPower
-    }
-
-    fun calcArmaduraEfetiva(): Int {
-        return personagem.armorFromPower.coerceAtLeast(0)
-    }
-
-    val aparar = calcAparar()
-    val resFinal = resistenciaFinal()
-    val tamanho = tamanhoTotal()
-    val mov = calcMovimento()
-    val armadura = calcArmaduraEfetiva()
-    val resistenciaTexto =
-        if (armadura > 0) "${resFinal}(${armadura})" else resFinal.toString()
-
-    lines += "Identidade"
-    lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"
-    lines += "Ancestralidade: $ancestralidadeNome"
-    lines += ""
-
-    lines += "Atributos derivados"
-    lines += "Aparar: $aparar"
-    lines += "Resistência: $resistenciaTexto"
-    lines += "Tamanho: $tamanho"
-    lines += "Movimento: $mov"
-    if (armadura > 0) {
-        lines += "Armadura: $armadura"
-    }
-    lines += ""
-
-    lines += "Atributos"
-    lines += listaAtributos.joinToString(", ") { attrKey ->
-        val label = mapaAtributosDisplay[attrKey] ?: attrKey
-        val valor = personagem.atributos[attrKey] ?: 4
-        "$label d$valor"
-    }
-    lines += ""
-
-    val periciasParaMostrar = listaPericias.filter { per ->
-        per.basica || (personagem.pericias[per.nome] ?: 0) >
-                periciaStartRaw(personagem.ancestralidade, per)
-    }
-
-    lines += "Perícias"
-    if (periciasParaMostrar.isEmpty()) {
-        lines += "– Nenhuma"
-    } else {
-        periciasParaMostrar.forEach { per ->
-            val raw = personagem.pericias[per.nome] ?: 0
-            lines += "• ${per.nome} d$raw"
-        }
-    }
-    lines += ""
-
-    lines += "Recursos & Equipamentos"
-    lines += "Dinheiro restante: ${personagem.dinheiro}"
-    if (personagem.equipamentos.isEmpty()) {
-        lines += "Equipamentos: – Nenhum"
-    } else {
-        lines += "Equipamentos:"
-        personagem.equipamentos.forEach { eq ->
-            lines += "• ${eq.nome}"
-        }
-    }
-    lines += ""
-
-    lines += "Vantagens"
-    if (personagem.vantagens.isEmpty()) {
-        lines += "– Nenhuma"
-    } else {
-        val nomesVantagens = listaVantagens
-            .filter { it.id in personagem.vantagens }
-            .map { it.nome }
-        lines += nomesVantagens.joinToString(", ")
-    }
-    lines += ""
-
-    lines += "Complicações"
-    lines += if (personagem.complicacoes.isEmpty()) {
-        "– Nenhuma"
-    } else {
-        personagem.complicacoes.joinToString(", ")
-    }
-    lines += ""
-
-    if (personagem.poderes.isNotEmpty()) {
-        lines += "Poderes arcanos"
-        personagem.poderes.forEach { (arcanoKey, lista) ->
-            val label = arcanoKey
-                .lowercase()
-                .replace('_', ' ')
-                .replaceFirstChar { it.titlecase() }
-
-            lines += if (lista.isEmpty()) {
-                "• $label: – nenhum poder escolhido"
-            } else {
-                "• $label: ${lista.joinToString(", ")}"
-            }
-        }
-        lines += ""
-    }
-
-    if (personagem.modoSupers &&
-        (personagem.superPontosTotais > 0 || personagem.gastosPorPoder.isNotEmpty())
-    ) {
-        lines += "Superpoderes"
-
-        if (personagem.gastosPorPoder.isEmpty()) {
-            lines += "– Nenhum superpoder registrado"
-        } else {
-            personagem.gastosPorPoder.forEach { (poderId, custo) ->
-                lines += "• $poderId: $custo SP"
-            }
-        }
-
-        lines += "Superpontos: ${personagem.superPontosTotais} (disponíveis: ${personagem.superPontosDisponiveis})"
-        lines += "Limite por poder: ${personagem.limitePorPoderPadrao}"
-        lines += ""
-    }
-
-    if (personagem.anotacoes.isNotBlank()) {
-        lines += "Anotações"
-        personagem.anotacoes
-            .lines()
-            .forEach { linha -> lines += linha }
-    }
-
-    return lines
-}
-
-fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
-    val doc = PdfDocument()
-    val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
-
-    val marginLeft   = 40f
-    val marginRight  = 40f
-    val marginTop    = 50f
-    val marginBottom = 40f
-
-    val paint = Paint().apply { textSize = 12f }
-    val fm = paint.fontMetrics
-    val lineHeight = fm.descent - fm.ascent + fm.leading
-
-    var page = doc.startPage(pageInfo)
-    var canvas = page.canvas
-    var y = marginTop
-
-    fun newPage() {
-        doc.finishPage(page)
-        page = doc.startPage(pageInfo)
-        canvas = page.canvas
-        y = marginTop
-    }
-
-    fun drawWrapped(text: String) {
-        var start = 0
-        val maxWidth = pageInfo.pageWidth - marginLeft - marginRight
-        while (start < text.length) {
-            val count = paint.breakText(text, start, text.length, true, maxWidth, null)
-            val line = text.substring(start, start + count)
-            if (y + lineHeight > pageInfo.pageHeight - marginBottom) {
-                newPage()
-            }
-            canvas.drawText(line, marginLeft, y, paint)
-            y += lineHeight
-            start += count
-        }
-    }
-
-    val titlePaint = Paint(paint).apply {
-        textSize = 16f
-        isFakeBoldText = true
-    }
-    val title = "Ficha de ${personagem.nome}"
-
-    val titleFm = titlePaint.fontMetrics
-    val titleHeight = titleFm.descent - titleFm.ascent + titleFm.leading
-    if (y + titleHeight > pageInfo.pageHeight - marginBottom) {
-        newPage()
-    }
-    canvas.drawText(title, marginLeft, y, titlePaint)
-    y += titleHeight + 12f
-
-    val lines = buildSummaryLines(personagem)
-    for (linha in lines) {
-        drawWrapped(linha)
-    }
-
-    doc.finishPage(page)
-    FileOutputStream(destino).use { out ->
-        doc.writeTo(out)
-    }
-    doc.close()
-}
-
 lateinit var listaAncestralidadesJson: List<RacialModifier>
 
 lateinit var racialAttrMinMap: Map<String, Map<String,Int>>
@@ -1097,12 +750,6 @@ fun periciaStartRaw(anc: String, per: Pericia): Int {
 }
 
 var listaVantagens:    List<Vantagem>   = emptyList()
-
-fun loadRawText(context: Context, @RawRes resId: Int): String {
-    val inputStream = context.resources.openRawResource(resId)
-    val reader = BufferedReader(InputStreamReader(inputStream))
-    return reader.readText()
-}
 
 data class Estagio(
     val nome: String,
@@ -1202,10 +849,9 @@ fun SectionCard(
 @Composable
 fun AncestralidadesDetailScreen(
     state: CriadorState,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    ancestralidadesTexto: String
 ) {
-    val context = LocalContext.current
-    val ancestralidadesTexto = remember { loadRawText(context, R.raw.ancestralidades) }
     val listaBlocos = remember { parseAncestralidades(ancestralidadesTexto) }
 
     val atual = remember(state.ancestralidade) { state.ancestralidade.trim().uppercase() }
@@ -1485,11 +1131,10 @@ fun parseAtributos(texto: String): List<AtributoCompleto> {
 }
 
 @Composable
-fun AtributosDetailScreen(onBack: () -> Unit) {
-    val context = LocalContext.current
-    val atributosTexto = remember {
-        loadRawText(context, R.raw.atributos)
-    }
+fun AtributosDetailScreen(
+    onBack: () -> Unit,
+    atributosTexto: String
+) {
     val listaAtributosCompleta = remember {
         parseAtributos(atributosTexto)
     }
@@ -2692,563 +2337,6 @@ fun EquipamentosDetailScreen(
 
 
 
-@Composable
-fun TelaInicial(
-    onCriarNovo: (
-        cartaSelvagem: Boolean,
-        maisPontosPericias: Boolean,
-        modoSupers: Boolean,
-        modoSuperequipamentos: Boolean,
-        modoSuperComplicacoes: Boolean,
-        nasceUmHeroi: Boolean,
-        heroisSemArmadura: Boolean,
-        expecializacaoPer: Boolean,
-        semPontosDePoder: Boolean,
-        grandesResponsabilidades: Boolean
-    ) -> Unit,
-    onLoad: (PersonagemSalvo) -> Unit,
-    context: Context,
-    viewModel: CriadorViewModel
-) {
-    var showLoadDialog by rememberSaveable { mutableStateOf(false) }
-
-    // CORREÇÃO: Inicializa como lista vazia e carrega em background
-    var nomesSalvos by remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
-    var pendingDelete by rememberSaveable { mutableStateOf<Pair<String, String>?>(null) }
-
-    // CORREÇÃO: Adiciona um CoroutineScope
-    val scope = rememberCoroutineScope()
-
-    // CORREÇÃO: Carrega a lista inicial de forma assíncrona
-    LaunchedEffect(Unit) {
-        nomesSalvos = withContext(Dispatchers.IO) {
-            StorageUtils.listarPersonagens(context)
-        }
-    }
-
-    // Estados do diálogo de opções iniciais
-    var showNewOptionsDialog by rememberSaveable { mutableStateOf(false) }
-
-    // Livro Básico
-    var expLivroBasico by rememberSaveable { mutableStateOf(false) }
-    var optCartaSelvagem by rememberSaveable { mutableStateOf(true) }
-    var optMaisPontosPericias by rememberSaveable { mutableStateOf(true) }
-    var optMultiAntecedenteArcano by rememberSaveable { mutableStateOf(false) }
-    var optEspecializacaoPer by rememberSaveable { mutableStateOf(false) }
-    var optHeroiSemArmadura by rememberSaveable { mutableStateOf(false) }
-    var optMultiplosIdiomas by rememberSaveable { mutableStateOf(false) }
-    var optNasceUmHeroi by rememberSaveable { mutableStateOf(false) }
-    var optSemPontosPoder by rememberSaveable { mutableStateOf(false) }
-
-    // Super
-    var expSuper by rememberSaveable { mutableStateOf(false) }
-    var optSuperPoderes by rememberSaveable { mutableStateOf(false) }
-    var optSuperequipamentos by rememberSaveable { mutableStateOf(false) }
-    var optSuperComplicacoes by rememberSaveable { mutableStateOf(false) }
-    var optGrandesResponsabilidades by rememberSaveable { mutableStateOf(false) }
-
-
-    // Horror
-    var expHorror by rememberSaveable { mutableStateOf(false) }
-
-    // Fantasia
-    var expFantasia by rememberSaveable { mutableStateOf(false) }
-
-    // Ficção Científica
-    var expFiccao by rememberSaveable { mutableStateOf(false) }
-
-    var showCreditsDialog by remember { mutableStateOf(false) }
-
-    var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
-
-    val helpAppText = """
-Este app ajuda você a criar personagens de Savage Worlds passo a passo.
-
-1) Tela Inicial
-   • Escolha se o personagem é Carta Selvagem, se terá mais pontos de Perícia, modo Supers, etc.
-   • Depois toque em "Criar Personagem".
-
-2) Ordem sugerida de preenchimento
-   • Ancestralidade → define bônus e limites de atributos/perícias.
-   • Atributos → distribua os pontos de atributo iniciais.
-   • Perícias → gaste os pontos de perícia disponíveis.
-   • Complicações → escolha Complicações para ganhar Pontos Bônus.
-   • Vantagens, Poderes e Equipamentos → gastam os recursos gerados nas etapas anteriores.
-
-3) Pontos Bônus (vindos de Complicações)
-   • Cada Complicação Menor gera 1 Ponto Bônus.
-   • Cada Complicação Maior gera 2 Pontos Bônus.
-   • O contador em "Complicações" mostra quantos Pontos Bônus você ainda tem livres.
-   • Esses Pontos Bônus podem ser usados em Atributos, Perícias, Vantagens ou Recursos,
-     através dos botões específicos em cada seção.
-
-4) Ajustes e devoluções
-   • Se você usou Pontos Bônus em Atributos/Perícias/Vantagens/Recursos e quiser desfazer,
-     use as opções de "desfazer Pontos Bônus" nas seções correspondentes.
-   • Se ainda houver Pontos Bônus em uso, algumas Complicações não poderão ser removidas:
-     primeiro desfaça os pontos comprados com elas.
-
-5) Dicas gerais
-   • Toque no título de cada seção para expandir/fechar.
-   • Use a opção "Lista Completa" para ler textos mais longos direto no app.
-   • Quando terminar, use o botão de salvar (ícone de disquete) ou de imprimir (ícone de impressora).
-""".trimIndent()
-
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Button(
-            onClick = { showNewOptionsDialog = true },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Criar Novo Personagem")
-        }
-        Spacer(Modifier.height(16.dp))
-        Button(
-            onClick = {
-                // CORREÇÃO: Atualiza a lista em background antes de mostrar
-                scope.launch(Dispatchers.IO) {
-                    val listaAtualizada = StorageUtils.listarPersonagens(context)
-                    withContext(Dispatchers.Main) {
-                        nomesSalvos = listaAtualizada // Atualiza o state na Main thread
-                        if (listaAtualizada.isEmpty()) {
-                            Toast.makeText(context, "Nenhum personagem salvo.", Toast.LENGTH_SHORT).show()
-                        } else {
-                            showLoadDialog = true
-                        }
-                    }
-                }
-            },
-            enabled = nomesSalvos.isNotEmpty(), // <-- CORRIGIDO
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Carregar Personagem Salvo")
-        }
-        Spacer(modifier = Modifier.height(240.dp))
-
-        Button(
-            onClick = { showCreditsDialog = true },
-            modifier = Modifier.fillMaxWidth()
-                .padding(bottom = 240.dp)
-                .alpha(0.6f)
-        ) {
-            Text("Créditos e Licença")
-        }
-
-        // --- Diálogo com a imagem e o texto ---
-        if (showCreditsDialog) {
-            AlertDialog(
-                onDismissRequest = { showCreditsDialog = false },
-                confirmButton = {
-                    TextButton(onClick = { showCreditsDialog = false }) {
-                        Text("Fechar")
-                    }
-                },
-                text = {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.sw_fan_logo),
-                            contentDescription = "Savage Worlds Fan Logo",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(100.dp)
-                        )
-                        Spacer(Modifier.height(16.dp))
-                        Text(
-                            text = """
-Este jogo faz referência ao sistema de regras Savage Worlds, disponibilizado mundialmente pela Pinnacle Entertainment Group (www.peginc.com) e no Brasil pela RetroPunk Publicações (www.retropunk.net). 
-
-Savage Worlds e todas as suas logos e marcas associadas são de propriedade da Pinnacle Entertainment Group. Utilizadas com permissão. A Pinnacle e a RetroPunk não fazem nenhuma representação ou garantia quanto à qualidade, viabilidade ou adequação em relação a este produto.
-
-Feito por Rafael S.W.
-                        """.trimIndent(),
-                            fontSize = 14.sp,
-                            textAlign = TextAlign.Justify,
-                            fontWeight = FontWeight.Normal
-                        )
-                    }
-                }
-            )
-        }
-
-    }
-
-    // ── Diálogo de configurações iniciais ────────────────────────────────────────
-    if (showNewOptionsDialog) {
-        AlertDialog(
-            onDismissRequest = { showNewOptionsDialog = false },
-            title            = { Text("Configurações Iniciais") },
-            text             = {
-                Column {
-                    // Livro Básico
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable { expLivroBasico = !expLivroBasico }
-                            .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment     = Alignment.CenterVertically
-                    ) {
-                        Text("Livro Básico", fontWeight = FontWeight.Bold)
-                        Icon(
-                            imageVector = if (expLivroBasico) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                            contentDescription = null
-                        )
-                    }
-                    if (expLivroBasico) {
-                        Spacer(Modifier.height(4.dp))
-
-                        // Carta Selvagem (NEGRITO)
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optCartaSelvagem = !optCartaSelvagem }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optCartaSelvagem,
-                                onCheckedChange = { optCartaSelvagem = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Carta Selvagem", fontWeight = FontWeight.Bold)
-                        }
-
-                        // Mais pontos de perícias (NEGRITO)
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optMaisPontosPericias = !optMaisPontosPericias }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optMaisPontosPericias,
-                                onCheckedChange = { optMaisPontosPericias = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Mais pontos de perícias", fontWeight = FontWeight.Bold)
-                        }
-
-                        // (mantém as demais opções do Livro Básico como já existiam)
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optMultiAntecedenteArcano = !optMultiAntecedenteArcano }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(checked = optMultiAntecedenteArcano, onCheckedChange = { optMultiAntecedenteArcano = it })
-                            Spacer(Modifier.width(8.dp))
-                            Text("Múltiplos Antecedentes Arcanos")
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optEspecializacaoPer = !optEspecializacaoPer }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(checked = optEspecializacaoPer, onCheckedChange = { optEspecializacaoPer = it })
-                            Spacer(Modifier.width(8.dp))
-                            Text("Especialização de Perícias")
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optHeroiSemArmadura = !optHeroiSemArmadura }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(checked = optHeroiSemArmadura, onCheckedChange = { optHeroiSemArmadura = it })
-                            Spacer(Modifier.width(8.dp))
-                            Text("Heróis sem Armadura")
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optMultiplosIdiomas = !optMultiplosIdiomas }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(checked = optMultiplosIdiomas, onCheckedChange = { optMultiplosIdiomas = it })
-                            Spacer(Modifier.width(8.dp))
-                            Text("Múltiplos Idiomas")
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optNasceUmHeroi = !optNasceUmHeroi }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(checked = optNasceUmHeroi, onCheckedChange = { optNasceUmHeroi = it })
-                            Spacer(Modifier.width(8.dp))
-                            Text("Nasce um Herói")
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optSemPontosPoder = !optSemPontosPoder }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(checked = optSemPontosPoder, onCheckedChange = { optSemPontosPoder = it })
-                            Spacer(Modifier.width(8.dp))
-                            Text("Sem pontos de Poder")
-                        }
-                    }
-
-                    Spacer(Modifier.height(16.dp))
-
-                    if (showHelpAppDialog) {
-                        AlertDialog(
-                            onDismissRequest = { showHelpAppDialog = false },
-                            confirmButton = {
-                                TextButton(onClick = { showHelpAppDialog = false }) {
-                                    Text("OK")
-                                }
-                            },
-                            title = { Text("Como usar o app") },
-                            text = {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .heightIn(max = 400.dp)
-                                        .verticalScroll(rememberScrollState())
-                                ) {
-                                    Text(helpAppText)
-                                }
-                            }
-                        )
-                    }
-
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable { expSuper = !expSuper }
-                            .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment     = Alignment.CenterVertically
-                    ) {
-                        Text("Super", fontWeight = FontWeight.Bold)
-                        Icon(
-                            imageVector = if (expSuper) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                            contentDescription = null
-                        )
-                    }
-                    if (expSuper) {
-                        Spacer(Modifier.height(4.dp))
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optSuperPoderes = !optSuperPoderes }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optSuperPoderes,
-                                onCheckedChange = { optSuperPoderes = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Superpoderes", fontWeight = FontWeight.Bold)
-                        }
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optGrandesResponsabilidades = !optGrandesResponsabilidades }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optGrandesResponsabilidades,
-                                onCheckedChange = { optGrandesResponsabilidades = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Grandes Responsabilidades")
-                        }
-                    }
-
-                    Spacer(Modifier.height(16.dp))
-
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable { expHorror = !expHorror }
-                            .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment     = Alignment.CenterVertically
-                    ) {
-                        Text("Horror", fontWeight = FontWeight.Bold)
-                        Icon(
-                            imageVector = if (expHorror) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                            contentDescription = null
-                        )
-                    }
-                    if (expHorror) {
-                        Text("— sem opções por enquanto —")
-                    }
-
-                    Spacer(Modifier.height(16.dp))
-
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable { expFantasia = !expFantasia }
-                            .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment     = Alignment.CenterVertically
-                    ) {
-                        Text("Fantasia", fontWeight = FontWeight.Bold)
-                        Icon(
-                            imageVector = if (expFantasia) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                            contentDescription = null
-                        )
-                    }
-                    if (expFantasia) {
-                        Text("— sem opções por enquanto —")
-                    }
-
-                    Spacer(Modifier.height(16.dp))
-
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable { expFiccao = !expFiccao }
-                            .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment     = Alignment.CenterVertically
-                    ) {
-                        Text("Ficção Científica", fontWeight = FontWeight.Bold)
-                        Icon(
-                            imageVector = if (expFiccao) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                            contentDescription = null
-                        )
-                    }
-                    if (expFiccao) {
-                        Text("— sem opções por enquanto —")
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = {
-
-                    onCriarNovo(
-                        optCartaSelvagem,
-                        optMaisPontosPericias,
-                        optSuperPoderes,
-                        optSuperequipamentos,
-                        optSuperComplicacoes,
-                        optNasceUmHeroi,
-                        optHeroiSemArmadura,
-                        optEspecializacaoPer,
-                        optSemPontosPoder,
-                        optGrandesResponsabilidades
-                    )
-
-                    viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
-                    viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
-
-                }) {
-                    Text("Confirmar")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showNewOptionsDialog = false }) {
-                    Text("Cancelar")
-                }
-            }
-        )
-    }
-
-    if (showLoadDialog) {
-        AlertDialog(
-            onDismissRequest = {
-                showLoadDialog = false
-                pendingDelete = null
-            },
-            title = { Text("Selecione um personagem") },
-            text = {
-                LazyColumn {
-                    items(nomesSalvos) { (displayName, fileKey) ->
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    scope.launch(Dispatchers.IO) {
-                                        val salvo = StorageUtils.carregarPersonagem(context, fileKey)
-                                        withContext(Dispatchers.Main) {
-                                            salvo?.let {
-                                                showLoadDialog = false
-                                                pendingDelete = null
-                                                onLoad(it)
-                                            }
-                                        }
-                                    }
-                                }
-                                .padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(displayName, Modifier.weight(1f))
-                            IconButton(onClick = { pendingDelete = displayName to fileKey }) {
-                                Icon(Icons.Default.Delete, contentDescription = "Deletar")
-                            }
-                        }
-                        HorizontalDivider()
-                    }
-                }
-            },
-            confirmButton = {},
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showLoadDialog = false
-                        pendingDelete = null
-                    }
-                ) {
-                    Text("Cancelar")
-                }
-            }
-        )
-    }
-
-    if (pendingDelete != null) {
-        val (displayName, fileKey) = pendingDelete!!
-        AlertDialog(
-            onDismissRequest = { pendingDelete = null },
-            title = { Text("Confirmar exclusão") },
-            text  = { Text("Deseja realmente excluir \"$displayName\"?") },
-            confirmButton = {
-                TextButton(onClick = {
-                    scope.launch(Dispatchers.IO) {
-                        StorageUtils.deletarPersonagem(context, fileKey)
-                        val listaAtualizada = StorageUtils.listarPersonagens(context)
-                        withContext(Dispatchers.Main) {
-                            nomesSalvos = listaAtualizada
-                            pendingDelete = null
-                        }
-                    }
-                }) {
-                    Text("Excluir")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { pendingDelete = null }) {
-                    Text("Cancelar")
-                }
-            }
-        )
-    }
-}
 
 @Composable
 fun SelecaoCard(
