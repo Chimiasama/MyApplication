@@ -6,6 +6,7 @@ import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.R
 import com.example.swadebuilder.SuperPoder
 import com.example.swadebuilder.util.loadJsonAsset
+import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 

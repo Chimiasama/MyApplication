@@ -31,9 +31,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.R
-import com.example.swadebuilder.SectionCard
 import com.example.swadebuilder.SectionHeader
 import com.example.swadebuilder.model.loadJsonAsset
+import com.example.swadebuilder.ui.components.SectionCard
 import kotlinx.serialization.Serializable
 
 @Serializable
