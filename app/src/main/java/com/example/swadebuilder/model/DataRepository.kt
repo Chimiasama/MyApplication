@@ -62,10 +62,19 @@ class DataRepository(private val context: Context) {
     }
 
     fun loadAtributosText(): String {
-        return context.resources.openRawResource(com.example.swadebuilder.R.raw.atributos).bufferedReader().use { it.readText() }
+        return context.resources.openRawResource(R.raw.atributos).bufferedReader().use { it.readText() }
     }
 
     fun loadAncestralidadesText(): String {
-        return context.resources.openRawResource(com.example.swadebuilder.R.raw.ancestralidades).bufferedReader().use { it.readText() }
+        return context.resources.openRawResource(R.raw.ancestralidades).bufferedReader().use { it.readText() }
+    }
+
+    fun loadPericiasDescriptions(): Map<String, String> {
+        val jsonText = context.resources.openRawResource(R.raw.pericias).bufferedReader().use { it.readText() }
+        val lista = Json.decodeFromString<List<PericiaDescricaoJson>>(jsonText)
+        return lista.associate { pericia ->
+            val key = pericia.nome.uppercase().semAcentos()
+            key to pericia.descricao.trim()
+        }
     }
 }

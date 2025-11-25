@@ -735,10 +735,14 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                                     vantagensJson = vantagensJson
                                                 )
                                             }
-                                            4 -> PericiasDetailScreen(
-                                                state  = state,
-                                                onBack = { showPericiasDetail = false }
-                                            )
+                                            4 -> {
+                                                val descriptions = remember { dataRepository.loadPericiasDescriptions() }
+                                                PericiasDetailScreen(
+                                                    state = state,
+                                                    onBack = { showPericiasDetail = false },
+                                                    descriptions = descriptions
+                                                )
+                                            }
                                             5 -> {
                                                 val complicacoesJson = remember { dataRepository.loadComplicacoesText() }
                                                 ComplicacoesDetailScreen(

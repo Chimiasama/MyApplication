@@ -17,34 +17,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.R
 import com.example.swadebuilder.listaPericias
-import com.example.swadebuilder.model.loadPericiasDescriptions
 import com.example.swadebuilder.util.semAcentos
 
 @Composable
 fun PericiasDetailScreen(
     state: CriadorState,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    descriptions: Map<String, String>
 ) {
-    val context = LocalContext.current
-
-    // Mapa de descrições já existente (R.raw.pericias)
-    val descricoes by remember {
-        mutableStateOf(loadPericiasDescriptions(context, R.raw.pericias))
-    }
-
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -69,23 +57,19 @@ fun PericiasDetailScreen(
             }
         }
 
-        // ► Usa a lista oficial (Pericia), que conversa com o CriadorState
         items(listaPericias) { per ->
-            // Chave p/ descrição
             val rawName = per.nome.removePrefix("*").trim()
             val key = "$rawName (${per.atributo})".uppercase().semAcentos()
-            val desc = descricoes[key] ?: "Descrição indisponível."
+            val desc = descriptions[key] ?: "Descrição indisponível."
 
-            // ► Estes dados vêm do state (uso REAL do state)
-            val currentRaw = state.rawTotal(per)                        // d0/d4/d6...
+            val currentRaw = state.rawTotal(per)
             val attrKey    = state.atributoBaseParaPericia(per)
             val atrRaw     = state.valoresAtributos[attrKey]!!.intValue
             val capRaw     = state.periciaCapRaw(per)
 
             val nextRaw    = if (currentRaw == 0 && per.basica) 4 else currentRaw + 2
-            val costNormal = if (nextRaw <= atrRaw) 1 else 2           // 1 até atributo, 2 acima
+            val costNormal = if (nextRaw <= atrRaw) 1 else 2
 
-            // Mínimos por vantagens (inclui opcionais)
             val minimoBasico  = state.minPericiaPorVantagem[per] ?: 0
             val minimoOpcional = state.vantagensSelecionadas
                 .flatMap { vant ->
@@ -95,12 +79,10 @@ fun PericiasDetailScreen(
                 }
                 .maxOrNull() ?: 0
             val minimoTotal = maxOf(minimoBasico, minimoOpcional)
-            val needsMin    = (minimoTotal > 0 && currentRaw in 1 until minimoTotal)
+            val needsMin    = (minimoTotal > 0 && currentRaw < minimoTotal)
 
-            // Pode aumentar agora (respeitando SP disponíveis, cap, etc.)
             val podeAumentar = state.pontosPericia >= costNormal && nextRaw <= capRaw
 
-            // Status amigável
             val status = buildString {
                 append(
                     when (currentRaw) {
@@ -120,10 +102,9 @@ fun PericiasDetailScreen(
                 }
             }
 
-            // Destaque visual
             val bg = when {
-                needsMin -> Color(0x11FF0000)         // vermelho claro
-                currentRaw > 0 || per.basica -> Color(0x11007AFF) // azul claro
+                needsMin -> Color(0x11FF0000)
+                currentRaw > 0 || per.basica -> Color(0x11007AFF)
                 else -> Color.Transparent
             }
 
