@@ -1032,69 +1032,16 @@ class CriadorState {
 
     fun aplicarAncestralidade(anc: String) {
         val prevAnc = ancestralidade
-        val wasHumano = (prevAnc == "HUMANOS")
-        val vaiSerHumano = (anc == "HUMANOS")
 
-        // Mapeia as vantagens raciais gratuitas da ancestralidade ANTERIOR
-        val prevFreeKeys: Set<String> =
-            (vantagensAutomaticas.toSet() +
-                    when (prevAnc) {
-                        "SAURIOS"    -> setOf("Sentidos Aguçados", "Prontidão")
-                        "PEQUENINOS" -> setOf("Sorte")
-                        "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES")
-                        else         -> emptySet()
-                    }
-                    ).map { it.keyify() }
-                .toSet()
-
-        // --- Ajuste do +1 PV de HUMANOS (sem apagar tudo e respeitando pré-requisitos) ---
-
-        if (wasHumano && !vaiSerHumano) {
-            // Helper: vantagem é racial gratuita da raça anterior?
-            fun isRacialFree(v: Vantagem): Boolean =
-                v.nome.keyify() in prevFreeKeys
-
-            // Helper: vantagem é pré-requisito de outra?
-            fun isUsedAsPrereq(v: Vantagem): Boolean {
-                val id = v.id
-                return vantagensSelecionadas.any { other ->
-                    other != v && other.requisitos.vantagensPrevias.any { prevId ->
-                        when (prevId) {
-                            "antecedente_arcano",
-                            "antecedente_arcano:*" -> {
-                                other.id.startsWith("antecedente_arcano_") ||
-                                        (other.id == "antecedente_arcano" && !other.choice.isNullOrBlank())
-                            }
-                            else -> other.id == prevId
-                        }
-                    }
-                }
-            }
-
-            // Candidatos a serem removidos para "pagar" o edge grátis de humano:
-            // - não raciais
-            // - não são pré-requisito de outra
-            // - não são vantagens de PODER (superpoderes)
-            val candidatos = vantagensSelecionadas.filter { v ->
-                !isRacialFree(v) &&
-                        !isUsedAsPrereq(v) &&
-                        !v.categoria.name.equals("PODER", ignoreCase = true)
-            }
-
-            if (candidatos.isNotEmpty()) {
-                // Remove só UMA vantagem (a última adquirida, por simplicidade)
-                val toRemove = candidatos.last()
-                vantagensSelecionadas.remove(toRemove)
+        if (prevAnc == "HUMANOS" && anc != "HUMANOS") {
+            if (vantagensSelecionadas.isNotEmpty()) {
+                vantagensSelecionadas.removeAt(vantagensSelecionadas.lastIndex)
             } else {
-                // Não sobrou nada "seguro" pra remover → ajusta só o pool de PV
                 pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
             }
-        } else if (!wasHumano && vaiSerHumano) {
-            // Entrando em HUMANOS → ganha 1 PV racial
+        } else if (prevAnc != "HUMANOS" && anc == "HUMANOS") {
             pontosVantagem += 1
         }
-
-        // --- Ajuste de atributos pela nova raça ---
 
         val desiredRaw = listaPericias.associateWith { rawTotal(it) }
 
@@ -1129,16 +1076,16 @@ class CriadorState {
             st.intValue = raw
         }
 
-        // Troca efetiva da ancestralidade
         ancestralidade = anc
 
-        // --- Vantagens / desvantagens raciais ---
+        val prevFree = vantagensAutomaticas.toSet() +
+                when (prevAnc) {
+                    "SAURIOS"    -> setOf("Sentidos Aguçados", "Prontidão")
+                    "PEQUENINOS" -> setOf("Sorte")
+                    else         -> emptySet()
+                }
 
-        // Remove APENAS as vantagens raciais automáticas da raça anterior
-        if (prevFreeKeys.isNotEmpty()) {
-            vantagensSelecionadas.removeAll { it.nome.keyify() in prevFreeKeys }
-        }
-
+        vantagensSelecionadas.removeAll { it.nome in prevFree }
         desvantagensAutomaticas.clear()
         vantagensAutomaticas.clear()
 
@@ -1149,8 +1096,10 @@ class CriadorState {
                 vantagensAutomaticas.addAll(rm.vantagensGratis)
             }
 
-        // NÃO tem mais "raças levam pra lista completa":
-        // Removemos o bloco que apagava tudo que não fosse vantagem automática.
+        val keepFreeKeys = vantagensAutomaticas.map { it.keyify() }.toSet()
+        vantagensSelecionadas.removeAll { sel ->
+            sel.nome.keyify() !in keepFreeKeys
+        }
 
         when (anc) {
             "SAURIOS" -> {
@@ -1181,12 +1130,7 @@ class CriadorState {
             }
         }
 
-        // IMPORTANTE:
-        // Removido: pontosVantagem = if (vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" }) 1 else 0
-        // Agora o pool de PV não é mais zerado/redefinido ao trocar de raça.
-        // Ele só é ajustado pelo bloco de HUMANO acima.
-
-        // --- Complicações raciais automáticas ---
+        pontosVantagem = if (vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" }) 1 else 0
 
         val oldAutoKeys = listaAncestralidadesJson
             .firstOrNull { it.nome.keyify() == prevAnc }
@@ -1210,20 +1154,28 @@ class CriadorState {
                     it.substringBefore("(").trim().keyify() == comp.id.keyify()
                             && it.contains("Menor", ignoreCase = true)
                 }
-                val hasMaior = desvantagensAutomaticas.any {
-                    it.substringBefore("(").trim().keyify() == comp.id.keyify()
-                            && it.contains("Maior", ignoreCase = true)
+
+                val grau = when (comp.severity.lowercase()) {
+                    "both"  -> if (hasMenor) "Menor" else "Maior"
+                    "menor" -> "Menor"
+                    "maior" -> "Maior"
+                    else    -> "Menor"
                 }
 
-                when {
-                    hasMaior -> complicacoesSelecionadas[comp] = "Maior"
-                    hasMenor -> complicacoesSelecionadas[comp] = "Menor"
-                }
+                complicacoesSelecionadas[comp] = grau
             }
 
-        // Recalcula pontos de atributo/perícias após o ajuste racial
+        if (modoSupers) {
+            listaVantagens.firstOrNull { it.id == "superpoderes" }?.let { sp ->
+                if (vantagensSelecionadas.none { it.id == "superpoderes" }) {
+                    vantagensSelecionadas.add(sp)
+                }
+            }
+        }
+
+        rebuildPericias(desiredRaw)
+
         recalcularPontosAtributo()
-        rebuildAllPericiaStacks()
     }
 
     fun spendProgressAcrossStages(n: Int) {

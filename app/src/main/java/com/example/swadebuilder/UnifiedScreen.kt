@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.ui.components.SectionCard
-import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
@@ -325,25 +324,64 @@ fun UnifiedScreen(
         }
     }
 
-    if (showMeioElfoDialog) {
+    if (showMeioElfoDialog && pendingMeioElfoKey != null) {
         AlertDialog(
             onDismissRequest = {
                 pendingMeioElfoKey = null
                 showMeioElfoDialog = false
             },
-            title = { Text("Meio-Elfo") },
+            title = { Text("Meio-Elfo: escolha a herança") },
             text = {
-                Text("Meio-elfos precisam escolher qual herança seguir. Vá na lista completa para escolher.")
+                Text(
+                    "Defina como a herança meio-élfica se manifesta:\n\n" +
+                            "• Herança Élfica: começa com Agilidade em d6.\n" +
+                            "• Herança Humana: ganha +1 Ponto de Vantagem na criação."
+                )
             },
             confirmButton = {
-                TextButton(onClick = {
-                    pendingMeioElfoKey = null
-                    showMeioElfoDialog = false
-                    onOpenListaAncestralidadesDetail()
-                }) { Text("OK") }
+                // Herança Élfica (Agilidade d6)
+                TextButton(
+                    onClick = {
+                        val key = pendingMeioElfoKey ?: return@TextButton
+
+                        // Aplica a ancestralidade Meio-Elfo
+                        state.aplicarAncestralidade(key)
+
+                        // Garante Agilidade em d6 (raw = 6) se ainda estiver abaixo
+                        val agiState = state.valoresAtributos["AGILIDADE"]
+                        if (agiState != null && agiState.intValue < 6) {
+                            agiState.intValue = 6
+                        }
+
+                        pendingMeioElfoKey = null
+                        showMeioElfoDialog = false
+                    }
+                ) {
+                    Text("Herança Élfica (Agilidade d6)")
+                }
+            },
+            dismissButton = {
+                // Herança Humana (+1 PV)
+                TextButton(
+                    onClick = {
+                        val key = pendingMeioElfoKey ?: return@TextButton
+
+                        // Aplica a ancestralidade Meio-Elfo
+                        state.aplicarAncestralidade(key)
+
+                        // Dá 1 ponto de vantagem extra
+                        state.pontosVantagem += 1
+
+                        pendingMeioElfoKey = null
+                        showMeioElfoDialog = false
+                    }
+                ) {
+                    Text("Herança Humana (+1 PV)")
+                }
             }
         )
     }
+
 
     // ✅ assinatura real do teu app
     if (showAllocDialog) {
