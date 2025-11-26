@@ -356,6 +356,7 @@ fun UnifiedScreen(
                             agiState.intValue = 6
                         }
 
+                        state.meioElfoAgil = true
                         pendingMeioElfoKey = null
                         showMeioElfoDialog = false
                     }

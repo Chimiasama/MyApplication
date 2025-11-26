@@ -1,4 +1,3 @@
-// Conteúdo completo do arquivo com a modificação aplicada na seção aplicarAncestralidade
 package com.example.swadebuilder
 
 import android.os.Build
@@ -25,11 +24,7 @@ class CriadorState {
     var modoSuperComplicacoes by mutableStateOf(false)
     var modoSuperequip by mutableStateOf(false)
     var grandesResponsabilidades by mutableStateOf(false)
-    companion object {
-        const val BASE_SP_POOL = 15
-        const val ID_AA_MILAGRES = "antecedente_arcano_milagres"
-    }
-
+    companion object { const val BASE_SP_POOL = 15 }
     var maisPontosPericias by mutableStateOf(true)
     var cartaSelvagem       by mutableStateOf(true)
     var dinheiro by mutableIntStateOf(500)
@@ -700,8 +695,11 @@ class CriadorState {
     }
 
     var ancestralidade by mutableStateOf("HUMANOS")
+    var celestialAAMilagresDesabilitado by mutableStateOf(false)
+    var meioElfoAgil by mutableStateOf(false)
 
     val vantagensAutomaticas = mutableStateListOf<String>()
+    val desvantagensRaciais = mutableStateListOf<String>()
 
     var pontosVantagem by mutableIntStateOf(0)
 
@@ -881,7 +879,7 @@ class CriadorState {
                 val per = listaPericias.firstOrNull {
                     it.nome.equals(perNome, ignoreCase = true)
                 }
-                per != null && rawTotalComSupers(per) >= minRaw
+                per != null && rawTotal(per) >= minRaw
             }
             if (!atendeUma) return false
         } else {
@@ -988,7 +986,10 @@ class CriadorState {
     fun atributoMaxRaw(a: String): Int {
         val minRaw = atributoMinRaw(a)
 
-        val extras = ((minRaw - 4).coerceAtLeast(0) / 2)
+        var extras = ((minRaw - 4).coerceAtLeast(0) / 2)
+        if (a.keyify() == "AGILIDADE" && meioElfoAgil) {
+            extras += 1
+        }
         val baseCap = 12 + extras
 
         val chave = a.keyify()
@@ -1046,7 +1047,7 @@ class CriadorState {
                     when (prevAnc) {
                         "SAURIOS"    -> setOf("Sentidos Aguçados", "Prontidão")
                         "PEQUENINOS" -> setOf("Sorte")
-                        "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
+            "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
                         else         -> emptySet()
                     }
                     ).map { it.keyify() }
@@ -1136,6 +1137,10 @@ class CriadorState {
 
         // Troca efetiva da ancestralidade
         ancestralidade = anc
+        celestialAAMilagresDesabilitado = (anc == "CELESTIAIS" && modoSupers)
+        if (anc != "MEIO-ELFOS") {
+            meioElfoAgil = false
+        }
 
         // --- Vantagens / desvantagens raciais ---
 
@@ -1146,31 +1151,13 @@ class CriadorState {
 
         desvantagensAutomaticas.clear()
         vantagensAutomaticas.clear()
+        desvantagensRaciais.clear()
 
         listaAncestralidadesJson
             .firstOrNull { it.nome.keyify() == anc }
             ?.let { rm ->
                 desvantagensAutomaticas.addAll(rm.desvantagens)
                 vantagensAutomaticas.addAll(rm.vantagensGratis)
-
-                // => nova lógica: para cada desvantagem textual da ancestralidade,
-                // se houver uma complicação correspondente em listaComplicacoes, adiciona-a
-                // em complicacoesSelecionadas (como `Menor`/`Maior` conforme o texto).
-                // Isso garante que complicações raciais sejam visíveis na seção de
-                // complicações/resumo/PDF e que continuem sendo tratadas como automáticas.
-                rm.desvantagens.forEach { desc ->
-                    val key = desc.substringBefore("(").trim().keyify()
-                    val comp = listaComplicacoes.firstOrNull { it.id.keyify() == key }
-                    if (comp != null) {
-                        val grau = when {
-                            desc.contains("Maior", ignoreCase = true) -> "Maior"
-                            desc.contains("Menor", ignoreCase = true) -> "Menor"
-                            else -> "Menor"
-                        }
-                        // adiciona/atualiza a entrada; pontos não são gerados por serem automáticas
-                        complicacoesSelecionadas[comp] = grau
-                    }
-                }
             }
 
         // NÃO tem mais "raças levam pra lista completa":
@@ -1189,6 +1176,8 @@ class CriadorState {
                 listaVantagens.firstOrNull { it.nome.equals("Sorte", ignoreCase = true) }
                     ?.let { vantagensSelecionadas.add(it) }
                 vantagensAutomaticas.add("Sorte")
+                desvantagensRaciais.add("Tamanho -1")
+                desvantagensRaciais.add("Movimentação Reduzida")
                 armadura = 0
             }
             "CELESTIAIS" -> {

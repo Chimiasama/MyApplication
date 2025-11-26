@@ -28,6 +28,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         ancestralidade = this.ancestralidade,
         celestialAAMilagresDesabilitado = this.celestialAAMilagresDesabilitado,
         vantagens = this.vantagensSelecionadas.map { it.id },
+        desvantagensRaciais = this.desvantagensRaciais.toList(),
         complicacoes = this.complicacoesSelecionadas
             .filterValues { it != null }
             .keys
@@ -270,10 +271,10 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += ""
 
     lines += "Complicações"
-    lines += if (personagem.complicacoes.isEmpty()) {
-        "– Nenhuma"
-    } else {
-        personagem.complicacoes.joinToString(", ")
+    val complicacoesText = personagem.complicacoes.joinToString(", ").ifBlank { "– Nenhuma" }
+    lines += complicacoesText
+    if (personagem.desvantagensRaciais.isNotEmpty()) {
+        lines += "Anotações Raciais: ${personagem.desvantagensRaciais.joinToString(", ")}"
     }
     lines += ""
 
