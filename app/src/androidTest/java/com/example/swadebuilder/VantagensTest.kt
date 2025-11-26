@@ -119,4 +119,21 @@ class VantagensTest {
         viewModel.state.emProgresso = true
         assertTrue("A criação básica deve ser congelada quando em progresso", viewModel.state.criacaoBasicaCongelada)
     }
+
+    @Test
+    fun vantagens_deveIncluirBasicoESuper_noModoSupers() {
+        viewModel.resetStateParaNovoPersonagem(
+            cartaSelvagem = true,
+            maisPontosPericias = true,
+            modoSupers = true
+        )
+        val vantagens = listaVantagens
+        val temVantagemBasica = vantagens.any { it.origem.uppercase() == "BASICO" }
+        val temVantagemSuper = vantagens.any { it.origem.uppercase() == "SUPER" }
+        val naoTemSuperpoderes = vantagens.none { it.id == "superpoderes" }
+
+        assertTrue("Deve incluir vantagens básicas no modo supers", temVantagemBasica)
+        assertTrue("Deve incluir vantagens super no modo supers", temVantagemSuper)
+        assertTrue("Não deve incluir a vantagem Superpoderes na lista", naoTemSuperpoderes)
+    }
 }
