@@ -228,10 +228,13 @@ fun VantagensContent(
     }
 
     // 1.3) lista final realmente exibida no app (respeita flags)
-    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, origensAtivas) {
+    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers) {
         listaVantagens.filter { vant ->
             val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase()
-            origemNorm in origensAtivas
+            val isBasico = origemNorm == "BASICO"
+            val isSuper = origemNorm == "SUPER"
+
+            isBasico || (isSuper && state.modoSupers)
         }
     }
 
