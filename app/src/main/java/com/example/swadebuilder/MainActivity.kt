@@ -776,7 +776,7 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
 
                                             else -> UnifiedScreen(
                                                 state = state,
-                                                viewModel = viewModel,
+                                                viewModel = criadorViewModel,
                                                 onOpenVantagensDetail = { nomeVantagem ->
                                                     highlightedVantagem = nomeVantagem
                                                     state.vantagemEmFoco = nomeVantagem
@@ -788,11 +788,8 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                                 onOpenListaAncestralidadesDetail = { showAncestralidadesDetail = true },
                                                 onOpenListaCompletaEquipamento   = { showEquipLista            = true },
                                                 onOpenPoderesDetail              = { showPoderesDetail         = true },
-
-                                                onOpenSuperPoderesDetail         = { nomePoder ->
-                                                    highlightedSuperPoder = nomePoder
-                                                    state.superPoderEmFoco = nomePoder.ifBlank { null }
-                                                    expPoderes = true
+                                                onOpenSuperPoderesDetail         = {
+                                                    highlightedSuperPoder = ""
                                                     showSuperDetail = true
                                                 },
 
