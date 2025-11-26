@@ -551,7 +551,8 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                     mostrouTelaInicial = false
                                 },
                                 onLoad = { salvo ->
-                                    creationSession++  // ✅ zera expansões/telas ao trocar de personagem
+                                    creationSession++
+
 
                                     criadorViewModel.loadFromSalvo(
                                         salvo,
