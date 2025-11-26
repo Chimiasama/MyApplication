@@ -1,3 +1,4 @@
+// url=https://github.com/Chimiasama/MyApplication/blob/fix/unify-antecedente-arcano-id/app/src/main/java/com/example/swadebuilder/ui/sections/VantagensSection.kt
 package com.example.swadebuilder.ui.sections
 
 import android.os.Build
@@ -104,7 +105,7 @@ fun VantFilterDialog(
                 Text("Origem", fontWeight = FontWeight.Bold)
                 allOrigens.forEach { o ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
+                        androidx.compose.material3.Checkbox(
                             checked = o in current.origens,
                             onCheckedChange = {
                                 val s = current.origens.toMutableSet()
@@ -121,7 +122,7 @@ fun VantFilterDialog(
                 Text("Estágio", fontWeight = FontWeight.Bold)
                 allEstagios.forEach { e ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
+                        androidx.compose.material3.Checkbox(
                             checked = e in current.estagios,
                             onCheckedChange = {
                                 val s = current.estagios.toMutableSet()
@@ -138,7 +139,7 @@ fun VantFilterDialog(
                 Text("Atributos", fontWeight = FontWeight.Bold)
                 allAtributos.forEach { a ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
+                        androidx.compose.material3.Checkbox(
                             checked = a in current.atributos,
                             onCheckedChange = {
                                 val s = current.atributos.toMutableSet()
@@ -155,7 +156,7 @@ fun VantFilterDialog(
                 Text("Perícias", fontWeight = FontWeight.Bold)
                 allPericias.forEach { p ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
+                        androidx.compose.material3.Checkbox(
                             checked = p in current.pericias,
                             onCheckedChange = {
                                 val s = current.pericias.toMutableSet()
@@ -184,6 +185,10 @@ fun VantagensContent(
     onOpenVantagensDetail: (String) -> Unit
 ) {
     val context = LocalContext.current
+
+    // garante que o estado interno saiba do modo multiplos AA
+    // (permite que a lógica central de seleção em CriadorState use a flag correta)
+    state.permiteMultiAntecedenteArcano = multiplosAAHabilitados
 
     // 1) carrega lista de vantagens (bruto)
     val listaVantagensRaw: List<Vantagem> = remember {
@@ -407,8 +412,11 @@ fun VantagensContent(
             }
 
             state.vantagensSelecionadas.forEachIndexed { index, vant ->
+                // Considera automaticas tanto por id quanto por nome legível (compat)
+                val autoKeysNormalized = state.vantagensAutomaticas.map { it.keyify() }
                 val isRacialFree =
-                    vant.nome.keyify() in state.vantagensAutomaticas.map { it.keyify() }
+                    vant.id in state.vantagensAutomaticas || vant.nome.keyify() in autoKeysNormalized
+
                 val requiredByAnother = state.vantagensSelecionadas.any { other ->
                     other != vant && other.requisitos.vantagensPrevias.any { reqId ->
                         reqId == vant.id
@@ -418,8 +426,9 @@ fun VantagensContent(
                 val isFromSuperPoder = state.vantagensDePoder.contains(vant.id)
                 val isSuperpoderesLocked = state.modoSupers && vant.id == "superpoderes"
 
-                val isCelestialAAMilagres = state.ancestralidade == "CELESTIAIS" &&
-                        vant.id == "antecedente_arcano_milagres"
+                // Bloqueia remoção se for o AA(Milagres) automático registrado por id
+                val isCelestialAAMilagres = (CriadorState.ID_AA_MILAGRES in state.vantagensAutomaticas)
+                        && vant.id == CriadorState.ID_AA_MILAGRES
 
                 val baseRemovable = !locked &&
                         index >= initialCount &&
@@ -915,5 +924,3 @@ fun VantagensContent(
         }
     }
 }
-
-
