@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FlashOn
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
@@ -559,6 +560,14 @@ fun SuperPoderesSection(
                                     imageVector = Icons.Filled.Close,
                                     contentDescription = "Remover"
                                 )
+                            },
+                            trailingIcon = {
+                                if (state.oMelhorQueHaSelecionada && p.poderId == state.poderFavorecido?.poderId) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Star,
+                                        contentDescription = "Poder Favorecido"
+                                    )
+                                }
                             }
                         )
                     } else {
@@ -580,6 +589,14 @@ fun SuperPoderesSection(
                                         imageVector = Icons.Filled.Close,
                                         contentDescription = "Remover"
                                     )
+                                },
+                                trailingIcon = {
+                                    if (state.oMelhorQueHaSelecionada && p.poderId == state.poderFavorecido?.poderId) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Star,
+                                            contentDescription = "Poder Favorecido"
+                                        )
+                                    }
                                 }
                             )
                         }
@@ -680,6 +697,14 @@ fun SuperPoderesSection(
                         Modifier.weight(1f),
                         fontWeight = FontWeight.SemiBold
                     )
+
+                    if (state.oMelhorQueHaSelecionada && "sp_${poder.nome.keyify()}" == state.poderFavorecido?.poderId) {
+                        Icon(
+                            imageVector = Icons.Filled.Star,
+                            contentDescription = "Poder Favorecido",
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
 
                     if (showLista2) {
                         Icon(
