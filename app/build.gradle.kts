@@ -151,6 +151,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.foundation)
+    androidTestImplementation(libs.androidx.core.testing)
     debugImplementation(libs.androidx.compose.ui.tooling.v170)
 
     // --- Material Components ---
@@ -187,6 +188,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core.v351)
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
 }
 
 // ------------------------------------------------------------
