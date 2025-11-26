@@ -52,7 +52,7 @@ fun AncestralidadesSection(
     expanded: Boolean,
     onToggle: () -> Unit,
     supersLocked: Boolean, // trava da fase de supers
-    onOpenListaAncestralidadesDetail: () -> Unit,
+    onOpenListaAncestralidadesDetail: (String) -> Unit,
     onSelectAncestralidade: (String) -> Unit
 ) {
     val context = LocalContext.current
@@ -94,7 +94,9 @@ fun AncestralidadesSection(
             onHelpClick = null,
             centerText = centerLabel,
             onCenterClick = null,
-            onListaCompletaClick = if (showLista) onOpenListaAncestralidadesDetail else null,
+            onListaCompletaClick = if (showLista) {
+                { onOpenListaAncestralidadesDetail("") }
+            } else null,
             listaCompletaText = "Lista Completa"
         )
 
@@ -155,8 +157,19 @@ fun AncestralidadesSection(
                         Text(
                             text = item.nome,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.weight(1f)
                         )
+
+                        if (showLista) {
+                            androidx.compose.material3.Icon(
+                                imageVector = Icons.Default.Visibility,
+                                contentDescription = "Detalhes",
+                                modifier = Modifier
+                                    .size(18.dp)
+                                    .clickable { onOpenListaAncestralidadesDetail(item.nome) }
+                            )
+                        }
                     }
                 }
             }
