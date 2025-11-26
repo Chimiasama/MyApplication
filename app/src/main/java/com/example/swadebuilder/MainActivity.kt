@@ -133,7 +133,10 @@ data class PurchasedPower(
     val custo: Int,
     val baseCost: Int,
     val poderId: String
-)
+) {
+    val gastoAtual: Int
+        get() = custo
+}
 
 // ===== NOVO: Superpoderes Restritivos (pré-requisito de perícia mínima) =====
 const val MIN_RAW_RESTRITIVO = 10  // d10
@@ -773,6 +776,7 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
 
                                             else -> UnifiedScreen(
                                                 state = state,
+                                                viewModel = viewModel,
                                                 onOpenVantagensDetail = { nomeVantagem ->
                                                     highlightedVantagem = nomeVantagem
                                                     state.vantagemEmFoco = nomeVantagem

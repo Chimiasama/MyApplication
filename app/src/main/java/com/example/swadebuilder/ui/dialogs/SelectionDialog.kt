@@ -153,12 +153,13 @@ fun MultipleSelectionDialog(
    =========================================================== */
 @Composable
 fun ChoiceDialog(
+    title: String = "Escolha uma opção",
     options: List<String>,
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
     SelectDialog(
-        title = "Escolha uma opção",
+        title = title,
         items = options,
         singleSelection = true,
         label = { it },
