@@ -695,8 +695,11 @@ class CriadorState {
     }
 
     var ancestralidade by mutableStateOf("HUMANOS")
+    var celestialAAMilagresDesabilitado by mutableStateOf(false)
+    var meioElfoAgil by mutableStateOf(false)
 
     val vantagensAutomaticas = mutableStateListOf<String>()
+    val desvantagensRaciais = mutableStateListOf<String>()
 
     var pontosVantagem by mutableIntStateOf(0)
 
@@ -983,7 +986,10 @@ class CriadorState {
     fun atributoMaxRaw(a: String): Int {
         val minRaw = atributoMinRaw(a)
 
-        val extras = ((minRaw - 4).coerceAtLeast(0) / 2)
+        var extras = ((minRaw - 4).coerceAtLeast(0) / 2)
+        if (a.keyify() == "AGILIDADE" && meioElfoAgil) {
+            extras += 1
+        }
         val baseCap = 12 + extras
 
         val chave = a.keyify()
@@ -1041,7 +1047,7 @@ class CriadorState {
                     when (prevAnc) {
                         "SAURIOS"    -> setOf("Sentidos Aguçados", "Prontidão")
                         "PEQUENINOS" -> setOf("Sorte")
-                        "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES")
+            "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
                         else         -> emptySet()
                     }
                     ).map { it.keyify() }
@@ -1131,6 +1137,10 @@ class CriadorState {
 
         // Troca efetiva da ancestralidade
         ancestralidade = anc
+        celestialAAMilagresDesabilitado = (anc == "CELESTIAIS" && modoSupers)
+        if (anc != "MEIO-ELFOS") {
+            meioElfoAgil = false
+        }
 
         // --- Vantagens / desvantagens raciais ---
 
@@ -1141,6 +1151,7 @@ class CriadorState {
 
         desvantagensAutomaticas.clear()
         vantagensAutomaticas.clear()
+        desvantagensRaciais.clear()
 
         listaAncestralidadesJson
             .firstOrNull { it.nome.keyify() == anc }
@@ -1165,15 +1176,18 @@ class CriadorState {
                 listaVantagens.firstOrNull { it.nome.equals("Sorte", ignoreCase = true) }
                     ?.let { vantagensSelecionadas.add(it) }
                 vantagensAutomaticas.add("Sorte")
+                desvantagensRaciais.add("Tamanho -1")
+                desvantagensRaciais.add("Movimentação Reduzida")
                 armadura = 0
             }
             "CELESTIAIS" -> {
-                listaVantagens
-                    .firstOrNull { it.nome.equals("ANTECEDENTE ARCANO MILAGRES", ignoreCase = true) }
-                    ?.let {
-                        vantagensSelecionadas.add(it)
-                    }
-                vantagensAutomaticas.add("ANTECEDENTE ARCANO MILAGRES")
+                val aaMilagres = listaVantagens.firstOrNull {
+                    it.id == "antecedente_arcano_milagres"
+                }
+                if (aaMilagres != null && vantagensSelecionadas.none { it.id == aaMilagres.id }) {
+                    vantagensSelecionadas.add(aaMilagres)
+                }
+                vantagensAutomaticas.add("ANTECEDENTE ARCANO (MILAGRES)")
                 armadura = 0
             }
             else -> {
@@ -1331,12 +1345,21 @@ class CriadorState {
     }
 
     var emProgresso by mutableStateOf(false)
+    val criacaoBasicaCongelada: Boolean
+        get() = emProgresso
 
-    fun creationComplete(): Boolean =
-        pontosAtributo == 0 &&
+    fun creationComplete(): Boolean {
+        val baseComplete = pontosAtributo == 0 &&
                 pontosPericia == 0 &&
                 pontosVantagem == 0 &&
                 (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0) == 0
+
+        return if (modoSupers) {
+            baseComplete && superPontosDisponiveis == 0
+        } else {
+            baseComplete
+        }
+    }
 
 
     val stageXpSpent: SnapshotStateMap<String, Int> = mutableStateMapOf<String, Int>().apply {
