@@ -133,7 +133,7 @@ class CriadorViewModel : ViewModel() {
         state.superPontosDisponiveis = 0
         state.superLimite = 0
         state.superLimitePorPoder = 0
-        state.idPoderFavorecido = null
+        state.poderFavoritoId = null
         state.limiteDePoderDaCampanha = Int.MAX_VALUE
 
         state.faseSupersAtiva = false
@@ -268,7 +268,7 @@ class CriadorViewModel : ViewModel() {
             }
         }
 
-        state.idPoderFavorecido = salvo.idPoderFavorecido
+        state.poderFavoritoId = salvo.poderFavoritoId
 
         state.superAtributoIncs.clear()
         state.superAtributoIncs.putAll(salvo.superAtributoIncs)
