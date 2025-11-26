@@ -49,12 +49,9 @@ class CriadorState {
     var superPontosDisponiveis by mutableIntStateOf(0)
     var superLimite by mutableIntStateOf(0)
     var superLimitePorPoder by mutableIntStateOf(0)
-    var idPoderFavorecido by mutableStateOf<String?>(null)
+    var poderFavoritoId by mutableStateOf<String?>(null)
     val oMelhorQueHaSelecionada by derivedStateOf {
         vantagensSelecionadas.any { it.id == "o_melhor_que_ha" }
-    }
-    val poderFavorecido by derivedStateOf {
-        superPoderesComprados.firstOrNull { it.poderId == idPoderFavorecido }
     }
     val limitePorPoderPadrao: Int
         get() = kotlin.math.floor(superPontosTotais / 3.0).toInt()
@@ -347,7 +344,7 @@ class CriadorState {
 
         if (registrarNoLedger) {
             val limiteIndividual =
-                if (idPoderFavorecido != null && idPoderFavorecido == poderId)
+                if (poderFavoritoId != null && poderFavoritoId == poderId)
                     limiteFavorecido
                 else
                     limitePorPoderPadrao
