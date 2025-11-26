@@ -8,6 +8,7 @@ data class MeuPersonagem(
     val atributos: Map<String, Int>,
     val pericias: Map<String, Int>,
     val ancestralidade: String,
+    val celestialAAMilagresDesabilitado: Boolean,
 
     // Vantagens e Complicações já persistidas por ID:
     val vantagens: List<String>,
