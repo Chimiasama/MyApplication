@@ -418,6 +418,9 @@ fun VantagensContent(
                 val isFromSuperPoder = state.vantagensDePoder.contains(vant.id)
                 val isSuperpoderesLocked = state.modoSupers && vant.id == "superpoderes"
 
+                val isCelestialAAMilagres = state.ancestralidade == "CELESTIAIS" &&
+                        vant.id == "antecedente_arcano_milagres"
+
                 val baseRemovable = !locked &&
                         index >= initialCount &&
                         index >= state.frozenAdvCount &&
@@ -428,6 +431,10 @@ fun VantagensContent(
 
                 val canRemove =
                     baseRemovable && !(state.emProgresso && vant.id == "novos_poderes")
+                            && !isCelestialAAMilagres
+
+                val isCelestialAAMilagresDesabilitado = state.celestialAAMilagresDesabilitado &&
+                        vant.id == "antecedente_arcano_milagres"
 
                 AssistChip(
                     onClick = {
@@ -465,7 +472,13 @@ fun VantagensContent(
                     },
                     enabled = canRemove,
                     label = {
-                        Text(vant.choice?.let { "${vant.nome} ($it)" } ?: vant.nome)
+                        val labelText = vant.choice?.let { "${vant.nome} ($it)" } ?: vant.nome
+                        val finalText = if (isCelestialAAMilagresDesabilitado) {
+                            "$labelText (DESABILITADO)"
+                        } else {
+                            labelText
+                        }
+                        Text(finalText)
                     },
                     leadingIcon = {
                         Icon(
