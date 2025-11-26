@@ -26,6 +26,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         atributos = this.valoresAtributos.mapValues { it.value.intValue },
         pericias = listaPericias.associate { per -> per.nome to this.rawTotal(per) },
         ancestralidade = this.ancestralidade,
+        celestialAAMilagresDesabilitado = this.celestialAAMilagresDesabilitado,
         vantagens = this.vantagensSelecionadas.map { it.id },
         desvantagensRaciais = this.desvantagensRaciais.toList(),
         complicacoes = this.complicacoesSelecionadas
@@ -258,7 +259,13 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         val nomesVantagens = listaVantagens
             .filter { it.id in personagem.vantagens }
-            .map { it.nome }
+            .map {
+                if (it.id == "antecedente_arcano_milagres" && personagem.celestialAAMilagresDesabilitado) {
+                    "${it.nome} (DESABILITADO)"
+                } else {
+                    it.nome
+                }
+            }
         lines += nomesVantagens.joinToString(", ")
     }
     lines += ""
