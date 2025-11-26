@@ -44,7 +44,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         superPontosDisponiveis = this.superPontosDisponiveis,
         limitePorPoderPadrao = this.limitePorPoderPadrao,
         limiteFavorecido = this.limiteFavorecido,
-        idPoderFavorecido = this.idPoderFavorecido,
+        poderFavoritoId = this.poderFavoritoId,
         superAtributoIncs = this.superAtributoIncs.toMap(),
         superPericiaIncs = this.superPericiaIncs.toMap(),
         bonusPararFromPower = this.bonusPararFromPower,

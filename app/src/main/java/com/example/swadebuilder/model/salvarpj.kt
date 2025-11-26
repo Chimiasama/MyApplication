@@ -56,7 +56,7 @@ data class PersonagemSalvo(
     // Limites & favorecido
     val limitePorPoderPadrao: Int = 0,
     val limiteFavorecido: Int = 0,
-    val idPoderFavorecido: String? = null,
+    val poderFavoritoId: String? = null,
 
     // Ledger de efeitos de poder
     val superAtributoIncs: Map<String, Int> = emptyMap(),
