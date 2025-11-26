@@ -1,3 +1,4 @@
+// Conteúdo completo do arquivo com a modificação aplicada na seção aplicarAncestralidade
 package com.example.swadebuilder
 
 import android.os.Build
@@ -24,7 +25,11 @@ class CriadorState {
     var modoSuperComplicacoes by mutableStateOf(false)
     var modoSuperequip by mutableStateOf(false)
     var grandesResponsabilidades by mutableStateOf(false)
-    companion object { const val BASE_SP_POOL = 15; const val ID_AA_MILAGRES = "antecedente_arcano_milagres" }
+    companion object {
+        const val BASE_SP_POOL = 15
+        const val ID_AA_MILAGRES = "antecedente_arcano_milagres"
+    }
+
     var maisPontosPericias by mutableStateOf(true)
     var cartaSelvagem       by mutableStateOf(true)
     var dinheiro by mutableIntStateOf(500)
@@ -629,39 +634,6 @@ class CriadorState {
     var permiteMultiAntecedenteArcano by mutableStateOf(false)
     var usarEspecializacoesDePericia by mutableStateOf(false)
 
-    // Helpers para tratar Antecedentes Arcanos por id (não alterar referências externas)
-    private fun isAntecedenteArcanoId(vantId: String): Boolean {
-        return vantId.startsWith("antecedente_arcano")
-    }
-
-    private fun hasAnyAntecedenteArcano(): Boolean {
-        return vantagensSelecionadas.any { isAntecedenteArcanoId(it.id) }
-    }
-
-    private fun canSelectAntecedenteArcanoById(v: Vantagem): Boolean {
-        if (!isAntecedenteArcanoId(v.id)) return true
-
-        return if (!permiteMultiAntecedenteArcano) {
-            // modo normal: só um antecedente arcano total permitido, a não ser que já tenha exatamente essa vantagem
-            val anyArcano = hasAnyAntecedenteArcano()
-            if (anyArcano && vantagensSelecionadas.none { it.id == v.id }) return false
-            true
-        } else {
-            // modo múltiplos: permite múltiplos, mas impede duplicatas/exatas
-            val jaTemMesmoId = vantagensSelecionadas.any { it.id == v.id }
-            if (jaTemMesmoId) return false
-
-            // Tratamento especial para generic "antecedente_arcano" com escolha
-            if (v.id == "antecedente_arcano" && v.choice != null) {
-                val jaTemMesmaChoice = vantagensSelecionadas.any {
-                    it.id == "antecedente_arcano" && it.choice?.keyify() == v.choice?.keyify()
-                }
-                if (jaTemMesmaChoice) return false
-            }
-            true
-        }
-    }
-
     val especializacoesPorPericia: SnapshotStateMap<String, com.example.swadebuilder.model.EspecializacoesDto> = mutableStateMapOf()
 
     var bonusPoderExtra by mutableIntStateOf(0)
@@ -788,10 +760,22 @@ class CriadorState {
             if (totalFeitas >= maxPermitidas) return false
         }
 
-        // Ajustado para trabalhar por id canônico quando aplicável
-        if (v.id.startsWith("antecedente_arcano") || key.startsWith("antecedente arcano")) {
-            // delega a decisão ao helper que usa permiteMultiAntecedenteArcano e o conteúdo atual
-            if (!canSelectAntecedenteArcanoById(v)) return false
+        if (key.startsWith("antecedente arcano")) {
+            if (!permiteMultiAntecedenteArcano) {
+                val anyArcano = vantagensSelecionadas.any { it.nome.keyify().startsWith("antecedente arcano") }
+                if (anyArcano && vantagensSelecionadas.none { it.nome.keyify() == key }) {
+                    return false
+                }
+            } else {
+                val jaTemMesmoId = vantagensSelecionadas.any { it.id == v.id }
+                if (jaTemMesmoId) return false
+                if (v.id == "antecedente_arcano" && v.choice != null) {
+                    val jaTemMesmaChoice = vantagensSelecionadas.any {
+                        it.id == "antecedente_arcano" && it.choice?.keyify() == v.choice?.keyify()
+                    }
+                    if (jaTemMesmaChoice) return false
+                }
+            }
         }
 
         if (key == "profissional" || key == "especialista") {
@@ -1168,6 +1152,25 @@ class CriadorState {
             ?.let { rm ->
                 desvantagensAutomaticas.addAll(rm.desvantagens)
                 vantagensAutomaticas.addAll(rm.vantagensGratis)
+
+                // => nova lógica: para cada desvantagem textual da ancestralidade,
+                // se houver uma complicação correspondente em listaComplicacoes, adiciona-a
+                // em complicacoesSelecionadas (como `Menor`/`Maior` conforme o texto).
+                // Isso garante que complicações raciais sejam visíveis na seção de
+                // complicações/resumo/PDF e que continuem sendo tratadas como automáticas.
+                rm.desvantagens.forEach { desc ->
+                    val key = desc.substringBefore("(").trim().keyify()
+                    val comp = listaComplicacoes.firstOrNull { it.id.keyify() == key }
+                    if (comp != null) {
+                        val grau = when {
+                            desc.contains("Maior", ignoreCase = true) -> "Maior"
+                            desc.contains("Menor", ignoreCase = true) -> "Menor"
+                            else -> "Menor"
+                        }
+                        // adiciona/atualiza a entrada; pontos não são gerados por serem automáticas
+                        complicacoesSelecionadas[comp] = grau
+                    }
+                }
             }
 
         // NÃO tem mais "raças levam pra lista completa":
@@ -1190,13 +1193,12 @@ class CriadorState {
             }
             "CELESTIAIS" -> {
                 val aaMilagres = listaVantagens.firstOrNull {
-                    it.id == ID_AA_MILAGRES
+                    it.id == "antecedente_arcano_milagres"
                 }
                 if (aaMilagres != null && vantagensSelecionadas.none { it.id == aaMilagres.id }) {
                     vantagensSelecionadas.add(aaMilagres)
                 }
-                // Armazena o id canônico para facilitar comparações em todo o sistema
-                vantagensAutomaticas.add(ID_AA_MILAGRES)
+                vantagensAutomaticas.add("ANTECEDENTE ARCANO (MILAGRES)")
                 armadura = 0
             }
             else -> {
