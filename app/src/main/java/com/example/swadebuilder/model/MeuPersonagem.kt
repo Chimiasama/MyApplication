@@ -13,6 +13,7 @@ data class MeuPersonagem(
     // Vantagens e Complicações já persistidas por ID:
     val vantagens: List<String>,
     val complicacoes: List<String>,
+    val desvantagensRaciais: List<String>,
 
     // Equipamentos com dados para impressão:
     val equipamentos: List<EquipamentoItem>,
