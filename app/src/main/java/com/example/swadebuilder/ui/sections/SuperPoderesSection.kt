@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
@@ -432,17 +433,6 @@ fun SuperPoderesSection(
     // --- O MELHOR QUE HÁ: escolha de poder favorecido diretamente na seção ---
     val temOMelhorQueHa = state.oMelhorQueHaSelecionada
 
-// Recalcula sempre que a lista mudar (sem remember aqui)
-    val candidatosFav = state.superPoderesComprados
-        .map { it.poderId to it.nome }
-        .distinctBy { it.first }
-        .sortedBy { it.second }
-
-    var favExpanded by rememberSaveable { mutableStateOf(false) }
-    var localFavId by rememberSaveable(state.idPoderFavorecido) {
-        mutableStateOf(state.idPoderFavorecido)
-    }
-
 
     Column(
         Modifier
@@ -583,14 +573,6 @@ fun SuperPoderesSection(
                                     imageVector = Icons.Filled.Close,
                                     contentDescription = "Remover"
                                 )
-                            },
-                            trailingIcon = {
-                                if (state.oMelhorQueHaSelecionada && p.poderId == state.poderFavorecido?.poderId) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Star,
-                                        contentDescription = "Poder Favorecido"
-                                    )
-                                }
                             }
                         )
                     } else {
@@ -612,14 +594,6 @@ fun SuperPoderesSection(
                                         imageVector = Icons.Filled.Close,
                                         contentDescription = "Remover"
                                     )
-                                },
-                                trailingIcon = {
-                                    if (state.oMelhorQueHaSelecionada && p.poderId == state.poderFavorecido?.poderId) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Star,
-                                            contentDescription = "Poder Favorecido"
-                                        )
-                                    }
                                 }
                             )
                         }
@@ -690,59 +664,16 @@ fun SuperPoderesSection(
         Text("Pontos disponíveis: ${state.superPontosDisponiveis}")
         Text("Limite de superpoderes: ${state.superLimite}")
 
-        // --- Seção: O MELHOR QUE HÁ (poder favorecido) ---
-        if (temOMelhorQueHa) {
+        // --- Seção: O MELhor QUE HÁ (poder favorecido) ---
+        if (temOMelhorQueHa && nivelDefinido) {
             Spacer(Modifier.height(8.dp))
-            Text(
-                "Poder favorecido (O MELHOR QUE HÁ)",
-                fontWeight = FontWeight.SemiBold
-            )
-            Spacer(Modifier.height(4.dp))
 
-            if (candidatosFav.isEmpty()) {
+            if (state.poderFavoritoId == null) {
                 Text(
-                    "Compre pelo menos um superpoder para poder escolher o favorecido.",
-                    style = MaterialTheme.typography.bodySmall
+                    "Defina o poder vinculado à vantagem O Melhor Que Há",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary
                 )
-            } else {
-                ExposedDropdownMenuBox(
-                    expanded = favExpanded,
-                    onExpandedChange = { favExpanded = !favExpanded }
-                ) {
-                    val label = candidatosFav.firstOrNull { it.first == localFavId }?.second
-                        ?: "Selecione o poder favorecido…"
-
-                    OutlinedTextField(
-                        value = label,
-                        onValueChange = { },
-                        readOnly = true,
-                        trailingIcon = {
-                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = favExpanded)
-                        },
-                        modifier = Modifier
-                            .menuAnchor(
-                                ExposedDropdownMenuAnchorType.PrimaryNotEditable,
-                                enabled = true
-                            )
-                            .fillMaxWidth()
-                    )
-
-                    DropdownMenu(
-                        expanded = favExpanded,
-                        onDismissRequest = { favExpanded = false }
-                    ) {
-                        candidatosFav.forEach { (id, nome) ->
-                            DropdownMenuItem(
-                                text = { Text(nome) },
-                                onClick = {
-                                    localFavId = id
-                                    state.idPoderFavorecido = id
-                                    favExpanded = false
-                                }
-                            )
-                        }
-                    }
-                }
             }
         }
 
@@ -778,12 +709,26 @@ fun SuperPoderesSection(
                         fontWeight = FontWeight.SemiBold
                     )
 
-                    if (state.oMelhorQueHaSelecionada && "sp_${poder.nome.keyify()}" == state.poderFavorecido?.poderId) {
-                        Icon(
-                            imageVector = Icons.Filled.Star,
-                            contentDescription = "Poder Favorecido",
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
+                    if (temOMelhorQueHa) {
+                        val isFavoriteLocked = state.poderFavoritoId?.let { favId -> (state.gastosPorPoder[favId] ?: 0) > 0 } ?: false
+                        val poderId = "sp_${poder.nome.keyify()}"
+                        val isFav = state.poderFavoritoId == poderId
+
+                        // Armadura e Resistência não podem ser favorecidos
+                        val isBloqueado = poder.nome.keyify() in listOf("ARMADURA", "RESISTENCIA")
+
+                        IconButton(
+                            onClick = {
+                                viewModel.definirPoderFavorecido(if (isFav) null else poderId)
+                            },
+                            enabled = !isFavoriteLocked && !isBloqueado
+                        ) {
+                            Icon(
+                                imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
+                                contentDescription = if (isFav) "Desmarcar como poder favorito" else "Marcar como poder favorito",
+                                tint = if (isBloqueado || isFavoriteLocked) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f) else MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
 
                     if (showLista2) {

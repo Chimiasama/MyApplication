@@ -23,13 +23,11 @@ class VantagensTest {
 
     @Test
     fun testOMelhorQueHa() {
-        val oMelhorQueHa = Vantagem(id = "o_melhor_que_ha", nome = "O Melhor Que Há", categoria = com.example.swadebuilder.model.Categoria.SUPER, requisitos = com.example.swadebuilder.model.Requisitos(estagio = "Novato"), origem = "SUPER")
         val superPoder = PurchasedPower(nome = "SuperPoder", custo = 10, baseCost = 10, poderId = "sp_superpoder")
         viewModel.state.superPoderesComprados.add(superPoder)
-        viewModel.definirPoderFavorecido(oMelhorQueHa, superPoder.poderId)
+        viewModel.definirPoderFavorecido(superPoder.poderId)
 
-        assertEquals(superPoder.poderId, viewModel.state.idPoderFavorecido)
-        assertTrue(viewModel.state.vantagensSelecionadas.contains(oMelhorQueHa))
+        assertEquals(superPoder.poderId, viewModel.state.poderFavoritoId)
     }
 
     @Test
