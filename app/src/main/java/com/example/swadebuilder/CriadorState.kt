@@ -49,20 +49,14 @@ class CriadorState {
     var superPontosDisponiveis by mutableIntStateOf(0)
     var superLimite by mutableIntStateOf(0)
     var superLimitePorPoder by mutableIntStateOf(0)
-    var idPoderFavorecido by mutableStateOf<String?>(null)
+    var poderFavoritoId by mutableStateOf<String?>(null)
     val oMelhorQueHaSelecionada by derivedStateOf {
         vantagensSelecionadas.any { it.id == "o_melhor_que_ha" }
     }
-    val poderFavorecido by derivedStateOf {
-        superPoderesComprados.firstOrNull { it.poderId == idPoderFavorecido }
-    }
     val limitePorPoderPadrao: Int
         get() = kotlin.math.floor(superPontosTotais / 3.0).toInt()
-
-    // O MELHOR QUE HÁ: metade dos SP totais, arredondando pra baixo
     val limiteFavorecido: Int
-        get() = kotlin.math.floor(superPontosTotais / 2.0).toInt()
-
+        get() = kotlin.math.ceil(superPontosTotais / 2.0).toInt()
     var limiteDePoderDaCampanha by mutableIntStateOf(Int.MAX_VALUE)
 
     var faseSupersAtiva by mutableStateOf(false)
@@ -349,13 +343,11 @@ class CriadorState {
         }
 
         if (registrarNoLedger) {
-            val isArmorOrRes = (poderId == "sp_armor" || poderId == "sp_res")
-
             val limiteIndividual =
-                if (!isArmorOrRes && idPoderFavorecido != null && idPoderFavorecido == poderId)
-                    limiteFavorecido          // bônus de O MELHOR QUE HÁ para qualquer poder EXCETO Armadura/Resistência
+                if (poderFavoritoId != null && poderFavoritoId == poderId)
+                    limiteFavorecido
                 else
-                    limitePorPoderPadrao      // padrão para todos (e também para Armadura/Resistência)
+                    limitePorPoderPadrao
 
             val gastoAtual = gastosPorPoder[poderId] ?: 0
             if (gastoAtual + custo > limiteIndividual) {
@@ -363,13 +355,14 @@ class CriadorState {
             }
 
             // Segurança extra: Armadura + Resistência compartilham limite de campanha
-            if (isArmorOrRes) {
+            if (poderId == "sp_armor" || poderId == "sp_res") {
                 val gastoArmor = gastosPorPoder["sp_armor"] ?: 0
                 val gastoRes = gastosPorPoder["sp_res"] ?: 0
                 val gastoCompartilhadoAtual = gastoArmor + gastoRes
 
                 if (gastoCompartilhadoAtual + custo > limiteDePoderDaCampanha) {
-                    return false to "Limite compartilhado de Armadura + Resistência atingido (${limiteDePoderDaCampanha} SP)."
+                    return false to
+                            "Limite compartilhado de Armadura + Resistência atingido (${limiteDePoderDaCampanha} SP)."
                 }
             }
         }

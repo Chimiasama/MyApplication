@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
@@ -39,7 +40,6 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
@@ -56,6 +56,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
@@ -595,7 +596,7 @@ fun SuperPoderesSection(
                                         imageVector = Icons.Filled.Close,
                                         contentDescription = "Remover"
                                     )
-                                }
+                                },
                             )
                         }
                     }
@@ -718,17 +719,19 @@ fun SuperPoderesSection(
                         // Armadura e Resistência não podem ser favorecidos
                         val isBloqueado = poder.nome.keyify() in listOf("ARMADURA", "RESISTENCIA")
 
-                        IconButton(
-                            onClick = {
-                                viewModel.definirPoderFavorecido(if (isFav) null else poderId)
-                            },
-                            enabled = !isFavoriteLocked && !isBloqueado
-                        ) {
-                            Icon(
-                                imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
-                                contentDescription = if (isFav) "Desmarcar como poder favorito" else "Marcar como poder favorito",
-                                tint = if (isBloqueado || isFavoriteLocked) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f) else MaterialTheme.colorScheme.primary
-                            )
+                        if (!isBloqueado) {
+                            IconButton(
+                                onClick = {
+                                    viewModel.definirPoderFavorecido(if (isFav) null else poderId)
+                                },
+                                enabled = !isFavoriteLocked
+                            ) {
+                                Icon(
+                                    imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
+                                    contentDescription = if (isFav) "Desmarcar como poder favorito" else "Marcar como poder favorito",
+                                    tint = if (isFavoriteLocked) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f) else if (isFav) Color.Red else MaterialTheme.colorScheme.primary
+                                )
+                            }
                         }
                     }
 
