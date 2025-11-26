@@ -151,7 +151,7 @@ fun UnifiedScreen(
     var showMeioElfoDialog by rememberSaveable { mutableStateOf(false) }
     var pendingMeioElfoKey by rememberSaveable { mutableStateOf<String?>(null) }
     // --------------------------------
-    val supersLocked = state.criacaoBasicaCongelada
+    val creationLocked = state.criacaoBasicaCongelada
 
     Column(
         modifier = Modifier
@@ -172,7 +172,7 @@ fun UnifiedScreen(
             currentAncestralidade = state.ancestralidade,
             expanded = expAncs,
             onToggle = onToggleAncs,
-            supersLocked = supersLocked,
+            supersLocked = creationLocked,
             onOpenListaAncestralidadesDetail = onOpenListaAncestralidadesDetail,
             onSelectAncestralidade = { nome ->
                 val key = nome.uppercase().semAcentos()
@@ -235,7 +235,10 @@ fun UnifiedScreen(
             )
         }
 
-        if (state.vantagensSelecionadas.any { it.nome.keyify().startsWith("ANTECEDENTE ARCANO") }) {
+        val temArcano = state.vantagensSelecionadas.any {
+            it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
+        }
+        if (temArcano && !state.celestialAAMilagresDesabilitado) {
             HorizontalDivider(thickness = 1.dp)
 
             SectionCard(
@@ -353,6 +356,7 @@ fun UnifiedScreen(
                             agiState.intValue = 6
                         }
 
+                        state.meioElfoAgil = true
                         pendingMeioElfoKey = null
                         showMeioElfoDialog = false
                     }
