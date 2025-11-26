@@ -24,24 +24,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FlashOn
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -400,7 +393,7 @@ fun SuperPoderesSection(
 
     // full vs lite: no full (show_lista_completa = true) mostramos o ícone clicável
     // e abrimos a tela de lista completa focada no poder
-    val showLista = booleanResource(R.bool.show_lista_completa)
+    booleanResource(R.bool.show_lista_completa)
 
     fun aplicarNivelSuper(novoNivel: Int) {
         // NÍVEL 0 = "voltar para criação": zera supers e volta a fase BASE
@@ -712,24 +705,45 @@ fun SuperPoderesSection(
                     )
 
                     if (temOMelhorQueHa) {
-                        val isFavoriteLocked = state.poderFavoritoId?.let { favId -> (state.gastosPorPoder[favId] ?: 0) > 0 } ?: false
+                        val favoritoAtual = state.poderFavoritoId
+                        val temFavorito = favoritoAtual != null
+
+                        val isFavoriteLocked = favoritoAtual?.let { favId ->
+                            (state.gastosPorPoder[favId] ?: 0) > 0
+                        } ?: false
+
                         val poderId = "sp_${poder.nome.keyify()}"
-                        val isFav = state.poderFavoritoId == poderId
+                        val isFav = favoritoAtual == poderId
 
                         // Armadura e Resistência não podem ser favorecidos
                         val isBloqueado = poder.nome.keyify() in listOf("ARMADURA", "RESISTENCIA")
 
-                        if (!isBloqueado) {
+                        // Regra visual:
+                        // - se ainda NÃO tem favorito -> mostra estrela em todos (menos bloqueados)
+                        // - se JÁ tem favorito       -> mostra estrela apenas no favorito
+                        val showStarForThis = !isBloqueado && (!temFavorito || isFav)
+
+                        if (showStarForThis) {
                             IconButton(
                                 onClick = {
+                                    // se já é favorito, desmarca (volta tudo a mostrar estrelas vazias)
+                                    // se não é, define este como favorito (estrela vermelha e some das outras)
                                     viewModel.definirPoderFavorecido(if (isFav) null else poderId)
                                 },
                                 enabled = !isFavoriteLocked
                             ) {
                                 Icon(
-                                    imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
-                                    contentDescription = if (isFav) "Desmarcar como poder favorito" else "Marcar como poder favorito",
-                                    tint = if (isFavoriteLocked) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f) else if (isFav) Color.Red else MaterialTheme.colorScheme.primary
+                                    imageVector = Icons.Outlined.StarBorder,
+                                    contentDescription = if (isFav)
+                                        "Desmarcar como poder favorito"
+                                    else
+                                        "Marcar como poder favorito",
+                                    tint = if (isFavoriteLocked)
+                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                    else if (isFav)
+                                        Color.Red          // favorito = vazia porém vermelha
+                                    else
+                                        MaterialTheme.colorScheme.primary   // não favorito = vazia na cor padrão
                                 )
                             }
                         }
@@ -852,7 +866,7 @@ fun SuperPoderesSection(
             }
 
             val saldoSp = state.superPontosDisponiveis
-            val limiteBasePorPoder = state.superLimitePorPoder
+            state.superLimitePorPoder
 
             val limiteParaDialog: Int = when {
 

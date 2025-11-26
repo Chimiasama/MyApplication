@@ -197,8 +197,10 @@ fun SupersDialog(
                                 DropdownMenuItem(
                                     text = { Text(nome) },
                                     onClick = {
+                                        // atualiza o rascunho local (pro label do campo)
                                         localFavId = id
-                                        state.poderFavoritoId = id
+                                        // usa a API do ViewModel pra registrar o favorito de verdade
+                                        viewModel.definirPoderFavorecido(id)
                                         favExpanded = false
                                     }
                                 )
