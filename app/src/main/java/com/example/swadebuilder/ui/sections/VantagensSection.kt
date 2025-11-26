@@ -181,7 +181,8 @@ fun VantFilterDialog(
 fun VantagensContent(
     state: CriadorState,
     multiplosAAHabilitados: Boolean,
-    onOpenVantagensDetail: (String) -> Unit
+    onOpenVantagensDetail: (String) -> Unit,
+    viewModel: CriadorViewModel = viewModel()
 ) {
     val context = LocalContext.current
 
@@ -258,6 +259,8 @@ fun VantagensContent(
     var showNovosPoderesDialog by rememberSaveable { mutableStateOf(false) }
     var dialogMostrandoAntecedente by remember { mutableStateOf<Vantagem?>(null) }
     var subOpcaoSelecionada by rememberSaveable { mutableStateOf<String?>(null) }
+    var showMelhorQueHaDialog by rememberSaveable { mutableStateOf(false) }
+    var pendingMelhorQueHa by remember { mutableStateOf<Vantagem?>(null) }
 
     val scope = rememberCoroutineScope()
 
@@ -419,6 +422,14 @@ fun VantagensContent(
                 val isSuperpoderesLocked = state.modoSupers && vant.id == "superpoderes"
 
                 val baseRemovable = !locked &&
+                        when (vant.id) {
+                            "o_melhor_que_ha" -> {
+                                val gastoAtual = state.poderFavorecido?.gastoAtual ?: 0
+                                val limitePadrao = state.limitePorPoderPadrao
+                                gastoAtual <= limitePadrao
+                            }
+                            else -> true
+                        } &&
                         index >= initialCount &&
                         index >= state.frozenAdvCount &&
                         !isRacialFree &&
@@ -432,6 +443,11 @@ fun VantagensContent(
                 AssistChip(
                     onClick = {
                         if (!canRemove) return@AssistChip
+
+                        if (vant.id == "o_melhor_que_ha") {
+                            viewModel.removerPoderFavorecido(vant)
+                            return@AssistChip
+                        }
 
                         if (vant.id == "novos_poderes") {
                             val escolhidoArcano = state.vantagensSelecionadas
@@ -651,6 +667,11 @@ fun VantagensContent(
                                                     showNovosPoderesDialog = true
                                                 }
 
+                                                vant.id == "o_melhor_que_ha" -> {
+                                                    pendingMelhorQueHa = vant
+                                                    showMelhorQueHaDialog = true
+                                                }
+
                                                 else -> {
                                                     if (vant.nome.contains(
                                                             "Pontos de Poder",
@@ -766,6 +787,27 @@ fun VantagensContent(
                             subOpcaoSelecionada = null
                         }
                     ) { Text("Cancelar") }
+                }
+            )
+        }
+        if (showMelhorQueHaDialog && pendingMelhorQueHa != null) {
+            val vant = pendingMelhorQueHa!!
+            val poderesComprados = state.superPoderesComprados
+                .distinctBy { it.poderId }
+                .map { it.nome }
+
+            ChoiceDialog(
+                title = "Escolha um Superpoder",
+                options = poderesComprados,
+                onConfirm = { choice ->
+                    val poderId = state.superPoderesComprados.first { it.nome == choice }.poderId
+                    viewModel.definirPoderFavorecido(vant, poderId)
+                    showMelhorQueHaDialog = false
+                    pendingMelhorQueHa = null
+                },
+                onDismiss = {
+                    showMelhorQueHaDialog = false
+                    pendingMelhorQueHa = null
                 }
             )
         }

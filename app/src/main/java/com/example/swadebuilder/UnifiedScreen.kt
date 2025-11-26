@@ -98,7 +98,7 @@ fun PreviewApp() {
 @Composable
 fun UnifiedScreen(
     state: CriadorState,
-
+    viewModel: CriadorViewModel,
     onOpenVantagensDetail: (String) -> Unit,
     onOpenPericiasDetail: () -> Unit,
     onOpenComplicacoesDetail: () -> Unit,
@@ -231,7 +231,8 @@ fun UnifiedScreen(
             VantagensContent(
                 state = state,
                 multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-                onOpenVantagensDetail  = onOpenVantagensDetail
+                onOpenVantagensDetail  = onOpenVantagensDetail,
+                viewModel = viewModel
             )
         }
 

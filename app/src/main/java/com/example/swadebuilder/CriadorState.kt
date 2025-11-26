@@ -50,6 +50,12 @@ class CriadorState {
     var superLimite by mutableIntStateOf(0)
     var superLimitePorPoder by mutableIntStateOf(0)
     var idPoderFavorecido by mutableStateOf<String?>(null)
+    val oMelhorQueHaSelecionada by derivedStateOf {
+        vantagensSelecionadas.any { it.id == "o_melhor_que_ha" }
+    }
+    val poderFavorecido by derivedStateOf {
+        superPoderesComprados.firstOrNull { it.poderId == idPoderFavorecido }
+    }
     val limitePorPoderPadrao: Int
         get() = kotlin.math.floor(superPontosTotais / 3.0).toInt()
     val limiteFavorecido: Int
@@ -748,6 +754,11 @@ class CriadorState {
 
     fun podeSelecionar(v: Vantagem): Boolean {
         val key = v.nome.keyify()
+
+        if (key == "o_melhor_que_ha") {
+            if (emProgresso) return false
+            if (superPoderesComprados.isEmpty()) return false
+        }
 
         if (v.nome.contains("Pontos de Poder", ignoreCase = true)) {
             val totalFeitas = comprasPpPorEstagio.values.sum()
