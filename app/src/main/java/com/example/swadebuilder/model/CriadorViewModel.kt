@@ -345,31 +345,14 @@ class CriadorViewModel : ViewModel() {
     }
 
     fun perPowerLimit(poderId: String): Int {
-        return if (state.idPoderFavorecido != null && state.idPoderFavorecido == poderId)
+        return if (state.poderFavoritoId != null && state.poderFavoritoId == poderId)
             state.limiteFavorecido
         else
             state.limitePorPoderPadrao
     }
 
-    fun definirPoderFavorecido(vantagem: Vantagem, poderId: String) {
-        state.idPoderFavorecido = poderId
-        state.vantagensSelecionadas.add(vantagem)
-        state.pontosVantagem--
-    }
-
-    fun removerPoderFavorecido(vantagem: Vantagem) {
-        val poderId = state.idPoderFavorecido ?: return
-        val gastoAtual = state.gastosPorPoder[poderId] ?: 0
-        val limitePadrao = state.limitePorPoderPadrao
-
-        if (gastoAtual > limitePadrao) {
-            // Impede a remoção se o poder favorecido ultrapassar o limite padrão
-            return
-        }
-
-        state.idPoderFavorecido = null
-        state.vantagensSelecionadas.remove(vantagem)
-        state.pontosVantagem++
+    fun definirPoderFavorecido(poderId: String?) {
+        state.poderFavoritoId = poderId
     }
 
     fun podeSubirAtributoPorSuper(attrKey: String, steps: Int): InvestCheck {
