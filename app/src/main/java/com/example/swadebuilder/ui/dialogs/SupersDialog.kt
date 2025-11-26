@@ -102,7 +102,7 @@ fun SupersDialog(
     }
 
     var favExpanded by rememberSaveable { mutableStateOf(false) }
-    var localFavId  by rememberSaveable { mutableStateOf(state.idPoderFavorecido) }
+    var localFavId  by rememberSaveable { mutableStateOf(state.poderFavoritoId) }
     val precisaDefinirFav = temOMelhorQueHa && localFavId.isNullOrEmpty()
 
     fun badgeText(poderId: String): String {
@@ -198,7 +198,7 @@ fun SupersDialog(
                                     text = { Text(nome) },
                                     onClick = {
                                         localFavId = id
-                                        state.idPoderFavorecido = id
+                                        state.poderFavoritoId = id
                                         favExpanded = false
                                     }
                                 )

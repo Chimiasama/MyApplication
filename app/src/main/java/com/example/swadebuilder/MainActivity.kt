@@ -687,7 +687,7 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                                             superPontosDisponiveis  = state.superPontosDisponiveis,
                                                             limitePorPoderPadrao    = state.limitePorPoderPadrao,
                                                             limiteFavorecido        = state.limiteFavorecido,
-                                                            idPoderFavorecido       = state.idPoderFavorecido,
+                                                            poderFavoritoId       = state.poderFavoritoId,
                                                             superAtributoIncs       = state.superAtributoIncs.toMap(),
                                                             superPericiaIncs        = state.superPericiaIncs.toMap(),
                                                             bonusPararFromPower     = state.bonusPararFromPower,

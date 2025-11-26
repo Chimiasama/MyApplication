@@ -133,7 +133,7 @@ class CriadorViewModel : ViewModel() {
         state.superPontosDisponiveis = 0
         state.superLimite = 0
         state.superLimitePorPoder = 0
-        state.idPoderFavorecido = null
+        state.poderFavoritoId = null
         state.limiteDePoderDaCampanha = Int.MAX_VALUE
 
         state.faseSupersAtiva = false
@@ -268,7 +268,7 @@ class CriadorViewModel : ViewModel() {
             }
         }
 
-        state.idPoderFavorecido = salvo.idPoderFavorecido
+        state.poderFavoritoId = salvo.poderFavoritoId
 
         state.superAtributoIncs.clear()
         state.superAtributoIncs.putAll(salvo.superAtributoIncs)
@@ -345,38 +345,14 @@ class CriadorViewModel : ViewModel() {
     }
 
     fun perPowerLimit(poderId: String): Int {
-        val isArmorOrRes = (poderId == "sp_armor" || poderId == "sp_res")
-
-        return if (
-            !isArmorOrRes &&
-            state.idPoderFavorecido != null &&
-            state.idPoderFavorecido == poderId
-        ) {
+        return if (state.poderFavoritoId != null && state.poderFavoritoId == poderId)
             state.limiteFavorecido
-        } else {
+        else
             state.limitePorPoderPadrao
-        }
     }
 
-    fun definirPoderFavorecido(vantagem: Vantagem, poderId: String) {
-        state.idPoderFavorecido = poderId
-        state.vantagensSelecionadas.add(vantagem)
-        state.pontosVantagem--
-    }
-
-    fun removerPoderFavorecido(vantagem: Vantagem) {
-        val poderId = state.idPoderFavorecido ?: return
-        val gastoAtual = state.gastosPorPoder[poderId] ?: 0
-        val limitePadrao = state.limitePorPoderPadrao
-
-        if (gastoAtual > limitePadrao) {
-            // Impede a remoção se o poder favorecido ultrapassar o limite padrão
-            return
-        }
-
-        state.idPoderFavorecido = null
-        state.vantagensSelecionadas.remove(vantagem)
-        state.pontosVantagem++
+    fun definirPoderFavorecido(poderId: String?) {
+        state.poderFavoritoId = poderId
     }
 
     fun podeSubirAtributoPorSuper(attrKey: String, steps: Int): InvestCheck {

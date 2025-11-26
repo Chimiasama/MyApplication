@@ -486,7 +486,7 @@ fun VantagensContent(
 
                                 // se for O MELHOR QUE HÁ, limpamos também o poder favorecido
                                 if (vant.id == "o_melhor_que_ha") {
-                                    state.idPoderFavorecido = null
+                                    state.poderFavoritoId = null
                                 }
                             }
                         },
