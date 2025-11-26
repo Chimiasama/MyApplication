@@ -430,7 +430,7 @@ fun VantagensContent(
                 val baseRemovable = !locked &&
                         when (vant.id) {
                             "o_melhor_que_ha" -> {
-                                val gastoAtual = state.poderFavorecido?.gastoAtual ?: 0
+                                val gastoAtual = state.poderFavoritoId?.let { state.gastosPorPoder[it] } ?: 0
                                 val limitePadrao = state.limitePorPoderPadrao
                                 gastoAtual <= limitePadrao
                             }
