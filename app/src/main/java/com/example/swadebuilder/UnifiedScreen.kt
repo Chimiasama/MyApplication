@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
@@ -52,8 +53,12 @@ import kotlinx.serialization.json.JsonPrimitive
 @Composable
 fun PreviewApp() {
     val state = remember { CriadorState() }
+    val vm = remember { CriadorViewModel() }
+
     UnifiedScreen(
         state = state,
+        viewModel = vm,   // <<<<<<<<<<<<<< ADICIONADO
+
         onOpenVantagensDetail = { _ -> },
         onOpenPericiasDetail = {},
         onOpenComplicacoesDetail = {},
@@ -91,7 +96,6 @@ fun PreviewApp() {
         listaSuperPoderes = emptyList()
     )
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)

@@ -1360,18 +1360,13 @@ class CriadorState {
         get() = emProgresso
 
     fun creationComplete(): Boolean {
-        val baseComplete = pontosAtributo == 0 &&
+        // "Ficha básica completa": todos os pontos iniciais foram distribuídos.
+        // Em modo supers, NÃO amarramos isso aos pontos de super – eles são uma fase à parte.
+        return pontosAtributo == 0 &&
                 pontosPericia == 0 &&
                 pontosVantagem == 0 &&
                 (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0) == 0
-
-        return if (modoSupers) {
-            baseComplete && superPontosDisponiveis == 0
-        } else {
-            baseComplete
-        }
     }
-
 
     val stageXpSpent: SnapshotStateMap<String, Int> = mutableStateMapOf<String, Int>().apply {
         listaDeEstagios.forEach { this[it.nome] = 0 }

@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.arcanoInfo
@@ -54,6 +55,7 @@ import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.Categoria
+import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -217,7 +219,7 @@ fun VantagensContent(
     // - sempre BASICO
     // - SUPER só quando modoSupers = true
     // Futuro: é só adicionar HORROR/FANTASIA/SCIFI aqui quando criar as flags.
-    val origensAtivas: Set<String> = remember(state.modoSupers) {
+    remember(state.modoSupers) {
         buildSet {
             add("BASICO")
             if (state.modoSupers) add("SUPER")
@@ -262,8 +264,6 @@ fun VantagensContent(
     var showNovosPoderesDialog by rememberSaveable { mutableStateOf(false) }
     var dialogMostrandoAntecedente by remember { mutableStateOf<Vantagem?>(null) }
     var subOpcaoSelecionada by rememberSaveable { mutableStateOf<String?>(null) }
-    var showMelhorQueHaDialog by rememberSaveable { mutableStateOf(false) }
-    var pendingMelhorQueHa by remember { mutableStateOf<Vantagem?>(null) }
 
     val scope = rememberCoroutineScope()
 
@@ -451,44 +451,45 @@ fun VantagensContent(
                         vant.id == "antecedente_arcano_milagres"
 
                 AssistChip(
-                    onClick = {
-                        if (!canRemove) return@AssistChip
+                        onClick = {
+                            if (!canRemove) return@AssistChip
 
-                        if (vant.id == "o_melhor_que_ha") {
-                            viewModel.removerPoderFavorecido(vant)
-                            return@AssistChip
-                        }
+                            if (vant.id == "novos_poderes") {
+                                val escolhidoArcano = state.vantagensSelecionadas
+                                    .firstOrNull { it.id == "antecedente_arcano" }
+                                    ?.choice
+                                    ?.uppercase()
+                                    ?.semAcentos()
+                                    ?.trim()
+                                    ?: ""
 
-                        if (vant.id == "novos_poderes") {
-                            val escolhidoArcano = state.vantagensSelecionadas
-                                .firstOrNull { it.id == "antecedente_arcano" }
-                                ?.choice
-                                ?.uppercase()
-                                ?.semAcentos()
-                                ?.trim()
-                                ?: ""
+                                val initialSlots = arcanoInfo[escolhidoArcano]?.first ?: 0
 
-                            val initialSlots = arcanoInfo[escolhidoArcano]?.first ?: 0
+                                state.desfazerUltimosNovosPoderes(
+                                    versionKey = escolhidoArcano,
+                                    initialSlots = initialSlots
+                                )
 
-                            state.desfazerUltimosNovosPoderes(
-                                versionKey = escolhidoArcano,
-                                initialSlots = initialSlots
-                            )
+                                state.vantagensSelecionadas.remove(vant)
+                                state.pontosVantagem++
+                                state.rebuildAllPericiaStacks()
+                            } else if (vant.nome.contains("Pontos de Poder", true)) {
+                                state.removerPontosDePoder(vant)
+                                state.pontosVantagem++
+                                state.rebuildAllPericiaStacks()
+                            } else {
+                                // remoção "normal"
+                                state.removeVantagemDinheiro(vant)
+                                state.vantagensSelecionadas.remove(vant)
+                                state.pontosVantagem++
+                                state.rebuildAllPericiaStacks()
 
-                            state.vantagensSelecionadas.remove(vant)
-                            state.pontosVantagem++
-                            state.rebuildAllPericiaStacks()
-                        } else if (vant.nome.contains("Pontos de Poder", true)) {
-                            state.removerPontosDePoder(vant)
-                            state.pontosVantagem++
-                            state.rebuildAllPericiaStacks()
-                        } else {
-                            state.removeVantagemDinheiro(vant)
-                            state.vantagensSelecionadas.remove(vant)
-                            state.pontosVantagem++
-                            state.rebuildAllPericiaStacks()
-                        }
-                    },
+                                // se for O MELHOR QUE HÁ, limpamos também o poder favorecido
+                                if (vant.id == "o_melhor_que_ha") {
+                                    state.idPoderFavorecido = null
+                                }
+                            }
+                        },
                     enabled = canRemove,
                     label = {
                         val labelText = vant.choice?.let { "${vant.nome} ($it)" } ?: vant.nome
@@ -683,11 +684,6 @@ fun VantagensContent(
                                                     showNovosPoderesDialog = true
                                                 }
 
-                                                vant.id == "o_melhor_que_ha" -> {
-                                                    pendingMelhorQueHa = vant
-                                                    showMelhorQueHaDialog = true
-                                                }
-
                                                 else -> {
                                                     if (vant.nome.contains(
                                                             "Pontos de Poder",
@@ -806,29 +802,8 @@ fun VantagensContent(
                 }
             )
         }
-        if (showMelhorQueHaDialog && pendingMelhorQueHa != null) {
-            val vant = pendingMelhorQueHa!!
-            val poderesComprados = state.superPoderesComprados
-                .distinctBy { it.poderId }
-                .map { it.nome }
 
-            ChoiceDialog(
-                title = "Escolha um Superpoder",
-                options = poderesComprados,
-                onConfirm = { choice ->
-                    val poderId = state.superPoderesComprados.first { it.nome == choice }.poderId
-                    viewModel.definirPoderFavorecido(vant, poderId)
-                    showMelhorQueHaDialog = false
-                    pendingMelhorQueHa = null
-                },
-                onDismiss = {
-                    showMelhorQueHaDialog = false
-                    pendingMelhorQueHa = null
-                }
-            )
-        }
-
-        // 11) ChoiceDialog genérico
+        // 10) ChoiceDialog genérico
         if (showChoiceDialog && pendingVantagem != null) {
             state.identifyMaxedTraits()
             val vant = pendingVantagem!!
@@ -894,7 +869,7 @@ fun VantagensContent(
             }
         }
 
-        // 12) MultipleSelectionDialog para NOVOS PODERES
+        // 10) MultipleSelectionDialog para NOVOS PODERES
         if (showNovosPoderesDialog && pendingNovosPoderes != null) {
             val vant = pendingNovosPoderes!!
 

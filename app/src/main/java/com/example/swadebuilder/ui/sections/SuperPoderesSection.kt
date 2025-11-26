@@ -29,10 +29,17 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -57,14 +64,14 @@ import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.PurchasedPower
 import com.example.swadebuilder.R
 import com.example.swadebuilder.SuperPoder
-import com.example.swadebuilder.ui.components.SectionCard
-import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.SuperAtributosPickerDialog
 import com.example.swadebuilder.ui.dialogs.SuperPericiasPickerDialog
 import com.example.swadebuilder.ui.dialogs.SuperVantagensPickerDialog
@@ -341,6 +348,7 @@ private fun Vantagem.bloqueadaComoSuperVantagem(): Boolean {
 // ==========================================================
 // SECTION: Lista e compra de Superpoderes (com picker 2:1)
 // ==========================================================
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SuperPoderesSection(
     state: CriadorState,
@@ -420,6 +428,21 @@ fun SuperPoderesSection(
 
         state.faseSupersAtiva = true
     }
+
+    // --- O MELHOR QUE HÁ: escolha de poder favorecido diretamente na seção ---
+    val temOMelhorQueHa = state.oMelhorQueHaSelecionada
+
+// Recalcula sempre que a lista mudar (sem remember aqui)
+    val candidatosFav = state.superPoderesComprados
+        .map { it.poderId to it.nome }
+        .distinctBy { it.first }
+        .sortedBy { it.second }
+
+    var favExpanded by rememberSaveable { mutableStateOf(false) }
+    var localFavId by rememberSaveable(state.idPoderFavorecido) {
+        mutableStateOf(state.idPoderFavorecido)
+    }
+
 
     Column(
         Modifier
@@ -667,7 +690,64 @@ fun SuperPoderesSection(
         Text("Pontos disponíveis: ${state.superPontosDisponiveis}")
         Text("Limite de superpoderes: ${state.superLimite}")
 
+        // --- Seção: O MELHOR QUE HÁ (poder favorecido) ---
+        if (temOMelhorQueHa) {
+            Spacer(Modifier.height(8.dp))
+            Text(
+                "Poder favorecido (O MELHOR QUE HÁ)",
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(Modifier.height(4.dp))
+
+            if (candidatosFav.isEmpty()) {
+                Text(
+                    "Compre pelo menos um superpoder para poder escolher o favorecido.",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            } else {
+                ExposedDropdownMenuBox(
+                    expanded = favExpanded,
+                    onExpandedChange = { favExpanded = !favExpanded }
+                ) {
+                    val label = candidatosFav.firstOrNull { it.first == localFavId }?.second
+                        ?: "Selecione o poder favorecido…"
+
+                    OutlinedTextField(
+                        value = label,
+                        onValueChange = { },
+                        readOnly = true,
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = favExpanded)
+                        },
+                        modifier = Modifier
+                            .menuAnchor(
+                                ExposedDropdownMenuAnchorType.PrimaryNotEditable,
+                                enabled = true
+                            )
+                            .fillMaxWidth()
+                    )
+
+                    DropdownMenu(
+                        expanded = favExpanded,
+                        onDismissRequest = { favExpanded = false }
+                    ) {
+                        candidatosFav.forEach { (id, nome) ->
+                            DropdownMenuItem(
+                                text = { Text(nome) },
+                                onClick = {
+                                    localFavId = id
+                                    state.idPoderFavorecido = id
+                                    favExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
         Spacer(Modifier.height(8.dp))
+
 
         // 3) lista rolável de superpoderes para comprar
         val showLista2 = booleanResource(R.bool.show_lista_completa)
