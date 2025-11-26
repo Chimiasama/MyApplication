@@ -58,8 +58,11 @@ class CriadorState {
     }
     val limitePorPoderPadrao: Int
         get() = kotlin.math.floor(superPontosTotais / 3.0).toInt()
+
+    // O MELHOR QUE HÁ: metade dos SP totais, arredondando pra baixo
     val limiteFavorecido: Int
-        get() = kotlin.math.ceil(superPontosTotais / 2.0).toInt()
+        get() = kotlin.math.floor(superPontosTotais / 2.0).toInt()
+
     var limiteDePoderDaCampanha by mutableIntStateOf(Int.MAX_VALUE)
 
     var faseSupersAtiva by mutableStateOf(false)
@@ -346,11 +349,13 @@ class CriadorState {
         }
 
         if (registrarNoLedger) {
+            val isArmorOrRes = (poderId == "sp_armor" || poderId == "sp_res")
+
             val limiteIndividual =
-                if (idPoderFavorecido != null && idPoderFavorecido == poderId)
-                    limiteFavorecido
+                if (!isArmorOrRes && idPoderFavorecido != null && idPoderFavorecido == poderId)
+                    limiteFavorecido          // bônus de O MELHOR QUE HÁ para qualquer poder EXCETO Armadura/Resistência
                 else
-                    limitePorPoderPadrao
+                    limitePorPoderPadrao      // padrão para todos (e também para Armadura/Resistência)
 
             val gastoAtual = gastosPorPoder[poderId] ?: 0
             if (gastoAtual + custo > limiteIndividual) {
@@ -358,14 +363,13 @@ class CriadorState {
             }
 
             // Segurança extra: Armadura + Resistência compartilham limite de campanha
-            if (poderId == "sp_armor" || poderId == "sp_res") {
+            if (isArmorOrRes) {
                 val gastoArmor = gastosPorPoder["sp_armor"] ?: 0
                 val gastoRes = gastosPorPoder["sp_res"] ?: 0
                 val gastoCompartilhadoAtual = gastoArmor + gastoRes
 
                 if (gastoCompartilhadoAtual + custo > limiteDePoderDaCampanha) {
-                    return false to
-                            "Limite compartilhado de Armadura + Resistência atingido (${limiteDePoderDaCampanha} SP)."
+                    return false to "Limite compartilhado de Armadura + Resistência atingido (${limiteDePoderDaCampanha} SP)."
                 }
             }
         }
