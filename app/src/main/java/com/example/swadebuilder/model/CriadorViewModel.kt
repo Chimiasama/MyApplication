@@ -345,10 +345,17 @@ class CriadorViewModel : ViewModel() {
     }
 
     fun perPowerLimit(poderId: String): Int {
-        return if (state.idPoderFavorecido != null && state.idPoderFavorecido == poderId)
+        val isArmorOrRes = (poderId == "sp_armor" || poderId == "sp_res")
+
+        return if (
+            !isArmorOrRes &&
+            state.idPoderFavorecido != null &&
+            state.idPoderFavorecido == poderId
+        ) {
             state.limiteFavorecido
-        else
+        } else {
             state.limitePorPoderPadrao
+        }
     }
 
     fun definirPoderFavorecido(vantagem: Vantagem, poderId: String) {
