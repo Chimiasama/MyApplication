@@ -1345,12 +1345,21 @@ class CriadorState {
     }
 
     var emProgresso by mutableStateOf(false)
+    val criacaoBasicaCongelada: Boolean
+        get() = emProgresso
 
-    fun creationComplete(): Boolean =
-        pontosAtributo == 0 &&
+    fun creationComplete(): Boolean {
+        val baseComplete = pontosAtributo == 0 &&
                 pontosPericia == 0 &&
                 pontosVantagem == 0 &&
                 (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0) == 0
+
+        return if (modoSupers) {
+            baseComplete && superPontosDisponiveis == 0
+        } else {
+            baseComplete
+        }
+    }
 
 
     val stageXpSpent: SnapshotStateMap<String, Int> = mutableStateMapOf<String, Int>().apply {

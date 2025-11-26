@@ -137,11 +137,9 @@ fun InformacoesSection(
                 }
             }
 
-            val supersTerminados =
-                (state.superPontosTotais > 0) && (state.superPontosDisponiveis == 0)
-            val podeAbrirProgressos = state.emProgresso || supersTerminados
+            val podeAbrirProgressos = state.emProgresso || state.creationComplete()
             val podeUsarProgresso =
-                supersTerminados && (state.progressosDisponiveis > 0) && (state.pontosVantagem == 0)
+                state.creationComplete() && (state.progressosDisponiveis > 0) && (state.pontosVantagem == 0)
 
             Row(
                 Modifier

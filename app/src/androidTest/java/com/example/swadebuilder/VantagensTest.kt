@@ -89,4 +89,34 @@ class VantagensTest {
         val maxAgilidade = viewModel.state.atributoMaxRaw("AGILIDADE")
         assertTrue("Meio-elfo humano não deve ter Agilidade máxima aumentada", maxAgilidade == 12)
     }
+
+    @Test
+    fun creationComplete_deveFuncionar_noModoNormal() {
+        viewModel.state.pontosAtributo = 0
+        viewModel.state.pontosPericia = 0
+        viewModel.state.pontosVantagem = 0
+        viewModel.state.pontosComplicacaoGastos = viewModel.state.pontosComplicacao
+        assertTrue("Deve ser considerado completo no modo normal", viewModel.state.creationComplete())
+    }
+
+    @Test
+    fun creationComplete_deveFuncionar_noModoSupers() {
+        viewModel.resetStateParaNovoPersonagem(
+            cartaSelvagem = true,
+            maisPontosPericias = true,
+            modoSupers = true
+        )
+        viewModel.state.pontosAtributo = 0
+        viewModel.state.pontosPericia = 0
+        viewModel.state.pontosVantagem = 0
+        viewModel.state.pontosComplicacaoGastos = viewModel.state.pontosComplicacao
+        viewModel.state.superPontosDisponiveis = 0
+        assertTrue("Deve ser considerado completo no modo supers", viewModel.state.creationComplete())
+    }
+
+    @Test
+    fun criacaoBasicaCongelada_deveSerVerdadeiro_quandoEmProgresso() {
+        viewModel.state.emProgresso = true
+        assertTrue("A criação básica deve ser congelada quando em progresso", viewModel.state.criacaoBasicaCongelada)
+    }
 }
