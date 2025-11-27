@@ -20,6 +20,7 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 
 class CriadorState {
+    var showHelpMessages by mutableStateOf(false)
     var modoSupers by mutableStateOf(false)
     var modoSuperComplicacoes by mutableStateOf(false)
     var modoSuperequip by mutableStateOf(false)

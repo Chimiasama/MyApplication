@@ -81,8 +81,10 @@ class CriadorViewModel : ViewModel() {
         modoSupers: Boolean,
         usarEspecializacoesDePericia: Boolean = false,
         grandesResponsabilidades: Boolean = false,
+        showHelpMessages: Boolean = false
     ) {
 
+        state.showHelpMessages = showHelpMessages
         state.modoSupers = modoSupers
         state.modoSuperequip = modoSupers
         state.modoSuperComplicacoes = modoSupers
