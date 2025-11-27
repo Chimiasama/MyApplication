@@ -177,6 +177,7 @@ fun UnifiedScreen(
             expanded = expAncs,
             onToggle = onToggleAncs,
             supersLocked = creationLocked,
+            ancestralidadeEmFoco = state.ancestralidadeEmFoco,      // <<< ADICIONADO
             onOpenListaAncestralidadesDetail = onOpenListaAncestralidadesDetail,
             onSelectAncestralidade = { nome ->
                 val key = nome.uppercase().semAcentos()

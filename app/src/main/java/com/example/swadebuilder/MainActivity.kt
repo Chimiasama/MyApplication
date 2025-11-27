@@ -759,7 +759,7 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                             )
                                             6 -> AncestralidadesDetailScreen(
                                                 state  = state,
-                                                onBack = { showAncestralidadesDetail = false }
+                                                onBack = { showAncestralidadesDetail = false }   // <<< sem mexer em ancestralidadeEmFoco
                                             )
                                             7 -> PoderesDetailScreen(
                                                 state  = state,
@@ -777,20 +777,33 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                             else -> UnifiedScreen(
                                                 state = state,
                                                 viewModel = criadorViewModel,
+
                                                 onOpenVantagensDetail = { nomeVantagem ->
-                                                    highlightedVantagem = nomeVantagem
-                                                    state.vantagemEmFoco = nomeVantagem
-                                                    showVantagensDetail = true
+                                                    highlightedVantagem      = nomeVantagem
+                                                    state.vantagemEmFoco     = nomeVantagem
+                                                    showVantagensDetail      = true
                                                 },
-                                                onOpenPericiasDetail             = { showPericiasDetail        = true },
-                                                onOpenComplicacoesDetail         = { showComplicacoesDetail    = true },
-                                                onOpenAtributosDetail            = { showAtributosDetail       = true },
-                                                onOpenListaAncestralidadesDetail = { showAncestralidadesDetail = true },
-                                                onOpenListaCompletaEquipamento   = { showEquipLista            = true },
-                                                onOpenPoderesDetail              = { showPoderesDetail         = true },
-                                                onOpenSuperPoderesDetail         = {
-                                                    highlightedSuperPoder = ""
-                                                    showSuperDetail = true
+
+                                                onOpenPericiasDetail     = { showPericiasDetail     = true },
+                                                onOpenComplicacoesDetail = { showComplicacoesDetail = true },
+                                                onOpenAtributosDetail    = { showAtributosDetail    = true },
+
+                                                // NOVO: usa o nome passado pelo olhinho de ancestralidade
+                                                onOpenListaAncestralidadesDetail = { nomeAnc ->
+                                                    if (nomeAnc.isNotBlank()) {
+                                                        state.ancestralidadeEmFoco = nomeAnc   // <<< grava foco
+                                                    }
+                                                    showAncestralidadesDetail = true
+                                                },
+
+                                                onOpenListaCompletaEquipamento = { showEquipLista    = true },
+                                                onOpenPoderesDetail            = { showPoderesDetail = true },
+
+                                                // NOVO: usa o nome passado pelo olhinho de superpoder
+                                                onOpenSuperPoderesDetail = { nomePoder ->
+                                                    highlightedSuperPoder  = nomePoder
+                                                    state.superPoderEmFoco = nomePoder.takeIf { it.isNotBlank() }
+                                                    showSuperDetail        = true
                                                 },
 
                                                 // ✅ Informações
@@ -931,9 +944,35 @@ fun AncestralidadesDetailScreen(
     val ancestralidadesTexto = remember { loadRawText(context, R.raw.ancestralidades) }
     val listaBlocos = remember { parseAncestralidades(ancestralidadesTexto) }
 
-    val atual = remember(state.ancestralidade) { state.ancestralidade.trim().uppercase() }
+    // usa foco se existir; senão, cai na ancestralidade atual da ficha
+    val atual = remember(state.ancestralidade, state.ancestralidadeEmFoco) {
+        (state.ancestralidadeEmFoco ?: state.ancestralidade)
+            .trim()
+            .uppercase()
+    }
+
+    // estado de rolagem da lista
+    val listState = rememberLazyListState()
+
+    // assim que abrir, rola até o título da ancestralidade em foco / atual
+    LaunchedEffect(atual, listaBlocos) {
+        if (atual.isNotBlank()) {
+            val idxTitulo = listaBlocos.indexOfFirst { bloco ->
+                bloco.tipo == "titulo" &&
+                        bloco.conteudo
+                            .removeSuffix(":")
+                            .contains(atual, ignoreCase = true)
+            }
+
+            if (idxTitulo >= 0) {
+                // +1 por causa do stickyHeader no topo
+                listState.scrollToItem(idxTitulo + 1)
+            }
+        }
+    }
 
     LazyColumn(
+        state = listState,
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
@@ -944,7 +983,11 @@ fun AncestralidadesDetailScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { onBack() }
+                        .clickable {
+                            // ao voltar, limpa o foco pra não "grudar" na próxima abertura
+                            state.ancestralidadeEmFoco = null
+                            onBack()
+                        }
                         .padding(vertical = 12.dp)
                 ) {
                     Spacer(modifier = Modifier.width(8.dp))
@@ -959,8 +1002,8 @@ fun AncestralidadesDetailScreen(
         }
 
         items(listaBlocos) { bloco ->
-            val isTitulo = bloco.tipo == "titulo"
-            val titulo = if (isTitulo) bloco.conteudo.removeSuffix(":") else ""
+            val isTitulo  = bloco.tipo == "titulo"
+            val titulo    = if (isTitulo) bloco.conteudo.removeSuffix(":") else ""
             val destacado = isTitulo && titulo.contains(atual, ignoreCase = true)
 
             Column(
@@ -974,7 +1017,7 @@ fun AncestralidadesDetailScreen(
                     Text(label, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 } else {
                     Text(
-                        text = bloco.conteudo,
+                        text  = bloco.conteudo,
                         style = MaterialTheme.typography.bodyMedium,
                         fontSize = 14.sp
                     )
