@@ -36,6 +36,13 @@ class CriadorViewModel : ViewModel() {
 
     val state = CriadorState()
 
+    private val _feedbackMessages = mutableStateListOf<String>()
+    val feedbackMessages: List<String> = _feedbackMessages
+
+    fun clearFeedbackMessages() {
+        _feedbackMessages.clear()
+    }
+
     // === NOVO: toggle global (por enquanto via MainActivity) ===
     var multiplosAAHabilitados: Boolean = false
         private set
@@ -96,7 +103,7 @@ class CriadorViewModel : ViewModel() {
         state.complicacoesSelecionadas.clear()
         state.vantagensAutomaticas.clear()
         state.desvantagensAutomaticas.clear()
-        state.aplicarAncestralidade("HUMANOS")
+        state.aplicarAncestralidade("HUMANOS", _feedbackMessages)
 
         if (state.modoSupers) {
             listaVantagens.firstOrNull { it.id == "superpoderes" }?.let { sp ->
@@ -196,7 +203,7 @@ class CriadorViewModel : ViewModel() {
         state.cartaSelvagem      = salvo.cartaSelvagem
         state.heroisSemArmadura  = salvo.heroisSemArmadura
         state.ancestralidade     = salvo.ancestralidade
-        state.aplicarAncestralidade(salvo.ancestralidade)
+        state.aplicarAncestralidade(salvo.ancestralidade, _feedbackMessages)
 
         state.cpPaStack.clear()
         repeat(salvo.cpPaCount) { state.cpPaStack.add("PA") }
@@ -480,6 +487,7 @@ class CriadorViewModel : ViewModel() {
                 // +2 por step até d12; +1 por step acima de d12.
                 val holder = state.valoresAtributos[key]
                 if (holder != null) {
+                    val antes = holder.intValue
                     repeat(efeito.steps.coerceAtLeast(0)) {
                         holder.intValue = if (holder.intValue < 12) {
                             (holder.intValue + 2).coerceAtMost(30)
@@ -487,42 +495,54 @@ class CriadorViewModel : ViewModel() {
                             (holder.intValue + 1).coerceAtMost(30)
                         }
                     }
+                    _feedbackMessages.add("Atributo $key aumentado de d$antes para d${holder.intValue}.")
                 }
             }
 
             is PowerEffect.SuperPericia -> {
                 val k = efeito.periciaId
-                val atual = state.superPericiaIncs[k] ?: 0
-                state.superPericiaIncs[k] = (atual + efeito.steps).coerceAtLeast(0)
+                val pericia = listaPericias.firstOrNull { it.nome.keyify() == k.keyify() }
+                if (pericia != null) {
+                    val antes = state.rawTotal(pericia)
+                    val atual = state.superPericiaIncs[k] ?: 0
+                    state.superPericiaIncs[k] = (atual + efeito.steps).coerceAtLeast(0)
+                    val depois = state.rawTotal(pericia)
+                    _feedbackMessages.add("Perícia ${pericia.nome} aumentada de d$antes para d$depois.")
+                }
             }
 
             is PowerEffect.BonusArmadura -> {
                 state.updateArmorFromPower((state.armorFromPower + efeito.value).coerceAtLeast(0))
+                _feedbackMessages.add("Armadura aumentada em ${efeito.value}.")
             }
 
             is PowerEffect.BonusResistencia -> {
                 state.updateBonusResFromPower((state.bonusResFromPower + efeito.value).coerceAtLeast(0))
+                _feedbackMessages.add("Resistência aumentada em ${efeito.value}.")
             }
 
             is PowerEffect.BonusAparar -> {
                 state.updateBonusPararFromPower((state.bonusPararFromPower + efeito.value).coerceAtLeast(0))
+                _feedbackMessages.add("Aparar aumentado em ${efeito.value}.")
             }
 
             is PowerEffect.BonusMovimentacao -> {
                 state.updateBonusMovimentacaoFromPower(
                     (state.bonusMovimentacaoFromPower + efeito.value).coerceAtLeast(0)
                 )
+                _feedbackMessages.add("Movimentação aumentada em ${efeito.value}.")
             }
 
             is PowerEffect.SuperVantagem -> {
                 listaVantagens.firstOrNull { it.id == efeito.vantagemId }?.let { v ->
                     state.adicionarVantagemPorSuper(v)
+                    _feedbackMessages.add("Vantagem ${v.nome} adicionada.")
                 }
             }
         }
 
         // 3) derivados de perícia / etc.
-        state.rebuildAllPericiaStacks()
+        state.rebuildAllPericiaStacks(_feedbackMessages)
         // IMPORTANTE: NÃO recalcular atributos básicos aqui,
         // para não “somar de novo” os supers nem mexer na etapa de criação com PAs.
 
@@ -561,6 +581,7 @@ class CriadorViewModel : ViewModel() {
                 // espelha a aplicação: -1 por step se > d12; -2 por step quando <= d12
                 val holder = state.valoresAtributos[key]
                 if (holder != null) {
+                    val antes = holder.intValue
                     repeat(efeito.steps.coerceAtLeast(0)) {
                         holder.intValue = if (holder.intValue > 12) {
                             (holder.intValue - 1).coerceAtLeast(4)
@@ -568,6 +589,7 @@ class CriadorViewModel : ViewModel() {
                             (holder.intValue - 2).coerceAtLeast(4)
                         }
                     }
+                    _feedbackMessages.add("Atributo $key reduzido de d$antes para d${holder.intValue}.")
                 }
             }
 
@@ -578,6 +600,7 @@ class CriadorViewModel : ViewModel() {
                 // 0) Simula quanto a perícia ficaria após remover esses steps
                 val perObj = listaPericias.firstOrNull { it.nome.keyify() == k.keyify() }
                 if (perObj != null && stepsToRemove > 0) {
+                    val antes = state.rawTotal(perObj)
                     val baseRaw       = state.rawTotal(perObj)
                     val stepsAtuais   = state.superPericiaIncs[k] ?: 0
                     val stepsDepois   = (stepsAtuais - stepsToRemove).coerceAtLeast(0)
@@ -589,6 +612,8 @@ class CriadorViewModel : ViewModel() {
                         // Não desfaz no ledger, não altera nada
                         return InvestResult(false, bloqueio)
                     }
+                    val depois = state.rawTotal(perObj)
+                    _feedbackMessages.add("Perícia ${perObj.nome} reduzida de d$antes para d$depois.")
                 }
 
                 // 1) Se passou, desfaz normalmente
@@ -599,20 +624,24 @@ class CriadorViewModel : ViewModel() {
 
             is PowerEffect.BonusArmadura -> {
                 state.updateArmorFromPower((state.armorFromPower - efeito.value).coerceAtLeast(0))
+                _feedbackMessages.add("Armadura reduzida em ${efeito.value}.")
             }
 
             is PowerEffect.BonusResistencia -> {
                 state.updateBonusResFromPower((state.bonusResFromPower - efeito.value).coerceAtLeast(0))
+                _feedbackMessages.add("Resistência reduzida em ${efeito.value}.")
             }
 
             is PowerEffect.BonusAparar -> {
                 state.updateBonusPararFromPower((state.bonusPararFromPower - efeito.value).coerceAtLeast(0))
+                _feedbackMessages.add("Aparar reduzido em ${efeito.value}.")
             }
 
             is PowerEffect.BonusMovimentacao -> {
                 state.updateBonusMovimentacaoFromPower(
                     (state.bonusMovimentacaoFromPower - efeito.value).coerceAtLeast(0)
                 )
+                _feedbackMessages.add("Movimentação reduzida em ${efeito.value}.")
             }
 
             is PowerEffect.SuperVantagem -> {
@@ -620,12 +649,13 @@ class CriadorViewModel : ViewModel() {
                     it.id.equals(efeito.vantagemId, ignoreCase = true)
                 }?.let { v ->
                     state.removerVantagemPorSuper(v)
+                    _feedbackMessages.add("Vantagem ${v.nome} removida.")
                 }
             }
         }
 
         // Atualiza apenas derivados que dependem de supers / perícias
-        state.rebuildAllPericiaStacks()
+        state.rebuildAllPericiaStacks(_feedbackMessages)
         // De novo: nada de recalcular atributos de criação aqui.
 
         return InvestResult(true, "Investimento revertido.")
