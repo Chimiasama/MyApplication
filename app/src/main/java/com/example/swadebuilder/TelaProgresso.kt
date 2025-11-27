@@ -28,7 +28,7 @@ import com.example.swadebuilder.ui.components.SectionCard
 @Composable
 fun TelaProgresso() {
     var expInfos by remember { mutableStateOf(true) }
-    var expAncs by remember { mutableState of(true) }
+    var expAncs by remember { mutableStateOf(true) }
     var expComps by remember { mutableStateOf(true) }
     var expEquip by remember { mutableStateOf(true) }
     var expAttrs by remember { mutableStateOf(true) }
