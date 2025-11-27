@@ -298,7 +298,8 @@ fun ProgressionSlotsSection(state: CriadorState, viewModel: CriadorViewModel = v
         ProgressionSlotDialog(
             stageName = selectedStage,
             onDismiss = { showDialog = false },
-            viewModel = viewModel
+            viewModel = viewModel,
+            state = state
         )
     }
 

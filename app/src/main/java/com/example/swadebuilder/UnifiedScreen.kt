@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.ui.components.SectionCard
-import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
 import com.example.swadebuilder.ui.sections.ComplicacoesSection
@@ -149,7 +148,6 @@ fun UnifiedScreen(
         Log.d("DEBUG", "modoSupers é ${state.modoSupers}")
     }
 
-    var showAllocDialog by rememberSaveable { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
     // --- estados para o MEIO-ELFO ---
@@ -167,8 +165,7 @@ fun UnifiedScreen(
         InformacoesSection(
             state = state,
             expanded = expInfos,
-            onToggle = onToggleInfos,
-            onUseProgress = { showAllocDialog = true }
+            onToggle = onToggleInfos
         )
 
         HorizontalDivider(thickness = 1.dp)
@@ -405,11 +402,5 @@ fun UnifiedScreen(
                 }
             }
         )
-    }
-
-    if (showAllocDialog) {
-        ProgressosDialog(state) {
-            showAllocDialog = false
-        }
     }
 }

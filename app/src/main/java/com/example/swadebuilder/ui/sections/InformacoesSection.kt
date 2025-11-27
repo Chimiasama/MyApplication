@@ -51,8 +51,7 @@ import kotlin.math.roundToInt
 fun InformacoesSection(
     state: CriadorState,
     expanded: Boolean,
-    onToggle: () -> Unit,
-    onUseProgress: () -> Unit
+    onToggle: () -> Unit
 ) {
     val context = LocalContext.current
 

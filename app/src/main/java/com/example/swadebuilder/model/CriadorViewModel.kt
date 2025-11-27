@@ -506,7 +506,7 @@ class CriadorViewModel : ViewModel() {
         }
 
         // 3) derivados de perícia / etc.
-        state.rebuildAllPericiaStacks()
+        state.rebuildAllPericiaStacks(_feedbackMessages)
         // IMPORTANTE: NÃO recalcular atributos básicos aqui,
         // para não “somar de novo” os supers nem mexer na etapa de criação com PAs.
 
@@ -609,7 +609,7 @@ class CriadorViewModel : ViewModel() {
         }
 
         // Atualiza apenas derivados que dependem de supers / perícias
-        state.rebuildAllPericiaStacks()
+        state.rebuildAllPericiaStacks(_feedbackMessages)
         // De novo: nada de recalcular atributos de criação aqui.
 
         return InvestResult(true, "Investimento revertido.")
