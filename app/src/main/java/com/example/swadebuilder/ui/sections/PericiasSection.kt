@@ -47,12 +47,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.criacaoBasicaCongelada
-import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.ui.components.SectionHeader
 import kotlin.math.max
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -63,30 +62,24 @@ fun PericiasContent(
 ) {
     val locked = state.criacaoBasicaCongelada
 
-    // ===== PONTOS BÔNUS (PC) =====
     val pcTotal  = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
     val pcLivres = (pcTotal - pcGastos).coerceAtLeast(0)
     val spUsados = state.cpSpStack.size
-    // =============================
 
-    // Diálogo para PRIMEIRA especialização (quando compra a perícia)
     var showSpecDialog by rememberSaveable { mutableStateOf(false) }
     var specText by rememberSaveable { mutableStateOf("") }
     var specTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
     var buyingExtraSpec by rememberSaveable { mutableStateOf(false) }
 
-    // Diálogo de EDIÇÃO (renomear) de especialização (principal OU extra)
     var showEditDialog by rememberSaveable { mutableStateOf(false) }
     var editIsPrincipal by rememberSaveable { mutableStateOf(false) }
     var editPerTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
     var editOldName by rememberSaveable { mutableStateOf("") }
     var editNewName by rememberSaveable { mutableStateOf("") }
 
-    // Idoso (bônus de SP até 5 na ASTÚCIA)
     val idosoActive = state.idosoBonusSp > 0
 
-    // Largura da coluna de valor (para caber "d12+1" tranquilo, como nos atributos)
     val valorColWidthDp = 80.dp
 
     LazyColumn(
@@ -97,7 +90,6 @@ fun PericiasContent(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         stickyHeader {
-            // Usa a cor do tema em vez de amarelo fixo
             val pergaminho = MaterialTheme.colorScheme.surfaceVariant
             val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
@@ -167,17 +159,15 @@ fun PericiasContent(
         }
 
         items(listaPericias) { per ->
-            // Valor base (só criação/complicações, sem supers) – usado para custo/limites
             val currentRaw = state.rawTotal(per)
             val attrKey    = state.atributoBaseParaPericia(per)
             val atrRaw     = state.valoresAtributos[attrKey]!!.intValue
             val capRaw     = state.periciaCapRaw(per)
 
-            // Valor FINAL para jogar, incluindo Superperícia
             val displayRaw = state.rawTotalComSupers(per)
 
             val nextRaw = when {
-                currentRaw == 0 && per.basica -> 4        // básicas ficam em d4 quando "zeradas"
+                currentRaw == 0 && per.basica -> 4
                 currentRaw < 12               -> currentRaw + 2
                 else                          -> currentRaw + 1
             }
@@ -186,10 +176,8 @@ fun PericiasContent(
             val compStack = state.compCostStackPorPericia.getValue(per)
             val spStack   = state.spCostStackPorPericia.getValue(per)
 
-            // Mínimo imposto por vantagens
             val minimoBasico: Int = state.minPericiaPorVantagem[per] ?: 0
 
-            // Opcional de requisitos
             val opcionalList: List<Int> = state.vantagensSelecionadas.flatMap { vant ->
                 val mapaOpc = vant.requisitos.periciaMinOpcional ?: emptyMap()
                 mapaOpc.entries
@@ -203,7 +191,6 @@ fun PericiasContent(
                     (compStack.isNotEmpty() || spStack.any { it > 0 }) &&
                     (currentRaw - 2 >= minimoTotal)
 
-            // Idoso: quanto já foi gasto em perícias de ASTÚCIA?
             val astuciaSpent = state.spCostStackPorPericia
                 .filterKeys { p -> p.atributo == "ASTUCIA" }
                 .values
@@ -255,12 +242,9 @@ fun PericiasContent(
                         overflow = TextOverflow.Ellipsis
                     )
 
-                    // −
                     IconButton(
                         onClick = {
-                            // reduzir a perícia (apenas parte de criação/complicações)
                             state.decreasePericia(per)
-                            // se zerou, remover TODAS as especializações da perícia
                             if (state.rawTotal(per) == 0) {
                                 state.especializacoesPorPericia.remove(per.nome)
                             }
@@ -277,7 +261,6 @@ fun PericiasContent(
                         )
                     }
 
-                    // valor (agora exibindo o TOTAL com supers)
                     Text(
                         text = when {
                             displayRaw == 0 && per.basica -> "d4"
@@ -289,10 +272,8 @@ fun PericiasContent(
                         textAlign = TextAlign.Center
                     )
 
-                    // +
                     IconButton(
                         onClick = {
-                            // ===== RECHECAGEM RÁPIDA CONTRA CLIQUES MUITO RÁPIDOS =====
                             val currRawNow = state.rawTotal(per)
                             val attrKeyNow = state.atributoBaseParaPericia(per)
                             val atrRawNow  = state.valoresAtributos[attrKeyNow]!!.intValue
@@ -319,19 +300,15 @@ fun PericiasContent(
                                         true)
 
                             if (!canIncreaseNow) {
-                                // se por lag / spam de cliques o botão ainda estiver "enabled",
-                                // essa checagem impede estouro de limite
                                 return@IconButton
                             }
 
-                            // avanço normal de perícia (já passou pela checagem acima)
                             state.baseIncsPorPericia[per] =
                                 state.baseIncsPorPericia.getValue(per) + 1
                             state.spCostStackPorPericia
                                 .getValue(per)
                                 .add(costNow)
 
-                            // se a regra estiver ativa e ainda não existe especialização principal, solicitar agora
                             if (state.usarEspecializacoesDePericia) {
                                 val esp = state.especializacoesPorPericia[per.nome]
                                 if (esp?.principal == null) {
@@ -354,7 +331,6 @@ fun PericiasContent(
                         )
                     }
 
-                    // Esp+
                     val jaTemPrincipal =
                         state.especializacoesPorPericia[per.nome]?.principal != null
                     if (state.usarEspecializacoesDePericia && jaTemPrincipal) {
@@ -372,10 +348,8 @@ fun PericiasContent(
                     }
                 }
 
-                // ====== RESUMO / CHIPS DE ESPECIALIZAÇÕES ======
                 val espDto: EspecializacoesDto? = state.especializacoesPorPericia[per.nome]
                 val principal = espDto?.principal
-                // lista de extras = lista sem o principal (e sem duplicatas)
                 val extras: List<String> = when {
                     espDto == null -> emptyList()
                     else -> espDto.lista
@@ -384,7 +358,6 @@ fun PericiasContent(
                         .filter { it != principal }
                 }
 
-                // Pode remover especializações extras? Somente no modo de construção inicial.
                 val canRemoveSpecs = !locked
 
                 if (principal != null || extras.isNotEmpty()) {
@@ -396,7 +369,6 @@ fun PericiasContent(
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Chip da principal (SEM remover, mas com editar)
                         if (principal != null) {
                             SpecChip(
                                 label = principal,
@@ -412,7 +384,6 @@ fun PericiasContent(
                             )
                         }
 
-                        // Chips das extras (podem ser editadas e removidas)
                         extras.forEach { extra ->
                             SpecChip(
                                 label = extra,
@@ -444,7 +415,6 @@ fun PericiasContent(
         }
     }
 
-    // Diálogo quando compra/define especialização (principal ou Esp+)
     if (showSpecDialog && specTarget != null) {
         AlertDialog(
             onDismissRequest = { showSpecDialog = false },
@@ -479,7 +449,6 @@ fun PericiasContent(
                                     ?: EspecializacoesDto()
                             val novo =
                                 if (!buyingExtraSpec) {
-                                    // definindo a PRINCIPAL
                                     val baseLista =
                                         (atual.lista + nomeEsp).distinct()
                                     EspecializacoesDto(
@@ -487,7 +456,6 @@ fun PericiasContent(
                                         lista = baseLista
                                     )
                                 } else {
-                                    // adicionando EXTRA (1 SP)
                                     val novas =
                                         (atual.lista + nomeEsp).distinct()
                                     atual.copy(lista = novas).also {
@@ -510,7 +478,6 @@ fun PericiasContent(
         )
     }
 
-    // Diálogo para RENOMEAR especialização (principal OU extra)
     if (showEditDialog && editPerTarget != null) {
         AlertDialog(
             onDismissRequest = { showEditDialog = false },
@@ -544,7 +511,6 @@ fun PericiasContent(
                                 state.especializacoesPorPericia[per.nome]
                                     ?: EspecializacoesDto()
                             if (editIsPrincipal) {
-                                // renomeia principal e mantém/coerentiza na lista
                                 val antiga = atual.principal
                                 val listaSemAntiga =
                                     atual.lista.filter { it != antiga }
@@ -556,7 +522,6 @@ fun PericiasContent(
                                         lista = novaLista
                                     )
                             } else {
-                                // renomeia um item extra na lista
                                 val novaLista =
                                     atual.lista.map { if (it == editOldName) novo else it }
                                         .distinct()
@@ -577,7 +542,6 @@ fun PericiasContent(
     }
 }
 
-/** Chip compacto para exibir/editar/remover especializações. */
 @Composable
 private fun SpecChip(
     label: String,

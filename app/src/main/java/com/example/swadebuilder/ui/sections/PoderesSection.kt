@@ -35,20 +35,19 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.arcanoInfo
-import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.loadJsonAsset
+import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
 
-// ---------- Normalizações ----------
 private fun String.normAAKey(): String =
     this.uppercase().semAcentos().trim()
 
 private fun Vantagem.toArcanoKeyFromModel(): String? {
     if (!subtipoArcano.isNullOrBlank()) return subtipoArcano.normAAKey()
-    if (!choice.isNullOrBlank()) return choice!!.normAAKey() // ← fix: !! correto
+    if (!choice.isNullOrBlank()) return choice!!.normAAKey()
     val n = nome.normAAKey()
     return when {
         "(DOM" in n -> "DOM"
@@ -60,7 +59,6 @@ private fun Vantagem.toArcanoKeyFromModel(): String? {
     }
 }
 
-// Conversor de custo (em PP) -> penalidade de teste (-⌈PP/2⌉)
 private fun custoParaPenalidadeTexto(custo: String): String {
     val clean = custo.trim()
     clean.toIntOrNull()?.let { base -> return "-${(base + 1) / 2}" }
@@ -74,7 +72,6 @@ private fun custoParaPenalidadeTexto(custo: String): String {
     return "—"
 }
 
-/** Seção **exclusiva** para PODERES de Antecedente Arcano. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PoderesSection(
@@ -85,19 +82,16 @@ fun PoderesSection(
 
     val locked = state.criacaoBasicaCongeladaComXp
 
-    // 1) Detecta arcanos ativos
     val arcanosAtivos = remember(state.vantagensSelecionadas) {
         state.vantagensSelecionadas.mapNotNull { it.toArcanoKeyFromModel() }.distinct()
     }
     if (arcanosAtivos.isEmpty()) return
 
-    // 2) Carrega poderes (uma vez)
     val allPoderes: List<Poder> = remember {
         runCatching { context.loadJsonAsset<List<Poder>>("poderes.json") }.getOrElse { emptyList() }
     }
     val poderesElegiveis = remember(allPoderes) { allPoderes }
 
-    // === MODO LEGADO: um único AA visível (mantém comportamento anterior) ===
     if (!state.permiteMultiAntecedenteArcano) {
         var selectedArcanoKey by rememberSaveable(arcanosAtivos) { mutableStateOf(arcanosAtivos.first()) }
         LaunchedEffect(arcanosAtivos) {
@@ -114,7 +108,6 @@ fun PoderesSection(
         return
     }
 
-    // === MODO MULTI-AA: um bloco completo por AA adquirido ===
     arcanosAtivos.forEach { arcKeyRaw ->
         ArcanoArea(
             arcKeyRaw = arcKeyRaw,
@@ -123,7 +116,7 @@ fun PoderesSection(
             onOpenListaCompletaPoderes = onOpenListaCompletaPoderes,
             locked = locked
         )
-        Spacer(Modifier.height(4.dp)) // separação visual mínima entre áreas
+        Spacer(Modifier.height(4.dp))
     }
 }
 
@@ -155,7 +148,6 @@ private fun ArcanoArea(
 
     HorizontalDivider(thickness = 1.dp)
 
-    // Slots deste AA (fora da área rolável)
     val slots = remember(arcKey, slotsCount) {
         val existente = state.poderSlotsPorArcano[arcKey]
         if (existente != null && existente.size == slotsCount) {
@@ -193,7 +185,6 @@ private fun ArcanoArea(
         }
     }
 
-    // Lista rolável de poderes (janela 400.dp) — independente por AA
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -227,7 +218,7 @@ private fun ArcanoArea(
             ) {
                 Column(Modifier.padding(12.dp)) {
                     Text(poder.nome, fontWeight = FontWeight.Bold)
-                    Text("Custo: ${poder.pontosDePoder}") // ← custo abaixo do nome
+                    Text("Custo: ${poder.pontosDePoder}")
                     if (state.usarSemPontosDePoder) {
                         Text("Penalidade base: ${custoParaPenalidadeTexto(poder.pontosDePoder)}")
                     }

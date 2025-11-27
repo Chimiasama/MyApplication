@@ -1080,7 +1080,7 @@ class CriadorState {
 
             // Helper: vantagem é pré-requisito de outra?
             fun isUsedAsPrereq(v: Vantagem): Boolean {
-                val id = v.id
+                v.id
                 return vantagensSelecionadas.any { other ->
                     other != v && other.requisitos.vantagensPrevias.any { prevId ->
                         when (prevId) {
@@ -1120,7 +1120,7 @@ class CriadorState {
 
         // --- Ajuste de atributos pela nova raça ---
 
-        val desiredRaw = listaPericias.associateWith { rawTotal(it) }
+        listaPericias.associateWith { rawTotal(it) }
 
         val newAttrMods = racialAttrMinMap[anc] ?: emptyMap()
 

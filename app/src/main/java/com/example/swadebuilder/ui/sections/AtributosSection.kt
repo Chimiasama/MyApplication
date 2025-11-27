@@ -32,11 +32,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.criacaoBasicaCongelada
-import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.ui.components.SectionHeader
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -44,22 +43,17 @@ fun AtributosContent(
     state: CriadorState,
     onOpenAtributosDetail: () -> Unit
 ) {
-    // Agora travamos tudo com base na fase global
     val locked = state.criacaoBasicaCongelada
 
-    // Usa a surface do tema
     val pergaminho = MaterialTheme.colorScheme.surfaceVariant
 
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
-    // ===== PONTOS BÔNUS (PC) =====
     val pcTotal  = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
     val pcLivres = (pcTotal - pcGastos).coerceAtLeast(0)
     val paUsados = state.cpPaStack.size
-    // =============================
 
-    // ===== LARGURA DINÂMICA PARA O VALOR (evitar esmagar "d12+4") =====
     val textMeasurer = rememberTextMeasurer()
     val density = LocalDensity.current
     val measureStyle = MaterialTheme.typography.bodyLarge
@@ -71,10 +65,8 @@ fun AtributosContent(
         val maxPx = samples.maxOf { s ->
             textMeasurer.measure(text = s, style = measureStyle).size.width
         }
-        // um pouco mais largo pra afastar os botões
         with(density) { (maxPx + 100).toDp() }
     }
-    // ===================================================================
 
     Column(
         modifier = Modifier
@@ -82,7 +74,6 @@ fun AtributosContent(
             .background(pergaminho, shape = RoundedCornerShape(12.dp))
             .padding(12.dp)
     ) {
-        // cabeçalho
         SectionHeader(
             onHelpClick = null,
             centerText = "Pontos de Atributo: ${state.pontosAtributo} • Pontos Bônus: $pcLivres de $pcTotal",
@@ -92,7 +83,6 @@ fun AtributosContent(
 
         Spacer(Modifier.height(4.dp))
 
-        // Botões de usar / desfazer Pontos Bônus em Atributos
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -107,7 +97,6 @@ fun AtributosContent(
                 onClick = {
                     if (!podeUsarPc) return@TextButton
 
-                    // Centraliza toda a lógica de gasto de PC em CriadorState
                     state.gastarPcParaAtributo()
                 },
                 enabled = podeUsarPc
@@ -139,11 +128,9 @@ fun AtributosContent(
 
         Spacer(Modifier.height(8.dp))
 
-        // linhas dos atributos
         listaAtributos.forEach { nome ->
             val baseRaw = state.valoresAtributos[nome]!!.intValue
 
-            // mínimo exigido (racial ou por vantagem)
             val minReq = maxOf(
                 state.atributoMinRaw(nome),
                 state.minAttrPorVantagem[nome] ?: 4
@@ -152,16 +139,13 @@ fun AtributosContent(
             val maxRaw  = state.atributoMaxRaw(nome)
             val stack   = state.paCostStackPorAtributo.getValue(nome)
 
-            // valor efetivo com supers (para exibição)
             val efetivoRaw = state.atributoRawComSupers(nome)
 
-            // ===== NOVOS PASSOS: até d12 sobe de 2 em 2, depois de 1 em 1 =====
             val nextRaw = if (baseRaw < 12) baseRaw + 2 else baseRaw + 1
             val prevRaw = if (baseRaw <= 12) baseRaw - 2 else baseRaw - 1
 
             val canReduce   = !locked && stack.isNotEmpty() && (prevRaw >= minReq)
             val canIncrease = !locked && state.pontosAtributo > 0 && (nextRaw <= maxRaw)
-            // =================================================================
 
             Row(
                 modifier = Modifier
@@ -177,7 +161,6 @@ fun AtributosContent(
                     overflow = TextOverflow.Ellipsis
                 )
 
-                // botão de diminuir
                 IconButton(
                     onClick = {
                         if (prevRaw < minReq) return@IconButton
@@ -198,7 +181,6 @@ fun AtributosContent(
                     )
                 }
 
-                // valor (com supers) – agora com mais espaço
                 Text(
                     text = efetivoRaw.toDiceString(),
                     modifier = Modifier.width(valorColWidthDp),
@@ -208,7 +190,6 @@ fun AtributosContent(
                     textAlign = TextAlign.Center
                 )
 
-                // botão de aumentar
                 IconButton(
                     onClick = {
                         if (nextRaw > maxRaw || state.pontosAtributo <= 0) return@IconButton

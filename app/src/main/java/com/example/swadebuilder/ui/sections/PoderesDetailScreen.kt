@@ -48,7 +48,7 @@ private fun custoParaPenalidadeTexto(custo: String): String {
     val clean = custo.trim()
 
     clean.toIntOrNull()?.let { base ->
-        val pen = (base + 1) / 2 // ceil(base/2)
+        val pen = (base + 1) / 2
         return "-$pen"
     }
 
@@ -74,18 +74,13 @@ private fun custoParaPenalidadeTexto(custo: String): String {
     return "—"
 }
 
-/**
- * UM ÚNICO DETAIL:
- * - Se state.modoSupers == false  -> mostra lista de MAGIAS (poderes.json, classe Poder)
- * - Se state.modoSupers == true   -> mostra lista de SUPERPODERES (superpoderes.json, classe SuperPoder)
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun PoderesDetailScreen(
     state: CriadorState,
     onBack: () -> Unit,
-    viewModel: CriadorViewModel? = null // <- opcional: usado para abrir o SupersDialog
+    viewModel: CriadorViewModel? = null
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
     val isSupers = state.modoSupers
@@ -122,7 +117,6 @@ fun PoderesDetailScreen(
             Spacer(Modifier.height(8.dp))
 
             if (!isSupers) {
-                // ---------- MODO NORMAL: PODERES (MAGIAS) ----------
                 val allPoderes: List<Poder> = remember {
                     context.loadJsonAsset("poderes.json")
                 }
@@ -152,7 +146,6 @@ fun PoderesDetailScreen(
                             Spacer(Modifier.height(2.dp))
 
                             if (state.usarSemPontosDePoder) {
-                                // pontosDePoder já é String no seu modelo — remove toString() redundante
                                 val custoStr: String = poder.pontosDePoder
                                 Text(
                                     text = "Penalidade base: ${custoParaPenalidadeTexto(custoStr)}",
@@ -240,12 +233,10 @@ fun PoderesDetailScreen(
                     }
                 }
             } else {
-                // ---------- MODO SUPERS: SUPERPODERES ----------
                 val superPoderes: List<SuperPoder> = remember {
                     context.loadJsonAsset("superpoderes.json")
                 }
 
-                // Cabeçalho de controle/atalho para diálogo
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -263,7 +254,7 @@ fun PoderesDetailScreen(
                         SupersDialog(
                             state = state,
                             viewModel = viewModel,
-                            onConfirmLock = { /* travar fase de supers: mover para seu fluxo */ },
+                            onConfirmLock = { },
                             onDismiss = { showSupers = false }
                         )
                     }
