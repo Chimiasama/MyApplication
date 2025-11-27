@@ -647,9 +647,9 @@ class CriadorState {
     private var jovemMalusPa by mutableIntStateOf(0)
     private var jovemMalusSp by mutableIntStateOf(0)
 
-    fun syncFromCPRefund(pa: Boolean = false, sp: Boolean = false) {
-        if (pa) recalcularPontosAtributo()
-        if (sp) rebuildAllPericiaStacks()
+    fun syncFromCPRefund(pa: Boolean = false, sp: Boolean = false, feedbackMessages: MutableList<String>) {
+        if (pa) recalcularPontosAtributo(feedbackMessages)
+        if (sp) rebuildAllPericiaStacks(feedbackMessages)
     }
 
     val cpPaStack       = mutableStateListOf<String>()  // você já trocou pra add("PB")
@@ -1054,10 +1054,14 @@ class CriadorState {
         return applySuperStepsFrom(startForSteps, steps)
     }
 
-    fun aplicarAncestralidade(anc: String) {
+    fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>) {
         val prevAnc = ancestralidade
         val wasHumano = (prevAnc == "HUMANOS")
         val vaiSerHumano = (anc == "HUMANOS")
+
+        val paAntes = pontosAtributo
+        val spAntes = pontosPericia
+        val pvAntes = pontosVantagem
 
         // Mapeia as vantagens raciais gratuitas da ancestralidade ANTERIOR
         val prevFreeKeys: Set<String> =
@@ -1109,6 +1113,7 @@ class CriadorState {
                 // Remove só UMA vantagem (a última adquirida, por simplicidade)
                 val toRemove = candidatos.last()
                 vantagensSelecionadas.remove(toRemove)
+                feedbackMessages.add("Vantagem ${toRemove.nome} removida para compensar a troca de Ancestralidade.")
             } else {
                 // Não sobrou nada "seguro" pra remover → ajusta só o pool de PV
                 pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
@@ -1145,9 +1150,11 @@ class CriadorState {
             }
 
             if (appliedSteps < stack.size) {
-                repeat(stack.size - appliedSteps) {
+                val removidos = stack.size - appliedSteps
+                repeat(removidos) {
                     stack.removeAt(stack.lastIndex)
                 }
+                feedbackMessages.add("$removidos ponto(s) de atributo devolvido(s) de $nome.")
             }
 
             st.intValue = raw
@@ -1254,8 +1261,16 @@ class CriadorState {
             }
 
         // Recalcula pontos de atributo/perícias após o ajuste racial
-        recalcularPontosAtributo()
-        rebuildAllPericiaStacks()
+        recalcularPontosAtributo(feedbackMessages)
+        rebuildAllPericiaStacks(feedbackMessages)
+
+        val paDepois = pontosAtributo
+        val spDepois = pontosPericia
+        val pvDepois = pontosVantagem
+
+        if (paDepois > paAntes) feedbackMessages.add("${paDepois - paAntes} ponto(s) de atributo devolvido(s).")
+        if (spDepois > spAntes) feedbackMessages.add("${spDepois - spAntes} ponto(s) de perícia devolvido(s).")
+        if (pvDepois > pvAntes) feedbackMessages.add("${pvDepois - pvAntes} ponto(s) de vantagem devolvido(s).")
     }
 
     fun spendProgressAcrossStages(n: Int) {
@@ -1303,16 +1318,16 @@ class CriadorState {
         return (5 + cpPaStack.size - jovemMalusPa) - usados
     }
 
-    fun recalcularPontosAtributo() {
+    fun recalcularPontosAtributo(feedbackMessages: MutableList<String>? = null) {
 
         pontosAtributo = calcularPontosAtributoRestantes()
 
-        trimAttributeStacks()
+        trimAttributeStacks(feedbackMessages)
 
-        rebuildAllPericiaStacks()
+        rebuildAllPericiaStacks(feedbackMessages)
     }
 
-    private fun trimAttributeStacks() {
+    private fun trimAttributeStacks(feedbackMessages: MutableList<String>? = null) {
 
         while (pontosAtributo < 0) {
             val entry = paCostStackPorAtributo
@@ -1332,6 +1347,8 @@ class CriadorState {
 
             val novo = if (atual > 12) atual - 1 else atual - 2
             valoresAtributos[nomeAttr]!!.intValue = novo.coerceAtLeast(base)
+
+            feedbackMessages?.add("Atributo $nomeAttr reduzido para d${novo.coerceAtLeast(base)} para compensar pontos.")
 
             pontosAtributo = calcularPontosAtributoRestantes()
         }
@@ -1399,7 +1416,7 @@ class CriadorState {
         return raw
     }
 
-    fun rebuildAllPericiaStacks() {
+    fun rebuildAllPericiaStacks(feedbackMessages: MutableList<String>? = null) {
         var cumulativeCost = 0
         val pool = totalSpPool
 
@@ -1435,6 +1452,9 @@ class CriadorState {
 
             var cost = costFor(target)
 
+            if (cost > 0 && cumulativeCost + cost > pool) {
+                feedbackMessages?.add("Perícia ${per.nome} reduzida para d$target para compensar pontos.")
+            }
             while (cumulativeCost + cost > pool) {
                 target = (target - 2).coerceAtLeast(minRaw)
                 cost   = costFor(target)

@@ -287,6 +287,39 @@ class MainActivity : ComponentActivity() {
 
             var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
 
+            var showFeedbackDialog by rememberSaveable { mutableStateOf(false) }
+
+            LaunchedEffect(criadorViewModel.feedbackMessages.size) {
+                if (criadorViewModel.feedbackMessages.isNotEmpty()) {
+                    showFeedbackDialog = true
+                }
+            }
+
+            if (showFeedbackDialog) {
+                AlertDialog(
+                    onDismissRequest = {
+                        criadorViewModel.clearFeedbackMessages()
+                        showFeedbackDialog = false
+                    },
+                    title = { Text("Ajustes Automáticos") },
+                    text = {
+                        Column {
+                            criadorViewModel.feedbackMessages.forEach { message ->
+                                Text(message)
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            criadorViewModel.clearFeedbackMessages()
+                            showFeedbackDialog = false
+                        }) {
+                            Text("OK")
+                        }
+                    }
+                )
+            }
+
             val helpAppText = """
 Como usar o app
 
