@@ -245,16 +245,21 @@ fun SupersDialog(
                                     (state.gastosPorPoder["sp_armor"] ?: 0) < viewModel.perPowerLimit("sp_armor") &&
                                     state.superPontosDisponiveis >= custoFlatPequeno,
                             onMinus = {
-                                val r = viewModel.desfazerInvestimentoSuper("sp_armor", custoFlatPequeno, PowerEffect.BonusArmadura(1))
-                                if (!r.ok) showSnack(r.mensagem)
-                            },
-                            onPlus  = {
-                                val c = viewModel.canInvestInPower("sp_armor", custoFlatPequeno, PowerEffect.BonusArmadura(1))
-                                if (!c.ok) showSnack(c.motivoBloqueio ?: "Bloqueado.")
-                                else {
-                                    val r = viewModel.tentarInvestirSuper("sp_armor", custoFlatPequeno, PowerEffect.BonusArmadura(1))
+                                val investment = state.superInvestments.lastOrNull { it.powerId == "sp_armor" }
+                                if (investment != null) {
+                                    val r = viewModel.desfazerInvestimentoSuper(investment)
                                     if (!r.ok) showSnack(r.mensagem)
                                 }
+                            },
+                            onPlus  = {
+                                val investment = com.example.swadebuilder.model.SuperInvestment(
+                                    powerId = "sp_armor",
+                                    displayName = "Armadura",
+                                    cost = custoFlatPequeno,
+                                    effect = PowerEffect.BonusArmadura(1)
+                                )
+                                val r = viewModel.tentarInvestirSuper(investment)
+                                if (!r.ok) showSnack(r.mensagem)
                             }
                         )
                         PoderRowPlusMinus(
@@ -269,16 +274,21 @@ fun SupersDialog(
                                     (state.gastosPorPoder["sp_res"] ?: 0) < viewModel.perPowerLimit("sp_res") &&
                                     state.superPontosDisponiveis >= custoFlatPequeno,
                             onMinus = {
-                                val r = viewModel.desfazerInvestimentoSuper("sp_res", custoFlatPequeno, PowerEffect.BonusResistencia(1))
-                                if (!r.ok) showSnack(r.mensagem)
-                            },
-                            onPlus  = {
-                                val c = viewModel.canInvestInPower("sp_res", custoFlatPequeno, PowerEffect.BonusResistencia(1))
-                                if (!c.ok) showSnack(c.motivoBloqueio ?: "Bloqueado.")
-                                else {
-                                    val r = viewModel.tentarInvestirSuper("sp_res", custoFlatPequeno, PowerEffect.BonusResistencia(1))
+                                val investment = state.superInvestments.lastOrNull { it.powerId == "sp_res" }
+                                if (investment != null) {
+                                    val r = viewModel.desfazerInvestimentoSuper(investment)
                                     if (!r.ok) showSnack(r.mensagem)
                                 }
+                            },
+                            onPlus  = {
+                                val investment = com.example.swadebuilder.model.SuperInvestment(
+                                    powerId = "sp_res",
+                                    displayName = "Resistência",
+                                    cost = custoFlatPequeno,
+                                    effect = PowerEffect.BonusResistencia(1)
+                                )
+                                val r = viewModel.tentarInvestirSuper(investment)
+                                if (!r.ok) showSnack(r.mensagem)
                             }
                         )
                         Spacer(Modifier.height(8.dp))
@@ -300,16 +310,21 @@ fun SupersDialog(
                                     !precisaDefinirFav &&
                                     state.superPontosDisponiveis >= custoFlatPequeno,
                             onMinus = {
-                                val r = viewModel.desfazerInvestimentoSuper("sp_aparar", custoFlatPequeno, PowerEffect.BonusAparar(1))
-                                if (!r.ok) showSnack(r.mensagem)
-                            },
-                            onPlus  = {
-                                val c = viewModel.canInvestInPower("sp_aparar", custoFlatPequeno, PowerEffect.BonusAparar(1))
-                                if (!c.ok) showSnack(c.motivoBloqueio ?: "Bloqueado.")
-                                else {
-                                    val r = viewModel.tentarInvestirSuper("sp_aparar", custoFlatPequeno, PowerEffect.BonusAparar(1))
+                                val investment = state.superInvestments.lastOrNull { it.powerId == "sp_aparar" }
+                                if (investment != null) {
+                                    val r = viewModel.desfazerInvestimentoSuper(investment)
                                     if (!r.ok) showSnack(r.mensagem)
                                 }
+                            },
+                            onPlus  = {
+                                val investment = com.example.swadebuilder.model.SuperInvestment(
+                                    powerId = "sp_aparar",
+                                    displayName = "Aparar",
+                                    cost = custoFlatPequeno,
+                                    effect = PowerEffect.BonusAparar(1)
+                                )
+                                val r = viewModel.tentarInvestirSuper(investment)
+                                if (!r.ok) showSnack(r.mensagem)
                             }
                         )
                         Spacer(Modifier.height(8.dp))
@@ -335,25 +350,23 @@ fun SupersDialog(
                                     !precisaDefinirFav &&
                                     state.superPontosDisponiveis >= custoStepAtributo,
                             onMinus = {
-                                val r = viewModel.desfazerInvestimentoSuper(
-                                    poderId, custoStepAtributo,
-                                    PowerEffect.SuperAtributo(attr.uppercase(), 1)
-                                )
-                                if (!r.ok) showSnack(r.mensagem)
-                            },
-                            onPlus  = {
-                                val c = viewModel.canInvestInPower(
-                                    poderId, custoStepAtributo,
-                                    PowerEffect.SuperAtributo(attr.uppercase(), 1)
-                                )
-                                if (!c.ok) showSnack(c.motivoBloqueio ?: "Bloqueado.")
-                                else {
-                                    val r = viewModel.tentarInvestirSuper(
-                                        poderId, custoStepAtributo,
-                                        PowerEffect.SuperAtributo(attr.uppercase(), 1)
-                                    )
+                                val investment = state.superInvestments.lastOrNull {
+                                    it.powerId == poderId && (it.effect as? PowerEffect.SuperAtributo)?.attrKey == attr.uppercase()
+                                }
+                                if (investment != null) {
+                                    val r = viewModel.desfazerInvestimentoSuper(investment)
                                     if (!r.ok) showSnack(r.mensagem)
                                 }
+                            },
+                            onPlus  = {
+                                val investment = com.example.swadebuilder.model.SuperInvestment(
+                                    powerId = poderId,
+                                    displayName = "Superatributo: $attr",
+                                    cost = custoStepAtributo,
+                                    effect = PowerEffect.SuperAtributo(attr.uppercase(), 1)
+                                )
+                                val r = viewModel.tentarInvestirSuper(investment)
+                                if (!r.ok) showSnack(r.mensagem)
                             }
                         )
                     }
@@ -382,25 +395,23 @@ fun SupersDialog(
                                     !precisaDefinirFav &&
                                     state.superPontosDisponiveis >= custoStepPericia,
                             onMinus = {
-                                val r = viewModel.desfazerInvestimentoSuper(
-                                    poderId, custoStepPericia,
-                                    PowerEffect.SuperPericia(per.nome.keyify(), 1)
-                                )
-                                if (!r.ok) showSnack(r.mensagem)
-                            },
-                            onPlus  = {
-                                val c = viewModel.canInvestInPower(
-                                    poderId, custoStepPericia,
-                                    PowerEffect.SuperPericia(per.nome.keyify(), 1)
-                                )
-                                if (!c.ok) showSnack(c.motivoBloqueio ?: "Bloqueado.")
-                                else {
-                                    val r = viewModel.tentarInvestirSuper(
-                                        poderId, custoStepPericia,
-                                        PowerEffect.SuperPericia(per.nome.keyify(), 1)
-                                    )
+                                val investment = state.superInvestments.lastOrNull {
+                                    it.powerId == poderId && (it.effect as? PowerEffect.SuperPericia)?.periciaKey == per.nome.keyify()
+                                }
+                                if (investment != null) {
+                                    val r = viewModel.desfazerInvestimentoSuper(investment)
                                     if (!r.ok) showSnack(r.mensagem)
                                 }
+                            },
+                            onPlus  = {
+                                val investment = com.example.swadebuilder.model.SuperInvestment(
+                                    powerId = poderId,
+                                    displayName = "Superperícia: ${per.nome}",
+                                    cost = custoStepPericia,
+                                    effect = PowerEffect.SuperPericia(per.nome.keyify(), 1)
+                                )
+                                val r = viewModel.tentarInvestirSuper(investment)
+                                if (!r.ok) showSnack(r.mensagem)
                             }
                         )
                     }
@@ -457,18 +468,14 @@ fun SupersDialog(
                                         state.superPontosDisponiveis >= custoVant,
                                 onClick = {
                                     val v = selectedVant ?: return@Button
-                                    val c = viewModel.canInvestInPower(
-                                        "sp_supervantagem", custoVant,
-                                        PowerEffect.SuperVantagem(v.id)
+                                    val investment = com.example.swadebuilder.model.SuperInvestment(
+                                        powerId = "sp_supervantagem",
+                                        displayName = "Supervantagem: ${v.nome}",
+                                        cost = custoVant,
+                                        effect = PowerEffect.SuperVantagem(v.id)
                                     )
-                                    if (!c.ok) showSnack(c.motivoBloqueio ?: "Bloqueado.")
-                                    else {
-                                        val r = viewModel.tentarInvestirSuper(
-                                            "sp_supervantagem", custoVant,
-                                            PowerEffect.SuperVantagem(v.id)
-                                        )
-                                        if (!r.ok) showSnack(r.mensagem)
-                                    }
+                                    val r = viewModel.tentarInvestirSuper(investment)
+                                    if (!r.ok) showSnack(r.mensagem)
                                 }
                             ) { Text("Comprar (2)") }
 
@@ -479,11 +486,13 @@ fun SupersDialog(
                                         !precisaDefinirFav,
                                 onClick = {
                                     val v = selectedVant ?: return@Button
-                                    val r = viewModel.desfazerInvestimentoSuper(
-                                        "sp_vant_${v.id}", custoVant,
-                                        PowerEffect.SuperVantagem(v.id)
-                                    )
-                                    if (!r.ok) showSnack(r.mensagem)
+                                    val investment = state.superInvestments.lastOrNull {
+                                        it.powerId == "sp_supervantagem" && (it.effect as? PowerEffect.SuperVantagem)?.vantagemId == v.id
+                                    }
+                                    if (investment != null) {
+                                        val r = viewModel.desfazerInvestimentoSuper(investment)
+                                        if (!r.ok) showSnack(r.mensagem)
+                                    }
                                 }
                             ) { Text("Remover") }
                         }

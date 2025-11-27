@@ -1,6 +1,7 @@
 package com.example.swadebuilder.model
 
 import kotlinx.serialization.Serializable
+import com.example.swadebuilder.model.SuperInvestment
 
 @Serializable
 data class MeuPersonagem(
@@ -36,8 +37,7 @@ data class MeuPersonagem(
     val poderFavoritoId: String? = null,
 
     // Ledger de efeitos de poder (somente supers)
-    val superAtributoIncs: Map<String, Int> = emptyMap(),   // chave = atributo keyify (FORCA, AGILIDADE, etc.)
-    val superPericiaIncs: Map<String, Int> = emptyMap(),    // chave = periciaId/pericia.keyify()
+    val superInvestments: List<SuperInvestment> = emptyList(),
     val bonusPararFromPower: Int = 0,
     val bonusResFromPower: Int = 0,
     val armorFromPower: Int = 0,
