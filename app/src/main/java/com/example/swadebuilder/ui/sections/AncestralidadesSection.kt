@@ -4,7 +4,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -54,6 +54,7 @@ fun AncestralidadesSection(
     expanded: Boolean,
     onToggle: () -> Unit,
     supersLocked: Boolean, // trava da fase de supers
+    ancestralidadeEmFoco: String?,           // <<< NOVO
     onOpenListaAncestralidadesDetail: (String) -> Unit,
     onSelectAncestralidade: (String) -> Unit
 ) {
@@ -79,6 +80,23 @@ fun AncestralidadesSection(
         ancestralidadesState.value.firstOrNull { item ->
             item.nome.uppercase().semAcentos() == selectedKey.value
         }?.nome ?: "HUMANOS"
+
+    // --- NOVO: reordena a lista para trazer a ancestralidade em foco para o topo ---
+    val focoKey = ancestralidadeEmFoco
+        ?.uppercase()
+        ?.semAcentos()
+        ?.takeIf { it.isNotBlank() }
+
+    val listaOrdenada =
+        if (focoKey != null) {
+            val (foco, resto) = ancestralidadesState.value.partition {
+                it.nome.uppercase().semAcentos() == focoKey
+            }
+            foco + resto
+        } else {
+            ancestralidadesState.value
+        }
+    // -------------------------------------------------------------------------------
 
     SectionCard(
         title = "Ancestralidades",
@@ -122,9 +140,9 @@ fun AncestralidadesSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(max = 240.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)
             ) {
-                items(ancestralidadesState.value) { item ->
+                items(listaOrdenada) { item ->
                     val itemKey = item.nome.uppercase().semAcentos()
                     val isSelected = itemKey == selectedKey.value
 
@@ -164,12 +182,14 @@ fun AncestralidadesSection(
                         )
 
                         if (showLista) {
-                            androidx.compose.material3.Icon(
+                            Icon(
                                 imageVector = Icons.Default.Visibility,
                                 contentDescription = "Detalhes",
                                 modifier = Modifier
                                     .size(18.dp)
-                                    .clickable { onOpenListaAncestralidadesDetail(item.nome) }
+                                    .clickable {
+                                        onOpenListaAncestralidadesDetail(item.nome)
+                                    }
                             )
                         }
                     }

@@ -320,6 +320,7 @@ class CriadorState {
     var openVantagensAfterGrant by mutableStateOf(false)
     var superPoderEmFoco by mutableStateOf<String?>(null)
 
+    var ancestralidadeEmFoco by mutableStateOf<String?>(null)
 
     fun comprarSuperPoder(
         nome: String,
