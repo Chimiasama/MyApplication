@@ -391,8 +391,6 @@ fun UnifiedScreen(
         )
     }
 
-
-    // ✅ assinatura real do teu app
     if (showAllocDialog) {
         ProgressosDialog(state) {
             showAllocDialog = false
