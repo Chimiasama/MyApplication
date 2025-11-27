@@ -99,6 +99,7 @@ import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.loadPericiasDescriptions
+import com.example.swadebuilder.ui.screens.ProgressionScreen
 import com.example.swadebuilder.ui.sections.PoderesDetailScreen
 import com.example.swadebuilder.ui.sections.SuperPoderesDetailScreen
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
@@ -710,14 +711,12 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                                             modoSupers              = state.modoSupers,
                                                             modoSuperequip          = state.modoSuperequip,
                                                             modoSuperComplicacoes   = state.modoSuperComplicacoes,
-                                                            superpoderesComprados   = state.superPoderesComprados.map { it.nome },
+                                                            superInvestments        = state.superInvestments.toList(),
                                                             superPontosTotais       = state.superPontosTotais,
                                                             superPontosDisponiveis  = state.superPontosDisponiveis,
                                                             limitePorPoderPadrao    = state.limitePorPoderPadrao,
                                                             limiteFavorecido        = state.limiteFavorecido,
                                                             poderFavoritoId       = state.poderFavoritoId,
-                                                            superAtributoIncs       = state.superAtributoIncs.toMap(),
-                                                            superPericiaIncs        = state.superPericiaIncs.toMap(),
                                                             bonusPararFromPower     = state.bonusPararFromPower,
                                                             bonusResFromPower       = state.bonusResFromPower,
                                                             armorFromPower          = state.armorFromPower,
@@ -863,6 +862,55 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                                 superequipCategorias  = superequipCategorias,
                                                 listaSuperPoderes     = listaSuperPoderes
                                             )
+                                            else -> if (state.emProgresso) {
+                                                ProgressionScreen(state = state)
+                                            } else {
+                                                UnifiedScreen(
+                                                    state = state,
+                                                    viewModel = criadorViewModel,
+                                                    onOpenVantagensDetail = { nomeVantagem ->
+                                                        highlightedVantagem = nomeVantagem
+                                                        state.vantagemEmFoco = nomeVantagem
+                                                        showVantagensDetail = true
+                                                    },
+                                                    onOpenPericiasDetail = { showPericiasDetail = true },
+                                                    onOpenComplicacoesDetail = { showComplicacoesDetail = true },
+                                                    onOpenAtributosDetail = { showAtributosDetail = true },
+                                                    onOpenListaAncestralidadesDetail = { nomeAnc ->
+                                                        if (nomeAnc.isNotBlank()) {
+                                                            state.ancestralidadeEmFoco = nomeAnc
+                                                        }
+                                                        showAncestralidadesDetail = true
+                                                    },
+                                                    onOpenListaCompletaEquipamento = { showEquipLista = true },
+                                                    onOpenPoderesDetail = { showPoderesDetail = true },
+                                                    onOpenSuperPoderesDetail = { nomePoder ->
+                                                        highlightedSuperPoder = nomePoder
+                                                        state.superPoderEmFoco = nomePoder.takeIf { it.isNotBlank() }
+                                                        showSuperDetail = true
+                                                    },
+                                                    expInfos = expInfos,
+                                                    onToggleInfos = { expInfos = !expInfos },
+                                                    expAncs = expAncs,
+                                                    onToggleAncs = { expAncs = !expAncs },
+                                                    expComps = expComps,
+                                                    onToggleComps = { expComps = !expComps },
+                                                    expEquip = expEquip,
+                                                    onToggleEquip = { expEquip = !expEquip },
+                                                    expAttrs = expAttrs,
+                                                    onToggleAttrs = { expAttrs = !expAttrs },
+                                                    expPer = expPer,
+                                                    onTogglePer = { expPer = !expPer },
+                                                    expVants = expVants,
+                                                    onToggleVants = { expVants = !expVants },
+                                                    expResumo = expResumo,
+                                                    onToggleResumo = { expResumo = !expResumo },
+                                                    expPoderes = expPoderes,
+                                                    onTogglePoderes = { expPoderes = !expPoderes },
+                                                    equipamentoCategorias = equipamentoCategorias,
+                                                    superequipCategorias = superequipCategorias,
+                                                    listaSuperPoderes = listaSuperPoderes
+                                                )
                                         }
                                     }
                                 }

@@ -141,43 +141,15 @@ fun InformacoesSection(
             val podeUsarProgresso =
                 state.creationComplete() && (state.progressosDisponiveis > 0) && (state.pontosVantagem == 0)
 
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            if (!state.emProgresso) {
                 Button(
-                    onClick = { showProgressDialog = true },
-                    enabled = podeAbrirProgressos && poderesOk,
-                    modifier = Modifier.weight(1f)
+                    onClick = { state.emProgresso = true },
+                    enabled = state.creationComplete(),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Progressos: ${state.progresso}")
+                    Text("Finalizar Criação e Ir para Progressão")
                 }
-                Button(
-                    onClick = {
-                        state.emProgresso = true
-                        if (state.progressosDisponiveis > 0 && state.pontosVantagem == 0) {
-                            onUseProgress()
-                        }
-                    },
-                    enabled = podeUsarProgresso && poderesOk,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("Usar Progresso (${state.progressosDisponiveis})")
-                }
-            }
-
-            if (state.progresso > 0) {
-                TextButton(onClick = {
-                    state.progresso = 0
-                    state.progressosDisponiveis = 0
-                    state.emProgresso = false
-                }) {
-                    Text("Desfazer Progresso")
-                }
-            }
+            } else {
 
             val movimento = state.valorMovimentacao()
             val aparar = state.valorAparar()

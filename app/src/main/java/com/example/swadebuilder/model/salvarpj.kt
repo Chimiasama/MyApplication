@@ -2,6 +2,7 @@ package com.example.swadebuilder.model
 
 import kotlinx.serialization.Serializable
 import java.util.UUID
+import com.example.swadebuilder.model.SuperInvestment
 
 @Serializable
 data class PersonagemSalvo(
@@ -46,8 +47,7 @@ data class PersonagemSalvo(
     val modoSuperequip: Boolean = false,
     val modoSuperComplicacoes: Boolean = false,
 
-    // Snapshot simples (nomes dos superpoderes comprados)
-    val superpoderesComprados: List<String> = emptyList(),
+    val superInvestments: List<SuperInvestment> = emptyList(),
 
     // ===== NOVOS CAMPOS (SUPERS) =====
     val superPontosTotais: Int = 0,
@@ -59,8 +59,6 @@ data class PersonagemSalvo(
     val poderFavoritoId: String? = null,
 
     // Ledger de efeitos de poder
-    val superAtributoIncs: Map<String, Int> = emptyMap(),
-    val superPericiaIncs: Map<String, Int> = emptyMap(),
     val bonusPararFromPower: Int = 0,
     val bonusResFromPower: Int = 0,
     val armorFromPower: Int = 0,

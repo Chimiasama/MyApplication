@@ -15,6 +15,8 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.model.PowerEffect
+import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
@@ -41,7 +43,7 @@ class CriadorState {
         listaDeEstagios.forEach { this[it.nome] = 0 }
     }
 
-    val superPoderesComprados = mutableStateListOf<PurchasedPower>()
+    val superInvestments = mutableStateListOf<SuperInvestment>()
     var superNivelCampanha by mutableStateOf<Int?>(null)
     var usarSemPontosDePoder by mutableStateOf(false)
 
@@ -61,8 +63,6 @@ class CriadorState {
 
     var faseSupersAtiva by mutableStateOf(false)
 
-    val superAtributoIncs = mutableStateMapOf<String, Int>()
-    val superPericiaIncs = mutableStateMapOf<String, Int>()
     var bonusPararFromPower by mutableIntStateOf(0)
     var bonusResFromPower  by mutableIntStateOf(0)
     var armorFromPower     by mutableIntStateOf(0)
@@ -309,7 +309,11 @@ class CriadorState {
 
     fun rawTotalComSupers(per: Pericia): Int {
         val base = rawTotal(per)
-        val incs = superPericiaIncs[per.nome.keyify()] ?: 0
+        val incs = superInvestments
+            .map { it.effect }
+            .filterIsInstance<PowerEffect.SuperPericia>()
+            .filter { it.periciaKey.equals(per.nome, ignoreCase = true) }
+            .sumOf { it.steps }
         return applySuperStepsFrom(base, incs)
     }
 
@@ -322,86 +326,13 @@ class CriadorState {
 
     var ancestralidadeEmFoco by mutableStateOf<String?>(null)
 
-    fun comprarSuperPoder(
-        nome: String,
-        custo: Int,
-        baseCost: Int = custo,
-        poderId: String = "sp_${nome.keyify()}",
-        registrarNoLedger: Boolean = true
-    ): Pair<Boolean, String> {
-
-        // 0) Regra restritiva de perícia mínima (Superciência / Superfeitiçaria)
-        val nomeKey = nome.keyify()
-        val periciaReqKey = SUPER_PODERES_RESTRITIVOS[nomeKey]
-        if (periciaReqKey != null) {
-            val perReq = listaPericias.firstOrNull { it.nome.keyify() == periciaReqKey }
-            val rawFinalReq = perReq?.let { rawTotalComSupers(it) } ?: 0
-
-            if (rawFinalReq < MIN_RAW_RESTRITIVO) {
-                val perNome = perReq?.nome ?: periciaReqKey
-                return false to "Para comprar $nome, você precisa ter a perícia $perNome em d10 ou mais."
-            }
-        }
-
-        if (registrarNoLedger) {
-            val limiteIndividual =
-                if (poderFavoritoId != null && poderFavoritoId == poderId)
-                    limiteFavorecido
-                else
-                    limitePorPoderPadrao
-
-            val gastoAtual = gastosPorPoder[poderId] ?: 0
-            if (gastoAtual + custo > limiteIndividual) {
-                return false to "Limite deste superpoder atingido (${limiteIndividual} SP)."
-            }
-
-            // Segurança extra: Armadura + Resistência compartilham limite de campanha
-            if (poderId == "sp_armor" || poderId == "sp_res") {
-                val gastoArmor = gastosPorPoder["sp_armor"] ?: 0
-                val gastoRes = gastosPorPoder["sp_res"] ?: 0
-                val gastoCompartilhadoAtual = gastoArmor + gastoRes
-
-                if (gastoCompartilhadoAtual + custo > limiteDePoderDaCampanha) {
-                    return false to
-                            "Limite compartilhado de Armadura + Resistência atingido (${limiteDePoderDaCampanha} SP)."
-                }
-            }
-        }
-
-        // 1) Limite de quantidade de superpoderes
-        if (superPoderesComprados.size >= superLimite) {
-            return false to "Limite de superpoderes atingido (${superLimite})."
-        }
-
-        // 2) Saldo de SP
-        if (superPontosDisponiveis < custo) {
-            return false to "Sem saldo: precisa de $custo SP, tem $superPontosDisponiveis."
-        }
-
-        // 3) Compra normal
-        superPoderesComprados.add(
-            PurchasedPower(
-                nome = nome,
-                custo = custo,
-                baseCost = baseCost,
-                poderId = poderId
-            )
-        )
-
-        if (registrarNoLedger) {
-            registrarGastoDePoder(poderId, custo)
-        }
-
-        return true to "Superpoder adquirido."
-    }
-
     fun removerSuperPoder(
-        poder: PurchasedPower,
+        poder: SuperInvestment,
         desfazerNoLedger: Boolean = true
     ) {
-        if (superPoderesComprados.remove(poder)) {
+        if (superInvestments.remove(poder)) {
             if (desfazerNoLedger) {
-                desfazerGastoDePoder(poder.poderId, poder.custo)
+                desfazerGastoDePoder(poder.powerId, poder.cost)
             }
         }
     }
@@ -759,7 +690,7 @@ class CriadorState {
         // 1) Regra especial: O MELHOR QUE HÁ
         if (key == "o_melhor_que_ha") {
             if (emProgresso) return false
-            if (superPoderesComprados.isEmpty()) return false
+            if (superInvestments.isEmpty()) return false
         }
 
         // 2) Pontos de Poder por estágio
@@ -1318,7 +1249,7 @@ class CriadorState {
         return (5 + cpPaStack.size - jovemMalusPa) - usados
     }
 
-    fun recalcularPontosAtributo(feedbackMessages: MutableList<String>? = null) {
+    fun recalcularPontosAtributo(feedbackMessages: MutableList<String> = mutableListOf()) {
 
         pontosAtributo = calcularPontosAtributoRestantes()
 
@@ -1327,7 +1258,7 @@ class CriadorState {
         rebuildAllPericiaStacks(feedbackMessages)
     }
 
-    private fun trimAttributeStacks(feedbackMessages: MutableList<String>? = null) {
+    private fun trimAttributeStacks(feedbackMessages: MutableList<String> = mutableListOf()) {
 
         while (pontosAtributo < 0) {
             val entry = paCostStackPorAtributo
@@ -1416,7 +1347,7 @@ class CriadorState {
         return raw
     }
 
-    fun rebuildAllPericiaStacks(feedbackMessages: MutableList<String>? = null) {
+    fun rebuildAllPericiaStacks(feedbackMessages: MutableList<String> = mutableListOf()) {
         var cumulativeCost = 0
         val pool = totalSpPool
 
