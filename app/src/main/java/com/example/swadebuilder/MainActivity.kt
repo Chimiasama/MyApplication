@@ -295,7 +295,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            if (showFeedbackDialog) {
+            if (showFeedbackDialog && state.showHelpMessages) {
                 AlertDialog(
                     onDismissRequest = {
                         criadorViewModel.clearFeedbackMessages()
@@ -560,7 +560,7 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                             TelaInicial(
                                 onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, _, _,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
-                                                semPontosDePoder, grandesResponsabilidades ->
+                                                semPontosDePoder, grandesResponsabilidades, showHelpMessages ->
 
                                     creationSession++
 
@@ -568,7 +568,8 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                         cartaSelvagem      = cartaSelvagem,
                                         maisPontosPericias = maisPontosPericias,
                                         modoSupers         = modoSupers,
-                                        usarEspecializacoesDePericia = usarEspecializacaoPer
+                                        usarEspecializacoesDePericia = usarEspecializacaoPer,
+                                        showHelpMessages = showHelpMessages
                                     )
                                     criadorViewModel.state.heroisSemArmadura     = heroisSemArmadura
                                     criadorViewModel.state.nasceUmHeroi          = nasceUmHeroi
