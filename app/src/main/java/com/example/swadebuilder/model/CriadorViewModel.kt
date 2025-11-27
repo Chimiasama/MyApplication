@@ -409,9 +409,6 @@ class CriadorViewModel : ViewModel() {
                     it.id.equals(efeito.vantagemId, ignoreCase = true)
                 } ?: return InvestCheck(false, "Vantagem não encontrada: ${efeito.vantagemId}.")
 
-            is PowerEffect.Generico -> {
-                // Nenhuma validação extra necessária para poderes genéricos
-            }
                 // NÃO permitir comprar de novo se já tiver a vantagem de qualquer forma
                 if (state.vantagensSelecionadas.any { it.id == vant.id }) {
                     return InvestCheck(false, "Você já possui a vantagem ${vant.nome}.")
@@ -426,6 +423,9 @@ class CriadorViewModel : ViewModel() {
                 if (!permitido) {
                     return InvestCheck(false, "Requisitos não atendidos para a vantagem (exceto Estágio).")
                 }
+            }
+            is PowerEffect.Generico -> {
+                // Nenhuma validação extra necessária para poderes genéricos
             }
         }
 
