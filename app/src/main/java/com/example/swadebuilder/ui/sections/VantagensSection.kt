@@ -743,7 +743,6 @@ fun VantagensContent(
             Spacer(Modifier.size(8.dp))
         }
 
-        // 10) Dialog “Escolha Antecedente Arcano”
         if (dialogMostrandoAntecedente != null) {
             val vantOriginal = dialogMostrandoAntecedente!!
             val opcoesArcano: List<String> = vantOriginal.choiceOptions
@@ -803,18 +802,32 @@ fun VantagensContent(
             )
         }
 
-        // 10) ChoiceDialog genérico
         if (showChoiceDialog && pendingVantagem != null) {
             state.identifyMaxedTraits()
             val vant = pendingVantagem!!
 
-            val validOptions: List<String> = when {
+            val validOptions = when {
+                // 1) ARMA PREDILETA: só Atirar / Atletismo / Lutar em d8+
                 vant.id == "arma_predileta" -> {
                     listaPericias
-                        .filter { per -> state.rawTotal(per) >= 8 }
+                        .filter { per ->
+                            val nome = per.nome
+
+                            // só essas três perícias
+                            val isAllowed =
+                                nome.equals("Atirar", ignoreCase = true) ||
+                                        nome.equals("Atletismo", ignoreCase = true) ||
+                                        nome.equals("Lutar", ignoreCase = true)
+
+                            // precisa estar em d8 ou mais
+                            val meetsMin = state.rawTotal(per) >= 8
+
+                            isAllowed && meetsMin
+                        }
                         .map { it.nome }
                 }
 
+                // 2) APRIMORADA continua limitada a uma por Arma Predileta diferente
                 vant.id == "arma_predileta_aprimorada" -> {
                     state.vantagensSelecionadas
                         .filter { it.id == "arma_predileta" && it.choice != null }
@@ -822,16 +835,19 @@ fun VantagensContent(
                         .distinct()
                 }
 
+                // 3) PROFISSIONAL: só traços no teto
                 vant.id == "profissional" -> {
                     vant.choiceOptions.filter { it in state.maxedTraits }
                 }
 
+                // 4) ESPECIALISTA: só em cima de PROFISSIONAL já comprado
                 vant.id == "especialista" -> {
                     state.vantagensSelecionadas
                         .filter { it.id == "profissional" && it.choice != null }
                         .mapNotNull { it.choice }
                 }
 
+                // 5) padrão: evita repetir choice quando há limite de selections
                 vant.maxSelections > 0 -> {
                     val used = state.vantagensSelecionadas
                         .filter { it.id == vant.id && it.choice != null }
@@ -869,7 +885,7 @@ fun VantagensContent(
             }
         }
 
-        // 10) MultipleSelectionDialog para NOVOS PODERES
+        // 11) MultipleSelectionDialog para NOVOS PODERES
         if (showNovosPoderesDialog && pendingNovosPoderes != null) {
             val vant = pendingNovosPoderes!!
 
