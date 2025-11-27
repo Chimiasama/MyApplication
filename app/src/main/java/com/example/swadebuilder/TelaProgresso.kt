@@ -24,8 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.model.VantagemCategoria
-import com.example.swadebuilder.model.VantagemRequisitos
 
 // ── Data Structures ──────────────────────────────────────────────────────────────────
 /**
@@ -124,8 +122,6 @@ fun TelaProgresso() {
             slot = selectedSlot!!,
             onDismiss = { showDialog = false },
             onChoiceSelected = { choice ->
-                // The logic to update the state is now handled inside the dialog,
-                // but this is where you would apply the choice to the main state.
                 val index = progressionSlots.indexOfFirst { it.id == selectedSlot!!.id }
                 if (index != -1) {
                     progressionSlots[index] = progressionSlots[index].copy(choice = choice)
@@ -181,31 +177,16 @@ fun ProgressionChoiceDialog(
         .filter { it.stage == currentStage }
         .any { it.choice is ProgressionChoice.IncreaseAttribute }
 
-    val placeholderVantagem = Vantagem(
-        id = "placeholder",
-        nome = "Vantagem de Exemplo",
-        descricao = "Esta é uma vantagem de exemplo.",
-        categoria = VantagemCategoria.COMBATE,
-        requisitos = VantagemRequisitos(estagio = "Novato"),
-        origem = "BASICO"
-    )
-
-
-    // CRITICAL COMMENT: The list of available choices is currently static.
-    // A full implementation would require dynamically filtering advantages based on
-    // the character's current stage and checking if their prerequisites are met.
-    // This would involve passing the entire character state (CriadorState) to this dialog,
-    // which could increase complexity.
+    // Por enquanto a lista é estática; depois você pode plugar aqui
+    // a lógica real de filtrar vantagens / etc.
     val availableChoices = mutableListOf<ProgressionChoice>()
     if (!hasIncreasedAttribute || currentStage == Stage.LENDARIO) {
         availableChoices.add(ProgressionChoice.IncreaseAttribute)
     }
     availableChoices.add(ProgressionChoice.IncreaseSkill)
-    availableChoices.add(ProgressionChoice.SelectVantagem(placeholderVantagem))
+    // availableChoices.add(ProgressionChoice.SelectVantagem(algumaVantagemReal))
     availableChoices.add(ProgressionChoice.RemoveMinorHindrance)
     availableChoices.add(ProgressionChoice.ReserveMajorHindranceSlot)
-    // CRITICAL COMMENT: Adding a placeholder for vantagem selection.
-    // The real implementation needs a way to select a specific vantagem.
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -221,9 +202,6 @@ fun ProgressionChoiceDialog(
                             .padding(vertical = 8.dp)
                     )
                 }
-                // CRITICAL COMMENT: This is a simplified UI. A more robust solution
-                // would likely involve a separate screen for selecting advantages,
-                // especially to show their requirements and descriptions.
             }
         },
         confirmButton = {
