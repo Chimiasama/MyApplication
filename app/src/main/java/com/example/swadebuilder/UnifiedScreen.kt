@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -189,7 +190,10 @@ fun UnifiedScreen(
                     showMeioElfoDialog = true
                 } else {
                     pendingMeioElfoKey = null
-                    state.aplicarAncestralidade(key)
+                    state.aplicarAncestralidade(
+                        key,
+                        viewModel.feedbackMessages as MutableList<String>
+                    )
                 }
             }
         )
@@ -200,7 +204,8 @@ fun UnifiedScreen(
             state = state,
             expanded = expComps,
             onToggle = onToggleComps,
-            onOpenComplicacoesDetail = onOpenComplicacoesDetail
+            onOpenComplicacoesDetail = onOpenComplicacoesDetail,
+            feedbackMessages = viewModel.feedbackMessages as MutableList<String>
         )
 
         HorizontalDivider(thickness = 1.dp)
@@ -222,7 +227,11 @@ fun UnifiedScreen(
             onToggle = onTogglePer,
             icon     = Icons.Default.School
         ) {
-            PericiasContent(state, onOpenPericiasDetail)
+            PericiasContent(
+                state = state,
+                onOpenPericiasDetail = onOpenPericiasDetail,
+                feedbackMessages = viewModel.feedbackMessages as MutableList<String>
+            )
         }
 
         HorizontalDivider(thickness = 1.dp)
@@ -354,7 +363,10 @@ fun UnifiedScreen(
                         val key = pendingMeioElfoKey ?: return@TextButton
 
                         // Aplica a ancestralidade Meio-Elfo
-                        state.aplicarAncestralidade(key)
+                        state.aplicarAncestralidade(
+                            key,
+                            viewModel.feedbackMessages as MutableList<String>
+                        )
 
                         // Garante Agilidade em d6 (raw = 6) se ainda estiver abaixo
                         val agiState = state.valoresAtributos["AGILIDADE"]
@@ -377,7 +389,10 @@ fun UnifiedScreen(
                         val key = pendingMeioElfoKey ?: return@TextButton
 
                         // Aplica a ancestralidade Meio-Elfo
-                        state.aplicarAncestralidade(key)
+                        state.aplicarAncestralidade(
+                            key,
+                            viewModel.feedbackMessages as MutableList<String>
+                        )
 
                         // Dá 1 ponto de vantagem extra
                         state.pontosVantagem += 1

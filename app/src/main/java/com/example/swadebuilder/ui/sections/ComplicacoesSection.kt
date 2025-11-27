@@ -57,7 +57,8 @@ fun ComplicacoesSection(
     state: CriadorState,
     expanded: Boolean,
     onToggle: () -> Unit,
-    onOpenComplicacoesDetail: () -> Unit
+    onOpenComplicacoesDetail: () -> Unit,
+    feedbackMessages: MutableList<String>
 ) {
     val locked = state.criacaoBasicaCongelada
 
@@ -141,7 +142,7 @@ fun ComplicacoesSection(
                                     "idoso" -> {
                                         state.complicacoesSelecionadas.remove(comp)
                                         state.idosoBonusSp = 0
-                                        state.syncFromCPRefund(sp = true)
+                                        state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
                                     }
                                     "jovem" -> {
                                         val pequComp = complicacoesFiltradas.first { it.id == "pequeno" }
