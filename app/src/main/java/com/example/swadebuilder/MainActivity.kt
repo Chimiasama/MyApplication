@@ -62,6 +62,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -244,6 +246,8 @@ class MainActivity : ComponentActivity() {
             val criadorViewModel: CriadorViewModel = viewModel()
             criadorViewModel.setMultiplosAAHabilitados(MULTIPLOS_AA_HABILITADOS)
             val state = criadorViewModel.state
+            val snackHost = remember { SnackbarHostState() }
+            val scope = rememberCoroutineScope()
 
             var creationSession by rememberSaveable { mutableIntStateOf(0) }
 
@@ -285,29 +289,15 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            if (showFeedbackDialog && state.showHelpMessages) {
-                AlertDialog(
-                    onDismissRequest = {
-                        criadorViewModel.clearFeedbackMessages()
-                        showFeedbackDialog = false
-                    },
-                    title = { Text("Ajustes Automáticos") },
-                    text = {
-                        Column {
-                            criadorViewModel.feedbackMessages.forEach { message ->
-                                Text(message)
-                            }
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            criadorViewModel.clearFeedbackMessages()
-                            showFeedbackDialog = false
-                        }) {
-                            Text("OK")
+            LaunchedEffect(criadorViewModel.feedbackMessages.size) {
+                if (state.showHelpMessages && criadorViewModel.feedbackMessages.isNotEmpty()) {
+                    criadorViewModel.feedbackMessages.forEach { msg ->
+                        scope.launch {
+                            snackHost.showSnackbar(msg)
                         }
                     }
-                )
+                    criadorViewModel.clearFeedbackMessages()
+                }
             }
 
 
@@ -457,6 +447,7 @@ class MainActivity : ComponentActivity() {
                             }
 
                             Scaffold(
+                                snackbarHost = { SnackbarHost(hostState = snackHost) },
                                 containerColor = Color.Transparent,
                                 topBar         = {
                                     if (emTelaDePreenchimento) {
@@ -554,7 +545,12 @@ class MainActivity : ComponentActivity() {
                                                         StorageUtils.salvarPersonagem(context, salvo)
 
                                                         withContext(Dispatchers.Main) {
-                                                            Toast.makeText(context, "Personagem salvo com sucesso!", Toast.LENGTH_SHORT).show()
+
+                                                            Toast.makeText(
+                                                                context,
+                                                                "Personagem salvo com sucesso!",
+                                                                Toast.LENGTH_SHORT
+                                                            ).show()
                                                         }
                                                     }
                                                 }) {
