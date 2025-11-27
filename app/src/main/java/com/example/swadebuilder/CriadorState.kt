@@ -755,17 +755,20 @@ class CriadorState {
     fun podeSelecionar(v: Vantagem): Boolean {
         val key = v.nome.keyify()
 
+        // 1) Regra especial: O MELHOR QUE HÁ
         if (key == "o_melhor_que_ha") {
             if (emProgresso) return false
             if (superPoderesComprados.isEmpty()) return false
         }
 
+        // 2) Pontos de Poder por estágio
         if (v.nome.contains("Pontos de Poder", ignoreCase = true)) {
             val totalFeitas = comprasPpPorEstagio.values.sum()
             val maxPermitidas = maxComprasPpAteAgora()
             if (totalFeitas >= maxPermitidas) return false
         }
 
+        // 3) Antecedente Arcano e multi-arcano
         if (key.startsWith("antecedente arcano")) {
             if (!permiteMultiAntecedenteArcano) {
                 val anyArcano = vantagensSelecionadas.any { it.nome.keyify().startsWith("antecedente arcano") }
@@ -784,6 +787,7 @@ class CriadorState {
             }
         }
 
+        // 4) PROFISSIONAL / ESPECIALISTA
         if (key == "profissional" || key == "especialista") {
             val choiceSeguro = v.choice
 
@@ -821,10 +825,9 @@ class CriadorState {
             }
         }
 
-        val ignorarEstagioPorNasce =
-            (nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0)
+        // 5) Estágio mínimo (respeita Nasce um Herói)
+        val ignorarEstagioPorNasce = (nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0)
         if (!ignorarEstagioPorNasce) {
-
             listaDeEstagios
                 .firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
                 ?.let { estReqObj ->
@@ -832,6 +835,7 @@ class CriadorState {
                 }
         }
 
+        // 6) Vantagens prévias
         if (v.requisitos.vantagensPrevias.isNotEmpty()) {
             val faltam = v.requisitos.vantagensPrevias.any { prevId ->
                 when (prevId) {
@@ -851,17 +855,19 @@ class CriadorState {
             if (faltam) return false
         }
 
+        // 7) PPs de novo (segurança extra)
         if (v.nome.contains("Pontos de Poder", ignoreCase = true)) {
             val totalCompras = comprasPpPorEstagio.values.sum()
             val limite = maxComprasPpAteAgora()
             if (totalCompras >= limite) return false
         }
-
-        else if (v.maxSelections > 0) {
+        // >>> AQUI estava o problema: cap geral por maxSelections, ignorando limite_compra "infinito"
+        else if (v.limiteCompra != "infinito" && v.maxSelections > 0) {
             val ja = vantagensSelecionadas.count { it.id == v.id }
             if (ja >= v.maxSelections) return false
         }
 
+        // 8) Evita repetir a MESMA choice em vantagens com escolha
         val choiceSeguro2 = v.choice
         if (v.requiresChoice && choiceSeguro2 != null) {
             val repetida = vantagensSelecionadas.any {
@@ -870,19 +876,20 @@ class CriadorState {
             if (repetida) return false
         }
 
+        // 9) Estágio alternativo (tabela nivelParaEstagio)
         nivelParaEstagio[v.requisitos.estagio]?.let { estReqObj2 ->
             if (estReqObj2.minProgress > effectiveProgressoParaVantagens()) return false
         }
 
+        // 10) Atributos mínimos
         if (v.requisitos.atributoMin.any { (nome, min) ->
                 val chaveNorm = nome.uppercase().semAcentos().trim()
                 valoresAtributos[chaveNorm]?.intValue?.let { it < min } != false
             }) return false
 
+        // 11) Perícias mínimas obrigatórias
         val periciaMinMap = v.requisitos.periciaMin
-
         if (v.vinculadoPericia && periciaMinMap.isNotEmpty()) {
-
             val atendeUma = periciaMinMap.any { (perNome, minRaw) ->
                 val per = listaPericias.firstOrNull {
                     it.nome.equals(perNome, ignoreCase = true)
@@ -891,7 +898,6 @@ class CriadorState {
             }
             if (!atendeUma) return false
         } else {
-
             if (periciaMinMap.any { (perNome, minRaw) ->
                     val per = listaPericias.firstOrNull {
                         it.nome.equals(perNome, ignoreCase = true)
@@ -902,6 +908,7 @@ class CriadorState {
             }
         }
 
+        // 12) Perícias mínimas opcionais (qualquer uma)
         val periciaMinOpcMap = v.requisitos.periciaMinOpcional
         if (periciaMinOpcMap.isNotEmpty()) {
             val atendeUmaOpc = periciaMinOpcMap.any { (perNome, minRaw) ->
@@ -913,8 +920,10 @@ class CriadorState {
             if (!atendeUmaOpc) return false
         }
 
+        // 13) Exige Carta Selvagem?
         if (v.requisitos.exigeCS && !cartaSelvagem) return false
 
+        // 14) Conflitos com complicações (Lento x Ligeiro, etc.)
         val compsConfl = incompatibilidades[key] ?: emptySet()
         val vantKey = v.nome.trim().uppercase()
         if (vantKey == "RICO" || vantKey == "PODRE DE RICO") {
