@@ -43,8 +43,6 @@ import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.SuperPoder
 import com.example.swadebuilder.model.loadJsonAsset
-import com.example.swadebuilder.ui.components.SectionCard
-import com.example.swadebuilder.ui.components.SectionHeader
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
@@ -64,7 +62,6 @@ fun SuperPoderesDetailScreen(
 
     val listState = rememberLazyListState()
 
-    // Se veio um nome destacado, rola até ele
     LaunchedEffect(highlightedName, superPoderes) {
         if (highlightedName.isNotEmpty()) {
             val index = superPoderes.indexOfFirst {
@@ -100,7 +97,6 @@ fun SuperPoderesDetailScreen(
                 )
             )
 
-            // Linha apenas com o resumo de pontos (sem botão vermelho)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -120,7 +116,6 @@ fun SuperPoderesDetailScreen(
                 state = listState
             ) {
                 items(superPoderes, key = { it.nome }) { poder ->
-                    // Começa expandido se for o poder destacado
                     val startExpanded =
                         highlightedName.isNotEmpty() &&
                                 poder.nome.equals(highlightedName, ignoreCase = true)
@@ -154,7 +149,6 @@ fun SuperPoderesDetailScreen(
 
                         AnimatedVisibility(visible = expanded) {
                             Column(Modifier.padding(top = 4.dp, bottom = 8.dp)) {
-                                // Custo base
                                 poder.custoBase?.let { custo ->
                                     Text(
                                         text = "Custo Base: $custo",
@@ -164,7 +158,6 @@ fun SuperPoderesDetailScreen(
                                     Spacer(Modifier.height(4.dp))
                                 }
 
-                                // Modificadores
                                 val mods = poder.modificadores ?: emptyList()
                                 if (mods.isNotEmpty()) {
                                     Text(
@@ -182,7 +175,6 @@ fun SuperPoderesDetailScreen(
                                     Spacer(Modifier.height(4.dp))
                                 }
 
-                                // Manifestações: pode ser string única ou array no JSON
                                 val mans: List<String> = when (val m = poder.manifestacoes) {
                                     is JsonArray -> {
                                         m.mapNotNull { elem ->
@@ -212,7 +204,6 @@ fun SuperPoderesDetailScreen(
                                     Spacer(Modifier.height(4.dp))
                                 }
 
-                                // Descrição
                                 poder.descricao?.let { desc ->
                                     Text(
                                         text = "Descrição:",

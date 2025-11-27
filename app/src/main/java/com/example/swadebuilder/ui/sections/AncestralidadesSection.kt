@@ -53,35 +53,31 @@ fun AncestralidadesSection(
     currentAncestralidade: String,
     expanded: Boolean,
     onToggle: () -> Unit,
-    supersLocked: Boolean, // trava da fase de supers
-    ancestralidadeEmFoco: String?,           // <<< NOVO
+    supersLocked: Boolean,
+    ancestralidadeEmFoco: String?,
     onOpenListaAncestralidadesDetail: (String) -> Unit,
     onSelectAncestralidade: (String) -> Unit
 ) {
     val context = LocalContext.current
     val showLista = booleanResource(R.bool.show_lista_completa)
 
-    // lista do assets
     val ancestralidadesState = remember {
         mutableStateOf(
             context.loadJsonAsset<List<RacialModifierLite>>(ASSET_ANCESTRALIDADES)
         )
     }
 
-    // chave normalizada da ancestralidade atual (ex: "ANÕES" -> "ANOES")
     val selectedKey = rememberSaveable(currentAncestralidade) {
         mutableStateOf(
             currentAncestralidade.uppercase().semAcentos().ifBlank { "HUMANOS" }
         )
     }
 
-    // Nome bonitinho pra exibir no cabeçalho
     val selectedDisplayName =
         ancestralidadesState.value.firstOrNull { item ->
             item.nome.uppercase().semAcentos() == selectedKey.value
         }?.nome ?: "HUMANOS"
 
-    // --- NOVO: reordena a lista para trazer a ancestralidade em foco para o topo ---
     val focoKey = ancestralidadeEmFoco
         ?.uppercase()
         ?.semAcentos()
@@ -96,7 +92,6 @@ fun AncestralidadesSection(
         } else {
             ancestralidadesState.value
         }
-    // -------------------------------------------------------------------------------
 
     SectionCard(
         title = "Ancestralidades",
@@ -158,9 +153,7 @@ fun AncestralidadesSection(
                             )
                             .clickable(enabled = !supersLocked) {
                                 if (supersLocked) return@clickable
-                                // grava a chave normalizada
                                 selectedKey.value = itemKey
-                                // avisa o caller com o nome "bonito"
                                 onSelectAncestralidade(item.nome)
                             }
                             .padding(vertical = 8.dp, horizontal = 8.dp),
@@ -168,7 +161,7 @@ fun AncestralidadesSection(
                     ) {
                         RadioButton(
                             selected = isSelected,
-                            onClick = null, // clique tratado na Row
+                            onClick = null,
                             enabled = !supersLocked
                         )
 
@@ -199,10 +192,6 @@ fun AncestralidadesSection(
     }
 }
 
-/**
- * Overload mantido por compatibilidade com outros pontos do app.
- * (Mesmo que esta seção não use mais dropdown.)
- */
 @Composable
 fun TransparentOutlinedReadOnlyField(
     text: String,

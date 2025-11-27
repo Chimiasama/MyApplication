@@ -74,9 +74,6 @@ import com.example.swadebuilder.ui.dialogs.SuperVantagensPickerDialog
 import com.example.swadebuilder.util.keyify
 import kotlin.math.roundToInt
 
-// ==========================================================
-// DIALOG: Compra de Superpoder (base discreta + modificadores)
-// ==========================================================
 @Composable
 fun BuySuperPowerDialog(
     poder: SuperPoder,
@@ -85,12 +82,10 @@ fun BuySuperPowerDialog(
     onConfirm: (baseCost: Int, totalCost: Int) -> Unit,
     onDismiss: () -> Unit
 ) {
-    // ---------- parse discreto do custoBase ----------
     fun parseCustoBaseOptions(raw: String?): List<Int> {
         if (raw.isNullOrBlank()) return listOf(1)
         val s = raw.trim()
 
-        // faixa com EN DASH “a–b”
         val enDash = '–'
         if (s.contains(enDash)) {
             val parts = s.split(enDash).map { it.trim() }
@@ -103,7 +98,6 @@ fun BuySuperPowerDialog(
             }
         }
 
-        // lista “x/y/z/...”
         if (s.contains('/')) {
             return s.split('/')
                 .mapNotNull { it.trim().toIntOrNull() }
@@ -111,16 +105,13 @@ fun BuySuperPowerDialog(
                 .sorted()
         }
 
-        // valor único
         return s.toIntOrNull()?.let { listOf(it) } ?: listOf(1)
     }
 
-    // opções declaradas no JSON para este poder
     val baseOptionsAll = remember(poder.custoBase) { parseCustoBaseOptions(poder.custoBase) }
     val baseMinDeclarado = baseOptionsAll.minOrNull() ?: 1
     val baseMaxDeclarado = baseOptionsAll.maxOrNull() ?: baseMinDeclarado
 
-    // ---------- modificadores ----------
     data class ModState(
         val name: String,
         val options: List<Int>,
@@ -150,32 +141,24 @@ fun BuySuperPowerDialog(
         }
     }
 
-    // ---------- CAP: por poder + pool disponível ----------
-    val totalCap = minOf(limitePorPoder, pontosDisponiveis) // teto do TOTAL (base + mods)
+    val totalCap = minOf(limitePorPoder, pontosDisponiveis)
 
-    // reduza as opções declaradas pelo teto (considerando custo dos mods)
     val capParaBase = (totalCap - modCost).coerceAtLeast(baseMinDeclarado)
     val allowedBaseOptions = baseOptionsAll
         .filter { it in baseMinDeclarado..minOf(baseMaxDeclarado, capParaBase) }
         .ifEmpty { listOf(baseMinDeclarado.coerceAtMost(capParaBase)) }
 
-    // ---------- modo curto x modo longo ----------
     val minAllowed = allowedBaseOptions.first()
     val maxAllowed = allowedBaseOptions.last()
     val isLongRange = allowedBaseOptions.size > 7 ||
             (maxAllowed - minAllowed) > 10
 
-    // índice da opção base escolhida
     var baseIdx by rememberSaveable(allowedBaseOptions) { mutableIntStateOf(0) }
     val baseCost = allowedBaseOptions.getOrElse(baseIdx) { allowedBaseOptions.last() }
 
-    // Total do poder (base + mods). Negativos podem reduzir, mas nunca deixa custo final < 1.
     val totalAtualRaw = baseCost + modCost
     val totalAtual = totalAtualRaw.coerceAtLeast(1)
 
-    // Pode confirmar se:
-    // 1) a base escolhida é uma das opções permitidas
-    // 2) o total final cabe no cap (e é >= 1)
     val podeConfirmar =
         (baseCost in allowedBaseOptions) && (totalAtual in 1..totalCap)
 
@@ -323,13 +306,10 @@ fun BuySuperPowerDialog(
 
 private fun Int.coLeastZero(): Int = if (this < 0) 0 else this
 
-// Vantagens que não podem ser compradas como Supervantagem em campanhas de supers
 private fun Vantagem.bloqueadaComoSuperVantagem(): Boolean {
-    // Qualquer coisa ligada ao grupo Antecedente Arcano
     if (grupoId?.equals("antecedente_arcano", ignoreCase = true) == true) return true
     if (id.contains("antecedente_arcano", ignoreCase = true)) return true
 
-    // Qualquer vantagem que exija Antecedente Arcano como pré-requisito
     if (requisitos.vantagensPrevias.any { req ->
             req.equals("antecedente_arcano", ignoreCase = true) ||
                     req.contains("antecedente_arcano", ignoreCase = true)
@@ -341,9 +321,6 @@ private fun Vantagem.bloqueadaComoSuperVantagem(): Boolean {
     return false
 }
 
-// ==========================================================
-// SECTION: Lista e compra de Superpoderes (com picker 2:1)
-// ==========================================================
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SuperPoderesSection(
@@ -357,10 +334,8 @@ fun SuperPoderesSection(
     val context = LocalContext.current
     var poderParaComprar by remember { mutableStateOf<SuperPoder?>(null) }
 
-    // estado de scroll da lista de superpoderes
     val listState = rememberLazyListState()
 
-    // quando superPoderEmFoco mudar, rola até o poder correspondente
     LaunchedEffect(state.superPoderEmFoco) {
         val foco = state.superPoderEmFoco
         if (!foco.isNullOrBlank()) {
@@ -371,32 +346,22 @@ fun SuperPoderesSection(
         }
     }
 
-    // agora o nível é realmente opcional (começa null)
     val nivelAtual = state.superNivelCampanha
 
-    // criação básica precisa estar pronta
     val supersLiberados = state.creationComplete()
 
-    // se já gastou qualquer ponto de super, o nível trava
     val jaInvestiuSupers = state.superPontosDisponiveis < state.superPontosTotais
     val podeEditarNivel = supersLiberados && !jaInvestiuSupers
 
-    // nível conta como "definido" só se há um valor e pontos calculados
     val nivelDefinido = (nivelAtual != null && state.superPontosTotais > 0)
 
-    // só pode comprar supers depois de:
-    // 1) criação básica completa
-    // 2) nível de superpoderes definido
     val podeComprarSupers = supersLiberados && nivelDefinido
 
     var showNivelDialog by rememberSaveable { mutableStateOf(false) }
 
-    // full vs lite: no full (show_lista_completa = true) mostramos o ícone clicável
-    // e abrimos a tela de lista completa focada no poder
     booleanResource(R.bool.show_lista_completa)
 
     fun aplicarNivelSuper(novoNivel: Int) {
-        // NÍVEL 0 = "voltar para criação": zera supers e volta a fase BASE
         if (novoNivel <= 0) {
             state.superNivelCampanha = null
             state.superPontosTotais = 0
@@ -409,7 +374,6 @@ fun SuperPoderesSection(
             return
         }
 
-        // cada nível aumenta o total de SP e o limite de poder
         val total = 15 * novoNivel
         val limite = 5 * novoNivel
 
@@ -425,7 +389,6 @@ fun SuperPoderesSection(
         state.faseSupersAtiva = true
     }
 
-    // --- O MELHOR QUE HÁ: escolha de poder favorecido diretamente na seção ---
     val temOMelhorQueHa = state.oMelhorQueHaSelecionada
 
 
@@ -434,25 +397,21 @@ fun SuperPoderesSection(
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        // 1) chips dos poderes comprados
         if (state.superPoderesComprados.isNotEmpty()) {
 
             fun isEspecial(p: PurchasedPower): Boolean {
                 val nome = p.nome.trim()
                 return when {
-                    // efeitos diretos na ficha
                     p.poderId == "sp_aparar" -> true
                     p.poderId == "sp_movimentacao" -> true
                     p.poderId == "sp_armor" -> true
                     p.poderId == "sp_res" -> true
 
-                    // pickers / ledger pai
                     nome.startsWith("Superatributo:", ignoreCase = true) -> true
                     nome.startsWith("Superperícia:", ignoreCase = true) ||
                             nome.startsWith("Superpericia:", ignoreCase = true) -> true
                     nome.startsWith("Supervantagem:", ignoreCase = true) -> true
 
-                    // bônus de perícia é “único por perícia”, então não agrupa
                     p.poderId == "sp_bonus_pericia" ||
                             nome.startsWith("Bônus de Perícia", ignoreCase = true) ||
                             nome.startsWith("Bonus de Perícia", ignoreCase = true) -> true
@@ -474,7 +433,6 @@ fun SuperPoderesSection(
                 state.superPoderesComprados.forEach { p ->
 
                     if (isEspecial(p)) {
-                        // ---- CHIP ESPECIAL: mantém exatamente o comportamento atual ----
                         AssistChip(
                             onClick = {
                                 when {
@@ -571,14 +529,12 @@ fun SuperPoderesSection(
                             }
                         )
                     } else {
-                        // ---- CHIP GENÉRICO AGRUPADO ----
                         if (emittedGenericIds.add(p.poderId)) {
                             val listaMesmoPoder = genericosPorId[p.poderId].orEmpty()
                             val custoSomado = listaMesmoPoder.sumOf { it.custo }
 
                             AssistChip(
                                 onClick = {
-                                    // remove todas as compras desse poder
                                     listaMesmoPoder.forEach { pp ->
                                         state.removerSuperPoder(pp)
                                     }
@@ -599,7 +555,6 @@ fun SuperPoderesSection(
             Spacer(Modifier.height(8.dp))
         }
 
-        // 2) seleção de nível (no lugar do slider)
         Text("Nível de Superpoderes")
         Spacer(Modifier.height(4.dp))
         Row(
@@ -659,7 +614,6 @@ fun SuperPoderesSection(
         Text("Pontos disponíveis: ${state.superPontosDisponiveis}")
         Text("Limite de superpoderes: ${state.superLimite}")
 
-        // --- Seção: O MELhor QUE HÁ (poder favorecido) ---
         if (temOMelhorQueHa && nivelDefinido) {
             Spacer(Modifier.height(8.dp))
 
@@ -675,7 +629,6 @@ fun SuperPoderesSection(
         Spacer(Modifier.height(8.dp))
 
 
-        // 3) lista rolável de superpoderes para comprar
         val showLista2 = booleanResource(R.bool.show_lista_completa)
 
         LazyColumn(
@@ -689,7 +642,6 @@ fun SuperPoderesSection(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        // clique no NOME: abre o diálogo de compra (quando permitido)
                         .clickable(enabled = podeComprarSupers) {
                             if (podeComprarSupers) {
                                 poderParaComprar = poder
@@ -715,19 +667,13 @@ fun SuperPoderesSection(
                         val poderId = "sp_${poder.nome.keyify()}"
                         val isFav = favoritoAtual == poderId
 
-                        // Armadura e Resistência não podem ser favorecidos
                         val isBloqueado = poder.nome.keyify() in listOf("ARMADURA", "RESISTENCIA")
 
-                        // Regra visual:
-                        // - se ainda NÃO tem favorito -> mostra estrela em todos (menos bloqueados)
-                        // - se JÁ tem favorito       -> mostra estrela apenas no favorito
                         val showStarForThis = !isBloqueado && (!temFavorito || isFav)
 
                         if (showStarForThis) {
                             IconButton(
                                 onClick = {
-                                    // se já é favorito, desmarca (volta tudo a mostrar estrelas vazias)
-                                    // se não é, define este como favorito (estrela vermelha e some das outras)
                                     viewModel.definirPoderFavorecido(if (isFav) null else poderId)
                                 },
                                 enabled = !isFavoriteLocked
@@ -741,9 +687,9 @@ fun SuperPoderesSection(
                                     tint = if (isFavoriteLocked)
                                         MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                                     else if (isFav)
-                                        Color.Red          // favorito = vazia porém vermelha
+                                        Color.Red
                                     else
-                                        MaterialTheme.colorScheme.primary   // não favorito = vazia na cor padrão
+                                        MaterialTheme.colorScheme.primary
                                 )
                             }
                         }
@@ -756,7 +702,6 @@ fun SuperPoderesSection(
                             modifier = Modifier
                                 .padding(start = 8.dp)
                                 .clickable {
-                                    // marcar foco pra, ao voltar, rolar até este poder
                                     state.superPoderEmFoco = poder.nome
                                     onOpenSuperPoderesDetail(poder.nome)
                                 }
@@ -768,7 +713,6 @@ fun SuperPoderesSection(
         }
     }
 
-    // 4) diálogo de escolha de nível
     if (showNivelDialog) {
         AlertDialog(
             onDismissRequest = { showNivelDialog = false },
@@ -776,7 +720,6 @@ fun SuperPoderesSection(
             text = {
                 Column(Modifier.fillMaxWidth()) {
 
-                    // NÍVEL 0: volta para fase de criação
                     TextButton(
                         onClick = {
                             aplicarNivelSuper(0)
@@ -799,7 +742,6 @@ fun SuperPoderesSection(
 
                     HorizontalDivider()
 
-                    // Níveis 1 a 5: campanha supers ativa
                     (1..5).forEach { nivel ->
                         val total = 15 * nivel
                         val limite = 5 * nivel
@@ -834,18 +776,15 @@ fun SuperPoderesSection(
         )
     }
 
-    // 5) diálogos de compra "especiais"
     var showSuperAttrPicker by rememberSaveable { mutableStateOf(false) }
     var poolSuperAttr by rememberSaveable { mutableIntStateOf(0) }
 
     var showSuperPericiaPicker by rememberSaveable { mutableStateOf(false) }
     var poolSuperPericia by rememberSaveable { mutableIntStateOf(0) }
 
-    // NOVO: picker de SUPERVANTAGEM (2 PP = 1 Vantagem)
     var showSuperVantPicker by rememberSaveable { mutableStateOf(false) }
     var poolSuperVant by rememberSaveable { mutableIntStateOf(0) }
 
-    // NOVO: BÔNUS DE PERÍCIA – só lembrete (vincula a uma perícia)
     var showBonusPericiaPicker by rememberSaveable { mutableStateOf(false) }
     var bonusPericiaBaseCost by rememberSaveable { mutableIntStateOf(0) }
     var bonusPericiaTotalCost by rememberSaveable { mutableIntStateOf(0) }
@@ -857,7 +796,6 @@ fun SuperPoderesSection(
         if (!supersLiberados) {
             poderParaComprar = null
         } else {
-            // ----- NOVO: calcular limite efetivo para o diálogo -----
             val nomeUpper = poder.nome.trim().uppercase()
             val poderIdEspecifico = when {
                 nomeUpper == "ARMADURA" -> "sp_armor"
@@ -870,7 +808,6 @@ fun SuperPoderesSection(
 
             val limiteParaDialog: Int = when {
 
-                // Armadura / Resistência (compartilham limite de campanha)
                 poderIdEspecifico != null -> {
                     val gastoAtualNeste = state.gastosPorPoder[poderIdEspecifico] ?: 0
                     val limiteIndividual = viewModel.perPowerLimit(poderIdEspecifico)
@@ -886,7 +823,6 @@ fun SuperPoderesSection(
                     minOf(restoIndividual, restoCompartilhado, saldoSp)
                 }
 
-                // Aparar (super) — único poder, respeita o restante
                 nomeUpper == "APARAR" -> {
                     val gastoAtual = state.gastosPorPoder["sp_aparar"] ?: 0
                     val limiteInd = viewModel.perPowerLimit("sp_aparar")
@@ -894,7 +830,6 @@ fun SuperPoderesSection(
                     minOf(restoInd, saldoSp)
                 }
 
-                // Movimentação (super) — único poder, respeita o restante
                 nomeUpper == "MOVIMENTAÇÃO" || nomeUpper == "MOVIMENTACAO" -> {
                     val gastoAtual = state.gastosPorPoder["sp_movimentacao"] ?: 0
                     val limiteInd = viewModel.perPowerLimit("sp_movimentacao")
@@ -902,7 +837,6 @@ fun SuperPoderesSection(
                     minOf(restoInd, saldoSp)
                 }
 
-                // Superatributo (poder pai único)
                 nomeUpper == "SUPERATRIBUTO" || nomeUpper == "SUPER ATRIBUTO" -> {
                     val gastoAtual = state.gastosPorPoder["sp_superatributo"] ?: 0
                     val limiteInd = viewModel.perPowerLimit("sp_superatributo")
@@ -910,7 +844,6 @@ fun SuperPoderesSection(
                     minOf(restoInd, saldoSp)
                 }
 
-                // SUPERPERÍCIA (poder pai único)
                 nomeUpper == "SUPERPERÍCIA" || nomeUpper == "SUPER PERÍCIA" ||
                         nomeUpper == "SUPERPERICIA" || nomeUpper == "SUPER PERICIA" -> {
                     val gastoAtual = state.gastosPorPoder["sp_superpericia"] ?: 0
@@ -919,7 +852,6 @@ fun SuperPoderesSection(
                     minOf(restoInd, saldoSp)
                 }
 
-                // SUPERVANTAGEM (poder pai único)
                 nomeUpper == "SUPERVANTAGEM" || nomeUpper == "SUPER VANTAGEM" -> {
                     val gastoAtual = state.gastosPorPoder["sp_supervantagem"] ?: 0
                     val limiteInd = viewModel.perPowerLimit("sp_supervantagem")
@@ -927,7 +859,6 @@ fun SuperPoderesSection(
                     minOf(restoInd, saldoSp)
                 }
 
-                // BÔNUS DE PERÍCIA (poder pai único)
                 nomeUpper == "BÔNUS DE PERÍCIA" ||
                         nomeUpper == "BÔNUS DE PERICIA" ||
                         nomeUpper == "BONUS DE PERÍCIA" ||
@@ -936,7 +867,6 @@ fun SuperPoderesSection(
                     minOf(limiteIndividual, saldoSp)
                 }
 
-                // Demais poderes: usar RESTANTE do poder (limite acumulado)
                 else -> {
                     val poderIdGenerico = "sp_${poder.nome.keyify()}"
                     val gastoAtual = state.gastosPorPoder[poderIdGenerico] ?: 0
@@ -945,12 +875,10 @@ fun SuperPoderesSection(
                     minOf(restoInd, saldoSp)
                 }
             }
-            // ----- FIM DO NOVO CÁLCULO -----
 
             BuySuperPowerDialog(
                 poder = poder,
                 pontosDisponiveis = saldoSp,
-                // Aqui passamos o limite já "apertado" para o diálogo.
                 limitePorPoder = limiteParaDialog,
                 onConfirm = { baseCost, custoTotal ->
 
@@ -1025,17 +953,13 @@ fun SuperPoderesSection(
                             }
                         }
 
-                        // Super Atributo: o pool de steps vem apenas do baseCost.
-                        // Modificadores encarecem o poder, mas não geram steps extras.
                         nome == "SUPERATRIBUTO" || nome == "SUPER ATRIBUTO" -> {
                             poolSuperAttr = baseCost / 2
                             showSuperAttrPicker = true
                         }
 
-                        // SUPERPERÍCIA (1:1): abre o picker de perícias
                         nome == "SUPERPERÍCIA" || nome == "SUPER PERÍCIA" ||
                                 nome == "SUPERPERICIA" || nome == "SUPER PERICIA" -> {
-                            // cada ponto de baseCost = 1 passo de Superperícia
                             poolSuperPericia = baseCost
                             if (poolSuperPericia > 0) {
                                 showSuperPericiaPicker = true
@@ -1044,23 +968,19 @@ fun SuperPoderesSection(
                             }
                         }
 
-                        // SUPERVANTAGEM (2 PP = 1 vantagem escolhida)
                         nome == "SUPERVANTAGEM" || nome == "SUPER VANTAGEM" -> {
-                            // cada 2 pontos compram 1 slot de Vantagem
                             poolSuperVant = baseCost / 2
                             if (poolSuperVant > 0) {
                                 showSuperVantPicker = true
                             }
                         }
 
-                        // NOVO: BÔNUS DE PERÍCIA – só registra lembrete vinculado à perícia
                         nome == "BÔNUS DE PERÍCIA" ||
                                 nome == "BÔNUS DE PERICIA" ||
                                 nome == "BONUS DE PERÍCIA" ||
                                 nome == "BONUS DE PERICIA" -> {
                             bonusPericiaBaseCost = baseCost
                             bonusPericiaTotalCost = custoTotal
-                            // nível implícito: 2 PP -> +1 / 4 PP -> +2
                             bonusPericiaNivel = if (baseCost >= 4) 2 else 1
                             showBonusPericiaPicker = true
                         }
@@ -1079,7 +999,6 @@ fun SuperPoderesSection(
         }
     }
 
-    // 6) picker de SuperAtributos (2:1)
     if (showSuperAttrPicker) {
         SuperAtributosPickerDialog(
             state = state,
@@ -1088,7 +1007,6 @@ fun SuperPoderesSection(
                 mapa.forEach { (attrKey, stepsSolicitados) ->
                     val poderIdPai = "sp_superatributo"
 
-                    // custo pretendido (2:1)
                     val custoPretendido = stepsSolicitados * 2
 
                     val gastoAtual = state.gastosPorPoder[poderIdPai] ?: 0
@@ -1123,7 +1041,6 @@ fun SuperPoderesSection(
         )
     }
 
-    // 7) picker de SUPERPERÍCIA (1:1)
     if (showSuperPericiaPicker) {
         SuperPericiasPickerDialog(
             state = state,
@@ -1132,10 +1049,8 @@ fun SuperPoderesSection(
 
                 val poderIdPai = "sp_superpericia"
 
-                // mapa: periciaKey (keyify) -> stepsSolicitados
                 mapa.forEach { (periciaKey, stepsSolicitados) ->
 
-                    // custo pretendido (1:1)
                     val custoPretendido = stepsSolicitados
 
                     val gastoAtual = state.gastosPorPoder[poderIdPai] ?: 0
@@ -1170,10 +1085,7 @@ fun SuperPoderesSection(
         )
     }
 
-    // 8) picker de SUPERVANTAGEM (2 PP = 1 vantagem)
     if (showSuperVantPicker) {
-        // candidatos: todas as vantagens não Lendárias que ainda não foram pegas
-        // e que não sejam Antecedentes Arcanos nem vantagens que dependam deles
         val vantagensDisponiveis: List<Vantagem> = listaVantagens.filter { v ->
             v.categoria != Categoria.LENDARIAS &&
                     !v.bloqueadaComoSuperVantagem() &&
@@ -1184,7 +1096,6 @@ fun SuperPoderesSection(
             poolInicial = poolSuperVant,
             vantagensDisponiveis = vantagensDisponiveis,
             onConfirm = { selecionadas ->
-                // cada Vantagem aqui custa 2 PP
                 val custoPorVantagem = 2
 
                 selecionadas.forEach { v ->
@@ -1221,7 +1132,6 @@ fun SuperPoderesSection(
         )
     }
 
-    // 9) picker de BÔNUS DE PERÍCIA (só lembrete, com upgrade)
     if (showBonusPericiaPicker) {
         var selectedPericia by remember { mutableStateOf<Pericia?>(null) }
 
@@ -1307,7 +1217,6 @@ fun SuperPoderesSection(
                         }
 
                         if (existente != null) {
-                            // Upgrade: remover o antigo, checar limite e SP, depois criar o novo
                             val custoAtual = existente.custo
                             val gastosSemEsta = gastosTotaisLocal - custoAtual
                             val novoTotalGastos = gastosSemEsta + custoNovoLocal
@@ -1320,10 +1229,8 @@ fun SuperPoderesSection(
                                 return@TextButton
                             }
 
-                            // Remove o antigo (refaz ledger e SP)
                             state.removerSuperPoder(existente, desfazerNoLedger = true)
                         } else {
-                            // Compra nova
                             val novoTotalGastos = gastosTotaisLocal + custoNovoLocal
                             if (novoTotalGastos > limiteIndLocal ||
                                 custoNovoLocal > state.superPontosDisponiveis
@@ -1359,9 +1266,6 @@ fun SuperPoderesSection(
     }
 }
 
-// ==========================================================
-// CONTENT: Card com título/ícone/cabeçalho e a Section acima
-// ==========================================================
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun SuperPoderesContent(
@@ -1383,7 +1287,6 @@ fun SuperPoderesContent(
             onHelpClick = null,
             centerText = "Pontos de Super: ${state.superPontosDisponiveis}",
             onCenterClick = onToggle,
-            // clique na "Lista completa" abre a tela sem foco específico
             onListaCompletaClick = if (showLista) {
                 { onOpenSuperPoderesDetail("") }
             } else null,

@@ -68,7 +68,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
-// modelo de filtro
 data class VantFilter(
     val origens: Set<String> = emptySet(),
     val estagios: Set<String> = emptySet(),
@@ -188,7 +187,6 @@ fun VantagensContent(
 ) {
     val context = LocalContext.current
 
-    // 1) carrega lista de vantagens (bruto)
     val listaVantagensRaw: List<Vantagem> = remember {
         val jsonString = context.assets.open("Vantagens.json")
             .bufferedReader()
@@ -202,35 +200,22 @@ fun VantagensContent(
         json.decodeFromString(jsonString)
     }
 
-    // 1.1) aplica filtro de exibição conforme o toggle de múltiplos AA
     val listaVantagens: List<Vantagem> =
         remember(multiplosAAHabilitados, listaVantagensRaw) {
             if (multiplosAAHabilitados) {
-                // modo NOVO: esconder o seletor base e exibir as 5 variantes específicas
                 listaVantagensRaw.filterNot { it.id == "antecedente_arcano" }
             } else {
-                // modo LEGADO: mostrar o seletor base e esconder as variantes
                 listaVantagensRaw.filterNot { it.id.startsWith("antecedente_arcano_") }
             }
         }
 
-    // 1.2) ORIGENS ATIVAS (flags de módulos)
-    // Agora:
-    // - sempre BASICO
-    // - SUPER só quando modoSupers = true
-    // Futuro: é só adicionar HORROR/FANTASIA/SCIFI aqui quando criar as flags.
     remember(state.modoSupers) {
         buildSet {
             add("BASICO")
             if (state.modoSupers) add("SUPER")
-            // exemplo futuro:
-            // if (state.modoHorror) add("HORROR")
-            // if (state.modoFantasia) add("FANTASIA")
-            // if (state.modoFiccao) add("SCIFI")
         }
     }
 
-    // 1.3) lista final realmente exibida no app (respeita flags)
     val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers) {
         listaVantagens.filter { vant ->
             val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase()
@@ -241,18 +226,14 @@ fun VantagensContent(
         }
     }
 
-    // Mapa id -> nome para mensagens de pré-requisito
-    // (usa lista pós-AA, mas antes do filtro de origem, para manter nomes legíveis)
     val idParaNome = remember(listaVantagens) {
         listaVantagens.associate { it.id to it.nome }
     }
 
-    // agrupamentos já filtrados por origem ativa
     val categoriasBy = remember(listaVantagensAtivas) {
         listaVantagensAtivas.groupBy { it.categoria }
     }
 
-    // Estados principais
     var filter by remember { mutableStateOf(VantFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
     var tempErrorMsg by remember { mutableStateOf("") }
@@ -267,11 +248,9 @@ fun VantagensContent(
 
     val scope = rememberCoroutineScope()
 
-    // mapa persistente de categorias expandidas + vantagem em foco
     val expandedMap = state.categoriasVantagensExpandidas
     val vantagemEmFoco = state.vantagemEmFoco
 
-    // garante que a categoria da vantagem em foco fique aberta
     LaunchedEffect(vantagemEmFoco) {
         if (!vantagemEmFoco.isNullOrBlank()) {
             val v = listaVantagensAtivas.firstOrNull { it.nome == vantagemEmFoco }
@@ -281,7 +260,6 @@ fun VantagensContent(
         }
     }
 
-    // contar iniciais para remoção
     var initialCount by rememberSaveable { mutableIntStateOf(0) }
     LaunchedEffect(state.emProgresso) {
         if (state.emProgresso) initialCount = state.vantagensSelecionadas.size
@@ -290,15 +268,12 @@ fun VantagensContent(
     val locked = state.criacaoBasicaCongeladaComXp
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
-    // ===== PONTOS BÔNUS (PC) =====
     val pcTotal = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
     val pcLivres = (pcTotal - pcGastos).coerceAtLeast(0)
     val pvUsados = state.cpPvStack.size
-    // =============================
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        // cabeçalho
         SectionHeader(
             onHelpClick = null,
             centerText = "Pontos de Vantagem: ${state.pontosVantagem} • Pontos Bônus: $pcLivres de $pcTotal",
@@ -308,7 +283,6 @@ fun VantagensContent(
 
         Spacer(Modifier.size(4.dp))
 
-        // Botões de usar / desfazer Pontos Bônus em Vantagens
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -352,7 +326,7 @@ fun VantagensContent(
 
         if (state.nasceUmHeroi && !state.emProgresso) {
             AssistChip(
-                onClick = { /* no-op */ },
+                onClick = { },
                 label = { Text("Nasce um Herói ativo: Estágio ignorado na criação") },
                 leadingIcon = { Icon(Icons.Default.Visibility, contentDescription = null) }
             )
@@ -361,7 +335,6 @@ fun VantagensContent(
 
         Spacer(Modifier.size(8.dp))
 
-        // botão de filtro
         Text(
             text = if (filter.isEmpty()) "Filtrar vantagens"
             else "Filtros (${filter.totalSelections()})",
@@ -371,9 +344,7 @@ fun VantagensContent(
                 .clickable { showFilterDialog = true }
         )
 
-        // diálogo de filtro
         if (showFilterDialog) {
-            // usa lista ativa, então não aparecem origens de módulos desligados
             val allOrigens = listaVantagensAtivas.map { it.origem.uppercase() }.distinct()
             val allEstagios = listaDeEstagios.map { it.nome }
             val allAtributos = mapaAtributosDisplay.values.toList()
@@ -399,14 +370,13 @@ fun VantagensContent(
 
         Spacer(Modifier.size(8.dp))
 
-        // chips de selecionadas
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             if (state.regraMultiplosIdiomas) {
                 AssistChip(
-                    onClick = { /* não removível */ },
+                    onClick = { },
                     enabled = false,
                     label = { Text("LINGUISTA (Regra de Ambientação)") }
                 )
@@ -478,13 +448,11 @@ fun VantagensContent(
                                 state.pontosVantagem++
                                 state.rebuildAllPericiaStacks()
                             } else {
-                                // remoção "normal"
                                 state.removeVantagemDinheiro(vant)
                                 state.vantagensSelecionadas.remove(vant)
                                 state.pontosVantagem++
                                 state.rebuildAllPericiaStacks()
 
-                                // se for O MELHOR QUE HÁ, limpamos também o poder favorecido
                                 if (vant.id == "o_melhor_que_ha") {
                                     state.poderFavoritoId = null
                                 }
@@ -541,9 +509,7 @@ fun VantagensContent(
 
         Spacer(Modifier.size(16.dp))
 
-        // seções por categoria
         categoriasBy.forEach { (cat, lista) ->
-            // em modo supers, a categoria PODER é toda desabilitada
             if (state.modoSupers && cat == Categoria.PODER) return@forEach
 
             val expanded = expandedMap[cat] ?: false
@@ -562,47 +528,37 @@ fun VantagensContent(
                         .padding(start = 8.dp, bottom = 8.dp)
                 ) {
                     lista
-                        // básico vs superpoderes
-                        // básico vs superpoderes
                         .filter { vant ->
                             if (!state.modoSupers) {
                                 true
                             } else {
-                                // em modo supers: some o AA "genérico" e qualquer coisa que dependa dele
                                 vant.id != "antecedente_arcano" &&
                                         !vant.requisitos.vantagensPrevias.contains("antecedente_arcano")
                             }
                         }
 
-                        // em modo supers não mostra Superpoderes na lista comprável
                         .filter { vant ->
                             if (state.modoSupers) vant.id != "superpoderes" else true
                         }
-                        // especialista só com profissional
                         .filter { vant ->
                             vant.categoria == cat &&
                                     (vant.id != "especialista" ||
                                             state.vantagensSelecionadas.any { it.id == "profissional" })
                         }
-                        // aplica filtros compostos
                         .filter { vant ->
-                            // origem
                             if (filter.origens.isNotEmpty() &&
                                 vant.origem.uppercase() !in filter.origens
                             ) return@filter false
 
-                            // estágio
                             if (filter.estagios.isNotEmpty() &&
                                 vant.requisitos.estagio !in filter.estagios
                             ) return@filter false
 
-                            // atributos
                             if (filter.atributos.isNotEmpty() &&
                                 filter.atributos.intersect(vant.requisitos.atributoMin.keys)
                                     .isEmpty()
                             ) return@filter false
 
-                            // perícias
                             if (filter.pericias.isNotEmpty()) {
                                 val reqMin = vant.requisitos.periciaMin.keys
                                 val reqOpt = vant.requisitos.periciaMinOpcional.keys
@@ -613,7 +569,6 @@ fun VantagensContent(
                             }
                             true
                         }
-                        // aqui a gente reorganiza para trazer a vantagem em foco pro topo
                         .let { listaFiltrada ->
                             if (vantagemEmFoco.isNullOrBlank()) listaFiltrada
                             else {
@@ -642,7 +597,6 @@ fun VantagensContent(
                                     )
                                 }
 
-                                // pré-requisitos de outras vantagens
                                 vant.requisitos.vantagensPrevias.forEach { prevId ->
                                     val legivel = idParaNome[prevId]
                                         ?: prevId.replace('_', ' ').uppercase()
@@ -813,19 +767,16 @@ fun VantagensContent(
             val vant = pendingVantagem!!
 
             val validOptions = when {
-                // 1) ARMA PREDILETA: só Atirar / Atletismo / Lutar em d8+
                 vant.id == "arma_predileta" -> {
                     listaPericias
                         .filter { per ->
                             val nome = per.nome
 
-                            // só essas três perícias
                             val isAllowed =
                                 nome.equals("Atirar", ignoreCase = true) ||
                                         nome.equals("Atletismo", ignoreCase = true) ||
                                         nome.equals("Lutar", ignoreCase = true)
 
-                            // precisa estar em d8 ou mais
                             val meetsMin = state.rawTotal(per) >= 8
 
                             isAllowed && meetsMin
@@ -833,7 +784,6 @@ fun VantagensContent(
                         .map { it.nome }
                 }
 
-                // 2) APRIMORADA continua limitada a uma por Arma Predileta diferente
                 vant.id == "arma_predileta_aprimorada" -> {
                     state.vantagensSelecionadas
                         .filter { it.id == "arma_predileta" && it.choice != null }
@@ -841,19 +791,16 @@ fun VantagensContent(
                         .distinct()
                 }
 
-                // 3) PROFISSIONAL: só traços no teto
                 vant.id == "profissional" -> {
                     vant.choiceOptions.filter { it in state.maxedTraits }
                 }
 
-                // 4) ESPECIALISTA: só em cima de PROFISSIONAL já comprado
                 vant.id == "especialista" -> {
                     state.vantagensSelecionadas
                         .filter { it.id == "profissional" && it.choice != null }
                         .mapNotNull { it.choice }
                 }
 
-                // 5) padrão: evita repetir choice quando há limite de selections
                 vant.maxSelections > 0 -> {
                     val used = state.vantagensSelecionadas
                         .filter { it.id == vant.id && it.choice != null }
@@ -891,7 +838,6 @@ fun VantagensContent(
             }
         }
 
-        // 11) MultipleSelectionDialog para NOVOS PODERES
         if (showNovosPoderesDialog && pendingNovosPoderes != null) {
             val vant = pendingNovosPoderes!!
 

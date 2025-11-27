@@ -44,10 +44,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.criacaoBasicaCongelada
+import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
-import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 
@@ -70,16 +69,9 @@ fun ComplicacoesSection(
 
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
-    // ✅ NOVO: origens ativas por enquanto:
-    // BASICO sempre, SUPER só se modoSuperComplicacoes estiver ligado.
-    // No futuro, basta adicionar flags e incluir novas origens aqui.
     val origensAtivas: Set<String> = buildSet {
         add("BASICO")
         if (state.modoSuperComplicacoes) add("SUPER")
-        // Futuro:
-        // if (state.modoHorrorComplicacoes) add("HORROR")
-        // if (state.modoFantasiaComplicacoes) add("FANTASIA")
-        // if (state.modoSciFiComplicacoes) add("SCIFI")
     }
 
     val complicacoesFiltradas = listaComplicacoes.filter { comp ->

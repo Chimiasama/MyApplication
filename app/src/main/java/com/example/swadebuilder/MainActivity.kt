@@ -138,10 +138,8 @@ data class PurchasedPower(
         get() = custo
 }
 
-// ===== NOVO: Superpoderes Restritivos (pré-requisito de perícia mínima) =====
-const val MIN_RAW_RESTRITIVO = 10  // d10
+const val MIN_RAW_RESTRITIVO = 10
 
-// chave do superpoder (keyify) -> chave da perícia (keyify)
 val SUPER_PODERES_RESTRITIVOS: Map<String, String> = mapOf(
     "Superfeitiçaria".keyify() to "Ocultismo".keyify(),
     "Superciência".keyify()    to "Ciência".keyify()
@@ -257,8 +255,6 @@ class MainActivity : ComponentActivity() {
             criadorViewModel.setMultiplosAAHabilitados(MULTIPLOS_AA_HABILITADOS)
             val state = criadorViewModel.state
 
-            // ✅ cada vez que você entra em um personagem novo/carregado,
-            //    incrementamos creationSession para zerar as seções/telas.
             var creationSession by rememberSaveable { mutableIntStateOf(0) }
 
             var expInfos   by rememberSaveable(creationSession) { mutableStateOf(false) }
@@ -533,7 +529,7 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, grandesResponsabilidades ->
 
-                                    creationSession++  // ✅ zera expansões/telas para personagem novo
+                                    creationSession++
 
                                     criadorViewModel.resetStateParaNovoPersonagem(
                                         cartaSelvagem      = cartaSelvagem,
@@ -637,7 +633,6 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                                 val scope = rememberCoroutineScope()
 
                                                 IconButton(onClick = {
-                                                    // snapshot no main thread
                                                     val personagem = state.toMeuPersonagem()
 
                                                     scope.launch(Dispatchers.IO) {
@@ -759,7 +754,7 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                             )
                                             6 -> AncestralidadesDetailScreen(
                                                 state  = state,
-                                                onBack = { showAncestralidadesDetail = false }   // <<< sem mexer em ancestralidadeEmFoco
+                                                onBack = { showAncestralidadesDetail = false }
                                             )
                                             7 -> PoderesDetailScreen(
                                                 state  = state,
@@ -770,7 +765,7 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                                 highlightedName = highlightedSuperPoder,
                                                 onBack          = {
                                                     showSuperDetail = false
-                                                    expPoderes = true        // mantém a seção de superpoderes aberta ao voltar
+                                                    expPoderes = true
                                                 }
                                             )
 
@@ -788,10 +783,9 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                                 onOpenComplicacoesDetail = { showComplicacoesDetail = true },
                                                 onOpenAtributosDetail    = { showAtributosDetail    = true },
 
-                                                // NOVO: usa o nome passado pelo olhinho de ancestralidade
                                                 onOpenListaAncestralidadesDetail = { nomeAnc ->
                                                     if (nomeAnc.isNotBlank()) {
-                                                        state.ancestralidadeEmFoco = nomeAnc   // <<< grava foco
+                                                        state.ancestralidadeEmFoco = nomeAnc
                                                     }
                                                     showAncestralidadesDetail = true
                                                 },
@@ -799,26 +793,21 @@ Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
                                                 onOpenListaCompletaEquipamento = { showEquipLista    = true },
                                                 onOpenPoderesDetail            = { showPoderesDetail = true },
 
-                                                // NOVO: usa o nome passado pelo olhinho de superpoder
                                                 onOpenSuperPoderesDetail = { nomePoder ->
                                                     highlightedSuperPoder  = nomePoder
                                                     state.superPoderEmFoco = nomePoder.takeIf { it.isNotBlank() }
                                                     showSuperDetail        = true
                                                 },
 
-                                                // ✅ Informações
                                                 expInfos       = expInfos,
                                                 onToggleInfos  = { expInfos = !expInfos },
 
-                                                // ✅ NOVO — Ancestralidades
                                                 expAncs        = expAncs,
                                                 onToggleAncs   = { expAncs = !expAncs },
 
-                                                // ✅ NOVO — Complicações
                                                 expComps       = expComps,
                                                 onToggleComps  = { expComps = !expComps },
 
-                                                // ✅ NOVO — Equipamentos
                                                 expEquip       = expEquip,
                                                 onToggleEquip  = { expEquip = !expEquip },
 
@@ -944,17 +933,14 @@ fun AncestralidadesDetailScreen(
     val ancestralidadesTexto = remember { loadRawText(context, R.raw.ancestralidades) }
     val listaBlocos = remember { parseAncestralidades(ancestralidadesTexto) }
 
-    // usa foco se existir; senão, cai na ancestralidade atual da ficha
     val atual = remember(state.ancestralidade, state.ancestralidadeEmFoco) {
         (state.ancestralidadeEmFoco ?: state.ancestralidade)
             .trim()
             .uppercase()
     }
 
-    // estado de rolagem da lista
     val listState = rememberLazyListState()
 
-    // assim que abrir, rola até o título da ancestralidade em foco / atual
     LaunchedEffect(atual, listaBlocos) {
         if (atual.isNotBlank()) {
             val idxTitulo = listaBlocos.indexOfFirst { bloco ->
@@ -965,7 +951,6 @@ fun AncestralidadesDetailScreen(
             }
 
             if (idxTitulo >= 0) {
-                // +1 por causa do stickyHeader no topo
                 listState.scrollToItem(idxTitulo + 1)
             }
         }
@@ -984,7 +969,6 @@ fun AncestralidadesDetailScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            // ao voltar, limpa o foco pra não "grudar" na próxima abertura
                             state.ancestralidadeEmFoco = null
                             onBack()
                         }
@@ -1203,7 +1187,6 @@ fun VantagensDetailScreen(
 ) {
     val context = LocalContext.current
 
-    // 1) Carrega TODAS as vantagens do asset
     val todasVantagens: List<Vantagem> = remember {
         val jsonString = context.assets.open("Vantagens.json")
             .bufferedReader()
@@ -1218,13 +1201,10 @@ fun VantagensDetailScreen(
         )
     }
 
-    // 2) Filtro de grupo (mantém sua regra original)
     val listaFiltradaParaGrupo = remember(modoSupers, todasVantagens) {
         if (!modoSupers) {
-            // no “básico” mostramos todas; o filtro por origem BASICO acontece abaixo
             todasVantagens
         } else {
-            // no modo supers, remove entradas específicas do grupo (como AA e Poder)
             todasVantagens.filter { vant ->
                 vant.id != "antecedente_arcano" &&
                         !vant.requisitos.vantagensPrevias.contains("antecedente_arcano") &&
@@ -1233,7 +1213,6 @@ fun VantagensDetailScreen(
         }
     }
 
-    // 3) Constrói blocos de texto (categorias Normais = origem BASICO)
     val categoriasNormais: Map<String, List<String>> = remember(listaFiltradaParaGrupo) {
         listaFiltradaParaGrupo
             .filter { it.origem.equals("BASICO", ignoreCase = true) }
@@ -1264,7 +1243,6 @@ fun VantagensDetailScreen(
             }
     }
 
-    // 4) Constrói blocos de texto (categorias Super — somente quando modoSupers)
     val categoriasSuper: Map<String, List<String>> = remember(modoSupers) {
         if (!modoSupers) {
             emptyMap()
@@ -1295,7 +1273,6 @@ fun VantagensDetailScreen(
         }
     }
 
-    // 5) Merge de categorias, preservando seu formato (chave normalizada -> Pair(nomeExibicao, blocos))
     val todasCategorias: Map<String, Pair<String, List<String>>> = remember(
         categoriasNormais,
         categoriasSuper
@@ -1333,20 +1310,15 @@ fun VantagensDetailScreen(
         }
     }
 
-    // 6) ► MAPA título -> Vantagem para conseguirmos cruzar com o state
-    //     (o título é sempre a PRIMEIRA LINHA do bloco)
     val tituloParaVant: Map<String, Vantagem> = remember(listaFiltradaParaGrupo, modoSupers) {
         val base = mutableMapOf<String, Vantagem>()
-        // do grupo filtrado normal/super
         listaFiltradaParaGrupo.forEach { base[it.nome] = it }
-        // adiciona também as super-detalhadas (se existirem) para bater o título
         if (modoSupers) {
             AppData.superVantagensParaDetalhe.forEach { base[it.nome] = it }
         }
         base
     }
 
-    // 7) Estado visual de expansão por categoria + rolagem até destaque
     val expandedState = remember {
         mutableStateMapOf<String, Boolean>().apply {
             todasCategorias.keys.forEach { put(it, false) }
@@ -1377,7 +1349,6 @@ fun VantagensDetailScreen(
         }
     }
 
-    // 8) ► Conjuntos para cruzar com o state (já possui / pode selecionar)
     val nomesJaSelecionadas = remember(state.vantagensSelecionadas) {
         state.vantagensSelecionadas.map { it.nome }.toSet()
     }
@@ -1412,7 +1383,6 @@ fun VantagensDetailScreen(
                 val displayName = pair.first
                 val listaBlocos = pair.second
 
-                // Cabeçalho da categoria
                 item(key = "header-$cat") {
                     Row(
                         Modifier
@@ -1439,13 +1409,11 @@ fun VantagensDetailScreen(
                     }
                 }
 
-                // Itens da categoria
                 if (expandedState[cat] == true) {
                     listaBlocos.forEachIndexed { index, bloco ->
                         val linhas = bloco.lines()
                         val titulo = linhas.first()
 
-                        // ► “binding” com o state: já escolhida? requisitos ok?
                         val vant = tituloParaVant[titulo]
                         val jaTem = (titulo in nomesJaSelecionadas)
                         val requisitosOk = vant?.let { state.podeSelecionar(it) } ?: true
@@ -1456,14 +1424,13 @@ fun VantagensDetailScreen(
                                     .padding(start = 24.dp, bottom = 16.dp)
                                     .background(
                                         when {
-                                            jaTem -> Color(0x11007AFF)     // já possui → leve destaque
-                                            requisitosOk -> Color.Transparent // pode pegar
-                                            else -> Color(0x11FF0000)       // pendente → leve vermelho
+                                            jaTem -> Color(0x11007AFF)
+                                            requisitosOk -> Color.Transparent
+                                            else -> Color(0x11FF0000)
                                         }
                                     )
                                     .padding(start = 4.dp, top = 8.dp, end = 4.dp, bottom = 8.dp)
                             ) {
-                                // Linha de título + status
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Text(
                                         text = titulo,
@@ -1471,7 +1438,6 @@ fun VantagensDetailScreen(
                                         fontSize = 18.sp,
                                         modifier = Modifier.weight(1f)
                                     )
-                                    // Selo de status à direita
                                     val status = when {
                                         jaTem -> "já selecionada"
                                         requisitosOk -> "requisitos OK"
@@ -1539,7 +1505,6 @@ fun ComplicacoesDetailScreen(
 ) {
     val context = LocalContext.current
 
-    // Lê todas as complicações do JSON em assets/complicacoes.json
     val listaTodas = remember {
         val jsonString = context.assets.open("complicacoes.json")
             .bufferedReader()
@@ -1548,12 +1513,10 @@ fun ComplicacoesDetailScreen(
         parser.decodeFromString(ListSerializer(Complicacao.serializer()), jsonString)
     }
 
-    // Aplica o filtro "Super" conforme o modo selecionado na tela inicial
     val listaFiltrada = remember(mostrarSuper, listaTodas) {
         if (mostrarSuper) listaTodas else listaTodas.filter { !it.origem.equals("SUPER", true) }
     }
 
-    // ► usa o estado global para saber o que já foi escolhido
     val jaEscolhidas = state.complicacoesSelecionadas
 
     LazyColumn(
@@ -1582,7 +1545,7 @@ fun ComplicacoesDetailScreen(
         }
 
         items(listaFiltrada) { comp ->
-            val tipoSel = jaEscolhidas[comp] // "Menor", "Maior" ou null
+            val tipoSel = jaEscolhidas[comp]
             val marcado = tipoSel != null
             val sevRaw = comp.severity.trim()
             val gravidade = when (sevRaw.lowercase()) {
@@ -1598,7 +1561,6 @@ fun ComplicacoesDetailScreen(
                     .padding(vertical = 8.dp)
                     .background(if (marcado) Color(0x11007AFF) else Color.Transparent)
             ) {
-                // Linha do título
                 Text(
                     buildString {
                         append(comp.name)
@@ -1610,7 +1572,6 @@ fun ComplicacoesDetailScreen(
                     fontWeight = FontWeight.SemiBold
                 )
 
-                // Descrição (se existir)
                 if (comp.description.isNotBlank()) {
                     Spacer(Modifier.height(4.dp))
                     Text(
@@ -1635,7 +1596,6 @@ fun PericiasDetailScreen(
 ) {
     val context = LocalContext.current
 
-    // Mapa de descrições já existente (R.raw.pericias)
     val descricoes by remember {
         mutableStateOf(loadPericiasDescriptions(context, R.raw.pericias))
     }
@@ -1664,23 +1624,19 @@ fun PericiasDetailScreen(
             }
         }
 
-        // ► Usa a lista oficial (Pericia), que conversa com o CriadorState
         items(listaPericias) { per ->
-            // Chave p/ descrição
             val rawName = per.nome.removePrefix("*").trim()
             val key = "$rawName (${per.atributo})".uppercase().semAcentos()
             val desc = descricoes[key] ?: "Descrição indisponível."
 
-            // ► Estes dados vêm do state (uso REAL do state)
-            val currentRaw = state.rawTotal(per)                        // d0/d4/d6...
+            val currentRaw = state.rawTotal(per)
             val attrKey    = state.atributoBaseParaPericia(per)
             val atrRaw     = state.valoresAtributos[attrKey]!!.intValue
             val capRaw     = state.periciaCapRaw(per)
 
             val nextRaw    = if (currentRaw == 0 && per.basica) 4 else currentRaw + 2
-            val costNormal = if (nextRaw <= atrRaw) 1 else 2           // 1 até atributo, 2 acima
+            val costNormal = if (nextRaw <= atrRaw) 1 else 2
 
-            // Mínimos por vantagens (inclui opcionais)
             val minimoBasico  = state.minPericiaPorVantagem[per] ?: 0
             val minimoOpcional = state.vantagensSelecionadas
                 .flatMap { vant ->
@@ -1692,10 +1648,8 @@ fun PericiasDetailScreen(
             val minimoTotal = maxOf(minimoBasico, minimoOpcional)
             val needsMin    = (minimoTotal > 0 && currentRaw in 1 until minimoTotal)
 
-            // Pode aumentar agora (respeitando SP disponíveis, cap, etc.)
             val podeAumentar = state.pontosPericia >= costNormal && nextRaw <= capRaw
 
-            // Status amigável
             val status = buildString {
                 append(
                     when (currentRaw) {
@@ -1715,10 +1669,9 @@ fun PericiasDetailScreen(
                 }
             }
 
-            // Destaque visual
             val bg = when {
-                needsMin -> Color(0x11FF0000)         // vermelho claro
-                currentRaw > 0 || per.basica -> Color(0x11007AFF) // azul claro
+                needsMin -> Color(0x11FF0000)
+                currentRaw > 0 || per.basica -> Color(0x11007AFF)
                 else -> Color.Transparent
             }
 
@@ -1836,10 +1789,9 @@ fun EquipamentosDetailScreen(
                     val tipoOriginal = cat.tipo
                     val isSuper = cat.origem.equals("SUPER", ignoreCase = true)
 
-                    // Normaliza o rótulo exibido para o grupo
                     val labelTipo = if (isSuper) {
                         if (tipoOriginal.contains("Equipamento Supers", ignoreCase = true)) {
-                            "Superequip - Veículos"     // ← fica igual ao padrão, mas com nome claro
+                            "Superequip - Veículos"
                         } else {
                             "Superequip - $tipoOriginal"
                         }
@@ -1858,7 +1810,6 @@ fun EquipamentosDetailScreen(
                 }
         }
 
-    // --- ESTADOS DE EXPANSÃO (mantidos) ---
     val expTipo  = remember(mapa) { mapa.keys.associateWith { mutableStateOf(false) } }
     val expSub   = remember(mapa) { mapa.mapValues { (_, sub) -> sub.keys.associateWith { mutableStateOf(false) } } }
     val expSub2  = remember(mapa) {
@@ -1872,7 +1823,6 @@ fun EquipamentosDetailScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Header "Voltar"
         stickyHeader {
             Surface(color = Color.Transparent) {
                 Row(
@@ -1888,7 +1838,6 @@ fun EquipamentosDetailScreen(
             }
         }
 
-        // TIPOS
         mapa.toSortedMap(compareBy { it.lowercase() }).forEach { (tipo, subMapa) ->
             item {
                 val et = expTipo.getValue(tipo)
@@ -1909,7 +1858,6 @@ fun EquipamentosDetailScreen(
                     }
 
                     if (et.value) {
-                        // SUBTIPOS
                         subMapa.toSortedMap(compareBy { it.lowercase() }).forEach { (subtipo, sub2Mapa) ->
                             val es = expSub.getValue(tipo).getValue(subtipo)
                             Column(Modifier.padding(start = 8.dp, bottom = 8.dp)) {
@@ -1929,7 +1877,6 @@ fun EquipamentosDetailScreen(
                                 }
 
                                 if (es.value) {
-                                    // SUBSUBTIPOS
                                     sub2Mapa.toSortedMap(compareBy { it.lowercase() }).forEach { (subsub, itens) ->
                                         val ess = expSub2.getValue(tipo).getValue(subtipo).getValue(subsub)
                                         Column(Modifier.padding(start = 8.dp, bottom = 4.dp)) {
@@ -1949,11 +1896,10 @@ fun EquipamentosDetailScreen(
                                                     )
                                                 }
                                             } else {
-                                                ess.value = true // sem subsubtipo: já aberto
+                                                ess.value = true
                                             }
 
                                             if (ess.value) {
-                                                // LISTA DE ITENS (com DETALHES)
                                                 Column(
                                                     Modifier
                                                         .fillMaxWidth()
@@ -1973,8 +1919,6 @@ fun EquipamentosDetailScreen(
                                                                 eq.custo.asText()?.let { Text(it) }
                                                             }
 
-                                                            // ===== PADRONIZAÇÃO DAS LINHAS =====
-                                                            // 1) Linha de "arma" (se aplicável)
                                                             val linhaArma = listOfNotNull(
                                                                 eq.dano.asText()?.let { "Dano: $it" },
                                                                 eq.pa.asText()?.let { "PA: $it" },
@@ -1983,7 +1927,6 @@ fun EquipamentosDetailScreen(
                                                                 eq.tiros.asText()?.let { "Tiros: $it" },
                                                             ).joinToString("  •  ").takeIf { it.isNotBlank() }
 
-                                                            // 2) Linha geral (peso/força/armadura/aparar)
                                                             val linhaGeral = listOfNotNull(
                                                                 eq.peso.asText()?.let { "Peso: $it" },
                                                                 eq.forcaMin.asText()?.let { "Força mín.: $it" },
@@ -1991,7 +1934,6 @@ fun EquipamentosDetailScreen(
                                                                 eq.aparar.asText()?.let { "Aparar: $it" },
                                                             ).joinToString("  •  ").takeIf { it.isNotBlank() }
 
-                                                            // 3) Linha veículo — mesma lógica/ordem usada no superquip de veículos
                                                             val linhaVeiculo = listOfNotNull(
                                                                 eq.velMaxima.asText()?.let { "Vel. máx.: $it" },
                                                                 eq.manobrabilidade.asText()?.let { "Manobrabilidade: $it" },
@@ -2001,7 +1943,6 @@ fun EquipamentosDetailScreen(
                                                                 eq.blindagem.asText()?.let { "Blindagem: $it" },
                                                                 eq.passageiros.asText()?.let { "Passageiros: $it" },
                                                             ).joinToString("  •  ").takeIf { it.isNotBlank() }
-                                                            // ===== FIM PADRONIZAÇÃO =====
 
                                                             linhaArma?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
                                                             linhaGeral?.let { Text(it, style = MaterialTheme.typography.bodySmall) }

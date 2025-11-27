@@ -35,12 +35,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.model.EquipamentoCategoria
+import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
-import com.example.swadebuilder.model.EquipamentoItem
 import kotlinx.serialization.json.JsonPrimitive
 
-// --- modelo de filtro para equipamentos ---
 data class EquipFilter(
     val somenteAcessiveis: Boolean = false,
     val origens: Set<String> = emptySet(),
@@ -54,7 +53,6 @@ data class EquipFilter(
     fun isEmpty() = totalSelections() == 0
 }
 
-// --- diálogo rolável de filtros ---
 @Composable
 fun EquipFilterDialog(
     allOrigens: List<String>,
@@ -75,7 +73,6 @@ fun EquipFilterDialog(
                     .verticalScroll(rememberScrollState())
                     .padding(end = 8.dp)
             ) {
-                // Somente acessíveis
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         checked = current.somenteAcessiveis,
@@ -88,7 +85,6 @@ fun EquipFilterDialog(
                 }
                 Spacer(Modifier.size(8.dp))
 
-                // Origem
                 Text("Origem", fontWeight = FontWeight.Bold)
                 allOrigens.forEach { o ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -106,7 +102,6 @@ fun EquipFilterDialog(
                 }
                 Spacer(Modifier.size(8.dp))
 
-                // Tipo
                 Text("Tipo", fontWeight = FontWeight.Bold)
                 allTipos.forEach { t ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -124,7 +119,6 @@ fun EquipFilterDialog(
                 }
                 Spacer(Modifier.size(8.dp))
 
-                // Subtipo
                 Text("Subtipo", fontWeight = FontWeight.Bold)
                 allSubtipos.forEach { st ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -150,15 +144,14 @@ fun EquipFilterDialog(
     )
 }
 
-// --- seção principal de equipamentos ---
 @Composable
 fun EquipamentoSection(
     dinheiro: Int,
     pcTotal: Int,
     pcLivres: Int,
     recursosPcUsados: Int,
-    expanded: Boolean,                 // ✅ vem de fora
-    onToggle: () -> Unit,              // ✅ vem de fora
+    expanded: Boolean,
+    onToggle: () -> Unit,
     onUsarPontosBonusEmRecursos: () -> Unit,
     onDesfazerPontosBonusEmRecursos: () -> Unit,
     onListaCompletaClick: () -> Unit,
@@ -170,7 +163,6 @@ fun EquipamentoSection(
 ) {
     var expSuperequip by rememberSaveable { mutableStateOf(false) }
 
-    // estados do filtro
     var filter by remember { mutableStateOf(EquipFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
@@ -191,7 +183,6 @@ fun EquipamentoSection(
             listaCompletaText = "Lista Completa"
         )
 
-        // Botões de Pontos Bônus em Recursos
         Spacer(modifier = Modifier.size(4.dp))
         Row(
             modifier = Modifier
@@ -227,7 +218,6 @@ fun EquipamentoSection(
             )
         }
 
-        // botão de filtro
         Spacer(Modifier.size(8.dp))
         Text(
             text = if (filter.isEmpty()) "Filtrar equipamentos"
@@ -238,7 +228,6 @@ fun EquipamentoSection(
                 .clickable { showFilterDialog = true }
         )
 
-        // diálogo de filtro — agora com listas unificadas (básico + super)
         if (showFilterDialog) {
 
             val allCategoriasVisiveis = (categorias + superequipCategorias)
@@ -267,7 +256,6 @@ fun EquipamentoSection(
 
         Spacer(Modifier.padding(vertical = 4.dp))
 
-        // equipamentos já comprados
         if (equipamentosComprados.isNotEmpty()) {
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -292,7 +280,6 @@ fun EquipamentoSection(
             Spacer(Modifier.padding(vertical = 4.dp))
         }
 
-        // peso total
         val totalWeight = equipamentosComprados
             .mapNotNull {
                 (it.peso as? JsonPrimitive)?.content?.replace(",", ".")?.toFloatOrNull()
@@ -306,7 +293,6 @@ fun EquipamentoSection(
                 .padding(bottom = 8.dp)
         )
 
-        // ── agrupamento por tipo / subtipo / subsubtipo (usando BÁSICO + SUPER) ────
         val allCategorias = (categorias + superequipCategorias)
             .filterNot {
                 it.tipo.equals("Equipamento Supers", true) ||
@@ -318,7 +304,6 @@ fun EquipamentoSection(
         val expandedTipoMap = remember { tipos.associateWith { mutableStateOf(false) } }
 
         tipos.forEach { tipo ->
-            // filtro por Tipo (se houver)
             if (filter.tipos.isNotEmpty() && tipo !in filter.tipos) return@forEach
 
             val isTipoExpanded = expandedTipoMap.getValue(tipo).value
@@ -339,7 +324,6 @@ fun EquipamentoSection(
                         .verticalScroll(scroll)
                         .padding(start = 8.dp, bottom = 8.dp)
                 ) {
-                    // categorias deste tipo (básico + super), aplicando filtro de Origem
                     val catsPorTipo = allCategorias
                         .filter { it.tipo == tipo }
                         .let { list ->
@@ -351,7 +335,6 @@ fun EquipamentoSection(
                         }
                     if (catsPorTipo.isEmpty()) return@Column
 
-                    // subtipos
                     val subtipos = catsPorTipo.map { it.subtipo }.distinct()
                     val expandedSubtipoMap = remember(tipo) {
                         subtipos.associateWith { mutableStateOf(false) }
@@ -387,7 +370,6 @@ fun EquipamentoSection(
                                 }
 
                                 if (subsub.isEmpty()) {
-                                    // listagem direta
                                     catsPorSub
                                         .flatMap { it.itens }
                                         .filter { eq ->
@@ -424,7 +406,6 @@ fun EquipamentoSection(
                                             }
                                         }
                                 } else {
-                                    // com subsubtipo
                                     subsub.forEach { ss ->
                                         val isSsExpanded =
                                             expandedSubsub.getValue(ss).value
@@ -499,12 +480,10 @@ fun EquipamentoSection(
             Spacer(Modifier.padding(vertical = 4.dp))
         }
 
-        // ── Superequipamentos (flat) — mantido para compat; agora só aparece se sobrar algo não coberto acima ──
         val supCatsFiltradas = (superequipCategorias).let { list ->
             val byOrigem = if (filter.origens.isNotEmpty())
                 list.filter { (it.origem?.uppercase() ?: "") in filter.origens }
             else list
-            // se todos os tipos/supertipos já foram exibidos no agrupamento principal, essa lista ficará vazia
             byOrigem
         }
 

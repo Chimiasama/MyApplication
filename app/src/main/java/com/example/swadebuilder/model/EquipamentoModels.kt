@@ -5,9 +5,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
 @Serializable
-/**
- * Representa um item de equipamento com todas as suas propriedades
- */
 data class EquipamentoItem(
     val nome: String,
     @SerialName("custo")
@@ -33,9 +30,6 @@ data class EquipamentoItem(
 )
 
 @Serializable
-/**
- * Agrupa uma lista de EquipamentoItem em uma categoria lógica
- */
 data class EquipamentoCategoria(
     val tipo: String,
     val subtipo: String,

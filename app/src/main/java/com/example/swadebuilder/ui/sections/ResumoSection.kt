@@ -30,7 +30,6 @@ import com.example.swadebuilder.toMeuPersonagem
 @Composable
 fun SummaryContent(state: CriadorState) {
 
-    // Mantém tua lógica de template automático (não mexi)
     val flagsTemplate = remember(state) {
         listOfNotNull(
             "Carta Selvagem".takeIf { state.cartaSelvagem },
@@ -47,11 +46,9 @@ fun SummaryContent(state: CriadorState) {
         }
     }
 
-    // ✅ FONTE ÚNICA
     val personagem = state.toMeuPersonagem()
     val allLines = buildSummaryLines(personagem)
 
-    // Não duplica a seção de anotações (ela vai no campo editável)
     val anotIndex = allLines.indexOf("Anotações")
     val lines = if (anotIndex >= 0) allLines.take(anotIndex) else allLines
 
