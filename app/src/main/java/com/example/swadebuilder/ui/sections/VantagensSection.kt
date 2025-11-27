@@ -563,11 +563,17 @@ fun VantagensContent(
                 ) {
                     lista
                         // básico vs superpoderes
+                        // básico vs superpoderes
                         .filter { vant ->
-                            if (!state.modoSupers) true
-                            else vant.id != "antecedente_arcano" &&
-                                    vant.requisitos.vantagensPrevias.isEmpty()
+                            if (!state.modoSupers) {
+                                true
+                            } else {
+                                // em modo supers: some o AA "genérico" e qualquer coisa que dependa dele
+                                vant.id != "antecedente_arcano" &&
+                                        !vant.requisitos.vantagensPrevias.contains("antecedente_arcano")
+                            }
                         }
+
                         // em modo supers não mostra Superpoderes na lista comprável
                         .filter { vant ->
                             if (state.modoSupers) vant.id != "superpoderes" else true
