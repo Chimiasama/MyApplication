@@ -45,8 +45,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         limitePorPoderPadrao = this.limitePorPoderPadrao,
         limiteFavorecido = this.limiteFavorecido,
         poderFavoritoId = this.poderFavoritoId,
-        superAtributoIncs = this.superAtributoIncs.toMap(),
-        superPericiaIncs = this.superPericiaIncs.toMap(),
+        superInvestments = this.superInvestments.toList(),
         bonusPararFromPower = this.bonusPararFromPower,
         bonusResFromPower = this.bonusResFromPower,
         armorFromPower = this.armorFromPower,
@@ -180,7 +179,10 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
 
     fun calcAparar(): Int {
         val lutarRawBase = personagem.pericias["Lutar"] ?: 0
-        val lutarStepsFromSupers = personagem.superPericiaIncs["LUTAR"] ?: 0
+        val lutarStepsFromSupers = personagem.superInvestments
+            .mapNotNull { it.effect as? com.example.swadebuilder.model.PowerEffect.SuperPericia }
+            .filter { it.periciaKey.equals("Lutar", ignoreCase = true) }
+            .sumOf { it.steps }
         val lutarComSupers = applySuperStepsFrom(lutarRawBase, lutarStepsFromSupers)
 
         val base = 2 + (lutarComSupers / 2)
