@@ -5,25 +5,14 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
-import com.example.swadebuilder.PurchasedPower
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
+import com.example.swadebuilder.model.PersonagemSalvo
+import com.example.swadebuilder.model.PowerEffect
+import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.util.keyify
-
-// ---- EFEITOS POSSÍVEIS DE INVESTIMENTO DE SUPER ----
-sealed class PowerEffect {
-    data class SuperAtributo(val attrKey: String, val steps: Int) : PowerEffect()
-    data class SuperPericia(val periciaId: String, val steps: Int) : PowerEffect()
-    data class BonusArmadura(val value: Int) : PowerEffect()                 // armorFromPower += value
-    data class BonusResistencia(val value: Int) : PowerEffect()              // bonusResFromPower += value
-    data class BonusAparar(val value: Int) : PowerEffect()
-
-    data class BonusMovimentacao(val value: Int) : PowerEffect()
-    // bonusPararFromPower += value
-    data class SuperVantagem(val vantagemId: String) : PowerEffect()
-}
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -132,7 +121,7 @@ class CriadorViewModel : ViewModel() {
         // ─────────────────────────────────────────────────────────────
         // RESET COMPLETO DE SUPERS – NÃO VAZAR ENTRE PERSONAGENS
         // ─────────────────────────────────────────────────────────────
-        state.superPoderesComprados.clear()
+        state.superInvestments.clear()
         state.superNivelCampanha = null
         state.usarSemPontosDePoder = false
 
@@ -144,8 +133,6 @@ class CriadorViewModel : ViewModel() {
         state.limiteDePoderDaCampanha = Int.MAX_VALUE
 
         state.faseSupersAtiva = false
-        state.superAtributoIncs.clear()
-        state.superPericiaIncs.clear()
         state.bonusPararFromPower = 0
         state.bonusResFromPower = 0
         state.armorFromPower = 0
@@ -277,12 +264,6 @@ class CriadorViewModel : ViewModel() {
 
         state.poderFavoritoId = salvo.poderFavoritoId
 
-        state.superAtributoIncs.clear()
-        state.superAtributoIncs.putAll(salvo.superAtributoIncs)
-
-        state.superPericiaIncs.clear()
-        state.superPericiaIncs.putAll(salvo.superPericiaIncs)
-
         state.updateBonusPararFromPower(salvo.bonusPararFromPower)
         state.updateBonusResFromPower (salvo.bonusResFromPower)
         state.updateArmorFromPower    (salvo.armorFromPower)
@@ -320,17 +301,8 @@ class CriadorViewModel : ViewModel() {
             state.faseSupersAtiva      = false
         }
 
-        state.superPoderesComprados.clear()
-        salvo.superpoderesComprados.forEach { nomePoder ->
-            state.superPoderesComprados.add(
-                PurchasedPower(
-                    nome     = nomePoder,
-                    custo    = 0,
-                    baseCost = 0,
-                    poderId  = "sp_${nomePoder.keyify()}"
-                )
-            )
-        }
+        state.superInvestments.clear()
+        state.superInvestments.addAll(salvo.superInvestments)
 
         state.pontosVantagem = salvo.pontosRestantes
         state.dinheiro       = salvo.dinheiro
@@ -420,12 +392,7 @@ class CriadorViewModel : ViewModel() {
             }
 
             is PowerEffect.SuperPericia -> {
-                val k = efeito.periciaId
-                val stepsAtuais = state.superPericiaIncs[k] ?: 0
-                val stepsFinais = stepsAtuais + efeito.steps
-                if (stepsFinais < 0) {
-                    return InvestCheck(false, "Redução inválida na perícia ${efeito.periciaId}.")
-                }
+                // A lógica de steps foi removida daqui, será tratada na UI/ViewModel
             }
 
             // Armadura/Resistência: não há checagem adicional aqui,
@@ -442,6 +409,9 @@ class CriadorViewModel : ViewModel() {
                     it.id.equals(efeito.vantagemId, ignoreCase = true)
                 } ?: return InvestCheck(false, "Vantagem não encontrada: ${efeito.vantagemId}.")
 
+            is PowerEffect.Generico -> {
+                // Nenhuma validação extra necessária para poderes genéricos
+            }
                 // NÃO permitir comprar de novo se já tiver a vantagem de qualquer forma
                 if (state.vantagensSelecionadas.any { it.id == vant.id }) {
                     return InvestCheck(false, "Você já possui a vantagem ${vant.nome}.")
@@ -479,10 +449,6 @@ class CriadorViewModel : ViewModel() {
             is PowerEffect.SuperAtributo -> {
                 val key = efeito.attrKey.uppercase().trim()
 
-                // (a) steps acumulados
-                val atualSteps = state.superAtributoIncs[key] ?: 0
-                state.superAtributoIncs[key] = (atualSteps + efeito.steps).coerceAtLeast(0)
-
                 // (b) refletir imediatamente no atributo visível:
                 // +2 por step até d12; +1 por step acima de d12.
                 val holder = state.valoresAtributos[key]
@@ -500,15 +466,9 @@ class CriadorViewModel : ViewModel() {
             }
 
             is PowerEffect.SuperPericia -> {
-                val k = efeito.periciaId
-                val pericia = listaPericias.firstOrNull { it.nome.keyify() == k.keyify() }
-                if (pericia != null) {
-                    val antes = state.rawTotal(pericia)
-                    val atual = state.superPericiaIncs[k] ?: 0
-                    state.superPericiaIncs[k] = (atual + efeito.steps).coerceAtLeast(0)
-                    val depois = state.rawTotal(pericia)
-                    _feedbackMessages.add("Perícia ${pericia.nome} aumentada de d$antes para d$depois.")
-                }
+                // O efeito visual é agora derivado da lista de investimentos,
+                // então não é mais necessário aplicar diretamente aqui.
+                // A atualização da UI será automática.
             }
 
             is PowerEffect.BonusArmadura -> {
@@ -539,6 +499,10 @@ class CriadorViewModel : ViewModel() {
                     _feedbackMessages.add("Vantagem ${v.nome} adicionada.")
                 }
             }
+
+            is PowerEffect.Generico -> {
+                _feedbackMessages.add("${efeito.nome} adquirido.")
+            }
         }
 
         // 3) derivados de perícia / etc.
@@ -551,8 +515,8 @@ class CriadorViewModel : ViewModel() {
 
     // ===== NOVO: bloqueio de remoção de Superperícia ligada a superpoderes restritivos =====
     private fun motivoBloqueioRemocaoSuperPericia(perKey: String, rawDepois: Int): String? {
-        val temFeiticaria = state.superPoderesComprados.any { it.nome.keyify() == "SUPERFEITICARIA" }
-        val temCiencia    = state.superPoderesComprados.any { it.nome.keyify() == "SUPERCIENCIA" }
+        val temFeiticaria = state.superInvestments.any { it.displayName.keyify() == "SUPERFEITICARIA" }
+        val temCiencia    = state.superInvestments.any { it.displayName.keyify() == "SUPERCIENCIA" }
 
         if (temFeiticaria && perKey == "OCULTISMO" && rawDepois < 10) {
             return "Primeiro remova o superpoder Superfeitiçaria."
@@ -574,9 +538,6 @@ class CriadorViewModel : ViewModel() {
         when (efeito) {
             is PowerEffect.SuperAtributo -> {
                 val key = efeito.attrKey.uppercase().trim()
-                val atual = state.superAtributoIncs[key] ?: 0
-                state.superAtributoIncs[key] = (atual - efeito.steps).coerceAtLeast(0)
-                if (state.superAtributoIncs[key] == 0) state.superAtributoIncs.remove(key)
 
                 // espelha a aplicação: -1 por step se > d12; -2 por step quando <= d12
                 val holder = state.valoresAtributos[key]
@@ -594,32 +555,22 @@ class CriadorViewModel : ViewModel() {
             }
 
             is PowerEffect.SuperPericia -> {
-                val k = efeito.periciaId
-                val stepsToRemove = efeito.steps.coerceAtLeast(0)
-
-                // 0) Simula quanto a perícia ficaria após remover esses steps
-                val perObj = listaPericias.firstOrNull { it.nome.keyify() == k.keyify() }
-                if (perObj != null && stepsToRemove > 0) {
-                    val antes = state.rawTotal(perObj)
-                    val baseRaw       = state.rawTotal(perObj)
-                    val stepsAtuais   = state.superPericiaIncs[k] ?: 0
-                    val stepsDepois   = (stepsAtuais - stepsToRemove).coerceAtLeast(0)
-                    val rawDepois     = state.applySuperStepsFrom(baseRaw, stepsDepois)
+                val perObj = listaPericias.firstOrNull { it.nome.keyify() == efeito.periciaKey.keyify() }
+                if (perObj != null) {
+                    val baseRaw = state.rawTotal(perObj)
+                    val incsAtuais = state.superInvestments
+                        .mapNotNull { it.effect as? PowerEffect.SuperPericia }
+                        .filter { it.periciaKey.equals(perObj.nome, ignoreCase = true) }
+                        .sumOf { it.steps }
+                    val incsDepois = (incsAtuais - efeito.steps).coerceAtLeast(0)
+                    val rawDepois = state.applySuperStepsFrom(baseRaw, incsDepois)
 
                     val perKey = perObj.nome.keyify()
                     val bloqueio = motivoBloqueioRemocaoSuperPericia(perKey, rawDepois)
                     if (bloqueio != null) {
-                        // Não desfaz no ledger, não altera nada
                         return InvestResult(false, bloqueio)
                     }
-                    val depois = state.rawTotal(perObj)
-                    _feedbackMessages.add("Perícia ${perObj.nome} reduzida de d$antes para d$depois.")
                 }
-
-                // 1) Se passou, desfaz normalmente
-                val atual = state.superPericiaIncs[k] ?: 0
-                state.superPericiaIncs[k] = (atual - efeito.steps).coerceAtLeast(0)
-                if (state.superPericiaIncs[k] == 0) state.superPericiaIncs.remove(k)
             }
 
             is PowerEffect.BonusArmadura -> {
@@ -652,6 +603,9 @@ class CriadorViewModel : ViewModel() {
                     _feedbackMessages.add("Vantagem ${v.nome} removida.")
                 }
             }
+            is PowerEffect.Generico -> {
+                _feedbackMessages.add("${efeito.nome} removido.")
+            }
         }
 
         // Atualiza apenas derivados que dependem de supers / perícias
@@ -665,17 +619,32 @@ class CriadorViewModel : ViewModel() {
      * Função genérica "façade" para a UI: tenta investir e retorna mensagem pronta.
      * Use um poderId estável por alvo (ex.: "sp_pericia_LUTAR", "sp_attr_FORCA", "sp_armor").
      */
-    fun tentarInvestirSuper(poderId: String, custo: Int, efeito: PowerEffect): InvestResult {
-        val check = canInvestInPower(poderId = poderId, custo = custo, efeito = efeito)
+    fun tentarInvestirSuper(investment: SuperInvestment): InvestResult {
+        val check = canInvestInPower(
+            poderId = investment.powerId,
+            custo = investment.cost,
+            efeito = investment.effect
+        )
         if (!check.ok) {
             return InvestResult(false, check.motivoBloqueio ?: "Não foi possível investir.")
         }
-        return applyPowerInvestment(poderId = poderId, custo = custo, efeito = efeito)
+
+        // Adiciona o investimento à lista principal do estado
+        state.superInvestments.add(investment)
+
+        return applyPowerInvestment(
+            poderId = investment.powerId,
+            custo = investment.cost,
+            efeito = investment.effect
+        )
     }
 
     /** Façade para desfazer o investimento feito. */
-    fun desfazerInvestimentoSuper(poderId: String, custo: Int, efeito: PowerEffect): InvestResult {
-        return revertPowerInvestment(poderId = poderId, custo = custo, efeito = efeito)
+    fun desfazerInvestimentoSuper(investment: SuperInvestment): InvestResult {
+        return revertPowerInvestment(
+            poderId = investment.powerId,
+            custo = investment.cost,
+            efeito = investment.effect
+        )
     }
-
 }

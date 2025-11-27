@@ -58,7 +58,7 @@ fun AtributosContent(
     val density = LocalDensity.current
     val measureStyle = MaterialTheme.typography.bodyLarge
 
-    val valorColWidthDp = androidx.compose.runtime.remember(state.superAtributoIncs, measureStyle) {
+    val valorColWidthDp = androidx.compose.runtime.remember(state.superInvestments, measureStyle) {
         val samples = listaAtributos.map { nome ->
             state.atributoRawComSupers(nome).toDiceString()
         }
