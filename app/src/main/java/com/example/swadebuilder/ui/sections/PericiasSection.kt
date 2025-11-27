@@ -58,7 +58,8 @@ import kotlin.math.max
 @Composable
 fun PericiasContent(
     state: CriadorState,
-    onOpenPericiasDetail: () -> Unit
+    onOpenPericiasDetail: () -> Unit,
+    feedbackMessages: MutableList<String>
 ) {
     val locked = state.criacaoBasicaCongelada
 
@@ -139,7 +140,7 @@ fun PericiasContent(
                                 state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
                                 state.pontosComplicacaoGastos =
                                     (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                                state.syncFromCPRefund(sp = true)
+                                state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
                             },
                             enabled = podeDesfazerPc
                         ) {

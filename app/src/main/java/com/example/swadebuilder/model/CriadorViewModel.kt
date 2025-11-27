@@ -162,14 +162,14 @@ class CriadorViewModel : ViewModel() {
         state.emProgresso = false
 
         state.valoresAtributos.forEach { (_, holder) -> holder.intValue = 4 }
-        state.recalcularPontosAtributo()
+        state.recalcularPontosAtributo(_feedbackMessages)
 
         listaPericias.forEach { per ->
             state.baseIncsPorPericia[per] = 0
             state.spCostStackPorPericia.getValue(per).clear()
             state.compCostStackPorPericia[per]?.clear()
         }
-        state.rebuildAllPericiaStacks()
+        state.rebuildAllPericiaStacks(_feedbackMessages)
 
         state.pontosVantagem =
             if (state.vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" }) 1 else 0
@@ -339,8 +339,8 @@ class CriadorViewModel : ViewModel() {
         state.especializacoesPorPericia.clear()
         state.especializacoesPorPericia.putAll(salvo.especializacoesPorPericia)
 
-        state.recalcularPontosAtributo()
-        state.rebuildAllPericiaStacks()
+        state.recalcularPontosAtributo(_feedbackMessages)
+        state.rebuildAllPericiaStacks(_feedbackMessages)
         normalizeArcanoIdsNoCarregamento()
         if (state.modoSupers) {
             listaVantagens.firstOrNull { it.id == "superpoderes" }?.let { sp ->
@@ -542,7 +542,7 @@ class CriadorViewModel : ViewModel() {
         }
 
         // 3) derivados de perícia / etc.
-        state.rebuildAllPericiaStacks(_feedbackMessages)
+        state.rebuildAllPericiaStacks()
         // IMPORTANTE: NÃO recalcular atributos básicos aqui,
         // para não “somar de novo” os supers nem mexer na etapa de criação com PAs.
 
@@ -655,7 +655,7 @@ class CriadorViewModel : ViewModel() {
         }
 
         // Atualiza apenas derivados que dependem de supers / perícias
-        state.rebuildAllPericiaStacks(_feedbackMessages)
+        state.rebuildAllPericiaStacks()
         // De novo: nada de recalcular atributos de criação aqui.
 
         return InvestResult(true, "Investimento revertido.")

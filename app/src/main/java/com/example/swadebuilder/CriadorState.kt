@@ -1318,7 +1318,7 @@ class CriadorState {
         return (5 + cpPaStack.size - jovemMalusPa) - usados
     }
 
-    fun recalcularPontosAtributo(feedbackMessages: MutableList<String>? = null) {
+    fun recalcularPontosAtributo(feedbackMessages: MutableList<String> = mutableListOf()) {
 
         pontosAtributo = calcularPontosAtributoRestantes()
 
@@ -1327,7 +1327,7 @@ class CriadorState {
         rebuildAllPericiaStacks(feedbackMessages)
     }
 
-    private fun trimAttributeStacks(feedbackMessages: MutableList<String>? = null) {
+    private fun trimAttributeStacks(feedbackMessages: MutableList<String> = mutableListOf()) {
 
         while (pontosAtributo < 0) {
             val entry = paCostStackPorAtributo
@@ -1416,7 +1416,7 @@ class CriadorState {
         return raw
     }
 
-    fun rebuildAllPericiaStacks(feedbackMessages: MutableList<String>? = null) {
+    fun rebuildAllPericiaStacks(feedbackMessages: MutableList<String> = mutableListOf()) {
         var cumulativeCost = 0
         val pool = totalSpPool
 
