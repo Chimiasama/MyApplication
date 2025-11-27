@@ -270,6 +270,7 @@ class MainActivity : ComponentActivity() {
             var showPoderesDetail         by rememberSaveable(creationSession) { mutableStateOf(false) }
             var showEquipLista            by rememberSaveable(creationSession) { mutableStateOf(false) }
             var showSuperDetail           by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var showProgressoScreen       by rememberSaveable(creationSession) { mutableStateOf(false) }
 
             var highlightedVantagem   by rememberSaveable(creationSession) { mutableStateOf("") }
             var highlightedSuperPoder by rememberSaveable(creationSession) { mutableStateOf("") }
@@ -309,7 +310,8 @@ class MainActivity : ComponentActivity() {
                             showAncestralidadesDetail ||
                             showPoderesDetail ||
                             showEquipLista ||
-                            showSuperDetail
+                            showSuperDetail ||
+                            showProgressoScreen
                     )
 
             BackHandler(enabled = mostrouTelaInicial) {
@@ -421,6 +423,7 @@ class MainActivity : ComponentActivity() {
                                         || showPoderesDetail
                                         || showEquipLista
                                         || showSuperDetail
+                                        || showProgressoScreen
                             ) {
                                 showVantagensDetail       = false
                                 showPericiasDetail        = false
@@ -430,6 +433,7 @@ class MainActivity : ComponentActivity() {
                                 showPoderesDetail         = false
                                 showEquipLista            = false
                                 showSuperDetail           = false
+                                showProgressoScreen       = false
                             }
                             BackHandler(
                                 enabled = !(
@@ -441,6 +445,7 @@ class MainActivity : ComponentActivity() {
                                                 || showPoderesDetail
                                                 || showEquipLista
                                                 || showSuperDetail
+                                                || showProgressoScreen
                                         )
                             ) {
                                 mostrouTelaInicial = true
@@ -575,6 +580,7 @@ class MainActivity : ComponentActivity() {
                                         showAncestralidadesDetail -> 6
                                         showPoderesDetail         -> 7
                                         showSuperDetail           -> 8
+                                        showProgressoScreen       -> 9
                                         else                      -> 0
                                     }
 
@@ -620,6 +626,7 @@ class MainActivity : ComponentActivity() {
                                                     expPoderes = true
                                                 }
                                             )
+                                            9 -> TelaProgresso()
 
                                             else -> UnifiedScreen(
                                                 state = state,
@@ -650,6 +657,8 @@ class MainActivity : ComponentActivity() {
                                                     state.superPoderEmFoco = nomePoder.takeIf { it.isNotBlank() }
                                                     showSuperDetail        = true
                                                 },
+
+                                                onNavigateToProgresso = { showProgressoScreen = true },
 
                                                 expInfos       = expInfos,
                                                 onToggleInfos  = { expInfos = !expInfos },

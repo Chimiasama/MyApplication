@@ -48,6 +48,9 @@ import com.example.swadebuilder.ui.sections.VantagensContent
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
+import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.fillMaxWidth
+
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Preview(showBackground = true)
@@ -68,6 +71,7 @@ fun PreviewApp() {
         onOpenListaCompletaEquipamento = {},
         onOpenPoderesDetail = {},
         onOpenSuperPoderesDetail = { _ -> },
+        onNavigateToProgresso = {},
 
         expInfos = true,
         onToggleInfos = {},
@@ -112,6 +116,7 @@ fun UnifiedScreen(
     onOpenListaCompletaEquipamento: () -> Unit,
     onOpenPoderesDetail: () -> Unit,
     onOpenSuperPoderesDetail: (String) -> Unit,
+    onNavigateToProgresso: () -> Unit,
 
     // ✅ expansões hoistadas
     expInfos: Boolean,
@@ -339,6 +344,16 @@ fun UnifiedScreen(
             icon     = Icons.Default.Description
         ) {
             SummaryContent(state)
+        }
+
+        if (state.emProgresso) {
+            Spacer(Modifier.height(16.dp))
+            Button(
+                onClick = onNavigateToProgresso,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Ir para a Tela de Progressão")
+            }
         }
     }
 
