@@ -314,7 +314,7 @@ class MainActivity : ComponentActivity() {
                             showProgressoScreen
                     )
 
-            BackHandler(enabled = mostrouTelaInicial) {
+            BackHandler(enabled = emTelaDePreenchimento && !mostrouTelaInicial) {
                 showExitDialog = true
             }
 
