@@ -66,7 +66,8 @@ fun TelaInicial(
         heroisSemArmadura: Boolean,
         expecializacaoPer: Boolean,
         semPontosDePoder: Boolean,
-        grandesResponsabilidades: Boolean
+        grandesResponsabilidades: Boolean,
+        showHelpMessages: Boolean
     ) -> Unit,
     onLoad: (PersonagemSalvo) -> Unit,
     context: Context,
@@ -101,6 +102,7 @@ fun TelaInicial(
     var optMultiplosIdiomas by rememberSaveable { mutableStateOf(false) }
     var optNasceUmHeroi by rememberSaveable { mutableStateOf(false) }
     var optSemPontosPoder by rememberSaveable { mutableStateOf(false) }
+    var optShowHelpMessages by rememberSaveable { mutableStateOf(false) }
 
     // Super
     var expSuper by rememberSaveable { mutableStateOf(false) }
@@ -366,6 +368,17 @@ Feito por Rafael S.W.
                             Spacer(Modifier.width(8.dp))
                             Text("Sem pontos de Poder")
                         }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { optShowHelpMessages = !optShowHelpMessages }
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Checkbox(checked = optShowHelpMessages, onCheckedChange = { optShowHelpMessages = it })
+                            Spacer(Modifier.width(8.dp))
+                            Text("Mostrar mensagens de auxílio")
+                        }
                     }
 
                     Spacer(Modifier.height(16.dp))
@@ -514,7 +527,8 @@ Feito por Rafael S.W.
                         optHeroiSemArmadura,
                         optEspecializacaoPer,
                         optSemPontosPoder,
-                        optGrandesResponsabilidades
+                        optGrandesResponsabilidades,
+                        optShowHelpMessages
                     )
 
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
