@@ -630,11 +630,6 @@ class MainActivity : ComponentActivity() {
                                                 state = state,
                                                 viewModel = criadorViewModel,
                                                 onBack = { showProgressoScreen = false },
-                                                onOpenVantagensDetail = { nomeVantagem ->
-                                                    highlightedVantagem      = nomeVantagem
-                                                    state.vantagemEmFoco     = nomeVantagem
-                                                    showVantagensDetail      = true
-                                                },
                                                 onOpenPericiasDetail = { showPericiasDetail = true },
                                                 onOpenComplicacoesDetail = { showComplicacoesDetail = true },
                                                 onOpenAtributosDetail = { showAtributosDetail = true },
@@ -654,8 +649,6 @@ class MainActivity : ComponentActivity() {
                                                 equipamentoCategorias = equipamentoCategorias,
                                                 superequipCategorias = superequipCategorias,
                                                 listaSuperPoderes = listaSuperPoderes,
-                                                expInfos = expInfos,
-                                                onToggleInfos = { expInfos = !expInfos },
                                                 expAncs = expAncs,
                                                 onToggleAncs = { expAncs = !expAncs },
                                                 expComps = expComps,

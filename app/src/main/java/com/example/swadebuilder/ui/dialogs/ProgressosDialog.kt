@@ -196,10 +196,6 @@ fun ProgressosDialog(
                 Text("XP neste estágio: $spentHere / $stageCap")
                 Spacer(Modifier.height(16.dp))
 
-                RadioButtonRow("Comprar Vantagem", escolheu == "Comprar Vantagem") {
-                    escolheu = "Comprar Vantagem"
-                }
-
                 RadioButtonRow("Perícia ≥ Atributo", escolheu == "PericiaAlta") {
                     escolheu = "PericiaAlta"
                 }
@@ -583,16 +579,6 @@ fun ProgressosDialog(
             TextButton(
                 onClick = {
                     when (escolheu) {
-                        "Comprar Vantagem" -> {
-                            state.grantVantagemPointFromXp(est.nome)
-                            Toast.makeText(
-                                context,
-                                "Recebeu um PV, utilize para poder continuar a distribuir seu progresso.",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            onDismiss()
-                            return@TextButton
-                        }
                         "PericiaAlta" -> {
                             state.spendProgressAcrossStages(1)
                             perAltaSelected?.let { per ->
