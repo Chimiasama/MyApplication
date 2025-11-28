@@ -952,6 +952,8 @@ private fun AdvantageSelectorDialog(
         reqIdx <= stageIndex
     }
 
+    val idParaNome = remember { listaVantagens.associate { it.id to it.nome } }
+
     AlertDialog(
         onDismissRequest = {
             seletorAtual.value = null
@@ -965,9 +967,10 @@ private fun AdvantageSelectorDialog(
                     .heightIn(max = 420.dp)
             ) {
                 items(candidatas) { vant ->
-                    val atendeRequisitos = strictRequirementsOk(state, vant, stageIndex)
-                    val podeSelecionar = state.podeSelecionar(vant) && atendeRequisitos
-                    val requisitos = formatarRequisitos(vant)
+                    val atendeRequisitos = withOverrideStage(state, stageInfo.descriptor.estagio.nome) {
+                        state.podeSelecionar(vant)
+                    } && strictRequirementsOk(state, vant, stageIndex)
+                    val requisitos = formatarRequisitos(vant, idParaNome)
 
                     val rawNivel = vant.nivel?.trim()
                     val chaveNivel = when {
@@ -978,7 +981,7 @@ private fun AdvantageSelectorDialog(
                     val estReq = nivelParaEstagio[chaveNivel] ?: nivelParaEstagio.getValue("N")
 
                     val temRecursos = progressDisponivel > 0 && creditosStage > 0
-                    val habilitado = podeSelecionar && temRecursos
+                    val habilitado = atendeRequisitos && temRecursos
 
                     Column(
                         modifier = Modifier
@@ -1007,19 +1010,23 @@ private fun AdvantageSelectorDialog(
                                 // Aqui seguimos o mesmo padrão do diálogo original:
                                 // convertemos 1 progresso em 1 PV reservado para comprar vantagem.
                                 state.grantVantagemPointFromXp(stageInfo.descriptor.estagio.nome)
+                                state.vantagemEmFoco = vant.nome
 
                                 slotState[alvo.stageCode]?.set(
                                     alvo.slotIndex,
                                     SlotChoice(
                                         tipo = SlotTipo.VANTAGEM,
                                         descricao = "PV reservado: ${vant.nome}",
-                                        atende = podeSelecionar,
+                                        atende = atendeRequisitos,
                                         detalhes = buildString {
-                                            append(requisitos.ifBlank { "Sem requisitos declarados" })
+                                            append(
+                                                requisitos.joinToString(" • ")
+                                                    .ifBlank { "Sem requisitos declarados" }
+                                            )
                                             if (vant.requiresChoice) {
                                                 append(" — requer escolha específica fora deste seletor")
                                             }
-                                            if (!podeSelecionar) {
+                                            if (!atendeRequisitos) {
                                                 append(" — requisitos não atendidos pelo estado atual")
                                             }
                                             append(". PV destacado do estágio ${stageInfo.descriptor.codigo}.")
@@ -1043,11 +1050,8 @@ private fun AdvantageSelectorDialog(
                             text = "Estágio mínimo: ${estReq.nome}",
                             style = MaterialTheme.typography.bodySmall
                         )
-                        if (requisitos.isNotBlank()) {
-                            Text(
-                                requisitos,
-                                style = MaterialTheme.typography.bodySmall
-                            )
+                        requisitos.forEach { req ->
+                            Text("• $req", style = MaterialTheme.typography.bodySmall)
                         }
                         if (!atendeRequisitos) {
                             Text(
@@ -1435,7 +1439,7 @@ private fun SkillSelectorDialog(
     )
 }
 
-private fun formatarRequisitos(v: Vantagem): String {
+private fun formatarRequisitos(v: Vantagem, idParaNome: Map<String, String>): List<String> {
     val partes = mutableListOf<String>()
 
     // NÃO colocamos mais "Estágio mínimo" aqui — isso já é exibido separado no diálogo
@@ -1456,12 +1460,32 @@ private fun formatarRequisitos(v: Vantagem): String {
             .joinToString { (nome, min) -> "$nome ${min.toDiceString()}" }
     }
     if (v.requisitos.vantagensPrevias.isNotEmpty()) {
-        partes += "Vantagens prévias: ${v.requisitos.vantagensPrevias.joinToString()}"
+        val legiveis = v.requisitos.vantagensPrevias.map { prevId ->
+            idParaNome[prevId] ?: prevId.replace('_', ' ').uppercase()
+        }
+        partes += "Vantagens prévias: ${legiveis.joinToString()}"
+    }
+    if (v.requisitos.exigeCS) {
+        partes += "Requer Carta Selvagem"
     }
     if (v.requisitos.observacoes.isNotBlank()) {
         partes += v.requisitos.observacoes
     }
-    return partes.joinToString(separator = " • ")
+    return partes
+}
+
+private inline fun <T> withOverrideStage(
+    state: CriadorState,
+    stageName: String,
+    block: () -> T
+): T {
+    val previous = state.overrideStageForVantagem
+    state.overrideStageForVantagem = stageName
+    return try {
+        block()
+    } finally {
+        state.overrideStageForVantagem = previous
+    }
 }
 
 private fun strictRequirementsOk(state: CriadorState, v: Vantagem, estIndex: Int): Boolean {
