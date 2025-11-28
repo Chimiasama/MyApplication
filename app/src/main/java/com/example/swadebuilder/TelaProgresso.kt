@@ -593,6 +593,7 @@ private fun criarProgressosPorEstagioState(): MutableMap<String, SnapshotStateLi
 }
 
 @Composable
+@Composable
 private fun StageProgressPrototype(
     state: CriadorState,
     slotState: MutableMap<String, SnapshotStateList<SlotChoice>>,
