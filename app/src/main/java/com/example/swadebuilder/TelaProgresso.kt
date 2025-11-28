@@ -368,7 +368,8 @@ fun TelaProgresso(
         slotState = progressSlotState,
         slotAlvo = slotAlvo,
         seletorAtual = seletorAtual,
-        reservasCompMaior = reservasCompMaior
+        reservasCompMaior = reservasCompMaior,
+        pendingAdvantageChoice = pendingAdvantageChoice
     )
 }
 
@@ -1079,7 +1080,8 @@ private fun AdvantageSelectorDialog(
     slotState: MutableMap<String, SnapshotStateList<SlotChoice>>,
     slotAlvo: MutableState<SlotContext?>,
     seletorAtual: MutableState<SelectorMode?>,
-    reservasCompMaior: MutableState<Int>
+    reservasCompMaior: MutableState<Int>,
+    pendingAdvantageChoice: MutableState<Vantagem?>
 ) {
     if (seletorAtual.value != SelectorMode.Advantage) return
     val alvo = slotAlvo.value ?: return
@@ -1187,7 +1189,7 @@ private fun AdvantageSelectorDialog(
 
                                 seletorAtual.value = null
                                 slotAlvo.value = null
-                            }
+                            }}
                             .padding(vertical = 8.dp, horizontal = 4.dp)
                     ) {
                         Text(
