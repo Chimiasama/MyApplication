@@ -1128,7 +1128,7 @@ private fun AdvantageSelectorDialog(
                 items(candidatas) { vant ->
                     val atendeRequisitos = withOverrideStage(state, stageInfo.descriptor.estagio.nome) {
                         state.podeSelecionar(vant)
-                    } && strictRequirementsOk(state, vant, stageIndex)
+                    }
                     val requisitos = formatarRequisitos(vant, idParaNome)
 
                     val rawNivel = vant.nivel?.trim()
@@ -1591,38 +1591,45 @@ private fun SkillSelectorDialog(
 }
 
 private fun formatarRequisitos(v: Vantagem, idParaNome: Map<String, String>): List<String> {
-    val partes = mutableListOf<String>()
+    return buildList {
+        listaDeEstagios.firstOrNull {
+            it.nome.equals(v.requisitos.estagio, true)
+        }?.let { add("Estágio Mínimo: ${it.nome}") }
 
-    // NÃO colocamos mais "Estágio mínimo" aqui — isso já é exibido separado no diálogo
-
-    if (v.requisitos.atributoMin.isNotEmpty()) {
-        partes += "Atributos: " + v.requisitos.atributoMin
-            .entries
-            .joinToString { (nome, min) -> "$nome ${min.toDiceString()}" }
-    }
-    if (v.requisitos.periciaMin.isNotEmpty()) {
-        partes += "Perícias: " + v.requisitos.periciaMin
-            .entries
-            .joinToString { (nome, min) -> "$nome ${min.toDiceString()}" }
-    }
-    if (v.requisitos.periciaMinOpcional.isNotEmpty()) {
-        partes += "Perícias (opcional): " + v.requisitos.periciaMinOpcional
-            .entries
-            .joinToString { (nome, min) -> "$nome ${min.toDiceString()}" }
-    }
-    if (v.requisitos.vantagensPrevias.isNotEmpty()) {
-        val legiveis = v.requisitos.vantagensPrevias.map { prevId ->
-            idParaNome[prevId] ?: prevId.replace('_', ' ').uppercase()
+        if (v.requisitos.atributoMin.isNotEmpty()) {
+            add("Atributos: " + v.requisitos.atributoMin.entries.joinToString { (a, m) ->
+                "${a.replaceFirstChar { it.uppercase() }} d$m"
+            })
         }
-        partes += "Vantagens prévias: ${legiveis.joinToString()}"
+        if (v.requisitos.periciaMin.isNotEmpty()) {
+            add("Perícias: " + v.requisitos.periciaMin.entries.joinToString { (p, m) ->
+                "$p d$m"
+            })
+        }
+
+        if (v.requisitos.periciaMinOpcional.isNotEmpty()) {
+            add(
+                "Perícias (uma de): " + v.requisitos.periciaMinOpcional.entries.joinToString(" ou ") {
+                    "${it.key} d${it.value}"
+                }
+            )
+        }
+
+        if (v.requisitos.vantagensPrevias.isNotEmpty()) {
+            val legiveis = v.requisitos.vantagensPrevias.map { prevId ->
+                idParaNome[prevId] ?: prevId.replace('_', ' ').uppercase()
+            }
+            add("Vantagens Prévias: ${legiveis.joinToString()}")
+        }
+
+        if (v.requisitos.exigeCS) {
+            add("Requer Carta Selvagem")
+        }
+
+        if (v.requisitos.observacoes.isNotBlank()) {
+            add(v.requisitos.observacoes)
+        }
     }
-    if (v.requisitos.exigeCS) {
-        partes += "Requer Carta Selvagem"
-    }
-    if (v.requisitos.observacoes.isNotBlank()) {
-        partes += v.requisitos.observacoes
-    }
-    return partes
 }
 
 private inline fun <T> withOverrideStage(
@@ -1639,72 +1646,6 @@ private inline fun <T> withOverrideStage(
     }
 }
 
-private fun strictRequirementsOk(state: CriadorState, v: Vantagem, estIndex: Int): Boolean {
-    // estágio mínimo
-    val reqEstBruto = v.requisitos.estagio
-    val reqEst = reqEstBruto?.trim().orEmpty()
-    if (reqEst.isNotEmpty()) {
-        val reqIdx = listaDeEstagios.indexOfFirst {
-            it.nome.equals(reqEst, ignoreCase = true)
-        }
-        if (reqIdx != -1 && reqIdx > estIndex) return false
-    }
-
-    // atributos mínimos
-    if (v.requisitos.atributoMin.any { (nome, min) ->
-            val chaveNorm = nome.uppercase().semAcentos().trim()
-            val valor = state.valoresAtributos[chaveNorm]?.intValue
-            valor == null || valor < min
-        }
-    ) return false
-
-    // perícias mínimas (obrigatórias)
-    val perMin = v.requisitos.periciaMin
-    if (perMin.isNotEmpty()) {
-        if (v.vinculadoPericia) {
-            // basta uma das perícias bater o mínimo
-            val atendeUma = perMin.any { (perNome, minRaw) ->
-                val per = listaPericias.firstOrNull { it.nome.equals(perNome, ignoreCase = true) }
-                per != null && state.rawTotal(per) >= minRaw
-            }
-            if (!atendeUma) return false
-        } else {
-            // todas as declaradas devem atender
-            val falhaAlguma = perMin.any { (perNome, minRaw) ->
-                val per = listaPericias.firstOrNull { it.nome.equals(perNome, ignoreCase = true) }
-                    ?: return@any true
-                state.rawTotal(per) < minRaw
-            }
-            if (falhaAlguma) return false
-        }
-    }
-
-    // perícias mínimas opcionais
-    val perMinOpc = v.requisitos.periciaMinOpcional
-    if (perMinOpc.isNotEmpty()) {
-        val ok = perMinOpc.any { (perNome, minRaw) ->
-            val per = listaPericias.firstOrNull { it.nome.equals(perNome, ignoreCase = true) }
-            per != null && state.rawTotal(per) >= minRaw
-        }
-        if (!ok) return false
-    }
-
-    // vantagens prévias
-    if (v.requisitos.vantagensPrevias.isNotEmpty()) {
-        val tenhoTodas = v.requisitos.vantagensPrevias.all { req ->
-            val reqNorm = req.uppercase().semAcentos().trim()
-            state.vantagensSelecionadas.any {
-                it.nome.uppercase().semAcentos().trim() == reqNorm
-            }
-        }
-        if (!tenhoTodas) return false
-    }
-
-    // carta selvagem, se exigir
-    if (v.requisitos.exigeCS && !state.cartaSelvagem) return false
-
-    return true
-}
 
 private fun reverterSlotChoice(
     state: CriadorState,
