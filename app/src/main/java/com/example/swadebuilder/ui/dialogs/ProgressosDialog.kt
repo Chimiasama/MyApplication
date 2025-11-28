@@ -20,6 +20,7 @@ import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.RadioButton
@@ -42,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
@@ -811,22 +813,28 @@ fun ProgressosDialog(
         val estSel   = listaDeEstagios[estIndex]
         val prevStageSpent = state.stageXpSpent.getValue(estSel.nome)
 
+        val idParaNome = remember { listaVantagens.associate { it.id to it.nome } }
+
         val candidatas = buildList {
             listaVantagens.forEach { v ->
-                val podeAgora = state.podeSelecionar(v)
-                val strictOk  = strictRequirementsOk(v, estIndex)
+                val reqEst = v.requisitos.estagio
+                val reqIdx = listaDeEstagios.indexOfFirst { it.nome.equals(reqEst, ignoreCase = true) }
+
+                val stageCompatible = (reqIdx == -1 || reqIdx <= estIndex)
+
                 val qtdJaTem = state.vantagensSelecionadas.count { it.nome.equals(v.nome, ignoreCase = true) }
-                val repeticaoOk = when (val maxEff = maxEffectiveSelections(v)) { null -> true; else -> qtdJaTem < maxEff }
-                val stageOk = v.requisitos.estagio.let { req ->
-                    val reqIdx = listaDeEstagios.indexOfFirst { it.nome.equals(req, ignoreCase = true) }
-                    reqIdx == -1 || reqIdx <= estIndex
+                val limitReached = when (val maxEff = maxEffectiveSelections(v)) {
+                    null -> false
+                    else -> qtdJaTem >= maxEff
                 }
+
                 val requiresChoice = v.requiresChoice
                 val validChoicesCount = if (requiresChoice) validChoiceOptionsFor(v).size else 0
                 val choiceOk = !requiresChoice || validChoicesCount > 0
-                val temProgresso = state.progressosDisponiveis >= 1
-                val deveListar = podeAgora && strictOk && repeticaoOk && stageOk && choiceOk && temProgresso
-                if (deveListar) add(v)
+
+                if (stageCompatible && choiceOk && !limitReached) {
+                    add(v)
+                }
             }
         }
 
@@ -843,46 +851,85 @@ fun ProgressosDialog(
                         .fillMaxHeight(0.6f)
                         .fillMaxWidth()
                 ) {
+                    Text(
+                        "Selecione uma Vantagem (${estSel.nome})",
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+
                     LazyColumn {
                         items(candidatas) { vant ->
+                            val atendeRequisitos = state.podeSelecionar(vant) && strictRequirementsOk(vant, estIndex)
+                            val listaRequisitosTexto = formatarRequisitosParaDialog(vant, idParaNome)
+
                             val qtdJaTem = state.vantagensSelecionadas.count {
                                 it.nome.equals(vant.nome, ignoreCase = true)
                             }
+
+                            val temProgresso = state.progressosDisponiveis >= 1
+                            val habilitado = atendeRequisitos && temProgresso
+
                             Column(
                                 Modifier
                                     .fillMaxWidth()
-                                    .clickable {
-                                        val qtdJaTemClick = state.vantagensSelecionadas.count {
-                                            it.nome.equals(vant.nome, ignoreCase = true)
-                                        }
-                                        when (val maxEff = maxEffectiveSelections(vant)) {
-                                            null -> {}
-                                            else -> if (qtdJaTemClick >= maxEff) {
-                                                showSnack("Você já atingiu o limite para ${vant.nome}.")
-                                                return@clickable
-                                            }
-                                        }
-                                        if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndex)) {
-                                            showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
+                                    .clickable(enabled = habilitado) {
+                                        if (!atendeRequisitos) {
+                                            showSnack("Requisitos não atendidos para ${vant.nome}.")
                                             return@clickable
                                         }
-                                        if (state.progressosDisponiveis < 1) {
-                                            showSnack("Você não tem progressos suficientes.")
+                                        if (!temProgresso) {
+                                            showSnack("Sem progressos disponíveis.")
                                             return@clickable
                                         }
+
                                         state.spendProgressAcrossStages(1)
-                                        state.vantagensSelecionadas += vant
-                                        state.checkFreeze()
-                                        showAdvSelection = false
-                                        onDismiss()
+
+                                        if (vant.requiresChoice || vant.id == "profissional" || vant.id == "especialista") {
+                                            pendingAdv = vant
+                                            showPendingChoice = true
+                                        } else {
+                                            state.vantagensSelecionadas += vant
+                                            state.checkFreeze()
+                                            showAdvSelection = false
+                                            onDismiss()
+                                        }
                                     }
                                     .padding(vertical = 8.dp, horizontal = 4.dp)
+                                    .alpha(if (habilitado) 1f else 0.5f)
                             ) {
-                                Text("${vant.nome} (${vant.requisitos.estagio.ifBlank { "—" }})")
-                                if (qtdJaTem > 0) {
-                                    Text("Já possui x$qtdJaTem", fontSize = 10.sp, color = Color.Gray)
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = vant.nome,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (atendeRequisitos) Color.Unspecified else MaterialTheme.colorScheme.error
+                                    )
+                                    Spacer(Modifier.width(8.dp))
+                                    Text(
+                                        text = "(${vant.requisitos.estagio.ifBlank { "Novato" }})",
+                                        fontSize = 12.sp,
+                                        color = Color.Gray
+                                    )
                                 }
-                                HorizontalDivider()
+
+                                if (listaRequisitosTexto.isNotEmpty()) {
+                                    listaRequisitosTexto.forEach { req ->
+                                        Text("• $req", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    }
+                                }
+
+                                if (qtdJaTem > 0) {
+                                    Text("Já possui x$qtdJaTem", fontSize = 10.sp, color = MaterialTheme.colorScheme.primary)
+                                }
+
+                                if (!atendeRequisitos) {
+                                    Text(
+                                        "Requisitos não atendidos (Atributo, Perícia ou Vantagem Prévia)",
+                                        fontSize = 11.sp,
+                                        color = MaterialTheme.colorScheme.error
+                                    )
+                                }
+
+                                HorizontalDivider(modifier = Modifier.padding(top = 4.dp))
                             }
                         }
                     }
@@ -1036,7 +1083,37 @@ fun ProgressosDialog(
     }
 }
 
-// Helpers usados acima
+private fun formatarRequisitosParaDialog(v: Vantagem, idParaNome: Map<String, String>): List<String> {
+    val partes = mutableListOf<String>()
+
+    if (v.requisitos.atributoMin.isNotEmpty()) {
+        partes += "Atributos: " + v.requisitos.atributoMin
+            .entries
+            .joinToString { (nome, min) -> "$nome d$min" }
+    }
+    if (v.requisitos.periciaMin.isNotEmpty()) {
+        partes += "Perícias: " + v.requisitos.periciaMin
+            .entries
+            .joinToString { (nome, min) -> "$nome d$min" }
+    }
+    if (v.requisitos.periciaMinOpcional.isNotEmpty()) {
+        partes += "Perícias (opcional): " + v.requisitos.periciaMinOpcional
+            .entries
+            .joinToString { (nome, min) -> "$nome d$min" }
+    }
+    if (v.requisitos.vantagensPrevias.isNotEmpty()) {
+        val legiveis = v.requisitos.vantagensPrevias.map { prevId ->
+            idParaNome[prevId] ?: prevId.replace('_', ' ').uppercase()
+        }
+        partes += "Vantagens: ${legiveis.joinToString()}"
+    }
+    if (v.requisitos.exigeCS) {
+        partes += "Requer Carta Selvagem"
+    }
+
+    return partes
+}
+
 private fun maxEffectiveSelections(v: Vantagem): Int? =
     if (v.maxSelections > 0) v.maxSelections else null
 
