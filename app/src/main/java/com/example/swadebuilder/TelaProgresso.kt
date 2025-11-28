@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -868,7 +869,11 @@ private fun AdvantageSelectorDialog(
         },
         title = { Text("Vantagens até ${stageInfo.descriptor.codigo}") },
         text = {
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 420.dp)
+            ) {
                 items(candidatas) { vant ->
                     val atende = strictRequirementsOk(state, vant, stageIndex)
                     val requisitos = formatarRequisitos(vant)
@@ -977,7 +982,11 @@ private fun SkillSelectorDialog(
             if (periciasValidas.isEmpty()) {
                 Text("Nenhuma perícia pode ser aumentada via avanço agora.")
             } else {
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 420.dp)
+                ) {
                     items(periciasValidas) { avanco ->
                         val pode = progressDisponivel >= avanco.cost && creditosStage >= avanco.cost
                         Column(
