@@ -626,7 +626,53 @@ class MainActivity : ComponentActivity() {
                                                     expPoderes = true
                                                 }
                                             )
-                                            9 -> TelaProgresso()
+                                            9 -> TelaProgresso(
+                                                state = state,
+                                                viewModel = criadorViewModel,
+                                                onBack = { showProgressoScreen = false },
+                                                onOpenVantagensDetail = { nomeVantagem ->
+                                                    highlightedVantagem      = nomeVantagem
+                                                    state.vantagemEmFoco     = nomeVantagem
+                                                    showVantagensDetail      = true
+                                                },
+                                                onOpenPericiasDetail = { showPericiasDetail = true },
+                                                onOpenComplicacoesDetail = { showComplicacoesDetail = true },
+                                                onOpenAtributosDetail = { showAtributosDetail = true },
+                                                onOpenListaAncestralidadesDetail = { nomeAnc ->
+                                                    if (nomeAnc.isNotBlank()) {
+                                                        state.ancestralidadeEmFoco = nomeAnc
+                                                    }
+                                                    showAncestralidadesDetail = true
+                                                },
+                                                onOpenListaCompletaEquipamento = { showEquipLista = true },
+                                                onOpenPoderesDetail = { showPoderesDetail = true },
+                                                onOpenSuperPoderesDetail = { nomePoder ->
+                                                    highlightedSuperPoder  = nomePoder
+                                                    state.superPoderEmFoco = nomePoder.takeIf { it.isNotBlank() }
+                                                    showSuperDetail        = true
+                                                },
+                                                equipamentoCategorias = equipamentoCategorias,
+                                                superequipCategorias = superequipCategorias,
+                                                listaSuperPoderes = listaSuperPoderes,
+                                                expInfos = expInfos,
+                                                onToggleInfos = { expInfos = !expInfos },
+                                                expAncs = expAncs,
+                                                onToggleAncs = { expAncs = !expAncs },
+                                                expComps = expComps,
+                                                onToggleComps = { expComps = !expComps },
+                                                expEquip = expEquip,
+                                                onToggleEquip = { expEquip = !expEquip },
+                                                expAttrs = expAttrs,
+                                                onToggleAttrs = { expAttrs = !expAttrs },
+                                                expPer = expPer,
+                                                onTogglePer = { expPer = !expPer },
+                                                expVants = expVants,
+                                                onToggleVants = { expVants = !expVants },
+                                                expResumo = expResumo,
+                                                onToggleResumo = { expResumo = !expResumo },
+                                                expPoderes = expPoderes,
+                                                onTogglePoderes = { expPoderes = !expPoderes },
+                                            )
 
                                             else -> UnifiedScreen(
                                                 state = state,

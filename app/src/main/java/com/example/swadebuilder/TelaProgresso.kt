@@ -2,41 +2,92 @@ package com.example.swadebuilder
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.EquipamentoCategoria
+import com.example.swadebuilder.model.SuperPoder
+import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.ui.dialogs.ProgressosDialog
+import com.example.swadebuilder.ui.sections.AncestralidadesSection
+import com.example.swadebuilder.ui.sections.AtributosContent
+import com.example.swadebuilder.ui.sections.ComplicacoesSection
+import com.example.swadebuilder.ui.sections.EquipamentoSection
+import com.example.swadebuilder.ui.sections.InformacoesSection
+import com.example.swadebuilder.ui.sections.PericiasContent
+import com.example.swadebuilder.ui.sections.PoderesSection
+import com.example.swadebuilder.ui.sections.SummaryContent
+import com.example.swadebuilder.ui.sections.SuperPoderesContent
+import com.example.swadebuilder.ui.sections.VantagensContent
+import kotlinx.serialization.json.JsonPrimitive
 
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-fun TelaProgresso() {
-    var expInfos by remember { mutableStateOf(true) }
-    var expAncs by remember { mutableStateOf(true) }
-    var expComps by remember { mutableStateOf(true) }
-    var expEquip by remember { mutableStateOf(true) }
-    var expAttrs by remember { mutableStateOf(true) }
-    var expPer by remember { mutableStateOf(true) }
-    var expVants by remember { mutableStateOf(true) }
-    var expResumo by remember { mutableStateOf(true) }
-    var expPoderes by remember { mutableStateOf(true) }
+fun TelaProgresso(
+    state: CriadorState,
+    viewModel: CriadorViewModel,
+    onBack: () -> Unit,
+    onOpenVantagensDetail: (String) -> Unit,
+    onOpenPericiasDetail: () -> Unit,
+    onOpenComplicacoesDetail: () -> Unit,
+    onOpenAtributosDetail: () -> Unit,
+    onOpenListaAncestralidadesDetail: (String) -> Unit,
+    onOpenListaCompletaEquipamento: () -> Unit,
+    onOpenPoderesDetail: () -> Unit,
+    onOpenSuperPoderesDetail: (String) -> Unit,
+    equipamentoCategorias: List<EquipamentoCategoria>,
+    superequipCategorias: List<EquipamentoCategoria>,
+    listaSuperPoderes: List<SuperPoder>,
+    expInfos: Boolean,
+    onToggleInfos: () -> Unit,
+    expAncs: Boolean,
+    onToggleAncs: () -> Unit,
+    expComps: Boolean,
+    onToggleComps: () -> Unit,
+    expEquip: Boolean,
+    onToggleEquip: () -> Unit,
+    expAttrs: Boolean,
+    onToggleAttrs: () -> Unit,
+    expPer: Boolean,
+    onTogglePer: () -> Unit,
+    expVants: Boolean,
+    onToggleVants: () -> Unit,
+    expResumo: Boolean,
+    onToggleResumo: () -> Unit,
+    expPoderes: Boolean,
+    onTogglePoderes: () -> Unit,
+) {
     val scrollState = rememberScrollState()
+    val showAllocDialog = rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -44,46 +95,73 @@ fun TelaProgresso() {
             .verticalScroll(scrollState)
             .padding(16.dp)
     ) {
-        SectionCard(
-            title = "Informações",
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Button(onClick = onBack) {
+                Icon(Icons.Default.ArrowBack, contentDescription = "Voltar")
+                Spacer(Modifier.width(8.dp))
+                Text("Voltar")
+            }
+
+            Text(
+                text = "Gestão de Progressos",
+                modifier = Modifier.weight(1f),
+                maxLines = 1
+            )
+        }
+
+        InformacoesSection(
+            state = state,
             expanded = expInfos,
-            onToggle = { expInfos = !expInfos },
-            icon = Icons.Default.Description
-        ) {
-            // Placeholder for progression info
-        }
+            onToggle = onToggleInfos,
+            onUseProgress = { showAllocDialog.value = true }
+        )
 
         HorizontalDivider(thickness = 1.dp)
 
-        SectionCard(
-            title = "Ancestralidade",
+        AncestralidadesSection(
+            currentAncestralidade = state.ancestralidade,
             expanded = expAncs,
-            onToggle = { expAncs = !expAncs },
-            icon = Icons.Default.Description
-        ) {
-            // Placeholder for progression ancestry
-        }
+            onToggle = onToggleAncs,
+            supersLocked = state.criacaoBasicaCongelada,
+            ancestralidadeEmFoco = state.ancestralidadeEmFoco,
+            onOpenListaAncestralidadesDetail = onOpenListaAncestralidadesDetail,
+            onSelectAncestralidade = { nome ->
+                val key = nome.uppercase().semAcentos()
+                state.aplicarAncestralidade(
+                    key,
+                    viewModel.feedbackMessages as MutableList<String>
+                )
+            }
+        )
 
         HorizontalDivider(thickness = 1.dp)
 
-        SectionCard(
-            title = "Complicações",
+        ComplicacoesSection(
+            state = state,
             expanded = expComps,
-            onToggle = { expComps = !expComps },
-            icon = Icons.Default.Description
-        ) {
-            // Placeholder for progression complications
-        }
+            onToggle = onToggleComps,
+            onOpenComplicacoesDetail = onOpenComplicacoesDetail,
+            supersLocked = state.criacaoBasicaCongelada
+        )
 
         HorizontalDivider(thickness = 1.dp)
 
         SectionCard(
             title = "Atributos",
             expanded = expAttrs,
-            onToggle = { expAttrs = !expAttrs },
+            onToggle = onToggleAttrs,
             icon = Icons.Default.FitnessCenter
         ) {
-            // Placeholder for progression attributes
+            AtributosContent(
+                state = state,
+                onOpenAtributosDetail = onOpenAtributosDetail
+            )
         }
 
         HorizontalDivider(thickness = 1.dp)
@@ -91,10 +169,13 @@ fun TelaProgresso() {
         SectionCard(
             title = "Perícias",
             expanded = expPer,
-            onToggle = { expPer = !expPer },
+            onToggle = onTogglePer,
             icon = Icons.Default.School
         ) {
-            // Placeholder for progression skills
+            PericiasContent(
+                state = state,
+                onOpenPericiasDetail = onOpenPericiasDetail
+            )
         }
 
         HorizontalDivider(thickness = 1.dp)
@@ -102,34 +183,94 @@ fun TelaProgresso() {
         SectionCard(
             title = "Vantagens",
             expanded = expVants,
-            onToggle = { expVants = !expVants },
+            onToggle = onToggleVants,
             icon = Icons.Default.Star
         ) {
-            // Placeholder for progression advantages
+            VantagensContent(
+                state = state,
+                onOpenVantagensDetail = onOpenVantagensDetail
+            )
         }
 
         HorizontalDivider(thickness = 1.dp)
 
-        SectionCard(
-            title = "Poderes",
-            expanded = expPoderes,
-            onToggle = { expPoderes = !expPoderes },
-            icon = Icons.Default.FlashOn
-        ) {
-            // Placeholder for progression powers
+        val temArcano = state.vantagensSelecionadas.any { vant ->
+            vant.antecedenteArcano != null ||
+                    vant.nome.keyify() == "antecedente_arcano"
         }
 
-        Spacer(Modifier.height(8.dp))
-        HorizontalDivider(thickness = 1.dp)
+        if (temArcano && !state.celestialAAMilagresDesabilitado) {
+            SectionCard(
+                title = "Poderes",
+                expanded = expPoderes,
+                onToggle = onTogglePoderes,
+                icon = Icons.Default.FlashOn
+            ) {
+                PoderesSection(
+                    state = state,
+                    onOpenListaCompletaPoderes = onOpenPoderesDetail
+                )
+            }
 
-        SectionCard(
-            title = "Equipamento",
+            HorizontalDivider(thickness = 1.dp)
+        }
+
+        if (state.modoSupers) {
+            SuperPoderesContent(
+                state = state,
+                listaSuperPoderes = listaSuperPoderes,
+                expanded = expPoderes,
+                onToggle = onTogglePoderes,
+                onOpenSuperPoderesDetail = onOpenSuperPoderesDetail
+            )
+
+            HorizontalDivider(thickness = 1.dp)
+        }
+
+        EquipamentoSection(
+            dinheiro = state.dinheiro,
+            pcTotal = state.pontosComplicacao,
+            pcLivres = (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0),
+            recursosPcUsados = state.cpRecursosStack.size,
             expanded = expEquip,
-            onToggle = { expEquip = !expEquip },
-            icon = Icons.Default.Description
-        ) {
-            // Placeholder for progression equipment
-        }
+            onToggle = onToggleEquip,
+            onUsarPontosBonusEmRecursos = {
+                val pcLivresLocal =
+                    (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0)
+
+                if (pcLivresLocal > 0 && state.cpRecursosStack.isEmpty()) {
+                    state.cpRecursosStack.add(Unit)
+                    state.pontosComplicacaoGastos += 1
+                    state.dinheiro += 500
+                }
+            },
+            onDesfazerPontosBonusEmRecursos = {
+                if (state.cpRecursosStack.isNotEmpty() && state.dinheiro >= 500) {
+                    state.cpRecursosStack.removeAt(state.cpRecursosStack.lastIndex)
+                    state.pontosComplicacaoGastos =
+                        (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                    state.dinheiro -= 500
+                }
+            },
+            onListaCompletaClick = onOpenListaCompletaEquipamento,
+            onEquipamentoDoubleClick = { equipamento ->
+                val custo = (equipamento.custo as? JsonPrimitive)
+                    ?.content?.toIntOrNull() ?: 0
+                if (custo <= state.dinheiro) {
+                    state.equipamentosComprados.add(equipamento)
+                    state.dinheiro -= custo
+                }
+            },
+            equipamentosComprados = state.equipamentosComprados,
+            onRemoveEquipamentoClick = { equipamento ->
+                val custo = (equipamento.custo as? JsonPrimitive)
+                    ?.content?.toIntOrNull() ?: 0
+                state.equipamentosComprados.remove(equipamento)
+                state.dinheiro += custo
+            },
+            categorias = equipamentoCategorias,
+            superequipCategorias = superequipCategorias
+        )
 
         Spacer(Modifier.height(16.dp))
         HorizontalDivider(thickness = 3.dp)
@@ -137,10 +278,16 @@ fun TelaProgresso() {
         SectionCard(
             title = "Resumo do Personagem",
             expanded = expResumo,
-            onToggle = { expResumo = !expResumo },
+            onToggle = onToggleResumo,
             icon = Icons.Default.Description
         ) {
-            // Placeholder for progression summary
+            SummaryContent(state = state)
+        }
+    }
+
+    if (showAllocDialog.value) {
+        ProgressosDialog(state = state) {
+            showAllocDialog.value = false
         }
     }
 }
