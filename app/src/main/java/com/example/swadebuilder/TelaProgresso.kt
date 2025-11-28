@@ -112,6 +112,7 @@ fun TelaProgresso(
     val progressSlotState = remember { criarProgressosPorEstagioState() }
     val slotAlvo = remember { mutableStateOf<SlotContext?>(null) }
     val seletorAtual = remember { mutableStateOf<SelectorMode?>(null) }
+    val pendingAdvantageChoice = remember { mutableStateOf<Vantagem?>(null) }
     val reservasCompMaior = rememberSaveable { mutableStateOf(0) }
 
     Column(
@@ -342,7 +343,8 @@ fun TelaProgresso(
         slotState = progressSlotState,
         slotAlvo = slotAlvo,
         seletorAtual = seletorAtual,
-        reservasCompMaior = reservasCompMaior
+        reservasCompMaior = reservasCompMaior,
+        pendingAdvantageChoice = pendingAdvantageChoice
     )
 
     SkillSelectorDialog(
@@ -360,6 +362,161 @@ fun TelaProgresso(
         seletorAtual = seletorAtual,
         reservasCompMaior = reservasCompMaior
     )
+
+    AdvantageChoiceDialog(
+        state = state,
+        slotState = progressSlotState,
+        slotAlvo = slotAlvo,
+        seletorAtual = seletorAtual,
+        reservasCompMaior = reservasCompMaior,
+        pendingAdvantageChoice = pendingAdvantageChoice
+    )
+}
+
+@Composable
+private fun AdvantageChoiceDialog(
+    state: CriadorState,
+    slotState: MutableMap<String, SnapshotStateList<SlotChoice>>,
+    slotAlvo: MutableState<SlotContext?>,
+    seletorAtual: MutableState<SelectorMode?>,
+    reservasCompMaior: MutableState<Int>,
+    pendingAdvantageChoice: MutableState<Vantagem?>
+) {
+    if (seletorAtual.value != SelectorMode.AdvantageChoice) return
+    val vant = pendingAdvantageChoice.value ?: return
+    val alvo = slotAlvo.value ?: return
+    val stageInfo = stageMath(state, alvo.stageCode) ?: return
+    val slotAtual = slotState[alvo.stageCode]?.getOrNull(alvo.slotIndex) ?: return
+
+    val validOptions = remember(vant, state.vantagensSelecionadas) {
+        when {
+            vant.id == "arma_predileta" -> {
+                listaPericias
+                    .filter { per ->
+                        val nome = per.nome
+                        val isAllowed =
+                            nome.equals("Atirar", ignoreCase = true) ||
+                                    nome.equals("Atletismo", ignoreCase = true) ||
+                                    nome.equals("Lutar", ignoreCase = true)
+                        val meetsMin = state.rawTotal(per) >= 8
+                        isAllowed && meetsMin
+                    }
+                    .map { it.nome }
+            }
+
+            vant.id == "arma_predileta_aprimorada" -> {
+                state.vantagensSelecionadas
+                    .filter { it.id == "arma_predileta" && it.choice != null }
+                    .mapNotNull { it.choice }
+                    .distinct()
+            }
+
+            vant.id == "profissional" -> {
+                state.identifyMaxedTraits()
+                vant.choiceOptions.filter { it in state.maxedTraits }
+            }
+
+            vant.id == "especialista" -> {
+                state.vantagensSelecionadas
+                    .filter { it.id == "profissional" && it.choice != null }
+                    .mapNotNull { it.choice }
+            }
+
+            vant.maxSelections > 0 -> {
+                val used = state.vantagensSelecionadas
+                    .filter { it.id == vant.id && it.choice != null }
+                    .mapNotNull { it.choice }
+                vant.choiceOptions.filter { it !in used }
+            }
+
+            else -> vant.choiceOptions
+        }
+    }
+
+    if (validOptions.isEmpty()) {
+        AlertDialog(
+            onDismissRequest = {
+                pendingAdvantageChoice.value = null
+                seletorAtual.value = null
+            },
+            title = { Text("Nenhuma opção disponível") },
+            text = { Text("Não há opções válidas para a vantagem '${vant.nome}' no momento.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    pendingAdvantageChoice.value = null
+                    seletorAtual.value = null
+                }) { Text("OK") }
+            }
+        )
+    } else {
+        var selection by remember { mutableStateOf<String?>(null) }
+        AlertDialog(
+            onDismissRequest = {
+                pendingAdvantageChoice.value = null
+                seletorAtual.value = null
+            },
+            title = { Text("Escolha para ${vant.nome}") },
+            text = {
+                LazyColumn {
+                    items(validOptions) { option ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { selection = option }
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = selection == option,
+                                onClick = { selection = option }
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(option)
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = selection != null,
+                    onClick = {
+                        val choice = selection ?: return@TextButton
+                        val anterior = slotAtual
+                        reverterSlotChoice(
+                            state,
+                            stageInfo.descriptor.estagio.nome,
+                            anterior,
+                            reservasCompMaior
+                        )
+                        if (consumeProgressForStage(state, stageInfo.descriptor.estagio.nome, 1)) {
+                            state.vantagensSelecionadas += vant.copy(choice = choice)
+                            state.rebuildAllPericiaStacks()
+
+                            slotState[alvo.stageCode]?.set(
+                                alvo.slotIndex,
+                                SlotChoice(
+                                    tipo = SlotTipo.VANTAGEM,
+                                    descricao = "Vantagem: ${vant.nome} ($choice)",
+                                    stageName = stageInfo.descriptor.estagio.nome,
+                                    custo = 1,
+                                    vantagemId = vant.id,
+                                    vantagemChoice = choice
+                                )
+                            )
+                        }
+                        pendingAdvantageChoice.value = null
+                        seletorAtual.value = null
+                    }
+                ) { Text("Confirmar") }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    pendingAdvantageChoice.value = null
+                    seletorAtual.value = null
+                }) { Text("Cancelar") }
+            }
+        )
+    }
 }
 
 @Composable
@@ -471,7 +628,7 @@ private enum class SlotTipo {
     RESERVA_COMP_MAIOR
 }
 
-private enum class SelectorMode { Root, Advantage, Skill, Attribute }
+private enum class SelectorMode { Root, Advantage, Skill, Attribute, AdvantageChoice }
 
 private data class SlotChoice(
     val tipo: SlotTipo = SlotTipo.LIVRE,
@@ -490,7 +647,8 @@ private data class SlotChoice(
     val periciasNomes: List<String>? = null,
     val periciasRawsAntes: List<Int>? = null,
     // VANTAGEM
-    val vantagemId: String? = null
+    val vantagemId: String? = null,
+    val vantagemChoice: String? = null
 )
 
 private data class StageDescriptor(
@@ -922,7 +1080,8 @@ private fun AdvantageSelectorDialog(
     slotState: MutableMap<String, SnapshotStateList<SlotChoice>>,
     slotAlvo: MutableState<SlotContext?>,
     seletorAtual: MutableState<SelectorMode?>,
-    reservasCompMaior: MutableState<Int>
+    reservasCompMaior: MutableState<Int>,
+    pendingAdvantageChoice: MutableState<Vantagem?>
 ) {
     if (seletorAtual.value != SelectorMode.Advantage) return
     val alvo = slotAlvo.value ?: return
@@ -987,11 +1146,14 @@ private fun AdvantageSelectorDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable(enabled = habilitado) {
-                                // se não estiver habilitado, simplesmente ignora o clique
                                 if (!habilitado) return@clickable
 
-                                val anterior = slotAtual
-                                reverterSlotChoice(
+                                if (vant.requiresChoice) {
+                                    pendingAdvantageChoice.value = vant
+                                    seletorAtual.value = SelectorMode.AdvantageChoice
+                                } else {
+                                    val anterior = slotAtual
+                                    reverterSlotChoice(
                                     state,
                                     stageInfo.descriptor.estagio.nome,
                                     anterior,
@@ -1007,30 +1169,18 @@ private fun AdvantageSelectorDialog(
                                     return@clickable
                                 }
 
-                                // Aqui seguimos o mesmo padrão do diálogo original:
-                                // convertemos 1 progresso em 1 PV reservado para comprar vantagem.
-                                state.grantVantagemPointFromXp(stageInfo.descriptor.estagio.nome)
-                                state.vantagemEmFoco = vant.nome
+                                state.vantagensSelecionadas += vant
+                                state.rebuildAllPericiaStacks()
 
                                 slotState[alvo.stageCode]?.set(
                                     alvo.slotIndex,
                                     SlotChoice(
                                         tipo = SlotTipo.VANTAGEM,
-                                        descricao = "PV reservado: ${vant.nome}",
+                                        descricao = "Vantagem: ${vant.nome}",
                                         atende = atendeRequisitos,
-                                        detalhes = buildString {
-                                            append(
-                                                requisitos.joinToString(" • ")
-                                                    .ifBlank { "Sem requisitos declarados" }
-                                            )
-                                            if (vant.requiresChoice) {
-                                                append(" — requer escolha específica fora deste seletor")
-                                            }
-                                            if (!atendeRequisitos) {
-                                                append(" — requisitos não atendidos pelo estado atual")
-                                            }
-                                            append(". PV destacado do estágio ${stageInfo.descriptor.codigo}.")
-                                        },
+                                        detalhes = requisitos
+                                            .joinToString(" • ")
+                                            .ifBlank { "Sem requisitos." },
                                         stageName = stageInfo.descriptor.estagio.nome,
                                         custo = 1,
                                         vantagemId = vant.id
@@ -1039,6 +1189,7 @@ private fun AdvantageSelectorDialog(
 
                                 seletorAtual.value = null
                                 slotAlvo.value = null
+                            }
                             }
                             .padding(vertical = 8.dp, horizontal = 4.dp)
                     ) {
@@ -1593,12 +1744,14 @@ private fun reverterSlotChoice(
         }
 
         SlotTipo.VANTAGEM -> {
-            // Aqui estamos DESFAZENDO a reserva de PV originada deste slot
-            state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
-            state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
-            if (state.pvFromXpOutstanding == 0) {
-                state.overrideStageForVantagem = null
-                state.openVantagensAfterGrant = false
+            choice.vantagemId?.let { id ->
+                val index = state.vantagensSelecionadas.indexOfLast {
+                    it.id == id && it.choice == choice.vantagemChoice
+                }
+                if (index != -1) {
+                    state.vantagensSelecionadas.removeAt(index)
+                    state.rebuildAllPericiaStacks()
+                }
             }
         }
 
