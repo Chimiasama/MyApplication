@@ -49,7 +49,7 @@ import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
-import com.example.swadebuilder.model.SuperPoder
+import com.example.swadebuilder.SuperPoder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.nivelParaEstagio
 import com.example.swadebuilder.util.keyify
@@ -592,7 +592,6 @@ private fun criarProgressosPorEstagioState(): MutableMap<String, SnapshotStateLi
     return mapa
 }
 
-@Composable
 @Composable
 private fun StageProgressPrototype(
     state: CriadorState,
