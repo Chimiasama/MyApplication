@@ -553,6 +553,23 @@ private fun stageMath(state: CriadorState, stageCode: String): StageMath? {
     )
 }
 
+private fun estagioMinimoParaVantagem(v: Vantagem): Estagio {
+    val reqEst = v.requisitos.estagio.trim()
+    if (reqEst.isNotBlank()) {
+        listaDeEstagios.firstOrNull { it.nome.equals(reqEst, ignoreCase = true) }?.let { return it }
+        nivelParaEstagio[reqEst.uppercase()]?.let { return it }
+    }
+
+    val nivelBruto = v.nivel
+    if (nivelBruto.isNotBlank()) {
+        val normalizado = nivelBruto.trim()
+        nivelParaEstagio[normalizado.uppercase()]?.let { return it }
+        listaDeEstagios.firstOrNull { it.nome.equals(normalizado, ignoreCase = true) }?.let { return it }
+    }
+
+    return nivelParaEstagio.getValue("N")
+}
+
 private fun consumeProgressForStage(
     state: CriadorState,
     stageName: String,
@@ -640,16 +657,22 @@ private fun StageProgressPrototype(
 
             val slots = slotState.getOrPut(desc.codigo) { mutableStateListOf() }
             slots.forEachIndexed { index, slot ->
+                val podeUsarEsteSlot = run {
+                    if (slot.tipo != SlotTipo.LIVRE) return@run true
+                    slots.take(index).all { it.tipo != SlotTipo.LIVRE }
+                }
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
-                        .clickable {
+                        .clickable(enabled = podeUsarEsteSlot) {
                             slotAlvo.value = SlotContext(desc.codigo, index)
                             seletorAtual.value = SelectorMode.Root
                         },
                     colors = CardDefaults.cardColors(
-                        containerColor = if (slot.tipo == SlotTipo.LIVRE) {
+                        containerColor = if (!podeUsarEsteSlot) {
+                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+                        } else if (slot.tipo == SlotTipo.LIVRE) {
                             MaterialTheme.colorScheme.surfaceVariant
                         } else {
                             MaterialTheme.colorScheme.surface
@@ -689,6 +712,12 @@ private fun StageProgressPrototype(
                                 text = "Editar",
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.primary
+                            )
+                        } else if (!podeUsarEsteSlot) {
+                            Text(
+                                text = "Bloqueado",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.outline
                             )
                         }
                     }
@@ -857,8 +886,9 @@ private fun AdvantageSelectorDialog(
             if (slotAtual.stageName == stageInfo.descriptor.estagio.nome) slotAtual.custo else 0
 
     val candidatas = listaVantagens.filter { vant ->
-        val estReq = nivelParaEstagio[vant.nivel.uppercase()] ?: nivelParaEstagio.getValue("N")
+        val estReq = estagioMinimoParaVantagem(vant)
         val reqIdx = listaDeEstagios.indexOfFirst { it.nome.equals(estReq.nome, ignoreCase = true) }
+            .takeIf { it >= 0 } ?: 0
         reqIdx <= stageIndex
     }
 
@@ -877,11 +907,11 @@ private fun AdvantageSelectorDialog(
                 items(candidatas) { vant ->
                     val atende = strictRequirementsOk(state, vant, stageIndex)
                     val requisitos = formatarRequisitos(vant)
+                    val podeComprar = progressDisponivel >= 1 && creditosStage >= 1
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable {
-                                if (progressDisponivel <= 0 || creditosStage <= 0) return@clickable
+                            .clickable(enabled = podeComprar) {
                                 val anterior = slotAtual
                                 reverterSlotChoice(state, stageInfo.descriptor.estagio.nome, anterior, reservasCompMaior)
                                 if (state.progressosDisponiveis <= 0 || stageInfo.creditsLeft <= 0) return@clickable
@@ -919,6 +949,13 @@ private fun AdvantageSelectorDialog(
                                 text = "Requisitos não atendidos no personagem atual",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                        if (!podeComprar) {
+                            Text(
+                                text = "XP insuficiente neste estágio para reservar PV",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.outline
                             )
                         }
                         if (vant.requiresChoice) {
