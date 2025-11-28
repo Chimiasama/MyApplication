@@ -2,6 +2,7 @@ package com.example.swadebuilder
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,12 +22,18 @@ import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +41,10 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
+import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.listaDeEstagios
+import com.example.swadebuilder.listaPericias
+import com.example.swadebuilder.nivelParaEstagio
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.ui.components.SectionCard
@@ -49,6 +60,13 @@ import com.example.swadebuilder.ui.sections.SummaryContent
 import com.example.swadebuilder.ui.sections.SuperPoderesContent
 import com.example.swadebuilder.ui.sections.VantagensContent
 import kotlinx.serialization.json.JsonPrimitive
+import androidx.compose.material3.AlertDialog
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.ui.text.font.FontWeight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -89,6 +107,10 @@ fun TelaProgresso(
 ) {
     val scrollState = rememberScrollState()
     val showAllocDialog = rememberSaveable { mutableStateOf(false) }
+    val progressSlotState = remember { criarProgressosPorEstagioState() }
+    val slotAlvo = remember { mutableStateOf<SlotContext?>(null) }
+    val seletorAtual = remember { mutableStateOf<SelectorMode?>(null) }
+    val reservasCompMaior = rememberSaveable { mutableStateOf(0) }
 
     Column(
         modifier = Modifier
@@ -278,6 +300,17 @@ fun TelaProgresso(
         Spacer(Modifier.height(16.dp))
         HorizontalDivider(thickness = 3.dp)
 
+        StageProgressPrototype(
+            state = state,
+            slotState = progressSlotState,
+            slotAlvo = slotAlvo,
+            seletorAtual = seletorAtual,
+            reservasCompMaior = reservasCompMaior
+        )
+
+        Spacer(Modifier.height(16.dp))
+        HorizontalDivider(thickness = 3.dp)
+
         SectionCard(
             title = "Resumo do Personagem",
             expanded = expResumo,
@@ -293,4 +326,462 @@ fun TelaProgresso(
             showAllocDialog.value = false
         }
     }
+
+    SlotTypeDialog(
+        slotState = progressSlotState,
+        slotAlvo = slotAlvo,
+        seletorAtual = seletorAtual,
+        reservasCompMaior = reservasCompMaior
+    )
+
+    AdvantageSelectorDialog(
+        state = state,
+        slotState = progressSlotState,
+        slotAlvo = slotAlvo,
+        seletorAtual = seletorAtual
+    )
+
+    SkillSelectorDialog(
+        state = state,
+        slotState = progressSlotState,
+        slotAlvo = slotAlvo,
+        seletorAtual = seletorAtual
+    )
+}
+
+private enum class SlotTipo {
+    LIVRE,
+    ATRIBUTO,
+    VANTAGEM,
+    PERICIA,
+    REMOVER_COMP_MENOR,
+    RESERVA_COMP_MAIOR
+}
+
+private enum class SelectorMode { Root, Advantage, Skill }
+
+private data class SlotChoice(
+    val tipo: SlotTipo = SlotTipo.LIVRE,
+    val descricao: String = "Slot livre",
+    val atende: Boolean = true,
+    val detalhes: String? = null
+)
+
+private data class StageDescriptor(
+    val estagio: Estagio,
+    val codigo: String,
+    val slotsIniciais: Int
+)
+
+private data class SlotContext(val stageCode: String, val slotIndex: Int)
+
+private fun stagePlan(): List<StageDescriptor> = listOf(
+    StageDescriptor(nivelParaEstagio.getValue("N"), "N", 3),
+    StageDescriptor(nivelParaEstagio.getValue("E"), "E", 4),
+    StageDescriptor(nivelParaEstagio.getValue("V"), "V", 4),
+    StageDescriptor(nivelParaEstagio.getValue("H"), "H", 4),
+    StageDescriptor(nivelParaEstagio.getValue("L"), "L", 4) // Lendário: pode adicionar mais slots manualmente
+)
+
+private fun criarProgressosPorEstagioState(): MutableMap<String, SnapshotStateList<SlotChoice>> {
+    val mapa = mutableStateMapOf<String, SnapshotStateList<SlotChoice>>()
+    stagePlan().forEach { desc ->
+        mapa[desc.codigo] = mutableStateListOf<SlotChoice>().apply {
+            repeat(desc.slotsIniciais) { add(SlotChoice()) }
+        }
+    }
+    return mapa
+}
+
+@Composable
+private fun StageProgressPrototype(
+    state: CriadorState,
+    slotState: MutableMap<String, SnapshotStateList<SlotChoice>>,
+    slotAlvo: androidx.compose.runtime.MutableState<SlotContext?>,
+    seletorAtual: androidx.compose.runtime.MutableState<SelectorMode?>,
+    reservasCompMaior: androidx.compose.runtime.MutableState<Int>
+) {
+    val plano = remember { stagePlan() }
+    val lendarioKey = remember { plano.last().codigo }
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = "Progressos por estágio (protótipo)",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold
+        )
+        Text(
+            text = "Mantemos o diálogo original de progressos intacto. Aqui você pode testar slots N/E/V/H/L sem consumir XP real.",
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(vertical = 4.dp)
+        )
+        Text(
+            text = "Regra crítica: só 1 aumento de atributo por estágio (Lendário aceita múltiplos, mas revise antes de validar).",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.tertiary
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        plano.forEach { desc ->
+            Text(
+                text = "${desc.estagio.nome} (${desc.codigo})",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+
+            val slots = slotState.getOrPut(desc.codigo) { mutableStateListOf() }
+            slots.forEachIndexed { index, slot ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                        .clickable {
+                            slotAlvo.value = SlotContext(desc.codigo, index)
+                            seletorAtual.value = SelectorMode.Root
+                        },
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (slot.tipo == SlotTipo.LIVRE) {
+                            MaterialTheme.colorScheme.surfaceVariant
+                        } else {
+                            MaterialTheme.colorScheme.surface
+                        }
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "${desc.codigo} ${slot.descricao}",
+                                fontWeight = if (slot.tipo == SlotTipo.LIVRE) FontWeight.Normal else FontWeight.SemiBold
+                            )
+                            slot.detalhes?.let { detalhe ->
+                                Text(
+                                    text = detalhe,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            }
+                            if (slot.tipo == SlotTipo.VANTAGEM && !slot.atende) {
+                                Text(
+                                    text = "Requisitos pendentes (não confirmado)",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        }
+
+                        if (slot.tipo != SlotTipo.LIVRE) {
+                            Text(
+                                text = "Editar",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                }
+            }
+
+            if (desc.codigo == lendarioKey) {
+                TextButton(onClick = {
+                    slotState[desc.codigo]?.add(SlotChoice())
+                }) {
+                    Icon(Icons.Default.Info, contentDescription = null)
+                    Spacer(Modifier.width(4.dp))
+                    Text("Adicionar slot Lendário extra")
+                }
+            }
+        }
+
+        Text(
+            text = "Reservas para Complicação Maior: ${reservasCompMaior.value} (placeholder – exige fluxo próprio)",
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        Text(
+            text = "Apenas a TelaProgresso foi tocada; demais telas permanecem intactas.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.outline
+        )
+    }
+}
+
+@Composable
+private fun SlotTypeDialog(
+    slotState: MutableMap<String, SnapshotStateList<SlotChoice>>,
+    slotAlvo: androidx.compose.runtime.MutableState<SlotContext?>,
+    seletorAtual: androidx.compose.runtime.MutableState<SelectorMode?>,
+    reservasCompMaior: androidx.compose.runtime.MutableState<Int>
+) {
+    if (seletorAtual.value != SelectorMode.Root) return
+    val alvo = slotAlvo.value ?: return
+    val stageDesc = stagePlan().firstOrNull { it.codigo == alvo.stageCode } ?: return
+    val slots = slotState[alvo.stageCode] ?: return
+
+    val atributoCapBateu = stageDesc.codigo != "L" && slots.count { it.tipo == SlotTipo.ATRIBUTO } >
+            (if (slots.getOrNull(alvo.slotIndex)?.tipo == SlotTipo.ATRIBUTO) 1 else 0)
+
+    AlertDialog(
+        onDismissRequest = {
+            seletorAtual.value = null
+            slotAlvo.value = null
+        },
+        title = { Text("Definir gasto para ${stageDesc.codigo} slot ${alvo.slotIndex + 1}") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(
+                    text = "Escolha um uso para o progresso. Não consome XP real; serve para testar fluxo.",
+                    style = MaterialTheme.typography.bodySmall
+                )
+
+                TextButton(
+                    onClick = {
+                        if (atributoCapBateu) return@TextButton
+                        slots[alvo.slotIndex] = SlotChoice(
+                            tipo = SlotTipo.ATRIBUTO,
+                            descricao = "Atributo +1",
+                            detalhes = if (stageDesc.codigo == "L") {
+                                "Lendário aceita múltiplos, mas valide custo e gating."
+                            } else {
+                                "Regra: máximo 1 aumento de atributo neste estágio."
+                            }
+                        )
+                        seletorAtual.value = null
+                        slotAlvo.value = null
+                    },
+                    enabled = !atributoCapBateu
+                ) { Text("Aumentar atributo") }
+                if (atributoCapBateu) {
+                    Text(
+                        text = "Limite de atributo deste estágio já usado (exceto regras especiais Lendário).",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+
+                TextButton(onClick = { seletorAtual.value = SelectorMode.Advantage }) {
+                    Text("Comprar vantagem (filtrada por estágio)")
+                }
+
+                TextButton(onClick = { seletorAtual.value = SelectorMode.Skill }) {
+                    Text("Aumentar perícia (opções válidas apenas)")
+                }
+
+                TextButton(onClick = {
+                    slots[alvo.slotIndex] = SlotChoice(
+                        tipo = SlotTipo.REMOVER_COMP_MENOR,
+                        descricao = "Remover Complicação Menor",
+                        detalhes = "Placeholder — requer validação manual para impacto em CP/Histórico"
+                    )
+                    seletorAtual.value = null
+                    slotAlvo.value = null
+                }) {
+                    Text("Remover Complicação Menor")
+                }
+
+                TextButton(onClick = {
+                    reservasCompMaior.value += 1
+                    slots[alvo.slotIndex] = SlotChoice(
+                        tipo = SlotTipo.RESERVA_COMP_MAIOR,
+                        descricao = "Reserva para Complicação Maior",
+                        detalhes = "Reserva ${reservasCompMaior.value} — acumule antes de aplicar de fato"
+                    )
+                    seletorAtual.value = null
+                    slotAlvo.value = null
+                }) {
+                    Text("Reservar para remover Complicação Maior")
+                }
+
+                TextButton(onClick = {
+                    slots[alvo.slotIndex] = SlotChoice()
+                    seletorAtual.value = null
+                    slotAlvo.value = null
+                }) {
+                    Text("Limpar slot")
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = {
+            TextButton(onClick = {
+                seletorAtual.value = null
+                slotAlvo.value = null
+            }) { Text("Fechar") }
+        }
+    )
+}
+
+@Composable
+private fun AdvantageSelectorDialog(
+    state: CriadorState,
+    slotState: MutableMap<String, SnapshotStateList<SlotChoice>>,
+    slotAlvo: androidx.compose.runtime.MutableState<SlotContext?>,
+    seletorAtual: androidx.compose.runtime.MutableState<SelectorMode?>
+) {
+    if (seletorAtual.value != SelectorMode.Advantage) return
+    val alvo = slotAlvo.value ?: return
+    val stageDesc = stagePlan().firstOrNull { it.codigo == alvo.stageCode } ?: return
+    val stageIndex = listaDeEstagios.indexOfFirst { it.nome == stageDesc.estagio.nome }
+    if (stageIndex < 0) return
+
+    val candidatas = listaVantagens.filter { vant ->
+        val estReq = nivelParaEstagio[vant.nivel.uppercase()] ?: nivelParaEstagio.getValue("N")
+        val reqIdx = listaDeEstagios.indexOfFirst { it.nome.equals(estReq.nome, ignoreCase = true) }
+        reqIdx <= stageIndex
+    }
+
+    AlertDialog(
+        onDismissRequest = {
+            seletorAtual.value = null
+            slotAlvo.value = null
+        },
+        title = { Text("Vantagens até ${stageDesc.codigo}") },
+        text = {
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                items(candidatas) { vant ->
+                    val atende = state.podeSelecionar(vant)
+                    val requisitos = formatarRequisitos(vant)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                slotState[alvo.stageCode]?.set(
+                                    alvo.slotIndex,
+                                    SlotChoice(
+                                        tipo = SlotTipo.VANTAGEM,
+                                        descricao = "Vantagem: ${vant.nome}",
+                                        atende = atende,
+                                        detalhes = buildString {
+                                            append(requisitos)
+                                            if (vant.requiresChoice) {
+                                                append(" — requer escolha específica não resolvida aqui")
+                                            }
+                                            if (!atende) {
+                                                append(" — requisitos não atendidos pelo estado atual")
+                                            }
+                                        }
+                                    )
+                                )
+                                seletorAtual.value = null
+                                slotAlvo.value = null
+                            }
+                            .padding(vertical = 8.dp, horizontal = 4.dp)
+                    ) {
+                        Text("${vant.nome} (${vant.nivel})", fontWeight = FontWeight.SemiBold)
+                        Text(requisitos.ifBlank { "Sem requisitos declarados" }, style = MaterialTheme.typography.bodySmall)
+                        if (!atende) {
+                            Text(
+                                text = "Requisitos não atendidos no personagem atual",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                        if (vant.requiresChoice) {
+                            Text(
+                                text = "Precisa de choice/variante — resolverá fora deste protótipo",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.tertiary
+                            )
+                        }
+                        HorizontalDivider()
+                    }
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = {
+            TextButton(onClick = {
+                seletorAtual.value = SelectorMode.Root
+            }) { Text("Voltar") }
+        }
+    )
+}
+
+@Composable
+private fun SkillSelectorDialog(
+    state: CriadorState,
+    slotState: MutableMap<String, SnapshotStateList<SlotChoice>>,
+    slotAlvo: androidx.compose.runtime.MutableState<SlotContext?>,
+    seletorAtual: androidx.compose.runtime.MutableState<SelectorMode?>
+) {
+    if (seletorAtual.value != SelectorMode.Skill) return
+    val alvo = slotAlvo.value ?: return
+    val periciasValidas = listaPericias.filter { per ->
+        state.rawTotal(per) < state.periciaCapRaw(per)
+    }
+
+    AlertDialog(
+        onDismissRequest = {
+            seletorAtual.value = null
+            slotAlvo.value = null
+        },
+        title = { Text("Perícias elegíveis para avanço") },
+        text = {
+            if (periciasValidas.isEmpty()) {
+                Text("Nenhuma perícia pode ser aumentada via avanço agora.")
+            } else {
+                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                    items(periciasValidas) { per ->
+                        val atual = state.rawTotal(per)
+                        val cap = state.periciaCapRaw(per)
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    slotState[alvo.stageCode]?.set(
+                                        alvo.slotIndex,
+                                        SlotChoice(
+                                            tipo = SlotTipo.PERICIA,
+                                            descricao = "Perícia: ${per.nome} (+1 passo)",
+                                            detalhes = "Atual: ${atual.toDiceString()} / Teto: ${cap.toDiceString()}"
+                                        )
+                                    )
+                                    seletorAtual.value = null
+                                    slotAlvo.value = null
+                                }
+                                .padding(vertical = 8.dp, horizontal = 4.dp)
+                        ) {
+                            Text(per.nome, fontWeight = FontWeight.SemiBold)
+                            Text(
+                                text = "${per.atributo} | ${atual.toDiceString()} → ${((atual + 2).coerceAtMost(cap)).toDiceString()} (custo padrão de avanço)",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                            HorizontalDivider()
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = {
+            TextButton(onClick = { seletorAtual.value = SelectorMode.Root }) { Text("Voltar") }
+        }
+    )
+}
+
+private fun formatarRequisitos(v: Vantagem): String {
+    val partes = mutableListOf<String>()
+    if (v.requisitos.estagio.isNotBlank()) partes += "Estágio mínimo: ${v.requisitos.estagio}"
+    if (v.requisitos.atributoMin.isNotEmpty()) {
+        partes += "Atributos: " + v.requisitos.atributoMin.entries.joinToString { (nome, min) -> "$nome ${min.toDiceString()}" }
+    }
+    if (v.requisitos.periciaMin.isNotEmpty()) {
+        partes += "Perícias: " + v.requisitos.periciaMin.entries.joinToString { (nome, min) -> "$nome ${min.toDiceString()}" }
+    }
+    if (v.requisitos.periciaMinOpcional.isNotEmpty()) {
+        partes += "Perícias (opcional): " + v.requisitos.periciaMinOpcional.entries.joinToString { (nome, min) -> "$nome ${min.toDiceString()}" }
+    }
+    if (v.requisitos.vantagensPrevias.isNotEmpty()) {
+        partes += "Vantagens prévias: ${v.requisitos.vantagensPrevias.joinToString()}"
+    }
+    if (v.requisitos.observacoes.isNotBlank()) {
+        partes += v.requisitos.observacoes
+    }
+    return partes.joinToString(separator = " • ")
 }
