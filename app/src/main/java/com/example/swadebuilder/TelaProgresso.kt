@@ -39,11 +39,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.model.CriadorViewModel
-import com.example.swadebuilder.model.EquipamentoCategoria
-import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.Pericia
+import com.example.swadebuilder.dynamicStageCaps
+import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
+import com.example.swadebuilder.listaVantagens
+import com.example.swadebuilder.mapaAtributosDisplay
+import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.EquipamentoCategoria
+import com.example.swadebuilder.model.SuperPoder
+import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.nivelParaEstagio
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
@@ -328,6 +334,7 @@ fun TelaProgresso(
     }
 
     SlotTypeDialog(
+        state = state,
         slotState = progressSlotState,
         slotAlvo = slotAlvo,
         seletorAtual = seletorAtual,
@@ -338,14 +345,124 @@ fun TelaProgresso(
         state = state,
         slotState = progressSlotState,
         slotAlvo = slotAlvo,
-        seletorAtual = seletorAtual
+        seletorAtual = seletorAtual,
+        reservasCompMaior = reservasCompMaior
     )
 
     SkillSelectorDialog(
         state = state,
         slotState = progressSlotState,
         slotAlvo = slotAlvo,
-        seletorAtual = seletorAtual
+        seletorAtual = seletorAtual,
+        reservasCompMaior = reservasCompMaior
+    )
+
+    AttributeSelectorDialog(
+        state = state,
+        slotState = progressSlotState,
+        slotAlvo = slotAlvo,
+        seletorAtual = seletorAtual,
+        reservasCompMaior = reservasCompMaior
+    )
+}
+
+@Composable
+private fun AttributeSelectorDialog(
+    state: CriadorState,
+    slotState: MutableMap<String, SnapshotStateList<SlotChoice>>,
+    slotAlvo: androidx.compose.runtime.MutableState<SlotContext?>,
+    seletorAtual: androidx.compose.runtime.MutableState<SelectorMode?>,
+    reservasCompMaior: androidx.compose.runtime.MutableState<Int>
+) {
+    if (seletorAtual.value != SelectorMode.Attribute) return
+    val alvo = slotAlvo.value ?: return
+    val stageInfo = stageMath(state, alvo.stageCode) ?: return
+    val slots = slotState[alvo.stageCode] ?: return
+    val slotAtual = slots.getOrNull(alvo.slotIndex) ?: return
+
+    val progressDisponivel = state.progressosDisponiveis + slotAtual.custo
+    val creditosStage = stageInfo.creditsLeft +
+            if (slotAtual.stageName == stageInfo.descriptor.estagio.nome) slotAtual.custo else 0
+    val attrsJaComprados = stageInfo.boughtAttrsSoFar -
+            if (slotAtual.tipo == SlotTipo.ATRIBUTO && slotAtual.stageName == stageInfo.descriptor.estagio.nome) 1 else 0
+    val limiteDeAtributo = attrsJaComprados < stageInfo.maxAttrsAllowed || stageInfo.descriptor.estagio.nome == "Lendário"
+
+    AlertDialog(
+        onDismissRequest = {
+            seletorAtual.value = null
+            slotAlvo.value = null
+        },
+        title = { Text("Escolher atributo (custo ${stageInfo.costAttr})") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(
+                    text = "1 aumento por estágio (Lendário aceita múltiplos). Usa progresso real do estágio ${stageInfo.descriptor.codigo}.",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                listaAtributos.forEach { attrKey ->
+                    val display = mapaAtributosDisplay[attrKey] ?: attrKey
+                    val atual = state.valoresAtributos[attrKey]?.intValue ?: 0
+                    val maxRaw = state.atributoMaxRaw(attrKey)
+                    val incremento = if (atual < 12) 2 else 1
+                    val proximo = (atual + incremento).coerceAtMost(maxRaw)
+                    val pode = limiteDeAtributo && progressDisponivel >= stageInfo.costAttr && creditosStage >= stageInfo.costAttr && atual < maxRaw
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(enabled = pode) {
+                                val anterior = slotAtual
+                                reverterSlotChoice(state, stageInfo.descriptor.estagio.nome, anterior, reservasCompMaior)
+                                if (consumeProgressForStage(state, stageInfo.descriptor.estagio.nome, stageInfo.costAttr)) {
+                                    state.comprasAttrPorEstagio[stageInfo.descriptor.estagio.nome] =
+                                        (state.comprasAttrPorEstagio[stageInfo.descriptor.estagio.nome] ?: 0) + 1
+                                    state.valoresAtributos[attrKey]?.intValue = proximo
+                                    state.recalcularPontosAtributo()
+
+                                    slotState[alvo.stageCode]?.set(
+                                        alvo.slotIndex,
+                                        SlotChoice(
+                                            tipo = SlotTipo.ATRIBUTO,
+                                            descricao = "Atributo +1 ($display)",
+                                            detalhes = "${atual.toDiceString()} → ${proximo.toDiceString()} (custo ${stageInfo.costAttr})",
+                                            stageName = stageInfo.descriptor.estagio.nome,
+                                            custo = stageInfo.costAttr,
+                                            atributoKey = attrKey,
+                                            valorAtributoAntes = atual
+                                        )
+                                    )
+                                }
+                                seletorAtual.value = null
+                                slotAlvo.value = null
+                            }
+                            .padding(vertical = 6.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(display, fontWeight = FontWeight.SemiBold)
+                            Text(
+                                text = "${atual.toDiceString()} → ${proximo.toDiceString()} (teto ${maxRaw.toDiceString()})",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = if (pode) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.outline
+                            )
+                        }
+                        if (!pode) {
+                            Text(
+                                text = "Bloqueado",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }
+                    HorizontalDivider()
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = {
+            TextButton(onClick = { seletorAtual.value = SelectorMode.Root }) { Text("Voltar") }
+        }
     )
 }
 
@@ -358,13 +475,20 @@ private enum class SlotTipo {
     RESERVA_COMP_MAIOR
 }
 
-private enum class SelectorMode { Root, Advantage, Skill }
+private enum class SelectorMode { Root, Advantage, Skill, Attribute }
 
 private data class SlotChoice(
     val tipo: SlotTipo = SlotTipo.LIVRE,
     val descricao: String = "Slot livre",
     val atende: Boolean = true,
-    val detalhes: String? = null
+    val detalhes: String? = null,
+    val stageName: String? = null,
+    val custo: Int = 0,
+    val atributoKey: String? = null,
+    val valorAtributoAntes: Int? = null,
+    val periciaNome: String? = null,
+    val periciaRawAntes: Int? = null,
+    val vantagemId: String? = null
 )
 
 private data class StageDescriptor(
@@ -382,6 +506,80 @@ private fun stagePlan(): List<StageDescriptor> = listOf(
     StageDescriptor(nivelParaEstagio.getValue("H"), "H", 4),
     StageDescriptor(nivelParaEstagio.getValue("L"), "L", 4) // Lendário: pode adicionar mais slots manualmente
 )
+
+private data class StageMath(
+    val descriptor: StageDescriptor,
+    val index: Int,
+    val stageCap: Int,
+    val spentHere: Int,
+    val creditsLeft: Int,
+    val costAttr: Int,
+    val boughtAttrsSoFar: Int,
+    val maxAttrsAllowed: Int
+)
+
+private data class PericiaAvanco(
+    val pericia: Pericia,
+    val atual: Int,
+    val cap: Int,
+    val next: Int,
+    val cost: Int
+)
+
+private fun stageMath(state: CriadorState, stageCode: String): StageMath? {
+    val desc = stagePlan().firstOrNull { it.codigo == stageCode } ?: return null
+    val idx = listaDeEstagios.indexOfFirst { it.nome == desc.estagio.nome }
+    if (idx < 0) return null
+
+    val stageCap = dynamicStageCaps[idx]
+    val spentHere = state.stageXpSpent.getValue(desc.estagio.nome)
+    val creditsLeft = stageCap - spentHere
+
+    val boughtSoFar = listaDeEstagios.take(idx + 1)
+        .sumOf { state.comprasAttrPorEstagio.getValue(it.nome) }
+    val maxAllowed = if (desc.estagio.nome == "Lendário") Int.MAX_VALUE else (idx + 1)
+    val costAttr = if (desc.estagio.nome == "Lendário") 2 else 1
+
+    return StageMath(
+        descriptor = desc,
+        index = idx,
+        stageCap = stageCap,
+        spentHere = spentHere,
+        creditsLeft = creditsLeft,
+        costAttr = costAttr,
+        boughtAttrsSoFar = boughtSoFar,
+        maxAttrsAllowed = maxAllowed
+    )
+}
+
+private fun consumeProgressForStage(
+    state: CriadorState,
+    stageName: String,
+    cost: Int
+): Boolean {
+    if (cost <= 0) return false
+    val idx = listaDeEstagios.indexOfFirst { it.nome == stageName }
+    if (idx < 0) return false
+    val cap = dynamicStageCaps[idx]
+    val spent = state.stageXpSpent.getValue(stageName)
+    if (spent + cost > cap) return false
+    if (state.progressosDisponiveis < cost) return false
+
+    state.stageXpSpent[stageName] = spent + cost
+    state.progressosDisponiveis -= cost
+    return true
+}
+
+private fun refundProgressForStage(
+    state: CriadorState,
+    stageName: String,
+    cost: Int
+) {
+    if (cost <= 0) return
+    val spent = state.stageXpSpent.getValue(stageName)
+    state.stageXpSpent[stageName] = (spent - cost).coerceAtLeast(0)
+    state.progressosDisponiveis += cost
+}
 
 private fun criarProgressosPorEstagioState(): MutableMap<String, SnapshotStateList<SlotChoice>> {
     val mapa = mutableStateMapOf<String, SnapshotStateList<SlotChoice>>()
@@ -406,12 +604,12 @@ private fun StageProgressPrototype(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Progressos por estágio (protótipo)",
+            text = "Progressos por estágio (interface alternativa)",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold
         )
         Text(
-            text = "Mantemos o diálogo original de progressos intacto. Aqui você pode testar slots N/E/V/H/L sem consumir XP real.",
+            text = "Mantemos o diálogo original de progressos intacto. Aqui cada slot N/E/V/H/L consome XP real ao confirmar a escolha.",
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.padding(vertical = 4.dp)
         )
@@ -424,12 +622,20 @@ private fun StageProgressPrototype(
         Spacer(Modifier.height(8.dp))
 
         plano.forEach { desc ->
+            val stageInfoAtual = stageMath(state, desc.codigo)
             Text(
                 text = "${desc.estagio.nome} (${desc.codigo})",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 4.dp)
             )
+            stageInfoAtual?.let {
+                Text(
+                    text = "XP neste estágio: ${it.spentHere} / ${it.stageCap}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.outline
+                )
+            }
 
             val slots = slotState.getOrPut(desc.codigo) { mutableStateListOf() }
             slots.forEachIndexed { index, slot ->
@@ -514,6 +720,7 @@ private fun StageProgressPrototype(
 
 @Composable
 private fun SlotTypeDialog(
+    state: CriadorState,
     slotState: MutableMap<String, SnapshotStateList<SlotChoice>>,
     slotAlvo: androidx.compose.runtime.MutableState<SlotContext?>,
     seletorAtual: androidx.compose.runtime.MutableState<SelectorMode?>,
@@ -521,41 +728,38 @@ private fun SlotTypeDialog(
 ) {
     if (seletorAtual.value != SelectorMode.Root) return
     val alvo = slotAlvo.value ?: return
-    val stageDesc = stagePlan().firstOrNull { it.codigo == alvo.stageCode } ?: return
+    val stageInfo = stageMath(state, alvo.stageCode) ?: return
     val slots = slotState[alvo.stageCode] ?: return
+    val slotAtual = slots.getOrNull(alvo.slotIndex) ?: return
 
-    val atributoCapBateu = stageDesc.codigo != "L" && slots.count { it.tipo == SlotTipo.ATRIBUTO } >
-            (if (slots.getOrNull(alvo.slotIndex)?.tipo == SlotTipo.ATRIBUTO) 1 else 0)
+    val progressDisponivel = state.progressosDisponiveis + slotAtual.custo
+    val creditosStage = stageInfo.creditsLeft +
+            if (slotAtual.stageName == stageInfo.descriptor.estagio.nome) slotAtual.custo else 0
+    val attrsJaComprados = stageInfo.boughtAttrsSoFar -
+            if (slotAtual.tipo == SlotTipo.ATRIBUTO && slotAtual.stageName == stageInfo.descriptor.estagio.nome) 1 else 0
+    val atributoCapBateu = stageInfo.descriptor.codigo != "L" && attrsJaComprados >= stageInfo.maxAttrsAllowed
 
     AlertDialog(
         onDismissRequest = {
             seletorAtual.value = null
             slotAlvo.value = null
         },
-        title = { Text("Definir gasto para ${stageDesc.codigo} slot ${alvo.slotIndex + 1}") },
+        title = { Text("Definir gasto para ${stageInfo.descriptor.codigo} slot ${alvo.slotIndex + 1}") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(
-                    text = "Escolha um uso para o progresso. Não consome XP real; serve para testar fluxo.",
+                    text = "Cada escolha consome progresso real do estágio ${stageInfo.descriptor.estagio.nome}.",
                     style = MaterialTheme.typography.bodySmall
                 )
 
                 TextButton(
                     onClick = {
                         if (atributoCapBateu) return@TextButton
-                        slots[alvo.slotIndex] = SlotChoice(
-                            tipo = SlotTipo.ATRIBUTO,
-                            descricao = "Atributo +1",
-                            detalhes = if (stageDesc.codigo == "L") {
-                                "Lendário aceita múltiplos, mas valide custo e gating."
-                            } else {
-                                "Regra: máximo 1 aumento de atributo neste estágio."
-                            }
-                        )
-                        seletorAtual.value = null
-                        slotAlvo.value = null
+                        seletorAtual.value = SelectorMode.Attribute
                     },
-                    enabled = !atributoCapBateu
+                    enabled = !atributoCapBateu &&
+                            progressDisponivel >= stageInfo.costAttr &&
+                            creditosStage >= stageInfo.costAttr
                 ) { Text("Aumentar atributo") }
                 if (atributoCapBateu) {
                     Text(
@@ -574,11 +778,17 @@ private fun SlotTypeDialog(
                 }
 
                 TextButton(onClick = {
-                    slots[alvo.slotIndex] = SlotChoice(
-                        tipo = SlotTipo.REMOVER_COMP_MENOR,
-                        descricao = "Remover Complicação Menor",
-                        detalhes = "Placeholder — requer validação manual para impacto em CP/Histórico"
-                    )
+                    val anterior = slots[alvo.slotIndex]
+                    reverterSlotChoice(state, stageInfo.descriptor.estagio.nome, anterior, reservasCompMaior)
+                    if (consumeProgressForStage(state, stageInfo.descriptor.estagio.nome, 1)) {
+                        slots[alvo.slotIndex] = SlotChoice(
+                            tipo = SlotTipo.REMOVER_COMP_MENOR,
+                            descricao = "Remover Complicação Menor",
+                            detalhes = "Registrar remoção manualmente nas complicações.",
+                            stageName = stageInfo.descriptor.estagio.nome,
+                            custo = 1
+                        )
+                    }
                     seletorAtual.value = null
                     slotAlvo.value = null
                 }) {
@@ -586,12 +796,18 @@ private fun SlotTypeDialog(
                 }
 
                 TextButton(onClick = {
-                    reservasCompMaior.value += 1
-                    slots[alvo.slotIndex] = SlotChoice(
-                        tipo = SlotTipo.RESERVA_COMP_MAIOR,
-                        descricao = "Reserva para Complicação Maior",
-                        detalhes = "Reserva ${reservasCompMaior.value} — acumule antes de aplicar de fato"
-                    )
+                    val anterior = slots[alvo.slotIndex]
+                    reverterSlotChoice(state, stageInfo.descriptor.estagio.nome, anterior, reservasCompMaior)
+                    if (consumeProgressForStage(state, stageInfo.descriptor.estagio.nome, 1)) {
+                        reservasCompMaior.value += 1
+                        slots[alvo.slotIndex] = SlotChoice(
+                            tipo = SlotTipo.RESERVA_COMP_MAIOR,
+                            descricao = "Reserva para Complicação Maior",
+                            detalhes = "Reserva ${reservasCompMaior.value} — aplicar remoção manualmente ao juntar reservas.",
+                            stageName = stageInfo.descriptor.estagio.nome,
+                            custo = 1
+                        )
+                    }
                     seletorAtual.value = null
                     slotAlvo.value = null
                 }) {
@@ -599,6 +815,8 @@ private fun SlotTypeDialog(
                 }
 
                 TextButton(onClick = {
+                    val anterior = slots[alvo.slotIndex]
+                    reverterSlotChoice(state, stageInfo.descriptor.estagio.nome, anterior, reservasCompMaior)
                     slots[alvo.slotIndex] = SlotChoice()
                     seletorAtual.value = null
                     slotAlvo.value = null
@@ -622,13 +840,20 @@ private fun AdvantageSelectorDialog(
     state: CriadorState,
     slotState: MutableMap<String, SnapshotStateList<SlotChoice>>,
     slotAlvo: androidx.compose.runtime.MutableState<SlotContext?>,
-    seletorAtual: androidx.compose.runtime.MutableState<SelectorMode?>
+    seletorAtual: androidx.compose.runtime.MutableState<SelectorMode?>,
+    reservasCompMaior: androidx.compose.runtime.MutableState<Int>
 ) {
     if (seletorAtual.value != SelectorMode.Advantage) return
     val alvo = slotAlvo.value ?: return
-    val stageDesc = stagePlan().firstOrNull { it.codigo == alvo.stageCode } ?: return
-    val stageIndex = listaDeEstagios.indexOfFirst { it.nome == stageDesc.estagio.nome }
+    val stageInfo = stageMath(state, alvo.stageCode) ?: return
+    val stageIndex = listaDeEstagios.indexOfFirst { it.nome == stageInfo.descriptor.estagio.nome }
     if (stageIndex < 0) return
+    val slots = slotState[alvo.stageCode] ?: return
+    val slotAtual = slots.getOrNull(alvo.slotIndex) ?: return
+
+    val progressDisponivel = state.progressosDisponiveis + slotAtual.custo
+    val creditosStage = stageInfo.creditsLeft +
+            if (slotAtual.stageName == stageInfo.descriptor.estagio.nome) slotAtual.custo else 0
 
     val candidatas = listaVantagens.filter { vant ->
         val estReq = nivelParaEstagio[vant.nivel.uppercase()] ?: nivelParaEstagio.getValue("N")
@@ -641,31 +866,40 @@ private fun AdvantageSelectorDialog(
             seletorAtual.value = null
             slotAlvo.value = null
         },
-        title = { Text("Vantagens até ${stageDesc.codigo}") },
+        title = { Text("Vantagens até ${stageInfo.descriptor.codigo}") },
         text = {
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(candidatas) { vant ->
-                    val atende = state.podeSelecionar(vant)
+                    val atende = strictRequirementsOk(state, vant, stageIndex)
                     val requisitos = formatarRequisitos(vant)
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
+                                if (progressDisponivel <= 0 || creditosStage <= 0) return@clickable
+                                val anterior = slotAtual
+                                reverterSlotChoice(state, stageInfo.descriptor.estagio.nome, anterior, reservasCompMaior)
+                                if (state.progressosDisponiveis <= 0 || stageInfo.creditsLeft <= 0) return@clickable
+                                state.grantVantagemPointFromXp(stageInfo.descriptor.estagio.nome)
                                 slotState[alvo.stageCode]?.set(
                                     alvo.slotIndex,
                                     SlotChoice(
                                         tipo = SlotTipo.VANTAGEM,
-                                        descricao = "Vantagem: ${vant.nome}",
+                                        descricao = "PV reservado: ${vant.nome}",
                                         atende = atende,
                                         detalhes = buildString {
                                             append(requisitos)
                                             if (vant.requiresChoice) {
-                                                append(" — requer escolha específica não resolvida aqui")
+                                                append(" — requer escolha específica fora deste seletor")
                                             }
                                             if (!atende) {
                                                 append(" — requisitos não atendidos pelo estado atual")
                                             }
-                                        }
+                                            append(". PV destacado do estágio ${stageInfo.descriptor.codigo}.")
+                                        },
+                                        stageName = stageInfo.descriptor.estagio.nome,
+                                        custo = 1,
+                                        vantagemId = vant.id
                                     )
                                 )
                                 seletorAtual.value = null
@@ -708,12 +942,29 @@ private fun SkillSelectorDialog(
     state: CriadorState,
     slotState: MutableMap<String, SnapshotStateList<SlotChoice>>,
     slotAlvo: androidx.compose.runtime.MutableState<SlotContext?>,
-    seletorAtual: androidx.compose.runtime.MutableState<SelectorMode?>
+    seletorAtual: androidx.compose.runtime.MutableState<SelectorMode?>,
+    reservasCompMaior: androidx.compose.runtime.MutableState<Int>
 ) {
     if (seletorAtual.value != SelectorMode.Skill) return
     val alvo = slotAlvo.value ?: return
-    val periciasValidas = listaPericias.filter { per ->
-        state.rawTotal(per) < state.periciaCapRaw(per)
+    val stageInfo = stageMath(state, alvo.stageCode) ?: return
+    val slots = slotState[alvo.stageCode] ?: return
+    val slotAtual = slots.getOrNull(alvo.slotIndex) ?: return
+    val progressDisponivel = state.progressosDisponiveis + slotAtual.custo
+    val creditosStage = stageInfo.creditsLeft +
+            if (slotAtual.stageName == stageInfo.descriptor.estagio.nome) slotAtual.custo else 0
+
+    val periciasValidas = listaPericias.mapNotNull { per ->
+        val atual = state.rawTotal(per)
+        val cap = state.periciaCapRaw(per)
+        if (atual >= cap) return@mapNotNull null
+        val next = when {
+            atual == 0 -> 4
+            atual < 12 -> atual + 2
+            else -> atual + 1
+        }
+        val cost = if (next <= state.valoresAtributos[state.atributoBaseParaPericia(per)]!!.intValue) 1 else 2
+        PericiaAvanco(per, atual, cap, next, cost)
     }
 
     AlertDialog(
@@ -727,30 +978,43 @@ private fun SkillSelectorDialog(
                 Text("Nenhuma perícia pode ser aumentada via avanço agora.")
             } else {
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(periciasValidas) { per ->
-                        val atual = state.rawTotal(per)
-                        val cap = state.periciaCapRaw(per)
+                    items(periciasValidas) { avanco ->
+                        val pode = progressDisponivel >= avanco.cost && creditosStage >= avanco.cost
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable {
-                                    slotState[alvo.stageCode]?.set(
-                                        alvo.slotIndex,
-                                        SlotChoice(
-                                            tipo = SlotTipo.PERICIA,
-                                            descricao = "Perícia: ${per.nome} (+1 passo)",
-                                            detalhes = "Atual: ${atual.toDiceString()} / Teto: ${cap.toDiceString()}"
+                                .clickable(enabled = pode) {
+                                    val anterior = slotAtual
+                                    reverterSlotChoice(state, stageInfo.descriptor.estagio.nome, anterior, reservasCompMaior)
+                                    if (consumeProgressForStage(state, stageInfo.descriptor.estagio.nome, avanco.cost)) {
+                                        state.baseIncsPorPericia[avanco.pericia] =
+                                            state.baseIncsPorPericia.getValue(avanco.pericia) + 1
+                                        state.spCostStackPorPericia.getValue(avanco.pericia).add(0)
+                                        state.rebuildAllPericiaStacks()
+
+                                        slotState[alvo.stageCode]?.set(
+                                            alvo.slotIndex,
+                                            SlotChoice(
+                                                tipo = SlotTipo.PERICIA,
+                                                descricao = "Perícia: ${avanco.pericia.nome} (+1 passo)",
+                                                detalhes = "${avanco.atual.toDiceString()} → ${avanco.next.toDiceString()} (custo ${avanco.cost} avanço)",
+                                                stageName = stageInfo.descriptor.estagio.nome,
+                                                custo = avanco.cost,
+                                                periciaNome = avanco.pericia.nome,
+                                                periciaRawAntes = avanco.atual
+                                            )
                                         )
-                                    )
+                                    }
                                     seletorAtual.value = null
                                     slotAlvo.value = null
                                 }
                                 .padding(vertical = 8.dp, horizontal = 4.dp)
                         ) {
-                            Text(per.nome, fontWeight = FontWeight.SemiBold)
+                            Text(avanco.pericia.nome, fontWeight = FontWeight.SemiBold)
                             Text(
-                                text = "${per.atributo} | ${atual.toDiceString()} → ${((atual + 2).coerceAtMost(cap)).toDiceString()} (custo padrão de avanço)",
-                                style = MaterialTheme.typography.bodySmall
+                                text = "${avanco.pericia.atributo} | ${avanco.atual.toDiceString()} → ${avanco.next.toDiceString()} (custo ${avanco.cost})",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = if (pode) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.outline
                             )
                             HorizontalDivider()
                         }
@@ -784,4 +1048,115 @@ private fun formatarRequisitos(v: Vantagem): String {
         partes += v.requisitos.observacoes
     }
     return partes.joinToString(separator = " • ")
+}
+
+private fun strictRequirementsOk(state: CriadorState, v: Vantagem, estIndex: Int): Boolean {
+    val reqEst = v.requisitos.estagio
+    if (reqEst.isNotBlank()) {
+        val reqIdx = listaDeEstagios.indexOfFirst { it.nome.equals(reqEst, ignoreCase = true) }
+        if (reqIdx != -1 && reqIdx > estIndex) return false
+    }
+    if (v.requisitos.atributoMin.any { (nome, min) ->
+            val chaveNorm = nome.uppercase().semAcentos().trim()
+            val valor = state.valoresAtributos[chaveNorm]?.intValue
+            valor == null || valor < min
+        }
+    ) return false
+    val perMin = v.requisitos.periciaMin
+    if (perMin.isNotEmpty()) {
+        if (v.vinculadoPericia) {
+            val atendeUma = perMin.any { (perNome, minRaw) ->
+                val per = listaPericias.firstOrNull { it.nome.equals(perNome, ignoreCase = true) }
+                per != null && state.rawTotal(per) >= minRaw
+            }
+            if (!atendeUma) return false
+        } else {
+            val falhaAlguma = perMin.any { (perNome, minRaw) ->
+                val per = listaPericias.firstOrNull { it.nome.equals(perNome, ignoreCase = true) }
+                    ?: return@any true
+                state.rawTotal(per) < minRaw
+            }
+            if (falhaAlguma) return false
+        }
+    }
+    val perMinOpc = v.requisitos.periciaMinOpcional
+    if (perMinOpc.isNotEmpty()) {
+        val ok = perMinOpc.any { (perNome, minRaw) ->
+            val per = listaPericias.firstOrNull { it.nome.equals(perNome, ignoreCase = true) }
+            per != null && state.rawTotal(per) >= minRaw
+        }
+        if (!ok) return false
+    }
+    if (v.requisitos.vantagensPrevias.isNotEmpty()) {
+        val tenhoTodas = v.requisitos.vantagensPrevias.all { req ->
+            val reqNorm = req.uppercase().semAcentos().trim()
+            state.vantagensSelecionadas.any { it.nome.uppercase().semAcentos().trim() == reqNorm }
+        }
+        if (!tenhoTodas) return false
+    }
+    if (v.requisitos.exigeCS && !state.cartaSelvagem) return false
+    return true
+}
+
+private fun reverterSlotChoice(
+    state: CriadorState,
+    stageFallbackName: String,
+    choice: SlotChoice,
+    reservasCompMaior: androidx.compose.runtime.MutableState<Int>
+) {
+    val stageName = choice.stageName ?: stageFallbackName
+    when (choice.tipo) {
+        SlotTipo.ATRIBUTO -> {
+            refundProgressForStage(state, stageName, choice.custo)
+            choice.atributoKey?.let { key ->
+                val base = choice.valorAtributoAntes
+                if (base != null) {
+                    state.valoresAtributos[key]?.intValue = base
+                } else {
+                    val atual = state.valoresAtributos[key]?.intValue ?: 0
+                    val step = if (atual > 12) 1 else 2
+                    state.valoresAtributos[key]?.intValue = (atual - step).coerceAtLeast(state.atributoMinRaw(key))
+                }
+                val prev = state.comprasAttrPorEstagio[stageName] ?: 0
+                state.comprasAttrPorEstagio[stageName] = (prev - 1).coerceAtLeast(0)
+                state.recalcularPontosAtributo()
+            }
+        }
+
+        SlotTipo.VANTAGEM -> {
+            refundProgressForStage(state, stageName, choice.custo)
+            state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
+            state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
+            if (state.pvFromXpOutstanding == 0) {
+                state.overrideStageForVantagem = null
+                state.openVantagensAfterGrant = false
+            }
+        }
+
+        SlotTipo.PERICIA -> {
+            refundProgressForStage(state, stageName, choice.custo)
+            choice.periciaNome?.let { nome ->
+                val per = listaPericias.firstOrNull { it.nome == nome }
+                per?.let {
+                    if (state.baseIncsPorPericia.getValue(it) > 0) {
+                        state.baseIncsPorPericia[it] = state.baseIncsPorPericia.getValue(it) - 1
+                    }
+                    val stack = state.spCostStackPorPericia.getValue(it)
+                    if (stack.isNotEmpty()) stack.removeAt(stack.size - 1)
+                    state.rebuildAllPericiaStacks()
+                }
+            }
+        }
+
+        SlotTipo.REMOVER_COMP_MENOR -> {
+            refundProgressForStage(state, stageName, choice.custo)
+        }
+
+        SlotTipo.RESERVA_COMP_MAIOR -> {
+            refundProgressForStage(state, stageName, choice.custo)
+            reservasCompMaior.value = (reservasCompMaior.value - 1).coerceAtLeast(0)
+        }
+
+        else -> {}
+    }
 }
