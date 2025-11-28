@@ -133,55 +133,6 @@ fun ProgressosDialog(
     val costAttr = if (est.nome == "Lendário") 2 else 1
     val canBuyAttr = creditsLeft >= costAttr && state.progressosDisponiveis >= costAttr && boughtSoFar < maxAllowed
 
-    // ── Requisitos de vantagens (mesma lógica, sem logs) ──────────────────────
-    fun strictRequirementsOk(v: Vantagem, estIndex: Int): Boolean {
-        val reqEst = v.requisitos.estagio
-        if (reqEst.isNotBlank()) {
-            val reqIdx = listaDeEstagios.indexOfFirst { it.nome.equals(reqEst, ignoreCase = true) }
-            if (reqIdx != -1 && reqIdx > estIndex) return false
-        }
-        if (v.requisitos.atributoMin.any { (nome, min) ->
-                val chaveNorm = nome.uppercase().semAcentos().trim()
-                val valor = state.valoresAtributos[chaveNorm]?.intValue
-                valor == null || valor < min
-            }
-        ) return false
-        val perMin = v.requisitos.periciaMin
-        if (perMin.isNotEmpty()) {
-            if (v.vinculadoPericia) {
-                val atendeUma = perMin.any { (perNome, minRaw) ->
-                    val per = listaPericias.firstOrNull { it.nome.equals(perNome, ignoreCase = true) }
-                    per != null && state.rawTotal(per) >= minRaw
-                }
-                if (!atendeUma) return false
-            } else {
-                val falhaAlguma = perMin.any { (perNome, minRaw) ->
-                    val per = listaPericias.firstOrNull { it.nome.equals(perNome, ignoreCase = true) }
-                        ?: return@any true
-                    state.rawTotal(per) < minRaw
-                }
-                if (falhaAlguma) return false
-            }
-        }
-        val perMinOpc = v.requisitos.periciaMinOpcional
-        if (perMinOpc.isNotEmpty()) {
-            val ok = perMinOpc.any { (perNome, minRaw) ->
-                val per = listaPericias.firstOrNull { it.nome.equals(perNome, ignoreCase = true) }
-                per != null && state.rawTotal(per) >= minRaw
-            }
-            if (!ok) return false
-        }
-        if (v.requisitos.vantagensPrevias.isNotEmpty()) {
-            val tenhoTodas = v.requisitos.vantagensPrevias.all { req ->
-                val reqNorm = req.uppercase().semAcentos().trim()
-                state.vantagensSelecionadas.any { it.nome.uppercase().semAcentos().trim() == reqNorm }
-            }
-            if (!tenhoTodas) return false
-        }
-        if (v.requisitos.exigeCS && !state.cartaSelvagem) return false
-        return true
-    }
-
     // Helpers 2×
     fun possui(per: Pericia): Boolean = state.rawTotal(per) > 0
     fun sendoCompradaAgora(per: Pericia): Boolean =
@@ -859,7 +810,8 @@ fun ProgressosDialog(
 
                     LazyColumn {
                         items(candidatas) { vant ->
-                            val atendeRequisitos = state.podeSelecionar(vant) && strictRequirementsOk(vant, estIndex)
+                            val atendeRequisitos = state.podeSelecionar(vant)
+
                             val listaRequisitosTexto = formatarRequisitosParaDialog(vant, idParaNome)
 
                             val qtdJaTem = state.vantagensSelecionadas.count {
@@ -976,8 +928,8 @@ fun ProgressosDialog(
                 ChoiceDialog(
                     options = options,
                     onConfirm = onConfirm@{ choice ->
-                        val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
-                        if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndexFinal)) {
+                        if (!state.podeSelecionar(vant)) {
+
                             showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
                             return@onConfirm
                         }
@@ -1023,8 +975,8 @@ fun ProgressosDialog(
                     ChoiceDialog(
                         options = profChoices,
                         onConfirm = onConfirm@{ choice ->
-                            val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
-                            if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndexFinal)) {
+                            advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
+                            if (!state.podeSelecionar(vant)) {
                                 showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
                                 return@onConfirm
                             }
@@ -1059,8 +1011,7 @@ fun ProgressosDialog(
                 ChoiceDialog(
                     options = vant.choiceOptions,
                     onConfirm = onConfirm@{ choice ->
-                        val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
-                        if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndexFinal)) {
+                        if (!state.podeSelecionar(vant)) {
                             showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
                             return@onConfirm
                         }
