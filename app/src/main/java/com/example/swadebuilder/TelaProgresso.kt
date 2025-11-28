@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -33,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
-import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.ui.components.SectionCard
@@ -50,6 +50,7 @@ import com.example.swadebuilder.ui.sections.SuperPoderesContent
 import com.example.swadebuilder.ui.sections.VantagensContent
 import kotlinx.serialization.json.JsonPrimitive
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun TelaProgresso(
@@ -147,7 +148,7 @@ fun TelaProgresso(
             expanded = expComps,
             onToggle = onToggleComps,
             onOpenComplicacoesDetail = onOpenComplicacoesDetail,
-            supersLocked = state.criacaoBasicaCongelada
+            feedbackMessages = viewModel.feedbackMessages as MutableList<String>
         )
 
         HorizontalDivider(thickness = 1.dp)
@@ -174,7 +175,8 @@ fun TelaProgresso(
         ) {
             PericiasContent(
                 state = state,
-                onOpenPericiasDetail = onOpenPericiasDetail
+                onOpenPericiasDetail = onOpenPericiasDetail,
+                feedbackMessages = viewModel.feedbackMessages as MutableList<String>
             )
         }
 
@@ -188,15 +190,16 @@ fun TelaProgresso(
         ) {
             VantagensContent(
                 state = state,
-                onOpenVantagensDetail = onOpenVantagensDetail
+                multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
+                onOpenVantagensDetail = onOpenVantagensDetail,
+                viewModel = viewModel
             )
         }
 
         HorizontalDivider(thickness = 1.dp)
 
-        val temArcano = state.vantagensSelecionadas.any { vant ->
-            vant.antecedenteArcano != null ||
-                    vant.nome.keyify() == "antecedente_arcano"
+        val temArcano = state.vantagensSelecionadas.any {
+            it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
         }
 
         if (temArcano && !state.celestialAAMilagresDesabilitado) {
