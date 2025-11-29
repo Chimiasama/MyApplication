@@ -1330,6 +1330,10 @@ class CriadorState {
 
     var progressosDisponiveis by mutableIntStateOf(0)
 
+    val xpSlots = mutableStateListOf<Boolean>().apply {
+        repeat(20) { add(false) }
+    }
+
     private fun reachedStages(): List<Estagio> =
         listaDeEstagios.filter { progresso >= it.minProgress }
 

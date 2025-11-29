@@ -45,6 +45,7 @@ import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.SummaryContent
 import com.example.swadebuilder.ui.sections.SuperPoderesContent
 import com.example.swadebuilder.ui.sections.VantagensContent
+import com.example.swadebuilder.ui.sections.XpSection
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
@@ -91,6 +92,8 @@ fun PreviewApp() {
         onToggleResumo = {},
         expPoderes = true,
         onTogglePoderes = {},
+        expXp = true,
+        onToggleXp = {},
 
         equipamentoCategorias = emptyList(),
         superequipCategorias = emptyList(),
@@ -140,6 +143,9 @@ fun UnifiedScreen(
 
     expPoderes: Boolean,
     onTogglePoderes: () -> Unit,
+
+    expXp: Boolean,
+    onToggleXp: () -> Unit,
 
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
@@ -340,6 +346,16 @@ fun UnifiedScreen(
         ) {
             SummaryContent(state)
         }
+
+        Spacer(Modifier.height(16.dp))
+        HorizontalDivider(thickness = 3.dp)
+
+        XpSection(
+            state = state,
+            expanded = expXp,
+            onToggle = onToggleXp,
+            onUseProgress = { showAllocDialog = true }
+        )
     }
 
     if (showMeioElfoDialog && pendingMeioElfoKey != null) {
