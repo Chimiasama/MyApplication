@@ -71,7 +71,6 @@ fun PreviewApp() {
         onOpenListaCompletaEquipamento = {},
         onOpenPoderesDetail = {},
         onOpenSuperPoderesDetail = { _ -> },
-        onNavigateToProgresso = {},
 
         expInfos = true,
         onToggleInfos = {},
@@ -116,7 +115,6 @@ fun UnifiedScreen(
     onOpenListaCompletaEquipamento: () -> Unit,
     onOpenPoderesDetail: () -> Unit,
     onOpenSuperPoderesDetail: (String) -> Unit,
-    onNavigateToProgresso: () -> Unit,
 
     // ✅ expansões hoistadas
     expInfos: Boolean,
@@ -346,15 +344,6 @@ fun UnifiedScreen(
             SummaryContent(state)
         }
 
-        if (state.emProgresso) {
-            Spacer(Modifier.height(16.dp))
-            Button(
-                onClick = onNavigateToProgresso,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Ir para a Tela de Progressão")
-            }
-        }
     }
 
     if (showMeioElfoDialog && pendingMeioElfoKey != null) {

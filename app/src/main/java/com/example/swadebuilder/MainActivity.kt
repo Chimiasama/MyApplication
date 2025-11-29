@@ -270,7 +270,6 @@ class MainActivity : ComponentActivity() {
             var showPoderesDetail         by rememberSaveable(creationSession) { mutableStateOf(false) }
             var showEquipLista            by rememberSaveable(creationSession) { mutableStateOf(false) }
             var showSuperDetail           by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var showProgressoScreen       by rememberSaveable(creationSession) { mutableStateOf(false) }
 
             var highlightedVantagem   by rememberSaveable(creationSession) { mutableStateOf("") }
             var highlightedSuperPoder by rememberSaveable(creationSession) { mutableStateOf("") }
@@ -310,8 +309,7 @@ class MainActivity : ComponentActivity() {
                             showAncestralidadesDetail ||
                             showPoderesDetail ||
                             showEquipLista ||
-                            showSuperDetail ||
-                            showProgressoScreen
+                            showSuperDetail
                     )
 
             BackHandler(enabled = emTelaDePreenchimento && !mostrouTelaInicial) {
@@ -423,7 +421,6 @@ class MainActivity : ComponentActivity() {
                                         || showPoderesDetail
                                         || showEquipLista
                                         || showSuperDetail
-                                        || showProgressoScreen
                             ) {
                                 showVantagensDetail       = false
                                 showPericiasDetail        = false
@@ -433,7 +430,6 @@ class MainActivity : ComponentActivity() {
                                 showPoderesDetail         = false
                                 showEquipLista            = false
                                 showSuperDetail           = false
-                                showProgressoScreen       = false
                             }
                             BackHandler(
                                 enabled = !(
@@ -445,7 +441,6 @@ class MainActivity : ComponentActivity() {
                                                 || showPoderesDetail
                                                 || showEquipLista
                                                 || showSuperDetail
-                                                || showProgressoScreen
                                         )
                             ) {
                                 mostrouTelaInicial = true
@@ -580,7 +575,6 @@ class MainActivity : ComponentActivity() {
                                         showAncestralidadesDetail -> 6
                                         showPoderesDetail         -> 7
                                         showSuperDetail           -> 8
-                                        showProgressoScreen       -> 9
                                         else                      -> 0
                                     }
 
@@ -626,54 +620,6 @@ class MainActivity : ComponentActivity() {
                                                     expPoderes = true
                                                 }
                                             )
-                                            9 -> TelaProgresso(
-                                                state = state,
-                                                viewModel = criadorViewModel,
-                                                onBack = { showProgressoScreen = false },
-                                                onOpenVantagensDetail = { nomeVantagem ->
-                                                    highlightedVantagem      = nomeVantagem
-                                                    state.vantagemEmFoco     = nomeVantagem
-                                                    showVantagensDetail      = true
-                                                },
-                                                onOpenPericiasDetail = { showPericiasDetail = true },
-                                                onOpenComplicacoesDetail = { showComplicacoesDetail = true },
-                                                onOpenAtributosDetail = { showAtributosDetail = true },
-                                                onOpenListaAncestralidadesDetail = { nomeAnc ->
-                                                    if (nomeAnc.isNotBlank()) {
-                                                        state.ancestralidadeEmFoco = nomeAnc
-                                                    }
-                                                    showAncestralidadesDetail = true
-                                                },
-                                                onOpenListaCompletaEquipamento = { showEquipLista = true },
-                                                onOpenPoderesDetail = { showPoderesDetail = true },
-                                                onOpenSuperPoderesDetail = { nomePoder ->
-                                                    highlightedSuperPoder  = nomePoder
-                                                    state.superPoderEmFoco = nomePoder.takeIf { it.isNotBlank() }
-                                                    showSuperDetail        = true
-                                                },
-                                                equipamentoCategorias = equipamentoCategorias,
-                                                superequipCategorias = superequipCategorias,
-                                                listaSuperPoderes = listaSuperPoderes,
-                                                expInfos = expInfos,
-                                                onToggleInfos = { expInfos = !expInfos },
-                                                expAncs = expAncs,
-                                                onToggleAncs = { expAncs = !expAncs },
-                                                expComps = expComps,
-                                                onToggleComps = { expComps = !expComps },
-                                                expEquip = expEquip,
-                                                onToggleEquip = { expEquip = !expEquip },
-                                                expAttrs = expAttrs,
-                                                onToggleAttrs = { expAttrs = !expAttrs },
-                                                expPer = expPer,
-                                                onTogglePer = { expPer = !expPer },
-                                                expVants = expVants,
-                                                onToggleVants = { expVants = !expVants },
-                                                expResumo = expResumo,
-                                                onToggleResumo = { expResumo = !expResumo },
-                                                expPoderes = expPoderes,
-                                                onTogglePoderes = { expPoderes = !expPoderes },
-                                            )
-
                                             else -> UnifiedScreen(
                                                 state = state,
                                                 viewModel = criadorViewModel,
@@ -703,8 +649,6 @@ class MainActivity : ComponentActivity() {
                                                     state.superPoderEmFoco = nomePoder.takeIf { it.isNotBlank() }
                                                     showSuperDetail        = true
                                                 },
-
-                                                onNavigateToProgresso = { showProgressoScreen = true },
 
                                                 expInfos       = expInfos,
                                                 onToggleInfos  = { expInfos = !expInfos },

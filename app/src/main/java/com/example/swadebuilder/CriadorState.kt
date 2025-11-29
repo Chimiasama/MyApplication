@@ -321,8 +321,6 @@ class CriadorState {
     var regraMultiplosIdiomas by mutableStateOf(false)
 
     var pvFromXpOutstanding by mutableIntStateOf(0)
-    var overrideStageForVantagem by mutableStateOf<String?>(null)
-    var openVantagensAfterGrant by mutableStateOf(false)
     var superPoderEmFoco by mutableStateOf<String?>(null)
 
     var ancestralidadeEmFoco by mutableStateOf<String?>(null)
@@ -337,21 +335,6 @@ class CriadorState {
             }
         }
     }
-
-    fun grantVantagemPointFromXp(stageName: String) {
-        check(progressosDisponiveis > 0) { "Sem XP disponível." }
-
-        stageXpSpent[stageName] = stageXpSpent.getValue(stageName) + 1
-        progressosDisponiveis -= 1
-
-        pontosVantagem += 1
-        pvFromXpOutstanding += 1
-
-        overrideStageForVantagem = stageName
-
-        openVantagensAfterGrant = true
-    }
-
 
     fun maxComprasPpAteAgora(): Int {
         return listaDeEstagios.indexOf(estagioAtual()) + 1
@@ -609,27 +592,6 @@ class CriadorState {
         return listaDeEstagios.first { progresso in it.minProgress .. it.maxProgress }
     }
 
-    private fun effectiveProgressoParaVantagens(): Int {
-        val stName = overrideStageForVantagem ?: return progresso
-        val st = listaDeEstagios.firstOrNull { it.nome.equals(stName, ignoreCase = true) }
-        return st?.minProgress ?: progresso
-    }
-
-    private fun currentProgressStageIndex(): Int {
-        val caps = listaDeEstagios.mapIndexed { idx, st ->
-            val prevMax = listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: 0
-            if (idx < listaDeEstagios.lastIndex)
-                st.maxProgress - prevMax
-            else
-                (TOTAL_PROGRESS_LIMIT - prevMax).coerceAtLeast(0)
-        }
-        val firstOpen = caps.indexOfFirst { cap ->
-            val nome = listaDeEstagios[caps.indexOf(cap)].nome
-            (stageXpSpent[nome] ?: 0) < cap
-        }
-        return if (firstOpen >= 0) firstOpen else listaDeEstagios.lastIndex
-    }
-
     var ancestralidade by mutableStateOf("HUMANOS")
     var celestialAAMilagresDesabilitado by mutableStateOf(false)
     var meioElfoAgil by mutableStateOf(false)
@@ -764,7 +726,7 @@ class CriadorState {
             listaDeEstagios
                 .firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
                 ?.let { estReqObj ->
-                    if (effectiveProgressoParaVantagens() < estReqObj.minProgress) return false
+                    if (progresso < estReqObj.minProgress) return false
                 }
         }
 
@@ -811,7 +773,7 @@ class CriadorState {
 
         // 9) Estágio alternativo (tabela nivelParaEstagio)
         nivelParaEstagio[v.requisitos.estagio]?.let { estReqObj2 ->
-            if (estReqObj2.minProgress > effectiveProgressoParaVantagens()) return false
+            if (estReqObj2.minProgress > progresso) return false
         }
 
         // 10) Atributos mínimos
@@ -1205,33 +1167,6 @@ class CriadorState {
         if (pvDepois > pvAntes) feedbackMessages.add("${pvDepois - pvAntes} ponto(s) de vantagem devolvido(s).")
     }
 
-    fun spendProgressAcrossStages(n: Int) {
-        var remaining = n
-        reachedStages().mapIndexed { idx, est -> idx to est }.forEach { (idx, est) ->
-            if (remaining == 0) return@forEach
-            val cap   = dynamicStageCaps[idx]
-            val spent = stageXpSpent.getValue(est.nome)
-            val avail = (cap - spent).coerceAtLeast(0)
-            val use   = avail.coerceAtMost(remaining)
-            if (use > 0) {
-                stageXpSpent[est.nome] = spent + use
-                remaining -= use
-            }
-        }
-        val totalSpent = stageXpSpent.values.sum()
-        progressosDisponiveis = (progresso - totalSpent).coerceAtLeast(0)
-    }
-
-    fun checkFreeze() {
-        val idx = currentProgressStageIndex()
-        val est = listaDeEstagios[idx]
-        val cap = dynamicStageCaps[idx]
-        val spent = stageXpSpent.getValue(est.nome)
-        if (spent == cap) {
-            frozenAdvCount = vantagensSelecionadas.size
-        }
-    }
-
     private fun calcularPontosAtributoRestantes(): Int {
         val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
         var usados = 0
@@ -1323,15 +1258,6 @@ class CriadorState {
                 pontosVantagem == 0 &&
                 (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0) == 0
     }
-
-    val stageXpSpent: SnapshotStateMap<String, Int> = mutableStateMapOf<String, Int>().apply {
-        listaDeEstagios.forEach { this[it.nome] = 0 }
-    }
-
-    var progressosDisponiveis by mutableIntStateOf(0)
-
-    private fun reachedStages(): List<Estagio> =
-        listaDeEstagios.filter { progresso >= it.minProgress }
 
     fun atributoRawBaseSemSupers(attrKey: String): Int {
         val key = attrKey.uppercase().trim()
