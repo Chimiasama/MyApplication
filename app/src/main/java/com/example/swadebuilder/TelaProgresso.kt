@@ -46,7 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
-import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
