@@ -152,7 +152,6 @@ fun UnifiedScreen(
         Log.d("DEBUG", "modoSupers é ${state.modoSupers}")
     }
 
-    var showAllocDialog by rememberSaveable { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
     // --- estados para o MEIO-ELFO ---
@@ -170,8 +169,7 @@ fun UnifiedScreen(
         InformacoesSection(
             state = state,
             expanded = expInfos,
-            onToggle = onToggleInfos,
-            onUseProgress = { showAllocDialog = true }
+            onToggle = onToggleInfos
         )
 
         HorizontalDivider(thickness = 1.dp)
@@ -409,11 +407,5 @@ fun UnifiedScreen(
                 }
             }
         )
-    }
-
-    if (showAllocDialog) {
-        ProgressosDialog(state) {
-            showAllocDialog = false
-        }
     }
 }

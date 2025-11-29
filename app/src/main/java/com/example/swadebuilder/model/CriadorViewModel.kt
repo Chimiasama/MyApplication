@@ -146,7 +146,6 @@ class CriadorViewModel : ViewModel() {
 
         state.dinheiro = 500
         state.progresso = 0
-        state.progressosDisponiveis = 0
         state.frozenAdvCount = 0
         state.emProgresso = false
 
@@ -417,10 +416,7 @@ class CriadorViewModel : ViewModel() {
                 }
 
                 // valida requisitos ignorando Estágio (simula “Lendário” para não travar pelo estágio)
-                val progressoAnterior = state.overrideStageForVantagem
-                state.overrideStageForVantagem = "Lendário"
                 val permitido = state.podeSelecionar(vant)
-                state.overrideStageForVantagem = progressoAnterior
 
                 if (!permitido) {
                     return InvestCheck(false, "Requisitos não atendidos para a vantagem (exceto Estágio).")

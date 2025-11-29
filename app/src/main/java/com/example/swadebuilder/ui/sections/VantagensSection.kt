@@ -660,10 +660,6 @@ fun VantagensContent(
 
                                                     if (state.pvFromXpOutstanding > 0) {
                                                         state.pvFromXpOutstanding -= 1
-                                                        if (state.pvFromXpOutstanding == 0) {
-                                                            state.overrideStageForVantagem = null
-                                                            state.openVantagensAfterGrant = false
-                                                        }
                                                     }
                                                 }
                                             }

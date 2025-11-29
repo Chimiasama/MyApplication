@@ -51,8 +51,7 @@ import kotlin.math.roundToInt
 fun InformacoesSection(
     state: CriadorState,
     expanded: Boolean,
-    onToggle: () -> Unit,
-    onUseProgress: () -> Unit
+    onToggle: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -138,8 +137,6 @@ fun InformacoesSection(
             }
 
             val podeAbrirProgressos = state.emProgresso || state.creationComplete()
-            val podeUsarProgresso =
-                state.creationComplete() && (state.progressosDisponiveis > 0) && (state.pontosVantagem == 0)
 
             Row(
                 Modifier
@@ -154,18 +151,6 @@ fun InformacoesSection(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("Progressos: ${state.progresso}")
-                }
-                Button(
-                    onClick = {
-                        state.emProgresso = true
-                        if (state.progressosDisponiveis > 0 && state.pontosVantagem == 0) {
-                            onUseProgress()
-                        }
-                    },
-                    enabled = podeUsarProgresso && poderesOk,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("Usar Progresso (${state.progressosDisponiveis})")
                 }
             }
 
@@ -223,7 +208,6 @@ fun InformacoesSection(
                 }
             }
 
-            val spentOnCreation = state.progresso - state.progressosDisponiveis
             var tempProgresso by rememberSaveable { mutableIntStateOf(state.progresso) }
             if (showProgressDialog) {
                 AlertDialog(
@@ -235,9 +219,9 @@ fun InformacoesSection(
                                 value = tempProgresso.toFloat(),
                                 onValueChange = { new ->
                                     tempProgresso = new.roundToInt()
-                                        .coerceIn(spentOnCreation, 50)
+                                        .coerceIn(0, 50)
                                 },
-                                valueRange = spentOnCreation.toFloat()..50f,
+                                valueRange = 0f..50f,
                                 steps = 50,
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -252,7 +236,6 @@ fun InformacoesSection(
                     confirmButton = {
                         TextButton(onClick = {
                             state.progresso = tempProgresso
-                            state.progressosDisponiveis = tempProgresso - spentOnCreation
                             state.emProgresso = true
                             showProgressDialog = false
                         }) { Text("OK") }

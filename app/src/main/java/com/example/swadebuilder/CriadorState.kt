@@ -242,11 +242,7 @@ class CriadorState {
     fun adicionarVantagemPorSuper(v: Vantagem): Boolean {
         if (v.categoria == Categoria.LENDARIAS) return false
 
-        val progressoAnterior = overrideStageForVantagem
-        overrideStageForVantagem = "Lendário"
-
         val permitido = podeSelecionar(v)
-        overrideStageForVantagem = progressoAnterior
 
         if (!permitido) return false
 
