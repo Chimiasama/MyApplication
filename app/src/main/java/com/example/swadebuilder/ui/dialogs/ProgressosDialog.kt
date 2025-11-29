@@ -530,6 +530,39 @@ fun ProgressosDialog(
                     Spacer(Modifier.height(12.dp))
                 }
 
+                // ── Vantagem via XP ───────────────────────────────────────────────
+                val podeComprarVantagem = creditsLeft > 0 && state.progressosDisponiveis > 0
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .alpha(if (podeComprarVantagem) 1f else 0.3f)
+                        .clickable(enabled = podeComprarVantagem) {
+                            if (podeComprarVantagem) {
+                                escolheu = "Vantagem"
+                            }
+                        }
+                        .padding(vertical = 4.dp)
+                ) {
+                    RadioButton(
+                        selected = (escolheu == "Vantagem"),
+                        onClick = {
+                            if (podeComprarVantagem) escolheu = "Vantagem"
+                        },
+                        enabled = podeComprarVantagem
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text("Comprar Vantagem")
+                }
+
+                if (escolheu == "Vantagem") {
+                    Text(
+                        "Selecione o progresso para adquirir uma Vantagem (custo 1 XP).",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(start = 8.dp, bottom = 12.dp)
+                    )
+                }
+
                 // ── Remover Complicação ───────────────────────────────────────────
                 if (state.complicacoesSelecionadas.values.any { it != null }) {
                     RadioButtonRow("Remover Complicação", escolheu == "Complicacao") {
@@ -677,6 +710,16 @@ fun ProgressosDialog(
                             }
                             return@TextButton
                         }
+                        "Vantagem" -> {
+                            if (!podeComprarVantagem) {
+                                showSnack("Sem progressos disponíveis neste estágio.")
+                                return@TextButton
+                            }
+
+                            advSelectedStageIndex = selectedTab
+                            showAdvSelection = true
+                            return@TextButton
+                        }
                         "Complicacao" -> {
                             compSelected?.let { comp ->
                                 val nivelAtual = state.complicacoesSelecionadas[comp]!!
@@ -738,6 +781,7 @@ fun ProgressosDialog(
                         }
                     }
                     "Atributo" -> canBuyAttr
+                    "Vantagem" -> podeComprarVantagem
                     else -> true
                 }
             ) { Text("Confirmar") }

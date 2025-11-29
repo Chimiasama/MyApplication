@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -24,13 +25,17 @@ import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.Button
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -46,8 +51,11 @@ import com.example.swadebuilder.ui.sections.PericiasContent
 import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.SummaryContent
 import com.example.swadebuilder.ui.sections.SuperPoderesContent
+import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.listaDeEstagios
+import com.example.swadebuilder.dynamicStageCaps
 import kotlinx.serialization.json.JsonPrimitive
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,6 +92,8 @@ fun TelaProgresso(
     expPoderes: Boolean,
     onTogglePoderes: () -> Unit,
 ) {
+    var showProgressDialog by rememberSaveable { mutableStateOf(false) }
+    var expProgressos by rememberSaveable { mutableStateOf(true) }
     val scrollState = rememberScrollState()
 
     Column(
@@ -251,6 +261,78 @@ fun TelaProgresso(
         Spacer(Modifier.height(16.dp))
         HorizontalDivider(thickness = 3.dp)
 
+        Spacer(Modifier.height(16.dp))
+
+        SectionCard(
+            title = "Progressos (XP)",
+            expanded = expProgressos,
+            onToggle = { expProgressos = !expProgressos },
+            icon = Icons.Default.FlashOn
+        ) {
+            val reachedStages = listaDeEstagios.filter { state.progresso >= it.minProgress }
+
+            Text(
+                text = "Progressos disponíveis: ${state.progressosDisponiveis}",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                val slots = state.progressosDisponiveis.coerceAtLeast(1)
+                repeat(slots) { idx ->
+                    AssistChip(
+                        onClick = { showProgressDialog = true },
+                        enabled = state.progressosDisponiveis > 0,
+                        label = {
+                            if (state.progressosDisponiveis > 0) {
+                                Text("XP ${idx + 1}")
+                            } else {
+                                Text("Sem XP")
+                            }
+                        }
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(8.dp))
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 180.dp)
+            ) {
+                items(reachedStages) { est ->
+                    val idx = listaDeEstagios.indexOf(est)
+                    val cap = dynamicStageCaps.getOrElse(idx) { 0 }
+                    val spent = state.stageXpSpent[est.nome] ?: 0
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(est.nome, fontWeight = FontWeight.SemiBold)
+                        Text("$spent / $cap", style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(8.dp))
+
+            Button(
+                onClick = { showProgressDialog = true },
+                enabled = state.progressosDisponiveis > 0,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Usar progresso para comprar melhorias")
+            }
+        }
 
         Spacer(Modifier.height(16.dp))
         HorizontalDivider(thickness = 3.dp)
@@ -262,6 +344,12 @@ fun TelaProgresso(
             icon = Icons.Default.Description
         ) {
             SummaryContent(state = state)
+        }
+    }
+
+    if (showProgressDialog) {
+        ProgressosDialog(state) {
+            showProgressDialog = false
         }
     }
 
