@@ -132,6 +132,7 @@ fun ProgressosDialog(
     val maxAllowed = if (est.nome == "Lendário") Int.MAX_VALUE else (selectedTab + 1)
     val costAttr = if (est.nome == "Lendário") 2 else 1
     val canBuyAttr = creditsLeft >= costAttr && state.progressosDisponiveis >= costAttr && boughtSoFar < maxAllowed
+    val podeComprarVantagem = creditsLeft > 0 && state.progressosDisponiveis > 0
 
     // Helpers 2×
     fun possui(per: Pericia): Boolean = state.rawTotal(per) > 0
@@ -531,7 +532,6 @@ fun ProgressosDialog(
                 }
 
                 // ── Vantagem via XP ───────────────────────────────────────────────
-                val podeComprarVantagem = creditsLeft > 0 && state.progressosDisponiveis > 0
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
