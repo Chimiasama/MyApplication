@@ -90,6 +90,26 @@ private fun escolhaLabel(escolha: EscolhaProgresso): String = when (escolha) {
     EscolhaProgresso.ReservaComplicacaoMaior -> "Reserva para Complicação Maior"
 }
 
+private fun sincronizarVantagensDoSlot(
+    anterior: EscolhaProgresso?,
+    nova: EscolhaProgresso?,
+    state: CriadorState
+) {
+    val vantAntiga = (anterior as? EscolhaProgresso.VantagemEscolhida)?.vantagem
+    val vantNova = (nova as? EscolhaProgresso.VantagemEscolhida)?.vantagem
+
+    if (vantAntiga != null && (vantNova == null || vantNova.id != vantAntiga.id || vantNova.choice != vantAntiga.choice)) {
+        val idxAntiga = state.vantagensSelecionadas.indexOfFirst { it.id == vantAntiga.id && it.choice == vantAntiga.choice }
+        if (idxAntiga >= 0) {
+            state.vantagensSelecionadas.removeAt(idxAntiga)
+        }
+    }
+
+    if (vantNova != null && state.vantagensSelecionadas.none { it.id == vantNova.id && it.choice == vantNova.choice }) {
+        state.vantagensSelecionadas += vantNova
+    }
+}
+
 private data class LinhaRequisito(val texto: String, val atende: Boolean? = null)
 
 private fun montarRequisitosComEstado(v: Vantagem, state: CriadorState): List<LinhaRequisito> {
@@ -761,7 +781,7 @@ fun TelaProgresso(
 
                 TextButton(
                     onClick = {
-                        slot.escolha = when (tipoEscolhido) {
+                        val novaEscolha = when (tipoEscolhido) {
                             "Atributo" -> atributoSelecionado?.let { EscolhaProgresso.Atributo(it) }
                             "Perícia" -> periciaSelecionada?.let { EscolhaProgresso.PericiaEscolhida(it) }
                             "Vantagem" -> vantagemSelecionada?.let { EscolhaProgresso.VantagemEscolhida(it) }
@@ -769,6 +789,8 @@ fun TelaProgresso(
                             "ReservaComplicaçãoMaior" -> EscolhaProgresso.ReservaComplicacaoMaior
                             else -> null
                         }
+                        sincronizarVantagensDoSlot(slot.escolha, novaEscolha, state)
+                        slot.escolha = novaEscolha
                         slotEmFoco = null
                         tipoEscolhido = null
                         atributoSelecionado = null
