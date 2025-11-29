@@ -90,23 +90,78 @@ private fun escolhaLabel(escolha: EscolhaProgresso): String = when (escolha) {
     EscolhaProgresso.ReservaComplicacaoMaior -> "Reserva para Complicação Maior"
 }
 
-private fun resumoRequisitos(v: Vantagem): List<String> {
-    val linhas = mutableListOf<String>()
+private data class LinhaRequisito(val texto: String, val atende: Boolean? = null)
+
+private fun montarRequisitosComEstado(v: Vantagem, state: CriadorState): List<LinhaRequisito> {
+    val linhas = mutableListOf<LinhaRequisito>()
     val req = v.requisitos
-    if (req.estagio.isNotBlank()) linhas += "Estágio mínimo: ${req.estagio}"
-    if (req.atributoMin.isNotEmpty()) {
-        val attr = req.atributoMin.entries.joinToString { (nome, valor) -> "$nome d$valor" }
-        linhas += "Atributos: $attr"
+
+    val ignorarEstagioPorNasce = (state.nasceUmHeroi && !state.emProgresso && state.pvFromXpOutstanding == 0)
+
+    req.estagio
+        .takeIf { it.isNotBlank() }
+        ?.let { estMin ->
+            val reqObj = listaDeEstagios.firstOrNull { it.nome.equals(estMin, ignoreCase = true) }
+            val atende = ignorarEstagioPorNasce || reqObj?.let { state.effectiveProgressoParaVantagens() >= it.minProgress } != false
+            linhas += LinhaRequisito("Estágio mínimo: $estMin", atende)
+        }
+
+    req.atributoMin.forEach { (nome, min) ->
+        val chave = nome.uppercase().semAcentos().trim()
+        val atual = state.valoresAtributos[chave]?.intValue
+        val atende = atual != null && atual >= min
+        val atualLabel = atual?.let { "d$it" } ?: "-"
+        linhas += LinhaRequisito("Atributo $nome d$min (atual $atualLabel)", atende)
     }
-    if (req.periciaMin.isNotEmpty()) {
-        val per = req.periciaMin.entries.joinToString { (nome, valor) -> "$nome d$valor" }
-        linhas += "Perícias: $per"
+
+    req.periciaMin.forEach { (nome, minRaw) ->
+        val per = listaPericias.firstOrNull { it.nome.equals(nome, ignoreCase = true) }
+        val atual = per?.let { state.rawTotal(it) }
+        val atende = atual != null && atual >= minRaw
+        val atualLabel = atual?.let { "d$it" } ?: "-"
+        linhas += LinhaRequisito("Perícia $nome d$minRaw (atual $atualLabel)", atende)
     }
+
+    if (req.periciaMinOpcional.isNotEmpty()) {
+        val resultados = req.periciaMinOpcional.map { (nome, minRaw) ->
+            val per = listaPericias.firstOrNull { it.nome.equals(nome, ignoreCase = true) }
+            val atual = per?.let { state.rawTotal(it) } ?: 0
+            val atende = per != null && atual >= minRaw
+            Triple(nome, minRaw, atende)
+        }
+        val atendeAlguma = resultados.any { it.third }
+        val linhaTexto = resultados.joinToString(
+            prefix = "Perícia opcional: ",
+            separator = " ou "
+        ) { (nome, minRaw, atende) -> "$nome d$minRaw${if (atende) " (ok)" else ""}" }
+        linhas += LinhaRequisito(linhaTexto, atendeAlguma)
+    }
+
     if (req.vantagensPrevias.isNotEmpty()) {
-        linhas += "Pré-requisitos: ${req.vantagensPrevias.joinToString()}"
+        val faltam = req.vantagensPrevias.any { prevId ->
+            when (prevId) {
+                "antecedente_arcano", "antecedente_arcano:*" -> {
+                    state.vantagensSelecionadas.none { poss ->
+                        poss.id.startsWith("antecedente_arcano_") ||
+                                (poss.id == "antecedente_arcano" && !poss.choice.isNullOrBlank())
+                    }
+                }
+                else -> state.vantagensSelecionadas.none { poss -> poss.id == prevId }
+            }
+        }
+        val label = "Pré-requisitos: ${req.vantagensPrevias.joinToString()}"
+        linhas += LinhaRequisito(label, !faltam)
     }
-    if (req.observacoes.isNotBlank()) linhas += req.observacoes
-    if (linhas.isEmpty()) linhas += "Sem requisitos adicionais"
+
+    if (req.exigeCS) {
+        linhas += LinhaRequisito("Exige Carta Selvagem", state.cartaSelvagem)
+    }
+
+    if (req.observacoes.isNotBlank()) {
+        linhas += LinhaRequisito(req.observacoes, null)
+    }
+
+    if (linhas.isEmpty()) linhas += LinhaRequisito("Sem requisitos adicionais", true)
     return linhas
 }
 
@@ -645,7 +700,7 @@ fun TelaProgresso(
                             )
                             LazyColumn(modifier = Modifier.heightIn(max = 240.dp)) {
                                 items(vantagensCompat) { vant ->
-                                    val atende = state.podeSelecionar(vant)
+                                    val requisitos = montarRequisitosComEstado(vant, state)
                                     Column(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -653,11 +708,15 @@ fun TelaProgresso(
                                             .padding(vertical = 6.dp)
                                     ) {
                                         Text(vant.nome, fontWeight = FontWeight.SemiBold)
-                                        resumoRequisitos(vant).forEach { linha ->
+                                        requisitos.forEach { linha ->
                                             Text(
-                                                text = linha,
+                                                text = linha.texto,
                                                 style = MaterialTheme.typography.labelSmall,
-                                                color = if (atende) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.error
+                                                color = when (linha.atende) {
+                                                    null -> MaterialTheme.colorScheme.onSurfaceVariant
+                                                    true -> MaterialTheme.colorScheme.onSurfaceVariant
+                                                    false -> MaterialTheme.colorScheme.error
+                                                }
                                             )
                                         }
                                     }
