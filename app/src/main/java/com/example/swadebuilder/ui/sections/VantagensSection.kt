@@ -407,7 +407,7 @@ fun VantagensContent(
                             else -> true
                         } &&
                         index >= initialCount &&
-                        index >= state.frozenAdvCount &&
+                        index >= state.frozenAdvantageCount &&
                         !isRacialFree &&
                         !requiredByAnother &&
                         !isFromSuperPoder &&
@@ -658,13 +658,6 @@ fun VantagensContent(
                                                     state.pontosVantagem--
                                                     state.rebuildAllPericiaStacks()
 
-                                                    if (state.pvFromXpOutstanding > 0) {
-                                                        state.pvFromXpOutstanding -= 1
-                                                        if (state.pvFromXpOutstanding == 0) {
-                                                            state.overrideStageForVantagem = null
-                                                            state.openVantagensAfterGrant = false
-                                                        }
-                                                    }
                                                 }
                                             }
 

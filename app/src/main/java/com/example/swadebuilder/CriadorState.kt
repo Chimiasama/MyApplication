@@ -341,15 +341,21 @@ class CriadorState {
     fun grantVantagemPointFromXp(stageName: String) {
         check(progressosDisponiveis > 0) { "Sem XP disponível." }
 
-        stageXpSpent[stageName] = stageXpSpent.getValue(stageName) + 1
-        progressosDisponiveis -= 1
-
         pontosVantagem += 1
         pvFromXpOutstanding += 1
 
         overrideStageForVantagem = stageName
 
         openVantagensAfterGrant = true
+        mostrandoVantagensProgresso = true
+    }
+
+    fun grantSkillPointsFromXp() {
+        check(progressosDisponiveis > 0) { "Sem XP disponível." }
+        //This is a hack to add 2 skill points
+        cpSpStack.add(Unit)
+        cpSpStack.add(Unit)
+        mostrandoPericiasProgresso = true
     }
 
 
@@ -641,7 +647,7 @@ class CriadorState {
 
     val desvantagensAutomaticas = mutableStateListOf<String>()
 
-    var frozenAdvCount by mutableIntStateOf(0)
+    var frozenAdvantageCount by mutableIntStateOf(0)
 
     var pontosAtributo by mutableIntStateOf(5)
 
@@ -1228,7 +1234,7 @@ class CriadorState {
         val cap = dynamicStageCaps[idx]
         val spent = stageXpSpent.getValue(est.nome)
         if (spent == cap) {
-            frozenAdvCount = vantagensSelecionadas.size
+            frozenAdvantageCount = vantagensSelecionadas.size
         }
     }
 
@@ -1314,6 +1320,12 @@ class CriadorState {
     var emProgresso by mutableStateOf(false)
     val criacaoBasicaCongelada: Boolean
         get() = emProgresso
+    var modoProgressaoAtivo by mutableStateOf(false)
+    var mostrandoVantagensProgresso by mutableStateOf(false)
+    var mostrandoPericiasProgresso by mutableStateOf(false)
+    val frozenSkillIncrements = mutableStateMapOf<String, Int>()
+
+    val advancementHistory = mutableStateListOf<com.example.swadebuilder.model.AdvancementAction>()
 
     fun creationComplete(): Boolean {
         // "Ficha básica completa": todos os pontos iniciais foram distribuídos.
@@ -1329,6 +1341,10 @@ class CriadorState {
     }
 
     var progressosDisponiveis by mutableIntStateOf(0)
+
+    val xpSlots = mutableStateListOf<Boolean>().apply {
+        repeat(20) { add(false) }
+    }
 
     private fun reachedStages(): List<Estagio> =
         listaDeEstagios.filter { progresso >= it.minProgress }

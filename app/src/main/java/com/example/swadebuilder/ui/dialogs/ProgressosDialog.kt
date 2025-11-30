@@ -52,6 +52,7 @@ import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
+import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.model.Vantagem
@@ -65,6 +66,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProgressosDialog(
     state: CriadorState,
+    slotIndex: Int,
     onDismiss: () -> Unit
 ) {
     // Snackbar para mensagens temporárias (substitui showTempError/tempErrorMsg)
@@ -247,265 +249,8 @@ fun ProgressosDialog(
                     escolheu = "Comprar Vantagem"
                 }
 
-                RadioButtonRow("Perícia ≥ Atributo", escolheu == "PericiaAlta") {
-                    escolheu = "PericiaAlta"
-                }
-                if (escolheu == "PericiaAlta") {
-                    ExposedDropdownMenuBox(
-                        expanded = perAltaExp,
-                        onExpandedChange = { perAltaExp = !perAltaExp }
-                    ) {
-                        OutlinedTextField(
-                            value = perAltaSelected?.nome ?: "Escolha perícia…",
-                            onValueChange = {},
-                            readOnly = true,
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(perAltaExp) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                .clickable { perAltaExp = true }
-                        )
-                        ExposedDropdownMenu(
-                            expanded = perAltaExp,
-                            onDismissRequest = { perAltaExp = false },
-                            modifier = Modifier.heightIn(max = 200.dp)
-                        ) {
-                            listaPericias
-                                .filter { per ->
-                                    val curr = state.rawTotal(per)
-                                    val baseAttrKey = state.atributoBaseParaPericia(per)
-                                    val atrRaw = state.valoresAtributos[baseAttrKey]!!.intValue
-                                    val capRaw = state.periciaCapRaw(per)
-                                    curr in atrRaw until capRaw
-                                }
-                                .forEach { per ->
-                                    DropdownMenuItem(
-                                        text = { Text(per.nome) },
-                                        onClick = {
-                                            perAltaSelected = per
-                                            perAltaExp = false
-                                        }
-                                    )
-                                }
-                        }
-                    }
-                    Spacer(Modifier.height(12.dp))
-                }
-
-                // ===== 2× Perícias/Especializações < Atributo (texto dinâmico) =====
-                val titulo2x = if (state.usarEspecializacoesDePericia)
-                    "2× Perícias/Especializações < Atributo"
-                else
-                    "2× Perícias < Atributo"
-
-                RadioButtonRow(titulo2x, escolheu == "PericiasBaixas") {
-                    escolheu = "PericiasBaixas"
-                }
-                if (escolheu == "PericiasBaixas") {
-                    if (!state.usarEspecializacoesDePericia) {
-                        slot1IsSpec = false; slot2IsSpec = false
-                        slot1SpecPer = null; slot2SpecPer = null
-                        slot1SpecName = ""; slot2SpecName = ""
-                        slot1NewPerSpecName = ""; slot2NewPerSpecName = ""
-                    }
-
-                    // ---------- SLOT 1 ----------
-                    Text("Escolha 1")
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        RadioButton(selected = !slot1IsSpec, onClick = { slot1IsSpec = false })
-                        Text("Perícia")
-                        Spacer(Modifier.width(16.dp))
-                        if (state.usarEspecializacoesDePericia) {
-                            RadioButton(selected = slot1IsSpec, onClick = { slot1IsSpec = true })
-                            Text("Especialização")
-                        }
-                    }
-
-                    if (!slot1IsSpec) {
-                        ExposedDropdownMenuBox(
-                            expanded = perBaixaExp1,
-                            onExpandedChange = { perBaixaExp1 = !perBaixaExp1 }
-                        ) {
-                            OutlinedTextField(
-                                value = perBaixa1?.nome ?: "Perícia 1…",
-                                onValueChange = {},
-                                readOnly = true,
-                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(perBaixaExp1) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                    .clickable { perBaixaExp1 = true }
-                            )
-                            ExposedDropdownMenu(
-                                expanded = perBaixaExp1,
-                                onDismissRequest = { perBaixaExp1 = false },
-                                modifier = Modifier.heightIn(max = 200.dp)
-                            ) {
-                                listaPericias.filter { per -> podeAumentarAbaixo(per) }.forEach { per ->
-                                    DropdownMenuItem(
-                                        text = { Text(per.nome) },
-                                        onClick = {
-                                            perBaixa1 = per
-                                            if (state.rawTotal(per) == 0) slot1NewPerSpecName = ""
-                                            perBaixaExp1 = false
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                        if (deveMostrarSpecNesteSlot(true, perBaixa1)) {
-                            Spacer(Modifier.height(6.dp))
-                            OutlinedTextField(
-                                value = slot1NewPerSpecName,
-                                onValueChange = { slot1NewPerSpecName = it },
-                                label = { Text("Especialização inicial (para ${perBaixa1!!.nome})") },
-                                singleLine = true,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-                    } else if (state.usarEspecializacoesDePericia) {
-                        ExposedDropdownMenuBox(
-                            expanded = slot1SpecPerExp,
-                            onExpandedChange = { slot1SpecPerExp = !slot1SpecPerExp }
-                        ) {
-                            OutlinedTextField(
-                                value = slot1SpecPer?.nome ?: "Perícia para a especialização…",
-                                onValueChange = {},
-                                readOnly = true,
-                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(slot1SpecPerExp) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                    .clickable { slot1SpecPerExp = true }
-                            )
-                            ExposedDropdownMenu(
-                                expanded = slot1SpecPerExp,
-                                onDismissRequest = { slot1SpecPerExp = false },
-                                modifier = Modifier.heightIn(max = 200.dp)
-                            ) {
-                                listaPericias
-                                    .filter { per -> possui(per) || sendoCompradaAgora(per) }
-                                    .forEach { per ->
-                                        DropdownMenuItem(
-                                            text = { Text(per.nome) },
-                                            onClick = {
-                                                slot1SpecPer = per
-                                                slot1SpecPerExp = false
-                                            }
-                                        )
-                                    }
-                            }
-                        }
-                        Spacer(Modifier.height(6.dp))
-                        OutlinedTextField(
-                            value = slot1SpecName,
-                            onValueChange = { slot1SpecName = it },
-                            label = { Text("Nome da especialização (1)") },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-
-                    Spacer(Modifier.height(12.dp))
-
-                    // ---------- SLOT 2 ----------
-                    Text("Escolha 2")
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        RadioButton(selected = !slot2IsSpec, onClick = { slot2IsSpec = false })
-                        Text("Perícia")
-                        Spacer(Modifier.width(16.dp))
-                        if (state.usarEspecializacoesDePericia) {
-                            RadioButton(selected = slot2IsSpec, onClick = { slot2IsSpec = true })
-                            Text("Especialização")
-                        }
-                    }
-
-                    if (!slot2IsSpec) {
-                        ExposedDropdownMenuBox(
-                            expanded = perBaixaExp2,
-                            onExpandedChange = { perBaixaExp2 = !perBaixaExp2 }
-                        ) {
-                            OutlinedTextField(
-                                value = perBaixa2?.nome ?: "Perícia 2…",
-                                onValueChange = {},
-                                readOnly = true,
-                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(perBaixaExp2) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                    .clickable { perBaixaExp2 = true }
-                            )
-                            ExposedDropdownMenu(
-                                expanded = perBaixaExp2,
-                                onDismissRequest = { perBaixaExp2 = false },
-                                modifier = Modifier.heightIn(max = 200.dp)
-                            ) {
-                                listaPericias.filter { per -> podeAumentarAbaixo(per) }.forEach { per ->
-                                    DropdownMenuItem(
-                                        text = { Text(per.nome) },
-                                        onClick = {
-                                            perBaixa2 = per
-                                            if (state.rawTotal(per) == 0) slot2NewPerSpecName = ""
-                                            perBaixaExp2 = false
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                        if (deveMostrarSpecNesteSlot(false, perBaixa2)) {
-                            Spacer(Modifier.height(6.dp))
-                            OutlinedTextField(
-                                value = slot2NewPerSpecName,
-                                onValueChange = { slot2NewPerSpecName = it },
-                                label = { Text("Especialização inicial (para ${perBaixa2!!.nome})") },
-                                singleLine = true,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-                    } else if (state.usarEspecializacoesDePericia) {
-                        ExposedDropdownMenuBox(
-                            expanded = slot2SpecPerExp,
-                            onExpandedChange = { slot2SpecPerExp = !slot2SpecPerExp }
-                        ) {
-                            OutlinedTextField(
-                                value = slot2SpecPer?.nome ?: "Perícia para a especialização…",
-                                onValueChange = {},
-                                readOnly = true,
-                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(slot2SpecPerExp) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                    .clickable { slot2SpecPerExp = true }
-                            )
-                            ExposedDropdownMenu(
-                                expanded = slot2SpecPerExp,
-                                onDismissRequest = { slot2SpecPerExp = false },
-                                modifier = Modifier.heightIn(max = 200.dp)
-                            ) {
-                                listaPericias
-                                    .filter { per -> possui(per) || sendoCompradaAgora(per) }
-                                    .forEach { per ->
-                                        DropdownMenuItem(
-                                            text = { Text(per.nome) },
-                                            onClick = {
-                                                slot2SpecPer = per
-                                                slot2SpecPerExp = false
-                                            }
-                                        )
-                                    }
-                            }
-                        }
-                        Spacer(Modifier.height(6.dp))
-                        OutlinedTextField(
-                            value = slot2SpecName,
-                            onValueChange = { slot2SpecName = it },
-                            label = { Text("Nome da especialização (2)") },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-
-                    Spacer(Modifier.height(12.dp))
+                RadioButtonRow("Aumentar Perícia", escolheu == "Aumentar Perícia") {
+                    escolheu = "Aumentar Perícia"
                 }
 
                 // ── Atributo via XP ────────────────────────────────────────────────
@@ -632,97 +377,11 @@ fun ProgressosDialog(
                     when (escolheu) {
                         "Comprar Vantagem" -> {
                             state.grantVantagemPointFromXp(est.nome)
-                            Toast.makeText(
-                                context,
-                                "Recebeu um PV, utilize para poder continuar a distribuir seu progresso.",
-                                Toast.LENGTH_LONG
-                            ).show()
                             onDismiss()
-                            return@TextButton
                         }
-                        "PericiaAlta" -> {
-                            state.spendProgressAcrossStages(1)
-                            perAltaSelected?.let { per ->
-                                state.baseIncsPorPericia[per] =
-                                    state.baseIncsPorPericia.getValue(per) + 1
-                                state.spCostStackPorPericia.getValue(per).add(0)
-                            }
-                        }
-                        "PericiasBaixas" -> {
-                            state.spendProgressAcrossStages(1)
-
-                            fun especNomePara(per: Pericia): String? {
-                                if (!state.usarEspecializacoesDePericia) return null
-                                val s1 = if (slot1IsSpec && slot1SpecPer == per) slot1SpecName.trim() else null
-                                val s2 = if (slot2IsSpec && slot2SpecPer == per) slot2SpecName.trim() else null
-                                val i1 = if (!slot1IsSpec && perBaixa1 == per) slot1NewPerSpecName.trim() else null
-                                val i2 = if (!slot2IsSpec && perBaixa2 == per) slot2NewPerSpecName.trim() else null
-                                return listOf(i1, i2, s1, s2).firstOrNull { !it.isNullOrEmpty() }
-                            }
-
-                            // SLOT 1
-                            if (!slot1IsSpec) {
-                                perBaixa1?.let { per ->
-                                    val eraZero = state.rawTotal(per) == 0
-                                    state.baseIncsPorPericia[per] =
-                                        state.baseIncsPorPericia.getValue(per) + 1
-                                    state.spCostStackPorPericia.getValue(per).add(0)
-
-                                    if (eraZero && state.usarEspecializacoesDePericia) {
-                                        especNomePara(per)?.let { nomeEsp ->
-                                            val atuais = state.especializacoesPorPericia[per.nome]
-                                                ?: EspecializacoesDto(principal = null, lista = emptyList())
-                                            val principal = atuais.principal ?: nomeEsp
-                                            val lista = (atuais.lista + nomeEsp + principal).distinct()
-                                            state.especializacoesPorPericia[per.nome] =
-                                                atuais.copy(principal = principal, lista = lista)
-                                        }
-                                    }
-                                }
-                            } else if (state.usarEspecializacoesDePericia) {
-                                val nome = slot1SpecName.trim()
-                                slot1SpecPer?.let { per ->
-                                    if (nome.isNotEmpty()) {
-                                        val atuais = state.especializacoesPorPericia[per.nome]
-                                            ?: EspecializacoesDto(principal = null, lista = emptyList())
-                                        val novas = (atuais.lista + nome).distinct()
-                                        state.especializacoesPorPericia[per.nome] =
-                                            atuais.copy(lista = novas)
-                                    }
-                                }
-                            }
-
-                            // SLOT 2
-                            if (!slot2IsSpec) {
-                                perBaixa2?.let { per ->
-                                    val eraZero = state.rawTotal(per) == 0
-                                    state.baseIncsPorPericia[per] =
-                                        state.baseIncsPorPericia.getValue(per) + 1
-                                    state.spCostStackPorPericia.getValue(per).add(0)
-
-                                    if (eraZero && state.usarEspecializacoesDePericia) {
-                                        especNomePara(per)?.let { nomeEsp ->
-                                            val atuais = state.especializacoesPorPericia[per.nome]
-                                                ?: EspecializacoesDto(principal = null, lista = emptyList())
-                                            val principal = atuais.principal ?: nomeEsp
-                                            val lista = (atuais.lista + nomeEsp + principal).distinct()
-                                            state.especializacoesPorPericia[per.nome] =
-                                                atuais.copy(principal = principal, lista = lista)
-                                        }
-                                    }
-                                }
-                            } else if (state.usarEspecializacoesDePericia) {
-                                val nome = slot2SpecName.trim()
-                                slot2SpecPer?.let { per ->
-                                    if (nome.isNotEmpty()) {
-                                        val atuais = state.especializacoesPorPericia[per.nome]
-                                            ?: EspecializacoesDto(principal = null, lista = emptyList())
-                                        val novas = (atuais.lista + nome).distinct()
-                                        state.especializacoesPorPericia[per.nome] =
-                                            atuais.copy(lista = novas)
-                                    }
-                                }
-                            }
+                        "Aumentar Perícia" -> {
+                            state.grantSkillPointsFromXp()
+                            onDismiss()
                         }
                         "Atributo" -> {
                             if (canBuyAttr) {
@@ -731,35 +390,43 @@ fun ProgressosDialog(
                                     val prev = state.comprasAttrPorEstagio[est.nome] ?: 0
                                     state.comprasAttrPorEstagio[est.nome] = prev + 1
                                     state.valoresAtributos[nome]!!.intValue += 2
+                                    state.advancementHistory.add(AdvancementAction.IncreaseAttribute(nome))
                                 }
+                                state.xpSlots[slotIndex] = true
+                                state.progressosDisponiveis--
                                 onDismiss()
                             } else {
                                 showSnack("Atributos lendários custam 2 progressos para adquirir")
+                                return@TextButton
                             }
-                            return@TextButton
                         }
                         "Complicacao" -> {
                             compSelected?.let { comp ->
                                 val nivelAtual = state.complicacoesSelecionadas[comp]!!
                                 val isSomenteMaior = comp.severity.lowercase() == "maior"
                                 val custo = when {
-                                    isSomenteMaior        -> 2
+                                    isSomenteMaior -> 2
                                     nivelAtual == "Maior" -> 1
                                     nivelAtual == "Menor" -> 1
-                                    else                   -> 0
+                                    else -> 0
                                 }
                                 state.spendProgressAcrossStages(custo)
                                 if (isSomenteMaior) {
                                     state.complicacoesSelecionadas.remove(comp)
+                                    state.advancementHistory.add(AdvancementAction.RemoveHindrance(comp.id))
                                 } else if (nivelAtual == "Maior") {
                                     state.complicacoesSelecionadas[comp] = "Menor"
+                                    state.advancementHistory.add(AdvancementAction.RemoveHindrance(comp.id))
                                 } else {
                                     state.complicacoesSelecionadas.remove(comp)
+                                    state.advancementHistory.add(AdvancementAction.RemoveHindrance(comp.id))
                                 }
                             }
+                            state.xpSlots[slotIndex] = true
+                            state.progressosDisponiveis--
+                            onDismiss()
                         }
                     }
-                    onDismiss()
                 },
                 enabled = when (escolheu) {
                     "PericiasBaixas" -> {

@@ -261,6 +261,7 @@ class MainActivity : ComponentActivity() {
             var expVants   by rememberSaveable(creationSession) { mutableStateOf(false) }
             var expPoderes by rememberSaveable(creationSession) { mutableStateOf(false) }
             var expResumo  by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expXp by rememberSaveable(creationSession) { mutableStateOf(false) }
 
             var showVantagensDetail       by rememberSaveable(creationSession) { mutableStateOf(false) }
             var showPericiasDetail        by rememberSaveable(creationSession) { mutableStateOf(false) }
@@ -677,6 +678,9 @@ class MainActivity : ComponentActivity() {
 
                                                 expPoderes      = expPoderes,
                                                 onTogglePoderes = { expPoderes = !expPoderes },
+
+                                                expXp = expXp,
+                                                onToggleXp = { expXp = !expXp },
 
                                                 equipamentoCategorias = equipamentoCategorias,
                                                 superequipCategorias  = superequipCategorias,

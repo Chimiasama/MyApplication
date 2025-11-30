@@ -147,8 +147,14 @@ class CriadorViewModel : ViewModel() {
         state.dinheiro = 500
         state.progresso = 0
         state.progressosDisponiveis = 0
-        state.frozenAdvCount = 0
+        state.xpSlots.fill(false)
+        state.frozenAdvantageCount = 0
+        state.advancementHistory.clear()
         state.emProgresso = false
+        state.modoProgressaoAtivo = false
+        state.mostrandoVantagensProgresso = false
+        state.mostrandoPericiasProgresso = false
+        state.frozenSkillIncrements.clear()
 
         state.valoresAtributos.forEach { (_, holder) -> holder.intValue = 4 }
         state.recalcularPontosAtributo(_feedbackMessages)
@@ -648,5 +654,45 @@ class CriadorViewModel : ViewModel() {
             custo = investment.cost,
             efeito = investment.effect
         )
+    }
+
+    fun revertLastAdvancement() {
+        if (state.advancementHistory.isEmpty()) return
+
+        val lastAction = state.advancementHistory.removeLast()
+        when (lastAction) {
+            is AdvancementAction.SpendOnAdvantage -> {
+                val advantage = listaVantagens.firstOrNull { it.id == lastAction.advantageId }
+                if (advantage != null) {
+                    state.vantagensSelecionadas.remove(advantage)
+                }
+                state.pontosVantagem++
+                state.frozenAdvantageCount = state.vantagensSelecionadas.size
+            }
+            is AdvancementAction.IncreaseAttribute -> {
+                state.valoresAtributos[lastAction.attributeName]!!.intValue -= 2
+                val stage = state.estagioAtual().nome
+                val prev = state.comprasAttrPorEstagio[stage] ?: 0
+                if (prev > 0) {
+                    state.comprasAttrPorEstagio[stage] = prev - 1
+                }
+            }
+            is AdvancementAction.SpendOnSkills -> {
+                lastAction.skillsIncreased.forEach { skillName ->
+                    val skill = listaPericias.firstOrNull { it.nome == skillName }
+                    if (skill != null) {
+                        state.decreasePericia(skill)
+                    }
+                }
+                state.rebuildAllPericiaStacks()
+            }
+            is AdvancementAction.RemoveHindrance -> {
+                // This is still complex, as we don't store the original severity.
+                // Re-adding as minor is a temporary solution.
+                val hindrance = listaComplicacoes.first { it.id == lastAction.hindranceId }
+                state.complicacoesSelecionadas[hindrance] = "Menor"
+            }
+        }
+        state.progressosDisponiveis++
     }
 }

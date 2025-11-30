@@ -188,9 +188,14 @@ fun PericiasContent(
             val minimoOpcional: Int = opcionalList.maxOrNull() ?: 0
             val minimoTotal = max(minimoBasico, minimoOpcional)
 
-            val canDecrease = !locked &&
-                    (compStack.isNotEmpty() || spStack.any { it > 0 }) &&
-                    (currentRaw - 2 >= minimoTotal)
+            val canDecrease = if (state.modoProgressaoAtivo) {
+                val frozenIncs = state.frozenSkillIncrements[per.nome] ?: 0
+                state.baseIncsPorPericia.getValue(per) > frozenIncs
+            } else {
+                !locked &&
+                        (compStack.isNotEmpty() || spStack.any { it > 0 }) &&
+                        (currentRaw - 2 >= minimoTotal)
+            }
 
             val astuciaSpent = state.spCostStackPorPericia
                 .filterKeys { p -> p.atributo == "ASTUCIA" }
