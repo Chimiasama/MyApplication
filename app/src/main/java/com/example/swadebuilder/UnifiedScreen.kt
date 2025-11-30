@@ -201,7 +201,10 @@ fun UnifiedScreen(
 
             if (state.mostrandoVantagensProgresso) {
                 Button(
-                    onClick = { state.mostrandoVantagensProgresso = false },
+                    onClick = {
+                        state.mostrandoVantagensProgresso = false
+                        state.frozenAdvantageCount = state.vantagensSelecionadas.size
+                    },
                     enabled = state.pontosVantagem == 0,
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -212,7 +215,14 @@ fun UnifiedScreen(
                     state = state,
                     expanded = expXp,
                     onToggle = onToggleXp,
-                    onUseProgress = { showAllocDialog = true }
+                    onUseProgress = { showAllocDialog = true },
+                    onUndo = {
+                        val lastUsedIndex = state.xpSlots.indexOfLast { it }
+                        if (lastUsedIndex != -1) {
+                            state.xpSlots[lastUsedIndex] = false
+                        }
+                        viewModel.revertLastAdvancement()
+                    }
                 )
             }
         } else {
@@ -315,7 +325,10 @@ fun UnifiedScreen(
             ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
 
             Button(
-                onClick = { state.modoProgressaoAtivo = true },
+                onClick = {
+                    state.modoProgressaoAtivo = true
+                    state.frozenAdvantageCount = state.vantagensSelecionadas.size
+                },
                 enabled = state.creationComplete(),
                 modifier = Modifier.fillMaxWidth()
             ) {

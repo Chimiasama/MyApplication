@@ -22,13 +22,15 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.sp
+import androidx.compose.material3.TextButton
 
 @Composable
 fun XpSection(
     state: CriadorState,
     expanded: Boolean,
     onToggle: () -> Unit,
-    onUseProgress: () -> Unit
+    onUseProgress: () -> Unit,
+    onUndo: () -> Unit
 ) {
     SectionCard(
         title = "XP",
@@ -46,20 +48,28 @@ fun XpSection(
                 items(20) { index ->
                     val slotUsed = state.xpSlots[index]
                     val isEnabled = (if (index == 0) !slotUsed else state.xpSlots[index - 1] && !slotUsed) && state.pontosVantagem == 0
+                    val isLastUsed = state.xpSlots.indexOfLast { it } == index
 
-                    Button(
-                        onClick = {
-                            state.xpSlots[index] = true
-                            state.progressosDisponiveis++
-                            onUseProgress()
-                        },
-                        enabled = isEnabled,
-                        modifier = Modifier.size(50.dp)
-                    ) {
-                        Text(
-                            text = (index + 1).toString(),
-                            fontSize = 18.sp
-                        )
+                    Column {
+                        Button(
+                            onClick = {
+                                state.xpSlots[index] = true
+                                state.progressosDisponiveis++
+                                onUseProgress()
+                            },
+                            enabled = isEnabled,
+                            modifier = Modifier.size(50.dp)
+                        ) {
+                            Text(
+                                text = (index + 1).toString(),
+                                fontSize = 18.sp
+                            )
+                        }
+                        if (slotUsed && isLastUsed) {
+                            TextButton(onClick = onUndo) {
+                                Text("Desfazer")
+                            }
+                        }
                     }
                 }
             }

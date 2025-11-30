@@ -52,6 +52,7 @@ import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
+import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.model.Vantagem
@@ -646,6 +647,7 @@ fun ProgressosDialog(
                                 state.baseIncsPorPericia[per] =
                                     state.baseIncsPorPericia.getValue(per) + 1
                                 state.spCostStackPorPericia.getValue(per).add(0)
+                                state.advancementHistory.add(AdvancementAction.IncreaseSkill(per.nome, true))
                             }
                         }
                         "PericiasBaixas" -> {
@@ -667,6 +669,7 @@ fun ProgressosDialog(
                                     state.baseIncsPorPericia[per] =
                                         state.baseIncsPorPericia.getValue(per) + 1
                                     state.spCostStackPorPericia.getValue(per).add(0)
+                                        state.advancementHistory.add(AdvancementAction.IncreaseSkill(per.nome, false))
 
                                     if (eraZero && state.usarEspecializacoesDePericia) {
                                         especNomePara(per)?.let { nomeEsp ->
@@ -699,6 +702,7 @@ fun ProgressosDialog(
                                     state.baseIncsPorPericia[per] =
                                         state.baseIncsPorPericia.getValue(per) + 1
                                     state.spCostStackPorPericia.getValue(per).add(0)
+                                    state.advancementHistory.add(AdvancementAction.IncreaseSkill(per.nome, false))
 
                                     if (eraZero && state.usarEspecializacoesDePericia) {
                                         especNomePara(per)?.let { nomeEsp ->
@@ -731,6 +735,7 @@ fun ProgressosDialog(
                                     val prev = state.comprasAttrPorEstagio[est.nome] ?: 0
                                     state.comprasAttrPorEstagio[est.nome] = prev + 1
                                     state.valoresAtributos[nome]!!.intValue += 2
+                                    state.advancementHistory.add(AdvancementAction.IncreaseAttribute(nome))
                                 }
                                 onDismiss()
                             } else {
@@ -751,10 +756,13 @@ fun ProgressosDialog(
                                 state.spendProgressAcrossStages(custo)
                                 if (isSomenteMaior) {
                                     state.complicacoesSelecionadas.remove(comp)
+                                    state.advancementHistory.add(AdvancementAction.RemoveHindrance(comp.id))
                                 } else if (nivelAtual == "Maior") {
                                     state.complicacoesSelecionadas[comp] = "Menor"
+                                    state.advancementHistory.add(AdvancementAction.RemoveHindrance(comp.id))
                                 } else {
                                     state.complicacoesSelecionadas.remove(comp)
+                                    state.advancementHistory.add(AdvancementAction.RemoveHindrance(comp.id))
                                 }
                             }
                         }

@@ -642,7 +642,7 @@ class CriadorState {
 
     val desvantagensAutomaticas = mutableStateListOf<String>()
 
-    var frozenAdvCount by mutableIntStateOf(0)
+    var frozenAdvantageCount by mutableIntStateOf(0)
 
     var pontosAtributo by mutableIntStateOf(5)
 
@@ -1317,6 +1317,8 @@ class CriadorState {
         get() = emProgresso
     var modoProgressaoAtivo by mutableStateOf(false)
     var mostrandoVantagensProgresso by mutableStateOf(false)
+
+    val advancementHistory = mutableStateListOf<com.example.swadebuilder.model.AdvancementAction>()
 
     fun creationComplete(): Boolean {
         // "Ficha básica completa": todos os pontos iniciais foram distribuídos.

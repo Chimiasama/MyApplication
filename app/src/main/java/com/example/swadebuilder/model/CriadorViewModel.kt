@@ -148,7 +148,8 @@ class CriadorViewModel : ViewModel() {
         state.progresso = 0
         state.progressosDisponiveis = 0
         state.xpSlots.fill(false)
-        state.frozenAdvCount = 0
+        state.frozenAdvantageCount = 0
+        state.advancementHistory.clear()
         state.emProgresso = false
         state.modoProgressaoAtivo = false
         state.mostrandoVantagensProgresso = false
@@ -651,5 +652,33 @@ class CriadorViewModel : ViewModel() {
             custo = investment.cost,
             efeito = investment.effect
         )
+    }
+
+    fun revertLastAdvancement() {
+        if (state.advancementHistory.isEmpty()) return
+
+        val lastAction = state.advancementHistory.removeLast()
+        when (lastAction) {
+            is AdvancementAction.GainAdvantage -> {
+                state.pontosVantagem++
+                state.vantagensSelecionadas.removeLast()
+                state.frozenAdvantageCount = state.vantagensSelecionadas.size
+            }
+            is AdvancementAction.IncreaseAttribute -> {
+                state.valoresAtributos[lastAction.attributeName]!!.intValue -= 2
+            }
+            is AdvancementAction.IncreaseSkill -> {
+                val pericia = listaPericias.first { it.nome == lastAction.skillName }
+                state.baseIncsPorPericia[pericia] = state.baseIncsPorPericia.getValue(pericia) - 1
+                state.spCostStackPorPericia.getValue(pericia).removeLast()
+            }
+            is AdvancementAction.RemoveHindrance -> {
+                // This is more complex, as we need to know if it was a major or minor hindrance.
+                // For now, we'll just re-add it as minor.
+                val hindrance = listaComplicacoes.first { it.id == lastAction.hindranceId }
+                state.complicacoesSelecionadas[hindrance] = "Menor"
+            }
+        }
+        state.progressosDisponiveis++
     }
 }

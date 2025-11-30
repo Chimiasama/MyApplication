@@ -407,7 +407,7 @@ fun VantagensContent(
                             else -> true
                         } &&
                         index >= initialCount &&
-                        index >= state.frozenAdvCount &&
+                        index >= state.frozenAdvantageCount &&
                         !isRacialFree &&
                         !requiredByAnother &&
                         !isFromSuperPoder &&
@@ -659,6 +659,7 @@ fun VantagensContent(
                                                     state.rebuildAllPericiaStacks()
 
                                                     if (state.pvFromXpOutstanding > 0) {
+                                                        state.advancementHistory.add(com.example.swadebuilder.model.AdvancementAction.GainAdvantage(vant.id))
                                                         state.pvFromXpOutstanding -= 1
                                                         if (state.pvFromXpOutstanding == 0) {
                                                             state.overrideStageForVantagem = null
