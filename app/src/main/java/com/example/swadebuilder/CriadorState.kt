@@ -350,6 +350,7 @@ class CriadorState {
         overrideStageForVantagem = stageName
 
         openVantagensAfterGrant = true
+        mostrandoVantagensProgresso = true
     }
 
 
@@ -1314,6 +1315,8 @@ class CriadorState {
     var emProgresso by mutableStateOf(false)
     val criacaoBasicaCongelada: Boolean
         get() = emProgresso
+    var modoProgressaoAtivo by mutableStateOf(false)
+    var mostrandoVantagensProgresso by mutableStateOf(false)
 
     fun creationComplete(): Boolean {
         // "Ficha básica completa": todos os pontos iniciais foram distribuídos.

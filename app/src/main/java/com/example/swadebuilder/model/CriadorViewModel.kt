@@ -150,6 +150,8 @@ class CriadorViewModel : ViewModel() {
         state.xpSlots.fill(false)
         state.frozenAdvCount = 0
         state.emProgresso = false
+        state.modoProgressaoAtivo = false
+        state.mostrandoVantagensProgresso = false
 
         state.valoresAtributos.forEach { (_, holder) -> holder.intValue = 4 }
         state.recalcularPontosAtributo(_feedbackMessages)

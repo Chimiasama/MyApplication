@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -170,10 +171,13 @@ fun UnifiedScreen(
             .verticalScroll(scrollState)
             .padding(16.dp)
     ) {
-        if (state.creationComplete()) {
+        if (state.modoProgressaoAtivo) {
             // Progression Phase Layout
             ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
-            if (state.pontosVantagem > 0) {
+            PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes, onOpenPoderesDetail = onOpenPoderesDetail)
+            SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes, onOpenSuperPoderesDetail = onOpenSuperPoderesDetail)
+
+            if (state.mostrandoVantagensProgresso) {
                 SectionCard(
                     title    = "Vantagens",
                     expanded = expVants,
@@ -188,19 +192,28 @@ fun UnifiedScreen(
                     )
                 }
             }
-            PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes, onOpenPoderesDetail = onOpenPoderesDetail)
-            SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes, onOpenSuperPoderesDetail = onOpenSuperPoderesDetail)
+
             EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, onOpenListaCompletaEquipamento = onOpenListaCompletaEquipamento, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
 
             Spacer(Modifier.height(16.dp))
             HorizontalDivider(thickness = 3.dp)
 
-            XpSection(
-                state = state,
-                expanded = expXp,
-                onToggle = onToggleXp,
-                onUseProgress = { showAllocDialog = true }
-            )
+            if (state.mostrandoVantagensProgresso) {
+                Button(
+                    onClick = { state.mostrandoVantagensProgresso = false },
+                    enabled = state.pontosVantagem == 0,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Confirmar e Voltar para o XP")
+                }
+            } else {
+                XpSection(
+                    state = state,
+                    expanded = expXp,
+                    onToggle = onToggleXp,
+                    onUseProgress = { showAllocDialog = true }
+                )
+            }
         } else {
             // Creation Phase Layout
             InformacoesSection(
@@ -217,13 +230,11 @@ fun UnifiedScreen(
                 expanded = expAncs,
                 onToggle = onToggleAncs,
                 supersLocked = creationLocked,
-                ancestralidadeEmFoco = state.ancestralidadeEmFoco,      // <<< ADICIONADO
+                ancestralidadeEmFoco = state.ancestralidadeEmFoco,
                 onOpenListaAncestralidadesDetail = onOpenListaAncestralidadesDetail,
                 onSelectAncestralidade = { nome ->
                     val key = nome.uppercase().semAcentos()
-
                     if (key == state.ancestralidade) return@AncestralidadesSection
-
                     if (key == "MEIO-ELFOS") {
                         pendingMeioElfoKey = key
                         showMeioElfoDialog = true
@@ -301,6 +312,14 @@ fun UnifiedScreen(
             HorizontalDivider(thickness = 3.dp)
 
             ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
+
+            Button(
+                onClick = { state.modoProgressaoAtivo = true },
+                enabled = state.creationComplete(),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Iniciar Progressão")
+            }
         }
     }
 
