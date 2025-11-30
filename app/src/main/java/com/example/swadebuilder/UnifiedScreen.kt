@@ -170,184 +170,13 @@ fun UnifiedScreen(
             .verticalScroll(scrollState)
             .padding(16.dp)
     ) {
-        InformacoesSection(
-            state = state,
-            expanded = expInfos,
-            onToggle = onToggleInfos,
-            onUseProgress = { showAllocDialog = true }
-        )
-
-        HorizontalDivider(thickness = 1.dp)
-
-        AncestralidadesSection(
-            currentAncestralidade = state.ancestralidade,
-            expanded = expAncs,
-            onToggle = onToggleAncs,
-            supersLocked = creationLocked,
-            ancestralidadeEmFoco = state.ancestralidadeEmFoco,      // <<< ADICIONADO
-            onOpenListaAncestralidadesDetail = onOpenListaAncestralidadesDetail,
-            onSelectAncestralidade = { nome ->
-                val key = nome.uppercase().semAcentos()
-
-                if (key == state.ancestralidade) return@AncestralidadesSection
-
-                if (key == "MEIO-ELFOS") {
-                    pendingMeioElfoKey = key
-                    showMeioElfoDialog = true
-                } else {
-                    pendingMeioElfoKey = null
-                    state.aplicarAncestralidade(
-                        key,
-                        viewModel.feedbackMessages as MutableList<String>
-                    )
-                }
-            }
-        )
-
-        HorizontalDivider(thickness = 1.dp)
-
-        ComplicacoesSection(
-            state = state,
-            expanded = expComps,
-            onToggle = onToggleComps,
-            onOpenComplicacoesDetail = onOpenComplicacoesDetail,
-            feedbackMessages = viewModel.feedbackMessages as MutableList<String>
-        )
-
-        HorizontalDivider(thickness = 1.dp)
-
-        SectionCard(
-            title    = "Atributos",
-            expanded = expAttrs,
-            onToggle = onToggleAttrs,
-            icon     = Icons.Default.FitnessCenter
-        ) {
-            AtributosContent(state, onOpenAtributosDetail)
-        }
-
-        HorizontalDivider(thickness = 1.dp)
-
-        SectionCard(
-            title    = "Perícias",
-            expanded = expPer,
-            onToggle = onTogglePer,
-            icon     = Icons.Default.School
-        ) {
-            PericiasContent(
-                state = state,
-                onOpenPericiasDetail = onOpenPericiasDetail,
-                feedbackMessages = viewModel.feedbackMessages as MutableList<String>
-            )
-        }
-
-        HorizontalDivider(thickness = 1.dp)
-
-        SectionCard(
-            title    = "Vantagens",
-            expanded = expVants,
-            onToggle = onToggleVants,
-            icon     = Icons.Default.Star
-        ) {
-            VantagensContent(
-                state = state,
-                multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-                onOpenVantagensDetail  = onOpenVantagensDetail,
-                viewModel = viewModel
-            )
-        }
-
-        val temArcano = state.vantagensSelecionadas.any {
-            it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
-        }
-        if (temArcano && !state.celestialAAMilagresDesabilitado) {
-            HorizontalDivider(thickness = 1.dp)
-
-            SectionCard(
-                title    = "Poderes",
-                expanded = expPoderes,
-                onToggle = onTogglePoderes,
-                icon     = Icons.Default.FlashOn
-            ) {
-                PoderesSection(
-                    state = state,
-                    onOpenListaCompletaPoderes = onOpenPoderesDetail
-                )
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-        HorizontalDivider(thickness = 1.dp)
-
-        if (state.modoSupers) {
-            SuperPoderesContent(
-                state                    = state,
-                listaSuperPoderes        = listaSuperPoderes,
-                expanded                 = expPoderes,
-                onToggle                 = onTogglePoderes,
-                onOpenSuperPoderesDetail = onOpenSuperPoderesDetail
-            )
-        }
-
-        EquipamentoSection(
-            dinheiro = state.dinheiro,
-            pcTotal = state.pontosComplicacao,
-            pcLivres = (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0),
-            recursosPcUsados = state.cpRecursosStack.size,
-
-            expanded = expEquip,
-            onToggle = onToggleEquip,
-
-            onUsarPontosBonusEmRecursos = {
-                val pcLivresLocal =
-                    (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0)
-
-                if (pcLivresLocal > 0 && state.cpRecursosStack.isEmpty()) {
-                    state.cpRecursosStack.add(Unit)
-                    state.pontosComplicacaoGastos += 1
-                    state.dinheiro += 500
-                }
-            },
-            onDesfazerPontosBonusEmRecursos = {
-                if (state.cpRecursosStack.isNotEmpty() && state.dinheiro >= 500) {
-                    state.cpRecursosStack.removeAt(state.cpRecursosStack.lastIndex)
-                    state.pontosComplicacaoGastos =
-                        (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                    state.dinheiro -= 500
-                }
-            },
-            onListaCompletaClick = onOpenListaCompletaEquipamento,
-            onEquipamentoDoubleClick = { equipamento ->
-                val custo = (equipamento.custo as? JsonPrimitive)
-                    ?.content?.toIntOrNull() ?: 0
-                if (custo <= state.dinheiro) {
-                    state.equipamentosComprados.add(equipamento)
-                    state.dinheiro -= custo
-                }
-            },
-            equipamentosComprados = state.equipamentosComprados,
-            onRemoveEquipamentoClick = { equipamento ->
-                val custo = (equipamento.custo as? JsonPrimitive)
-                    ?.content?.toIntOrNull() ?: 0
-                state.equipamentosComprados.remove(equipamento)
-                state.dinheiro += custo
-            },
-            categorias = equipamentoCategorias,
-            superequipCategorias = superequipCategorias
-        )
-
-        Spacer(Modifier.height(16.dp))
-        HorizontalDivider(thickness = 3.dp)
-
-        SectionCard(
-            title    = "Resumo do Personagem",
-            expanded = expResumo,
-            onToggle = onToggleResumo,
-            icon     = Icons.Default.Description
-        ) {
-            SummaryContent(state)
-        }
-
         if (state.creationComplete()) {
+            // Progression Phase Layout
+            ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
+            PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes, onOpenPoderesDetail = onOpenPoderesDetail)
+            SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes, onOpenSuperPoderesDetail = onOpenSuperPoderesDetail)
+            EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, onOpenListaCompletaEquipamento = onOpenListaCompletaEquipamento, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
+
             Spacer(Modifier.height(16.dp))
             HorizontalDivider(thickness = 3.dp)
 
@@ -357,6 +186,106 @@ fun UnifiedScreen(
                 onToggle = onToggleXp,
                 onUseProgress = { showAllocDialog = true }
             )
+        } else {
+            // Creation Phase Layout
+            InformacoesSection(
+                state = state,
+                expanded = expInfos,
+                onToggle = onToggleInfos,
+                onUseProgress = { showAllocDialog = true }
+            )
+
+            HorizontalDivider(thickness = 1.dp)
+
+            AncestralidadesSection(
+                currentAncestralidade = state.ancestralidade,
+                expanded = expAncs,
+                onToggle = onToggleAncs,
+                supersLocked = creationLocked,
+                ancestralidadeEmFoco = state.ancestralidadeEmFoco,      // <<< ADICIONADO
+                onOpenListaAncestralidadesDetail = onOpenListaAncestralidadesDetail,
+                onSelectAncestralidade = { nome ->
+                    val key = nome.uppercase().semAcentos()
+
+                    if (key == state.ancestralidade) return@AncestralidadesSection
+
+                    if (key == "MEIO-ELFOS") {
+                        pendingMeioElfoKey = key
+                        showMeioElfoDialog = true
+                    } else {
+                        pendingMeioElfoKey = null
+                        state.aplicarAncestralidade(
+                            key,
+                            viewModel.feedbackMessages as MutableList<String>
+                        )
+                    }
+                }
+            )
+
+            HorizontalDivider(thickness = 1.dp)
+
+            ComplicacoesSection(
+                state = state,
+                expanded = expComps,
+                onToggle = onToggleComps,
+                onOpenComplicacoesDetail = onOpenComplicacoesDetail,
+                feedbackMessages = viewModel.feedbackMessages as MutableList<String>
+            )
+
+            HorizontalDivider(thickness = 1.dp)
+
+            SectionCard(
+                title    = "Atributos",
+                expanded = expAttrs,
+                onToggle = onToggleAttrs,
+                icon     = Icons.Default.FitnessCenter
+            ) {
+                AtributosContent(state, onOpenAtributosDetail)
+            }
+
+            HorizontalDivider(thickness = 1.dp)
+
+            SectionCard(
+                title    = "Perícias",
+                expanded = expPer,
+                onToggle = onTogglePer,
+                icon     = Icons.Default.School
+            ) {
+                PericiasContent(
+                    state = state,
+                    onOpenPericiasDetail = onOpenPericiasDetail,
+                    feedbackMessages = viewModel.feedbackMessages as MutableList<String>
+                )
+            }
+
+            HorizontalDivider(thickness = 1.dp)
+
+            SectionCard(
+                title    = "Vantagens",
+                expanded = expVants,
+                onToggle = onToggleVants,
+                icon     = Icons.Default.Star
+            ) {
+                VantagensContent(
+                    state = state,
+                    multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
+                    onOpenVantagensDetail  = onOpenVantagensDetail,
+                    viewModel = viewModel
+                )
+            }
+
+            PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes, onOpenPoderesDetail = onOpenPoderesDetail)
+
+            Spacer(Modifier.height(8.dp))
+            HorizontalDivider(thickness = 1.dp)
+
+            SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes, onOpenSuperPoderesDetail = onOpenSuperPoderesDetail)
+            EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, onOpenListaCompletaEquipamento = onOpenListaCompletaEquipamento, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
+
+            Spacer(Modifier.height(16.dp))
+            HorizontalDivider(thickness = 3.dp)
+
+            ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
         }
     }
 
@@ -430,4 +359,119 @@ fun UnifiedScreen(
             showAllocDialog = false
         }
     }
+}
+
+@Composable
+private fun ResumoSection(
+    state: CriadorState,
+    expanded: Boolean,
+    onToggle: () -> Unit
+) {
+    SectionCard(
+        title = "Resumo do Personagem",
+        expanded = expanded,
+        onToggle = onToggle,
+        icon = Icons.Default.Description
+    ) {
+        SummaryContent(state)
+    }
+}
+
+@Composable
+private fun PoderesSection(
+    state: CriadorState,
+    expanded: Boolean,
+    onToggle: () -> Unit,
+    onOpenPoderesDetail: () -> Unit
+) {
+    val temArcano = state.vantagensSelecionadas.any {
+        it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
+    }
+    if (temArcano && !state.celestialAAMilagresDesabilitado) {
+        HorizontalDivider(thickness = 1.dp)
+        SectionCard(
+            title = "Poderes",
+            expanded = expanded,
+            onToggle = onToggle,
+            icon = Icons.Default.FlashOn
+        ) {
+            PoderesSection(
+                state = state,
+                onOpenListaCompletaPoderes = onOpenPoderesDetail
+            )
+        }
+    }
+}
+
+@Composable
+private fun SuperPoderesSection(
+    state: CriadorState,
+    listaSuperPoderes: List<SuperPoder>,
+    expanded: Boolean,
+    onToggle: () -> Unit,
+    onOpenSuperPoderesDetail: (String) -> Unit
+) {
+    if (state.modoSupers) {
+        SuperPoderesContent(
+            state = state,
+            listaSuperPoderes = listaSuperPoderes,
+            expanded = expanded,
+            onToggle = onToggle,
+            onOpenSuperPoderesDetail = onOpenSuperPoderesDetail
+        )
+    }
+}
+
+@Composable
+private fun EquipamentoSection(
+    state: CriadorState,
+    expanded: Boolean,
+    onToggle: () -> Unit,
+    onOpenListaCompletaEquipamento: () -> Unit,
+    equipamentoCategorias: List<EquipamentoCategoria>,
+    superequipCategorias: List<EquipamentoCategoria>
+) {
+    EquipamentoSection(
+        dinheiro = state.dinheiro,
+        pcTotal = state.pontosComplicacao,
+        pcLivres = (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0),
+        recursosPcUsados = state.cpRecursosStack.size,
+        expanded = expanded,
+        onToggle = onToggle,
+        onUsarPontosBonusEmRecursos = {
+            val pcLivresLocal =
+                (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0)
+            if (pcLivresLocal > 0 && state.cpRecursosStack.isEmpty()) {
+                state.cpRecursosStack.add(Unit)
+                state.pontosComplicacaoGastos += 1
+                state.dinheiro += 500
+            }
+        },
+        onDesfazerPontosBonusEmRecursos = {
+            if (state.cpRecursosStack.isNotEmpty() && state.dinheiro >= 500) {
+                state.cpRecursosStack.removeAt(state.cpRecursosStack.lastIndex)
+                state.pontosComplicacaoGastos =
+                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                state.dinheiro -= 500
+            }
+        },
+        onListaCompletaClick = onOpenListaCompletaEquipamento,
+        onEquipamentoDoubleClick = { equipamento ->
+            val custo = (equipamento.custo as? JsonPrimitive)
+                ?.content?.toIntOrNull() ?: 0
+            if (custo <= state.dinheiro) {
+                state.equipamentosComprados.add(equipamento)
+                state.dinheiro -= custo
+            }
+        },
+        equipamentosComprados = state.equipamentosComprados,
+        onRemoveEquipamentoClick = { equipamento ->
+            val custo = (equipamento.custo as? JsonPrimitive)
+                ?.content?.toIntOrNull() ?: 0
+            state.equipamentosComprados.remove(equipamento)
+            state.dinheiro += custo
+        },
+        categorias = equipamentoCategorias,
+        superequipCategorias = superequipCategorias
+    )
 }
