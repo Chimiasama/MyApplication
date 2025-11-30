@@ -1229,7 +1229,7 @@ class CriadorState {
         val cap = dynamicStageCaps[idx]
         val spent = stageXpSpent.getValue(est.nome)
         if (spent == cap) {
-            frozenAdvCount = vantagensSelecionadas.size
+            frozenAdvantageCount = vantagensSelecionadas.size
         }
     }
 
