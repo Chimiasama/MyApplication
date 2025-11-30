@@ -45,7 +45,7 @@ fun XpSection(
             ) {
                 items(20) { index ->
                     val slotUsed = state.xpSlots[index]
-                    val isEnabled = if (index == 0) !slotUsed else state.xpSlots[index - 1] && !slotUsed
+                    val isEnabled = (if (index == 0) !slotUsed else state.xpSlots[index - 1] && !slotUsed) && state.pontosVantagem == 0
 
                     Button(
                         onClick = {

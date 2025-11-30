@@ -173,6 +173,21 @@ fun UnifiedScreen(
         if (state.creationComplete()) {
             // Progression Phase Layout
             ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
+            if (state.pontosVantagem > 0) {
+                SectionCard(
+                    title    = "Vantagens",
+                    expanded = expVants,
+                    onToggle = onToggleVants,
+                    icon     = Icons.Default.Star
+                ) {
+                    VantagensContent(
+                        state = state,
+                        multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
+                        onOpenVantagensDetail  = onOpenVantagensDetail,
+                        viewModel = viewModel
+                    )
+                }
+            }
             PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes, onOpenPoderesDetail = onOpenPoderesDetail)
             SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes, onOpenSuperPoderesDetail = onOpenSuperPoderesDetail)
             EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, onOpenListaCompletaEquipamento = onOpenListaCompletaEquipamento, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
