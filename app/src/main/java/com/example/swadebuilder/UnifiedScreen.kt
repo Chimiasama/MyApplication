@@ -347,15 +347,17 @@ fun UnifiedScreen(
             SummaryContent(state)
         }
 
-        Spacer(Modifier.height(16.dp))
-        HorizontalDivider(thickness = 3.dp)
+        if (state.creationComplete()) {
+            Spacer(Modifier.height(16.dp))
+            HorizontalDivider(thickness = 3.dp)
 
-        XpSection(
-            state = state,
-            expanded = expXp,
-            onToggle = onToggleXp,
-            onUseProgress = { showAllocDialog = true }
-        )
+            XpSection(
+                state = state,
+                expanded = expXp,
+                onToggle = onToggleXp,
+                onUseProgress = { showAllocDialog = true }
+            )
+        }
     }
 
     if (showMeioElfoDialog && pendingMeioElfoKey != null) {

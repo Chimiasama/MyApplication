@@ -147,6 +147,7 @@ class CriadorViewModel : ViewModel() {
         state.dinheiro = 500
         state.progresso = 0
         state.progressosDisponiveis = 0
+        state.xpSlots.fill(false)
         state.frozenAdvCount = 0
         state.emProgresso = false
 
