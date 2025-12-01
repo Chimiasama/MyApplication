@@ -339,8 +339,6 @@ class CriadorState {
     }
 
     fun grantVantagemPointFromXp(stageName: String) {
-        check(progressosDisponiveis > 0) { "Sem XP disponível." }
-
         pontosVantagem += 1
         pvFromXpOutstanding += 1
 
@@ -351,7 +349,6 @@ class CriadorState {
     }
 
     fun grantSkillPointsFromXp() {
-        check(progressosDisponiveis > 0) { "Sem XP disponível." }
         //This is a hack to add 2 skill points
         cpSpStack.add(Unit)
         cpSpStack.add(Unit)
@@ -767,11 +764,16 @@ class CriadorState {
         // 5) Estágio mínimo (respeita Nasce um Herói)
         val ignorarEstagioPorNasce = (nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0)
         if (!ignorarEstagioPorNasce) {
-            listaDeEstagios
-                .firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
-                ?.let { estReqObj ->
-                    if (effectiveProgressoParaVantagens() < estReqObj.minProgress) return false
+            val estagioRequerido = listaDeEstagios.firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
+            if (estagioRequerido != null) {
+                val estagioAtual = overrideStageForVantagem?.let { stageName ->
+                    listaDeEstagios.firstOrNull { it.nome.equals(stageName, ignoreCase = true) }
+                } ?: estagioAtual()
+
+                if (listaDeEstagios.indexOf(estagioAtual) < listaDeEstagios.indexOf(estagioRequerido)) {
+                    return false
                 }
+            }
         }
 
         // 6) Vantagens prévias
@@ -1356,7 +1358,23 @@ class CriadorState {
     var mostrandoPericiasProgresso by mutableStateOf(false)
     val frozenSkillIncrements = mutableStateMapOf<String, Int>()
 
+    // Novas variáveis para rastrear o avanço de perícias
+    var skillAdvancementInProgress by mutableStateOf(false)
+    val skillsForCurrentAdvancement = mutableStateListOf<String>()
+
+    // Novas variáveis para rastrear o avanço de vantagens
+    var advantageAdvancementInProgress by mutableStateOf(false)
+    var advantageForCurrentAdvancement by mutableStateOf<String?>(null)
+
     val advancementHistory = mutableStateListOf<com.example.swadebuilder.model.AdvancementAction>()
+
+    fun increasePericiaFromAdvancement(per: Pericia, cost: Int) {
+        if (skillAdvancementInProgress) {
+            skillsForCurrentAdvancement.add(per.nome)
+        }
+        baseIncsPorPericia[per] = baseIncsPorPericia.getValue(per) + 1
+        spCostStackPorPericia.getValue(per).add(cost)
+    }
 
     fun creationComplete(): Boolean {
         // "Ficha básica completa": todos os pontos iniciais foram distribuídos.

@@ -645,6 +645,9 @@ fun VantagensContent(
                                                 }
 
                                                 else -> {
+                                                    if (state.advantageAdvancementInProgress) {
+                                                        state.advantageForCurrentAdvancement = vant.id
+                                                    }
                                                     if (vant.nome.contains(
                                                             "Pontos de Poder",
                                                             true

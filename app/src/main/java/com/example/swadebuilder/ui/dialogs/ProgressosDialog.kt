@@ -67,7 +67,9 @@ import kotlinx.coroutines.launch
 fun ProgressosDialog(
     state: CriadorState,
     slotIndex: Int,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onStartSkillAdvancement: (Int) -> Unit,
+    onStartAdvantageAdvancement: (Int, String) -> Unit
 ) {
     // Snackbar para mensagens temporárias (substitui showTempError/tempErrorMsg)
     val snackHost = remember { SnackbarHostState() }
@@ -376,11 +378,11 @@ fun ProgressosDialog(
                 onClick = {
                     when (escolheu) {
                         "Comprar Vantagem" -> {
-                            state.grantVantagemPointFromXp(est.nome)
+                            onStartAdvantageAdvancement(slotIndex, est.nome)
                             onDismiss()
                         }
                         "Aumentar Perícia" -> {
-                            state.grantSkillPointsFromXp()
+                            onStartSkillAdvancement(slotIndex)
                             onDismiss()
                         }
                         "Atributo" -> {

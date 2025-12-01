@@ -42,7 +42,8 @@ fun XpSection(
         LaunchedEffect(
             state.progresso,
             state.stageXpSpent.values.toList(),
-            state.xpSlots.toList()
+            state.xpSlots.toList(),
+            state.modoProgressaoAtivo
         ) {
             state.recomputeAvailableProgress()
         }

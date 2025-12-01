@@ -197,18 +197,21 @@ fun UnifiedScreen(
 
                 Button(
                     onClick = {
-                        val newAdvantage = state.vantagensSelecionadas.last()
-                        state.advancementHistory.add(com.example.swadebuilder.model.AdvancementAction.SpendOnAdvantage(newAdvantage.id))
-                        state.spendProgressAcrossStages(1)
-                        state.xpSlots[currentSlotIndex] = true
-                        state.recomputeAvailableProgress()
+                        viewModel.finishAdvantageAdvancement()
                         state.mostrandoVantagensProgresso = false
-                        state.frozenAdvantageCount = state.vantagensSelecionadas.size
                     },
                     enabled = state.pontosVantagem == 0,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Confirmar Vantagem e Voltar")
+                }
+                TextButton(
+                    onClick = {
+                        viewModel.cancelAdvancementInProgress()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Cancelar")
                 }
 
             } else if (state.mostrandoPericiasProgresso) {
@@ -233,23 +236,21 @@ fun UnifiedScreen(
 
                 Button(
                     onClick = {
-                        val skillsIncreased = state.baseIncsPorPericia.filter { (pericia, incs) ->
-                            (state.frozenSkillIncrements[pericia.nome] ?: 0) < incs
-                        }.map { it.key.nome }
-                        state.advancementHistory.add(com.example.swadebuilder.model.AdvancementAction.SpendOnSkills(skillsIncreased))
-                        state.spendProgressAcrossStages(1)
-                        state.xpSlots[currentSlotIndex] = true
-                        state.recomputeAvailableProgress()
+                        viewModel.finishSkillAdvancement()
                         state.mostrandoPericiasProgresso = false
-                        state.frozenSkillIncrements.clear()
-                        state.baseIncsPorPericia.forEach { (pericia, incs) ->
-                            state.frozenSkillIncrements[pericia.nome] = incs
-                        }
                     },
                     enabled = state.pontosPericia == 0,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Confirmar Perícias e Voltar")
+                }
+                TextButton(
+                    onClick = {
+                        viewModel.cancelAdvancementInProgress()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Cancelar")
                 }
 
             } else {
@@ -381,6 +382,7 @@ fun UnifiedScreen(
                 Button(
                     onClick = {
                         state.modoProgressaoAtivo = true
+                        state.progresso = 4
                         state.frozenAdvantageCount = state.vantagensSelecionadas.size
                         state.frozenSkillIncrements.clear()
                         state.baseIncsPorPericia.forEach { (pericia, incs) ->
@@ -462,9 +464,17 @@ fun UnifiedScreen(
     }
 
     if (showAllocDialog) {
-        ProgressosDialog(state, currentSlotIndex) {
-            showAllocDialog = false
-        }
+        ProgressosDialog(
+            state = state,
+            slotIndex = currentSlotIndex,
+            onDismiss = { showAllocDialog = false },
+            onStartSkillAdvancement = { slotIndex ->
+                viewModel.startSkillAdvancement(slotIndex)
+            },
+            onStartAdvantageAdvancement = { slotIndex, est ->
+                viewModel.startAdvantageAdvancement(slotIndex, est)
+            }
+        )
     }
 }
 

@@ -309,11 +309,7 @@ fun PericiasContent(
                                 return@IconButton
                             }
 
-                            state.baseIncsPorPericia[per] =
-                                state.baseIncsPorPericia.getValue(per) + 1
-                            state.spCostStackPorPericia
-                                .getValue(per)
-                                .add(costNow)
+                            state.increasePericiaFromAdvancement(per, costNow)
 
                             if (state.usarEspecializacoesDePericia) {
                                 val esp = state.especializacoesPorPericia[per.nome]

@@ -656,20 +656,96 @@ class CriadorViewModel : ViewModel() {
         )
     }
 
+    fun startSkillAdvancement(slotIndex: Int) {
+        if (state.progressosDisponiveis >= 1) {
+            state.spendProgressAcrossStages(1)
+            state.xpSlots[slotIndex] = true
+            state.skillAdvancementInProgress = true
+            state.skillsForCurrentAdvancement.clear()
+            state.grantSkillPointsFromXp()
+        }
+    }
+
+    fun finishSkillAdvancement() {
+        if (state.skillAdvancementInProgress) {
+            val skills = state.skillsForCurrentAdvancement.toList()
+            state.advancementHistory.add(AdvancementAction.SpendOnSkills(skills))
+            state.skillAdvancementInProgress = false
+            state.skillsForCurrentAdvancement.clear()
+        }
+    }
+
+    fun startAdvantageAdvancement(slotIndex: Int, est: String) {
+        if (state.progressosDisponiveis >= 1) {
+            state.spendProgressAcrossStages(1)
+            state.xpSlots[slotIndex] = true
+            state.advantageAdvancementInProgress = true
+            state.advantageForCurrentAdvancement = null
+            state.grantVantagemPointFromXp(est)
+        }
+    }
+
+    fun finishAdvantageAdvancement() {
+        if (state.advantageAdvancementInProgress) {
+            val advantageId = state.advantageForCurrentAdvancement
+            if (advantageId != null) {
+                state.advancementHistory.add(AdvancementAction.SpendOnAdvantage(advantageId))
+            }
+            state.advantageAdvancementInProgress = false
+            state.advantageForCurrentAdvancement = null
+        }
+    }
+
+    fun cancelAdvancementInProgress() {
+        val lastUsedIndex = state.xpSlots.indexOfLast { it }
+        if (lastUsedIndex != -1) {
+            state.xpSlots[lastUsedIndex] = false
+            state.progresso = lastUsedIndex
+            state.refundProgressAcrossStages(1)
+        }
+
+        if (state.skillAdvancementInProgress) {
+            if (state.cpSpStack.isNotEmpty()) state.cpSpStack.removeLast()
+            if (state.cpSpStack.isNotEmpty()) state.cpSpStack.removeLast()
+            state.rebuildAllPericiaStacks()
+        }
+
+        if (state.advantageAdvancementInProgress) {
+            state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
+            state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
+        }
+
+        state.skillAdvancementInProgress = false
+        state.advantageAdvancementInProgress = false
+        state.mostrandoPericiasProgresso = false
+        state.mostrandoVantagensProgresso = false
+    }
+
     fun revertLastAdvancement() {
         if (state.advancementHistory.isEmpty()) return
 
         val lastAction = state.advancementHistory.removeLast()
+
+        // Reverte o slot de XP e o contador de progresso
+        val lastUsedIndex = state.xpSlots.indexOfLast { it }
+        if (lastUsedIndex != -1) {
+            state.xpSlots[lastUsedIndex] = false
+            state.progresso = lastUsedIndex
+        }
+
         when (lastAction) {
             is AdvancementAction.SpendOnAdvantage -> {
-                val advantage = listaVantagens.firstOrNull { it.id == lastAction.advantageId }
+                // Reverte o gasto E a concessão do ponto de vantagem
+                val advantage = state.vantagensSelecionadas.firstOrNull { it.id == lastAction.advantageId }
                 if (advantage != null) {
                     state.vantagensSelecionadas.remove(advantage)
                 }
-                state.pontosVantagem++
+                state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
+                state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
                 state.frozenAdvantageCount = state.vantagensSelecionadas.size
             }
             is AdvancementAction.IncreaseAttribute -> {
+                // Esta ação é autónoma, a reversão é direta
                 state.valoresAtributos[lastAction.attributeName]!!.intValue -= 2
                 val stage = state.estagioAtual().nome
                 val prev = state.comprasAttrPorEstagio[stage] ?: 0
@@ -678,21 +754,25 @@ class CriadorViewModel : ViewModel() {
                 }
             }
             is AdvancementAction.SpendOnSkills -> {
+                // Reverte o gasto dos pontos de perícia
                 lastAction.skillsIncreased.forEach { skillName ->
                     val skill = listaPericias.firstOrNull { it.nome == skillName }
                     if (skill != null) {
                         state.decreasePericia(skill)
                     }
                 }
+                // Reverte a concessão dos pontos de perícia
+                if (state.cpSpStack.isNotEmpty()) state.cpSpStack.removeLast()
+                if (state.cpSpStack.isNotEmpty()) state.cpSpStack.removeLast()
+
                 state.rebuildAllPericiaStacks()
             }
             is AdvancementAction.RemoveHindrance -> {
-                // This is still complex, as we don't store the original severity.
-                // Re-adding as minor is a temporary solution.
                 val hindrance = listaComplicacoes.first { it.id == lastAction.hindranceId }
                 state.complicacoesSelecionadas[hindrance] = "Menor"
             }
         }
+        // Devolve o ponto de avanço ao "pool"
         state.refundProgressAcrossStages(lastAction.progressCost)
     }
 }
