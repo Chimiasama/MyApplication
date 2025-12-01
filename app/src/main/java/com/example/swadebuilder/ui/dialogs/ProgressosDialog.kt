@@ -390,10 +390,14 @@ fun ProgressosDialog(
                                     val prev = state.comprasAttrPorEstagio[est.nome] ?: 0
                                     state.comprasAttrPorEstagio[est.nome] = prev + 1
                                     state.valoresAtributos[nome]!!.intValue += 2
-                                    state.advancementHistory.add(AdvancementAction.IncreaseAttribute(nome))
+                                    state.advancementHistory.add(
+                                        AdvancementAction.IncreaseAttribute(
+                                            attributeName = nome,
+                                            progressCost = costAttr
+                                        )
+                                    )
                                 }
                                 state.xpSlots[slotIndex] = true
-                                state.progressosDisponiveis--
                                 onDismiss()
                             } else {
                                 showSnack("Atributos lendários custam 2 progressos para adquirir")
@@ -413,17 +417,31 @@ fun ProgressosDialog(
                                 state.spendProgressAcrossStages(custo)
                                 if (isSomenteMaior) {
                                     state.complicacoesSelecionadas.remove(comp)
-                                    state.advancementHistory.add(AdvancementAction.RemoveHindrance(comp.id))
+                                    state.advancementHistory.add(
+                                        AdvancementAction.RemoveHindrance(
+                                            hindranceId = comp.id,
+                                            progressCost = custo
+                                        )
+                                    )
                                 } else if (nivelAtual == "Maior") {
                                     state.complicacoesSelecionadas[comp] = "Menor"
-                                    state.advancementHistory.add(AdvancementAction.RemoveHindrance(comp.id))
+                                    state.advancementHistory.add(
+                                        AdvancementAction.RemoveHindrance(
+                                            hindranceId = comp.id,
+                                            progressCost = custo
+                                        )
+                                    )
                                 } else {
                                     state.complicacoesSelecionadas.remove(comp)
-                                    state.advancementHistory.add(AdvancementAction.RemoveHindrance(comp.id))
+                                    state.advancementHistory.add(
+                                        AdvancementAction.RemoveHindrance(
+                                            hindranceId = comp.id,
+                                            progressCost = custo
+                                        )
+                                    )
                                 }
                             }
                             state.xpSlots[slotIndex] = true
-                            state.progressosDisponiveis--
                             onDismiss()
                         }
                     }
@@ -539,6 +557,8 @@ fun ProgressosDialog(
                                         }
                                         state.spendProgressAcrossStages(1)
                                         state.vantagensSelecionadas += vant
+                                        state.advancementHistory.add(AdvancementAction.SpendOnAdvantage(vant.id))
+                                        state.xpSlots[slotIndex] = true
                                         state.checkFreeze()
                                         showAdvSelection = false
                                         onDismiss()
@@ -604,6 +624,8 @@ fun ProgressosDialog(
 
                         state.spendProgressAcrossStages(1)
                         state.vantagensSelecionadas += vant.copy(choice = choice)
+                        state.advancementHistory.add(AdvancementAction.SpendOnAdvantage(vant.id))
+                        state.xpSlots[slotIndex] = true
 
                         val choiceKey = choice.uppercase().semAcentos()
                         if (state.valoresAtributos.containsKey(choiceKey)) {
@@ -651,6 +673,8 @@ fun ProgressosDialog(
 
                             state.spendProgressAcrossStages(1)
                             state.vantagensSelecionadas += vant.copy(choice = choice)
+                            state.advancementHistory.add(AdvancementAction.SpendOnAdvantage(vant.id))
+                            state.xpSlots[slotIndex] = true
 
                             val choiceKey = choice.uppercase().semAcentos()
                             if (state.valoresAtributos.containsKey(choiceKey)) {
@@ -687,6 +711,8 @@ fun ProgressosDialog(
 
                         state.spendProgressAcrossStages(1)
                         state.vantagensSelecionadas += vant.copy(choice = choice)
+                        state.advancementHistory.add(AdvancementAction.SpendOnAdvantage(vant.id))
+                        state.xpSlots[slotIndex] = true
                         state.checkFreeze()
                         showPendingChoice = false
                         showAdvSelection = false

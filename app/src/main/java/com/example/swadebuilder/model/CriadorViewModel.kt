@@ -693,6 +693,6 @@ class CriadorViewModel : ViewModel() {
                 state.complicacoesSelecionadas[hindrance] = "Menor"
             }
         }
-        state.progressosDisponiveis++
+        state.refundProgressAcrossStages(lastAction.progressCost)
     }
 }

@@ -1228,6 +1228,24 @@ class CriadorState {
         progressosDisponiveis = (progresso - totalSpent).coerceAtLeast(0)
     }
 
+    fun refundProgressAcrossStages(n: Int) {
+        var remaining = n
+        reachedStages()
+            .mapIndexed { idx, est -> idx to est }
+            .asReversed()
+            .forEach { (_, est) ->
+                if (remaining == 0) return@forEach
+                val spent = stageXpSpent.getValue(est.nome)
+                if (spent > 0) {
+                    val refund = spent.coerceAtMost(remaining)
+                    stageXpSpent[est.nome] = spent - refund
+                    remaining -= refund
+                }
+            }
+        val totalSpent = stageXpSpent.values.sum()
+        progressosDisponiveis = (progresso - totalSpent).coerceAtLeast(0)
+    }
+
     fun checkFreeze() {
         val idx = currentProgressStageIndex()
         val est = listaDeEstagios[idx]
