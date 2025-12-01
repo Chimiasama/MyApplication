@@ -378,25 +378,23 @@ fun UnifiedScreen(
 
             ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
 
-            Button(
-                onClick = {
-                    state.modoProgressaoAtivo = true
-                    state.frozenAdvantageCount = state.vantagensSelecionadas.size
-                    state.frozenSkillIncrements.clear()
-                    state.baseIncsPorPericia.forEach { (pericia, incs) ->
-                        state.frozenSkillIncrements[pericia.nome] = incs
-                    }
-                    val advancementsEarned = listaDeEstagios.count { state.progresso >= it.minProgress }
-                    val advancementsSpent = state.xpSlots.count { it }
-                    state.progressosDisponiveis = advancementsEarned - advancementsSpent
-                },
-                enabled = state.creationComplete(),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Iniciar Progressão")
+                Button(
+                    onClick = {
+                        state.modoProgressaoAtivo = true
+                        state.frozenAdvantageCount = state.vantagensSelecionadas.size
+                        state.frozenSkillIncrements.clear()
+                        state.baseIncsPorPericia.forEach { (pericia, incs) ->
+                            state.frozenSkillIncrements[pericia.nome] = incs
+                        }
+                        state.recomputeAvailableProgress()
+                    },
+                    enabled = state.creationComplete(),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Iniciar Progressão")
+                }
             }
         }
-    }
 
     if (showMeioElfoDialog && pendingMeioElfoKey != null) {
         AlertDialog(

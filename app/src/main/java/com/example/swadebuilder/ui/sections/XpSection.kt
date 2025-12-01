@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 fun XpSection(
@@ -38,6 +39,14 @@ fun XpSection(
         onToggle = onToggle,
         icon = Icons.Default.Star
     ) {
+        LaunchedEffect(
+            state.progresso,
+            state.stageXpSpent.values.toList(),
+            state.xpSlots.toList()
+        ) {
+            state.recomputeAvailableProgress()
+        }
+
         Column(Modifier.padding(8.dp)) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(5),
