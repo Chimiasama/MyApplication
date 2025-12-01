@@ -398,6 +398,7 @@ fun ProgressosDialog(
                                     )
                                 }
                                 state.xpSlots[slotIndex] = true
+                                state.recomputeAvailableProgress()
                                 onDismiss()
                             } else {
                                 showSnack("Atributos lendários custam 2 progressos para adquirir")
@@ -442,6 +443,7 @@ fun ProgressosDialog(
                                 }
                             }
                             state.xpSlots[slotIndex] = true
+                            state.recomputeAvailableProgress()
                             onDismiss()
                         }
                     }
@@ -518,8 +520,7 @@ fun ProgressosDialog(
         AlertDialog(
             onDismissRequest = {
                 state.stageXpSpent[estSel.nome] = prevStageSpent
-                state.progressosDisponiveis =
-                    (state.progresso - state.stageXpSpent.values.sum()).coerceAtLeast(0)
+                state.recomputeAvailableProgress()
                 showAdvSelection = false
             },
             text = {
@@ -559,6 +560,7 @@ fun ProgressosDialog(
                                         state.vantagensSelecionadas += vant
                                         state.advancementHistory.add(AdvancementAction.SpendOnAdvantage(vant.id))
                                         state.xpSlots[slotIndex] = true
+                                        state.recomputeAvailableProgress()
                                         state.checkFreeze()
                                         showAdvSelection = false
                                         onDismiss()
@@ -579,8 +581,7 @@ fun ProgressosDialog(
             dismissButton = {
                 TextButton(onClick = {
                     state.stageXpSpent[estSel.nome] = prevStageSpent
-                    state.progressosDisponiveis =
-                        (state.progresso - state.stageXpSpent.values.sum()).coerceAtLeast(0)
+                    state.recomputeAvailableProgress()
                     showAdvSelection = false
                 }) { Text("Cancelar") }
             }
@@ -626,6 +627,7 @@ fun ProgressosDialog(
                         state.vantagensSelecionadas += vant.copy(choice = choice)
                         state.advancementHistory.add(AdvancementAction.SpendOnAdvantage(vant.id))
                         state.xpSlots[slotIndex] = true
+                        state.recomputeAvailableProgress()
 
                         val choiceKey = choice.uppercase().semAcentos()
                         if (state.valoresAtributos.containsKey(choiceKey)) {
@@ -675,6 +677,7 @@ fun ProgressosDialog(
                             state.vantagensSelecionadas += vant.copy(choice = choice)
                             state.advancementHistory.add(AdvancementAction.SpendOnAdvantage(vant.id))
                             state.xpSlots[slotIndex] = true
+                            state.recomputeAvailableProgress()
 
                             val choiceKey = choice.uppercase().semAcentos()
                             if (state.valoresAtributos.containsKey(choiceKey)) {
@@ -713,6 +716,7 @@ fun ProgressosDialog(
                         state.vantagensSelecionadas += vant.copy(choice = choice)
                         state.advancementHistory.add(AdvancementAction.SpendOnAdvantage(vant.id))
                         state.xpSlots[slotIndex] = true
+                        state.recomputeAvailableProgress()
                         state.checkFreeze()
                         showPendingChoice = false
                         showAdvSelection = false

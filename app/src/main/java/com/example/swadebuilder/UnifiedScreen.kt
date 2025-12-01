@@ -201,6 +201,7 @@ fun UnifiedScreen(
                         state.advancementHistory.add(com.example.swadebuilder.model.AdvancementAction.SpendOnAdvantage(newAdvantage.id))
                         state.spendProgressAcrossStages(1)
                         state.xpSlots[currentSlotIndex] = true
+                        state.recomputeAvailableProgress()
                         state.mostrandoVantagensProgresso = false
                         state.frozenAdvantageCount = state.vantagensSelecionadas.size
                     },
@@ -238,6 +239,7 @@ fun UnifiedScreen(
                         state.advancementHistory.add(com.example.swadebuilder.model.AdvancementAction.SpendOnSkills(skillsIncreased))
                         state.spendProgressAcrossStages(1)
                         state.xpSlots[currentSlotIndex] = true
+                        state.recomputeAvailableProgress()
                         state.mostrandoPericiasProgresso = false
                         state.frozenSkillIncrements.clear()
                         state.baseIncsPorPericia.forEach { (pericia, incs) ->

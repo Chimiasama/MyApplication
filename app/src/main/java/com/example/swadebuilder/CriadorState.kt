@@ -1224,8 +1224,7 @@ class CriadorState {
                 remaining -= use
             }
         }
-        val totalSpent = stageXpSpent.values.sum()
-        progressosDisponiveis = (progresso - totalSpent).coerceAtLeast(0)
+        recomputeAvailableProgress()
     }
 
     fun refundProgressAcrossStages(n: Int) {
@@ -1242,8 +1241,18 @@ class CriadorState {
                     remaining -= refund
                 }
             }
+        recomputeAvailableProgress()
+    }
+
+    fun recomputeAvailableProgress() {
         val totalSpent = stageXpSpent.values.sum()
-        progressosDisponiveis = (progresso - totalSpent).coerceAtLeast(0)
+        val availableByProgress = (progresso - totalSpent).coerceAtLeast(0)
+
+        val advancementsEarned = listaDeEstagios.count { progresso >= it.minProgress }
+        val advancementsSpent = xpSlots.count { it }
+        val availableBySlots = (advancementsEarned - advancementsSpent).coerceAtLeast(0)
+
+        progressosDisponiveis = kotlin.math.min(availableByProgress, availableBySlots)
     }
 
     fun checkFreeze() {
