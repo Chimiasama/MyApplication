@@ -1248,11 +1248,15 @@ class CriadorState {
         val totalSpent = stageXpSpent.values.sum()
         val availableByProgress = (progresso - totalSpent).coerceAtLeast(0)
 
-        val advancementsEarned = listaDeEstagios.count { progresso >= it.minProgress }
-        val advancementsSpent = xpSlots.count { it }
-        val availableBySlots = (advancementsEarned - advancementsSpent).coerceAtLeast(0)
+        val remainingStageCapacity = reachedStages()
+            .sumOf { stage ->
+                val stageIndex = listaDeEstagios.indexOf(stage)
+                val cap = dynamicStageCaps[stageIndex]
+                val spentHere = stageXpSpent.getValue(stage.nome)
+                (cap - spentHere).coerceAtLeast(0)
+            }
 
-        progressosDisponiveis = kotlin.math.min(availableByProgress, availableBySlots)
+        progressosDisponiveis = kotlin.math.min(availableByProgress, remainingStageCapacity)
     }
 
     fun checkFreeze() {
