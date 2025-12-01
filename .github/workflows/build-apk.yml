@@ -30,9 +30,12 @@ jobs:
       - name: Build APK (FullDebug)
         run: ./gradlew :app:assembleFullDebug --stacktrace
 
+      # --- NOVO: Sanitiza nome do artifact ---
+      - name: Sanitize artifact name
+        run: echo "ARTIFACT_NAME=$(echo '${{ github.event.inputs.branch }}' | tr '/' '-')" >> $GITHUB_ENV
+
       - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
-          # troca / por - no nome do artifact
-          name: built-apks-${{ replace(github.event.inputs.branch, '/', '-') }}
+          name: built-apks-${{ env.ARTIFACT_NAME }}
           path: app/build/outputs/apk/**/*.apk
