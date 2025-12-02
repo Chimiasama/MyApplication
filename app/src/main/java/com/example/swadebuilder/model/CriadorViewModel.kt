@@ -747,12 +747,14 @@ class CriadorViewModel : ViewModel() {
 
         when (lastAction) {
             is AdvancementAction.SpendOnAdvantage -> {
-                // Reverte o gasto E a concessão do ponto de vantagem
+                // Reverte a compra da vantagem e a concessão do ponto de XP.
                 val advantage = state.vantagensSelecionadas.firstOrNull { it.id == lastAction.advantageId }
                 if (advantage != null) {
                     state.vantagensSelecionadas.remove(advantage)
                 }
-                state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
+                // O avanço concedeu 1 ponto de vantagem pendente de XP, que agora é revertido.
+                // O gasto desse ponto é revertido pela remoção da vantagem (logicamente).
+                // O efeito líquido na contagem de pontosVantagem é nulo, mas o ponto pendente deve ser removido.
                 state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
                 state.frozenAdvantageCount = state.vantagensSelecionadas.size
             }
