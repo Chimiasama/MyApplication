@@ -280,7 +280,7 @@ fun UnifiedScreen(
                         listaVantagens.find { it.id == advantageId }?.nome ?: advantageId
                     },
                     getHindranceName = { hindranceId ->
-                        listaComplicacoes.find { it.id == hindranceId }?.nome ?: hindranceId
+                        listaComplicacoes.find { it.id == hindranceId }?.name ?: hindranceId
                     }
                 )
             }
