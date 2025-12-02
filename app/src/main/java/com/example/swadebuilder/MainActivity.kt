@@ -531,7 +531,7 @@ class MainActivity : ComponentActivity() {
                                                             superPontosDisponiveis  = state.superPontosDisponiveis,
                                                             limitePorPoderPadrao    = state.limitePorPoderPadrao,
                                                             limiteFavorecido        = state.limiteFavorecido,
-                                                            poderFavoritoId       = state.poderFavoritoId,
+                                                            poderFavoritoId         = state.poderFavoritoId,
                                                             bonusPararFromPower     = state.bonusPararFromPower,
                                                             bonusResFromPower       = state.bonusResFromPower,
                                                             armorFromPower          = state.armorFromPower,
