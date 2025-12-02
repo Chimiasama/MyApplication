@@ -738,11 +738,10 @@ class CriadorViewModel : ViewModel() {
 
         val lastAction = state.advancementHistory.removeLast()
 
-        // Reverte o slot de XP e o contador de progresso
+        // Reverte o slot de XP
         val lastUsedIndex = state.xpSlots.indexOfLast { it }
         if (lastUsedIndex != -1) {
             state.xpSlots[lastUsedIndex] = false
-            state.progresso--
         }
 
         when (lastAction) {
