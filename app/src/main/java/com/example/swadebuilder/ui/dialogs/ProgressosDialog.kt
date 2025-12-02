@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
-import com.example.swadebuilder.RadioButtonRow
+import com.example.swadebuilder.ui.components.RadioButtonRow
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias

@@ -21,8 +21,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -82,7 +84,7 @@ fun EquipamentosDetailScreen(
         remember(mapa) { mapa.mapValues { (_, sub) -> sub.keys.associateWith { mutableStateOf(false) } } }
     val expSub2 = remember(mapa) {
         mapa.mapValues { (_, sub) ->
-            sub.mapValues { (_, sub2) -> sub2.keys.associateWith { mutableState of(false) } }
+            sub.mapValues { (_, sub2) -> sub2.keys.associateWith { mutableStateOf(false) } }
         }
     }
 
