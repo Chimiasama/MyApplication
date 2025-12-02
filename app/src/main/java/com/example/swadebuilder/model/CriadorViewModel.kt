@@ -663,6 +663,7 @@ class CriadorViewModel : ViewModel() {
             state.skillAdvancementInProgress = true
             state.skillsForCurrentAdvancement.clear()
             state.grantSkillPointsFromXp()
+            state.updateEmProgressoFlag()
         }
     }
 
@@ -672,6 +673,7 @@ class CriadorViewModel : ViewModel() {
             state.advancementHistory.add(AdvancementAction.SpendOnSkills(skills))
             state.skillAdvancementInProgress = false
             state.skillsForCurrentAdvancement.clear()
+            state.updateEmProgressoFlag()
         }
     }
 
@@ -682,6 +684,7 @@ class CriadorViewModel : ViewModel() {
             state.advantageAdvancementInProgress = true
             state.advantageForCurrentAdvancement = null
             state.grantVantagemPointFromXp(est)
+            state.updateEmProgressoFlag()
         }
     }
 
@@ -693,6 +696,7 @@ class CriadorViewModel : ViewModel() {
             }
             state.advantageAdvancementInProgress = false
             state.advantageForCurrentAdvancement = null
+            state.updateEmProgressoFlag()
         }
     }
 
@@ -719,6 +723,7 @@ class CriadorViewModel : ViewModel() {
         state.advantageAdvancementInProgress = false
         state.mostrandoPericiasProgresso = false
         state.mostrandoVantagensProgresso = false
+        state.updateEmProgressoFlag()
     }
 
     fun revertLastAdvancement() {
@@ -774,5 +779,6 @@ class CriadorViewModel : ViewModel() {
         }
         // Devolve o ponto de avanço ao "pool"
         state.refundProgressAcrossStages(lastAction.progressCost)
+        state.updateEmProgressoFlag()
     }
 }

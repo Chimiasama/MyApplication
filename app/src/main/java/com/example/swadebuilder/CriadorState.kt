@@ -21,6 +21,7 @@ import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 
+const val TOTAL_PROGRESS_LIMIT = 20
 class CriadorState {
     var showHelpMessages by mutableStateOf(false)
     var modoSupers by mutableStateOf(false)
@@ -619,17 +620,21 @@ class CriadorState {
     }
 
     private fun currentProgressStageIndex(): Int {
-        val caps = listaDeEstagios.mapIndexed { idx, st ->
+        var firstOpen = -1
+
+        listaDeEstagios.forEachIndexed { idx, st ->
             val prevMax = listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: 0
-            if (idx < listaDeEstagios.lastIndex)
+            val cap = if (idx < listaDeEstagios.lastIndex) {
                 st.maxProgress - prevMax
-            else
+            } else {
                 (TOTAL_PROGRESS_LIMIT - prevMax).coerceAtLeast(0)
+            }
+            val spentHere = stageXpSpent[st.nome] ?: 0
+            if (spentHere < cap && firstOpen == -1) {
+                firstOpen = idx
+            }
         }
-        val firstOpen = caps.indexOfFirst { cap ->
-            val nome = listaDeEstagios[caps.indexOf(cap)].nome
-            (stageXpSpent[nome] ?: 0) < cap
-        }
+
         return if (firstOpen >= 0) firstOpen else listaDeEstagios.lastIndex
     }
 
@@ -1367,6 +1372,10 @@ class CriadorState {
     var advantageForCurrentAdvancement by mutableStateOf<String?>(null)
 
     val advancementHistory = mutableStateListOf<com.example.swadebuilder.model.AdvancementAction>()
+
+    fun updateEmProgressoFlag() {
+        emProgresso = skillAdvancementInProgress || advantageAdvancementInProgress
+    }
 
     fun increasePericiaFromAdvancement(per: Pericia, cost: Int) {
         if (skillAdvancementInProgress) {
