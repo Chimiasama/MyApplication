@@ -953,7 +953,7 @@ val nivelParaEstagio = mapOf(
     "L" to listaDeEstagios.first { it.nome == "Lendário" }
 )
 
-const val TOTAL_PROGRESS_LIMIT = 50
+const val TOTAL_PROGRESS_LIMIT = 20
 val dynamicStageCaps = listaDeEstagios.mapIndexed { idx, st ->
     val prevMax = listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: 0
     if (idx < listaDeEstagios.lastIndex)

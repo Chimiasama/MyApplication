@@ -659,6 +659,9 @@ fun VantagensContent(
                                                         state.vantagensSelecionadas += vant
                                                     }
                                                     state.pontosVantagem--
+                                                    if (state.advantageAdvancementInProgress && state.pvFromXpOutstanding > 0) {
+                                                        state.pvFromXpOutstanding -= 1
+                                                    }
                                                     state.rebuildAllPericiaStacks()
 
                                                 }

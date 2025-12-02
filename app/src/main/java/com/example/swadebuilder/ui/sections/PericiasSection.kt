@@ -61,7 +61,7 @@ fun PericiasContent(
     onOpenPericiasDetail: () -> Unit,
     feedbackMessages: MutableList<String>
 ) {
-    val locked = state.criacaoBasicaCongelada
+    val locked = state.criacaoBasicaCongelada && !state.skillAdvancementInProgress
 
     val pcTotal  = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos

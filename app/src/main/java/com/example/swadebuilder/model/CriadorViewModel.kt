@@ -658,11 +658,13 @@ class CriadorViewModel : ViewModel() {
 
     fun startSkillAdvancement(slotIndex: Int) {
         if (state.progressosDisponiveis >= 1) {
+            state.progresso++
             state.spendProgressAcrossStages(1)
             state.xpSlots[slotIndex] = true
             state.skillAdvancementInProgress = true
             state.skillsForCurrentAdvancement.clear()
             state.grantSkillPointsFromXp()
+            state.updateEmProgressoFlag()
         }
     }
 
@@ -672,16 +674,19 @@ class CriadorViewModel : ViewModel() {
             state.advancementHistory.add(AdvancementAction.SpendOnSkills(skills))
             state.skillAdvancementInProgress = false
             state.skillsForCurrentAdvancement.clear()
+            state.updateEmProgressoFlag()
         }
     }
 
     fun startAdvantageAdvancement(slotIndex: Int, est: String) {
         if (state.progressosDisponiveis >= 1) {
+            state.progresso++
             state.spendProgressAcrossStages(1)
             state.xpSlots[slotIndex] = true
             state.advantageAdvancementInProgress = true
             state.advantageForCurrentAdvancement = null
             state.grantVantagemPointFromXp(est)
+            state.updateEmProgressoFlag()
         }
     }
 
@@ -693,6 +698,7 @@ class CriadorViewModel : ViewModel() {
             }
             state.advantageAdvancementInProgress = false
             state.advantageForCurrentAdvancement = null
+            state.updateEmProgressoFlag()
         }
     }
 
@@ -700,7 +706,7 @@ class CriadorViewModel : ViewModel() {
         val lastUsedIndex = state.xpSlots.indexOfLast { it }
         if (lastUsedIndex != -1) {
             state.xpSlots[lastUsedIndex] = false
-            state.progresso = lastUsedIndex
+            state.progresso--
             state.refundProgressAcrossStages(1)
         }
 
@@ -719,6 +725,7 @@ class CriadorViewModel : ViewModel() {
         state.advantageAdvancementInProgress = false
         state.mostrandoPericiasProgresso = false
         state.mostrandoVantagensProgresso = false
+        state.updateEmProgressoFlag()
     }
 
     fun revertLastAdvancement() {
@@ -730,7 +737,7 @@ class CriadorViewModel : ViewModel() {
         val lastUsedIndex = state.xpSlots.indexOfLast { it }
         if (lastUsedIndex != -1) {
             state.xpSlots[lastUsedIndex] = false
-            state.progresso = lastUsedIndex
+            state.progresso--
         }
 
         when (lastAction) {
@@ -774,5 +781,6 @@ class CriadorViewModel : ViewModel() {
         }
         // Devolve o ponto de avanço ao "pool"
         state.refundProgressAcrossStages(lastAction.progressCost)
+        state.updateEmProgressoFlag()
     }
 }
