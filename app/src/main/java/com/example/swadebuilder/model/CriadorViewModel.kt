@@ -703,6 +703,11 @@ class CriadorViewModel : ViewModel() {
     }
 
     fun cancelAdvancementInProgress() {
+        // Roda apenas se houver um avanço em andamento para ser cancelado.
+        if (!state.skillAdvancementInProgress && !state.advantageAdvancementInProgress) {
+            return
+        }
+
         val lastUsedIndex = state.xpSlots.indexOfLast { it }
         if (lastUsedIndex != -1) {
             state.xpSlots[lastUsedIndex] = false
