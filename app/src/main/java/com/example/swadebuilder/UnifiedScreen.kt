@@ -272,10 +272,6 @@ fun UnifiedScreen(
                         showAllocDialog = true
                     },
                     onUndo = {
-                        val lastUsedIndex = state.xpSlots.indexOfLast { it }
-                        if (lastUsedIndex != -1) {
-                            state.xpSlots[lastUsedIndex] = false
-                        }
                         viewModel.revertLastAdvancement()
                     }
                 )
