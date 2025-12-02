@@ -277,12 +277,9 @@ fun UnifiedScreen(
                         viewModel.revertLastAdvancement()
                     },
                     getAdvantageName = { advantageId ->
-                        // Encontra a vantagem na lista completa (do ViewModel ou de uma fonte de dados)
-                        // Esta é uma implementação de exemplo. Ajuste conforme sua fonte de dados.
                         listaVantagens.find { it.id == advantageId }?.nome ?: advantageId
                     },
                     getHindranceName = { hindranceId ->
-                        // Similar para complicações
                         listaComplicacoes.find { it.id == hindranceId }?.nome ?: hindranceId
                     }
                 )
