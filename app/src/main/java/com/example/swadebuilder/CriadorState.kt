@@ -21,7 +21,6 @@ import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 
-const val TOTAL_PROGRESS_LIMIT = 20
 class CriadorState {
     var showHelpMessages by mutableStateOf(false)
     var modoSupers by mutableStateOf(false)
