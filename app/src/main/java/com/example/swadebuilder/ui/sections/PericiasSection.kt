@@ -61,7 +61,7 @@ fun PericiasContent(
     onOpenPericiasDetail: () -> Unit,
     feedbackMessages: MutableList<String>
 ) {
-    val locked = state.criacaoBasicaCongelada
+    val locked = state.criacaoBasicaCongelada && !state.skillAdvancementInProgress
 
     val pcTotal  = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
@@ -188,9 +188,14 @@ fun PericiasContent(
             val minimoOpcional: Int = opcionalList.maxOrNull() ?: 0
             val minimoTotal = max(minimoBasico, minimoOpcional)
 
-            val canDecrease = !locked &&
-                    (compStack.isNotEmpty() || spStack.any { it > 0 }) &&
-                    (currentRaw - 2 >= minimoTotal)
+            val canDecrease = if (state.modoProgressaoAtivo) {
+                val frozenIncs = state.frozenSkillIncrements[per.nome] ?: 0
+                state.baseIncsPorPericia.getValue(per) > frozenIncs
+            } else {
+                !locked &&
+                        (compStack.isNotEmpty() || spStack.any { it > 0 }) &&
+                        (currentRaw - 2 >= minimoTotal)
+            }
 
             val astuciaSpent = state.spCostStackPorPericia
                 .filterKeys { p -> p.atributo == "ASTUCIA" }
@@ -304,11 +309,7 @@ fun PericiasContent(
                                 return@IconButton
                             }
 
-                            state.baseIncsPorPericia[per] =
-                                state.baseIncsPorPericia.getValue(per) + 1
-                            state.spCostStackPorPericia
-                                .getValue(per)
-                                .add(costNow)
+                            state.increasePericiaFromAdvancement(per, costNow)
 
                             if (state.usarEspecializacoesDePericia) {
                                 val esp = state.especializacoesPorPericia[per.nome]

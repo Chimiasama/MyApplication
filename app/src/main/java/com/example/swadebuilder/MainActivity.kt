@@ -47,6 +47,7 @@ import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Print
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -261,6 +262,7 @@ class MainActivity : ComponentActivity() {
             var expVants   by rememberSaveable(creationSession) { mutableStateOf(false) }
             var expPoderes by rememberSaveable(creationSession) { mutableStateOf(false) }
             var expResumo  by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expXp by rememberSaveable(creationSession) { mutableStateOf(false) }
 
             var showVantagensDetail       by rememberSaveable(creationSession) { mutableStateOf(false) }
             var showPericiasDetail        by rememberSaveable(creationSession) { mutableStateOf(false) }
@@ -280,8 +282,49 @@ class MainActivity : ComponentActivity() {
             var showExitDialog     by rememberSaveable { mutableStateOf(false) }
 
             var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
+            var showThemeDialog by rememberSaveable { mutableStateOf(false) }
 
             var showFeedbackDialog by rememberSaveable { mutableStateOf(false) }
+
+            if (showThemeDialog) {
+                val context = LocalContext.current
+                val themeNames = remember {
+                    mapOf(
+                        com.example.swadebuilder.ui.theme.AppTheme.DEFAULT to "Padrão",
+                        com.example.swadebuilder.ui.theme.AppTheme.MEDIEVAL to "Medieval",
+                        com.example.swadebuilder.ui.theme.AppTheme.CYBERPUNK to "Cyberpunk",
+                        com.example.swadebuilder.ui.theme.AppTheme.WW2 to "Segunda Guerra",
+                        com.example.swadebuilder.ui.theme.AppTheme.HORROR to "Horror",
+                        com.example.swadebuilder.ui.theme.AppTheme.SCIFI to "Sci-Fi",
+                        com.example.swadebuilder.ui.theme.AppTheme.PRIDE to "Pride",
+                        com.example.swadebuilder.ui.theme.AppTheme.HALLOWEEN to "Halloween"
+                    )
+                }
+                AlertDialog(
+                    onDismissRequest = { showThemeDialog = false },
+                    title = { Text(context.getString(R.string.select_theme)) },
+                    text = {
+                        LazyColumn {
+                            items(com.example.swadebuilder.ui.theme.AppTheme.entries) { theme ->
+                                TextButton(
+                                    onClick = {
+                                        criadorViewModel.setAppTheme(theme)
+                                        showThemeDialog = false
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(themeNames[theme] ?: theme.name)
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { showThemeDialog = false }) {
+                            Text(context.getString(R.string.cancel))
+                        }
+                    }
+                )
+            }
 
             LaunchedEffect(criadorViewModel.feedbackMessages.size) {
                 if (criadorViewModel.feedbackMessages.isNotEmpty()) {
@@ -359,7 +402,7 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            SWADEbuilderTheme {
+            SWADEbuilderTheme(appTheme = state.appTheme) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -491,6 +534,9 @@ class MainActivity : ComponentActivity() {
                                                     Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
                                                 }
 
+                                                IconButton(onClick = { showThemeDialog = true }) {
+                                                    Icon(Icons.Default.Settings, contentDescription = "Change Theme")
+                                                }
                                                 IconButton(onClick = {
                                                     scope.launch(Dispatchers.IO) {
                                                         val personagemId  = state.idAtual ?: UUID.randomUUID().toString()
@@ -677,6 +723,9 @@ class MainActivity : ComponentActivity() {
 
                                                 expPoderes      = expPoderes,
                                                 onTogglePoderes = { expPoderes = !expPoderes },
+
+                                                expXp = expXp,
+                                                onToggleXp = { expXp = !expXp },
 
                                                 equipamentoCategorias = equipamentoCategorias,
                                                 superequipCategorias  = superequipCategorias,
@@ -949,7 +998,7 @@ val nivelParaEstagio = mapOf(
     "L" to listaDeEstagios.first { it.nome == "Lendário" }
 )
 
-const val TOTAL_PROGRESS_LIMIT = 50
+const val TOTAL_PROGRESS_LIMIT = 20
 val dynamicStageCaps = listaDeEstagios.mapIndexed { idx, st ->
     val prevMax = listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: 0
     if (idx < listaDeEstagios.lastIndex)

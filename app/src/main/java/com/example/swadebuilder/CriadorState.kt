@@ -18,10 +18,12 @@ import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 
 class CriadorState {
+    var appTheme by mutableStateOf(AppTheme.DEFAULT)
     var showHelpMessages by mutableStateOf(false)
     var modoSupers by mutableStateOf(false)
     var modoSuperComplicacoes by mutableStateOf(false)
@@ -339,17 +341,20 @@ class CriadorState {
     }
 
     fun grantVantagemPointFromXp(stageName: String) {
-        check(progressosDisponiveis > 0) { "Sem XP disponível." }
-
-        stageXpSpent[stageName] = stageXpSpent.getValue(stageName) + 1
-        progressosDisponiveis -= 1
-
         pontosVantagem += 1
         pvFromXpOutstanding += 1
 
         overrideStageForVantagem = stageName
 
         openVantagensAfterGrant = true
+        mostrandoVantagensProgresso = true
+    }
+
+    fun grantSkillPointsFromXp() {
+        //This is a hack to add 2 skill points
+        cpSpStack.add(Unit)
+        cpSpStack.add(Unit)
+        mostrandoPericiasProgresso = true
     }
 
 
@@ -616,17 +621,21 @@ class CriadorState {
     }
 
     private fun currentProgressStageIndex(): Int {
-        val caps = listaDeEstagios.mapIndexed { idx, st ->
+        var firstOpen = -1
+
+        listaDeEstagios.forEachIndexed { idx, st ->
             val prevMax = listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: 0
-            if (idx < listaDeEstagios.lastIndex)
+            val cap = if (idx < listaDeEstagios.lastIndex) {
                 st.maxProgress - prevMax
-            else
+            } else {
                 (TOTAL_PROGRESS_LIMIT - prevMax).coerceAtLeast(0)
+            }
+            val spentHere = stageXpSpent[st.nome] ?: 0
+            if (spentHere < cap && firstOpen == -1) {
+                firstOpen = idx
+            }
         }
-        val firstOpen = caps.indexOfFirst { cap ->
-            val nome = listaDeEstagios[caps.indexOf(cap)].nome
-            (stageXpSpent[nome] ?: 0) < cap
-        }
+
         return if (firstOpen >= 0) firstOpen else listaDeEstagios.lastIndex
     }
 
@@ -641,7 +650,7 @@ class CriadorState {
 
     val desvantagensAutomaticas = mutableStateListOf<String>()
 
-    var frozenAdvCount by mutableIntStateOf(0)
+    var frozenAdvantageCount by mutableIntStateOf(0)
 
     var pontosAtributo by mutableIntStateOf(5)
 
@@ -761,11 +770,16 @@ class CriadorState {
         // 5) Estágio mínimo (respeita Nasce um Herói)
         val ignorarEstagioPorNasce = (nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0)
         if (!ignorarEstagioPorNasce) {
-            listaDeEstagios
-                .firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
-                ?.let { estReqObj ->
-                    if (effectiveProgressoParaVantagens() < estReqObj.minProgress) return false
+            val estagioRequerido = listaDeEstagios.firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
+            if (estagioRequerido != null) {
+                val estagioAtual = overrideStageForVantagem?.let { stageName ->
+                    listaDeEstagios.firstOrNull { it.nome.equals(stageName, ignoreCase = true) }
+                } ?: estagioAtual()
+
+                if (listaDeEstagios.indexOf(estagioAtual) < listaDeEstagios.indexOf(estagioRequerido)) {
+                    return false
                 }
+            }
         }
 
         // 6) Vantagens prévias
@@ -1218,8 +1232,39 @@ class CriadorState {
                 remaining -= use
             }
         }
+        recomputeAvailableProgress()
+    }
+
+    fun refundProgressAcrossStages(n: Int) {
+        var remaining = n
+        reachedStages()
+            .mapIndexed { idx, est -> idx to est }
+            .asReversed()
+            .forEach { (_, est) ->
+                if (remaining == 0) return@forEach
+                val spent = stageXpSpent.getValue(est.nome)
+                if (spent > 0) {
+                    val refund = spent.coerceAtMost(remaining)
+                    stageXpSpent[est.nome] = spent - refund
+                    remaining -= refund
+                }
+            }
+        recomputeAvailableProgress()
+    }
+
+    fun recomputeAvailableProgress() {
         val totalSpent = stageXpSpent.values.sum()
-        progressosDisponiveis = (progresso - totalSpent).coerceAtLeast(0)
+        val availableByProgress = (progresso - totalSpent).coerceAtLeast(0)
+
+        val remainingStageCapacity = reachedStages()
+            .sumOf { stage ->
+                val stageIndex = listaDeEstagios.indexOf(stage)
+                val cap = dynamicStageCaps[stageIndex]
+                val spentHere = stageXpSpent.getValue(stage.nome)
+                (cap - spentHere).coerceAtLeast(0)
+            }
+
+        progressosDisponiveis = kotlin.math.min(availableByProgress, remainingStageCapacity)
     }
 
     fun checkFreeze() {
@@ -1228,7 +1273,7 @@ class CriadorState {
         val cap = dynamicStageCaps[idx]
         val spent = stageXpSpent.getValue(est.nome)
         if (spent == cap) {
-            frozenAdvCount = vantagensSelecionadas.size
+            frozenAdvantageCount = vantagensSelecionadas.size
         }
     }
 
@@ -1314,6 +1359,32 @@ class CriadorState {
     var emProgresso by mutableStateOf(false)
     val criacaoBasicaCongelada: Boolean
         get() = emProgresso
+    var modoProgressaoAtivo by mutableStateOf(false)
+    var mostrandoVantagensProgresso by mutableStateOf(false)
+    var mostrandoPericiasProgresso by mutableStateOf(false)
+    val frozenSkillIncrements = mutableStateMapOf<String, Int>()
+
+    // Novas variáveis para rastrear o avanço de perícias
+    var skillAdvancementInProgress by mutableStateOf(false)
+    val skillsForCurrentAdvancement = mutableStateListOf<String>()
+
+    // Novas variáveis para rastrear o avanço de vantagens
+    var advantageAdvancementInProgress by mutableStateOf(false)
+    var advantageForCurrentAdvancement by mutableStateOf<String?>(null)
+
+    val advancementHistory = mutableStateListOf<com.example.swadebuilder.model.AdvancementAction>()
+
+    fun updateEmProgressoFlag() {
+        emProgresso = skillAdvancementInProgress || advantageAdvancementInProgress
+    }
+
+    fun increasePericiaFromAdvancement(per: Pericia, cost: Int) {
+        if (skillAdvancementInProgress) {
+            skillsForCurrentAdvancement.add(per.nome)
+        }
+        baseIncsPorPericia[per] = baseIncsPorPericia.getValue(per) + 1
+        spCostStackPorPericia.getValue(per).add(cost)
+    }
 
     fun creationComplete(): Boolean {
         // "Ficha básica completa": todos os pontos iniciais foram distribuídos.
@@ -1329,6 +1400,10 @@ class CriadorState {
     }
 
     var progressosDisponiveis by mutableIntStateOf(0)
+
+    val xpSlots = mutableStateListOf<Boolean>().apply {
+        repeat(20) { add(false) }
+    }
 
     private fun reachedStages(): List<Estagio> =
         listaDeEstagios.filter { progresso >= it.minProgress }

@@ -407,7 +407,7 @@ fun VantagensContent(
                             else -> true
                         } &&
                         index >= initialCount &&
-                        index >= state.frozenAdvCount &&
+                        index >= state.frozenAdvantageCount &&
                         !isRacialFree &&
                         !requiredByAnother &&
                         !isFromSuperPoder &&
@@ -645,6 +645,9 @@ fun VantagensContent(
                                                 }
 
                                                 else -> {
+                                                    if (state.advantageAdvancementInProgress) {
+                                                        state.advantageForCurrentAdvancement = vant.id
+                                                    }
                                                     if (vant.nome.contains(
                                                             "Pontos de Poder",
                                                             true
@@ -656,15 +659,11 @@ fun VantagensContent(
                                                         state.vantagensSelecionadas += vant
                                                     }
                                                     state.pontosVantagem--
+                                                    if (state.advantageAdvancementInProgress && state.pvFromXpOutstanding > 0) {
+                                                        state.pvFromXpOutstanding -= 1
+                                                    }
                                                     state.rebuildAllPericiaStacks()
 
-                                                    if (state.pvFromXpOutstanding > 0) {
-                                                        state.pvFromXpOutstanding -= 1
-                                                        if (state.pvFromXpOutstanding == 0) {
-                                                            state.overrideStageForVantagem = null
-                                                            state.openVantagensAfterGrant = false
-                                                        }
-                                                    }
                                                 }
                                             }
 
