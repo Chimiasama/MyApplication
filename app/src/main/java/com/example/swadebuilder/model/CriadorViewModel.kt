@@ -776,8 +776,8 @@ class CriadorViewModel : ViewModel() {
             }
             is AdvancementAction.SpendOnSkills -> {
                 // Reverte o gasto dos pontos de perícia
-                lastAction.skillsIncreased.forEach { (skillName, _) ->
-                    val skill = listaPericias.firstOrNull { it.nome == skillName }
+                lastAction.skillsIncreased.forEach { skillInfo ->
+                    val skill = listaPericias.firstOrNull { it.nome == skillInfo.first }
                     if (skill != null) {
                         state.decreasePericia(skill)
                     }
