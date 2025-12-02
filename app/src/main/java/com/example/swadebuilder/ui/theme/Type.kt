@@ -5,9 +5,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.swadebuilder.R
 
 // Set of Material typography styles to start with
-val Typography = Typography(
+val DefaultTypography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
@@ -15,20 +16,48 @@ val Typography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+)
+
+// W.I.P. - Using default font until .ttf files can be added.
+val MedievalTypography = DefaultTypography /*Typography(
+    bodyLarge = TextStyle(
+        fontFamily = FontFamily(androidx.compose.ui.text.font.Font(R.font.medieval_font)),
         fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     )
-    */
-)
+)*/
+
+// W.I.P. - Using default font until .ttf files can be added.
+val MatrixTypography = DefaultTypography /*Typography(
+    bodyLarge = TextStyle(
+        fontFamily = FontFamily(androidx.compose.ui.text.font.Font(R.font.matrix_font)),
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    )
+)*/
+
+// W.I.P. - Using default font until .ttf files can be added.
+val CyberpunkTypography = DefaultTypography /*Typography(
+    bodyLarge = TextStyle(
+        fontFamily = FontFamily(androidx.compose.ui.text.font.Font(R.font.cyberpunk_font)),
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    )
+)*/
+
+// W.I.P. - Using default font until .ttf files can be added.
+val PrideTypography = DefaultTypography /*Typography(
+    bodyLarge = TextStyle(
+        fontFamily = FontFamily(androidx.compose.ui.text.font.Font(R.font.pride_font)),
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    )
+)*/

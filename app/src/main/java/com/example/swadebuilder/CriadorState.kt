@@ -18,10 +18,12 @@ import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 
 class CriadorState {
+    var appTheme by mutableStateOf(AppTheme.DEFAULT)
     var showHelpMessages by mutableStateOf(false)
     var modoSupers by mutableStateOf(false)
     var modoSuperComplicacoes by mutableStateOf(false)
