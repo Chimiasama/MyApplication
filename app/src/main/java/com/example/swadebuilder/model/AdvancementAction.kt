@@ -31,16 +31,15 @@ sealed class AdvancementAction(open val progressCost: Int) {
     }
 
     data class SpendOnSkills(
-        val skillsIncreased: List<String>,
+        val skillsIncreased: List<Pair<String, String>>, // Pair<SkillName, DieValue>
         override val progressCost: Int = 1
     ) : AdvancementAction(progressCost) {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
             getHindranceName: (String) -> String
         ): String {
-            // Limita a exibição para não poluir a UI se muitas perícias forem aumentadas
             val skillsToShow = skillsIncreased.take(2)
-            val displayText = skillsToShow.joinToString()
+            val displayText = skillsToShow.joinToString { (name, die) -> "$name ($die)" }
             return if (skillsIncreased.size > 2) {
                 "Perícias: $displayText..."
             } else {

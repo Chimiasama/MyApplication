@@ -674,8 +674,13 @@ class CriadorViewModel : ViewModel() {
 
     fun finishSkillAdvancement() {
         if (state.skillAdvancementInProgress) {
-            val skills = state.skillsForCurrentAdvancement.toList()
-            state.advancementHistory.add(AdvancementAction.SpendOnSkills(skills))
+            val skillsWithDice = state.skillsForCurrentAdvancement.mapNotNull { skillName ->
+                listaPericias.find { it.nome == skillName }?.let { pericia ->
+                    val dieValue = "d${state.rawTotal(pericia)}"
+                    skillName to dieValue
+                }
+            }
+            state.advancementHistory.add(AdvancementAction.SpendOnSkills(skillsWithDice))
             state.skillAdvancementInProgress = false
             state.skillsForCurrentAdvancement.clear()
             state.updateEmProgressoFlag()
@@ -771,7 +776,7 @@ class CriadorViewModel : ViewModel() {
             }
             is AdvancementAction.SpendOnSkills -> {
                 // Reverte o gasto dos pontos de perícia
-                lastAction.skillsIncreased.forEach { skillName ->
+                lastAction.skillsIncreased.forEach { (skillName, _) ->
                     val skill = listaPericias.firstOrNull { it.nome == skillName }
                     if (skill != null) {
                         state.decreasePericia(skill)

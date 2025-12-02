@@ -277,11 +277,11 @@ fun UnifiedScreen(
                     getAdvantageName = { advantageId ->
                         // Encontra a vantagem na lista completa (do ViewModel ou de uma fonte de dados)
                         // Esta é uma implementação de exemplo. Ajuste conforme sua fonte de dados.
-                        viewModel.listaVantagens.find { it.id == advantageId }?.nome ?: advantageId
+                        listaVantagens.find { it.id == advantageId }?.nome ?: advantageId
                     },
                     getHindranceName = { hindranceId ->
                         // Similar para complicações
-                        viewModel.listaComplicacoes.find { it.id == hindranceId }?.nome ?: hindranceId
+                        listaComplicacoes.find { it.id == hindranceId }?.nome ?: hindranceId
                     }
                 )
             }
