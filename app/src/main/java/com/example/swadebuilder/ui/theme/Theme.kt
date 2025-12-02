@@ -61,20 +61,186 @@ private val LightColorScheme = lightColorScheme(
     onPrimaryContainer = Color.Black
 )
 
+// ─── Medieval Theme ──────────────────────────────────────────────────────────
+private val MedievalLightColorScheme = lightColorScheme(
+    primary = MedievalBrown,
+    secondary = MedievalAccent,
+    tertiary = Pink40,
+    background = MedievalParchment,
+    surface = MedievalParchment,
+    surfaceVariant = Color(0xFFE0D9D3),
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = MedievalBrown,
+    onSurface = MedievalBrown,
+    primaryContainer = MedievalAccent,
+    onPrimaryContainer = MedievalParchment
+)
+
+private val MedievalDarkColorScheme = darkColorScheme(
+    primary = MedievalAccent,
+    secondary = MedievalParchment,
+    tertiary = Pink80,
+    background = MedievalDark,
+    surface = MedievalBrown,
+    surfaceVariant = Color(0xFF3A2A26),
+    onPrimary = Color.Black,
+    onSecondary = Color.Black,
+    onTertiary = Color.Black,
+    onBackground = MedievalParchment,
+    onSurface = MedievalParchment,
+    primaryContainer = MedievalBrown,
+    onPrimaryContainer = MedievalParchment
+)
+
+// ─── Cyberpunk Theme ─────────────────────────────────────────────────────────
+private val CyberpunkLightColorScheme = lightColorScheme(
+    primary = CyberpunkPink,
+    secondary = CyberpunkCyan,
+    tertiary = CyberpunkPink,
+    background = CyberpunkDark,
+    surface = CyberpunkBlack,
+    surfaceVariant = Color(0xFF2C001E),
+    onPrimary = Color.Black,
+    onSecondary = Color.Black,
+    onTertiary = Color.Black,
+    onBackground = CyberpunkCyan,
+    onSurface = CyberpunkCyan,
+    primaryContainer = CyberpunkPink,
+    onPrimaryContainer = Color.Black
+)
+
+private val CyberpunkDarkColorScheme = darkColorScheme(
+    primary = CyberpunkCyan,
+    secondary = CyberpunkPink,
+    tertiary = CyberpunkCyan,
+    background = CyberpunkBlack,
+    surface = CyberpunkDark,
+    surfaceVariant = Color(0xFF2C2C2C),
+    onPrimary = Color.Black,
+    onSecondary = Color.Black,
+    onTertiary = Color.Black,
+    onBackground = CyberpunkCyan,
+    onSurface = CyberpunkCyan,
+    primaryContainer = CyberpunkDark,
+    onPrimaryContainer = CyberpunkCyan
+)
+
+
+// ─── WW2 Theme ───────────────────────────────────────────────────────────────
+private val WW2LightColorScheme = lightColorScheme(
+    primary = WW2Olive,
+    secondary = WW2Gray,
+    tertiary = Pink40,
+    background = WW2Khaki,
+    surface = Color(0xFFE6DDB5),
+    surfaceVariant = Color(0xFFD9CEA1),
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color.Black,
+    onSurface = Color.Black,
+    primaryContainer = WW2Olive,
+    onPrimaryContainer = WW2Khaki
+)
+
+private val WW2DarkColorScheme = darkColorScheme(
+    primary = WW2Khaki,
+    secondary = WW2Gray,
+    tertiary = Pink80,
+    background = WW2Dark,
+    surface = Color(0xFF424242),
+    surfaceVariant = Color(0xFF535353),
+    onPrimary = Color.Black,
+    onSecondary = Color.Black,
+    onTertiary = Color.Black,
+    onBackground = WW2Khaki,
+    onSurface = WW2Khaki,
+    primaryContainer = WW2Dark,
+    onPrimaryContainer = WW2Khaki
+)
+
+// ─── Horror Theme ────────────────────────────────────────────────────────────
+private val HorrorLightColorScheme = lightColorScheme(
+    primary = HorrorRed,
+    secondary = HorrorGray,
+    tertiary = Pink40,
+    background = Color.White,
+    surface = Color(0xFFFAFAFA),
+    surfaceVariant = Color(0xFFF0F0F0),
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = HorrorBlack,
+    onSurface = HorrorBlack,
+    primaryContainer = HorrorRed,
+    onPrimaryContainer = Color.White
+)
+
+private val HorrorDarkColorScheme = darkColorScheme(
+    primary = HorrorRed,
+    secondary = HorrorGray,
+    tertiary = Pink80,
+    background = HorrorBlack,
+    surface = HorrorDark,
+    surfaceVariant = HorrorGray,
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color.White,
+    onSurface = Color.White,
+    primaryContainer = HorrorDark,
+    onPrimaryContainer = Color.White
+)
+
+// ─── Sci-Fi Theme ────────────────────────────────────────────────────────────
+private val SciFiLightColorScheme = lightColorScheme(
+    primary = SciFiBlue,
+    secondary = SciFiAccent,
+    tertiary = Pink40,
+    background = SciFiSilver,
+    surface = Color.White,
+    surfaceVariant = Color(0xFFF5F5F5),
+    onPrimary = Color.White,
+    onSecondary = Color.Black,
+    onTertiary = Color.Black,
+    onBackground = Color.Black,
+    onSurface = Color.Black,
+    primaryContainer = SciFiBlue,
+    onPrimaryContainer = Color.White
+)
+
+private val SciFiDarkColorScheme = darkColorScheme(
+    primary = SciFiAccent,
+    secondary = SciFiBlue,
+    tertiary = Pink80,
+    background = SciFiDark,
+    surface = Color(0xFF1A1A3A),
+    surfaceVariant = Color(0xFF2A2A4A),
+    onPrimary = Color.Black,
+    onSecondary = Color.White,
+    onTertiary = Color.Black,
+    onBackground = SciFiSilver,
+    onSurface = SciFiSilver,
+    primaryContainer = SciFiDark,
+    onPrimaryContainer = SciFiAccent
+)
+
 @Composable
 fun SWADEbuilderTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(), // ✅ segue o tema do sistema
-    dynamicColor: Boolean = false,              // ✅ usa tuas cores por padrão
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    appTheme: AppTheme = AppTheme.DEFAULT,
     content: @Composable () -> Unit
 ) {
-    val colorScheme =
-        if (dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // Se algum dia quiser usar Material You, é só passar dynamicColor = true
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        } else {
-            if (darkTheme) DarkColorScheme else LightColorScheme
-        }
+    val colorScheme = when (appTheme) {
+        AppTheme.DEFAULT -> if (darkTheme) DarkColorScheme else LightColorScheme
+        AppTheme.MEDIEVAL -> if (darkTheme) MedievalDarkColorScheme else MedievalLightColorScheme
+        AppTheme.CYBERPUNK -> if (darkTheme) CyberpunkDarkColorScheme else CyberpunkLightColorScheme
+        AppTheme.WW2 -> if (darkTheme) WW2DarkColorScheme else WW2LightColorScheme
+        AppTheme.HORROR -> if (darkTheme) HorrorDarkColorScheme else HorrorLightColorScheme
+        AppTheme.SCIFI -> if (darkTheme) SciFiDarkColorScheme else SciFiLightColorScheme
+    }
 
     MaterialTheme(
         colorScheme = colorScheme,

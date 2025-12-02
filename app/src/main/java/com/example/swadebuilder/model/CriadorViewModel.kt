@@ -40,6 +40,10 @@ class CriadorViewModel : ViewModel() {
         multiplosAAHabilitados = enabled
     }
 
+    fun setAppTheme(theme: com.example.swadebuilder.ui.theme.AppTheme) {
+        state.appTheme = theme
+    }
+
     private fun mapChoiceToArcanoId(choice: String?): String? {
         return when (choice?.trim()?.uppercase()) {
             "DOM"                -> "antecedente_arcano_dom"
