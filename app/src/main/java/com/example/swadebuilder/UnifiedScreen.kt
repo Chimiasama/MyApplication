@@ -48,6 +48,8 @@ import com.example.swadebuilder.ui.sections.SummaryContent
 import com.example.swadebuilder.ui.sections.SuperPoderesContent
 import com.example.swadebuilder.ui.sections.VantagensContent
 import com.example.swadebuilder.ui.sections.XpSection
+import com.example.swadebuilder.listaComplicacoes
+import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
