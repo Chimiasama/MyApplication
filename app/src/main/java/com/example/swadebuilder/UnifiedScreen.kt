@@ -55,7 +55,7 @@ import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun PreviewApp() {
     val state = remember { CriadorState() }
