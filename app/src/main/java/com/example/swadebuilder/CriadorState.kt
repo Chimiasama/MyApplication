@@ -590,6 +590,8 @@ class CriadorState {
     }
 
     val cpPaStack       = mutableStateListOf<String>()  // você já trocou pra add("PB")
+    var paFromProgress by mutableIntStateOf(0)
+    var legendaryAttrReservations by mutableIntStateOf(0)
     val cpSpStack       = mutableStateListOf<Unit>()
     val cpPvStack       = mutableStateListOf<Unit>()
     val cpRecursosStack = mutableStateListOf<Unit>()
@@ -1235,6 +1237,12 @@ class CriadorState {
         recomputeAvailableProgress()
     }
 
+    fun spendProgressAtStage(stageName: String, n: Int) {
+        val current = stageXpSpent.getValue(stageName)
+        stageXpSpent[stageName] = current + n
+        recomputeAvailableProgress()
+    }
+
     fun refundProgressAcrossStages(n: Int) {
         var remaining = n
         reachedStages()
@@ -1249,6 +1257,12 @@ class CriadorState {
                     remaining -= refund
                 }
             }
+        recomputeAvailableProgress()
+    }
+
+    fun refundProgressAtStage(stageName: String, n: Int) {
+        val current = stageXpSpent.getValue(stageName)
+        stageXpSpent[stageName] = (current - n).coerceAtLeast(0)
         recomputeAvailableProgress()
     }
 
@@ -1292,7 +1306,7 @@ class CriadorState {
             }
         }
 
-        return (5 + cpPaStack.size - jovemMalusPa) - usados
+        return (5 + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
     }
 
     fun recalcularPontosAtributo(feedbackMessages: MutableList<String> = mutableListOf()) {
@@ -1362,6 +1376,7 @@ class CriadorState {
     var modoProgressaoAtivo by mutableStateOf(false)
     var mostrandoVantagensProgresso by mutableStateOf(false)
     var mostrandoPericiasProgresso by mutableStateOf(false)
+    var mostrandoAtributosProgresso by mutableStateOf(false)
     val frozenSkillIncrements = mutableStateMapOf<String, Int>()
 
     // Novas variáveis para rastrear o avanço de perícias
@@ -1372,10 +1387,20 @@ class CriadorState {
     var advantageAdvancementInProgress by mutableStateOf(false)
     var advantageForCurrentAdvancement by mutableStateOf<String?>(null)
 
+    // Avanço de atributos
+    var attributeAdvancementInProgress by mutableStateOf(false)
+    var attributeStageForCurrentAdvancement by mutableStateOf<String?>(null)
+    var stageNameForCurrentAdvancement by mutableStateOf<String?>(null)
+    var attributeStacksBeforeAdvancement by mutableStateOf<Map<String, Int>?>(null)
+    var attributeUsedReservation by mutableStateOf(false)
+
     val advancementHistory = mutableStateListOf<com.example.swadebuilder.model.AdvancementAction>()
 
     fun updateEmProgressoFlag() {
-        emProgresso = skillAdvancementInProgress || advantageAdvancementInProgress
+        emProgresso =
+            skillAdvancementInProgress ||
+                    advantageAdvancementInProgress ||
+                    attributeAdvancementInProgress
     }
 
     fun increasePericiaFromAdvancement(per: Pericia, cost: Int) {
@@ -1421,6 +1446,23 @@ class CriadorState {
             raw += if (raw < 12) 2 else 1
         }
         return raw
+    }
+
+    fun snapshotAttributeStacks(): Map<String, Int> =
+        paCostStackPorAtributo.mapValues { (_, stack) -> stack.size }
+
+    fun restoreAttributeStacks(snapshot: Map<String, Int>) {
+        listaAtributos.forEach { attr ->
+            val stack = paCostStackPorAtributo.getValue(attr)
+            val target = snapshot[attr] ?: 0
+            while (stack.size > target) {
+                stack.removeLast()
+                val current = valoresAtributos[attr]!!.intValue
+                val prev = if (current > 12) current - 1 else current - 2
+                valoresAtributos[attr]!!.intValue = prev
+            }
+        }
+        recalcularPontosAtributo()
     }
 
     fun rebuildAllPericiaStacks(feedbackMessages: MutableList<String> = mutableListOf()) {

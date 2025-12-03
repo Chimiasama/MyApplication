@@ -253,6 +253,41 @@ fun UnifiedScreen(
                     Text("Cancelar")
                 }
 
+            } else if (state.mostrandoAtributosProgresso) {
+                // Progression: Attributes
+                ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
+
+                SectionCard(
+                    title    = "Atributos",
+                    expanded = expAttrs,
+                    onToggle = onToggleAttrs,
+                    icon     = Icons.Default.FitnessCenter
+                ) {
+                    AtributosContent(state = state, onOpenAtributosDetail = onOpenAtributosDetail)
+                }
+
+                Spacer(Modifier.height(16.dp))
+                HorizontalDivider(thickness = 3.dp)
+
+                Button(
+                    onClick = {
+                        viewModel.finishAttributeAdvancement()
+                        state.mostrandoAtributosProgresso = false
+                    },
+                    enabled = state.pontosAtributo == 0,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Confirmar Atributo e Voltar")
+                }
+                TextButton(
+                    onClick = {
+                        viewModel.cancelAdvancementInProgress()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Cancelar")
+                }
+
             } else {
                 // Default Progression View
                 ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
@@ -464,11 +499,17 @@ fun UnifiedScreen(
             state = state,
             slotIndex = currentSlotIndex,
             onDismiss = { showAllocDialog = false },
-            onStartSkillAdvancement = { slotIndex ->
-                viewModel.startSkillAdvancement(slotIndex)
+            onStartSkillAdvancement = { slotIndex, stage ->
+                viewModel.startSkillAdvancement(slotIndex, stage)
             },
             onStartAdvantageAdvancement = { slotIndex, est ->
                 viewModel.startAdvantageAdvancement(slotIndex, est)
+            },
+            onStartAttributeAdvancement = { slotIndex, stage, consumeReservation ->
+                viewModel.startAttributeAdvancement(slotIndex, stage, consumeReservation)
+            },
+            onReserveLegendaryAttribute = { slotIndex, stage ->
+                viewModel.reserveLegendaryAttribute(slotIndex, stage)
             }
         )
     }
