@@ -75,7 +75,7 @@ fun SupersDialog(
     val supersEditaveis =
         state.faseSupersAtiva &&
                 !state.emProgresso &&
-                state.creationComplete()
+                state.baseCreationComplete()
 
     val snackHost = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -152,7 +152,7 @@ fun SupersDialog(
                 }
 
                 // >>> mensagem de bloqueio enquanto a ficha inicial não estiver completa
-                if (!state.creationComplete()) {
+                if (!state.baseCreationComplete()) {
                     Spacer(Modifier.height(8.dp))
                     Text(
                         "Antes de investir em superpoderes, termine de distribuir os pontos iniciais " +

@@ -410,21 +410,22 @@ fun UnifiedScreen(
 
             ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
 
-                Button(
-                    onClick = {
-                        state.modoProgressaoAtivo = true
-                        state.progresso = 4
-                        state.frozenAdvantageCount = state.vantagensSelecionadas.size
-                        state.frozenSkillIncrements.clear()
-                        state.baseIncsPorPericia.forEach { (pericia, incs) ->
-                            state.frozenSkillIncrements[pericia.nome] = incs
-                        }
-                        state.recomputeAvailableProgress()
-                    },
-                    enabled = state.creationComplete(),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Iniciar Progressão")
+                if (state.creationComplete()) {
+                    Button(
+                        onClick = {
+                            state.modoProgressaoAtivo = true
+                            state.progresso = 4
+                            state.frozenAdvantageCount = state.vantagensSelecionadas.size
+                            state.frozenSkillIncrements.clear()
+                            state.baseIncsPorPericia.forEach { (pericia, incs) ->
+                                state.frozenSkillIncrements[pericia.nome] = incs
+                            }
+                            state.recomputeAvailableProgress()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Iniciar Progressão")
+                    }
                 }
             }
         }
