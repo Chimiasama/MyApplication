@@ -1413,11 +1413,15 @@ class CriadorState {
 
     fun creationComplete(): Boolean {
         // "Ficha básica completa": todos os pontos iniciais foram distribuídos.
-        // Em modo supers, NÃO amarramos isso aos pontos de super – eles são uma fase à parte.
-        return pontosAtributo == 0 &&
+        // Em campanha supers, também exige ter zerado os Pontos de Super.
+        val basePronta = pontosAtributo == 0 &&
                 pontosPericia == 0 &&
                 pontosVantagem == 0 &&
                 (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0) == 0
+
+        val supersProntos = !modoSupers || superPontosTotais <= 0 || superPontosDisponiveis == 0
+
+        return basePronta && supersProntos
     }
 
     val stageXpSpent: SnapshotStateMap<String, Int> = mutableStateMapOf<String, Int>().apply {
