@@ -1373,8 +1373,6 @@ class CriadorState {
     }
 
     var emProgresso by mutableStateOf(false)
-    val criacaoBasicaCongelada: Boolean
-        get() = emProgresso
     var modoProgressaoAtivo by mutableStateOf(false)
     var mostrandoVantagensProgresso by mutableStateOf(false)
     var mostrandoPericiasProgresso by mutableStateOf(false)
