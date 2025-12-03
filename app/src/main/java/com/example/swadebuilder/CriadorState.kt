@@ -315,7 +315,7 @@ class CriadorState {
         val incs = superInvestments
             .map { it.effect }
             .filterIsInstance<PowerEffect.SuperPericia>()
-            .filter { it.periciaKey.equals(per.nome, ignoreCase = true) }
+            .filter { it.periciaKey.keyify() == per.nome.keyify() }
             .sumOf { it.steps }
         return applySuperStepsFrom(base, incs)
     }
