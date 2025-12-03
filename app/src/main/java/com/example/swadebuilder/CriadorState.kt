@@ -1433,21 +1433,6 @@ class CriadorState {
     private fun reachedStages(): List<Estagio> =
         listaDeEstagios.filter { progresso >= it.minProgress }
 
-    fun atributoRawCriacao(attrKey: String): Int {
-        val key = attrKey.uppercase().trim()
-        val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
-        val baseMin = mods[key] ?: 4
-
-        // Quantos "steps" base foram comprados na criação
-        val stepsBase = paCostStackPorAtributo[key]?.size ?: 0
-
-        var raw = baseMin
-        repeat(stepsBase) {
-            raw += if (raw < 12) 2 else 1
-        }
-        return raw
-    }
-
     fun atributoRawBaseSemSupers(attrKey: String): Int {
         val key = attrKey.uppercase().trim()
         val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
@@ -1481,6 +1466,8 @@ class CriadorState {
     }
 
     fun rebuildAllPericiaStacks(feedbackMessages: MutableList<String> = mutableListOf()) {
+        if (modoProgressaoAtivo) return
+
         var cumulativeCost = 0
         val pool = totalSpPool
 
@@ -1501,9 +1488,7 @@ class CriadorState {
 
                     // >>> AQUI: atributo para custo ignora supers enquanto estiver na fase supers de criação
                     val attrRawForCost =
-                        if (emProgresso) {
-                            atributoRawCriacao(attrKey)
-                        } else if (faseSupersAtiva) {
+                        if (faseSupersAtiva && !emProgresso) {
                             atributoRawBaseSemSupers(attrKey)
                         } else {
                             valoresAtributos[attrKey]!!.intValue
@@ -1537,9 +1522,7 @@ class CriadorState {
 
                 // >>> MESMA REGRA AQUI
                 val attrRawForCost =
-                    if (emProgresso) {
-                        atributoRawCriacao(attrKey)
-                    } else if (faseSupersAtiva) {
+                    if (faseSupersAtiva && !emProgresso) {
                         atributoRawBaseSemSupers(attrKey)
                     } else {
                         valoresAtributos[attrKey]!!.intValue
