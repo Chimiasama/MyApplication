@@ -37,10 +37,14 @@ import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionHeader
 
+import androidx.compose.material.icons.filled.ShoppingCart
+import com.example.swadebuilder.model.CriadorViewModel
+
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun AtributosContent(
     state: CriadorState,
+    viewModel: CriadorViewModel,
     onOpenAtributosDetail: () -> Unit
 ) {
     val locked = state.criacaoBasicaCongelada && !state.attributeAdvancementInProgress
@@ -83,6 +87,9 @@ fun AtributosContent(
 
         Spacer(Modifier.height(4.dp))
 
+        val podeComprarComPb = !locked && pcLivres >= 2
+        val podeDevolverPb = !locked && state.pontosAtributo > 0 && paUsados > 0 && state.cpPaStack.lastOrNull() == "PB"
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -90,31 +97,31 @@ fun AtributosContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val podeUsarPc = !locked && pcLivres >= 2
-            val podeDesfazerPc = !locked && paUsados > 0
-
-            TextButton(
-                onClick = {
-                    if (!podeUsarPc) return@TextButton
-
-                    state.gastarPcParaAtributo()
-                },
-                enabled = podeUsarPc
-            ) {
-                Text("Usar PB em Atributos")
+            if (podeComprarComPb) {
+                TextButton(
+                    onClick = { viewModel.converterPbParaPa() }
+                ) {
+                    Icon(
+                        Icons.Default.ShoppingCart,
+                        contentDescription = "Comprar com PB",
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text("Comprar com PB (Custo: 2)")
+                }
             }
-
-            TextButton(
-                onClick = {
-                    if (!podeDesfazerPc) return@TextButton
-                    state.cpPaStack.removeAt(state.cpPaStack.lastIndex)
-                    state.pontosComplicacaoGastos =
-                        (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)
-                    state.recalcularPontosAtributo()
-                },
-                enabled = podeDesfazerPc
-            ) {
-                Text("Desfazer uso de PB")
+            if (podeDevolverPb) {
+                TextButton(
+                    onClick = { viewModel.devolverPaParaPb() }
+                ) {
+                    Icon(
+                        Icons.Default.Remove,
+                        contentDescription = "Devolver PB",
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text("Devolver PB")
+                }
             }
         }
 

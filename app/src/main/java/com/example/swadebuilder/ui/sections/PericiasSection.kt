@@ -54,10 +54,13 @@ import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionHeader
 import kotlin.math.max
 
+import com.example.swadebuilder.model.CriadorViewModel
+
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun PericiasContent(
     state: CriadorState,
+    viewModel: CriadorViewModel,
     onOpenPericiasDetail: () -> Unit,
     feedbackMessages: MutableList<String>
 ) {
@@ -118,33 +121,35 @@ fun PericiasContent(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        val podeUsarPc = !locked && pcLivres > 0
-                        val podeDesfazerPc = !locked && spUsados > 0
+                        val podeComprarComPb = !locked && pcLivres >= 1
+                        val podeDevolverPb = !locked && state.pontosPericia > 0 && spUsados > 0
 
-                        TextButton(
-                            onClick = {
-                                if (!podeUsarPc) return@TextButton
-
-                                state.cpSpStack.add(Unit)
-                                state.pontosComplicacaoGastos += 1
-
-                            },
-                            enabled = podeUsarPc
-                        ) {
-                            Text("Usar PB em Perícias")
+                        if (podeComprarComPb) {
+                            TextButton(
+                                onClick = { viewModel.converterPbParaSp(1) }
+                            ) {
+                                Icon(
+                                    Icons.Default.Add,
+                                    contentDescription = "Comprar com PB",
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Spacer(Modifier.width(4.dp))
+                                Text("Comprar 1 PP com 1 PB")
+                            }
                         }
 
-                        TextButton(
-                            onClick = {
-                                if (!podeDesfazerPc) return@TextButton
-                                state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
-                                state.pontosComplicacaoGastos =
-                                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                                state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                            },
-                            enabled = podeDesfazerPc
-                        ) {
-                            Text("Desfazer uso de PB")
+                        if (podeDevolverPb) {
+                            TextButton(
+                                onClick = { viewModel.devolverSpParaPb(1) }
+                            ) {
+                                Icon(
+                                    Icons.Default.Remove,
+                                    contentDescription = "Devolver PB",
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Spacer(Modifier.width(4.dp))
+                                Text("Devolver 1 PP para 1 PB")
+                            }
                         }
                     }
 

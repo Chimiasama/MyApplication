@@ -924,4 +924,87 @@ class CriadorViewModel : ViewModel() {
         state.refundProgressAtStage(stageName, lastAction.progressCost)
         state.updateEmProgressoFlag()
     }
+
+    /**
+     * Converte Pontos de Complicação (PB) em Pontos de Atributo (PA).
+     * Custo de 2 PB por 1 PA.
+     * Retorna true se a conversão for bem-sucedida.
+     */
+    fun converterPbParaPa(): Boolean {
+        val custo = 2
+        val pcLivres = state.pontosComplicacao - state.pontosComplicacaoGastos
+        if (pcLivres < custo) return false
+
+        state.cpPaStack.add("PB")
+        state.pontosComplicacaoGastos += custo
+        state.recalcularPontosAtributo()
+        return true
+    }
+
+    /**
+     * Converte Pontos de Atributo (PA) de volta para Pontos de Complicação (PB).
+     * Retorna true se a conversão for bem-sucedida.
+     */
+    fun devolverPaParaPb(): Boolean {
+        if (state.pontosAtributo <= 0 || state.cpPaStack.isEmpty()) return false
+
+        state.cpPaStack.removeLast()
+        state.pontosComplicacaoGastos = (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)
+        state.recalcularPontosAtributo()
+        return true
+    }
+
+    /**
+     * Converte Pontos de Complicação (PB) em Pontos de Perícia (SP).
+     * Custo de 1 PB por 1 SP.
+     * Retorna true se a conversão for bem-sucedida.
+     */
+    fun converterPbParaSp(quantidade: Int): Boolean {
+        val custo = quantidade
+        val pcLivres = state.pontosComplicacao - state.pontosComplicacaoGastos
+        if (pcLivres < custo) return false
+
+        repeat(quantidade) { state.cpSpStack.add(Unit) }
+        state.pontosComplicacaoGastos += custo
+        return true
+    }
+
+    /**
+     * Converte Pontos de Perícia (SP) de volta para Pontos de Complicação (PB).
+     * Retorna true se a conversão for bem-sucedida.
+     */
+    fun devolverSpParaPb(quantidade: Int): Boolean {
+        if (state.pontosPericia < quantidade || state.cpSpStack.size < quantidade) return false
+
+        repeat(quantidade) { if (state.cpSpStack.isNotEmpty()) state.cpSpStack.removeLast() }
+        state.pontosComplicacaoGastos = (state.pontosComplicacaoGastos - quantidade).coerceAtLeast(0)
+        return true
+    }
+
+    /**
+     * Converte Pontos de Complicação (PB) em Pontos de Vantagem (PV).
+     * Custo de 2 PB por 1 PV.
+     */
+    fun converterPbParaPv(): Boolean {
+        val custo = 2
+        val pcLivres = state.pontosComplicacao - state.pontosComplicacaoGastos
+        if (pcLivres < custo) return false
+
+        state.pontosComplicacaoGastos += custo
+        state.cpPvStack.add(Unit)
+        state.pontosVantagem++
+        return true
+    }
+
+    /**
+     * Converte Pontos de Vantagem (PV) de volta para Pontos de Complicação (PB).
+     */
+    fun devolverPvParaPb(): Boolean {
+        if (state.pontosVantagem <= 0 || state.cpPvStack.isEmpty()) return false
+
+        state.cpPvStack.removeLast()
+        state.pontosComplicacaoGastos -= 2
+        state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
+        return true
+    }
 }

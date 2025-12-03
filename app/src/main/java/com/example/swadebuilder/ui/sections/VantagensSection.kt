@@ -290,27 +290,35 @@ fun VantagensContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val podeUsarPc = !locked && pcLivres >= 2
-            val podeDesfazerPc = !locked && pvUsados > 0
+            val podeComprarComPb = !locked && pcLivres >= 2
+            val podeDevolverPb = !locked && state.pontosVantagem > 0 && pvUsados > 0
 
-            TextButton(
-                onClick = {
-                    if (!podeUsarPc) return@TextButton
-                    state.gastarPcParaVantagem()
-                },
-                enabled = podeUsarPc
-            ) {
-                Text("Usar PB em Vantagens")
+            if (podeComprarComPb) {
+                TextButton(
+                    onClick = { viewModel.converterPbParaPv() }
+                ) {
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = "Comprar com PB",
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(Modifier.size(4.dp))
+                    Text("Comprar 1 PV com 2 PB")
+                }
             }
 
-            TextButton(
-                onClick = {
-                    if (!podeDesfazerPc) return@TextButton
-                    state.devolverPcDeVantagem()
-                },
-                enabled = podeDesfazerPc
-            ) {
-                Text("Desfazer uso de PB")
+            if (podeDevolverPb) {
+                TextButton(
+                    onClick = { viewModel.devolverPvParaPb() }
+                ) {
+                    Icon(
+                        Icons.Default.Remove,
+                        contentDescription = "Devolver PB",
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(Modifier.size(4.dp))
+                    Text("Devolver 1 PV para 2 PB")
+                }
             }
         }
 

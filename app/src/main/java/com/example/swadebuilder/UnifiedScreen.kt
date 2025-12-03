@@ -226,6 +226,7 @@ fun UnifiedScreen(
                 ) {
                     PericiasContent(
                         state = state,
+                        viewModel = viewModel,
                         onOpenPericiasDetail = onOpenPericiasDetail,
                         feedbackMessages = viewModel.feedbackMessages as MutableList<String>
                     )
@@ -263,7 +264,11 @@ fun UnifiedScreen(
                     onToggle = onToggleAttrs,
                     icon     = Icons.Default.FitnessCenter
                 ) {
-                    AtributosContent(state = state, onOpenAtributosDetail = onOpenAtributosDetail)
+                    AtributosContent(
+                        state = state,
+                        viewModel = viewModel,
+                        onOpenAtributosDetail = onOpenAtributosDetail
+                    )
                 }
 
                 Spacer(Modifier.height(16.dp))
@@ -363,7 +368,7 @@ fun UnifiedScreen(
                 onToggle = onToggleAttrs,
                 icon     = Icons.Default.FitnessCenter
             ) {
-                AtributosContent(state, onOpenAtributosDetail)
+                AtributosContent(state, viewModel, onOpenAtributosDetail)
             }
 
             HorizontalDivider(thickness = 1.dp)
@@ -376,6 +381,7 @@ fun UnifiedScreen(
             ) {
                 PericiasContent(
                     state = state,
+                    viewModel = viewModel,
                     onOpenPericiasDetail = onOpenPericiasDetail,
                     feedbackMessages = viewModel.feedbackMessages as MutableList<String>
                 )
