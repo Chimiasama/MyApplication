@@ -774,32 +774,40 @@ class CriadorViewModel : ViewModel() {
     fun finishAttributeAdvancement() {
         if (state.attributeAdvancementInProgress) {
             val before = state.attributeStacksBeforeAdvancement ?: emptyMap()
-            val increases = mutableListOf<String>()
-            state.paCostStackPorAtributo.forEach { (attr, stack) ->
-                val diff = stack.size - (before[attr] ?: 0)
-                repeat(diff.coerceAtLeast(0)) { increases.add(attr) }
-            }
+            // Um avanço de atributo concede um ponto. Encontramos qual atributo foi aumentado.
+            val increasedAttributeName = state.paCostStackPorAtributo.entries
+                .firstOrNull { (attr, stack) ->
+                    stack.size > (before[attr] ?: 0)
+                }?.key
 
-            val stageName = state.attributeStageForCurrentAdvancement ?: state.estagioAtual().nome
-            increases.forEach { attr ->
+            if (increasedAttributeName != null) {
+                val stageName = state.attributeStageForCurrentAdvancement ?: state.estagioAtual().nome
+                // Registra a compra para a regra de "um por estágio"
                 val prev = state.comprasAttrPorEstagio[stageName] ?: 0
                 state.comprasAttrPorEstagio[stageName] = prev + 1
+
+                // Adiciona uma única entrada no histórico
                 state.advancementHistory.add(
                     AdvancementAction.IncreaseAttribute(
-                        attributeName = attr,
+                        attributeName = increasedAttributeName,
                         stageName = stageName,
                         progressCost = 1
                     )
                 )
             }
 
+            // Limpa o estado de avanço em progresso
             state.attributeAdvancementInProgress = false
             state.attributeStageForCurrentAdvancement = null
             state.stageNameForCurrentAdvancement = null
             state.attributeStacksBeforeAdvancement = null
             state.attributeUsedReservation = false
             state.mostrandoAtributosProgresso = false
+
+            // >>> CORREÇÃO CRÍTICA:
+            // Recalcula os progressos disponíveis para desbloquear o próximo slot de XP
             state.recomputeAvailableProgress()
+
             state.checkFreeze()
             state.updateEmProgressoFlag()
         }
