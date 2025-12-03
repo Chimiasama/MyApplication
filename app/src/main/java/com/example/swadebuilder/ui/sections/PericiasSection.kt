@@ -51,6 +51,7 @@ import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import kotlin.math.max
 
@@ -106,55 +107,31 @@ fun PericiasContent(
                 ) {
                     SectionHeader(
                         onHelpClick          = null,
-                        centerText           = "Pontos de Perícia: ${state.pontosPericia} • Pontos Bônus: $pcLivres de $pcTotal",
+                        centerText           = "Pontos de Perícia: ${state.pontosPericia}",
                         onListaCompletaClick = if (showLista) ({ onOpenPericiasDetail() }) else null,
                         listaCompletaText    = "Lista Completa"
                     )
 
                     Spacer(Modifier.height(4.dp))
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        val podeUsarPc = !locked && pcLivres > 0
-                        val podeDesfazerPc = !locked && spUsados > 0
-
-                        TextButton(
-                            onClick = {
-                                if (!podeUsarPc) return@TextButton
-
-                                state.cpSpStack.add(Unit)
-                                state.pontosComplicacaoGastos += 1
-
-                            },
-                            enabled = podeUsarPc
-                        ) {
-                            Text("Usar PB em Perícias")
+                    PbWalletBanner(
+                        pcTotal = pcTotal,
+                        pcLivres = pcLivres,
+                        spendLabel = "Usar PB em Perícias",
+                        refundLabel = "Desfazer uso de PB",
+                        spendEnabled = !locked && pcLivres > 0,
+                        refundEnabled = !locked && spUsados > 0,
+                        onSpend = {
+                            state.cpSpStack.add(Unit)
+                            state.pontosComplicacaoGastos += 1
+                        },
+                        onRefund = {
+                            state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
+                            state.pontosComplicacaoGastos =
+                                (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                            state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
                         }
-
-                        TextButton(
-                            onClick = {
-                                if (!podeDesfazerPc) return@TextButton
-                                state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
-                                state.pontosComplicacaoGastos =
-                                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                                state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                            },
-                            enabled = podeDesfazerPc
-                        ) {
-                            Text("Desfazer uso de PB")
-                        }
-                    }
-
-                    if (pcTotal == 0) {
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            text = "Para ganhar Pontos Bônus, escolha Complicações na seção apropriada.",
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
+                    )
                 }
             }
         }

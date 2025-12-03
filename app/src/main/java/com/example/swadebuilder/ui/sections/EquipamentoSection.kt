@@ -37,6 +37,7 @@ import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import kotlinx.serialization.json.JsonPrimitive
 
@@ -177,46 +178,24 @@ fun EquipamentoSection(
 
         SectionHeader(
             onHelpClick = null,
-            centerText = "Dinheiro: $dinheiro • Pontos Bônus: $pcLivres de $pcTotal",
+            centerText = "Dinheiro: $dinheiro",
             onCenterClick = null,
             onListaCompletaClick = if (showLista) onListaCompletaClick else null,
             listaCompletaText = "Lista Completa"
         )
 
         Spacer(modifier = Modifier.size(4.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val podeUsarPcRecursos = pcLivres > 0 && recursosPcUsados == 0
-            val podeDesfazerPcRecursos = recursosPcUsados > 0
 
-            TextButton(
-                onClick = onUsarPontosBonusEmRecursos,
-                enabled = podeUsarPcRecursos
-            ) {
-                Text("Usar PB em Recursos")
-            }
-
-            TextButton(
-                onClick = onDesfazerPontosBonusEmRecursos,
-                enabled = podeDesfazerPcRecursos
-            ) {
-                Text("Desfazer uso de PB")
-            }
-        }
-
-        if (pcTotal == 0) {
-            Spacer(Modifier.size(4.dp))
-            Text(
-                text = "Para ganhar Pontos Bônus, escolha Complicações na seção apropriada.",
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-        }
+        PbWalletBanner(
+            pcTotal = pcTotal,
+            pcLivres = pcLivres,
+            spendLabel = "Usar PB em Recursos",
+            refundLabel = "Desfazer uso de PB",
+            spendEnabled = pcLivres > 0 && recursosPcUsados == 0,
+            refundEnabled = recursosPcUsados > 0,
+            onSpend = onUsarPontosBonusEmRecursos,
+            onRefund = onDesfazerPontosBonusEmRecursos
+        )
 
         Spacer(Modifier.size(8.dp))
         Text(

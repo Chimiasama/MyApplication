@@ -58,6 +58,7 @@ import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.dialogs.MultipleSelectionDialog
@@ -276,51 +277,23 @@ fun VantagensContent(
     Column(modifier = Modifier.fillMaxWidth()) {
         SectionHeader(
             onHelpClick = null,
-            centerText = "Pontos de Vantagem: ${state.pontosVantagem} • Pontos Bônus: $pcLivres de $pcTotal",
+            centerText = "Pontos de Vantagem: ${state.pontosVantagem}",
             onListaCompletaClick = if (showLista) ({ onOpenVantagensDetail("") }) else null,
             listaCompletaText = "Lista Completa"
         )
 
         Spacer(Modifier.size(4.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val podeUsarPc = !locked && pcLivres >= 2
-            val podeDesfazerPc = !locked && pvUsados > 0
-
-            TextButton(
-                onClick = {
-                    if (!podeUsarPc) return@TextButton
-                    state.gastarPcParaVantagem()
-                },
-                enabled = podeUsarPc
-            ) {
-                Text("Usar PB em Vantagens")
-            }
-
-            TextButton(
-                onClick = {
-                    if (!podeDesfazerPc) return@TextButton
-                    state.devolverPcDeVantagem()
-                },
-                enabled = podeDesfazerPc
-            ) {
-                Text("Desfazer uso de PB")
-            }
-        }
-
-        if (pcTotal == 0) {
-            Spacer(Modifier.size(4.dp))
-            Text(
-                text = "Para ganhar Pontos Bônus, escolha Complicações na seção apropriada.",
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
+        PbWalletBanner(
+            pcTotal = pcTotal,
+            pcLivres = pcLivres,
+            spendLabel = "Usar PB em Vantagens",
+            refundLabel = "Desfazer uso de PB",
+            spendEnabled = !locked && pcLivres >= 2,
+            refundEnabled = !locked && pvUsados > 0,
+            onSpend = { state.gastarPcParaVantagem() },
+            onRefund = { state.devolverPcDeVantagem() }
+        )
 
         Spacer(Modifier.size(8.dp))
 
