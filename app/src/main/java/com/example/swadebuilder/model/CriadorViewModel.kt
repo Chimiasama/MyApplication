@@ -151,7 +151,6 @@ class CriadorViewModel : ViewModel() {
         state.dinheiro = 500
         state.progresso = 0
         state.progressosDisponiveis = 0
-        state.xpSlots.fill(false)
         state.frozenAdvantageCount = 0
         state.advancementHistory.clear()
         state.emProgresso = false
@@ -664,7 +663,6 @@ class CriadorViewModel : ViewModel() {
         if (state.progressosDisponiveis >= 1) {
             state.progresso++
             state.spendProgressAcrossStages(1)
-            state.xpSlots[slotIndex] = true
             state.skillAdvancementInProgress = true
             state.skillsForCurrentAdvancement.clear()
             state.grantSkillPointsFromXp()
@@ -691,7 +689,6 @@ class CriadorViewModel : ViewModel() {
         if (state.progressosDisponiveis >= 1) {
             state.progresso++
             state.spendProgressAcrossStages(1)
-            state.xpSlots[slotIndex] = true
             state.advantageAdvancementInProgress = true
             state.advantageForCurrentAdvancement = null
             state.grantVantagemPointFromXp(est)
@@ -717,12 +714,8 @@ class CriadorViewModel : ViewModel() {
             return
         }
 
-        val lastUsedIndex = state.xpSlots.indexOfLast { it }
-        if (lastUsedIndex != -1) {
-            state.xpSlots[lastUsedIndex] = false
-            state.progresso--
-            state.refundProgressAcrossStages(1)
-        }
+        state.progresso--
+        state.refundProgressAcrossStages(1)
 
         if (state.skillAdvancementInProgress) {
             if (state.cpSpStack.isNotEmpty()) state.cpSpStack.removeLast()
@@ -748,11 +741,7 @@ class CriadorViewModel : ViewModel() {
         val lastAction = state.advancementHistory.removeLast()
 
         // Reverte o slot de XP e o contador de progresso
-        val lastUsedIndex = state.xpSlots.indexOfLast { it }
-        if (lastUsedIndex != -1) {
-            state.xpSlots[lastUsedIndex] = false
-            state.progresso--
-        }
+        state.progresso--
 
         when (lastAction) {
             is AdvancementAction.SpendOnAdvantage -> {
