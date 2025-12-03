@@ -681,6 +681,7 @@ class CriadorViewModel : ViewModel() {
         }
     }
 
+
     fun finishSkillAdvancement() {
         if (state.skillAdvancementInProgress) {
             val skills = state.skillsForCurrentAdvancement.toList()
@@ -722,11 +723,42 @@ class CriadorViewModel : ViewModel() {
                         stageName = stageName
                     )
                 )
+                if (state.pvFromXpOutstanding > 0) {
+                    state.pvFromXpOutstanding--
+                }
             }
             state.advantageAdvancementInProgress = false
             state.advantageForCurrentAdvancement = null
             state.stageNameForCurrentAdvancement = null
             state.updateEmProgressoFlag()
+        }
+    }
+
+    fun selectAdvantageForAdvancement(vantagem: Vantagem) {
+        if (state.advantageAdvancementInProgress) {
+            if (state.advantageForCurrentAdvancement != null) {
+                val currentAdvantageId = state.advantageForCurrentAdvancement!!
+                val currentAdvantage = state.vantagensSelecionadas.find { it.id == currentAdvantageId }
+                if (currentAdvantage != null) {
+                    if (currentAdvantage.nome.contains("Pontos de Poder", true)) {
+                        state.removerPontosDePoder(currentAdvantage)
+                    } else {
+                        state.removeVantagemDinheiro(currentAdvantage)
+                        state.vantagensSelecionadas.remove(currentAdvantage)
+                    }
+                    state.pontosVantagem++
+                }
+            }
+
+            if (vantagem.nome.contains("Pontos de Poder", true)) {
+                state.comprarPontoDePoder(vantagem)
+            } else {
+                state.applyVantagemDinheiro(vantagem)
+                state.vantagensSelecionadas.add(vantagem)
+            }
+            state.pontosVantagem--
+            state.advantageForCurrentAdvancement = vantagem.id
+            state.rebuildAllPericiaStacks()
         }
     }
 

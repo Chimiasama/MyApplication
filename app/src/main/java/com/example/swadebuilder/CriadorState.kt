@@ -942,7 +942,9 @@ class CriadorState {
         if (idx >= 0) {
             spStack.removeAt(idx)
             baseIncsPorPericia[per] = baseIncsPorPericia.getValue(per) - 1
-
+            if (skillAdvancementInProgress) {
+                skillsForCurrentAdvancement.remove(per.nome)
+            }
         }
     }
 

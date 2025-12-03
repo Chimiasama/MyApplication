@@ -117,8 +117,25 @@ fun AtributosContent(
             val nextRaw = if (baseRaw < 12) baseRaw + 2 else baseRaw + 1
             val prevRaw = if (baseRaw <= 12) baseRaw - 2 else baseRaw - 1
 
-            val canReduce   = !locked && stack.isNotEmpty() && (prevRaw >= minReq)
             val canIncrease = !locked && state.pontosAtributo > 0 && (nextRaw <= maxRaw)
+
+            val canReduce = run {
+                val baseCanReduce = !locked && stack.isNotEmpty() && (prevRaw >= minReq)
+                if (!baseCanReduce) {
+                    false
+                } else {
+                    if (state.attributeAdvancementInProgress) {
+                        // Durante o avanço, só pode reduzir se a pilha atual for maior
+                        // do que era ANTES de começar a gastar o ponto.
+                        val beforeSize = state.attributeStacksBeforeAdvancement?.get(nome) ?: 0
+                        stack.size > beforeSize
+                    } else {
+                        // Comportamento normal fora do avanço
+                        true
+                    }
+                }
+            }
+
 
             Row(
                 modifier = Modifier
