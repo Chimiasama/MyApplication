@@ -176,4 +176,6 @@ private fun describeAction(action: AdvancementAction, state: CriadorState): Stri
         val compName = listaComplicacoes.firstOrNull { it.id == action.hindranceId }
         "Complicação: ${compName?.id ?: action.hindranceId}"
     }
+
+    is AdvancementAction.ReserveLegendaryAttribute -> "Reserva de atributo lendário"
 }
