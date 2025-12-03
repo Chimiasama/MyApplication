@@ -291,8 +291,6 @@ fun UnifiedScreen(
             } else {
                 // Default Progression View
                 ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
-                PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes, onOpenPoderesDetail = onOpenPoderesDetail)
-                SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes, onOpenSuperPoderesDetail = onOpenSuperPoderesDetail)
                 EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, onOpenListaCompletaEquipamento = onOpenListaCompletaEquipamento, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
 
                 Spacer(Modifier.height(16.dp))
