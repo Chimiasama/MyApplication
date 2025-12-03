@@ -255,9 +255,9 @@ fun ProgressosDialog(
                 // ── Atributo via XP ────────────────────────────────────────────────
                 val attrLabel = when {
                     isLendarioStage && remainingBaseAttrs <= 0 && canUseReservation ->
-                        "Atributo (usar reserva lendária)"
+                        "Aumentar atributo (usar reserva lendária)"
 
-                    else -> "Atributo +1 dado"
+                    else -> "Aumentar atributo"
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

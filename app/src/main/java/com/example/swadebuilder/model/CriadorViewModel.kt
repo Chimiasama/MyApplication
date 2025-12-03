@@ -799,6 +799,7 @@ class CriadorViewModel : ViewModel() {
             state.attributeStacksBeforeAdvancement = null
             state.attributeUsedReservation = false
             state.mostrandoAtributosProgresso = false
+            state.recomputeAvailableProgress()
             state.updateEmProgressoFlag()
         }
     }
