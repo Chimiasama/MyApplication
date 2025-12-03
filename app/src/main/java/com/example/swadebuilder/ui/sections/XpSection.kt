@@ -66,7 +66,10 @@ fun XpSection(
         val slotStageLabels = buildStageLabels()
 
         Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            LazyColumn(
+                modifier = Modifier.heightIn(max = 420.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(TOTAL_PROGRESS_LIMIT) { index ->
                     val slotUsed = state.xpSlots[index]
                     val isEnabled = (if (index == 0) !slotUsed else state.xpSlots[index - 1] && !slotUsed) && state.pontosVantagem == 0 && state.pontosPericia == 0 && state.progressosDisponiveis > 0
@@ -176,4 +179,6 @@ private fun describeAction(action: AdvancementAction, state: CriadorState): Stri
         val compName = listaComplicacoes.firstOrNull { it.id == action.hindranceId }
         "Complicação: ${compName?.id ?: action.hindranceId}"
     }
+
+    is AdvancementAction.ReserveLegendaryAttribute -> "Reserva de atributo lendário"
 }

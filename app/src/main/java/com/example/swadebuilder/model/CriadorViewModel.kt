@@ -114,6 +114,8 @@ class CriadorViewModel : ViewModel() {
 
         state.cpRecursosStack.clear()
         state.cpPaStack.clear()
+        state.paFromProgress = 0
+        state.legendaryAttrReservations = 0
         state.cpPvStack.clear()
         state.cpSpStack.clear()
         state.comprasPpPorEstagio.keys.forEach   { state.comprasPpPorEstagio[it] = 0 }
@@ -123,6 +125,12 @@ class CriadorViewModel : ViewModel() {
         state.spCostStackPorPericia.values.forEach   { it.clear() }
         state.poderSlotsPorArcano.clear()
         state.novosPoderesStacksPorArcano.clear()
+        state.attributeAdvancementInProgress = false
+        state.attributeStageForCurrentAdvancement = null
+        state.attributeStacksBeforeAdvancement = null
+        state.attributeUsedReservation = false
+        state.stageNameForCurrentAdvancement = null
+        state.mostrandoAtributosProgresso = false
 
         // ─────────────────────────────────────────────────────────────
         // RESET COMPLETO DE SUPERS – NÃO VAZAR ENTRE PERSONAGENS
@@ -660,10 +668,11 @@ class CriadorViewModel : ViewModel() {
         )
     }
 
-    fun startSkillAdvancement(slotIndex: Int) {
+    fun startSkillAdvancement(slotIndex: Int, stageName: String) {
         if (state.progressosDisponiveis >= 1) {
             state.progresso++
-            state.spendProgressAcrossStages(1)
+            state.spendProgressAtStage(stageName, 1)
+            state.stageNameForCurrentAdvancement = stageName
             state.xpSlots[slotIndex] = true
             state.skillAdvancementInProgress = true
             state.skillsForCurrentAdvancement.clear()
@@ -675,9 +684,16 @@ class CriadorViewModel : ViewModel() {
     fun finishSkillAdvancement() {
         if (state.skillAdvancementInProgress) {
             val skills = state.skillsForCurrentAdvancement.toList()
-            state.advancementHistory.add(AdvancementAction.SpendOnSkills(skills))
+            val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
+            state.advancementHistory.add(
+                AdvancementAction.SpendOnSkills(
+                    skillsIncreased = skills,
+                    stageName = stageName
+                )
+            )
             state.skillAdvancementInProgress = false
             state.skillsForCurrentAdvancement.clear()
+            state.stageNameForCurrentAdvancement = null
             state.updateEmProgressoFlag()
         }
     }
@@ -685,7 +701,8 @@ class CriadorViewModel : ViewModel() {
     fun startAdvantageAdvancement(slotIndex: Int, est: String) {
         if (state.progressosDisponiveis >= 1) {
             state.progresso++
-            state.spendProgressAcrossStages(1)
+            state.spendProgressAtStage(est, 1)
+            state.stageNameForCurrentAdvancement = est
             state.xpSlots[slotIndex] = true
             state.advantageAdvancementInProgress = true
             state.advantageForCurrentAdvancement = null
@@ -698,25 +715,113 @@ class CriadorViewModel : ViewModel() {
         if (state.advantageAdvancementInProgress) {
             val advantageId = state.advantageForCurrentAdvancement
             if (advantageId != null) {
-                state.advancementHistory.add(AdvancementAction.SpendOnAdvantage(advantageId))
+                val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
+                state.advancementHistory.add(
+                    AdvancementAction.SpendOnAdvantage(
+                        advantageId = advantageId,
+                        stageName = stageName
+                    )
+                )
             }
             state.advantageAdvancementInProgress = false
             state.advantageForCurrentAdvancement = null
+            state.stageNameForCurrentAdvancement = null
+            state.updateEmProgressoFlag()
+        }
+    }
+
+    fun startAttributeAdvancement(
+        slotIndex: Int,
+        stageName: String,
+        consumesLegendaryReservation: Boolean
+    ) {
+        if (state.progressosDisponiveis >= 1) {
+            state.progresso++
+            state.spendProgressAtStage(stageName, 1)
+            state.stageNameForCurrentAdvancement = stageName
+            state.attributeStageForCurrentAdvancement = stageName
+            state.xpSlots[slotIndex] = true
+
+            if (consumesLegendaryReservation) {
+                state.legendaryAttrReservations =
+                    (state.legendaryAttrReservations - 1).coerceAtLeast(0)
+            }
+            state.attributeUsedReservation = consumesLegendaryReservation
+
+            state.paFromProgress += 1
+            state.recalcularPontosAtributo()
+
+            state.attributeAdvancementInProgress = true
+            state.attributeStacksBeforeAdvancement = state.snapshotAttributeStacks()
+            state.mostrandoAtributosProgresso = true
+            state.updateEmProgressoFlag()
+        }
+    }
+
+    fun reserveLegendaryAttribute(slotIndex: Int, stageName: String) {
+        if (state.progressosDisponiveis >= 1) {
+            state.progresso++
+            state.spendProgressAtStage(stageName, 1)
+            state.xpSlots[slotIndex] = true
+            state.legendaryAttrReservations += 1
+            state.advancementHistory.add(
+                AdvancementAction.ReserveLegendaryAttribute(stageName = stageName)
+            )
+            state.recomputeAvailableProgress()
+        }
+    }
+
+    fun finishAttributeAdvancement() {
+        if (state.attributeAdvancementInProgress) {
+            val before = state.attributeStacksBeforeAdvancement ?: emptyMap()
+            val increases = mutableListOf<String>()
+            state.paCostStackPorAtributo.forEach { (attr, stack) ->
+                val diff = stack.size - (before[attr] ?: 0)
+                repeat(diff.coerceAtLeast(0)) { increases.add(attr) }
+            }
+
+            val stageName = state.attributeStageForCurrentAdvancement ?: state.estagioAtual().nome
+            increases.forEach { attr ->
+                val prev = state.comprasAttrPorEstagio[stageName] ?: 0
+                state.comprasAttrPorEstagio[stageName] = prev + 1
+                state.advancementHistory.add(
+                    AdvancementAction.IncreaseAttribute(
+                        attributeName = attr,
+                        stageName = stageName,
+                        progressCost = 1
+                    )
+                )
+            }
+
+            state.attributeAdvancementInProgress = false
+            state.attributeStageForCurrentAdvancement = null
+            state.stageNameForCurrentAdvancement = null
+            state.attributeStacksBeforeAdvancement = null
+            state.attributeUsedReservation = false
+            state.mostrandoAtributosProgresso = false
             state.updateEmProgressoFlag()
         }
     }
 
     fun cancelAdvancementInProgress() {
         // Roda apenas se houver um avanço em andamento para ser cancelado.
-        if (!state.skillAdvancementInProgress && !state.advantageAdvancementInProgress) {
+        if (
+            !state.skillAdvancementInProgress &&
+            !state.advantageAdvancementInProgress &&
+            !state.attributeAdvancementInProgress
+        ) {
             return
         }
+
+        val stageName = state.stageNameForCurrentAdvancement
+            ?: state.attributeStageForCurrentAdvancement
+            ?: state.estagioAtual().nome
 
         val lastUsedIndex = state.xpSlots.indexOfLast { it }
         if (lastUsedIndex != -1) {
             state.xpSlots[lastUsedIndex] = false
             state.progresso--
-            state.refundProgressAcrossStages(1)
+            state.refundProgressAtStage(stageName, 1)
         }
 
         if (state.skillAdvancementInProgress) {
@@ -730,8 +835,22 @@ class CriadorViewModel : ViewModel() {
             state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
         }
 
+        if (state.attributeAdvancementInProgress) {
+            state.paFromProgress = (state.paFromProgress - 1).coerceAtLeast(0)
+            state.attributeStacksBeforeAdvancement?.let { state.restoreAttributeStacks(it) }
+            if (state.attributeUsedReservation) {
+                state.legendaryAttrReservations += 1
+            }
+            state.attributeUsedReservation = false
+            state.attributeStageForCurrentAdvancement = null
+            state.attributeStacksBeforeAdvancement = null
+            state.mostrandoAtributosProgresso = false
+        }
+
         state.skillAdvancementInProgress = false
         state.advantageAdvancementInProgress = false
+        state.attributeAdvancementInProgress = false
+        state.stageNameForCurrentAdvancement = null
         state.mostrandoPericiasProgresso = false
         state.mostrandoVantagensProgresso = false
         state.updateEmProgressoFlag()
@@ -741,6 +860,7 @@ class CriadorViewModel : ViewModel() {
         if (state.advancementHistory.isEmpty()) return
 
         val lastAction = state.advancementHistory.removeLast()
+        val stageName = lastAction.stageName
 
         // Reverte o slot de XP e o contador de progresso
         val lastUsedIndex = state.xpSlots.indexOfLast { it }
@@ -761,12 +881,18 @@ class CriadorViewModel : ViewModel() {
                 state.frozenAdvantageCount = state.vantagensSelecionadas.size
             }
             is AdvancementAction.IncreaseAttribute -> {
-                // Esta ação é autónoma, a reversão é direta
-                state.valoresAtributos[lastAction.attributeName]!!.intValue -= 2
-                val stage = state.estagioAtual().nome
-                val prev = state.comprasAttrPorEstagio[stage] ?: 0
-                if (prev > 0) {
-                    state.comprasAttrPorEstagio[stage] = prev - 1
+                val stack = state.paCostStackPorAtributo[lastAction.attributeName]
+                if (stack != null && stack.isNotEmpty()) {
+                    stack.removeLast()
+                    val current = state.valoresAtributos[lastAction.attributeName]!!.intValue
+                    val prevRaw = if (current > 12) current - 1 else current - 2
+                    state.valoresAtributos[lastAction.attributeName]!!.intValue = prevRaw
+                    val prev = state.comprasAttrPorEstagio[lastAction.stageName] ?: 0
+                    if (prev > 0) {
+                        state.comprasAttrPorEstagio[lastAction.stageName] = prev - 1
+                    }
+                    state.paFromProgress = (state.paFromProgress - 1).coerceAtLeast(0)
+                    state.recalcularPontosAtributo()
                 }
             }
             is AdvancementAction.SpendOnSkills -> {
@@ -787,9 +913,13 @@ class CriadorViewModel : ViewModel() {
                 val hindrance = listaComplicacoes.first { it.id == lastAction.hindranceId }
                 state.complicacoesSelecionadas[hindrance] = "Menor"
             }
+            is AdvancementAction.ReserveLegendaryAttribute -> {
+                state.legendaryAttrReservations =
+                    (state.legendaryAttrReservations - 1).coerceAtLeast(0)
+            }
         }
         // Devolve o ponto de avanço ao "pool"
-        state.refundProgressAcrossStages(lastAction.progressCost)
+        state.refundProgressAtStage(stageName, lastAction.progressCost)
         state.updateEmProgressoFlag()
     }
 }

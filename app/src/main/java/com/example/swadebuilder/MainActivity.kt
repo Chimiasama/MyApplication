@@ -996,6 +996,17 @@ val listaDeEstagios = listOf(
     Estagio("Lendário",  16, Int.MAX_VALUE)
 )
 
+fun stageIndexForSlot(slotIndex: Int): Int {
+    var remaining = slotIndex
+    dynamicStageCaps.forEachIndexed { idx, cap ->
+        if (remaining < cap) return idx
+        remaining -= cap
+    }
+    return dynamicStageCaps.lastIndex
+}
+
+fun stageForSlot(slotIndex: Int): Estagio = listaDeEstagios[stageIndexForSlot(slotIndex)]
+
 val nivelParaEstagio = mapOf(
     "N" to listaDeEstagios.first { it.nome == "Novato" },
     "E" to listaDeEstagios.first { it.nome == "Experiente" },

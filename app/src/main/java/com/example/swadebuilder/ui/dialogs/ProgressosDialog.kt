@@ -52,11 +52,14 @@ import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
+import com.example.swadebuilder.dynamicStageCaps
 import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.periciaStartRaw
+import com.example.swadebuilder.stageForSlot
+import com.example.swadebuilder.stageIndexForSlot
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.delay
@@ -68,8 +71,10 @@ fun ProgressosDialog(
     state: CriadorState,
     slotIndex: Int,
     onDismiss: () -> Unit,
-    onStartSkillAdvancement: (Int) -> Unit,
-    onStartAdvantageAdvancement: (Int, String) -> Unit
+    onStartSkillAdvancement: (Int, String) -> Unit,
+    onStartAdvantageAdvancement: (Int, String) -> Unit,
+    onStartAttributeAdvancement: (Int, String, Boolean) -> Unit,
+    onReserveLegendaryAttribute: (Int, String) -> Unit
 ) {
     // Snackbar para mensagens temporárias (substitui showTempError/tempErrorMsg)
     val snackHost = remember { SnackbarHostState() }
@@ -83,8 +88,6 @@ fun ProgressosDialog(
     var perBaixa1 by rememberSaveable { mutableStateOf<Pericia?>(null) }
     var perBaixaExp2 by rememberSaveable { mutableStateOf(false) }
     var perBaixa2 by rememberSaveable { mutableStateOf<Pericia?>(null) }
-    var attrExp by rememberSaveable { mutableStateOf(false) }
-    var attrSelected by rememberSaveable { mutableStateOf<String?>(null) }
     var compExp by rememberSaveable { mutableStateOf(false) }
     var compSelected by rememberSaveable { mutableStateOf<Complicacao?>(null) }
     var showAdvSelection by rememberSaveable { mutableStateOf(false) }
@@ -106,34 +109,28 @@ fun ProgressosDialog(
     var slot1NewPerSpecName by rememberSaveable { mutableStateOf("") }
     var slot2NewPerSpecName by rememberSaveable { mutableStateOf("") }
 
-    // Configuração de estágios
-    val totalProgressLimit = 50
     val stages = listaDeEstagios
-    val stageCaps = stages.mapIndexed { idx, st ->
-        val prevMax = stages.getOrNull(idx - 1)?.maxProgress ?: 0
-        if (idx < stages.lastIndex) st.maxProgress - prevMax else (totalProgressLimit - prevMax).coerceAtLeast(0)
-    }
-    val currentStageIndex = stageCaps
-        .mapIndexed { i, cap -> i to cap }
-        .firstOrNull { (i, cap) -> state.stageXpSpent.getValue(stages[i].nome) < cap }
-        ?.first ?: stages.lastIndex
-
-    var selectedTab by rememberSaveable { mutableIntStateOf(currentStageIndex) }
-
-    listaPericias.associateWith { 0 }.toMutableMap()
+    val stageIndex = stageIndexForSlot(slotIndex)
+    var selectedTab by rememberSaveable { mutableIntStateOf(stageIndex) }
 
     // ── Cálculos de atributo via XP ────────────────────────────────────────────
-    val est = stages[selectedTab]
-    val prevMaxGlobal = if (selectedTab > 0) stages[selectedTab - 1].maxProgress else 0
-    val stageCap = if (selectedTab < stages.lastIndex) est.maxProgress - prevMaxGlobal
-    else (totalProgressLimit - prevMaxGlobal).coerceAtLeast(0)
+    val est = stageForSlot(slotIndex)
+    val stageCap = dynamicStageCaps.getOrElse(stageIndex) { 0 }
     val spentHere = state.stageXpSpent.getValue(est.nome)
     val creditsLeft = stageCap - spentHere
 
-    val boughtSoFar = stages.take(selectedTab + 1).sumOf { state.comprasAttrPorEstagio.getValue(it.nome) }
-    val maxAllowed = if (est.nome == "Lendário") Int.MAX_VALUE else (selectedTab + 1)
-    val costAttr = if (est.nome == "Lendário") 2 else 1
-    val canBuyAttr = creditsLeft >= costAttr && state.progressosDisponiveis >= costAttr && boughtSoFar < maxAllowed
+    val lendarioIndex = stages.indexOfFirst { it.nome.equals("Lendário", ignoreCase = true) }
+        .takeIf { it >= 0 } ?: stages.lastIndex
+    val totalAttrPurchases = state.comprasAttrPorEstagio.values.sum()
+    val baseAllowance = (stageIndex + 1).coerceAtMost(lendarioIndex)
+    val remainingBaseAttrs = (baseAllowance - totalAttrPurchases).coerceAtLeast(0)
+    val isLendarioStage = stageIndex == lendarioIndex
+    val canUseReservation = isLendarioStage && state.legendaryAttrReservations > 0
+    val needsReservation = isLendarioStage && remainingBaseAttrs <= 0 && !canUseReservation
+    val canBuyAttr = creditsLeft > 0 && state.progressosDisponiveis >= 1 &&
+            (remainingBaseAttrs > 0 || canUseReservation)
+    val canReserveLegendary = isLendarioStage &&
+            totalAttrPurchases >= lendarioIndex && creditsLeft > 0 && state.progressosDisponiveis >= 1
 
     // ── Requisitos de vantagens (mesma lógica, sem logs) ──────────────────────
     fun strictRequirementsOk(v: Vantagem, estIndex: Int): Boolean {
@@ -222,7 +219,7 @@ fun ProgressosDialog(
         title = {
             PrimaryTabRow(selectedTabIndex = selectedTab) {
                 stages.forEachIndexed { i, st ->
-                    val enabled = i == currentStageIndex
+                    val enabled = i == stageIndex
                     Tab(
                         selected = (selectedTab == i),
                         onClick  = { if (enabled) selectedTab = i },
@@ -256,19 +253,24 @@ fun ProgressosDialog(
                 }
 
                 // ── Atributo via XP ────────────────────────────────────────────────
+                val attrLabel = when {
+                    isLendarioStage && remainingBaseAttrs <= 0 && canUseReservation ->
+                        "Atributo (usar reserva lendária)"
+
+                    else -> "Atributo +1 dado"
+                }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
                         .alpha(if (canBuyAttr) 1f else 0.3f)
                         .clickable(
-                            enabled = state.progressosDisponiveis >= costAttr || est.nome == "Lendário"
+                            enabled = canBuyAttr
                         ) {
                             when {
-                                est.nome == "Lendário" && state.progressosDisponiveis < costAttr -> {
-                                    showSnack("Atributos lendários custam 2 progressos para adquirir")
-                                }
                                 canBuyAttr -> escolheu = "Atributo"
+                                needsReservation -> showSnack("Reserve um atributo lendário primeiro.")
+                                else -> showSnack("Sem créditos suficientes para atributo.")
                             }
                         }
                         .padding(vertical = 4.dp)
@@ -276,56 +278,29 @@ fun ProgressosDialog(
                     RadioButton(
                         selected = (escolheu == "Atributo"),
                         onClick  = {
-                            if (est.nome == "Lendário" && state.progressosDisponiveis < costAttr) {
-                                showSnack("Atributos lendários custam 2 progressos para adquirir")
-                            } else if (canBuyAttr) {
+                            if (canBuyAttr) {
                                 escolheu = "Atributo"
                             }
                         },
                         enabled  = canBuyAttr
                     )
                     Spacer(Modifier.width(8.dp))
-                    Text("Atributo +1 dado")
+                    Text(attrLabel)
                 }
 
-                if (escolheu == "Atributo") {
-                    ExposedDropdownMenuBox(
-                        expanded = attrExp,
-                        onExpandedChange = { attrExp = !attrExp }
+                if (canReserveLegendary) {
+                    RadioButtonRow(
+                        "Reservar atributo lendário (custa 1 XP)",
+                        escolheu == "ReservaLendario"
                     ) {
-                        OutlinedTextField(
-                            value = attrSelected ?: "Escolha atributo…",
-                            onValueChange = {},
-                            readOnly = true,
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(attrExp) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                .clickable { attrExp = true }
-                        )
-                        ExposedDropdownMenu(
-                            expanded = attrExp,
-                            onDismissRequest = { attrExp = false },
-                            modifier = Modifier.heightIn(max = 200.dp)
-                        ) {
-                            listaAtributos
-                                .filter { nome ->
-                                    val current = state.valoresAtributos[nome]!!.intValue
-                                    val cap     = state.atributoMaxRaw(nome)
-                                    current < cap
-                                }
-                                .forEach { a ->
-                                    DropdownMenuItem(
-                                        text = { Text(a) },
-                                        onClick = {
-                                            attrSelected = a
-                                            attrExp = false
-                                        }
-                                    )
-                                }
-                        }
+                        escolheu = "ReservaLendario"
                     }
-                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        "Reservas ativas: ${state.legendaryAttrReservations}",
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+                    Spacer(Modifier.height(8.dp))
                 }
 
                 // ── Remover Complicação ───────────────────────────────────────────
@@ -382,28 +357,25 @@ fun ProgressosDialog(
                             onDismiss()
                         }
                         "Aumentar Perícia" -> {
-                            onStartSkillAdvancement(slotIndex)
+                            onStartSkillAdvancement(slotIndex, est.nome)
                             onDismiss()
                         }
                         "Atributo" -> {
                             if (canBuyAttr) {
-                                state.spendProgressAcrossStages(costAttr)
-                                attrSelected?.let { nome ->
-                                    val prev = state.comprasAttrPorEstagio[est.nome] ?: 0
-                                    state.comprasAttrPorEstagio[est.nome] = prev + 1
-                                    state.valoresAtributos[nome]!!.intValue += 2
-                                    state.advancementHistory.add(
-                                        AdvancementAction.IncreaseAttribute(
-                                            attributeName = nome,
-                                            progressCost = costAttr
-                                        )
-                                    )
-                                }
-                                state.xpSlots[slotIndex] = true
-                                state.recomputeAvailableProgress()
+                                val consumeReservation = remainingBaseAttrs <= 0
+                                onStartAttributeAdvancement(slotIndex, est.nome, consumeReservation)
+                                onDismiss()
+                            } else if (needsReservation) {
+                                showSnack("Reserve um atributo lendário primeiro.")
+                                return@TextButton
+                            }
+                        }
+                        "ReservaLendario" -> {
+                            if (canReserveLegendary) {
+                                onReserveLegendaryAttribute(slotIndex, est.nome)
                                 onDismiss()
                             } else {
-                                showSnack("Atributos lendários custam 2 progressos para adquirir")
+                                showSnack("Você precisa liberar reservas lendárias primeiro.")
                                 return@TextButton
                             }
                         }
@@ -417,12 +389,14 @@ fun ProgressosDialog(
                                     nivelAtual == "Menor" -> 1
                                     else -> 0
                                 }
-                                state.spendProgressAcrossStages(custo)
+                                state.progresso += custo
+                                state.spendProgressAtStage(est.nome, custo)
                                 if (isSomenteMaior) {
                                     state.complicacoesSelecionadas.remove(comp)
                                     state.advancementHistory.add(
                                         AdvancementAction.RemoveHindrance(
                                             hindranceId = comp.id,
+                                            stageName = est.nome,
                                             progressCost = custo
                                         )
                                     )
@@ -431,6 +405,7 @@ fun ProgressosDialog(
                                     state.advancementHistory.add(
                                         AdvancementAction.RemoveHindrance(
                                             hindranceId = comp.id,
+                                            stageName = est.nome,
                                             progressCost = custo
                                         )
                                     )
@@ -439,6 +414,7 @@ fun ProgressosDialog(
                                     state.advancementHistory.add(
                                         AdvancementAction.RemoveHindrance(
                                             hindranceId = comp.id,
+                                            stageName = est.nome,
                                             progressCost = custo
                                         )
                                     )
@@ -488,6 +464,7 @@ fun ProgressosDialog(
                         }
                     }
                     "Atributo" -> canBuyAttr
+                    "ReservaLendario" -> canReserveLegendary
                     else -> true
                 }
             ) { Text("Confirmar") }
@@ -558,9 +535,14 @@ fun ProgressosDialog(
                                             showSnack("Você não tem progressos suficientes.")
                                             return@clickable
                                         }
-                                        state.spendProgressAcrossStages(1)
-                                        state.vantagensSelecionadas += vant
-                                        state.advancementHistory.add(AdvancementAction.SpendOnAdvantage(vant.id))
+                        state.spendProgressAtStage(estSel.nome, 1)
+                        state.vantagensSelecionadas += vant
+                        state.advancementHistory.add(
+                            AdvancementAction.SpendOnAdvantage(
+                                advantageId = vant.id,
+                                stageName = estSel.nome
+                            )
+                        )
                                         state.xpSlots[slotIndex] = true
                                         state.recomputeAvailableProgress()
                                         state.checkFreeze()
@@ -594,6 +576,7 @@ fun ProgressosDialog(
         state.identifyMaxedTraits()
         val vant = pendingAdv!!
         val key = vant.nome.keyify()
+        val estSel = listaDeEstagios[advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab]
 
         when (key) {
             "PROFISSIONAL" -> {
@@ -625,9 +608,14 @@ fun ProgressosDialog(
                             return@onConfirm
                         }
 
-                        state.spendProgressAcrossStages(1)
+                        state.spendProgressAtStage(estSel.nome, 1)
                         state.vantagensSelecionadas += vant.copy(choice = choice)
-                        state.advancementHistory.add(AdvancementAction.SpendOnAdvantage(vant.id))
+                        state.advancementHistory.add(
+                            AdvancementAction.SpendOnAdvantage(
+                                advantageId = vant.id,
+                                stageName = estSel.nome
+                            )
+                        )
                         state.xpSlots[slotIndex] = true
                         state.recomputeAvailableProgress()
 
@@ -675,9 +663,14 @@ fun ProgressosDialog(
                                 return@onConfirm
                             }
 
-                            state.spendProgressAcrossStages(1)
+                            state.spendProgressAtStage(estSel.nome, 1)
                             state.vantagensSelecionadas += vant.copy(choice = choice)
-                            state.advancementHistory.add(AdvancementAction.SpendOnAdvantage(vant.id))
+                            state.advancementHistory.add(
+                                AdvancementAction.SpendOnAdvantage(
+                                    advantageId = vant.id,
+                                    stageName = estSel.nome
+                                )
+                            )
                             state.xpSlots[slotIndex] = true
                             state.recomputeAvailableProgress()
 
@@ -714,9 +707,14 @@ fun ProgressosDialog(
                             return@onConfirm
                         }
 
-                        state.spendProgressAcrossStages(1)
+                        state.spendProgressAtStage(estSel.nome, 1)
                         state.vantagensSelecionadas += vant.copy(choice = choice)
-                        state.advancementHistory.add(AdvancementAction.SpendOnAdvantage(vant.id))
+                        state.advancementHistory.add(
+                            AdvancementAction.SpendOnAdvantage(
+                                advantageId = vant.id,
+                                stageName = estSel.nome
+                            )
+                        )
                         state.xpSlots[slotIndex] = true
                         state.recomputeAvailableProgress()
                         state.checkFreeze()
