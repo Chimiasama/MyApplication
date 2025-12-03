@@ -315,7 +315,7 @@ class CriadorState {
         val incs = superInvestments
             .map { it.effect }
             .filterIsInstance<PowerEffect.SuperPericia>()
-            .filter { it.periciaKey.equals(per.nome, ignoreCase = true) }
+            .filter { it.periciaKey.keyify() == per.nome.keyify() }
             .sumOf { it.steps }
         return applySuperStepsFrom(base, incs)
     }
@@ -1373,8 +1373,6 @@ class CriadorState {
     }
 
     var emProgresso by mutableStateOf(false)
-    val criacaoBasicaCongelada: Boolean
-        get() = emProgresso
     var modoProgressaoAtivo by mutableStateOf(false)
     var mostrandoVantagensProgresso by mutableStateOf(false)
     var mostrandoPericiasProgresso by mutableStateOf(false)

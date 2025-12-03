@@ -23,8 +23,8 @@ enum class FaseFluxo {
  */
 val CriadorState.faseFluxo: FaseFluxo
     get() = when {
-        // 3) PROGRESSOS sempre domina: uma vez que começou, fica nessa fase
-        progresso > 0 -> FaseFluxo.PROGRESSOS
+        // 3) PROGRESSOS sempre domina, mas em modo supers só depois de gastar todos os superpontos
+        progresso > 0 && !modoSupersComSaldoDeSupers -> FaseFluxo.PROGRESSOS
 
         // 2) Campanha supers, com nível já definido e pontos calculados
         modoSupers &&
@@ -35,6 +35,9 @@ val CriadorState.faseFluxo: FaseFluxo
         // 1) Default: criação normal
         else -> FaseFluxo.BASE
     }
+
+private val CriadorState.modoSupersComSaldoDeSupers: Boolean
+    get() = modoSupers && superPontosTotais > 0 && superPontosDisponiveis > 0
 
 /**
  * Criação básica congelada?
