@@ -55,7 +55,7 @@ fun XpSection(
 
         Column(Modifier.padding(8.dp)) {
             LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(400.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 items(20) { index ->
