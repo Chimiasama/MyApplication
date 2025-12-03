@@ -43,7 +43,7 @@ fun AtributosContent(
     state: CriadorState,
     onOpenAtributosDetail: () -> Unit
 ) {
-    val locked = state.criacaoBasicaCongelada
+    val locked = state.criacaoBasicaCongelada && !state.attributeAdvancementInProgress
 
     val pergaminho = MaterialTheme.colorScheme.surfaceVariant
 
