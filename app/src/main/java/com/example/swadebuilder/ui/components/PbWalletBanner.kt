@@ -25,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -39,10 +38,11 @@ fun PbWalletBanner(
     onSpend: () -> Unit,
     onRefund: () -> Unit,
     modifier: Modifier = Modifier,
-    infoText: String = "Para ganhar Pontos Bônus, escolha Complicações na seção apropriada."
 ) {
     val hasBonus = pcTotal > 0
     val showActions = hasBonus && (spendEnabled || refundEnabled)
+
+    if (!hasBonus) return
 
     var menuExpanded by remember { mutableStateOf(false) }
 
@@ -122,15 +122,6 @@ fun PbWalletBanner(
                         }
                     }
                 }
-            }
-
-            if (!hasBonus) {
-                Text(
-                    text = infoText,
-                    style = MaterialTheme.typography.bodySmall,
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier.padding(top = 6.dp)
-                )
             }
         }
     }
