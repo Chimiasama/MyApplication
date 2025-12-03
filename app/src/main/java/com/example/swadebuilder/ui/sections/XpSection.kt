@@ -66,7 +66,10 @@ fun XpSection(
         val slotStageLabels = buildStageLabels()
 
         Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            LazyColumn(
+                modifier = Modifier.heightIn(max = 360.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(TOTAL_PROGRESS_LIMIT) { index ->
                     val slotUsed = state.xpSlots[index]
                     val isEnabled = (if (index == 0) !slotUsed else state.xpSlots[index - 1] && !slotUsed) && state.pontosVantagem == 0 && state.pontosPericia == 0 && state.progressosDisponiveis > 0
