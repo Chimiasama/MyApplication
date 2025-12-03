@@ -619,24 +619,21 @@ fun VantagensContent(
 
                                                 else -> {
                                                     if (state.advantageAdvancementInProgress) {
-                                                        state.advantageForCurrentAdvancement = vant.id
-                                                    }
-                                                    if (vant.nome.contains(
-                                                            "Pontos de Poder",
-                                                            true
-                                                        )
-                                                    ) {
-                                                        state.comprarPontoDePoder(vant)
+                                                        viewModel.selectAdvantageForAdvancement(vant)
                                                     } else {
-                                                        state.applyVantagemDinheiro(vant)
-                                                        state.vantagensSelecionadas += vant
+                                                        if (vant.nome.contains(
+                                                                "Pontos de Poder",
+                                                                true
+                                                            )
+                                                        ) {
+                                                            state.comprarPontoDePoder(vant)
+                                                        } else {
+                                                            state.applyVantagemDinheiro(vant)
+                                                            state.vantagensSelecionadas += vant
+                                                        }
+                                                        state.pontosVantagem--
+                                                        state.rebuildAllPericiaStacks()
                                                     }
-                                                    state.pontosVantagem--
-                                                    if (state.advantageAdvancementInProgress && state.pvFromXpOutstanding > 0) {
-                                                        state.pvFromXpOutstanding -= 1
-                                                    }
-                                                    state.rebuildAllPericiaStacks()
-
                                                 }
                                             }
 

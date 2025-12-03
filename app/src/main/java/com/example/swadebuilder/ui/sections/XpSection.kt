@@ -165,7 +165,7 @@ private fun describeAction(action: AdvancementAction, state: CriadorState): Stri
     }
 
     is AdvancementAction.SpendOnSkills -> {
-        val skills = action.skillsIncreased.mapNotNull { skillName ->
+        val skills = action.skillsIncreased.distinct().mapNotNull { skillName ->
             val per = listaPericias.firstOrNull { it.nome == skillName }
             per?.let {
                 val die = state.rawTotal(it).toDiceString()
