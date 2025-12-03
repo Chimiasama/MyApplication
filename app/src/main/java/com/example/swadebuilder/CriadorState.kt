@@ -1466,6 +1466,8 @@ class CriadorState {
     }
 
     fun rebuildAllPericiaStacks(feedbackMessages: MutableList<String> = mutableListOf()) {
+        if (modoProgressaoAtivo) return
+
         var cumulativeCost = 0
         val pool = totalSpPool
 
