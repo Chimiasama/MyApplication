@@ -353,7 +353,7 @@ fun SuperPoderesSection(
 
     val nivelAtual = state.superNivelCampanha
 
-    val supersLiberados = state.creationComplete()
+    val supersLiberados = state.baseCreationComplete()
 
     val jaInvestiuSupers = state.superPontosDisponiveis < state.superPontosTotais
     val podeEditarNivel = supersLiberados && !jaInvestiuSupers

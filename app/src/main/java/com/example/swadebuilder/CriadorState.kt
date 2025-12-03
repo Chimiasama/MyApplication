@@ -1411,17 +1411,17 @@ class CriadorState {
         spCostStackPorPericia.getValue(per).add(cost)
     }
 
+    fun baseCreationComplete(): Boolean = pontosAtributo == 0 &&
+            pontosPericia == 0 &&
+            pontosVantagem == 0 &&
+            (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0) == 0
+
     fun creationComplete(): Boolean {
         // "Ficha básica completa": todos os pontos iniciais foram distribuídos.
         // Em campanha supers, também exige ter zerado os Pontos de Super.
-        val basePronta = pontosAtributo == 0 &&
-                pontosPericia == 0 &&
-                pontosVantagem == 0 &&
-                (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0) == 0
-
         val supersProntos = !modoSupers || superPontosTotais <= 0 || superPontosDisponiveis == 0
 
-        return basePronta && supersProntos
+        return baseCreationComplete() && supersProntos
     }
 
     val stageXpSpent: SnapshotStateMap<String, Int> = mutableStateMapOf<String, Int>().apply {
