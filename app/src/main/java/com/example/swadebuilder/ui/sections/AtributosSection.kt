@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -102,7 +103,7 @@ fun AtributosContent(
                     onClick = { viewModel.converterPbParaPa() }
                 ) {
                     Icon(
-                        Icons.Default.ShoppingCart,
+                        Icons.Default.Add,
                         contentDescription = "Comprar com PB",
                         modifier = Modifier.size(18.dp)
                     )

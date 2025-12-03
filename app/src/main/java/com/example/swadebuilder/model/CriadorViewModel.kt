@@ -978,6 +978,7 @@ class CriadorViewModel : ViewModel() {
 
         repeat(quantidade) { if (state.cpSpStack.isNotEmpty()) state.cpSpStack.removeLast() }
         state.pontosComplicacaoGastos = (state.pontosComplicacaoGastos - quantidade).coerceAtLeast(0)
+        state.rebuildAllPericiaStacks(_feedbackMessages)
         return true
     }
 
@@ -1003,7 +1004,7 @@ class CriadorViewModel : ViewModel() {
         if (state.pontosVantagem <= 0 || state.cpPvStack.isEmpty()) return false
 
         state.cpPvStack.removeLast()
-        state.pontosComplicacaoGastos -= 2
+        state.pontosComplicacaoGastos = (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)
         state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
         return true
     }
