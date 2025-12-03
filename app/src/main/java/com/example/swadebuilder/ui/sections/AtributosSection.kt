@@ -19,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +34,7 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 
 @OptIn(ExperimentalTextApi::class)
@@ -76,55 +76,28 @@ fun AtributosContent(
     ) {
         SectionHeader(
             onHelpClick = null,
-            centerText = "Pontos de Atributo: ${state.pontosAtributo} • Pontos Bônus: $pcLivres de $pcTotal",
+            centerText = "Pontos de Atributo: ${state.pontosAtributo}",
             onListaCompletaClick = if (showLista) ({ onOpenAtributosDetail() }) else null,
             listaCompletaText = "Lista Completa"
         )
 
         Spacer(Modifier.height(4.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val podeUsarPc = !locked && pcLivres >= 2
-            val podeDesfazerPc = !locked && paUsados > 0
-
-            TextButton(
-                onClick = {
-                    if (!podeUsarPc) return@TextButton
-
-                    state.gastarPcParaAtributo()
-                },
-                enabled = podeUsarPc
-            ) {
-                Text("Usar PB em Atributos")
+        PbWalletBanner(
+            pcTotal = pcTotal,
+            pcLivres = pcLivres,
+            spendLabel = "Usar PB em Atributos",
+            refundLabel = "Desfazer uso de PB",
+            spendEnabled = !locked && pcLivres >= 2,
+            refundEnabled = !locked && paUsados > 0,
+            onSpend = { state.gastarPcParaAtributo() },
+            onRefund = {
+                state.cpPaStack.removeAt(state.cpPaStack.lastIndex)
+                state.pontosComplicacaoGastos =
+                    (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)
+                state.recalcularPontosAtributo()
             }
-
-            TextButton(
-                onClick = {
-                    if (!podeDesfazerPc) return@TextButton
-                    state.cpPaStack.removeAt(state.cpPaStack.lastIndex)
-                    state.pontosComplicacaoGastos =
-                        (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)
-                    state.recalcularPontosAtributo()
-                },
-                enabled = podeDesfazerPc
-            ) {
-                Text("Desfazer uso de PB")
-            }
-        }
-
-        if (pcTotal == 0) {
-            Spacer(Modifier.height(4.dp))
-            Text(
-                text = "Para ganhar Pontos Bônus, escolha Complicações na seção apropriada.",
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
+        )
 
         Spacer(Modifier.height(8.dp))
 
