@@ -1403,6 +1403,13 @@ class CriadorState {
                     attributeAdvancementInProgress
     }
 
+    fun snapshotFrozenSkillIncrements() {
+        frozenSkillIncrements.clear()
+        baseIncsPorPericia.forEach { (pericia, incs) ->
+            frozenSkillIncrements[pericia.nome] = incs
+        }
+    }
+
     fun increasePericiaFromAdvancement(per: Pericia, cost: Int) {
         if (skillAdvancementInProgress) {
             skillsForCurrentAdvancement.add(per.nome)

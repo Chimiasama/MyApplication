@@ -220,10 +220,10 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += ""
 
     lines += "Atributos"
-    lines += listaAtributos.joinToString(", ") { attrKey ->
+    listaAtributos.forEach { attrKey ->
         val label = mapaAtributosDisplay[attrKey] ?: attrKey
         val valor = personagem.atributos[attrKey] ?: 4
-        "$label d$valor"
+        lines += "• $label d$valor"
     }
     lines += ""
 
