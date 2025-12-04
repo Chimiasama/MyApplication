@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.model.AdvancementOption
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.ui.components.SectionCard
@@ -149,7 +150,7 @@ fun UnifiedScreen(
         Log.d("DEBUG", "modoSupers é ${state.modoSupers}")
     }
 
-    var showAllocDialog by rememberSaveable { mutableStateOf(false) }
+    var showAdvancementDialog by rememberSaveable { mutableStateOf(false) }
     var currentSlotIndex by rememberSaveable { mutableStateOf(-1) }
     val scrollState = rememberScrollState()
 
@@ -294,26 +295,26 @@ fun UnifiedScreen(
                     onToggle = onToggleXp,
                     onUseProgress = { index ->
                         currentSlotIndex = index
-                        showAllocDialog = true
+                        showAdvancementDialog = true
                     },
                     onUndo = {
                         viewModel.revertLastAdvancement()
                     },
-                    showAdvancementDialog = showAllocDialog,
+                    showAdvancementDialog = showAdvancementDialog,
                     advancementOptions = viewModel.getAdvancementOptions(currentSlotIndex),
-                    onDismissAdvancementDialog = { showAllocDialog = false },
+                    onDismissAdvancementDialog = { showAdvancementDialog = false },
                     onSelectAdvancement = { option ->
                         val stageName = listaDeEstagios.first { currentSlotIndex in it.minProgress..it.maxProgress }.nome
                         when (option) {
                             is AdvancementOption.IncreaseAttribute -> viewModel.startAttributeAdvancement(currentSlotIndex, stageName, false)
                             is AdvancementOption.IncreaseSkills -> viewModel.startSkillAdvancement(currentSlotIndex, stageName)
-                            is AdvancementOption.NewAdvantage -> viewModel.startAdvancementAdvancement(currentSlotIndex, stageName)
+                            is AdvancementOption.NewAdvantage -> viewModel.startAdvantageAdvancement(currentSlotIndex, stageName)
                             is AdvancementOption.RemoveMinorHindrance,
                             is AdvancementOption.ReduceMajorHindrance,
                             is AdvancementOption.ReserveMajorHindrance,
                             is AdvancementOption.RemoveReservedMajorHindrance -> viewModel.startHindranceAdvancement(currentSlotIndex, stageName, option)
                         }
-                        showAllocDialog = false
+                        showAdvancementDialog = false
                     }
                 )
             }
@@ -491,25 +492,6 @@ fun UnifiedScreen(
         )
     }
 
-    if (showAllocDialog) {
-        ProgressosDialog(
-            state = state,
-            slotIndex = currentSlotIndex,
-            onDismiss = { showAllocDialog = false },
-            onStartSkillAdvancement = { slotIndex, stage ->
-                viewModel.startSkillAdvancement(slotIndex, stage)
-            },
-            onStartAdvantageAdvancement = { slotIndex, est ->
-                viewModel.startAdvantageAdvancement(slotIndex, est)
-            },
-            onStartAttributeAdvancement = { slotIndex, stage, consumeReservation ->
-                viewModel.startAttributeAdvancement(slotIndex, stage, consumeReservation)
-            },
-            onReserveLegendaryAttribute = { slotIndex, stage ->
-                viewModel.reserveLegendaryAttribute(slotIndex, stage)
-            }
-        )
-    }
 }
 
 @Composable

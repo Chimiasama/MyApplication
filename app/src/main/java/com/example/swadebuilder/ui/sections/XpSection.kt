@@ -58,8 +58,10 @@ fun XpSection(
             title = "Escolha um avanço",
             options = advancementOptions.map { it.text },
             onDismiss = onDismissAdvancementDialog,
-            onSelect = { index ->
-                onSelectAdvancement(advancementOptions[index])
+            onConfirm = { selectedOption ->
+                advancementOptions.find { it.text == selectedOption }?.let {
+                    onSelectAdvancement(it)
+                }
             }
         )
     }

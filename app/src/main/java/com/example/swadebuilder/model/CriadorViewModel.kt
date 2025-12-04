@@ -723,7 +723,7 @@ class CriadorViewModel : ViewModel() {
     }
 
     fun startHindranceAdvancement(slotIndex: Int, stageName: String, option: AdvancementOption) {
-        if (state.progressosDisponivels >= 1) {
+        if (state.progressosDisponiveis >= 1) {
             state.progresso++
             state.spendProgressAtStage(stageName, 1)
             state.stageNameForCurrentAdvancement = stageName
