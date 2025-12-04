@@ -116,7 +116,8 @@ class DerivedAttributesCalculator(private val state: CriadorState) {
     }
 
     private fun calcAparar(): Int {
-        val lutar = state.periciasVisiveis["Lutar"] ?: 0
+        val lutarPericia = listaPericias.first { it.nome.equals("Lutar", ignoreCase = true) }
+        val lutar = state.rawTotal(lutarPericia)
         val base = 2 + (lutar / 2)
         val bloquearBonus = if (vantagens.any { it == "bloquear" }) 1 else 0
         val bloquearAprimoradoBonus = if (vantagens.any { it == "bloquear-aprimorado" }) 1 else 0
@@ -219,6 +220,18 @@ fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
     nextLine()
 
     // Vantagens e Complicações
+    canvas.drawText("Equipamentos", col1X, y, sectionPaint)
+    nextLine()
+    drawText("Dinheiro: ${personagem.dinheiro}", col1X + 10)
+    nextLine()
+    if (personagem.equipamentos.isNotEmpty()) {
+        personagem.equipamentos.forEach {
+            drawText("• ${it.nome}", col1X + 10)
+            nextLine()
+        }
+    }
+    nextLine()
+
     canvas.drawText("Vantagens", col1X, y, sectionPaint)
     nextLine()
     if (personagem.vantagens.isEmpty()) {

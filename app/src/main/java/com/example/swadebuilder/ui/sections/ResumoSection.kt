@@ -163,6 +163,16 @@ fun SummaryContent(state: CriadorState) {
                     }
                 }
 
+                // Equipment
+                SummaryCard("Equipamentos") {
+                    Text("Dinheiro: ${personagem.dinheiro}")
+                    if (personagem.equipamentos.isNotEmpty()) {
+                        personagem.equipamentos.forEach {
+                            Text("• ${it.nome}")
+                        }
+                    }
+                }
+
                 // Hindrances
                 SummaryCard(
                     "Complicações",
