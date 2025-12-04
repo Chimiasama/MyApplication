@@ -19,7 +19,7 @@ data class MeuPersonagem(
     val movimento: Int,
     val armadura: Int,
 
-    // Vantagens e Complicações
+    // Vantagens e Complicações (por nome, para exibição)
     val vantagens: List<String>,
     val complicacoes: List<String>,
     val desvantagensRaciais: List<String>,

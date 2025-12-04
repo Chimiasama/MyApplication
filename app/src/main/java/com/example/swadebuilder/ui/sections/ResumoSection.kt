@@ -1,6 +1,7 @@
 package com.example.swadebuilder.ui.sections
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -110,8 +111,12 @@ fun SummaryContent(state: CriadorState) {
             ) {
                 // Attributes
                 SummaryCard("Atributos") {
-                    personagem.atributos.forEach { (attr, dado) ->
-                        AttributeChip(attr, "d$dado")
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)
+                    ) {
+                        personagem.atributos.forEach { (attr, dado) ->
+                            AttributeChip(attr, "d$dado")
+                        }
                     }
                 }
 
@@ -269,11 +274,7 @@ private fun SummaryCard(
         Column(modifier = Modifier.padding(10.dp)) {
             SectionTitle(title, icon)
             Spacer(modifier = Modifier.height(4.dp))
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)
-            ) {
-                content()
-            }
+            content()
         }
     }
 }

@@ -32,7 +32,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         armadura = derived.armadura,
 
         vantagens = this.vantagensSelecionadas.map { it.nome },
-        complicacoes = this.complicacoesSelecionadas.values.filterNotNull().map { it.nome },
+        complicacoes = this.complicacoesSelecionadas.keys.map { it.name },
         desvantagensRaciais = this.desvantagensRaciais.toList(),
 
         equipamentos = this.equipamentosComprados.toList(),
@@ -64,7 +64,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
 // 2) Calculadora de Atributos Derivados
 class DerivedAttributesCalculator(private val state: CriadorState) {
     private val vantagens by lazy { state.vantagensSelecionadas.map { it.nome.keyify() } }
-    private val complicacoes by lazy { state.complicacoesSelecionadas.values.filterNotNull().map { it.nome.keyify() } }
+    private val complicacoes by lazy { state.complicacoesSelecionadas.values.filterNotNull().map { it.name.keyify() } }
 
     data class DerivedValues(
         val aparar: Int,
@@ -84,7 +84,8 @@ class DerivedAttributesCalculator(private val state: CriadorState) {
     }
 
     private fun calcTamanho(): Int {
-        val racialSize = state.ancestralidadeSelecionada?.desvantagens
+        val ancestralidade = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == state.ancestralidade }
+        val racialSize = ancestralidade?.desvantagens
             ?.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
             ?.substringAfter("TAMANHO")?.trim()?.toIntOrNull() ?: 0
         val obesoBonus = if (complicacoes.any { it == "obeso" }) 1 else 0
@@ -103,7 +104,8 @@ class DerivedAttributesCalculator(private val state: CriadorState) {
 
     private fun calcMovimento(): Int {
         val base = 6
-        val racialPenalty = state.ancestralidadeSelecionada?.desvantagens
+        val ancestralidade = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == state.ancestralidade }
+        val racialPenalty = ancestralidade?.desvantagens
             ?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
             .let { if (it == true) 1 else 0 }
         val lentoPenalty = if (complicacoes.any { it == "lento" }) 1 else 0
@@ -146,8 +148,8 @@ fun salvarEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
 fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
     val doc = PdfDocument()
     val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
-    val page = doc.startPage(pageInfo)
-    val canvas = page.canvas
+    var page = doc.startPage(pageInfo)
+    var canvas = page.canvas
 
     val paint = Paint()
     paint.textSize = 12f
