@@ -248,7 +248,6 @@ class MainActivity : ComponentActivity() {
 
             var creationSession by rememberSaveable { mutableIntStateOf(0) }
 
-            var expInfos   by rememberSaveable(creationSession) { mutableStateOf(false) }
             var expAncs    by rememberSaveable(creationSession) { mutableStateOf(false) }
             var expComps   by rememberSaveable(creationSession) { mutableStateOf(false) }
             var expEquip   by rememberSaveable(creationSession) { mutableStateOf(false) }
@@ -692,9 +691,6 @@ class MainActivity : ComponentActivity() {
                                                     state.superPoderEmFoco = nomePoder.takeIf { it.isNotBlank() }
                                                     showSuperDetail        = true
                                                 },
-
-                                                expInfos       = expInfos,
-                                                onToggleInfos  = { expInfos = !expInfos },
 
                                                 expAncs        = expAncs,
                                                 onToggleAncs   = { expAncs = !expAncs },

@@ -41,7 +41,6 @@ import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
 import com.example.swadebuilder.ui.sections.ComplicacoesSection
 import com.example.swadebuilder.ui.sections.EquipamentoSection
-import com.example.swadebuilder.ui.sections.InformacoesSection
 import com.example.swadebuilder.ui.sections.PericiasContent
 import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.SummaryContent
@@ -71,9 +70,6 @@ fun PreviewApp() {
         onOpenListaCompletaEquipamento = {},
         onOpenPoderesDetail = {},
         onOpenSuperPoderesDetail = { _ -> },
-
-        expInfos = true,
-        onToggleInfos = {},
 
         expAncs = true,
         onToggleAncs = {},
@@ -117,10 +113,6 @@ fun UnifiedScreen(
     onOpenListaCompletaEquipamento: () -> Unit,
     onOpenPoderesDetail: () -> Unit,
     onOpenSuperPoderesDetail: (String) -> Unit,
-
-    // ✅ expansões hoistadas
-    expInfos: Boolean,
-    onToggleInfos: () -> Unit,
 
     expAncs: Boolean,
     onToggleAncs: () -> Unit,
@@ -311,12 +303,7 @@ fun UnifiedScreen(
             }
         } else {
             // Creation Phase Layout
-            InformacoesSection(
-                state = state,
-                expanded = expInfos,
-                onToggle = onToggleInfos,
-                onUseProgress = { showAllocDialog = true }
-            )
+            ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
 
             HorizontalDivider(thickness = 1.dp)
 
@@ -406,10 +393,8 @@ fun UnifiedScreen(
             Spacer(Modifier.height(16.dp))
             HorizontalDivider(thickness = 3.dp)
 
-            ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
-
-                if (state.creationComplete()) {
-                    Button(
+            if (state.creationComplete()) {
+                Button(
                         onClick = {
                             state.modoProgressaoAtivo = true
                             state.progresso = 4

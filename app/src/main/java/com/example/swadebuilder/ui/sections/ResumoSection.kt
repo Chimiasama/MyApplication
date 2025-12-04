@@ -21,10 +21,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -34,10 +36,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.buildSummaryLines
+import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.toMeuPersonagem
+import com.example.swadebuilder.util.keyify
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
 fun SummaryContent(state: CriadorState) {
+
+    val context = LocalContext.current
+    val nomesSalvos = remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
+
+    LaunchedEffect(Unit) {
+        nomesSalvos.value = withContext(Dispatchers.IO) {
+            StorageUtils.listarPersonagens(context)
+        }
+    }
+
+    LaunchedEffect(nomesSalvos.value) {
+        if (state.nomePersonagem.isBlank()) {
+            var idx = 1
+            while (nomesSalvos.value.any { it.first == "Nome $idx" }) {
+                idx++
+            }
+            state.nomePersonagem = "Nome $idx"
+        }
+    }
 
     val flagsTemplate = remember(state) {
         listOfNotNull(
@@ -81,16 +106,48 @@ fun SummaryContent(state: CriadorState) {
     val derivedSection = sections.firstOrNull { it.title == "Atributos derivados" }
     val attributesSection = sections.firstOrNull { it.title == "Atributos" }
     val skillsSection = sections.firstOrNull { it.title == "Perícias" }
-    val otherSections = sections.filterNot {
+
+    val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "musculoso" }
+    val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "soldado" }
+    val bonusCapacity = (if (hasMusculoso) 10f else 0f) + (if (hasSoldado) 10f else 0f)
+    val strengthRaw = state.valoresAtributos["FORCA"]?.intValue ?: 4
+    val baseLimit = ((strengthRaw - 2) / 2) * 10f
+    val weightLimit = baseLimit + bonusCapacity
+    val totalWeight = state.equipamentosComprados
+        .mapNotNull { item ->
+            (item.peso as? kotlinx.serialization.json.JsonPrimitive)
+                ?.content
+                ?.replace(",", ".")
+                ?.toFloatOrNull()
+        }
+        .sum()
+    val ratio = if (weightLimit > 0f) totalWeight / weightLimit else Float.POSITIVE_INFINITY
+    val weightWarning = when {
+        ratio >= 4f -> "Impossível carregar tanto peso, remova itens ou aumente a força."
+        ratio >= 3f -> "Peso extremo! Penalidades severas de sobrecarga."
+        ratio > 1f -> "Peso excedido! Você está sobrecarregado."
+        else -> null
+    }
+
+    val sectionsWithWeight = sections.map { section ->
+        if (section.title == "Recursos & Equipamentos") {
+            val weightLine = "Peso: ${"%.1f".format(totalWeight)} / ${"%.1f".format(weightLimit)}"
+            val updatedItems = buildList {
+                add(weightLine)
+                weightWarning?.let { add("• $it") }
+                addAll(section.items)
+            }
+            section.copy(items = updatedItems)
+        } else {
+            section
+        }
+    }
+
+    val otherSections = sectionsWithWeight.filterNot {
         it.title in setOf("Identidade", "Atributos derivados", "Atributos", "Perícias")
     }
 
-    val nome = identitySection?.items
-        ?.firstOrNull { it.startsWith("Nome:") }
-        ?.substringAfter(":")
-        ?.trim()
-        .orEmpty()
-        .ifBlank { "(sem nome)" }
+    val nome = state.nomePersonagem
 
     val ancestralidadeValue = identitySection?.items
         ?.firstOrNull { it.startsWith("Ancestralidade:") }
@@ -102,6 +159,7 @@ fun SummaryContent(state: CriadorState) {
     Column(Modifier.fillMaxWidth()) {
         IdentityCard(
             nome = nome,
+            onNomeChange = { state.nomePersonagem = it },
             ancestralidade = "Ancestralidade: $ancestralidadeValue"
         )
 
@@ -120,13 +178,13 @@ fun SummaryContent(state: CriadorState) {
                 attributesSection?.let {
                     SummarySectionCard(
                         section = it,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(0.45f)
                     )
                 }
                 skillsSection?.let {
                     SummarySectionCard(
                         section = it,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(0.55f)
                     )
                 }
             }
@@ -208,6 +266,7 @@ private fun SummarySection.toStats(): List<Pair<String, String>> =
 @Composable
 private fun IdentityCard(
     nome: String,
+    onNomeChange: (String) -> Unit,
     ancestralidade: String
 ) {
     Card(
@@ -217,12 +276,14 @@ private fun IdentityCard(
         )
     ) {
         Column(Modifier.padding(16.dp)) {
-            Text(
-                text = nome,
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+            OutlinedTextField(
+                value = nome,
+                onValueChange = onNomeChange,
+                label = { Text("Nome do Personagem") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
             )
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(8.dp))
             Text(
                 text = ancestralidade,
                 style = MaterialTheme.typography.bodyMedium,
