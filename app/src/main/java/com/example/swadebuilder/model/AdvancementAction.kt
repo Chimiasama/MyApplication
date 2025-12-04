@@ -2,6 +2,12 @@ package com.example.swadebuilder.model
 
 import com.example.swadebuilder.toDiceString
 
+enum class HindranceChangeType {
+    RESERVATION,
+    REDUCE_TO_MINOR,
+    REMOVE
+}
+
 sealed class AdvancementAction(open val progressCost: Int, open val stageName: String) {
     abstract fun getDisplayText(
         getAdvantageName: (String) -> String,
@@ -54,6 +60,9 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
 
     data class RemoveHindrance(
         val hindranceId: String,
+        val changeType: HindranceChangeType,
+        val previousLevel: String?,
+        val usedReservation: Boolean = false,
         override val stageName: String,
         override val progressCost: Int
     ) : AdvancementAction(progressCost, stageName) {
@@ -61,7 +70,12 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
             getAdvantageName: (String) -> String,
             getSkillValue: (String) -> Int
         ): String {
-            return "Remover Complicação: $hindranceId" // Substituir por nome se disponível
+            val actionLabel = when (changeType) {
+                HindranceChangeType.RESERVATION   -> "Reserva de Complicação"
+                HindranceChangeType.REDUCE_TO_MINOR -> "Redução de Complicação"
+                HindranceChangeType.REMOVE        -> "Remover Complicação"
+            }
+            return "$actionLabel: $hindranceId"
         }
     }
 
