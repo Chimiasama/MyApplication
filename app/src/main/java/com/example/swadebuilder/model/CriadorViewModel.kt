@@ -695,6 +695,9 @@ class CriadorViewModel : ViewModel() {
             state.skillAdvancementInProgress = false
             state.skillsForCurrentAdvancement.clear()
             state.stageNameForCurrentAdvancement = null
+            if (state.modoProgressaoAtivo) {
+                state.snapshotFrozenSkillIncrements()
+            }
             state.updateEmProgressoFlag()
         }
     }
@@ -954,6 +957,9 @@ class CriadorViewModel : ViewModel() {
         }
         // Devolve o ponto de avanço ao "pool"
         state.refundProgressAtStage(stageName, lastAction.progressCost)
+        if (state.modoProgressaoAtivo) {
+            state.snapshotFrozenSkillIncrements()
+        }
         state.updateEmProgressoFlag()
     }
 }

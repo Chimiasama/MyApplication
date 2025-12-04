@@ -414,10 +414,7 @@ fun UnifiedScreen(
                             state.modoProgressaoAtivo = true
                             state.progresso = 4
                             state.frozenAdvantageCount = state.vantagensSelecionadas.size
-                            state.frozenSkillIncrements.clear()
-                            state.baseIncsPorPericia.forEach { (pericia, incs) ->
-                                state.frozenSkillIncrements[pericia.nome] = incs
-                            }
+                            state.snapshotFrozenSkillIncrements()
                             state.recomputeAvailableProgress()
                         },
                         modifier = Modifier.fillMaxWidth()
