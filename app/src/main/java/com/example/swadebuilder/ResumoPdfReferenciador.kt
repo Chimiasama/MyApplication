@@ -64,7 +64,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
 // 2) Calculadora de Atributos Derivados
 class DerivedAttributesCalculator(private val state: CriadorState) {
     private val vantagens by lazy { state.vantagensSelecionadas.map { it.nome.keyify() } }
-    private val complicacoes by lazy { state.complicacoesSelecionadas.values.filterNotNull().map { it.name.keyify() } }
+    private val complicacoes by lazy { state.complicacoesSelecionadas.keys.map { it.name.keyify() } }
 
     data class DerivedValues(
         val aparar: Int,
