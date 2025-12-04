@@ -178,13 +178,13 @@ fun SummaryContent(state: CriadorState) {
                 attributesSection?.let {
                     SummarySectionCard(
                         section = it,
-                        modifier = Modifier.weight(0.45f)
+                        modifier = Modifier.weight(0.35f)
                     )
                 }
                 skillsSection?.let {
                     SummarySectionCard(
                         section = it,
-                        modifier = Modifier.weight(0.55f)
+                        modifier = Modifier.weight(0.65f)
                     )
                 }
             }
