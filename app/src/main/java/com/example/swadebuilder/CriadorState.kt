@@ -1387,6 +1387,10 @@ class CriadorState {
     var advantageAdvancementInProgress by mutableStateOf(false)
     var advantageForCurrentAdvancement by mutableStateOf<String?>(null)
 
+    // Novas variáveis para rastrear o avanço de complicações
+    var hindranceAdvancementInProgress by mutableStateOf(false)
+    val majorHindrancesReservedForRemoval = mutableStateListOf<String>()
+
     // Avanço de atributos
     var attributeAdvancementInProgress by mutableStateOf(false)
     var attributeStageForCurrentAdvancement by mutableStateOf<String?>(null)
@@ -1400,7 +1404,8 @@ class CriadorState {
         emProgresso =
             skillAdvancementInProgress ||
                     advantageAdvancementInProgress ||
-                    attributeAdvancementInProgress
+                    attributeAdvancementInProgress ||
+                    hindranceAdvancementInProgress
     }
 
     fun snapshotFrozenSkillIncrements() {

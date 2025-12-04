@@ -298,6 +298,22 @@ fun UnifiedScreen(
                     },
                     onUndo = {
                         viewModel.revertLastAdvancement()
+                    },
+                    showAdvancementDialog = showAllocDialog,
+                    advancementOptions = viewModel.getAdvancementOptions(currentSlotIndex),
+                    onDismissAdvancementDialog = { showAllocDialog = false },
+                    onSelectAdvancement = { option ->
+                        val stageName = listaDeEstagios.first { currentSlotIndex in it.minProgress..it.maxProgress }.nome
+                        when (option) {
+                            is AdvancementOption.IncreaseAttribute -> viewModel.startAttributeAdvancement(currentSlotIndex, stageName, false)
+                            is AdvancementOption.IncreaseSkills -> viewModel.startSkillAdvancement(currentSlotIndex, stageName)
+                            is AdvancementOption.NewAdvantage -> viewModel.startAdvancementAdvancement(currentSlotIndex, stageName)
+                            is AdvancementOption.RemoveMinorHindrance,
+                            is AdvancementOption.ReduceMajorHindrance,
+                            is AdvancementOption.ReserveMajorHindrance,
+                            is AdvancementOption.RemoveReservedMajorHindrance -> viewModel.startHindranceAdvancement(currentSlotIndex, stageName, option)
+                        }
+                        showAllocDialog = false
                     }
                 )
             }

@@ -18,6 +18,23 @@ import com.example.swadebuilder.util.keyify
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
 data class InvestResult(val ok: Boolean, val mensagem: String)
 
+sealed class AdvancementOption(val text: String, val data: Any? = null) {
+    object IncreaseAttribute : AdvancementOption("Aumentar Atributo")
+    object IncreaseSkills : AdvancementOption("Aumentar Perícias")
+    object NewAdvantage : AdvancementOption("Nova Vantagem")
+    data class RemoveMinorHindrance(val hindrance: Complicacao) :
+        AdvancementOption("Remover ${hindrance.name} (Menor)", hindrance)
+
+    data class ReduceMajorHindrance(val hindrance: Complicacao) :
+        AdvancementOption("Reduzir ${hindrance.name} (Maior -> Menor)", hindrance)
+
+    data class ReserveMajorHindrance(val hindrance: Complicacao) :
+        AdvancementOption("Reservar remoção de ${hindrance.name} (Maior)", hindrance)
+
+    data class RemoveReservedMajorHindrance(val hindrance: Complicacao) :
+        AdvancementOption("Remover ${hindrance.name} (Maior)", hindrance)
+}
+
 /**
  * ViewModel que gerencia o estado de criação de personagem.
  */
@@ -42,6 +59,30 @@ class CriadorViewModel : ViewModel() {
 
     fun setAppTheme(theme: com.example.swadebuilder.ui.theme.AppTheme) {
         state.appTheme = theme
+    }
+
+    fun getAdvancementOptions(slotIndex: Int): List<AdvancementOption> {
+        val options = mutableListOf<AdvancementOption>()
+        options.add(AdvancementOption.IncreaseAttribute)
+        options.add(AdvancementOption.IncreaseSkills)
+        options.add(AdvancementOption.NewAdvantage)
+
+        state.complicacoesSelecionadas.forEach { (hindrance, severity) ->
+            when (severity) {
+                "Menor" -> options.add(AdvancementOption.RemoveMinorHindrance(hindrance))
+                "Maior" -> {
+                    if (state.majorHindrancesReservedForRemoval.contains(hindrance.id)) {
+                        options.add(AdvancementOption.RemoveReservedMajorHindrance(hindrance))
+                    } else {
+                        options.add(AdvancementOption.ReserveMajorHindrance(hindrance))
+                    }
+                    if (hindrance.severity.contains("Menor")) {
+                        options.add(AdvancementOption.ReduceMajorHindrance(hindrance))
+                    }
+                }
+            }
+        }
+        return options
     }
 
     private fun mapChoiceToArcanoId(choice: String?): String? {
@@ -681,6 +722,89 @@ class CriadorViewModel : ViewModel() {
         }
     }
 
+    fun startHindranceAdvancement(slotIndex: Int, stageName: String, option: AdvancementOption) {
+        if (state.progressosDisponivels >= 1) {
+            state.progresso++
+            state.spendProgressAtStage(stageName, 1)
+            state.stageNameForCurrentAdvancement = stageName
+            state.xpSlots[slotIndex] = true
+            state.hindranceAdvancementInProgress = true
+            state.updateEmProgressoFlag()
+
+            when (option) {
+                is AdvancementOption.RemoveMinorHindrance -> removeMinorHindrance(option.hindrance, stageName)
+                is AdvancementOption.ReduceMajorHindrance -> reduceMajorHindrance(option.hindrance, stageName)
+                is AdvancementOption.ReserveMajorHindrance -> reserveRemoveMajorHindrance(option.hindrance, stageName)
+                is AdvancementOption.RemoveReservedMajorHindrance -> removeMajorHindrance(option.hindrance, stageName)
+                else -> {
+                    // This should not happen
+                }
+            }
+        }
+    }
+
+    private fun removeMinorHindrance(hindrance: Complicacao, stageName: String) {
+        state.complicacoesSelecionadas.remove(hindrance)
+        state.advancementHistory.add(
+            AdvancementAction.RemoveMinorHindrance(
+                hindranceId = hindrance.id,
+                stageName = stageName,
+                progressCost = 1
+            )
+        )
+        finishHindranceAdvancement()
+    }
+
+    private fun reduceMajorHindrance(hindrance: Complicacao, stageName: String) {
+        state.complicacoesSelecionadas[hindrance] = "Menor"
+        state.advancementHistory.add(
+            AdvancementAction.ReduceMajorHindrance(
+                hindranceId = hindrance.id,
+                stageName = stageName
+            )
+        )
+        finishHindranceAdvancement()
+    }
+
+    private fun reserveRemoveMajorHindrance(hindrance: Complicacao, stageName: String) {
+        state.majorHindrancesReservedForRemoval.add(hindrance.id)
+        state.advancementHistory.add(
+            AdvancementAction.ReserveRemoveMajorHindrance(
+                hindranceId = hindrance.id,
+                stageName = stageName
+            )
+        )
+        finishHindranceAdvancement()
+    }
+
+    private fun removeMajorHindrance(hindrance: Complicacao, stageName: String) {
+        state.complicacoesSelecionadas.remove(hindrance)
+        state.majorHindrancesReservedForRemoval.remove(hindrance.id)
+        state.advancementHistory.add(
+            AdvancementAction.RemoveMajorHindrance(
+                hindranceId = hindrance.id,
+                stageName = stageName,
+                progressCost = 1
+            )
+        )
+        finishHindranceAdvancement()
+    }
+
+    fun finishHindranceAdvancement() {
+        if (state.hindranceAdvancementInProgress) {
+            state.hindranceAdvancementInProgress = false
+            state.stageNameForCurrentAdvancement = null
+            state.updateEmProgressoFlag()
+        }
+    }
+
+    fun cancelHindranceAdvancement() {
+        if (!state.hindranceAdvancementInProgress) {
+            return
+        }
+        revertLastAdvancement()
+    }
+
 
     fun finishSkillAdvancement() {
         if (state.skillAdvancementInProgress) {
@@ -845,7 +969,8 @@ class CriadorViewModel : ViewModel() {
         if (
             !state.skillAdvancementInProgress &&
             !state.advantageAdvancementInProgress &&
-            !state.attributeAdvancementInProgress
+            !state.attributeAdvancementInProgress &&
+            !state.hindranceAdvancementInProgress
         ) {
             return
         }
@@ -884,9 +1009,15 @@ class CriadorViewModel : ViewModel() {
             state.mostrandoAtributosProgresso = false
         }
 
+        if (state.hindranceAdvancementInProgress) {
+            // Revert the last action from history, as it was already added
+            revertLastAdvancement()
+        }
+
         state.skillAdvancementInProgress = false
         state.advantageAdvancementInProgress = false
         state.attributeAdvancementInProgress = false
+        state.hindranceAdvancementInProgress = false
         state.stageNameForCurrentAdvancement = null
         state.mostrandoPericiasProgresso = false
         state.mostrandoVantagensProgresso = false
@@ -946,9 +1077,21 @@ class CriadorViewModel : ViewModel() {
 
                 state.rebuildAllPericiaStacks()
             }
-            is AdvancementAction.RemoveHindrance -> {
+            is AdvancementAction.RemoveMinorHindrance -> {
                 val hindrance = listaComplicacoes.first { it.id == lastAction.hindranceId }
                 state.complicacoesSelecionadas[hindrance] = "Menor"
+            }
+            is AdvancementAction.RemoveMajorHindrance -> {
+                val hindrance = listaComplicacoes.first { it.id == lastAction.hindranceId }
+                state.complicacoesSelecionadas[hindrance] = "Maior"
+                state.majorHindrancesReservedForRemoval.add(hindrance.id)
+            }
+            is AdvancementAction.ReduceMajorHindrance -> {
+                val hindrance = listaComplicacoes.first { it.id == lastAction.hindranceId }
+                state.complicacoesSelecionadas[hindrance] = "Maior"
+            }
+            is AdvancementAction.ReserveRemoveMajorHindrance -> {
+                state.majorHindrancesReservedForRemoval.remove(lastAction.hindranceId)
             }
             is AdvancementAction.ReserveLegendaryAttribute -> {
                 state.legendaryAttrReservations =

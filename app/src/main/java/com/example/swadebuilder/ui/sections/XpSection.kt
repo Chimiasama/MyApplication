@@ -36,8 +36,10 @@ import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.AdvancementAction
+import com.example.swadebuilder.model.AdvancementOption
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 
 @Composable
 fun XpSection(
@@ -45,8 +47,23 @@ fun XpSection(
     expanded: Boolean,
     onToggle: () -> Unit,
     onUseProgress: (Int) -> Unit,
-    onUndo: () -> Unit
+    onUndo: () -> Unit,
+    showAdvancementDialog: Boolean,
+    advancementOptions: List<AdvancementOption>,
+    onDismissAdvancementDialog: () -> Unit,
+    onSelectAdvancement: (AdvancementOption) -> Unit
 ) {
+    if (showAdvancementDialog) {
+        ChoiceDialog(
+            title = "Escolha um avanço",
+            options = advancementOptions.map { it.text },
+            onDismiss = onDismissAdvancementDialog,
+            onSelect = { index ->
+                onSelectAdvancement(advancementOptions[index])
+            }
+        )
+    }
+
     SectionCard(
         title = "XP",
         expanded = expanded,
@@ -153,32 +170,16 @@ private fun buildSlotDescriptions(state: CriadorState): List<String?> {
     return descriptions.take(TOTAL_PROGRESS_LIMIT)
 }
 
-private fun describeAction(action: AdvancementAction, state: CriadorState): String = when (action) {
-    is AdvancementAction.SpendOnAdvantage -> {
-        val advantageName = listaVantagens.firstOrNull { it.id == action.advantageId }?.nome
-        "Vantagem: ${advantageName ?: action.advantageId}"
+private fun describeAction(action: AdvancementAction, state: CriadorState): String {
+    val getAdvantageName: (String) -> String = { id ->
+        listaVantagens.firstOrNull { it.id == id }?.nome ?: id
+    }
+    val getSkillValue: (String) -> Int = { name ->
+        listaPericias.firstOrNull { it.nome == name }?.let { state.rawTotal(it) } ?: 0
+    }
+    val getHindranceName: (String) -> String = { id ->
+        listaComplicacoes.firstOrNull { it.id == id }?.name ?: id
     }
 
-    is AdvancementAction.IncreaseAttribute -> {
-        val attrName = mapaAtributosDisplay[action.attributeName] ?: action.attributeName
-        "Atributo: $attrName"
-    }
-
-    is AdvancementAction.SpendOnSkills -> {
-        val skills = action.skillsIncreased.distinct().mapNotNull { skillName ->
-            val per = listaPericias.firstOrNull { it.nome == skillName }
-            per?.let {
-                val die = state.rawTotal(it).toDiceString()
-                "$die ${it.nome}"
-            } ?: skillName
-        }
-        "Perícias: ${skills.joinToString(", ")}".trim()
-    }
-
-    is AdvancementAction.RemoveHindrance -> {
-        val compName = listaComplicacoes.firstOrNull { it.id == action.hindranceId }
-        "Complicação: ${compName?.id ?: action.hindranceId}"
-    }
-
-    is AdvancementAction.ReserveLegendaryAttribute -> "Reserva de atributo lendário"
+    return action.getDisplayText(getAdvantageName, getSkillValue, getHindranceName)
 }
