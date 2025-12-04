@@ -29,6 +29,7 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
 
     data class IncreaseAttribute(
         val attributeName: String,
+        val usedLegendaryReservation: Boolean = false,
         override val stageName: String,
         override val progressCost: Int
     ) : AdvancementAction(progressCost, stageName) {
@@ -42,6 +43,7 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
 
     data class SpendOnSkills(
         val skillsIncreased: List<String>,
+        val recordedSkillValues: Map<String, Int>? = null,
         override val stageName: String,
         override val progressCost: Int = 1
     ) : AdvancementAction(progressCost, stageName) {
@@ -51,7 +53,7 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
         ): String {
             val uniqueSkills = skillsIncreased.distinct()
             val text = uniqueSkills.joinToString(", ") { skillName ->
-                val diceValue = getSkillValue(skillName)
+                val diceValue = recordedSkillValues?.get(skillName) ?: getSkillValue(skillName)
                 "$skillName ${diceValue.toDiceString()}"
             }
             return "Perícias: $text"

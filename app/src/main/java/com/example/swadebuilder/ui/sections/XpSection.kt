@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.MaterialTheme
@@ -65,10 +66,19 @@ fun XpSection(
 
         val slotDescriptions = buildSlotDescriptions(state)
         val slotStageLabels = buildStageLabels()
+        val listState = rememberLazyListState()
+
+        LaunchedEffect(state.xpSlots.toList()) {
+            val lastUsedIndex = state.xpSlots.indexOfLast { it }
+            if (lastUsedIndex > 0) {
+                listState.animateScrollToItem(lastUsedIndex)
+            }
+        }
 
         Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             LazyColumn(
                 modifier = Modifier.heightIn(max = 420.dp),
+                state = listState,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(TOTAL_PROGRESS_LIMIT) { index ->
@@ -169,7 +179,8 @@ private fun describeAction(action: AdvancementAction, state: CriadorState): Stri
         val skills = action.skillsIncreased.distinct().mapNotNull { skillName ->
             val per = listaPericias.firstOrNull { it.nome == skillName }
             per?.let {
-                val die = state.rawTotal(it).toDiceString()
+                val dieValue = action.recordedSkillValues?.get(skillName) ?: state.rawTotal(it)
+                val die = dieValue.toDiceString()
                 "$die ${it.nome}"
             } ?: skillName
         }
