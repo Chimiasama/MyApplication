@@ -663,6 +663,7 @@ class CriadorState {
     val valoresAtributos = listaAtributos.associateWith { mutableIntStateOf(4) }
 
     val complicacoesSelecionadas: SnapshotStateMap<Complicacao, String?> = mutableStateMapOf()
+    val reservasComplicacaoMaior: SnapshotStateMap<String, Boolean> = mutableStateMapOf()
 
     val pontosComplicacao: Int
         get() {

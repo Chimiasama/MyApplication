@@ -36,6 +36,7 @@ import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.AdvancementAction
+import com.example.swadebuilder.model.HindranceChangeType
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionCard
 
@@ -177,7 +178,12 @@ private fun describeAction(action: AdvancementAction, state: CriadorState): Stri
 
     is AdvancementAction.RemoveHindrance -> {
         val compName = listaComplicacoes.firstOrNull { it.id == action.hindranceId }
-        "Complicação: ${compName?.id ?: action.hindranceId}"
+        val baseLabel = compName?.id ?: action.hindranceId
+        when (action.changeType) {
+            HindranceChangeType.RESERVATION -> "Reserva de Complicação: $baseLabel"
+            HindranceChangeType.REDUCE_TO_MINOR -> "Reduzir Complicação: $baseLabel"
+            HindranceChangeType.REMOVE -> "Remover Complicação: $baseLabel"
+        }
     }
 
     is AdvancementAction.ReserveLegendaryAttribute -> "Reserva de atributo lendário"

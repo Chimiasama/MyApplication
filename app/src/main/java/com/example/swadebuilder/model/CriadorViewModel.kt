@@ -7,6 +7,7 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.listaComplicacoes
+import com.example.swadebuilder.model.HindranceChangeType
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.model.PersonagemSalvo
@@ -96,6 +97,7 @@ class CriadorViewModel : ViewModel() {
         state.ancestralidade = "HUMANOS"
         state.vantagensSelecionadas.clear()
         state.complicacoesSelecionadas.clear()
+        state.reservasComplicacaoMaior.clear()
         state.vantagensAutomaticas.clear()
         state.desvantagensAutomaticas.clear()
         state.aplicarAncestralidade("HUMANOS", _feedbackMessages)
@@ -255,6 +257,7 @@ class CriadorViewModel : ViewModel() {
         }
 
         state.complicacoesSelecionadas.clear()
+        state.reservasComplicacaoMaior.clear()
         salvo.complicacoes.forEach { compId ->
             listaComplicacoes.find { it.id == compId }?.let { comp ->
                 // Por default, restaura como “Menor”
@@ -948,7 +951,26 @@ class CriadorViewModel : ViewModel() {
             }
             is AdvancementAction.RemoveHindrance -> {
                 val hindrance = listaComplicacoes.first { it.id == lastAction.hindranceId }
-                state.complicacoesSelecionadas[hindrance] = "Menor"
+                when (lastAction.changeType) {
+                    HindranceChangeType.RESERVATION -> {
+                        state.reservasComplicacaoMaior.remove(hindrance.id)
+                    }
+
+                    HindranceChangeType.REDUCE_TO_MINOR -> {
+                        val previous = lastAction.previousLevel ?: "Maior"
+                        state.complicacoesSelecionadas[hindrance] = previous
+                    }
+
+                    HindranceChangeType.REMOVE -> {
+                        val previous = lastAction.previousLevel
+                        if (previous != null) {
+                            state.complicacoesSelecionadas[hindrance] = previous
+                        }
+                        if (lastAction.usedReservation) {
+                            state.reservasComplicacaoMaior[hindrance.id] = true
+                        }
+                    }
+                }
             }
             is AdvancementAction.ReserveLegendaryAttribute -> {
                 state.legendaryAttrReservations =

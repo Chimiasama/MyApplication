@@ -41,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
@@ -56,6 +55,7 @@ import com.example.swadebuilder.dynamicStageCaps
 import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.EspecializacoesDto
+import com.example.swadebuilder.model.HindranceChangeType
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.periciaStartRaw
 import com.example.swadebuilder.stageForSlot
@@ -88,8 +88,15 @@ fun ProgressosDialog(
     var perBaixa1 by rememberSaveable { mutableStateOf<Pericia?>(null) }
     var perBaixaExp2 by rememberSaveable { mutableStateOf(false) }
     var perBaixa2 by rememberSaveable { mutableStateOf<Pericia?>(null) }
-    var compExp by rememberSaveable { mutableStateOf(false) }
-    var compSelected by rememberSaveable { mutableStateOf<Complicacao?>(null) }
+    var compAction by rememberSaveable { mutableStateOf<String?>(null) }
+    var compReserveExp by rememberSaveable { mutableStateOf(false) }
+    var compReserveSelected by rememberSaveable { mutableStateOf<Complicacao?>(null) }
+    var compReservedRemovalExp by rememberSaveable { mutableStateOf(false) }
+    var compReservedRemovalSelected by rememberSaveable { mutableStateOf<Complicacao?>(null) }
+    var compReduceExp by rememberSaveable { mutableStateOf(false) }
+    var compReduceSelected by rememberSaveable { mutableStateOf<Complicacao?>(null) }
+    var compMinorExp by rememberSaveable { mutableStateOf(false) }
+    var compMinorSelected by rememberSaveable { mutableStateOf<Complicacao?>(null) }
     var showAdvSelection by rememberSaveable { mutableStateOf(false) }
     var pendingAdv by rememberSaveable { mutableStateOf<Vantagem?>(null) }
     var showPendingChoice by rememberSaveable { mutableStateOf(false) }
@@ -303,52 +310,220 @@ fun ProgressosDialog(
                     Spacer(Modifier.height(8.dp))
                 }
 
-                // ── Remover Complicação ───────────────────────────────────────────
+                // ── Remover / Reduzir Complicação ─────────────────────────────────
                 if (state.complicacoesSelecionadas.values.any { it != null }) {
-                    RadioButtonRow("Remover Complicação", escolheu == "Complicacao") {
-                        escolheu = "Complicacao"
+                    // Limpa reservas que não fazem mais sentido (complicação removida ou reduzida).
+                    val reservasInvalidas = state.reservasComplicacaoMaior.keys.filterNot { id ->
+                        state.complicacoesSelecionadas.any { (comp, nivel) ->
+                            comp.id == id && nivel == "Maior"
+                        }
                     }
-                    if (escolheu == "Complicacao") {
-                        ExposedDropdownMenuBox(
-                            expanded = compExp,
-                            onExpandedChange = { compExp = !compExp }
-                        ) {
-                            OutlinedTextField(
-                                value         = compSelected?.id ?: "Escolha complicação…",
-                                onValueChange = {},
-                                readOnly      = true,
-                                trailingIcon  = { ExposedDropdownMenuDefaults.TrailingIcon(compExp) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                    .clickable { compExp = true }
-                            )
-                            ExposedDropdownMenu(
-                                expanded = compExp,
-                                onDismissRequest = { compExp = false },
-                                modifier = Modifier.heightIn(max = 200.dp)
-                            ) {
-                                state.complicacoesSelecionadas
-                                    .filterValues { it != null }
-                                    .keys
-                                    .forEach { c ->
-                                        DropdownMenuItem(
-                                            text = { Text("${c.id} (${state.complicacoesSelecionadas[c]})") },
-                                            onClick = {
-                                                compSelected = c
-                                                compExp = false
-                                            }
+                    reservasInvalidas.forEach { state.reservasComplicacaoMaior.remove(it) }
+
+                    val complicacoesMaiores = state.complicacoesSelecionadas
+                        .filterValues { it == "Maior" }
+                        .keys
+                    val complicacoesReservaveis = complicacoesMaiores.filter { comp ->
+                        !state.reservasComplicacaoMaior.containsKey(comp.id)
+                    }
+                    val complicacoesReservadas = complicacoesMaiores.filter { comp ->
+                        state.reservasComplicacaoMaior.containsKey(comp.id)
+                    }
+                    val complicacoesRedutiveis = complicacoesReservaveis.filter { comp ->
+                        comp.severity.contains("menor", ignoreCase = true)
+                    }
+                    val complicacoesMenores = state.complicacoesSelecionadas
+                        .filterValues { it == "Menor" }
+                        .keys
+
+                    if (complicacoesReservaveis.isNotEmpty() ||
+                        complicacoesReservadas.isNotEmpty() ||
+                        complicacoesRedutiveis.isNotEmpty() ||
+                        complicacoesMenores.isNotEmpty()
+                    ) {
+                        RadioButtonRow("Gerenciar Complicação", escolheu == "Complicacao") {
+                            escolheu = "Complicacao"
+                        }
+
+                        if (escolheu == "Complicacao") {
+                            Spacer(Modifier.height(4.dp))
+
+                            if (complicacoesReservadas.isNotEmpty()) {
+                                RadioButtonRow(
+                                    "Remover complicação Maior (usar reserva)",
+                                    compAction == "RemoverReservada"
+                                ) {
+                                    compAction = "RemoverReservada"
+                                }
+                                if (compAction == "RemoverReservada") {
+                                    ExposedDropdownMenuBox(
+                                        expanded = compReservedRemovalExp,
+                                        onExpandedChange = { compReservedRemovalExp = !compReservedRemovalExp }
+                                    ) {
+                                        OutlinedTextField(
+                                            value = compReservedRemovalSelected?.id
+                                                ?: "Escolha complicação reservada…",
+                                            onValueChange = {},
+                                            readOnly = true,
+                                            trailingIcon = {
+                                                ExposedDropdownMenuDefaults.TrailingIcon(compReservedRemovalExp)
+                                            },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                                                .clickable { compReservedRemovalExp = true }
                                         )
+                                        ExposedDropdownMenu(
+                                            expanded = compReservedRemovalExp,
+                                            onDismissRequest = { compReservedRemovalExp = false },
+                                            modifier = Modifier.heightIn(max = 200.dp)
+                                        ) {
+                                            complicacoesReservadas.forEach { c ->
+                                                DropdownMenuItem(
+                                                    text = { Text("${c.id} (Maior)") },
+                                                    onClick = {
+                                                        compReservedRemovalSelected = c
+                                                        compReservedRemovalExp = false
+                                                    }
+                                                )
+                                            }
+                                        }
                                     }
+                                    Spacer(Modifier.height(12.dp))
+                                }
+                            }
+
+                            if (complicacoesReservaveis.isNotEmpty()) {
+                                RadioButtonRow(
+                                    "Reservar remoção de complicação Maior",
+                                    compAction == "ReservarMaior"
+                                ) { compAction = "ReservarMaior" }
+                                if (compAction == "ReservarMaior") {
+                                    ExposedDropdownMenuBox(
+                                        expanded = compReserveExp,
+                                        onExpandedChange = { compReserveExp = !compReserveExp }
+                                    ) {
+                                        OutlinedTextField(
+                                            value = compReserveSelected?.id ?: "Escolha complicação Maior…",
+                                            onValueChange = {},
+                                            readOnly = true,
+                                            trailingIcon = {
+                                                ExposedDropdownMenuDefaults.TrailingIcon(compReserveExp)
+                                            },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                                                .clickable { compReserveExp = true }
+                                        )
+                                        ExposedDropdownMenu(
+                                            expanded = compReserveExp,
+                                            onDismissRequest = { compReserveExp = false },
+                                            modifier = Modifier.heightIn(max = 200.dp)
+                                        ) {
+                                            complicacoesReservaveis.forEach { c ->
+                                                DropdownMenuItem(
+                                                    text = { Text("${c.id} (Maior)") },
+                                                    onClick = {
+                                                        compReserveSelected = c
+                                                        compReserveExp = false
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+                                    Spacer(Modifier.height(12.dp))
+                                }
+                            }
+
+                            if (complicacoesRedutiveis.isNotEmpty()) {
+                                RadioButtonRow(
+                                    "Reduzir complicação (Maior → Menor)",
+                                    compAction == "Reduzir"
+                                ) { compAction = "Reduzir" }
+                                if (compAction == "Reduzir") {
+                                    ExposedDropdownMenuBox(
+                                        expanded = compReduceExp,
+                                        onExpandedChange = { compReduceExp = !compReduceExp }
+                                    ) {
+                                        OutlinedTextField(
+                                            value = compReduceSelected?.id ?: "Escolha complicação…",
+                                            onValueChange = {},
+                                            readOnly = true,
+                                            trailingIcon = {
+                                                ExposedDropdownMenuDefaults.TrailingIcon(compReduceExp)
+                                            },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                                                .clickable { compReduceExp = true }
+                                        )
+                                        ExposedDropdownMenu(
+                                            expanded = compReduceExp,
+                                            onDismissRequest = { compReduceExp = false },
+                                            modifier = Modifier.heightIn(max = 200.dp)
+                                        ) {
+                                            complicacoesRedutiveis.forEach { c ->
+                                                DropdownMenuItem(
+                                                    text = { Text("${c.id} (Maior)") },
+                                                    onClick = {
+                                                        compReduceSelected = c
+                                                        compReduceExp = false
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+                                    Spacer(Modifier.height(12.dp))
+                                }
+                            }
+
+                            if (complicacoesMenores.isNotEmpty()) {
+                                RadioButtonRow(
+                                    "Remover complicação Menor",
+                                    compAction == "RemoverMenor"
+                                ) { compAction = "RemoverMenor" }
+                                if (compAction == "RemoverMenor") {
+                                    ExposedDropdownMenuBox(
+                                        expanded = compMinorExp,
+                                        onExpandedChange = { compMinorExp = !compMinorExp }
+                                    ) {
+                                        OutlinedTextField(
+                                            value = compMinorSelected?.id ?: "Escolha complicação…",
+                                            onValueChange = {},
+                                            readOnly = true,
+                                            trailingIcon = {
+                                                ExposedDropdownMenuDefaults.TrailingIcon(compMinorExp)
+                                            },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                                                .clickable { compMinorExp = true }
+                                        )
+                                        ExposedDropdownMenu(
+                                            expanded = compMinorExp,
+                                            onDismissRequest = { compMinorExp = false },
+                                            modifier = Modifier.heightIn(max = 200.dp)
+                                        ) {
+                                            complicacoesMenores.forEach { c ->
+                                                DropdownMenuItem(
+                                                    text = { Text("${c.id} (Menor)") },
+                                                    onClick = {
+                                                        compMinorSelected = c
+                                                        compMinorExp = false
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+                                    Spacer(Modifier.height(12.dp))
+                                }
                             }
                         }
-                        Spacer(Modifier.height(12.dp))
                     }
                 }
             }
         },
         confirmButton = {
-            val context = LocalContext.current
             TextButton(
                 onClick = {
                     when (escolheu) {
@@ -380,46 +555,131 @@ fun ProgressosDialog(
                             }
                         }
                         "Complicacao" -> {
-                            compSelected?.let { comp ->
-                                val nivelAtual = state.complicacoesSelecionadas[comp]!!
-                                val isSomenteMaior = comp.severity.lowercase() == "maior"
-                                val custo = when {
-                                    isSomenteMaior -> 2
-                                    nivelAtual == "Maior" -> 1
-                                    nivelAtual == "Menor" -> 1
-                                    else -> 0
+                            fun ensureProgressAvailable(): Boolean {
+                                if (state.progressosDisponiveis < 1) {
+                                    showSnack("Você não tem progressos suficientes.")
+                                    return false
                                 }
-                                state.progresso += custo
-                                state.spendProgressAtStage(est.nome, custo)
-                                if (isSomenteMaior) {
+                                return true
+                            }
+
+                            when (compAction) {
+                                "ReservarMaior" -> {
+                                    val comp = compReserveSelected
+                                    if (comp == null) {
+                                        showSnack("Escolha qual complicação Maior reservar.")
+                                        return@TextButton
+                                    }
+                                    if (!ensureProgressAvailable()) return@TextButton
+
+                                    val nivelAtual = state.complicacoesSelecionadas[comp]
+                                    if (nivelAtual != "Maior") {
+                                        showSnack("Apenas complicações Maiores podem ser reservadas.")
+                                        return@TextButton
+                                    }
+
+                                    state.progresso += 1
+                                    state.spendProgressAtStage(est.nome, 1)
+                                    state.reservasComplicacaoMaior[comp.id] = true
+                                    state.advancementHistory.add(
+                                        AdvancementAction.RemoveHindrance(
+                                            hindranceId = comp.id,
+                                            changeType = HindranceChangeType.RESERVATION,
+                                            previousLevel = nivelAtual,
+                                            stageName = est.nome,
+                                            progressCost = 1
+                                        )
+                                    )
+                                }
+
+                                "RemoverReservada" -> {
+                                    val comp = compReservedRemovalSelected
+                                    if (comp == null) {
+                                        showSnack("Escolha qual complicação remover.")
+                                        return@TextButton
+                                    }
+                                    if (!state.reservasComplicacaoMaior.containsKey(comp.id)) {
+                                        showSnack("Use primeiro a reserva dessa complicação Maior.")
+                                        return@TextButton
+                                    }
+                                    if (!ensureProgressAvailable()) return@TextButton
+
+                                    val nivelAnterior = state.complicacoesSelecionadas[comp]
+                                    state.progresso += 1
+                                    state.spendProgressAtStage(est.nome, 1)
+                                    state.reservasComplicacaoMaior.remove(comp.id)
                                     state.complicacoesSelecionadas.remove(comp)
                                     state.advancementHistory.add(
                                         AdvancementAction.RemoveHindrance(
                                             hindranceId = comp.id,
+                                            changeType = HindranceChangeType.REMOVE,
+                                            previousLevel = nivelAnterior,
+                                            usedReservation = true,
                                             stageName = est.nome,
-                                            progressCost = custo
+                                            progressCost = 1
                                         )
                                     )
-                                } else if (nivelAtual == "Maior") {
+                                }
+
+                                "Reduzir" -> {
+                                    val comp = compReduceSelected
+                                    if (comp == null) {
+                                        showSnack("Escolha qual complicação reduzir.")
+                                        return@TextButton
+                                    }
+                                    if (!ensureProgressAvailable()) return@TextButton
+
+                                    val nivelAnterior = state.complicacoesSelecionadas[comp]
+                                    if (nivelAnterior != "Maior") {
+                                        showSnack("Essa complicação não está como Maior.")
+                                        return@TextButton
+                                    }
+
+                                    state.progresso += 1
+                                    state.spendProgressAtStage(est.nome, 1)
+                                    state.reservasComplicacaoMaior.remove(comp.id)
                                     state.complicacoesSelecionadas[comp] = "Menor"
                                     state.advancementHistory.add(
                                         AdvancementAction.RemoveHindrance(
                                             hindranceId = comp.id,
+                                            changeType = HindranceChangeType.REDUCE_TO_MINOR,
+                                            previousLevel = nivelAnterior,
                                             stageName = est.nome,
-                                            progressCost = custo
+                                            progressCost = 1
                                         )
                                     )
-                                } else {
+                                }
+
+                                "RemoverMenor" -> {
+                                    val comp = compMinorSelected
+                                    if (comp == null) {
+                                        showSnack("Escolha qual complicação remover.")
+                                        return@TextButton
+                                    }
+                                    if (!ensureProgressAvailable()) return@TextButton
+
+                                    val nivelAnterior = state.complicacoesSelecionadas[comp]
+                                    state.progresso += 1
+                                    state.spendProgressAtStage(est.nome, 1)
+                                    state.reservasComplicacaoMaior.remove(comp.id)
                                     state.complicacoesSelecionadas.remove(comp)
                                     state.advancementHistory.add(
                                         AdvancementAction.RemoveHindrance(
                                             hindranceId = comp.id,
+                                            changeType = HindranceChangeType.REMOVE,
+                                            previousLevel = nivelAnterior,
                                             stageName = est.nome,
-                                            progressCost = custo
+                                            progressCost = 1
                                         )
                                     )
                                 }
+
+                                else -> {
+                                    showSnack("Escolha como gastar o XP na complicação.")
+                                    return@TextButton
+                                }
                             }
+
                             state.xpSlots[slotIndex] = true
                             state.recomputeAvailableProgress()
                             onDismiss()
