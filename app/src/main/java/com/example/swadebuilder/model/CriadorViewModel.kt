@@ -802,7 +802,7 @@ class CriadorViewModel : ViewModel() {
     }
 
     fun reserveLegendaryAttribute(slotIndex: Int, stageName: String) {
-        if (state.progressosDisponiveis >= 1) {
+        if (state.progressosDisponiveis >= 1 && state.legendaryAttrReservations == 0) {
             state.progresso++
             state.spendProgressAtStage(stageName, 1)
             state.xpSlots[slotIndex] = true
