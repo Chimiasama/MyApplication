@@ -137,7 +137,8 @@ fun ProgressosDialog(
     val canBuyAttr = creditsLeft > 0 && state.progressosDisponiveis >= 1 &&
             (remainingBaseAttrs > 0 || canUseReservation)
     val canReserveLegendary = isLendarioStage &&
-            totalAttrPurchases >= lendarioIndex && creditsLeft > 0 && state.progressosDisponiveis >= 1
+            totalAttrPurchases >= lendarioIndex && creditsLeft > 0 &&
+            state.progressosDisponiveis >= 1 && state.legendaryAttrReservations == 0
 
     // ── Requisitos de vantagens (mesma lógica, sem logs) ──────────────────────
     fun strictRequirementsOk(v: Vantagem, estIndex: Int): Boolean {

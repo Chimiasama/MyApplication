@@ -689,9 +689,14 @@ class CriadorViewModel : ViewModel() {
         if (state.skillAdvancementInProgress) {
             val skills = state.skillsForCurrentAdvancement.toList()
             val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
+            val skillValuesSnapshot = skills.associateWith { skillName ->
+                val pericia = listaPericias.firstOrNull { it.nome == skillName }
+                pericia?.let { state.rawTotal(it) }
+            }.filterValues { it != null }.mapValues { it.value!! }
             state.advancementHistory.add(
                 AdvancementAction.SpendOnSkills(
                     skillsIncreased = skills,
+                    recordedSkillValues = skillValuesSnapshot,
                     stageName = stageName
                 )
             )
@@ -797,7 +802,7 @@ class CriadorViewModel : ViewModel() {
     }
 
     fun reserveLegendaryAttribute(slotIndex: Int, stageName: String) {
-        if (state.progressosDisponiveis >= 1) {
+        if (state.progressosDisponiveis >= 1 && state.legendaryAttrReservations == 0) {
             state.progresso++
             state.spendProgressAtStage(stageName, 1)
             state.xpSlots[slotIndex] = true
