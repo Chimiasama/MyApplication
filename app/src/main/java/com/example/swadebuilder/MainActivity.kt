@@ -372,7 +372,7 @@ class MainActivity : ComponentActivity() {
 
             if (showExitDialog) {
                 AlertDialog(
-                    onDismissRequest = { },
+                    onDismissRequest = { showExitDialog = false },
                     title            = { Text("Deseja encerrar o app?") },
                     confirmButton    = {
                         TextButton(onClick = {
@@ -382,7 +382,7 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     dismissButton    = {
-                        TextButton(onClick = { }) {
+                        TextButton(onClick = { showExitDialog = false }) {
                             Text("Não")
                         }
                     }
