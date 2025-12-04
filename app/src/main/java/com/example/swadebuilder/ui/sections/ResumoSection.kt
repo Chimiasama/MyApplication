@@ -1,20 +1,18 @@
 package com.example.swadebuilder.ui.sections
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -81,8 +79,10 @@ fun SummaryContent(state: CriadorState) {
 
     val identitySection = sections.firstOrNull { it.title == "Identidade" }
     val derivedSection = sections.firstOrNull { it.title == "Atributos derivados" }
+    val attributesSection = sections.firstOrNull { it.title == "Atributos" }
+    val skillsSection = sections.firstOrNull { it.title == "Perícias" }
     val otherSections = sections.filterNot {
-        it.title == "Identidade" || it.title == "Atributos derivados"
+        it.title in setOf("Identidade", "Atributos derivados", "Atributos", "Perícias")
     }
 
     val nome = identitySection?.items
@@ -92,7 +92,7 @@ fun SummaryContent(state: CriadorState) {
         .orEmpty()
         .ifBlank { "(sem nome)" }
 
-    val ancestralidade = identitySection?.items
+    val ancestralidadeValue = identitySection?.items
         ?.firstOrNull { it.startsWith("Ancestralidade:") }
         ?.substringAfter(":")
         ?.trim()
@@ -102,8 +102,7 @@ fun SummaryContent(state: CriadorState) {
     Column(Modifier.fillMaxWidth()) {
         IdentityCard(
             nome = nome,
-            ancestralidade = ancestralidade,
-            flags = flagsTemplate
+            ancestralidade = "Ancestralidade: $ancestralidadeValue"
         )
 
         Spacer(Modifier.height(12.dp))
@@ -113,9 +112,39 @@ fun SummaryContent(state: CriadorState) {
             Spacer(Modifier.height(12.dp))
         }
 
-        otherSections.forEachIndexed { idx, section ->
-            SummarySectionCard(section)
-            if (idx != otherSections.lastIndex) {
+        if (attributesSection != null || skillsSection != null) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                attributesSection?.let {
+                    SummarySectionCard(
+                        section = it,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                skillsSection?.let {
+                    SummarySectionCard(
+                        section = it,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+            Spacer(Modifier.height(12.dp))
+        }
+
+        val filteredSections = otherSections.filterNot { section ->
+            when (section.title) {
+                "Vantagens", "Complicações" ->
+                    section.items.none { it.trim() != "– Nenhuma" }
+
+                else -> false
+            }
+        }
+
+        filteredSections.forEachIndexed { idx, section ->
+            SummarySectionCard(section = section)
+            if (idx != filteredSections.lastIndex) {
                 Spacer(Modifier.height(12.dp))
             }
         }
@@ -179,8 +208,7 @@ private fun SummarySection.toStats(): List<Pair<String, String>> =
 @Composable
 private fun IdentityCard(
     nome: String,
-    ancestralidade: String,
-    flags: List<String>
+    ancestralidade: String
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -200,37 +228,21 @@ private fun IdentityCard(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
-            if (flags.isNotEmpty()) {
-                Spacer(Modifier.height(8.dp))
-                Row(
-                    modifier = Modifier.horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    flags.forEach { flag ->
-                        AssistChip(
-                            onClick = {},
-                            label = { Text(flag) },
-                            colors = AssistChipDefaults.assistChipColors(
-                                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
-                            )
-                        )
-                    }
-                }
-            }
         }
     }
 }
 
 @Composable
+@OptIn(ExperimentalLayoutApi::class)
 private fun DerivedStatsRow(stats: List<Pair<String, String>>) {
     if (stats.isEmpty()) return
 
-    Row(
+    FlowRow(
         modifier = Modifier
             .fillMaxWidth()
-            .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(horizontal = 12.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         stats.forEach { (label, value) ->
             CircleStat(label = label, value = value)
@@ -239,9 +251,9 @@ private fun DerivedStatsRow(stats: List<Pair<String, String>>) {
 }
 
 @Composable
-private fun SummarySectionCard(section: SummarySection) {
+private fun SummarySectionCard(section: SummarySection, modifier: Modifier = Modifier) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
