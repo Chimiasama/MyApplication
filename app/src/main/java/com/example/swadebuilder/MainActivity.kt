@@ -87,7 +87,6 @@ import com.example.swadebuilder.model.AtributoList
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
-import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.PersonagemSalvo
 import com.example.swadebuilder.model.RacialModifier
@@ -126,13 +125,6 @@ data class ArcanoInfo(
 )
 
 lateinit var arcanoInfo: Map<String, Triple<Int, Int, String>>
-
-data class PurchasedPower(
-    val nome: String,
-    val custo: Int,
-    val baseCost: Int,
-    val poderId: String
-)
 
 private val json = Json {
     ignoreUnknownKeys = true
@@ -927,11 +919,6 @@ private fun getHelpAppText(state: CriadorState): String {
 }
 fun Int.toDiceString(): String =
     if (this <= 12) "d$this" else "d12+${(this - 12)}"
-
-private val EquipamentoItem.passageiros
-    get() = this.tripulacao
-private val EquipamentoItem.blindagem
-    get() = this.resistencia
 
 data class Pericia(val nome: String, val atributo: String, val basica: Boolean)
 
