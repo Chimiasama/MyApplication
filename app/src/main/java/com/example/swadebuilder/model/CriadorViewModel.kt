@@ -824,12 +824,16 @@ class CriadorViewModel : ViewModel() {
             }
 
             val stageName = state.attributeStageForCurrentAdvancement ?: state.estagioAtual().nome
+            var reservationAvailable = state.attributeUsedReservation
             increases.forEach { attr ->
+                val usedReservation = reservationAvailable
+                if (reservationAvailable) reservationAvailable = false
                 val prev = state.comprasAttrPorEstagio[stageName] ?: 0
                 state.comprasAttrPorEstagio[stageName] = prev + 1
                 state.advancementHistory.add(
                     AdvancementAction.IncreaseAttribute(
                         attributeName = attr,
+                        usedLegendaryReservation = usedReservation,
                         stageName = stageName,
                         progressCost = 1
                     )
@@ -938,6 +942,9 @@ class CriadorViewModel : ViewModel() {
                     }
                     state.paFromProgress = (state.paFromProgress - 1).coerceAtLeast(0)
                     state.recalcularPontosAtributo()
+                    if (lastAction.usedLegendaryReservation) {
+                        state.legendaryAttrReservations += 1
+                    }
                 }
             }
             is AdvancementAction.SpendOnSkills -> {

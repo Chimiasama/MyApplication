@@ -29,6 +29,7 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
 
     data class IncreaseAttribute(
         val attributeName: String,
+        val usedLegendaryReservation: Boolean = false,
         override val stageName: String,
         override val progressCost: Int
     ) : AdvancementAction(progressCost, stageName) {
