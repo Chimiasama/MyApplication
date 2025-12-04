@@ -76,6 +76,21 @@ class CriadorState {
     val gastosPorPoder     = mutableStateMapOf<String, Int>()
     var naturalArmorFromRace by mutableIntStateOf(0)
 
+    val periciasVisiveis: Map<String, Int> by derivedStateOf {
+        val lutar = listaPericias.first { it.nome.equals("Lutar", ignoreCase = true) }
+        val pericias = listaPericias
+            .filter { per ->
+                per.basica || rawTotal(per) > periciaStartRaw(ancestralidade, per)
+            }
+            .toMutableList()
+        if (!pericias.contains(lutar)) {
+            pericias.add(lutar)
+        }
+        pericias.associate { per ->
+            per.nome to rawTotal(per)
+        }
+    }
+
     fun valorMovimentacao(): Int {
         val base = 6
 

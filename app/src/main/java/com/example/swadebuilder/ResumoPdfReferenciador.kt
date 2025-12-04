@@ -12,33 +12,36 @@ import com.example.swadebuilder.util.keyify
 import java.io.File
 import java.io.FileOutputStream
 
-/**
- * Fonte única para Resumo e PDF.
- * - Snapshot do state -> MeuPersonagem
- * - buildSummaryLines() -> usado por UI e PDF
- * - gerarFichaEmPdf() / salvarEExibirFichaPdf()
- */
-
-// ✅ 1) Snapshot único do state
+// 1) Snapshot único do state
 fun CriadorState.toMeuPersonagem(): MeuPersonagem {
+    // Calcula os atributos derivados
+    val derived = DerivedAttributesCalculator(this).calculate()
+
     return MeuPersonagem(
         nome = this.nomePersonagem,
-        atributos = this.valoresAtributos.mapValues { it.value.intValue },
-        pericias = listaPericias.associate { per -> per.nome to this.rawTotal(per) },
         ancestralidade = this.ancestralidade,
         celestialAAMilagresDesabilitado = this.celestialAAMilagresDesabilitado,
-        vantagens = this.vantagensSelecionadas.map { it.id },
+
+        atributos = this.valoresAtributos.mapValues { it.value.intValue },
+        pericias = this.periciasVisiveis,
+
+        aparar = derived.aparar,
+        resistencia = derived.resistencia,
+        tamanho = derived.tamanho,
+        movimento = derived.movimento,
+        armadura = derived.armadura,
+
+        vantagens = this.vantagensSelecionadas.map { it.nome },
+        complicacoes = this.complicacoesSelecionadas.values.filterNotNull().map { it.nome },
         desvantagensRaciais = this.desvantagensRaciais.toList(),
-        complicacoes = this.complicacoesSelecionadas
-            .filterValues { it != null }
-            .keys
-            .map { it.id },
+
         equipamentos = this.equipamentosComprados.toList(),
-        poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
         dinheiro = this.dinheiro,
+
+        poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
         pontosRestantes = this.pontosVantagem,
 
-        // supers
+        // Supers
         modoSupers = this.modoSupers,
         superPontosTotais = this.superPontosTotais,
         superPontosDisponiveis = this.superPontosDisponiveis,
@@ -58,23 +61,80 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
     )
 }
 
-// ✅ 2) Abrir/compartilhar PDF
-fun salvarEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
-    val pdfFile = File(context.getExternalFilesDir(null), "ficha_preenchida.pdf")
+// 2) Calculadora de Atributos Derivados
+class DerivedAttributesCalculator(private val state: CriadorState) {
+    private val vantagens by lazy { state.vantagensSelecionadas.map { it.nome.keyify() } }
+    private val complicacoes by lazy { state.complicacoesSelecionadas.values.filterNotNull().map { it.nome.keyify() } }
 
-    gerarFichaEmPdf(pdfFile, dadosDoPersonagem)
-
-    val uri: Uri = FileProvider.getUriForFile(
-        context,
-        "${context.packageName}.fileprovider",
-        pdfFile
+    data class DerivedValues(
+        val aparar: Int,
+        val resistencia: Int,
+        val tamanho: Int,
+        val movimento: Int,
+        val armadura: Int
     )
 
+    fun calculate(): DerivedValues {
+        val tamanho = calcTamanho()
+        val resistencia = calcResistencia(tamanho)
+        val movimento = calcMovimento()
+        val aparar = calcAparar()
+        val armadura = calcArmadura()
+        return DerivedValues(aparar, resistencia, tamanho, movimento, armadura)
+    }
+
+    private fun calcTamanho(): Int {
+        val racialSize = state.ancestralidadeSelecionada?.desvantagens
+            ?.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
+            ?.substringAfter("TAMANHO")?.trim()?.toIntOrNull() ?: 0
+        val obesoBonus = if (complicacoes.any { it == "obeso" }) 1 else 0
+        val pequenoPenalty = if (complicacoes.any { it == "pequeno" }) -1 else 0
+        return racialSize + obesoBonus + pequenoPenalty
+    }
+
+    private fun calcResistencia(tamanho: Int): Int {
+        val vigor = state.valoresAtributos["VIGOR"]?.intValue ?: 4
+        val base = 2 + (vigor / 2)
+        val resistenciaBonus = if (vantagens.any { it == "resistencia" }) 1 else 0
+        val fragilPenalty = if (complicacoes.any { it == "fragil" }) -1 else 0
+        val brigaoBonus = vantagens.count { it in listOf("brigao", "pugilista") }
+        return (base + resistenciaBonus + fragilPenalty + brigaoBonus + tamanho + state.bonusResFromPower).coerceAtLeast(0)
+    }
+
+    private fun calcMovimento(): Int {
+        val base = 6
+        val racialPenalty = state.ancestralidadeSelecionada?.desvantagens
+            ?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
+            .let { if (it == true) 1 else 0 }
+        val lentoPenalty = if (complicacoes.any { it == "lento" }) 1 else 0
+        val idosoPenalty = if (complicacoes.any { it == "idoso" }) 1 else 0
+        val obesoPenalty = if (complicacoes.any { it == "obeso" }) 1 else 0
+        val ligeiroBonus = if (vantagens.any { it == "ligeiro" }) 2 else 0
+        return (base - racialPenalty - lentoPenalty - idosoPenalty - obesoPenalty + ligeiroBonus + state.bonusMovimentacaoFromPower).coerceAtLeast(0)
+    }
+
+    private fun calcAparar(): Int {
+        val lutar = state.periciasVisiveis["Lutar"] ?: 0
+        val base = 2 + (lutar / 2)
+        val bloquearBonus = if (vantagens.any { it == "bloquear" }) 1 else 0
+        val bloquearAprimoradoBonus = if (vantagens.any { it == "bloquear-aprimorado" }) 1 else 0
+        return base + bloquearBonus + bloquearAprimoradoBonus + state.bonusPararFromPower
+    }
+
+    private fun calcArmadura(): Int {
+        return state.armorFromPower.coerceAtLeast(0)
+    }
+}
+
+// 3) Abrir/compartilhar PDF
+fun salvarEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
+    val pdfFile = File(context.getExternalFilesDir(null), "ficha_preenchida.pdf")
+    gerarFichaEmPdf(pdfFile, dadosDoPersonagem)
+    val uri: Uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", pdfFile)
     val intent = Intent(Intent.ACTION_VIEW).apply {
         setDataAndType(uri, "application/pdf")
         flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
     }
-
     if (intent.resolveActivity(context.packageManager) != null) {
         context.startActivity(intent)
     } else {
@@ -82,307 +142,146 @@ fun salvarEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
     }
 }
 
-// ✅ 3) Texto-base do resumo (UI e PDF)
-fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
-    val lines = mutableListOf<String>()
-
-    val ancestralidadeNome: String = listaAncestralidadesJson
-        .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
-        ?.nome ?: personagem.ancestralidade
-
-    val vantagensNomeKey: List<String> = listaVantagens
-        .filter { it.id in personagem.vantagens }
-        .map { it.nome.keyify() }
-
-    fun temComp(key: String): Boolean =
-        personagem.complicacoes.any { it.keyify() == key }
-
-    fun racialSize(): Int =
-        listaAncestralidadesJson
-            .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
-            ?.desvantagens
-            ?.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
-            ?.substringAfter("TAMANHO")
-            ?.trim()
-            ?.toIntOrNull()
-            ?: 0
-
-    fun tamanhoTotal(): Int {
-        val base = racialSize()
-        val obesoBonus = if (temComp("OBESO")) 1 else 0
-        val pequenoPenalty = if (temComp("PEQUENO")) -1 else 0
-        return base + obesoBonus + pequenoPenalty
-    }
-
-    fun resistenciaBase(): Int {
-        val vigorRaw = personagem.atributos["VIGOR"] ?: 4
-        val base = 2 + (vigorRaw / 2)
-
-        val bonusPos =
-            if (vantagensNomeKey.any { it == "RESISTENCIA" }) 1 else 0
-        val bonusNeg =
-            if (personagem.complicacoes.any { it.keyify() == "FRAGIL" }) -1 else 0
-
-        val brigaoBonus = vantagensNomeKey.count { it in listOf("BRIGAO", "PUGILISTA") }
-
-        return (base + bonusPos + bonusNeg + brigaoBonus + tamanhoTotal())
-            .coerceAtLeast(0)
-    }
-
-    fun resistenciaFinal(): Int =
-        resistenciaBase() + personagem.bonusResFromPower
-
-    fun calcMovimento(): Int {
-        val base = 6
-
-        val racialPenalty =
-            listaAncestralidadesJson
-                .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
-                ?.desvantagens
-                ?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
-                .takeIf { it == true }
-                ?.let { 1 }
-                ?: 0
-
-        val lentoPenalty = if (temComp("LENTO")) 1 else 0
-        val idosoPenalty = if (temComp("IDOSO")) 1 else 0
-        val obesoPenalty = if (temComp("OBESO")) 1 else 0
-        val ligeiroBonus =
-            if (vantagensNomeKey.any { it == "LIGEIRO" }) 2 else 0
-
-        return (
-                base
-                        - racialPenalty
-                        - lentoPenalty
-                        - idosoPenalty
-                        - obesoPenalty
-                        + ligeiroBonus
-                        + personagem.bonusMovimentacaoFromPower
-                ).coerceAtLeast(0)
-    }
-
-    fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
-        var raw = rawStart
-        var remaining = steps.coerceAtLeast(0)
-
-        if (raw <= 0 && remaining > 0) {
-            raw = 4
-            remaining -= 1
-        }
-
-        repeat(remaining) {
-            raw += if (raw < 12) 2 else 1
-        }
-
-        return raw
-    }
-
-    fun calcAparar(): Int {
-        val lutarRawBase = personagem.pericias["Lutar"] ?: 0
-        val lutarStepsFromSupers = personagem.superInvestments
-            .mapNotNull { it.effect as? com.example.swadebuilder.model.PowerEffect.SuperPericia }
-            .filter { it.periciaKey.equals("Lutar", ignoreCase = true) }
-            .sumOf { it.steps }
-        val lutarComSupers = applySuperStepsFrom(lutarRawBase, lutarStepsFromSupers)
-
-        val base = 2 + (lutarComSupers / 2)
-
-        val bloquearBonus =
-            if (vantagensNomeKey.any { it == "BLOQUEAR" }) 1 else 0
-        val bloquearAprimoradoBonus =
-            if (vantagensNomeKey.any { it == "BLOQUEAR APRIMORADO" }) 1 else 0
-
-        return base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusPararFromPower
-    }
-
-    fun calcArmaduraEfetiva(): Int =
-        personagem.armorFromPower.coerceAtLeast(0)
-
-    val aparar = calcAparar()
-    val resFinal = resistenciaFinal()
-    val tamanho = tamanhoTotal()
-    val mov = calcMovimento()
-    val armadura = calcArmaduraEfetiva()
-    val resistenciaTexto =
-        if (armadura > 0) "${resFinal}(${armadura})" else resFinal.toString()
-
-    lines += "Identidade"
-    lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"
-    lines += "Ancestralidade: $ancestralidadeNome"
-    lines += ""
-
-    lines += "Atributos derivados"
-    lines += "Aparar: $aparar"
-    lines += "Resistência: $resistenciaTexto"
-    lines += "Tamanho: $tamanho"
-    lines += "Movimento: $mov"
-    if (armadura > 0) lines += "Armadura: $armadura"
-    lines += ""
-
-    lines += "Atributos"
-    lines += listaAtributos.joinToString(", ") { attrKey ->
-        val label = mapaAtributosDisplay[attrKey] ?: attrKey
-        val valor = personagem.atributos[attrKey] ?: 4
-        "$label d$valor"
-    }
-    lines += ""
-
-    val periciasParaMostrar = listaPericias.filter { per ->
-        per.basica || (personagem.pericias[per.nome] ?: 0) >
-                periciaStartRaw(personagem.ancestralidade, per)
-    }
-
-    lines += "Perícias"
-    if (periciasParaMostrar.isEmpty()) {
-        lines += "– Nenhuma"
-    } else {
-        periciasParaMostrar.forEach { per ->
-            val raw = personagem.pericias[per.nome] ?: 0
-            lines += "• ${per.nome} d$raw"
-        }
-    }
-    lines += ""
-
-    lines += "Recursos & Equipamentos"
-    lines += "Dinheiro restante: ${personagem.dinheiro}"
-    if (personagem.equipamentos.isEmpty()) {
-        lines += "Equipamentos: – Nenhum"
-    } else {
-        lines += "Equipamentos:"
-        personagem.equipamentos.forEach { eq ->
-            lines += "• ${eq.nome}"
-        }
-    }
-    lines += ""
-
-    lines += "Vantagens"
-    if (personagem.vantagens.isEmpty()) {
-        lines += "– Nenhuma"
-    } else {
-        val nomesVantagens = listaVantagens
-            .filter { it.id in personagem.vantagens }
-            .map {
-                if (it.id == "antecedente_arcano_milagres" && personagem.celestialAAMilagresDesabilitado) {
-                    "${it.nome} (DESABILITADO)"
-                } else {
-                    it.nome
-                }
-            }
-        lines += nomesVantagens.joinToString(", ")
-    }
-    lines += ""
-
-    lines += "Complicações"
-    val complicacoesText = personagem.complicacoes.joinToString(", ").ifBlank { "– Nenhuma" }
-    lines += complicacoesText
-    if (personagem.desvantagensRaciais.isNotEmpty()) {
-        lines += "Anotações Raciais: ${personagem.desvantagensRaciais.joinToString(", ")}"
-    }
-    lines += ""
-
-    if (personagem.poderes.isNotEmpty()) {
-        lines += "Poderes arcanos"
-        personagem.poderes.forEach { (arcanoKey, lista) ->
-            val label = arcanoKey
-                .lowercase()
-                .replace('_', ' ')
-                .replaceFirstChar { it.titlecase() }
-
-            lines += if (lista.isEmpty()) {
-                "• $label: – nenhum poder escolhido"
-            } else {
-                "• $label: ${lista.joinToString(", ")}"
-            }
-        }
-        lines += ""
-    }
-
-    if (personagem.modoSupers &&
-        (personagem.superPontosTotais > 0 || personagem.gastosPorPoder.isNotEmpty())
-    ) {
-        lines += "Superpoderes"
-
-        if (personagem.gastosPorPoder.isEmpty()) {
-            lines += "– Nenhum superpoder registrado"
-        } else {
-            personagem.gastosPorPoder.forEach { (poderId, custo) ->
-                lines += "• $poderId: $custo SP"
-            }
-        }
-
-        lines += "Superpontos: ${personagem.superPontosTotais} (disponíveis: ${personagem.superPontosDisponiveis})"
-        lines += "Limite por poder: ${personagem.limitePorPoderPadrao}"
-        lines += ""
-    }
-
-    if (personagem.anotacoes.isNotBlank()) {
-        lines += "Anotações"
-        personagem.anotacoes.lines().forEach { linha -> lines += linha }
-    }
-
-    return lines
-}
-
-// ✅ 4) Montagem do PDF (usa buildSummaryLines)
+// 4) Montagem do PDF
 fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
     val doc = PdfDocument()
     val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
+    val page = doc.startPage(pageInfo)
+    val canvas = page.canvas
 
-    val marginLeft = 40f
-    val marginRight = 40f
-    val marginTop = 50f
-    val marginBottom = 40f
+    val paint = Paint()
+    paint.textSize = 12f
+    var y = 40f
 
-    val paint = Paint().apply { textSize = 12f }
-    val fm = paint.fontMetrics
-    val lineHeight = fm.descent - fm.ascent + fm.leading
-
-    var page = doc.startPage(pageInfo)
-    var canvas = page.canvas
-    var y = marginTop
-
-    fun newPage() {
-        doc.finishPage(page)
-        page = doc.startPage(pageInfo)
-        canvas = page.canvas
-        y = marginTop
+    fun drawText(text: String, x: Float, isBold: Boolean = false) {
+        paint.isFakeBoldText = isBold
+        canvas.drawText(text, x, y, paint)
     }
 
-    fun drawWrapped(text: String) {
-        var start = 0
-        val maxWidth = pageInfo.pageWidth - marginLeft - marginRight
-        while (start < text.length) {
-            val count = paint.breakText(text, start, text.length, true, maxWidth, null)
-            val line = text.substring(start, start + count)
-            if (y + lineHeight > pageInfo.pageHeight - marginBottom) {
-                newPage()
+    fun nextLine() {
+        y += 16f
+    }
+
+    // Título
+    paint.textSize = 18f
+    drawText("Ficha de ${personagem.nome}", 40f, true)
+    nextLine()
+    nextLine()
+
+    // Seções
+    paint.textSize = 12f
+    val sectionPaint = Paint(paint).apply { isFakeBoldText = true }
+
+    // Identidade e Derivados
+    canvas.drawText("Identidade", 40f, y, sectionPaint)
+    nextLine()
+    drawText("Raça: ${personagem.ancestralidade}", 50f)
+    nextLine()
+    val resistenciaTexto = if (personagem.armadura > 0) "${personagem.resistencia}(${personagem.armadura})" else "${personagem.resistencia}"
+    drawText("Aparar: ${personagem.aparar} | Resistência: $resistenciaTexto | Movimento: ${personagem.movimento} | Tamanho: ${personagem.tamanho}", 50f)
+    nextLine()
+    nextLine()
+
+    // Atributos e Perícias
+    val col1X = 40f
+    val col2X = 300f
+    val startY = y
+
+    canvas.drawText("Atributos", col1X, y, sectionPaint)
+    nextLine()
+    personagem.atributos.forEach { (nome, dado) ->
+        drawText("• $nome: d$dado", col1X + 10)
+        nextLine()
+    }
+
+    y = startY
+    canvas.drawText("Perícias", col2X, y, sectionPaint)
+    nextLine()
+    if (personagem.pericias.isEmpty()) {
+        drawText("– Nenhuma", col2X + 10)
+        nextLine()
+    } else {
+        personagem.pericias.forEach { (nome, dado) ->
+            drawText("• $nome: d$dado", col2X + 10)
+            nextLine()
+            if (y > 780f) { // Page break
+                doc.finishPage(page)
+                val newPage = doc.startPage(pageInfo)
+                canvas = newPage.canvas
+                y = 40f
             }
-            canvas.drawText(line, marginLeft, y, paint)
-            y += lineHeight
-            start += count
         }
     }
 
-    val titlePaint = Paint(paint).apply {
-        textSize = 16f
-        isFakeBoldText = true
-    }
-    val title = "Ficha de ${personagem.nome}"
+    y = maxOf(y, startY + (personagem.atributos.size + 1) * 16f)
+    nextLine()
 
-    val titleFm = titlePaint.fontMetrics
-    val titleHeight = titleFm.descent - titleFm.ascent + titleFm.leading
-    if (y + titleHeight > pageInfo.pageHeight - marginBottom) {
-        newPage()
+    // Vantagens e Complicações
+    canvas.drawText("Vantagens", col1X, y, sectionPaint)
+    nextLine()
+    if (personagem.vantagens.isEmpty()) {
+        drawText("– Nenhuma", col1X + 10)
+    } else {
+        drawText(personagem.vantagens.joinToString(", "), col1X + 10)
     }
-    canvas.drawText(title, marginLeft, y, titlePaint)
-    y += titleHeight + 12f
+    nextLine()
+    nextLine()
 
-    val lines = buildSummaryLines(personagem)
-    for (linha in lines) drawWrapped(linha)
+    canvas.drawText("Complicações", col1X, y, sectionPaint)
+    nextLine()
+    val allComps = personagem.complicacoes + personagem.desvantagensRaciais
+    if (allComps.isEmpty()) {
+        drawText("– Nenhuma", col1X + 10)
+    } else {
+        drawText(allComps.joinToString(", "), col1X + 10)
+    }
+    nextLine()
+    nextLine()
+
+    // Poderes
+    if (personagem.poderes.isNotEmpty()) {
+        canvas.drawText("Poderes Arcanos", 40f, y, sectionPaint)
+        nextLine()
+        personagem.poderes.forEach { (arcano, lista) ->
+            val poderes = if (lista.isEmpty()) "– nenhum" else lista.joinToString(", ")
+            drawText("• $arcano: $poderes", 50f)
+            nextLine()
+        }
+        nextLine()
+    }
+
+    if (personagem.modoSupers) {
+        canvas.drawText("Superpoderes", 40f, y, sectionPaint)
+        nextLine()
+        if (personagem.gastosPorPoder.isEmpty()) {
+            drawText("– Nenhum", 50f)
+        } else {
+            personagem.gastosPorPoder.forEach { (poder, custo) ->
+                drawText("• $poder: $custo SP", 50f)
+                nextLine()
+            }
+        }
+        nextLine()
+    }
+
+    // Anotações
+    if (personagem.anotacoes.isNotBlank()) {
+        canvas.drawText("Anotações", 40f, y, sectionPaint)
+        nextLine()
+        personagem.anotacoes.lines().forEach {
+            drawText(it, 50f)
+            nextLine()
+        }
+    }
 
     doc.finishPage(page)
-    FileOutputStream(destino).use { out -> doc.writeTo(out) }
-    doc.close()
+    try {
+        FileOutputStream(destino).use { out ->
+            doc.writeTo(out)
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    } finally {
+        doc.close()
+    }
 }
-
-
