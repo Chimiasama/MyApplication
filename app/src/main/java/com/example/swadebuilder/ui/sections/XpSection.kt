@@ -169,7 +169,8 @@ private fun describeAction(action: AdvancementAction, state: CriadorState): Stri
         val skills = action.skillsIncreased.distinct().mapNotNull { skillName ->
             val per = listaPericias.firstOrNull { it.nome == skillName }
             per?.let {
-                val die = state.rawTotal(it).toDiceString()
+                val dieValue = action.recordedSkillValues?.get(skillName) ?: state.rawTotal(it)
+                val die = dieValue.toDiceString()
                 "$die ${it.nome}"
             } ?: skillName
         }
