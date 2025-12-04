@@ -7,6 +7,7 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.listaComplicacoes
+import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.model.PersonagemSalvo
@@ -22,6 +23,8 @@ sealed class AdvancementOption(val text: String, val data: Any? = null) {
     object IncreaseAttribute : AdvancementOption("Aumentar Atributo")
     object IncreaseSkills : AdvancementOption("Aumentar Perícias")
     object NewAdvantage : AdvancementOption("Nova Vantagem")
+    object ReserveLegendaryAttribute : AdvancementOption("Reservar Aumento de Atributo (Lendário)")
+    object SpendLegendaryAttribute : AdvancementOption("Gastar Aumento de Atributo (Lendário)")
     data class RemoveMinorHindrance(val hindrance: Complicacao) :
         AdvancementOption("Remover ${hindrance.name} (Menor)", hindrance)
 
@@ -63,7 +66,17 @@ class CriadorViewModel : ViewModel() {
 
     fun getAdvancementOptions(slotIndex: Int): List<AdvancementOption> {
         val options = mutableListOf<AdvancementOption>()
-        options.add(AdvancementOption.IncreaseAttribute)
+        val currentStage = listaDeEstagios.firstOrNull { slotIndex in it.minProgress..it.maxProgress }
+
+        if (currentStage?.nome == "Lendário") {
+            options.add(AdvancementOption.ReserveLegendaryAttribute)
+            if (state.legendaryAttrReservations > 0) {
+                options.add(AdvancementOption.SpendLegendaryAttribute)
+            }
+        } else {
+            options.add(AdvancementOption.IncreaseAttribute)
+        }
+
         options.add(AdvancementOption.IncreaseSkills)
         options.add(AdvancementOption.NewAdvantage)
 

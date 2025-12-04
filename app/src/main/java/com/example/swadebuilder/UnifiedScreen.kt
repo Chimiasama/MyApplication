@@ -37,7 +37,6 @@ import com.example.swadebuilder.model.AdvancementOption
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.ui.components.SectionCard
-import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
 import com.example.swadebuilder.ui.sections.ComplicacoesSection
@@ -309,6 +308,8 @@ fun UnifiedScreen(
                             is AdvancementOption.IncreaseAttribute -> viewModel.startAttributeAdvancement(currentSlotIndex, stageName, false)
                             is AdvancementOption.IncreaseSkills -> viewModel.startSkillAdvancement(currentSlotIndex, stageName)
                             is AdvancementOption.NewAdvantage -> viewModel.startAdvantageAdvancement(currentSlotIndex, stageName)
+                            is AdvancementOption.ReserveLegendaryAttribute -> viewModel.reserveLegendaryAttribute(currentSlotIndex, stageName)
+                            is AdvancementOption.SpendLegendaryAttribute -> viewModel.startAttributeAdvancement(currentSlotIndex, stageName, true)
                             is AdvancementOption.RemoveMinorHindrance,
                             is AdvancementOption.ReduceMajorHindrance,
                             is AdvancementOption.ReserveMajorHindrance,
