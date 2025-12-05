@@ -161,6 +161,7 @@ class CriadorViewModel : ViewModel() {
         state.dinheiro = 500
         state.progresso = 0
         state.progressosDisponiveis = 0
+        state.stageXpSpent.keys.forEach { state.stageXpSpent[it] = 0 }
         state.xpSlots.fill(false)
         state.frozenAdvantageCount = 0
         state.advancementHistory.clear()
