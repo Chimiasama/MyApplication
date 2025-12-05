@@ -29,7 +29,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -71,6 +70,7 @@ import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Locale
 import kotlinx.serialization.json.Json
 
 data class VantFilter(
@@ -246,7 +246,6 @@ fun VantagensContent(
     var selectedReqs by remember { mutableStateOf<List<String>>(emptyList()) }
     var pendingVantagem by remember { mutableStateOf<Vantagem?>(null) }
     var showChoiceDialog by rememberSaveable { mutableStateOf(false) }
-    var eruditoChoice by rememberSaveable { mutableStateOf("") }
     var pendingNovosPoderes by rememberSaveable { mutableStateOf<Vantagem?>(null) }
     var showNovosPoderesDialog by rememberSaveable { mutableStateOf(false) }
     var dialogMostrandoAntecedente by remember { mutableStateOf<Vantagem?>(null) }
@@ -744,48 +743,48 @@ fun VantagensContent(
             state.identifyMaxedTraits()
             val vant = pendingVantagem!!
             if (vant.id == "erudito") {
-                AlertDialog(
-                    onDismissRequest = {
-                        showChoiceDialog = false
-                        pendingVantagem = null
-                        eruditoChoice = ""
-                    },
-                    title = { Text("Escolha a perícia de conhecimento") },
-                    text = {
-                        OutlinedTextField(
-                            value = eruditoChoice,
-                            onValueChange = { eruditoChoice = it },
-                            label = { Text("Perícia (ex.: Conhecimento Acadêmico)") },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    },
-                    confirmButton = {
-                        TextButton(
-                            enabled = eruditoChoice.isNotBlank(),
-                            onClick = {
-                                val escolha = eruditoChoice.trim().ifBlank { null }
-                                state.vantagensSelecionadas += vant.copy(choice = escolha)
-                                state.pontosVantagem--
-                                state.rebuildAllPericiaStacks()
-                                showChoiceDialog = false
-                                pendingVantagem = null
-                                eruditoChoice = ""
-                            }
-                        ) {
-                            Text("Confirmar")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = {
-                            showChoiceDialog = false
-                            pendingVantagem = null
-                            eruditoChoice = ""
-                        }) {
-                            Text("Cancelar")
+                val usedChoices = state.vantagensSelecionadas
+                    .filter { it.id == "erudito" && !it.choice.isNullOrBlank() }
+                    .mapNotNull { it.choice?.keyify() }
+                    .toSet()
+
+                val knowledgeOptions = listaPericias
+                    .filter { per -> per.nome.contains("CONHECIMENTO", ignoreCase = true) }
+                    .map { per ->
+                        val base = per.nome.substringBefore("(").trim()
+                        base.lowercase(Locale.getDefault()).replaceFirstChar {
+                            it.titlecase(Locale.getDefault())
                         }
                     }
-                )
+                    .distinct()
+                    .filterNot { opt -> opt.keyify() in usedChoices }
+                    .sorted()
+
+                if (knowledgeOptions.isEmpty()) {
+                    LaunchedEffect(vant) {
+                        tempErrorMsg = "Nenhuma perícia de Conhecimento disponível"
+                        showTempError = true
+                        delay(2_000)
+                        showTempError = false
+                        showChoiceDialog = false
+                        pendingVantagem = null
+                    }
+                } else {
+                    ChoiceDialog(
+                        options = knowledgeOptions,
+                        onConfirm = { choice ->
+                            state.vantagensSelecionadas += vant.copy(choice = choice)
+                            state.pontosVantagem--
+                            state.rebuildAllPericiaStacks()
+                            showChoiceDialog = false
+                            pendingVantagem = null
+                        },
+                        onDismiss = {
+                            showChoiceDialog = false
+                            pendingVantagem = null
+                        }
+                    )
+                }
             } else {
                 val validOptions = when {
                     vant.id == "arma_predileta" -> {
