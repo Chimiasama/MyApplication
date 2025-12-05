@@ -32,9 +32,14 @@ data class PersonagemSalvo(
 
     val dinheiro: Int,
     val pontosRestantes: Int,
+    val naturalArmorFromRace: Int = 0,
+    val armorBase: Int = 0,
+    val vantagemChoices: Map<String, List<String>> = emptyMap(),
+    val vantagensRaciais: List<String> = emptyList(),
     val maisPontosPericias: Boolean,
     val cartaSelvagem: Boolean,
     val heroisSemArmadura: Boolean = false,
+    val soldadoCargaAtivo: Boolean = true,
     val semPontosDePoder: Boolean = false,
 
     // Especializações existentes

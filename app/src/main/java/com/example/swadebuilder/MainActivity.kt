@@ -534,6 +534,12 @@ class MainActivity : ComponentActivity() {
                                                             .filterValues { it != null }
                                                             .keys
                                                             .map { it.id }
+                                                        val vantagemChoices = state.vantagensSelecionadas
+                                                            .groupBy { it.id }
+                                                            .mapValues { (_, list) ->
+                                                                list.mapNotNull { it.choice }
+                                                                    .filter { it.isNotBlank() }
+                                                            }
 
                                                         val salvo = PersonagemSalvo(
                                                             id                 = personagemId,
@@ -542,6 +548,8 @@ class MainActivity : ComponentActivity() {
                                                             pericias           = periciasMap,
                                                             ancestralidade     = state.ancestralidade,
                                                             vantagens          = state.vantagensSelecionadas.map { it.id },
+                                                            vantagemChoices    = vantagemChoices,
+                                                            vantagensRaciais   = state.vantagensRaciais.toList(),
                                                             complicacoes       = complicacoesList,
                                                             cpPaCount          = state.cpPaStack.size,
                                                             cpPvCount          = state.cpPvStack.size,
@@ -551,9 +559,12 @@ class MainActivity : ComponentActivity() {
                                                             poderes            = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
                                                             dinheiro           = state.dinheiro,
                                                             pontosRestantes    = state.pontosVantagem,
+                                                            naturalArmorFromRace = state.naturalArmorFromRace,
+                                                            armorBase            = state.armadura,
                                                             maisPontosPericias = state.maisPontosPericias,
                                                             cartaSelvagem      = state.cartaSelvagem,
                                                             heroisSemArmadura  = state.heroisSemArmadura,
+                                                            soldadoCargaAtivo  = state.soldadoCargaAtivo,
                                                             semPontosDePoder   = state.usarSemPontosDePoder,
                                                             usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
                                                             especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),

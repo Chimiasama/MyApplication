@@ -566,11 +566,15 @@ private fun EquipamentoSection(
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>
 ) {
+    val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
+    val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
+
     EquipamentoSection(
         dinheiro = state.dinheiro,
         pcTotal = state.pontosComplicacao,
         pcLivres = (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0),
         recursosPcUsados = state.cpRecursosStack.size,
+        emProgresso = state.emProgresso,
         expanded = expanded,
         onToggle = onToggle,
         onUsarPontosBonusEmRecursos = {
@@ -607,6 +611,16 @@ private fun EquipamentoSection(
             state.dinheiro += custo
         },
         categorias = equipamentoCategorias,
-        superequipCategorias = superequipCategorias
+        superequipCategorias = superequipCategorias,
+        forcaRaw = state.valoresAtributos["FORCA"]?.intValue ?: 4,
+        hasMusculoso = hasMusculoso,
+        hasSoldado = hasSoldado,
+        soldadoCargaAtivo = state.soldadoCargaAtivo,
+        onEditarDinheiro = { novoValor -> state.dinheiro = novoValor },
+        onToggleSoldadoCarga = {
+            if (hasSoldado) {
+                state.soldadoCargaAtivo = !state.soldadoCargaAtivo
+            }
+        }
     )
 }
