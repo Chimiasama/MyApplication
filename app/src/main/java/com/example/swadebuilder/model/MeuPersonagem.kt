@@ -25,6 +25,11 @@ data class MeuPersonagem(
     val dinheiro: Int,
     val pontosRestantes: Int,
 
+    val naturalArmorFromRace: Int = 0,
+    val armorBase: Int = 0,
+    val advantageChoices: Map<String, List<String>> = emptyMap(),
+    val vantagensRaciais: List<String> = emptyList(),
+
     // ===== NOVOS CAMPOS (SUPERS) =====
     val modoSupers: Boolean = false,
     val superPontosTotais: Int = 0,
@@ -48,5 +53,7 @@ data class MeuPersonagem(
     val limiteDePoderDaCampanha: Int = Int.MAX_VALUE,
 
     // ===== ANOTAÇÕES LIVRES PARA RESUMO / FICHA =====
-    val anotacoes: String = ""
+    val anotacoes: String = "",
+
+    val soldadoCargaAtivo: Boolean = true
 )

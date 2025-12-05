@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
@@ -74,6 +75,8 @@ fun InformacoesSection(
     }
 
     var showProgressDialog by rememberSaveable { mutableStateOf(false) }
+    var showMoneyDialog by rememberSaveable { mutableStateOf(false) }
+    var dinheiroInput by rememberSaveable { mutableStateOf(state.dinheiro.toString()) }
     val focusManager = LocalFocusManager.current
 
     SectionCard(
@@ -93,6 +96,16 @@ fun InformacoesSection(
             )
 
             Spacer(Modifier.height(8.dp))
+
+            if (state.emProgresso) {
+                TextButton(onClick = {
+                    dinheiroInput = state.dinheiro.toString()
+                    showMoneyDialog = true
+                }) {
+                    Text("Editar dinheiro")
+                }
+                Spacer(Modifier.height(4.dp))
+            }
 
             OutlinedTextField(
                 value = state.nomePersonagem,
@@ -183,11 +196,11 @@ fun InformacoesSection(
 
             val spentOnCreation = state.progresso - state.progressosDisponiveis
             var tempProgresso by rememberSaveable { mutableIntStateOf(state.progresso) }
-            if (showProgressDialog) {
-                AlertDialog(
-                    onDismissRequest = { showProgressDialog = false },
-                    title = { Text("Defina o Progresso (0–50)") },
-                    text = {
+        if (showProgressDialog) {
+            AlertDialog(
+                onDismissRequest = { showProgressDialog = false },
+                title = { Text("Defina o Progresso (0–50)") },
+                text = {
                         Column {
                             Slider(
                                 value = tempProgresso.toFloat(),
@@ -219,9 +232,46 @@ fun InformacoesSection(
                         TextButton(onClick = { showProgressDialog = false }) {
                             Text("Cancelar")
                         }
+                }
+            )
+        }
+
+        if (showMoneyDialog) {
+            AlertDialog(
+                onDismissRequest = { showMoneyDialog = false },
+                title = { Text("Editar dinheiro") },
+                text = {
+                    OutlinedTextField(
+                        value = dinheiroInput,
+                        onValueChange = { novo ->
+                            dinheiroInput = novo.filter { it.isDigit() || it == '-' }
+                        },
+                        label = { Text("Valor em dinheiro") },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        val novoValor = dinheiroInput.toIntOrNull()
+                        if (novoValor != null) {
+                            state.dinheiro = novoValor
+                        }
+                        showMoneyDialog = false
+                    }) {
+                        Text("Salvar")
                     }
-                )
-            }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showMoneyDialog = false }) { Text("Cancelar") }
+                }
+            )
+        }
 
             val totalWeight = state.equipamentosComprados
                 .mapNotNull { item ->
@@ -233,16 +283,20 @@ fun InformacoesSection(
                 .sum()
 
             val hasMusculoso = state.vantagensSelecionadas.any {
-                it.nome.keyify() == "musculoso"
+                it.nome.keyify() == "MUSCULOSO"
             }
             val hasSoldado = state.vantagensSelecionadas.any {
-                it.nome.keyify() == "soldado"
+                it.nome.keyify() == "SOLDADO"
             }
-            val bonusCapacity = (if (hasMusculoso) 10f else 0f) +
-                    (if (hasSoldado) 10f else 0f)
+            val bonusCapacity = if (hasMusculoso) 10f else 0f
 
             val strengthRaw = state.valoresAtributos["FORCA"]!!.intValue
-            val baseLimit = ((strengthRaw - 2) / 2) * 10f
+            val effectiveStrength = if (hasSoldado && state.soldadoCargaAtivo) {
+                if (strengthRaw < 12) strengthRaw + 2 else strengthRaw + 1
+            } else {
+                strengthRaw
+            }
+            val baseLimit = ((effectiveStrength - 2) / 2) * 10f
             val limit = baseLimit + bonusCapacity
 
             Text(
@@ -253,6 +307,17 @@ fun InformacoesSection(
                     .padding(vertical = 4.dp),
                 textAlign = TextAlign.Center
             )
+
+            if (hasSoldado) {
+                AssistChip(
+                    onClick = { state.soldadoCargaAtivo = !state.soldadoCargaAtivo },
+                    label = {
+                        Text(
+                            if (state.soldadoCargaAtivo) "Bônus Soldado ativo" else "Bônus Soldado inativo"
+                        )
+                    }
+                )
+            }
 
             val ratio = if (limit > 0f) totalWeight / limit else Float.POSITIVE_INFINITY
             val warning = when {

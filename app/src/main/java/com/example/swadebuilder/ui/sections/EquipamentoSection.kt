@@ -19,6 +19,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -30,7 +31,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.booleanResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CollapsibleSection
@@ -39,6 +43,8 @@ import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import kotlinx.serialization.json.JsonPrimitive
 
 data class EquipFilter(
@@ -151,6 +157,7 @@ fun EquipamentoSection(
     pcTotal: Int,
     pcLivres: Int,
     recursosPcUsados: Int,
+    emProgresso: Boolean,
     expanded: Boolean,
     onToggle: () -> Unit,
     onUsarPontosBonusEmRecursos: () -> Unit,
@@ -160,8 +167,18 @@ fun EquipamentoSection(
     equipamentosComprados: List<EquipamentoItem>,
     onRemoveEquipamentoClick: (EquipamentoItem) -> Unit,
     categorias: List<EquipamentoCategoria>,
-    superequipCategorias: List<EquipamentoCategoria>
+    superequipCategorias: List<EquipamentoCategoria>,
+    forcaRaw: Int,
+    hasMusculoso: Boolean,
+    hasSoldado: Boolean,
+    soldadoCargaAtivo: Boolean,
+    onEditarDinheiro: (Int) -> Unit,
+    onToggleSoldadoCarga: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
+    var showMoneyDialog by rememberSaveable { mutableStateOf(false) }
+    var dinheiroInput by rememberSaveable { mutableStateOf(dinheiro.toString()) }
+
     var expSuperequip by rememberSaveable { mutableStateOf(false) }
 
     var filter by remember { mutableStateOf(EquipFilter()) }
@@ -183,6 +200,22 @@ fun EquipamentoSection(
             onListaCompletaClick = if (showLista) onListaCompletaClick else null,
             listaCompletaText = "Lista Completa"
         )
+
+        if (emProgresso) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                TextButton(onClick = {
+                    dinheiroInput = dinheiro.toString()
+                    showMoneyDialog = true
+                }) {
+                    Text("Editar dinheiro")
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.size(4.dp))
 
@@ -264,13 +297,74 @@ fun EquipamentoSection(
                 (it.peso as? JsonPrimitive)?.content?.replace(",", ".")?.toFloatOrNull()
             }
             .sum()
-        Text(
-            "Peso total: $totalWeight",
-            style = MaterialTheme.typography.bodyMedium,
+        val effectiveStrength = if (hasSoldado && soldadoCargaAtivo) {
+            if (forcaRaw < 12) forcaRaw + 2 else forcaRaw + 1
+        } else {
+            forcaRaw
+        }
+        val baseLimit = ((effectiveStrength - 2) / 2) * 10f
+        val limit = baseLimit + if (hasMusculoso) 10f else 0f
+
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp)
-        )
+                .padding(bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                "Peso total: ${"%.1f".format(totalWeight)} / ${"%.1f".format(limit)}",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(1f)
+            )
+            if (hasSoldado) {
+                AssistChip(
+                    onClick = onToggleSoldadoCarga,
+                    label = {
+                        Text(
+                            if (soldadoCargaAtivo) "Bônus Soldado ativo" else "Bônus Soldado inativo"
+                        )
+                    }
+                )
+            }
+        }
+
+        if (showMoneyDialog) {
+            AlertDialog(
+                onDismissRequest = { showMoneyDialog = false },
+                title = { Text("Editar dinheiro") },
+                text = {
+                    OutlinedTextField(
+                        value = dinheiroInput,
+                        onValueChange = { novo ->
+                            dinheiroInput = novo.filter { it.isDigit() || it == '-' }
+                        },
+                        label = { Text("Valor em dinheiro") },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        val novoValor = dinheiroInput.toIntOrNull()
+                        if (novoValor != null) {
+                            onEditarDinheiro(novoValor)
+                        }
+                        showMoneyDialog = false
+                    }) {
+                        Text("Salvar")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showMoneyDialog = false }) { Text("Cancelar") }
+                }
+            )
+        }
 
         val allCategorias = (categorias + superequipCategorias)
             .filterNot {
