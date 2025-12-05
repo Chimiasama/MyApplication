@@ -172,7 +172,6 @@ fun EquipamentoSection(
     hasMusculoso: Boolean,
     hasSoldado: Boolean,
     soldadoCargaAtivo: Boolean,
-    onEditarDinheiro: (Int) -> Unit,
     onToggleSoldadoCarga: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
@@ -327,43 +326,6 @@ fun EquipamentoSection(
                     }
                 )
             }
-        }
-
-        if (showMoneyDialog) {
-            AlertDialog(
-                onDismissRequest = { showMoneyDialog = false },
-                title = { Text("Editar dinheiro") },
-                text = {
-                    OutlinedTextField(
-                        value = dinheiroInput,
-                        onValueChange = { novo ->
-                            dinheiroInput = novo.filter { it.isDigit() || it == '-' }
-                        },
-                        label = { Text("Valor em dinheiro") },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                },
-                confirmButton = {
-                    TextButton(onClick = {
-                        val novoValor = dinheiroInput.toIntOrNull()
-                        if (novoValor != null) {
-                            onEditarDinheiro(novoValor)
-                        }
-                        showMoneyDialog = false
-                    }) {
-                        Text("Salvar")
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showMoneyDialog = false }) { Text("Cancelar") }
-                }
-            )
         }
 
         val allCategorias = (categorias + superequipCategorias)
