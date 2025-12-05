@@ -239,7 +239,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     listaAtributos.forEach { attrKey ->
         val label = mapaAtributosDisplay[attrKey] ?: attrKey
         val valor = personagem.atributos[attrKey] ?: 4
-        lines += "• $label d$valor"
+        lines += "$label d$valor"
     }
     lines += ""
 
@@ -254,7 +254,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         periciasParaMostrar.forEach { per ->
             val raw = personagem.pericias[per.nome] ?: 0
-            lines += "• ${per.nome} d$raw"
+            lines += "${per.nome} d$raw"
         }
     }
     lines += ""

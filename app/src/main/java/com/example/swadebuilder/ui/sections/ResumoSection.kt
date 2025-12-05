@@ -399,7 +399,7 @@ fun CircleStat(
     ) {
         Box(
             modifier = Modifier
-                .size(60.dp)
+                .size(68.dp)
                 .clip(CircleShape)
                 .border(
                     width = 1.dp,
