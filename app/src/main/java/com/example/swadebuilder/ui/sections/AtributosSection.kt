@@ -166,7 +166,7 @@ fun AtributosContent(
                 ) {
                     Icon(
                         Icons.Default.Remove,
-                        contentDescription = null,
+                        contentDescription = "Diminuir ${mapaAtributosDisplay[nome]}",
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -195,7 +195,7 @@ fun AtributosContent(
                 ) {
                     Icon(
                         Icons.Default.Add,
-                        contentDescription = null,
+                        contentDescription = "Aumentar ${mapaAtributosDisplay[nome]}",
                         modifier = Modifier.fillMaxSize()
                     )
                 }

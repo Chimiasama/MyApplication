@@ -301,7 +301,7 @@ fun VantagensContent(
             AssistChip(
                 onClick = { },
                 label = { Text("Nasce um Herói ativo: Estágio ignorado na criação") },
-                leadingIcon = { Icon(Icons.Default.Visibility, contentDescription = null) }
+                leadingIcon = { Icon(Icons.Default.Visibility, contentDescription = "Nasce um Herói ativo") }
             )
             Spacer(Modifier.size(8.dp))
         }
@@ -444,7 +444,7 @@ fun VantagensContent(
                     leadingIcon = {
                         Icon(
                             Icons.Default.Close,
-                            contentDescription = if (canRemove) "Remover" else null
+                            contentDescription = if (canRemove) "Remover" else ""
                         )
                     }
                 )

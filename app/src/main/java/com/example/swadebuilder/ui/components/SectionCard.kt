@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,7 +49,7 @@ fun SectionCard(
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = null,
+                contentDescription = title,
                 modifier = Modifier
                     .size(36.dp)
                     .padding(end = 12.dp),
@@ -63,7 +64,7 @@ fun SectionCard(
             Spacer(Modifier.weight(1f))
             Icon(
                 imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                contentDescription = null,
+                contentDescription = stringResource(id = if (expanded) com.example.swadebuilder.R.string.cd_collapse else com.example.swadebuilder.R.string.cd_expand),
                 modifier = Modifier.size(36.dp),
                 tint = headerColor
             )
