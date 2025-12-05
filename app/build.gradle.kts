@@ -20,12 +20,14 @@ configurations
 
 android {
     namespace = "com.example.swadebuilder"
-    compileSdk = 36
+    // Use the latest stable Android SDK to avoid CI failures when preview SDKs
+    // are unavailable on the build agents.
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.swadebuilder"
         minSdk = 25
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 13
         versionName = "2.2"
 
