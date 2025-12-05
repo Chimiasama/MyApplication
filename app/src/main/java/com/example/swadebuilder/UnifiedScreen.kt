@@ -574,6 +574,7 @@ private fun EquipamentoSection(
         pcTotal = state.pontosComplicacao,
         pcLivres = (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0),
         recursosPcUsados = state.cpRecursosStack.size,
+        emProgresso = state.emProgresso,
         expanded = expanded,
         onToggle = onToggle,
         onUsarPontosBonusEmRecursos = {
@@ -615,6 +616,7 @@ private fun EquipamentoSection(
         hasMusculoso = hasMusculoso,
         hasSoldado = hasSoldado,
         soldadoCargaAtivo = state.soldadoCargaAtivo,
+        onEditarDinheiro = { novoValor -> state.dinheiro = novoValor },
         onToggleSoldadoCarga = {
             if (hasSoldado) {
                 state.soldadoCargaAtivo = !state.soldadoCargaAtivo
