@@ -564,6 +564,7 @@ class MainActivity : ComponentActivity() {
                                                             maisPontosPericias = state.maisPontosPericias,
                                                             cartaSelvagem      = state.cartaSelvagem,
                                                             heroisSemArmadura  = state.heroisSemArmadura,
+                                                            soldadoCargaAtivo  = state.soldadoCargaAtivo,
                                                             semPontosDePoder   = state.usarSemPontosDePoder,
                                                             usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
                                                             especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),

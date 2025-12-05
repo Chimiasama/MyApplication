@@ -80,6 +80,7 @@ class CriadorViewModel : ViewModel() {
         state.modoSuperComplicacoes = modoSupers
         state.grandesResponsabilidades = grandesResponsabilidades
         state.modoSuperComplicacoes = modoSupers
+        state.soldadoCargaAtivo = true
 
         state.idAtual = null
         state.nomePersonagem = ""
@@ -208,6 +209,7 @@ class CriadorViewModel : ViewModel() {
         state.maisPontosPericias = salvo.maisPontosPericias
         state.cartaSelvagem      = salvo.cartaSelvagem
         state.heroisSemArmadura  = salvo.heroisSemArmadura
+        state.soldadoCargaAtivo  = salvo.soldadoCargaAtivo
         state.ancestralidade     = salvo.ancestralidade
         state.aplicarAncestralidade(salvo.ancestralidade, _feedbackMessages)
 

@@ -108,11 +108,11 @@ fun SummaryContent(state: CriadorState) {
     val attributesSection = sections.firstOrNull { it.title == "Atributos" }
     val skillsSection = sections.firstOrNull { it.title == "Perícias" }
 
-    val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "musculoso" }
-    val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "soldado" }
+    val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
+    val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
     val bonusCapacity = if (hasMusculoso) 10f else 0f
     val strengthRaw = state.valoresAtributos["FORCA"]?.intValue ?: 4
-    val effectiveStrengthForLoad = if (hasSoldado) {
+    val effectiveStrengthForLoad = if (hasSoldado && state.soldadoCargaAtivo) {
         if (strengthRaw < 12) strengthRaw + 2 else strengthRaw + 1
     } else {
         strengthRaw
@@ -137,7 +137,12 @@ fun SummaryContent(state: CriadorState) {
 
     val sectionsWithWeight = sections.map { section ->
         if (section.title == "Recursos & Equipamentos") {
-            val weightLine = "Peso: ${"%.1f".format(totalWeight)} / ${"%.1f".format(weightLimit)}"
+            val soldierLabel = when {
+                hasSoldado && state.soldadoCargaAtivo -> " (Soldado +1 dado)"
+                hasSoldado -> " (Soldado inativo)"
+                else -> ""
+            }
+            val weightLine = "Peso: ${"%.1f".format(totalWeight)} / ${"%.1f".format(weightLimit)}$soldierLabel"
             val updatedItems = buildList {
                 add(weightLine)
                 weightWarning?.let { add("• $it") }
@@ -394,7 +399,7 @@ fun CircleStat(
     ) {
         Box(
             modifier = Modifier
-                .size(52.dp)
+                .size(60.dp)
                 .clip(CircleShape)
                 .border(
                     width = 1.dp,

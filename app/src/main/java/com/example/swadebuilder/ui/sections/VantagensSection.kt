@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -494,64 +497,68 @@ fun VantagensContent(
                 expanded = expanded,
                 onToggle = { expandedMap[cat] = !expanded }
             ) {
-                val scroll = rememberScrollState()
-                Column(
-                    Modifier
+                val listaFiltrada = lista
+                    .filter { vant ->
+                        if (!state.modoSupers) {
+                            true
+                        } else {
+                            vant.id != "antecedente_arcano" &&
+                                    !vant.requisitos.vantagensPrevias.contains("antecedente_arcano")
+                        }
+                    }
+
+                    .filter { vant ->
+                        if (state.modoSupers) vant.id != "superpoderes" else true
+                    }
+                    .filter { vant ->
+                        vant.categoria == cat &&
+                                (vant.id != "especialista" ||
+                                        state.vantagensSelecionadas.any { it.id == "profissional" })
+                    }
+                    .filter { vant ->
+                        if (filter.origens.isNotEmpty() &&
+                            vant.origem.uppercase() !in filter.origens
+                        ) return@filter false
+
+                        if (filter.estagios.isNotEmpty() &&
+                            vant.requisitos.estagio !in filter.estagios
+                        ) return@filter false
+
+                        if (filter.atributos.isNotEmpty() &&
+                            filter.atributos.intersect(vant.requisitos.atributoMin.keys)
+                                .isEmpty()
+                        ) return@filter false
+
+                        if (filter.pericias.isNotEmpty()) {
+                            val reqMin = vant.requisitos.periciaMin.keys
+                            val reqOpt = vant.requisitos.periciaMinOpcional.keys
+                            val vinc =
+                                if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
+                            if (filter.pericias.intersect(reqMin + reqOpt + vinc).isEmpty())
+                                return@filter false
+                        }
+                        true
+                    }
+
+                val listState = rememberLazyListState()
+
+                LaunchedEffect(vantagemEmFoco, expanded, listaFiltrada) {
+                    if (expanded && !vantagemEmFoco.isNullOrBlank()) {
+                        val targetIndex = listaFiltrada.indexOfFirst { it.nome == vantagemEmFoco }
+                        if (targetIndex >= 0) {
+                            listState.animateScrollToItem(targetIndex)
+                        }
+                    }
+                }
+
+                LazyColumn(
+                    modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(max = 200.dp)
-                        .verticalScroll(scroll)
-                        .padding(start = 8.dp, bottom = 8.dp)
+                        .padding(start = 8.dp, bottom = 8.dp),
+                    state = listState
                 ) {
-                    lista
-                        .filter { vant ->
-                            if (!state.modoSupers) {
-                                true
-                            } else {
-                                vant.id != "antecedente_arcano" &&
-                                        !vant.requisitos.vantagensPrevias.contains("antecedente_arcano")
-                            }
-                        }
-
-                        .filter { vant ->
-                            if (state.modoSupers) vant.id != "superpoderes" else true
-                        }
-                        .filter { vant ->
-                            vant.categoria == cat &&
-                                    (vant.id != "especialista" ||
-                                            state.vantagensSelecionadas.any { it.id == "profissional" })
-                        }
-                        .filter { vant ->
-                            if (filter.origens.isNotEmpty() &&
-                                vant.origem.uppercase() !in filter.origens
-                            ) return@filter false
-
-                            if (filter.estagios.isNotEmpty() &&
-                                vant.requisitos.estagio !in filter.estagios
-                            ) return@filter false
-
-                            if (filter.atributos.isNotEmpty() &&
-                                filter.atributos.intersect(vant.requisitos.atributoMin.keys)
-                                    .isEmpty()
-                            ) return@filter false
-
-                            if (filter.pericias.isNotEmpty()) {
-                                val reqMin = vant.requisitos.periciaMin.keys
-                                val reqOpt = vant.requisitos.periciaMinOpcional.keys
-                                val vinc =
-                                    if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
-                                if (filter.pericias.intersect(reqMin + reqOpt + vinc).isEmpty())
-                                    return@filter false
-                            }
-                            true
-                        }
-                        .let { listaFiltrada ->
-                            if (vantagemEmFoco.isNullOrBlank()) listaFiltrada
-                            else {
-                                val (match, others) = listaFiltrada.partition { it.nome == vantagemEmFoco }
-                                match + others
-                            }
-                        }
-                        .forEach { vant ->
+                    items(listaFiltrada, key = { it.id }) { vant ->
                             val reqList = buildList {
                                 listaDeEstagios.firstOrNull {
                                     it.nome.equals(vant.requisitos.estagio, true)

@@ -62,7 +62,8 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         gastosPorPoder = this.gastosPorPoder.toMap(),
         limiteDePoderDaCampanha = this.limiteDePoderDaCampanha,
 
-        anotacoes = this.anotacoes
+        anotacoes = this.anotacoes,
+        soldadoCargaAtivo = this.soldadoCargaAtivo
     )
 }
 
@@ -105,8 +106,11 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         .mapValues { it.value.toMutableList() }
         .toMutableMap()
 
+    val allComplicationsKeys: List<String> =
+        personagem.complicacoes + personagem.desvantagensRaciais
+
     fun temComp(key: String): Boolean =
-        personagem.complicacoes.any { it.keyify() == key }
+        allComplicationsKeys.any { it.keyify() == key }
 
     fun racialSize(): Int =
         listaAncestralidadesJson
@@ -132,7 +136,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         val bonusPos =
             if (vantagensNomeKey.any { it == "RESISTENCIA" }) 1 else 0
         val bonusNeg =
-            if (personagem.complicacoes.any { it.keyify() == "FRAGIL" }) -1 else 0
+            if (allComplicationsKeys.any { it.keyify() == "FRAGIL" }) -1 else 0
 
         val brigaoBonus = vantagensNomeKey.count { it in listOf("BRIGAO", "PUGILISTA") }
 
@@ -229,7 +233,6 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += "Resistência: $resistenciaTexto"
     lines += "Tamanho: $tamanho"
     lines += "Movimento: $mov"
-    if (armadura > 0) lines += "Armadura: $armadura"
     lines += ""
 
     lines += "Atributos"

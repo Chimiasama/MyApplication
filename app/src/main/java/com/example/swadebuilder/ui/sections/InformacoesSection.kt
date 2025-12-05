@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
@@ -282,15 +283,15 @@ fun InformacoesSection(
                 .sum()
 
             val hasMusculoso = state.vantagensSelecionadas.any {
-                it.nome.keyify() == "musculoso"
+                it.nome.keyify() == "MUSCULOSO"
             }
             val hasSoldado = state.vantagensSelecionadas.any {
-                it.nome.keyify() == "soldado"
+                it.nome.keyify() == "SOLDADO"
             }
             val bonusCapacity = if (hasMusculoso) 10f else 0f
 
             val strengthRaw = state.valoresAtributos["FORCA"]!!.intValue
-            val effectiveStrength = if (hasSoldado) {
+            val effectiveStrength = if (hasSoldado && state.soldadoCargaAtivo) {
                 if (strengthRaw < 12) strengthRaw + 2 else strengthRaw + 1
             } else {
                 strengthRaw
@@ -306,6 +307,17 @@ fun InformacoesSection(
                     .padding(vertical = 4.dp),
                 textAlign = TextAlign.Center
             )
+
+            if (hasSoldado) {
+                AssistChip(
+                    onClick = { state.soldadoCargaAtivo = !state.soldadoCargaAtivo },
+                    label = {
+                        Text(
+                            if (state.soldadoCargaAtivo) "Bônus Soldado ativo" else "Bônus Soldado inativo"
+                        )
+                    }
+                )
+            }
 
             val ratio = if (limit > 0f) totalWeight / limit else Float.POSITIVE_INFINITY
             val warning = when {

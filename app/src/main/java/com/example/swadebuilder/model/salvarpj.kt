@@ -39,6 +39,7 @@ data class PersonagemSalvo(
     val maisPontosPericias: Boolean,
     val cartaSelvagem: Boolean,
     val heroisSemArmadura: Boolean = false,
+    val soldadoCargaAtivo: Boolean = true,
     val semPontosDePoder: Boolean = false,
 
     // Especializações existentes

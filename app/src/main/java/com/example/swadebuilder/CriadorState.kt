@@ -75,6 +75,7 @@ class CriadorState {
     val vantagensDePoder   = mutableStateSetOf<String>()
     val gastosPorPoder     = mutableStateMapOf<String, Int>()
     var naturalArmorFromRace by mutableIntStateOf(0)
+    var soldadoCargaAtivo by mutableStateOf(true)
 
     fun valorMovimentacao(): Int {
         val base = 6
@@ -150,7 +151,9 @@ class CriadorState {
         val base     = 2 + (vigorRaw / 2)
 
         val bonusPos = if (vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" }) 1 else 0
-        val bonusNeg = if (desvantagensAutomaticas.any { it.keyify() == "FRAGIL" }) -1 else 0
+        val bonusNeg =
+            if (desvantagensAutomaticas.any { it.keyify() == "FRAGIL" } ||
+                desvantagensRaciais.any { it.keyify() == "FRAGIL" }) -1 else 0
 
         // Bônus de “Brigão / Pugilista” continua igual
         val brigaoBonus = vantagensSelecionadas

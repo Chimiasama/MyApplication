@@ -53,5 +53,7 @@ data class MeuPersonagem(
     val limiteDePoderDaCampanha: Int = Int.MAX_VALUE,
 
     // ===== ANOTAÇÕES LIVRES PARA RESUMO / FICHA =====
-    val anotacoes: String = ""
+    val anotacoes: String = "",
+
+    val soldadoCargaAtivo: Boolean = true
 )
