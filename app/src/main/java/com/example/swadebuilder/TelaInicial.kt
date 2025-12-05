@@ -251,7 +251,13 @@ Feito por Rafael S.W.
             onDismissRequest = { showNewOptionsDialog = false },
             title            = { Text("Configurações Iniciais") },
             text             = {
-                Column {
+                val scrollState = rememberScrollState()
+
+                Column(
+                    modifier = Modifier
+                        .heightIn(max = 520.dp)
+                        .verticalScroll(scrollState)
+                ) {
                     // Livro Básico
                     Row(
                         Modifier

@@ -28,6 +28,12 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         ancestralidade = this.ancestralidade,
         celestialAAMilagresDesabilitado = this.celestialAAMilagresDesabilitado,
         vantagens = this.vantagensSelecionadas.map { it.id },
+        advantageChoices = this.vantagensSelecionadas
+            .groupBy { it.id }
+            .mapValues { (_, list) ->
+                list.mapNotNull { it.choice }.filter { it.isNotBlank() }
+            },
+        vantagensRaciais = this.vantagensRaciais.toList(),
         desvantagensRaciais = this.desvantagensRaciais.toList(),
         complicacoes = this.complicacoesSelecionadas
             .filterValues { it != null }
@@ -37,6 +43,8 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
         dinheiro = this.dinheiro,
         pontosRestantes = this.pontosVantagem,
+        naturalArmorFromRace = this.naturalArmorFromRace,
+        armorBase = this.armadura,
 
         // supers
         modoSupers = this.modoSupers,
@@ -54,7 +62,8 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         gastosPorPoder = this.gastosPorPoder.toMap(),
         limiteDePoderDaCampanha = this.limiteDePoderDaCampanha,
 
-        anotacoes = this.anotacoes
+        anotacoes = this.anotacoes,
+        soldadoCargaAtivo = this.soldadoCargaAtivo
     )
 }
 
@@ -93,9 +102,15 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val vantagensNomeKey: List<String> = listaVantagens
         .filter { it.id in personagem.vantagens }
         .map { it.nome.keyify() }
+    val vantagemChoices: MutableMap<String, MutableList<String>> = personagem.advantageChoices
+        .mapValues { it.value.toMutableList() }
+        .toMutableMap()
+
+    val allComplicationsKeys: List<String> =
+        personagem.complicacoes + personagem.desvantagensRaciais
 
     fun temComp(key: String): Boolean =
-        personagem.complicacoes.any { it.keyify() == key }
+        allComplicationsKeys.any { it.keyify() == key }
 
     fun racialSize(): Int =
         listaAncestralidadesJson
@@ -121,7 +136,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         val bonusPos =
             if (vantagensNomeKey.any { it == "RESISTENCIA" }) 1 else 0
         val bonusNeg =
-            if (personagem.complicacoes.any { it.keyify() == "FRAGIL" }) -1 else 0
+            if (allComplicationsKeys.any { it.keyify() == "FRAGIL" }) -1 else 0
 
         val brigaoBonus = vantagensNomeKey.count { it in listOf("BRIGAO", "PUGILISTA") }
 
@@ -195,8 +210,10 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         return base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusPararFromPower
     }
 
-    fun calcArmaduraEfetiva(): Int =
-        personagem.armorFromPower.coerceAtLeast(0)
+    fun calcArmaduraEfetiva(): Int {
+        val melhorExterna = personagem.armorFromPower.coerceAtLeast(personagem.armorBase)
+        return (melhorExterna + personagem.naturalArmorFromRace).coerceAtLeast(0)
+    }
 
     val aparar = calcAparar()
     val resFinal = resistenciaFinal()
@@ -216,14 +233,13 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += "Resistência: $resistenciaTexto"
     lines += "Tamanho: $tamanho"
     lines += "Movimento: $mov"
-    if (armadura > 0) lines += "Armadura: $armadura"
     lines += ""
 
     lines += "Atributos"
     listaAtributos.forEach { attrKey ->
         val label = mapaAtributosDisplay[attrKey] ?: attrKey
         val valor = personagem.atributos[attrKey] ?: 4
-        lines += "• $label d$valor"
+        lines += "$label d$valor"
     }
     lines += ""
 
@@ -238,7 +254,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         periciasParaMostrar.forEach { per ->
             val raw = personagem.pericias[per.nome] ?: 0
-            lines += "• ${per.nome} d$raw"
+            lines += "${per.nome} d$raw"
         }
     }
     lines += ""
@@ -261,14 +277,20 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         val nomesVantagens = listaVantagens
             .filter { it.id in personagem.vantagens }
-            .map {
-                if (it.id == "antecedente_arcano_milagres" && personagem.celestialAAMilagresDesabilitado) {
-                    "${it.nome} (DESABILITADO)"
+            .map { vant ->
+                val escolha = vantagemChoices[vant.id]?.removeFirstOrNull()
+                    ?.takeIf { it.isNotBlank() }
+                val baseNome = if (vant.id == "antecedente_arcano_milagres" && personagem.celestialAAMilagresDesabilitado) {
+                    "${vant.nome} (DESABILITADO)"
                 } else {
-                    it.nome
+                    vant.nome
                 }
+                if (escolha != null) "$baseNome (${escolha.trim()})" else baseNome
             }
         lines += nomesVantagens.joinToString(", ")
+    }
+    if (personagem.vantagensRaciais.isNotEmpty()) {
+        lines += "Vantagens Raciais: ${personagem.vantagensRaciais.joinToString(", ")}"
     }
     lines += ""
 

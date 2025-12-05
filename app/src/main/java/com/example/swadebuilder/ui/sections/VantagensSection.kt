@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -67,6 +70,7 @@ import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Locale
 import kotlinx.serialization.json.Json
 
 data class VantFilter(
@@ -492,64 +496,68 @@ fun VantagensContent(
                 expanded = expanded,
                 onToggle = { expandedMap[cat] = !expanded }
             ) {
-                val scroll = rememberScrollState()
-                Column(
-                    Modifier
+                val listaFiltrada = lista
+                    .filter { vant ->
+                        if (!state.modoSupers) {
+                            true
+                        } else {
+                            vant.id != "antecedente_arcano" &&
+                                    !vant.requisitos.vantagensPrevias.contains("antecedente_arcano")
+                        }
+                    }
+
+                    .filter { vant ->
+                        if (state.modoSupers) vant.id != "superpoderes" else true
+                    }
+                    .filter { vant ->
+                        vant.categoria == cat &&
+                                (vant.id != "especialista" ||
+                                        state.vantagensSelecionadas.any { it.id == "profissional" })
+                    }
+                    .filter { vant ->
+                        if (filter.origens.isNotEmpty() &&
+                            vant.origem.uppercase() !in filter.origens
+                        ) return@filter false
+
+                        if (filter.estagios.isNotEmpty() &&
+                            vant.requisitos.estagio !in filter.estagios
+                        ) return@filter false
+
+                        if (filter.atributos.isNotEmpty() &&
+                            filter.atributos.intersect(vant.requisitos.atributoMin.keys)
+                                .isEmpty()
+                        ) return@filter false
+
+                        if (filter.pericias.isNotEmpty()) {
+                            val reqMin = vant.requisitos.periciaMin.keys
+                            val reqOpt = vant.requisitos.periciaMinOpcional.keys
+                            val vinc =
+                                if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
+                            if (filter.pericias.intersect(reqMin + reqOpt + vinc).isEmpty())
+                                return@filter false
+                        }
+                        true
+                    }
+
+                val listState = rememberLazyListState()
+
+                LaunchedEffect(vantagemEmFoco, expanded, listaFiltrada) {
+                    if (expanded && !vantagemEmFoco.isNullOrBlank()) {
+                        val targetIndex = listaFiltrada.indexOfFirst { it.nome == vantagemEmFoco }
+                        if (targetIndex >= 0) {
+                            listState.animateScrollToItem(targetIndex)
+                        }
+                    }
+                }
+
+                LazyColumn(
+                    modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(max = 200.dp)
-                        .verticalScroll(scroll)
-                        .padding(start = 8.dp, bottom = 8.dp)
+                        .padding(start = 8.dp, bottom = 8.dp),
+                    state = listState
                 ) {
-                    lista
-                        .filter { vant ->
-                            if (!state.modoSupers) {
-                                true
-                            } else {
-                                vant.id != "antecedente_arcano" &&
-                                        !vant.requisitos.vantagensPrevias.contains("antecedente_arcano")
-                            }
-                        }
-
-                        .filter { vant ->
-                            if (state.modoSupers) vant.id != "superpoderes" else true
-                        }
-                        .filter { vant ->
-                            vant.categoria == cat &&
-                                    (vant.id != "especialista" ||
-                                            state.vantagensSelecionadas.any { it.id == "profissional" })
-                        }
-                        .filter { vant ->
-                            if (filter.origens.isNotEmpty() &&
-                                vant.origem.uppercase() !in filter.origens
-                            ) return@filter false
-
-                            if (filter.estagios.isNotEmpty() &&
-                                vant.requisitos.estagio !in filter.estagios
-                            ) return@filter false
-
-                            if (filter.atributos.isNotEmpty() &&
-                                filter.atributos.intersect(vant.requisitos.atributoMin.keys)
-                                    .isEmpty()
-                            ) return@filter false
-
-                            if (filter.pericias.isNotEmpty()) {
-                                val reqMin = vant.requisitos.periciaMin.keys
-                                val reqOpt = vant.requisitos.periciaMinOpcional.keys
-                                val vinc =
-                                    if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
-                                if (filter.pericias.intersect(reqMin + reqOpt + vinc).isEmpty())
-                                    return@filter false
-                            }
-                            true
-                        }
-                        .let { listaFiltrada ->
-                            if (vantagemEmFoco.isNullOrBlank()) listaFiltrada
-                            else {
-                                val (match, others) = listaFiltrada.partition { it.nome == vantagemEmFoco }
-                                match + others
-                            }
-                        }
-                        .forEach { vant ->
+                    items(listaFiltrada, key = { it.id }) { vant ->
                             val reqList = buildList {
                                 listaDeEstagios.firstOrNull {
                                     it.nome.equals(vant.requisitos.estagio, true)
@@ -734,76 +742,120 @@ fun VantagensContent(
         if (showChoiceDialog && pendingVantagem != null) {
             state.identifyMaxedTraits()
             val vant = pendingVantagem!!
+            if (vant.id == "erudito") {
+                val usedChoices = state.vantagensSelecionadas
+                    .filter { it.id == "erudito" && !it.choice.isNullOrBlank() }
+                    .mapNotNull { it.choice?.keyify() }
+                    .toSet()
 
-            val validOptions = when {
-                vant.id == "arma_predileta" -> {
-                    listaPericias
-                        .filter { per ->
-                            val nome = per.nome
-
-                            val isAllowed =
-                                nome.equals("Atirar", ignoreCase = true) ||
-                                        nome.equals("Atletismo", ignoreCase = true) ||
-                                        nome.equals("Lutar", ignoreCase = true)
-
-                            val meetsMin = state.rawTotal(per) >= 8
-
-                            isAllowed && meetsMin
+                val knowledgeOptions = listaPericias
+                    .filter { per -> per.nome.contains("CONHECIMENTO", ignoreCase = true) }
+                    .map { per ->
+                        val base = per.nome.substringBefore("(").trim()
+                        base.lowercase(Locale.getDefault()).replaceFirstChar {
+                            it.titlecase(Locale.getDefault())
                         }
-                        .map { it.nome }
-                }
+                    }
+                    .distinct()
+                    .filterNot { opt -> opt.keyify() in usedChoices }
+                    .sorted()
 
-                vant.id == "arma_predileta_aprimorada" -> {
-                    state.vantagensSelecionadas
-                        .filter { it.id == "arma_predileta" && it.choice != null }
-                        .mapNotNull { it.choice }
-                        .distinct()
-                }
-
-                vant.id == "profissional" -> {
-                    vant.choiceOptions.filter { it in state.maxedTraits }
-                }
-
-                vant.id == "especialista" -> {
-                    state.vantagensSelecionadas
-                        .filter { it.id == "profissional" && it.choice != null }
-                        .mapNotNull { it.choice }
-                }
-
-                vant.maxSelections > 0 -> {
-                    val used = state.vantagensSelecionadas
-                        .filter { it.id == vant.id && it.choice != null }
-                        .mapNotNull { it.choice }
-                    vant.choiceOptions.filter { it !in used }
-                }
-
-                else -> vant.choiceOptions
-            }
-
-            if (validOptions.isEmpty()) {
-                LaunchedEffect(vant) {
-                    tempErrorMsg = "Nenhuma opção disponível para escolher"
-                    showTempError = true
-                    delay(2_000)
-                    showTempError = false
-                    showChoiceDialog = false
-                    pendingVantagem = null
-                }
-            } else {
-                ChoiceDialog(
-                    options = validOptions,
-                    onConfirm = { choice ->
-                        state.vantagensSelecionadas += vant.copy(choice = choice)
-                        state.pontosVantagem--
-                        state.rebuildAllPericiaStacks()
-                        showChoiceDialog = false
-                        pendingVantagem = null
-                    },
-                    onDismiss = {
+                if (knowledgeOptions.isEmpty()) {
+                    LaunchedEffect(vant) {
+                        tempErrorMsg = "Nenhuma perícia de Conhecimento disponível"
+                        showTempError = true
+                        delay(2_000)
+                        showTempError = false
                         showChoiceDialog = false
                         pendingVantagem = null
                     }
-                )
+                } else {
+                    ChoiceDialog(
+                        options = knowledgeOptions,
+                        onConfirm = { choice ->
+                            state.vantagensSelecionadas += vant.copy(choice = choice)
+                            state.pontosVantagem--
+                            state.rebuildAllPericiaStacks()
+                            showChoiceDialog = false
+                            pendingVantagem = null
+                        },
+                        onDismiss = {
+                            showChoiceDialog = false
+                            pendingVantagem = null
+                        }
+                    )
+                }
+            } else {
+                val validOptions = when {
+                    vant.id == "arma_predileta" -> {
+                        listaPericias
+                            .filter { per ->
+                                val nome = per.nome
+
+                                val isAllowed =
+                                    nome.equals("Atirar", ignoreCase = true) ||
+                                            nome.equals("Atletismo", ignoreCase = true) ||
+                                            nome.equals("Lutar", ignoreCase = true)
+
+                                val meetsMin = state.rawTotal(per) >= 8
+
+                                isAllowed && meetsMin
+                            }
+                            .map { it.nome }
+                    }
+
+                    vant.id == "arma_predileta_aprimorada" -> {
+                        state.vantagensSelecionadas
+                            .filter { it.id == "arma_predileta" && it.choice != null }
+                            .mapNotNull { it.choice }
+                            .distinct()
+                    }
+
+                    vant.id == "profissional" -> {
+                        vant.choiceOptions.filter { it in state.maxedTraits }
+                    }
+
+                    vant.id == "especialista" -> {
+                        state.vantagensSelecionadas
+                            .filter { it.id == "profissional" && it.choice != null }
+                            .mapNotNull { it.choice }
+                    }
+
+                    vant.maxSelections > 0 -> {
+                        val used = state.vantagensSelecionadas
+                            .filter { it.id == vant.id && it.choice != null }
+                            .mapNotNull { it.choice }
+                        vant.choiceOptions.filter { it !in used }
+                    }
+
+                    else -> vant.choiceOptions
+                }
+
+                if (validOptions.isEmpty()) {
+                    LaunchedEffect(vant) {
+                        tempErrorMsg = "Nenhuma opção disponível para escolher"
+                        showTempError = true
+                        delay(2_000)
+                        showTempError = false
+                        showChoiceDialog = false
+                        pendingVantagem = null
+                    }
+                } else {
+                    ChoiceDialog(
+                        options = validOptions,
+                        onConfirm = { choice ->
+                            state.vantagensSelecionadas += vant.copy(choice = choice)
+                            state.pontosVantagem--
+                            state.rebuildAllPericiaStacks()
+                            showChoiceDialog = false
+                            pendingVantagem = null
+                        },
+                        onDismiss = {
+                            showChoiceDialog = false
+                            pendingVantagem = null
+                        }
+                    )
+                }
             }
         }
 

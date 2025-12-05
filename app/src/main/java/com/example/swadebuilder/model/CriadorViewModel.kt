@@ -80,6 +80,7 @@ class CriadorViewModel : ViewModel() {
         state.modoSuperComplicacoes = modoSupers
         state.grandesResponsabilidades = grandesResponsabilidades
         state.modoSuperComplicacoes = modoSupers
+        state.soldadoCargaAtivo = true
 
         state.idAtual = null
         state.nomePersonagem = ""
@@ -208,8 +209,17 @@ class CriadorViewModel : ViewModel() {
         state.maisPontosPericias = salvo.maisPontosPericias
         state.cartaSelvagem      = salvo.cartaSelvagem
         state.heroisSemArmadura  = salvo.heroisSemArmadura
+        state.soldadoCargaAtivo  = salvo.soldadoCargaAtivo
         state.ancestralidade     = salvo.ancestralidade
         state.aplicarAncestralidade(salvo.ancestralidade, _feedbackMessages)
+
+        if (salvo.vantagensRaciais.isNotEmpty()) {
+            state.vantagensRaciais.clear()
+            state.vantagensRaciais.addAll(salvo.vantagensRaciais)
+        }
+
+        state.naturalArmorFromRace = salvo.naturalArmorFromRace
+        state.armadura = salvo.armorBase
 
         state.cpPaStack.clear()
         repeat(salvo.cpPaCount) { state.cpPaStack.add("PA") }
@@ -239,17 +249,16 @@ class CriadorViewModel : ViewModel() {
         state.vantagensSelecionadas.clear()
         val mapPorId   = listaVantagens.associateBy { it.id }
         val mapPorNome = listaVantagens.associateBy { it.nome.trim().uppercase() }
+        val choicesMap = salvo.vantagemChoices.mapValues { it.value.toMutableList() }
 
         salvo.vantagens.forEach { saved ->
             val trimmed = saved.trim()
-            val byId = mapPorId[trimmed]
-            if (byId != null) {
-                state.vantagensSelecionadas.add(byId)
-            } else {
-                val byName = mapPorNome[trimmed.uppercase()]
-                if (byName != null) {
-                    state.vantagensSelecionadas.add(byName)
+            val base = mapPorId[trimmed] ?: mapPorNome[trimmed.uppercase()]
+            base?.copy()?.let { vantCopiada ->
+                choicesMap[trimmed]?.removeFirstOrNull()?.let { escolha ->
+                    vantCopiada.choice = escolha
                 }
+                state.vantagensSelecionadas.add(vantCopiada)
             }
         }
 

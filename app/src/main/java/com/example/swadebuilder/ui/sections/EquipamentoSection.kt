@@ -160,7 +160,12 @@ fun EquipamentoSection(
     equipamentosComprados: List<EquipamentoItem>,
     onRemoveEquipamentoClick: (EquipamentoItem) -> Unit,
     categorias: List<EquipamentoCategoria>,
-    superequipCategorias: List<EquipamentoCategoria>
+    superequipCategorias: List<EquipamentoCategoria>,
+    forcaRaw: Int,
+    hasMusculoso: Boolean,
+    hasSoldado: Boolean,
+    soldadoCargaAtivo: Boolean,
+    onToggleSoldadoCarga: () -> Unit
 ) {
     var expSuperequip by rememberSaveable { mutableStateOf(false) }
 
@@ -264,13 +269,37 @@ fun EquipamentoSection(
                 (it.peso as? JsonPrimitive)?.content?.replace(",", ".")?.toFloatOrNull()
             }
             .sum()
-        Text(
-            "Peso total: $totalWeight",
-            style = MaterialTheme.typography.bodyMedium,
+        val effectiveStrength = if (hasSoldado && soldadoCargaAtivo) {
+            if (forcaRaw < 12) forcaRaw + 2 else forcaRaw + 1
+        } else {
+            forcaRaw
+        }
+        val baseLimit = ((effectiveStrength - 2) / 2) * 10f
+        val limit = baseLimit + if (hasMusculoso) 10f else 0f
+
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp)
-        )
+                .padding(bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                "Peso total: ${"%.1f".format(totalWeight)} / ${"%.1f".format(limit)}",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(1f)
+            )
+            if (hasSoldado) {
+                AssistChip(
+                    onClick = onToggleSoldadoCarga,
+                    label = {
+                        Text(
+                            if (soldadoCargaAtivo) "Bônus Soldado ativo" else "Bônus Soldado inativo"
+                        )
+                    }
+                )
+            }
+        }
 
         val allCategorias = (categorias + superequipCategorias)
             .filterNot {
