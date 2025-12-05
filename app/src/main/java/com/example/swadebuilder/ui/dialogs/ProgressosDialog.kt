@@ -360,7 +360,7 @@ fun ProgressosDialog(
                                         onExpandedChange = { compReservedRemovalExp = !compReservedRemovalExp }
                                     ) {
                                         OutlinedTextField(
-                                            value = compReservedRemovalSelected?.id
+                                            value = compReservedRemovalSelected?.name
                                                 ?: "Escolha complicação reservada…",
                                             onValueChange = {},
                                             readOnly = true,
@@ -379,7 +379,7 @@ fun ProgressosDialog(
                                         ) {
                                             complicacoesReservadas.forEach { c ->
                                                 DropdownMenuItem(
-                                                    text = { Text("${c.id} (Maior)") },
+                                                    text = { Text("${c.name} (Maior)") },
                                                     onClick = {
                                                         compReservedRemovalSelected = c
                                                         compReservedRemovalExp = false
@@ -403,7 +403,7 @@ fun ProgressosDialog(
                                         onExpandedChange = { compReserveExp = !compReserveExp }
                                     ) {
                                         OutlinedTextField(
-                                            value = compReserveSelected?.id ?: "Escolha complicação Maior…",
+                                            value = compReserveSelected?.name ?: "Escolha complicação Maior…",
                                             onValueChange = {},
                                             readOnly = true,
                                             trailingIcon = {
@@ -421,7 +421,7 @@ fun ProgressosDialog(
                                         ) {
                                             complicacoesReservaveis.forEach { c ->
                                                 DropdownMenuItem(
-                                                    text = { Text("${c.id} (Maior)") },
+                                                    text = { Text("${c.name} (Maior)") },
                                                     onClick = {
                                                         compReserveSelected = c
                                                         compReserveExp = false
@@ -445,7 +445,7 @@ fun ProgressosDialog(
                                         onExpandedChange = { compReduceExp = !compReduceExp }
                                     ) {
                                         OutlinedTextField(
-                                            value = compReduceSelected?.id ?: "Escolha complicação…",
+                                            value = compReduceSelected?.name ?: "Escolha complicação…",
                                             onValueChange = {},
                                             readOnly = true,
                                             trailingIcon = {
@@ -463,7 +463,7 @@ fun ProgressosDialog(
                                         ) {
                                             complicacoesRedutiveis.forEach { c ->
                                                 DropdownMenuItem(
-                                                    text = { Text("${c.id} (Maior)") },
+                                                    text = { Text("${c.name} (Maior)") },
                                                     onClick = {
                                                         compReduceSelected = c
                                                         compReduceExp = false
@@ -487,7 +487,7 @@ fun ProgressosDialog(
                                         onExpandedChange = { compMinorExp = !compMinorExp }
                                     ) {
                                         OutlinedTextField(
-                                            value = compMinorSelected?.id ?: "Escolha complicação…",
+                                            value = compMinorSelected?.name ?: "Escolha complicação…",
                                             onValueChange = {},
                                             readOnly = true,
                                             trailingIcon = {
@@ -505,7 +505,7 @@ fun ProgressosDialog(
                                         ) {
                                             complicacoesMenores.forEach { c ->
                                                 DropdownMenuItem(
-                                                    text = { Text("${c.id} (Menor)") },
+                                                    text = { Text("${c.name} (Menor)") },
                                                     onClick = {
                                                         compMinorSelected = c
                                                         compMinorExp = false

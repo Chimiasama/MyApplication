@@ -26,6 +26,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -242,6 +243,7 @@ fun VantagensContent(
     var selectedReqs by remember { mutableStateOf<List<String>>(emptyList()) }
     var pendingVantagem by remember { mutableStateOf<Vantagem?>(null) }
     var showChoiceDialog by rememberSaveable { mutableStateOf(false) }
+    var eruditoChoice by rememberSaveable { mutableStateOf("") }
     var pendingNovosPoderes by rememberSaveable { mutableStateOf<Vantagem?>(null) }
     var showNovosPoderesDialog by rememberSaveable { mutableStateOf(false) }
     var dialogMostrandoAntecedente by remember { mutableStateOf<Vantagem?>(null) }
@@ -734,76 +736,120 @@ fun VantagensContent(
         if (showChoiceDialog && pendingVantagem != null) {
             state.identifyMaxedTraits()
             val vant = pendingVantagem!!
-
-            val validOptions = when {
-                vant.id == "arma_predileta" -> {
-                    listaPericias
-                        .filter { per ->
-                            val nome = per.nome
-
-                            val isAllowed =
-                                nome.equals("Atirar", ignoreCase = true) ||
-                                        nome.equals("Atletismo", ignoreCase = true) ||
-                                        nome.equals("Lutar", ignoreCase = true)
-
-                            val meetsMin = state.rawTotal(per) >= 8
-
-                            isAllowed && meetsMin
-                        }
-                        .map { it.nome }
-                }
-
-                vant.id == "arma_predileta_aprimorada" -> {
-                    state.vantagensSelecionadas
-                        .filter { it.id == "arma_predileta" && it.choice != null }
-                        .mapNotNull { it.choice }
-                        .distinct()
-                }
-
-                vant.id == "profissional" -> {
-                    vant.choiceOptions.filter { it in state.maxedTraits }
-                }
-
-                vant.id == "especialista" -> {
-                    state.vantagensSelecionadas
-                        .filter { it.id == "profissional" && it.choice != null }
-                        .mapNotNull { it.choice }
-                }
-
-                vant.maxSelections > 0 -> {
-                    val used = state.vantagensSelecionadas
-                        .filter { it.id == vant.id && it.choice != null }
-                        .mapNotNull { it.choice }
-                    vant.choiceOptions.filter { it !in used }
-                }
-
-                else -> vant.choiceOptions
-            }
-
-            if (validOptions.isEmpty()) {
-                LaunchedEffect(vant) {
-                    tempErrorMsg = "Nenhuma opção disponível para escolher"
-                    showTempError = true
-                    delay(2_000)
-                    showTempError = false
-                    showChoiceDialog = false
-                    pendingVantagem = null
-                }
-            } else {
-                ChoiceDialog(
-                    options = validOptions,
-                    onConfirm = { choice ->
-                        state.vantagensSelecionadas += vant.copy(choice = choice)
-                        state.pontosVantagem--
-                        state.rebuildAllPericiaStacks()
+            if (vant.id == "erudito") {
+                AlertDialog(
+                    onDismissRequest = {
                         showChoiceDialog = false
                         pendingVantagem = null
+                        eruditoChoice = ""
                     },
-                    onDismiss = {
+                    title = { Text("Escolha a perícia de conhecimento") },
+                    text = {
+                        OutlinedTextField(
+                            value = eruditoChoice,
+                            onValueChange = { eruditoChoice = it },
+                            label = { Text("Perícia (ex.: Conhecimento Acadêmico)") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(
+                            enabled = eruditoChoice.isNotBlank(),
+                            onClick = {
+                                val escolha = eruditoChoice.trim().ifBlank { null }
+                                state.vantagensSelecionadas += vant.copy(choice = escolha)
+                                state.pontosVantagem--
+                                state.rebuildAllPericiaStacks()
+                                showChoiceDialog = false
+                                pendingVantagem = null
+                                eruditoChoice = ""
+                            }
+                        ) {
+                            Text("Confirmar")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = {
+                            showChoiceDialog = false
+                            pendingVantagem = null
+                            eruditoChoice = ""
+                        }) {
+                            Text("Cancelar")
+                        }
+                    }
+                )
+            } else {
+                val validOptions = when {
+                    vant.id == "arma_predileta" -> {
+                        listaPericias
+                            .filter { per ->
+                                val nome = per.nome
+
+                                val isAllowed =
+                                    nome.equals("Atirar", ignoreCase = true) ||
+                                            nome.equals("Atletismo", ignoreCase = true) ||
+                                            nome.equals("Lutar", ignoreCase = true)
+
+                                val meetsMin = state.rawTotal(per) >= 8
+
+                                isAllowed && meetsMin
+                            }
+                            .map { it.nome }
+                    }
+
+                    vant.id == "arma_predileta_aprimorada" -> {
+                        state.vantagensSelecionadas
+                            .filter { it.id == "arma_predileta" && it.choice != null }
+                            .mapNotNull { it.choice }
+                            .distinct()
+                    }
+
+                    vant.id == "profissional" -> {
+                        vant.choiceOptions.filter { it in state.maxedTraits }
+                    }
+
+                    vant.id == "especialista" -> {
+                        state.vantagensSelecionadas
+                            .filter { it.id == "profissional" && it.choice != null }
+                            .mapNotNull { it.choice }
+                    }
+
+                    vant.maxSelections > 0 -> {
+                        val used = state.vantagensSelecionadas
+                            .filter { it.id == vant.id && it.choice != null }
+                            .mapNotNull { it.choice }
+                        vant.choiceOptions.filter { it !in used }
+                    }
+
+                    else -> vant.choiceOptions
+                }
+
+                if (validOptions.isEmpty()) {
+                    LaunchedEffect(vant) {
+                        tempErrorMsg = "Nenhuma opção disponível para escolher"
+                        showTempError = true
+                        delay(2_000)
+                        showTempError = false
                         showChoiceDialog = false
                         pendingVantagem = null
                     }
-                )
+                } else {
+                    ChoiceDialog(
+                        options = validOptions,
+                        onConfirm = { choice ->
+                            state.vantagensSelecionadas += vant.copy(choice = choice)
+                            state.pontosVantagem--
+                            state.rebuildAllPericiaStacks()
+                            showChoiceDialog = false
+                            pendingVantagem = null
+                        },
+                        onDismiss = {
+                            showChoiceDialog = false
+                            pendingVantagem = null
+                        }
+                    )
+                }
             }
         }
 

@@ -74,6 +74,8 @@ fun InformacoesSection(
     }
 
     var showProgressDialog by rememberSaveable { mutableStateOf(false) }
+    var showMoneyDialog by rememberSaveable { mutableStateOf(false) }
+    var dinheiroInput by rememberSaveable { mutableStateOf(state.dinheiro.toString()) }
     val focusManager = LocalFocusManager.current
 
     SectionCard(
@@ -93,6 +95,16 @@ fun InformacoesSection(
             )
 
             Spacer(Modifier.height(8.dp))
+
+            if (state.emProgresso) {
+                TextButton(onClick = {
+                    dinheiroInput = state.dinheiro.toString()
+                    showMoneyDialog = true
+                }) {
+                    Text("Editar dinheiro")
+                }
+                Spacer(Modifier.height(4.dp))
+            }
 
             OutlinedTextField(
                 value = state.nomePersonagem,
@@ -183,11 +195,11 @@ fun InformacoesSection(
 
             val spentOnCreation = state.progresso - state.progressosDisponiveis
             var tempProgresso by rememberSaveable { mutableIntStateOf(state.progresso) }
-            if (showProgressDialog) {
-                AlertDialog(
-                    onDismissRequest = { showProgressDialog = false },
-                    title = { Text("Defina o Progresso (0–50)") },
-                    text = {
+        if (showProgressDialog) {
+            AlertDialog(
+                onDismissRequest = { showProgressDialog = false },
+                title = { Text("Defina o Progresso (0–50)") },
+                text = {
                         Column {
                             Slider(
                                 value = tempProgresso.toFloat(),
@@ -219,9 +231,46 @@ fun InformacoesSection(
                         TextButton(onClick = { showProgressDialog = false }) {
                             Text("Cancelar")
                         }
+                }
+            )
+        }
+
+        if (showMoneyDialog) {
+            AlertDialog(
+                onDismissRequest = { showMoneyDialog = false },
+                title = { Text("Editar dinheiro") },
+                text = {
+                    OutlinedTextField(
+                        value = dinheiroInput,
+                        onValueChange = { novo ->
+                            dinheiroInput = novo.filter { it.isDigit() || it == '-' }
+                        },
+                        label = { Text("Valor em dinheiro") },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        val novoValor = dinheiroInput.toIntOrNull()
+                        if (novoValor != null) {
+                            state.dinheiro = novoValor
+                        }
+                        showMoneyDialog = false
+                    }) {
+                        Text("Salvar")
                     }
-                )
-            }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showMoneyDialog = false }) { Text("Cancelar") }
+                }
+            )
+        }
 
             val totalWeight = state.equipamentosComprados
                 .mapNotNull { item ->
@@ -238,11 +287,15 @@ fun InformacoesSection(
             val hasSoldado = state.vantagensSelecionadas.any {
                 it.nome.keyify() == "soldado"
             }
-            val bonusCapacity = (if (hasMusculoso) 10f else 0f) +
-                    (if (hasSoldado) 10f else 0f)
+            val bonusCapacity = if (hasMusculoso) 10f else 0f
 
             val strengthRaw = state.valoresAtributos["FORCA"]!!.intValue
-            val baseLimit = ((strengthRaw - 2) / 2) * 10f
+            val effectiveStrength = if (hasSoldado) {
+                if (strengthRaw < 12) strengthRaw + 2 else strengthRaw + 1
+            } else {
+                strengthRaw
+            }
+            val baseLimit = ((effectiveStrength - 2) / 2) * 10f
             val limit = baseLimit + bonusCapacity
 
             Text(

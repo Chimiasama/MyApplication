@@ -28,6 +28,12 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         ancestralidade = this.ancestralidade,
         celestialAAMilagresDesabilitado = this.celestialAAMilagresDesabilitado,
         vantagens = this.vantagensSelecionadas.map { it.id },
+        advantageChoices = this.vantagensSelecionadas
+            .groupBy { it.id }
+            .mapValues { (_, list) ->
+                list.mapNotNull { it.choice }.filter { it.isNotBlank() }
+            },
+        vantagensRaciais = this.vantagensRaciais.toList(),
         desvantagensRaciais = this.desvantagensRaciais.toList(),
         complicacoes = this.complicacoesSelecionadas
             .filterValues { it != null }
@@ -37,6 +43,8 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
         dinheiro = this.dinheiro,
         pontosRestantes = this.pontosVantagem,
+        naturalArmorFromRace = this.naturalArmorFromRace,
+        armorBase = this.armadura,
 
         // supers
         modoSupers = this.modoSupers,
@@ -93,6 +101,9 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val vantagensNomeKey: List<String> = listaVantagens
         .filter { it.id in personagem.vantagens }
         .map { it.nome.keyify() }
+    val vantagemChoices: MutableMap<String, MutableList<String>> = personagem.advantageChoices
+        .mapValues { it.value.toMutableList() }
+        .toMutableMap()
 
     fun temComp(key: String): Boolean =
         personagem.complicacoes.any { it.keyify() == key }
@@ -195,8 +206,10 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         return base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusPararFromPower
     }
 
-    fun calcArmaduraEfetiva(): Int =
-        personagem.armorFromPower.coerceAtLeast(0)
+    fun calcArmaduraEfetiva(): Int {
+        val melhorExterna = personagem.armorFromPower.coerceAtLeast(personagem.armorBase)
+        return (melhorExterna + personagem.naturalArmorFromRace).coerceAtLeast(0)
+    }
 
     val aparar = calcAparar()
     val resFinal = resistenciaFinal()
@@ -261,14 +274,20 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         val nomesVantagens = listaVantagens
             .filter { it.id in personagem.vantagens }
-            .map {
-                if (it.id == "antecedente_arcano_milagres" && personagem.celestialAAMilagresDesabilitado) {
-                    "${it.nome} (DESABILITADO)"
+            .map { vant ->
+                val escolha = vantagemChoices[vant.id]?.removeFirstOrNull()
+                    ?.takeIf { it.isNotBlank() }
+                val baseNome = if (vant.id == "antecedente_arcano_milagres" && personagem.celestialAAMilagresDesabilitado) {
+                    "${vant.nome} (DESABILITADO)"
                 } else {
-                    it.nome
+                    vant.nome
                 }
+                if (escolha != null) "$baseNome (${escolha.trim()})" else baseNome
             }
         lines += nomesVantagens.joinToString(", ")
+    }
+    if (personagem.vantagensRaciais.isNotEmpty()) {
+        lines += "Vantagens Raciais: ${personagem.vantagensRaciais.joinToString(", ")}"
     }
     lines += ""
 

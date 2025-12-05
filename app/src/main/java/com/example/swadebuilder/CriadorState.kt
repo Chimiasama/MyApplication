@@ -646,6 +646,7 @@ class CriadorState {
     var meioElfoAgil by mutableStateOf(false)
 
     val vantagensAutomaticas = mutableStateListOf<String>()
+    val vantagensRaciais = mutableStateListOf<String>()
     val desvantagensRaciais = mutableStateListOf<String>()
 
     var pontosVantagem by mutableIntStateOf(0)
@@ -1127,6 +1128,7 @@ class CriadorState {
 
         desvantagensAutomaticas.clear()
         vantagensAutomaticas.clear()
+        vantagensRaciais.clear()
         desvantagensRaciais.clear()
 
         listaAncestralidadesJson
@@ -1134,11 +1136,14 @@ class CriadorState {
             ?.let { rm ->
                 desvantagensAutomaticas.addAll(rm.desvantagens)
                 vantagensAutomaticas.addAll(rm.vantagensGratis)
+                vantagensRaciais.addAll(rm.vantagensGratis)
+                desvantagensRaciais.addAll(rm.desvantagens)
             }
 
         // NÃO tem mais "raças levam pra lista completa":
         // Removemos o bloco que apagava tudo que não fosse vantagem automática.
 
+        naturalArmorFromRace = 0
         when (anc) {
             "SAURIOS" -> {
                 listaVantagens.firstOrNull { it.nome.equals("Sentidos Aguçados", ignoreCase = true) }
@@ -1146,14 +1151,20 @@ class CriadorState {
                 listaVantagens.firstOrNull { it.nome.equals("Prontidão", ignoreCase = true) }
                     ?.let { vantagensSelecionadas.add(it) }
                 vantagensAutomaticas.add("Prontidão")
-                armadura = 2
+                vantagensRaciais.add("Prontidão")
+                naturalArmorFromRace = 2
+                armadura = 0
             }
             "PEQUENINOS" -> {
                 listaVantagens.firstOrNull { it.nome.equals("Sorte", ignoreCase = true) }
                     ?.let { vantagensSelecionadas.add(it) }
                 vantagensAutomaticas.add("Sorte")
-                desvantagensRaciais.add("Tamanho -1")
-                desvantagensRaciais.add("Movimentação Reduzida")
+                if (desvantagensRaciais.none { it.contains("Tamanho", ignoreCase = true) }) {
+                    desvantagensRaciais.add("Tamanho -1")
+                }
+                if (desvantagensRaciais.none { it.contains("Movimentação Reduzida", ignoreCase = true) }) {
+                    desvantagensRaciais.add("Movimentação Reduzida")
+                }
                 armadura = 0
             }
             "CELESTIAIS" -> {

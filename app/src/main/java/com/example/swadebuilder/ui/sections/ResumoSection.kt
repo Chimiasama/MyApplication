@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -109,9 +110,14 @@ fun SummaryContent(state: CriadorState) {
 
     val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "musculoso" }
     val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "soldado" }
-    val bonusCapacity = (if (hasMusculoso) 10f else 0f) + (if (hasSoldado) 10f else 0f)
+    val bonusCapacity = if (hasMusculoso) 10f else 0f
     val strengthRaw = state.valoresAtributos["FORCA"]?.intValue ?: 4
-    val baseLimit = ((strengthRaw - 2) / 2) * 10f
+    val effectiveStrengthForLoad = if (hasSoldado) {
+        if (strengthRaw < 12) strengthRaw + 2 else strengthRaw + 1
+    } else {
+        strengthRaw
+    }
+    val baseLimit = ((effectiveStrengthForLoad - 2) / 2) * 10f
     val weightLimit = baseLimit + bonusCapacity
     val totalWeight = state.equipamentosComprados
         .mapNotNull { item ->
@@ -178,13 +184,14 @@ fun SummaryContent(state: CriadorState) {
                 attributesSection?.let {
                     SummarySectionCard(
                         section = it,
-                        modifier = Modifier.weight(0.35f)
+                        modifier = Modifier.weight(0.42f),
+                        textStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp)
                     )
                 }
                 skillsSection?.let {
                     SummarySectionCard(
                         section = it,
-                        modifier = Modifier.weight(0.65f)
+                        modifier = Modifier.weight(0.58f)
                     )
                 }
             }
@@ -312,7 +319,11 @@ private fun DerivedStatsRow(stats: List<Pair<String, String>>) {
 }
 
 @Composable
-private fun SummarySectionCard(section: SummarySection, modifier: Modifier = Modifier) {
+private fun SummarySectionCard(
+    section: SummarySection,
+    modifier: Modifier = Modifier,
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium
+) {
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -329,9 +340,9 @@ private fun SummarySectionCard(section: SummarySection, modifier: Modifier = Mod
             Spacer(Modifier.height(8.dp))
             section.items.forEach { item ->
                 when {
-                    item.startsWith("•") -> BulletRow(text = item.removePrefix("•").trim())
-                    item.contains(":") -> LabelValueRow(item)
-                    else -> Text(text = item, style = MaterialTheme.typography.bodyMedium)
+                    item.startsWith("•") -> BulletRow(text = item.removePrefix("•").trim(), textStyle = textStyle)
+                    item.contains(":") -> LabelValueRow(item, textStyle)
+                    else -> Text(text = item, style = textStyle)
                 }
                 Spacer(Modifier.height(6.dp))
             }
@@ -340,11 +351,11 @@ private fun SummarySectionCard(section: SummarySection, modifier: Modifier = Mod
 }
 
 @Composable
-private fun LabelValueRow(raw: String) {
+private fun LabelValueRow(raw: String, textStyle: TextStyle) {
     val label = raw.substringBefore(":").trim()
     val value = raw.substringAfter(":").trim()
     if (label.isBlank() || value.isBlank()) {
-        Text(text = raw, style = MaterialTheme.typography.bodyMedium)
+        Text(text = raw, style = textStyle)
         return
     }
 
@@ -356,19 +367,19 @@ private fun LabelValueRow(raw: String) {
             }
             append(value)
         },
-        style = MaterialTheme.typography.bodyMedium
+        style = textStyle
     )
 }
 
 @Composable
-private fun BulletRow(text: String) {
+private fun BulletRow(text: String, textStyle: TextStyle) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = "•",
-            style = MaterialTheme.typography.bodyMedium,
+            style = textStyle,
             modifier = Modifier.padding(end = 6.dp)
         )
-        Text(text = text, style = MaterialTheme.typography.bodyMedium)
+        Text(text = text, style = textStyle)
     }
 }
 
