@@ -79,7 +79,7 @@ fun PbWalletBanner(
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.Info,
-                                    contentDescription = null
+                                    contentDescription = "Ações de Pontos Bônus"
                                 )
                             }
                         )
@@ -99,7 +99,7 @@ fun PbWalletBanner(
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.Add,
-                                        contentDescription = null
+                                        contentDescription = spendLabel
                                     )
                                 }
                             )
@@ -115,7 +115,7 @@ fun PbWalletBanner(
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.Undo,
-                                        contentDescription = null
+                                        contentDescription = refundLabel
                                     )
                                 }
                             )

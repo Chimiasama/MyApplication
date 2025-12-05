@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -263,7 +264,7 @@ Feito por Rafael S.W.
                         Text("Livro Básico", fontWeight = FontWeight.Bold)
                         Icon(
                             imageVector = if (expLivroBasico) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                            contentDescription = null
+                            contentDescription = stringResource(id = if (expLivroBasico) R.string.cd_collapse else R.string.cd_expand)
                         )
                     }
                     if (expLivroBasico) {
@@ -416,7 +417,7 @@ Feito por Rafael S.W.
                         Text("Super", fontWeight = FontWeight.Bold)
                         Icon(
                             imageVector = if (expSuper) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                            contentDescription = null
+                            contentDescription = stringResource(id = if (expSuper) R.string.cd_collapse else R.string.cd_expand)
                         )
                     }
                     if (expSuper) {
@@ -466,7 +467,7 @@ Feito por Rafael S.W.
                         Text("Horror", fontWeight = FontWeight.Bold)
                         Icon(
                             imageVector = if (expHorror) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                            contentDescription = null
+                            contentDescription = stringResource(id = if (expHorror) R.string.cd_collapse else R.string.cd_expand)
                         )
                     }
                     if (expHorror) {
@@ -486,7 +487,7 @@ Feito por Rafael S.W.
                         Text("Fantasia", fontWeight = FontWeight.Bold)
                         Icon(
                             imageVector = if (expFantasia) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                            contentDescription = null
+                            contentDescription = stringResource(id = if (expFantasia) R.string.cd_collapse else R.string.cd_expand)
                         )
                     }
                     if (expFantasia) {
@@ -506,7 +507,7 @@ Feito por Rafael S.W.
                         Text("Ficção Científica", fontWeight = FontWeight.Bold)
                         Icon(
                             imageVector = if (expFiccao) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                            contentDescription = null
+                            contentDescription = stringResource(id = if (expFiccao) R.string.cd_collapse else R.string.cd_expand)
                         )
                     }
                     if (expFiccao) {

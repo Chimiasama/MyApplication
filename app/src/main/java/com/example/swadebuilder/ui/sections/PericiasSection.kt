@@ -240,7 +240,7 @@ fun PericiasContent(
                     ) {
                         Icon(
                             Icons.Default.Remove,
-                            contentDescription = null,
+                            contentDescription = "Diminuir ${per.nome}",
                             modifier = Modifier.fillMaxSize()
                         )
                     }
@@ -306,7 +306,7 @@ fun PericiasContent(
                     ) {
                         Icon(
                             Icons.Default.Add,
-                            contentDescription = null,
+                            contentDescription = "Aumentar ${per.nome}",
                             modifier = Modifier.fillMaxSize()
                         )
                     }
@@ -559,7 +559,7 @@ private fun SpecChip(
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = "Renomear",
+                    contentDescription = "Renomear $label",
                     tint = colors.onSurfaceVariant.copy(alpha = 0.7f)
                 )
             }
@@ -572,7 +572,7 @@ private fun SpecChip(
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Remover",
+                    contentDescription = "Remover $label",
                     tint = colors.onSurfaceVariant.copy(alpha = 0.7f)
                 )
             }

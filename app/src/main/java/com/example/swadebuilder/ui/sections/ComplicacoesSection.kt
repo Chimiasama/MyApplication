@@ -170,7 +170,7 @@ fun ComplicacoesSection(
                         },
                         enabled     = isClickable,
                         label       = { Text("${comp.name} ($tipo)") },
-                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = null) }
+                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover ${comp.name}") }
                     )
                 }
         }
@@ -380,7 +380,7 @@ fun TransparentOutlinedReadOnlyField(
                 Spacer(Modifier.weight(1f))
                 Icon(
                     imageVector        = Icons.Default.ArrowDropDown,
-                    contentDescription = null,
+                    contentDescription = "",
                     tint = if (enabled)
                         colors.onSurface
                     else

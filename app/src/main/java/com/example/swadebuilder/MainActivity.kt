@@ -77,6 +77,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -1021,7 +1022,7 @@ fun CollapsibleSection(
             Text(title, fontWeight = FontWeight.Bold, fontSize = 18.sp)
             Icon(
                 imageVector = if (expanded) Icons.Default.Remove else Icons.Default.Add,
-                contentDescription = null
+                contentDescription = stringResource(id = if (expanded) R.string.cd_collapse else R.string.cd_expand)
             )
         }
         if (expanded) content()
@@ -1106,7 +1107,7 @@ fun SelecaoCard(
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = null,
+                contentDescription = title,
                 modifier = Modifier.size(40.dp),
                 tint = Color.Black
             )
@@ -1129,7 +1130,7 @@ fun SelecaoCard(
 
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.MenuBook,
-                contentDescription = null,
+                contentDescription = "",
                 tint = Color.Black
             )
         }
