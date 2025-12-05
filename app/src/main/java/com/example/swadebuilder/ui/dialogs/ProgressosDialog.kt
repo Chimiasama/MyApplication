@@ -1,6 +1,5 @@
 package com.example.swadebuilder.ui.dialogs
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -54,7 +53,6 @@ import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.dynamicStageCaps
 import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.Complicacao
-import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.model.HindranceChangeType
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.periciaStartRaw

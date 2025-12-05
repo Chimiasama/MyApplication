@@ -7,12 +7,8 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.listaComplicacoes
-import com.example.swadebuilder.model.HindranceChangeType
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
-import com.example.swadebuilder.model.PersonagemSalvo
-import com.example.swadebuilder.model.PowerEffect
-import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.util.keyify
 
 // ---- OBJETOS DE RETORNO ----

@@ -1,7 +1,6 @@
 package com.example.swadebuilder.model
 
 import kotlinx.serialization.Serializable
-import com.example.swadebuilder.model.SuperInvestment
 
 @Serializable
 data class MeuPersonagem(

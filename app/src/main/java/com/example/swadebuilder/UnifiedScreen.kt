@@ -25,7 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -150,7 +150,7 @@ fun UnifiedScreen(
     }
 
     var showAllocDialog by rememberSaveable { mutableStateOf(false) }
-    var currentSlotIndex by rememberSaveable { mutableStateOf(-1) }
+    var currentSlotIndex by rememberSaveable { mutableIntStateOf(-1) }
     val scrollState = rememberScrollState()
 
     // --- estados para o MEIO-ELFO ---

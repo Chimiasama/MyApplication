@@ -2,7 +2,6 @@ package com.example.swadebuilder.model
 
 import kotlinx.serialization.Serializable
 import java.util.UUID
-import com.example.swadebuilder.model.SuperInvestment
 
 @Serializable
 data class PersonagemSalvo(
