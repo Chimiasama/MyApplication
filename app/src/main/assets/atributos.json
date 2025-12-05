@@ -1,9 +1,0 @@
-{
-  "atributos": [
-    { "nome": "Agilidade",     "min": 4 },
-    { "nome": "Astúcia",  "min": 4 },
-    { "nome": "Espírito",      "min": 4 },
-    { "nome": "Força",  "min": 4 },
-    { "nome": "Vigor",    "min": 4 }
-  ]
-}

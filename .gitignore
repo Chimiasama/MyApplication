@@ -13,3 +13,14 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Ignorar JSON sensíveis da pasta assets
+app/src/main/assets/*.json
+# Ignorar TXT sensíveis da pasta raw
+app/src/main/res/raw/*.txt
+
+# Ignorar JSON sensíveis da pasta assets
+app/src/main/assets/*.json
+
+# Ignorar TXT sensíveis da pasta raw
+app/src/main/res/raw/*.txt

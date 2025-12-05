@@ -1,7 +1,0 @@
-[
-  { "key": "DOM",       "slots": 1, "pp": 15, "foco": "Foco" },
-  { "key": "MAGIA",     "slots": 3, "pp": 10, "foco": "Conjurar" },
-  { "key": "MILAGRES",  "slots": 3, "pp": 10, "foco": "Fé" },
-  { "key": "PSIÔNICOS", "slots": 3, "pp": 10, "foco": "Psiônicos" },
-  { "key": "CIÊNCIA ESTRANHA", "slots": 2, "pp": 15, "foco": "Ciência Estranha" }
-]
