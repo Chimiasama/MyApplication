@@ -274,22 +274,22 @@ class MainActivity : ComponentActivity() {
             var showFeedbackDialog by rememberSaveable { mutableStateOf(false) }
 
             if (showThemeDialog) {
-                val context = LocalContext.current
                 val themeNames = remember {
                     mapOf(
-                        com.example.swadebuilder.ui.theme.AppTheme.DEFAULT to "Padrão",
-                        com.example.swadebuilder.ui.theme.AppTheme.MEDIEVAL to "Medieval",
+                        com.example.swadebuilder.ui.theme.AppTheme.DEFAULT   to "Padrão",
+                        com.example.swadebuilder.ui.theme.AppTheme.MEDIEVAL  to "Medieval",
                         com.example.swadebuilder.ui.theme.AppTheme.CYBERPUNK to "Cyberpunk",
-                        com.example.swadebuilder.ui.theme.AppTheme.WW2 to "Segunda Guerra",
-                        com.example.swadebuilder.ui.theme.AppTheme.HORROR to "Horror",
-                        com.example.swadebuilder.ui.theme.AppTheme.SCIFI to "Sci-Fi",
-                        com.example.swadebuilder.ui.theme.AppTheme.PRIDE to "Pride",
+                        com.example.swadebuilder.ui.theme.AppTheme.WW2       to "Segunda Guerra",
+                        com.example.swadebuilder.ui.theme.AppTheme.HORROR    to "Horror",
+                        com.example.swadebuilder.ui.theme.AppTheme.SCIFI     to "Sci-Fi",
+                        com.example.swadebuilder.ui.theme.AppTheme.PRIDE     to "Pride",
                         com.example.swadebuilder.ui.theme.AppTheme.HALLOWEEN to "Halloween"
                     )
                 }
+
                 AlertDialog(
                     onDismissRequest = { showThemeDialog = false },
-                    title = { Text(context.getString(R.string.select_theme)) },
+                    title = { Text(stringResource(R.string.select_theme)) },
                     text = {
                         LazyColumn {
                             items(com.example.swadebuilder.ui.theme.AppTheme.entries) { theme ->
@@ -307,7 +307,7 @@ class MainActivity : ComponentActivity() {
                     },
                     confirmButton = {
                         TextButton(onClick = { showThemeDialog = false }) {
-                            Text(context.getString(R.string.cancel))
+                            Text(stringResource(R.string.cancel))
                         }
                     }
                 )
