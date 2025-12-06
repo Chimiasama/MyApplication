@@ -44,10 +44,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CollapsibleSection
@@ -558,123 +558,192 @@ fun VantagensContent(
                     state = listState
                 ) {
                     items(listaFiltrada, key = { it.id }) { vant ->
-                            val reqList = buildList {
-                                listaDeEstagios.firstOrNull {
-                                    it.nome.equals(vant.requisitos.estagio, true)
-                                }?.let { add("Estágio ≥ ${it.nome}") }
+                        val reqList = buildList {
+                            listaDeEstagios.firstOrNull {
+                                it.nome.equals(vant.requisitos.estagio, true)
+                            }?.let { add("Estágio ≥ ${it.nome}") }
 
-                                vant.requisitos.atributoMin.forEach { (a, m) ->
-                                    add("$a ≥ $m")
-                                }
-                                vant.requisitos.periciaMin.forEach { (p, m) ->
-                                    add("$p ≥ $m")
-                                }
-
-                                if (vant.requisitos.periciaMinOpcional.isNotEmpty()) {
-                                    add(
-                                        vant.requisitos.periciaMinOpcional.entries.joinToString(" ou ") {
-                                            "${it.key} d${it.value}+"
-                                        }
-                                    )
-                                }
-
-                                vant.requisitos.vantagensPrevias.forEach { prevId ->
-                                    val legivel = idParaNome[prevId]
-                                        ?: prevId.replace('_', ' ').uppercase()
-                                    add("Pré-requisito: $legivel")
-                                }
-
-                                if (vant.requisitos.exigeCS) add("Requer Carta Selvagem")
-                                if (vant.nome.trim().removeSuffix(":").keyify() == "profissional") {
-                                    add(
-                                        "Traço no teto máximo: escolha entre " +
-                                                state.maxedTraits.joinToString()
-                                    )
-                                }
+                            vant.requisitos.atributoMin.forEach { (a, m) ->
+                                add("$a ≥ $m")
+                            }
+                            vant.requisitos.periciaMin.forEach { (p, m) ->
+                                add("$p ≥ $m")
                             }
 
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable(enabled = !locked) {
-                                        selectedReqs = reqList
-                                        if (!locked) {
-                                            when {
-                                                state.pontosVantagem <= 0 -> {
-                                                    tempErrorMsg = "Sem PV disponível"
-                                                    showTempError = true
-                                                }
+                            if (vant.requisitos.periciaMinOpcional.isNotEmpty()) {
+                                add(
+                                    vant.requisitos.periciaMinOpcional.entries.joinToString(" ou ") {
+                                        "${it.key} d${it.value}+"
+                                    }
+                                )
+                            }
 
-                                                !state.podeSelecionar(vant) -> {
-                                                    tempErrorMsg =
-                                                        "Faltam requisitos para '${vant.nome}'"
-                                                    showTempError = true
-                                                }
+                            vant.requisitos.vantagensPrevias.forEach { prevId ->
+                                val legivel = idParaNome[prevId]
+                                    ?: prevId.replace('_', ' ').uppercase()
+                                add("Pré-requisito: $legivel")
+                            }
 
-                                                vant.vinculadoPericia -> {
-                                                    pendingVantagem = vant
-                                                    showChoiceDialog = true
-                                                }
+                            if (vant.requisitos.exigeCS) add("Requer Carta Selvagem")
+                            if (vant.nome.trim().removeSuffix(":").keyify() == "profissional") {
+                                add(
+                                    "Traço no teto máximo: escolha entre " +
+                                            state.maxedTraits.joinToString()
+                                )
+                            }
+                        }
 
-                                                vant.id == "antecedente_arcano" -> {
-                                                    dialogMostrandoAntecedente = vant
-                                                }
+                        val jaTem = state.vantagensSelecionadas.any { it.id == vant.id }
+                        val requisitosOk = state.podeSelecionar(vant)
+                        val statusText = when {
+                            jaTem -> "Já selecionada"
+                            requisitosOk -> "Requisitos OK"
+                            else -> "Requisitos pendentes"
+                        }
+                        val statusColor = when {
+                            jaTem -> MaterialTheme.colorScheme.tertiary
+                            requisitosOk -> MaterialTheme.colorScheme.primary
+                            else -> MaterialTheme.colorScheme.error
+                        }
 
-                                                vant.id == "novos_poderes" -> {
-                                                    pendingNovosPoderes = vant
-                                                    showNovosPoderesDialog = true
-                                                }
-
-                                                else -> {
-                                                    if (state.advantageAdvancementInProgress) {
-                                                        viewModel.selectAdvantageForAdvancement(vant)
-                                                    } else {
-                                                        if (vant.nome.contains(
-                                                                "Pontos de Poder",
-                                                                true
-                                                            )
-                                                        ) {
-                                                            state.comprarPontoDePoder(vant)
-                                                        } else {
-                                                            state.applyVantagemDinheiro(vant)
-                                                            state.vantagensSelecionadas += vant
-                                                        }
-                                                        state.pontosVantagem--
-                                                        state.rebuildAllPericiaStacks()
-                                                    }
-                                                }
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 4.dp, vertical = 4.dp)
+                                .clickable(enabled = !locked) {
+                                    selectedReqs = reqList
+                                    if (!locked) {
+                                        when {
+                                            state.pontosVantagem <= 0 -> {
+                                                tempErrorMsg = "Sem PV disponível"
+                                                showTempError = true
                                             }
 
-                                            scope.launch {
-                                                delay(2_000)
-                                                showTempError = false
+                                            !state.podeSelecionar(vant) -> {
+                                                tempErrorMsg =
+                                                    "Faltam requisitos para '${vant.nome}'"
+                                                showTempError = true
+                                            }
+
+                                            vant.vinculadoPericia -> {
+                                                pendingVantagem = vant
+                                                showChoiceDialog = true
+                                            }
+
+                                            vant.id == "antecedente_arcano" -> {
+                                                dialogMostrandoAntecedente = vant
+                                            }
+
+                                            vant.id == "novos_poderes" -> {
+                                                pendingNovosPoderes = vant
+                                                showNovosPoderesDialog = true
+                                            }
+
+                                            else -> {
+                                                if (state.advantageAdvancementInProgress) {
+                                                    viewModel.selectAdvantageForAdvancement(vant)
+                                                } else {
+                                                    if (vant.nome.contains(
+                                                            "Pontos de Poder",
+                                                            true
+                                                        )
+                                                    ) {
+                                                        state.comprarPontoDePoder(vant)
+                                                    } else {
+                                                        state.applyVantagemDinheiro(vant)
+                                                        state.vantagensSelecionadas += vant
+                                                    }
+                                                    state.pontosVantagem--
+                                                    state.rebuildAllPericiaStacks()
+                                                }
                                             }
                                         }
+
+                                        scope.launch {
+                                            delay(2_000)
+                                            showTempError = false
+                                        }
                                     }
-                                    .alpha(
-                                        if (!locked && state.podeSelecionar(vant)) 1f
-                                        else 0.3f
+                                },
+                            colors = CardDefaults.cardColors(
+                                containerColor = when {
+                                    jaTem -> MaterialTheme.colorScheme.tertiaryContainer
+                                    requisitosOk -> MaterialTheme.colorScheme.surfaceVariant
+                                    else -> MaterialTheme.colorScheme.errorContainer
+                                }
+                            )
+                        ) {
+                            Column(Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
+                                Row(
+                                    Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        vant.nome,
+                                        style = MaterialTheme.typography.titleSmall,
+                                        modifier = Modifier.weight(1f)
                                     )
-                                    .padding(vertical = 8.dp, horizontal = 4.dp)
-                            ) {
-                                Text(
-                                    vant.nome,
-                                    Modifier.weight(1f),
-                                    fontWeight = FontWeight.Medium
-                                )
-                                if (showLista) {
-                                    Icon(
-                                        Icons.Default.Visibility,
-                                        contentDescription = "Detalhes",
-                                        modifier = Modifier
-                                            .size(18.dp)
-                                            .clickable {
-                                                onOpenVantagensDetail(vant.nome)
-                                            }
+
+                                    Text(
+                                        statusText,
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = statusColor
+                                    )
+                                }
+
+                                Spacer(Modifier.size(6.dp))
+
+                                FlowRow(
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    val origem = vant.origem.ifBlank { "BÁSICO" }.uppercase(Locale.ROOT)
+                                    AssistChip(onClick = {}, label = { Text(origem) })
+
+                                    listaDeEstagios.firstOrNull {
+                                        it.nome.equals(vant.requisitos.estagio, true)
+                                    }?.let { est ->
+                                        AssistChip(onClick = {}, label = { Text("Estágio ${est.nome}") })
+                                    }
+
+                                    if (showLista) {
+                                        AssistChip(
+                                            onClick = { onOpenVantagensDetail(vant.nome) },
+                                            label = { Text("Ver detalhes") }
+                                        )
+                                    }
+
+                                    if (vant.descricao.isNotBlank() && vant.nome.equals(
+                                            vant.vinculadoPericia,
+                                            true
+                                        )
+                                    ) {
+                                        AssistChip(
+                                            onClick = {},
+                                            leadingIcon = {
+                                                Icon(
+                                                    Icons.Default.Visibility,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                                                )
+                                            },
+                                            label = { Text("Opções especiais") }
+                                        )
+                                    }
+                                }
+
+                                vant.descricao.takeIf { it.isNotBlank() }?.let { desc ->
+                                    Spacer(Modifier.size(8.dp))
+                                    Text(
+                                        desc,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        maxLines = 3,
+                                        overflow = TextOverflow.Ellipsis
                                     )
                                 }
                             }
                         }
+                    }
                 }
             }
             Spacer(Modifier.size(8.dp))
