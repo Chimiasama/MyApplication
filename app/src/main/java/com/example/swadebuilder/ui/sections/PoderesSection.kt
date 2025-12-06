@@ -192,6 +192,8 @@ private fun ArcanoArea(
         }
     }
 
+    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -199,7 +201,6 @@ private fun ArcanoArea(
             .padding(bottom = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
         items(
             items = poderesElegiveis,
             key = { it.id }
