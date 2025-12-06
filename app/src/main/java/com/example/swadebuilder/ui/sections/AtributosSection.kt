@@ -242,28 +242,26 @@ fun AtributosContent(
                 Spacer(Modifier.height(6.dp))
                 TextButton(
                     onClick = {
-                            val current = detalhesExpandidos[descKey] ?: false
-                            detalhesExpandidos[descKey] = !current
-                        },
-                        contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp, vertical = 4.dp)
-                    ) {
-                        Text(
-                            if (detalhesExpandidos[descKey] == true) "Ocultar detalhes" else "Ver detalhes",
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                    }
+                        val current = detalhesExpandidos[descKey] ?: false
+                        detalhesExpandidos[descKey] = !current
+                    },
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        if (detalhesExpandidos[descKey] == true) "Ocultar detalhes" else "Ver detalhes",
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
 
-                    AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
-                        Text(
-                            text = descricao,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
+                AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
+                    Text(
+                        text = descricao,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
         }
 
         Spacer(Modifier.height(8.dp))
     }
-}
 }
