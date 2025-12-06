@@ -2,7 +2,6 @@ package com.example.swadebuilder.ui.sections
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -47,7 +46,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CollapsibleSection
@@ -243,7 +241,6 @@ fun VantagensContent(
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
     var tempErrorMsg by remember { mutableStateOf("") }
     var showTempError by remember { mutableStateOf(false) }
-    var selectedReqs by remember { mutableStateOf<List<String>>(emptyList()) }
     var pendingVantagem by remember { mutableStateOf<Vantagem?>(null) }
     var showChoiceDialog by rememberSaveable { mutableStateOf(false) }
     var pendingNovosPoderes by rememberSaveable { mutableStateOf<Vantagem?>(null) }
@@ -272,6 +269,7 @@ fun VantagensContent(
 
     val locked = state.criacaoBasicaCongeladaComXp
     val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
+    val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
 
     val pcTotal = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
@@ -457,34 +455,15 @@ fun VantagensContent(
 
         Spacer(Modifier.size(16.dp))
 
-        Card(
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primaryContainer),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
+        if (showTempError) {
+            Text(
+                tempErrorMsg,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
-        ) {
-            Column(Modifier.padding(8.dp)) {
-                when {
-                    showTempError ->
-                        Text(tempErrorMsg, color = MaterialTheme.colorScheme.error)
-
-                    selectedReqs.isEmpty() -> Text(
-                        "Selecione uma vantagem para ver requisitos",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-
-                    else -> selectedReqs.forEach { req ->
-                        Text("• $req", style = MaterialTheme.typography.bodySmall)
-                    }
-                }
-            }
         }
 
-        Spacer(Modifier.size(16.dp))
+        Spacer(Modifier.size(8.dp))
 
         categoriasBy.forEach { (cat, lista) ->
             if (state.modoSupers && cat == Categoria.PODER) return@forEach
@@ -611,7 +590,6 @@ fun VantagensContent(
                                 .fillMaxWidth()
                                 .padding(horizontal = 4.dp, vertical = 4.dp)
                                 .clickable(enabled = !locked) {
-                                    selectedReqs = reqList
                                     if (!locked) {
                                         when {
                                             state.pontosVantagem <= 0 -> {
@@ -684,11 +662,25 @@ fun VantagensContent(
                                         modifier = Modifier.weight(1f)
                                     )
 
-                                    Text(
-                                        statusText,
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = statusColor
-                                    )
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(
+                                            statusText,
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = statusColor
+                                        )
+
+                                        if (showLista) {
+                                            Spacer(Modifier.size(8.dp))
+                                            Icon(
+                                                Icons.Default.Visibility,
+                                                contentDescription = "Ver detalhes",
+                                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                modifier = Modifier
+                                                    .size(18.dp)
+                                                    .clickable { onOpenVantagensDetail(vant.nome) }
+                                            )
+                                        }
+                                    }
                                 }
 
                                 Spacer(Modifier.size(6.dp))
@@ -706,13 +698,6 @@ fun VantagensContent(
                                         AssistChip(onClick = {}, label = { Text("Estágio ${est.nome}") })
                                     }
 
-                                    if (showLista) {
-                                        AssistChip(
-                                            onClick = { onOpenVantagensDetail(vant.nome) },
-                                            label = { Text("Ver detalhes") }
-                                        )
-                                    }
-
                                     if (vant.descricao.isNotBlank() && vant.vinculadoPericia) {
                                         AssistChip(
                                             onClick = {},
@@ -728,13 +713,32 @@ fun VantagensContent(
                                     }
                                 }
 
-                                vant.descricao.takeIf { it.isNotBlank() }?.let { desc ->
+                                if (reqList.isNotEmpty()) {
+                                    Spacer(Modifier.size(4.dp))
+                                    Text(
+                                        "Requisitos:",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                    reqList.forEach { req ->
+                                        Text(
+                                            "• $req",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = if (requisitosOk || jaTem) {
+                                                MaterialTheme.colorScheme.onSurface
+                                            } else {
+                                                MaterialTheme.colorScheme.onSurfaceVariant
+                                            }
+                                        )
+                                    }
+                                }
+
+                                if (allowLongTexts && vant.descricao.isNotBlank()) {
                                     Spacer(Modifier.size(8.dp))
                                     Text(
-                                        desc,
+                                        "Toque no ícone de olho para ver os detalhes desta vantagem.",
                                         style = MaterialTheme.typography.bodySmall,
-                                        maxLines = 3,
-                                        overflow = TextOverflow.Ellipsis
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                             }
