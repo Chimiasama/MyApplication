@@ -575,6 +575,7 @@ private fun EquipamentoSection(
         pcLivres = (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0),
         recursosPcUsados = state.cpRecursosStack.size,
         emProgresso = state.emProgresso,
+        modoProgressaoAtivo = state.modoProgressaoAtivo,
         expanded = expanded,
         onToggle = onToggle,
         onUsarPontosBonusEmRecursos = {

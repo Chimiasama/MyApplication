@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
@@ -158,6 +159,7 @@ fun EquipamentoSection(
     pcLivres: Int,
     recursosPcUsados: Int,
     emProgresso: Boolean,
+    modoProgressaoAtivo: Boolean,
     expanded: Boolean,
     onToggle: () -> Unit,
     onUsarPontosBonusEmRecursos: () -> Unit,
@@ -201,14 +203,14 @@ fun EquipamentoSection(
             listaCompletaText = "Lista Completa"
         )
 
-        if (emProgresso) {
+        if (emProgresso || modoProgressaoAtivo) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp),
                 horizontalArrangement = Arrangement.End
             ) {
-                TextButton(onClick = {
+                Button(onClick = {
                     dinheiroInput = dinheiro.toString()
                     showMoneyDialog = true
                 }) {
