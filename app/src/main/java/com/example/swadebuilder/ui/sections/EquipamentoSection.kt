@@ -558,11 +558,12 @@ fun EquipamentoSection(
             Spacer(Modifier.padding(vertical = 4.dp))
         }
 
-        val supCatsFiltradas = (superequipCategorias).let { list ->
-            val byOrigem = if (filter.origens.isNotEmpty())
+        val supCatsFiltradas = superequipCategorias.let { list ->
+            if (filter.origens.isNotEmpty()) {
                 list.filter { (it.origem?.uppercase() ?: "") in filter.origens }
-            else list
-            byOrigem
+            } else {
+                list
+            }
         }
 
         if (supCatsFiltradas.isNotEmpty()) {
@@ -581,28 +582,29 @@ fun EquipamentoSection(
                 ) {
                     supCatsFiltradas
                         .flatMap { it.itens }
-                          .filter { eq ->
-                              if (filter.somenteAcessiveis) {
-                                  val c = (eq.custo as? JsonPrimitive)
-                                      ?.content?.toIntOrNull() ?: Int.MAX_VALUE
-                                  if (c > dinheiro) return@filter false
-                              }
-                              true
-                          }
-                          .forEach { equipamento ->
-                              EquipamentoListItem(
-                                  equipamento = equipamento,
-                                  onClick = { onEquipamentoDoubleClick(equipamento) },
-                                  allowLongTexts = allowLongTexts,
-                                  expanded = detalhesExpandidos[equipamento.nome] == true,
-                                  onToggleDetails = {
-                                      val current = detalhesExpandidos[equipamento.nome] ?: false
-                                      detalhesExpandidos[equipamento.nome] = !current
-                                  }
-                              )
-                          }
-                  }
-              }
+                        .filter { eq ->
+                            if (filter.somenteAcessiveis) {
+                                val c = (eq.custo as? JsonPrimitive)
+                                    ?.content?.toIntOrNull()
+                                    ?: Int.MAX_VALUE
+                                if (c > dinheiro) return@filter false
+                            }
+                            true
+                        }
+                        .forEach { equipamento ->
+                            EquipamentoListItem(
+                                equipamento = equipamento,
+                                onClick = { onEquipamentoDoubleClick(equipamento) },
+                                allowLongTexts = allowLongTexts,
+                                expanded = detalhesExpandidos[equipamento.nome] == true,
+                                onToggleDetails = {
+                                    val current = detalhesExpandidos[equipamento.nome] ?: false
+                                    detalhesExpandidos[equipamento.nome] = !current
+                                }
+                            )
+                        }
+                }
+            }
         }
     }
 }
