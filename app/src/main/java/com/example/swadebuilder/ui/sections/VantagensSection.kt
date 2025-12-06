@@ -68,7 +68,6 @@ import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.Locale
 import kotlinx.serialization.json.Json
 
 data class VantFilter(
@@ -540,13 +539,13 @@ fun VantagensContent(
                         val reqList = buildList {
                             listaDeEstagios.firstOrNull {
                                 it.nome.equals(vant.requisitos.estagio, true)
-                            }?.let { add("Estágio ≥ ${it.nome}") }
+                            }?.let { add("Estágio: ${it.nome}") }
 
                             vant.requisitos.atributoMin.forEach { (a, m) ->
-                                add("$a ≥ $m")
+                                add("$a d$m")
                             }
                             vant.requisitos.periciaMin.forEach { (p, m) ->
-                                add("$p ≥ $m")
+                                add("$p d$m")
                             }
 
                             if (vant.requisitos.periciaMinOpcional.isNotEmpty()) {
@@ -689,15 +688,6 @@ fun VantagensContent(
                                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                                     verticalArrangement = Arrangement.spacedBy(6.dp)
                                 ) {
-                                    val origem = vant.origem.ifBlank { "BÁSICO" }.uppercase(Locale.ROOT)
-                                    AssistChip(onClick = {}, label = { Text(origem) })
-
-                                    listaDeEstagios.firstOrNull {
-                                        it.nome.equals(vant.requisitos.estagio, true)
-                                    }?.let { est ->
-                                        AssistChip(onClick = {}, label = { Text("Estágio ${est.nome}") })
-                                    }
-
                                     if (vant.descricao.isNotBlank() && vant.vinculadoPericia) {
                                         AssistChip(
                                             onClick = {},
@@ -733,14 +723,6 @@ fun VantagensContent(
                                     }
                                 }
 
-                                if (allowLongTexts && vant.descricao.isNotBlank()) {
-                                    Spacer(Modifier.size(8.dp))
-                                    Text(
-                                        "Toque no ícone de olho para ver os detalhes desta vantagem.",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
                             }
                         }
                     }
