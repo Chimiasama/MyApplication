@@ -265,3 +265,5 @@ fun AtributosContent(
         Spacer(Modifier.height(8.dp))
     }
 }
+
+}
