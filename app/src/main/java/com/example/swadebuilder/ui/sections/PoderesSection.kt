@@ -131,7 +131,7 @@ private fun ArcanoArea(
 ) {
     val arcKey = arcKeyRaw.normAAKey()
     val (slotsCount, ppTotal, foco) = arcanoInfo[arcKey] ?: Triple(0, 0, "—")
-    val showListaCompleta = booleanResource(R.bool.show_lista_completa)
+    val showListaCompleta = false
     val center = if (state.usarSemPontosDePoder) {
         "Teste $foco = -(custo/2)"
     } else {
@@ -143,7 +143,7 @@ private fun ArcanoArea(
         centerText  = center,
         onCenterClick = null,
         onListaCompletaClick = if (showListaCompleta) onOpenListaCompletaPoderes else null,
-        listaCompletaText = "Poderes"
+        listaCompletaText = ""
     )
 
     HorizontalDivider(thickness = 1.dp)

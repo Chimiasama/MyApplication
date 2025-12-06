@@ -67,7 +67,6 @@ fun PreviewApp() {
         onOpenComplicacoesDetail = {},
         onOpenAtributosDetail = {},
         onOpenListaAncestralidadesDetail = { _ -> },
-        onOpenListaCompletaEquipamento = {},
         onOpenPoderesDetail = {},
         onOpenSuperPoderesDetail = { _ -> },
 
@@ -110,7 +109,6 @@ fun UnifiedScreen(
     onOpenComplicacoesDetail: () -> Unit,
     onOpenAtributosDetail: () -> Unit,
     onOpenListaAncestralidadesDetail: (String) -> Unit,
-    onOpenListaCompletaEquipamento: () -> Unit,
     onOpenPoderesDetail: () -> Unit,
     onOpenSuperPoderesDetail: (String) -> Unit,
 
@@ -283,7 +281,7 @@ fun UnifiedScreen(
             } else {
                 // Default Progression View
                 ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
-                EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, onOpenListaCompletaEquipamento = onOpenListaCompletaEquipamento, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
+                EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
 
                 Spacer(Modifier.height(16.dp))
                 HorizontalDivider(thickness = 3.dp)
@@ -388,7 +386,7 @@ fun UnifiedScreen(
             HorizontalDivider(thickness = 1.dp)
 
             SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes, onOpenSuperPoderesDetail = onOpenSuperPoderesDetail)
-            EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, onOpenListaCompletaEquipamento = onOpenListaCompletaEquipamento, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
+            EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
 
             Spacer(Modifier.height(16.dp))
             HorizontalDivider(thickness = 3.dp)
@@ -562,7 +560,6 @@ private fun EquipamentoSection(
     state: CriadorState,
     expanded: Boolean,
     onToggle: () -> Unit,
-    onOpenListaCompletaEquipamento: () -> Unit,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>
 ) {
@@ -595,7 +592,6 @@ private fun EquipamentoSection(
                 state.dinheiro -= 500
             }
         },
-        onListaCompletaClick = onOpenListaCompletaEquipamento,
         onEquipamentoDoubleClick = { equipamento ->
             val custo = (equipamento.custo as? JsonPrimitive)
                 ?.content?.toIntOrNull() ?: 0

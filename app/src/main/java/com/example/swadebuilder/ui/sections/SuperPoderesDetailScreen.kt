@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -28,6 +29,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,6 +59,8 @@ fun SuperPoderesDetailScreen(
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
+    val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
+    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
     val superPoderes: List<SuperPoder> = remember {
         context.loadJsonAsset("superpoderes.json")
     }
@@ -205,16 +210,35 @@ fun SuperPoderesDetailScreen(
                                 }
 
                                 poder.descricao?.let { desc ->
-                                    Text(
-                                        text = "Descrição:",
-                                        fontWeight = FontWeight.SemiBold,
-                                        fontSize = 14.sp
-                                    )
-                                    Spacer(Modifier.height(4.dp))
-                                    Text(
-                                        text = desc,
-                                        fontSize = 14.sp
-                                    )
+                                    if (allowLongTexts && desc.isNotBlank()) {
+                                        TextButton(
+                                            onClick = {
+                                                val current = detalhesExpandidos[poder.nome] ?: false
+                                                detalhesExpandidos[poder.nome] = !current
+                                            },
+                                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp)
+                                        ) {
+                                            Text(
+                                                if (detalhesExpandidos[poder.nome] == true) "Ocultar detalhes" else "Ver detalhes",
+                                                style = MaterialTheme.typography.labelMedium
+                                            )
+                                        }
+
+                                        AnimatedVisibility(visible = detalhesExpandidos[poder.nome] == true) {
+                                            Column {
+                                                Text(
+                                                    text = "Descrição:",
+                                                    fontWeight = FontWeight.SemiBold,
+                                                    fontSize = 14.sp
+                                                )
+                                                Spacer(Modifier.height(4.dp))
+                                                Text(
+                                                    text = desc,
+                                                    fontSize = 14.sp
+                                                )
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

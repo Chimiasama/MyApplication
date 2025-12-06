@@ -169,7 +169,6 @@ fun EquipamentoSection(
     onToggle: () -> Unit,
     onUsarPontosBonusEmRecursos: () -> Unit,
     onDesfazerPontosBonusEmRecursos: () -> Unit,
-    onListaCompletaClick: () -> Unit,
     onEquipamentoDoubleClick: (EquipamentoItem) -> Unit,
     equipamentosComprados: List<EquipamentoItem>,
     onRemoveEquipamentoClick: (EquipamentoItem) -> Unit,
@@ -190,7 +189,7 @@ fun EquipamentoSection(
 
     var filter by remember { mutableStateOf(EquipFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
-    val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
+    val showLista = false
 
     SectionCard(
         title    = "Equipamento",
@@ -205,7 +204,7 @@ fun EquipamentoSection(
             centerText = "Dinheiro: $dinheiro",
             onCenterClick = null,
             onListaCompletaClick = if (showLista) onListaCompletaClick else null,
-            listaCompletaText = "Lista Completa"
+            listaCompletaText = ""
         )
 
         if (emProgresso || modoProgressaoAtivo) {

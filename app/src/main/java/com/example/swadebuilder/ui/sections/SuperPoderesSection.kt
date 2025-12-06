@@ -367,7 +367,7 @@ fun SuperPoderesSection(
 
     var showNivelDialog by rememberSaveable { mutableStateOf(false) }
 
-    booleanResource(R.bool.show_lista_completa)
+    false
 
     fun aplicarNivelSuper(novoNivel: Int) {
         if (novoNivel <= 0) {
@@ -539,7 +539,7 @@ fun SuperPoderesSection(
         Spacer(Modifier.height(8.dp))
 
 
-        val showLista2 = booleanResource(R.bool.show_lista_completa)
+        val showLista2 = false
 
         LazyColumn(
             state = listState,
@@ -1137,7 +1137,7 @@ fun SuperPoderesContent(
         onToggle = onToggle,
         icon = Icons.Filled.FlashOn
     ) {
-        val showLista = booleanResource(R.bool.show_lista_completa)
+        val showLista = false
 
         SectionHeader(
             onHelpClick = null,
@@ -1146,7 +1146,7 @@ fun SuperPoderesContent(
             onListaCompletaClick = if (showLista) {
                 { onOpenSuperPoderesDetail("") }
             } else null,
-            listaCompletaText = "Lista Completa"
+            listaCompletaText = ""
         )
 
         SuperPoderesSection(

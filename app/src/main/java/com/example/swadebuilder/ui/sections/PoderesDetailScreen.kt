@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +28,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -34,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -83,6 +86,8 @@ fun PoderesDetailScreen(
     viewModel: CriadorViewModel? = null
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
+    val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
+    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
     val isSupers = state.modoSupers
 
     Surface(
@@ -179,50 +184,74 @@ fun PoderesDetailScreen(
                                 Spacer(Modifier.height(4.dp))
                             }
 
-                            if (poder.descricao.isNotBlank()) {
-                                Text(
-                                    text = "Descrição:",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp,
-                                    color = MaterialTheme.colorScheme.onSurface
+                            val hasDescriptions = allowLongTexts && (
+                                poder.descricao.isNotBlank() ||
+                                    poder.modificadores.any { it.descricao.isNotBlank() }
                                 )
-                                Text(
-                                    text = poder.descricao,
-                                    fontSize = 14.sp,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                                Spacer(Modifier.height(4.dp))
-                            }
 
-                            if (poder.modificadores.isNotEmpty()) {
-                                Text(
-                                    text = "Modificadores:",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                                poder.modificadores.forEach { mod ->
+                            if (hasDescriptions) {
+                                TextButton(
+                                    onClick = {
+                                        val current = detalhesExpandidos[poder.nome] ?: false
+                                        detalhesExpandidos[poder.nome] = !current
+                                    },
+                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp)
+                                ) {
                                     Text(
-                                        text = "- ${mod.nome} (Custo: ${mod.custo})",
-                                        fontSize = 14.sp,
-                                        color = MaterialTheme.colorScheme.onSurface
+                                        if (detalhesExpandidos[poder.nome] == true) "Ocultar detalhes" else "Ver detalhes",
+                                        style = MaterialTheme.typography.labelMedium
                                     )
-                                    if (state.usarSemPontosDePoder) {
-                                        Text(
-                                            text = "  Penalidade: ${custoParaPenalidadeTexto(mod.custo)}",
-                                            fontSize = 14.sp,
-                                            color = MaterialTheme.colorScheme.onSurface
-                                        )
-                                    }
-                                    if (mod.descricao.isNotBlank()) {
-                                        Text(
-                                            text = "  ${mod.descricao}",
-                                            fontSize = 14.sp,
-                                            color = MaterialTheme.colorScheme.onSurface
-                                        )
+                                }
+
+                                AnimatedVisibility(visible = detalhesExpandidos[poder.nome] == true) {
+                                    Column {
+                                        if (poder.descricao.isNotBlank()) {
+                                            Text(
+                                                text = "Descrição:",
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 14.sp,
+                                                color = MaterialTheme.colorScheme.onSurface
+                                            )
+                                            Text(
+                                                text = poder.descricao,
+                                                fontSize = 14.sp,
+                                                color = MaterialTheme.colorScheme.onSurface
+                                            )
+                                            Spacer(Modifier.height(4.dp))
+                                        }
+
+                                        if (poder.modificadores.isNotEmpty()) {
+                                            Text(
+                                                text = "Modificadores:",
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 14.sp,
+                                                color = MaterialTheme.colorScheme.onSurface
+                                            )
+                                            poder.modificadores.forEach { mod ->
+                                                Text(
+                                                    text = "- ${mod.nome} (Custo: ${mod.custo})",
+                                                    fontSize = 14.sp,
+                                                    color = MaterialTheme.colorScheme.onSurface
+                                                )
+                                                if (state.usarSemPontosDePoder) {
+                                                    Text(
+                                                        text = "  Penalidade: ${custoParaPenalidadeTexto(mod.custo)}",
+                                                        fontSize = 14.sp,
+                                                        color = MaterialTheme.colorScheme.onSurface
+                                                    )
+                                                }
+                                                if (mod.descricao.isNotBlank()) {
+                                                    Text(
+                                                        text = "  ${mod.descricao}",
+                                                        fontSize = 14.sp,
+                                                        color = MaterialTheme.colorScheme.onSurface
+                                                    )
+                                                }
+                                            }
+                                            Spacer(Modifier.height(8.dp))
+                                        }
                                     }
                                 }
-                                Spacer(Modifier.height(8.dp))
                             }
 
                             HorizontalDivider(

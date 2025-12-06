@@ -94,7 +94,7 @@ fun PericiasContent(
     ) {
         stickyHeader {
             val pergaminho = MaterialTheme.colorScheme.surfaceVariant
-            val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
+            val showLista = false
 
             Surface(
                 tonalElevation = 0.dp,
@@ -110,7 +110,7 @@ fun PericiasContent(
                         onHelpClick          = null,
                         centerText           = "Pontos de Perícia: ${state.pontosPericia}",
                         onListaCompletaClick = if (showLista) ({ onOpenPericiasDetail() }) else null,
-                        listaCompletaText    = "Lista Completa"
+                        listaCompletaText    = ""
                     )
 
                     Spacer(Modifier.height(4.dp))
