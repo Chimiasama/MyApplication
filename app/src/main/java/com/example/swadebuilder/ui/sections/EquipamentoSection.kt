@@ -189,7 +189,6 @@ fun EquipamentoSection(
 
     var filter by remember { mutableStateOf(EquipFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
-    val showLista = false
 
     SectionCard(
         title    = "Equipamento",
@@ -203,7 +202,7 @@ fun EquipamentoSection(
             onHelpClick = null,
             centerText = "Dinheiro: $dinheiro",
             onCenterClick = null,
-            onListaCompletaClick = if (showLista) onListaCompletaClick else null,
+            onListaCompletaClick = null,
             listaCompletaText = ""
         )
 
