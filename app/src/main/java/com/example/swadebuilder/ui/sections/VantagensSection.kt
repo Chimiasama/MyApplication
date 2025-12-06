@@ -23,8 +23,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -231,10 +229,6 @@ fun VantagensContent(
         }
     }
 
-    val idParaNome = remember(listaVantagens) {
-        listaVantagens.associate { it.id to it.nome }
-    }
-
     val categoriasBy = remember(listaVantagensAtivas) {
         listaVantagensAtivas.groupBy { it.categoria }
     }
@@ -243,7 +237,6 @@ fun VantagensContent(
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
     var tempErrorMsg by remember { mutableStateOf("") }
     var showTempError by remember { mutableStateOf(false) }
-    var selectedReqs by remember { mutableStateOf<List<String>>(emptyList()) }
     var pendingVantagem by remember { mutableStateOf<Vantagem?>(null) }
     var showChoiceDialog by rememberSaveable { mutableStateOf(false) }
     var pendingNovosPoderes by rememberSaveable { mutableStateOf<Vantagem?>(null) }
@@ -346,6 +339,16 @@ fun VantagensContent(
         }
 
         Spacer(Modifier.size(8.dp))
+
+        if (showTempError) {
+            Text(
+                tempErrorMsg,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(horizontal = 16.dp),
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Spacer(Modifier.size(8.dp))
+        }
 
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -452,35 +455,6 @@ fun VantagensContent(
                         )
                     }
                 )
-            }
-        }
-
-        Spacer(Modifier.size(16.dp))
-
-        Card(
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primaryContainer),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            )
-        ) {
-            Column(Modifier.padding(8.dp)) {
-                when {
-                    showTempError ->
-                        Text(tempErrorMsg, color = MaterialTheme.colorScheme.error)
-
-                    selectedReqs.isEmpty() -> Text(
-                        "Selecione uma vantagem para ver requisitos",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-
-                    else -> selectedReqs.forEach { req ->
-                        Text("• $req", style = MaterialTheme.typography.bodySmall)
-                    }
-                }
             }
         }
 
@@ -593,11 +567,10 @@ fun VantagensContent(
                                 }
                             }
 
-                            Row(
+                            Column(
                                 Modifier
                                     .fillMaxWidth()
                                     .clickable(enabled = !locked) {
-                                        selectedReqs = reqList
                                         if (!locked) {
                                             when {
                                                 state.pontosVantagem <= 0 -> {
@@ -627,7 +600,9 @@ fun VantagensContent(
 
                                                 else -> {
                                                     if (state.advantageAdvancementInProgress) {
-                                                        viewModel.selectAdvantageForAdvancement(vant)
+                                                        viewModel.selectAdvantageForAdvancement(
+                                                            vant
+                                                        )
                                                     } else {
                                                         if (vant.nome.contains(
                                                                 "Pontos de Poder",
@@ -657,20 +632,39 @@ fun VantagensContent(
                                     )
                                     .padding(vertical = 8.dp, horizontal = 4.dp)
                             ) {
-                                Text(
-                                    vant.nome,
-                                    Modifier.weight(1f),
-                                    fontWeight = FontWeight.Medium
-                                )
-                                if (showLista) {
-                                    Icon(
-                                        Icons.Default.Visibility,
-                                        contentDescription = "Detalhes",
-                                        modifier = Modifier
-                                            .size(18.dp)
-                                            .clickable {
-                                                onOpenVantagensDetail(vant.nome)
-                                            }
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        vant.nome,
+                                        Modifier.weight(1f),
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                    if (showLista) {
+                                        Icon(
+                                            Icons.Default.Visibility,
+                                            contentDescription = "Detalhes",
+                                            modifier = Modifier
+                                                .size(18.dp)
+                                                .clickable {
+                                                    onOpenVantagensDetail(vant.nome)
+                                                }
+                                        )
+                                    }
+                                }
+                                val reqText = buildList {
+                                    vant.requisitos.estagio.takeIf { it != "Noviço" }
+                                        ?.let { add(it) }
+                                    vant.requisitos.atributoMin.forEach { (a, m) -> add("$a $m") }
+                                    vant.requisitos.periciaMin.forEach { (p, m) -> add("$p $m") }
+                                }.joinToString(" • ")
+
+                                if (reqText.isNotBlank()) {
+                                    Text(
+                                        text = reqText,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                            alpha = 0.7f
+                                        ),
+                                        modifier = Modifier.padding(top = 2.dp)
                                     )
                                 }
                             }

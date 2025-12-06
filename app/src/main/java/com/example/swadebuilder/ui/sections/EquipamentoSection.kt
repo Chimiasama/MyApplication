@@ -46,7 +46,49 @@ import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import com.example.swadebuilder.ui.components.asText
 import kotlinx.serialization.json.JsonPrimitive
+
+@Composable
+private fun EquipamentoRow(equipamento: EquipamentoItem, onDoubleClick: () -> Unit) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onDoubleClick)
+            .padding(vertical = 6.dp, horizontal = 4.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = equipamento.nome,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = "$${equipamento.custo.asText()}",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        val stats = listOfNotNull(
+            equipamento.dano.asText()?.let { "Dano $it" },
+            equipamento.pa.asText()?.let { "PA $it" },
+            equipamento.distancia.asText()?.let { "Dist ${it.replace("-", " ")}" },
+            equipamento.peso.asText()?.let { "Peso $it" }
+        ).joinToString(" • ")
+        if (stats.isNotBlank()) {
+            Text(
+                text = stats,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                modifier = Modifier.padding(top = 2.dp)
+            )
+        }
+    }
+}
 
 data class EquipFilter(
     val somenteAcessiveis: Boolean = false,
@@ -457,27 +499,8 @@ fun EquipamentoSection(
                                             true
                                         }
                                         .forEach { equipamento ->
-                                            Row(
-                                                Modifier
-                                                    .fillMaxWidth()
-                                                    .clickable {
-                                                        onEquipamentoDoubleClick(equipamento)
-                                                    }
-                                                    .padding(
-                                                        vertical = 4.dp,
-                                                        horizontal = 4.dp
-                                                    ),
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
-                                                Text(
-                                                    equipamento.nome,
-                                                    Modifier.weight(1f),
-                                                    style = MaterialTheme.typography.bodyMedium
-                                                )
-                                                Text(
-                                                    equipamento.custo.toString(),
-                                                    style = MaterialTheme.typography.bodyMedium
-                                                )
+                                            EquipamentoRow(equipamento = equipamento) {
+                                                onEquipamentoDoubleClick(equipamento)
                                             }
                                         }
                                 } else {
@@ -519,27 +542,8 @@ fun EquipamentoSection(
                                                         true
                                                     }
                                                     .forEach { equipamento ->
-                                                        Row(
-                                                            Modifier
-                                                                .fillMaxWidth()
-                                                                .clickable {
-                                                                    onEquipamentoDoubleClick(equipamento)
-                                                                }
-                                                                .padding(
-                                                                    vertical = 4.dp,
-                                                                    horizontal = 4.dp
-                                                                ),
-                                                            verticalAlignment = Alignment.CenterVertically
-                                                        ) {
-                                                            Text(
-                                                                equipamento.nome,
-                                                                Modifier.weight(1f),
-                                                                style = MaterialTheme.typography.bodyMedium
-                                                            )
-                                                            Text(
-                                                                equipamento.custo.toString(),
-                                                                style = MaterialTheme.typography.bodyMedium
-                                                            )
+                                                        EquipamentoRow(equipamento = equipamento) {
+                                                            onEquipamentoDoubleClick(equipamento)
                                                         }
                                                     }
                                             }
@@ -587,24 +591,8 @@ fun EquipamentoSection(
                             true
                         }
                         .forEach { equipamento ->
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        onEquipamentoDoubleClick(equipamento)
-                                    }
-                                    .padding(vertical = 4.dp, horizontal = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    equipamento.nome,
-                                    Modifier.weight(1f),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                                Text(
-                                    equipamento.custo.toString(),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
+                            EquipamentoRow(equipamento = equipamento) {
+                                onEquipamentoDoubleClick(equipamento)
                             }
                         }
                 }

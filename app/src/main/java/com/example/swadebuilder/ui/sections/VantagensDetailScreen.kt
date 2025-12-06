@@ -1,21 +1,17 @@
 package com.example.swadebuilder.ui.sections
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -37,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.AppData
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.ui.components.VantagemListItem
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 
@@ -65,8 +61,12 @@ fun VantagensDetailScreen(
         )
     }
 
-    val listaFiltradaParaGrupo = remember(modoSupers, todasVantagens) {
-        if (!modoSupers) {
+    val idToNameMap = remember(todasVantagens) {
+        todasVantagens.associate { it.id to it.nome }
+    }
+
+    val listaFiltrada = remember(modoSupers, todasVantagens, AppData.superVantagensParaDetalhe) {
+        val baseList = if (!modoSupers) {
             todasVantagens
         } else {
             todasVantagens.filter { vant ->
@@ -75,140 +75,37 @@ fun VantagensDetailScreen(
                         vant.categoria.name.uppercase() != "PODER"
             }
         }
+        baseList + if (modoSupers) AppData.superVantagensParaDetalhe else emptyList()
     }
 
-    val categoriasNormais: Map<String, List<String>> = remember(listaFiltradaParaGrupo) {
-        listaFiltradaParaGrupo
-            .filter { it.origem.equals("BASICO", ignoreCase = true) }
-            .groupBy { it.categoria.name }
-            .mapValues { entry ->
-                entry.value.map { vant ->
-                    buildString {
-                        append(vant.nome)
-                        append("\nEstágio: ${vant.requisitos.estagio}")
-                        vant.requisitos.atributoMin.forEach { (atributo, minimo) ->
-                            append("\n$atributo ≥ $minimo")
-                        }
-                        vant.requisitos.periciaMin.forEach { (pericia, minimo) ->
-                            append("\n$pericia ≥ $minimo")
-                        }
-                        vant.requisitos.periciaMinOpcional.forEach { (pericia, valorMinimo) ->
-                            append("\n$pericia d$valorMinimo+")
-                        }
-                        vant.requisitos.vantagensPrevias.forEach { req ->
-                            append("\nPré‐requisito: $req")
-                        }
-                        if (vant.requisitos.observacoes.isNotBlank()) {
-                            append("\nObservações: ${vant.requisitos.observacoes}")
-                        }
-                        append("\n\n${vant.descricao}")
-                    }
-                }
-            }
-    }
-
-    val categoriasSuper: Map<String, List<String>> = remember(modoSupers) {
-        if (!modoSupers) {
-            emptyMap()
-        } else {
-            val supList = AppData.superVantagensParaDetalhe
-            supList.groupBy { it.categoria.name }
-                .mapValues { entry ->
-                    entry.value.map { vant ->
-                        buildString {
-                            append(vant.nome)
-                            append("\nEstágio: ${vant.requisitos.estagio}")
-                            vant.requisitos.periciaMin.forEach { (pericia, minimo) ->
-                                append("\n$pericia ≥ $minimo")
-                            }
-                            vant.requisitos.periciaMinOpcional.forEach { (pericia, valorMinimo) ->
-                                append("\n$pericia ≥ $valorMinimo")
-                            }
-                            vant.requisitos.vantagensPrevias.forEach { req ->
-                                append("\nPré‐requisito: $req")
-                            }
-                            if (vant.requisitos.observacoes.isNotBlank()) {
-                                append("\nObservações: ${vant.requisitos.observacoes}")
-                            }
-                            append("\n\n${vant.descricao}")
-                        }
-                    }
-                }
-        }
-    }
-
-    val todasCategorias: Map<String, Pair<String, List<String>>> = remember(
-        categoriasNormais,
-        categoriasSuper
-    ) {
-        val tempMap = mutableMapOf<String, Pair<String, MutableList<String>>>()
-
-        categoriasNormais.forEach { (categoriaEnumName, blocosTexto) ->
-            val chaveNorm = categoriaEnumName
-                .uppercase()
-                .semAcentos()
-                .removePrefix("DE ")
-                .trim()
-            tempMap[chaveNorm] = Pair(categoriaEnumName, blocosTexto.toMutableList())
-        }
-
-        categoriasSuper.forEach { (categoriaEnumName, blocosTextoSuper) ->
-            val chaveNorm = categoriaEnumName
-                .uppercase()
-                .semAcentos()
-                .removePrefix("DE ")
-                .trim()
-            if (tempMap.containsKey(chaveNorm)) {
-                val (_, blocosMutaveis) = tempMap.getValue(chaveNorm)
-                blocosMutaveis.addAll(blocosTextoSuper)
-            } else {
-                tempMap[chaveNorm] = Pair(
-                    categoriaEnumName.lowercase().replaceFirstChar { it.uppercase() },
-                    blocosTextoSuper.toMutableList()
-                )
-            }
-        }
-
-        tempMap.mapValues { (_, pair) ->
-            pair.first to pair.second.toList()
-        }
-    }
-
-    val tituloParaVant: Map<String, Vantagem> = remember(listaFiltradaParaGrupo, modoSupers) {
-        val base = mutableMapOf<String, Vantagem>()
-        listaFiltradaParaGrupo.forEach { base[it.nome] = it }
-        if (modoSupers) {
-            AppData.superVantagensParaDetalhe.forEach { base[it.nome] = it }
-        }
-        base
+    val vantagensAgrupadas = remember(listaFiltrada) {
+        listaFiltrada.groupBy { it.categoria.name.lowercase().replaceFirstChar { char -> if (char.isLowerCase()) char.titlecase() else char.toString() } }
+            .toSortedMap(compareBy { it })
     }
 
     val expandedState = remember {
         mutableStateMapOf<String, Boolean>().apply {
-            todasCategorias.keys.forEach { put(it, false) }
+            vantagensAgrupadas.keys.forEach { put(it, false) }
         }
     }
     val listState = rememberLazyListState()
 
-    LaunchedEffect(highlightedName, todasCategorias) {
+    LaunchedEffect(highlightedName, vantagensAgrupadas) {
         if (highlightedName.isNotEmpty()) {
-            val targetCat: String? = todasCategorias.entries.firstOrNull { (_, pair) ->
-                pair.second.any { bloco -> bloco.lines().first() == highlightedName }
+            val targetCat = vantagensAgrupadas.entries.firstOrNull { (_, vants) ->
+                vants.any { it.nome == highlightedName }
             }?.key
-            targetCat?.let { expandedState[it] = true }
+            if (targetCat != null) {
+                expandedState[targetCat] = true
+                val groupIndex = vantagensAgrupadas.keys.indexOf(targetCat)
+                var itemIndexInList = groupIndex + 1
 
-            val keysList = mutableListOf<String>()
-            todasCategorias.forEach { (cat, pair) ->
-                keysList.add("header-$cat")
-                if (expandedState[cat] == true) {
-                    pair.second.forEach { bloco ->
-                        keysList.add(bloco.lines().first())
-                    }
+                val vantsInGroup = vantagensAgrupadas[targetCat] ?: emptyList()
+                val indexInGroup = vantsInGroup.indexOfFirst { it.nome == highlightedName }
+                if (indexInGroup != -1) {
+                    itemIndexInList += indexInGroup
+                    listState.animateScrollToItem(itemIndexInList)
                 }
-            }
-            val idx = keysList.indexOf(highlightedName)
-            if (idx >= 0) {
-                listState.animateScrollToItem(idx)
             }
         }
     }
@@ -240,30 +137,29 @@ fun VantagensDetailScreen(
         LazyColumn(
             state = listState,
             contentPadding = innerPadding,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
         ) {
-            todasCategorias.forEach { (cat, pair) ->
-                val displayName = pair.first
-                val listaBlocos = pair.second
-
-                item(key = "header-$cat") {
+            vantagensAgrupadas.forEach { (categoria, vants) ->
+                item(key = "header-$categoria") {
                     Row(
                         Modifier
                             .fillMaxWidth()
                             .clickable {
-                                val atual = expandedState[cat] ?: false
-                                expandedState[cat] = !atual
+                                val atual = expandedState[categoria] ?: false
+                                expandedState[categoria] = !atual
                             }
-                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                            .padding(vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = displayName,
+                            text = categoria,
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.weight(1f)
                         )
                         Icon(
-                            imageVector = if (expandedState[cat] == true)
+                            imageVector = if (expandedState[categoria] == true)
                                 Icons.Filled.ExpandLess
                             else
                                 Icons.Filled.ExpandMore,
@@ -272,65 +168,14 @@ fun VantagensDetailScreen(
                     }
                 }
 
-                if (expandedState[cat] == true) {
-                    listaBlocos.forEachIndexed { index, bloco ->
-                        val linhas = bloco.lines()
-                        val titulo = linhas.first()
-
-                        val vant = tituloParaVant[titulo]
-                        val jaTem = (titulo in nomesJaSelecionadas)
-                        val requisitosOk = vant?.let { state.podeSelecionar(it) } ?: true
-
-                        item(key = "$cat-$titulo-$index") {
-                            Column(
-                                Modifier
-                                    .padding(start = 24.dp, bottom = 16.dp)
-                                    .background(
-                                        when {
-                                            jaTem -> MaterialTheme.colorScheme.tertiaryContainer
-                                            requisitosOk -> Color.Transparent
-                                            else -> MaterialTheme.colorScheme.errorContainer
-                                        }
-                                    )
-                                    .padding(start = 4.dp, top = 8.dp, end = 4.dp, bottom = 8.dp)
-                            ) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text(
-                                        text = titulo,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 18.sp,
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    val status = when {
-                                        jaTem -> "já selecionada"
-                                        requisitosOk -> "requisitos OK"
-                                        else -> "requisitos pendentes"
-                                    }
-                                    Text(
-                                        status,
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = when {
-                                            jaTem -> MaterialTheme.colorScheme.tertiary
-                                            requisitosOk -> MaterialTheme.colorScheme.primary
-                                            else -> MaterialTheme.colorScheme.error
-                                        }
-                                    )
-                                }
-
-                                Spacer(Modifier.height(4.dp))
-
-                                if (linhas.size > 1) {
-                                    Text(
-                                        text = linhas.drop(1).joinToString("\n"),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        fontSize = 14.sp
-                                    )
-                                }
-
-                                Spacer(Modifier.height(12.dp))
-                                HorizontalDivider(color = Color.Gray, thickness = 1.dp)
-                            }
-                        }
+                if (expandedState[categoria] == true) {
+                    items(vants, key = { "vant-${it.id}" }) { vant ->
+                        VantagemListItem(
+                            vantagem = vant,
+                            isRequirementMet = state.podeSelecionar(vant),
+                            isAlreadyAcquired = vant.nome in nomesJaSelecionadas,
+                            idToNameMap = idToNameMap
+                        )
                     }
                 }
             }
