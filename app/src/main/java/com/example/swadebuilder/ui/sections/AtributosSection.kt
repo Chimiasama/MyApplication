@@ -40,8 +40,7 @@ import com.example.swadebuilder.ui.components.SectionHeader
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun AtributosContent(
-    state: CriadorState,
-    onOpenAtributosDetail: () -> Unit
+    state: CriadorState
 ) {
     val locked = state.criacaoBasicaCongelada && !state.attributeAdvancementInProgress
 
@@ -77,7 +76,7 @@ fun AtributosContent(
         SectionHeader(
             onHelpClick = null,
             centerText = "Pontos de Atributo: ${state.pontosAtributo}",
-            onListaCompletaClick = if (showLista) ({ onOpenAtributosDetail() }) else null,
+            onListaCompletaClick = null,
             listaCompletaText = "Lista Completa"
         )
 

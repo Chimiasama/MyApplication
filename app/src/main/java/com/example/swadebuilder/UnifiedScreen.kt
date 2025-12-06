@@ -31,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
@@ -42,7 +41,6 @@ import com.example.swadebuilder.ui.sections.AtributosContent
 import com.example.swadebuilder.ui.sections.ComplicacoesSection
 import com.example.swadebuilder.ui.sections.EquipamentoSection
 import com.example.swadebuilder.ui.sections.PericiasContent
-import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.SummaryContent
 import com.example.swadebuilder.ui.sections.SuperPoderesContent
 import com.example.swadebuilder.ui.sections.VantagensContent
@@ -51,6 +49,7 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
 
+/*
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Preview(showBackground = true)
 @Composable
@@ -60,16 +59,7 @@ fun PreviewApp() {
 
     UnifiedScreen(
         state = state,
-        viewModel = vm,   // <<<<<<<<<<<<<< ADICIONADO
-
-        onOpenVantagensDetail = { _ -> },
-        onOpenPericiasDetail = {},
-        onOpenComplicacoesDetail = {},
-        onOpenAtributosDetail = {},
-        onOpenListaAncestralidadesDetail = { _ -> },
-        onOpenListaCompletaEquipamento = {},
-        onOpenPoderesDetail = {},
-        onOpenSuperPoderesDetail = { _ -> },
+        viewModel = vm,
 
         expAncs = true,
         onToggleAncs = {},
@@ -98,6 +88,7 @@ fun PreviewApp() {
         listaSuperPoderes = emptyList()
     )
 }
+*/
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -105,42 +96,24 @@ fun PreviewApp() {
 fun UnifiedScreen(
     state: CriadorState,
     viewModel: CriadorViewModel,
-    onOpenVantagensDetail: (String) -> Unit,
-    onOpenPericiasDetail: () -> Unit,
-    onOpenComplicacoesDetail: () -> Unit,
-    onOpenAtributosDetail: () -> Unit,
-    onOpenListaAncestralidadesDetail: (String) -> Unit,
-    onOpenListaCompletaEquipamento: () -> Unit,
-    onOpenPoderesDetail: () -> Unit,
-    onOpenSuperPoderesDetail: (String) -> Unit,
-
     expAncs: Boolean,
     onToggleAncs: () -> Unit,
-
     expComps: Boolean,
     onToggleComps: () -> Unit,
-
     expEquip: Boolean,
     onToggleEquip: () -> Unit,
-
     expAttrs: Boolean,
     onToggleAttrs: () -> Unit,
-
     expPer: Boolean,
     onTogglePer: () -> Unit,
-
     expVants: Boolean,
     onToggleVants: () -> Unit,
-
     expResumo: Boolean,
     onToggleResumo: () -> Unit,
-
     expPoderes: Boolean,
     onTogglePoderes: () -> Unit,
-
     expXp: Boolean,
     onToggleXp: () -> Unit,
-
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
     listaSuperPoderes: List<SuperPoder>
@@ -153,10 +126,8 @@ fun UnifiedScreen(
     var currentSlotIndex by rememberSaveable { mutableIntStateOf(-1) }
     val scrollState = rememberScrollState()
 
-    // --- estados para o MEIO-ELFO ---
     var showMeioElfoDialog by rememberSaveable { mutableStateOf(false) }
     var pendingMeioElfoKey by rememberSaveable { mutableStateOf<String?>(null) }
-    // --------------------------------
     val creationLocked = state.criacaoBasicaCongelada
 
     Column(
@@ -167,7 +138,6 @@ fun UnifiedScreen(
     ) {
         if (state.modoProgressaoAtivo) {
             if (state.mostrandoVantagensProgresso) {
-                // Progression: Advantages
                 ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
 
                 SectionCard(
@@ -179,7 +149,6 @@ fun UnifiedScreen(
                     VantagensContent(
                         state = state,
                         multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-                        onOpenVantagensDetail  = onOpenVantagensDetail,
                         viewModel = viewModel
                     )
                 }
@@ -207,7 +176,6 @@ fun UnifiedScreen(
                 }
 
             } else if (state.mostrandoPericiasProgresso) {
-                // Progression: Skills
                 ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
 
                 SectionCard(
@@ -218,7 +186,6 @@ fun UnifiedScreen(
                 ) {
                     PericiasContent(
                         state = state,
-                        onOpenPericiasDetail = onOpenPericiasDetail,
                         feedbackMessages = viewModel.feedbackMessages as MutableList<String>
                     )
                 }
@@ -246,7 +213,6 @@ fun UnifiedScreen(
                 }
 
             } else if (state.mostrandoAtributosProgresso) {
-                // Progression: Attributes
                 ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
 
                 SectionCard(
@@ -255,7 +221,7 @@ fun UnifiedScreen(
                     onToggle = onToggleAttrs,
                     icon     = Icons.Default.FitnessCenter
                 ) {
-                    AtributosContent(state = state, onOpenAtributosDetail = onOpenAtributosDetail)
+                    AtributosContent(state = state)
                 }
 
                 Spacer(Modifier.height(16.dp))
@@ -281,9 +247,8 @@ fun UnifiedScreen(
                 }
 
             } else {
-                // Default Progression View
                 ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
-                EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, onOpenListaCompletaEquipamento = onOpenListaCompletaEquipamento, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
+                EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
 
                 Spacer(Modifier.height(16.dp))
                 HorizontalDivider(thickness = 3.dp)
@@ -302,7 +267,6 @@ fun UnifiedScreen(
                 )
             }
         } else {
-            // Creation Phase Layout
             ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
 
             HorizontalDivider(thickness = 1.dp)
@@ -313,7 +277,6 @@ fun UnifiedScreen(
                 onToggle = onToggleAncs,
                 supersLocked = creationLocked,
                 ancestralidadeEmFoco = state.ancestralidadeEmFoco,
-                onOpenListaAncestralidadesDetail = onOpenListaAncestralidadesDetail,
                 onSelectAncestralidade = { nome ->
                     val key = nome.uppercase().semAcentos()
                     if (key == state.ancestralidade) return@AncestralidadesSection
@@ -336,7 +299,6 @@ fun UnifiedScreen(
                 state = state,
                 expanded = expComps,
                 onToggle = onToggleComps,
-                onOpenComplicacoesDetail = onOpenComplicacoesDetail,
                 feedbackMessages = viewModel.feedbackMessages as MutableList<String>
             )
 
@@ -348,7 +310,7 @@ fun UnifiedScreen(
                 onToggle = onToggleAttrs,
                 icon     = Icons.Default.FitnessCenter
             ) {
-                AtributosContent(state, onOpenAtributosDetail)
+                AtributosContent(state)
             }
 
             HorizontalDivider(thickness = 1.dp)
@@ -361,7 +323,6 @@ fun UnifiedScreen(
             ) {
                 PericiasContent(
                     state = state,
-                    onOpenPericiasDetail = onOpenPericiasDetail,
                     feedbackMessages = viewModel.feedbackMessages as MutableList<String>
                 )
             }
@@ -377,18 +338,17 @@ fun UnifiedScreen(
                 VantagensContent(
                     state = state,
                     multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-                    onOpenVantagensDetail  = onOpenVantagensDetail,
                     viewModel = viewModel
                 )
             }
 
-            PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes, onOpenPoderesDetail = onOpenPoderesDetail)
+            PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes)
 
             Spacer(Modifier.height(8.dp))
             HorizontalDivider(thickness = 1.dp)
 
-            SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes, onOpenSuperPoderesDetail = onOpenSuperPoderesDetail)
-            EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, onOpenListaCompletaEquipamento = onOpenListaCompletaEquipamento, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
+            SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes)
+            EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
 
             Spacer(Modifier.height(16.dp))
             HorizontalDivider(thickness = 3.dp)
@@ -425,18 +385,15 @@ fun UnifiedScreen(
                 )
             },
             confirmButton = {
-                // Herança Élfica (Agilidade d6)
                 TextButton(
                     onClick = {
                         val key = pendingMeioElfoKey ?: return@TextButton
 
-                        // Aplica a ancestralidade Meio-Elfo
                         state.aplicarAncestralidade(
                             key,
                             viewModel.feedbackMessages as MutableList<String>
                         )
 
-                        // Garante Agilidade em d6 (raw = 6) se ainda estiver abaixo
                         val agiState = state.valoresAtributos["AGILIDADE"]
                         if (agiState != null && agiState.intValue < 6) {
                             agiState.intValue = 6
@@ -451,18 +408,15 @@ fun UnifiedScreen(
                 }
             },
             dismissButton = {
-                // Herança Humana (+1 PV)
                 TextButton(
                     onClick = {
                         val key = pendingMeioElfoKey ?: return@TextButton
 
-                        // Aplica a ancestralidade Meio-Elfo
                         state.aplicarAncestralidade(
                             key,
                             viewModel.feedbackMessages as MutableList<String>
                         )
 
-                        // Dá 1 ponto de vantagem extra
                         state.pontosVantagem += 1
 
                         pendingMeioElfoKey = null
@@ -516,8 +470,7 @@ private fun ResumoSection(
 private fun PoderesSection(
     state: CriadorState,
     expanded: Boolean,
-    onToggle: () -> Unit,
-    onOpenPoderesDetail: () -> Unit
+    onToggle: () -> Unit
 ) {
     val temArcano = state.vantagensSelecionadas.any {
         it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
@@ -530,9 +483,8 @@ private fun PoderesSection(
             onToggle = onToggle,
             icon = Icons.Default.FlashOn
         ) {
-            PoderesSection(
-                state = state,
-                onOpenListaCompletaPoderes = onOpenPoderesDetail
+            com.example.swadebuilder.ui.sections.PoderesSection(
+                state = state
             )
         }
     }
@@ -543,16 +495,14 @@ private fun SuperPoderesSection(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
     expanded: Boolean,
-    onToggle: () -> Unit,
-    onOpenSuperPoderesDetail: (String) -> Unit
+    onToggle: () -> Unit
 ) {
     if (state.modoSupers) {
         SuperPoderesContent(
             state = state,
             listaSuperPoderes = listaSuperPoderes,
             expanded = expanded,
-            onToggle = onToggle,
-            onOpenSuperPoderesDetail = onOpenSuperPoderesDetail
+            onToggle = onToggle
         )
     }
 }
@@ -562,14 +512,13 @@ private fun EquipamentoSection(
     state: CriadorState,
     expanded: Boolean,
     onToggle: () -> Unit,
-    onOpenListaCompletaEquipamento: () -> Unit,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>
 ) {
     val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
     val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
 
-    EquipamentoSection(
+    com.example.swadebuilder.ui.sections.EquipamentoSection(
         dinheiro = state.dinheiro,
         pcTotal = state.pontosComplicacao,
         pcLivres = (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0),
@@ -595,7 +544,6 @@ private fun EquipamentoSection(
                 state.dinheiro -= 500
             }
         },
-        onListaCompletaClick = onOpenListaCompletaEquipamento,
         onEquipamentoDoubleClick = { equipamento ->
             val custo = (equipamento.custo as? JsonPrimitive)
                 ?.content?.toIntOrNull() ?: 0

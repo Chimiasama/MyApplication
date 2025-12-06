@@ -48,7 +48,6 @@ fun AncestralidadesSection(
     onToggle: () -> Unit,
     supersLocked: Boolean,
     ancestralidadeEmFoco: String?,
-    onOpenListaAncestralidadesDetail: (String) -> Unit,
     onSelectAncestralidade: (String) -> Unit
 ) {
     val context = LocalContext.current

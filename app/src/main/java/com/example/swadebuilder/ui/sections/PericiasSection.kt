@@ -51,7 +51,6 @@ import kotlin.math.max
 @Composable
 fun PericiasContent(
     state: CriadorState,
-    onOpenPericiasDetail: () -> Unit,
     feedbackMessages: MutableList<String>
 ) {
     val locked = state.criacaoBasicaCongelada && !state.skillAdvancementInProgress
