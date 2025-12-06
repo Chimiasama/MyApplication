@@ -84,6 +84,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.swadebuilder.model.Atributo
 import com.example.swadebuilder.model.AtributoList
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
