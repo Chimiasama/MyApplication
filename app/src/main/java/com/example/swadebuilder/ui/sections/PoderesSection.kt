@@ -231,8 +231,18 @@ private fun ArcanoArea(
                         Text("Penalidade base: ${custoParaPenalidadeTexto(poder.pontosDePoder)}")
                     }
 
-                    val descricaoDisponivel = allowLongTexts && poder.descricao.isNotBlank()
-                    if (descricaoDisponivel) {
+                    val manifestacoesDisponiveis = poder.manifestacoes.filter { it.isNotBlank() }
+                    val modificadoresDisponiveis = poder.modificadores.filter { mod ->
+                        mod.nome.isNotBlank() || mod.descricao.isNotBlank()
+                    }
+
+                    val detalhesDisponiveis = allowLongTexts && (
+                        poder.descricao.isNotBlank() ||
+                            manifestacoesDisponiveis.isNotEmpty() ||
+                            modificadoresDisponiveis.isNotEmpty()
+                    )
+
+                    if (detalhesDisponiveis) {
                         Spacer(Modifier.height(6.dp))
                         TextButton(onClick = {
                             val current = detalhesExpandidos[poder.id] ?: false
@@ -249,25 +259,26 @@ private fun ArcanoArea(
 
                         AnimatedVisibility(visible = detalhesExpandidos[poder.id] == true) {
                             Column(Modifier.padding(top = 4.dp)) {
-                                Text(poder.descricao)
-                                Spacer(Modifier.height(4.dp))
+                                if (poder.descricao.isNotBlank()) {
+                                    Text(poder.descricao)
+                                    Spacer(Modifier.height(4.dp))
+                                }
+
                                 Text("Distância: ${poder.distancia}")
                                 Text("Duração: ${poder.duracao}")
 
-                                val mans = poder.manifestacoes
-                                if (mans.isNotEmpty()) {
+                                if (manifestacoesDisponiveis.isNotEmpty()) {
                                     Spacer(Modifier.height(4.dp))
                                     Text("Manifestações:", fontWeight = FontWeight.SemiBold)
-                                    mans.forEach { man ->
+                                    manifestacoesDisponiveis.forEach { man ->
                                         Text("• $man", style = MaterialTheme.typography.bodyMedium)
                                     }
                                 }
 
-                                val mods = poder.modificadores
-                                if (mods.isNotEmpty()) {
+                                if (modificadoresDisponiveis.isNotEmpty()) {
                                     Spacer(Modifier.height(4.dp))
                                     Text("Modificadores:", fontWeight = FontWeight.SemiBold)
-                                    mods.forEach { mod ->
+                                    modificadoresDisponiveis.forEach { mod ->
                                         Text(
                                             "${mod.nome} (${mod.custo}): ${mod.descricao}",
                                             style = MaterialTheme.typography.bodyMedium

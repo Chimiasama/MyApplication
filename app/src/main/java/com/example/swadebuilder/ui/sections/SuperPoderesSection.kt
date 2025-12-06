@@ -556,12 +556,14 @@ fun SuperPoderesSection(
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
         ) {
             items(listaSuperPoderes, key = { it.nome }) { poder ->
-                val manifestacoesList = remember(poder.manifestacoes) {
+                val manifestacoesList = remember(poder.nome, poder.manifestacoes) {
                     when (val m = poder.manifestacoes) {
                         is JsonArray -> m.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
                         is JsonPrimitive -> listOfNotNull(m.contentOrNull)
                         else -> emptyList()
-                    }
+                    }.mapNotNull { it?.trim() }
+                        .filter { it.isNotEmpty() }
+                        .distinct()
                 }
 
                 val showDetails = allowLongTexts && (
