@@ -556,10 +556,18 @@ fun SuperPoderesSection(
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
         ) {
             items(listaSuperPoderes, key = { it.nome }) { poder ->
+                val manifestacoesList = remember(poder.manifestacoes) {
+                    when (val m = poder.manifestacoes) {
+                        is JsonArray -> m.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
+                        is JsonPrimitive -> listOfNotNull(m.contentOrNull)
+                        else -> emptyList()
+                    }
+                }
+
                 val showDetails = allowLongTexts && (
-                        poder.descricao != null ||
+                        poder.descricao?.isNotBlank() == true ||
                                 (poder.modificadores?.isNotEmpty() == true) ||
-                                (poder.manifestacoes != null)
+                                manifestacoesList.isNotEmpty()
                         )
                 val expanded = detalhesExpandidos[poder.nome] == true
 
@@ -649,17 +657,11 @@ fun SuperPoderesSection(
                                     Spacer(Modifier.height(4.dp))
                                 }
 
-                                val mans = when (val m = poder.manifestacoes) {
-                                    is JsonArray -> m.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
-                                    is JsonPrimitive -> listOfNotNull(m.contentOrNull)
-                                    else -> emptyList()
-                                }
-
-                                if (mans.isNotEmpty()) {
-                                    Text("Manifestações:", fontWeight = FontWeight.SemiBold)
-                                    mans.forEach { man -> Text("• $man") }
-                                    Spacer(Modifier.height(4.dp))
-                                }
+                                  if (manifestacoesList.isNotEmpty()) {
+                                      Text("Manifestações:", fontWeight = FontWeight.SemiBold)
+                                      manifestacoesList.forEach { man -> Text("• $man") }
+                                      Spacer(Modifier.height(4.dp))
+                                  }
 
                                 val mods = poder.modificadores ?: emptyList()
                                 if (mods.isNotEmpty()) {
