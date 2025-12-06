@@ -158,6 +158,7 @@ fun EquipamentoSection(
     pcLivres: Int,
     recursosPcUsados: Int,
     emProgresso: Boolean,
+    modoProgressaoAtivo: Boolean,
     expanded: Boolean,
     onToggle: () -> Unit,
     onUsarPontosBonusEmRecursos: () -> Unit,
@@ -202,7 +203,7 @@ fun EquipamentoSection(
             listaCompletaText = "Lista Completa"
         )
 
-        if (emProgresso) {
+        if (emProgresso || modoProgressaoAtivo) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
