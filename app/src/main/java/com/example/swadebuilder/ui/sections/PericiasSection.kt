@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -18,10 +17,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,22 +34,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.booleanResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.criacaoBasicaCongelada
+import com.example.swadebuilder.Pericia
+import com.example.swadebuilder.R
 import com.example.swadebuilder.listaPericias
-import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbWalletBanner
+import com.example.swadebuilder.ui.components.PericiaListItem
 import com.example.swadebuilder.ui.components.SectionHeader
 import kotlin.math.max
 
@@ -72,18 +63,16 @@ fun PericiasContent(
 
     var showSpecDialog by rememberSaveable { mutableStateOf(false) }
     var specText by rememberSaveable { mutableStateOf("") }
-    var specTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
+    var specTarget by rememberSaveable { mutableStateOf<Pericia?>(null) }
     var buyingExtraSpec by rememberSaveable { mutableStateOf(false) }
 
     var showEditDialog by rememberSaveable { mutableStateOf(false) }
     var editIsPrincipal by rememberSaveable { mutableStateOf(false) }
-    var editPerTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
+    var editPerTarget by rememberSaveable { mutableStateOf<Pericia?>(null) }
     var editOldName by rememberSaveable { mutableStateOf("") }
     var editNewName by rememberSaveable { mutableStateOf("") }
 
     val idosoActive = state.idosoBonusSp > 0
-
-    val valorColWidthDp = 80.dp
 
     LazyColumn(
         modifier = Modifier
@@ -94,7 +83,7 @@ fun PericiasContent(
     ) {
         stickyHeader {
             val pergaminho = MaterialTheme.colorScheme.surfaceVariant
-            val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
+            val showLista = booleanResource(R.bool.show_lista_completa)
 
             Surface(
                 tonalElevation = 0.dp,
@@ -109,7 +98,7 @@ fun PericiasContent(
                     SectionHeader(
                         onHelpClick          = null,
                         centerText           = "Pontos de Perícia: ${state.pontosPericia}",
-                        onListaCompletaClick = if (showLista) ({ onOpenPericiasDetail() }) else null,
+                        onListaCompletaClick = null,
                         listaCompletaText    = "Lista Completa"
                     )
 
@@ -142,7 +131,6 @@ fun PericiasContent(
             val attrKey    = state.atributoBaseParaPericia(per)
             val atrRaw     = state.valoresAtributos[attrKey]!!.intValue
             val capRaw     = state.periciaCapRaw(per)
-
             val displayRaw = state.rawTotalComSupers(per)
 
             val nextRaw = when {
@@ -188,210 +176,34 @@ fun PericiasContent(
                     else
                         true)
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 2.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    val defaultSize = MaterialTheme.typography.bodyLarge.fontSize
-
-                    Text(
-                        text = buildAnnotatedString {
-                            if (per.basica) {
-                                withStyle(
-                                    SpanStyle(
-                                        color = Color.Red,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                ) {
-                                    append("✯ ${per.nome}")
-                                }
-                            } else {
-                                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append(per.nome)
-                                }
-                            }
-                            withStyle(SpanStyle(fontSize = defaultSize / 2)) {
-                                val displayAtr = mapaAtributosDisplay[attrKey] ?: attrKey
-                                append(" ($displayAtr)")
-                            }
-                        },
-                        modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.bodyLarge,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
-                    IconButton(
-                        onClick = {
-                            state.decreasePericia(per)
-                            if (state.rawTotal(per) == 0) {
-                                state.especializacoesPorPericia.remove(per.nome)
-                            }
-                        },
-                        enabled = canDecrease,
-                        modifier = Modifier
-                            .size(32.dp)
-                            .padding(4.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.Remove,
-                            contentDescription = "Diminuir ${per.nome}",
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-
-                    Text(
-                        text = when {
-                            displayRaw == 0 && per.basica -> "d4"
-                            displayRaw == 0 -> "-"
-                            else -> displayRaw.toDiceString()
-                        },
-                        modifier = Modifier.width(valorColWidthDp),
-                        style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Center
-                    )
-
-                    IconButton(
-                        onClick = {
-                            val currRawNow = state.rawTotal(per)
-                            val attrKeyNow = state.atributoBaseParaPericia(per)
-                            val atrRawNow  = state.valoresAtributos[attrKeyNow]!!.intValue
-                            val capRawNow  = state.periciaCapRaw(per)
-
-                            val nextRawNow = when {
-                                currRawNow == 0 && per.basica -> 4
-                                currRawNow < 12               -> currRawNow + 2
-                                else                          -> currRawNow + 1
-                            }
-                            val costNow = if (nextRawNow <= atrRawNow) 1 else 2
-
-                            val astuciaSpentNow = state.spCostStackPorPericia
-                                .filterKeys { p -> p.atributo == "ASTUCIA" }
-                                .values
-                                .sumOf { costs -> costs.sum() }
-
-                            val canIncreaseNow = !locked &&
-                                    state.pontosPericia >= costNow &&
-                                    nextRawNow <= capRawNow &&
-                                    (if (idosoActive && astuciaSpentNow < 5)
-                                        per.atributo == "ASTUCIA"
-                                    else
-                                        true)
-
-                            if (!canIncreaseNow) {
-                                return@IconButton
-                            }
-
-                            state.increasePericiaFromAdvancement(per, costNow)
-
-                            if (state.usarEspecializacoesDePericia) {
-                                val esp = state.especializacoesPorPericia[per.nome]
-                                if (esp?.principal == null) {
-                                    specTarget = per
-                                    specText = ""
-                                    buyingExtraSpec = false
-                                    showSpecDialog = true
-                                }
-                            }
-                        },
-                        enabled = canIncrease,
-                        modifier = Modifier
-                            .size(32.dp)
-                            .padding(4.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.Add,
-                            contentDescription = "Aumentar ${per.nome}",
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-
-                    val jaTemPrincipal =
-                        state.especializacoesPorPericia[per.nome]?.principal != null
-                    if (state.usarEspecializacoesDePericia && jaTemPrincipal) {
-                        TextButton(
-                            onClick = {
-                                specTarget = per
-                                specText = ""
-                                buyingExtraSpec = true
-                                showSpecDialog = true
-                            },
-                            enabled = !locked && state.pontosPericia >= 1
-                        ) {
-                            Text("Esp+")
+            PericiaListItem(
+                pericia = per,
+                diceValue = when {
+                    displayRaw == 0 && per.basica -> "d4"
+                    displayRaw == 0 -> "-"
+                    else -> displayRaw.toDiceString()
+                },
+                canIncrease = canIncrease,
+                canDecrease = canDecrease,
+                onIncrease = {
+                    state.increasePericiaFromAdvancement(per, costNormal)
+                    if (state.usarEspecializacoesDePericia) {
+                        val esp = state.especializacoesPorPericia[per.nome]
+                        if (esp?.principal == null) {
+                            specTarget = per
+                            specText = ""
+                            buyingExtraSpec = false
+                            showSpecDialog = true
                         }
                     }
-                }
-
-                val espDto: EspecializacoesDto? = state.especializacoesPorPericia[per.nome]
-                val principal = espDto?.principal
-                val extras: List<String> = when {
-                    espDto == null -> emptyList()
-                    else -> espDto.lista
-                        .filter { it.isNotBlank() }
-                        .distinct()
-                        .filter { it != principal }
-                }
-
-                val canRemoveSpecs = !locked
-
-                if (principal != null || extras.isNotEmpty()) {
-                    Spacer(Modifier.width(8.dp))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (principal != null) {
-                            SpecChip(
-                                label = principal,
-                                isPrincipal = true,
-                                onEdit = {
-                                    editIsPrincipal = true
-                                    editPerTarget = per
-                                    editOldName = principal
-                                    editNewName = principal
-                                    showEditDialog = true
-                                },
-                                onRemove = null
-                            )
-                        }
-
-                        extras.forEach { extra ->
-                            SpecChip(
-                                label = extra,
-                                isPrincipal = false,
-                                onEdit = {
-                                    editIsPrincipal = false
-                                    editPerTarget = per
-                                    editOldName = extra
-                                    editNewName = extra
-                                    showEditDialog = true
-                                },
-                                onRemove =
-                                    if (canRemoveSpecs) {
-                                        {
-                                            val atual =
-                                                state.especializacoesPorPericia[per.nome]
-                                                    ?: EspecializacoesDto()
-                                            val novaLista =
-                                                atual.lista.filter { it != extra }
-                                            state.especializacoesPorPericia[per.nome] =
-                                                atual.copy(lista = novaLista)
-                                        }
-                                    } else null
-                            )
-                        }
+                },
+                onDecrease = {
+                    state.decreasePericia(per)
+                    if (state.rawTotal(per) == 0) {
+                        state.especializacoesPorPericia.remove(per.nome)
                     }
                 }
-            }
+            )
         }
     }
 

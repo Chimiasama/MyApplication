@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaComplicacoes
+import com.example.swadebuilder.ui.components.ComplicacaoListItem
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.keyify
@@ -94,7 +95,7 @@ fun ComplicacoesSection(
             onHelpClick          = null,
             centerText           = "Pontos Complicação: livres $livresPc / $totalPc",
             onCenterClick        = null,
-            onListaCompletaClick = if (showLista) onOpenComplicacoesDetail else null,
+            onListaCompletaClick = null,
             listaCompletaText    = "Lista Completa"
         )
 
@@ -254,139 +255,51 @@ fun ComplicacoesSection(
                     val maiorOnly = sevRaw.contains("maior") && !sevRaw.contains("menor")
                     val ambos     = sevRaw.contains("menor") && sevRaw.contains("maior")
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(
-                                text = comp.name,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-
-                        Spacer(Modifier.width(8.dp))
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            if (menorOnly || ambos) {
-                                val enabledMenor = !locked && cur == null
-                                TextButton(
-                                    onClick = {
-                                        if (!enabledMenor) return@TextButton
-                                        when (comp.id) {
-                                            "jovem" -> {
-                                                state.complicacoesSelecionadas[comp] = "Menor"
-                                                state.applyYoungMinor()
-                                            }
-                                            "obeso" -> {
-                                                state.complicacoesSelecionadas[comp] = "Menor"
-                                                state.obesoBonusSize = 1
-                                                state.obesoMalusMov = 1
-                                            }
-                                            else -> {
-                                                state.complicacoesSelecionadas[comp] = "Menor"
-                                            }
-                                        }
-                                    },
-                                    enabled = enabledMenor
-                                ) {
-                                    Text("Menor")
+                    ComplicacaoListItem(
+                        complicacao = comp,
+                        currentSeverity = cur,
+                        canSelectMenor = !locked && cur == null,
+                        canSelectMaior = !locked && ((maiorOnly && cur == null) || (ambos && cur == "Menor")),
+                        onSelectMenor = {
+                            when (comp.id) {
+                                "jovem" -> {
+                                    state.complicacoesSelecionadas[comp] = "Menor"
+                                    state.applyYoungMinor()
+                                }
+                                "obeso" -> {
+                                    state.complicacoesSelecionadas[comp] = "Menor"
+                                    state.obesoBonusSize = 1
+                                    state.obesoMalusMov = 1
+                                }
+                                else -> {
+                                    state.complicacoesSelecionadas[comp] = "Menor"
                                 }
                             }
-
-                            if (maiorOnly || ambos) {
-                                val enabledMaior = !locked && (
-                                        (maiorOnly && cur == null) ||
-                                                (ambos && cur == "Menor")
-                                        )
-                                TextButton(
-                                    onClick = {
-                                        if (!enabledMaior) return@TextButton
-                                        when (comp.id) {
-                                            "idoso" -> {
-                                                state.complicacoesSelecionadas[comp] = "Maior"
-                                                state.idosoBonusSp = 5
-                                                state.rebuildAllPericiaStacks()
-                                            }
-                                            "jovem" -> {
-                                                state.complicacoesSelecionadas[comp] = "Maior"
-                                                state.applyYoungMajor(pequComp)
-                                            }
-                                            "obeso" -> {
-                                                state.complicacoesSelecionadas[comp] = "Maior"
-                                                state.obesoBonusSize = 1
-                                                state.obesoMalusMov = 1
-                                            }
-                                            else -> {
-                                                state.complicacoesSelecionadas[comp] = "Maior"
-                                            }
-                                        }
-                                    },
-                                    enabled = enabledMaior
-                                ) {
-                                    Text("Maior")
+                        },
+                        onSelectMaior = {
+                            when (comp.id) {
+                                "idoso" -> {
+                                    state.complicacoesSelecionadas[comp] = "Maior"
+                                    state.idosoBonusSp = 5
+                                    state.rebuildAllPericiaStacks()
+                                }
+                                "jovem" -> {
+                                    state.complicacoesSelecionadas[comp] = "Maior"
+                                    state.applyYoungMajor(pequComp)
+                                }
+                                "obeso" -> {
+                                    state.complicacoesSelecionadas[comp] = "Maior"
+                                    state.obesoBonusSize = 1
+                                    state.obesoMalusMov = 1
+                                }
+                                else -> {
+                                    state.complicacoesSelecionadas[comp] = "Maior"
                                 }
                             }
                         }
-                    }
+                    )
                 }
             }
         }
     }
-}
-
-@Composable
-fun TransparentOutlinedReadOnlyField(
-    text: String,
-    enabled: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val colors = MaterialTheme.colorScheme
-
-    BasicTextField(
-        value         = text,
-        onValueChange = {},
-        enabled       = enabled,
-        readOnly      = true,
-        textStyle     = LocalTextStyle.current.copy(color = colors.onSurface),
-        singleLine    = true,
-        modifier      = modifier,
-        decorationBox = { inner ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .background(Color.Transparent, shape = MaterialTheme.shapes.small)
-                    .border(
-                        width = 1.dp,
-                        color = if (enabled)
-                            colors.outline.copy(alpha = 0.8f)
-                        else
-                            colors.outline.copy(alpha = 0.5f),
-                        shape = MaterialTheme.shapes.small
-                    )
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-                    .clickable(enabled = enabled, onClick = onClick)
-            ) {
-                inner()
-                Spacer(Modifier.weight(1f))
-                Icon(
-                    imageVector        = Icons.Default.ArrowDropDown,
-                    contentDescription = "",
-                    tint = if (enabled)
-                        colors.onSurface
-                    else
-                        colors.onSurface.copy(alpha = 0.5f)
-                )
-            }
-        }
-    )
 }

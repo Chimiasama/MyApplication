@@ -39,6 +39,7 @@ import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.loadJsonAsset
+import com.example.swadebuilder.ui.components.PoderListItem
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
 
@@ -59,19 +60,6 @@ private fun Vantagem.toArcanoKeyFromModel(): String? {
     }
 }
 
-private fun custoParaPenalidadeTexto(custo: String): String {
-    val clean = custo.trim()
-    clean.toIntOrNull()?.let { base -> return "-${(base + 1) / 2}" }
-    if (clean.contains("/")) {
-        return clean.split("/").joinToString("/") { p ->
-            p.replace("+", "").trim().toIntOrNull()?.let { "-${(it + 1) / 2}" } ?: "—"
-        }
-    }
-    if (clean.endsWith("+")) clean.removeSuffix("+").toIntOrNull()?.let { return "-${(it + 1) / 2}+" }
-    if (clean.startsWith("+")) clean.removePrefix("+").toIntOrNull()?.let { return "-${(it + 1) / 2}" }
-    return "—"
-}
-
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PoderesSection(
@@ -79,8 +67,6 @@ fun PoderesSection(
     onOpenListaCompletaPoderes: () -> Unit
 ) {
     val context = LocalContext.current
-
-    val locked = state.criacaoBasicaCongeladaComXp
 
     val arcanosAtivos = remember(state.vantagensSelecionadas) {
         state.vantagensSelecionadas.mapNotNull { it.toArcanoKeyFromModel() }.distinct()
@@ -103,7 +89,7 @@ fun PoderesSection(
             state = state,
             poderesElegiveis = poderesElegiveis,
             onOpenListaCompletaPoderes = onOpenListaCompletaPoderes,
-            locked = locked
+            locked = state.criacaoBasicaCongeladaComXp
         )
         return
     }
@@ -114,7 +100,7 @@ fun PoderesSection(
             state = state,
             poderesElegiveis = poderesElegiveis,
             onOpenListaCompletaPoderes = onOpenListaCompletaPoderes,
-            locked = locked
+            locked = state.criacaoBasicaCongeladaComXp
         )
         Spacer(Modifier.height(4.dp))
     }
@@ -142,7 +128,7 @@ private fun ArcanoArea(
         onHelpClick = null,
         centerText  = center,
         onCenterClick = null,
-        onListaCompletaClick = if (showListaCompleta) onOpenListaCompletaPoderes else null,
+        onListaCompletaClick = null,
         listaCompletaText = "Poderes"
     )
 
@@ -197,33 +183,19 @@ private fun ArcanoArea(
             key = { it.id }
         ) { poder ->
             val selecionado = slots.any { it == poder.id }
-
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 6.dp)
-                    .alpha(if (selecionado) 0.45f else 1f)
-                    .clickable(enabled = !locked) {
-                        if (selecionado) {
-                            val idx = slots.indexOfFirst { it == poder.id }
-                            if (idx >= 0) slots[idx] = null
-                        } else {
-                            val firstEmpty = slots.indexOfFirst { it == null }
-                            if (firstEmpty >= 0) slots[firstEmpty] = poder.id
-                        }
-                    }
-            ) {
-                Column(Modifier.padding(12.dp)) {
-                    Text(poder.nome, fontWeight = FontWeight.Bold)
-                    Text("Custo: ${poder.pontosDePoder}")
-                    if (state.usarSemPontosDePoder) {
-                        Text("Penalidade base: ${custoParaPenalidadeTexto(poder.pontosDePoder)}")
+            PoderListItem(
+                poder = poder,
+                isClickable = !locked,
+                onClick = {
+                    if (selecionado) {
+                        val idx = slots.indexOfFirst { it == poder.id }
+                        if (idx >= 0) slots[idx] = null
+                    } else {
+                        val firstEmpty = slots.indexOfFirst { it == null }
+                        if (firstEmpty >= 0) slots[firstEmpty] = poder.id
                     }
                 }
-            }
+            )
         }
     }
 }

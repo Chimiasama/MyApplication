@@ -4,8 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,35 +27,26 @@ import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.R
-import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.Poder
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun VantagemListItem(
-    vantagem: Vantagem,
-    isSelected: Boolean,
-    requirementsMet: Boolean,
+fun PoderListItem(
+    poder: Poder,
     isClickable: Boolean = false,
-    onClick: (Vantagem) -> Unit = {}
+    onClick: (Poder) -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
     val showFull = booleanResource(R.bool.show_lista_completa)
-
-    val cardColors = CardDefaults.cardColors(
-        containerColor = when {
-            isSelected -> MaterialTheme.colorScheme.tertiaryContainer
-            !requirementsMet -> MaterialTheme.colorScheme.errorContainer
-            else -> MaterialTheme.colorScheme.surfaceVariant
-        }
-    )
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
-            .clickable(enabled = isClickable, onClick = { onClick(vantagem) }),
+            .clickable(enabled = isClickable, onClick = { onClick(poder) }),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = cardColors
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
     ) {
         Column(
             modifier = Modifier.padding(12.dp)
@@ -68,41 +57,25 @@ fun VantagemListItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = vantagem.nome,
+                    text = poder.nome,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = when {
-                        isSelected -> "Já possui"
-                        !requirementsMet -> "Não cumpre"
-                        else -> "Cumpre"
-                    },
+                    text = "Estágio: ${poder.estagio}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
-            if (vantagem.hasRequirements()) {
-                Spacer(modifier = Modifier.height(12.dp))
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    vantagem.requisitos.estagio.let {
-                        if (it.isNotBlank()) SuggestionChip(onClick = {}, label = { Text("Estágio: $it") })
-                    }
-                    vantagem.requisitos.vantagensPrevias.forEach {
-                        SuggestionChip(onClick = {}, label = { Text(it) })
-                    }
-                    vantagem.requisitos.atributoMin.forEach { (attr, value) ->
-                        SuggestionChip(onClick = {}, label = { Text("$attr d$value") })
-                    }
-                    vantagem.requisitos.periciaMin.forEach { (skill, value) ->
-                        SuggestionChip(onClick = {}, label = { Text("$skill d$value") })
-                    }
-                }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                SuggestionChip(onClick = {}, label = { Text("Custo: ${poder.custo}") })
+                SuggestionChip(onClick = {}, label = { Text("Duração: ${poder.duracao}") })
+                SuggestionChip(onClick = {}, label = { Text("Alcance: ${poder.alcance}") })
             }
 
             if (showFull) {
@@ -116,7 +89,7 @@ fun VantagemListItem(
                     Column {
                         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                         Text(
-                            text = vantagem.descricao,
+                            text = poder.descricao,
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -124,11 +97,4 @@ fun VantagemListItem(
             }
         }
     }
-}
-
-private fun Vantagem.hasRequirements(): Boolean {
-    return requisitos.estagio.isNotBlank() ||
-            requisitos.vantagensPrevias.isNotEmpty() ||
-            requisitos.atributoMin.isNotEmpty() ||
-            requisitos.periciaMin.isNotEmpty()
 }

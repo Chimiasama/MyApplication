@@ -1,5 +1,6 @@
 package com.example.swadebuilder.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -11,13 +12,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.R
 import com.example.swadebuilder.model.EquipamentoItem
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
@@ -29,6 +38,9 @@ fun EquipamentoListItem(
     isClickable: Boolean = false,
     onClick: (EquipamentoItem) -> Unit = {}
 ) {
+    var expanded by remember { mutableStateOf(false) }
+    val showFull = booleanResource(R.bool.show_lista_completa)
+
     fun JsonElement?.asText(): String? = when (this) {
         is JsonPrimitive -> this.content
         else -> this?.toString()
@@ -64,13 +76,6 @@ fun EquipamentoListItem(
                     )
                 }
             }
-            equipamento.observacoes.asText()?.let {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
             Spacer(modifier = Modifier.height(12.dp))
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -84,6 +89,25 @@ fun EquipamentoListItem(
                 equipamento.forcaMin.asText()?.let { SuggestionChip(onClick = {}, label = { Text("Força: $it") }) }
                 equipamento.armadura.asText()?.let { SuggestionChip(onClick = {}, label = { Text("Armadura: $it") }) }
                 equipamento.aparar.asText()?.let { SuggestionChip(onClick = {}, label = { Text("Aparar: $it") }) }
+            }
+            if (showFull && equipamento.observacoes.asText() != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    TextButton(onClick = { expanded = !expanded }) {
+                        Text(if (expanded) "Ocultar" else "Detalhes")
+                    }
+                }
+                AnimatedVisibility(visible = expanded) {
+                    Column {
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                        equipamento.observacoes.asText()?.let {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                }
             }
         }
     }
