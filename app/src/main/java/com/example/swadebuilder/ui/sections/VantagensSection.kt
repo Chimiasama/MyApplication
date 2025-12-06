@@ -551,7 +551,7 @@ fun VantagensContent(
                             if (vant.requisitos.periciaMinOpcional.isNotEmpty()) {
                                 add(
                                     vant.requisitos.periciaMinOpcional.entries.joinToString(" ou ") {
-                                        "${it.key} d${it.value}+"
+                                        "${it.key} d${it.value}"
                                     }
                                 )
                             }
