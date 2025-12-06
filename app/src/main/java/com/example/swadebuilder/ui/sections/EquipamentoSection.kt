@@ -178,6 +178,7 @@ fun EquipamentoSection(
     val focusManager = LocalFocusManager.current
     var showMoneyDialog by rememberSaveable { mutableStateOf(false) }
     var dinheiroInput by rememberSaveable { mutableStateOf(dinheiro.toString()) }
+    var dinheiroDeltaInput by rememberSaveable { mutableStateOf("") }
 
     var expSuperequip by rememberSaveable { mutableStateOf(false) }
 
@@ -202,17 +203,58 @@ fun EquipamentoSection(
         )
 
         if (emProgresso) {
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                horizontalArrangement = Arrangement.End
+                    .padding(horizontal = 8.dp)
             ) {
-                TextButton(onClick = {
-                    dinheiroInput = dinheiro.toString()
-                    showMoneyDialog = true
-                }) {
-                    Text("Editar dinheiro")
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = {
+                        dinheiroInput = dinheiro.toString()
+                        showMoneyDialog = true
+                    }) {
+                        Text("Editar dinheiro")
+                    }
+                }
+
+                Spacer(modifier = Modifier.size(4.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedTextField(
+                        value = dinheiroDeltaInput,
+                        onValueChange = { novo ->
+                            dinheiroDeltaInput = novo.filter { it.isDigit() }
+                        },
+                        label = { Text("Valor para ajustar") },
+                        singleLine = true,
+                        modifier = Modifier.weight(1f),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+                    )
+
+                    TextButton(onClick = {
+                        val delta = dinheiroDeltaInput.toIntOrNull() ?: return@TextButton
+                        onEditarDinheiro(dinheiro + delta)
+                    }) {
+                        Text("Adicionar")
+                    }
+
+                    TextButton(onClick = {
+                        val delta = dinheiroDeltaInput.toIntOrNull() ?: return@TextButton
+                        onEditarDinheiro((dinheiro - delta).coerceAtLeast(0))
+                    }) {
+                        Text("Remover")
+                    }
                 }
             }
         }
