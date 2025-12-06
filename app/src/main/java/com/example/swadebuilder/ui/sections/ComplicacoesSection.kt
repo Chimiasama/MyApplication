@@ -1,4 +1,5 @@
 @file:Suppress("DEPRECATION")
+@file:OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 
 package com.example.swadebuilder.ui.sections
 
@@ -10,6 +11,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -54,7 +56,6 @@ import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 
-@ExperimentalMaterial3Api
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun ComplicacoesSection(
