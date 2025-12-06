@@ -193,12 +193,6 @@ fun AncestralidadesSection(
                                         style = MaterialTheme.typography.bodyLarge,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
-                                    val statusLabel = if (isSelected) "Atual" else "Disponível"
-                                    Text(
-                                        text = statusLabel,
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
                                 }
                             }
 

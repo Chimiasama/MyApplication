@@ -1,13 +1,16 @@
 package com.example.swadebuilder.ui.sections
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -42,6 +46,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CollapsibleSection
+import com.example.swadebuilder.R
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.ui.components.PbWalletBanner
@@ -50,7 +55,10 @@ import com.example.swadebuilder.ui.components.SectionHeader
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import com.example.swadebuilder.ui.sections.toResumo
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonPrimitive
 
 data class EquipFilter(
     val somenteAcessiveis: Boolean = false,
@@ -189,6 +197,8 @@ fun EquipamentoSection(
 
     var filter by remember { mutableStateOf(EquipFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
+    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
+    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     SectionCard(
         title    = "Equipamento",
@@ -511,29 +521,35 @@ fun EquipamentoSection(
                                                 catsPorSub
                                                     .filter { it.subsubtipo == ss }
                                                     .flatMap { it.itens }
-                                                    .filter { eq ->
-                                                        if (filter.somenteAcessiveis) {
-                                                            val c =
-                                                                (eq.custo as? JsonPrimitive)
-                                                                    ?.content?.toIntOrNull()
-                                                                    ?: Int.MAX_VALUE
-                                                            if (c > dinheiro) return@filter false
-                                                        }
-                                                        true
-                                                    }
-                                                    .forEach { equipamento ->
-                                                        EquipamentoListItem(
-                                                            equipamento = equipamento,
-                                                            onClick = {
-                                                                onEquipamentoDoubleClick(
-                                                                    equipamento
-                                                                )
-                                                            }
-                                                        )
-                                                    }
-                                            }
-                                        }
-                                    }
+                                                      .filter { eq ->
+                                                          if (filter.somenteAcessiveis) {
+                                                              val c =
+                                                                  (eq.custo as? JsonPrimitive)
+                                                                      ?.content?.toIntOrNull()
+                                                                      ?: Int.MAX_VALUE
+                                                              if (c > dinheiro) return@filter false
+                                                          }
+                                                          true
+                                                      }
+                                                      .forEach { equipamento ->
+                                                          EquipamentoListItem(
+                                                              equipamento = equipamento,
+                                                              onClick = {
+                                                                  onEquipamentoDoubleClick(
+                                                                      equipamento
+                                                                  )
+                                                              },
+                                                              allowLongTexts = allowLongTexts,
+                                                              expanded = detalhesExpandidos[equipamento.nome] == true,
+                                                              onToggleDetails = {
+                                                                  val current = detalhesExpandidos[equipamento.nome] ?: false
+                                                                  detalhesExpandidos[equipamento.nome] = !current
+                                                              }
+                                                          )
+                                                      }
+                                                  }
+                                              }
+                                          }
                                 }
                             }
                         }
@@ -544,11 +560,12 @@ fun EquipamentoSection(
             Spacer(Modifier.padding(vertical = 4.dp))
         }
 
-        val supCatsFiltradas = (superequipCategorias).let { list ->
-            val byOrigem = if (filter.origens.isNotEmpty())
+        val supCatsFiltradas = superequipCategorias.let { list ->
+            if (filter.origens.isNotEmpty()) {
                 list.filter { (it.origem?.uppercase() ?: "") in filter.origens }
-            else list
-            byOrigem
+            } else {
+                list
+            }
         }
 
         if (supCatsFiltradas.isNotEmpty()) {
@@ -570,7 +587,8 @@ fun EquipamentoSection(
                         .filter { eq ->
                             if (filter.somenteAcessiveis) {
                                 val c = (eq.custo as? JsonPrimitive)
-                                    ?.content?.toIntOrNull() ?: Int.MAX_VALUE
+                                    ?.content?.toIntOrNull()
+                                    ?: Int.MAX_VALUE
                                 if (c > dinheiro) return@filter false
                             }
                             true
@@ -578,7 +596,13 @@ fun EquipamentoSection(
                         .forEach { equipamento ->
                             EquipamentoListItem(
                                 equipamento = equipamento,
-                                onClick = { onEquipamentoDoubleClick(equipamento) }
+                                onClick = { onEquipamentoDoubleClick(equipamento) },
+                                allowLongTexts = allowLongTexts,
+                                expanded = detalhesExpandidos[equipamento.nome] == true,
+                                onToggleDetails = {
+                                    val current = detalhesExpandidos[equipamento.nome] ?: false
+                                    detalhesExpandidos[equipamento.nome] = !current
+                                }
                             )
                         }
                 }
@@ -590,7 +614,10 @@ fun EquipamentoSection(
 @Composable
 private fun EquipamentoListItem(
     equipamento: EquipamentoItem,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    allowLongTexts: Boolean,
+    expanded: Boolean,
+    onToggleDetails: () -> Unit
 ) {
     val resumo = equipamento.toResumo()
 
@@ -642,6 +669,45 @@ private fun EquipamentoListItem(
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }
+
+            val detalhes = buildList {
+                equipamento.observacoes.contentString()?.let { add("Observações: $it") }
+                equipamento.forcaMin.contentString()?.let { add("Força mínima: $it") }
+                equipamento.distancia.contentString()?.let { add("Distância: $it") }
+                equipamento.dano.contentString()?.let { add("Dano: $it") }
+                equipamento.tiros.contentString()?.let { add("Tiros: $it") }
+                equipamento.tamanho.contentString()?.let { add("Tamanho: $it") }
+                equipamento.manobrabilidade.contentString()?.let { add("Manobrabilidade: $it") }
+                equipamento.velMaxima.contentString()?.let { add("Velocidade Máx.: $it") }
+                equipamento.resistencia.contentString()?.let { add("Resistência: $it") }
+                equipamento.tripulacao.contentString()?.let { add("Tripulação: $it") }
+            }
+
+            if (allowLongTexts && detalhes.isNotEmpty()) {
+                Spacer(Modifier.height(6.dp))
+                TextButton(
+                    onClick = onToggleDetails,
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
+                ) {
+                    Text(
+                        if (expanded) "Ocultar detalhes" else "Ver detalhes",
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
+
+                AnimatedVisibility(visible = expanded) {
+                    Column(Modifier.padding(top = 4.dp)) {
+                        detalhes.forEach { linha ->
+                            Text(linha, style = MaterialTheme.typography.bodySmall)
+                        }
+                    }
+                }
+            }
         }
     }
 }
+
+private fun JsonElement?.contentString(): String? = this
+    ?.jsonPrimitive
+    ?.contentOrNull
+    ?.takeIf { it.isNotBlank() }
