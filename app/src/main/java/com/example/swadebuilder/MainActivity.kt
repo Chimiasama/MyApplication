@@ -274,6 +274,24 @@ class MainActivity : ComponentActivity() {
 
             var showFeedbackDialog by rememberSaveable { mutableStateOf(false) }
 
+            LaunchedEffect(state.mostrandoPericiasProgresso) {
+                if (state.mostrandoPericiasProgresso) {
+                    expPer = true
+                }
+            }
+
+            LaunchedEffect(state.mostrandoVantagensProgresso) {
+                if (state.mostrandoVantagensProgresso) {
+                    expVants = true
+                }
+            }
+
+            LaunchedEffect(state.mostrandoAtributosProgresso) {
+                if (state.mostrandoAtributosProgresso) {
+                    expAttrs = true
+                }
+            }
+
             if (showThemeDialog) {
                 val themeNames = remember {
                     mapOf(
