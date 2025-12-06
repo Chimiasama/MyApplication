@@ -57,11 +57,11 @@ android {
             versionNameSuffix = "-lite"
 
             // Flags de build (para controle dentro do app)
-            buildConfigField("boolean", "SHOW_LISTA_COMPLETA", "false")
+            buildConfigField("boolean", "SHOW_FULL_DESCRIPTIONS", "false")
             buildConfigField("boolean", "ENABLE_LONG_TEXTS", "false")
 
             resValue("string", "app_name", "SWADEbuilder")
-            resValue("bool", "show_lista_completa", "false")
+            resValue("bool", "show_full_descriptions", "false")
             resValue("bool", "enable_long_texts", "false")
         }
 
@@ -70,11 +70,11 @@ android {
             applicationIdSuffix = ".full"
             versionNameSuffix = "-full"
 
-            buildConfigField("boolean", "SHOW_LISTA_COMPLETA", "true")
+            buildConfigField("boolean", "SHOW_FULL_DESCRIPTIONS", "true")
             buildConfigField("boolean", "ENABLE_LONG_TEXTS", "true")
 
             resValue("string", "app_name", "SWADEbuilder (Completo)")
-            resValue("bool", "show_lista_completa", "true")
+            resValue("bool", "show_full_descriptions", "true")
             resValue("bool", "enable_long_texts", "true")
         }
     }

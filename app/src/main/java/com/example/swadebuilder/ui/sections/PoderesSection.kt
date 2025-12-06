@@ -111,7 +111,7 @@ private fun ArcanoArea(
 ) {
     val arcKey = arcKeyRaw.normAAKey()
     val (slotsCount, ppTotal, foco) = arcanoInfo[arcKey] ?: Triple(0, 0, "—")
-    val showListaCompleta = booleanResource(R.bool.show_lista_completa)
+    val showListaCompleta = booleanResource(R.bool.show_full_descriptions)
     val center = if (state.usarSemPontosDePoder) {
         "Teste $foco = -(custo/2)"
     } else {

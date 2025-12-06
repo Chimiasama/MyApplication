@@ -41,7 +41,7 @@ fun VantagemListItem(
     onClick: (Vantagem) -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val showFull = booleanResource(R.bool.show_lista_completa)
+    val showFull = booleanResource(R.bool.show_full_descriptions)
 
     val cardColors = CardDefaults.cardColors(
         containerColor = when {

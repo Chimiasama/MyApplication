@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.R
+import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.toDiceString
@@ -82,7 +83,7 @@ fun PericiasContent(
     ) {
         stickyHeader {
             val pergaminho = MaterialTheme.colorScheme.surfaceVariant
-            val showLista = booleanResource(R.bool.show_lista_completa)
+            val showLista = booleanResource(R.bool.show_full_descriptions)
 
             Surface(
                 tonalElevation = 0.dp,

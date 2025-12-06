@@ -49,47 +49,6 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
 
-/*
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-@Preview(showBackground = true)
-@Composable
-fun PreviewApp() {
-    val state = remember { CriadorState() }
-    val vm = remember { CriadorViewModel() }
-
-    UnifiedScreen(
-        state = state,
-        viewModel = vm,
-
-        expAncs = true,
-        onToggleAncs = {},
-
-        expComps = true,
-        onToggleComps = {},
-
-        expEquip = true,
-        onToggleEquip = {},
-
-        expAttrs = true,
-        onToggleAttrs = {},
-        expPer = true,
-        onTogglePer = {},
-        expVants = true,
-        onToggleVants = {},
-        expResumo = true,
-        onToggleResumo = {},
-        expPoderes = true,
-        onTogglePoderes = {},
-        expXp = true,
-        onToggleXp = {},
-
-        equipamentoCategorias = emptyList(),
-        superequipCategorias = emptyList(),
-        listaSuperPoderes = emptyList()
-    )
-}
-*/
-
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable

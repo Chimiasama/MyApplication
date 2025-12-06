@@ -186,7 +186,7 @@ fun EquipamentoSection(
 
     var filter by remember { mutableStateOf(EquipFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
-    val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
+    val showLista = booleanResource(com.example.swadebuilder.R.bool.show_full_descriptions)
 
     SectionCard(
         title    = "Equipamento",

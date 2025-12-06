@@ -272,7 +272,7 @@ fun VantagensContent(
     }
 
     val locked = state.criacaoBasicaCongeladaComXp
-    val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
+    val showLista = booleanResource(com.example.swadebuilder.R.bool.show_full_descriptions)
 
     val pcTotal = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos

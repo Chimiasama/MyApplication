@@ -329,7 +329,6 @@ fun SuperPoderesSection(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
     expanded: Boolean,
-    onOpenSuperPoderesDetail: (String) -> Unit,
     viewModel: CriadorViewModel = viewModel()
 ) {
     if (!expanded) return
@@ -361,7 +360,7 @@ fun SuperPoderesSection(
 
     var showNivelDialog by rememberSaveable { mutableStateOf(false) }
 
-    booleanResource(R.bool.show_lista_completa)
+    booleanResource(R.bool.show_full_descriptions)
 
     fun aplicarNivelSuper(novoNivel: Int) {
         if (novoNivel <= 0) {
@@ -1075,8 +1074,7 @@ fun SuperPoderesContent(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
     expanded: Boolean,
-    onToggle: () -> Unit,
-    onOpenSuperPoderesDetail: (String) -> Unit
+    onToggle: () -> Unit
 ) {
     SectionCard(
         title = "Superpoderes",
@@ -1084,15 +1082,13 @@ fun SuperPoderesContent(
         onToggle = onToggle,
         icon = Icons.Filled.FlashOn
     ) {
-        val showLista = booleanResource(R.bool.show_lista_completa)
+        val showLista = booleanResource(R.bool.show_full_descriptions)
 
         SectionHeader(
             onHelpClick = null,
             centerText = "Pontos de Super: ${state.superPontosDisponiveis}",
             onCenterClick = onToggle,
-            onListaCompletaClick = if (showLista) {
-                { onOpenSuperPoderesDetail("") }
-            } else null,
+            onListaCompletaClick = null,
             listaCompletaText = "Lista Completa"
         )
 
@@ -1100,7 +1096,6 @@ fun SuperPoderesContent(
             state = state,
             listaSuperPoderes = listaSuperPoderes,
             expanded = expanded,
-            onOpenSuperPoderesDetail = onOpenSuperPoderesDetail
         )
     }
 }

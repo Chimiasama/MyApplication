@@ -2,7 +2,6 @@ package com.example.swadebuilder.ui.sections
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -51,7 +51,7 @@ fun AncestralidadesSection(
     onSelectAncestralidade: (String) -> Unit
 ) {
     val context = LocalContext.current
-    val showLista = booleanResource(R.bool.show_lista_completa)
+    val showLista = booleanResource(R.bool.show_full_descriptions)
 
     val ancestralidadesState = remember {
         mutableStateOf(
