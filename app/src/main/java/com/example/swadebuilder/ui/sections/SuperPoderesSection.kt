@@ -372,8 +372,6 @@ fun SuperPoderesSection(
 
     var showNivelDialog by rememberSaveable { mutableStateOf(false) }
 
-    false
-
     fun aplicarNivelSuper(novoNivel: Int) {
         if (novoNivel <= 0) {
             state.superNivelCampanha = null
