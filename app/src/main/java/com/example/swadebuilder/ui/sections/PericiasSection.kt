@@ -2,6 +2,7 @@ package com.example.swadebuilder.ui.sections
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +24,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,12 +35,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -47,13 +53,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.R
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.EspecializacoesDto
+import com.example.swadebuilder.model.loadPericiasDescriptions
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.util.semAcentos
 import kotlin.math.max
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -63,6 +72,13 @@ fun PericiasContent(
     onOpenPericiasDetail: () -> Unit,
     feedbackMessages: MutableList<String>
 ) {
+    val context = LocalContext.current
+    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
+    val descricoes = remember(allowLongTexts) {
+        if (!allowLongTexts) emptyMap() else loadPericiasDescriptions(context, R.raw.pericias)
+    }
+    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
+
     val locked = state.criacaoBasicaCongelada && !state.skillAdvancementInProgress
 
     val pcTotal  = state.pontosComplicacao
@@ -188,10 +204,19 @@ fun PericiasContent(
                     else
                         true)
 
+            val rawName = per.nome.removePrefix("*").trim()
+            val descKey = "$rawName (${per.atributo})".uppercase().semAcentos()
+            val descricao = descricoes[descKey].orEmpty()
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 2.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                    .padding(horizontal = 10.dp, vertical = 8.dp)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -325,6 +350,31 @@ fun PericiasContent(
                         ) {
                             Text("Esp+")
                         }
+                    }
+                }
+
+                if (allowLongTexts && descricao.isNotBlank()) {
+                    Spacer(Modifier.height(4.dp))
+                    TextButton(
+                        onClick = {
+                            val current = detalhesExpandidos[descKey] ?: false
+                            detalhesExpandidos[descKey] = !current
+                        },
+                        colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.primary),
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
+                    ) {
+                        Text(
+                            if (detalhesExpandidos[descKey] == true) "Ocultar detalhes" else "Ver detalhes",
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    }
+
+                    AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
+                        Text(
+                            text = descricao,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
 
