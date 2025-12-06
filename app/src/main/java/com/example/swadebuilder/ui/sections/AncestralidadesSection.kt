@@ -2,6 +2,7 @@ package com.example.swadebuilder.ui.sections
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -12,17 +13,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.R
+import com.example.swadebuilder.loadRawText
 import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -59,7 +65,16 @@ fun AncestralidadesSection(
     onSelectAncestralidade: (String) -> Unit
 ) {
     val context = LocalContext.current
-    val showLista = booleanResource(R.bool.show_lista_completa)
+    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
+    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
+
+    val descricaoPorAncestralidade = remember(allowLongTexts) {
+        if (!allowLongTexts) {
+            emptyMap()
+        } else {
+            parseAncestralidadeDescriptions(loadRawText(context, R.raw.ancestralidades))
+        }
+    }
 
     val ancestralidadesState = remember {
         mutableStateOf(
@@ -109,10 +124,8 @@ fun AncestralidadesSection(
             onHelpClick = null,
             centerText = centerLabel,
             onCenterClick = null,
-            onListaCompletaClick = if (showLista) {
-                { onOpenListaAncestralidadesDetail("") }
-            } else null,
-            listaCompletaText = "Lista Completa"
+            onListaCompletaClick = null,
+            listaCompletaText = ""
         )
 
         Spacer(Modifier.height(8.dp))
@@ -140,56 +153,109 @@ fun AncestralidadesSection(
                 items(listaOrdenada) { item ->
                     val itemKey = item.nome.uppercase().semAcentos()
                     val isSelected = itemKey == selectedKey.value
+                    val descKey = itemKey
+                    val descricao = descricaoPorAncestralidade[descKey].orEmpty()
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = if (isSelected)
-                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)
-                                else
-                                    MaterialTheme.colorScheme.surface,
-                                shape = MaterialTheme.shapes.small
-                            )
-                            .clickable(enabled = !supersLocked) {
-                                if (supersLocked) return@clickable
-                                selectedKey.value = itemKey
-                                onSelectAncestralidade(item.nome)
-                            }
-                            .padding(vertical = 8.dp, horizontal = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.medium,
+                        tonalElevation = if (isSelected) 4.dp else 0.dp,
+                        color = if (isSelected) {
+                            MaterialTheme.colorScheme.primaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.surfaceVariant
+                        }
                     ) {
-                        RadioButton(
-                            selected = isSelected,
-                            onClick = null,
-                            enabled = !supersLocked
-                        )
+                        Column(
+                            modifier = Modifier
+                                .clickable(enabled = !supersLocked) {
+                                    if (supersLocked) return@clickable
+                                    selectedKey.value = itemKey
+                                    onSelectAncestralidade(item.nome)
+                                }
+                                .padding(horizontal = 12.dp, vertical = 10.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = isSelected,
+                                    onClick = null,
+                                    enabled = !supersLocked
+                                )
 
-                        Spacer(Modifier.padding(start = 8.dp))
+                                Spacer(Modifier.padding(start = 8.dp))
 
-                        Text(
-                            text = item.nome,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.weight(1f)
-                        )
+                                Column(Modifier.weight(1f)) {
+                                    Text(
+                                        text = item.nome,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    val statusLabel = if (isSelected) "Atual" else "Disponível"
+                                    Text(
+                                        text = statusLabel,
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
 
-                        if (showLista) {
-                            Icon(
-                                imageVector = Icons.Default.Visibility,
-                                contentDescription = "Detalhes",
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .clickable {
-                                        onOpenListaAncestralidadesDetail(item.nome)
-                                    }
-                            )
+                            if (allowLongTexts && descricao.isNotBlank()) {
+                                Spacer(Modifier.height(6.dp))
+                                TextButton(
+                                    onClick = {
+                                        val current = detalhesExpandidos[descKey] ?: false
+                                        detalhesExpandidos[descKey] = !current
+                                    },
+                                    colors = ButtonDefaults.textButtonColors(
+                                        contentColor = MaterialTheme.colorScheme.primary
+                                    ),
+                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
+                                ) {
+                                    Text(
+                                        if (detalhesExpandidos[descKey] == true) "Ocultar detalhes" else "Ver detalhes",
+                                        style = MaterialTheme.typography.labelMedium
+                                    )
+                                }
+
+                                AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
+                                    Text(
+                                        text = descricao,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
                         }
                     }
                 }
             }
         }
     }
+}
+
+private fun parseAncestralidadeDescriptions(texto: String): Map<String, String> {
+    val linhas = texto.lines()
+    val mapa = mutableMapOf<String, StringBuilder>()
+
+    var tituloAtual = ""
+
+    for (linha in linhas) {
+        val limpa = linha.trim()
+        if (limpa.isBlank()) continue
+
+        val isTitulo = limpa.all { it.isUpperCase() || it == '-' || it == ':' || it.isWhitespace() }
+        if (isTitulo) {
+            tituloAtual = limpa.removeSuffix(":").uppercase().semAcentos()
+            mapa.putIfAbsent(tituloAtual, StringBuilder())
+        } else if (tituloAtual.isNotBlank()) {
+            mapa.getValue(tituloAtual).appendLine(limpa)
+        }
+    }
+
+    return mapa.mapValues { it.value.toString().trim() }
 }
 
 @Composable

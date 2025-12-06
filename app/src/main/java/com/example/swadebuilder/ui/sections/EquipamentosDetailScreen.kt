@@ -11,6 +11,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,8 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonPrimitive
+import com.example.swadebuilder.ui.sections.toResumo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,11 +39,6 @@ fun EquipamentosDetailScreen(
     categorias: List<EquipamentoCategoria>,
     onBack: () -> Unit
 ) {
-    fun JsonElement?.asText(): String? = when (this) {
-        is JsonPrimitive -> this.content
-        else -> this?.toString()
-    }?.takeIf { it.isNotBlank() }
-
     val mapa =
         remember(categorias) {
             categorias
@@ -191,97 +187,60 @@ fun EquipamentosDetailScreen(
                                                                         )
                                                                 ) {
                                                                     itens.forEach { eq ->
-                                                                        Column(
-                                                                            Modifier
+                                                                        val resumo = eq.toResumo()
+
+                                                                        Card(
+                                                                            modifier = Modifier
                                                                                 .fillMaxWidth()
-                                                                                .padding(vertical = 6.dp)
+                                                                                .padding(vertical = 6.dp),
+                                                                            colors = CardDefaults.cardColors(
+                                                                                containerColor = MaterialTheme.colorScheme.surfaceVariant
+                                                                            )
                                                                         ) {
-                                                                            Row(
-                                                                                Modifier.fillMaxWidth(),
-                                                                                horizontalArrangement = Arrangement.SpaceBetween
+                                                                            Column(
+                                                                                Modifier.padding(
+                                                                                    horizontal = 12.dp,
+                                                                                    vertical = 8.dp
+                                                                                )
                                                                             ) {
-                                                                                Text(
-                                                                                    eq.nome,
-                                                                                    style = MaterialTheme.typography.bodyLarge
-                                                                                )
-                                                                                eq.custo.asText()
-                                                                                    ?.let { Text(it) }
-                                                                            }
-
-                                                                            val linhaArma =
-                                                                                listOfNotNull(
-                                                                                    eq.dano.asText()
-                                                                                        ?.let { "Dano: $it" },
-                                                                                    eq.pa.asText()
-                                                                                        ?.let { "PA: $it" },
-                                                                                    eq.cdt.asText()
-                                                                                        ?.let { "CdT: $it" },
-                                                                                    eq.distancia.asText()
-                                                                                        ?.let { "Distância: $it" },
-                                                                                    eq.tiros.asText()
-                                                                                        ?.let { "Tiros: $it" },
-                                                                                ).joinToString("  •  ")
-                                                                                    .takeIf { it.isNotBlank() }
-
-                                                                            val linhaGeral =
-                                                                                listOfNotNull(
-                                                                                    eq.peso.asText()
-                                                                                        ?.let { "Peso: $it" },
-                                                                                    eq.forcaMin.asText()
-                                                                                        ?.let { "Força mín.: $it" },
-                                                                                    eq.armadura.asText()
-                                                                                        ?.let { "Armadura: $it" },
-                                                                                    eq.aparar.asText()
-                                                                                        ?.let { "Aparar: $it" },
-                                                                                ).joinToString("  •  ")
-                                                                                    .takeIf { it.isNotBlank() }
-
-                                                                            val linhaVeiculo =
-                                                                                listOfNotNull(
-                                                                                    eq.velMaxima.asText()
-                                                                                        ?.let { "Vel. máx.: $it" },
-                                                                                    eq.manobrabilidade.asText()
-                                                                                        ?.let { "Manobrabilidade: $it" },
-                                                                                    eq.tamanho.asText()
-                                                                                        ?.let { "Tamanho: $it" },
-                                                                                    eq.resistencia.asText()
-                                                                                        ?.let { "Resistência: $it" },
-                                                                                    eq.tripulacao.asText()
-                                                                                        ?.let { "Tripulação: $it" },
-                                                                                    eq.blindagem.asText()
-                                                                                        ?.let { "Blindagem: $it" },
-                                                                                    eq.passageiros.asText()
-                                                                                        ?.let { "Passageiros: $it" },
-                                                                                ).joinToString("  •  ")
-                                                                                    .takeIf { it.isNotBlank() }
-
-                                                                            linhaArma?.let {
-                                                                                Text(
-                                                                                    it,
-                                                                                    style = MaterialTheme.typography.bodySmall
-                                                                                )
-                                                                            }
-                                                                            linhaGeral?.let {
-                                                                                Text(
-                                                                                    it,
-                                                                                    style = MaterialTheme.typography.bodySmall
-                                                                                )
-                                                                            }
-                                                                            linhaVeiculo?.let {
-                                                                                Text(
-                                                                                    it,
-                                                                                    style = MaterialTheme.typography.bodySmall
-                                                                                )
-                                                                            }
-
-                                                                            eq.observacoes.asText()
-                                                                                ?.takeIf { it.isNotBlank() }
-                                                                                ?.let {
+                                                                                Row(
+                                                                                    Modifier.fillMaxWidth(),
+                                                                                    horizontalArrangement = Arrangement.SpaceBetween
+                                                                                ) {
                                                                                     Text(
-                                                                                        it,
-                                                                                        style = MaterialTheme.typography.bodySmall
+                                                                                        eq.nome,
+                                                                                        style = MaterialTheme.typography.titleSmall,
+                                                                                        modifier = Modifier.weight(1f)
+                                                                                    )
+                                                                                    resumo.custo?.let { custo ->
+                                                                                        Text(
+                                                                                            custo,
+                                                                                            style = MaterialTheme.typography.labelLarge,
+                                                                                            color = MaterialTheme.colorScheme.primary
+                                                                                        )
+                                                                                    }
+                                                                                }
+
+                                                                                listOfNotNull(
+                                                                                    resumo.linhaArma,
+                                                                                    resumo.linhaGeral,
+                                                                                    resumo.linhaVeiculo,
+                                                                                ).forEach { linha ->
+                                                                                    Text(
+                                                                                        linha,
+                                                                                        style = MaterialTheme.typography.bodySmall,
+                                                                                        modifier = Modifier.padding(top = 2.dp)
                                                                                     )
                                                                                 }
+
+                                                                                resumo.observacao?.let {
+                                                                                    Text(
+                                                                                        it,
+                                                                                        style = MaterialTheme.typography.bodySmall,
+                                                                                        modifier = Modifier.padding(top = 4.dp)
+                                                                                    )
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
@@ -299,8 +258,3 @@ fun EquipamentosDetailScreen(
         }
     )
 }
-
-private val EquipamentoItem.passageiros
-    get() = this.tripulacao
-private val EquipamentoItem.blindagem
-    get() = this.resistencia

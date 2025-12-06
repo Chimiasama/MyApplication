@@ -1,14 +1,17 @@
 @file:Suppress("DEPRECATION")
+@file:OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 
 package com.example.swadebuilder.ui.sections
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -34,7 +38,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,7 +57,6 @@ import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 
-@ExperimentalMaterial3Api
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun ComplicacoesSection(
@@ -69,7 +74,8 @@ fun ComplicacoesSection(
         .map { it.uppercase().semAcentos().substringBefore("(").trim() }
         .toSet()
 
-    val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
+    val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
+    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val origensAtivas: Set<String> = buildSet {
         add("BASICO")
@@ -94,8 +100,8 @@ fun ComplicacoesSection(
             onHelpClick          = null,
             centerText           = "Pontos Complicação: livres $livresPc / $totalPc",
             onCenterClick        = null,
-            onListaCompletaClick = if (showLista) onOpenComplicacoesDetail else null,
-            listaCompletaText    = "Lista Completa"
+            onListaCompletaClick = null,
+            listaCompletaText    = ""
         )
 
         Spacer(Modifier.height(4.dp))
@@ -254,86 +260,114 @@ fun ComplicacoesSection(
                     val maiorOnly = sevRaw.contains("maior") && !sevRaw.contains("menor")
                     val ambos     = sevRaw.contains("menor") && sevRaw.contains("maior")
 
-                    Row(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .padding(vertical = 4.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(
-                                text = comp.name,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-
-                        Spacer(Modifier.width(8.dp))
-
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            if (menorOnly || ambos) {
-                                val enabledMenor = !locked && cur == null
-                                TextButton(
-                                    onClick = {
-                                        if (!enabledMenor) return@TextButton
-                                        when (comp.id) {
-                                            "jovem" -> {
-                                                state.complicacoesSelecionadas[comp] = "Menor"
-                                                state.applyYoungMinor()
-                                            }
-                                            "obeso" -> {
-                                                state.complicacoesSelecionadas[comp] = "Menor"
-                                                state.obesoBonusSize = 1
-                                                state.obesoMalusMov = 1
-                                            }
-                                            else -> {
-                                                state.complicacoesSelecionadas[comp] = "Menor"
-                                            }
-                                        }
-                                    },
-                                    enabled = enabledMenor
-                                ) {
-                                    Text("Menor")
-                                }
+                            Column(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = comp.name,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
                             }
 
-                            if (maiorOnly || ambos) {
-                                val enabledMaior = !locked && (
-                                        (maiorOnly && cur == null) ||
-                                                (ambos && cur == "Menor")
-                                        )
-                                TextButton(
-                                    onClick = {
-                                        if (!enabledMaior) return@TextButton
-                                        when (comp.id) {
-                                            "idoso" -> {
-                                                state.complicacoesSelecionadas[comp] = "Maior"
-                                                state.idosoBonusSp = 5
-                                                state.rebuildAllPericiaStacks()
+                            Spacer(Modifier.width(8.dp))
+
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                if (menorOnly || ambos) {
+                                    val enabledMenor = !locked && cur == null
+                                    TextButton(
+                                        onClick = {
+                                            if (!enabledMenor) return@TextButton
+                                            when (comp.id) {
+                                                "jovem" -> {
+                                                    state.complicacoesSelecionadas[comp] = "Menor"
+                                                    state.applyYoungMinor()
+                                                }
+                                                "obeso" -> {
+                                                    state.complicacoesSelecionadas[comp] = "Menor"
+                                                    state.obesoBonusSize = 1
+                                                    state.obesoMalusMov = 1
+                                                }
+                                                else -> {
+                                                    state.complicacoesSelecionadas[comp] = "Menor"
+                                                }
                                             }
-                                            "jovem" -> {
-                                                state.complicacoesSelecionadas[comp] = "Maior"
-                                                state.applyYoungMajor(pequComp)
-                                            }
-                                            "obeso" -> {
-                                                state.complicacoesSelecionadas[comp] = "Maior"
-                                                state.obesoBonusSize = 1
-                                                state.obesoMalusMov = 1
-                                            }
-                                            else -> {
-                                                state.complicacoesSelecionadas[comp] = "Maior"
-                                            }
-                                        }
-                                    },
-                                    enabled = enabledMaior
-                                ) {
-                                    Text("Maior")
+                                        },
+                                        enabled = enabledMenor
+                                    ) {
+                                        Text("Menor")
+                                    }
                                 }
+
+                                if (maiorOnly || ambos) {
+                                    val enabledMaior = !locked && (
+                                            (maiorOnly && cur == null) ||
+                                                    (ambos && cur == "Menor")
+                                            )
+                                    TextButton(
+                                        onClick = {
+                                            if (!enabledMaior) return@TextButton
+                                            when (comp.id) {
+                                                "idoso" -> {
+                                                    state.complicacoesSelecionadas[comp] = "Maior"
+                                                    state.idosoBonusSp = 5
+                                                    state.rebuildAllPericiaStacks()
+                                                }
+                                                "jovem" -> {
+                                                    state.complicacoesSelecionadas[comp] = "Maior"
+                                                    state.applyYoungMajor(pequComp)
+                                                }
+                                                "obeso" -> {
+                                                    state.complicacoesSelecionadas[comp] = "Maior"
+                                                    state.obesoBonusSize = 1
+                                                    state.obesoMalusMov = 1
+                                                }
+                                                else -> {
+                                                    state.complicacoesSelecionadas[comp] = "Maior"
+                                                }
+                                            }
+                                        },
+                                        enabled = enabledMaior
+                                    ) {
+                                        Text("Maior")
+                                    }
+                                }
+                            }
+                        }
+
+                        if (allowLongTexts && comp.description.isNotBlank()) {
+                            TextButton(
+                                onClick = {
+                                    val current = detalhesExpandidos[comp.id] ?: false
+                                    detalhesExpandidos[comp.id] = !current
+                                },
+                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp)
+                            ) {
+                                Text(
+                                    if (detalhesExpandidos[comp.id] == true) "Ocultar detalhes" else "Ver detalhes",
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                            }
+
+                            AnimatedVisibility(visible = detalhesExpandidos[comp.id] == true) {
+                                Text(
+                                    text = comp.description.trim(),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(top = 4.dp)
+                                )
                             }
                         }
                     }

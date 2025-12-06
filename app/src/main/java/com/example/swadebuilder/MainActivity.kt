@@ -704,8 +704,6 @@ class MainActivity : ComponentActivity() {
                                                     }
                                                     showAncestralidadesDetail = true
                                                 },
-
-                                                onOpenListaCompletaEquipamento = { showEquipLista    = true },
                                                 onOpenPoderesDetail            = { showPoderesDetail = true },
 
                                                 onOpenSuperPoderesDetail = { nomePoder ->

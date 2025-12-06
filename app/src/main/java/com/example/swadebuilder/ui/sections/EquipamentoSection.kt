@@ -3,6 +3,7 @@ package com.example.swadebuilder.ui.sections
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,12 +17,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -41,11 +44,12 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
-import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.PbWalletBanner
+import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import com.example.swadebuilder.ui.sections.toResumo
 import kotlinx.serialization.json.JsonPrimitive
 
 data class EquipFilter(
@@ -152,6 +156,7 @@ fun EquipFilterDialog(
     )
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun EquipamentoSection(
     dinheiro: Int,
@@ -164,7 +169,6 @@ fun EquipamentoSection(
     onToggle: () -> Unit,
     onUsarPontosBonusEmRecursos: () -> Unit,
     onDesfazerPontosBonusEmRecursos: () -> Unit,
-    onListaCompletaClick: () -> Unit,
     onEquipamentoDoubleClick: (EquipamentoItem) -> Unit,
     equipamentosComprados: List<EquipamentoItem>,
     onRemoveEquipamentoClick: (EquipamentoItem) -> Unit,
@@ -185,7 +189,6 @@ fun EquipamentoSection(
 
     var filter by remember { mutableStateOf(EquipFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
-    val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
     SectionCard(
         title    = "Equipamento",
@@ -199,8 +202,8 @@ fun EquipamentoSection(
             onHelpClick = null,
             centerText = "Dinheiro: $dinheiro",
             onCenterClick = null,
-            onListaCompletaClick = if (showLista) onListaCompletaClick else null,
-            listaCompletaText = "Lista Completa"
+            onListaCompletaClick = null,
+            listaCompletaText = ""
         )
 
         if (emProgresso || modoProgressaoAtivo) {
@@ -519,28 +522,14 @@ fun EquipamentoSection(
                                                         true
                                                     }
                                                     .forEach { equipamento ->
-                                                        Row(
-                                                            Modifier
-                                                                .fillMaxWidth()
-                                                                .clickable {
-                                                                    onEquipamentoDoubleClick(equipamento)
-                                                                }
-                                                                .padding(
-                                                                    vertical = 4.dp,
-                                                                    horizontal = 4.dp
-                                                                ),
-                                                            verticalAlignment = Alignment.CenterVertically
-                                                        ) {
-                                                            Text(
-                                                                equipamento.nome,
-                                                                Modifier.weight(1f),
-                                                                style = MaterialTheme.typography.bodyMedium
-                                                            )
-                                                            Text(
-                                                                equipamento.custo.toString(),
-                                                                style = MaterialTheme.typography.bodyMedium
-                                                            )
-                                                        }
+                                                        EquipamentoListItem(
+                                                            equipamento = equipamento,
+                                                            onClick = {
+                                                                onEquipamentoDoubleClick(
+                                                                    equipamento
+                                                                )
+                                                            }
+                                                        )
                                                     }
                                             }
                                         }
@@ -587,27 +576,71 @@ fun EquipamentoSection(
                             true
                         }
                         .forEach { equipamento ->
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        onEquipamentoDoubleClick(equipamento)
-                                    }
-                                    .padding(vertical = 4.dp, horizontal = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    equipamento.nome,
-                                    Modifier.weight(1f),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                                Text(
-                                    equipamento.custo.toString(),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
+                            EquipamentoListItem(
+                                equipamento = equipamento,
+                                onClick = { onEquipamentoDoubleClick(equipamento) }
+                            )
                         }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun EquipamentoListItem(
+    equipamento: EquipamentoItem,
+    onClick: () -> Unit
+) {
+    val resumo = equipamento.toResumo()
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .clickable { onClick() },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    equipamento.nome,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.weight(1f)
+                )
+                resumo.custo?.let {
+                    Text(
+                        it,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            listOfNotNull(
+                resumo.linhaArma,
+                resumo.linhaGeral,
+                resumo.linhaVeiculo,
+            ).forEach { linha ->
+                Text(
+                    linha,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(top = 2.dp)
+                )
+            }
+
+            resumo.observacao?.let {
+                Text(
+                    it,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
             }
         }
     }

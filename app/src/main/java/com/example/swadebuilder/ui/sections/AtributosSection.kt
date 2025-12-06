@@ -1,5 +1,6 @@
 package com.example.swadebuilder.ui.sections
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -18,10 +20,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.FontWeight
@@ -30,12 +36,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.R
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.mapaAtributosDisplay
+import com.example.swadebuilder.loadRawText
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.ui.sections.parseAtributos
+import com.example.swadebuilder.util.semAcentos
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -43,11 +53,24 @@ fun AtributosContent(
     state: CriadorState,
     onOpenAtributosDetail: () -> Unit
 ) {
+    val context = LocalContext.current
+    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
+    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
+
+    val descricaoPorAtributo = remember(allowLongTexts) {
+        if (!allowLongTexts) {
+            emptyMap()
+        } else {
+            parseAtributos(loadRawText(context, R.raw.atributos))
+                .associate { atributo ->
+                    atributo.nome.uppercase().semAcentos() to atributo.descricao
+                }
+        }
+    }
+
     val locked = state.criacaoBasicaCongelada && !state.attributeAdvancementInProgress
 
     val pergaminho = MaterialTheme.colorScheme.surfaceVariant
-
-    val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
     val pcTotal  = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
@@ -77,8 +100,8 @@ fun AtributosContent(
         SectionHeader(
             onHelpClick = null,
             centerText = "Pontos de Atributo: ${state.pontosAtributo}",
-            onListaCompletaClick = if (showLista) ({ onOpenAtributosDetail() }) else null,
-            listaCompletaText = "Lista Completa"
+            onListaCompletaClick = null,
+            listaCompletaText = ""
         )
 
         Spacer(Modifier.height(4.dp))
@@ -137,19 +160,31 @@ fun AtributosContent(
             }
 
 
-            Row(
+            val displayName = mapaAtributosDisplay[nome] ?: nome
+            val descKey = displayName.uppercase().semAcentos()
+            val descricao = descricaoPorAtributo[descKey].orEmpty()
+
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(vertical = 4.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 10.dp)
             ) {
-                Text(
-                    text = mapaAtributosDisplay[nome] ?: nome,
-                    modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = displayName,
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
 
                 IconButton(
                     onClick = {
@@ -199,9 +234,33 @@ fun AtributosContent(
                         modifier = Modifier.fillMaxSize()
                     )
                 }
+
+                if (allowLongTexts && descricao.isNotBlank()) {
+                    Spacer(Modifier.height(6.dp))
+                    TextButton(
+                        onClick = {
+                            val current = detalhesExpandidos[descKey] ?: false
+                            detalhesExpandidos[descKey] = !current
+                        },
+                        contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            if (detalhesExpandidos[descKey] == true) "Ocultar detalhes" else "Ver detalhes",
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    }
+
+                    AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
+                        Text(
+                            text = descricao,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
             }
         }
 
         Spacer(Modifier.height(8.dp))
     }
+}
 }

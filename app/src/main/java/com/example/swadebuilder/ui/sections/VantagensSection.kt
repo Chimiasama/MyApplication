@@ -2,10 +2,11 @@ package com.example.swadebuilder.ui.sections
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -36,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,12 +47,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import java.util.Locale
 import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.arcanoInfo
@@ -70,7 +73,6 @@ import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.Locale
 import kotlinx.serialization.json.Json
 
 data class VantFilter(
@@ -182,7 +184,7 @@ fun VantFilterDialog(
 }
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun VantagensContent(
     state: CriadorState,
@@ -243,7 +245,6 @@ fun VantagensContent(
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
     var tempErrorMsg by remember { mutableStateOf("") }
     var showTempError by remember { mutableStateOf(false) }
-    var selectedReqs by remember { mutableStateOf<List<String>>(emptyList()) }
     var pendingVantagem by remember { mutableStateOf<Vantagem?>(null) }
     var showChoiceDialog by rememberSaveable { mutableStateOf(false) }
     var pendingNovosPoderes by rememberSaveable { mutableStateOf<Vantagem?>(null) }
@@ -271,7 +272,8 @@ fun VantagensContent(
     }
 
     val locked = state.criacaoBasicaCongeladaComXp
-    val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
+    val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
+    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val pcTotal = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
@@ -282,8 +284,8 @@ fun VantagensContent(
         SectionHeader(
             onHelpClick = null,
             centerText = "Pontos de Vantagem: ${state.pontosVantagem}",
-            onListaCompletaClick = if (showLista) ({ onOpenVantagensDetail("") }) else null,
-            listaCompletaText = "Lista Completa"
+            onListaCompletaClick = null,
+            listaCompletaText = ""
         )
 
         Spacer(Modifier.size(4.dp))
@@ -457,34 +459,15 @@ fun VantagensContent(
 
         Spacer(Modifier.size(16.dp))
 
-        Card(
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primaryContainer),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
+        if (showTempError) {
+            Text(
+                tempErrorMsg,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
-        ) {
-            Column(Modifier.padding(8.dp)) {
-                when {
-                    showTempError ->
-                        Text(tempErrorMsg, color = MaterialTheme.colorScheme.error)
-
-                    selectedReqs.isEmpty() -> Text(
-                        "Selecione uma vantagem para ver requisitos",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-
-                    else -> selectedReqs.forEach { req ->
-                        Text("• $req", style = MaterialTheme.typography.bodySmall)
-                    }
-                }
-            }
         }
 
-        Spacer(Modifier.size(16.dp))
+        Spacer(Modifier.size(8.dp))
 
         categoriasBy.forEach { (cat, lista) ->
             if (state.modoSupers && cat == Categoria.PODER) return@forEach
@@ -558,123 +541,208 @@ fun VantagensContent(
                     state = listState
                 ) {
                     items(listaFiltrada, key = { it.id }) { vant ->
-                            val reqList = buildList {
-                                listaDeEstagios.firstOrNull {
-                                    it.nome.equals(vant.requisitos.estagio, true)
-                                }?.let { add("Estágio ≥ ${it.nome}") }
+                        val reqList = buildList {
+                            listaDeEstagios.firstOrNull {
+                                it.nome.equals(vant.requisitos.estagio, true)
+                            }?.let { add(it.nome) }
 
-                                vant.requisitos.atributoMin.forEach { (a, m) ->
-                                    add("$a ≥ $m")
-                                }
-                                vant.requisitos.periciaMin.forEach { (p, m) ->
-                                    add("$p ≥ $m")
-                                }
-
-                                if (vant.requisitos.periciaMinOpcional.isNotEmpty()) {
-                                    add(
-                                        vant.requisitos.periciaMinOpcional.entries.joinToString(" ou ") {
-                                            "${it.key} d${it.value}+"
-                                        }
-                                    )
-                                }
-
-                                vant.requisitos.vantagensPrevias.forEach { prevId ->
-                                    val legivel = idParaNome[prevId]
-                                        ?: prevId.replace('_', ' ').uppercase()
-                                    add("Pré-requisito: $legivel")
-                                }
-
-                                if (vant.requisitos.exigeCS) add("Requer Carta Selvagem")
-                                if (vant.nome.trim().removeSuffix(":").keyify() == "profissional") {
-                                    add(
-                                        "Traço no teto máximo: escolha entre " +
-                                                state.maxedTraits.joinToString()
-                                    )
-                                }
+                            vant.requisitos.atributoMin.forEach { (a, m) ->
+                                add("$a d$m")
+                            }
+                            vant.requisitos.periciaMin.forEach { (p, m) ->
+                                add("$p d$m")
                             }
 
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable(enabled = !locked) {
-                                        selectedReqs = reqList
-                                        if (!locked) {
-                                            when {
-                                                state.pontosVantagem <= 0 -> {
-                                                    tempErrorMsg = "Sem PV disponível"
-                                                    showTempError = true
-                                                }
-
-                                                !state.podeSelecionar(vant) -> {
-                                                    tempErrorMsg =
-                                                        "Faltam requisitos para '${vant.nome}'"
-                                                    showTempError = true
-                                                }
-
-                                                vant.vinculadoPericia -> {
-                                                    pendingVantagem = vant
-                                                    showChoiceDialog = true
-                                                }
-
-                                                vant.id == "antecedente_arcano" -> {
-                                                    dialogMostrandoAntecedente = vant
-                                                }
-
-                                                vant.id == "novos_poderes" -> {
-                                                    pendingNovosPoderes = vant
-                                                    showNovosPoderesDialog = true
-                                                }
-
-                                                else -> {
-                                                    if (state.advantageAdvancementInProgress) {
-                                                        viewModel.selectAdvantageForAdvancement(vant)
-                                                    } else {
-                                                        if (vant.nome.contains(
-                                                                "Pontos de Poder",
-                                                                true
-                                                            )
-                                                        ) {
-                                                            state.comprarPontoDePoder(vant)
-                                                        } else {
-                                                            state.applyVantagemDinheiro(vant)
-                                                            state.vantagensSelecionadas += vant
-                                                        }
-                                                        state.pontosVantagem--
-                                                        state.rebuildAllPericiaStacks()
-                                                    }
-                                                }
-                                            }
-
-                                            scope.launch {
-                                                delay(2_000)
-                                                showTempError = false
-                                            }
-                                        }
+                            if (vant.requisitos.periciaMinOpcional.isNotEmpty()) {
+                                add(
+                                    vant.requisitos.periciaMinOpcional.entries.joinToString(" ou ") {
+                                        "${it.key} d${it.value}"
                                     }
-                                    .alpha(
-                                        if (!locked && state.podeSelecionar(vant)) 1f
-                                        else 0.3f
-                                    )
-                                    .padding(vertical = 8.dp, horizontal = 4.dp)
-                            ) {
-                                Text(
-                                    vant.nome,
-                                    Modifier.weight(1f),
-                                    fontWeight = FontWeight.Medium
                                 )
-                                if (showLista) {
-                                    Icon(
-                                        Icons.Default.Visibility,
-                                        contentDescription = "Detalhes",
-                                        modifier = Modifier
-                                            .size(18.dp)
-                                            .clickable {
-                                                onOpenVantagensDetail(vant.nome)
-                                            }
-                                    )
-                                }
+                            }
+
+                            vant.requisitos.vantagensPrevias.forEach { prevId ->
+                                val legivel = idParaNome[prevId]
+                                    ?: prevId.replace('_', ' ').uppercase()
+                                add("Pré-requisito: $legivel")
+                            }
+
+                            if (vant.requisitos.exigeCS) add("Requer Carta Selvagem")
+                            if (vant.nome.trim().removeSuffix(":").keyify() == "profissional") {
+                                add(
+                                    "Traço no teto máximo: escolha entre " +
+                                            state.maxedTraits.joinToString()
+                                )
                             }
                         }
+
+                        val jaTem = state.vantagensSelecionadas.any { it.id == vant.id }
+                        val requisitosOk = state.podeSelecionar(vant)
+                        val statusText = when {
+                            jaTem -> "Já selecionada"
+                            requisitosOk -> "Requisitos OK"
+                            else -> "Requisitos pendentes"
+                        }
+                        val statusColor = when {
+                            jaTem -> MaterialTheme.colorScheme.tertiary
+                            requisitosOk -> MaterialTheme.colorScheme.primary
+                            else -> MaterialTheme.colorScheme.error
+                        }
+
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 4.dp, vertical = 4.dp)
+                                .clickable(enabled = !locked) {
+                                    if (!locked) {
+                                        when {
+                                            state.pontosVantagem <= 0 -> {
+                                                tempErrorMsg = "Sem PV disponível"
+                                                showTempError = true
+                                            }
+
+                                            !state.podeSelecionar(vant) -> {
+                                                tempErrorMsg =
+                                                    "Faltam requisitos para '${vant.nome}'"
+                                                showTempError = true
+                                            }
+
+                                            vant.vinculadoPericia -> {
+                                                pendingVantagem = vant
+                                                showChoiceDialog = true
+                                            }
+
+                                            vant.id == "antecedente_arcano" -> {
+                                                dialogMostrandoAntecedente = vant
+                                            }
+
+                                            vant.id == "novos_poderes" -> {
+                                                pendingNovosPoderes = vant
+                                                showNovosPoderesDialog = true
+                                            }
+
+                                            else -> {
+                                                if (state.advantageAdvancementInProgress) {
+                                                    viewModel.selectAdvantageForAdvancement(vant)
+                                                } else {
+                                                    if (vant.nome.contains(
+                                                            "Pontos de Poder",
+                                                            true
+                                                        )
+                                                    ) {
+                                                        state.comprarPontoDePoder(vant)
+                                                    } else {
+                                                        state.applyVantagemDinheiro(vant)
+                                                        state.vantagensSelecionadas += vant
+                                                    }
+                                                    state.pontosVantagem--
+                                                    state.rebuildAllPericiaStacks()
+                                                }
+                                            }
+                                        }
+
+                                        scope.launch {
+                                            delay(2_000)
+                                            showTempError = false
+                                        }
+                                    }
+                                },
+                            colors = CardDefaults.cardColors(
+                                containerColor = when {
+                                    jaTem -> MaterialTheme.colorScheme.tertiaryContainer
+                                    requisitosOk -> MaterialTheme.colorScheme.surfaceVariant
+                                    else -> MaterialTheme.colorScheme.errorContainer
+                                }
+                            )
+                        ) {
+                            Column(Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
+                                Row(
+                                    Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        vant.nome,
+                                        style = MaterialTheme.typography.titleSmall,
+                                        modifier = Modifier.weight(1f)
+                                    )
+
+                                    Text(
+                                        statusText,
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = statusColor
+                                    )
+                                }
+
+                                Spacer(Modifier.size(6.dp))
+
+                                FlowRow(
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    if (vant.descricao.isNotBlank() && vant.vinculadoPericia) {
+                                        AssistChip(
+                                            onClick = {},
+                                            leadingIcon = {
+                                                Icon(
+                                                    Icons.Default.Visibility,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                                                )
+                                            },
+                                            label = { Text("Opções especiais") }
+                                        )
+                                    }
+                                }
+
+                                if (reqList.isNotEmpty()) {
+                                    Spacer(Modifier.size(4.dp))
+                                    Text(
+                                        "Requisitos:",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                    reqList.forEach { req ->
+                                        Text(
+                                            "• $req",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = if (requisitosOk || jaTem) {
+                                                MaterialTheme.colorScheme.onSurface
+                                            } else {
+                                                MaterialTheme.colorScheme.onSurfaceVariant
+                                            }
+                                        )
+                                    }
+                                }
+
+                                val canShowDetails = allowLongTexts && vant.descricao.isNotBlank()
+                                if (canShowDetails) {
+                                    Spacer(Modifier.size(8.dp))
+                                    TextButton(
+                                        onClick = {
+                                            val current = detalhesExpandidos[vant.id] ?: false
+                                            detalhesExpandidos[vant.id] = !current
+                                        },
+                                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                                    ) {
+                                        Text(
+                                            if (detalhesExpandidos[vant.id] == true) "Ocultar detalhes" else "Ver detalhes",
+                                            style = MaterialTheme.typography.labelMedium
+                                        )
+                                    }
+
+                                    AnimatedVisibility(visible = detalhesExpandidos[vant.id] == true) {
+                                        Text(
+                                            text = vant.descricao.trim(),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.padding(top = 4.dp)
+                                        )
+                                    }
+                                }
+
+                            }
+                        }
+                    }
                 }
             }
             Spacer(Modifier.size(8.dp))
