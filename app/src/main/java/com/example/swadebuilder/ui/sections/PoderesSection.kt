@@ -192,7 +192,7 @@ private fun ArcanoArea(
         }
     }
 
-    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
+    val detalhesExpandidos = remember(arcKey) { mutableStateMapOf<String, Boolean>() }
 
     LazyColumn(
         modifier = Modifier
