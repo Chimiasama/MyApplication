@@ -97,6 +97,10 @@ class CriadorViewModel : ViewModel() {
         state.reservasComplicacaoMaior.clear()
         state.vantagensAutomaticas.clear()
         state.desvantagensAutomaticas.clear()
+        state.vantagemEmFoco = null
+        state.categoriasVantagensExpandidas.keys.forEach { cat ->
+            state.categoriasVantagensExpandidas[cat] = false
+        }
         state.aplicarAncestralidade("HUMANOS", _feedbackMessages)
 
         if (state.modoSupers) {
