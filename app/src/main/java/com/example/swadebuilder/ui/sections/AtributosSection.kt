@@ -18,7 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.criacaoBasicaCongelada
-import com.example.swadebuilder.model.Atributo
+import com.example.swadebuilder.model.AtributoJson
 import com.example.swadebuilder.model.AtributoList
 import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.toDiceString

@@ -54,7 +54,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.R
-import com.example.swadebuilder.SuperPoder
+import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.model.Categoria
@@ -73,7 +73,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun BuySuperPowerDialog(
-    poder: SuperPoder,
+    poder: Poder,
     pontosDisponiveis: Int,
     limitePorPoder: Int,
     onConfirm: (baseCost: Int, totalCost: Int, modifiers: Map<String, Int>) -> Unit,
@@ -327,13 +327,13 @@ private fun Vantagem.bloqueadaComoSuperVantagem(): Boolean {
 @Composable
 fun SuperPoderesSection(
     state: CriadorState,
-    listaSuperPoderes: List<SuperPoder>,
+    listaSuperPoderes: List<Poder>,
     expanded: Boolean,
     viewModel: CriadorViewModel = viewModel()
 ) {
     if (!expanded) return
     val context = LocalContext.current
-    var poderParaComprar by remember { mutableStateOf<SuperPoder?>(null) }
+    var poderParaComprar by remember { mutableStateOf<Poder?>(null) }
 
     val listState = rememberLazyListState()
 
@@ -1072,7 +1072,7 @@ fun SuperPoderesSection(
 @Composable
 fun SuperPoderesContent(
     state: CriadorState,
-    listaSuperPoderes: List<SuperPoder>,
+    listaSuperPoderes: List<Poder>,
     expanded: Boolean,
     onToggle: () -> Unit
 ) {

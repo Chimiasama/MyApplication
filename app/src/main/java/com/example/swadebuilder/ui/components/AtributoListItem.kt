@@ -30,11 +30,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.R
-import com.example.swadebuilder.model.Atributo
+import com.example.swadebuilder.model.AtributoJson
 
 @Composable
 fun AtributoListItem(
-    atributo: Atributo,
+    atributo: AtributoJson,
     diceValue: String,
     canIncrease: Boolean,
     canDecrease: Boolean,
