@@ -272,7 +272,7 @@ fun VantagensContent(
 
     val locked = state.criacaoBasicaCongeladaComXp
     val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
-    val detalhesExpandidos = rememberSaveable { mutableStateMapOf<String, Boolean>() }
+    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val pcTotal = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos

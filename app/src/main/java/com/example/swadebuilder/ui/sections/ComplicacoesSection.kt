@@ -73,7 +73,7 @@ fun ComplicacoesSection(
         .toSet()
 
     val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
-    val detalhesExpandidos = rememberSaveable { mutableStateMapOf<String, Boolean>() }
+    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val origensAtivas: Set<String> = buildSet {
         add("BASICO")
