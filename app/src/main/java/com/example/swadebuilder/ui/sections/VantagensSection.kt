@@ -2,6 +2,7 @@ package com.example.swadebuilder.ui.sections
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -35,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -268,8 +271,8 @@ fun VantagensContent(
     }
 
     val locked = state.criacaoBasicaCongeladaComXp
-    val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
     val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
+    val detalhesExpandidos = rememberSaveable { mutableStateMapOf<String, Boolean>() }
 
     val pcTotal = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
@@ -280,8 +283,8 @@ fun VantagensContent(
         SectionHeader(
             onHelpClick = null,
             centerText = "Pontos de Vantagem: ${state.pontosVantagem}",
-            onListaCompletaClick = if (showLista) ({ onOpenVantagensDetail("") }) else null,
-            listaCompletaText = "Lista Completa"
+            onListaCompletaClick = null,
+            listaCompletaText = ""
         )
 
         Spacer(Modifier.size(4.dp))
@@ -662,25 +665,11 @@ fun VantagensContent(
                                         modifier = Modifier.weight(1f)
                                     )
 
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Text(
-                                            statusText,
-                                            style = MaterialTheme.typography.labelMedium,
-                                            color = statusColor
-                                        )
-
-                                        if (showLista) {
-                                            Spacer(Modifier.size(8.dp))
-                                            Icon(
-                                                Icons.Default.Visibility,
-                                                contentDescription = "Ver detalhes",
-                                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                                modifier = Modifier
-                                                    .size(18.dp)
-                                                    .clickable { onOpenVantagensDetail(vant.nome) }
-                                            )
-                                        }
-                                    }
+                                    Text(
+                                        statusText,
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = statusColor
+                                    )
                                 }
 
                                 Spacer(Modifier.size(6.dp))
@@ -720,6 +709,32 @@ fun VantagensContent(
                                             } else {
                                                 MaterialTheme.colorScheme.onSurfaceVariant
                                             }
+                                        )
+                                    }
+                                }
+
+                                val canShowDetails = allowLongTexts && vant.descricao.isNotBlank()
+                                if (canShowDetails) {
+                                    Spacer(Modifier.size(8.dp))
+                                    TextButton(
+                                        onClick = {
+                                            val current = detalhesExpandidos[vant.id] ?: false
+                                            detalhesExpandidos[vant.id] = !current
+                                        },
+                                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                                    ) {
+                                        Text(
+                                            if (detalhesExpandidos[vant.id] == true) "Ocultar detalhes" else "Ver detalhes",
+                                            style = MaterialTheme.typography.labelMedium
+                                        )
+                                    }
+
+                                    AnimatedVisibility(visible = detalhesExpandidos[vant.id] == true) {
+                                        Text(
+                                            text = vant.descricao.trim(),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.padding(top = 4.dp)
                                         )
                                     }
                                 }
