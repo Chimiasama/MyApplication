@@ -713,11 +713,7 @@ fun VantagensContent(
                                         )
                                     }
 
-                                    if (vant.descricao.isNotBlank() && vant.nome.equals(
-                                            vant.vinculadoPericia,
-                                            true
-                                        )
-                                    ) {
+                                    if (vant.descricao.isNotBlank() && vant.vinculadoPericia) {
                                         AssistChip(
                                             onClick = {},
                                             leadingIcon = {
