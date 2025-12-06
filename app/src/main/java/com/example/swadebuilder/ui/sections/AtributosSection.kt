@@ -235,10 +235,13 @@ fun AtributosContent(
                     )
                 }
 
-                if (allowLongTexts && descricao.isNotBlank()) {
-                    Spacer(Modifier.height(6.dp))
-                    TextButton(
-                        onClick = {
+                Spacer(Modifier.width(4.dp))
+            }
+
+            if (allowLongTexts && descricao.isNotBlank()) {
+                Spacer(Modifier.height(6.dp))
+                TextButton(
+                    onClick = {
                             val current = detalhesExpandidos[descKey] ?: false
                             detalhesExpandidos[descKey] = !current
                         },

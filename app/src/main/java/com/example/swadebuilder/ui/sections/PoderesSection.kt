@@ -1,5 +1,6 @@
 package com.example.swadebuilder.ui.sections
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,9 +19,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -79,6 +82,7 @@ fun PoderesSection(
     onOpenListaCompletaPoderes: () -> Unit
 ) {
     val context = LocalContext.current
+    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
 
     val locked = state.criacaoBasicaCongeladaComXp
 
@@ -103,7 +107,8 @@ fun PoderesSection(
             state = state,
             poderesElegiveis = poderesElegiveis,
             onOpenListaCompletaPoderes = onOpenListaCompletaPoderes,
-            locked = locked
+            locked = locked,
+            allowLongTexts = allowLongTexts
         )
         return
     }
@@ -114,7 +119,8 @@ fun PoderesSection(
             state = state,
             poderesElegiveis = poderesElegiveis,
             onOpenListaCompletaPoderes = onOpenListaCompletaPoderes,
-            locked = locked
+            locked = locked,
+            allowLongTexts = allowLongTexts
         )
         Spacer(Modifier.height(4.dp))
     }
@@ -127,7 +133,8 @@ private fun ArcanoArea(
     state: CriadorState,
     poderesElegiveis: List<Poder>,
     onOpenListaCompletaPoderes: () -> Unit,
-    locked: Boolean
+    locked: Boolean,
+    allowLongTexts: Boolean
 ) {
     val arcKey = arcKeyRaw.normAAKey()
     val (slotsCount, ppTotal, foco) = arcanoInfo[arcKey] ?: Triple(0, 0, "—")
@@ -192,6 +199,7 @@ private fun ArcanoArea(
             .padding(bottom = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
         items(
             items = poderesElegiveis,
             key = { it.id }
@@ -221,6 +229,53 @@ private fun ArcanoArea(
                     Text("Custo: ${poder.pontosDePoder}")
                     if (state.usarSemPontosDePoder) {
                         Text("Penalidade base: ${custoParaPenalidadeTexto(poder.pontosDePoder)}")
+                    }
+
+                    val descricaoDisponivel = allowLongTexts && poder.descricao.isNotBlank()
+                    if (descricaoDisponivel) {
+                        Spacer(Modifier.height(6.dp))
+                        TextButton(onClick = {
+                            val current = detalhesExpandidos[poder.id] ?: false
+                            detalhesExpandidos[poder.id] = !current
+                        }) {
+                            Text(
+                                if (detalhesExpandidos[poder.id] == true)
+                                    "Ocultar detalhes"
+                                else
+                                    "Ver detalhes",
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+
+                        AnimatedVisibility(visible = detalhesExpandidos[poder.id] == true) {
+                            Column(Modifier.padding(top = 4.dp)) {
+                                Text(poder.descricao)
+                                Spacer(Modifier.height(4.dp))
+                                Text("Distância: ${poder.distancia}")
+                                Text("Duração: ${poder.duracao}")
+
+                                val mans = poder.manifestacoes
+                                if (mans.isNotEmpty()) {
+                                    Spacer(Modifier.height(4.dp))
+                                    Text("Manifestações:", fontWeight = FontWeight.SemiBold)
+                                    mans.forEach { man ->
+                                        Text("• $man", style = MaterialTheme.typography.bodyMedium)
+                                    }
+                                }
+
+                                val mods = poder.modificadores
+                                if (mods.isNotEmpty()) {
+                                    Spacer(Modifier.height(4.dp))
+                                    Text("Modificadores:", fontWeight = FontWeight.SemiBold)
+                                    mods.forEach { mod ->
+                                        Text(
+                                            "${mod.nome} (${mod.custo}): ${mod.descricao}",
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

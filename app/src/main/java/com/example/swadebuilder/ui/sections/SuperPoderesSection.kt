@@ -5,6 +5,7 @@ package com.example.swadebuilder.ui.sections
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -75,6 +77,9 @@ import com.example.swadebuilder.ui.dialogs.SuperAtributosPickerDialog
 import com.example.swadebuilder.ui.dialogs.SuperPericiasPickerDialog
 import com.example.swadebuilder.ui.dialogs.SuperVantagensPickerDialog
 import com.example.swadebuilder.util.keyify
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.contentOrNull
 import kotlin.math.roundToInt
 
 @Composable
@@ -540,6 +545,8 @@ fun SuperPoderesSection(
 
 
         val showLista2 = false
+        val allowLongTexts = booleanResource(R.bool.enable_long_texts)
+        val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
         LazyColumn(
             state = listState,
@@ -549,7 +556,14 @@ fun SuperPoderesSection(
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
         ) {
             items(listaSuperPoderes, key = { it.nome }) { poder ->
-                Row(
+                val showDetails = allowLongTexts && (
+                        poder.descricao != null ||
+                                (poder.modificadores?.isNotEmpty() == true) ||
+                                (poder.manifestacoes != null)
+                        )
+                val expanded = detalhesExpandidos[poder.nome] == true
+
+                Column(
                     Modifier
                         .fillMaxWidth()
                         .clickable(enabled = podeComprarSupers) {
@@ -557,65 +571,103 @@ fun SuperPoderesSection(
                                 poderParaComprar = poder
                             }
                         }
-                        .padding(vertical = 6.dp, horizontal = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(vertical = 6.dp, horizontal = 8.dp)
                 ) {
-                    Text(
-                        poder.nome,
-                        Modifier.weight(1f),
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            poder.nome,
+                            Modifier.weight(1f),
+                            fontWeight = FontWeight.SemiBold
+                        )
 
-                    if (temOMelhorQueHa) {
-                        val favoritoAtual = state.poderFavoritoId
-                        val temFavorito = favoritoAtual != null
+                        if (temOMelhorQueHa) {
+                            val favoritoAtual = state.poderFavoritoId
+                            val temFavorito = favoritoAtual != null
 
-                        val isFavoriteLocked = favoritoAtual?.let { favId ->
-                            (state.gastosPorPoder[favId] ?: 0) > 0
-                        } ?: false
+                            val isFavoriteLocked = favoritoAtual?.let { favId ->
+                                (state.gastosPorPoder[favId] ?: 0) > 0
+                            } ?: false
 
-                        val poderId = "sp_${poder.nome.keyify()}"
-                        val isFav = favoritoAtual == poderId
+                            val poderId = "sp_${poder.nome.keyify()}"
+                            val isFav = favoritoAtual == poderId
 
-                        val isBloqueado = poder.nome.keyify() in listOf("ARMADURA", "RESISTENCIA")
+                            val isBloqueado = poder.nome.keyify() in listOf("ARMADURA", "RESISTENCIA")
 
-                        val showStarForThis = !isBloqueado && (!temFavorito || isFav)
+                            val showStarForThis = !isBloqueado && (!temFavorito || isFav)
 
-                        if (showStarForThis) {
-                            IconButton(
-                                onClick = {
-                                    viewModel.definirPoderFavorecido(if (isFav) null else poderId)
-                                },
-                                enabled = !isFavoriteLocked
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.StarBorder,
-                                    contentDescription = if (isFav)
-                                        "Desmarcar como poder favorito"
-                                    else
-                                        "Marcar como poder favorito",
-                                    tint = if (isFavoriteLocked)
-                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                    else if (isFav)
-                                        Color.Red
-                                    else
-                                        MaterialTheme.colorScheme.primary
-                                )
+                            if (showStarForThis) {
+                                IconButton(
+                                    onClick = {
+                                        viewModel.definirPoderFavorecido(if (isFav) null else poderId)
+                                    },
+                                    enabled = !isFavoriteLocked
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.StarBorder,
+                                        contentDescription = if (isFav)
+                                            "Desmarcar como poder favorito"
+                                        else
+                                            "Marcar como poder favorito",
+                                        tint = if (isFavoriteLocked)
+                                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                        else if (isFav)
+                                            Color.Red
+                                        else
+                                            MaterialTheme.colorScheme.primary
+                                    )
+                                }
                             }
+                        }
+
+                        if (showLista2) {
+                            Icon(
+                                imageVector = Icons.Filled.Visibility,
+                                contentDescription = "Ver detalhes do superpoder",
+                                modifier = Modifier
+                                    .padding(start = 8.dp)
+                                    .clickable {
+                                        state.superPoderEmFoco = poder.nome
+                                        onOpenSuperPoderesDetail(poder.nome)
+                                    }
+                            )
                         }
                     }
 
-                    if (showLista2) {
-                        Icon(
-                            imageVector = Icons.Filled.Visibility,
-                            contentDescription = "Ver detalhes do superpoder",
-                            modifier = Modifier
-                                .padding(start = 8.dp)
-                                .clickable {
-                                    state.superPoderEmFoco = poder.nome
-                                    onOpenSuperPoderesDetail(poder.nome)
+                    if (showDetails) {
+                        Spacer(Modifier.height(4.dp))
+                        TextButton(onClick = { detalhesExpandidos[poder.nome] = !expanded }) {
+                            Text(if (expanded) "Ocultar detalhes" else "Ver detalhes")
+                        }
+
+                        AnimatedVisibility(visible = expanded) {
+                            Column(Modifier.padding(top = 4.dp)) {
+                                poder.descricao?.let {
+                                    Text(it)
+                                    Spacer(Modifier.height(4.dp))
                                 }
-                        )
+
+                                val mans = when (val m = poder.manifestacoes) {
+                                    is JsonArray -> m.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
+                                    is JsonPrimitive -> listOfNotNull(m.contentOrNull)
+                                    else -> emptyList()
+                                }
+
+                                if (mans.isNotEmpty()) {
+                                    Text("Manifestações:", fontWeight = FontWeight.SemiBold)
+                                    mans.forEach { man -> Text("• $man") }
+                                    Spacer(Modifier.height(4.dp))
+                                }
+
+                                val mods = poder.modificadores ?: emptyList()
+                                if (mods.isNotEmpty()) {
+                                    Text("Modificadores:", fontWeight = FontWeight.SemiBold)
+                                    mods.forEach { mod -> Text("- $mod") }
+                                }
+                            }
+                        }
                     }
                 }
                 HorizontalDivider()
