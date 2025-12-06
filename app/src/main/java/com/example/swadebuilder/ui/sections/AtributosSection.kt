@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
@@ -46,8 +45,6 @@ fun AtributosContent(
     val locked = state.criacaoBasicaCongelada && !state.attributeAdvancementInProgress
 
     val pergaminho = MaterialTheme.colorScheme.surfaceVariant
-
-    val showLista = booleanResource(com.example.swadebuilder.R.bool.show_lista_completa)
 
     val pcTotal  = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
@@ -77,8 +74,8 @@ fun AtributosContent(
         SectionHeader(
             onHelpClick = null,
             centerText = "Pontos de Atributo: ${state.pontosAtributo}",
-            onListaCompletaClick = if (showLista) ({ onOpenAtributosDetail() }) else null,
-            listaCompletaText = "Lista Completa"
+            onListaCompletaClick = null,
+            listaCompletaText = ""
         )
 
         Spacer(Modifier.height(4.dp))

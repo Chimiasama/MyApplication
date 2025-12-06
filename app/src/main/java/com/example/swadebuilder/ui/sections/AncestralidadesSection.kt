@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.loadJsonAsset
@@ -59,7 +57,6 @@ fun AncestralidadesSection(
     onSelectAncestralidade: (String) -> Unit
 ) {
     val context = LocalContext.current
-    val showLista = booleanResource(R.bool.show_lista_completa)
 
     val ancestralidadesState = remember {
         mutableStateOf(
@@ -109,10 +106,8 @@ fun AncestralidadesSection(
             onHelpClick = null,
             centerText = centerLabel,
             onCenterClick = null,
-            onListaCompletaClick = if (showLista) {
-                { onOpenListaAncestralidadesDetail("") }
-            } else null,
-            listaCompletaText = "Lista Completa"
+            onListaCompletaClick = null,
+            listaCompletaText = ""
         )
 
         Spacer(Modifier.height(8.dp))
@@ -174,17 +169,6 @@ fun AncestralidadesSection(
                             modifier = Modifier.weight(1f)
                         )
 
-                        if (showLista) {
-                            Icon(
-                                imageVector = Icons.Default.Visibility,
-                                contentDescription = "Detalhes",
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .clickable {
-                                        onOpenListaAncestralidadesDetail(item.nome)
-                                    }
-                            )
-                        }
                     }
                 }
             }
