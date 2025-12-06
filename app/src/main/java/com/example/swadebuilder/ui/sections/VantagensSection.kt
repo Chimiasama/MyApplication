@@ -539,7 +539,7 @@ fun VantagensContent(
                         val reqList = buildList {
                             listaDeEstagios.firstOrNull {
                                 it.nome.equals(vant.requisitos.estagio, true)
-                            }?.let { add("Estágio: ${it.nome}") }
+                            }?.let { add(it.nome) }
 
                             vant.requisitos.atributoMin.forEach { (a, m) ->
                                 add("$a d$m")
