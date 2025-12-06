@@ -1,7 +1,6 @@
 package com.example.swadebuilder.ui.sections
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.components.VantagemListItem
 import kotlinx.serialization.builtins.ListSerializer
@@ -39,6 +39,8 @@ import kotlinx.serialization.json.Json
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VantagensDetailScreen(
+    state: CriadorState,
+    modoSupers: Boolean,
     highlightedName: String,
     onBack: () -> Unit
 ) {
@@ -57,8 +59,14 @@ fun VantagensDetailScreen(
         )
     }
 
-    val vantagensPorCategoria = remember(todasVantagens) {
-        todasVantagens.groupBy { it.categoria.name }
+    val vantagensFiltradas = remember(todasVantagens, modoSupers) {
+        todasVantagens.filter { vant ->
+            !modoSupers || (vant.id != "antecedente_arcano" && !vant.requisitos.vantagensPrevias.contains("antecedente_arcano"))
+        }
+    }
+
+    val vantagensPorCategoria = remember(vantagensFiltradas) {
+        vantagensFiltradas.groupBy { it.categoria.name }
     }
 
     val expandedState = remember {
@@ -141,7 +149,13 @@ fun VantagensDetailScreen(
                 }
                 if (expandedState[category] == true) {
                     items(vantagens) { vantagem ->
-                        VantagemListItem(vantagem = vantagem)
+                        val isSelected = state.vantagensSelecionadas.any { it.id == vantagem.id }
+                        val requirementsMet = state.podeSelecionar(vantagem)
+                        VantagemListItem(
+                            vantagem = vantagem,
+                            isSelected = isSelected,
+                            requirementsMet = requirementsMet
+                        )
                     }
                 }
             }

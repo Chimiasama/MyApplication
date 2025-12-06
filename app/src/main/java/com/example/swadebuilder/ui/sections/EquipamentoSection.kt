@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.ui.components.EquipamentoListItem
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -457,28 +458,11 @@ fun EquipamentoSection(
                                             true
                                         }
                                         .forEach { equipamento ->
-                                            Row(
-                                                Modifier
-                                                    .fillMaxWidth()
-                                                    .clickable {
-                                                        onEquipamentoDoubleClick(equipamento)
-                                                    }
-                                                    .padding(
-                                                        vertical = 4.dp,
-                                                        horizontal = 4.dp
-                                                    ),
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
-                                                Text(
-                                                    equipamento.nome,
-                                                    Modifier.weight(1f),
-                                                    style = MaterialTheme.typography.bodyMedium
-                                                )
-                                                Text(
-                                                    equipamento.custo.toString(),
-                                                    style = MaterialTheme.typography.bodyMedium
-                                                )
-                                            }
+                                            EquipamentoListItem(
+                                                equipamento = equipamento,
+                                                isClickable = true,
+                                                onClick = onEquipamentoDoubleClick
+                                            )
                                         }
                                 } else {
                                     subsub.forEach { ss ->
@@ -519,28 +503,11 @@ fun EquipamentoSection(
                                                         true
                                                     }
                                                     .forEach { equipamento ->
-                                                        Row(
-                                                            Modifier
-                                                                .fillMaxWidth()
-                                                                .clickable {
-                                                                    onEquipamentoDoubleClick(equipamento)
-                                                                }
-                                                                .padding(
-                                                                    vertical = 4.dp,
-                                                                    horizontal = 4.dp
-                                                                ),
-                                                            verticalAlignment = Alignment.CenterVertically
-                                                        ) {
-                                                            Text(
-                                                                equipamento.nome,
-                                                                Modifier.weight(1f),
-                                                                style = MaterialTheme.typography.bodyMedium
-                                                            )
-                                                            Text(
-                                                                equipamento.custo.toString(),
-                                                                style = MaterialTheme.typography.bodyMedium
-                                                            )
-                                                        }
+                                                        EquipamentoListItem(
+                                                            equipamento = equipamento,
+                                                            isClickable = true,
+                                                            onClick = onEquipamentoDoubleClick
+                                                        )
                                                     }
                                             }
                                         }
@@ -587,25 +554,11 @@ fun EquipamentoSection(
                             true
                         }
                         .forEach { equipamento ->
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        onEquipamentoDoubleClick(equipamento)
-                                    }
-                                    .padding(vertical = 4.dp, horizontal = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    equipamento.nome,
-                                    Modifier.weight(1f),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                                Text(
-                                    equipamento.custo.toString(),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
+                            EquipamentoListItem(
+                                equipamento = equipamento,
+                                isClickable = true,
+                                onClick = onEquipamentoDoubleClick
+                            )
                         }
                 }
             }

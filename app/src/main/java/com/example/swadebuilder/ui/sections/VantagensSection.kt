@@ -63,6 +63,7 @@ import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.ui.components.VantagemListItem
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.dialogs.MultipleSelectionDialog
 import com.example.swadebuilder.util.keyify
@@ -593,87 +594,55 @@ fun VantagensContent(
                                 }
                             }
 
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable(enabled = !locked) {
-                                        selectedReqs = reqList
-                                        if (!locked) {
-                                            when {
-                                                state.pontosVantagem <= 0 -> {
-                                                    tempErrorMsg = "Sem PV disponível"
-                                                    showTempError = true
-                                                }
-
-                                                !state.podeSelecionar(vant) -> {
-                                                    tempErrorMsg =
-                                                        "Faltam requisitos para '${vant.nome}'"
-                                                    showTempError = true
-                                                }
-
-                                                vant.vinculadoPericia -> {
-                                                    pendingVantagem = vant
-                                                    showChoiceDialog = true
-                                                }
-
-                                                vant.id == "antecedente_arcano" -> {
-                                                    dialogMostrandoAntecedente = vant
-                                                }
-
-                                                vant.id == "novos_poderes" -> {
-                                                    pendingNovosPoderes = vant
-                                                    showNovosPoderesDialog = true
-                                                }
-
-                                                else -> {
-                                                    if (state.advantageAdvancementInProgress) {
-                                                        viewModel.selectAdvantageForAdvancement(vant)
-                                                    } else {
-                                                        if (vant.nome.contains(
-                                                                "Pontos de Poder",
-                                                                true
-                                                            )
-                                                        ) {
-                                                            state.comprarPontoDePoder(vant)
-                                                        } else {
-                                                            state.applyVantagemDinheiro(vant)
-                                                            state.vantagensSelecionadas += vant
-                                                        }
-                                                        state.pontosVantagem--
-                                                        state.rebuildAllPericiaStacks()
-                                                    }
-                                                }
+                            VantagemListItem(
+                                vantagem = vant,
+                                isSelected = state.vantagensSelecionadas.any { it.id == vant.id },
+                                requirementsMet = state.podeSelecionar(vant),
+                                isClickable = !locked,
+                                onClick = {
+                                    if (!locked) {
+                                        when {
+                                            state.pontosVantagem <= 0 -> {
+                                                tempErrorMsg = "Sem PV disponível"
+                                                showTempError = true
                                             }
-
-                                            scope.launch {
-                                                delay(2_000)
-                                                showTempError = false
+                                            !state.podeSelecionar(vant) -> {
+                                                tempErrorMsg = "Faltam requisitos para '${vant.nome}'"
+                                                showTempError = true
+                                            }
+                                            vant.vinculadoPericia -> {
+                                                pendingVantagem = vant
+                                                showChoiceDialog = true
+                                            }
+                                            vant.id == "antecedente_arcano" -> {
+                                                dialogMostrandoAntecedente = vant
+                                            }
+                                            vant.id == "novos_poderes" -> {
+                                                pendingNovosPoderes = vant
+                                                showNovosPoderesDialog = true
+                                            }
+                                            else -> {
+                                                if (state.advantageAdvancementInProgress) {
+                                                    viewModel.selectAdvantageForAdvancement(vant)
+                                                } else {
+                                                    if (vant.nome.contains("Pontos de Poder", true)) {
+                                                        state.comprarPontoDePoder(vant)
+                                                    } else {
+                                                        state.applyVantagemDinheiro(vant)
+                                                        state.vantagensSelecionadas += vant
+                                                    }
+                                                    state.pontosVantagem--
+                                                    state.rebuildAllPericiaStacks()
+                                                }
                                             }
                                         }
+                                        scope.launch {
+                                            delay(2_000)
+                                            showTempError = false
+                                        }
                                     }
-                                    .alpha(
-                                        if (!locked && state.podeSelecionar(vant)) 1f
-                                        else 0.3f
-                                    )
-                                    .padding(vertical = 8.dp, horizontal = 4.dp)
-                            ) {
-                                Text(
-                                    vant.nome,
-                                    Modifier.weight(1f),
-                                    fontWeight = FontWeight.Medium
-                                )
-                                if (showLista) {
-                                    Icon(
-                                        Icons.Default.Visibility,
-                                        contentDescription = "Detalhes",
-                                        modifier = Modifier
-                                            .size(18.dp)
-                                            .clickable {
-                                                onOpenVantagensDetail(vant.nome)
-                                            }
-                                    )
                                 }
-                            }
+                            )
                         }
                 }
             }
