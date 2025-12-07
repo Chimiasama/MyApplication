@@ -300,7 +300,11 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     }.joinToString(", ").ifBlank { "– Nenhuma" }
     lines += complicacoesText
     if (personagem.desvantagensRaciais.isNotEmpty()) {
-        lines += "Anotações Raciais: ${personagem.desvantagensRaciais.joinToString(", ")}"
+        val desvantagensNomes = personagem.desvantagensRaciais.map { desvantagemId ->
+            // Tenta encontrar pelo id, se não, usa o texto original (para casos como "Tamanho -1")
+            listaComplicacoes.firstOrNull { it.id.keyify() == desvantagemId.keyify() }?.name ?: desvantagemId
+        }
+        lines += "Anotações Raciais: ${desvantagensNomes.joinToString(", ")}"
     }
     lines += ""
 
@@ -315,7 +319,10 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
             lines += if (lista.isEmpty()) {
                 "• $label: – nenhum poder escolhido"
             } else {
-                "• $label: ${lista.joinToString(", ")}"
+                val nomesPoderes = lista.map { poderId ->
+                    listaPoderes.firstOrNull { it.id == poderId }?.nome ?: poderId
+                }
+                "• $label: ${nomesPoderes.joinToString(", ")}"
             }
         }
         lines += ""
