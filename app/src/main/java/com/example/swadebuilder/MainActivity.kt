@@ -932,7 +932,7 @@ private fun getHelpAppText(state: CriadorState): String {
 
     adicionar/remover itens e ver o dinheiro restante atualizar ao vivo.
 
-    Esta seção nunca é bloqueada independetemente da fase de criação que o personagem está.
+    Esta seção nunca é bloqueada independemente da fase de criação que o personagem está.
 
     10) Resumo
 
