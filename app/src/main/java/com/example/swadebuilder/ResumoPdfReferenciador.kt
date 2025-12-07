@@ -320,7 +320,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
                 "• $label: – nenhum poder escolhido"
             } else {
                 val nomesPoderes = lista.map { poderId ->
-                    listaPoderes.firstOrNull { it.id == poderId }?.nome ?: poderId
+                    allPowersMap[poderId] ?: poderId
                 }
                 "• $label: ${nomesPoderes.joinToString(", ")}"
             }
@@ -337,7 +337,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
             lines += "– Nenhum superpoder registrado"
         } else {
             personagem.gastosPorPoder.forEach { (poderId, custo) ->
-                val poderName = listaPoderes.firstOrNull { it.id == poderId }?.nome ?: poderId
+                val poderName = allPowersMap[poderId] ?: poderId
                 lines += "• $poderName: $custo SP"
             }
         }

@@ -157,12 +157,21 @@ class MainActivity : ComponentActivity() {
             cat.origem?.equals("super", ignoreCase = true) ?: false
         }
 
+        val poderesJson = assets
+            .open("poderes.json")
+            .bufferedReader()
+            .use { it.readText() }
+        listaPoderes = json.decodeFromString(poderesJson)
+
         val superPoderesJson = assets
             .open("superpoderes.json")
             .bufferedReader()
             .use { it.readText() }
-        val listaSuperPoderes: List<SuperPoder> =
-            json.decodeFromString(superPoderesJson)
+        listaSuperPoderes = json.decodeFromString(superPoderesJson)
+
+        val regularPowers = listaPoderes.associate { it.id to it.nome }
+        val superPowers = listaSuperPoderes.associate { it.nome.keyify() to it.nome }
+        allPowersMap = regularPowers + superPowers
 
         val arcanoJson = assets.open("arcano_info.json")
             .bufferedReader().use { it.readText() }
@@ -967,6 +976,9 @@ lateinit var listaAtributos: List<String>
 lateinit var mapaAtributosDisplay: Map<String, String>
 
 lateinit var listaPericias: List<Pericia>
+lateinit var listaPoderes: List<Poder>
+lateinit var listaSuperPoderes: List<SuperPoder>
+lateinit var allPowersMap: Map<String, String>
 
 fun periciaStartRaw(anc: String, per: Pericia): Int {
     val ancKey = anc.keyify()
