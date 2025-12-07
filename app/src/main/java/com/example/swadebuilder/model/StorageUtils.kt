@@ -5,12 +5,17 @@ import kotlinx.serialization.json.Json
 import java.io.File
 
 object StorageUtils {
+    private val json = Json {
+        ignoreUnknownKeys = true
+        explicitNulls = false
+    }
+
     private fun fileNameFromKey(key: String): String =
         "personagem_${key}.json"
 
     fun salvarPersonagem(context: Context, personagem: PersonagemSalvo) {
         val file = File(context.filesDir, fileNameFromKey(personagem.id))
-        val jsonText = Json.encodeToString(personagem)
+        val jsonText = json.encodeToString(personagem)
         file.writeText(jsonText)
     }
 
@@ -18,7 +23,7 @@ object StorageUtils {
         val file = File(context.filesDir, fileNameFromKey(nomeArquivo))
         if (!file.exists()) return null
         val jsonText = file.readText()
-        return Json.decodeFromString<PersonagemSalvo>(jsonText)
+        return json.decodeFromString<PersonagemSalvo>(jsonText)
     }
 
     fun listarPersonagens(context: Context): List<Pair<String, String>> {
@@ -29,7 +34,7 @@ object StorageUtils {
             ?.mapNotNull { file ->
                 runCatching {
                     val jsonText = file.readText()
-                    val personagem = Json.decodeFromString<PersonagemSalvo>(jsonText)
+                    val personagem = json.decodeFromString<PersonagemSalvo>(jsonText)
                     val key = file.name
                         .removePrefix("personagem_")
                         .removeSuffix(".json")
