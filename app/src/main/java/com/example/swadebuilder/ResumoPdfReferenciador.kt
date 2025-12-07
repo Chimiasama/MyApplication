@@ -10,6 +10,7 @@ import androidx.core.content.FileProvider
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.util.keyify
 import java.io.File
+import com.example.swadebuilder.allPowersMap
 import java.io.FileOutputStream
 
 /**

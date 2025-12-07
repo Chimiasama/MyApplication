@@ -88,6 +88,7 @@ import com.example.swadebuilder.model.AtributoList
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
+import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.PersonagemSalvo
 import com.example.swadebuilder.model.RacialModifier
@@ -956,16 +957,6 @@ fun Int.toDiceString(): String =
 data class Pericia(val nome: String, val atributo: String, val basica: Boolean)
 
 var listaComplicacoes: List<Complicacao> = emptyList()
-
-@Serializable
-data class SuperPoder(
-    val nome: String,
-    val estagio: String = "iniciante",
-    val custoBase: String? = null,
-    val modificadores: List<String>? = null,
-    val descricao: String? = null,
-    val manifestacoes: JsonElement? = null
-)
 
 lateinit var listaAncestralidadesJson: List<RacialModifier>
 
