@@ -148,7 +148,14 @@ private fun buildSlotDescriptions(state: CriadorState): List<String?> {
     val descriptions = mutableListOf<String?>()
 
     state.advancementHistory.forEach { action ->
-        val desc = describeAction(action, state)
+        val desc = action.getDisplayText(
+            getAdvantageName = { advId -> listaVantagens.firstOrNull { it.id == advId }?.nome ?: advId },
+            getSkillValue = { skillName ->
+                val pericia = listaPericias.firstOrNull { it.nome == skillName }
+                if (pericia != null) state.rawTotal(pericia) else 0
+            },
+            getHindranceName = { hid -> listaComplicacoes.firstOrNull { it.id == hid }?.name ?: hid }
+        )
         repeat(action.progressCost.coerceAtLeast(1)) {
             if (descriptions.size < TOTAL_PROGRESS_LIMIT) {
                 descriptions += desc
@@ -161,40 +168,4 @@ private fun buildSlotDescriptions(state: CriadorState): List<String?> {
     }
 
     return descriptions.take(TOTAL_PROGRESS_LIMIT)
-}
-
-private fun describeAction(action: AdvancementAction, state: CriadorState): String = when (action) {
-    is AdvancementAction.SpendOnAdvantage -> {
-        val advantageName = listaVantagens.firstOrNull { it.id == action.advantageId }?.nome
-        "Vantagem: ${advantageName ?: action.advantageId}"
-    }
-
-    is AdvancementAction.IncreaseAttribute -> {
-        val attrName = mapaAtributosDisplay[action.attributeName] ?: action.attributeName
-        "Atributo: $attrName"
-    }
-
-    is AdvancementAction.SpendOnSkills -> {
-        val skills = action.skillsIncreased.distinct().mapNotNull { skillName ->
-            val per = listaPericias.firstOrNull { it.nome == skillName }
-            per?.let {
-                val dieValue = action.recordedSkillValues?.get(skillName) ?: state.rawTotal(it)
-                val die = dieValue.toDiceString()
-                "$die ${it.nome}"
-            } ?: skillName
-        }
-        "Perícias: ${skills.joinToString(", ")}".trim()
-    }
-
-    is AdvancementAction.RemoveHindrance -> {
-        val compName = listaComplicacoes.firstOrNull { it.id == action.hindranceId }
-        val baseLabel = compName?.id ?: action.hindranceId
-        when (action.changeType) {
-            HindranceChangeType.RESERVATION -> "Reserva de Complicação: $baseLabel"
-            HindranceChangeType.REDUCE_TO_MINOR -> "Reduzir Complicação: $baseLabel"
-            HindranceChangeType.REMOVE -> "Remover Complicação: $baseLabel"
-        }
-    }
-
-    is AdvancementAction.ReserveLegendaryAttribute -> "Reserva de atributo lendário"
 }

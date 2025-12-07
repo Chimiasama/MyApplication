@@ -295,7 +295,9 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += ""
 
     lines += "Complicações"
-    val complicacoesText = personagem.complicacoes.joinToString(", ").ifBlank { "– Nenhuma" }
+    val complicacoesText = personagem.complicacoes.map { compId ->
+        listaComplicacoes.firstOrNull { it.id == compId }?.name ?: compId
+    }.joinToString(", ").ifBlank { "– Nenhuma" }
     lines += complicacoesText
     if (personagem.desvantagensRaciais.isNotEmpty()) {
         lines += "Anotações Raciais: ${personagem.desvantagensRaciais.joinToString(", ")}"
@@ -328,7 +330,8 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
             lines += "– Nenhum superpoder registrado"
         } else {
             personagem.gastosPorPoder.forEach { (poderId, custo) ->
-                lines += "• $poderId: $custo SP"
+                val poderName = listaPoderes.firstOrNull { it.id == poderId }?.nome ?: poderId
+                lines += "• $poderName: $custo SP"
             }
         }
 

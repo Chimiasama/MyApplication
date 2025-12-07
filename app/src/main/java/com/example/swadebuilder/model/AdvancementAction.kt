@@ -11,7 +11,8 @@ enum class HindranceChangeType {
 sealed class AdvancementAction(open val progressCost: Int, open val stageName: String) {
     abstract fun getDisplayText(
         getAdvantageName: (String) -> String,
-        getSkillValue: (String) -> Int
+        getSkillValue: (String) -> Int,
+        getHindranceName: (String) -> String
     ): String
 
     data class SpendOnAdvantage(
@@ -21,7 +22,8 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
     ) : AdvancementAction(progressCost, stageName) {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
-            getSkillValue: (String) -> Int
+            getSkillValue: (String) -> Int,
+            getHindranceName: (String) -> String
         ): String {
             return "Vantagem: ${getAdvantageName(advantageId)}"
         }
@@ -35,7 +37,8 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
     ) : AdvancementAction(progressCost, stageName) {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
-            getSkillValue: (String) -> Int
+            getSkillValue: (String) -> Int,
+            getHindranceName: (String) -> String
         ): String {
             return "Atributo: $attributeName"
         }
@@ -49,7 +52,8 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
     ) : AdvancementAction(progressCost, stageName) {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
-            getSkillValue: (String) -> Int
+            getSkillValue: (String) -> Int,
+            getHindranceName: (String) -> String
         ): String {
             val uniqueSkills = skillsIncreased.distinct()
             val text = uniqueSkills.joinToString(", ") { skillName ->
@@ -70,14 +74,15 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
     ) : AdvancementAction(progressCost, stageName) {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
-            getSkillValue: (String) -> Int
+            getSkillValue: (String) -> Int,
+            getHindranceName: (String) -> String
         ): String {
             val actionLabel = when (changeType) {
                 HindranceChangeType.RESERVATION   -> "Reserva de Complicação"
                 HindranceChangeType.REDUCE_TO_MINOR -> "Redução de Complicação"
                 HindranceChangeType.REMOVE        -> "Remover Complicação"
             }
-            return "$actionLabel: $hindranceId"
+            return "$actionLabel: ${getHindranceName(hindranceId)}"
         }
     }
 
@@ -87,7 +92,8 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
     ) : AdvancementAction(progressCost, stageName) {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
-            getSkillValue: (String) -> Int
+            getSkillValue: (String) -> Int,
+            getHindranceName: (String) -> String
         ): String {
             return "Reservar Aumento de Atributo (Lendário)"
         }
