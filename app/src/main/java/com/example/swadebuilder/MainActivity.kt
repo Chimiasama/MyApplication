@@ -443,7 +443,7 @@ class MainActivity : ComponentActivity() {
                             Scaffold(
                                 snackbarHost = { SnackbarHost(hostState = snackHost) },
                                 containerColor = Color.Transparent,
-                                topBar         = {
+                                topBar = {
                                     TopAppBar(
                                         colors = TopAppBarDefaults.topAppBarColors(
                                             containerColor = Color.Transparent
@@ -471,102 +471,99 @@ class MainActivity : ComponentActivity() {
                                                 )
                                             }
                                         },
-                                actions = {
-                                    val scope = rememberCoroutineScope()
+                                        actions = {
+                                            val scope = rememberCoroutineScope()
 
-                                    IconButton(onClick = {
-        
-                                        val personagem = state.toMeuPersonagem()
+                                            IconButton(onClick = {
+                                                val personagem = state.toMeuPersonagem()
 
-                                        scope.launch(Dispatchers.IO) {
-                                            salvarEExibirFichaPdf(this@MainActivity, personagem)
-                                        }
-                                    }) {
-                                        Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
-                                    }
-
-                                    IconButton(onClick = { showThemeDialog = true }) {
-                                        Icon(Icons.Default.Settings, contentDescription = "Change Theme")
-                                    }
-                                    IconButton(onClick = {
-                                        scope.launch(Dispatchers.IO) {
-                                            val personagemId  = state.idAtual ?: UUID.randomUUID().toString()
-                                            val atributosMap  = state.valoresAtributos.mapValues { it.value.intValue }
-                                            val periciasMap   = listaPericias.associate { per -> per.nome to state.rawTotal(per) }
-                                            val complicacoesList = state.complicacoesSelecionadas
-                                                .filterValues { it != null }
-                                                .keys
-                                                .map { it.id }
-                                            val vantagemChoices = state.vantagensSelecionadas
-                                                .groupBy { it.id }
-                                                .mapValues { (_, list) ->
-                                                    list.mapNotNull { it.choice }
-                                                        .filter { it.isNotBlank() }
+                                                scope.launch(Dispatchers.IO) {
+                                                    salvarEExibirFichaPdf(this@MainActivity, personagem)
                                                 }
+                                            }) {
+                                                Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
+                                            }
 
-                                            val salvo = PersonagemSalvo(
-                                                id                 = personagemId,
-                                                nome               = state.nomePersonagem,
-                                                atributos          = atributosMap,
-                                                pericias           = periciasMap,
-                                                ancestralidade     = state.ancestralidade,
-                                                vantagens          = state.vantagensSelecionadas.map { it.id },
-                                                vantagemChoices    = vantagemChoices,
-                                                vantagensRaciais   = state.vantagensRaciais.toList(),
-                                                complicacoes       = complicacoesList,
-                                                cpPaCount          = state.cpPaStack.size,
-                                                cpPvCount          = state.cpPvStack.size,
-                                                cpSpCount          = state.cpSpStack.size,
-                                                cpRecursosCount    = state.cpRecursosStack.size,
-                                                equipamentos       = state.equipamentosComprados.map { it.nome },
-                                                poderes            = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
-                                                dinheiro           = state.dinheiro,
-                                                pontosRestantes    = state.pontosVantagem,
-                                                naturalArmorFromRace = state.naturalArmorFromRace,
-                                                armorBase            = state.armadura,
-                                                maisPontosPericias = state.maisPontosPericias,
-                                                cartaSelvagem      = state.cartaSelvagem,
-                                                heroisSemArmadura  = state.heroisSemArmadura,
-                                                soldadoCargaAtivo  = state.soldadoCargaAtivo,
-                                                semPontosDePoder   = state.usarSemPontosDePoder,
-                                                usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
-                                                especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
-                                                modoSupers              = state.modoSupers,
-                                                modoSuperequip          = state.modoSuperequip,
-                                                modoSuperComplicacoes   = state.modoSuperComplicacoes,
-                                                superInvestments        = state.superInvestments.toList(),
-                                                superPontosTotais       = state.superPontosTotais,
-                                                superPontosDisponiveis  = state.superPontosDisponiveis,
-                                                limitePorPoderPadrao    = state.limitePorPoderPadrao,
-                                                limiteFavorecido        = state.limiteFavorecido,
-                                                poderFavoritoId         = state.poderFavoritoId,
-                                                bonusPararFromPower     = state.bonusPararFromPower,
-                                                bonusResFromPower       = state.bonusResFromPower,
-                                                armorFromPower          = state.armorFromPower,
-                                                vantagensDePoder        = state.vantagensDePoder.toSet(),
-                                                gastosPorPoder          = state.gastosPorPoder.toMap(),
-                                                limiteDePoderDaCampanha = state.limiteDePoderDaCampanha,
-                                                anotacoes               = state.anotacoes
-                                            )
+                                            IconButton(onClick = { showThemeDialog = true }) {
+                                                Icon(Icons.Default.Settings, contentDescription = "Change Theme")
+                                            }
+                                            IconButton(onClick = {
+                                                scope.launch(Dispatchers.IO) {
+                                                    val personagemId  = state.idAtual ?: UUID.randomUUID().toString()
+                                                    val atributosMap  = state.valoresAtributos.mapValues { it.value.intValue }
+                                                    val periciasMap   = listaPericias.associate { per -> per.nome to state.rawTotal(per) }
+                                                    val complicacoesList = state.complicacoesSelecionadas
+                                                        .filterValues { it != null }
+                                                        .keys
+                                                        .map { it.id }
+                                                    val vantagemChoices = state.vantagensSelecionadas
+                                                        .groupBy { it.id }
+                                                        .mapValues { (_, list) ->
+                                                            list.mapNotNull { it.choice }
+                                                                .filter { it.isNotBlank() }
+                                                        }
 
-                                            state.idAtual = personagemId
-                                            StorageUtils.salvarPersonagem(context, salvo)
+                                                    val salvo = PersonagemSalvo(
+                                                        id                 = personagemId,
+                                                        nome               = state.nomePersonagem,
+                                                        atributos          = atributosMap,
+                                                        pericias           = periciasMap,
+                                                        ancestralidade     = state.ancestralidade,
+                                                        vantagens          = state.vantagensSelecionadas.map { it.id },
+                                                        vantagemChoices    = vantagemChoices,
+                                                        vantagensRaciais   = state.vantagensRaciais.toList(),
+                                                        complicacoes       = complicacoesList,
+                                                        cpPaCount          = state.cpPaStack.size,
+                                                        cpPvCount          = state.cpPvStack.size,
+                                                        cpSpCount          = state.cpSpStack.size,
+                                                        cpRecursosCount    = state.cpRecursosStack.size,
+                                                        equipamentos       = state.equipamentosComprados.map { it.nome },
+                                                        poderes            = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
+                                                        dinheiro           = state.dinheiro,
+                                                        pontosRestantes    = state.pontosVantagem,
+                                                        naturalArmorFromRace = state.naturalArmorFromRace,
+                                                        armorBase            = state.armadura,
+                                                        maisPontosPericias = state.maisPontosPericias,
+                                                        cartaSelvagem      = state.cartaSelvagem,
+                                                        heroisSemArmadura  = state.heroisSemArmadura,
+                                                        soldadoCargaAtivo  = state.soldadoCargaAtivo,
+                                                        semPontosDePoder   = state.usarSemPontosDePoder,
+                                                        usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
+                                                        especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
+                                                        modoSupers              = state.modoSupers,
+                                                        modoSuperequip          = state.modoSuperequip,
+                                                        modoSuperComplicacoes   = state.modoSuperComplicacoes,
+                                                        superInvestments        = state.superInvestments.toList(),
+                                                        superPontosTotais       = state.superPontosTotais,
+                                                        superPontosDisponiveis  = state.superPontosDisponiveis,
+                                                        limitePorPoderPadrao    = state.limitePorPoderPadrao,
+                                                        limiteFavorecido        = state.limiteFavorecido,
+                                                        poderFavoritoId         = state.poderFavoritoId,
+                                                        bonusPararFromPower     = state.bonusPararFromPower,
+                                                        bonusResFromPower       = state.bonusResFromPower,
+                                                        armorFromPower          = state.armorFromPower,
+                                                        vantagensDePoder        = state.vantagensDePoder.toSet(),
+                                                        gastosPorPoder          = state.gastosPorPoder.toMap(),
+                                                        limiteDePoderDaCampanha = state.limiteDePoderDaCampanha,
+                                                        anotacoes               = state.anotacoes
+                                                    )
 
-                                            withContext(Dispatchers.Main) {
+                                                    state.idAtual = personagemId
+                                                    StorageUtils.salvarPersonagem(context, salvo)
 
-                                                Toast.makeText(
-                                                    context,
-                                                    "Personagem salvo com sucesso!",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
+                                                    withContext(Dispatchers.Main) {
+                                                        Toast.makeText(
+                                                            context,
+                                                            "Personagem salvo com sucesso!",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
+                                                }
+                                            }) {
+                                                Icon(Icons.Default.Save, contentDescription = "Salvar")
                                             }
                                         }
-                                    }) {
-                                        Icon(Icons.Default.Save, contentDescription = "Salvar")
-                                    }
-                                }
-                            )
-                        }
+                                    )
                                 },
                                 content = { innerPadding ->
                                     Box(
@@ -601,7 +598,7 @@ class MainActivity : ComponentActivity() {
                                         )
                                     }
                                 }
-                            }
+                            )
                         }
                     }
                 }
