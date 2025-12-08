@@ -2580,7 +2580,6 @@
     "nome": "SUPERPODERES",
     "categoria": "ANTECEDENTE",
     "origem": "SUPER",
-    "nivel": "Novato",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -3623,7 +3622,7 @@
     {
       "id": "enganador",
       "nome": "ENGANADOR",
-      "categoria": "SOCIAL",
+      "categoria": "SOCIAIS",
       "origem": "FANTASIA",
       "requisitos": {
         "estagio": "Experiente",

@@ -567,7 +567,9 @@ fun VantagensContent(
                                 add("Pré-requisito: $legivel")
                             }
 
-                            if (vant.requisitos.exigeCS) add("Requer Carta Selvagem")
+                            if (vant.requisitos.observacoes.isNotBlank()) {
+                                add(vant.requisitos.observacoes)
+                            }
                             if (vant.nome.trim().removeSuffix(":").keyify() == "profissional") {
                                 add(
                                     "Traço no teto máximo: escolha entre " +

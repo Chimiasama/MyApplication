@@ -13,9 +13,6 @@ data class Vantagem(
 
     val origem: String = "",
 
-    @SerialName("nivel")
-    val nivel: String = "N",
-
     val requisitos: Requisito,
 
     @SerialName("limite_compra")
