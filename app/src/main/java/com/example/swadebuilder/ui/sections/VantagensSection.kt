@@ -182,6 +182,34 @@ fun VantFilterDialog(
     )
 }
 
+private fun mapChoiceToArcanoId(choice: String?): String? {
+    return when (choice?.trim()?.uppercase()?.semAcentos()) {
+        "DOM" -> "antecedente_arcano_dom"
+        "MAGIA" -> "antecedente_arcano_magia"
+        "MILAGRES" -> "antecedente_arcano_milagres"
+        "PSIONICOS", "PSIÔNICOS" -> "antecedente_arcano_psionicos"
+        "CIENCIA ESTRANHA", "CIÊNCIA ESTRANHA" -> "antecedente_arcano_ciencia_estranha"
+        else -> null
+    }
+}
+
+private fun arcanoVersionKey(vant: Vantagem?): String? {
+    vant ?: return null
+    return when {
+        vant.id.startsWith("antecedente_arcano_") -> {
+            vant.id.removePrefix("antecedente_arcano_")
+                .replace("_", " ")
+                .uppercase()
+                .semAcentos()
+                .trim()
+        }
+
+        !vant.choice.isNullOrBlank() -> vant.choice!!.uppercase().semAcentos().trim()
+        !vant.subtipoArcano.isNullOrBlank() -> vant.subtipoArcano!!.uppercase().semAcentos().trim()
+        else -> null
+    }
+}
+
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -198,14 +226,24 @@ fun VantagensContent(
         }.getOrElse { emptyList() }
     }
 
-    val listaVantagens: List<Vantagem> =
-        remember(multiplosAAHabilitados, listaVantagensRaw) {
-            if (multiplosAAHabilitados) {
-                listaVantagensRaw.filterNot { it.id == "antecedente_arcano" }
-            } else {
-                listaVantagensRaw.filterNot { it.id.startsWith("antecedente_arcano_") }
+    val listaVantagens: List<Vantagem> = remember(
+        multiplosAAHabilitados,
+        listaVantagensRaw,
+        state.vantagensSelecionadas
+    ) {
+        if (multiplosAAHabilitados) {
+            listaVantagensRaw.filterNot { it.id == "antecedente_arcano" }
+        } else {
+            val arcanosSelecionados = state.vantagensSelecionadas
+                .map { it.id }
+                .filter { it.startsWith("antecedente_arcano_") }
+                .toSet()
+
+            listaVantagensRaw.filterNot { vant ->
+                vant.id.startsWith("antecedente_arcano_") && vant.id !in arcanosSelecionados
             }
         }
+    }
 
     remember(state.modoSupers) {
         buildSet {
@@ -395,13 +433,10 @@ fun VantagensContent(
                             if (!canRemove) return@AssistChip
 
                             if (vant.id == "novos_poderes") {
-                                val escolhidoArcano = state.vantagensSelecionadas
-                                    .firstOrNull { it.id == "antecedente_arcano" }
-                                    ?.choice
-                                    ?.uppercase()
-                                    ?.semAcentos()
-                                    ?.trim()
-                                    ?: ""
+                                val escolhidoArcano = arcanoVersionKey(
+                                    state.vantagensSelecionadas
+                                        .firstOrNull { it.id.startsWith("antecedente_arcano") }
+                                ) ?: ""
 
                                 val initialSlots = arcanoInfo[escolhidoArcano]?.first ?: 0
 
@@ -773,9 +808,11 @@ fun VantagensContent(
                     TextButton(
                         enabled = (subOpcaoSelecionada != null),
                         onClick = {
-                            val novaVantagem = vantOriginal.copy(
-                                choice = subOpcaoSelecionada
-                            )
+                            val arcanoId = mapChoiceToArcanoId(subOpcaoSelecionada)
+                            val novaVantagem = arcanoId
+                                ?.let { id -> listaVantagensRaw.firstOrNull { it.id == id } }
+                                ?.copy(choice = subOpcaoSelecionada)
+                                ?: vantOriginal.copy(choice = subOpcaoSelecionada)
 
                             if (state.podeSelecionar(novaVantagem)) {
                                 state.vantagensSelecionadas += novaVantagem
@@ -945,15 +982,11 @@ fun VantagensContent(
                 options = disponiveis,
                 maxSelections = 2,
                 onConfirm = { escolhas ->
-                    val escolhidoArcano = state.vantagensSelecionadas
-                        .firstOrNull { it.id == "antecedente_arcano" }
-                        ?.choice
-                        ?: ""
-
-                    val versionKey = escolhidoArcano
-                        .uppercase()
-                        .semAcentos()
-                        .trim()
+                    val versionKey = arcanoVersionKey(
+                        state.vantagensSelecionadas.firstOrNull {
+                            it.id.startsWith("antecedente_arcano")
+                        }
+                    ) ?: ""
 
                     val initialSlots = arcanoInfo[versionKey]?.first ?: 0
 
