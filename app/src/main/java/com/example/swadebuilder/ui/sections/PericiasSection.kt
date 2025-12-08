@@ -43,7 +43,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -58,7 +57,6 @@ import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.EspecializacoesDto
-import com.example.swadebuilder.model.loadPericiasDescriptions
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -69,14 +67,9 @@ import kotlin.math.max
 @Composable
 fun PericiasContent(
     state: CriadorState,
-    onOpenPericiasDetail: () -> Unit,
     feedbackMessages: MutableList<String>
 ) {
-    val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
-    val descricoes = remember(allowLongTexts) {
-        if (!allowLongTexts) emptyMap() else loadPericiasDescriptions(context, R.raw.pericias)
-    }
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val locked = state.criacaoBasicaCongelada && !state.skillAdvancementInProgress
@@ -88,12 +81,12 @@ fun PericiasContent(
 
     var showSpecDialog by rememberSaveable { mutableStateOf(false) }
     var specText by rememberSaveable { mutableStateOf("") }
-    var specTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
+    var specTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.model.PericiaJson?>(null) }
     var buyingExtraSpec by rememberSaveable { mutableStateOf(false) }
 
     var showEditDialog by rememberSaveable { mutableStateOf(false) }
     var editIsPrincipal by rememberSaveable { mutableStateOf(false) }
-    var editPerTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
+    var editPerTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.model.PericiaJson?>(null) }
     var editOldName by rememberSaveable { mutableStateOf("") }
     var editNewName by rememberSaveable { mutableStateOf("") }
 
@@ -110,7 +103,6 @@ fun PericiasContent(
     ) {
         stickyHeader {
             val pergaminho = MaterialTheme.colorScheme.surfaceVariant
-            val showLista = false
 
             Surface(
                 tonalElevation = 0.dp,
@@ -125,7 +117,7 @@ fun PericiasContent(
                     SectionHeader(
                         onHelpClick          = null,
                         centerText           = "Pontos de Perícia: ${state.pontosPericia}",
-                        onListaCompletaClick = if (showLista) ({ onOpenPericiasDetail() }) else null,
+                        onListaCompletaClick = null,
                         listaCompletaText    = ""
                     )
 
@@ -206,7 +198,6 @@ fun PericiasContent(
 
             val rawName = per.nome.removePrefix("*").trim()
             val descKey = "$rawName (${per.atributo})".uppercase().semAcentos()
-            val descricao = descricoes[descKey].orEmpty()
 
             Column(
                 modifier = Modifier
@@ -353,7 +344,7 @@ fun PericiasContent(
                     }
                 }
 
-                if (allowLongTexts && descricao.isNotBlank()) {
+                if (allowLongTexts && per.descricao.isNotBlank()) {
                     Spacer(Modifier.height(4.dp))
                     TextButton(
                         onClick = {
@@ -371,7 +362,7 @@ fun PericiasContent(
 
                     AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
                         Text(
-                            text = descricao,
+                            text = per.descricao,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

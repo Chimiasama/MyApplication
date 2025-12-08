@@ -27,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.FontWeight
@@ -40,33 +39,18 @@ import com.example.swadebuilder.R
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.mapaAtributosDisplay
-import com.example.swadebuilder.loadRawText
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
-import com.example.swadebuilder.ui.sections.parseAtributos
 import com.example.swadebuilder.util.semAcentos
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun AtributosContent(
     state: CriadorState,
-    onOpenAtributosDetail: () -> Unit
 ) {
-    val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
-
-    val descricaoPorAtributo = remember(allowLongTexts) {
-        if (!allowLongTexts) {
-            emptyMap()
-        } else {
-            parseAtributos(loadRawText(context, R.raw.atributos))
-                .associate { atributo ->
-                    atributo.nome.uppercase().semAcentos() to atributo.descricao
-                }
-        }
-    }
 
     val locked = state.criacaoBasicaCongelada && !state.attributeAdvancementInProgress
 
@@ -125,6 +109,7 @@ fun AtributosContent(
         Spacer(Modifier.height(8.dp))
 
         listaAtributos.forEach { nome ->
+            val atributo = listaAtributos.first { it.nome == nome }
             val baseRaw = state.valoresAtributos[nome]!!.intValue
 
             val minReq = maxOf(
@@ -162,7 +147,6 @@ fun AtributosContent(
 
             val displayName = mapaAtributosDisplay[nome] ?: nome
             val descKey = displayName.uppercase().semAcentos()
-            val descricao = descricaoPorAtributo[descKey].orEmpty()
 
             Column(
                 modifier = Modifier
@@ -238,7 +222,7 @@ fun AtributosContent(
                 Spacer(Modifier.width(4.dp))
             }
 
-            if (allowLongTexts && descricao.isNotBlank()) {
+            if (allowLongTexts && atributo.descricao.isNotBlank()) {
                 Spacer(Modifier.height(6.dp))
                 TextButton(
                     onClick = {
@@ -255,7 +239,7 @@ fun AtributosContent(
 
                 AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
                     Text(
-                        text = descricao,
+                        text = atributo.descricao,
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -265,5 +249,4 @@ fun AtributosContent(
         Spacer(Modifier.height(8.dp))
     }
 }
-
 }
