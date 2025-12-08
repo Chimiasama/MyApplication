@@ -75,7 +75,7 @@ fun PericiasContent(
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val descricoes = remember(allowLongTexts) {
-        if (!allowLongTexts) emptyMap() else loadPericiasDescriptions(context, R.raw.pericias)
+        if (!allowLongTexts) emptyMap() else loadPericiasDescriptions(context)
     }
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 

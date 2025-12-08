@@ -28,8 +28,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.R
-import com.example.swadebuilder.loadRawText
+import com.example.swadebuilder.ui.sections.RacialModifierDescricao
+import com.example.swadebuilder.model.loadJsonAsset
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,8 +38,10 @@ fun AncestralidadesDetailScreen(
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
-    val ancestralidadesTexto = remember { loadRawText(context, R.raw.ancestralidades) }
-    val listaBlocos = remember { parseAncestralidades(ancestralidadesTexto) }
+    val ancestralidades = remember {
+        context.loadJsonAsset<List<RacialModifierDescricao>>("listaancestralidade.json")
+    }
+    val listaBlocos = remember { parseAncestralidades(ancestralidades) }
 
     val atual = remember(state.ancestralidade, state.ancestralidadeEmFoco) {
         (state.ancestralidadeEmFoco ?: state.ancestralidade)
@@ -125,28 +127,16 @@ fun AncestralidadesDetailScreen(
 
 data class BlocoTexto(val tipo: String, val conteudo: String)
 
-fun parseAncestralidades(texto: String): List<BlocoTexto> {
-    val linhas = texto.lines()
+fun parseAncestralidades(ancestralidades: List<RacialModifierDescricao>): List<BlocoTexto> {
     val blocos = mutableListOf<BlocoTexto>()
-
-    var esperandoTitulo = true
-
-    for (linha in linhas) {
-        val linhaLimpa = linha.trim()
-
-        if (linhaLimpa.isBlank()) {
-            esperandoTitulo = true
-            continue
-        }
-
-        if (esperandoTitulo && linhaLimpa.all { it.isUpperCase() || it == '-' || it == ':' || it.isWhitespace() }) {
-            blocos.add(BlocoTexto("titulo", linhaLimpa))
-            esperandoTitulo = false
-        } else {
-            blocos.add(BlocoTexto("texto", linhaLimpa))
-            esperandoTitulo = false
-        }
+    ancestralidades.forEach { ancestralidade ->
+        blocos.add(BlocoTexto("titulo", "${ancestralidade.nome}:"))
+        ancestralidade.descricao.lines()
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+            .forEach { descricaoLinha ->
+                blocos.add(BlocoTexto("texto", descricaoLinha))
+            }
     }
-
     return blocos
 }

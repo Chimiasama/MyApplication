@@ -45,7 +45,7 @@ fun PericiasDetailScreen(
     val context = LocalContext.current
 
     val descricoes by remember {
-        mutableStateOf(loadPericiasDescriptions(context, R.raw.pericias))
+        mutableStateOf(loadPericiasDescriptions(context))
     }
 
     Scaffold(

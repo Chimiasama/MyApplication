@@ -28,7 +28,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.R
-import com.example.swadebuilder.loadRawText
+import com.example.swadebuilder.model.AtributoJson
+import com.example.swadebuilder.model.AtributoList
+import com.example.swadebuilder.model.loadJsonAsset
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,11 +38,11 @@ fun AtributosDetailScreen(onBack: () -> Unit) {
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
-    val atributosTexto = remember {
-        loadRawText(context, R.raw.atributos)
+    val atributos = remember {
+        context.loadJsonAsset<AtributoList>("atributos.json").atributos
     }
     val listaAtributosCompleta = remember {
-        parseAtributos(atributosTexto)
+        parseAtributos(atributos)
     }
 
     Scaffold(
@@ -119,42 +121,11 @@ data class AtributoCompleto(
     val descricao: String
 )
 
-fun parseAtributos(texto: String): List<AtributoCompleto> {
-    val linhas = texto.lines()
-    val lista = mutableListOf<AtributoCompleto>()
-
-    var nomeAtual = ""
-    val descricaoAtual = StringBuilder()
-
-    for (linha in linhas) {
-        val linhaTrimada = linha.trim()
-
-        if (linhaTrimada.isBlank()) continue
-
-        if (linhaTrimada.endsWith(":")) {
-            if (nomeAtual.isNotEmpty()) {
-                lista.add(
-                    AtributoCompleto(
-                        nome = nomeAtual,
-                        descricao = descricaoAtual.toString().trim()
-                    )
-                )
-            }
-            nomeAtual = linhaTrimada.removeSuffix(":").trim()
-            descricaoAtual.clear()
-        } else {
-            descricaoAtual.appendLine(linhaTrimada)
-        }
-    }
-
-    if (nomeAtual.isNotEmpty()) {
-        lista.add(
-            AtributoCompleto(
-                nome = nomeAtual,
-                descricao = descricaoAtual.toString().trim()
-            )
+fun parseAtributos(atributos: List<AtributoJson>): List<AtributoCompleto> {
+    return atributos.map { atributo ->
+        AtributoCompleto(
+            nome = atributo.nome,
+            descricao = atributo.descricao
         )
     }
-
-    return lista
 }

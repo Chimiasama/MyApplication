@@ -73,7 +73,6 @@ import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 
 data class VantFilter(
     val origens: Set<String> = emptySet(),
@@ -195,16 +194,9 @@ fun VantagensContent(
     val context = LocalContext.current
 
     val listaVantagensRaw: List<Vantagem> = remember {
-        val jsonString = context.assets.open("Vantagens.json")
-            .bufferedReader()
-            .use { it.readText() }
-        val json = Json {
-            ignoreUnknownKeys = true
-            explicitNulls = false
-            isLenient = true
-            coerceInputValues = true
-        }
-        json.decodeFromString(jsonString)
+        runCatching {
+            context.loadJsonAsset<List<Vantagem>>("Vantagens.json")
+        }.getOrElse { emptyList() }
     }
 
     val listaVantagens: List<Vantagem> =

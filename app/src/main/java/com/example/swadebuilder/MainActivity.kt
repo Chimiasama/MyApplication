@@ -8,11 +8,11 @@ package com.example.swadebuilder
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
-import androidx.annotation.RawRes
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
@@ -103,7 +103,6 @@ import com.example.swadebuilder.ui.sections.SuperPoderesDetailScreen
 import com.example.swadebuilder.ui.sections.VantagensDetailScreen
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -112,8 +111,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.util.UUID
 
 
@@ -129,6 +126,19 @@ lateinit var arcanoInfo: Map<String, Triple<Int, Int, String>>
 
 private val json = Json {
     ignoreUnknownKeys = true
+}
+
+private inline fun <reified T> Context.decodeAssetOrNull(fileName: String): T? {
+    return runCatching {
+        val rawText = assets.open(fileName)
+            .bufferedReader(Charsets.UTF_8)
+            .use { it.readText() }
+
+        json.decodeFromString<T>(rawText)
+    }.getOrElse { error ->
+        Log.e("MainActivity", "Erro ao carregar asset $fileName", error)
+        null
+    }
 }
 
 private const val MULTIPLOS_AA_HABILITADOS: Boolean = false
@@ -175,22 +185,25 @@ class MainActivity : ComponentActivity() {
                 .trim() to Triple(it.slots, it.pp, it.foco)
         }
 
-        val atributosData = this.loadJsonAsset<AtributoList>("atributos.json")
-        listaAtributos = atributosData.atributos
-            .map { it.nome.keyify() }
-        mapaAtributosDisplay = atributosData.atributos
-            .associate { it.nome.keyify() to it.nome }
+        val atributosData = this.decodeAssetOrNull<AtributoList>("atributos.json")
+        listaAtributos = atributosData?.atributos
+            ?.map { it.nome.keyify() }
+            ?: emptyList()
+        mapaAtributosDisplay = atributosData?.atributos
+            ?.associate { it.nome.keyify() to it.nome }
+            ?: emptyMap()
 
-        val periciasData = this.loadJsonAsset<PericiaList>("pericias.json")
-        listaPericias = periciasData.pericias.map { pj ->
+        val periciasData = this.decodeAssetOrNull<PericiaList>("pericias.json")
+        listaPericias = periciasData?.pericias?.map { pj ->
             Pericia(
                 nome     = pj.nome,
                 atributo = pj.atributo.uppercase().semAcentos(),
                 basica   = pj.basica
             )
-        }
+        } ?: emptyList()
 
-        val todasVantagens: List<Vantagem> = this.loadJsonAsset("Vantagens.json")
+        val todasVantagens: List<Vantagem> =
+            this.decodeAssetOrNull("Vantagens.json") ?: emptyList()
 
         AppData.basicasVantagens          = todasVantagens.filter { it.origem.equals("BASICO", true) }
         AppData.superVantagens = todasVantagens.filter {
@@ -212,11 +225,8 @@ class MainActivity : ComponentActivity() {
             complicacoesJson
         )
 
-        val ancestralRaw = assets.open("listaancestralidade.json")
-            .bufferedReader(Charsets.UTF_8)
-            .use { it.readText() }
-
-        listaAncestralidadesJson = Json.decodeFromString<List<RacialModifier>>(ancestralRaw)
+        listaAncestralidadesJson =
+            decodeAssetOrNull("listaancestralidade.json") ?: emptyList()
 
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
             val m = rm.atributos
@@ -976,12 +986,6 @@ fun periciaStartRaw(anc: String, per: Pericia): Int {
 }
 
 var listaVantagens:    List<Vantagem>   = emptyList()
-
-fun loadRawText(context: Context, @RawRes resId: Int): String {
-    val inputStream = context.resources.openRawResource(resId)
-    val reader = BufferedReader(InputStreamReader(inputStream))
-    return reader.readText()
-}
 
 data class Estagio(
     val nome: String,

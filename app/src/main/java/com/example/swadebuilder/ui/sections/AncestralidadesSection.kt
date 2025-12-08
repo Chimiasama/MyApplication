@@ -35,7 +35,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.R
-import com.example.swadebuilder.loadRawText
 import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -45,6 +44,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RacialModifierLite(
     val nome: String
+)
+
+@Serializable
+data class RacialModifierDescricao(
+    val nome: String,
+    val descricao: String
 )
 
 private const val ASSET_ANCESTRALIDADES = "listaancestralidade.json"
@@ -69,7 +74,7 @@ fun AncestralidadesSection(
         if (!allowLongTexts) {
             emptyMap()
         } else {
-            parseAncestralidadeDescriptions(loadRawText(context, R.raw.ancestralidades))
+            loadAncestralidadeDescriptions(context)
         }
     }
 
@@ -226,26 +231,11 @@ fun AncestralidadesSection(
     }
 }
 
-private fun parseAncestralidadeDescriptions(texto: String): Map<String, String> {
-    val linhas = texto.lines()
-    val mapa = mutableMapOf<String, StringBuilder>()
-
-    var tituloAtual = ""
-
-    for (linha in linhas) {
-        val limpa = linha.trim()
-        if (limpa.isBlank()) continue
-
-        val isTitulo = limpa.all { it.isUpperCase() || it == '-' || it == ':' || it.isWhitespace() }
-        if (isTitulo) {
-            tituloAtual = limpa.removeSuffix(":").uppercase().semAcentos()
-            mapa.putIfAbsent(tituloAtual, StringBuilder())
-        } else if (tituloAtual.isNotBlank()) {
-            mapa.getValue(tituloAtual).appendLine(limpa)
-        }
+private fun loadAncestralidadeDescriptions(context: android.content.Context): Map<String, String> {
+    val lista = context.loadJsonAsset<List<RacialModifierDescricao>>(ASSET_ANCESTRALIDADES)
+    return lista.associate { racial ->
+        racial.nome.uppercase().semAcentos() to racial.descricao.trim()
     }
-
-    return mapa.mapValues { it.value.toString().trim() }
 }
 
 @Composable
