@@ -774,13 +774,17 @@ fun VantagensContent(
                     TextButton(
                         enabled = (subOpcaoSelecionada != null),
                         onClick = {
-                            val novaVantagem = vantOriginal.copy(
-                                choice = subOpcaoSelecionada
-                            )
+                            subOpcaoSelecionada?.let { escolha ->
+                                val keyEscolha = escolha.uppercase().semAcentos().trim()
+                                val vantagemEspecifica = listaVantagensAtivas.firstOrNull { vant ->
+                                    !vant.subtipoArcano.isNullOrBlank() &&
+                                            vant.subtipoArcano.uppercase().semAcentos().trim() == keyEscolha
+                                }
 
-                            if (state.podeSelecionar(novaVantagem)) {
-                                state.vantagensSelecionadas += novaVantagem
-                                state.pontosVantagem--
+                                if (vantagemEspecifica != null && state.podeSelecionar(vantagemEspecifica)) {
+                                    state.vantagensSelecionadas += vantagemEspecifica
+                                    state.pontosVantagem--
+                                }
                             }
                             dialogMostrandoAntecedente = null
                             subOpcaoSelecionada = null
