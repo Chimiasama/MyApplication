@@ -52,7 +52,7 @@ import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-@Preview(showBackground = true)
+// @Preview(showBackground = true) // Commented out to avoid build errors with ViewModel
 @Composable
 fun PreviewApp() {
     val state = remember { CriadorState() }
@@ -60,16 +60,7 @@ fun PreviewApp() {
 
     UnifiedScreen(
         state = state,
-        viewModel = vm,   // <<<<<<<<<<<<<< ADICIONADO
-
-        onOpenVantagensDetail = { _ -> },
-        onOpenPericiasDetail = {},
-        onOpenComplicacoesDetail = {},
-        onOpenAtributosDetail = {},
-        onOpenListaAncestralidadesDetail = { _ -> },
-        onOpenPoderesDetail = {},
-        onOpenSuperPoderesDetail = { _ -> },
-
+        viewModel = vm,
         expAncs = true,
         onToggleAncs = {},
 
@@ -104,13 +95,6 @@ fun PreviewApp() {
 fun UnifiedScreen(
     state: CriadorState,
     viewModel: CriadorViewModel,
-    onOpenVantagensDetail: (String) -> Unit,
-    onOpenPericiasDetail: () -> Unit,
-    onOpenComplicacoesDetail: () -> Unit,
-    onOpenAtributosDetail: () -> Unit,
-    onOpenListaAncestralidadesDetail: (String) -> Unit,
-    onOpenPoderesDetail: () -> Unit,
-    onOpenSuperPoderesDetail: (String) -> Unit,
 
     expAncs: Boolean,
     onToggleAncs: () -> Unit,
@@ -177,7 +161,6 @@ fun UnifiedScreen(
                     VantagensContent(
                         state = state,
                         multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-                        onOpenVantagensDetail  = onOpenVantagensDetail,
                         viewModel = viewModel
                     )
                 }
@@ -216,7 +199,6 @@ fun UnifiedScreen(
                 ) {
                     PericiasContent(
                         state = state,
-                        onOpenPericiasDetail = onOpenPericiasDetail,
                         feedbackMessages = viewModel.feedbackMessages as MutableList<String>
                     )
                 }
@@ -253,7 +235,7 @@ fun UnifiedScreen(
                     onToggle = onToggleAttrs,
                     icon     = Icons.Default.FitnessCenter
                 ) {
-                    AtributosContent(state = state, onOpenAtributosDetail = onOpenAtributosDetail)
+                    AtributosContent(state = state)
                 }
 
                 Spacer(Modifier.height(16.dp))
@@ -311,7 +293,6 @@ fun UnifiedScreen(
                 onToggle = onToggleAncs,
                 supersLocked = creationLocked,
                 ancestralidadeEmFoco = state.ancestralidadeEmFoco,
-                onOpenListaAncestralidadesDetail = onOpenListaAncestralidadesDetail,
                 onSelectAncestralidade = { nome ->
                     val key = nome.uppercase().semAcentos()
                     if (key == state.ancestralidade) return@AncestralidadesSection
@@ -334,7 +315,6 @@ fun UnifiedScreen(
                 state = state,
                 expanded = expComps,
                 onToggle = onToggleComps,
-                onOpenComplicacoesDetail = onOpenComplicacoesDetail,
                 feedbackMessages = viewModel.feedbackMessages as MutableList<String>
             )
 
@@ -346,7 +326,7 @@ fun UnifiedScreen(
                 onToggle = onToggleAttrs,
                 icon     = Icons.Default.FitnessCenter
             ) {
-                AtributosContent(state, onOpenAtributosDetail)
+                AtributosContent(state)
             }
 
             HorizontalDivider(thickness = 1.dp)
@@ -359,7 +339,6 @@ fun UnifiedScreen(
             ) {
                 PericiasContent(
                     state = state,
-                    onOpenPericiasDetail = onOpenPericiasDetail,
                     feedbackMessages = viewModel.feedbackMessages
                 )
             }
@@ -375,17 +354,16 @@ fun UnifiedScreen(
                 VantagensContent(
                     state = state,
                     multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-                    onOpenVantagensDetail  = onOpenVantagensDetail,
                     viewModel = viewModel
                 )
             }
 
-            PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes, onOpenPoderesDetail = onOpenPoderesDetail)
+            PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes)
 
             Spacer(Modifier.height(8.dp))
             HorizontalDivider(thickness = 1.dp)
 
-            SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes, onOpenSuperPoderesDetail = onOpenSuperPoderesDetail)
+            SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes)
             EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
 
             Spacer(Modifier.height(16.dp))
@@ -514,8 +492,7 @@ private fun ResumoSection(
 private fun PoderesSection(
     state: CriadorState,
     expanded: Boolean,
-    onToggle: () -> Unit,
-    onOpenPoderesDetail: () -> Unit
+    onToggle: () -> Unit
 ) {
     val temArcano = state.vantagensSelecionadas.any {
         it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
@@ -529,8 +506,7 @@ private fun PoderesSection(
             icon = Icons.Default.FlashOn
         ) {
             PoderesSection(
-                state = state,
-                onOpenListaCompletaPoderes = onOpenPoderesDetail
+                state = state
             )
         }
     }
@@ -542,16 +518,14 @@ private fun SuperPoderesSection(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
     expanded: Boolean,
-    onToggle: () -> Unit,
-    onOpenSuperPoderesDetail: (String) -> Unit
+    onToggle: () -> Unit
 ) {
     if (state.modoSupers) {
         SuperPoderesContent(
             state = state,
             listaSuperPoderes = listaSuperPoderes,
             expanded = expanded,
-            onToggle = onToggle,
-            onOpenSuperPoderesDetail = onOpenSuperPoderesDetail
+            onToggle = onToggle
         )
     }
 }
