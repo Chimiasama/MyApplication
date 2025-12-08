@@ -70,6 +70,7 @@ import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.dialogs.MultipleSelectionDialog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.loadJsonAsset
+import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -183,12 +184,12 @@ fun VantFilterDialog(
 }
 
 private fun mapChoiceToArcanoId(choice: String?): String? {
-    return when (choice?.trim()?.uppercase()?.semAcentos()) {
+    return when (choice?.keyify()) {
         "DOM" -> "antecedente_arcano_dom"
         "MAGIA" -> "antecedente_arcano_magia"
         "MILAGRES" -> "antecedente_arcano_milagres"
-        "PSIONICOS", "PSIÔNICOS" -> "antecedente_arcano_psionicos"
-        "CIENCIA ESTRANHA", "CIÊNCIA ESTRANHA" -> "antecedente_arcano_ciencia_estranha"
+        "PSIONICOS" -> "antecedente_arcano_psionicos"
+        "CIENCIA ESTRANHA" -> "antecedente_arcano_ciencia_estranha"
         else -> null
     }
 }
@@ -808,16 +809,30 @@ fun VantagensContent(
                     TextButton(
                         enabled = (subOpcaoSelecionada != null),
                         onClick = {
-                            val arcanoId = mapChoiceToArcanoId(subOpcaoSelecionada)
-                            val novaVantagem = arcanoId
+                            val choiceRaw = subOpcaoSelecionada ?: return@TextButton
+                            val arcanoKey = choiceRaw.keyify()
+                            val arcanoId = mapChoiceToArcanoId(choiceRaw)
+                            val base = arcanoId
                                 ?.let { id -> listaVantagensRaw.firstOrNull { it.id == id } }
-                                ?.copy(choice = subOpcaoSelecionada)
-                                ?: vantOriginal.copy(choice = subOpcaoSelecionada)
+                                ?: vantOriginal
+                            val novaVantagem = base.copy(
+                                choice = choiceRaw,
+                                subtipoArcano = arcanoKey
+                            )
 
                             if (state.podeSelecionar(novaVantagem)) {
                                 state.vantagensSelecionadas += novaVantagem
                                 state.pontosVantagem--
                                 state.rebuildAllPericiaStacks()
+                                val versionKey = arcanoVersionKey(novaVantagem) ?: arcanoKey
+                                if (versionKey.isNotBlank()) {
+                                    val initialSlots = arcanoInfo[versionKey]?.first ?: 0
+                                    state.poderSlotsPorArcano.getOrPut(versionKey) {
+                                        mutableStateListOf<String?>().apply {
+                                            repeat(initialSlots) { add(null) }
+                                        }
+                                    }
+                                }
                             }
                             dialogMostrandoAntecedente = null
                             subOpcaoSelecionada = null
