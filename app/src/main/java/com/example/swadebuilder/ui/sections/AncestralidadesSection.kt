@@ -3,24 +3,21 @@ package com.example.swadebuilder.ui.sections
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
@@ -153,8 +150,7 @@ fun AncestralidadesSection(
                 items(listaOrdenada) { item ->
                     val itemKey = item.nome.uppercase().semAcentos()
                     val isSelected = itemKey == selectedKey.value
-                    val descKey = itemKey
-                    val descricao = descricaoPorAncestralidade[descKey].orEmpty()
+                    val descricao = descricaoPorAncestralidade[itemKey].orEmpty()
 
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
@@ -200,8 +196,8 @@ fun AncestralidadesSection(
                                 Spacer(Modifier.height(6.dp))
                                 TextButton(
                                     onClick = {
-                                        val current = detalhesExpandidos[descKey] ?: false
-                                        detalhesExpandidos[descKey] = !current
+                                        val current = detalhesExpandidos[itemKey] ?: false
+                                        detalhesExpandidos[itemKey] = !current
                                     },
                                     colors = ButtonDefaults.textButtonColors(
                                         contentColor = MaterialTheme.colorScheme.primary
@@ -209,12 +205,12 @@ fun AncestralidadesSection(
                                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
                                 ) {
                                     Text(
-                                        if (detalhesExpandidos[descKey] == true) "Ocultar detalhes" else "Ver detalhes",
+                                        if (detalhesExpandidos[itemKey] == true) "Ocultar detalhes" else "Ver detalhes",
                                         style = MaterialTheme.typography.labelMedium
                                     )
                                 }
 
-                                AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
+                                AnimatedVisibility(visible = detalhesExpandidos[itemKey] == true) {
                                     Text(
                                         text = descricao,
                                         style = MaterialTheme.typography.bodyMedium,
