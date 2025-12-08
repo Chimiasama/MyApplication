@@ -94,10 +94,8 @@ import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.sections.AncestralidadesDetailScreen
-import com.example.swadebuilder.ui.sections.AtributosDetailScreen
 import com.example.swadebuilder.ui.sections.ComplicacoesDetailScreen
 import com.example.swadebuilder.ui.sections.EquipamentosDetailScreen
-import com.example.swadebuilder.ui.sections.PericiasDetailScreen
 import com.example.swadebuilder.ui.sections.PoderesDetailScreen
 import com.example.swadebuilder.ui.sections.SuperPoderesDetailScreen
 import com.example.swadebuilder.ui.sections.VantagensDetailScreen
@@ -176,12 +174,14 @@ class MainActivity : ComponentActivity() {
         }
 
         val atributosData = this.loadJsonAsset<AtributoList>("atributos.json")
+        listaAtributosJson = atributosData.atributos
         listaAtributos = atributosData.atributos
             .map { it.nome.keyify() }
         mapaAtributosDisplay = atributosData.atributos
             .associate { it.nome.keyify() to it.nome }
 
         val periciasData = this.loadJsonAsset<PericiaList>("pericias.json")
+        listaPericiasJson = periciasData.pericias
         listaPericias = periciasData.pericias.map { pj ->
             Pericia(
                 nome     = pj.nome,
@@ -631,9 +631,7 @@ class MainActivity : ComponentActivity() {
                                 ) {
                                     val screenIndex = when {
                                         showEquipLista            -> 1
-                                        showAtributosDetail       -> 2
                                         showVantagensDetail       -> 3
-                                        showPericiasDetail        -> 4
                                         showComplicacoesDetail    -> 5
                                         showAncestralidadesDetail -> 6
                                         showPoderesDetail         -> 7
@@ -651,16 +649,11 @@ class MainActivity : ComponentActivity() {
                                                         if (state.modoSuperequip) superequipCategorias else emptyList(),
                                                 onBack     = { showEquipLista = false }
                                             )
-                                            2 -> AtributosDetailScreen(onBack = { showAtributosDetail = false })
                                             3 -> VantagensDetailScreen(
                                                 state           = state,
                                                 modoSupers      = state.modoSupers,
                                                 highlightedName = highlightedVantagem,
                                                 onBack          = { showVantagensDetail = false }
-                                            )
-                                            4 -> PericiasDetailScreen(
-                                                state  = state,
-                                                onBack = { showPericiasDetail = false }
                                             )
                                             5 -> ComplicacoesDetailScreen(
                                                 state        = state,
@@ -964,9 +957,11 @@ lateinit var racialAttrMinMap: Map<String, Map<String,Int>>
 lateinit var racialSkillStartMap: Map<String, Map<String,Int>>
 
 lateinit var listaAtributos: List<String>
+lateinit var listaAtributosJson: List<com.example.swadebuilder.model.AtributoJson>
 lateinit var mapaAtributosDisplay: Map<String, String>
 
 lateinit var listaPericias: List<Pericia>
+lateinit var listaPericiasJson: List<com.example.swadebuilder.model.PericiaJson>
 
 fun periciaStartRaw(anc: String, per: Pericia): Int {
     val ancKey = anc.keyify()

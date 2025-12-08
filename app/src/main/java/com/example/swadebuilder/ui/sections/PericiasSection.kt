@@ -52,11 +52,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.R
 import com.example.swadebuilder.criacaoBasicaCongelada
-import com.example.swadebuilder.listaPericias
+import com.example.swadebuilder.listaPericiasJson
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.EspecializacoesDto
+import com.example.swadebuilder.model.PericiaJson
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -81,12 +83,12 @@ fun PericiasContent(
 
     var showSpecDialog by rememberSaveable { mutableStateOf(false) }
     var specText by rememberSaveable { mutableStateOf("") }
-    var specTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.model.PericiaJson?>(null) }
+    var specTarget by rememberSaveable { mutableStateOf<PericiaJson?>(null) }
     var buyingExtraSpec by rememberSaveable { mutableStateOf(false) }
 
     var showEditDialog by rememberSaveable { mutableStateOf(false) }
     var editIsPrincipal by rememberSaveable { mutableStateOf(false) }
-    var editPerTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.model.PericiaJson?>(null) }
+    var editPerTarget by rememberSaveable { mutableStateOf<PericiaJson?>(null) }
     var editOldName by rememberSaveable { mutableStateOf("") }
     var editNewName by rememberSaveable { mutableStateOf("") }
 
@@ -145,13 +147,14 @@ fun PericiasContent(
             }
         }
 
-        items(listaPericias) { per ->
-            val currentRaw = state.rawTotal(per)
-            val attrKey    = state.atributoBaseParaPericia(per)
+        items(listaPericiasJson) { per ->
+            val p = Pericia(per.nome, per.atributo, per.basica)
+            val currentRaw = state.rawTotal(p)
+            val attrKey    = state.atributoBaseParaPericia(p)
             val atrRaw     = state.valoresAtributos[attrKey]!!.intValue
-            val capRaw     = state.periciaCapRaw(per)
+            val capRaw     = state.periciaCapRaw(p)
 
-            val displayRaw = state.rawTotalComSupers(per)
+            val displayRaw = state.rawTotalComSupers(p)
 
             val nextRaw = when {
                 currentRaw == 0 && per.basica -> 4
@@ -160,10 +163,10 @@ fun PericiasContent(
             }
             val costNormal = if (nextRaw <= atrRaw) 1 else 2
 
-            val compStack = state.compCostStackPorPericia.getValue(per)
-            val spStack   = state.spCostStackPorPericia.getValue(per)
+            val compStack = state.compCostStackPorPericia.getValue(p)
+            val spStack   = state.spCostStackPorPericia.getValue(p)
 
-            val minimoBasico: Int = state.minPericiaPorVantagem[per] ?: 0
+            val minimoBasico: Int = state.minPericiaPorVantagem[p] ?: 0
 
             val opcionalList: List<Int> = state.vantagensSelecionadas.flatMap { vant ->
                 val mapaOpc = vant.requisitos.periciaMinOpcional ?: emptyMap()
@@ -176,7 +179,7 @@ fun PericiasContent(
 
             val canDecrease = if (state.modoProgressaoAtivo) {
                 val frozenIncs = state.frozenSkillIncrements[per.nome] ?: 0
-                state.baseIncsPorPericia.getValue(per) > frozenIncs
+                state.baseIncsPorPericia.getValue(p) > frozenIncs
             } else {
                 !locked &&
                         (compStack.isNotEmpty() || spStack.any { it > 0 }) &&
@@ -184,7 +187,7 @@ fun PericiasContent(
             }
 
             val astuciaSpent = state.spCostStackPorPericia
-                .filterKeys { p -> p.atributo == "ASTUCIA" }
+                .filterKeys { it.atributo == "ASTUCIA" }
                 .values
                 .sumOf { costs -> costs.sum() }
 
@@ -244,8 +247,8 @@ fun PericiasContent(
 
                     IconButton(
                         onClick = {
-                            state.decreasePericia(per)
-                            if (state.rawTotal(per) == 0) {
+                            state.decreasePericia(p)
+                            if (state.rawTotal(p) == 0) {
                                 state.especializacoesPorPericia.remove(per.nome)
                             }
                         },
@@ -274,10 +277,10 @@ fun PericiasContent(
 
                     IconButton(
                         onClick = {
-                            val currRawNow = state.rawTotal(per)
-                            val attrKeyNow = state.atributoBaseParaPericia(per)
+                            val currRawNow = state.rawTotal(p)
+                            val attrKeyNow = state.atributoBaseParaPericia(p)
                             val atrRawNow  = state.valoresAtributos[attrKeyNow]!!.intValue
-                            val capRawNow  = state.periciaCapRaw(per)
+                            val capRawNow  = state.periciaCapRaw(p)
 
                             val nextRawNow = when {
                                 currRawNow == 0 && per.basica -> 4
@@ -287,7 +290,7 @@ fun PericiasContent(
                             val costNow = if (nextRawNow <= atrRawNow) 1 else 2
 
                             val astuciaSpentNow = state.spCostStackPorPericia
-                                .filterKeys { p -> p.atributo == "ASTUCIA" }
+                                .filterKeys { it.atributo == "ASTUCIA" }
                                 .values
                                 .sumOf { costs -> costs.sum() }
 
@@ -303,7 +306,7 @@ fun PericiasContent(
                                 return@IconButton
                             }
 
-                            state.increasePericiaFromAdvancement(per, costNow)
+                            state.increasePericiaFromAdvancement(p, costNow)
 
                             if (state.usarEspecializacoesDePericia) {
                                 val esp = state.especializacoesPorPericia[per.nome]
@@ -481,7 +484,7 @@ fun PericiasContent(
                                         (atual.lista + nomeEsp).distinct()
                                     atual.copy(lista = novas).also {
                                         state.spCostStackPorPericia
-                                            .getValue(per)
+                                            .getValue(Pericia(per.nome, per.atributo, per.basica))
                                             .add(1)
                                     }
                                 }

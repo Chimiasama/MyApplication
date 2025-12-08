@@ -47,7 +47,6 @@ import com.example.swadebuilder.ui.sections.SummaryContent
 import com.example.swadebuilder.ui.sections.SuperPoderesContent
 import com.example.swadebuilder.ui.sections.VantagensContent
 import com.example.swadebuilder.ui.sections.XpSection
-import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
 
@@ -63,9 +62,7 @@ fun PreviewApp() {
         viewModel = vm,   // <<<<<<<<<<<<<< ADICIONADO
 
         onOpenVantagensDetail = { _ -> },
-        onOpenPericiasDetail = {},
         onOpenComplicacoesDetail = {},
-        onOpenAtributosDetail = {},
         onOpenListaAncestralidadesDetail = { _ -> },
         onOpenPoderesDetail = {},
         onOpenSuperPoderesDetail = { _ -> },
@@ -105,9 +102,7 @@ fun UnifiedScreen(
     state: CriadorState,
     viewModel: CriadorViewModel,
     onOpenVantagensDetail: (String) -> Unit,
-    onOpenPericiasDetail: () -> Unit,
     onOpenComplicacoesDetail: () -> Unit,
-    onOpenAtributosDetail: () -> Unit,
     onOpenListaAncestralidadesDetail: (String) -> Unit,
     onOpenPoderesDetail: () -> Unit,
     onOpenSuperPoderesDetail: (String) -> Unit,
@@ -216,7 +211,6 @@ fun UnifiedScreen(
                 ) {
                     PericiasContent(
                         state = state,
-                        onOpenPericiasDetail = onOpenPericiasDetail,
                         feedbackMessages = viewModel.feedbackMessages as MutableList<String>
                     )
                 }
@@ -253,7 +247,7 @@ fun UnifiedScreen(
                     onToggle = onToggleAttrs,
                     icon     = Icons.Default.FitnessCenter
                 ) {
-                    AtributosContent(state = state, onOpenAtributosDetail = onOpenAtributosDetail)
+                    AtributosContent(state = state)
                 }
 
                 Spacer(Modifier.height(16.dp))
@@ -346,7 +340,7 @@ fun UnifiedScreen(
                 onToggle = onToggleAttrs,
                 icon     = Icons.Default.FitnessCenter
             ) {
-                AtributosContent(state, onOpenAtributosDetail)
+                AtributosContent(state)
             }
 
             HorizontalDivider(thickness = 1.dp)
@@ -359,7 +353,6 @@ fun UnifiedScreen(
             ) {
                 PericiasContent(
                     state = state,
-                    onOpenPericiasDetail = onOpenPericiasDetail,
                     feedbackMessages = viewModel.feedbackMessages
                 )
             }

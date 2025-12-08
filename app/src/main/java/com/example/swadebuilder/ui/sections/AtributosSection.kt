@@ -37,12 +37,13 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.criacaoBasicaCongelada
-import com.example.swadebuilder.listaAtributos
+import com.example.swadebuilder.listaAtributosJson
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
+import kotlin.math.max
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -66,8 +67,8 @@ fun AtributosContent(
     val measureStyle = MaterialTheme.typography.bodyLarge
 
     val valorColWidthDp = androidx.compose.runtime.remember(state.superInvestments, measureStyle) {
-        val samples = listaAtributos.map { nome ->
-            state.atributoRawComSupers(nome).toDiceString()
+        val samples = listaAtributosJson.map { atributo ->
+            state.atributoRawComSupers(atributo.nome).toDiceString()
         }
         val maxPx = samples.maxOf { s ->
             textMeasurer.measure(text = s, style = measureStyle).size.width
@@ -108,11 +109,11 @@ fun AtributosContent(
 
         Spacer(Modifier.height(8.dp))
 
-        listaAtributos.forEach { nome ->
-            val atributo = listaAtributos.first { it.nome == nome }
+        listaAtributosJson.forEach { atributo ->
+            val nome = atributo.nome
             val baseRaw = state.valoresAtributos[nome]!!.intValue
 
-            val minReq = maxOf(
+            val minReq = max(
                 state.atributoMinRaw(nome),
                 state.minAttrPorVantagem[nome] ?: 4
             )
