@@ -60,7 +60,7 @@ fun PreviewApp() {
 
     UnifiedScreen(
         state = state,
-        viewModel = vm,   // <<<<<<<<<<<<<< ADICIONADO
+        viewModel = vm,
 
         onOpenVantagensDetail = { _ -> },
         onOpenComplicacoesDetail = {},
