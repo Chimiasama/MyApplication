@@ -360,7 +360,7 @@ fun UnifiedScreen(
                 PericiasContent(
                     state = state,
                     onOpenPericiasDetail = onOpenPericiasDetail,
-                    feedbackMessages = viewModel.feedbackMessages as MutableList<String>
+                    feedbackMessages = viewModel.feedbackMessages
                 )
             }
 
@@ -536,6 +536,7 @@ private fun PoderesSection(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 private fun SuperPoderesSection(
     state: CriadorState,

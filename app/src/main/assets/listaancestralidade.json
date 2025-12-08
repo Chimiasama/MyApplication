@@ -1,6 +1,8 @@
 [
   {
     "nome": "ANDROIDES",
+    "origem": "BASICO",
+    "descricao": "São criaturas semi-orgânicas criadas por tecnologia avançada. O exemplo aqui simula seres humanos em muitos aspectos, podendo ter passabilidade humana quando desejar. Sua rede neural avançada lhes dá uma inteligência artificial completa, com personalidades individuais.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
@@ -14,6 +16,8 @@
   },
   {
     "nome": "ANÕES",
+    "origem": "BASICO",
+    "descricao": "São um povo baixo, robusto e resistente que vêm de cavernas imensas ou altas montanhas. São um povo orgulhoso e guerreiro, graças ao contato constante com criaturas hostis como orcs e goblins. Geralmente vivem mais de 200 anos.",
     "atributos": {
       "Vigor": 2
     },
@@ -28,6 +32,8 @@
   },
   {
     "nome": "AQUARIANOS",
+    "origem": "BASICO",
+    "descricao": "Povo aquático oriundo das profundezas esmagadoras do oceano. São fortes e resistentes debaixo das ondas, mas geralmente são vulneráveis ao ar livre ou ao calor abrasador da superfície.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
@@ -41,13 +47,15 @@
   },
   {
     "nome": "AVIANOS",
+    "origem": "BASICO",
+    "descricao": "São humanoides com asas. Tendem a ser bem leves devido a seus ossos ocos. Podem ter penas, pele coriácea ou até mesmo escamas.",
     "atributos": {},
     "pericias": {
       "Perceber": 2
     },
     "vantagensGratis": [
       "VOO",
-      "SENTIDOS AGUÇADOS:"
+      "SENTIDOS AGUÇADOS"
     ],
     "desvantagens": [
       "FRÁGIL",
@@ -57,6 +65,8 @@
   },
   {
     "nome": "ELFOS",
+    "origem": "BASICO",
+    "descricao": "Possuem altura avantajada, almas gentis, orelhas pontudas e olhos profundos de cores variadas. Sejam habitantes de florestas ou vales ocultos, todos possuem delicadeza naturalmente maior que a dos humanos.",
     "atributos": {
       "Agilidade": 2
     },
@@ -71,6 +81,8 @@
   },
   {
     "nome": "MEIO-ELFOS",
+    "origem": "BASICO",
+    "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante, a maioria é bem aceita, mas pode ocorrer rejeição por qualquer lado de sua família. Sua expectativa de vida se aproxima mais da sua descendência humana.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
@@ -83,6 +95,8 @@
   },
   {
     "nome": "HUMANOS",
+    "origem": "BASICO",
+    "descricao": "Em muitos cenários seres humanos recebem uma Vantagem gratuita à sua escolha. Esta opção reflete a sua versatilidade e adaptabilidade em comparação a outras ancestralidades.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
@@ -92,6 +106,8 @@
   },
   {
     "nome": "PEQUENINOS",
+    "origem": "BASICO",
+    "descricao": "Este é um povo composto por seres baixos e ágeis com cabelos ondulados castanhos ou negros. Mesmo sendo frágeis, seu otimismo entusiástico lhes concede uma atitude de “nunca diga nunca”.",
     "atributos": {
       "Espírito": 2
     },
@@ -107,6 +123,8 @@
   },
   {
     "nome": "RAKASHANOS",
+    "origem": "BASICO",
+    "descricao": "Humanoides de aparência felina. Podem ter as cores lustrosas dos tigres, a pele manchada dos leopardos ou a aparência exótica dos gatos siameses. Possuem garras e presas afiadas.",
     "atributos": {
       "Agilidade": 2
     },
@@ -124,6 +142,8 @@
   },
   {
     "nome": "SÁURIOS",
+    "origem": "BASICO",
+    "descricao": "Lagartos humanoides que normalmente vêm de selvas escaldantes ou de desertos ermos onde possuem civilizações únicas que são desconhecidas por outros seres sencientes.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
@@ -138,6 +158,8 @@
   },
   {
     "nome": "CELESTIAIS",
+    "origem": "BASICO",
+    "descricao": "Anjos são uma espécie bastante variada. Celestiais têm muitas formas, mas sua característica mais notável é um par de asas brancas e emplumadas que brota de suas costas.",
     "atributos": {},
     "pericias": {
       "Fé": 2
@@ -149,11 +171,13 @@
     "desvantagens": [
       "DESASTRADO",
       "INIMIGO RACIAL (Demônios e Diabos)",
-      "VOTO (Maior: Proteger a humanidade)"
+      "VOTO (Maior)"
     ]
   },
   {
     "nome": "GUARDIÕES",
+    "origem": "BASICO",
+    "descricao": "Seres humanos que servem ao Coro Celestial são chamados de guardiões. Herdeiros da Terra devastada.",
     "atributos": {
       "Vigor": 2
     },
@@ -163,7 +187,402 @@
       "CAMPEÕES"
     ],
     "desvantagens": [
-      "VOTO (Maior: Proteger a humanidade)"
+      "VOTO (Maior)"
+    ]
+  },
+  {
+    "nome": "CENTAUROS",
+    "origem": "FANTASIA",
+    "descricao": "Centauros têm a parte inferior do corpo de um cavalo e a parte superior do corpo de um humano. São corredores rápidos e orgulhosos.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "CASCOS",
+      "MOVIMENTAÇÃO +4",
+      "TAMANHO +1"
+    ],
+    "desvantagens": [
+      "DEPENDÊNCIA",
+      "FORMA INCOMUM"
+    ]
+  },
+  {
+    "nome": "DESCENDENTE ELEMENTAL (AR)",
+    "origem": "FANTASIA",
+    "descricao": "Descendentes do ar têm cabelos brancos que se agitam continuamente como se fossem soprados por um vento fantasma. Não precisam respirar.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "AR INTERNO",
+      "RESISTÊNCIA AMBIENTAL"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)"
+    ]
+  },
+  {
+    "nome": "DESCENDENTE ELEMENTAL (ÁGUA)",
+    "origem": "FANTASIA",
+    "descricao": "Descendentes da água têm uma tonalidade azulada na pele e no cabelo e falam com vozes mansas. Não se afogam na água.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "AQUÁTICO",
+      "RESISTÊNCIA AMBIENTAL"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)"
+    ]
+  },
+  {
+    "nome": "DESCENDENTE ELEMENTAL (FOGO)",
+    "origem": "FANTASIA",
+    "descricao": "Descendentes do fogo têm cabelos de um laranja ou amarelo brilhante, vozes sibilantes e pupilas vermelhas. São frenéticos e rápidos.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "RÁPIDO",
+      "RESISTÊNCIA AMBIENTAL"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)"
+    ]
+  },
+  {
+    "nome": "DESCENDENTE ELEMENTAL (TERRA)",
+    "origem": "FANTASIA",
+    "descricao": "Descendentes da terra têm vozes roucas, corpos musculosos e um tom avermelhado em sua pele. São resistentes como rocha.",
+    "atributos": {
+      "Vigor": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "SÓLIDO COMO ROCHA",
+      "RESISTÊNCIA AMBIENTAL"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)"
+    ]
+  },
+  {
+    "nome": "DRACONIANOS",
+    "origem": "FANTASIA",
+    "descricao": "Draconianos humanoides vêm de desertos escaldantes ou cavernas vulcânicas. Têm a capacidade de cuspir fogo como os próprios dragões e pele escamosa.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ARMA DE SOPRO",
+      "ARMADURA +2",
+      "MORDIDA/GARRAS",
+      "RESISTÊNCIA AMBIENTAL (Calor)"
+    ],
+    "desvantagens": [
+      "FRAQUEZA AMBIENTAL (Frio)",
+      "MAL-HUMORADO",
+      "SANGUE FRIO"
+    ]
+  },
+  {
+    "nome": "FADAS",
+    "origem": "FANTASIA",
+    "descricao": "Criaturas aladas pequenas e muitas vezes impetuosas. Possuem asas de inseto e uma curiosidade natural sobre o mundo.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "VOO"
+    ],
+    "desvantagens": [
+      "BOCA GRANDE",
+      "CURIOSO",
+      "DESASTRADO",
+      "DIMINUTO",
+      "IMPULSIVO"
+    ]
+  },
+  {
+    "nome": "GNOMOS",
+    "origem": "FANTASIA",
+    "descricao": "Pequenos humanoides de florestas profundas ou cavernas. São frequentemente confundidos com pequeninos, mas são mais proporcionais e astutos.",
+    "atributos": {
+      "Astúcia": 2
+    },
+    "pericias": {
+      "Perceber": 2
+    },
+    "vantagensGratis": [
+      "SENTIDOS APRIMORADOS",
+      "VISÃO NO ESCURO"
+    ],
+    "desvantagens": [
+      "MOVIMENTAÇÃO REDUZIDA",
+      "TAMANHO -1"
+    ]
+  },
+  {
+    "nome": "GOBLINS",
+    "origem": "FANTASIA",
+    "descricao": "Seres briguentos que muitas vezes servem orcs ou ogros. Desenvolveram táticas de sobrevivência e furtividade para sobreviver em ambientes violentos.",
+    "atributos": {},
+    "pericias": {
+      "Furtividade": 2
+    },
+    "vantagensGratis": [
+      "INFRAVISÃO",
+      "SOBREVIVENTE",
+      "SORRATEIRO"
+    ],
+    "desvantagens": [
+      "DESAGRADÁVEL",
+      "TAMANHO -1"
+    ]
+  },
+  {
+    "nome": "GOLENS",
+    "origem": "FANTASIA",
+    "descricao": "Geralmente autômatos de pedra, metal ou outro material, criados por magia ou ciência estranha. São densos, fortes e não possuem necessidades biológicas.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ARMADURA +2",
+      "CONSTRUTO",
+      "TAMANHO +2"
+    ],
+    "desvantagens": [
+      "DESAJEITADO",
+      "GRANDE",
+      "MOVIMENTAÇÃO REDUZIDA",
+      "PERÍCIAS BÁSICAS REDUZIDAS",
+      "SEM NOÇÃO",
+      "SEM ÓRGÃOS VITAIS"
+    ]
+  },
+  {
+    "nome": "INFERNAIS",
+    "origem": "FANTASIA",
+    "descricao": "Têm sangue demoníaco ou diabólico em sua linhagem. Possuem pele avermelhada, chifres e cauda, além de resistência ao calor.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "CHIFRES",
+      "NATUREZA DIABÓLICA",
+      "RESISTÊNCIA AMBIENTAL (Calor)",
+      "VISÃO TOTAL NO ESCURO"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)",
+      "FRAQUEZA AMBIENTAL (Frio)"
+    ]
+  },
+  {
+    "nome": "INSETOIDES",
+    "origem": "FANTASIA",
+    "descricao": "Povo inseto com exoesqueletos e múltiplos membros. Vêm de sociedades altamente organizadas e obedientes.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ANDAR NAS PAREDES",
+      "ARMADURA +2",
+      "AÇÕES ADICIONAIS",
+      "MORDIDA OU GARRA"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)",
+      "FORMATO CORPORAL INCOMUM",
+      "MENTE DE COLMEIA"
+    ]
+  },
+  {
+    "nome": "MEIO-GIGANTES",
+    "origem": "FANTASIA",
+    "descricao": "Párias encontrados em colinas distantes e montanhas. São imensos, fortes e imparáveis, adequados para ambientes selvagens.",
+    "atributos": {
+      "Força": 4,
+      "Vigor": 4
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "MUITO FORTE",
+      "MUITO RESISTENTE",
+      "TAMANHO +3"
+    ],
+    "desvantagens": [
+      "ANALFABETO",
+      "CABEÇAS-DURAS",
+      "FORASTEIRO (Maior)",
+      "GRANDE",
+      "SEM NOÇÃO"
+    ]
+  },
+  {
+    "nome": "MEIO-ORCS",
+    "origem": "FANTASIA",
+    "descricao": "Descendentes de orcs e humanos. Herdam a força ou resistência dos orcs, mas muitas vezes são evitados pelas sociedades civilizadas.",
+    "atributos": {
+      "Vigor": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "ENDURECIDO",
+      "INFRAVISÃO"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)"
+    ]
+  },
+  {
+    "nome": "MINOTAUROS",
+    "origem": "FANTASIA",
+    "descricao": "Possuem corpo humano e cabeça e musculatura de touro. Conhecidos por sua força física, mau humor e chifres perversos.",
+    "atributos": {
+      "Força": 4
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "CHIFRES",
+      "DURÃO",
+      "MUITO FORTE",
+      "TAMANHO +1"
+    ],
+    "desvantagens": [
+      "DESAGRADÁVEL",
+      "GRANDE",
+      "SEM INSTRUÇÃO",
+      "SENSÍVEL"
+    ]
+  },
+  {
+    "nome": "OGROS",
+    "origem": "FANTASIA",
+    "descricao": "Orgulhosos e malignos, ogros são grandes e corpulentos. Se orgulham de sua força e resistência, vivendo em tribos selvagens.",
+    "atributos": {
+      "Força": 4,
+      "Vigor": 4
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "MUITO FORTE",
+      "MUITO RESISTENTE",
+      "ROBUSTO",
+      "TAMANHO +1"
+    ],
+    "desvantagens": [
+      "ARROGANTE",
+      "DESAJEITADO",
+      "FORASTEIRO (Menor)",
+      "GRANDE",
+      "SEM NOÇÃO"
+    ]
+  },
+  {
+    "nome": "ORCS",
+    "origem": "FANTASIA",
+    "descricao": "Têm reputação de serem selvagens e brutais. Suas tribos são governadas pelos mais fortes. Possuem força e resistência naturais.",
+    "atributos": {
+      "Força": 2,
+      "Vigor": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "FORTE",
+      "INFRAVISÃO",
+      "RESISTENTE",
+      "TAMANHO +1"
+    ],
+    "desvantagens": [
+      "BRUTAL",
+      "FORASTEIRO (Maior)"
+    ]
+  },
+  {
+    "nome": "POVO RATAZANA",
+    "origem": "FANTASIA",
+    "descricao": "Humanoides peludos com corpos curvados e rostos de rato. São sobreviventes natos, vivendo em esgotos e favelas, e obcecados por tesouros.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "GARRAS",
+      "MORDIDA",
+      "RESISTÊNCIA NATURAL",
+      "SUCATEIRO",
+      "VISÃO NO ESCURO"
+    ],
+    "desvantagens": [
+      "COVARDE",
+      "FORASTEIRO (Maior)",
+      "GANANCIOSO (Menor)",
+      "TAMANHO -1"
+    ]
+  },
+  {
+    "nome": "POVO RATO",
+    "origem": "FANTASIA",
+    "descricao": "Criaturas minúsculas e bípedes que se assemelham a ratos comuns. São tímidos e furtivos, vivendo nas sombras.",
+    "atributos": {
+      "Força": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "DIMINUTO",
+      "VISÃO NO ESCURO"
+    ],
+    "desvantagens": [
+      "FOBIA – GATOS (Menor)",
+      "FORASTEIRO (Maior)",
+      "MOVIMENTAÇÃO REDUZIDA",
+      "POUCO IMPONENTE"
+    ]
+  },
+  {
+    "nome": "POVO SERPENTE",
+    "origem": "FANTASIA",
+    "descricao": "Humanoides com cabeças ofídicas. Variam de constritores a víboras. São rápidos e possuem mordidas venenosas.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "INFRAVISÃO",
+      "MORDIDA",
+      "MORDIDA VENENOSA",
+      "MOVIMENTAÇÃO"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)",
+      "FRAQUEZA AMBIENTAL",
+      "SANGUE FRIO"
+    ]
+  },
+  {
+    "nome": "RENASCIDOS",
+    "origem": "FANTASIA",
+    "descricao": "Filhos de um ser vivo e um vampiro. Têm pele pálida e uma conexão inata com os mortos. São fortes e resistentes ao frio.",
+    "atributos": {
+      "Força": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "BEBEDOR DE SANGUE",
+      "FORÇA SOBRENATURAL",
+      "MORDIDA",
+      "RESISTÊNCIA AO FRIO",
+      "VISÃO NO ESCURO"
+    ],
+    "desvantagens": [
+      "AVERSÃO ANIMAL",
+      "FORASTEIRO (Maior)",
+      "SENSIBILIDADE À LUZ SOLAR"
+    ]
+  },
+  {
+    "nome": "TRANSMORFOS",
+    "origem": "FANTASIA",
+    "descricao": "Criaturas capazes de mudar sua aparência para se parecer com outras pessoas. São camaleões sociais, muitas vezes atuando como espiões ou vigaristas.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "CARISMÁTICO",
+      "MUDAR DE FORMA"
+    ],
+    "desvantagens": [
+      "SEGREDO (Maior)"
     ]
   }
 ]

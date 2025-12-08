@@ -2683,5 +2683,1085 @@
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)"
-  }
+  },
+    {
+      "id": "escolhido",
+      "nome": "ESCOLHIDO",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Carta Selvagem"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "A personagem é destinada à grandeza. Quando gasta Convicção, ela dura até o final do encontro. Ganha a Complicação Inimigo (Maior) e uma marca física que não pode ser removida."
+    },
+    {
+      "id": "heranca",
+      "nome": "HERANÇA",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "infinito",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Concede um item mágico com valor total de 10.000 PO. Se o item for perdido, pode ser recuperado em aventura, mas itens destruídos ou consumíveis são perdidos."
+    },
+    {
+      "id": "inimigo_predileto",
+      "nome": "INIMIGO PREDILETO",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Atletismo, Lutar ou Atirar d6+"
+      },
+      "limite_compra": "infinito",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ganha uma rerrolagem gratuita para rastrear (Sobrevivência) ou atacar (Atletismo, Lutar, Atirar) um tipo específico de inimigo escolhido."
+    },
+    {
+      "id": "resistencia_arcana_fc",
+      "nome": "RESISTÊNCIA ARCANA",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "espirito": 8
+        },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Habilidades arcanas contra o herói sofrem -2 e o dano mágico é reduzido em 2. Inclui bônus mágicos de armas oponentes."
+    },
+    {
+      "id": "resistencia_arcana_aprimorada_fc",
+      "nome": "RESISTÊNCIA ARCANA APRIMORADA",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["resistencia_arcana_fc"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "A penalidade para a rolagem da perícia arcana contra o herói é -4 e o dano mágico é reduzido em 4."
+    },
+    {
+      "id": "sangue_feerico",
+      "nome": "SANGUE FEÉRICO",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ganha uma rerrolagem gratuita ao resistir a poderes inimigos e efeitos semelhantes a feitiços."
+    },
+    {
+      "id": "terreno_predileto",
+      "nome": "TERRENO PREDILETO",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {
+          "sobrevivencia": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "infinito",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Escolha um terreno. Nele, ganha rerrolagem gratuita para Sobrevivência e Perceber, e compra uma Carta de Ação adicional para iniciativa."
+    },
+    {
+      "id": "aguento_o_tranco",
+      "nome": "AGUENTO O TRANCO",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {
+          "vigor": 10
+        },
+        "pericias": {},
+        "vantagens_previas": ["queixo_de_ferro"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ganha uma rerrolagem gratuita em testes de Absorção para eliminar Ferimentos ou testes de Vigor para resistir a Golpes Nocauteadores."
+    },
+    {
+      "id": "ataque_furtivo",
+      "nome": "ATAQUE FURTIVO",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["assassino"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "O bônus de +2 da Vantagem Assassino é substituído por um d6 no dano (pode gerar Ases). Aplica-se a Atletismo (arremessar), Lutar ou Atirar."
+    },
+    {
+      "id": "ataque_furtivo_aprimorado",
+      "nome": "ATAQUE FURTIVO APRIMORADO",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Veterano",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["ataque_furtivo"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "O bônus de Ataque Furtivo agora também se aplica se o inimigo estiver Distraído."
+    },
+    {
+      "id": "carga",
+      "nome": "CARGA",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {
+          "lutar": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Se correr pelo menos 5 quadros (10m), adiciona +2 ao dano do primeiro ataque de Lutar. Pode combinar com Ataque Selvagem."
+    },
+    {
+      "id": "combate_proximo",
+      "nome": "COMBATE PRÓXIMO",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "agilidade": 8
+        },
+        "pericias": {
+          "lutar": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Se armado com faca/arma pequena, escolhe alvo adjacente como ação livre: ganha Alcance +1 contra ele para ataques e Aparar (se o inimigo não tiver arma pequena/desarmado)."
+    },
+    {
+      "id": "combate_proximo_aprimorado",
+      "nome": "COMBATE PRÓXIMO APRIMORADO",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Veterano",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["combate_proximo"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "O bônus de Combate Próximo aumenta para Alcance +2."
+    },
+    {
+      "id": "defensor",
+      "nome": "DEFENSOR",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {
+          "lutar": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Pode compartilhar o Aparar e bônus de escudo com um aliado adjacente como ação livre."
+    },
+    {
+      "id": "deflexao_de_projeteis",
+      "nome": "DEFLEXÃO DE PROJÉTEIS",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Heroico",
+        "atributos": {},
+        "pericias": {
+          "lutar": 10
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ataques físicos à distância contra a personagem usam o Aparar como dificuldade base (se tiver arma branca ou Artista Marcial)."
+    },
+    {
+      "id": "fender",
+      "nome": "FENDER",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "forca": 8
+        },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ao golpear para quebrar um objeto, adiciona +d6 ao dano total."
+    },
+    {
+      "id": "flexibilidade_marcial",
+      "nome": "FLEXIBILIDADE MARCIAL",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {
+          "lutar": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Uma vez por encontro (ação livre), ganha uma Vantagem de Combate por 5 rodadas (deve atender requisitos)."
+    },
+    {
+      "id": "golpe_atordoador",
+      "nome": "GOLPE ATORDOADOR",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {
+          "forca": 8
+        },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Se causar Abalado/Ferido com arma contundente, a vítima deve fazer teste de Vigor ou fica Atordoada."
+    },
+    {
+      "id": "golpe_de_asa",
+      "nome": "GOLPE DE ASA",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["asas"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ação limitada (Atletismo). Cria Cone. Alvos rolam Vigor (-2 com ampliação) ou ficam Abalados. Se for Curinga, falha causa Atordoado."
+    },
+    {
+      "id": "guerreiro_treinado",
+      "nome": "GUERREIRO TREINADO",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {
+          "lutar": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Seu bônus por Agrupar aumenta em +1 para você e aliados (máximo +4)."
+    },
+    {
+      "id": "parede_de_escudos",
+      "nome": "PAREDE DE ESCUDOS",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {
+          "lutar": 8
+        },
+        "vantagens_previas": ["guerreiro_treinado"],
+        "observacoes": "Escudo Médio"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Adiciona +1 ao Aparar se adjacente a aliado com Parede de Escudos, ou +2 se tiver dois aliados adjacentes."
+    },
+    {
+      "id": "lutador_sujo",
+      "nome": "LUTADOR SUJO",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Adiciona +2 às rolagens ao realizar um Desafio (Truque) com a perícia Lutar."
+    },
+    {
+      "id": "lutador_realmente_sujo",
+      "nome": "LUTADOR REALMENTE SUJO",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["lutador_sujo"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Se conseguir uma ampliação em um Desafio, recebe a Finalização contra o oponente até ele não estar mais Abalado."
+    },
+    {
+      "id": "oportunista",
+      "nome": "OPORTUNISTA",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Veterano",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ao receber um Curinga, adiciona +4 à Característica e dano em vez de +2."
+    },
+    {
+      "id": "queimar",
+      "nome": "QUEIMAR",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {
+          "vigor": 8
+        },
+        "pericias": {},
+        "vantagens_previas": ["arma_de_sopro"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Melhora o dano da arma de sopro em um tipo de dado. Permite usar Cone ou Raio conforme desejado."
+    },
+    {
+      "id": "rugir",
+      "nome": "RUGIR",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {
+          "espirito": 8
+        },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ação limitada: Desafio de Intimidar em Modelo de Cone."
+    },
+    {
+      "id": "selvageria",
+      "nome": "SELVAGERIA",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {
+          "lutar": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Causa +4 de dano ao realizar um Ataque Selvagem em vez de +2."
+    },
+    {
+      "id": "tiro_duplo",
+      "nome": "TIRO DUPLO",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Atletismo d8+ (arremesso) ou Atirar d8+ (arco)"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ação limitada: dispara dois projéteis (rola dois dados) em um único ataque. Não aumenta Cadência, usa 2 munições."
+    },
+    {
+      "id": "tiro_duplo_aprimorado",
+      "nome": "TIRO DUPLO APRIMORADO",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Heroico",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["tiro_duplo"],
+        "observacoes": "Atletismo d10+ (arremesso) ou Atirar d10+ (arco)"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Pode usar Tiro Duplo duas vezes por turno."
+    },
+    {
+      "id": "tiro_preciso",
+      "nome": "TIRO PRECISO",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Atletismo d8+ ou Atirar d8+"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Em um Desafio com Atletismo ou Atirar, pode escolher que o adversário resista com Astúcia em vez de Agilidade."
+    },
+    {
+      "id": "reflexos_aprimorados",
+      "nome": "REFLEXOS APRIMORADOS",
+      "categoria": "COMBATE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Veterano",
+        "atributos": {
+          "agilidade": 8
+        },
+        "pericias": {
+          "atletismo": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ignora -2 de Agilidade ao Evadir. Pode Evadir ataques de área que normalmente não permitem (com -2)."
+    },
+    {
+      "id": "artifice",
+      "nome": "ARTÍFICE",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Pode criar Dispositivos Arcanos temporários e itens mágicos permanentes."
+    },
+    {
+      "id": "artifice_mestre",
+      "nome": "ARTÍFICE MESTRE",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Heroico",
+        "atributos": {},
+        "pericias": {
+          "ocultismo": 10
+        },
+        "vantagens_previas": ["artifice"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ganha 1.000 PO de progresso para cada sucesso e aumento em teste de Ocultismo para criar itens."
+    },
+    {
+      "id": "conjurador_silencioso",
+      "nome": "CONJURADOR SILENCIOSO",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {
+          "ocultismo": 8
+        },
+        "vantagens_previas": ["antecedente_arcano"],
+        "observacoes": "AA não pode ser Bardo"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Pode conjurar feitiços sem falar (debaixo d'água, silêncio, amordaçado)."
+    },
+    {
+      "id": "familiar",
+      "nome": "FAMILIAR",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Antecedente Arcano (Bruxo, Diabolista, Druida, Elementalista, Feiticeiro, Mago, Necromante, Xamã)"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ganha um familiar (Carta Selvagem, 5 PP, elo mental). O familiar ganha poderes conforme o mestre sobe de Estágio."
+    },
+    {
+      "id": "maestria_epica",
+      "nome": "MAESTRIA ÉPICA",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Veterano",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano"],
+        "observacoes": "perícia arcana d6+"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ganha acesso aos Modificadores Épicos de Poder."
+    },
+    {
+      "id": "mago_de_batalha",
+      "nome": "MAGO DE BATALHA",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano"],
+        "observacoes": "perícia arcana d10+"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Permite conjurar feitiços em grandes unidades de Extras (Magia de Batalha)."
+    },
+    {
+      "id": "mago_de_sangue",
+      "nome": "MAGO DE SANGUE",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano"],
+        "observacoes": "Disposição maligna"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Recupera d6 Pontos de Poder ao causar Ferimento direto em ser consciente e sapiente."
+    },
+    {
+      "id": "poder_favorito",
+      "nome": "PODER FAVORITO",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano"],
+        "observacoes": "perícia arcana d8+"
+      },
+      "limite_compra": "infinito",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Escolha um poder. Ignora até 2 pontos de penalidade ao ativar esse poder."
+    },
+    {
+      "id": "poderes_misticos",
+      "nome": "PODERES MÍSTICOS",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Requer atributos/perícias d8+ específicos da classe escolhida (Bárbaro, Guerreiro, Ladino, Monge, Paladino, Patrulheiro)"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ganha 10 PP e poderes específicos com limitação Pessoal baseados num arquétipo (Bárbaro, Guerreiro, etc.). Não acumula com Antecedente Arcano."
+    },
+    {
+      "id": "transferencia",
+      "nome": "TRANSFERÊNCIA",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ação livre limitada: transfere até 5 PP para outra pessoa à vista."
+    },
+    {
+      "id": "aptidao_com_pedras",
+      "nome": "APTIDÃO COM PEDRAS",
+      "categoria": "PROFISSIONAL",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {
+          "consertar": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Recebe rolagem grátis de Perceber +2 para detectar armadilhas/portas em pedra a até 3m."
+    },
+    {
+      "id": "batedor",
+      "nome": "BATEDOR",
+      "categoria": "PROFISSIONAL",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {
+          "sobrevivencia": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Pode fazer Perceber -2 para detectar encontros de viagem primeiro. Sempre alerta contra Furtividade. +2 Conhecimento Geral sobre rotas conhecidas."
+    },
+    {
+      "id": "cacador_de_tesouros",
+      "nome": "CAÇADOR DE TESOUROS",
+      "categoria": "PROFISSIONAL",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {
+          "perceber": 8,
+          "ocultismo": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Avalia valor de tesouros/itens mágicos com Astúcia. Pode gastar Bene para rerrolar tabela de itens mágicos."
+    },
+    {
+      "id": "cavaleiro",
+      "nome": "CAVALEIRO",
+      "categoria": "PROFISSIONAL",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "espirito": 6,
+          "forca": 8,
+          "vigor": 8
+        },
+        "pericias": {
+          "lutar": 8,
+          "cavalgar": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": "Obrigação (Maior)"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "+1 Intimidar/Persuadir com quem respeita autoridade. Ganha cavalo de guerra, lança, espada, armadura pesada e escudo."
+    },
+    {
+      "id": "envenenador",
+      "nome": "ENVENENADOR",
+      "categoria": "PROFISSIONAL",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Alquimia, Curar ou Sobrevivência d6+"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Cria venenos na metade do tempo. Venenos de contato duram 12 horas."
+    },
+    {
+      "id": "explorador",
+      "nome": "EXPLORADOR",
+      "categoria": "PROFISSIONAL",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "vigor": 6
+        },
+        "pericias": {
+          "sobrevivencia": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Em viagens, compra carta extra de Ação. Reduz tempo de viagem em 10%."
+    },
+    {
+      "id": "montaria",
+      "nome": "MONTARIA",
+      "categoria": "PROFISSIONAL",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {
+          "cavalgar": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ganha montaria leal e Resiliente (Astúcia maior). Ganha melhorias a cada Estágio do dono. No Heroico vira Montaria Especial; no Lendário, Montaria Lendária."
+    },
+    {
+      "id": "nascido_na_sela",
+      "nome": "NASCIDO NA SELA",
+      "categoria": "PROFISSIONAL",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "agilidade": 8
+        },
+        "pericias": {
+          "cavalgar": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Rerrolagem gratuita em Cavalgar. Aumenta Movimentação da montaria em 2 e dado de corrida em um passo."
+    },
+    {
+      "id": "pressentir_armadilhas",
+      "nome": "PRESSENTIR ARMADILHAS",
+      "categoria": "PROFISSIONAL",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {
+          "consertar": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Faz rolagem de Perceber quando armadilha a 5 quadros vai ativar. Ignora 2 de penalidade para Evadir ou Desarmar (Ladinagem) armadilhas."
+    },
+    {
+      "id": "trovador",
+      "nome": "TROVADOR",
+      "categoria": "PROFISSIONAL",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {
+          "conhecimento_geral": 6,
+          "performance": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "+2 em Conhecimento Geral. Pode usar Performance no lugar de Conhecimento Batalha para Liderança."
+    },
+    {
+      "id": "enganador",
+      "nome": "ENGANADOR",
+      "categoria": "SOCIAL",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {
+          "astucia": 8
+        },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ao fazer Desafio com perícias de Astúcia ou Espírito, pode escolher se o alvo resiste com Astúcia ou Espírito."
+    },
+    {
+      "id": "aura_de_coragem",
+      "nome": "AURA DE CORAGEM",
+      "categoria": "ESTRANHAS",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "espirito": 8
+        },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Aliados em raio de 10 quadros ganham +1 em rolagens de Medo e subtraem 1 da Tabela de Medo."
+    },
+    {
+      "id": "falar_com_animais",
+      "nome": "FALAR COM ANIMAIS",
+      "categoria": "ESTRANHAS",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Pode compreender e falar com uma classe geral de animais."
+    },
+    {
+      "id": "mudanca_rapida",
+      "nome": "MUDANÇA RÁPIDA",
+      "categoria": "ESTRANHAS",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["licantropo"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Pode mudar de forma como ação limitada em vez de 10 minutos."
+    },
+    {
+      "id": "bando_de_guerra",
+      "nome": "BANDO DE GUERRA",
+      "categoria": "LENDARIAS",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Lendário",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["comando", "seguidores"],
+        "observacoes": "Carta Selvagem, +2 Liderança"
+      },
+      "limite_compra": "infinito",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Cinco dos Seguidores ganham Resiliente."
+    },
+    {
+      "id": "imparavel",
+      "nome": "IMPARÁVEL",
+      "categoria": "LENDARIAS",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Lendário",
+        "atributos": {
+          "vigor": 10
+        },
+        "pericias": {},
+        "vantagens_previas": ["queixo_de_ferro", "nervos_de_aco"],
+        "observacoes": "Carta Selvagem"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Possui a habilidade monstruosa Imparável."
+    },
+    {
+      "id": "lar_doce_lar",
+      "nome": "LAR, DOCE LAR",
+      "categoria": "LENDARIAS",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Lendário",
+        "atributos": {
+          "espirito": 8
+        },
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano"],
+        "observacoes": "Carta Selvagem"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Designa uma área como lar. Pode gastar Bene para recuperar todos PP lá. Sente o lar à distância."
+    },
+    {
+      "id": "reliquia",
+      "nome": "RELÍQUIA",
+      "categoria": "LENDARIAS",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Lendário",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Carta Selvagem"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Pode escolher qualquer item mágico do livro (com aprovação do Mestre)."
+    }
 ]
