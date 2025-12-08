@@ -687,9 +687,7 @@ class MainActivity : ComponentActivity() {
                                                     showVantagensDetail      = true
                                                 },
 
-                                                onOpenPericiasDetail     = { showPericiasDetail     = true },
                                                 onOpenComplicacoesDetail = { showComplicacoesDetail = true },
-                                                onOpenAtributosDetail    = { showAtributosDetail    = true },
 
                                                 onOpenListaAncestralidadesDetail = { nomeAnc ->
                                                     if (nomeAnc.isNotBlank()) {
