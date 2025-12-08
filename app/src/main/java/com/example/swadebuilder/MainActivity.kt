@@ -8,6 +8,7 @@ package com.example.swadebuilder
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -448,14 +449,21 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onLoad = { salvo ->
                                     creationSession++
-
-
-                                    criadorViewModel.loadFromSalvo(
-                                        salvo,
-                                        categoriasBasico = equipamentoCategorias,
-                                        categoriasSuper  = superequipCategorias
-                                    )
-                                    mostrouTelaInicial = false
+                                    runCatching {
+                                        criadorViewModel.loadFromSalvo(
+                                            salvo,
+                                            categoriasBasico = equipamentoCategorias,
+                                            categoriasSuper  = superequipCategorias
+                                        )
+                                        mostrouTelaInicial = false
+                                    }.onFailure {
+                                        Log.e("MainActivity", "Erro ao carregar personagem salvo", it)
+                                        Toast.makeText(
+                                            context,
+                                            "Não foi possível carregar o personagem salvo.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 },
                                 context   = context,
                                 viewModel = criadorViewModel

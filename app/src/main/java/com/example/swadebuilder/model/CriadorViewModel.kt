@@ -191,17 +191,19 @@ class CriadorViewModel : ViewModel() {
         categoriasBasico: List<EquipamentoCategoria>,
         categoriasSuper:  List<EquipamentoCategoria>
     ) {
+        val modoSupersAtivo = salvo.modoSupers || salvo.superInvestments.isNotEmpty() || salvo.superPontosTotais > 0
+
         // Reinicia o estado com as flags corretas vindas do save
         resetStateParaNovoPersonagem(
             cartaSelvagem = salvo.cartaSelvagem,
             maisPontosPericias = salvo.maisPontosPericias,
-            modoSupers = salvo.modoSupers,
+            modoSupers = modoSupersAtivo,
             usarEspecializacoesDePericia = salvo.usarEspecializacoesDePericia
         )
 
         // Demais flags de modo (mantêm comportamento de telas/filtros)
-        state.modoSuperequip        = salvo.modoSuperequip
-        state.modoSuperComplicacoes = salvo.modoSuperComplicacoes
+        state.modoSuperequip        = salvo.modoSuperequip || modoSupersAtivo
+        state.modoSuperComplicacoes = salvo.modoSuperComplicacoes || modoSupersAtivo
         state.usarSemPontosDePoder  = salvo.semPontosDePoder
 
         // Identidade, nome e anotações
