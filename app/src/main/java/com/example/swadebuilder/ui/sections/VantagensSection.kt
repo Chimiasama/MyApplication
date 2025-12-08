@@ -781,7 +781,6 @@ fun VantagensContent(
                             if (state.podeSelecionar(novaVantagem)) {
                                 state.vantagensSelecionadas += novaVantagem
                                 state.pontosVantagem--
-                                state.rebuildAllPericiaStacks()
                             }
                             dialogMostrandoAntecedente = null
                             subOpcaoSelecionada = null
