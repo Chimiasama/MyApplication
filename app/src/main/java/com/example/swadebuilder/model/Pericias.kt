@@ -1,7 +1,6 @@
 package com.example.swadebuilder.model
 
 import android.content.Context
-import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.Serializable
 

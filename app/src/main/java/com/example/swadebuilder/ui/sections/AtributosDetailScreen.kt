@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.AtributoJson
 import com.example.swadebuilder.model.AtributoList
-import com.example.swadebuilder.util.loadJsonAsset
+import com.example.swadebuilder.model.loadJsonAsset
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

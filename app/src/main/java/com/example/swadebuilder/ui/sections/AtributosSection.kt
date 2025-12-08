@@ -46,7 +46,7 @@ import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.sections.parseAtributos
 import com.example.swadebuilder.util.semAcentos
-import com.example.swadebuilder.util.loadJsonAsset
+import com.example.swadebuilder.model.loadJsonAsset
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
