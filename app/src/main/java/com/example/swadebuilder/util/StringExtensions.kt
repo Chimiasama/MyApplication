@@ -16,3 +16,7 @@ fun String.keyify(): String =
     trim()
         .uppercase()
         .semAcentos()
+
+fun String.arcanoKey(): String =
+    replace("_", " ")
+        .keyify()

@@ -70,8 +70,8 @@ import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.dialogs.MultipleSelectionDialog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.loadJsonAsset
+import com.example.swadebuilder.util.arcanoKey
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -184,7 +184,7 @@ fun VantFilterDialog(
 }
 
 private fun mapChoiceToArcanoId(choice: String?): String? {
-    return when (choice?.keyify()) {
+    return when (choice?.arcanoKey()) {
         "DOM" -> "antecedente_arcano_dom"
         "MAGIA" -> "antecedente_arcano_magia"
         "MILAGRES" -> "antecedente_arcano_milagres"
@@ -199,14 +199,11 @@ private fun arcanoVersionKey(vant: Vantagem?): String? {
     return when {
         vant.id.startsWith("antecedente_arcano_") -> {
             vant.id.removePrefix("antecedente_arcano_")
-                .replace("_", " ")
-                .uppercase()
-                .semAcentos()
-                .trim()
+                .arcanoKey()
         }
 
-        !vant.choice.isNullOrBlank() -> vant.choice!!.uppercase().semAcentos().trim()
-        !vant.subtipoArcano.isNullOrBlank() -> vant.subtipoArcano!!.uppercase().semAcentos().trim()
+        !vant.choice.isNullOrBlank() -> vant.choice!!.arcanoKey()
+        !vant.subtipoArcano.isNullOrBlank() -> vant.subtipoArcano!!.arcanoKey()
         else -> null
     }
 }
@@ -810,7 +807,7 @@ fun VantagensContent(
                         enabled = (subOpcaoSelecionada != null),
                         onClick = {
                             val choiceRaw = subOpcaoSelecionada ?: return@TextButton
-                            val arcanoKey = choiceRaw.keyify()
+                            val arcanoKey = choiceRaw.arcanoKey()
                             val arcanoId = mapChoiceToArcanoId(choiceRaw)
                             val base = arcanoId
                                 ?.let { id -> listaVantagensRaw.firstOrNull { it.id == id } }

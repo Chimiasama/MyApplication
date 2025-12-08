@@ -92,6 +92,7 @@ import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
+import com.example.swadebuilder.util.arcanoKey
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.Dispatchers
@@ -169,10 +170,7 @@ class MainActivity : ComponentActivity() {
         val arcanoList: List<ArcanoInfo> =
             Json.decodeFromString(arcanoJson)
         arcanoInfo = arcanoList.associate {
-            it.key
-                .uppercase()
-                .semAcentos()
-                .trim() to Triple(it.slots, it.pp, it.foco)
+            it.key.arcanoKey() to Triple(it.slots, it.pp, it.foco)
         }
 
         val atributosData = this.decodeAssetOrNull<AtributoList>("atributos.json")

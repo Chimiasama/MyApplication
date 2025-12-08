@@ -43,10 +43,9 @@ import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.ui.components.SectionHeader
-import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.arcanoKey
 
-private fun String.normAAKey(): String =
-    this.uppercase().semAcentos().trim()
+private fun String.normAAKey(): String = this.arcanoKey()
 
 private fun Vantagem.toArcanoKeyFromModel(): String? {
     if (!subtipoArcano.isNullOrBlank()) return subtipoArcano.normAAKey()

@@ -10,6 +10,7 @@ import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
+import com.example.swadebuilder.util.arcanoKey
 import com.example.swadebuilder.util.keyify
 
 // ---- OBJETOS DE RETORNO ----
@@ -42,15 +43,13 @@ class CriadorViewModel : ViewModel() {
         state.appTheme = theme
     }
 
-    private fun mapChoiceToArcanoId(choice: String?): String? {
-        return when (choice?.trim()?.uppercase()) {
-            "DOM"                -> "antecedente_arcano_dom"
-            "MAGIA"              -> "antecedente_arcano_magia"
-            "MILAGRES"           -> "antecedente_arcano_milagres"
-            "PSIÔNICOS", "PSIONICOS" -> "antecedente_arcano_psionicos"
-            "CIÊNCIA ESTRANHA", "CIENCIA ESTRANHA" -> "antecedente_arcano_ciencia_estranha"
-            else -> null
-        }
+    private fun mapChoiceToArcanoId(choice: String?): String? = when (choice?.arcanoKey()) {
+        "DOM" -> "antecedente_arcano_dom"
+        "MAGIA" -> "antecedente_arcano_magia"
+        "MILAGRES" -> "antecedente_arcano_milagres"
+        "PSIONICOS" -> "antecedente_arcano_psionicos"
+        "CIENCIA ESTRANHA" -> "antecedente_arcano_ciencia_estranha"
+        else -> null
     }
 
     fun normalizeArcanoIdsNoCarregamento() {
@@ -302,7 +301,9 @@ class CriadorViewModel : ViewModel() {
 
         state.poderSlotsPorArcano.clear()
         salvo.poderes.forEach { (arcano, poderesLista) ->
-            val capacidade = arcanoInfo[arcano]?.first ?: 0
+            val capacidade = arcanoInfo[arcano] ?.first
+                ?: arcanoInfo[arcano.arcanoKey()]?.first
+                ?: 0
             state.poderSlotsPorArcano[arcano] = mutableStateListOf<String?>().apply {
                 repeat(capacidade) { idx -> add(poderesLista.getOrNull(idx)) }
             }
