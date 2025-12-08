@@ -53,9 +53,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import java.util.Locale
+import com.example.swadebuilder.AppData
 import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
@@ -436,7 +436,7 @@ fun VantagensContent(
                                         .firstOrNull { it.id.startsWith("antecedente_arcano") }
                                 ) ?: ""
 
-                                val initialSlots = arcanoInfo[escolhidoArcano]?.first ?: 0
+                                val initialSlots = AppData.arcanoInfo[escolhidoArcano]?.first ?: 0
 
                                 state.desfazerUltimosNovosPoderes(
                                     versionKey = escolhidoArcano,
@@ -817,18 +817,27 @@ fun VantagensContent(
                                 subtipoArcano = arcanoKey
                             )
 
-                            if (state.podeSelecionar(novaVantagem)) {
-                                state.vantagensSelecionadas += novaVantagem
-                                state.pontosVantagem--
-                                state.rebuildAllPericiaStacks()
-                                val versionKey = arcanoVersionKey(novaVantagem) ?: arcanoKey
-                                if (versionKey.isNotBlank()) {
-                                    val initialSlots = arcanoInfo[versionKey]?.first ?: 0
-                                    state.poderSlotsPorArcano.getOrPut(versionKey) {
-                                        mutableStateListOf<String?>().apply {
-                                            repeat(initialSlots) { add(null) }
+                            runCatching {
+                                if (state.podeSelecionar(novaVantagem)) {
+                                    state.vantagensSelecionadas += novaVantagem
+                                    state.pontosVantagem--
+                                    state.rebuildAllPericiaStacks()
+                                    val versionKey = arcanoVersionKey(novaVantagem) ?: arcanoKey
+                                    if (versionKey.isNotBlank()) {
+                                        val initialSlots = AppData.arcanoInfo[versionKey]?.first ?: 0
+                                        state.poderSlotsPorArcano.getOrPut(versionKey) {
+                                            mutableStateListOf<String?>().apply {
+                                                repeat(initialSlots) { add(null) }
+                                            }
                                         }
                                     }
+                                }
+                            }.onFailure {
+                                tempErrorMsg = "Erro ao adicionar Antecedente Arcano: ${it.localizedMessage}"
+                                showTempError = true
+                                scope.launch {
+                                    delay(3_000)
+                                    showTempError = false
                                 }
                             }
                             dialogMostrandoAntecedente = null
@@ -1000,7 +1009,7 @@ fun VantagensContent(
                         }
                     ) ?: ""
 
-                    val initialSlots = arcanoInfo[versionKey]?.first ?: 0
+                    val initialSlots = AppData.arcanoInfo[versionKey]?.first ?: 0
 
                     val slots = state.poderSlotsPorArcano.getOrPut(versionKey) {
                         mutableStateListOf<String?>().apply {

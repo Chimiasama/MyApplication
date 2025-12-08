@@ -13,4 +13,5 @@ object AppData {
     /** Texto completo de cada supervantagem (acrescentado à lista normal). */
     var superVantagensParaDetalhe: List<Vantagem> = emptyList()
 
+    var arcanoInfo: Map<String, Triple<Int, Int, String>> = emptyMap()
 }

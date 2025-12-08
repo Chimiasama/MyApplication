@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
-import com.example.swadebuilder.arcanoInfo
+import com.example.swadebuilder.AppData
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens

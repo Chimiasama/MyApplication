@@ -2666,7 +2666,7 @@
     "descricao": "O herói ou heroína escolhe outra personagem específica. Ao ajudar este parceiro em um Ataque Combinado bem-sucedido, o bônus é adicionado tanto à rolagem da perícia quanto ao dano (veja Ataques Combinados na pág. 37). Esta Vantagem pode ser comprada várias vezes para ser aplicada a vários aliados.\nSe o parceiro morrer ou deixar a campanha, o herói ou heroína pode, com permissão do Mestre, escolher um novo membro da equipe para substituí-lo. Isso deve acontecer após a nova dupla treinar ou lutar junta em uma batalha ou duas."
   },
   {
-    "id": "parceiro",
+    "id": "parceiro_super",
     "nome": "PARCEIRO",
     "categoria": "SOCIAIS",
     "origem": "SUPER",

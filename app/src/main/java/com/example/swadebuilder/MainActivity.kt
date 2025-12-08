@@ -113,8 +113,6 @@ data class ArcanoInfo(
     val foco: String
 )
 
-lateinit var arcanoInfo: Map<String, Triple<Int, Int, String>>
-
 private val json = Json {
     ignoreUnknownKeys = true
 }
@@ -169,7 +167,7 @@ class MainActivity : ComponentActivity() {
             .bufferedReader().use { it.readText() }
         val arcanoList: List<ArcanoInfo> =
             Json.decodeFromString(arcanoJson)
-        arcanoInfo = arcanoList.associate {
+        AppData.arcanoInfo = arcanoList.associate {
             it.key.arcanoKey() to Triple(it.slots, it.pp, it.foco)
         }
 

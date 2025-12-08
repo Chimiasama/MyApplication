@@ -35,9 +35,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.AppData
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
-import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
@@ -132,7 +132,7 @@ private fun ArcanoArea(
     allowLongTexts: Boolean
 ) {
     val arcKey = arcKeyRaw.normAAKey()
-    val (slotsCount, ppTotal, foco) = arcanoInfo[arcKey] ?: Triple(0, 0, "—")
+    val (slotsCount, ppTotal, foco) = AppData.arcanoInfo[arcKey] ?: Triple(0, 0, "—")
     val center = if (state.usarSemPontosDePoder) {
         "Teste $foco = -(custo/2)"
     } else {
