@@ -14,8 +14,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -93,14 +91,6 @@ import com.example.swadebuilder.model.PersonagemSalvo
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.ui.sections.AncestralidadesDetailScreen
-import com.example.swadebuilder.ui.sections.AtributosDetailScreen
-import com.example.swadebuilder.ui.sections.ComplicacoesDetailScreen
-import com.example.swadebuilder.ui.sections.EquipamentosDetailScreen
-import com.example.swadebuilder.ui.sections.PericiasDetailScreen
-import com.example.swadebuilder.ui.sections.PoderesDetailScreen
-import com.example.swadebuilder.ui.sections.SuperPoderesDetailScreen
-import com.example.swadebuilder.ui.sections.VantagensDetailScreen
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
@@ -262,18 +252,6 @@ class MainActivity : ComponentActivity() {
             var expResumo  by rememberSaveable(creationSession) { mutableStateOf(false) }
             var expXp by rememberSaveable(creationSession) { mutableStateOf(false) }
 
-            var showVantagensDetail       by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var showPericiasDetail        by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var showComplicacoesDetail    by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var showAtributosDetail       by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var showAncestralidadesDetail by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var showPoderesDetail         by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var showEquipLista            by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var showSuperDetail           by rememberSaveable(creationSession) { mutableStateOf(false) }
-
-            var highlightedVantagem   by rememberSaveable(creationSession) { mutableStateOf("") }
-            var highlightedSuperPoder by rememberSaveable(creationSession) { mutableStateOf("") }
-
             val context = LocalContext.current
             val activity = (context as? ComponentActivity)
             var mostrouTelaInicial by rememberSaveable { mutableStateOf(true) }
@@ -358,19 +336,6 @@ class MainActivity : ComponentActivity() {
                     criadorViewModel.clearFeedbackMessages()
                 }
             }
-
-
-            val emTelaDePreenchimento = !(
-                    showVantagensDetail ||
-                            showPericiasDetail ||
-                            showComplicacoesDetail ||
-                            showAtributosDetail ||
-                            showAncestralidadesDetail ||
-                            showPoderesDetail ||
-                            showEquipLista ||
-                            showSuperDetail
-                    )
-
             BackHandler(enabled = mostrouTelaInicial) {
                 showExitDialog = true
             }
@@ -471,37 +436,7 @@ class MainActivity : ComponentActivity() {
                                 viewModel = criadorViewModel
                             )
                         } else {
-                            BackHandler(
-                                enabled = showVantagensDetail
-                                        || showPericiasDetail
-                                        || showComplicacoesDetail
-                                        || showAtributosDetail
-                                        || showAncestralidadesDetail
-                                        || showPoderesDetail
-                                        || showEquipLista
-                                        || showSuperDetail
-                            ) {
-                                showVantagensDetail       = false
-                                showPericiasDetail        = false
-                                showComplicacoesDetail    = false
-                                showAtributosDetail       = false
-                                showAncestralidadesDetail = false
-                                showPoderesDetail         = false
-                                showEquipLista            = false
-                                showSuperDetail           = false
-                            }
-                            BackHandler(
-                                enabled = !(
-                                        showVantagensDetail
-                                                || showPericiasDetail
-                                                || showComplicacoesDetail
-                                                || showAtributosDetail
-                                                || showAncestralidadesDetail
-                                                || showPoderesDetail
-                                                || showEquipLista
-                                                || showSuperDetail
-                                        )
-                            ) {
+                            BackHandler(enabled = true) {
                                 mostrouTelaInicial = true
                             }
 
@@ -509,255 +444,164 @@ class MainActivity : ComponentActivity() {
                                 snackbarHost = { SnackbarHost(hostState = snackHost) },
                                 containerColor = Color.Transparent,
                                 topBar         = {
-                                    if (emTelaDePreenchimento) {
-                                        TopAppBar(
-                                            colors = TopAppBarDefaults.topAppBarColors(
-                                                containerColor = Color.Transparent
-                                            ),
-                                            title = {
-                                                Box(
-                                                    modifier = Modifier.fillMaxWidth(),
-                                                    contentAlignment = Alignment.Center
-                                                ) {
-                                                    TextButton(onClick = { showHelpAppDialog = true }) {
-                                                        Text(
-                                                            text = "Como usar o app",
-                                                            fontSize = 16.sp,
-                                                            fontWeight = FontWeight.Medium
-                                                        )
-                                                    }
-                                                }
-                                            },
-                                            navigationIcon = {
-                                                TextButton(onClick = { mostrouTelaInicial = true }) {
+                                    TopAppBar(
+                                        colors = TopAppBarDefaults.topAppBarColors(
+                                            containerColor = Color.Transparent
+                                        ),
+                                        title = {
+                                            Box(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                TextButton(onClick = { showHelpAppDialog = true }) {
                                                     Text(
-                                                        text       = "Voltar",
-                                                        fontWeight = FontWeight.Bold,
-                                                        fontSize   = 18.sp
+                                                        text = "Como usar o app",
+                                                        fontSize = 16.sp,
+                                                        fontWeight = FontWeight.Medium
                                                     )
                                                 }
-                                            },
-                                            actions = {
-                                                val scope = rememberCoroutineScope()
-
-                                                IconButton(onClick = {
-                                                    val personagem = state.toMeuPersonagem()
-
-                                                    scope.launch(Dispatchers.IO) {
-                                                        salvarEExibirFichaPdf(this@MainActivity, personagem)
-                                                    }
-                                                }) {
-                                                    Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
-                                                }
-
-                                                IconButton(onClick = { showThemeDialog = true }) {
-                                                    Icon(Icons.Default.Settings, contentDescription = "Change Theme")
-                                                }
-                                                IconButton(onClick = {
-                                                    scope.launch(Dispatchers.IO) {
-                                                        val personagemId  = state.idAtual ?: UUID.randomUUID().toString()
-                                                        val atributosMap  = state.valoresAtributos.mapValues { it.value.intValue }
-                                                        val periciasMap   = listaPericias.associate { per -> per.nome to state.rawTotal(per) }
-                                                        val complicacoesList = state.complicacoesSelecionadas
-                                                            .filterValues { it != null }
-                                                            .keys
-                                                            .map { it.id }
-                                                        val vantagemChoices = state.vantagensSelecionadas
-                                                            .groupBy { it.id }
-                                                            .mapValues { (_, list) ->
-                                                                list.mapNotNull { it.choice }
-                                                                    .filter { it.isNotBlank() }
-                                                            }
-
-                                                        val salvo = PersonagemSalvo(
-                                                            id                 = personagemId,
-                                                            nome               = state.nomePersonagem,
-                                                            atributos          = atributosMap,
-                                                            pericias           = periciasMap,
-                                                            ancestralidade     = state.ancestralidade,
-                                                            vantagens          = state.vantagensSelecionadas.map { it.id },
-                                                            vantagemChoices    = vantagemChoices,
-                                                            vantagensRaciais   = state.vantagensRaciais.toList(),
-                                                            complicacoes       = complicacoesList,
-                                                            cpPaCount          = state.cpPaStack.size,
-                                                            cpPvCount          = state.cpPvStack.size,
-                                                            cpSpCount          = state.cpSpStack.size,
-                                                            cpRecursosCount    = state.cpRecursosStack.size,
-                                                            equipamentos       = state.equipamentosComprados.map { it.nome },
-                                                            poderes            = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
-                                                            dinheiro           = state.dinheiro,
-                                                            pontosRestantes    = state.pontosVantagem,
-                                                            naturalArmorFromRace = state.naturalArmorFromRace,
-                                                            armorBase            = state.armadura,
-                                                            maisPontosPericias = state.maisPontosPericias,
-                                                            cartaSelvagem      = state.cartaSelvagem,
-                                                            heroisSemArmadura  = state.heroisSemArmadura,
-                                                            soldadoCargaAtivo  = state.soldadoCargaAtivo,
-                                                            semPontosDePoder   = state.usarSemPontosDePoder,
-                                                            usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
-                                                            especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
-                                                            modoSupers              = state.modoSupers,
-                                                            modoSuperequip          = state.modoSuperequip,
-                                                            modoSuperComplicacoes   = state.modoSuperComplicacoes,
-                                                            superInvestments        = state.superInvestments.toList(),
-                                                            superPontosTotais       = state.superPontosTotais,
-                                                            superPontosDisponiveis  = state.superPontosDisponiveis,
-                                                            limitePorPoderPadrao    = state.limitePorPoderPadrao,
-                                                            limiteFavorecido        = state.limiteFavorecido,
-                                                            poderFavoritoId         = state.poderFavoritoId,
-                                                            bonusPararFromPower     = state.bonusPararFromPower,
-                                                            bonusResFromPower       = state.bonusResFromPower,
-                                                            armorFromPower          = state.armorFromPower,
-                                                            vantagensDePoder        = state.vantagensDePoder.toSet(),
-                                                            gastosPorPoder          = state.gastosPorPoder.toMap(),
-                                                            limiteDePoderDaCampanha = state.limiteDePoderDaCampanha,
-                                                            anotacoes               = state.anotacoes
-                                                        )
-
-                                                        state.idAtual = personagemId
-                                                        StorageUtils.salvarPersonagem(context, salvo)
-
-                                                        withContext(Dispatchers.Main) {
-
-                                                            Toast.makeText(
-                                                                context,
-                                                                "Personagem salvo com sucesso!",
-                                                                Toast.LENGTH_SHORT
-                                                            ).show()
-                                                        }
-                                                    }
-                                                }) {
-                                                    Icon(Icons.Default.Save, contentDescription = "Salvar")
-                                                }
                                             }
-                                        )
+                                        },
+                                        navigationIcon = {
+                                            TextButton(onClick = { mostrouTelaInicial = true }) {
+                                                Text(
+                                                    text       = "Voltar",
+                                                    fontWeight = FontWeight.Bold,
+                                                    fontSize   = 18.sp
+                                                )
+                                            }
+                                        },
+                                actions = {
+                                    val scope = rememberCoroutineScope()
+
+                                    IconButton(onClick = {
+        
+                                        val personagem = state.toMeuPersonagem()
+
+                                        scope.launch(Dispatchers.IO) {
+                                            salvarEExibirFichaPdf(this@MainActivity, personagem)
+                                        }
+                                    }) {
+                                        Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
                                     }
+
+                                    IconButton(onClick = { showThemeDialog = true }) {
+                                        Icon(Icons.Default.Settings, contentDescription = "Change Theme")
+                                    }
+                                    IconButton(onClick = {
+                                        scope.launch(Dispatchers.IO) {
+                                            val personagemId  = state.idAtual ?: UUID.randomUUID().toString()
+                                            val atributosMap  = state.valoresAtributos.mapValues { it.value.intValue }
+                                            val periciasMap   = listaPericias.associate { per -> per.nome to state.rawTotal(per) }
+                                            val complicacoesList = state.complicacoesSelecionadas
+                                                .filterValues { it != null }
+                                                .keys
+                                                .map { it.id }
+                                            val vantagemChoices = state.vantagensSelecionadas
+                                                .groupBy { it.id }
+                                                .mapValues { (_, list) ->
+                                                    list.mapNotNull { it.choice }
+                                                        .filter { it.isNotBlank() }
+                                                }
+
+                                            val salvo = PersonagemSalvo(
+                                                id                 = personagemId,
+                                                nome               = state.nomePersonagem,
+                                                atributos          = atributosMap,
+                                                pericias           = periciasMap,
+                                                ancestralidade     = state.ancestralidade,
+                                                vantagens          = state.vantagensSelecionadas.map { it.id },
+                                                vantagemChoices    = vantagemChoices,
+                                                vantagensRaciais   = state.vantagensRaciais.toList(),
+                                                complicacoes       = complicacoesList,
+                                                cpPaCount          = state.cpPaStack.size,
+                                                cpPvCount          = state.cpPvStack.size,
+                                                cpSpCount          = state.cpSpStack.size,
+                                                cpRecursosCount    = state.cpRecursosStack.size,
+                                                equipamentos       = state.equipamentosComprados.map { it.nome },
+                                                poderes            = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
+                                                dinheiro           = state.dinheiro,
+                                                pontosRestantes    = state.pontosVantagem,
+                                                naturalArmorFromRace = state.naturalArmorFromRace,
+                                                armorBase            = state.armadura,
+                                                maisPontosPericias = state.maisPontosPericias,
+                                                cartaSelvagem      = state.cartaSelvagem,
+                                                heroisSemArmadura  = state.heroisSemArmadura,
+                                                soldadoCargaAtivo  = state.soldadoCargaAtivo,
+                                                semPontosDePoder   = state.usarSemPontosDePoder,
+                                                usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
+                                                especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
+                                                modoSupers              = state.modoSupers,
+                                                modoSuperequip          = state.modoSuperequip,
+                                                modoSuperComplicacoes   = state.modoSuperComplicacoes,
+                                                superInvestments        = state.superInvestments.toList(),
+                                                superPontosTotais       = state.superPontosTotais,
+                                                superPontosDisponiveis  = state.superPontosDisponiveis,
+                                                limitePorPoderPadrao    = state.limitePorPoderPadrao,
+                                                limiteFavorecido        = state.limiteFavorecido,
+                                                poderFavoritoId         = state.poderFavoritoId,
+                                                bonusPararFromPower     = state.bonusPararFromPower,
+                                                bonusResFromPower       = state.bonusResFromPower,
+                                                armorFromPower          = state.armorFromPower,
+                                                vantagensDePoder        = state.vantagensDePoder.toSet(),
+                                                gastosPorPoder          = state.gastosPorPoder.toMap(),
+                                                limiteDePoderDaCampanha = state.limiteDePoderDaCampanha,
+                                                anotacoes               = state.anotacoes
+                                            )
+
+                                            state.idAtual = personagemId
+                                            StorageUtils.salvarPersonagem(context, salvo)
+
+                                            withContext(Dispatchers.Main) {
+
+                                                Toast.makeText(
+                                                    context,
+                                                    "Personagem salvo com sucesso!",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                        }
+                                    }) {
+                                        Icon(Icons.Default.Save, contentDescription = "Salvar")
+                                    }
+                                }
+                            )
+                        }
                                 },
                                 content = { innerPadding ->
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(innerPadding)
-                                ) {
-                                    val screenIndex = when {
-                                        showEquipLista            -> 1
-                                        showAtributosDetail       -> 2
-                                        showVantagensDetail       -> 3
-                                        showPericiasDetail        -> 4
-                                        showComplicacoesDetail    -> 5
-                                        showAncestralidadesDetail -> 6
-                                        showPoderesDetail         -> 7
-                                        showSuperDetail           -> 8
-                                        else                      -> 0
-                                    }
-
-                                    Crossfade(
-                                        targetState   = screenIndex,
-                                        animationSpec = tween(durationMillis = 150)
-                                    ) { screen ->
-                                        when (screen) {
-                                            1 -> EquipamentosDetailScreen(
-                                                categorias = equipamentoCategorias +
-                                                        if (state.modoSuperequip) superequipCategorias else emptyList(),
-                                                onBack     = { showEquipLista = false }
-                                            )
-                                            2 -> AtributosDetailScreen(onBack = { showAtributosDetail = false })
-                                            3 -> VantagensDetailScreen(
-                                                state           = state,
-                                                modoSupers      = state.modoSupers,
-                                                highlightedName = highlightedVantagem,
-                                                onBack          = { showVantagensDetail = false }
-                                            )
-                                            4 -> PericiasDetailScreen(
-                                                state  = state,
-                                                onBack = { showPericiasDetail = false }
-                                            )
-                                            5 -> ComplicacoesDetailScreen(
-                                                state        = state,
-                                                onBack       = { showComplicacoesDetail = false },
-                                                mostrarSuper = state.modoSuperComplicacoes
-                                            )
-                                            6 -> AncestralidadesDetailScreen(
-                                                state  = state,
-                                                onBack = { showAncestralidadesDetail = false }
-                                            )
-                                            7 -> PoderesDetailScreen(
-                                                state  = state,
-                                                onBack = { showPoderesDetail = false }
-                                            )
-                                            8 -> SuperPoderesDetailScreen(
-                                                state           = state,
-                                                highlightedName = highlightedSuperPoder,
-                                                onBack          = {
-                                                    showSuperDetail = false
-                                                    expPoderes = true
-                                                }
-                                            )
-
-                                            else -> UnifiedScreen(
-                                                state = state,
-                                                viewModel = criadorViewModel,
-
-                                                onOpenVantagensDetail = { nomeVantagem ->
-                                                    highlightedVantagem      = nomeVantagem
-                                                    state.vantagemEmFoco     = nomeVantagem
-                                                    showVantagensDetail      = true
-                                                },
-
-                                                onOpenPericiasDetail     = { showPericiasDetail     = true },
-                                                onOpenComplicacoesDetail = { showComplicacoesDetail = true },
-                                                onOpenAtributosDetail    = { showAtributosDetail    = true },
-
-                                                onOpenListaAncestralidadesDetail = { nomeAnc ->
-                                                    if (nomeAnc.isNotBlank()) {
-                                                        state.ancestralidadeEmFoco = nomeAnc
-                                                    }
-                                                    showAncestralidadesDetail = true
-                                                },
-                                                onOpenPoderesDetail            = { showPoderesDetail = true },
-
-                                                onOpenSuperPoderesDetail = { nomePoder ->
-                                                    highlightedSuperPoder  = nomePoder
-                                                    state.superPoderEmFoco = nomePoder.takeIf { it.isNotBlank() }
-                                                    showSuperDetail        = true
-                                                },
-
-                                                expAncs        = expAncs,
-                                                onToggleAncs   = { expAncs = !expAncs },
-
-                                                expComps       = expComps,
-                                                onToggleComps  = { expComps = !expComps },
-
-                                                expEquip       = expEquip,
-                                                onToggleEquip  = { expEquip = !expEquip },
-
-                                                expAttrs       = expAttrs,
-                                                onToggleAttrs  = { expAttrs   = !expAttrs },
-
-                                                expPer         = expPer,
-                                                onTogglePer    = { expPer     = !expPer },
-
-                                                expVants       = expVants,
-                                                onToggleVants  = { expVants   = !expVants },
-
-                                                expResumo      = expResumo,
-                                                onToggleResumo = { expResumo  = !expResumo },
-
-                                                expPoderes      = expPoderes,
-                                                onTogglePoderes = { expPoderes = !expPoderes },
-
-                                                expXp = expXp,
-                                                onToggleXp = { expXp = !expXp },
-
-                                                equipamentoCategorias = equipamentoCategorias,
-                                                superequipCategorias  = superequipCategorias,
-                                                listaSuperPoderes     = listaSuperPoderes
-                                            )
-                                        }
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(innerPadding)
+                                    ) {
+                                        UnifiedScreen(
+                                            state = state,
+                                            viewModel = criadorViewModel,
+                                            expAncs = expAncs,
+                                            onToggleAncs = { expAncs = !expAncs },
+                                            expComps = expComps,
+                                            onToggleComps = { expComps = !expComps },
+                                            expEquip = expEquip,
+                                            onToggleEquip = { expEquip = !expEquip },
+                                            expAttrs = expAttrs,
+                                            onToggleAttrs = { expAttrs = !expAttrs },
+                                            expPer = expPer,
+                                            onTogglePer = { expPer = !expPer },
+                                            expVants = expVants,
+                                            onToggleVants = { expVants = !expVants },
+                                            expResumo = expResumo,
+                                            onToggleResumo = { expResumo = !expResumo },
+                                            expPoderes = expPoderes,
+                                            onTogglePoderes = { expPoderes = !expPoderes },
+                                            expXp = expXp,
+                                            onToggleXp = { expXp = !expXp },
+                                            equipamentoCategorias = equipamentoCategorias,
+                                            superequipCategorias = superequipCategorias,
+                                            listaSuperPoderes = listaSuperPoderes
+                                        )
                                     }
                                 }
                             }
-                            )
                         }
                     }
                 }

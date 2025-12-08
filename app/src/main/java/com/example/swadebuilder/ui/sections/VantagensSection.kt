@@ -188,7 +188,6 @@ fun VantFilterDialog(
 fun VantagensContent(
     state: CriadorState,
     multiplosAAHabilitados: Boolean,
-    onOpenVantagensDetail: (String) -> Unit,
     viewModel: CriadorViewModel = viewModel()
 ) {
     val context = LocalContext.current

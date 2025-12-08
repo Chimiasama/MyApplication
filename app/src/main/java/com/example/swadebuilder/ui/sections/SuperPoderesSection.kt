@@ -71,8 +71,6 @@ import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.ui.components.SectionCard
-import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.SuperAtributosPickerDialog
 import com.example.swadebuilder.ui.dialogs.SuperPericiasPickerDialog
 import com.example.swadebuilder.ui.dialogs.SuperVantagensPickerDialog
@@ -340,7 +338,6 @@ fun SuperPoderesSection(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
     expanded: Boolean,
-    onOpenSuperPoderesDetail: (String) -> Unit,
     viewModel: CriadorViewModel = viewModel()
 ) {
     if (!expanded) return
@@ -634,12 +631,7 @@ fun SuperPoderesSection(
                             Icon(
                                 imageVector = Icons.Filled.Visibility,
                                 contentDescription = "Ver detalhes do superpoder",
-                                modifier = Modifier
-                                    .padding(start = 8.dp)
-                                    .clickable {
-                                        state.superPoderEmFoco = poder.nome
-                                        onOpenSuperPoderesDetail(poder.nome)
-                                    }
+                                modifier = Modifier.padding(start = 8.dp)
                             )
                         }
                     }
@@ -1176,38 +1168,3 @@ fun SuperPoderesSection(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-@Composable
-fun SuperPoderesContent(
-    state: CriadorState,
-    listaSuperPoderes: List<SuperPoder>,
-    expanded: Boolean,
-    onToggle: () -> Unit,
-    onOpenSuperPoderesDetail: (String) -> Unit
-) {
-    SectionCard(
-        title = "Superpoderes",
-        expanded = expanded,
-        onToggle = onToggle,
-        icon = Icons.Filled.FlashOn
-    ) {
-        val showLista = false
-
-        SectionHeader(
-            onHelpClick = null,
-            centerText = "Pontos de Super: ${state.superPontosDisponiveis}",
-            onCenterClick = onToggle,
-            onListaCompletaClick = if (showLista) {
-                { onOpenSuperPoderesDetail("") }
-            } else null,
-            listaCompletaText = ""
-        )
-
-        SuperPoderesSection(
-            state = state,
-            listaSuperPoderes = listaSuperPoderes,
-            expanded = expanded,
-            onOpenSuperPoderesDetail = onOpenSuperPoderesDetail
-        )
-    }
-}

@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
@@ -61,14 +62,6 @@ fun PreviewApp() {
     UnifiedScreen(
         state = state,
         viewModel = vm,   // <<<<<<<<<<<<<< ADICIONADO
-
-        onOpenVantagensDetail = { _ -> },
-        onOpenPericiasDetail = {},
-        onOpenComplicacoesDetail = {},
-        onOpenAtributosDetail = {},
-        onOpenListaAncestralidadesDetail = { _ -> },
-        onOpenPoderesDetail = {},
-        onOpenSuperPoderesDetail = { _ -> },
 
         expAncs = true,
         onToggleAncs = {},
@@ -104,13 +97,6 @@ fun PreviewApp() {
 fun UnifiedScreen(
     state: CriadorState,
     viewModel: CriadorViewModel,
-    onOpenVantagensDetail: (String) -> Unit,
-    onOpenPericiasDetail: () -> Unit,
-    onOpenComplicacoesDetail: () -> Unit,
-    onOpenAtributosDetail: () -> Unit,
-    onOpenListaAncestralidadesDetail: (String) -> Unit,
-    onOpenPoderesDetail: () -> Unit,
-    onOpenSuperPoderesDetail: (String) -> Unit,
 
     expAncs: Boolean,
     onToggleAncs: () -> Unit,
@@ -177,7 +163,6 @@ fun UnifiedScreen(
                     VantagensContent(
                         state = state,
                         multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-                        onOpenVantagensDetail  = onOpenVantagensDetail,
                         viewModel = viewModel
                     )
                 }
@@ -216,7 +201,6 @@ fun UnifiedScreen(
                 ) {
                     PericiasContent(
                         state = state,
-                        onOpenPericiasDetail = onOpenPericiasDetail,
                         feedbackMessages = viewModel.feedbackMessages as MutableList<String>
                     )
                 }
@@ -253,7 +237,7 @@ fun UnifiedScreen(
                     onToggle = onToggleAttrs,
                     icon     = Icons.Default.FitnessCenter
                 ) {
-                    AtributosContent(state = state, onOpenAtributosDetail = onOpenAtributosDetail)
+                    AtributosContent(state = state)
                 }
 
                 Spacer(Modifier.height(16.dp))
@@ -311,7 +295,6 @@ fun UnifiedScreen(
                 onToggle = onToggleAncs,
                 supersLocked = creationLocked,
                 ancestralidadeEmFoco = state.ancestralidadeEmFoco,
-                onOpenListaAncestralidadesDetail = onOpenListaAncestralidadesDetail,
                 onSelectAncestralidade = { nome ->
                     val key = nome.uppercase().semAcentos()
                     if (key == state.ancestralidade) return@AncestralidadesSection
@@ -334,7 +317,6 @@ fun UnifiedScreen(
                 state = state,
                 expanded = expComps,
                 onToggle = onToggleComps,
-                onOpenComplicacoesDetail = onOpenComplicacoesDetail,
                 feedbackMessages = viewModel.feedbackMessages as MutableList<String>
             )
 
@@ -346,7 +328,7 @@ fun UnifiedScreen(
                 onToggle = onToggleAttrs,
                 icon     = Icons.Default.FitnessCenter
             ) {
-                AtributosContent(state, onOpenAtributosDetail)
+                AtributosContent(state)
             }
 
             HorizontalDivider(thickness = 1.dp)
@@ -359,7 +341,6 @@ fun UnifiedScreen(
             ) {
                 PericiasContent(
                     state = state,
-                    onOpenPericiasDetail = onOpenPericiasDetail,
                     feedbackMessages = viewModel.feedbackMessages
                 )
             }
@@ -375,17 +356,16 @@ fun UnifiedScreen(
                 VantagensContent(
                     state = state,
                     multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-                    onOpenVantagensDetail  = onOpenVantagensDetail,
                     viewModel = viewModel
                 )
             }
 
-            PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes, onOpenPoderesDetail = onOpenPoderesDetail)
+            PoderesSectionContainer(state = state, expanded = expPoderes, onToggle = onTogglePoderes)
 
             Spacer(Modifier.height(8.dp))
             HorizontalDivider(thickness = 1.dp)
 
-            SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes, onOpenSuperPoderesDetail = onOpenSuperPoderesDetail)
+            SuperPoderesSectionContainer(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes)
             EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
 
             Spacer(Modifier.height(16.dp))
@@ -511,11 +491,10 @@ private fun ResumoSection(
 }
 
 @Composable
-private fun PoderesSection(
+private fun PoderesSectionContainer(
     state: CriadorState,
     expanded: Boolean,
-    onToggle: () -> Unit,
-    onOpenPoderesDetail: () -> Unit
+    onToggle: () -> Unit
 ) {
     val temArcano = state.vantagensSelecionadas.any {
         it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
@@ -528,30 +507,39 @@ private fun PoderesSection(
             onToggle = onToggle,
             icon = Icons.Default.FlashOn
         ) {
-            PoderesSection(
-                state = state,
-                onOpenListaCompletaPoderes = onOpenPoderesDetail
-            )
+            com.example.swadebuilder.ui.sections.PoderesSection(state = state)
         }
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-private fun SuperPoderesSection(
+private fun SuperPoderesSectionContainer(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
     expanded: Boolean,
-    onToggle: () -> Unit,
-    onOpenSuperPoderesDetail: (String) -> Unit
+    onToggle: () -> Unit
 ) {
-    if (state.modoSupers) {
-        SuperPoderesContent(
+    if (!state.modoSupers) return
+
+    SectionCard(
+        title = "Superpoderes",
+        expanded = expanded,
+        onToggle = onToggle,
+        icon = Icons.Default.FlashOn
+    ) {
+        SectionHeader(
+            onHelpClick = null,
+            centerText = "Pontos de Super: ${state.superPontosDisponiveis}",
+            onCenterClick = onToggle,
+            onListaCompletaClick = null,
+            listaCompletaText = ""
+        )
+
+        com.example.swadebuilder.ui.sections.SuperPoderesSection(
             state = state,
             listaSuperPoderes = listaSuperPoderes,
-            expanded = expanded,
-            onToggle = onToggle,
-            onOpenSuperPoderesDetail = onOpenSuperPoderesDetail
+            expanded = expanded
         )
     }
 }

@@ -44,15 +44,13 @@ import com.example.swadebuilder.model.AtributoList
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
-import com.example.swadebuilder.ui.sections.parseAtributos
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.model.loadJsonAsset
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun AtributosContent(
-    state: CriadorState,
-    onOpenAtributosDetail: () -> Unit
+    state: CriadorState
 ) {
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
@@ -63,7 +61,7 @@ fun AtributosContent(
             emptyMap()
         } else {
             val atributos = context.loadJsonAsset<AtributoList>("atributos.json")
-            parseAtributos(atributos.atributos).associate { atributo ->
+            atributos.atributos.associate { atributo ->
                 atributo.nome.uppercase().semAcentos() to atributo.descricao
             }
         }

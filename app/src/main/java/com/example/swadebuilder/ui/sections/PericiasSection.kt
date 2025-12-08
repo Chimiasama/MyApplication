@@ -69,7 +69,6 @@ import kotlin.math.max
 @Composable
 fun PericiasContent(
     state: CriadorState,
-    onOpenPericiasDetail: () -> Unit,
     feedbackMessages: MutableList<String>
 ) {
     val context = LocalContext.current
@@ -125,7 +124,7 @@ fun PericiasContent(
                     SectionHeader(
                         onHelpClick          = null,
                         centerText           = "Pontos de Perícia: ${state.pontosPericia}",
-                        onListaCompletaClick = if (showLista) ({ onOpenPericiasDetail() }) else null,
+                        onListaCompletaClick = null,
                         listaCompletaText    = ""
                     )
 
