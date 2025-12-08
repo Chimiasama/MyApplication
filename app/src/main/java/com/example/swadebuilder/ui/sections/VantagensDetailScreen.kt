@@ -37,9 +37,8 @@ import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.AppData
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
-import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,17 +51,9 @@ fun VantagensDetailScreen(
     val context = LocalContext.current
 
     val todasVantagens: List<Vantagem> = remember {
-        val jsonString = context.assets.open("Vantagens.json")
-            .bufferedReader()
-            .use { it.readText() }
-        val parser = Json {
-            ignoreUnknownKeys = true
-            explicitNulls = false
-        }
-        parser.decodeFromString(
-            ListSerializer(Vantagem.serializer()),
-            jsonString
-        )
+        runCatching {
+            context.loadJsonAsset<List<Vantagem>>("Vantagens.json")
+        }.getOrElse { emptyList() }
     }
 
     val listaFiltradaParaGrupo = remember(modoSupers, todasVantagens) {
