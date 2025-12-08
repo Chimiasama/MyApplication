@@ -40,12 +40,13 @@ import com.example.swadebuilder.R
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.mapaAtributosDisplay
-import com.example.swadebuilder.loadRawText
+import com.example.swadebuilder.model.AtributoList
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.sections.parseAtributos
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.loadJsonAsset
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -61,10 +62,10 @@ fun AtributosContent(
         if (!allowLongTexts) {
             emptyMap()
         } else {
-            parseAtributos(loadRawText(context, R.raw.atributos))
-                .associate { atributo ->
-                    atributo.nome.uppercase().semAcentos() to atributo.descricao
-                }
+            val atributos = context.loadJsonAsset<AtributoList>("atributos.json")
+            parseAtributos(atributos.atributos).associate { atributo ->
+                atributo.nome.uppercase().semAcentos() to atributo.descricao
+            }
         }
     }
 

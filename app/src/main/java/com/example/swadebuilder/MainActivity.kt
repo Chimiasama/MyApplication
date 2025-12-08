@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
-import androidx.annotation.RawRes
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
@@ -112,8 +111,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.util.UUID
 
 
@@ -976,12 +973,6 @@ fun periciaStartRaw(anc: String, per: Pericia): Int {
 }
 
 var listaVantagens:    List<Vantagem>   = emptyList()
-
-fun loadRawText(context: Context, @RawRes resId: Int): String {
-    val inputStream = context.resources.openRawResource(resId)
-    val reader = BufferedReader(InputStreamReader(inputStream))
-    return reader.readText()
-}
 
 data class Estagio(
     val nome: String,
