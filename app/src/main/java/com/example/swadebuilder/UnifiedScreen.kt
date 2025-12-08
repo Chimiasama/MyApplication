@@ -369,7 +369,22 @@ fun UnifiedScreen(
                 )
             }
 
-            PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes)
+            val temArcano = state.vantagensSelecionadas.any {
+                it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
+            }
+            if (temArcano && !state.celestialAAMilagresDesabilitado) {
+                HorizontalDivider(thickness = 1.dp)
+                SectionCard(
+                    title = "Poderes",
+                    expanded = expPoderes,
+                    onToggle = onTogglePoderes,
+                    icon = Icons.Default.FlashOn
+                ) {
+                    PoderesSection(
+                        state = state
+                    )
+                }
+            }
 
             Spacer(Modifier.height(8.dp))
             HorizontalDivider(thickness = 1.dp)
@@ -499,29 +514,6 @@ private fun ResumoSection(
     }
 }
 
-@Composable
-private fun PoderesSection(
-    state: CriadorState,
-    expanded: Boolean,
-    onToggle: () -> Unit
-) {
-    val temArcano = state.vantagensSelecionadas.any {
-        it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
-    }
-    if (temArcano && !state.celestialAAMilagresDesabilitado) {
-        HorizontalDivider(thickness = 1.dp)
-        SectionCard(
-            title = "Poderes",
-            expanded = expanded,
-            onToggle = onToggle,
-            icon = Icons.Default.FlashOn
-        ) {
-            PoderesSection(
-                state = state
-            )
-        }
-    }
-}
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
