@@ -8,5 +8,6 @@ data class RacialModifier(
     val atributos: Map<String, Int>,
     val pericias: Map<String, Int>,
     val vantagensGratis: List<String>,
-    val desvantagens: List<String>
+    val desvantagens: List<String>,
+    val origem: String = "BASICO"
 )

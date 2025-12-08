@@ -167,7 +167,7 @@ class MainActivity : ComponentActivity() {
         val arcanoJson = assets.open("arcano_info.json")
             .bufferedReader().use { it.readText() }
         val arcanoList: List<ArcanoInfo> =
-            Json.decodeFromString(arcanoJson)
+            json.decodeFromString(arcanoJson)
         arcanoInfo = arcanoList.associate {
             it.key
                 .uppercase()
@@ -216,7 +216,7 @@ class MainActivity : ComponentActivity() {
             .bufferedReader(Charsets.UTF_8)
             .use { it.readText() }
 
-        listaAncestralidadesJson = Json.decodeFromString<List<RacialModifier>>(ancestralRaw)
+        listaAncestralidadesJson = json.decodeFromString<List<RacialModifier>>(ancestralRaw)
 
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
             val m = rm.atributos
