@@ -1,6 +1,7 @@
 package com.example.swadebuilder.model
 
 import android.content.Context
+import android.util.Log
 import kotlinx.serialization.json.Json
 import java.io.File
 
@@ -23,7 +24,12 @@ object StorageUtils {
         val file = File(context.filesDir, fileNameFromKey(nomeArquivo))
         if (!file.exists()) return null
         val jsonText = file.readText()
-        return json.decodeFromString<PersonagemSalvo>(jsonText)
+
+        return runCatching {
+            json.decodeFromString<PersonagemSalvo>(jsonText)
+        }.onFailure {
+            Log.e("StorageUtils", "Falha ao decodificar personagem salvo $nomeArquivo", it)
+        }.getOrNull()
     }
 
     fun listarPersonagens(context: Context): List<Pair<String, String>> {

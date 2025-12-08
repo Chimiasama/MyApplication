@@ -570,10 +570,16 @@ Feito por Rafael S.W.
                                     scope.launch(Dispatchers.IO) {
                                         val salvo = StorageUtils.carregarPersonagem(context, fileKey)
                                         withContext(Dispatchers.Main) {
-                                            salvo?.let {
+                                            if (salvo != null) {
                                                 showLoadDialog = false
                                                 pendingDelete = null
-                                                onLoad(it)
+                                                onLoad(salvo)
+                                            } else {
+                                                Toast.makeText(
+                                                    context,
+                                                    "Não foi possível carregar o personagem salvo.",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
                                             }
                                         }
                                     }
