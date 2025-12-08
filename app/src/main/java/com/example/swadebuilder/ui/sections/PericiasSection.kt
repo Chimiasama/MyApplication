@@ -124,7 +124,7 @@ fun PericiasContent(
                     SectionHeader(
                         onHelpClick          = null,
                         centerText           = "Pontos de Perícia: ${state.pontosPericia}",
-                        onListaCompletaClick = if (showLista) ({ onOpenPericiasDetail() }) else null,
+                        onListaCompletaClick = null,
                         listaCompletaText    = ""
                     )
 

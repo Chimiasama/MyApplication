@@ -594,16 +594,11 @@ class MainActivity : ComponentActivity() {
                                                 state.vantagemEmFoco = nomeVantagem
                                             },
 
-                                            onOpenPericiasDetail = { },
-                                            onOpenComplicacoesDetail = { },
-                                            onOpenAtributosDetail = { },
-
                                             onOpenListaAncestralidadesDetail = { nomeAnc ->
                                                 if (nomeAnc.isNotBlank()) {
                                                     state.ancestralidadeEmFoco = nomeAnc
                                                 }
                                             },
-                                            onOpenPoderesDetail = { },
 
                                             onOpenSuperPoderesDetail = { nomePoder ->
                                                 highlightedSuperPoder = nomePoder

@@ -44,9 +44,9 @@ import com.example.swadebuilder.model.AtributoList
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
-import com.example.swadebuilder.ui.sections.parseAtributos
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.model.loadJsonAsset
+import kotlin.collections.orEmpty
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
