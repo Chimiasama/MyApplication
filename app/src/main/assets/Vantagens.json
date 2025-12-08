@@ -2580,6 +2580,7 @@
     "nome": "SUPERPODERES",
     "categoria": "ANTECEDENTE",
     "origem": "SUPER",
+    "nivel": "Novato",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},

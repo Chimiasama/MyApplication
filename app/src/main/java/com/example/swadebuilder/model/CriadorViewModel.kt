@@ -1,6 +1,7 @@
 // CriadorViewModel.kt
 package com.example.swadebuilder.model
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
@@ -258,11 +259,23 @@ class CriadorViewModel : ViewModel() {
         salvo.vantagens.forEach { saved ->
             val trimmed = saved.trim()
             val base = mapPorId[trimmed] ?: mapPorNome[trimmed.uppercase()]
-            base?.copy()?.let { vantCopiada ->
-                choicesMap[trimmed]?.removeFirstOrNull()?.let { escolha ->
-                    vantCopiada.choice = escolha
+            if (base != null) {
+                val vantCopiada = runCatching { base.copy() }
+                    .onFailure {
+                        Log.e(
+                            "CriadorViewModel",
+                            "Erro ao copiar vantagem '$trimmed' ao carregar personagem.",
+                            it
+                        )
+                    }
+                    .getOrNull()
+
+                if (vantCopiada != null) {
+                    choicesMap[trimmed]?.removeFirstOrNull()?.let { escolha ->
+                        vantCopiada.choice = escolha
+                    }
+                    state.vantagensSelecionadas.add(vantCopiada)
                 }
-                state.vantagensSelecionadas.add(vantCopiada)
             }
         }
 
