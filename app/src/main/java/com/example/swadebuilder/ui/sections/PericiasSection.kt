@@ -148,7 +148,7 @@ fun PericiasContent(
         }
 
         items(listaPericiasJson) { per ->
-            val p = Pericia(per.nome, per.atributo, per.basica)
+            val p = Pericia(per.nome, per.atributo.uppercase().semAcentos(), per.basica)
             val currentRaw = state.rawTotal(p)
             val attrKey    = state.atributoBaseParaPericia(p)
             val atrRaw     = state.valoresAtributos[attrKey]!!.intValue
