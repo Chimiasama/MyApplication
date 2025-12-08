@@ -78,8 +78,7 @@ private fun custoParaPenalidadeTexto(custo: String): String {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PoderesSection(
-    state: CriadorState,
-    onOpenListaCompletaPoderes: () -> Unit
+    state: CriadorState
 ) {
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
@@ -106,7 +105,6 @@ fun PoderesSection(
             arcKeyRaw = selectedArcanoKey,
             state = state,
             poderesElegiveis = poderesElegiveis,
-            onOpenListaCompletaPoderes = onOpenListaCompletaPoderes,
             locked = locked,
             allowLongTexts = allowLongTexts
         )
@@ -118,7 +116,6 @@ fun PoderesSection(
             arcKeyRaw = arcKeyRaw,
             state = state,
             poderesElegiveis = poderesElegiveis,
-            onOpenListaCompletaPoderes = onOpenListaCompletaPoderes,
             locked = locked,
             allowLongTexts = allowLongTexts
         )
@@ -132,7 +129,6 @@ private fun ArcanoArea(
     arcKeyRaw: String,
     state: CriadorState,
     poderesElegiveis: List<Poder>,
-    onOpenListaCompletaPoderes: () -> Unit,
     locked: Boolean,
     allowLongTexts: Boolean
 ) {
@@ -149,7 +145,7 @@ private fun ArcanoArea(
         onHelpClick = null,
         centerText  = center,
         onCenterClick = null,
-        onListaCompletaClick = if (showListaCompleta) onOpenListaCompletaPoderes else null,
+        onListaCompletaClick = null,
         listaCompletaText = ""
     )
 

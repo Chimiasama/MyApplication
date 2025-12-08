@@ -51,8 +51,7 @@ import com.example.swadebuilder.model.loadJsonAsset
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun AtributosContent(
-    state: CriadorState,
-    onOpenAtributosDetail: () -> Unit
+    state: CriadorState
 ) {
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)

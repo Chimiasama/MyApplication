@@ -93,14 +93,6 @@ import com.example.swadebuilder.model.PersonagemSalvo
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.ui.sections.AncestralidadesDetailScreen
-import com.example.swadebuilder.ui.sections.AtributosDetailScreen
-import com.example.swadebuilder.ui.sections.ComplicacoesDetailScreen
-import com.example.swadebuilder.ui.sections.EquipamentosDetailScreen
-import com.example.swadebuilder.ui.sections.PericiasDetailScreen
-import com.example.swadebuilder.ui.sections.PoderesDetailScreen
-import com.example.swadebuilder.ui.sections.SuperPoderesDetailScreen
-import com.example.swadebuilder.ui.sections.VantagensDetailScreen
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
@@ -262,15 +254,6 @@ class MainActivity : ComponentActivity() {
             var expResumo  by rememberSaveable(creationSession) { mutableStateOf(false) }
             var expXp by rememberSaveable(creationSession) { mutableStateOf(false) }
 
-            var showVantagensDetail       by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var showPericiasDetail        by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var showComplicacoesDetail    by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var showAtributosDetail       by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var showAncestralidadesDetail by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var showPoderesDetail         by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var showEquipLista            by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var showSuperDetail           by rememberSaveable(creationSession) { mutableStateOf(false) }
-
             var highlightedVantagem   by rememberSaveable(creationSession) { mutableStateOf("") }
             var highlightedSuperPoder by rememberSaveable(creationSession) { mutableStateOf("") }
 
@@ -360,16 +343,7 @@ class MainActivity : ComponentActivity() {
             }
 
 
-            val emTelaDePreenchimento = !(
-                    showVantagensDetail ||
-                            showPericiasDetail ||
-                            showComplicacoesDetail ||
-                            showAtributosDetail ||
-                            showAncestralidadesDetail ||
-                            showPoderesDetail ||
-                            showEquipLista ||
-                            showSuperDetail
-                    )
+            val emTelaDePreenchimento = true
 
             BackHandler(enabled = mostrouTelaInicial) {
                 showExitDialog = true
@@ -472,35 +446,7 @@ class MainActivity : ComponentActivity() {
                             )
                         } else {
                             BackHandler(
-                                enabled = showVantagensDetail
-                                        || showPericiasDetail
-                                        || showComplicacoesDetail
-                                        || showAtributosDetail
-                                        || showAncestralidadesDetail
-                                        || showPoderesDetail
-                                        || showEquipLista
-                                        || showSuperDetail
-                            ) {
-                                showVantagensDetail       = false
-                                showPericiasDetail        = false
-                                showComplicacoesDetail    = false
-                                showAtributosDetail       = false
-                                showAncestralidadesDetail = false
-                                showPoderesDetail         = false
-                                showEquipLista            = false
-                                showSuperDetail           = false
-                            }
-                            BackHandler(
-                                enabled = !(
-                                        showVantagensDetail
-                                                || showPericiasDetail
-                                                || showComplicacoesDetail
-                                                || showAtributosDetail
-                                                || showAncestralidadesDetail
-                                                || showPoderesDetail
-                                                || showEquipLista
-                                                || showSuperDetail
-                                        )
+                                enabled = true
                             ) {
                                 mostrouTelaInicial = true
                             }
@@ -634,129 +580,69 @@ class MainActivity : ComponentActivity() {
                                     }
                                 },
                                 content = { innerPadding ->
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(innerPadding)
-                                ) {
-                                    val screenIndex = when {
-                                        showEquipLista            -> 1
-                                        showAtributosDetail       -> 2
-                                        showVantagensDetail       -> 3
-                                        showPericiasDetail        -> 4
-                                        showComplicacoesDetail    -> 5
-                                        showAncestralidadesDetail -> 6
-                                        showPoderesDetail         -> 7
-                                        showSuperDetail           -> 8
-                                        else                      -> 0
-                                    }
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(innerPadding)
+                                    ) {
+                                        UnifiedScreen(
+                                            state = state,
+                                            viewModel = criadorViewModel,
 
-                                    Crossfade(
-                                        targetState   = screenIndex,
-                                        animationSpec = tween(durationMillis = 150)
-                                    ) { screen ->
-                                        when (screen) {
-                                            1 -> EquipamentosDetailScreen(
-                                                categorias = equipamentoCategorias +
-                                                        if (state.modoSuperequip) superequipCategorias else emptyList(),
-                                                onBack     = { showEquipLista = false }
-                                            )
-                                            2 -> AtributosDetailScreen(onBack = { showAtributosDetail = false })
-                                            3 -> VantagensDetailScreen(
-                                                state           = state,
-                                                modoSupers      = state.modoSupers,
-                                                highlightedName = highlightedVantagem,
-                                                onBack          = { showVantagensDetail = false }
-                                            )
-                                            4 -> PericiasDetailScreen(
-                                                state  = state,
-                                                onBack = { showPericiasDetail = false }
-                                            )
-                                            5 -> ComplicacoesDetailScreen(
-                                                state        = state,
-                                                onBack       = { showComplicacoesDetail = false },
-                                                mostrarSuper = state.modoSuperComplicacoes
-                                            )
-                                            6 -> AncestralidadesDetailScreen(
-                                                state  = state,
-                                                onBack = { showAncestralidadesDetail = false }
-                                            )
-                                            7 -> PoderesDetailScreen(
-                                                state  = state,
-                                                onBack = { showPoderesDetail = false }
-                                            )
-                                            8 -> SuperPoderesDetailScreen(
-                                                state           = state,
-                                                highlightedName = highlightedSuperPoder,
-                                                onBack          = {
-                                                    showSuperDetail = false
-                                                    expPoderes = true
+                                            onOpenVantagensDetail = { nomeVantagem ->
+                                                highlightedVantagem = nomeVantagem
+                                                state.vantagemEmFoco = nomeVantagem
+                                            },
+
+                                            onOpenPericiasDetail = { },
+                                            onOpenComplicacoesDetail = { },
+                                            onOpenAtributosDetail = { },
+
+                                            onOpenListaAncestralidadesDetail = { nomeAnc ->
+                                                if (nomeAnc.isNotBlank()) {
+                                                    state.ancestralidadeEmFoco = nomeAnc
                                                 }
-                                            )
+                                            },
+                                            onOpenPoderesDetail = { },
 
-                                            else -> UnifiedScreen(
-                                                state = state,
-                                                viewModel = criadorViewModel,
+                                            onOpenSuperPoderesDetail = { nomePoder ->
+                                                highlightedSuperPoder = nomePoder
+                                                state.superPoderEmFoco = nomePoder.takeIf { it.isNotBlank() }
+                                            },
 
-                                                onOpenVantagensDetail = { nomeVantagem ->
-                                                    highlightedVantagem      = nomeVantagem
-                                                    state.vantagemEmFoco     = nomeVantagem
-                                                    showVantagensDetail      = true
-                                                },
+                                            expAncs = expAncs,
+                                            onToggleAncs = { expAncs = !expAncs },
 
-                                                onOpenPericiasDetail     = { showPericiasDetail     = true },
-                                                onOpenComplicacoesDetail = { showComplicacoesDetail = true },
-                                                onOpenAtributosDetail    = { showAtributosDetail    = true },
+                                            expComps = expComps,
+                                            onToggleComps = { expComps = !expComps },
 
-                                                onOpenListaAncestralidadesDetail = { nomeAnc ->
-                                                    if (nomeAnc.isNotBlank()) {
-                                                        state.ancestralidadeEmFoco = nomeAnc
-                                                    }
-                                                    showAncestralidadesDetail = true
-                                                },
-                                                onOpenPoderesDetail            = { showPoderesDetail = true },
+                                            expEquip = expEquip,
+                                            onToggleEquip = { expEquip = !expEquip },
 
-                                                onOpenSuperPoderesDetail = { nomePoder ->
-                                                    highlightedSuperPoder  = nomePoder
-                                                    state.superPoderEmFoco = nomePoder.takeIf { it.isNotBlank() }
-                                                    showSuperDetail        = true
-                                                },
+                                            expAttrs = expAttrs,
+                                            onToggleAttrs = { expAttrs = !expAttrs },
 
-                                                expAncs        = expAncs,
-                                                onToggleAncs   = { expAncs = !expAncs },
+                                            expPer = expPer,
+                                            onTogglePer = { expPer = !expPer },
 
-                                                expComps       = expComps,
-                                                onToggleComps  = { expComps = !expComps },
+                                            expVants = expVants,
+                                            onToggleVants = { expVants = !expVants },
 
-                                                expEquip       = expEquip,
-                                                onToggleEquip  = { expEquip = !expEquip },
+                                            expResumo = expResumo,
+                                            onToggleResumo = { expResumo = !expResumo },
 
-                                                expAttrs       = expAttrs,
-                                                onToggleAttrs  = { expAttrs   = !expAttrs },
+                                            expPoderes = expPoderes,
+                                            onTogglePoderes = { expPoderes = !expPoderes },
 
-                                                expPer         = expPer,
-                                                onTogglePer    = { expPer     = !expPer },
+                                            expXp = expXp,
+                                            onToggleXp = { expXp = !expXp },
 
-                                                expVants       = expVants,
-                                                onToggleVants  = { expVants   = !expVants },
-
-                                                expResumo      = expResumo,
-                                                onToggleResumo = { expResumo  = !expResumo },
-
-                                                expPoderes      = expPoderes,
-                                                onTogglePoderes = { expPoderes = !expPoderes },
-
-                                                expXp = expXp,
-                                                onToggleXp = { expXp = !expXp },
-
-                                                equipamentoCategorias = equipamentoCategorias,
-                                                superequipCategorias  = superequipCategorias,
-                                                listaSuperPoderes     = listaSuperPoderes
-                                            )
-                                        }
+                                            equipamentoCategorias = equipamentoCategorias,
+                                            superequipCategorias = superequipCategorias,
+                                            listaSuperPoderes = listaSuperPoderes
+                                        )
                                     }
                                 }
-                            }
                             )
                         }
                     }
@@ -933,7 +819,7 @@ private fun getHelpAppText(state: CriadorState): String {
 
     adicionar/remover itens e ver o dinheiro restante atualizar ao vivo.
 
-    Esta seção nunca é bloqueada independetemente da fase de criação que o personagem está.
+    Esta seção nunca é bloqueada independemente da fase de criação que o personagem está.
 
     10) Resumo
 
