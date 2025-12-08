@@ -684,13 +684,6 @@ fun VantagensContent(
                                     if (vant.descricao.isNotBlank() && vant.vinculadoPericia) {
                                         AssistChip(
                                             onClick = {},
-                                            leadingIcon = {
-                                                Icon(
-                                                    Icons.Default.Visibility,
-                                                    contentDescription = null,
-                                                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                                                )
-                                            },
                                             label = { Text("Opções especiais") }
                                         )
                                     }
