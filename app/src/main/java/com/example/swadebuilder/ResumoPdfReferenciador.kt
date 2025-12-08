@@ -2,26 +2,16 @@ package com.example.swadebuilder
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
 import android.graphics.pdf.PdfDocument
 import android.net.Uri
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.example.swadebuilder.model.MeuPersonagem
+import com.example.swadebuilder.util.PdfLayoutManager
 import com.example.swadebuilder.util.keyify
 import java.io.File
 import java.io.FileOutputStream
 
-/**
- * Fonte única para Resumo e PDF.
- * - Snapshot do state -> MeuPersonagem
- * - buildSummaryLines() -> usado por UI e PDF
- * - gerarFichaEmPdf() / salvarEExibirFichaPdf()
- */
-
-// ✅ 1) Snapshot único do state
 fun CriadorState.toMeuPersonagem(): MeuPersonagem {
     return MeuPersonagem(
         nome = this.nomePersonagem,
@@ -81,7 +71,6 @@ private fun complicationDisplayNames(rawIds: List<String>): List<String> {
     }
 }
 
-// ✅ 2) Abrir/compartilhar PDF
 fun salvarEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
     val pdfFile = File(context.getExternalFilesDir(null), "ficha_preenchida.pdf")
 
@@ -101,11 +90,10 @@ fun salvarEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
     if (intent.resolveActivity(context.packageManager) != null) {
         context.startActivity(intent)
     } else {
-        Toast.makeText(context, "Nenhum app de PDF encontrado.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Nenhuma app de PDF encontrado.", Toast.LENGTH_SHORT).show()
     }
 }
 
-// ✅ 3) Texto-base do resumo (UI e PDF)
 fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val lines = mutableListOf<String>()
 
@@ -363,167 +351,13 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     return lines
 }
 
-// ✅ 4) Montagem do PDF (usa buildSummaryLines)
 fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
     val doc = PdfDocument()
     val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
 
-    val marginLeft = 32f
-    val marginRight = 32f
-    val marginTop = 40f
-    val marginBottom = 36f
+    val layoutManager = PdfLayoutManager(doc, pageInfo)
+    layoutManager.draw(personagem)
 
-    val bodyPaint = Paint().apply { textSize = 12f }
-    val bodyFm = bodyPaint.fontMetrics
-    val bodyLineHeight = bodyFm.descent - bodyFm.ascent + bodyFm.leading
-
-    val sectionTitlePaint = Paint(bodyPaint).apply {
-        textSize = 13.5f
-        isFakeBoldText = true
-    }
-    val titlePaint = Paint(bodyPaint).apply {
-        textSize = 18f
-        isFakeBoldText = true
-    }
-    val subtitlePaint = Paint(bodyPaint).apply {
-        textSize = 12.5f
-        isFakeBoldText = true
-        color = Color.DKGRAY
-    }
-
-    val boxStroke = Paint().apply {
-        style = Paint.Style.STROKE
-        color = Color.rgb(92, 64, 51)
-        strokeWidth = 2f
-    }
-    val boxFill = Paint().apply {
-        style = Paint.Style.FILL
-        color = Color.rgb(248, 244, 235)
-    }
-    val headerFill = Paint().apply {
-        style = Paint.Style.FILL
-        color = Color.rgb(229, 214, 200)
-    }
-
-    var page = doc.startPage(pageInfo)
-    var canvas = page.canvas
-    var y = marginTop
-
-    fun newPage() {
-        doc.finishPage(page)
-        page = doc.startPage(pageInfo)
-        canvas = page.canvas
-        y = marginTop
-    }
-
-    fun wrapLine(text: String, paint: Paint, maxWidth: Float): List<String> {
-        if (text.isEmpty()) return listOf("")
-
-        val wrapped = mutableListOf<String>()
-        var start = 0
-        while (start < text.length) {
-            val count = paint.breakText(text, start, text.length, true, maxWidth, null)
-            wrapped += text.substring(start, start + count)
-            start += count
-        }
-        return wrapped
-    }
-
-    fun drawSection(title: String, contentLines: List<String>) {
-        val maxWidth = pageInfo.pageWidth - marginLeft - marginRight
-        val padding = 12f
-        val headerHeight = sectionTitlePaint.fontMetrics.let { it.descent - it.ascent } + padding
-
-        val normalizedContent = contentLines.map { line ->
-            if (line.startsWith("•") || line.startsWith("–") || line.contains(":")) line else "• $line"
-        }
-
-        val wrappedLines = normalizedContent.flatMap { wrapLine(it, bodyPaint, maxWidth - (padding * 2)) }
-        val contentHeight = (wrappedLines.size * bodyLineHeight) + padding
-        val totalHeight = headerHeight + contentHeight + padding
-
-        if (y + totalHeight > pageInfo.pageHeight - marginBottom) {
-            newPage()
-        }
-
-        val rect = RectF(
-            marginLeft,
-            y,
-            pageInfo.pageWidth - marginRight,
-            y + totalHeight
-        )
-
-        val headerRect = RectF(rect.left, rect.top, rect.right, rect.top + headerHeight)
-
-        canvas.drawRoundRect(rect, 18f, 18f, boxFill)
-        canvas.drawRoundRect(headerRect, 18f, 18f, headerFill)
-        canvas.drawRoundRect(rect, 18f, 18f, boxStroke)
-
-        val headerBaseline = headerRect.top + padding - sectionTitlePaint.fontMetrics.ascent
-        canvas.drawText(title, rect.left + padding, headerBaseline, sectionTitlePaint)
-
-        var contentY = headerRect.bottom + padding - bodyFm.ascent
-        wrappedLines.forEach { line ->
-            canvas.drawText(line, rect.left + padding, contentY, bodyPaint)
-            contentY += bodyLineHeight
-        }
-
-        y = rect.bottom + 10f
-    }
-
-    val title = "Ficha de ${personagem.nome.ifBlank { "(sem nome)" }}"
-    val titleHeight = titlePaint.fontMetrics.let { it.descent - it.ascent }
-    val subtitleHeight = subtitlePaint.fontMetrics.let { it.descent - it.ascent }
-
-    canvas.drawText(title, marginLeft, y, titlePaint)
-    y += titleHeight + 6f
-    canvas.drawText("Ancestralidade: ${personagem.ancestralidade}", marginLeft, y, subtitlePaint)
-    y += subtitleHeight + 12f
-
-    val lines = buildSummaryLines(personagem)
-    val sectionTitles = setOf(
-        "Identidade",
-        "Atributos derivados",
-        "Atributos",
-        "Perícias",
-        "Recursos & Equipamentos",
-        "Vantagens",
-        "Complicações",
-        "Poderes arcanos",
-        "Superpoderes",
-        "Anotações"
-    )
-
-    val sections = mutableListOf<Pair<String, MutableList<String>>>()
-    var currentTitle = "Resumo"
-    var buffer = mutableListOf<String>()
-
-    fun flushSection() {
-        if (buffer.isNotEmpty()) {
-            sections += currentTitle to buffer
-            buffer = mutableListOf()
-        }
-    }
-
-    lines.forEach { linha ->
-        when {
-            linha in sectionTitles -> {
-                flushSection()
-                currentTitle = linha
-            }
-            linha.isBlank() -> flushSection()
-            else -> buffer += linha
-        }
-    }
-    flushSection()
-
-    sections.forEach { (titleSecao, conteudo) ->
-        drawSection(titleSecao, conteudo)
-    }
-
-    doc.finishPage(page)
     FileOutputStream(destino).use { out -> doc.writeTo(out) }
     doc.close()
 }
-
-
