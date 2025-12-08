@@ -3763,5 +3763,795 @@
       "vinculado_pericia": false,
       "ganha_ao_comprar": [],
       "descricao": "Pode escolher qualquer item mágico do livro (com aprovação do Mestre)."
+    },
+    {
+      "id": "antecedente_arcano_alquimista",
+      "nome": "ANTECEDENTE ARCANO (Alquimista)",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": { "Astúcia": 6 },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "grupoId": "antecedente_arcano",
+      "subtipoArcano": "ALQUIMISTA",
+      "isGrupoSelector": false,
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Alquimistas criam poções, óleos e elixires. Seus poderes são preparados antecipadamente em frascos. Possuem a Complicação Componente Material (poções são descartáveis) e precisam de sua Bolsa de Alquimista para ativar poderes. Perícia Arcana: Alquimia (Astúcia)."
+    },
+    {
+      "id": "mestre_alquimista",
+      "nome": "MESTRE ALQUIMISTA",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": { "Alquimia": 10 },
+        "vantagens_previas": ["antecedente_arcano_alquimista"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Permite criar poções pela metade do custo normal e conta como tendo acesso a uma Oficina Simples contanto que tenha sua bolsa de alquimista."
+    },
+    {
+      "id": "quimico",
+      "nome": "QUÍMICO",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": { "Alquimia": 8 },
+        "vantagens_previas": ["antecedente_arcano_alquimista"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "As misturas alquímicas dadas a outros duram uma semana em vez de 48 horas."
+    },
+    {
+      "id": "antecedente_arcano_bardo",
+      "nome": "ANTECEDENTE ARCANO (Bardo)",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": { "Espírito": 6 },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "grupoId": "antecedente_arcano",
+      "subtipoArcano": "BARDO",
+      "isGrupoSelector": false,
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Bardos conjuram feitiços através de performance. Possuem Interferência de Armadura (Menor) e Língua Afiada (podem usar Performance como Provocar em Desafios e ignorar repetição se mudarem os versos). Perícia Arcana: Performance (Espírito)."
+    },
+    {
+      "id": "inspirar_heroismo",
+      "nome": "INSPIRAR HEROÍSMO",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": { "Performance": 8 },
+        "vantagens_previas": ["antecedente_arcano_bardo"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Uma vez por encontro, gasta 1 Bene para ganhar 5 marcadores de Inspiração. Pode distribuir a aliados no alcance (Astúcia) para rerrolar Traços ou Dano."
+    },
+    {
+      "id": "instrumento",
+      "nome": "INSTRUMENTO",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_bardo"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Adiciona +1 na rolagem de Performance ao conjurar magias usando um instrumento (requer mãos livres)."
+    },
+    {
+      "id": "marcha_funebre",
+      "nome": "MARCHA FÚNEBRE",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Heroico",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_bardo"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Inimigos a até 10 quadros subtraem 2 do total ao gastar Benes para Absorver ou rerrolar."
+    },
+    {
+      "id": "antecedente_arcano_bruxo",
+      "nome": "ANTECEDENTE ARCANO (Bruxo)",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": { "Astúcia": 6 },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "grupoId": "antecedente_arcano",
+      "subtipoArcano": "BRUXO",
+      "isGrupoSelector": false,
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": ["familiar"],
+      "descricao": "Bruxos usam magia antiga e pactos. Possuem Interferência de Armadura (Maior), Componentes Materiais, Corrupção, e a habilidade Congregação (transferir PP). Começam com a Vantagem Familiar e podem Preparar Poderes. Perícia Arcana: Conjurar (Astúcia)."
+    },
+    {
+      "id": "a_hora_das_bruxas",
+      "nome": "A HORA DAS BRUXAS",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_bruxo"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Entre meia-noite e 1h da manhã, não rola Falhas Críticas e ganha uma Absorção grátis por ferimento."
+    },
+    {
+      "id": "mau_olhado",
+      "nome": "MAU-OLHADO",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_bruxo"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Uma vez por encontro (ação livre), alvo a 6 quadros deve testar Espírito -2 para gastar Benes pelo resto do encontro."
+    },
+    {
+      "id": "antecedente_arcano_clerigo",
+      "nome": "ANTECEDENTE ARCANO (Clérigo)",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": { "Espírito": 6 },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "grupoId": "antecedente_arcano",
+      "subtipoArcano": "CLÉRIGO",
+      "isGrupoSelector": false,
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Servos de divindades. Devem escolher um Domínio. Possuem Voto (Maior). Exibir símbolo sagrado concede rerrolagem em Fé. Perícia Arcana: Fé (Espírito)."
+    },
+    {
+      "id": "destruir_mortos_vivos",
+      "nome": "DESTRUIR MORTOS-VIVOS",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_clerigo"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ação limitada, gasta 1 PP (2d6 dano) ou 2 PP (3d6 dano) em Modelo Grande de Explosão centrado em si. Afeta apenas mortos-vivos."
+    },
+    {
+      "id": "misericordia",
+      "nome": "MISERICÓRDIA",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": { "Fé": 8 },
+        "vantagens_previas": ["antecedente_arcano_clerigo"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ação, gasta 1 PP: remove Distraído, Vulnerável ou Abalado de um alvo no alcance do Espírito."
+    },
+    {
+      "id": "antecedente_arcano_diabolista",
+      "nome": "ANTECEDENTE ARCANO (Diabolista)",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": { "Astúcia": 6 },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "grupoId": "antecedente_arcano",
+      "subtipoArcano": "DIABOLISTA",
+      "isGrupoSelector": false,
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Conjuram servos do Abismo. Possuem Interferência de Armadura (Maior) e Corrupção. Podem invocar demônios específicos com Conjurar Aliado. Perícia Arcana: Conjurar (Astúcia)."
+    },
+    {
+      "id": "armadura_infernal",
+      "nome": "ARMADURA INFERNAL",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_diabolista"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ação: concede Armadura +2 com um brilho infernal. Impede Furtividade."
+    },
+    {
+      "id": "furia_infernal",
+      "nome": "FÚRIA INFERNAL",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_diabolista"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Poderes raio, explosão e rajada causam +2 de dano."
+    },
+    {
+      "id": "antecedente_arcano_druida",
+      "nome": "ANTECEDENTE ARCANO (Druida)",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": { "Espírito": 6 },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "grupoId": "antecedente_arcano",
+      "subtipoArcano": "DRUIDA",
+      "isGrupoSelector": false,
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Protetores da natureza. Possuem Interferência de Armadura (Menor), Componentes Materiais e Voto (Maior). Duração de Conjurar Animal e Mudança de Forma (animal) aumentada para 1h. Ignoram terreno acidentado natural. Perícia Arcana: Fé (Espírito)."
+    },
+    {
+      "id": "cajado_do_coracao_da_mata",
+      "nome": "CAJADO DO CORAÇÃO DA MATA",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_druida"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ganha um cajado especial (For+d8, Aparar +1, Alcance 1). Pode gastar 1 PP para causar +d6 de dano."
+    },
+    {
+      "id": "forma_verdadeira",
+      "nome": "FORMA VERDADEIRA",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_druida"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Permite falar e conjurar poderes (-2) enquanto estiver sob Mudança de Forma. Risco de perder humanidade se usado por muito tempo."
+    },
+    {
+      "id": "antecedente_arcano_elementalista",
+      "nome": "ANTECEDENTE ARCANO (Elementalista)",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": { "Astúcia": 6 },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "grupoId": "antecedente_arcano",
+      "subtipoArcano": "ELEMENTALISTA",
+      "isGrupoSelector": false,
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Especialistas em um elemento (fogo, água, terra ou ar). Possuem Interferência de Armadura (Maior). Ganham rerrolagem perto do elemento, ou -2 se ausente. Devem escolher Origem Elemental. Perícia Arcana: Conjurar (Astúcia)."
+    },
+    {
+      "id": "absorcao_elemental",
+      "nome": "ABSORÇÃO ELEMENTAL",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_elementalista"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Resistência +2 enquanto estiver em Sinergia Elemental (perto de fonte significativa do elemento)."
+    },
+    {
+      "id": "maestria_elemental",
+      "nome": "MAESTRIA ELEMENTAL",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_elementalista"],
+        "observacoes": ""
+      },
+      "limite_compra": "infinito",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Concede domínio sobre um novo elemento. Pode ser comprada múltiplas vezes."
+    },
+    {
+      "id": "antecedente_arcano_engenhoqueiro",
+      "nome": "ANTECEDENTE ARCANO (Engenhoqueiro)",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": { "Astúcia": 6 },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "grupoId": "antecedente_arcano",
+      "subtipoArcano": "ENGENHOQUEIRO",
+      "isGrupoSelector": false,
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Criam dispositivos arcanos. Falha Crítica quebra o dispositivo (sem Fadiga). Precisam de kit de ferramentas. Podem sabotar máquinas com Consertar. Perícia Arcana: Consertar (Astúcia)."
+    },
+    {
+      "id": "armadura_de_engenhoqueiro",
+      "nome": "ARMADURA DE ENGENHOQUEIRO",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_engenhoqueiro"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Modifica armadura (couro+) para reduzir Força Mínima e adicionar um efeito: Dano corpo a corpo +2, Armadura +2 ou Salto/Movimento aumentado. Risco de colapso ao sofrer ferimento."
+    },
+    {
+      "id": "familiar_construto",
+      "nome": "FAMILIAR CONSTRUTO",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_engenhoqueiro"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ganha um familiar com a habilidade Construto (+2 recuperar abalado, imunidades, reparado com Consertar)."
+    },
+    {
+      "id": "antecedente_arcano_feiticeiro",
+      "nome": "ANTECEDENTE ARCANO (Feiticeiro)",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": { "Astúcia": 6 },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "grupoId": "antecedente_arcano",
+      "subtipoArcano": "FEITICEIRO",
+      "isGrupoSelector": false,
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Conjuram poder bruto, muitas vezes de fontes perigosas. Possuem Interferência de Armadura (Menor) e Corrupção. Falha Crítica causa Fadiga, Atordoamento e Corrupção. Podem Sobrecarregar (gastar PP extras para aumentar total da rolagem). Perícia Arcana: Conjurar (Astúcia)."
+    },
+    {
+      "id": "grande_poder",
+      "nome": "GRANDE PODER",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Veterano",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_feiticeiro"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Gasta um Bene para conjurar qualquer poder de até 20 PP com -2. Risco de perda de atributo se falhar."
+    },
+    {
+      "id": "poder_fenomenal",
+      "nome": "PODER FENOMENAL",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Heroico",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["grande_poder"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Permite gastar Convicção para lançar qualquer feitiço disponível no cenário com o bônus de Convicção."
+    },
+    {
+      "id": "antecedente_arcano_ilusionista",
+      "nome": "ANTECEDENTE ARCANO (Ilusionista)",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": { "Astúcia": 6 },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "grupoId": "antecedente_arcano",
+      "subtipoArcano": "ILUSIONISTA",
+      "isGrupoSelector": false,
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Especialistas em enganação. Possuem Interferência de Armadura (Maior). Ilusões são sempre Fortes (grátis) e podem preencher Modelo Grande. Se um inimigo descrer, vê através de todas as ilusões. Perícia Arcana: Conjurar (Astúcia)."
+    },
+    {
+      "id": "ilusao_mortal",
+      "nome": "ILUSÃO MORTAL",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": { "Conjurar": 10 },
+        "vantagens_previas": ["antecedente_arcano_ilusionista"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Pode usar o Modificador Mortal em ilusões sem custo extra de PP."
+    },
+    {
+      "id": "mestre_da_ilusao",
+      "nome": "MESTRE DA ILUSÃO",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": { "Conjurar": 8 },
+        "vantagens_previas": ["antecedente_arcano_ilusionista"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Pode usar Modificadores Mobilidade e Som sem custo extra de PP."
+    },
+    {
+      "id": "antecedente_arcano_invocador",
+      "nome": "ANTECEDENTE ARCANO (Invocador)",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": { "Astúcia": 6 },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "grupoId": "antecedente_arcano",
+      "subtipoArcano": "INVOCADOR",
+      "isGrupoSelector": false,
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Chamam criaturas para lutar. Possuem Interferência de Armadura (Menor). Reduzem custo de poderes de conjuração em 2 (min 1) e duração é em minutos. Perícia Arcana: Conjurar (Astúcia)."
+    },
+    {
+      "id": "barda_arcana",
+      "nome": "BARDA ARCANA",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_invocador"],
+        "observacoes": "Poder Conjurar Animal"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Animais invocados têm +2 de Resistência."
+    },
+    {
+      "id": "grande_invocacao",
+      "nome": "GRANDE INVOCAÇÃO",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Heroico",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_invocador"],
+        "observacoes": "Poderes Conjurar Monstro e Conjurar Animal"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Permite conjurar feras poderosas como mamutes e dragões jovens por custo fixo de PP."
+    },
+    {
+      "id": "invocacao_feroz",
+      "nome": "INVOCAÇÃO FEROZ",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_invocador"],
+        "observacoes": "Poder Conjurar Monstro"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Permite conceder uma Vantagem de Combate a monstros invocados."
+    },
+    {
+      "id": "antecedente_arcano_mago_fantasia",
+      "nome": "ANTECEDENTE ARCANO (Mago - Fantasia)",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": { "Astúcia": 6 },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "grupoId": "antecedente_arcano",
+      "subtipoArcano": "MAGO (FANTASIA)",
+      "isGrupoSelector": false,
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "O conjurador clássico e versátil. Possui maior lista de poderes, mas sofre Interferência de Armadura (Maior) e Componentes Materiais. Perícia Arcana: Conjurar (Astúcia)."
+    },
+    {
+      "id": "grimorio",
+      "nome": "GRIMÓRIO",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_mago_fantasia"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ganha 1 poder imediatamente. Ao pegar a vantagem Novos Poderes, escolhe 3 poderes em vez de 2."
+    },
+    {
+      "id": "inspiracao_arcana",
+      "nome": "INSPIRAÇÃO ARCANA",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Heroico",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_mago_fantasia"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Gasta 1 Bene para conjurar qualquer poder de seu Estágio ou inferior (acesso ao grimório necessário)."
+    },
+    {
+      "id": "antecedente_arcano_necromante",
+      "nome": "ANTECEDENTE ARCANO (Necromante)",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": { "Astúcia": 6 },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "grupoId": "antecedente_arcano",
+      "subtipoArcano": "NECROMANTE",
+      "isGrupoSelector": false,
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Mestres da morte. Possuem Corrupção. O poder Zumbi é Novato e dura 4 horas. Perícia Arcana: Conjurar (Astúcia)."
+    },
+    {
+      "id": "familiar_morto_vivo",
+      "nome": "FAMILIAR MORTO-VIVO",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_necromante"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ganha um familiar com a habilidade Morto-Vivo (+2 Resistência, sem dano extra local, imunidades)."
+    },
+    {
+      "id": "recipiente_da_alma",
+      "nome": "RECIPIENTE DA ALMA",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Lendário",
+        "atributos": {},
+        "pericias": { "Ocultismo": 10 },
+        "vantagens_previas": ["antecedente_arcano_necromante"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Transforma-se em Morto-Vivo (Lich). Se morto, a alma retorna a um recipiente escondido e habita novo corpo em 2d6 dias."
+    },
+    {
+      "id": "antecedente_arcano_xama",
+      "nome": "ANTECEDENTE ARCANO (Xamã)",
+      "categoria": "ANTECEDENTE",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": { "Espírito": 6 },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "grupoId": "antecedente_arcano",
+      "subtipoArcano": "XAMÃ",
+      "isGrupoSelector": false,
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Conectados aos espíritos. Possuem Interferência de Armadura (Menor) e Desagradável (peculiaridade). Devem usar um Fetiche (-2 sem ele). Escolhem um Poder Favorecido. Perícia Arcana: Fé (Espírito)."
+    },
+    {
+      "id": "fetiche_sagrado",
+      "nome": "FETICHE SAGRADO",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": { "Fé": 8 },
+        "vantagens_previas": ["antecedente_arcano_xama"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ganha rerrolagem ao falhar em Fé contanto que tenha o fetiche em mãos."
+    },
+    {
+      "id": "magia_primordial",
+      "nome": "MAGIA PRIMORDIAL",
+      "categoria": "PODER",
+      "origem": "FANTASIA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["antecedente_arcano_xama"],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "+2 de dano em poderes ofensivos. Falha Crítica causa Atordoamento em área."
     }
 ]
