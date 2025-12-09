@@ -56,7 +56,7 @@ fun TipoMonstroSection(
                     RadioButtonRow(
                         selected = selected,
                         label = template.nome,
-                        onClick = { state.tipoMonstroSelecionado = template.id }
+                        onSelect = { state.tipoMonstroSelecionado = template.id }
                     )
 
                     if (selected) {
