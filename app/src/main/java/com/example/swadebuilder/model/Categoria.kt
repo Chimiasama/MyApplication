@@ -17,5 +17,6 @@ enum class Categoria {
     @SerialName("SOCIAIS")       SOCIAIS,
     @SerialName("ESTRANHAS")     ESTRANHAS,
     @SerialName("LENDARIAS")     LENDARIAS,
-    @SerialName("SUPER")         SUPER
+    @SerialName("SUPER")         SUPER,
+    @SerialName("MONSTRUOSAS")   MONSTRUOSAS
 }
