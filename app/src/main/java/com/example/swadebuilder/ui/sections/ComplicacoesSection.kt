@@ -63,7 +63,6 @@ fun ComplicacoesSection(
     state: CriadorState,
     expanded: Boolean,
     onToggle: () -> Unit,
-    onOpenComplicacoesDetail: () -> Unit,
     feedbackMessages: MutableList<String>
 ) {
     val locked = state.criacaoBasicaCongelada

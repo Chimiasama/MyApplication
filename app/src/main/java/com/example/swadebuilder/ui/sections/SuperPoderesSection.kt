@@ -340,7 +340,6 @@ fun SuperPoderesSection(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
     expanded: Boolean,
-    onOpenSuperPoderesDetail: (String) -> Unit,
     viewModel: CriadorViewModel = viewModel()
 ) {
     if (!expanded) return
@@ -542,7 +541,6 @@ fun SuperPoderesSection(
         Spacer(Modifier.height(8.dp))
 
 
-        val showLista2 = false
         val allowLongTexts = booleanResource(R.bool.enable_long_texts)
         val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
@@ -628,19 +626,6 @@ fun SuperPoderesSection(
                                     )
                                 }
                             }
-                        }
-
-                        if (showLista2) {
-                            Icon(
-                                imageVector = Icons.Filled.Visibility,
-                                contentDescription = "Ver detalhes do superpoder",
-                                modifier = Modifier
-                                    .padding(start = 8.dp)
-                                    .clickable {
-                                        state.superPoderEmFoco = poder.nome
-                                        onOpenSuperPoderesDetail(poder.nome)
-                                    }
-                            )
                         }
                     }
 
@@ -1182,8 +1167,7 @@ fun SuperPoderesContent(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
     expanded: Boolean,
-    onToggle: () -> Unit,
-    onOpenSuperPoderesDetail: (String) -> Unit
+    onToggle: () -> Unit
 ) {
     SectionCard(
         title = "Superpoderes",
@@ -1191,23 +1175,18 @@ fun SuperPoderesContent(
         onToggle = onToggle,
         icon = Icons.Filled.FlashOn
     ) {
-        val showLista = false
-
         SectionHeader(
             onHelpClick = null,
             centerText = "Pontos de Super: ${state.superPontosDisponiveis}",
             onCenterClick = onToggle,
-            onListaCompletaClick = if (showLista) {
-                { onOpenSuperPoderesDetail("") }
-            } else null,
+            onListaCompletaClick = null,
             listaCompletaText = ""
         )
 
         SuperPoderesSection(
             state = state,
             listaSuperPoderes = listaSuperPoderes,
-            expanded = expanded,
-            onOpenSuperPoderesDetail = onOpenSuperPoderesDetail
+            expanded = expanded
         )
     }
 }

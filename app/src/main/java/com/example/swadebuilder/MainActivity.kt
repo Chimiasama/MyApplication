@@ -688,30 +688,6 @@ class MainActivity : ComponentActivity() {
                                                 state = state,
                                                 viewModel = criadorViewModel,
 
-                                                onOpenVantagensDetail = { nomeVantagem ->
-                                                    highlightedVantagem      = nomeVantagem
-                                                    state.vantagemEmFoco     = nomeVantagem
-                                                    showVantagensDetail      = true
-                                                },
-
-                                                onOpenPericiasDetail     = { showPericiasDetail     = true },
-                                                onOpenComplicacoesDetail = { showComplicacoesDetail = true },
-                                                onOpenAtributosDetail    = { showAtributosDetail    = true },
-
-                                                onOpenListaAncestralidadesDetail = { nomeAnc ->
-                                                    if (nomeAnc.isNotBlank()) {
-                                                        state.ancestralidadeEmFoco = nomeAnc
-                                                    }
-                                                    showAncestralidadesDetail = true
-                                                },
-                                                onOpenPoderesDetail            = { showPoderesDetail = true },
-
-                                                onOpenSuperPoderesDetail = { nomePoder ->
-                                                    highlightedSuperPoder  = nomePoder
-                                                    state.superPoderEmFoco = nomePoder.takeIf { it.isNotBlank() }
-                                                    showSuperDetail        = true
-                                                },
-
                                                 expAncs        = expAncs,
                                                 onToggleAncs   = { expAncs = !expAncs },
 
