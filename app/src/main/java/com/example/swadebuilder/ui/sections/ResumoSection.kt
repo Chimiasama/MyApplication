@@ -167,11 +167,16 @@ fun SummaryContent(state: CriadorState) {
         .orEmpty()
         .ifBlank { "–" }
 
+    val monstroInfo = if (state.modoMonstroAtivo) {
+        val tipoNome = com.example.swadebuilder.listaMonstroTemplates.find { it.id == state.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
+        "\nTipo de Monstro: $tipoNome"
+    } else ""
+
     Column(Modifier.fillMaxWidth()) {
         IdentityCard(
             nome = nome,
             onNomeChange = { state.nomePersonagem = it },
-            ancestralidade = "Ancestralidade: $ancestralidadeValue"
+            ancestralidade = "Ancestralidade: $ancestralidadeValue$monstroInfo"
         )
 
         Spacer(Modifier.height(12.dp))

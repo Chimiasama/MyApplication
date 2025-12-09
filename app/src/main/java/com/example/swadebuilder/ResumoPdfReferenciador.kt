@@ -50,6 +50,8 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
 
         // supers
         modoSupers = this.modoSupers,
+        modoMonstroAtivo = this.modoMonstroAtivo,
+        tipoMonstroSelecionado = this.tipoMonstroSelecionado,
         superPontosTotais = this.superPontosTotais,
         superPontosDisponiveis = this.superPontosDisponiveis,
         limitePorPoderPadrao = this.limitePorPoderPadrao,
@@ -112,6 +114,11 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val ancestralidadeNome: String = listaAncestralidadesJson
         .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
         ?.nome ?: personagem.ancestralidade
+
+    val monstroNome = if (personagem.modoMonstroAtivo) {
+        val tipoNome = listaMonstroTemplates.find { it.id == personagem.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
+        " (Monstro: $tipoNome)"
+    } else ""
 
     val vantagensNomeKey: List<String> = listaVantagens
         .filter { it.id in personagem.vantagens }
@@ -240,7 +247,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
 
     lines += "Identidade"
     lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"
-    lines += "Ancestralidade: $ancestralidadeNome"
+    lines += "Ancestralidade: $ancestralidadeNome$monstroNome"
     lines += ""
 
     lines += "Atributos derivados"
@@ -475,9 +482,14 @@ fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
     val titleHeight = titlePaint.fontMetrics.let { it.descent - it.ascent }
     val subtitleHeight = subtitlePaint.fontMetrics.let { it.descent - it.ascent }
 
+    val monstroTxt = if (personagem.modoMonstroAtivo) {
+        val tipoNome = listaMonstroTemplates.find { it.id == personagem.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
+        " - Monstro: $tipoNome"
+    } else ""
+
     canvas.drawText(title, marginLeft, y, titlePaint)
     y += titleHeight + 6f
-    canvas.drawText("Ancestralidade: ${personagem.ancestralidade}", marginLeft, y, subtitlePaint)
+    canvas.drawText("Ancestralidade: ${personagem.ancestralidade}$monstroTxt", marginLeft, y, subtitlePaint)
     y += subtitleHeight + 12f
 
     val lines = buildSummaryLines(personagem)

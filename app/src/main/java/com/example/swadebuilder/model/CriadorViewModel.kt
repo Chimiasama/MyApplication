@@ -72,6 +72,7 @@ class CriadorViewModel : ViewModel() {
         modoSupers: Boolean,
         compendioFantasiaAtivo: Boolean,
         compendioHorrorAtivo: Boolean = false,
+        modoMonstroAtivo: Boolean = false,
         usarEspecializacoesDePericia: Boolean = false,
         grandesResponsabilidades: Boolean = false,
         showHelpMessages: Boolean = false
@@ -81,6 +82,8 @@ class CriadorViewModel : ViewModel() {
         state.modoSupers = modoSupers
         state.compendioFantasiaAtivo = compendioFantasiaAtivo
         state.compendioHorrorAtivo = compendioHorrorAtivo
+        state.modoMonstroAtivo = modoMonstroAtivo
+        state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
         state.modoSuperequip = modoSupers
         state.modoSuperComplicacoes = modoSupers
         state.grandesResponsabilidades = grandesResponsabilidades
@@ -90,6 +93,8 @@ class CriadorViewModel : ViewModel() {
         state.idAtual = null
         state.nomePersonagem = ""
         state.anotacoes = ""
+
+        state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
 
         state.cartaSelvagem = cartaSelvagem
         state.maisPontosPericias = maisPontosPericias
@@ -203,8 +208,13 @@ class CriadorViewModel : ViewModel() {
             modoSupers = salvo.modoSupers,
             compendioFantasiaAtivo = salvo.compendioFantasiaAtivo,
             compendioHorrorAtivo = salvo.compendioHorrorAtivo,
+            modoMonstroAtivo = salvo.modoMonstroAtivo,
             usarEspecializacoesDePericia = salvo.usarEspecializacoesDePericia
         )
+        // Se no save já tem algo selecionado, usa ele em vez do default
+        if (salvo.modoMonstroAtivo) {
+            state.tipoMonstroSelecionado = salvo.tipoMonstroSelecionado ?: "anjo"
+        }
 
         // Demais flags de modo (mantêm comportamento de telas/filtros)
         state.modoSuperequip        = salvo.modoSuperequip
