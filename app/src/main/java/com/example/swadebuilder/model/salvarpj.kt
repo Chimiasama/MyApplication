@@ -50,6 +50,8 @@ data class PersonagemSalvo(
     val modoSupers: Boolean = false,
     val compendioFantasiaAtivo: Boolean = false,
     val compendioHorrorAtivo: Boolean = false,
+    val modoMonstroAtivo: Boolean = false,
+    val tipoMonstroSelecionado: String? = null,
     val modoSuperequip: Boolean = false,
     val modoSuperComplicacoes: Boolean = false,
 

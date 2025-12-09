@@ -88,6 +88,7 @@ import com.example.swadebuilder.model.AtributoList
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
+import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.PersonagemSalvo
 import com.example.swadebuilder.model.RacialModifier
@@ -221,6 +222,12 @@ class MainActivity : ComponentActivity() {
             .use { it.readText() }
 
         listaAncestralidadesJson = json.decodeFromString<List<RacialModifier>>(ancestralRaw)
+
+        val monstrosJson = assets
+            .open("monstros.json")
+            .bufferedReader()
+            .use { it.readText() }
+        listaMonstroTemplates = json.decodeFromString(monstrosJson)
 
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
             val m = rm.atributos
@@ -425,7 +432,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, _, _,
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, modoMonstroAtivo, _, _,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, grandesResponsabilidades, showHelpMessages ->
 
@@ -437,6 +444,7 @@ class MainActivity : ComponentActivity() {
                                         modoSupers         = modoSupers,
                                         compendioFantasiaAtivo = compendioFantasiaAtivo,
                                         compendioHorrorAtivo = compendioHorrorAtivo,
+                                        modoMonstroAtivo = modoMonstroAtivo,
                                         usarEspecializacoesDePericia = usarEspecializacaoPer,
                                         showHelpMessages = showHelpMessages
                                     )
@@ -594,6 +602,9 @@ class MainActivity : ComponentActivity() {
                                                             especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
                                                             modoSupers              = state.modoSupers,
                                                             compendioFantasiaAtivo  = state.compendioFantasiaAtivo,
+                                                            compendioHorrorAtivo    = state.compendioHorrorAtivo,
+                                                            modoMonstroAtivo        = state.modoMonstroAtivo,
+                                                            tipoMonstroSelecionado  = state.tipoMonstroSelecionado,
                                                             modoSuperequip          = state.modoSuperequip,
                                                             modoSuperComplicacoes   = state.modoSuperComplicacoes,
                                                             superInvestments        = state.superInvestments.toList(),
@@ -942,6 +953,7 @@ data class SuperPoder(
 )
 
 lateinit var listaAncestralidadesJson: List<RacialModifier>
+lateinit var listaMonstroTemplates: List<MonstroTemplate>
 
 lateinit var racialAttrMinMap: Map<String, Map<String,Int>>
 lateinit var racialSkillStartMap: Map<String, Map<String,Int>>

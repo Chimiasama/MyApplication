@@ -30,6 +30,8 @@ class CriadorState {
     var modoSuperequip by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)
+    var modoMonstroAtivo by mutableStateOf(false)
+    var tipoMonstroSelecionado by mutableStateOf<String?>(null)
     var grandesResponsabilidades by mutableStateOf(false)
     companion object { const val BASE_SP_POOL = 15 }
     var maisPontosPericias by mutableStateOf(true)
