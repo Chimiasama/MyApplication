@@ -681,7 +681,7 @@ fun EquipamentoSection(
 }
 
 @Composable
-private fun EquipamentoListItem(
+fun EquipamentoListItem(
     equipamento: EquipamentoItem,
     onClick: () -> Unit,
     allowLongTexts: Boolean,
