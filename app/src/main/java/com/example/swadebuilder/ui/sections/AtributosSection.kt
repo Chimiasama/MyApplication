@@ -3,12 +3,12 @@ package com.example.swadebuilder.ui.sections
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,8 +26,8 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.FontWeight
@@ -39,13 +39,43 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaAtributos
-import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.loadRawText
+import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
-import com.example.swadebuilder.ui.sections.parseAtributos
 import com.example.swadebuilder.util.semAcentos
+
+data class AtributoDesc(
+    val nome: String,
+    val descricao: String
+)
+
+fun parseAtributos(rawText: String): List<AtributoDesc> {
+    val result = mutableListOf<AtributoDesc>()
+    val lines = rawText.lines()
+    var currentName = ""
+    val currentDesc = StringBuilder()
+
+    for (line in lines) {
+        val trimmed = line.trim()
+        if (trimmed.endsWith(":")) {
+            if (currentName.isNotEmpty()) {
+                result.add(AtributoDesc(currentName, currentDesc.toString().trim()))
+                currentDesc.clear()
+            }
+            currentName = trimmed.removeSuffix(":")
+        } else {
+            if (currentName.isNotEmpty()) {
+                currentDesc.append(line).append("\n")
+            }
+        }
+    }
+    if (currentName.isNotEmpty()) {
+        result.add(AtributoDesc(currentName, currentDesc.toString().trim()))
+    }
+    return result
+}
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
