@@ -84,6 +84,9 @@ fun PreviewApp() {
         expXp = true,
         onToggleXp = {},
 
+        expMonstro = true,
+        onToggleMonstro = {},
+
         equipamentoCategorias = emptyList(),
         superequipCategorias = emptyList(),
         listaSuperPoderes = emptyList()
@@ -123,6 +126,9 @@ fun UnifiedScreen(
 
     expXp: Boolean,
     onToggleXp: () -> Unit,
+
+    expMonstro: Boolean,
+    onToggleMonstro: () -> Unit,
 
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
@@ -313,7 +319,11 @@ fun UnifiedScreen(
 
             if (state.modoMonstroAtivo) {
                 HorizontalDivider(thickness = 1.dp)
-                TipoMonstroSection(state = state)
+                TipoMonstroSection(
+                    state = state,
+                    expanded = expMonstro,
+                    onToggle = onToggleMonstro
+                )
             }
 
             HorizontalDivider(thickness = 1.dp)
