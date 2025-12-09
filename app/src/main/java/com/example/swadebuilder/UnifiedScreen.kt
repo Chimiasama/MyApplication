@@ -288,6 +288,7 @@ fun UnifiedScreen(
             HorizontalDivider(thickness = 1.dp)
 
             AncestralidadesSection(
+                state = state,
                 currentAncestralidade = state.ancestralidade,
                 expanded = expAncs,
                 onToggle = onToggleAncs,
@@ -594,6 +595,7 @@ private fun EquipamentoSection(
             if (hasSoldado) {
                 state.soldadoCargaAtivo = !state.soldadoCargaAtivo
             }
-        }
+        },
+        compendioFantasiaAtivo = state.compendioFantasiaAtivo
     )
 }

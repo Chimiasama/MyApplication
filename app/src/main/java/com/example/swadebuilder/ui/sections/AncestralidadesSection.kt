@@ -41,6 +41,8 @@ import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.Serializable
+import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.CriadorState
 
 @Serializable
 data class RacialModifierLite(
@@ -53,6 +55,7 @@ private const val ASSET_ANCESTRALIDADES = "listaancestralidade.json"
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun AncestralidadesSection(
+    state: CriadorState,
     currentAncestralidade: String,
     expanded: Boolean,
     onToggle: () -> Unit,
@@ -72,10 +75,15 @@ fun AncestralidadesSection(
         }
     }
 
-    val ancestralidadesState = remember {
-        mutableStateOf(
-            context.loadJsonAsset<List<RacialModifierLite>>(ASSET_ANCESTRALIDADES)
-        )
+    val compendioFantasiaAtivo = state.compendioFantasiaAtivo
+
+    val ancestralidadesState = remember(compendioFantasiaAtivo) {
+        val all = context.loadJsonAsset<List<RacialModifier>>(ASSET_ANCESTRALIDADES)
+        val filtered = all.filter {
+            val origin = it.origem?.uppercase() ?: "BASICO"
+            origin == "BASICO" || (origin == "FANTASIA" && compendioFantasiaAtivo)
+        }.map { RacialModifierLite(it.nome) }
+        mutableStateOf(filtered)
     }
 
     val selectedKey = rememberSaveable(currentAncestralidade) {

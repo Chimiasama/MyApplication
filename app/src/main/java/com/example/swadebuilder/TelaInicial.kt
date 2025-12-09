@@ -61,6 +61,7 @@ fun TelaInicial(
         cartaSelvagem: Boolean,
         maisPontosPericias: Boolean,
         modoSupers: Boolean,
+        compendioFantasiaAtivo: Boolean,
         modoSuperequipamentos: Boolean,
         modoSuperComplicacoes: Boolean,
         nasceUmHeroi: Boolean,
@@ -118,6 +119,7 @@ fun TelaInicial(
 
     // Fantasia
     var expFantasia by rememberSaveable { mutableStateOf(false) }
+    var optCompendioFantasia by rememberSaveable { mutableStateOf(false) }
 
     // Ficção Científica
     var expFiccao by rememberSaveable { mutableStateOf(false) }
@@ -497,7 +499,22 @@ Feito por Rafael S.W.
                         )
                     }
                     if (expFantasia) {
-                        Text("— sem opções por enquanto —")
+                        Spacer(Modifier.height(4.dp))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { optCompendioFantasia = !optCompendioFantasia }
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Checkbox(
+                                checked = optCompendioFantasia,
+                                onCheckedChange = { optCompendioFantasia = it }
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text("Compêndio de Fantasia", fontWeight = FontWeight.Bold)
+                        }
                     }
 
                     Spacer(Modifier.height(16.dp))
@@ -528,6 +545,7 @@ Feito por Rafael S.W.
                         optCartaSelvagem,
                         optMaisPontosPericias,
                         optSuperPoderes,
+                        optCompendioFantasia,
                         optSuperequipamentos,
                         optSuperComplicacoes,
                         optNasceUmHeroi,

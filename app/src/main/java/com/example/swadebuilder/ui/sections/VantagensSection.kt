@@ -222,13 +222,14 @@ fun VantagensContent(
         }
     }
 
-    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers) {
+    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo) {
         listaVantagens.filter { vant ->
             val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase()
             val isBasico = origemNorm == "BASICO"
             val isSuper = origemNorm == "SUPER"
+            val isFantasia = origemNorm == "FANTASIA"
 
-            isBasico || (isSuper && state.modoSupers)
+            isBasico || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo)
         }
     }
 

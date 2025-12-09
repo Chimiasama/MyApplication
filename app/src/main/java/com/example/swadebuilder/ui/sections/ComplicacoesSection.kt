@@ -79,6 +79,7 @@ fun ComplicacoesSection(
     val origensAtivas: Set<String> = buildSet {
         add("BASICO")
         if (state.modoSuperComplicacoes) add("SUPER")
+        if (state.compendioFantasiaAtivo) add("FANTASIA")
     }
 
     val complicacoesFiltradas = listaComplicacoes.filter { comp ->
