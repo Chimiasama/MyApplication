@@ -626,9 +626,7 @@ fun EquipamentoSection(
                                     CollapsibleSection(
                                         title = subtipo,
                                         expanded = isSubExpanded,
-                                        onToggle = { isSubExpanded ->
-                                            expandedSubtipoMap.getValue(subtipo).value = !isSubExpanded
-                                        }.let { { expandedSubtipoMap.getValue(subtipo).value = !isSubExpanded } }
+                                        onToggle = { expandedSubtipoMap.getValue(subtipo).value = !isSubExpanded }
                                     ) {
                                         val scroll = rememberScrollState()
                                         Column(
