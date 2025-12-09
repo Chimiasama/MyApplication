@@ -29,6 +29,7 @@ class CriadorState {
     var modoSuperComplicacoes by mutableStateOf(false)
     var modoSuperequip by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
+    var compendioHorrorAtivo by mutableStateOf(false)
     var grandesResponsabilidades by mutableStateOf(false)
     companion object { const val BASE_SP_POOL = 15 }
     var maisPontosPericias by mutableStateOf(true)

@@ -421,7 +421,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, _, _,
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, _, _,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, grandesResponsabilidades, showHelpMessages ->
 
@@ -432,6 +432,7 @@ class MainActivity : ComponentActivity() {
                                         maisPontosPericias = maisPontosPericias,
                                         modoSupers         = modoSupers,
                                         compendioFantasiaAtivo = compendioFantasiaAtivo,
+                                        compendioHorrorAtivo = compendioHorrorAtivo,
                                         usarEspecializacoesDePericia = usarEspecializacaoPer,
                                         showHelpMessages = showHelpMessages
                                     )
@@ -589,6 +590,7 @@ class MainActivity : ComponentActivity() {
                                                             especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
                                                             modoSupers              = state.modoSupers,
                                                             compendioFantasiaAtivo  = state.compendioFantasiaAtivo,
+                                                            compendioHorrorAtivo    = state.compendioHorrorAtivo,
                                                             modoSuperequip          = state.modoSuperequip,
                                                             modoSuperComplicacoes   = state.modoSuperComplicacoes,
                                                             superInvestments        = state.superInvestments.toList(),

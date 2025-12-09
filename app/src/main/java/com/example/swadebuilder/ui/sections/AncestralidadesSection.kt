@@ -77,11 +77,11 @@ fun AncestralidadesSection(
 
     val compendioFantasiaAtivo = state.compendioFantasiaAtivo
 
-    val ancestralidadesState = remember(compendioFantasiaAtivo) {
+    val ancestralidadesState = remember(compendioFantasiaAtivo, state.compendioHorrorAtivo) {
         val all = context.loadJsonAsset<List<RacialModifier>>(ASSET_ANCESTRALIDADES)
         val filtered = all.filter {
             val origin = it.origem?.uppercase() ?: "BASICO"
-            origin == "BASICO" || (origin == "FANTASIA" && compendioFantasiaAtivo)
+            origin == "BASICO" || (origin == "FANTASIA" && compendioFantasiaAtivo) || (origin == "HORROR" && state.compendioHorrorAtivo)
         }.map { RacialModifierLite(it.nome) }
         mutableStateOf(filtered)
     }
