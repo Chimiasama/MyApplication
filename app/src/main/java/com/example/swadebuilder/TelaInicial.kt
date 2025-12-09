@@ -62,6 +62,7 @@ fun TelaInicial(
         maisPontosPericias: Boolean,
         modoSupers: Boolean,
         compendioFantasiaAtivo: Boolean,
+        compendioHorrorAtivo: Boolean,
         modoSuperequipamentos: Boolean,
         modoSuperComplicacoes: Boolean,
         nasceUmHeroi: Boolean,
@@ -116,6 +117,7 @@ fun TelaInicial(
 
     // Horror
     var expHorror by rememberSaveable { mutableStateOf(false) }
+    var optCompendioHorror by rememberSaveable { mutableStateOf(false) }
 
     // Fantasia
     var expFantasia by rememberSaveable { mutableStateOf(false) }
@@ -479,7 +481,22 @@ Feito por Rafael S.W.
                         )
                     }
                     if (expHorror) {
-                        Text("— sem opções por enquanto —")
+                        Spacer(Modifier.height(4.dp))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { optCompendioHorror = !optCompendioHorror }
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Checkbox(
+                                checked = optCompendioHorror,
+                                onCheckedChange = { optCompendioHorror = it }
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text("Compêndio de Horror", fontWeight = FontWeight.Bold)
+                        }
                     }
 
                     Spacer(Modifier.height(16.dp))
@@ -546,6 +563,7 @@ Feito por Rafael S.W.
                         optMaisPontosPericias,
                         optSuperPoderes,
                         optCompendioFantasia,
+                        optCompendioHorror,
                         optSuperequipamentos,
                         optSuperComplicacoes,
                         optNasceUmHeroi,
