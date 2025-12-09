@@ -71,6 +71,7 @@ class CriadorViewModel : ViewModel() {
         maisPontosPericias: Boolean,
         modoSupers: Boolean,
         compendioFantasiaAtivo: Boolean,
+        compendioHorrorAtivo: Boolean = false,
         usarEspecializacoesDePericia: Boolean = false,
         grandesResponsabilidades: Boolean = false,
         showHelpMessages: Boolean = false
@@ -79,6 +80,7 @@ class CriadorViewModel : ViewModel() {
         state.showHelpMessages = showHelpMessages
         state.modoSupers = modoSupers
         state.compendioFantasiaAtivo = compendioFantasiaAtivo
+        state.compendioHorrorAtivo = compendioHorrorAtivo
         state.modoSuperequip = modoSupers
         state.modoSuperComplicacoes = modoSupers
         state.grandesResponsabilidades = grandesResponsabilidades
@@ -200,6 +202,7 @@ class CriadorViewModel : ViewModel() {
             maisPontosPericias = salvo.maisPontosPericias,
             modoSupers = salvo.modoSupers,
             compendioFantasiaAtivo = salvo.compendioFantasiaAtivo,
+            compendioHorrorAtivo = salvo.compendioHorrorAtivo,
             usarEspecializacoesDePericia = salvo.usarEspecializacoesDePericia
         )
 

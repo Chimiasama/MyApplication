@@ -49,6 +49,7 @@ data class PersonagemSalvo(
     // ===== MODOS SUPER =====
     val modoSupers: Boolean = false,
     val compendioFantasiaAtivo: Boolean = false,
+    val compendioHorrorAtivo: Boolean = false,
     val modoSuperequip: Boolean = false,
     val modoSuperComplicacoes: Boolean = false,
 
