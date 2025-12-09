@@ -202,143 +202,6 @@ fun EquipamentoSection(
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
-    // Helper function to render a list of items based on a list of categories (for reuse)
-    @Composable
-    fun RenderCategoryList(
-        sourceCategorias: List<EquipamentoCategoria>,
-        expandedTipoMap: MutableMap<String, Boolean>
-    ) {
-        val tipos = sourceCategorias.map { it.tipo }.distinct()
-
-        tipos.forEach { tipo ->
-            if (filter.tipos.isNotEmpty() && tipo !in filter.tipos) return@forEach
-
-            val isTipoExpanded = expandedTipoMap[tipo] ?: false
-            CollapsibleSection(
-                title = tipo,
-                expanded = isTipoExpanded,
-                onToggle = { expandedTipoMap[tipo] = !isTipoExpanded }
-            ) {
-                val scroll = rememberScrollState()
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 200.dp)
-                        .verticalScroll(scroll)
-                        .padding(start = 8.dp, bottom = 8.dp)
-                ) {
-                    val catsPorTipo = sourceCategorias
-                        .filter { it.tipo == tipo }
-                        .let { list ->
-                            if (filter.origens.isNotEmpty())
-                                list.filter { (it.origem?.uppercase() ?: "") in filter.origens }
-                            else list
-                        }
-
-                    if (catsPorTipo.isNotEmpty()) {
-                        val subtipos = catsPorTipo.map { it.subtipo }.distinct()
-                        val expandedSubtipoMap = remember(tipo) {
-                            subtipos.associateWith { mutableStateOf(false) }
-                        }
-
-                        subtipos.forEach { subtipo ->
-                            if (filter.subtipos.isNotEmpty() && subtipo !in filter.subtipos) return@forEach
-
-                            val isSubExpanded = expandedSubtipoMap.getValue(subtipo).value
-                            CollapsibleSection(
-                                title = subtipo,
-                                expanded = isSubExpanded,
-                                onToggle = { expandedSubtipoMap.getValue(subtipo).value = !isSubExpanded }
-                            ) {
-                                val scrollSub = rememberScrollState()
-                                Column(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .heightIn(max = 200.dp)
-                                        .verticalScroll(scrollSub)
-                                        .padding(start = 8.dp, bottom = 8.dp)
-                                ) {
-                                    val catsPorSub = catsPorTipo.filter { it.subtipo == subtipo }
-                                    val subsub = catsPorSub.mapNotNull { it.subsubtipo }.distinct()
-                                    val expandedSubsub = remember(tipo, subtipo) {
-                                        subsub.associateWith { mutableStateOf(false) }
-                                    }
-
-                                    if (subsub.isEmpty()) {
-                                        catsPorSub
-                                            .flatMap { it.itens }
-                                            .filter { eq ->
-                                                if (filter.somenteAcessiveis) {
-                                                    val c = (eq.custo as? JsonPrimitive)?.content?.toIntOrNull()
-                                                        ?: Int.MAX_VALUE
-                                                    if (c > dinheiro) return@filter false
-                                                }
-                                                true
-                                            }
-                                            .forEach { equipamento ->
-                                                EquipamentoListItem(
-                                                    equipamento = equipamento,
-                                                    onClick = { onEquipamentoDoubleClick(equipamento) },
-                                                    allowLongTexts = allowLongTexts,
-                                                    expanded = detalhesExpandidos[equipamento.nome] == true,
-                                                    onToggleDetails = {
-                                                        val current = detalhesExpandidos[equipamento.nome] ?: false
-                                                        detalhesExpandidos[equipamento.nome] = !current
-                                                    }
-                                                )
-                                            }
-                                    } else {
-                                        subsub.forEach { ss ->
-                                            val isSsExpanded = expandedSubsub.getValue(ss).value
-                                            CollapsibleSection(
-                                                title = ss,
-                                                expanded = isSsExpanded,
-                                                onToggle = { expandedSubsub.getValue(ss).value = !isSsExpanded }
-                                            ) {
-                                                val scrollSs = rememberScrollState()
-                                                Column(
-                                                    Modifier
-                                                        .fillMaxWidth()
-                                                        .heightIn(max = 200.dp)
-                                                        .verticalScroll(scrollSs)
-                                                        .padding(start = 8.dp, bottom = 8.dp)
-                                                ) {
-                                                    catsPorSub
-                                                        .filter { it.subsubtipo == ss }
-                                                        .flatMap { it.itens }
-                                                        .filter { eq ->
-                                                            if (filter.somenteAcessiveis) {
-                                                                val c = (eq.custo as? JsonPrimitive)?.content?.toIntOrNull()
-                                                                    ?: Int.MAX_VALUE
-                                                                if (c > dinheiro) return@filter false
-                                                            }
-                                                            true
-                                                        }
-                                                        .forEach { equipamento ->
-                                                            EquipamentoListItem(
-                                                                equipamento = equipamento,
-                                                                onClick = { onEquipamentoDoubleClick(equipamento) },
-                                                                allowLongTexts = allowLongTexts,
-                                                                expanded = detalhesExpandidos[equipamento.nome] == true,
-                                                                onToggleDetails = {
-                                                                    val current = detalhesExpandidos[equipamento.nome] ?: false
-                                                                    detalhesExpandidos[equipamento.nome] = !current
-                                                                }
-                                                            )
-                                                        }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     SectionCard(
         title    = "Equipamento",
         expanded = expanded,
@@ -542,8 +405,178 @@ fun EquipamentoSection(
         }
 
         // Renderiza categorias normais
+        val tiposNormais = normalCategorias.map { it.tipo }.distinct()
         val expandedTipoMap = remember { mutableStateMapOf<String, Boolean>() }
-        RenderCategoryList(sourceCategorias = normalCategorias, expandedTipoMap = expandedTipoMap)
+
+        tiposNormais.forEach { tipo ->
+            if (filter.tipos.isNotEmpty() && tipo !in filter.tipos) return@forEach
+
+            val isTipoExpanded = expandedTipoMap[tipo] ?: false
+            CollapsibleSection(
+                title = tipo,
+                expanded = isTipoExpanded,
+                onToggle = {
+                    val newState = !isTipoExpanded
+                    // Fecha outros se quiser comportamento de acordeão, ou apenas toggle
+                    // expandedTipoMap.keys.forEach { expandedTipoMap[it] = false }
+                    expandedTipoMap[tipo] = newState
+                }
+            ) {
+                val scroll = rememberScrollState()
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 200.dp)
+                        .verticalScroll(scroll)
+                        .padding(start = 8.dp, bottom = 8.dp)
+                ) {
+                    val catsPorTipo = normalCategorias
+                        .filter { it.tipo == tipo }
+                        .let { list ->
+                            if (filter.origens.isNotEmpty())
+                                list.filter {
+                                    (it.origem?.uppercase() ?: "") in filter.origens
+                                }
+                            else list
+                        }
+                    if (catsPorTipo.isEmpty()) return@Column
+
+                    val subtipos = catsPorTipo.map { it.subtipo }.distinct()
+                    val expandedSubtipoMap = remember(tipo) {
+                        subtipos.associateWith { mutableStateOf(false) }
+                    }
+
+                    subtipos.forEach subtiposLoop@{ subtipo ->
+                        if (filter.subtipos.isNotEmpty() && subtipo !in filter.subtipos)
+                            return@subtiposLoop
+
+                        val isSubExpanded = expandedSubtipoMap.getValue(subtipo).value
+                        CollapsibleSection(
+                            title = subtipo,
+                            expanded = isSubExpanded,
+                            onToggle = {
+                                expandedSubtipoMap.forEach { (st, stState) ->
+                                    stState.value =
+                                        if (st == subtipo) !isSubExpanded else false
+                                }
+                            }
+                        ) {
+                            val scroll2 = rememberScrollState()
+                            Column(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .heightIn(max = 200.dp)
+                                    .verticalScroll(scroll2)
+                                    .padding(start = 8.dp, bottom = 8.dp)
+                            ) {
+                                val catsPorSub = catsPorTipo.filter { it.subtipo == subtipo }
+                                val subsub = catsPorSub.mapNotNull { it.subsubtipo }.distinct()
+                                val expandedSubsub = remember(tipo, subtipo) {
+                                    subsub.associateWith { mutableStateOf(false) }
+                                }
+
+                                if (subsub.isEmpty()) {
+                                    catsPorSub
+                                        .flatMap { it.itens }
+                                        .filter { eq ->
+                                            if (filter.somenteAcessiveis) {
+                                                val c = (eq.custo as? JsonPrimitive)
+                                                    ?.content?.toIntOrNull()
+                                                    ?: Int.MAX_VALUE
+                                                if (c > dinheiro) return@filter false
+                                            }
+                                            true
+                                        }
+                                        .forEach { equipamento ->
+                                            Row(
+                                                Modifier
+                                                    .fillMaxWidth()
+                                                    .clickable {
+                                                        onEquipamentoDoubleClick(equipamento)
+                                                    }
+                                                    .padding(
+                                                        vertical = 4.dp,
+                                                        horizontal = 4.dp
+                                                    ),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(
+                                                    equipamento.nome,
+                                                    Modifier.weight(1f),
+                                                    style = MaterialTheme.typography.bodyMedium
+                                                )
+                                                Text(
+                                                    equipamento.custo.toString(),
+                                                    style = MaterialTheme.typography.bodyMedium
+                                                )
+                                            }
+                                        }
+                                } else {
+                                    subsub.forEach { ss ->
+                                        val isSsExpanded =
+                                            expandedSubsub.getValue(ss).value
+                                        CollapsibleSection(
+                                            title = ss,
+                                            expanded = isSsExpanded,
+                                            onToggle = {
+                                                expandedSubsub.forEach { (s, sState) ->
+                                                    sState.value =
+                                                        if (s == ss) !isSsExpanded else false
+                                                }
+                                            }
+                                        ) {
+                                            val scroll3 = rememberScrollState()
+                                            Column(
+                                                Modifier
+                                                    .fillMaxWidth()
+                                                    .heightIn(max = 200.dp)
+                                                    .verticalScroll(scroll3)
+                                                    .padding(
+                                                        start = 8.dp,
+                                                        bottom = 8.dp
+                                                    )
+                                            ) {
+                                                catsPorSub
+                                                    .filter { it.subsubtipo == ss }
+                                                    .flatMap { it.itens }
+                                                      .filter { eq ->
+                                                          if (filter.somenteAcessiveis) {
+                                                              val c =
+                                                                  (eq.custo as? JsonPrimitive)
+                                                                      ?.content?.toIntOrNull()
+                                                                      ?: Int.MAX_VALUE
+                                                              if (c > dinheiro) return@filter false
+                                                          }
+                                                          true
+                                                      }
+                                                      .forEach { equipamento ->
+                                                          EquipamentoListItem(
+                                                              equipamento = equipamento,
+                                                              onClick = {
+                                                                  onEquipamentoDoubleClick(
+                                                                      equipamento
+                                                                  )
+                                                              },
+                                                              allowLongTexts = allowLongTexts,
+                                                              expanded = detalhesExpandidos[equipamento.nome] == true,
+                                                              onToggleDetails = {
+                                                                  val current = detalhesExpandidos[equipamento.nome] ?: false
+                                                                  detalhesExpandidos[equipamento.nome] = !current
+                                                              }
+                                                          )
+                                                      }
+                                                  }
+                                              }
+                                          }
+                                }
+                            }
+                        }
+                        Spacer(Modifier.padding(vertical = 2.dp))
+                    }
+                }
+            }
+            Spacer(Modifier.padding(vertical = 4.dp))
+        }
 
         // Seção Especial: Equipamento de Fantasia
         if (compendioFantasiaAtivo && fantasiaCategorias.isNotEmpty()) {
@@ -553,13 +586,127 @@ fun EquipamentoSection(
                 expanded = expFantasiaEquip,
                 onToggle = { expFantasiaEquip = !expFantasiaEquip }
             ) {
+                val tiposFantasia = fantasiaCategorias.map { it.tipo }.distinct()
                 // Dentro do acordeão de Fantasia, listamos os Tipos (Armas, Armaduras, etc.)
                 // e dentro de cada Tipo, os Subtipos.
 
                 // Mapa de expansão para os tipos dentro da seção de Fantasia
                 val expandedFantasiaTipoMap = remember { mutableStateMapOf<String, Boolean>() }
+
                 Column(modifier = Modifier.padding(start = 8.dp)) {
-                    RenderCategoryList(sourceCategorias = fantasiaCategorias, expandedTipoMap = expandedFantasiaTipoMap)
+                    tiposFantasia.forEach { tipo ->
+                        if (filter.tipos.isNotEmpty() && tipo !in filter.tipos) return@forEach
+
+                        val isTipoExpanded = expandedFantasiaTipoMap[tipo] ?: false
+
+                        CollapsibleSection(
+                            title = tipo,
+                            expanded = isTipoExpanded,
+                            onToggle = { expandedFantasiaTipoMap[tipo] = !isTipoExpanded }
+                        ) {
+                            // Mesma lógica de renderização de subtipos/itens
+                            val catsPorTipo = fantasiaCategorias
+                                .filter { it.tipo == tipo }
+                                .let { list ->
+                                    if (filter.origens.isNotEmpty())
+                                        list.filter { (it.origem?.uppercase() ?: "") in filter.origens }
+                                    else list
+                                }
+
+                            if (catsPorTipo.isNotEmpty()) {
+                                val subtipos = catsPorTipo.map { it.subtipo }.distinct()
+                                val expandedSubtipoMap = remember(tipo) {
+                                    subtipos.associateWith { mutableStateOf(false) }
+                                }
+
+                                subtipos.forEach { subtipo ->
+                                    if (filter.subtipos.isNotEmpty() && subtipo !in filter.subtipos) return@forEach
+
+                                    val isSubExpanded = expandedSubtipoMap.getValue(subtipo).value
+                                    CollapsibleSection(
+                                        title = subtipo,
+                                        expanded = isSubExpanded,
+                                        onToggle = { isSubExpanded ->
+                                            expandedSubtipoMap.getValue(subtipo).value = !isSubExpanded
+                                        }.let { { expandedSubtipoMap.getValue(subtipo).value = !isSubExpanded } }
+                                    ) {
+                                        val scroll = rememberScrollState()
+                                        Column(
+                                            Modifier
+                                                .fillMaxWidth()
+                                                .heightIn(max = 200.dp)
+                                                .verticalScroll(scroll)
+                                                .padding(start = 8.dp, bottom = 8.dp)
+                                        ) {
+                                            val catsPorSub = catsPorTipo.filter { it.subtipo == subtipo }
+                                            val subsub = catsPorSub.mapNotNull { it.subsubtipo }.distinct()
+
+                                            // Reutilizando lógica de renderização de itens...
+                                            // Como é código duplicado da seção normal, idealmente refatoraríamos para uma função composable
+                                            // "RenderCategoryContent", mas aqui vou duplicar para manter a estrutura do diff simples.
+
+                                            if (subsub.isEmpty()) {
+                                                catsPorSub.flatMap { it.itens }
+                                                    .filter { eq ->
+                                                        if (filter.somenteAcessiveis) {
+                                                            val c = (eq.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
+                                                            if (c > dinheiro) return@filter false
+                                                        }
+                                                        true
+                                                    }
+                                                    .forEach { equipamento ->
+                                                        EquipamentoListItem(
+                                                            equipamento = equipamento,
+                                                            onClick = { onEquipamentoDoubleClick(equipamento) },
+                                                            allowLongTexts = allowLongTexts,
+                                                            expanded = detalhesExpandidos[equipamento.nome] == true,
+                                                            onToggleDetails = {
+                                                                val current = detalhesExpandidos[equipamento.nome] ?: false
+                                                                detalhesExpandidos[equipamento.nome] = !current
+                                                            }
+                                                        )
+                                                    }
+                                            } else {
+                                                val expandedSubsub = remember(tipo, subtipo) {
+                                                    subsub.associateWith { mutableStateOf(false) }
+                                                }
+                                                subsub.forEach { ss ->
+                                                    val isSsExpanded = expandedSubsub.getValue(ss).value
+                                                    CollapsibleSection(
+                                                        title = ss,
+                                                        expanded = isSsExpanded,
+                                                        onToggle = { expandedSubsub.getValue(ss).value = !isSsExpanded }
+                                                    ) {
+                                                        catsPorSub.filter { it.subsubtipo == ss }
+                                                            .flatMap { it.itens }
+                                                            .filter { eq ->
+                                                                if (filter.somenteAcessiveis) {
+                                                                    val c = (eq.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
+                                                                    if (c > dinheiro) return@filter false
+                                                                }
+                                                                true
+                                                            }
+                                                            .forEach { equipamento ->
+                                                                EquipamentoListItem(
+                                                                    equipamento = equipamento,
+                                                                    onClick = { onEquipamentoDoubleClick(equipamento) },
+                                                                    allowLongTexts = allowLongTexts,
+                                                                    expanded = detalhesExpandidos[equipamento.nome] == true,
+                                                                    onToggleDetails = {
+                                                                        val current = detalhesExpandidos[equipamento.nome] ?: false
+                                                                        detalhesExpandidos[equipamento.nome] = !current
+                                                                    }
+                                                                )
+                                                            }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

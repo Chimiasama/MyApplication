@@ -99,3 +99,197 @@ Seres humanos que servem ao Coro Celestial são chamados de guardiões.
 - VIGOROSO: As pessoas que herdaram esta Terra devastada começam o jogo com um d6 em Vigor em vez de um d4. Isso aumenta seu Vigor máximo para d12 + 1.
 - VOTO (Maior: Proteger a humanidade): Devem proteger o rebanho que resta na Terra devastada.
 
+
+CENTAUROS:
+Centauros têm a parte inferior do corpo de um cavalo e a parte superior do corpo de um humano. São corredores rápidos e orgulhosos.
+- CASCOS: Centauros podem usar seus cascos como armas naturais, causando Força+d4 de dano.
+- MOVIMENTAÇÃO +4: Seus corpos de cavalo lhes conferem uma velocidade natural superior. Aumente a Movimentação em +4 e o dado de corrida em um tipo.
+- TAMANHO +1: Devido à sua constituição equina, centauros são maiores e mais robustos que humanos normais. Adiciona +1 à Resistência.
+- DEPENDÊNCIA: Centauros precisam de mais comida e água que um humano comum. Devem consumir o dobro de rações diárias ou sofrem Fadiga.
+- FORMA INCOMUM: Centauros não podem usar montarias, subir escadas verticais ou usar armaduras para humanoides (exceto barda para cavalos).
+
+DESCENDENTE ELEMENTAL (AR):
+Descendentes do ar têm cabelos brancos que se agitam continuamente como se fossem soprados por um vento fantasma. Não precisam respirar.
+- AR INTERNO: Não precisam respirar e são imunes a ataques baseados em inalação de gás ou veneno.
+- RESISTÊNCIA AMBIENTAL: Recebem +4 para resistir a efeitos de Eletricidade e reduzem o dano desse tipo em 4.
+- FORASTEIRO (Menor): Sua aparência estranha causa desconforto em outras pessoas (-2 em Persuadir).
+
+DESCENDENTE ELEMENTAL (ÁGUA):
+Descendentes da água têm uma tonalidade azulada na pele e no cabelo e falam com vozes mansas. Não se afogam na água.
+- AQUÁTICO: Podem respirar debaixo d'água e se movem com sua Movimentação total nadando.
+- RESISTÊNCIA AMBIENTAL: Recebem +4 para resistir a efeitos de Frio e reduzem o dano desse tipo em 4.
+- FORASTEIRO (Menor): Sua aparência estranha causa desconforto em outras pessoas (-2 em Persuadir).
+
+DESCENDENTE ELEMENTAL (FOGO):
+Descendentes do fogo têm cabelos de um laranja ou amarelo brilhante, vozes sibilantes e pupilas vermelhas. São frenéticos e rápidos.
+- RÁPIDO: A energia ígnea lhes confere reflexos rápidos. Podem sacar cartas de iniciativa adicionais se a primeira for 5 ou menos.
+- RESISTÊNCIA AMBIENTAL: Recebem +4 para resistir a efeitos de Calor/Fogo e reduzem o dano desse tipo em 4.
+- FORASTEIRO (Menor): Sua aparência estranha causa desconforto em outras pessoas (-2 em Persuadir).
+
+DESCENDENTE ELEMENTAL (TERRA):
+Descendentes da terra têm vozes roucas, corpos musculosos e um tom avermelhado em sua pele. São resistentes como rocha.
+- SÓLIDO COMO ROCHA: Começam com Vigor d6 e seu limite aumenta para d12+1.
+- RESISTÊNCIA AMBIENTAL: Recebem +4 para resistir a efeitos de Ácido e reduzem o dano desse tipo em 4.
+- FORASTEIRO (Menor): Sua aparência estranha causa desconforto em outras pessoas (-2 em Persuadir).
+
+DRACONIANOS:
+Draconianos humanoides vêm de desertos escaldantes ou cavernas vulcânicas. Têm a capacidade de cuspir fogo como os próprios dragões e pele escamosa.
+- ARMA DE SOPRO: Podem cuspir fogo usando o Modelo de Cone. O dano é 2d6 e pode ser evitado com Agilidade (-2).
+- ARMADURA +2: Sua pele escamosa confere proteção natural.
+- MORDIDA/GARRAS: Causam Força+d4 de dano.
+- RESISTÊNCIA AMBIENTAL (Calor): Recebem +4 para resistir a Calor e reduzem dano de fogo em 4.
+- FRAQUEZA AMBIENTAL (Frio): Sofrem -4 para resistir a Frio e recebem +4 de dano de ataques de gelo.
+- MAL-HUMORADO: São territoriais e agressivos. -2 em Persuadir.
+- SANGUE FRIO: Sofrem penalidade de -1 em testes de Vigor em ambientes frios e ficam letárgicos.
+
+FADAS:
+Criaturas aladas pequenas e muitas vezes impetuosas. Possuem asas de inseto e uma curiosidade natural sobre o mundo.
+- VOO: Voam com Movimentação 6.
+- BOCA GRANDE: Não conseguem guardar segredos.
+- CURIOSO: Querem saber de tudo.
+- DESASTRADO: Têm dificuldade com tecnologia e mecanismos complexos.
+- DIMINUTO: Têm Tamanho -2 (e -2 em Resistência). São mais difíceis de acertar (-2 nos ataques contra elas).
+- IMPULSIVO: Agem antes de pensar.
+
+GNOMOS:
+Pequenos humanoides de florestas profundas ou cavernas. São frequentemente confundidos com pequeninos, mas são mais proporcionais e astutos.
+- SENTIDOS APRIMORADOS: Começam com Perceber d6 e limite d12+1.
+- VISÃO NO ESCURO: Ignoram penalidades por iluminação.
+- MOVIMENTAÇÃO REDUZIDA: -1 na Movimentação e no dado de corrida.
+- TAMANHO -1: Resistência reduzida em 1.
+
+GOBLINS:
+Seres briguentos que muitas vezes servem orcs ou ogros. Desenvolveram táticas de sobrevivência e furtividade para sobreviver em ambientes violentos.
+- INFRAVISÃO: Enxergam calor, reduzindo penalidades de escuridão pela metade.
+- SOBREVIVENTE: +1 em rolagens de Sobrevivência.
+- SORRATEIRO: Começam com Furtividade d6 e limite d12+1.
+- DESAGRADÁVEL: -2 em Persuadir devido à sua natureza rude.
+- TAMANHO -1: Resistência reduzida em 1.
+
+GOLENS:
+Geralmente autômatos de pedra, metal ou outro material, criados por magia ou ciência estranha. São densos, fortes e não possuem necessidades biológicas.
+- ARMADURA +2: Feitos de material resistente.
+- CONSTRUTO: +2 para recuperar de Abalado, não respiram, imunes a veneno/doença.
+- TAMANHO +2: Grandes e pesados (+2 Resistência).
+- DESAJEITADO: -2 em Agilidade.
+- GRANDE: Mais fáceis de acertar (+2 para atacantes).
+- MOVIMENTAÇÃO REDUZIDA: -1 na Movimentação e no dado de corrida.
+- PERÍCIAS BÁSICAS REDUZIDAS: Não começam com as perícias básicas gratuitas.
+- SEM NOÇÃO: -2 em Conhecimento Geral.
+- SEM ÓRGÃOS VITAIS: Imunes a Dano Extra de ataques localizados.
+
+INFERNAIS:
+Têm sangue demoníaco ou diabólico em sua linhagem. Possuem pele avermelhada, chifres e cauda, além de resistência ao calor.
+- CHIFRES: Causam Força+d4 de dano.
+- NATUREZA DIABÓLICA: Considerados demônios para efeitos que afetam tais criaturas.
+- RESISTÊNCIA AMBIENTAL (Calor): +4 para resistir a Calor/Fogo, reduzem dano em 4.
+- VISÃO TOTAL NO ESCURO: Ignoram qualquer penalidade de escuridão.
+- FORASTEIRO (Menor): Aparência perturbadora (-2 Persuadir).
+- FRAQUEZA AMBIENTAL (Frio): +4 dano de frio, -4 para resistir.
+
+INSETOIDES:
+Povo inseto com exoesqueletos e múltiplos membros. Vêm de sociedades altamente organizadas e obedientes.
+- ANDAR NAS PAREDES: Podem andar em superfícies verticais com Movimentação total.
+- ARMADURA +2: Exoesqueleto quitinoso.
+- AÇÕES ADICIONAIS: Braços extras permitem ignorar 2 pontos de penalidade por Ação Múltipla.
+- MORDIDA OU GARRA: Força+d4.
+- FORASTEIRO (Menor): Aparência estranha.
+- FORMATO CORPORAL INCOMUM: Armaduras e roupas devem ser customizadas (custo dobrado).
+- MENTE DE COLMEIA: Leais à sua rainha ou líder, mas com pouca individualidade.
+
+MEIO-GIGANTES:
+Párias encontrados em colinas distantes e montanhas. São imensos, fortes e imparáveis, adequados para ambientes selvagens.
+- MUITO FORTE: Começam com Força d8 (limite d12+2).
+- MUITO RESISTENTE: Começam com Vigor d8 (limite d12+2).
+- TAMANHO +3: +3 em Resistência.
+- ANALFABETO: Não sabem ler ou escrever.
+- CABEÇAS-DURAS: -1 em Astúcia.
+- FORASTEIRO (Maior): Frequentemente temidos ou odiados.
+- GRANDE: +2 para serem acertados.
+- SEM NOÇÃO: -2 em Conhecimento Geral.
+
+MEIO-ORCS:
+Descendentes de orcs e humanos. Herdam a força ou resistência dos orcs, mas muitas vezes são evitados pelas sociedades civilizadas.
+- ENDURECIDO: Começam com Vigor d6 (limite d12+1).
+- INFRAVISÃO: Reduzem penalidades de escuridão pela metade.
+- FORASTEIRO (Menor): Desconfiança geral.
+
+MINOTAUROS:
+Possuem corpo humano e cabeça e musculatura de touro. Conhecidos por sua força física, mau humor e chifres perversos.
+- CHIFRES: Força+d4.
+- DURÃO: Começam com Vigor d6.
+- MUITO FORTE: Começam com Força d8 (limite d12+2).
+- TAMANHO +1: +1 Resistência.
+- DESAGRADÁVEL: -2 Persuadir.
+- GRANDE: +2 para serem acertados (porém note que tamanho é apenas +1, então a complicação Grande não se aplica mecanicamente da mesma forma que +2, mas a descrição racial diz que são Grandes alvos? Vamos assumir a complicação Grande padrão se listada).
+- SEM INSTRUÇÃO: -2 em Conhecimento Geral.
+- SENSÍVEL: Provocam-se facilmente.
+
+OGROS:
+Orgulhosos e malignos, ogros são grandes e corpulentos. Se orgulham de sua força e resistência, vivendo em tribos selvagens.
+- MUITO FORTE: Começam com Força d8 (limite d12+2).
+- MUITO RESISTENTE: Começam com Vigor d8 (limite d12+2).
+- ROBUSTO: Um segundo resultado Abalado não causa um Ferimento.
+- TAMANHO +1: +1 Resistência. (Nota: Ogros costumam ser maiores, mas seguindo a lista JSON fornecida).
+- ARROGANTE: Confiam demais em sua força.
+- DESAJEITADO: -2 Agilidade.
+- FORASTEIRO (Menor): Temidos.
+- GRANDE: +2 para serem acertados.
+- SEM NOÇÃO: -2 Conhecimento Geral.
+
+ORCS:
+Têm reputação de serem selvagens e brutais. Suas tribos são governadas pelos mais fortes. Possuem força e resistência naturais.
+- FORTE: Começam com Força d6 (limite d12+1).
+- INFRAVISÃO: Reduzem penalidades de escuridão pela metade.
+- RESISTENTE: Começam com Vigor d6 (limite d12+1).
+- TAMANHO +1: +1 Resistência.
+- BRUTAL: -2 em testes de Astúcia para resistir a provocações ou inteligência.
+- FORASTEIRO (Maior): Odiados pela maioria das raças.
+
+POVO RATAZANA:
+Humanoides peludos com corpos curvados e rostos de rato. São sobreviventes natos, vivendo em esgotos e favelas, e obcecados por tesouros.
+- GARRAS: Força+d4.
+- MORDIDA: Força+d4.
+- RESISTÊNCIA NATURAL: Imunes a veneno e doença.
+- SUCATEIRO: Encontram itens úteis (como a Vantagem Sucateiro).
+- VISÃO NO ESCURO: Ignoram penalidades de iluminação.
+- COVARDE: -2 em testes de Medo.
+- FORASTEIRO (Maior): Vistos como pragas.
+- GANANCIOSO (Menor): Obcecados por brilho e riqueza.
+- TAMANHO -1: -1 Resistência.
+
+POVO RATO:
+Criaturas minúsculas e bípedes que se assemelham a ratos comuns. São tímidos e furtivos, vivendo nas sombras.
+- DIMINUTO: Tamanho -2 (-2 Resistência, -2 para serem acertados).
+- VISÃO NO ESCURO: Ignoram penalidades de iluminação.
+- FOBIA – GATOS (Menor): Medo instintivo.
+- FORASTEIRO (Maior): Vistos como pragas ou animais.
+- MOVIMENTAÇÃO REDUZIDA: -1 Movimentação.
+- POUCO IMPONENTE: -2 em Intimidar.
+
+POVO SERPENTE:
+Humanoides com cabeças ofídicas. Variam de constritores a víboras. São rápidos e possuem mordidas venenosas.
+- INFRAVISÃO: Reduzem penalidades de escuridão pela metade.
+- MORDIDA: Força+d4.
+- MORDIDA VENENOSA: Vítima faz teste de Vigor ou sofre Fadiga/Paralisia (depende da espécie).
+- MOVIMENTAÇÃO: Deslocamento rápido.
+- FORASTEIRO (Menor): Desconfiança.
+- FRAQUEZA AMBIENTAL: Sofrem com frio.
+- SANGUE FRIO: Letárgicos no frio.
+
+RENASCIDOS:
+Filhos de um ser vivo e um vampiro. Têm pele pálida e uma conexão inata com os mortos. São fortes e resistentes ao frio.
+- BEBEDOR DE SANGUE: Precisam de sangue para sobreviver.
+- FORÇA SOBRENATURAL: Começam com Força d6 (limite d12+1).
+- MORDIDA: Força+d4.
+- RESISTÊNCIA AO FRIO: +4 para resistir, -4 dano.
+- VISÃO NO ESCURO: Ignoram iluminação.
+- AVERSÃO ANIMAL: Animais os temem (-2 Cavalgar, etc).
+- FORASTEIRO (Maior): Vistos como monstros.
+- SENSIBILIDADE À LUZ SOLAR: Sofrem Fadiga se expostos ao sol sem proteção.
+
+TRANSMORFOS:
+Criaturas capazes de mudar sua aparência para se parecer com outras pessoas. São camaleões sociais, muitas vezes atuando como espiões ou vigaristas.
+- CARISMÁTICO: Ganham a Vantagem Carismático.
+- MUDAR DE FORMA: Podem assumir a aparência de humanoides do mesmo tamanho.
+- SEGREDO (Maior): Se descobertos, são caçados ou expulsos.
