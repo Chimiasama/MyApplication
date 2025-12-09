@@ -1,0 +1,128 @@
+[
+  {
+    "id": "anjo",
+    "nome": "Anjo",
+    "descricao": "Seres grandiosos e terríveis, vingadores divinos.",
+    "atributos_bonus": {
+      "Fe": 1,
+      "Forca": 2,
+      "Vigor": 2
+    },
+    "habilidades": [
+      { "nome": "Embelezar", "descricao": "Ação livre limitada para criar efeitos menores de limpeza ou ordem." },
+      { "nome": "Imunidades", "descricao": "Imune a doenças e venenos. Não envelhece." },
+      { "nome": "Voo", "descricao": "Asas retráteis (ação limitada). Movimentação 12." }
+    ],
+    "complicacoes": ["Voto (Maior) - Servo do Paraíso"]
+  },
+  {
+    "id": "demonio",
+    "nome": "Demônio",
+    "descricao": "Seres de linhagem infernal, cruéis e egoístas.",
+    "atributos_bonus": {
+      "Vigor": 1,
+      "Espirito": 1
+    },
+    "habilidades": [
+      { "nome": "Imunidades", "descricao": "Imune a doenças e venenos. Não envelhece. Não respira." },
+      { "nome": "Resistência Ambiental", "descricao": "+4 resistir/reduzir dano de Frio, Eletricidade e Calor." },
+      { "nome": "Visão Total no Escuro", "descricao": "Ignora penalidades de iluminação." },
+      { "nome": "Ruína", "descricao": "Cause pequenos efeitos malignos (plantas murcham, etc) ao redor." }
+    ],
+    "complicacoes": ["Fraqueza (Ferro Frio) - +4 dano"]
+  },
+  {
+    "id": "fantasma",
+    "nome": "Fantasma",
+    "descricao": "Espíritos visíveis que se recusaram a partir.",
+    "atributos_bonus": {
+      "Espirito": 1
+    },
+    "habilidades": [
+      { "nome": "Etéreo", "descricao": "Pode alternar entre corpóreo e incorpóreo (ação livre limitada). Intangível atravessa sólidos e imune a ataques mundanos." },
+      { "nome": "Imunidades", "descricao": "Imune a doenças e venenos. Não envelhece. Não respira." },
+      { "nome": "Visão Total no Escuro", "descricao": "Ignora penalidades de iluminação." },
+      { "nome": "Voo", "descricao": "Movimentação 12." }
+    ],
+    "complicacoes": ["Fraqueza (Sal) - Barreira e Abalado ao contato"]
+  },
+  {
+    "id": "lobisomem",
+    "nome": "Lobisomem",
+    "descricao": "Amaldiçoados com uma forma bestial e fúria selvagem.",
+    "atributos_bonus": {
+      "Agilidade": 2,
+      "Forca": 2,
+      "Vigor": 2
+    },
+    "habilidades": [
+      { "nome": "Infravisão", "descricao": "Reduz penalidade de iluminação à metade contra alvos vivos." },
+      { "nome": "Armas Naturais", "descricao": "Mordida/Garras (For+d6, PA 2)." },
+      { "nome": "Regeneração (Lenta)", "descricao": "Rolagem de cura natural por dia." },
+      { "nome": "Transformação", "descricao": "Ação livre limitada. Obrigatória na lua cheia. Habilidades só funcionam transformado." },
+      { "nome": "Velocidade", "descricao": "Movimentação +2, dado de corrida +1 passo." }
+    ],
+    "complicacoes": ["Fraqueza (Prata) - +4 dano", "Mudo (enquanto transformado)"]
+  },
+  {
+    "id": "monstro_retalhos",
+    "nome": "Monstro de Retalhos",
+    "descricao": "Costurado em laboratório com partes diversas.",
+    "atributos_bonus": {
+      "Forca": 2,
+      "Vigor": 2
+    },
+    "habilidades": [
+      { "nome": "Ciência!", "descricao": "Possui a Vantagem Resistência Arcana." },
+      { "nome": "Fúria", "descricao": "Possui a Vantagem Furioso." },
+      { "nome": "Morto-Vivo", "descricao": "+2 Resistência, +2 recuperar Abalado, sem dano extra local, ignora 1 ponto penalidade ferimento." },
+      { "nome": "Recosturar", "descricao": "Partes perdidas podem ser recosturadas (Curar -4 ou Ciência Estranha)." }
+    ],
+    "complicacoes": ["Sem Noção", "Fobia (Fogo)", "Fraqueza (Fogo) - +4 dano"]
+  },
+  {
+    "id": "mumia",
+    "nome": "Múmia",
+    "descricao": "Mortos-vivos preservados de tempos antigos.",
+    "atributos_bonus": {
+      "Forca": 2,
+      "Vigor": 2
+    },
+    "habilidades": [
+      { "nome": "Morto-Vivo", "descricao": "+2 Resistência, +2 recuperar Abalado, sem dano extra local, ignora 1 ponto penalidade ferimento." },
+      { "nome": "Não Envelhece", "descricao": "Imune ao tempo." }
+    ],
+    "complicacoes": ["Fraqueza (Fogo) - +4 dano", "Lento (-1 Movimentação, Corrida d4)"]
+  },
+  {
+    "id": "revivido",
+    "nome": "Revivido",
+    "descricao": "Retornou da morte como força de vingança.",
+    "atributos_bonus": {
+      "Espirito": 1,
+      "Vigor": 1
+    },
+    "habilidades": [
+      { "nome": "Morto-Vivo", "descricao": "+2 Resistência, +2 recuperar Abalado, sem dano extra local, ignora 1 ponto penalidade ferimento." },
+      { "nome": "Regeneração (Lenta)", "descricao": "Cura natural 1/dia se consumir carne crua." },
+      { "nome": "Robusto", "descricao": "Segundo abalado não causa ferimento." }
+    ],
+    "complicacoes": ["Voto (Maior) - Vingança"]
+  },
+  {
+    "id": "vampiro",
+    "nome": "Vampiro",
+    "descricao": "Predadores da noite que se alimentam de sangue.",
+    "atributos_bonus": {
+      "Forca": 2,
+      "Vigor": 2
+    },
+    "habilidades": [
+      { "nome": "Mordida", "descricao": "Presas (For+d4)." },
+      { "nome": "Morto-Vivo", "descricao": "+2 Resistência, +2 recuperar Abalado, sem dano extra local, ignora 1 ponto penalidade ferimento." },
+      { "nome": "Regeneração (Lenta)", "descricao": "Cura natural 1/dia se alimentado." },
+      { "nome": "Visão Total no Escuro", "descricao": "Ignora penalidades de iluminação." }
+    ],
+    "complicacoes": ["Hábito Maior (Fome)", "Fraquezas (Luz Solar, Estaca, Convite, Símbolos Sagrados, Água Corrente)"]
+  }
+]
