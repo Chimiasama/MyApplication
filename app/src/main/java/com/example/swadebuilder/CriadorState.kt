@@ -683,8 +683,8 @@ class CriadorState {
 
     var jovemAutoPequeno by mutableStateOf(false)
 
-    private var jovemMalusPa by mutableIntStateOf(0)
-    private var jovemMalusSp by mutableIntStateOf(0)
+    var jovemMalusPa by mutableIntStateOf(0)
+    var jovemMalusSp by mutableIntStateOf(0)
 
     fun syncFromCPRefund(pa: Boolean = false, sp: Boolean = false, feedbackMessages: MutableList<String>) {
         if (pa) recalcularPontosAtributo(feedbackMessages)

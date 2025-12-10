@@ -11,7 +11,9 @@ enum class HindranceChangeType {
 }
 
 @Serializable
-sealed class AdvancementAction(open val progressCost: Int, open val stageName: String) {
+sealed class AdvancementAction {
+    abstract val progressCost: Int
+    abstract val stageName: String
     abstract fun getDisplayText(
         getAdvantageName: (String) -> String,
         getSkillValue: (String) -> Int
@@ -24,7 +26,7 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
         val arcanoKey: String? = null,
         val previousArcanoSlots: List<String?>? = null,
         override val progressCost: Int = 1
-    ) : AdvancementAction(progressCost, stageName) {
+    ) : AdvancementAction() {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
             getSkillValue: (String) -> Int
@@ -39,7 +41,7 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
         val usedLegendaryReservation: Boolean = false,
         override val stageName: String,
         override val progressCost: Int
-    ) : AdvancementAction(progressCost, stageName) {
+    ) : AdvancementAction() {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
             getSkillValue: (String) -> Int
@@ -54,7 +56,7 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
         val recordedSkillValues: Map<String, Int>? = null,
         override val stageName: String,
         override val progressCost: Int = 1
-    ) : AdvancementAction(progressCost, stageName) {
+    ) : AdvancementAction() {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
             getSkillValue: (String) -> Int
@@ -76,7 +78,7 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
         val usedReservation: Boolean = false,
         override val stageName: String,
         override val progressCost: Int
-    ) : AdvancementAction(progressCost, stageName) {
+    ) : AdvancementAction() {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
             getSkillValue: (String) -> Int
@@ -94,7 +96,7 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
     data class ReserveLegendaryAttribute(
         override val stageName: String,
         override val progressCost: Int = 1
-    ) : AdvancementAction(progressCost, stageName) {
+    ) : AdvancementAction() {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
             getSkillValue: (String) -> Int
