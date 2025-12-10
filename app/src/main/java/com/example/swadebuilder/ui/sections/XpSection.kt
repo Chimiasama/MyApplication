@@ -98,7 +98,7 @@ fun XpSection(
 
                         Surface(
                             modifier = Modifier
-                                .weight(1f)
+                                .weight(1f, fill = false)
                                 .heightIn(min = 52.dp)
                                 .alpha(if (isEnabled || slotUsed) 1f else 0.5f)
                                 .clickable(enabled = isEnabled) { onUseProgress(index) },

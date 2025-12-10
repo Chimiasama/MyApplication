@@ -708,7 +708,7 @@ fun EquipamentoListItem(
                 Text(
                     equipamento.nome,
                     style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f, fill = false)
                 )
                 resumo.custo?.let {
                     Text(
