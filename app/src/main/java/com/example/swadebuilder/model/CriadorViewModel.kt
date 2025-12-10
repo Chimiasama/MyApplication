@@ -309,7 +309,7 @@ class CriadorViewModel : ViewModel() {
                 val nivelNormalizado = when (nivelSalvo?.lowercase()) {
                     "maior" -> "Maior"
                     "menor" -> "Menor"
-                    else -> comp.tipo ?: "Menor"
+                    else -> comp.severity.ifBlank { "Menor" }
                 }
                 state.complicacoesSelecionadas[comp] = nivelNormalizado
             }
