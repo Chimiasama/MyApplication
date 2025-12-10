@@ -21,6 +21,8 @@ import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.arcanoInfo
+import com.example.swadebuilder.normAAKey
 
 class CriadorState {
     var appTheme by mutableStateOf(AppTheme.DEFAULT)
@@ -334,6 +336,9 @@ class CriadorState {
     var openVantagensAfterGrant by mutableStateOf(false)
     var superPoderEmFoco by mutableStateOf<String?>(null)
 
+    var arcanoEmCompraViaXpKey by mutableStateOf<String?>(null)
+    var arcanoSnapshotAntesDaCompra: List<String?>? = null
+
     var ancestralidadeEmFoco by mutableStateOf<String?>(null)
 
     fun removerSuperPoder(
@@ -567,11 +572,56 @@ class CriadorState {
             slots.removeLast()
         }
 
-        // Atualiza a lista plana
+        syncPoderesSelecionadosFromSlots()
+    }
+
+    fun syncPoderesSelecionadosFromSlots() {
         poderesSelecionados.apply {
             clear()
-            addAll(slots.filterNotNull())
+            addAll(poderSlotsPorArcano.values.flatMap { it.filterNotNull() })
         }
+    }
+
+    fun iniciarCompraArcanoViaXp(arcKeyRaw: String) {
+        val arcKey = arcKeyRaw.normAAKey()
+        arcanoEmCompraViaXpKey = arcKey
+        arcanoSnapshotAntesDaCompra = poderSlotsPorArcano[arcKey]?.toList()
+
+        val initialSlots = arcanoInfo[arcKey]?.first ?: 0
+        val slots = poderSlotsPorArcano.getOrPut(arcKey) { mutableStateListOf() }
+        while (slots.size < initialSlots) { slots.add(null) }
+
+        mostrandoPoderesProgresso = true
+    }
+
+    fun restoreArcanoSlots(arcKey: String, snapshot: List<String?>?) {
+        if (snapshot == null) {
+            poderSlotsPorArcano.remove(arcKey)
+            novosPoderesStacksPorArcano.remove(arcKey)
+        } else {
+            poderSlotsPorArcano[arcKey] = mutableStateListOf<String?>().apply { addAll(snapshot) }
+        }
+        syncPoderesSelecionadosFromSlots()
+    }
+
+    fun limparCompraArcanoViaXp(restaurarSnapshot: Boolean) {
+        arcanoEmCompraViaXpKey?.let { arcKey ->
+            if (restaurarSnapshot) {
+                restoreArcanoSlots(arcKey, arcanoSnapshotAntesDaCompra)
+            }
+        }
+        arcanoEmCompraViaXpKey = null
+        arcanoSnapshotAntesDaCompra = null
+        mostrandoPoderesProgresso = false
+    }
+
+    fun arcanoCompraPendente(): Boolean {
+        val arcKey = arcanoEmCompraViaXpKey ?: return false
+        val required = arcanoInfo[arcKey]?.first ?: 0
+        if (required == 0) return false
+        val slots = poderSlotsPorArcano[arcKey] ?: return true
+        val filled = slots.count { it != null }
+        return filled < required
     }
 
     var permiteMultiAntecedenteArcano by mutableStateOf(false)
@@ -1396,6 +1446,7 @@ class CriadorState {
     var mostrandoVantagensProgresso by mutableStateOf(false)
     var mostrandoPericiasProgresso by mutableStateOf(false)
     var mostrandoAtributosProgresso by mutableStateOf(false)
+    var mostrandoPoderesProgresso by mutableStateOf(false)
     val frozenSkillIncrements = mutableStateMapOf<String, Int>()
 
     // Novas variáveis para rastrear o avanço de perícias

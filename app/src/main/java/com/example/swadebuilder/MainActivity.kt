@@ -282,6 +282,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+            LaunchedEffect(state.mostrandoPoderesProgresso, state.arcanoCompraPendente()) {
+                if (state.mostrandoPoderesProgresso || state.arcanoCompraPendente()) {
+                    expPoderes = true
+                    expVants = true
+                }
+            }
+
             if (showThemeDialog) {
                 val themeNames = remember {
                     mapOf(
