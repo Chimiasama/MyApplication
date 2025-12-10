@@ -105,6 +105,7 @@ data class PersonagemSalvo(
 @Serializable
 data class VantagemPersistida(
     val id: String,
+    val nome: String? = null,
     val choice: String? = null
 )
 

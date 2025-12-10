@@ -287,6 +287,7 @@ class CriadorViewModel : ViewModel() {
         state.vantagensSelecionadas.clear()
         val mapPorId   = listaVantagens.associateBy { it.id }
         val mapPorNome = listaVantagens.associateBy { it.nome.trim().uppercase() }
+        val mapPorKey  = listaVantagens.associateBy { it.nome.keyify() }
         val choicesMap = salvo.vantagemChoices.mapValues { it.value.toMutableList() }.toMutableMap()
 
         val vantagensPersistidas: List<VantagemPersistida> =
@@ -300,7 +301,13 @@ class CriadorViewModel : ViewModel() {
 
         vantagensPersistidas.forEach { saved ->
             val trimmed = saved.id.trim()
-            val base = mapPorId[trimmed] ?: mapPorNome[trimmed.uppercase()]
+            val base = mapPorId[trimmed]
+                ?: mapPorNome[trimmed.uppercase()]
+                ?: mapPorKey[trimmed.keyify()]
+                ?: saved.nome?.let { nome ->
+                    val upper = nome.trim().uppercase()
+                    mapPorNome[upper] ?: mapPorKey[nome.keyify()]
+                }
             if (base != null) {
                 val vantCopiada = runCatching { base.copy() }
                     .onFailure {

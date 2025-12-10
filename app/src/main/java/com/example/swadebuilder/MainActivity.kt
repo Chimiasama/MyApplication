@@ -525,7 +525,11 @@ class MainActivity : ComponentActivity() {
                                                         ancestralidade     = state.ancestralidade,
                                                         vantagens          = state.vantagensSelecionadas.map { it.id },
                                                         vantagensDetalhadas = state.vantagensSelecionadas.map {
-                                                            VantagemPersistida(id = it.id, choice = it.choice)
+                                                            VantagemPersistida(
+                                                                id = it.id,
+                                                                nome = it.nome,
+                                                                choice = it.choice
+                                                            )
                                                         },
                                                         vantagemChoices    = vantagemChoices,
                                                         vantagensRaciais   = state.vantagensRaciais.toList(),
