@@ -227,7 +227,36 @@ class CriadorState {
         if (cpPvStack.isNotEmpty()) {
             cpPvStack.removeLast()
             pontosComplicacaoGastos -= 2
-            pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
+            pontosVantagem -= 1
+            trimAdvantages()
+        }
+    }
+
+    private fun trimAdvantages() {
+        while (pontosVantagem < 0) {
+            // Encontra a última vantagem que pode ser removida (não racial/automática)
+            val toRemoveIdx = vantagensSelecionadas.indexOfLast { vant ->
+                val key = vant.nome.keyify()
+                val isRacial = vantagensAutomaticas.any { it.keyify() == key } ||
+                        vantagensRaciais.any { it.keyify() == key }
+                !isRacial
+            }
+
+            if (toRemoveIdx != -1) {
+                val vant = vantagensSelecionadas[toRemoveIdx]
+                // Lógica de remoção específica (dinheiro, PP, etc)
+                if (vant.nome.contains("Pontos de Poder", true)) {
+                    removerPontosDePoder(vant)
+                } else {
+                    removeVantagemDinheiro(vant)
+                    vantagensSelecionadas.removeAt(toRemoveIdx)
+                }
+                // Como removemos uma vantagem, "recuperamos" o ponto gasto nela
+                pontosVantagem += 1
+            } else {
+                // Se não há nada para remover, zera o saldo negativo para evitar estado inválido
+                pontosVantagem = 0
+            }
         }
     }
 
