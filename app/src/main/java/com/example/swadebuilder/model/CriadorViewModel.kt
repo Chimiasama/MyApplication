@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
-import com.example.swadebuilder.TOTAL_PROGRESS_LIMIT
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.listaPericias
@@ -146,13 +145,10 @@ class CriadorViewModel : ViewModel() {
         state.attributeStacksBeforeAdvancement = null
         state.attributeUsedReservation = false
         state.stageNameForCurrentAdvancement = null
-        state.overrideStageForVantagem = null
         state.arcanoEmCompraViaXpKey = null
         state.arcanoSnapshotAntesDaCompra = null
         state.mostrandoPoderesProgresso = false
         state.mostrandoAtributosProgresso = false
-        state.skillsForCurrentAdvancement.clear()
-        state.skillAdvancementInProgress = false
 
         // ─────────────────────────────────────────────────────────────
         // RESET COMPLETO DE SUPERS – NÃO VAZAR ENTRE PERSONAGENS
@@ -190,16 +186,8 @@ class CriadorViewModel : ViewModel() {
         state.mostrandoVantagensProgresso = false
         state.mostrandoPericiasProgresso = false
         state.frozenSkillIncrements.clear()
-        state.overrideStageForVantagem = null
-        state.pvFromXpOutstanding = 0
-        state.jovemMalusPa = 0
-        state.jovemMalusSp = 0
-        state.jovemAutoPequeno = false
 
-        state.paCostStackPorAtributo.values.forEach { it.clear() }
-        state.valoresAtributos.forEach { (attr, holder) ->
-            holder.intValue = state.atributoMinRaw(attr)
-        }
+        state.valoresAtributos.forEach { (_, holder) -> holder.intValue = 4 }
         state.recalcularPontosAtributo(_feedbackMessages)
 
         listaPericias.forEach { per ->
@@ -260,7 +248,7 @@ class CriadorViewModel : ViewModel() {
         state.armadura = salvo.armorBase
 
         state.cpPaStack.clear()
-        repeat(salvo.cpPaCount) { state.cpPaStack.add("PB") }
+        repeat(salvo.cpPaCount) { state.cpPaStack.add("PA") }
 
         state.cpPvStack.clear()
         repeat(salvo.cpPvCount) { state.cpPvStack.add(Unit) }
@@ -287,27 +275,11 @@ class CriadorViewModel : ViewModel() {
         state.vantagensSelecionadas.clear()
         val mapPorId   = listaVantagens.associateBy { it.id }
         val mapPorNome = listaVantagens.associateBy { it.nome.trim().uppercase() }
-        val mapPorKey  = listaVantagens.associateBy { it.nome.keyify() }
-        val choicesMap = salvo.vantagemChoices.mapValues { it.value.toMutableList() }.toMutableMap()
+        val choicesMap = salvo.vantagemChoices.mapValues { it.value.toMutableList() }
 
-        val vantagensPersistidas: List<VantagemPersistida> =
-            if (salvo.vantagensDetalhadas.isNotEmpty()) {
-                salvo.vantagensDetalhadas
-            } else {
-                salvo.vantagens.map { id ->
-                    VantagemPersistida(id = id.trim(), choice = choicesMap[id]?.firstOrNull())
-                }
-            }
-
-        vantagensPersistidas.forEach { saved ->
-            val trimmed = saved.id.trim()
-            val base = mapPorId[trimmed]
-                ?: mapPorNome[trimmed.uppercase()]
-                ?: mapPorKey[trimmed.keyify()]
-                ?: saved.nome?.let { nome ->
-                    val upper = nome.trim().uppercase()
-                    mapPorNome[upper] ?: mapPorKey[nome.keyify()]
-                }
+        salvo.vantagens.forEach { saved ->
+            val trimmed = saved.trim()
+            val base = mapPorId[trimmed] ?: mapPorNome[trimmed.uppercase()]
             if (base != null) {
                 val vantCopiada = runCatching { base.copy() }
                     .onFailure {
@@ -320,9 +292,8 @@ class CriadorViewModel : ViewModel() {
                     .getOrNull()
 
                 if (vantCopiada != null) {
-                    val choice = saved.choice ?: choicesMap[trimmed]?.removeFirstOrNull()
-                    if (!choice.isNullOrBlank()) {
-                        vantCopiada.choice = choice
+                    choicesMap[trimmed]?.removeFirstOrNull()?.let { escolha ->
+                        vantCopiada.choice = escolha
                     }
                     state.vantagensSelecionadas.add(vantCopiada)
                 }
@@ -331,20 +302,11 @@ class CriadorViewModel : ViewModel() {
 
         state.complicacoesSelecionadas.clear()
         state.reservasComplicacaoMaior.clear()
-
-        // Restaura o nível salvo de cada complicação (fallback para severidade original ou "Menor")
-        val tiposSalvos = salvo.complicacoesTipos
         salvo.complicacoes.forEach { compId ->
             listaComplicacoes.find { it.id == compId }?.let { comp ->
-                val nivelSalvo = tiposSalvos[compId]
-                val fallbackNivel = comp.severity.ifBlank { "Menor" }
-                state.complicacoesSelecionadas[comp] = nivelSalvo ?: fallbackNivel
+                // Por default, restaura como “Menor”
+                state.complicacoesSelecionadas[comp] = "Menor"
             }
-        }
-
-        // Reaplica reservas de complicações maiores usadas em progresso
-        salvo.reservasComplicacaoMaior.forEach { compId ->
-            state.reservasComplicacaoMaior[compId] = true
         }
 
         state.equipamentosComprados.clear()
@@ -409,36 +371,6 @@ class CriadorViewModel : ViewModel() {
         state.superInvestments.clear()
         state.superInvestments.addAll(salvo.superInvestments)
 
-        state.rebuildAttributeStacksFromValues()
-
-        state.modoProgressaoAtivo   = salvo.modoProgressaoAtivo
-        state.progresso             = salvo.progresso
-        state.paFromProgress        = salvo.paFromProgress
-        state.pvFromXpOutstanding   = salvo.pvFromXpOutstanding
-        state.legendaryAttrReservations = salvo.legendaryAttrReservations
-        state.frozenAdvantageCount  = salvo.frozenAdvantageCount
-
-        state.stageXpSpent.keys.forEach { stage ->
-            state.stageXpSpent[stage] = salvo.stageXpSpent[stage] ?: 0
-        }
-
-        state.xpSlots.clear()
-        state.xpSlots.addAll(salvo.xpSlots.take(TOTAL_PROGRESS_LIMIT))
-        repeat(TOTAL_PROGRESS_LIMIT - state.xpSlots.size) { state.xpSlots.add(false) }
-
-        state.advancementHistory.clear()
-        state.advancementHistory.addAll(salvo.advancementHistory)
-        state.comprasAttrPorEstagio.keys.forEach { stage ->
-            state.comprasAttrPorEstagio[stage] = 0
-        }
-        state.advancementHistory.forEach { action ->
-            if (action is AdvancementAction.IncreaseAttribute) {
-                val prev = state.comprasAttrPorEstagio[action.stageName] ?: 0
-                state.comprasAttrPorEstagio[action.stageName] = prev + 1
-            }
-        }
-        state.emProgresso = salvo.emProgresso
-
         state.pontosVantagem = salvo.pontosRestantes
         state.dinheiro       = salvo.dinheiro
 
@@ -446,8 +378,6 @@ class CriadorViewModel : ViewModel() {
         state.especializacoesPorPericia.clear()
         state.especializacoesPorPericia.putAll(salvo.especializacoesPorPericia)
 
-        state.recomputeAvailableProgress()
-        
         state.recalcularPontosAtributo(_feedbackMessages)
         state.rebuildAllPericiaStacks(_feedbackMessages)
         normalizeArcanoIdsNoCarregamento()
@@ -862,7 +792,6 @@ class CriadorViewModel : ViewModel() {
             state.advantageAdvancementInProgress = false
             state.advantageForCurrentAdvancement = null
             state.stageNameForCurrentAdvancement = null
-            state.overrideStageForVantagem = null
             state.limparCompraArcanoViaXp(restaurarSnapshot = false)
             state.updateEmProgressoFlag()
             state.mostrandoVantagensProgresso = false
@@ -1081,7 +1010,6 @@ class CriadorViewModel : ViewModel() {
         state.attributeAdvancementInProgress = false
         state.advantageForCurrentAdvancement = null
         state.stageNameForCurrentAdvancement = null
-        state.overrideStageForVantagem = null
         state.mostrandoPericiasProgresso = false
         state.mostrandoVantagensProgresso = false
         state.mostrandoPoderesProgresso = false

@@ -1,32 +1,26 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.toDiceString
-import kotlinx.serialization.Serializable
 
-@Serializable
 enum class HindranceChangeType {
     RESERVATION,
     REDUCE_TO_MINOR,
     REMOVE
 }
 
-@Serializable
-sealed class AdvancementAction {
-    abstract val progressCost: Int
-    abstract val stageName: String
+sealed class AdvancementAction(open val progressCost: Int, open val stageName: String) {
     abstract fun getDisplayText(
         getAdvantageName: (String) -> String,
         getSkillValue: (String) -> Int
     ): String
 
-    @Serializable
     data class SpendOnAdvantage(
         val advantageId: String,
         override val stageName: String,
         val arcanoKey: String? = null,
         val previousArcanoSlots: List<String?>? = null,
         override val progressCost: Int = 1
-    ) : AdvancementAction() {
+    ) : AdvancementAction(progressCost, stageName) {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
             getSkillValue: (String) -> Int
@@ -35,13 +29,12 @@ sealed class AdvancementAction {
         }
     }
 
-    @Serializable
     data class IncreaseAttribute(
         val attributeName: String,
         val usedLegendaryReservation: Boolean = false,
         override val stageName: String,
         override val progressCost: Int
-    ) : AdvancementAction() {
+    ) : AdvancementAction(progressCost, stageName) {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
             getSkillValue: (String) -> Int
@@ -50,13 +43,12 @@ sealed class AdvancementAction {
         }
     }
 
-    @Serializable
     data class SpendOnSkills(
         val skillsIncreased: List<String>,
         val recordedSkillValues: Map<String, Int>? = null,
         override val stageName: String,
         override val progressCost: Int = 1
-    ) : AdvancementAction() {
+    ) : AdvancementAction(progressCost, stageName) {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
             getSkillValue: (String) -> Int
@@ -70,7 +62,6 @@ sealed class AdvancementAction {
         }
     }
 
-    @Serializable
     data class RemoveHindrance(
         val hindranceId: String,
         val changeType: HindranceChangeType,
@@ -78,7 +69,7 @@ sealed class AdvancementAction {
         val usedReservation: Boolean = false,
         override val stageName: String,
         override val progressCost: Int
-    ) : AdvancementAction() {
+    ) : AdvancementAction(progressCost, stageName) {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
             getSkillValue: (String) -> Int
@@ -92,11 +83,10 @@ sealed class AdvancementAction {
         }
     }
 
-    @Serializable
     data class ReserveLegendaryAttribute(
         override val stageName: String,
         override val progressCost: Int = 1
-    ) : AdvancementAction() {
+    ) : AdvancementAction(progressCost, stageName) {
         override fun getDisplayText(
             getAdvantageName: (String) -> String,
             getSkillValue: (String) -> Int

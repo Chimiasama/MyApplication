@@ -224,46 +224,11 @@ class CriadorState {
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun devolverPcDeVantagem() {
-        if (cpPvStack.isEmpty()) return
-
-        val vantParaRemover = ultimaVantagemElegivelParaReembolsoPb() ?: return
-
-        cpPvStack.removeLast()
-        pontosComplicacaoGastos -= 2
-        pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
-
-        if (vantParaRemover.nome.contains("Pontos de Poder", true)) {
-            removerPontosDePoder(vantParaRemover)
-        } else {
-            removeVantagemDinheiro(vantParaRemover)
-            vantagensSelecionadas.remove(vantParaRemover)
+        if (cpPvStack.isNotEmpty()) {
+            cpPvStack.removeLast()
+            pontosComplicacaoGastos -= 2
+            pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
         }
-
-        rebuildAllPericiaStacks()
-    }
-
-    private fun ultimaVantagemElegivelParaReembolsoPb(): Vantagem? {
-        val autoKeys = vantagensAutomaticas.map { it.keyify() }.toSet()
-
-        for (idx in vantagensSelecionadas.indices.reversed()) {
-            val vant = vantagensSelecionadas[idx]
-            val key = vant.nome.keyify()
-
-            if (idx < frozenAdvantageCount) continue
-            if (key in autoKeys) continue
-            if (vantagensRaciais.any { it.keyify() == key }) continue
-            if (vantagensDePoder.contains(vant.id)) continue
-            if (modoSupers && vant.id == "superpoderes") continue
-
-            val requiredByAnother = vantagensSelecionadas.any { other ->
-                other != vant && other.requisitos.vantagensPrevias.any { reqId -> reqId == vant.id }
-            }
-            if (requiredByAnother) continue
-
-            return vant
-        }
-
-        return null
     }
 
     fun gastarPcParaAtributo(): Boolean {
@@ -402,39 +367,6 @@ class CriadorState {
         cpSpStack.add(Unit)
         cpSpStack.add(Unit)
         mostrandoPericiasProgresso = true
-    }
-
-    fun rebuildAttributeStacksFromValues() {
-        paCostStackPorAtributo.values.forEach { it.clear() }
-
-        val superStepsByAttr: Map<String, Int> = superInvestments
-            .mapNotNull { it.effect as? PowerEffect.SuperAtributo }
-            .groupBy { it.attrKey.uppercase().trim() }
-            .mapValues { (_, list) -> list.sumOf { it.steps.coerceAtLeast(0) } }
-
-        listaAtributos.forEach { attr ->
-            val holder = valoresAtributos[attr] ?: return@forEach
-            val baseMin = racialAttrMinMap[ancestralidade]?.get(attr) ?: 4
-
-            var baseRaw = holder.intValue
-            repeat(superStepsByAttr[attr] ?: 0) {
-                baseRaw = if (baseRaw > 12) {
-                    (baseRaw - 1).coerceAtLeast(baseMin)
-                } else {
-                    (baseRaw - 2).coerceAtLeast(baseMin)
-                }
-            }
-
-            var raw = baseMin
-            val stack = paCostStackPorAtributo.getValue(attr)
-
-            while (raw < baseRaw) {
-                val next = if (raw < 12) raw + 2 else raw + 1
-                if (next > baseRaw) break
-                stack.add(1)
-                raw = next
-            }
-        }
     }
 
 
@@ -716,8 +648,8 @@ class CriadorState {
 
     var jovemAutoPequeno by mutableStateOf(false)
 
-    var jovemMalusPa by mutableIntStateOf(0)
-    var jovemMalusSp by mutableIntStateOf(0)
+    private var jovemMalusPa by mutableIntStateOf(0)
+    private var jovemMalusSp by mutableIntStateOf(0)
 
     fun syncFromCPRefund(pa: Boolean = false, sp: Boolean = false, feedbackMessages: MutableList<String>) {
         if (pa) recalcularPontosAtributo(feedbackMessages)

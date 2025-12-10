@@ -92,7 +92,6 @@ import com.example.swadebuilder.model.PersonagemSalvo
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.model.VantagemPersistida
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.loadJsonAsset
@@ -506,10 +505,10 @@ class MainActivity : ComponentActivity() {
                                                     val personagemId  = state.idAtual ?: UUID.randomUUID().toString()
                                                     val atributosMap  = state.valoresAtributos.mapValues { it.value.intValue }
                                                     val periciasMap   = listaPericias.associate { per -> per.nome to state.rawTotal(per) }
-                                                    val complicacoesMap = state.complicacoesSelecionadas
+                                                    val complicacoesList = state.complicacoesSelecionadas
                                                         .filterValues { it != null }
-                                                        .mapKeys { it.key.id }
-                                                    val complicacoesList = complicacoesMap.keys.toList()
+                                                        .keys
+                                                        .map { it.id }
                                                     val vantagemChoices = state.vantagensSelecionadas
                                                         .groupBy { it.id }
                                                         .mapValues { (_, list) ->
@@ -524,18 +523,9 @@ class MainActivity : ComponentActivity() {
                                                         pericias           = periciasMap,
                                                         ancestralidade     = state.ancestralidade,
                                                         vantagens          = state.vantagensSelecionadas.map { it.id },
-                                                        vantagensDetalhadas = state.vantagensSelecionadas.map {
-                                                            VantagemPersistida(
-                                                                id = it.id,
-                                                                nome = it.nome,
-                                                                choice = it.choice
-                                                            )
-                                                        },
                                                         vantagemChoices    = vantagemChoices,
                                                         vantagensRaciais   = state.vantagensRaciais.toList(),
                                                         complicacoes       = complicacoesList,
-                                                        complicacoesTipos  = complicacoesMap,
-                                                        reservasComplicacaoMaior = state.reservasComplicacaoMaior.keys.toSet(),
                                                         cpPaCount          = state.cpPaStack.size,
                                                         cpPvCount          = state.cpPvStack.size,
                                                         cpSpCount          = state.cpSpStack.size,
@@ -544,17 +534,6 @@ class MainActivity : ComponentActivity() {
                                                         poderes            = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
                                                         dinheiro           = state.dinheiro,
                                                         pontosRestantes    = state.pontosVantagem,
-                                                        progresso          = state.progresso,
-                                                        progressosDisponiveis = state.progressosDisponiveis,
-                                                        stageXpSpent          = state.stageXpSpent.toMap(),
-                                                        xpSlots               = state.xpSlots.toList(),
-                                                        paFromProgress        = state.paFromProgress,
-                                                        pvFromXpOutstanding   = state.pvFromXpOutstanding,
-                                                        legendaryAttrReservations = state.legendaryAttrReservations,
-                                                        frozenAdvantageCount  = state.frozenAdvantageCount,
-                                                        modoProgressaoAtivo   = state.modoProgressaoAtivo,
-                                                        emProgresso           = state.emProgresso,
-                                                        advancementHistory    = state.advancementHistory.toList(),
                                                         naturalArmorFromRace = state.naturalArmorFromRace,
                                                         armorBase            = state.armadura,
                                                         maisPontosPericias = state.maisPontosPericias,
