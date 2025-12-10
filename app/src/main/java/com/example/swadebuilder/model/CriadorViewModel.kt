@@ -260,7 +260,7 @@ class CriadorViewModel : ViewModel() {
         state.armadura = salvo.armorBase
 
         state.cpPaStack.clear()
-        repeat(salvo.cpPaCount) { state.cpPaStack.add("PA") }
+        repeat(salvo.cpPaCount) { state.cpPaStack.add("PB") }
 
         state.cpPvStack.clear()
         repeat(salvo.cpPvCount) { state.cpPvStack.add(Unit) }
@@ -383,6 +383,8 @@ class CriadorViewModel : ViewModel() {
         state.superInvestments.clear()
         state.superInvestments.addAll(salvo.superInvestments)
 
+        state.rebuildAttributeStacksFromValues()
+
         state.modoProgressaoAtivo   = salvo.modoProgressaoAtivo
         state.progresso             = salvo.progresso
         state.paFromProgress        = salvo.paFromProgress
@@ -400,6 +402,15 @@ class CriadorViewModel : ViewModel() {
 
         state.advancementHistory.clear()
         state.advancementHistory.addAll(salvo.advancementHistory)
+        state.comprasAttrPorEstagio.keys.forEach { stage ->
+            state.comprasAttrPorEstagio[stage] = 0
+        }
+        state.advancementHistory.forEach { action ->
+            if (action is AdvancementAction.IncreaseAttribute) {
+                val prev = state.comprasAttrPorEstagio[action.stageName] ?: 0
+                state.comprasAttrPorEstagio[action.stageName] = prev + 1
+            }
+        }
         state.emProgresso = salvo.emProgresso
 
         state.pontosVantagem = salvo.pontosRestantes

@@ -404,6 +404,39 @@ class CriadorState {
         mostrandoPericiasProgresso = true
     }
 
+    fun rebuildAttributeStacksFromValues() {
+        paCostStackPorAtributo.values.forEach { it.clear() }
+
+        val superStepsByAttr: Map<String, Int> = superInvestments
+            .mapNotNull { it.effect as? PowerEffect.SuperAtributo }
+            .groupBy { it.attrKey.uppercase().trim() }
+            .mapValues { (_, list) -> list.sumOf { it.steps.coerceAtLeast(0) } }
+
+        listaAtributos.forEach { attr ->
+            val holder = valoresAtributos[attr] ?: return@forEach
+            val baseMin = racialAttrMinMap[ancestralidade]?.get(attr) ?: 4
+
+            var baseRaw = holder.intValue
+            repeat(superStepsByAttr[attr] ?: 0) {
+                baseRaw = if (baseRaw > 12) {
+                    (baseRaw - 1).coerceAtLeast(baseMin)
+                } else {
+                    (baseRaw - 2).coerceAtLeast(baseMin)
+                }
+            }
+
+            var raw = baseMin
+            val stack = paCostStackPorAtributo.getValue(attr)
+
+            while (raw < baseRaw) {
+                val next = if (raw < 12) raw + 2 else raw + 1
+                if (next > baseRaw) break
+                stack.add(1)
+                raw = next
+            }
+        }
+    }
+
 
     fun maxComprasPpAteAgora(): Int {
         return listaDeEstagios.indexOf(estagioAtual()) + 1
