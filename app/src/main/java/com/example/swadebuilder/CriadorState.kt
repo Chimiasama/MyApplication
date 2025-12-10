@@ -587,9 +587,10 @@ class CriadorState {
         arcanoEmCompraViaXpKey = arcKey
         arcanoSnapshotAntesDaCompra = poderSlotsPorArcano[arcKey]?.toList()
 
-        val initialSlots = arcanoInfo[arcKey]?.first ?: 0
+        // Usa a contagem dinâmica que inclui Novos Poderes, em vez de apenas o valor inicial
+        val totalSlots = getSlotsCountForArcano(arcKey)
         val slots = poderSlotsPorArcano.getOrPut(arcKey) { mutableStateListOf() }
-        while (slots.size < initialSlots) { slots.add(null) }
+        while (slots.size < totalSlots) { slots.add(null) }
 
         mostrandoPoderesProgresso = true
     }
@@ -615,9 +616,18 @@ class CriadorState {
         mostrandoPoderesProgresso = false
     }
 
+    fun getSlotsCountForArcano(arcKey: String): Int {
+        val base = arcanoInfo[arcKey]?.first ?: 0
+        val newPowersCount = vantagensSelecionadas.count {
+            it.id == "novos_poderes" &&
+                    (it.choice.isNullOrBlank() || it.choice?.normAAKey() == arcKey)
+        }
+        return base + (newPowersCount * 2)
+    }
+
     fun arcanoCompraPendente(): Boolean {
         val arcKey = arcanoEmCompraViaXpKey ?: return false
-        val required = arcanoInfo[arcKey]?.first ?: 0
+        val required = getSlotsCountForArcano(arcKey)
         if (required == 0) return false
         val slots = poderSlotsPorArcano[arcKey] ?: return true
         val filled = slots.count { it != null }

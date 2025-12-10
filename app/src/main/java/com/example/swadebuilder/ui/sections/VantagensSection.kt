@@ -249,8 +249,6 @@ fun VantagensContent(
     var showTempError by remember { mutableStateOf(false) }
     var pendingVantagem by remember { mutableStateOf<Vantagem?>(null) }
     var showChoiceDialog by rememberSaveable { mutableStateOf(false) }
-    var pendingNovosPoderes by rememberSaveable { mutableStateOf<Vantagem?>(null) }
-    var showNovosPoderesDialog by rememberSaveable { mutableStateOf(false) }
     var dialogMostrandoAntecedente by remember { mutableStateOf<Vantagem?>(null) }
     var subOpcaoSelecionada by rememberSaveable { mutableStateOf<String?>(null) }
 
@@ -407,26 +405,7 @@ fun VantagensContent(
                         onClick = {
                             if (!canRemove) return@AssistChip
 
-                            if (vant.id == "novos_poderes") {
-                                val escolhidoArcano = state.vantagensSelecionadas
-                                    .firstOrNull { it.id == "antecedente_arcano" }
-                                    ?.choice
-                                    ?.uppercase()
-                                    ?.semAcentos()
-                                    ?.trim()
-                                    ?: ""
-
-                                val initialSlots = arcanoInfo[escolhidoArcano]?.first ?: 0
-
-                                state.desfazerUltimosNovosPoderes(
-                                    versionKey = escolhidoArcano,
-                                    initialSlots = initialSlots
-                                )
-
-                                state.vantagensSelecionadas.remove(vant)
-                                state.pontosVantagem++
-                                state.rebuildAllPericiaStacks()
-                            } else if (vant.nome.contains("Pontos de Poder", true)) {
+                            if (vant.nome.contains("Pontos de Poder", true)) {
                                 state.removerPontosDePoder(vant)
                                 state.pontosVantagem++
                                 state.rebuildAllPericiaStacks()
@@ -627,11 +606,6 @@ fun VantagensContent(
 
                                             vant.id == "antecedente_arcano" -> {
                                                 dialogMostrandoAntecedente = vant
-                                            }
-
-                                            vant.id == "novos_poderes" -> {
-                                                pendingNovosPoderes = vant
-                                                showNovosPoderesDialog = true
                                             }
 
                                             else -> {
@@ -937,78 +911,6 @@ fun VantagensContent(
             }
         }
 
-        if (showNovosPoderesDialog && pendingNovosPoderes != null) {
-            val vant = pendingNovosPoderes!!
-
-            val allPoderes: List<Poder> =
-                LocalContext.current.loadJsonAsset("poderes.json")
-
-            val curEstIndex = listaDeEstagios.indexOfFirst {
-                it.nome == state.estagioAtual().nome
-            }
-
-            val disponiveis = allPoderes
-                .filter { poder ->
-                    val poderIndex = listaDeEstagios.indexOfFirst { it.nome == poder.estagio }
-                    if (curEstIndex == -1 || poderIndex == -1) {
-                        true
-                    } else {
-                        poderIndex <= curEstIndex
-                    }
-                }
-                .map { it.nome }
-                .filter { nome -> nome !in state.poderesSelecionados }
-
-            MultipleSelectionDialog(
-                title = "Escolha 2 novos poderes",
-                options = disponiveis,
-                maxSelections = 2,
-                onConfirm = { escolhas ->
-                    val escolhidoArcano = state.vantagensSelecionadas
-                        .firstOrNull { it.id == "antecedente_arcano" }
-                        ?.choice
-                        ?: ""
-
-                    val versionKey = escolhidoArcano
-                        .uppercase()
-                        .semAcentos()
-                        .trim()
-
-                    val initialSlots = arcanoInfo[versionKey]?.first ?: 0
-
-                    val slots = state.poderSlotsPorArcano.getOrPut(versionKey) {
-                        mutableStateListOf<String?>().apply {
-                            repeat(initialSlots) { add(null) }
-                        }
-                    }
-
-                    escolhas.forEach { poder ->
-                        val firstEmpty = slots.indexOfFirst { it == null }
-                        if (firstEmpty >= 0) {
-                            slots[firstEmpty] = poder
-                        } else {
-                            slots.add(poder)
-                        }
-                    }
-
-                    state.poderSlotsPorArcano[versionKey] = slots
-                    state.poderesSelecionados.clear()
-                    state.poderesSelecionados.addAll(slots.filterNotNull())
-                    state.registrarNovosPoderes(versionKey, escolhas)
-
-                    state.vantagensSelecionadas += vant
-                    state.pontosVantagem--
-                    state.rebuildAllPericiaStacks()
-
-                    showNovosPoderesDialog = false
-                    pendingNovosPoderes = null
-                },
-                onDismiss = {
-                    showNovosPoderesDialog = false
-                    pendingNovosPoderes = null
-                }
-            )
-        }
     }
 }
 
