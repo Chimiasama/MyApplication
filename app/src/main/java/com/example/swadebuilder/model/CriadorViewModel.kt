@@ -305,9 +305,17 @@ class CriadorViewModel : ViewModel() {
         state.reservasComplicacaoMaior.clear()
         salvo.complicacoes.forEach { compId ->
             listaComplicacoes.find { it.id == compId }?.let { comp ->
-                // Por default, restaura como “Menor”
-                state.complicacoesSelecionadas[comp] = "Menor"
+                val nivelSalvo = salvo.complicacoesNiveis[compId]
+                val nivelNormalizado = when (nivelSalvo?.lowercase()) {
+                    "maior" -> "Maior"
+                    "menor" -> "Menor"
+                    else -> comp.tipo ?: "Menor"
+                }
+                state.complicacoesSelecionadas[comp] = nivelNormalizado
             }
+        }
+        salvo.reservasComplicacaoMaior.forEach { compId ->
+            state.reservasComplicacaoMaior[compId] = true
         }
 
         state.equipamentosComprados.clear()
@@ -378,6 +386,49 @@ class CriadorViewModel : ViewModel() {
         state.usarEspecializacoesDePericia = salvo.usarEspecializacoesDePericia
         state.especializacoesPorPericia.clear()
         state.especializacoesPorPericia.putAll(salvo.especializacoesPorPericia)
+
+        state.progresso = salvo.progresso
+        state.progressosDisponiveis = salvo.progressosDisponiveis
+        salvo.stageXpSpent.forEach { (stage, spent) ->
+            state.stageXpSpent[stage] = spent
+        }
+        if (salvo.xpSlots.isNotEmpty()) {
+            state.xpSlots.clear()
+            state.xpSlots.addAll(salvo.xpSlots)
+        }
+        state.modoProgressaoAtivo = salvo.modoProgressaoAtivo
+        state.emProgresso = salvo.emProgresso
+        state.mostrandoVantagensProgresso = salvo.mostrandoVantagensProgresso
+        state.mostrandoPericiasProgresso  = salvo.mostrandoPericiasProgresso
+        state.mostrandoAtributosProgresso = salvo.mostrandoAtributosProgresso
+        state.mostrandoPoderesProgresso   = salvo.mostrandoPoderesProgresso
+        state.frozenAdvantageCount = salvo.frozenAdvantageCount
+        state.frozenSkillIncrements.clear()
+        state.frozenSkillIncrements.putAll(salvo.frozenSkillIncrements)
+        if (state.modoProgressaoAtivo && state.frozenSkillIncrements.isEmpty()) {
+            state.snapshotFrozenSkillIncrements()
+        }
+        state.paFromProgress = salvo.paFromProgress
+        state.pvFromXpOutstanding = salvo.pvFromXpOutstanding
+        salvo.comprasAttrPorEstagio.forEach { (stage, count) ->
+            state.comprasAttrPorEstagio[stage] = count
+        }
+        salvo.comprasPpPorEstagio.forEach { (stage, count) ->
+            state.comprasPpPorEstagio[stage] = count
+        }
+        state.skillAdvancementInProgress = salvo.skillAdvancementInProgress
+        state.skillsForCurrentAdvancement.clear()
+        state.skillsForCurrentAdvancement.addAll(salvo.skillsForCurrentAdvancement)
+        state.advantageAdvancementInProgress = salvo.advantageAdvancementInProgress
+        state.advantageForCurrentAdvancement = salvo.advantageForCurrentAdvancement
+        state.attributeAdvancementInProgress = salvo.attributeAdvancementInProgress
+        state.attributeStageForCurrentAdvancement = salvo.attributeStageForCurrentAdvancement
+        state.stageNameForCurrentAdvancement = salvo.stageNameForCurrentAdvancement
+        state.attributeStacksBeforeAdvancement = salvo.attributeStacksBeforeAdvancement
+        state.attributeUsedReservation = salvo.attributeUsedReservation
+        state.advancementHistory.clear()
+        state.advancementHistory.addAll(salvo.advancementHistory)
+        state.recomputeAvailableProgress()
 
         state.recalcularPontosAtributo(_feedbackMessages)
         state.rebuildAllPericiaStacks(_feedbackMessages)

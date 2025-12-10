@@ -3,6 +3,8 @@ package com.example.swadebuilder.model
 import kotlinx.serialization.Serializable
 import java.util.UUID
 
+import com.example.swadebuilder.model.AdvancementAction
+
 @Serializable
 data class PersonagemSalvo(
     val id: String = UUID.randomUUID().toString(),
@@ -16,6 +18,8 @@ data class PersonagemSalvo(
 
     // IDs de complicações
     val complicacoes: List<String>,
+    val complicacoesNiveis: Map<String, String> = emptyMap(),
+    val reservasComplicacaoMaior: Set<String> = emptySet(),
 
     // --- NOVOS CAMPOS: Persistência dos gastos de Pontos de Complicação ---
     val cpPaCount: Int = 0,       // Quantos aumentos de Atributo (PA) via PC
@@ -78,7 +82,37 @@ data class PersonagemSalvo(
     val limiteDePoderDaCampanha: Int = Int.MAX_VALUE,
 
     // ===== ANOTAÇÕES LIVRES DO JOGADOR =====
-    val anotacoes: String = ""
+    val anotacoes: String = "",
+
+    // ===== ESTADO DE PROGRESSOS E XP =====
+    val progresso: Int = 0,
+    val progressosDisponiveis: Int = 0,
+    val stageXpSpent: Map<String, Int> = emptyMap(),
+    val xpSlots: List<Boolean> = emptyList(),
+    val modoProgressaoAtivo: Boolean = false,
+    val emProgresso: Boolean = false,
+    val mostrandoVantagensProgresso: Boolean = false,
+    val mostrandoPericiasProgresso: Boolean = false,
+    val mostrandoAtributosProgresso: Boolean = false,
+    val mostrandoPoderesProgresso: Boolean = false,
+    val frozenAdvantageCount: Int = 0,
+    val frozenSkillIncrements: Map<String, Int> = emptyMap(),
+    val paFromProgress: Int = 0,
+    val pvFromXpOutstanding: Int = 0,
+    val comprasAttrPorEstagio: Map<String, Int> = emptyMap(),
+    val comprasPpPorEstagio: Map<String, Int> = emptyMap(),
+
+    val skillAdvancementInProgress: Boolean = false,
+    val skillsForCurrentAdvancement: List<String> = emptyList(),
+    val advantageAdvancementInProgress: Boolean = false,
+    val advantageForCurrentAdvancement: String? = null,
+    val attributeAdvancementInProgress: Boolean = false,
+    val attributeStageForCurrentAdvancement: String? = null,
+    val stageNameForCurrentAdvancement: String? = null,
+    val attributeStacksBeforeAdvancement: Map<String, Int>? = null,
+    val attributeUsedReservation: Boolean = false,
+
+    val advancementHistory: List<AdvancementAction> = emptyList()
 )
 
 @Serializable

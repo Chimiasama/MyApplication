@@ -509,60 +509,97 @@ class MainActivity : ComponentActivity() {
                                                         .filterValues { it != null }
                                                         .keys
                                                         .map { it.id }
-                                                    val vantagemChoices = state.vantagensSelecionadas
-                                                        .groupBy { it.id }
-                                                        .mapValues { (_, list) ->
-                                                            list.mapNotNull { it.choice }
-                                                                .filter { it.isNotBlank() }
-                                                        }
+                                                    val complicacaoNiveis = state.complicacoesSelecionadas
+                                                        .filterValues { it != null }
+                                                        .mapValues { it.value!! }
+                                                        .mapKeys { it.key.id }
+                                                val vantagemChoices = state.vantagensSelecionadas
+                                                    .groupBy { it.id }
+                                                    .mapValues { (_, list) ->
+                                                        list.mapNotNull { it.choice }
+                                                            .filter { it.isNotBlank() }
+                                                    }
 
                                                     val salvo = PersonagemSalvo(
-                                                        id                 = personagemId,
-                                                        nome               = state.nomePersonagem,
-                                                        atributos          = atributosMap,
-                                                        pericias           = periciasMap,
-                                                        ancestralidade     = state.ancestralidade,
-                                                        vantagens          = state.vantagensSelecionadas.map { it.id },
-                                                        vantagemChoices    = vantagemChoices,
-                                                        vantagensRaciais   = state.vantagensRaciais.toList(),
-                                                        complicacoes       = complicacoesList,
-                                                        cpPaCount          = state.cpPaStack.size,
-                                                        cpPvCount          = state.cpPvStack.size,
-                                                        cpSpCount          = state.cpSpStack.size,
-                                                        cpRecursosCount    = state.cpRecursosStack.size,
-                                                        equipamentos       = state.equipamentosComprados.map { it.nome },
-                                                        poderes            = state.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
-                                                        dinheiro           = state.dinheiro,
-                                                        pontosRestantes    = state.pontosVantagem,
+                                                        id                   = personagemId,
+                                                        nome                 = state.nomePersonagem,
+                                                        atributos            = atributosMap,
+                                                        pericias             = periciasMap,
+                                                        ancestralidade       = state.ancestralidade,
+                                                        vantagens            = state.vantagensSelecionadas.map { it.id },
+                                                        vantagemChoices      = vantagemChoices,
+                                                        vantagensRaciais     = state.vantagensRaciais.toList(),
+                                                        complicacoes         = complicacoesList,
+                                                        complicacoesNiveis   = complicacaoNiveis,
+                                                        reservasComplicacaoMaior = state.reservasComplicacaoMaior
+                                                            .filterValues { it }
+                                                            .keys
+                                                            .toSet(),
+                                                        cpPaCount            = state.cpPaStack.size,
+                                                        cpPvCount            = state.cpPvStack.size,
+                                                        cpSpCount            = state.cpSpStack.size,
+                                                        cpRecursosCount      = state.cpRecursosStack.size,
+                                                        equipamentos         = state.equipamentosComprados.map { it.nome },
+                                                        poderes              = state.poderSlotsPorArcano.mapValues { (_, slots) ->
+                                                            slots.filterNotNull()
+                                                        },
+                                                        dinheiro             = state.dinheiro,
+                                                        pontosRestantes      = state.pontosVantagem,
                                                         naturalArmorFromRace = state.naturalArmorFromRace,
                                                         armorBase            = state.armadura,
-                                                        maisPontosPericias = state.maisPontosPericias,
-                                                        cartaSelvagem      = state.cartaSelvagem,
-                                                        heroisSemArmadura  = state.heroisSemArmadura,
-                                                        soldadoCargaAtivo  = state.soldadoCargaAtivo,
-                                                        semPontosDePoder   = state.usarSemPontosDePoder,
+                                                        maisPontosPericias   = state.maisPontosPericias,
+                                                        cartaSelvagem        = state.cartaSelvagem,
+                                                        heroisSemArmadura    = state.heroisSemArmadura,
+                                                        soldadoCargaAtivo    = state.soldadoCargaAtivo,
+                                                        semPontosDePoder     = state.usarSemPontosDePoder,
                                                         usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
                                                         especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
-                                                        modoSupers              = state.modoSupers,
-                                                        compendioFantasiaAtivo  = state.compendioFantasiaAtivo,
-                                                        compendioHorrorAtivo    = state.compendioHorrorAtivo,
-                                                        modoMonstroAtivo        = state.modoMonstroAtivo,
-                                                        tipoMonstroSelecionado  = state.tipoMonstroSelecionado,
-                                                        modoSuperequip          = state.modoSuperequip,
-                                                        modoSuperComplicacoes   = state.modoSuperComplicacoes,
-                                                        superInvestments        = state.superInvestments.toList(),
-                                                        superPontosTotais       = state.superPontosTotais,
-                                                        superPontosDisponiveis  = state.superPontosDisponiveis,
-                                                        limitePorPoderPadrao    = state.limitePorPoderPadrao,
-                                                        limiteFavorecido        = state.limiteFavorecido,
-                                                        poderFavoritoId         = state.poderFavoritoId,
-                                                        bonusPararFromPower     = state.bonusPararFromPower,
-                                                        bonusResFromPower       = state.bonusResFromPower,
-                                                        armorFromPower          = state.armorFromPower,
-                                                        vantagensDePoder        = state.vantagensDePoder.toSet(),
-                                                        gastosPorPoder          = state.gastosPorPoder.toMap(),
+                                                        modoSupers           = state.modoSupers,
+                                                        compendioFantasiaAtivo = state.compendioFantasiaAtivo,
+                                                        compendioHorrorAtivo   = state.compendioHorrorAtivo,
+                                                        modoMonstroAtivo       = state.modoMonstroAtivo,
+                                                        tipoMonstroSelecionado = state.tipoMonstroSelecionado,
+                                                        modoSuperequip         = state.modoSuperequip,
+                                                        modoSuperComplicacoes  = state.modoSuperComplicacoes,
+                                                        superInvestments       = state.superInvestments.toList(),
+                                                        superPontosTotais      = state.superPontosTotais,
+                                                        superPontosDisponiveis = state.superPontosDisponiveis,
+                                                        limitePorPoderPadrao   = state.limitePorPoderPadrao,
+                                                        limiteFavorecido       = state.limiteFavorecido,
+                                                        poderFavoritoId        = state.poderFavoritoId,
+                                                        bonusPararFromPower    = state.bonusPararFromPower,
+                                                        bonusResFromPower      = state.bonusResFromPower,
+                                                        armorFromPower         = state.armorFromPower,
+                                                        vantagensDePoder       = state.vantagensDePoder.toSet(),
+                                                        gastosPorPoder         = state.gastosPorPoder.toMap(),
                                                         limiteDePoderDaCampanha = state.limiteDePoderDaCampanha,
-                                                        anotacoes               = state.anotacoes
+                                                        anotacoes              = state.anotacoes,
+                                                        progresso              = state.progresso,
+                                                        progressosDisponiveis   = state.progressosDisponiveis,
+                                                        stageXpSpent            = state.stageXpSpent.toMap(),
+                                                        xpSlots                 = state.xpSlots.toList(),
+                                                        modoProgressaoAtivo     = state.modoProgressaoAtivo,
+                                                        emProgresso             = state.emProgresso,
+                                                        mostrandoVantagensProgresso = state.mostrandoVantagensProgresso,
+                                                        mostrandoPericiasProgresso  = state.mostrandoPericiasProgresso,
+                                                        mostrandoAtributosProgresso = state.mostrandoAtributosProgresso,
+                                                        mostrandoPoderesProgresso   = state.mostrandoPoderesProgresso,
+                                                        frozenAdvantageCount    = state.frozenAdvantageCount,
+                                                        frozenSkillIncrements   = state.frozenSkillIncrements.toMap(),
+                                                        paFromProgress         = state.paFromProgress,
+                                                        pvFromXpOutstanding    = state.pvFromXpOutstanding,
+                                                        comprasAttrPorEstagio  = state.comprasAttrPorEstagio.toMap(),
+                                                        comprasPpPorEstagio    = state.comprasPpPorEstagio.toMap(),
+                                                        skillAdvancementInProgress = state.skillAdvancementInProgress,
+                                                        skillsForCurrentAdvancement = state.skillsForCurrentAdvancement.toList(),
+                                                        advantageAdvancementInProgress = state.advantageAdvancementInProgress,
+                                                        advantageForCurrentAdvancement = state.advantageForCurrentAdvancement,
+                                                        attributeAdvancementInProgress = state.attributeAdvancementInProgress,
+                                                        attributeStageForCurrentAdvancement = state.attributeStageForCurrentAdvancement,
+                                                        stageNameForCurrentAdvancement = state.stageNameForCurrentAdvancement,
+                                                        attributeStacksBeforeAdvancement = state.attributeStacksBeforeAdvancement,
+                                                        attributeUsedReservation = state.attributeUsedReservation,
+                                                        advancementHistory = state.advancementHistory.toList()
                                                     )
 
                                                     state.idAtual = personagemId

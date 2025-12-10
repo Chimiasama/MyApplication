@@ -1,19 +1,25 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.toDiceString
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 enum class HindranceChangeType {
     RESERVATION,
     REDUCE_TO_MINOR,
     REMOVE
 }
 
+@Serializable
 sealed class AdvancementAction(open val progressCost: Int, open val stageName: String) {
     abstract fun getDisplayText(
         getAdvantageName: (String) -> String,
         getSkillValue: (String) -> Int
     ): String
 
+    @Serializable
+    @SerialName("SpendOnAdvantage")
     data class SpendOnAdvantage(
         val advantageId: String,
         override val stageName: String,
@@ -29,6 +35,8 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
         }
     }
 
+    @Serializable
+    @SerialName("IncreaseAttribute")
     data class IncreaseAttribute(
         val attributeName: String,
         val usedLegendaryReservation: Boolean = false,
@@ -43,6 +51,8 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
         }
     }
 
+    @Serializable
+    @SerialName("SpendOnSkills")
     data class SpendOnSkills(
         val skillsIncreased: List<String>,
         val recordedSkillValues: Map<String, Int>? = null,
@@ -62,6 +72,8 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
         }
     }
 
+    @Serializable
+    @SerialName("RemoveHindrance")
     data class RemoveHindrance(
         val hindranceId: String,
         val changeType: HindranceChangeType,
@@ -83,6 +95,8 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
         }
     }
 
+    @Serializable
+    @SerialName("ReserveLegendaryAttribute")
     data class ReserveLegendaryAttribute(
         override val stageName: String,
         override val progressCost: Int = 1
