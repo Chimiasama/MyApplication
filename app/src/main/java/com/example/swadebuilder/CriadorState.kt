@@ -224,11 +224,46 @@ class CriadorState {
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun devolverPcDeVantagem() {
-        if (cpPvStack.isNotEmpty()) {
-            cpPvStack.removeLast()
-            pontosComplicacaoGastos -= 2
-            pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
+        if (cpPvStack.isEmpty()) return
+
+        val vantParaRemover = ultimaVantagemElegivelParaReembolsoPb() ?: return
+
+        cpPvStack.removeLast()
+        pontosComplicacaoGastos -= 2
+        pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
+
+        if (vantParaRemover.nome.contains("Pontos de Poder", true)) {
+            removerPontosDePoder(vantParaRemover)
+        } else {
+            removeVantagemDinheiro(vantParaRemover)
+            vantagensSelecionadas.remove(vantParaRemover)
         }
+
+        rebuildAllPericiaStacks()
+    }
+
+    private fun ultimaVantagemElegivelParaReembolsoPb(): Vantagem? {
+        val autoKeys = vantagensAutomaticas.map { it.keyify() }.toSet()
+
+        for (idx in vantagensSelecionadas.indices.reversed()) {
+            val vant = vantagensSelecionadas[idx]
+            val key = vant.nome.keyify()
+
+            if (idx < frozenAdvantageCount) continue
+            if (key in autoKeys) continue
+            if (vantagensRaciais.any { it.keyify() == key }) continue
+            if (vantagensDePoder.contains(vant.id)) continue
+            if (modoSupers && vant.id == "superpoderes") continue
+
+            val requiredByAnother = vantagensSelecionadas.any { other ->
+                other != vant && other.requisitos.vantagensPrevias.any { reqId -> reqId == vant.id }
+            }
+            if (requiredByAnother) continue
+
+            return vant
+        }
+
+        return null
     }
 
     fun gastarPcParaAtributo(): Boolean {

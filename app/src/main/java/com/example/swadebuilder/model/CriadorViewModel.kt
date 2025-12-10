@@ -150,6 +150,8 @@ class CriadorViewModel : ViewModel() {
         state.arcanoSnapshotAntesDaCompra = null
         state.mostrandoPoderesProgresso = false
         state.mostrandoAtributosProgresso = false
+        state.skillsForCurrentAdvancement.clear()
+        state.skillAdvancementInProgress = false
 
         // ─────────────────────────────────────────────────────────────
         // RESET COMPLETO DE SUPERS – NÃO VAZAR ENTRE PERSONAGENS
@@ -189,8 +191,14 @@ class CriadorViewModel : ViewModel() {
         state.frozenSkillIncrements.clear()
         state.overrideStageForVantagem = null
         state.pvFromXpOutstanding = 0
+        state.jovemMalusPa = 0
+        state.jovemMalusSp = 0
+        state.jovemAutoPequeno = false
 
-        state.valoresAtributos.forEach { (_, holder) -> holder.intValue = 4 }
+        state.paCostStackPorAtributo.values.forEach { it.clear() }
+        state.valoresAtributos.forEach { (attr, holder) ->
+            holder.intValue = state.atributoMinRaw(attr)
+        }
         state.recalcularPontosAtributo(_feedbackMessages)
 
         listaPericias.forEach { per ->
