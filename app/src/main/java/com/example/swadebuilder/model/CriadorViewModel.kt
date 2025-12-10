@@ -979,14 +979,6 @@ class CriadorViewModel : ViewModel() {
                     }
 
                     if (vant.id == "novos_poderes") {
-                        val targetArcKey = state.novosPoderesEmCompraArcKey
-                            ?: state.vantagensSelecionadas
-                                .mapNotNull { it.toArcanoKey()?.normAAKey() }
-                                .firstOrNull()
-                        val initialSlots = targetArcKey?.let { arcanoInfo[it]?.first ?: 0 } ?: 0
-                        if (targetArcKey != null) {
-                            state.desfazerUltimosNovosPoderes(targetArcKey, initialSlots)
-                        }
                         state.limparCompraNovosPoderes(restaurarSnapshot = true)
                     }
 
