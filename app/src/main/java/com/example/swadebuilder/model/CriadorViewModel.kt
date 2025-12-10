@@ -145,6 +145,7 @@ class CriadorViewModel : ViewModel() {
         state.attributeStacksBeforeAdvancement = null
         state.attributeUsedReservation = false
         state.stageNameForCurrentAdvancement = null
+        state.overrideStageForVantagem = null
         state.arcanoEmCompraViaXpKey = null
         state.arcanoSnapshotAntesDaCompra = null
         state.mostrandoPoderesProgresso = false
@@ -186,6 +187,8 @@ class CriadorViewModel : ViewModel() {
         state.mostrandoVantagensProgresso = false
         state.mostrandoPericiasProgresso = false
         state.frozenSkillIncrements.clear()
+        state.overrideStageForVantagem = null
+        state.pvFromXpOutstanding = 0
 
         state.valoresAtributos.forEach { (_, holder) -> holder.intValue = 4 }
         state.recalcularPontosAtributo(_feedbackMessages)
@@ -792,6 +795,7 @@ class CriadorViewModel : ViewModel() {
             state.advantageAdvancementInProgress = false
             state.advantageForCurrentAdvancement = null
             state.stageNameForCurrentAdvancement = null
+            state.overrideStageForVantagem = null
             state.limparCompraArcanoViaXp(restaurarSnapshot = false)
             state.updateEmProgressoFlag()
             state.mostrandoVantagensProgresso = false
@@ -1010,6 +1014,7 @@ class CriadorViewModel : ViewModel() {
         state.attributeAdvancementInProgress = false
         state.advantageForCurrentAdvancement = null
         state.stageNameForCurrentAdvancement = null
+        state.overrideStageForVantagem = null
         state.mostrandoPericiasProgresso = false
         state.mostrandoVantagensProgresso = false
         state.mostrandoPoderesProgresso = false
