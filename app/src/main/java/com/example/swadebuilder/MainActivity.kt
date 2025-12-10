@@ -505,10 +505,10 @@ class MainActivity : ComponentActivity() {
                                                     val personagemId  = state.idAtual ?: UUID.randomUUID().toString()
                                                     val atributosMap  = state.valoresAtributos.mapValues { it.value.intValue }
                                                     val periciasMap   = listaPericias.associate { per -> per.nome to state.rawTotal(per) }
-                                                    val complicacoesList = state.complicacoesSelecionadas
+                                                    val complicacoesMap = state.complicacoesSelecionadas
                                                         .filterValues { it != null }
-                                                        .keys
-                                                        .map { it.id }
+                                                        .mapKeys { it.key.id }
+                                                    val complicacoesList = complicacoesMap.keys.toList()
                                                     val vantagemChoices = state.vantagensSelecionadas
                                                         .groupBy { it.id }
                                                         .mapValues { (_, list) ->
@@ -526,6 +526,8 @@ class MainActivity : ComponentActivity() {
                                                         vantagemChoices    = vantagemChoices,
                                                         vantagensRaciais   = state.vantagensRaciais.toList(),
                                                         complicacoes       = complicacoesList,
+                                                        complicacoesTipos  = complicacoesMap,
+                                                        reservasComplicacaoMaior = state.reservasComplicacaoMaior.keys.toSet(),
                                                         cpPaCount          = state.cpPaStack.size,
                                                         cpPvCount          = state.cpPvStack.size,
                                                         cpSpCount          = state.cpSpStack.size,

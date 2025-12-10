@@ -18,6 +18,12 @@ data class PersonagemSalvo(
     // IDs de complicações
     val complicacoes: List<String>,
 
+    // Nível salvo de cada complicação (Menor/Maior) — mantém compatibilidade com saves antigos
+    val complicacoesTipos: Map<String, String?> = emptyMap(),
+
+    // Complicações Maiores já reservadas para remoção em progresso
+    val reservasComplicacaoMaior: Set<String> = emptySet(),
+
     // --- NOVOS CAMPOS: Persistência dos gastos de Pontos de Complicação ---
     val cpPaCount: Int = 0,       // Quantos aumentos de Atributo (PA) via PC
     val cpPvCount: Int = 0,       // Quantos Pontos de Vantagem (PV) via PC

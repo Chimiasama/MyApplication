@@ -314,11 +314,20 @@ class CriadorViewModel : ViewModel() {
 
         state.complicacoesSelecionadas.clear()
         state.reservasComplicacaoMaior.clear()
+
+        // Restaura o nível salvo de cada complicação (fallback para severidade original ou "Menor")
+        val tiposSalvos = salvo.complicacoesTipos
         salvo.complicacoes.forEach { compId ->
             listaComplicacoes.find { it.id == compId }?.let { comp ->
-                // Por default, restaura como “Menor”
-                state.complicacoesSelecionadas[comp] = "Menor"
+                val nivelSalvo = tiposSalvos[compId]
+                val fallbackNivel = comp.severity.ifBlank { "Menor" }
+                state.complicacoesSelecionadas[comp] = nivelSalvo ?: fallbackNivel
             }
+        }
+
+        // Reaplica reservas de complicações maiores usadas em progresso
+        salvo.reservasComplicacaoMaior.forEach { compId ->
+            state.reservasComplicacaoMaior[compId] = true
         }
 
         state.equipamentosComprados.clear()
