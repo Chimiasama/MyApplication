@@ -196,12 +196,12 @@ fun AtributosContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp)
+                    .padding(vertical = 2.dp)
                     .background(
                         color = MaterialTheme.colorScheme.surfaceVariant,
                         shape = RoundedCornerShape(10.dp)
                     )
-                    .padding(horizontal = 12.dp, vertical = 10.dp)
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -268,7 +268,7 @@ fun AtributosContent(
             }
 
             if (allowLongTexts && descricao.isNotBlank()) {
-                Spacer(Modifier.height(6.dp))
+                Spacer(Modifier.height(2.dp))
                 TextButton(
                     onClick = {
                         val current = detalhesExpandidos[descKey] ?: false
@@ -290,8 +290,6 @@ fun AtributosContent(
                 }
             }
         }
-
-        Spacer(Modifier.height(8.dp))
     }
 }
 

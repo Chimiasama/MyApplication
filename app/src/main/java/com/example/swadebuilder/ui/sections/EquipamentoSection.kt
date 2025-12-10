@@ -693,13 +693,13 @@ fun EquipamentoListItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(vertical = 2.dp)
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
-        Column(Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
+        Column(Modifier.padding(horizontal = 12.dp, vertical = 4.dp)) {
             Row(
                 Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -753,7 +753,7 @@ fun EquipamentoListItem(
             }
 
             if (allowLongTexts && detalhes.isNotEmpty()) {
-                Spacer(Modifier.height(6.dp))
+                Spacer(Modifier.height(2.dp))
                 TextButton(
                     onClick = onToggleDetails,
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
