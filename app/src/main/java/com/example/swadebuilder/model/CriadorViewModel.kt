@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
+import com.example.swadebuilder.TOTAL_PROGRESS_LIMIT
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.listaPericias
@@ -382,6 +383,25 @@ class CriadorViewModel : ViewModel() {
         state.superInvestments.clear()
         state.superInvestments.addAll(salvo.superInvestments)
 
+        state.modoProgressaoAtivo   = salvo.modoProgressaoAtivo
+        state.progresso             = salvo.progresso
+        state.paFromProgress        = salvo.paFromProgress
+        state.pvFromXpOutstanding   = salvo.pvFromXpOutstanding
+        state.legendaryAttrReservations = salvo.legendaryAttrReservations
+        state.frozenAdvantageCount  = salvo.frozenAdvantageCount
+
+        state.stageXpSpent.keys.forEach { stage ->
+            state.stageXpSpent[stage] = salvo.stageXpSpent[stage] ?: 0
+        }
+
+        state.xpSlots.clear()
+        state.xpSlots.addAll(salvo.xpSlots.take(TOTAL_PROGRESS_LIMIT))
+        repeat(TOTAL_PROGRESS_LIMIT - state.xpSlots.size) { state.xpSlots.add(false) }
+
+        state.advancementHistory.clear()
+        state.advancementHistory.addAll(salvo.advancementHistory)
+        state.emProgresso = salvo.emProgresso
+
         state.pontosVantagem = salvo.pontosRestantes
         state.dinheiro       = salvo.dinheiro
 
@@ -389,6 +409,8 @@ class CriadorViewModel : ViewModel() {
         state.especializacoesPorPericia.clear()
         state.especializacoesPorPericia.putAll(salvo.especializacoesPorPericia)
 
+        state.recomputeAvailableProgress()
+        
         state.recalcularPontosAtributo(_feedbackMessages)
         state.rebuildAllPericiaStacks(_feedbackMessages)
         normalizeArcanoIdsNoCarregamento()

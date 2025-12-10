@@ -1,5 +1,6 @@
 package com.example.swadebuilder.model
 
+import com.example.swadebuilder.TOTAL_PROGRESS_LIMIT
 import kotlinx.serialization.Serializable
 import java.util.UUID
 
@@ -32,6 +33,17 @@ data class PersonagemSalvo(
 
     val dinheiro: Int,
     val pontosRestantes: Int,
+    val progresso: Int = 0,
+    val progressosDisponiveis: Int = 0,
+    val stageXpSpent: Map<String, Int> = emptyMap(),
+    val xpSlots: List<Boolean> = List(TOTAL_PROGRESS_LIMIT) { false },
+    val paFromProgress: Int = 0,
+    val pvFromXpOutstanding: Int = 0,
+    val legendaryAttrReservations: Int = 0,
+    val frozenAdvantageCount: Int = 0,
+    val modoProgressaoAtivo: Boolean = false,
+    val emProgresso: Boolean = false,
+    val advancementHistory: List<AdvancementAction> = emptyList(),
     val naturalArmorFromRace: Int = 0,
     val armorBase: Int = 0,
     val vantagemChoices: Map<String, List<String>> = emptyMap(),
