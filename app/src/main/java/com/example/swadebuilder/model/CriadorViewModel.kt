@@ -91,6 +91,7 @@ class CriadorViewModel : ViewModel() {
         state.grandesResponsabilidades = grandesResponsabilidades
         state.modoSuperComplicacoes = modoSupers
         state.soldadoCargaAtivo = true
+        state.nasceUmHeroi = false
 
         state.idAtual = null
         state.nomePersonagem = ""
