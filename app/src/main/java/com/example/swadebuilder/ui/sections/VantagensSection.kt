@@ -68,6 +68,7 @@ import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.dialogs.MultipleSelectionDialog
+import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
@@ -400,6 +401,8 @@ fun VantagensContent(
                 val isCelestialAAMilagresDesabilitado = state.celestialAAMilagresDesabilitado &&
                         vant.id == "antecedente_arcano_milagres"
 
+                val arcKey = vant.toArcanoKey()
+
                 AssistChip(
                         onClick = {
                             if (!canRemove) return@AssistChip
@@ -435,6 +438,13 @@ fun VantagensContent(
 
                                 if (vant.id == "o_melhor_que_ha") {
                                     state.poderFavoritoId = null
+                                }
+                            }
+
+                            if (arcKey != null && arcKey == state.arcanoEmCompraViaXpKey) {
+                                state.limparCompraArcanoViaXp(restaurarSnapshot = true)
+                                if (state.advantageForCurrentAdvancement == vant.id) {
+                                    state.advantageForCurrentAdvancement = null
                                 }
                             }
                         },
@@ -783,9 +793,13 @@ fun VantagensContent(
                             )
 
                             if (state.podeSelecionar(novaVantagem)) {
-                                state.vantagensSelecionadas += novaVantagem
-                                state.pontosVantagem--
-                                state.rebuildAllPericiaStacks()
+                                if (state.advantageAdvancementInProgress) {
+                                    viewModel.selectAdvantageForAdvancement(novaVantagem)
+                                } else {
+                                    state.vantagensSelecionadas += novaVantagem
+                                    state.pontosVantagem--
+                                    state.rebuildAllPericiaStacks()
+                                }
                             }
                             dialogMostrandoAntecedente = null
                             subOpcaoSelecionada = null

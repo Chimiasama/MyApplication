@@ -39,28 +39,12 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
+import com.example.swadebuilder.normAAKey
+import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.ui.components.SectionHeader
-import com.example.swadebuilder.util.semAcentos
-
-private fun String.normAAKey(): String =
-    this.uppercase().semAcentos().trim()
-
-private fun Vantagem.toArcanoKeyFromModel(): String? {
-    if (!subtipoArcano.isNullOrBlank()) return subtipoArcano.normAAKey()
-    if (!choice.isNullOrBlank()) return choice!!.normAAKey()
-    val n = nome.normAAKey()
-    return when {
-        "(DOM" in n -> "DOM"
-        "(MAGIA" in n -> "MAGIA"
-        "(MILAGRES" in n -> "MILAGRES"
-        ("(PSIONICOS" in n) || ("(PSIÔNICOS" in nome) -> "PSIONICOS"
-        ("(CIENCIA ESTRANHA" in n) || ("(CIÊNCIA ESTRANHA" in nome) -> "CIENCIA ESTRANHA"
-        else -> null
-    }
-}
 
 private fun custoParaPenalidadeTexto(custo: String): String {
     val clean = custo.trim()
@@ -86,7 +70,7 @@ fun PoderesSection(
     val locked = state.criacaoBasicaCongeladaComXp
 
     val arcanosAtivos = remember(state.vantagensSelecionadas) {
-        state.vantagensSelecionadas.mapNotNull { it.toArcanoKeyFromModel() }.distinct()
+        state.vantagensSelecionadas.mapNotNull { it.toArcanoKey() }.distinct()
     }
     if (arcanosAtivos.isEmpty()) return
 
@@ -177,6 +161,7 @@ private fun ArcanoArea(
                         onClick = {
                             if (!locked && poderId != null) {
                                 slots[idx] = null
+                                state.syncPoderesSelecionadosFromSlots()
                             }
                         },
                         label = { Text("${idx + 1}: $label") },
@@ -210,15 +195,21 @@ private fun ArcanoArea(
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp, vertical = 6.dp)
                     .alpha(if (selecionado) 0.45f else 1f)
-                    .clickable(enabled = !locked) {
-                        if (selecionado) {
-                            val idx = slots.indexOfFirst { it == poder.id }
-                            if (idx >= 0) slots[idx] = null
-                        } else {
-                            val firstEmpty = slots.indexOfFirst { it == null }
-                            if (firstEmpty >= 0) slots[firstEmpty] = poder.id
+                        .clickable(enabled = !locked) {
+                            if (selecionado) {
+                                val idx = slots.indexOfFirst { it == poder.id }
+                                if (idx >= 0) {
+                                    slots[idx] = null
+                                    state.syncPoderesSelecionadosFromSlots()
+                                }
+                            } else {
+                                val firstEmpty = slots.indexOfFirst { it == null }
+                                if (firstEmpty >= 0) {
+                                    slots[firstEmpty] = poder.id
+                                    state.syncPoderesSelecionadosFromSlots()
+                                }
+                            }
                         }
-                    }
             ) {
                 Column(Modifier.padding(12.dp)) {
                     Text(poder.nome, fontWeight = FontWeight.Bold)
