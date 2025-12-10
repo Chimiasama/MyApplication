@@ -17,6 +17,8 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
     data class SpendOnAdvantage(
         val advantageId: String,
         override val stageName: String,
+        val arcanoKey: String? = null,
+        val previousArcanoSlots: List<String?>? = null,
         override val progressCost: Int = 1
     ) : AdvancementAction(progressCost, stageName) {
         override fun getDisplayText(

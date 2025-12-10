@@ -10,6 +10,8 @@ import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
+import com.example.swadebuilder.normAAKey
+import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.util.keyify
 
 // ---- OBJETOS DE RETORNO ----
@@ -143,6 +145,9 @@ class CriadorViewModel : ViewModel() {
         state.attributeStacksBeforeAdvancement = null
         state.attributeUsedReservation = false
         state.stageNameForCurrentAdvancement = null
+        state.arcanoEmCompraViaXpKey = null
+        state.arcanoSnapshotAntesDaCompra = null
+        state.mostrandoPoderesProgresso = false
         state.mostrandoAtributosProgresso = false
 
         // ─────────────────────────────────────────────────────────────
@@ -757,6 +762,9 @@ class CriadorViewModel : ViewModel() {
             state.xpSlots[slotIndex] = true
             state.advantageAdvancementInProgress = true
             state.advantageForCurrentAdvancement = null
+            state.mostrandoPoderesProgresso = false
+            state.arcanoEmCompraViaXpKey = null
+            state.arcanoSnapshotAntesDaCompra = null
             state.grantVantagemPointFromXp(est)
             state.updateEmProgressoFlag()
         }
@@ -764,13 +772,16 @@ class CriadorViewModel : ViewModel() {
 
     fun finishAdvantageAdvancement() {
         if (state.advantageAdvancementInProgress) {
+            if (state.arcanoCompraPendente()) return
             val advantageId = state.advantageForCurrentAdvancement
             if (advantageId != null) {
                 val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
                 state.advancementHistory.add(
                     AdvancementAction.SpendOnAdvantage(
                         advantageId = advantageId,
-                        stageName = stageName
+                        stageName = stageName,
+                        arcanoKey = state.arcanoEmCompraViaXpKey,
+                        previousArcanoSlots = state.arcanoSnapshotAntesDaCompra
                     )
                 )
                 if (state.pvFromXpOutstanding > 0) {
@@ -780,6 +791,7 @@ class CriadorViewModel : ViewModel() {
             state.advantageAdvancementInProgress = false
             state.advantageForCurrentAdvancement = null
             state.stageNameForCurrentAdvancement = null
+            state.limparCompraArcanoViaXp(restaurarSnapshot = false)
             state.updateEmProgressoFlag()
         }
     }
@@ -790,6 +802,11 @@ class CriadorViewModel : ViewModel() {
                 val currentAdvantageId = state.advantageForCurrentAdvancement!!
                 val currentAdvantage = state.vantagensSelecionadas.find { it.id == currentAdvantageId }
                 if (currentAdvantage != null) {
+                    val currentArcKey = currentAdvantage.toArcanoKey()?.normAAKey()
+                    if (currentArcKey != null && currentArcKey == state.arcanoEmCompraViaXpKey) {
+                        state.limparCompraArcanoViaXp(restaurarSnapshot = true)
+                    }
+
                     if (currentAdvantage.nome.contains("Pontos de Poder", true)) {
                         state.removerPontosDePoder(currentAdvantage)
                     } else {
@@ -808,6 +825,9 @@ class CriadorViewModel : ViewModel() {
             }
             state.pontosVantagem--
             state.advantageForCurrentAdvancement = vantagem.id
+            vantagem.toArcanoKey()?.let { arcKey ->
+                state.iniciarCompraArcanoViaXp(arcKey)
+            } ?: state.limparCompraArcanoViaXp(restaurarSnapshot = false)
             state.rebuildAllPericiaStacks()
         }
     }
@@ -919,6 +939,22 @@ class CriadorViewModel : ViewModel() {
         }
 
         if (state.advantageAdvancementInProgress) {
+            state.advantageForCurrentAdvancement?.let { advId ->
+                state.vantagensSelecionadas.firstOrNull { it.id == advId }?.let { vant ->
+                    val arcKey = vant.toArcanoKey()?.normAAKey()
+                    if (arcKey != null && arcKey == state.arcanoEmCompraViaXpKey) {
+                        state.limparCompraArcanoViaXp(restaurarSnapshot = true)
+                    }
+
+                    if (vant.nome.contains("Pontos de Poder", true)) {
+                        state.removerPontosDePoder(vant)
+                    } else {
+                        state.removeVantagemDinheiro(vant)
+                        state.vantagensSelecionadas.remove(vant)
+                    }
+                    state.pontosVantagem++
+                }
+            }
             state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
             state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
         }
@@ -938,9 +974,11 @@ class CriadorViewModel : ViewModel() {
         state.skillAdvancementInProgress = false
         state.advantageAdvancementInProgress = false
         state.attributeAdvancementInProgress = false
+        state.advantageForCurrentAdvancement = null
         state.stageNameForCurrentAdvancement = null
         state.mostrandoPericiasProgresso = false
         state.mostrandoVantagensProgresso = false
+        state.mostrandoPoderesProgresso = false
         state.updateEmProgressoFlag()
     }
 
@@ -963,6 +1001,9 @@ class CriadorViewModel : ViewModel() {
                 val advantage = state.vantagensSelecionadas.firstOrNull { it.id == lastAction.advantageId }
                 if (advantage != null) {
                     state.vantagensSelecionadas.remove(advantage)
+                }
+                lastAction.arcanoKey?.let { arcKey ->
+                    state.restoreArcanoSlots(arcKey, lastAction.previousArcanoSlots)
                 }
                 state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
                 state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)

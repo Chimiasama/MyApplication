@@ -172,6 +172,11 @@ fun UnifiedScreen(
                     )
                 }
 
+                if (state.mostrandoPoderesProgresso) {
+                    Spacer(Modifier.height(8.dp))
+                    PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes)
+                }
+
                 Spacer(Modifier.height(16.dp))
                 HorizontalDivider(thickness = 3.dp)
 
@@ -180,7 +185,7 @@ fun UnifiedScreen(
                         viewModel.finishAdvantageAdvancement()
                         state.mostrandoVantagensProgresso = false
                     },
-                    enabled = state.pontosVantagem == 0,
+                    enabled = state.pontosVantagem == 0 && !state.arcanoCompraPendente(),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Confirmar Vantagem e Voltar")
