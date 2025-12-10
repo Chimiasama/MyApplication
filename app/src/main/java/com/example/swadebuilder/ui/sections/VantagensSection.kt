@@ -66,6 +66,7 @@ import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
+import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
