@@ -176,9 +176,6 @@ class CriadorViewModel : ViewModel() {
         // ─────────────────────────────────────────────────────────────
 
         state.dinheiro = 500
-        state.progresso = 0
-        state.progressosDisponiveis = 0
-        state.stageXpSpent.keys.forEach { state.stageXpSpent[it] = 0 }
         state.xpSlots.fill(false)
         state.frozenAdvantageCount = 0
         state.advancementHistory.clear()
@@ -790,6 +787,7 @@ class CriadorViewModel : ViewModel() {
                     state.pvFromXpOutstanding--
                 }
             }
+            state.overrideStageForVantagem = null
             state.advantageAdvancementInProgress = false
             state.advantageForCurrentAdvancement = null
             state.stageNameForCurrentAdvancement = null
@@ -992,6 +990,8 @@ class CriadorViewModel : ViewModel() {
             }
             state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
             state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
+            state.overrideStageForVantagem = null
+            state.openVantagensAfterGrant = false
         }
 
         if (state.attributeAdvancementInProgress) {
