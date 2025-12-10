@@ -768,7 +768,8 @@ class CriadorViewModel : ViewModel() {
             if (advantageId != null) {
                 val advantage = state.vantagensSelecionadas.find { it.id == advantageId }
                 // Check if Arcane Background
-                val isArcaneBackground = advantage?.nome?.keyify()?.startsWith("antecedente arcano") == true
+                // Use ID check as names can be localized or weirdly formatted by keyify
+                val isArcaneBackground = advantage?.id?.startsWith("antecedente_arcano") == true
 
                 if (isArcaneBackground) {
                     state.selectingPowersViaXp = true
@@ -806,19 +807,8 @@ class CriadorViewModel : ViewModel() {
             val advantageId = state.advantageForCurrentAdvancement!!
             val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
 
-            // Identify which powers were added.
-            // Since we are in this mode, any powers in `poderesSelecionados` that match the AB key
-            // and were just added should be tracked.
-            // Simplified: We assume powers added during this transaction are the ones currently in `poderesSelecionados`
-            // that belong to this AB. But wait, `poderesSelecionados` is a global list of IDs.
-            // We need to know which ones are NEW.
-            // `state.registrarNovosPoderes` uses `novosPoderesStacksPorArcano`.
-            // If the user used the normal `PoderesSection` (which we will show), they fill slots.
-
             val advantage = state.vantagensSelecionadas.find { it.id == advantageId }
-            val arcanoKey = advantage?.choice?.keyify()
-                ?: advantage?.nome?.substringAfter(":")?.trim()?.keyify() // fallback logic
-                ?: "" // Should not happen for valid AB
+            val arcanoKey = advantage?.let { getArcanoKey(it) } ?: ""
 
             // We grab the powers currently in the slots for this arcano
             val powers = state.poderSlotsPorArcano[arcanoKey]?.filterNotNull() ?: emptyList()
@@ -984,8 +974,7 @@ class CriadorViewModel : ViewModel() {
                         state.vantagensSelecionadas.remove(advantage)
 
                         // Clear powers associated with this AB
-                        val arcanoKey = advantage.choice?.keyify()
-                            ?: advantage.nome.substringAfter(":").trim().keyify()
+                        val arcanoKey = getArcanoKey(advantage)
                         state.poderSlotsPorArcano.remove(arcanoKey)
                         // Also clear from global list
                         // Rebuild simple list from remaining maps
@@ -1030,6 +1019,21 @@ class CriadorViewModel : ViewModel() {
         state.mostrandoPericiasProgresso = false
         state.mostrandoVantagensProgresso = false
         state.updateEmProgressoFlag()
+    }
+
+    // Replicates logic from PoderesSection.kt to correctly identify the map key for power slots
+    fun getArcanoKey(vantagem: Vantagem): String {
+        if (!vantagem.subtipoArcano.isNullOrBlank()) return vantagem.subtipoArcano.keyify()
+        if (!vantagem.choice.isNullOrBlank()) return vantagem.choice!!.keyify()
+        val n = vantagem.nome.keyify() // keyify includes .uppercase()
+        return when {
+            "(DOM" in n -> "DOM"
+            "(MAGIA" in n -> "MAGIA"
+            "(MILAGRES" in n -> "MILAGRES"
+            ("(PSIONICOS" in n) || ("(PSIÔNICOS" in n) -> "PSIONICOS"
+            ("(CIENCIA ESTRANHA" in n) || ("(CIÊNCIA ESTRANHA" in n) -> "CIENCIA ESTRANHA"
+            else -> n // Fallback
+        }
     }
 
     fun revertLastAdvancement() {

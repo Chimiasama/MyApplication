@@ -285,7 +285,7 @@ fun UnifiedScreen(
 
                 val abId = state.advantageForCurrentAdvancement
                 val abVant = state.vantagensSelecionadas.find { it.id == abId }
-                val abKey = abVant?.choice?.keyify() ?: abVant?.nome?.substringAfter(":")?.trim()?.keyify() ?: ""
+                val abKey = abVant?.let { viewModel.getArcanoKey(it) } ?: ""
                 val slots = state.poderSlotsPorArcano[abKey]
                 // We consider it "filled" if all slots are non-null.
                 val allSlotsFilled = slots?.all { it != null } == true
