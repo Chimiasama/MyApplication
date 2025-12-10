@@ -15,6 +15,9 @@ data class PersonagemSalvo(
     // IDs de vantagens
     val vantagens: List<String>,
 
+    // Vantagens com metadados opcionais (para restauração mais confiável)
+    val vantagensDetalhadas: List<VantagemPersistida> = emptyList(),
+
     // IDs de complicações
     val complicacoes: List<String>,
 
@@ -97,6 +100,12 @@ data class PersonagemSalvo(
 
     // ===== ANOTAÇÕES LIVRES DO JOGADOR =====
     val anotacoes: String = ""
+)
+
+@Serializable
+data class VantagemPersistida(
+    val id: String,
+    val choice: String? = null
 )
 
 @Serializable

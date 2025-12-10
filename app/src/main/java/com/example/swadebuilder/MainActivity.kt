@@ -92,6 +92,7 @@ import com.example.swadebuilder.model.PersonagemSalvo
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.VantagemPersistida
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.loadJsonAsset
@@ -523,6 +524,9 @@ class MainActivity : ComponentActivity() {
                                                         pericias           = periciasMap,
                                                         ancestralidade     = state.ancestralidade,
                                                         vantagens          = state.vantagensSelecionadas.map { it.id },
+                                                        vantagensDetalhadas = state.vantagensSelecionadas.map {
+                                                            VantagemPersistida(id = it.id, choice = it.choice)
+                                                        },
                                                         vantagemChoices    = vantagemChoices,
                                                         vantagensRaciais   = state.vantagensRaciais.toList(),
                                                         complicacoes       = complicacoesList,

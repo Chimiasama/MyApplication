@@ -287,10 +287,19 @@ class CriadorViewModel : ViewModel() {
         state.vantagensSelecionadas.clear()
         val mapPorId   = listaVantagens.associateBy { it.id }
         val mapPorNome = listaVantagens.associateBy { it.nome.trim().uppercase() }
-        val choicesMap = salvo.vantagemChoices.mapValues { it.value.toMutableList() }
+        val choicesMap = salvo.vantagemChoices.mapValues { it.value.toMutableList() }.toMutableMap()
 
-        salvo.vantagens.forEach { saved ->
-            val trimmed = saved.trim()
+        val vantagensPersistidas: List<VantagemPersistida> =
+            if (salvo.vantagensDetalhadas.isNotEmpty()) {
+                salvo.vantagensDetalhadas
+            } else {
+                salvo.vantagens.map { id ->
+                    VantagemPersistida(id = id.trim(), choice = choicesMap[id]?.firstOrNull())
+                }
+            }
+
+        vantagensPersistidas.forEach { saved ->
+            val trimmed = saved.id.trim()
             val base = mapPorId[trimmed] ?: mapPorNome[trimmed.uppercase()]
             if (base != null) {
                 val vantCopiada = runCatching { base.copy() }
@@ -304,8 +313,9 @@ class CriadorViewModel : ViewModel() {
                     .getOrNull()
 
                 if (vantCopiada != null) {
-                    choicesMap[trimmed]?.removeFirstOrNull()?.let { escolha ->
-                        vantCopiada.choice = escolha
+                    val choice = saved.choice ?: choicesMap[trimmed]?.removeFirstOrNull()
+                    if (!choice.isNullOrBlank()) {
+                        vantCopiada.choice = choice
                     }
                     state.vantagensSelecionadas.add(vantCopiada)
                 }
