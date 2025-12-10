@@ -690,8 +690,7 @@ class CriadorState {
         return arcanosAtivos.any { arcKey ->
             val base = arcanoInfo[arcKey]?.first ?: 0
             val extras = novosPoderesStacksPorArcano[arcKey]?.sum() ?: 0
-            val pendentes = if (novosPoderesEmCompraArcKey == arcKey) novosPoderesSlotQuantidade else 0
-            val esperado = base + extras + pendentes
+            val esperado = base + extras
 
             if (esperado == 0) return@any false
 
