@@ -134,15 +134,42 @@ private fun ArcanoArea(
 
     HorizontalDivider(thickness = 1.dp)
 
-    val slots = remember(arcKey, slotsCount) {
-        val existente = state.poderSlotsPorArcano[arcKey]
-        if (existente != null && existente.size == slotsCount) {
-            existente
-        } else {
-            val nova = mutableStateListOf<String?>().apply { repeat(slotsCount) { add(null) } }
+    val slots = remember(arcKey) {
+        state.poderSlotsPorArcano[arcKey] ?: mutableStateListOf<String?>().also { nova ->
             state.poderSlotsPorArcano[arcKey] = nova
-            nova
         }
+    }
+
+    if (slots.size < slotsCount) {
+        repeat(slotsCount - slots.size) { slots.add(null) }
+    }
+
+    val somenteNovosSlotsEditaveis = state.emProgresso &&
+            state.novosPoderesEmCompraArcKey == arcKey &&
+            state.novosPoderesSlotInicio >= 0 &&
+            state.novosPoderesSlotQuantidade > 0
+
+    fun slotEditable(idx: Int): Boolean {
+        if (locked) return false
+        if (!somenteNovosSlotsEditaveis) return true
+
+        val start = state.novosPoderesSlotInicio
+        val end = (start + state.novosPoderesSlotQuantidade).coerceAtMost(slots.size)
+
+        return idx in start until end
+    }
+
+    fun proximoSlotVazioEditavel(): Int? {
+        if (!somenteNovosSlotsEditaveis) {
+            val idx = slots.indexOfFirst { it == null }
+            return if (idx >= 0) idx else null
+        }
+
+        val start = state.novosPoderesSlotInicio
+        if (start < 0) return null
+        val end = (start + state.novosPoderesSlotQuantidade).coerceAtMost(slots.size)
+
+        return (start until end).firstOrNull { idx -> slots.getOrNull(idx) == null }
     }
 
     Card(
@@ -152,20 +179,20 @@ private fun ArcanoArea(
             .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
         Column(Modifier.padding(12.dp)) {
-            Text("Slots: $slotsCount", fontWeight = FontWeight.SemiBold)
+            Text("Slots: ${slots.size}", fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.height(6.dp))
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 slots.forEachIndexed { idx, poderId ->
                     val label = poderId ?: "— vazio —"
                     AssistChip(
                         onClick = {
-                            if (!locked && poderId != null) {
+                            if (slotEditable(idx) && poderId != null) {
                                 slots[idx] = null
                                 state.syncPoderesSelecionadosFromSlots()
                             }
                         },
                         label = { Text("${idx + 1}: $label") },
-                        enabled = !locked && poderId != null
+                        enabled = slotEditable(idx) && poderId != null
                     )
                 }
             }
@@ -185,7 +212,10 @@ private fun ArcanoArea(
             items = poderesElegiveis,
             key = { it.id }
         ) { poder ->
-            val selecionado = slots.any { it == poder.id }
+            val idxSelecionado = slots.indexOfFirst { it == poder.id }
+            val selecionado = idxSelecionado >= 0
+            val podeRemoverSelecionado = selecionado && slotEditable(idxSelecionado)
+            val podeAdicionar = proximoSlotVazioEditavel() != null
 
             Card(
                 colors = CardDefaults.cardColors(
@@ -195,17 +225,16 @@ private fun ArcanoArea(
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp, vertical = 6.dp)
                     .alpha(if (selecionado) 0.45f else 1f)
-                        .clickable(enabled = !locked) {
+                        .clickable(enabled = (!locked && (podeRemoverSelecionado || (!selecionado && podeAdicionar)))) {
                             if (selecionado) {
-                                val idx = slots.indexOfFirst { it == poder.id }
-                                if (idx >= 0) {
-                                    slots[idx] = null
+                                if (podeRemoverSelecionado) {
+                                    slots[idxSelecionado] = null
                                     state.syncPoderesSelecionadosFromSlots()
                                 }
                             } else {
-                                val firstEmpty = slots.indexOfFirst { it == null }
-                                if (firstEmpty >= 0) {
-                                    slots[firstEmpty] = poder.id
+                                val targetIdx = proximoSlotVazioEditavel()
+                                if (targetIdx != null && slotEditable(targetIdx)) {
+                                    slots[targetIdx] = poder.id
                                     state.syncPoderesSelecionadosFromSlots()
                                 }
                             }

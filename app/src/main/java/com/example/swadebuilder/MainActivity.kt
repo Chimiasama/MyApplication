@@ -304,8 +304,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            LaunchedEffect(state.mostrandoPoderesProgresso, state.arcanoCompraPendente()) {
-                if (state.mostrandoPoderesProgresso || state.arcanoCompraPendente()) {
+            LaunchedEffect(
+                state.mostrandoPoderesProgresso,
+                state.arcanoCompraPendente(),
+                state.novosPoderesCompraPendente()
+            ) {
+                if (
+                    state.mostrandoPoderesProgresso ||
+                    state.arcanoCompraPendente() ||
+                    state.novosPoderesCompraPendente()
+                ) {
                     expPoderes = true
                     expVants = true
                 }

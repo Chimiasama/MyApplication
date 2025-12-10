@@ -172,7 +172,11 @@ fun UnifiedScreen(
                     )
                 }
 
-                if (state.mostrandoPoderesProgresso || state.arcanoCompraPendente()) {
+                if (
+                    state.mostrandoPoderesProgresso ||
+                    state.arcanoCompraPendente() ||
+                    state.novosPoderesCompraPendente()
+                ) {
                     Spacer(Modifier.height(8.dp))
                     PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes)
                 }
@@ -185,7 +189,9 @@ fun UnifiedScreen(
                         viewModel.finishAdvantageAdvancement()
                         state.mostrandoVantagensProgresso = false
                     },
-                    enabled = state.pontosVantagem == 0 && !state.arcanoCompraPendente(),
+                    enabled = state.pontosVantagem == 0 &&
+                            !state.arcanoCompraPendente() &&
+                            !state.novosPoderesCompraPendente(),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Confirmar Vantagem e Voltar")

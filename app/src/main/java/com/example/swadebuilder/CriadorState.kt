@@ -23,6 +23,7 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.normAAKey
+import com.example.swadebuilder.toArcanoKey
 
 class CriadorState {
     var appTheme by mutableStateOf(AppTheme.DEFAULT)
@@ -545,11 +546,40 @@ class CriadorState {
 
     val poderSlotsPorArcano = mutableStateMapOf<String, SnapshotStateList<String?>>()
 
-    val novosPoderesStacksPorArcano = mutableStateMapOf<String, MutableList<List<String>>>()
+    val novosPoderesStacksPorArcano = mutableStateMapOf<String, MutableList<Int>>()
 
-    fun registrarNovosPoderes(versionKey: String, escolhas: List<String>) {
+    var novosPoderesEmCompraArcKey by mutableStateOf<String?>(null)
+    var novosPoderesSnapshotAntesDaCompra by mutableStateOf<List<String?>?>(null)
+    var novosPoderesSlotInicio by mutableIntStateOf(-1)
+    var novosPoderesSlotQuantidade by mutableIntStateOf(0)
+
+    fun registrarNovosPoderesSlots(versionKey: String, quantidade: Int) {
         val pilha = novosPoderesStacksPorArcano.getOrPut(versionKey) { mutableListOf() }
-        pilha.add(escolhas)
+        pilha.add(quantidade)
+    }
+
+    fun iniciarCompraNovosPoderes(arcKeyRaw: String, viaProgresso: Boolean) {
+        val arcKey = arcKeyRaw.normAAKey()
+        val initialSlots = arcanoInfo[arcKey]?.first ?: 0
+        val slots = poderSlotsPorArcano.getOrPut(arcKey) { mutableStateListOf() }
+        while (slots.size < initialSlots) { slots.add(null) }
+
+        if (viaProgresso) {
+            novosPoderesSnapshotAntesDaCompra = slots.toList()
+            novosPoderesEmCompraArcKey = arcKey
+            novosPoderesSlotInicio = slots.size
+        }
+
+        val quantidade = 2
+        repeat(quantidade) { slots.add(null) }
+        registrarNovosPoderesSlots(arcKey, quantidade)
+
+        if (viaProgresso) {
+            novosPoderesSlotQuantidade = quantidade
+            mostrandoPoderesProgresso = true
+        }
+
+        syncPoderesSelecionadosFromSlots()
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -557,15 +587,16 @@ class CriadorState {
         val pilha = novosPoderesStacksPorArcano[versionKey] ?: return
         if (pilha.isEmpty()) return
 
-        val ultima = pilha.removeLast()
+        val removidos = pilha.removeLast()
         val slots = poderSlotsPorArcano[versionKey] ?: return
 
-        ultima.forEach { poderId ->
-            val idx = slots.indexOfLast { it == poderId }
-            if (idx >= 0) slots[idx] = null
+        repeat(removidos) {
+            if (slots.size > initialSlots) {
+                slots.removeLast()
+            }
         }
 
-        val extrasAinda = pilha.sumOf { it.size }
+        val extrasAinda = pilha.sum()
         val tamanhoMinimo = (initialSlots + extrasAinda).coerceAtLeast(initialSlots)
 
         while (slots.size > tamanhoMinimo && slots.lastOrNull() == null) {
@@ -573,6 +604,21 @@ class CriadorState {
         }
 
         syncPoderesSelecionadosFromSlots()
+    }
+
+    fun limparCompraNovosPoderes(restaurarSnapshot: Boolean) {
+        novosPoderesEmCompraArcKey?.let { arcKey ->
+            if (restaurarSnapshot) {
+                restoreArcanoSlots(arcKey, novosPoderesSnapshotAntesDaCompra)
+                val pilha = novosPoderesStacksPorArcano[arcKey]
+                if (pilha?.isNotEmpty() == true) pilha.removeLast()
+            }
+        }
+
+        novosPoderesEmCompraArcKey = null
+        novosPoderesSnapshotAntesDaCompra = null
+        novosPoderesSlotInicio = -1
+        novosPoderesSlotQuantidade = 0
     }
 
     fun syncPoderesSelecionadosFromSlots() {
@@ -622,6 +668,36 @@ class CriadorState {
         val slots = poderSlotsPorArcano[arcKey] ?: return true
         val filled = slots.count { it != null }
         return filled < required
+    }
+
+    fun novosPoderesCompraPendente(): Boolean {
+        val arcKey = novosPoderesEmCompraArcKey ?: return false
+        val start  = novosPoderesSlotInicio
+        val count  = novosPoderesSlotQuantidade
+        val slots  = poderSlotsPorArcano[arcKey] ?: return true
+
+        if (start < 0 || count <= 0) return false
+
+        val end = (start + count).coerceAtMost(slots.size)
+        return (start until end).any { idx -> slots.getOrNull(idx) == null }
+    }
+
+    fun poderesPendentesNaCriacao(): Boolean {
+        val arcanosAtivos = vantagensSelecionadas
+            .mapNotNull { it.toArcanoKey()?.normAAKey() }
+            .distinct()
+
+        return arcanosAtivos.any { arcKey ->
+            val base = arcanoInfo[arcKey]?.first ?: 0
+            val extras = novosPoderesStacksPorArcano[arcKey]?.sum() ?: 0
+            val pendentes = if (novosPoderesEmCompraArcKey == arcKey) novosPoderesSlotQuantidade else 0
+            val esperado = base + extras + pendentes
+
+            if (esperado == 0) return@any false
+
+            val slots = poderSlotsPorArcano[arcKey]
+            slots == null || slots.size < esperado || slots.take(esperado).any { it == null }
+        }
     }
 
     var permiteMultiAntecedenteArcano by mutableStateOf(false)
@@ -1498,7 +1574,9 @@ class CriadorState {
         // Em campanha supers, também exige ter zerado os Pontos de Super.
         val supersProntos = !modoSupers || superPontosTotais <= 0 || superPontosDisponiveis == 0
 
-        return baseCreationComplete() && supersProntos
+        val poderesProntos = !poderesPendentesNaCriacao()
+
+        return baseCreationComplete() && supersProntos && poderesProntos
     }
 
     val stageXpSpent: SnapshotStateMap<String, Int> = mutableStateMapOf<String, Int>().apply {

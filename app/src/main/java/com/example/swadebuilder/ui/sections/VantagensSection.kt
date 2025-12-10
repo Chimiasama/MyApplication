@@ -62,15 +62,12 @@ import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
-import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
-import com.example.swadebuilder.ui.dialogs.MultipleSelectionDialog
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -249,8 +246,6 @@ fun VantagensContent(
     var showTempError by remember { mutableStateOf(false) }
     var pendingVantagem by remember { mutableStateOf<Vantagem?>(null) }
     var showChoiceDialog by rememberSaveable { mutableStateOf(false) }
-    var pendingNovosPoderes by rememberSaveable { mutableStateOf<Vantagem?>(null) }
-    var showNovosPoderesDialog by rememberSaveable { mutableStateOf(false) }
     var dialogMostrandoAntecedente by remember { mutableStateOf<Vantagem?>(null) }
     var subOpcaoSelecionada by rememberSaveable { mutableStateOf<String?>(null) }
 
@@ -408,20 +403,20 @@ fun VantagensContent(
                             if (!canRemove) return@AssistChip
 
                             if (vant.id == "novos_poderes") {
-                                val escolhidoArcano = state.vantagensSelecionadas
-                                    .firstOrNull { it.id == "antecedente_arcano" }
-                                    ?.choice
-                                    ?.uppercase()
-                                    ?.semAcentos()
-                                    ?.trim()
-                                    ?: ""
+                                val arcKey = state.vantagensSelecionadas
+                                    .mapNotNull { it.toArcanoKey()?.normAAKey() }
+                                    .firstOrNull()
 
-                                val initialSlots = arcanoInfo[escolhidoArcano]?.first ?: 0
+                                val initialSlots = arcKey?.let { arcanoInfo[it]?.first ?: 0 } ?: 0
 
-                                state.desfazerUltimosNovosPoderes(
-                                    versionKey = escolhidoArcano,
-                                    initialSlots = initialSlots
-                                )
+                                if (!arcKey.isNullOrBlank()) {
+                                    state.desfazerUltimosNovosPoderes(
+                                        versionKey = arcKey,
+                                        initialSlots = initialSlots
+                                    )
+                                }
+
+                                state.limparCompraNovosPoderes(restaurarSnapshot = false)
 
                                 state.vantagensSelecionadas.remove(vant)
                                 state.pontosVantagem++
@@ -630,8 +625,22 @@ fun VantagensContent(
                                             }
 
                                             vant.id == "novos_poderes" -> {
-                                                pendingNovosPoderes = vant
-                                                showNovosPoderesDialog = true
+                                                val arcKey = state.vantagensSelecionadas
+                                                    .mapNotNull { it.toArcanoKey()?.normAAKey() }
+                                                    .firstOrNull()
+
+                                                if (arcKey == null) {
+                                                    tempErrorMsg = "Defina um Antecedente Arcano antes."
+                                                    showTempError = true
+                                                } else if (state.advantageAdvancementInProgress) {
+                                                    viewModel.selectAdvantageForAdvancement(vant)
+                                                } else {
+                                                    state.applyVantagemDinheiro(vant)
+                                                    state.vantagensSelecionadas += vant
+                                                    state.pontosVantagem--
+                                                    state.iniciarCompraNovosPoderes(arcKey, viaProgresso = false)
+                                                    state.rebuildAllPericiaStacks()
+                                                }
                                             }
 
                                             else -> {
@@ -798,6 +807,15 @@ fun VantagensContent(
                                 } else {
                                     state.vantagensSelecionadas += novaVantagem
                                     state.pontosVantagem--
+                                    val arcKey = novaVantagem.toArcanoKey()?.normAAKey()
+                                    if (arcKey != null) {
+                                        val initialSlots = arcanoInfo[arcKey]?.first ?: 0
+                                        val slots = state.poderSlotsPorArcano.getOrPut(arcKey) {
+                                            mutableStateListOf()
+                                        }
+                                        while (slots.size < initialSlots) { slots.add(null) }
+                                        state.syncPoderesSelecionadosFromSlots()
+                                    }
                                     state.rebuildAllPericiaStacks()
                                 }
                             }
@@ -937,78 +955,6 @@ fun VantagensContent(
             }
         }
 
-        if (showNovosPoderesDialog && pendingNovosPoderes != null) {
-            val vant = pendingNovosPoderes!!
-
-            val allPoderes: List<Poder> =
-                LocalContext.current.loadJsonAsset("poderes.json")
-
-            val curEstIndex = listaDeEstagios.indexOfFirst {
-                it.nome == state.estagioAtual().nome
-            }
-
-            val disponiveis = allPoderes
-                .filter { poder ->
-                    val poderIndex = listaDeEstagios.indexOfFirst { it.nome == poder.estagio }
-                    if (curEstIndex == -1 || poderIndex == -1) {
-                        true
-                    } else {
-                        poderIndex <= curEstIndex
-                    }
-                }
-                .map { it.nome }
-                .filter { nome -> nome !in state.poderesSelecionados }
-
-            MultipleSelectionDialog(
-                title = "Escolha 2 novos poderes",
-                options = disponiveis,
-                maxSelections = 2,
-                onConfirm = { escolhas ->
-                    val escolhidoArcano = state.vantagensSelecionadas
-                        .firstOrNull { it.id == "antecedente_arcano" }
-                        ?.choice
-                        ?: ""
-
-                    val versionKey = escolhidoArcano
-                        .uppercase()
-                        .semAcentos()
-                        .trim()
-
-                    val initialSlots = arcanoInfo[versionKey]?.first ?: 0
-
-                    val slots = state.poderSlotsPorArcano.getOrPut(versionKey) {
-                        mutableStateListOf<String?>().apply {
-                            repeat(initialSlots) { add(null) }
-                        }
-                    }
-
-                    escolhas.forEach { poder ->
-                        val firstEmpty = slots.indexOfFirst { it == null }
-                        if (firstEmpty >= 0) {
-                            slots[firstEmpty] = poder
-                        } else {
-                            slots.add(poder)
-                        }
-                    }
-
-                    state.poderSlotsPorArcano[versionKey] = slots
-                    state.poderesSelecionados.clear()
-                    state.poderesSelecionados.addAll(slots.filterNotNull())
-                    state.registrarNovosPoderes(versionKey, escolhas)
-
-                    state.vantagensSelecionadas += vant
-                    state.pontosVantagem--
-                    state.rebuildAllPericiaStacks()
-
-                    showNovosPoderesDialog = false
-                    pendingNovosPoderes = null
-                },
-                onDismiss = {
-                    showNovosPoderesDialog = false
-                    pendingNovosPoderes = null
-                }
-            )
-        }
     }
 }
 

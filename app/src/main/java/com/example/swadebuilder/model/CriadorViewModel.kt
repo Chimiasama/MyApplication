@@ -140,6 +140,10 @@ class CriadorViewModel : ViewModel() {
         state.spCostStackPorPericia.values.forEach   { it.clear() }
         state.poderSlotsPorArcano.clear()
         state.novosPoderesStacksPorArcano.clear()
+        state.novosPoderesEmCompraArcKey = null
+        state.novosPoderesSnapshotAntesDaCompra = null
+        state.novosPoderesSlotInicio = -1
+        state.novosPoderesSlotQuantidade = 0
         state.attributeAdvancementInProgress = false
         state.attributeStageForCurrentAdvancement = null
         state.attributeStacksBeforeAdvancement = null
@@ -765,6 +769,10 @@ class CriadorViewModel : ViewModel() {
             state.mostrandoPoderesProgresso = false
             state.arcanoEmCompraViaXpKey = null
             state.arcanoSnapshotAntesDaCompra = null
+            state.novosPoderesEmCompraArcKey = null
+            state.novosPoderesSnapshotAntesDaCompra = null
+            state.novosPoderesSlotInicio = -1
+            state.novosPoderesSlotQuantidade = 0
             state.grantVantagemPointFromXp(est)
             state.updateEmProgressoFlag()
         }
@@ -773,6 +781,7 @@ class CriadorViewModel : ViewModel() {
     fun finishAdvantageAdvancement() {
         if (state.advantageAdvancementInProgress) {
             if (state.arcanoCompraPendente()) return
+            if (state.novosPoderesCompraPendente()) return
             val advantageId = state.advantageForCurrentAdvancement
             if (advantageId != null) {
                 val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
@@ -792,6 +801,7 @@ class CriadorViewModel : ViewModel() {
             state.advantageForCurrentAdvancement = null
             state.stageNameForCurrentAdvancement = null
             state.limparCompraArcanoViaXp(restaurarSnapshot = false)
+            state.limparCompraNovosPoderes(restaurarSnapshot = false)
             state.updateEmProgressoFlag()
         }
     }
@@ -807,6 +817,10 @@ class CriadorViewModel : ViewModel() {
                         state.limparCompraArcanoViaXp(restaurarSnapshot = true)
                     }
 
+                    if (currentAdvantage.id == "novos_poderes") {
+                        state.limparCompraNovosPoderes(restaurarSnapshot = true)
+                    }
+
                     if (currentAdvantage.nome.contains("Pontos de Poder", true)) {
                         state.removerPontosDePoder(currentAdvantage)
                     } else {
@@ -815,6 +829,24 @@ class CriadorViewModel : ViewModel() {
                     }
                     state.pontosVantagem++
                 }
+            }
+
+            if (vantagem.id == "novos_poderes") {
+                val arcKey = state.vantagensSelecionadas
+                    .mapNotNull { it.toArcanoKey()?.normAAKey() }
+                    .firstOrNull()
+
+                if (arcKey != null) {
+                    state.applyVantagemDinheiro(vantagem)
+                    state.vantagensSelecionadas.add(vantagem)
+                    state.pontosVantagem--
+                    state.advantageForCurrentAdvancement = vantagem.id
+                    state.limparCompraArcanoViaXp(restaurarSnapshot = false)
+                    state.iniciarCompraNovosPoderes(arcKey, viaProgresso = true)
+                    state.rebuildAllPericiaStacks()
+                }
+
+                return
             }
 
             if (vantagem.nome.contains("Pontos de Poder", true)) {
@@ -944,6 +976,18 @@ class CriadorViewModel : ViewModel() {
                     val arcKey = vant.toArcanoKey()?.normAAKey()
                     if (arcKey != null && arcKey == state.arcanoEmCompraViaXpKey) {
                         state.limparCompraArcanoViaXp(restaurarSnapshot = true)
+                    }
+
+                    if (vant.id == "novos_poderes") {
+                        val targetArcKey = state.novosPoderesEmCompraArcKey
+                            ?: state.vantagensSelecionadas
+                                .mapNotNull { it.toArcanoKey()?.normAAKey() }
+                                .firstOrNull()
+                        val initialSlots = targetArcKey?.let { arcanoInfo[it]?.first ?: 0 } ?: 0
+                        if (targetArcKey != null) {
+                            state.desfazerUltimosNovosPoderes(targetArcKey, initialSlots)
+                        }
+                        state.limparCompraNovosPoderes(restaurarSnapshot = true)
                     }
 
                     if (vant.nome.contains("Pontos de Poder", true)) {
