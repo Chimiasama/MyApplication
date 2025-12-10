@@ -172,7 +172,7 @@ fun UnifiedScreen(
                     )
                 }
 
-                if (state.mostrandoPoderesProgresso) {
+                if (state.mostrandoPoderesProgresso || state.arcanoCompraPendente()) {
                     Spacer(Modifier.height(8.dp))
                     PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes)
                 }
