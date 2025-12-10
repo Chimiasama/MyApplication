@@ -117,7 +117,11 @@ private fun ArcanoArea(
     allowLongTexts: Boolean
 ) {
     val arcKey = arcKeyRaw.normAAKey()
-    val (slotsCount, ppTotal, foco) = arcanoInfo[arcKey] ?: Triple(0, 0, "—")
+    val baseInfo = arcanoInfo[arcKey] ?: Triple(0, 0, "—")
+    val ppTotal = baseInfo.second
+    val foco = baseInfo.third
+    val slotsCount = state.getSlotsCountForArcano(arcKey)
+
     val center = if (state.usarSemPontosDePoder) {
         "Teste $foco = -(custo/2)"
     } else {
@@ -136,14 +140,24 @@ private fun ArcanoArea(
 
     val slots = remember(arcKey, slotsCount) {
         val existente = state.poderSlotsPorArcano[arcKey]
-        if (existente != null && existente.size == slotsCount) {
-            existente
-        } else {
+        if (existente == null) {
             val nova = mutableStateListOf<String?>().apply { repeat(slotsCount) { add(null) } }
             state.poderSlotsPorArcano[arcKey] = nova
             nova
+        } else {
+            if (existente.size < slotsCount) {
+                while (existente.size < slotsCount) { existente.add(null) }
+            } else if (existente.size > slotsCount) {
+                while (existente.size > slotsCount) { existente.removeLast() }
+            }
+            existente
         }
     }
+
+    // Determine how many initial slots are locked due to XP purchase flow
+    val lockedCount = if (state.mostrandoPoderesProgresso && state.arcanoEmCompraViaXpKey == arcKey)
+        state.arcanoSnapshotAntesDaCompra?.size ?: 0
+    else 0
 
     Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -157,15 +171,17 @@ private fun ArcanoArea(
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 slots.forEachIndexed { idx, poderId ->
                     val label = poderId ?: "— vazio —"
+                    // Slot locked if global lock is on, OR if it belongs to previous committed state
+                    val isSlotLocked = locked || idx < lockedCount
                     AssistChip(
                         onClick = {
-                            if (!locked && poderId != null) {
+                            if (!isSlotLocked && poderId != null) {
                                 slots[idx] = null
                                 state.syncPoderesSelecionadosFromSlots()
                             }
                         },
                         label = { Text("${idx + 1}: $label") },
-                        enabled = !locked && poderId != null
+                        enabled = !isSlotLocked && poderId != null
                     )
                 }
             }
@@ -195,21 +211,23 @@ private fun ArcanoArea(
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp, vertical = 6.dp)
                     .alpha(if (selecionado) 0.45f else 1f)
-                        .clickable(enabled = !locked) {
-                            if (selecionado) {
-                                val idx = slots.indexOfFirst { it == poder.id }
-                                if (idx >= 0) {
-                                    slots[idx] = null
-                                    state.syncPoderesSelecionadosFromSlots()
-                                }
-                            } else {
-                                val firstEmpty = slots.indexOfFirst { it == null }
-                                if (firstEmpty >= 0) {
-                                    slots[firstEmpty] = poder.id
-                                    state.syncPoderesSelecionadosFromSlots()
-                                }
+                    .clickable(enabled = !locked) {
+                        if (selecionado) {
+                            val idx = slots.indexOfFirst { it == poder.id }
+                            // Can only deselect if the slot is not locked
+                            if (idx >= 0 && idx >= lockedCount) {
+                                slots[idx] = null
+                                state.syncPoderesSelecionadosFromSlots()
+                            }
+                        } else {
+                            val firstEmpty = slots.indexOfFirst { it == null }
+                            // Can only select if there is a free slot that is not locked
+                            if (firstEmpty >= 0 && firstEmpty >= lockedCount) {
+                                slots[firstEmpty] = poder.id
+                                state.syncPoderesSelecionadosFromSlots()
                             }
                         }
+                    }
             ) {
                 Column(Modifier.padding(12.dp)) {
                     Text(poder.nome, fontWeight = FontWeight.Bold)

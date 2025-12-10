@@ -821,15 +821,42 @@ class CriadorViewModel : ViewModel() {
                 state.comprarPontoDePoder(vantagem)
             } else {
                 state.applyVantagemDinheiro(vantagem)
+                // Se for "Novos Poderes" e temos múltiplos arcanos habilitados,
+                // seria ideal que 'vantagem' já viesse com choice definida.
+                // Aqui vamos assumir que se não vier, e tivermos 1 arcano, aplicamos a ele.
+                // Mas 'vantagem' é data class vinda do clique.
                 state.vantagensSelecionadas.add(vantagem)
             }
             state.pontosVantagem--
             state.advantageForCurrentAdvancement = vantagem.id
-            vantagem.toArcanoKey()?.let { arcKey ->
-                state.iniciarCompraArcanoViaXp(arcKey)
-            } ?: state.limparCompraArcanoViaXp(restaurarSnapshot = false)
+
+            // Check if it's "Novos Poderes" to trigger the flow
+            if (vantagem.id == "novos_poderes") {
+                // Find target arcane background
+                // 1. Try choice if set
+                val choiceKey = advantageArcaneKey(vantagem)
+                // 2. If not, try to find the first existing arcane background
+                val arcKey = choiceKey ?: state.vantagensSelecionadas
+                    .mapNotNull { it.toArcanoKey()?.normAAKey() }
+                    .firstOrNull()
+
+                if (arcKey != null) {
+                    state.iniciarCompraArcanoViaXp(arcKey)
+                } else {
+                    state.limparCompraArcanoViaXp(restaurarSnapshot = false)
+                }
+            } else {
+                vantagem.toArcanoKey()?.let { arcKey ->
+                    state.iniciarCompraArcanoViaXp(arcKey)
+                } ?: state.limparCompraArcanoViaXp(restaurarSnapshot = false)
+            }
+
             state.rebuildAllPericiaStacks()
         }
+    }
+
+    private fun advantageArcaneKey(v: Vantagem): String? {
+        return v.choice?.normAAKey()
     }
 
     fun startAttributeAdvancement(
