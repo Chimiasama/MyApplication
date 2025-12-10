@@ -145,6 +145,7 @@ class CriadorViewModel : ViewModel() {
         state.attributeStacksBeforeAdvancement = null
         state.attributeUsedReservation = false
         state.stageNameForCurrentAdvancement = null
+        state.overrideStageForVantagem = null
         state.arcanoEmCompraViaXpKey = null
         state.arcanoSnapshotAntesDaCompra = null
         state.mostrandoPoderesProgresso = false
