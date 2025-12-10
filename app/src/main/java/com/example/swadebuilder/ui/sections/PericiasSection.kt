@@ -105,7 +105,7 @@ fun PericiasContent(
             .fillMaxWidth()
             .heightIn(max = 400.dp)
             .padding(vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         stickyHeader {
             val pergaminho = MaterialTheme.colorScheme.surfaceVariant
@@ -209,12 +209,11 @@ fun PericiasContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 2.dp)
                     .background(
                         color = MaterialTheme.colorScheme.surfaceVariant,
                         shape = RoundedCornerShape(10.dp)
                     )
-                    .padding(horizontal = 10.dp, vertical = 8.dp)
+                    .padding(horizontal = 10.dp, vertical = 4.dp)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -243,7 +242,7 @@ fun PericiasContent(
                                 append(" ($displayAtr)")
                             }
                         },
-                        modifier = Modifier.weight(1f, fill = false),
+                        modifier = Modifier.weight(1f),
                         style = MaterialTheme.typography.bodyLarge,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -352,7 +351,7 @@ fun PericiasContent(
                 }
 
                 if (allowLongTexts && descricao.isNotBlank()) {
-                    Spacer(Modifier.height(4.dp))
+                    Spacer(Modifier.height(2.dp))
                     TextButton(
                         onClick = {
                             val current = detalhesExpandidos[descKey] ?: false
