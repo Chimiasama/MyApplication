@@ -766,6 +766,23 @@ class CriadorViewModel : ViewModel() {
         if (state.advantageAdvancementInProgress) {
             val advantageId = state.advantageForCurrentAdvancement
             if (advantageId != null) {
+                val advantage = state.vantagensSelecionadas.find { it.id == advantageId }
+                // Check if Arcane Background
+                val isArcaneBackground = advantage?.nome?.keyify()?.startsWith("antecedente arcano") == true
+
+                if (isArcaneBackground) {
+                    state.selectingPowersViaXp = true
+                    // Keep progress locked, but switch UI to powers
+                    // Don't add to history yet, wait for power selection
+                    // But decrement outstanding points as the advantage is "bought" tentatively
+                    if (state.pvFromXpOutstanding > 0) {
+                        state.pvFromXpOutstanding--
+                    }
+                    state.mostrandoVantagensProgresso = false // Hide advantages, will show powers
+                    state.updateEmProgressoFlag()
+                    return // Stop here, don't finish
+                }
+
                 val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
                 state.advancementHistory.add(
                     AdvancementAction.SpendOnAdvantage(
@@ -780,6 +797,45 @@ class CriadorViewModel : ViewModel() {
             state.advantageAdvancementInProgress = false
             state.advantageForCurrentAdvancement = null
             state.stageNameForCurrentAdvancement = null
+            state.updateEmProgressoFlag()
+        }
+    }
+
+    fun finishArcaneBackgroundPowerSelection() {
+        if (state.selectingPowersViaXp && state.advantageForCurrentAdvancement != null) {
+            val advantageId = state.advantageForCurrentAdvancement!!
+            val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
+
+            // Identify which powers were added.
+            // Since we are in this mode, any powers in `poderesSelecionados` that match the AB key
+            // and were just added should be tracked.
+            // Simplified: We assume powers added during this transaction are the ones currently in `poderesSelecionados`
+            // that belong to this AB. But wait, `poderesSelecionados` is a global list of IDs.
+            // We need to know which ones are NEW.
+            // `state.registrarNovosPoderes` uses `novosPoderesStacksPorArcano`.
+            // If the user used the normal `PoderesSection` (which we will show), they fill slots.
+
+            val advantage = state.vantagensSelecionadas.find { it.id == advantageId }
+            val arcanoKey = advantage?.choice?.keyify()
+                ?: advantage?.nome?.substringAfter(":")?.trim()?.keyify() // fallback logic
+                ?: "" // Should not happen for valid AB
+
+            // We grab the powers currently in the slots for this arcano
+            val powers = state.poderSlotsPorArcano[arcanoKey]?.filterNotNull() ?: emptyList()
+
+            state.advancementHistory.add(
+                AdvancementAction.SpendOnArcaneBackground(
+                    advantageId = advantageId,
+                    powersAcquired = powers,
+                    arcaneKey = arcanoKey,
+                    stageName = stageName
+                )
+            )
+
+            state.advantageAdvancementInProgress = false
+            state.advantageForCurrentAdvancement = null
+            state.stageNameForCurrentAdvancement = null
+            state.selectingPowersViaXp = false
             state.updateEmProgressoFlag()
         }
     }
@@ -919,6 +975,38 @@ class CriadorViewModel : ViewModel() {
         }
 
         if (state.advantageAdvancementInProgress) {
+            // Handle cancellation during AB power selection
+            if (state.selectingPowersViaXp) {
+                val advantageId = state.advantageForCurrentAdvancement
+                if (advantageId != null) {
+                    val advantage = state.vantagensSelecionadas.find { it.id == advantageId }
+                    if (advantage != null) {
+                        state.vantagensSelecionadas.remove(advantage)
+
+                        // Clear powers associated with this AB
+                        val arcanoKey = advantage.choice?.keyify()
+                            ?: advantage.nome.substringAfter(":").trim().keyify()
+                        state.poderSlotsPorArcano.remove(arcanoKey)
+                        // Also clear from global list
+                        // Rebuild simple list from remaining maps
+                        val remainingPowers = state.poderSlotsPorArcano.values.flatMap { it }.filterNotNull()
+                        state.poderesSelecionados.clear()
+                        state.poderesSelecionados.addAll(remainingPowers)
+                    }
+                }
+                state.selectingPowersViaXp = false
+                // Note: pvFromXpOutstanding was already decremented in finishAdvantageAdvancement when entering this state
+                // We need to restore it so the line below (pontosVantagem adjustment) works or just reset properly.
+                // In generic cancellation below:
+                // state.pontosVantagem = (state.pontosVantagem - 1)
+                // state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1)
+                // We must be careful not to double decrement if we already did it.
+                // In finishAdvantageAdvancement (partial): we did pvFromXpOutstanding--
+                // So here we should probably increment it back before generic logic decrements it again?
+                // Or just handle it manually here.
+                state.pvFromXpOutstanding++
+            }
+
             state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
             state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
         }
@@ -964,6 +1052,22 @@ class CriadorViewModel : ViewModel() {
                 if (advantage != null) {
                     state.vantagensSelecionadas.remove(advantage)
                 }
+                state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
+                state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
+                state.frozenAdvantageCount = state.vantagensSelecionadas.size
+            }
+            is AdvancementAction.SpendOnArcaneBackground -> {
+                 // Revert AB and its powers
+                val advantage = state.vantagensSelecionadas.firstOrNull { it.id == lastAction.advantageId }
+                if (advantage != null) {
+                    state.vantagensSelecionadas.remove(advantage)
+                }
+                // Remove the powers
+                state.poderSlotsPorArcano.remove(lastAction.arcaneKey)
+                val remainingPowers = state.poderSlotsPorArcano.values.flatMap { it }.filterNotNull()
+                state.poderesSelecionados.clear()
+                state.poderesSelecionados.addAll(remainingPowers)
+
                 state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
                 state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
                 state.frozenAdvantageCount = state.vantagensSelecionadas.size

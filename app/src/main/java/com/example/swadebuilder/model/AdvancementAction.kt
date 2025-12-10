@@ -27,6 +27,21 @@ sealed class AdvancementAction(open val progressCost: Int, open val stageName: S
         }
     }
 
+    data class SpendOnArcaneBackground(
+        val advantageId: String,
+        val powersAcquired: List<String>,
+        val arcaneKey: String,
+        override val stageName: String,
+        override val progressCost: Int = 1
+    ) : AdvancementAction(progressCost, stageName) {
+        override fun getDisplayText(
+            getAdvantageName: (String) -> String,
+            getSkillValue: (String) -> Int
+        ): String {
+            return "Antecedente Arcano: ${getAdvantageName(advantageId)}"
+        }
+    }
+
     data class IncreaseAttribute(
         val attributeName: String,
         val usedLegendaryReservation: Boolean = false,

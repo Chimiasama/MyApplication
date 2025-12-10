@@ -267,6 +267,47 @@ fun UnifiedScreen(
                     Text("Cancelar")
                 }
 
+            } else if (state.selectingPowersViaXp) {
+                // Progression: Powers for AB
+                ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
+
+                SectionCard(
+                    title = "Poderes",
+                    expanded = expPoderes,
+                    onToggle = onTogglePoderes,
+                    icon = Icons.Default.FlashOn
+                ) {
+                    PoderesSection(state = state)
+                }
+
+                Spacer(Modifier.height(16.dp))
+                HorizontalDivider(thickness = 3.dp)
+
+                val abId = state.advantageForCurrentAdvancement
+                val abVant = state.vantagensSelecionadas.find { it.id == abId }
+                val abKey = abVant?.choice?.keyify() ?: abVant?.nome?.substringAfter(":")?.trim()?.keyify() ?: ""
+                val slots = state.poderSlotsPorArcano[abKey]
+                // We consider it "filled" if all slots are non-null.
+                val allSlotsFilled = slots?.all { it != null } == true
+
+                Button(
+                    onClick = {
+                        viewModel.finishArcaneBackgroundPowerSelection()
+                    },
+                    enabled = allSlotsFilled,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Confirmar Poderes e Voltar")
+                }
+                TextButton(
+                    onClick = {
+                        viewModel.cancelAdvancementInProgress()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Cancelar Antecedente Arcano")
+                }
+
             } else {
                 // Default Progression View
                 ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
