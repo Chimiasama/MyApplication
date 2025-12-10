@@ -169,6 +169,11 @@ private fun describeAction(action: AdvancementAction, state: CriadorState): Stri
         "Vantagem: ${advantageName ?: action.advantageId}"
     }
 
+    is AdvancementAction.SpendOnArcaneBackground -> {
+        val advantageName = listaVantagens.firstOrNull { it.id == action.advantageId }?.nome
+        "Antecedente Arcano: ${advantageName ?: action.advantageId}"
+    }
+
     is AdvancementAction.IncreaseAttribute -> {
         val attrName = mapaAtributosDisplay[action.attributeName] ?: action.attributeName
         "Atributo: $attrName"

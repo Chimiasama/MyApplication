@@ -1068,8 +1068,6 @@ class CriadorViewModel : ViewModel() {
                 state.poderesSelecionados.clear()
                 state.poderesSelecionados.addAll(remainingPowers)
 
-                state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
-                state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
                 state.frozenAdvantageCount = state.vantagensSelecionadas.size
             }
             is AdvancementAction.IncreaseAttribute -> {
