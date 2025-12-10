@@ -751,6 +751,7 @@ class CriadorViewModel : ViewModel() {
                 state.snapshotFrozenSkillIncrements()
             }
             state.updateEmProgressoFlag()
+            state.mostrandoPericiasProgresso = false
         }
     }
 
@@ -793,6 +794,7 @@ class CriadorViewModel : ViewModel() {
             state.stageNameForCurrentAdvancement = null
             state.limparCompraArcanoViaXp(restaurarSnapshot = false)
             state.updateEmProgressoFlag()
+            state.mostrandoVantagensProgresso = false
         }
     }
 
@@ -935,6 +937,7 @@ class CriadorViewModel : ViewModel() {
             state.recomputeAvailableProgress()
             state.checkFreeze()
             state.updateEmProgressoFlag()
+            state.mostrandoAtributosProgresso = false
         }
     }
 
@@ -969,7 +972,11 @@ class CriadorViewModel : ViewModel() {
             state.advantageForCurrentAdvancement?.let { advId ->
                 state.vantagensSelecionadas.firstOrNull { it.id == advId }?.let { vant ->
                     val arcKey = vant.toArcanoKey()?.normAAKey()
-                    if (arcKey != null && arcKey == state.arcanoEmCompraViaXpKey) {
+                    // Se a vantagem for um antecedente arcano sendo comprado OU
+                    // se for uma vantagem que acionou o fluxo de compra de poderes (ex: Novos Poderes)
+                    if (state.arcanoEmCompraViaXpKey != null) {
+                        state.limparCompraArcanoViaXp(restaurarSnapshot = true)
+                    } else if (arcKey != null && arcKey == state.arcanoEmCompraViaXpKey) {
                         state.limparCompraArcanoViaXp(restaurarSnapshot = true)
                     }
 

@@ -201,7 +201,7 @@ private fun ArcanoArea(
             items = poderesElegiveis,
             key = { it.id }
         ) { poder ->
-            val selecionado = slots.any { it == poder.id }
+            val selecionado = slots.any { it?.equals(poder.id, ignoreCase = true) == true }
 
             Card(
                 colors = CardDefaults.cardColors(
@@ -213,7 +213,7 @@ private fun ArcanoArea(
                     .alpha(if (selecionado) 0.45f else 1f)
                     .clickable(enabled = !locked) {
                         if (selecionado) {
-                            val idx = slots.indexOfFirst { it == poder.id }
+                            val idx = slots.indexOfFirst { it?.equals(poder.id, ignoreCase = true) == true }
                             // Can only deselect if the slot is not locked
                             if (idx >= 0 && idx >= lockedCount) {
                                 slots[idx] = null
