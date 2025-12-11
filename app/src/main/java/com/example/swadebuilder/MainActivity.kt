@@ -539,6 +539,17 @@ class MainActivity : ComponentActivity() {
                                                         cpPvCount            = state.cpPvStack.size,
                                                         cpSpCount            = state.cpSpStack.size,
                                                         cpRecursosCount      = state.cpRecursosStack.size,
+                                                        paCostStackPorAtributo = state.paCostStackPorAtributo
+                                                            .mapValues { it.value.toList() },
+                                                        spCostStackPorPericia = state.spCostStackPorPericia
+                                                            .entries
+                                                            .associate { (per, stack) -> per.nome to stack.toList() },
+                                                        baseIncsPorPericia = state.baseIncsPorPericia
+                                                            .entries
+                                                            .associate { (per, qtd) -> per.nome to qtd },
+                                                        compCostStackPorPericia = state.compCostStackPorPericia
+                                                            .entries
+                                                            .associate { (per, stack) -> per.nome to stack.toList() },
                                                         equipamentos         = state.equipamentosComprados.map { it.nome },
                                                         poderes              = state.poderSlotsPorArcano.mapValues { (_, slots) ->
                                                             slots.filterNotNull()

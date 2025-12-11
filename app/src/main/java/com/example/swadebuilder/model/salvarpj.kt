@@ -28,6 +28,12 @@ data class PersonagemSalvo(
     val cpRecursosCount: Int = 0, // Quantos aumentos de dinheiro ($$) via PC
     // ----------------------------------------------------------------------
 
+    // Histórico de custos para reconstrução de gastos
+    val paCostStackPorAtributo: Map<String, List<Int>> = emptyMap(),
+    val spCostStackPorPericia: Map<String, List<Int>> = emptyMap(),
+    val baseIncsPorPericia: Map<String, Int> = emptyMap(),
+    val compCostStackPorPericia: Map<String, List<Int>> = emptyMap(),
+
     // Equipamentos por nome (como antes)
     val equipamentos: List<String>,
 

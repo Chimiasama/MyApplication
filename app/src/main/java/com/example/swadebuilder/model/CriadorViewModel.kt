@@ -208,6 +208,10 @@ class CriadorViewModel : ViewModel() {
         categoriasBasico: List<EquipamentoCategoria>,
         categoriasSuper:  List<EquipamentoCategoria>
     ) {
+        val hasSavedStacks = salvo.paCostStackPorAtributo.isNotEmpty() ||
+                salvo.spCostStackPorPericia.isNotEmpty() ||
+                salvo.baseIncsPorPericia.isNotEmpty() ||
+                salvo.compCostStackPorPericia.isNotEmpty()
         // Reinicia o estado com as flags corretas vindas do save
         resetStateParaNovoPersonagem(
             cartaSelvagem = salvo.cartaSelvagem,
@@ -274,31 +278,56 @@ class CriadorViewModel : ViewModel() {
         }
         state.rebuildPericias(desiredPericias)
 
+        state.paCostStackPorAtributo.values.forEach { it.clear() }
+        salvo.paCostStackPorAtributo.forEach { (attr, stack) ->
+            state.paCostStackPorAtributo[attr]?.addAll(stack)
+        }
+
+        state.baseIncsPorPericia.keys.forEach { state.baseIncsPorPericia[it] = 0 }
+        state.spCostStackPorPericia.values.forEach { it.clear() }
+        state.compCostStackPorPericia.values.forEach { it.clear() }
+        listaPericias.forEach { per ->
+            salvo.spCostStackPorPericia[per.nome]?.let { savedStack ->
+                state.spCostStackPorPericia.getValue(per).addAll(savedStack)
+            }
+            salvo.baseIncsPorPericia[per.nome]?.let { incs ->
+                state.baseIncsPorPericia[per] = incs
+            }
+            salvo.compCostStackPorPericia[per.nome]?.let { savedStack ->
+                state.compCostStackPorPericia[per]?.addAll(savedStack)
+            }
+        }
+
         state.vantagensSelecionadas.clear()
-        val mapPorId   = listaVantagens.associateBy { it.id }
-        val mapPorNome = listaVantagens.associateBy { it.nome.trim().uppercase() }
-        val choicesMap = salvo.vantagemChoices.mapValues { it.value.toMutableList() }
+        val idsSalvosNormalizados = salvo.vantagens.map { it.keyify() }
+        val choicesMap = salvo.vantagemChoices
+            .mapKeys { it.key.keyify() }
+            .mapValues { it.value.toMutableList() }
 
-        salvo.vantagens.forEach { saved ->
-            val trimmed = saved.trim()
-            val base = mapPorId[trimmed] ?: mapPorNome[trimmed.uppercase()]
-            if (base != null) {
-                val vantCopiada = runCatching { base.copy() }
-                    .onFailure {
-                        Log.e(
-                            "CriadorViewModel",
-                            "Erro ao copiar vantagem '$trimmed' ao carregar personagem.",
-                            it
-                        )
-                    }
-                    .getOrNull()
-
-                if (vantCopiada != null) {
-                    choicesMap[trimmed]?.removeFirstOrNull()?.let { escolha ->
-                        vantCopiada.choice = escolha
-                    }
-                    state.vantagensSelecionadas.add(vantCopiada)
+        listaVantagens.filter { vant ->
+            val idKey = vant.id.keyify()
+            val nomeKey = vant.nome.keyify()
+            idKey in idsSalvosNormalizados || nomeKey in idsSalvosNormalizados
+        }.forEach { base ->
+            val vantCopiada = runCatching { base.copy() }
+                .onFailure {
+                    Log.e(
+                        "CriadorViewModel",
+                        "Erro ao copiar vantagem '${base.id}' ao carregar personagem.",
+                        it
+                    )
                 }
+                .getOrNull()
+
+            if (vantCopiada != null) {
+                val chaveId = base.id.keyify()
+                val chaveNome = base.nome.keyify()
+                val escolha = choicesMap[chaveId]?.removeFirstOrNull()
+                    ?: choicesMap[chaveNome]?.removeFirstOrNull()
+                if (escolha != null) {
+                    vantCopiada.choice = escolha
+                }
+                state.vantagensSelecionadas.add(vantCopiada)
             }
         }
 
@@ -459,7 +488,9 @@ class CriadorViewModel : ViewModel() {
         }
         // ------------------------------------------
 
-        state.rebuildAllPericiaStacks(_feedbackMessages)
+        if (!hasSavedStacks) {
+            state.rebuildAllPericiaStacks(_feedbackMessages)
+        }
         normalizeArcanoIdsNoCarregamento()
         if (state.modoSupers) {
             listaVantagens.firstOrNull { it.id == "superpoderes" }?.let { sp ->
