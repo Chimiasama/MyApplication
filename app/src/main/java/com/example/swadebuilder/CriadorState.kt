@@ -13,11 +13,20 @@ import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import com.example.swadebuilder.model.AdvantageSnapshot
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
+import com.example.swadebuilder.model.ComplicacaoSnapshot
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.PersonagemSnapshot
 import com.example.swadebuilder.model.PowerEffect
+import com.example.swadebuilder.model.SnapshotAtributos
+import com.example.swadebuilder.model.SnapshotFlags
+import com.example.swadebuilder.model.SnapshotPericias
+import com.example.swadebuilder.model.SnapshotProgresso
+import com.example.swadebuilder.model.SnapshotRecursos
+import com.example.swadebuilder.model.SnapshotSelecoes
+import com.example.swadebuilder.model.SnapshotSupers
 import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.AppTheme
@@ -1762,17 +1771,15 @@ class CriadorState {
     fun restoreFromSnapshot(snapshot: PersonagemSnapshot, feedbackMessages: MutableList<String>) {
         val flags = snapshot.flags
 
-        resetStateParaNovoPersonagem(
-            cartaSelvagem = flags.cartaSelvagem,
-            maisPontosPericias = flags.maisPontosPericias,
-            modoSupers = flags.modoSupers,
-            compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
-            compendioHorrorAtivo = flags.compendioHorrorAtivo,
-            modoMonstroAtivo = flags.modoMonstroAtivo,
-            usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia,
-            grandesResponsabilidades = flags.grandesResponsabilidades,
-            showHelpMessages = snapshot.showHelpMessages
-        )
+        showHelpMessages = snapshot.showHelpMessages
+        cartaSelvagem = flags.cartaSelvagem
+        maisPontosPericias = flags.maisPontosPericias
+        modoSupers = flags.modoSupers
+        compendioFantasiaAtivo = flags.compendioFantasiaAtivo
+        compendioHorrorAtivo = flags.compendioHorrorAtivo
+        modoMonstroAtivo = flags.modoMonstroAtivo
+        usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia
+        grandesResponsabilidades = flags.grandesResponsabilidades
 
         idAtual = snapshot.id
         nomePersonagem = snapshot.nome

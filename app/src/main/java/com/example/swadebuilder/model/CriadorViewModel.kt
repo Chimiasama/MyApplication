@@ -62,6 +62,18 @@ class CriadorViewModel : ViewModel() {
     fun carregarPersonagem(context: Context, saveId: String): Boolean {
         val snapshot = CharacterStorage.load(context, saveId) ?: return false
         clearFeedbackMessages()
+        val flags = snapshot.flags
+        resetStateParaNovoPersonagem(
+            cartaSelvagem = flags.cartaSelvagem,
+            maisPontosPericias = flags.maisPontosPericias,
+            modoSupers = flags.modoSupers,
+            compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
+            compendioHorrorAtivo = flags.compendioHorrorAtivo,
+            modoMonstroAtivo = flags.modoMonstroAtivo,
+            usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia,
+            grandesResponsabilidades = flags.grandesResponsabilidades,
+            showHelpMessages = snapshot.showHelpMessages
+        )
         state.restoreFromSnapshot(snapshot, _feedbackMessages)
         state.idAtual = saveId
         return true
