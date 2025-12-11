@@ -6,6 +6,13 @@ import java.util.UUID
 import com.example.swadebuilder.model.AdvancementAction
 
 @Serializable
+data class SavedAdvantage(
+    val id: String,
+    val choice: String? = null,
+    val origem: String = "BASICO"
+)
+
+@Serializable
 data class PersonagemSalvo(
     val id: String = UUID.randomUUID().toString(),
     val nome: String,
@@ -13,8 +20,13 @@ data class PersonagemSalvo(
     val pericias: Map<String, Int>,
     val ancestralidade: String,
 
-    // IDs de vantagens
-    val vantagens: List<String>,
+    // IDs de vantagens (LEGACY - Mantido para compatibilidade reversa)
+    val vantagens: List<String> = emptyList(),
+    // Choices (LEGACY - Mantido para compatibilidade reversa)
+    val vantagemChoices: Map<String, List<String>> = emptyMap(),
+
+    // NOVO CAMPO: Lista estruturada de vantagens salvas (Prioritário no carregamento)
+    val savedAdvantages: List<SavedAdvantage> = emptyList(),
 
     // IDs de complicações
     val complicacoes: List<String>,
@@ -38,13 +50,14 @@ data class PersonagemSalvo(
     val pontosRestantes: Int,
     val naturalArmorFromRace: Int = 0,
     val armorBase: Int = 0,
-    val vantagemChoices: Map<String, List<String>> = emptyMap(),
+
     val vantagensRaciais: List<String> = emptyList(),
     val maisPontosPericias: Boolean,
     val cartaSelvagem: Boolean,
     val heroisSemArmadura: Boolean = false,
     val soldadoCargaAtivo: Boolean = true,
     val semPontosDePoder: Boolean = false,
+    val nasceUmHeroi: Boolean = false,
 
     // Especializações existentes
     val usarEspecializacoesDePericia: Boolean = false,

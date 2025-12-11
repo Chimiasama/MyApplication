@@ -237,6 +237,7 @@ class CriadorViewModel : ViewModel() {
         state.cartaSelvagem      = salvo.cartaSelvagem
         state.heroisSemArmadura  = salvo.heroisSemArmadura
         state.soldadoCargaAtivo  = salvo.soldadoCargaAtivo
+        state.nasceUmHeroi       = salvo.nasceUmHeroi
         state.ancestralidade     = salvo.ancestralidade
         state.aplicarAncestralidade(salvo.ancestralidade, _feedbackMessages)
 
@@ -276,27 +277,51 @@ class CriadorViewModel : ViewModel() {
         state.vantagensSelecionadas.clear()
         val mapPorId   = listaVantagens.associateBy { it.id }
         val mapPorNome = listaVantagens.associateBy { it.nome.trim().uppercase() }
-        val choicesMap = salvo.vantagemChoices.mapValues { it.value.toMutableList() }
 
-        salvo.vantagens.forEach { saved ->
-            val trimmed = saved.trim()
-            val base = mapPorId[trimmed] ?: mapPorNome[trimmed.uppercase()]
-            if (base != null) {
-                val vantCopiada = runCatching { base.copy() }
-                    .onFailure {
-                        Log.e(
-                            "CriadorViewModel",
-                            "Erro ao copiar vantagem '$trimmed' ao carregar personagem.",
-                            it
-                        )
-                    }
-                    .getOrNull()
+        if (salvo.savedAdvantages.isNotEmpty()) {
+            salvo.savedAdvantages.forEach { savedAdv ->
+                val base = mapPorId[savedAdv.id] ?: mapPorNome[savedAdv.id.trim().uppercase()]
+                if (base != null) {
+                    val vantCopiada = runCatching { base.copy() }
+                        .onFailure {
+                            Log.e(
+                                "CriadorViewModel",
+                                "Erro ao copiar vantagem '${savedAdv.id}' ao carregar personagem.",
+                                it
+                            )
+                        }
+                        .getOrNull()
 
-                if (vantCopiada != null) {
-                    choicesMap[trimmed]?.removeFirstOrNull()?.let { escolha ->
-                        vantCopiada.choice = escolha
+                    if (vantCopiada != null) {
+                        vantCopiada.choice = savedAdv.choice
+                        state.vantagensSelecionadas.add(vantCopiada)
                     }
-                    state.vantagensSelecionadas.add(vantCopiada)
+                }
+            }
+        } else {
+            // FALLBACK LEGADO
+            val choicesMap = salvo.vantagemChoices.mapValues { it.value.toMutableList() }
+
+            salvo.vantagens.forEach { saved ->
+                val trimmed = saved.trim()
+                val base = mapPorId[trimmed] ?: mapPorNome[trimmed.uppercase()]
+                if (base != null) {
+                    val vantCopiada = runCatching { base.copy() }
+                        .onFailure {
+                            Log.e(
+                                "CriadorViewModel",
+                                "Erro ao copiar vantagem '$trimmed' ao carregar personagem.",
+                                it
+                            )
+                        }
+                        .getOrNull()
+
+                    if (vantCopiada != null) {
+                        choicesMap[trimmed]?.removeFirstOrNull()?.let { escolha ->
+                            vantCopiada.choice = escolha
+                        }
+                        state.vantagensSelecionadas.add(vantCopiada)
+                    }
                 }
             }
         }

@@ -90,6 +90,7 @@ import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.PersonagemSalvo
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.SavedAdvantage
 import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
@@ -528,6 +529,9 @@ class MainActivity : ComponentActivity() {
                                                         ancestralidade       = state.ancestralidade,
                                                         vantagens            = state.vantagensSelecionadas.map { it.id },
                                                         vantagemChoices      = vantagemChoices,
+                                                        savedAdvantages      = state.vantagensSelecionadas.map {
+                                                            SavedAdvantage(it.id, it.choice, it.origem)
+                                                        },
                                                         vantagensRaciais     = state.vantagensRaciais.toList(),
                                                         complicacoes         = complicacoesList,
                                                         complicacoesNiveis   = complicacaoNiveis,
@@ -551,6 +555,7 @@ class MainActivity : ComponentActivity() {
                                                         cartaSelvagem        = state.cartaSelvagem,
                                                         heroisSemArmadura    = state.heroisSemArmadura,
                                                         soldadoCargaAtivo    = state.soldadoCargaAtivo,
+                                                        nasceUmHeroi         = state.nasceUmHeroi,
                                                         semPontosDePoder     = state.usarSemPontosDePoder,
                                                         usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
                                                         especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
