@@ -547,7 +547,7 @@ Feito por Rafael S.W.
                         optNasceUmHeroi,
                         optHeroiSemArmadura,
                         optEspecializacaoPer,
-                        optSemPontosDePoder = optSemPontosPoder,
+                        optSemPontosPoder,
                         optGrandesResponsabilidades,
                         optShowHelpMessages
                     )

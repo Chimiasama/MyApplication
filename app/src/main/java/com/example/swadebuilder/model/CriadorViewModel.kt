@@ -1040,7 +1040,8 @@ class CriadorViewModel : ViewModel() {
                         compendioHorrorAtivo = snapshot.compendioHorrorAtivo,
                         modoMonstroAtivo = snapshot.modoMonstroAtivo,
                         usarEspecializacoesDePericia = snapshot.usarEspecializacoesDePericia,
-                        grandesResponsabilidades = snapshot.grandesResponsabilidades
+                        grandesResponsabilidades = snapshot.grandesResponsabilidades,
+                        showHelpMessages = state.showHelpMessages
                     )
 
                     // 2. Restaurar propriedades simples
