@@ -103,6 +103,12 @@ data class PersonagemSalvo(
     val comprasAttrPorEstagio: Map<String, Int> = emptyMap(),
     val comprasPpPorEstagio: Map<String, Int> = emptyMap(),
 
+    // Persistência das stacks de custo (histórico detalhado)
+    val paCostStackPorAtributo: Map<String, List<Int>> = emptyMap(),
+    val spCostStackPorPericia: Map<String, List<Int>> = emptyMap(),
+    val baseIncsPorPericia: Map<String, Int> = emptyMap(),
+    val compCostStackPorPericia: Map<String, List<Int>> = emptyMap(),
+
     val skillAdvancementInProgress: Boolean = false,
     val skillsForCurrentAdvancement: List<String> = emptyList(),
     val advantageAdvancementInProgress: Boolean = false,

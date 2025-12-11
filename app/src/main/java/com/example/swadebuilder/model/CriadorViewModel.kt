@@ -269,36 +269,94 @@ class CriadorViewModel : ViewModel() {
         state.valoresAtributos.forEach { (key, holder) ->
             holder.intValue = salvo.atributos[key] ?: 4
         }
-        val desiredPericias: Map<Pericia, Int> = listaPericias.associateWith { per ->
-            salvo.pericias[per.nome] ?: state.rawTotal(per)
+        // --- 3) Recuperação das Stacks de Custo ---
+        // Se o save tem as stacks novas, usamos diretamente e evitamos rebuildPericias.
+        // Se for save antigo (stacks vazias), caímos no fallback do rebuildPericias/recalcularPontosAtributo.
+
+        val temStacksSalvas = salvo.paCostStackPorAtributo.isNotEmpty() || salvo.spCostStackPorPericia.isNotEmpty()
+
+        if (temStacksSalvas) {
+            // Limpa as stacks atuais
+            state.paCostStackPorAtributo.values.forEach { it.clear() }
+            state.spCostStackPorPericia.values.forEach { it.clear() }
+            state.baseIncsPorPericia.keys.forEach { state.baseIncsPorPericia[it] = 0 }
+            state.compCostStackPorPericia.values.forEach { it.clear() }
+
+            // Restaura PA Stacks
+            salvo.paCostStackPorAtributo.forEach { (attrName, stack) ->
+                state.paCostStackPorAtributo[attrName]?.addAll(stack)
+            }
+
+            // Restaura SP Stacks, Incs Base e Comp Stacks (usando nome da pericia como chave)
+            listaPericias.forEach { per ->
+                // SP Stack
+                val spStack = salvo.spCostStackPorPericia[per.nome]
+                if (spStack != null) {
+                    state.spCostStackPorPericia[per]?.addAll(spStack)
+                }
+                // Base Incs
+                val baseInc = salvo.baseIncsPorPericia[per.nome]
+                if (baseInc != null) {
+                    state.baseIncsPorPericia[per] = baseInc
+                }
+                // Comp Stack
+                val compStack = salvo.compCostStackPorPericia[per.nome]
+                if (compStack != null) {
+                    state.compCostStackPorPericia[per]?.addAll(compStack)
+                }
+            }
+
+            // Precisamos atualizar o 'valorAtributos' (mutableState) para refletir o stack carregado + base racial?
+            // O código original fazia: holder.intValue = salvo.atributos[key] ?: 4
+            // Isso sobrescreve o valor visual. Como as stacks agora são a fonte de verdade para "voltar atrás",
+            // mas o valor final é o que importa para exibição, manteremos a atribuição visual do save,
+            // ou poderíamos recalcular? Melhor manter o valor salvo para garantir consistência visual imediata.
+            // (Já foi feito no bloco acima: holder.intValue = salvo.atributos[key] ?: 4)
+
+        } else {
+            // --- Fallback para Saves Antigos ---
+            val desiredPericias: Map<Pericia, Int> = listaPericias.associateWith { per ->
+                salvo.pericias[per.nome] ?: state.rawTotal(per)
+            }
+            state.rebuildPericias(desiredPericias)
         }
-        state.rebuildPericias(desiredPericias)
 
+        // --- 4) Recuperação de Vantagens (com Normalização) ---
         state.vantagensSelecionadas.clear()
-        val mapPorId   = listaVantagens.associateBy { it.id }
-        val mapPorNome = listaVantagens.associateBy { it.nome.trim().uppercase() }
+
         val choicesMap = salvo.vantagemChoices.mapValues { it.value.toMutableList() }
+        // Normaliza também as chaves do choicesMap para garantir match se o ID mudou de case
+        val choicesMapNormalized = choicesMap.mapKeys { it.key.keyify() }
 
-        salvo.vantagens.forEach { saved ->
-            val trimmed = saved.trim()
-            val base = mapPorId[trimmed] ?: mapPorNome[trimmed.uppercase()]
+        salvo.vantagens.forEach { savedIdRaw ->
+            val savedIdKey = savedIdRaw.keyify()
+
+            // Busca no catálogo por ID ou Nome (ambos normalizados)
+            val base = listaVantagens.find {
+                it.id.keyify() == savedIdKey || it.nome.keyify() == savedIdKey
+            }
+
             if (base != null) {
-                val vantCopiada = runCatching { base.copy() }
-                    .onFailure {
-                        Log.e(
-                            "CriadorViewModel",
-                            "Erro ao copiar vantagem '$trimmed' ao carregar personagem.",
-                            it
-                        )
-                    }
-                    .getOrNull()
-
+                val vantCopiada = runCatching { base.copy() }.getOrNull()
                 if (vantCopiada != null) {
-                    choicesMap[trimmed]?.removeFirstOrNull()?.let { escolha ->
-                        vantCopiada.choice = escolha
+                    // Tenta recuperar a choice
+                    // 1. Pelo ID exato salvo (se houver entry no map)
+                    var choice = choicesMap[savedIdRaw]?.removeFirstOrNull()
+
+                    // 2. Se falhar, tenta pelo ID da vantagem do catálogo (caso o save tenha ID antigo mas choice no ID novo?)
+                    // Ou pelo ID normalizado.
+                    if (choice == null) {
+                         choice = choicesMapNormalized[savedIdKey]?.removeFirstOrNull()
                     }
+
+                    if (choice != null) {
+                        vantCopiada.choice = choice
+                    }
+
                     state.vantagensSelecionadas.add(vantCopiada)
                 }
+            } else {
+                Log.e("CriadorViewModel", "Vantagem salva não encontrada no catálogo: $savedIdRaw")
             }
         }
 

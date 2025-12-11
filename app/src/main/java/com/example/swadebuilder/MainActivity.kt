@@ -590,6 +590,18 @@ class MainActivity : ComponentActivity() {
                                                         pvFromXpOutstanding    = state.pvFromXpOutstanding,
                                                         comprasAttrPorEstagio  = state.comprasAttrPorEstagio.toMap(),
                                                         comprasPpPorEstagio    = state.comprasPpPorEstagio.toMap(),
+
+                                                        paCostStackPorAtributo = state.paCostStackPorAtributo.mapValues { it.value.toList() },
+                                                        spCostStackPorPericia = state.spCostStackPorPericia.entries.associate { (per, stack) ->
+                                                            per.nome to stack.toList()
+                                                        },
+                                                        baseIncsPorPericia = state.baseIncsPorPericia.entries.associate { (per, qtd) ->
+                                                            per.nome to qtd
+                                                        },
+                                                        compCostStackPorPericia = state.compCostStackPorPericia.entries.associate { (per, stack) ->
+                                                            per.nome to stack.toList()
+                                                        },
+
                                                         skillAdvancementInProgress = state.skillAdvancementInProgress,
                                                         skillsForCurrentAdvancement = state.skillsForCurrentAdvancement.toList(),
                                                         advantageAdvancementInProgress = state.advantageAdvancementInProgress,
