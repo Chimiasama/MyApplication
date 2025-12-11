@@ -98,6 +98,7 @@ data class PersonagemSalvo(
     val frozenAdvantageCount: Int = 0,
     val frozenSkillIncrements: Map<String, Int> = emptyMap(),
     val paFromProgress: Int = 0,
+    val spFromProgress: Int = 0,
     val pvFromXpOutstanding: Int = 0,
     val comprasAttrPorEstagio: Map<String, Int> = emptyMap(),
     val comprasPpPorEstagio: Map<String, Int> = emptyMap(),

@@ -363,9 +363,7 @@ class CriadorState {
     }
 
     fun grantSkillPointsFromXp() {
-        //This is a hack to add 2 skill points
-        cpSpStack.add(Unit)
-        cpSpStack.add(Unit)
+        spFromProgress += 2
         mostrandoPericiasProgresso = true
     }
 
@@ -660,13 +658,14 @@ class CriadorState {
     var paFromProgress by mutableIntStateOf(0)
     var legendaryAttrReservations by mutableIntStateOf(0)
     val cpSpStack       = mutableStateListOf<Unit>()
+    var spFromProgress by mutableIntStateOf(0)
     val cpPvStack       = mutableStateListOf<Unit>()
     val cpRecursosStack = mutableStateListOf<Unit>()
 
     private val totalSpPool: Int
         get() {
             val base = if (maisPontosPericias) BASE_SP_POOL else BASE_SP_POOL - 3
-            return (base + cpSpStack.size + idosoBonusSp - jovemMalusSp)
+            return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp)
                 .coerceAtLeast(0)
         }
 
