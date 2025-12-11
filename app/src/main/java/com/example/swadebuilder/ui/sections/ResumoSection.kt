@@ -21,12 +21,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -37,31 +35,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.buildSummaryLines
-import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.toMeuPersonagem
 import com.example.swadebuilder.util.keyify
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 @Composable
 fun SummaryContent(state: CriadorState) {
 
-    val context = LocalContext.current
-    val nomesSalvos = remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
-
     LaunchedEffect(Unit) {
-        nomesSalvos.value = withContext(Dispatchers.IO) {
-            StorageUtils.listarPersonagens(context)
-        }
-    }
-
-    LaunchedEffect(nomesSalvos.value) {
         if (state.nomePersonagem.isBlank()) {
-            var idx = 1
-            while (nomesSalvos.value.any { it.first == "Nome $idx" }) {
-                idx++
-            }
-            state.nomePersonagem = "Nome $idx"
+            state.nomePersonagem = "Nome 1"
         }
     }
 
