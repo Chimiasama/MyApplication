@@ -441,7 +441,8 @@ class MainActivity : ComponentActivity() {
                                     criadorViewModel.loadFromSalvo(
                                         salvo,
                                         categoriasBasico = equipamentoCategorias,
-                                        categoriasSuper  = superequipCategorias
+                                        categoriasSuper  = superequipCategorias,
+                                        listaDeVantagensMestra = listaVantagens
                                     )
                                     mostrouTelaInicial = false
                                 },

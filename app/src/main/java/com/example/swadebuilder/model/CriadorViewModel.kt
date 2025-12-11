@@ -206,7 +206,8 @@ class CriadorViewModel : ViewModel() {
     fun loadFromSalvo(
         salvo: PersonagemSalvo,
         categoriasBasico: List<EquipamentoCategoria>,
-        categoriasSuper:  List<EquipamentoCategoria>
+        categoriasSuper:  List<EquipamentoCategoria>,
+        listaDeVantagensMestra: List<Vantagem>
     ) {
         // Reinicia o estado com as flags corretas vindas do save
         resetStateParaNovoPersonagem(
@@ -279,9 +280,10 @@ class CriadorViewModel : ViewModel() {
 
         salvo.vantagens.forEach { saved ->
             val trimmed = saved.trim()
-            val savedKey = trimmed.keyify()
-            val base = listaVantagens.firstOrNull { vant ->
-                vant.id.keyify() == savedKey || vant.nome.keyify() == savedKey
+            val savedKey = trimmed.replace("_", " ").keyify()
+            val base = listaDeVantagensMestra.firstOrNull { vant ->
+                vant.id.replace("_", " ").keyify() == savedKey ||
+                        vant.nome.replace("_", " ").keyify() == savedKey
             }
             if (base != null) {
                 val vantCopiada = runCatching { base.copy() }
