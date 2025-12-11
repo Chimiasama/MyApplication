@@ -100,6 +100,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.decodeFromString
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -114,6 +115,7 @@ data class ArcanoInfo(
 
 lateinit var arcanoInfo: Map<String, Triple<Int, Int, String>>
 
+// Define Json instance for serialization
 private val json = Json {
     ignoreUnknownKeys = true
 }
@@ -134,6 +136,7 @@ class MainActivity : ComponentActivity() {
             .open("equipamentos.json")
             .bufferedReader()
             .use { it.readText() }
+        // Use the json instance defined above
         val allEquipCategorias: List<EquipamentoCategoria> =
             json.decodeFromString(allEquipJson)
 
@@ -177,7 +180,11 @@ class MainActivity : ComponentActivity() {
             )
         }
 
-        val todasVantagens: List<Vantagem> = this.loadJsonAsset("Vantagens.json")
+        // Use kotlinx.serialization for Vantagens.json to respect default values (e.g. limiteCompra)
+        val vantagensJson = assets.open("Vantagens.json")
+            .bufferedReader().use { it.readText() }
+        // Explicitly using the json instance
+        val todasVantagens: List<Vantagem> = json.decodeFromString(vantagensJson)
 
         AppData.basicasVantagens          = todasVantagens.filter { it.origem.equals("BASICO", true) }
         AppData.superVantagens = todasVantagens.filter {
