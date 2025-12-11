@@ -474,7 +474,7 @@ class MainActivity : ComponentActivity() {
                                                 val personagem = state.toMeuPersonagem()
 
                                                 scope.launch(Dispatchers.IO) {
-                                                    salvarEExibirFichaPdf(this@MainActivity, personagem)
+                                                    produzirEExibirFichaPdf(this@MainActivity, personagem)
                                                 }
                                             }) {
                                                 Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
@@ -584,7 +584,7 @@ private fun getHelpAppText(state: CriadorState): String {
     Como usar o app
 
     $fullVersionInstruction
-    Este app guia você na criação de personagem para Savage Worlds Edição Aventura (SWADE), seguindo o passo a passo padrão do livro básico. A ideia é você distribuir pontos, escolher opções e, no final, salvar ou imprimir sua ficha.
+    Este app guia você na criação de personagem para Savage Worlds Edição Aventura (SWADE), seguindo o passo a passo padrão do livro básico. A ideia é você distribuir pontos, escolher opções e, no final, produzir o PDF ou imprimir sua ficha.
     Os conteúdos textuais foram omitidos para proteger os direitos do conteúdo intelectual. Para acessar as informações você deve ver os livros.
 
     1) Começando (Tela Inicial)
@@ -710,7 +710,7 @@ private fun getHelpAppText(state: CriadorState): String {
 
     10) Resumo
 
-    O resumo mostra tudo consolidado: atributos, perícias, vantagens, complicações, poderes, equipamentos e derivados (Aparar, Resistência, Movimento etc.). É sua checagem final antes de salvar ou imprimir.
+    O resumo mostra tudo consolidado: atributos, perícias, vantagens, complicações, poderes, equipamentos e derivados (Aparar, Resistência, Movimento etc.). É sua checagem final antes de produzir o PDF ou imprimir.
     Você apagar e escrever nas anotações.
 
     11) Imprimir PDF
