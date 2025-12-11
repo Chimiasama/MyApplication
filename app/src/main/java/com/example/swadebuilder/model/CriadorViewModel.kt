@@ -275,26 +275,27 @@ class CriadorViewModel : ViewModel() {
         state.rebuildPericias(desiredPericias)
 
         state.vantagensSelecionadas.clear()
-        val mapPorId   = listaVantagens.associateBy { it.id }
-        val mapPorNome = listaVantagens.associateBy { it.nome.trim().uppercase() }
         val choicesMap = salvo.vantagemChoices.mapValues { it.value.toMutableList() }
 
         salvo.vantagens.forEach { saved ->
-            val trimmed = saved.trim()
-            val base = mapPorId[trimmed] ?: mapPorNome[trimmed.uppercase()]
+            val savedKey = saved.keyify()
+            val base = listaVantagens.find {
+                it.id.keyify() == savedKey || it.nome.keyify() == savedKey
+            }
+
             if (base != null) {
                 val vantCopiada = runCatching { base.copy() }
                     .onFailure {
                         Log.e(
                             "CriadorViewModel",
-                            "Erro ao copiar vantagem '$trimmed' ao carregar personagem.",
+                            "Erro ao copiar vantagem '$saved' ao carregar personagem.",
                             it
                         )
                     }
                     .getOrNull()
 
                 if (vantCopiada != null) {
-                    choicesMap[trimmed]?.removeFirstOrNull()?.let { escolha ->
+                    choicesMap[saved.trim()]?.removeFirstOrNull()?.let { escolha ->
                         vantCopiada.choice = escolha
                     }
                     state.vantagensSelecionadas.add(vantCopiada)
