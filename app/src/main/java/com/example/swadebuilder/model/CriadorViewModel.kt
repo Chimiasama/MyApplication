@@ -206,7 +206,8 @@ class CriadorViewModel : ViewModel() {
     fun loadFromSalvo(
         salvo: PersonagemSalvo,
         categoriasBasico: List<EquipamentoCategoria>,
-        categoriasSuper:  List<EquipamentoCategoria>
+        categoriasSuper:  List<EquipamentoCategoria>,
+        listaDeVantagensMestra: List<Vantagem>
     ) {
         // Reinicia o estado com as flags corretas vindas do save
         resetStateParaNovoPersonagem(
@@ -278,9 +279,10 @@ class CriadorViewModel : ViewModel() {
         val choicesMap = salvo.vantagemChoices.mapValues { it.value.toMutableList() }
 
         salvo.vantagens.forEach { saved ->
-            val savedKey = saved.keyify()
-            val base = listaVantagens.find {
-                it.id.keyify() == savedKey || it.nome.keyify() == savedKey
+            val savedKey = saved.trim().replace("_", " ").keyify()
+            val base = listaDeVantagensMestra.find {
+                it.id.replace("_", " ").keyify() == savedKey ||
+                it.nome.replace("_", " ").keyify() == savedKey
             }
 
             if (base != null) {
