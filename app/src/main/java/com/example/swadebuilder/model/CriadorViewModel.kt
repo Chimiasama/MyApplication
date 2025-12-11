@@ -299,7 +299,10 @@ class CriadorViewModel : ViewModel() {
         }
 
         state.vantagensSelecionadas.clear()
-        val idsSalvosNormalizados = salvo.vantagens.map { it.keyify() }
+        val idsSalvosNormalizados = buildSet {
+            salvo.vantagens.mapTo(this) { it.keyify() }
+            salvo.vantagemChoices.keys.mapTo(this) { it.keyify() }
+        }
         val choicesMap = salvo.vantagemChoices
             .mapKeys { it.key.keyify() }
             .mapValues { it.value.toMutableList() }

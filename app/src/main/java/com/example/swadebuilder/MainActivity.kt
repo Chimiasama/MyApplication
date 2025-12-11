@@ -526,7 +526,9 @@ class MainActivity : ComponentActivity() {
                                                         atributos            = atributosMap,
                                                         pericias             = periciasMap,
                                                         ancestralidade       = state.ancestralidade,
-                                                        vantagens            = state.vantagensSelecionadas.map { it.id },
+                                                        vantagens            = state.vantagensSelecionadas.map { vant ->
+                                                            vant.id.ifBlank { vant.nome }
+                                                        },
                                                         vantagemChoices      = vantagemChoices,
                                                         vantagensRaciais     = state.vantagensRaciais.toList(),
                                                         complicacoes         = complicacoesList,
