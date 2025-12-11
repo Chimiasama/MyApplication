@@ -275,13 +275,14 @@ class CriadorViewModel : ViewModel() {
         state.rebuildPericias(desiredPericias)
 
         state.vantagensSelecionadas.clear()
-        val mapPorId   = listaVantagens.associateBy { it.id }
-        val mapPorNome = listaVantagens.associateBy { it.nome.trim().uppercase() }
         val choicesMap = salvo.vantagemChoices.mapValues { it.value.toMutableList() }
 
         salvo.vantagens.forEach { saved ->
             val trimmed = saved.trim()
-            val base = mapPorId[trimmed] ?: mapPorNome[trimmed.uppercase()]
+            val savedKey = trimmed.keyify()
+            val base = listaVantagens.firstOrNull { vant ->
+                vant.id.keyify() == savedKey || vant.nome.keyify() == savedKey
+            }
             if (base != null) {
                 val vantCopiada = runCatching { base.copy() }
                     .onFailure {
