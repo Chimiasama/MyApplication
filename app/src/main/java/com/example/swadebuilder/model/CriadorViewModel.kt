@@ -1,6 +1,7 @@
 // CriadorViewModel.kt
 package com.example.swadebuilder.model
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
@@ -10,6 +11,7 @@ import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
+import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
 
 // ---- OBJETOS DE RETORNO ----
@@ -40,6 +42,29 @@ class CriadorViewModel : ViewModel() {
 
     fun setAppTheme(theme: com.example.swadebuilder.ui.theme.AppTheme) {
         state.appTheme = theme
+    }
+
+    fun salvarPersonagem(context: Context, nomePersonalizado: String? = null): CharacterStorage.SaveEntry {
+        val nome = (nomePersonalizado?.takeIf { it.isNotBlank() } ?: state.nomePersonagem)
+            .ifBlank { "Personagem" }
+
+        val snapshot = state.toSnapshot().copy(nome = nome)
+        val entry = CharacterStorage.save(context, snapshot)
+        state.idAtual = entry.id
+        _feedbackMessages.add("Personagem salvo: ${entry.nome}")
+        return entry
+    }
+
+    fun listarPersonagensSalvos(context: Context): List<CharacterStorage.SaveEntry> {
+        return CharacterStorage.listSaves(context)
+    }
+
+    fun carregarPersonagem(context: Context, saveId: String): Boolean {
+        val snapshot = CharacterStorage.load(context, saveId) ?: return false
+        clearFeedbackMessages()
+        state.restoreFromSnapshot(snapshot, _feedbackMessages)
+        state.idAtual = saveId
+        return true
     }
 
     private fun mapChoiceToArcanoId(choice: String?): String? {

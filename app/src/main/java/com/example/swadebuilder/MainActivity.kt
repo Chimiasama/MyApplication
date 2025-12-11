@@ -37,7 +37,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Print
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
@@ -64,6 +66,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -89,6 +92,7 @@ import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
+import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
@@ -100,6 +104,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.text.DateFormat
 
 
 @Serializable
@@ -257,6 +262,18 @@ class MainActivity : ComponentActivity() {
             var showThemeDialog by rememberSaveable { mutableStateOf(false) }
 
             var showFeedbackDialog by rememberSaveable { mutableStateOf(false) }
+            var showSaveDialog by rememberSaveable { mutableStateOf(false) }
+            var showLoadDialog by rememberSaveable { mutableStateOf(false) }
+            var saveName by rememberSaveable { mutableStateOf("") }
+
+            val savedEntries = remember { mutableStateListOf<CharacterStorage.SaveEntry>() }
+
+            LaunchedEffect(showLoadDialog) {
+                if (showLoadDialog) {
+                    savedEntries.clear()
+                    savedEntries.addAll(criadorViewModel.listarPersonagensSalvos(context))
+                }
+            }
 
             LaunchedEffect(state.mostrandoPericiasProgresso) {
                 if (state.mostrandoPericiasProgresso) {
@@ -317,6 +334,96 @@ class MainActivity : ComponentActivity() {
                     },
                     confirmButton = {
                         TextButton(onClick = { showThemeDialog = false }) {
+                            Text(stringResource(R.string.cancel))
+                        }
+                    }
+                )
+            }
+
+            if (showSaveDialog) {
+                AlertDialog(
+                    onDismissRequest = { showSaveDialog = false },
+                    title = { Text("Salvar personagem") },
+                    text = {
+                        Column {
+                            Text("Defina um nome para o salvamento.")
+                            OutlinedTextField(
+                                value = saveName.ifBlank { state.nomePersonagem },
+                                onValueChange = { saveName = it },
+                                label = { Text("Nome do arquivo") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            val entry = criadorViewModel.salvarPersonagem(
+                                context,
+                                saveName.ifBlank { state.nomePersonagem }
+                            )
+                            showSaveDialog = false
+                            scope.launch {
+                                snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
+                            }
+                        }) {
+                            Text("Salvar")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showSaveDialog = false }) {
+                            Text(stringResource(R.string.cancel))
+                        }
+                    }
+                )
+            }
+
+            if (showLoadDialog) {
+                AlertDialog(
+                    onDismissRequest = { showLoadDialog = false },
+                    title = { Text("Carregar personagem") },
+                    text = {
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            if (savedEntries.isEmpty()) {
+                                Text("Nenhum personagem salvo.")
+                            } else {
+                                savedEntries.forEach { entry ->
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 4.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Column(modifier = Modifier.weight(1f)) {
+                                            Text(entry.nome)
+                                            Text(
+                                                DateFormat.getDateTimeInstance().format(entry.timestamp),
+                                                style = MaterialTheme.typography.bodySmall
+                                            )
+                                        }
+                                        TextButton(onClick = {
+                                            val loaded = criadorViewModel.carregarPersonagem(context, entry.id)
+                                            if (loaded) {
+                                                creationSession++
+                                                mostrouTelaInicial = false
+                                                showLoadDialog = false
+                                                scope.launch {
+                                                    snackHost.showSnackbar("Carregado: ${entry.nome}")
+                                                }
+                                            } else {
+                                                scope.launch {
+                                                    snackHost.showSnackbar("Falha ao carregar o personagem")
+                                                }
+                                            }
+                                        }) {
+                                            Text("Carregar")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { showLoadDialog = false }) {
                             Text(stringResource(R.string.cancel))
                         }
                     }
@@ -469,6 +576,19 @@ class MainActivity : ComponentActivity() {
                                         },
                                         actions = {
                                             val scope = rememberCoroutineScope()
+
+                                            IconButton(onClick = {
+                                                saveName = state.nomePersonagem
+                                                showSaveDialog = true
+                                            }) {
+                                                Icon(Icons.Default.Save, contentDescription = "Salvar personagem")
+                                            }
+
+                                            IconButton(onClick = {
+                                                showLoadDialog = true
+                                            }) {
+                                                Icon(Icons.Default.FolderOpen, contentDescription = "Carregar personagem")
+                                            }
 
                                             IconButton(onClick = {
                                                 val personagem = state.toMeuPersonagem()

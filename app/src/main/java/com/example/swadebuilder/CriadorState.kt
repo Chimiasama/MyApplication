@@ -1,6 +1,7 @@
 package com.example.swadebuilder
 
 import android.os.Build
+import java.util.UUID
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -15,6 +16,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.model.PersonagemSnapshot
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Vantagem
@@ -1626,5 +1628,302 @@ class CriadorState {
 
             cumulativeCost += cost
         }
+    }
+
+    fun toSnapshot(): PersonagemSnapshot {
+        val snapshotId = idAtual ?: UUID.randomUUID().toString()
+
+        return PersonagemSnapshot(
+            id = snapshotId,
+            nome = nomePersonagem,
+            timestamp = System.currentTimeMillis(),
+            appTheme = appTheme.name,
+            showHelpMessages = showHelpMessages,
+            anotacoes = anotacoes,
+            flags = SnapshotFlags(
+                cartaSelvagem = cartaSelvagem,
+                maisPontosPericias = maisPontosPericias,
+                modoSupers = modoSupers,
+                compendioFantasiaAtivo = compendioFantasiaAtivo,
+                compendioHorrorAtivo = compendioHorrorAtivo,
+                modoMonstroAtivo = modoMonstroAtivo,
+                tipoMonstroSelecionado = tipoMonstroSelecionado,
+                usarEspecializacoesDePericia = usarEspecializacoesDePericia,
+                grandesResponsabilidades = grandesResponsabilidades,
+                modoSuperComplicacoes = modoSuperComplicacoes,
+                modoSuperequip = modoSuperequip,
+                heroisSemArmadura = heroisSemArmadura,
+                nasceUmHeroi = nasceUmHeroi,
+                soldadoCargaAtivo = soldadoCargaAtivo,
+                permiteMultiAntecedenteArcano = permiteMultiAntecedenteArcano,
+                meioElfoAgil = meioElfoAgil,
+                celestialAAMilagresDesabilitado = celestialAAMilagresDesabilitado,
+                jovemAutoPequeno = jovemAutoPequeno,
+                jovemMalusPa = jovemMalusPa,
+                jovemMalusSp = jovemMalusSp,
+                idosoBonusSp = idosoBonusSp,
+                obesoBonusSize = obesoBonusSize,
+                obesoMalusMov = obesoMalusMov,
+                bonusPoderExtra = bonusPoderExtra
+            ),
+            recursos = SnapshotRecursos(
+                dinheiro = dinheiro,
+                pontosVantagem = pontosVantagem,
+                pontosAtributo = pontosAtributo,
+                pontosComplicacaoGastos = pontosComplicacaoGastos,
+                paFromProgress = paFromProgress,
+                spFromProgress = spFromProgress,
+                legendaryAttrReservations = legendaryAttrReservations,
+                cpPaStack = cpPaStack.toList(),
+                cpSpCount = cpSpStack.size,
+                cpPvCount = cpPvStack.size,
+                cpRecursosCount = cpRecursosStack.size
+            ),
+            atributos = SnapshotAtributos(
+                ancestralidade = ancestralidade,
+                valoresAtributos = valoresAtributos.mapValues { it.value.intValue },
+                paCostStackPorAtributo = paCostStackPorAtributo.mapValues { it.value.toList() }
+            ),
+            pericias = SnapshotPericias(
+                baseIncsPorPericia = baseIncsPorPericia.mapKeys { it.key.nome },
+                compIncsPorPericia = compIncsPorPericia.mapKeys { it.key.nome },
+                spCostStackPorPericia = spCostStackPorPericia.mapKeys { it.key.nome }.mapValues { it.value.toList() },
+                compCostStackPorPericia = compCostStackPorPericia.mapKeys { it.key.nome }.mapValues { it.value.toList() },
+                especializacoesPorPericia = especializacoesPorPericia.toMap()
+            ),
+            selecoes = SnapshotSelecoes(
+                vantagens = vantagensSelecionadas.map { AdvantageSnapshot(it.id, it.choice) },
+                vantagensAutomaticas = vantagensAutomaticas.toList(),
+                vantagensRaciais = vantagensRaciais.toList(),
+                desvantagensAutomaticas = desvantagensAutomaticas.toList(),
+                desvantagensRaciais = desvantagensRaciais.toList(),
+                complicacoesSelecionadas = complicacoesSelecionadas.map { (comp, nivel) ->
+                    ComplicacaoSnapshot(comp.id, nivel)
+                },
+                reservasComplicacaoMaior = reservasComplicacaoMaior.toMap(),
+                poderesSelecionados = poderesSelecionados.toList(),
+                poderSlotsPorArcano = poderSlotsPorArcano.mapValues { it.value.toList() },
+                novosPoderesStacksPorArcano = novosPoderesStacksPorArcano
+                    .mapValues { (_, pilhas) -> pilhas.map { it.toList() } },
+                arcanoEmCompraViaXpKey = arcanoEmCompraViaXpKey,
+                arcanoSnapshotAntesDaCompra = arcanoSnapshotAntesDaCompra,
+                equipamentosComprados = equipamentosComprados.toList()
+            ),
+            progresso = SnapshotProgresso(
+                progresso = progresso,
+                progressosDisponiveis = progressosDisponiveis,
+                stageXpSpent = stageXpSpent.toMap(),
+                xpSlots = xpSlots.toList(),
+                advancementHistory = advancementHistory.toList(),
+                frozenSkillIncrements = frozenSkillIncrements.toMap(),
+                skillAdvancementInProgress = skillAdvancementInProgress,
+                skillsForCurrentAdvancement = skillsForCurrentAdvancement.toList(),
+                advantageAdvancementInProgress = advantageAdvancementInProgress,
+                advantageForCurrentAdvancement = advantageForCurrentAdvancement,
+                attributeAdvancementInProgress = attributeAdvancementInProgress,
+                attributeStageForCurrentAdvancement = attributeStageForCurrentAdvancement,
+                stageNameForCurrentAdvancement = stageNameForCurrentAdvancement,
+                attributeStacksBeforeAdvancement = attributeStacksBeforeAdvancement,
+                attributeUsedReservation = attributeUsedReservation,
+                overrideStageForVantagem = overrideStageForVantagem,
+                emProgresso = emProgresso,
+                modoProgressaoAtivo = modoProgressaoAtivo,
+                mostrandoVantagensProgresso = mostrandoVantagensProgresso,
+                mostrandoPericiasProgresso = mostrandoPericiasProgresso,
+                mostrandoAtributosProgresso = mostrandoAtributosProgresso,
+                mostrandoPoderesProgresso = mostrandoPoderesProgresso,
+                frozenAdvantageCount = frozenAdvantageCount,
+                stageNameForCurrentAdvancementSnapshot = stageNameForCurrentAdvancement
+            ),
+            supers = SnapshotSupers(
+                superInvestments = superInvestments.toList(),
+                superNivelCampanha = superNivelCampanha,
+                usarSemPontosDePoder = usarSemPontosDePoder,
+                superPontosTotais = superPontosTotais,
+                superPontosDisponiveis = superPontosDisponiveis,
+                superLimite = superLimite,
+                superLimitePorPoder = superLimitePorPoder,
+                poderFavoritoId = poderFavoritoId,
+                limiteDePoderDaCampanha = limiteDePoderDaCampanha,
+                bonusPararFromPower = bonusPararFromPower,
+                bonusResFromPower = bonusResFromPower,
+                armorFromPower = armorFromPower,
+                bonusMovimentacaoFromPower = bonusMovimentacaoFromPower,
+                vantagensDePoder = vantagensDePoder.toList(),
+                gastosPorPoder = gastosPorPoder.toMap(),
+                faseSupersAtiva = faseSupersAtiva,
+                comprasPpPorEstagio = comprasPpPorEstagio.toMap(),
+                comprasAttrPorEstagio = comprasAttrPorEstagio.toMap(),
+                superPontosDisponiveisFlag = superPontosDisponiveis > 0
+            )
+        )
+    }
+
+    fun restoreFromSnapshot(snapshot: PersonagemSnapshot, feedbackMessages: MutableList<String>) {
+        val flags = snapshot.flags
+
+        resetStateParaNovoPersonagem(
+            cartaSelvagem = flags.cartaSelvagem,
+            maisPontosPericias = flags.maisPontosPericias,
+            modoSupers = flags.modoSupers,
+            compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
+            compendioHorrorAtivo = flags.compendioHorrorAtivo,
+            modoMonstroAtivo = flags.modoMonstroAtivo,
+            usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia,
+            grandesResponsabilidades = flags.grandesResponsabilidades,
+            showHelpMessages = snapshot.showHelpMessages
+        )
+
+        idAtual = snapshot.id
+        nomePersonagem = snapshot.nome
+        anotacoes = snapshot.anotacoes
+        appTheme = com.example.swadebuilder.ui.theme.AppTheme.valueOf(snapshot.appTheme)
+
+        // Flags adicionais
+        modoSuperComplicacoes = flags.modoSuperComplicacoes
+        modoSuperequip = flags.modoSuperequip
+        heroisSemArmadura = flags.heroisSemArmadura
+        nasceUmHeroi = flags.nasceUmHeroi
+        soldadoCargaAtivo = flags.soldadoCargaAtivo
+        permiteMultiAntecedenteArcano = flags.permiteMultiAntecedenteArcano
+        meioElfoAgil = flags.meioElfoAgil
+        celestialAAMilagresDesabilitado = flags.celestialAAMilagresDesabilitado
+        jovemAutoPequeno = flags.jovemAutoPequeno
+        jovemMalusPa = flags.jovemMalusPa
+        jovemMalusSp = flags.jovemMalusSp
+        idosoBonusSp = flags.idosoBonusSp
+        obesoBonusSize = flags.obesoBonusSize
+        obesoMalusMov = flags.obesoMalusMov
+        bonusPoderExtra = flags.bonusPoderExtra
+        tipoMonstroSelecionado = flags.tipoMonstroSelecionado
+
+        dinheiro = snapshot.recursos.dinheiro
+        pontosVantagem = snapshot.recursos.pontosVantagem
+        pontosComplicacaoGastos = snapshot.recursos.pontosComplicacaoGastos
+        paFromProgress = snapshot.recursos.paFromProgress
+        spFromProgress = snapshot.recursos.spFromProgress
+        legendaryAttrReservations = snapshot.recursos.legendaryAttrReservations
+
+        cpPaStack.apply { clear(); addAll(snapshot.recursos.cpPaStack) }
+        cpSpStack.apply { clear(); repeat(snapshot.recursos.cpSpCount) { add(Unit) } }
+        cpPvStack.apply { clear(); repeat(snapshot.recursos.cpPvCount) { add(Unit) } }
+        cpRecursosStack.apply { clear(); repeat(snapshot.recursos.cpRecursosCount) { add(Unit) } }
+
+        aplicarAncestralidade(snapshot.atributos.ancestralidade, feedbackMessages)
+
+        paCostStackPorAtributo.forEach { (attr, stack) ->
+            stack.clear()
+            stack.addAll(snapshot.atributos.paCostStackPorAtributo[attr].orEmpty())
+            val base = racialAttrMinMap[snapshot.atributos.ancestralidade]?.get(attr) ?: 4
+            valoresAtributos[attr]!!.intValue = applySuperStepsFrom(base, stack.size)
+        }
+        pontosAtributo = calcularPontosAtributoRestantes()
+
+        especializacoesPorPericia.clear()
+        listaPericias.forEach { per ->
+            baseIncsPorPericia[per] = snapshot.pericias.baseIncsPorPericia[per.nome] ?: 0
+            compIncsPorPericia[per] = snapshot.pericias.compIncsPorPericia[per.nome] ?: 0
+
+            spCostStackPorPericia.getValue(per).apply {
+                clear();
+                addAll(snapshot.pericias.spCostStackPorPericia[per.nome].orEmpty())
+            }
+            compCostStackPorPericia.getValue(per)?.apply {
+                clear();
+                addAll(snapshot.pericias.compCostStackPorPericia[per.nome].orEmpty())
+            }
+
+            snapshot.pericias.especializacoesPorPericia[per.nome]?.let { dto ->
+                especializacoesPorPericia[per.nome] = dto
+            }
+        }
+
+        vantagensSelecionadas.clear()
+        snapshot.selecoes.vantagens.forEach { snap ->
+            listaVantagens.firstOrNull { it.id == snap.id }?.let { vant ->
+                vant.choice = snap.choice
+                vantagensSelecionadas.add(vant)
+            }
+        }
+
+        vantagensAutomaticas.apply { clear(); addAll(snapshot.selecoes.vantagensAutomaticas) }
+        vantagensRaciais.apply { clear(); addAll(snapshot.selecoes.vantagensRaciais) }
+        desvantagensAutomaticas.apply { clear(); addAll(snapshot.selecoes.desvantagensAutomaticas) }
+        desvantagensRaciais.apply { clear(); addAll(snapshot.selecoes.desvantagensRaciais) }
+
+        complicacoesSelecionadas.clear()
+        snapshot.selecoes.complicacoesSelecionadas.forEach { compSnap ->
+            listaComplicacoes.firstOrNull { it.id == compSnap.id }?.let { comp ->
+                complicacoesSelecionadas[comp] = compSnap.nivel
+            }
+        }
+        reservasComplicacaoMaior.clear()
+        reservasComplicacaoMaior.putAll(snapshot.selecoes.reservasComplicacaoMaior)
+
+        equipamentosComprados.apply { clear(); addAll(snapshot.selecoes.equipamentosComprados) }
+
+        poderSlotsPorArcano.clear()
+        snapshot.selecoes.poderSlotsPorArcano.forEach { (key, slots) ->
+            poderSlotsPorArcano[key] = mutableStateListOf<String?>().apply { addAll(slots) }
+        }
+        novosPoderesStacksPorArcano.clear()
+        snapshot.selecoes.novosPoderesStacksPorArcano.forEach { (key, pilhas) ->
+            novosPoderesStacksPorArcano[key] = pilhas.map { it.toMutableList() }.toMutableList()
+        }
+        poderesSelecionados.apply { clear(); addAll(snapshot.selecoes.poderesSelecionados) }
+        arcanoEmCompraViaXpKey = snapshot.selecoes.arcanoEmCompraViaXpKey
+        arcanoSnapshotAntesDaCompra = snapshot.selecoes.arcanoSnapshotAntesDaCompra
+
+        progresso = snapshot.progresso.progresso
+        progressosDisponiveis = snapshot.progresso.progressosDisponiveis
+        stageXpSpent.keys.forEach { stage -> stageXpSpent[stage] = snapshot.progresso.stageXpSpent[stage] ?: 0 }
+        xpSlots.apply { clear(); addAll(snapshot.progresso.xpSlots) }
+        advancementHistory.apply { clear(); addAll(snapshot.progresso.advancementHistory) }
+
+        frozenSkillIncrements.clear()
+        frozenSkillIncrements.putAll(snapshot.progresso.frozenSkillIncrements)
+
+        skillAdvancementInProgress = snapshot.progresso.skillAdvancementInProgress
+        skillsForCurrentAdvancement.apply { clear(); addAll(snapshot.progresso.skillsForCurrentAdvancement) }
+        advantageAdvancementInProgress = snapshot.progresso.advantageAdvancementInProgress
+        advantageForCurrentAdvancement = snapshot.progresso.advantageForCurrentAdvancement
+        attributeAdvancementInProgress = snapshot.progresso.attributeAdvancementInProgress
+        attributeStageForCurrentAdvancement = snapshot.progresso.attributeStageForCurrentAdvancement
+        stageNameForCurrentAdvancement = snapshot.progresso.stageNameForCurrentAdvancement
+        attributeStacksBeforeAdvancement = snapshot.progresso.attributeStacksBeforeAdvancement
+        attributeUsedReservation = snapshot.progresso.attributeUsedReservation
+        overrideStageForVantagem = snapshot.progresso.overrideStageForVantagem
+        emProgresso = snapshot.progresso.emProgresso
+        modoProgressaoAtivo = snapshot.progresso.modoProgressaoAtivo
+        mostrandoVantagensProgresso = snapshot.progresso.mostrandoVantagensProgresso
+        mostrandoPericiasProgresso = snapshot.progresso.mostrandoPericiasProgresso
+        mostrandoAtributosProgresso = snapshot.progresso.mostrandoAtributosProgresso
+        mostrandoPoderesProgresso = snapshot.progresso.mostrandoPoderesProgresso
+        frozenAdvantageCount = snapshot.progresso.frozenAdvantageCount
+
+        superInvestments.apply { clear(); addAll(snapshot.supers.superInvestments) }
+        superNivelCampanha = snapshot.supers.superNivelCampanha
+        usarSemPontosDePoder = snapshot.supers.usarSemPontosDePoder
+        superPontosTotais = snapshot.supers.superPontosTotais
+        superPontosDisponiveis = snapshot.supers.superPontosDisponiveis
+        superLimite = snapshot.supers.superLimite
+        superLimitePorPoder = snapshot.supers.superLimitePorPoder
+        poderFavoritoId = snapshot.supers.poderFavoritoId
+        limiteDePoderDaCampanha = snapshot.supers.limiteDePoderDaCampanha
+        bonusPararFromPower = snapshot.supers.bonusPararFromPower
+        bonusResFromPower = snapshot.supers.bonusResFromPower
+        armorFromPower = snapshot.supers.armorFromPower
+        bonusMovimentacaoFromPower = snapshot.supers.bonusMovimentacaoFromPower
+        vantagensDePoder.apply { clear(); addAll(snapshot.supers.vantagensDePoder) }
+        gastosPorPoder.apply { clear(); putAll(snapshot.supers.gastosPorPoder) }
+        faseSupersAtiva = snapshot.supers.faseSupersAtiva
+
+        comprasPpPorEstagio.keys.forEach { comprasPpPorEstagio[it] = snapshot.supers.comprasPpPorEstagio[it] ?: 0 }
+        comprasAttrPorEstagio.keys.forEach { comprasAttrPorEstagio[it] = snapshot.supers.comprasAttrPorEstagio[it] ?: 0 }
+
+        recalcularPontosAtributo(feedbackMessages)
+        rebuildAllPericiaStacks(feedbackMessages)
+        updateEmProgressoFlag()
+        syncPoderesSelecionadosFromSlots()
     }
 }
