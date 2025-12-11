@@ -20,17 +20,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -38,12 +35,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.keyify
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonPrimitive
 import kotlin.math.roundToInt
 
@@ -54,25 +48,6 @@ fun InformacoesSection(
     onToggle: () -> Unit,
     onUseProgress: () -> Unit
 ) {
-    val context = LocalContext.current
-
-    val nomesSalvos = remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
-
-    LaunchedEffect(Unit) {
-        nomesSalvos.value = withContext(Dispatchers.IO) {
-            StorageUtils.listarPersonagens(context)
-        }
-    }
-
-    LaunchedEffect(nomesSalvos.value) {
-        if (state.nomePersonagem.isBlank()) {
-            var idx = 1
-            while (nomesSalvos.value.any { it.first == "Nome $idx" }) {
-                idx++
-            }
-            state.nomePersonagem = "Nome $idx"
-        }
-    }
 
     var showProgressDialog by rememberSaveable { mutableStateOf(false) }
     var showMoneyDialog by rememberSaveable { mutableStateOf(false) }

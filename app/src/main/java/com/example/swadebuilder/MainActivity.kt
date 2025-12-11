@@ -8,7 +8,6 @@ package com.example.swadebuilder
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -40,7 +39,6 @@ import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Print
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
@@ -88,9 +86,7 @@ import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.PericiaList
-import com.example.swadebuilder.model.PersonagemSalvo
 import com.example.swadebuilder.model.RacialModifier
-import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.keyify
@@ -98,14 +94,12 @@ import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.util.UUID
 
 
 @Serializable
@@ -434,17 +428,6 @@ class MainActivity : ComponentActivity() {
 
                                     mostrouTelaInicial = false
                                 },
-                                onLoad = { salvo ->
-                                    creationSession++
-
-
-                                    criadorViewModel.loadFromSalvo(
-                                        salvo,
-                                        categoriasBasico = equipamentoCategorias,
-                                        categoriasSuper  = superequipCategorias
-                                    )
-                                    mostrouTelaInicial = false
-                                },
                                 context   = context,
                                 viewModel = criadorViewModel
                             )
@@ -491,7 +474,7 @@ class MainActivity : ComponentActivity() {
                                                 val personagem = state.toMeuPersonagem()
 
                                                 scope.launch(Dispatchers.IO) {
-                                                    salvarEExibirFichaPdf(this@MainActivity, personagem)
+                                                    produzirEExibirFichaPdf(this@MainActivity, personagem)
                                                 }
                                             }) {
                                                 Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
@@ -499,123 +482,6 @@ class MainActivity : ComponentActivity() {
 
                                             IconButton(onClick = { showThemeDialog = true }) {
                                                 Icon(Icons.Default.Settings, contentDescription = "Change Theme")
-                                            }
-                                            IconButton(onClick = {
-                                                scope.launch(Dispatchers.IO) {
-                                                    val personagemId  = state.idAtual ?: UUID.randomUUID().toString()
-                                                    val atributosMap  = state.valoresAtributos.mapValues { it.value.intValue }
-                                                    val periciasMap   = listaPericias.associate { per -> per.nome to state.rawTotal(per) }
-                                                    val complicacoesList = state.complicacoesSelecionadas
-                                                        .filterValues { it != null }
-                                                        .keys
-                                                        .map { it.id }
-                                                    val complicacaoNiveis = state.complicacoesSelecionadas
-                                                        .filterValues { it != null }
-                                                        .mapValues { it.value!! }
-                                                        .mapKeys { it.key.id }
-                                                val vantagemChoices = state.vantagensSelecionadas
-                                                    .groupBy { it.id }
-                                                    .mapValues { (_, list) ->
-                                                        list.mapNotNull { it.choice }
-                                                            .filter { it.isNotBlank() }
-                                                    }
-
-                                                    val salvo = PersonagemSalvo(
-                                                        id                   = personagemId,
-                                                        nome                 = state.nomePersonagem,
-                                                        atributos            = atributosMap,
-                                                        pericias             = periciasMap,
-                                                        ancestralidade       = state.ancestralidade,
-                                                        vantagens            = state.vantagensSelecionadas.map { it.id },
-                                                        vantagemChoices      = vantagemChoices,
-                                                        vantagensRaciais     = state.vantagensRaciais.toList(),
-                                                        complicacoes         = complicacoesList,
-                                                        complicacoesNiveis   = complicacaoNiveis,
-                                                        reservasComplicacaoMaior = state.reservasComplicacaoMaior
-                                                            .filterValues { it }
-                                                            .keys
-                                                            .toSet(),
-                                                        cpPaCount            = state.cpPaStack.size,
-                                                        cpPvCount            = state.cpPvStack.size,
-                                                        cpSpCount            = state.cpSpStack.size,
-                                                        cpRecursosCount      = state.cpRecursosStack.size,
-                                                        equipamentos         = state.equipamentosComprados.map { it.nome },
-                                                        poderes              = state.poderSlotsPorArcano.mapValues { (_, slots) ->
-                                                            slots.filterNotNull()
-                                                        },
-                                                        dinheiro             = state.dinheiro,
-                                                        pontosRestantes      = state.pontosVantagem,
-                                                        naturalArmorFromRace = state.naturalArmorFromRace,
-                                                        armorBase            = state.armadura,
-                                                        maisPontosPericias   = state.maisPontosPericias,
-                                                        cartaSelvagem        = state.cartaSelvagem,
-                                                        heroisSemArmadura    = state.heroisSemArmadura,
-                                                        soldadoCargaAtivo    = state.soldadoCargaAtivo,
-                                                        semPontosDePoder     = state.usarSemPontosDePoder,
-                                                        usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
-                                                        especializacoesPorPericia    = state.especializacoesPorPericia.toMap(),
-                                                        modoSupers           = state.modoSupers,
-                                                        compendioFantasiaAtivo = state.compendioFantasiaAtivo,
-                                                        compendioHorrorAtivo   = state.compendioHorrorAtivo,
-                                                        modoMonstroAtivo       = state.modoMonstroAtivo,
-                                                        tipoMonstroSelecionado = state.tipoMonstroSelecionado,
-                                                        modoSuperequip         = state.modoSuperequip,
-                                                        modoSuperComplicacoes  = state.modoSuperComplicacoes,
-                                                        superInvestments       = state.superInvestments.toList(),
-                                                        superPontosTotais      = state.superPontosTotais,
-                                                        superPontosDisponiveis = state.superPontosDisponiveis,
-                                                        limitePorPoderPadrao   = state.limitePorPoderPadrao,
-                                                        limiteFavorecido       = state.limiteFavorecido,
-                                                        poderFavoritoId        = state.poderFavoritoId,
-                                                        bonusPararFromPower    = state.bonusPararFromPower,
-                                                        bonusResFromPower      = state.bonusResFromPower,
-                                                        armorFromPower         = state.armorFromPower,
-                                                        vantagensDePoder       = state.vantagensDePoder.toSet(),
-                                                        gastosPorPoder         = state.gastosPorPoder.toMap(),
-                                                        limiteDePoderDaCampanha = state.limiteDePoderDaCampanha,
-                                                        anotacoes              = state.anotacoes,
-                                                        progresso              = state.progresso,
-                                                        progressosDisponiveis   = state.progressosDisponiveis,
-                                                        stageXpSpent            = state.stageXpSpent.toMap(),
-                                                        xpSlots                 = state.xpSlots.toList(),
-                                                        modoProgressaoAtivo     = state.modoProgressaoAtivo,
-                                                        emProgresso             = state.emProgresso,
-                                                        mostrandoVantagensProgresso = state.mostrandoVantagensProgresso,
-                                                        mostrandoPericiasProgresso  = state.mostrandoPericiasProgresso,
-                                                        mostrandoAtributosProgresso = state.mostrandoAtributosProgresso,
-                                                        mostrandoPoderesProgresso   = state.mostrandoPoderesProgresso,
-                                                        frozenAdvantageCount    = state.frozenAdvantageCount,
-                                                        frozenSkillIncrements   = state.frozenSkillIncrements.toMap(),
-                                                        paFromProgress         = state.paFromProgress,
-                                                        pvFromXpOutstanding    = state.pvFromXpOutstanding,
-                                                        comprasAttrPorEstagio  = state.comprasAttrPorEstagio.toMap(),
-                                                        comprasPpPorEstagio    = state.comprasPpPorEstagio.toMap(),
-                                                        skillAdvancementInProgress = state.skillAdvancementInProgress,
-                                                        skillsForCurrentAdvancement = state.skillsForCurrentAdvancement.toList(),
-                                                        advantageAdvancementInProgress = state.advantageAdvancementInProgress,
-                                                        advantageForCurrentAdvancement = state.advantageForCurrentAdvancement,
-                                                        attributeAdvancementInProgress = state.attributeAdvancementInProgress,
-                                                        attributeStageForCurrentAdvancement = state.attributeStageForCurrentAdvancement,
-                                                        stageNameForCurrentAdvancement = state.stageNameForCurrentAdvancement,
-                                                        attributeStacksBeforeAdvancement = state.attributeStacksBeforeAdvancement,
-                                                        attributeUsedReservation = state.attributeUsedReservation,
-                                                        advancementHistory = state.advancementHistory.toList()
-                                                    )
-
-                                                    state.idAtual = personagemId
-                                                    StorageUtils.salvarPersonagem(context, salvo)
-
-                                                    withContext(Dispatchers.Main) {
-
-                                                        Toast.makeText(
-                                                            context,
-                                                            "Personagem salvo com sucesso!",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                    }
-                                                }
-                                            }) {
-                                                Icon(Icons.Default.Save, contentDescription = "Salvar")
                                             }
                                         }
                                     )
@@ -718,14 +584,12 @@ private fun getHelpAppText(state: CriadorState): String {
     Como usar o app
 
     $fullVersionInstruction
-    Este app guia você na criação de personagem para Savage Worlds Edição Aventura (SWADE), seguindo o passo a passo padrão do livro básico. A ideia é você distribuir pontos, escolher opções e, no final, salvar ou imprimir sua ficha.
+    Este app guia você na criação de personagem para Savage Worlds Edição Aventura (SWADE), seguindo o passo a passo padrão do livro básico. A ideia é você distribuir pontos, escolher opções e, no final, produzir o PDF ou imprimir sua ficha.
     Os conteúdos textuais foram omitidos para proteger os direitos do conteúdo intelectual. Para acessar as informações você deve ver os livros.
 
     1) Começando (Tela Inicial)
 
     Na tela inicial defina se você usa alguma regra de ambientação, outros livros de referência etc. Carta Selvagem e Mais Pontos de Perícia estão habilitados por padrão. Depois toque em Criar Personagem para ir para o preenchimento.
-
-    Dica: se você já tem um personagem salvo, use Carregar para continuar a partir de onde parou.
 
     2) Ordem sugerida de preenchimento
 
@@ -846,14 +710,12 @@ private fun getHelpAppText(state: CriadorState): String {
 
     10) Resumo
 
-    O resumo mostra tudo consolidado: atributos, perícias, vantagens, complicações, poderes, equipamentos e derivados (Aparar, Resistência, Movimento etc.). É sua checagem final antes de salvar ou imprimir.
+    O resumo mostra tudo consolidado: atributos, perícias, vantagens, complicações, poderes, equipamentos e derivados (Aparar, Resistência, Movimento etc.). É sua checagem final antes de produzir o PDF ou imprimir.
     Você apagar e escrever nas anotações.
 
-    11) Salvar e Imprimir PDF
+    11) Imprimir PDF
 
-    No topo da tela principal você tem dois ícones:
-
-    Salvar (disquete): guarda o personagem no aparelho para abrir depois.
+    No topo da tela principal você tem um ícone:
 
     Imprimir (impressora): gera um PDF com a ficha preenchida e abre em um leitor de PDF instalado no celular.
 
