@@ -16,6 +16,7 @@ import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -1012,12 +1013,12 @@ class CriadorViewModel : ViewModel() {
                 val jsonString = Json.encodeToString(snapshot)
                 CharacterStorage.saveFile(context, filename, jsonString)
 
-                viewModelScope.launch(Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     _feedbackMessages.add("Personagem salvo com sucesso!")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                viewModelScope.launch(Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     _feedbackMessages.add("Erro ao salvar: ${e.message}")
                 }
             }
@@ -1030,7 +1031,7 @@ class CriadorViewModel : ViewModel() {
                 val jsonString = CharacterStorage.readFile(context, filename)
                 val snapshot = Json.decodeFromString<PersonagemSnapshot>(jsonString)
 
-                viewModelScope.launch(Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     // 1. Reset para estado limpo
                     resetStateParaNovoPersonagem(
                         cartaSelvagem = snapshot.cartaSelvagem,
@@ -1179,7 +1180,7 @@ class CriadorViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                viewModelScope.launch(Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     _feedbackMessages.add("Erro ao carregar personagem: ${e.message}")
                 }
             }
