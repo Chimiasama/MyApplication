@@ -18,7 +18,7 @@ import java.io.FileOutputStream
  * Fonte única para Resumo e PDF.
  * - Snapshot do state -> MeuPersonagem
  * - buildSummaryLines() -> usado por UI e PDF
- * - gerarFichaEmPdf() / salvarEExibirFichaPdf()
+ * - gerarFichaEmPdf() / produzirEExibirFichaPdf()
  */
 
 // ✅ 1) Snapshot único do state
@@ -84,7 +84,7 @@ private fun complicationDisplayNames(rawIds: List<String>): List<String> {
 }
 
 // ✅ 2) Abrir/compartilhar PDF
-fun salvarEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
+fun produzirEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
     val pdfFile = File(context.getExternalFilesDir(null), "ficha_preenchida.pdf")
 
     gerarFichaEmPdf(pdfFile, dadosDoPersonagem)
