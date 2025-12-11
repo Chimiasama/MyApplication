@@ -288,21 +288,25 @@ class CriadorViewModel : ViewModel() {
             }
 
             // Restaura SP Stacks, Incs Base e Comp Stacks (usando nome da pericia como chave)
+            // Normaliza as chaves dos mapas salvos para facilitar a busca robusta
+            val spStackMapNormalized = salvo.spCostStackPorPericia.mapKeys { it.key.keyify() }
+            val baseIncMapNormalized = salvo.baseIncsPorPericia.mapKeys { it.key.keyify() }
+            val compStackMapNormalized = salvo.compCostStackPorPericia.mapKeys { it.key.keyify() }
+
             listaPericias.forEach { per ->
+                val key = per.nome.keyify()
+
                 // SP Stack
-                val spStack = salvo.spCostStackPorPericia[per.nome]
-                if (spStack != null) {
-                    state.spCostStackPorPericia[per]?.addAll(spStack)
+                spStackMapNormalized[key]?.let { savedStack ->
+                    state.spCostStackPorPericia[per]?.addAll(savedStack)
                 }
                 // Base Incs
-                val baseInc = salvo.baseIncsPorPericia[per.nome]
-                if (baseInc != null) {
-                    state.baseIncsPorPericia[per] = baseInc
+                baseIncMapNormalized[key]?.let { qtd ->
+                    state.baseIncsPorPericia[per] = qtd
                 }
                 // Comp Stack
-                val compStack = salvo.compCostStackPorPericia[per.nome]
-                if (compStack != null) {
-                    state.compCostStackPorPericia[per]?.addAll(compStack)
+                compStackMapNormalized[key]?.let { savedStack ->
+                    state.compCostStackPorPericia[per]?.addAll(savedStack)
                 }
             }
 
