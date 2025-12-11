@@ -16,6 +16,9 @@ data class PersonagemSalvo(
     // IDs de vantagens
     val vantagens: List<String>,
 
+    // Metadados completos de vantagens (id + escolha), preserva ordem e escolhas individuais
+    val vantagensDetalhadas: List<VantagemSalva> = emptyList(),
+
     // IDs de complicações
     val complicacoes: List<String>,
     val complicacoesNiveis: Map<String, String> = emptyMap(),
@@ -113,6 +116,12 @@ data class PersonagemSalvo(
     val attributeUsedReservation: Boolean = false,
 
     val advancementHistory: List<AdvancementAction> = emptyList()
+)
+
+@Serializable
+data class VantagemSalva(
+    val id: String,
+    val choice: String? = null
 )
 
 @Serializable

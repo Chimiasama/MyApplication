@@ -89,6 +89,7 @@ import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.PersonagemSalvo
+import com.example.swadebuilder.model.VantagemSalva
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.StorageUtils
 import com.example.swadebuilder.model.Vantagem
@@ -527,6 +528,12 @@ class MainActivity : ComponentActivity() {
                                                         pericias             = periciasMap,
                                                         ancestralidade       = state.ancestralidade,
                                                         vantagens            = state.vantagensSelecionadas.map { it.id },
+                                                        vantagensDetalhadas  = state.vantagensSelecionadas.map {
+                                                            VantagemSalva(
+                                                                id = it.id,
+                                                                choice = it.choice
+                                                            )
+                                                        },
                                                         vantagemChoices      = vantagemChoices,
                                                         vantagensRaciais     = state.vantagensRaciais.toList(),
                                                         complicacoes         = complicacoesList,
