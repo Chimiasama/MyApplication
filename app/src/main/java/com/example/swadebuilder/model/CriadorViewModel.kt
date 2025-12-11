@@ -130,6 +130,7 @@ class CriadorViewModel : ViewModel() {
         state.cpRecursosStack.clear()
         state.cpPaStack.clear()
         state.paFromProgress = 0
+        state.spFromProgress = 0
         state.legendaryAttrReservations = 0
         state.cpPvStack.clear()
         state.cpSpStack.clear()
@@ -409,6 +410,7 @@ class CriadorViewModel : ViewModel() {
             state.snapshotFrozenSkillIncrements()
         }
         state.paFromProgress = salvo.paFromProgress
+        state.spFromProgress = salvo.spFromProgress
         state.pvFromXpOutstanding = salvo.pvFromXpOutstanding
         salvo.comprasAttrPorEstagio.forEach { (stage, count) ->
             state.comprasAttrPorEstagio[stage] = count
@@ -431,6 +433,32 @@ class CriadorViewModel : ViewModel() {
         state.recomputeAvailableProgress()
 
         state.recalcularPontosAtributo(_feedbackMessages)
+        // --- Migration Logic for spFromProgress ---
+        // If loading an old save (inferred by spFromProgress == 0 but having spend skill actions),
+        // we might need to move points from cpSpStack (where the hack put them) to spFromProgress.
+        val inferredSpFromHistory = state.advancementHistory
+            .filterIsInstance<AdvancementAction.SpendOnSkills>()
+            .count() * 2
+
+        if (state.spFromProgress == 0 && inferredSpFromHistory > 0) {
+            // Check if cpSpStack has enough points to account for these XP spends.
+            // Old hack: cpSpStack.add(Unit) twice per advancement.
+            // So we expect at least inferredSpFromHistory items in cpSpStack.
+            if (state.cpSpStack.size >= inferredSpFromHistory) {
+                repeat(inferredSpFromHistory) {
+                    if (state.cpSpStack.isNotEmpty()) state.cpSpStack.removeLast()
+                }
+                state.spFromProgress = inferredSpFromHistory
+                // Re-sync pontosComplicacaoGastos because we removed from cpSpStack
+                // Each cpSpStack item costs 1 PC.
+                state.pontosComplicacaoGastos = (state.cpPaStack.size * 2) +
+                        (state.cpPvStack.size * 2) +
+                        (state.cpSpStack.size * 1) +
+                        (state.cpRecursosStack.size * 1)
+            }
+        }
+        // ------------------------------------------
+
         state.rebuildAllPericiaStacks(_feedbackMessages)
         normalizeArcanoIdsNoCarregamento()
         if (state.modoSupers) {
@@ -1015,8 +1043,7 @@ class CriadorViewModel : ViewModel() {
         }
 
         if (state.skillAdvancementInProgress) {
-            if (state.cpSpStack.isNotEmpty()) state.cpSpStack.removeLast()
-            if (state.cpSpStack.isNotEmpty()) state.cpSpStack.removeLast()
+            state.spFromProgress = (state.spFromProgress - 2).coerceAtLeast(0)
             state.rebuildAllPericiaStacks()
         }
 
@@ -1122,8 +1149,7 @@ class CriadorViewModel : ViewModel() {
                     }
                 }
                 // Reverte a concessão dos pontos de perícia
-                if (state.cpSpStack.isNotEmpty()) state.cpSpStack.removeLast()
-                if (state.cpSpStack.isNotEmpty()) state.cpSpStack.removeLast()
+                state.spFromProgress = (state.spFromProgress - 2).coerceAtLeast(0)
 
                 state.rebuildAllPericiaStacks()
             }
