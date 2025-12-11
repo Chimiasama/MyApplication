@@ -39,6 +39,7 @@ import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Print
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
@@ -88,6 +89,7 @@ import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.ui.dialogs.SaveLoadDialog
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.loadJsonAsset
@@ -255,6 +257,8 @@ class MainActivity : ComponentActivity() {
 
             var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
             var showThemeDialog by rememberSaveable { mutableStateOf(false) }
+            var showSaveLoadDialog by rememberSaveable { mutableStateOf(false) }
+            var saveLoadInitialTab by rememberSaveable { mutableIntStateOf(0) }
 
             var showFeedbackDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -281,6 +285,25 @@ class MainActivity : ComponentActivity() {
                     expPoderes = true
                     expVants = true
                 }
+            }
+
+            if (showSaveLoadDialog) {
+                SaveLoadDialog(
+                    initialTab = saveLoadInitialTab,
+                    onDismiss = { showSaveLoadDialog = false },
+                    onSave = { filename ->
+                        criadorViewModel.saveCharacter(context, filename)
+                        showSaveLoadDialog = false
+                    },
+                    onLoad = { filename ->
+                        criadorViewModel.loadCharacter(context, filename)
+                        showSaveLoadDialog = false
+                        // Reset expand states or logic if needed
+                        creationSession++ // Re-trigger rememberSaveable for expands?
+                        // But creationSession is used to reset them to false.
+                        // We might want to keep them or reset them.
+                    }
+                )
             }
 
             if (showThemeDialog) {
@@ -428,6 +451,10 @@ class MainActivity : ComponentActivity() {
 
                                     mostrouTelaInicial = false
                                 },
+                                onCarregarJogo = {
+                                    saveLoadInitialTab = 1 // Carregar tab
+                                    showSaveLoadDialog = true
+                                },
                                 context   = context,
                                 viewModel = criadorViewModel
                             )
@@ -469,6 +496,13 @@ class MainActivity : ComponentActivity() {
                                         },
                                         actions = {
                                             val scope = rememberCoroutineScope()
+
+                                            IconButton(onClick = {
+                                                saveLoadInitialTab = 0
+                                                showSaveLoadDialog = true
+                                            }) {
+                                                Icon(Icons.Default.Save, contentDescription = "Salvar")
+                                            }
 
                                             IconButton(onClick = {
                                                 val personagem = state.toMeuPersonagem()

@@ -1,8 +1,10 @@
 // CriadorViewModel.kt
 package com.example.swadebuilder.model
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.listaComplicacoes
@@ -10,7 +12,12 @@ import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
+import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -918,5 +925,263 @@ class CriadorViewModel : ViewModel() {
             state.snapshotFrozenSkillIncrements()
         }
         state.updateEmProgressoFlag()
+    }
+
+    // --- Persistência (Save/Load) ---
+
+    fun saveCharacter(context: Context, filename: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val snapshot = PersonagemSnapshot(
+                    nomePersonagem = state.nomePersonagem,
+                    anotacoes = state.anotacoes,
+                    ancestralidade = state.ancestralidade,
+                    dinheiro = state.dinheiro,
+                    valoresAtributos = state.valoresAtributos.mapKeys { it.key }.mapValues { it.value.intValue },
+                    pontosAtributo = state.pontosAtributo,
+
+                    // Pericias
+                    baseIncsPorPericia = state.baseIncsPorPericia.mapKeys { it.key.nome },
+                    spCostStackPorPericia = state.spCostStackPorPericia.mapKeys { it.key.nome }.mapValues { it.value.toList() },
+
+                    // Selections
+                    vantagens = state.vantagensSelecionadas.map { VantagemSaveDto(it.id, it.choice) },
+                    complicacoes = state.complicacoesSelecionadas.map { entry ->
+                        ComplicacaoSaveDto(entry.key.id, entry.value)
+                    },
+                    equipamentos = state.equipamentosComprados.toList(),
+                    poderesSelecionados = state.poderesSelecionados.toList(),
+
+                    // Stacks
+                    paCostStackPorAtributo = state.paCostStackPorAtributo.mapValues { it.value.toList() },
+                    cpPaStack = state.cpPaStack.toList(),
+                    cpPvStackCount = state.cpPvStack.size,
+                    cpSpStackCount = state.cpSpStack.size,
+                    pontosComplicacaoGastos = state.pontosComplicacaoGastos,
+
+                    // Config Flags
+                    modoSupers = state.modoSupers,
+                    modoSuperComplicacoes = state.modoSuperComplicacoes,
+                    modoSuperequip = state.modoSuperequip,
+                    compendioFantasiaAtivo = state.compendioFantasiaAtivo,
+                    compendioHorrorAtivo = state.compendioHorrorAtivo,
+                    modoMonstroAtivo = state.modoMonstroAtivo,
+                    tipoMonstroSelecionado = state.tipoMonstroSelecionado,
+                    grandesResponsabilidades = state.grandesResponsabilidades,
+                    maisPontosPericias = state.maisPontosPericias,
+                    cartaSelvagem = state.cartaSelvagem,
+                    heroisSemArmadura = state.heroisSemArmadura,
+                    soldadoCargaAtivo = state.soldadoCargaAtivo,
+                    regraMultiplosIdiomas = state.regraMultiplosIdiomas,
+                    permiteMultiAntecedenteArcano = state.permiteMultiAntecedenteArcano,
+                    usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
+                    celestialAAMilagresDesabilitado = state.celestialAAMilagresDesabilitado,
+                    meioElfoAgil = state.meioElfoAgil,
+                    nasceUmHeroi = state.nasceUmHeroi,
+
+                    // Progression
+                    progresso = state.progresso,
+                    stageXpSpent = state.stageXpSpent.toMap(),
+                    advancementHistory = state.advancementHistory.toList(),
+                    frozenSkillIncrements = state.frozenSkillIncrements.toMap(),
+                    frozenAdvantageCount = state.frozenAdvantageCount,
+                    legendaryAttrReservations = state.legendaryAttrReservations,
+                    xpSlots = state.xpSlots.toList(),
+                    pvFromXpOutstanding = state.pvFromXpOutstanding,
+
+                    // Supers
+                    superInvestments = state.superInvestments.toList(),
+                    superPontosTotais = state.superPontosTotais,
+                    superNivelCampanha = state.superNivelCampanha,
+                    poderFavoritoId = state.poderFavoritoId,
+                    gastosPorPoder = state.gastosPorPoder.toMap(),
+                    bonusPararFromPower = state.bonusPararFromPower,
+                    bonusResFromPower = state.bonusResFromPower,
+                    armorFromPower = state.armorFromPower,
+                    bonusMovimentacaoFromPower = state.bonusMovimentacaoFromPower,
+                    naturalArmorFromRace = state.naturalArmorFromRace,
+
+                    poderSlotsPorArcano = state.poderSlotsPorArcano.mapValues { it.value.toList() },
+                    novosPoderesStacksPorArcano = state.novosPoderesStacksPorArcano.mapValues { it.value.toList() },
+                    comprasPpPorEstagio = state.comprasPpPorEstagio.toMap(),
+                    bonusPoderExtra = state.bonusPoderExtra,
+
+                    especializacoesPorPericia = state.especializacoesPorPericia.toMap()
+                )
+
+                val jsonString = Json.encodeToString(snapshot)
+                CharacterStorage.saveFile(context, filename, jsonString)
+
+                viewModelScope.launch(Dispatchers.Main) {
+                    _feedbackMessages.add("Personagem salvo com sucesso!")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                viewModelScope.launch(Dispatchers.Main) {
+                    _feedbackMessages.add("Erro ao salvar: ${e.message}")
+                }
+            }
+        }
+    }
+
+    fun loadCharacter(context: Context, filename: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val jsonString = CharacterStorage.readFile(context, filename)
+                val snapshot = Json.decodeFromString<PersonagemSnapshot>(jsonString)
+
+                viewModelScope.launch(Dispatchers.Main) {
+                    // 1. Reset para estado limpo
+                    resetStateParaNovoPersonagem(
+                        cartaSelvagem = snapshot.cartaSelvagem,
+                        maisPontosPericias = snapshot.maisPontosPericias,
+                        modoSupers = snapshot.modoSupers,
+                        compendioFantasiaAtivo = snapshot.compendioFantasiaAtivo,
+                        compendioHorrorAtivo = snapshot.compendioHorrorAtivo,
+                        modoMonstroAtivo = snapshot.modoMonstroAtivo,
+                        usarEspecializacoesDePericia = snapshot.usarEspecializacoesDePericia,
+                        grandesResponsabilidades = snapshot.grandesResponsabilidades
+                    )
+
+                    // 2. Restaurar propriedades simples
+                    state.nomePersonagem = snapshot.nomePersonagem
+                    state.anotacoes = snapshot.anotacoes
+                    state.dinheiro = snapshot.dinheiro
+                    state.modoSuperComplicacoes = snapshot.modoSuperComplicacoes
+                    state.modoSuperequip = snapshot.modoSuperequip
+                    state.tipoMonstroSelecionado = snapshot.tipoMonstroSelecionado
+                    state.heroisSemArmadura = snapshot.heroisSemArmadura
+                    state.soldadoCargaAtivo = snapshot.soldadoCargaAtivo
+                    state.regraMultiplosIdiomas = snapshot.regraMultiplosIdiomas
+                    state.permiteMultiAntecedenteArcano = snapshot.permiteMultiAntecedenteArcano
+                    state.celestialAAMilagresDesabilitado = snapshot.celestialAAMilagresDesabilitado
+                    state.meioElfoAgil = snapshot.meioElfoAgil
+                    state.nasceUmHeroi = snapshot.nasceUmHeroi
+                    state.pvFromXpOutstanding = snapshot.pvFromXpOutstanding
+                    state.pontosComplicacaoGastos = snapshot.pontosComplicacaoGastos
+
+                    // Especializações
+                    state.especializacoesPorPericia.putAll(snapshot.especializacoesPorPericia)
+
+                    // 3. Ancestralidade (aplica lógica mínima, mas será sobrescrita pelos valores salvos)
+                    state.ancestralidade = snapshot.ancestralidade
+                    state.aplicarAncestralidade(snapshot.ancestralidade, mutableListOf()) // Dispara reatividade, mas...
+
+                    // 4. Restaurar Back-ending Stacks (Crucial para Undo)
+                    // Attributes
+                    state.paCostStackPorAtributo.clear()
+                    snapshot.paCostStackPorAtributo.forEach { (k, v) ->
+                        state.paCostStackPorAtributo[k] = mutableListOf<Int>().apply { addAll(v) }
+                    }
+                    state.cpPaStack.clear()
+                    state.cpPaStack.addAll(snapshot.cpPaStack)
+                    state.pontosAtributo = snapshot.pontosAtributo // Set directly
+
+                    // Restore Attribute Values (Overrides whatever aplicarAncestralidade did)
+                    snapshot.valoresAtributos.forEach { (k, v) ->
+                        state.valoresAtributos[k]?.intValue = v
+                    }
+
+                    // Skills
+                    state.baseIncsPorPericia.clear()
+                    snapshot.baseIncsPorPericia.forEach { (name, incs) ->
+                        listaPericias.find { it.nome == name }?.let { per ->
+                            state.baseIncsPorPericia[per] = incs
+                        }
+                    }
+                    state.spCostStackPorPericia.forEach { (_, v) -> v.clear() }
+                    snapshot.spCostStackPorPericia.forEach { (name, costs) ->
+                        listaPericias.find { it.nome == name }?.let { per ->
+                            state.spCostStackPorPericia[per]?.addAll(costs)
+                        }
+                    }
+
+                    // PB stacks
+                    state.cpPvStack.clear()
+                    repeat(snapshot.cpPvStackCount) { state.cpPvStack.add(Unit) }
+                    state.cpSpStack.clear()
+                    repeat(snapshot.cpSpStackCount) { state.cpSpStack.add(Unit) }
+
+                    // 5. Selections
+                    // Complicacoes
+                    state.complicacoesSelecionadas.clear()
+                    snapshot.complicacoes.forEach { dto ->
+                        listaComplicacoes.find { it.id == dto.id }?.let { comp ->
+                            state.complicacoesSelecionadas[comp] = dto.severity
+                        }
+                    }
+
+                    // Vantagens
+                    state.vantagensSelecionadas.clear()
+                    snapshot.vantagens.forEach { dto ->
+                        listaVantagens.find { it.id == dto.id }?.let { baseVant ->
+                            // Use copy to set choice, avoiding transient/shared state issues
+                            val restored = baseVant.copy()
+                            restored.choice = dto.choice
+                            state.vantagensSelecionadas.add(restored)
+                        }
+                    }
+
+                    // Equipamentos
+                    state.equipamentosComprados.clear()
+                    state.equipamentosComprados.addAll(snapshot.equipamentos)
+
+                    // Poderes
+                    state.poderesSelecionados.clear()
+                    state.poderesSelecionados.addAll(snapshot.poderesSelecionados)
+
+                    // 6. Supers
+                    state.superInvestments.clear()
+                    state.superInvestments.addAll(snapshot.superInvestments)
+                    state.superPontosTotais = snapshot.superPontosTotais
+                    state.superNivelCampanha = snapshot.superNivelCampanha
+                    state.poderFavoritoId = snapshot.poderFavoritoId
+                    state.gastosPorPoder.putAll(snapshot.gastosPorPoder)
+                    state.bonusPararFromPower = snapshot.bonusPararFromPower
+                    state.bonusResFromPower = snapshot.bonusResFromPower
+                    state.armorFromPower = snapshot.armorFromPower
+                    state.bonusMovimentacaoFromPower = snapshot.bonusMovimentacaoFromPower
+                    state.naturalArmorFromRace = snapshot.naturalArmorFromRace
+
+                    // 7. Arcane/Magic details
+                    state.poderSlotsPorArcano.clear()
+                    snapshot.poderSlotsPorArcano.forEach { (k, v) ->
+                        state.poderSlotsPorArcano[k] = mutableStateListOf<String?>().apply { addAll(v) }
+                    }
+                    state.novosPoderesStacksPorArcano.clear()
+                    snapshot.novosPoderesStacksPorArcano.forEach { (k, v) ->
+                         state.novosPoderesStacksPorArcano[k] = mutableListOf<List<String>>().apply { addAll(v) }
+                    }
+                    state.comprasPpPorEstagio.putAll(snapshot.comprasPpPorEstagio)
+                    state.bonusPoderExtra = snapshot.bonusPoderExtra
+
+                    // 8. Progression
+                    state.progresso = snapshot.progresso
+                    state.stageXpSpent.putAll(snapshot.stageXpSpent)
+                    state.advancementHistory.clear()
+                    state.advancementHistory.addAll(snapshot.advancementHistory)
+                    state.frozenSkillIncrements.putAll(snapshot.frozenSkillIncrements)
+                    state.frozenAdvantageCount = snapshot.frozenAdvantageCount
+                    state.legendaryAttrReservations = snapshot.legendaryAttrReservations
+                    state.xpSlots.clear()
+                    state.xpSlots.addAll(snapshot.xpSlots)
+
+                    if (state.progresso > 0) {
+                        state.modoProgressaoAtivo = true
+                    }
+
+                    // 9. Final Recalc to Ensure Consistency
+                    state.rebuildAllPericiaStacks()
+                    state.recalcularPontosAtributo()
+
+                    _feedbackMessages.add("Personagem ${state.nomePersonagem} carregado com sucesso.")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                viewModelScope.launch(Dispatchers.Main) {
+                    _feedbackMessages.add("Erro ao carregar personagem: ${e.message}")
+                }
+            }
+        }
     }
 }
