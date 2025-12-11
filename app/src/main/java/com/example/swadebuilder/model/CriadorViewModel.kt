@@ -65,7 +65,7 @@ class CriadorViewModel : ViewModel() {
             } else v
         }
         state.vantagensSelecionadas.clear()
-        state.vantagensSelecionadas.addAll(convertidos.distinctBy { it.id })
+        state.vantagensSelecionadas.addAll(convertidos)
     }
 
     fun resetStateParaNovoPersonagem(
