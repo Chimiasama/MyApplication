@@ -286,51 +286,59 @@ class CriadorViewModel : ViewModel() {
         state.baseIncsPorPericia.keys.forEach { state.baseIncsPorPericia[it] = 0 }
         state.spCostStackPorPericia.values.forEach { it.clear() }
         state.compCostStackPorPericia.values.forEach { it.clear() }
+
+        val spStackMapNormalized = salvo.spCostStackPorPericia.mapKeys { it.key.keyify() }
+        val baseIncsMapNormalized = salvo.baseIncsPorPericia.mapKeys { it.key.keyify() }
+        val compStackMapNormalized = salvo.compCostStackPorPericia.mapKeys { it.key.keyify() }
+
         listaPericias.forEach { per ->
-            salvo.spCostStackPorPericia[per.nome]?.let { savedStack ->
+            val key = per.nome.keyify()
+
+            spStackMapNormalized[key]?.let { savedStack ->
                 state.spCostStackPorPericia.getValue(per).addAll(savedStack)
             }
-            salvo.baseIncsPorPericia[per.nome]?.let { incs ->
+            baseIncsMapNormalized[key]?.let { incs ->
                 state.baseIncsPorPericia[per] = incs
             }
-            salvo.compCostStackPorPericia[per.nome]?.let { savedStack ->
+            compStackMapNormalized[key]?.let { savedStack ->
                 state.compCostStackPorPericia[per]?.addAll(savedStack)
             }
         }
 
         state.vantagensSelecionadas.clear()
-        val idsSalvosNormalizados = buildSet {
-            salvo.vantagens.mapTo(this) { it.keyify() }
-            salvo.vantagemChoices.keys.mapTo(this) { it.keyify() }
-        }
         val choicesMap = salvo.vantagemChoices
             .mapKeys { it.key.keyify() }
             .mapValues { it.value.toMutableList() }
 
-        listaVantagens.filter { vant ->
-            val idKey = vant.id.keyify()
-            val nomeKey = vant.nome.keyify()
-            idKey in idsSalvosNormalizados || nomeKey in idsSalvosNormalizados
-        }.forEach { base ->
-            val vantCopiada = runCatching { base.copy() }
-                .onFailure {
-                    Log.e(
-                        "CriadorViewModel",
-                        "Erro ao copiar vantagem '${base.id}' ao carregar personagem.",
-                        it
-                    )
-                }
-                .getOrNull()
+        salvo.vantagens.forEach { savedIdRaw ->
+            val savedIdKey = savedIdRaw.keyify()
 
-            if (vantCopiada != null) {
-                val chaveId = base.id.keyify()
-                val chaveNome = base.nome.keyify()
-                val escolha = choicesMap[chaveId]?.removeFirstOrNull()
-                    ?: choicesMap[chaveNome]?.removeFirstOrNull()
-                if (escolha != null) {
-                    vantCopiada.choice = escolha
+            val base = listaVantagens.find {
+                it.id.keyify() == savedIdKey || it.nome.keyify() == savedIdKey
+            }
+
+            if (base != null) {
+                val vantCopiada = runCatching { base.copy() }
+                    .onFailure {
+                        Log.e(
+                            "CriadorViewModel",
+                            "Erro ao copiar vantagem '${base.id}' ao carregar personagem.",
+                            it
+                        )
+                    }
+                    .getOrNull()
+
+                if (vantCopiada != null) {
+                    val chaveId = base.id.keyify()
+                    val chaveNome = base.nome.keyify()
+                    val escolha = choicesMap[chaveId]?.removeFirstOrNull()
+                        ?: choicesMap[chaveNome]?.removeFirstOrNull()
+                        ?: choicesMap[savedIdKey]?.removeFirstOrNull()
+                    if (escolha != null) {
+                        vantCopiada.choice = escolha
+                    }
+                    state.vantagensSelecionadas.add(vantCopiada)
                 }
-                state.vantagensSelecionadas.add(vantCopiada)
             }
         }
 
