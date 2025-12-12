@@ -91,6 +91,7 @@ import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.ui.dialogs.AjudaDialog
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
@@ -452,26 +453,9 @@ class MainActivity : ComponentActivity() {
             }
 
             if (showHelpAppDialog) {
-                val scrollState = rememberScrollState()
-
-                AlertDialog(
-                    onDismissRequest = { showHelpAppDialog = false },
-                    confirmButton = {
-                        TextButton(onClick = { showHelpAppDialog = false }) {
-                            Text("OK")
-                        }
-                    },
-                    title = { Text("Como usar o app") },
-                    text = {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .heightIn(max = 400.dp)
-                                .verticalScroll(scrollState)
-                        ) {
-                            Text(getHelpAppText(state = state))
-                        }
-                    }
+                AjudaDialog(
+                    state = state,
+                    onDismiss = { showHelpAppDialog = false }
                 )
             }
 
@@ -661,187 +645,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private fun getHelpAppText(state: CriadorState): String {
-    val isFullVersion = true
-    val isSupersMode = state.modoSupers
-
-    val fullVersionInstruction = if (isFullVersion) {
-        "Caso deseje acessar os dados das seções para consultar pode usar o botão lista completa ou tocar direto no olho ao lado do nome.\n\n"
-    } else {
-        ""
-    }
-
-    val powersInstruction = if (isSupersMode) {
-        """
-        8) Superpoderes
-
-        Em caso de campanha de Supers a seção de Superpoderes vem disponível mas só fica acessível após:
-        Todos pontos da criação inicial forem distribuídos,
-
-        O nível da Campanha de Super for definido.
-
-        Com estas definições é possível comprar os superpoderes e o app faz os ajustes na ficha quando for aplicável.
-
-        Caso se deseje é possível voltar para a fase inicial de criação ao remover os superpoderes adquiridos e definir o nível da campanha como 0.
-        """.trimIndent()
-    } else {
-        """
-        8) Poderes
-
-        Se o personagem possuir um Antecedente Arcano, a seção de poderes fica disponível:
-
-        escolha sua tradição/arcano;
-
-        selecione poderes nos espaços disponíveis;
-
-        o app controla quantos você pode pegar e evita ultrapassar o limite.
-
-        Se você remover o Antecedente Arcano, poderes que dependem dele são limpos automaticamente.
-        """.trimIndent()
-    }
-
-    return """
-    Como usar o app
-
-    $fullVersionInstruction
-    Este app guia você na criação de personagem para Savage Worlds Edição Aventura (SWADE), seguindo o passo a passo padrão do livro básico. A ideia é você distribuir pontos, escolher opções e, no final, produzir o PDF ou imprimir sua ficha.
-    Os conteúdos textuais foram omitidos para proteger os direitos do conteúdo intelectual. Para acessar as informações você deve ver os livros.
-
-    1) Começando (Tela Inicial)
-
-    Na tela inicial defina se você usa alguma regra de ambientação, outros livros de referência etc. Carta Selvagem e Mais Pontos de Perícia estão habilitados por padrão. Depois toque em Criar Personagem para ir para o preenchimento.
-
-    2) Ordem sugerida de preenchimento
-
-    A ordem abaixo evita retrabalho, porque algumas escolhas afetam limites e pontos:
-
-    Ancestralidade
-
-    Complicações
-
-    Atributos
-
-    Perícias
-
-    Vantagens / Poderes (ou Superpoderes) / Equipamentos
-
-    Resumo final
-
-    Essa também é a ordem de disposição das seções do app. A seção de Informações é para detalhes adicionais.
-
-    3) Ancestralidade
-
-    Escolha primeiro a ancestralidade. Ela pode:
-
-    ajustar valores mínimos ou máximos de atributos e perícias;
-
-    conceder bônus iniciais gratuitos;
-
-    impor penalidades ou limites especiais.
-
-    Automático: quando você troca a ancestralidade, o app recalcula limites e:
-
-    ajusta atributos para respeitar os novos mínimos/máx-imos;
-
-    reduz perícias que tenham passado do novo limite, devolvendo pontos ao pool quando necessário;
-
-    mantém as perícias básicas com mínimo de d4.
-
-    Ou seja, você não precisa “consertar na mão” depois da troca.
-
-    4) Complicações (ganhar Pontos Bônus)
-
-    Complicações servem pra dar cor ao personagem e gerar Pontos Bônus de Criação:
-
-    Menor = +1 ponto bônus
-
-    Maior = +2 pontos bônus
-
-    Limite padrão: até 4 pontos bônus no total.
-
-    O contador da seção mostra quantos pontos bônus você tem disponíveis.
-
-    Esses pontos podem ser convertidos nas seções apropriadas (atributos, perícias, vantagens ou recursos). Sempre que você “gasta” pontos bônus, o app registra de onde eles vieram.
-
-    Importante:
-    Se você tentar remover uma complicação que ainda está “financiando” algo, o app impede e avisa. Primeiro desfaça as compras feitas com aqueles pontos.
-
-    5) Atributos (5 pontos)
-
-    Você tem 5 pontos para distribuir entre os atributos.
-
-    Regras que o app segue:
-
-    Todos começam em d4.
-
-    Cada ponto gasto aumenta um passo: d4 → d6 → d8 → d10 → d12.
-
-    O app não deixa gastar mais do que o total disponível.
-
-    Se algum bônus de ancestralidade modificar um atributo, o valor final é ajustado.
-
-    Sugestão prática: suba primeiro o(s) atributo(s) que sustentam suas perícias principais.
-
-    6) Perícias - 15 pontos (12 se não usar regra de ambientação)
-
-    Você tem 15 pontos para comprar perícias.
-
-    Regras:
-
-    Perícias básicas já começam em d4 (mínimo fixo).
-
-    Perícias não-básicas começam em - (não treinadas).
-
-    Aumento de perícia custa:
-
-    1 ponto por passo até igualar o atributo ligado;
-
-    2 pontos por passo se passar do atributo.
-
-    Você pode reduzir uma perícia não-básica de volta para - e recuperar pontos. As básicas param em d4.
-
-    Automático: se você mudar um atributo depois, o app recalcula os custos/limites das perícias que dependem dele. Se alguma perícia ficar acima do permitido pela nova combinação de atributo/ancestralidade, ela é reduzida até o máximo válido e os pontos excedentes voltam para você.
-
-    7) Vantagens
-
-    Na seção de vantagens você gasta os pontos de vantagens conforme o SWADE.
-    Toque no + para expandir. Cada vantagem exibe:
-
-    nome,
-
-    requisitos.
-
-    Filtros: na lista você pode filtrar por categoria, requisitos, disponibilidade etc. Isso ajuda a achar rápido o que combina com sua ideia de personagem.
-
-    $powersInstruction
-
-    9) Equipamentos e Recursos
-
-    Aqui você compra itens com o dinheiro inicial.
-    Você pode:
-
-    navegar por categorias,
-
-    usar filtros e busca para achar equipamento pelo tipo/nome,
-
-    adicionar/remover itens e ver o dinheiro restante atualizar ao vivo.
-
-    Esta seção nunca é bloqueada independetemente da fase de criação que o personagem está.
-
-    10) Resumo
-
-    O resumo mostra tudo consolidado: atributos, perícias, vantagens, complicações, poderes, equipamentos e derivados (Aparar, Resistência, Movimento etc.). É sua checagem final antes de produzir o PDF ou imprimir.
-    Você apagar e escrever nas anotações.
-
-    11) Imprimir PDF
-
-    No topo da tela principal você tem um ícone:
-
-    Imprimir (impressora): gera um PDF com a ficha preenchida e abre em um leitor de PDF instalado no celular.
-
-    Dica: renomeie o personagem antes de imprimir para o PDF sair com o nome certo.
-    """.trimIndent()
-}
 fun Int.toDiceString(): String =
     if (this <= 12) "d$this" else "d12+${(this - 12)}"
 
