@@ -4,6 +4,8 @@
     "nome": "Aurax",
     "categoria": "ANCESTRALIDADE",
     "origem": "SCI_FI",
+    "atributos": { "Vigor": 2 },
+    "pericias": {},
     "habilidades": [
       { "nome": "Resistente", "descricao": "Começam com Vigor d6. Máximo d12+1." },
       { "nome": "Mundo de Baixa Gravidade", "descricao": "Deduzem 1 de Força e Vigor em gravidade normal. Fatigam-se rapidamente em gravidade alta." },
@@ -15,6 +17,8 @@
     "nome": "Avion",
     "categoria": "ANCESTRALIDADE",
     "origem": "SCI_FI",
+    "atributos": { "Agilidade": 2 },
+    "pericias": {},
     "habilidades": [
       { "nome": "Voo", "descricao": "Voam com Movimentação 12 em gravidade normal." },
       { "nome": "Ossos Frágeis", "descricao": "-1 na Resistência." },
@@ -26,6 +30,8 @@
     "nome": "Constructo (Sci-Fi)",
     "categoria": "ANCESTRALIDADE",
     "origem": "SCI_FI",
+    "atributos": {},
+    "pericias": {},
     "habilidades": [
       { "nome": "Artificial", "descricao": "+2 para recuperar Abalado. Não respira. Imune a doenças/venenos." },
       { "nome": "Dependência", "descricao": "Precisa recarregar energia diariamente ou sofre Fadiga." },
@@ -38,6 +44,8 @@
     "nome": "Floran",
     "categoria": "ANCESTRALIDADE",
     "origem": "SCI_FI",
+    "atributos": {},
+    "pericias": {},
     "habilidades": [
       { "nome": "Planta", "descricao": "+2 para recuperar Abalado. Imune a venenos. Não sofrem dano extra de ataques localizados." },
       { "nome": "Dependência", "descricao": "Precisa de luz solar e água ou sofre Fadiga." },
@@ -49,6 +57,8 @@
     "nome": "Insectoide",
     "categoria": "ANCESTRALIDADE",
     "origem": "SCI_FI",
+    "atributos": {},
+    "pericias": {},
     "habilidades": [
       { "nome": "Armadura", "descricao": "Carapaça fornece +2 de Armadura." },
       { "nome": "Membros Extras", "descricao": "Possui braços extras. Ignora 2 pontos de penalidade por Ações Múltiplas." },
@@ -60,6 +70,8 @@
     "nome": "Kalian",
     "categoria": "ANCESTRALIDADE",
     "origem": "SCI_FI",
+    "atributos": {},
+    "pericias": {},
     "habilidades": [
       { "nome": "Quatro Braços", "descricao": "Ignora 2 pontos de penalidade por Ações Múltiplas." },
       { "nome": "Pacifista", "descricao": "Começam com a Complicação Pacifista (Menor)." },
@@ -71,6 +83,8 @@
     "nome": "Rakashan",
     "categoria": "ANCESTRALIDADE",
     "origem": "SCI_FI",
+    "atributos": { "Agilidade": 2 },
+    "pericias": {},
     "habilidades": [
       { "nome": "Agilidade", "descricao": "Começam com Agilidade d6. Máximo d12+1." },
       { "nome": "Garras", "descricao": "For+d4, PA 2." },
@@ -83,6 +97,8 @@
     "nome": "Sauriano",
     "categoria": "ANCESTRALIDADE",
     "origem": "SCI_FI",
+    "atributos": {},
+    "pericias": {},
     "habilidades": [
       { "nome": "Armadura", "descricao": "Pele escamosa +2." },
       { "nome": "Sangue Frio", "descricao": "-4 para resistir a efeitos de frio. Sofre dano extra." },
@@ -95,6 +111,8 @@
     "nome": "Yeti",
     "categoria": "ANCESTRALIDADE",
     "origem": "SCI_FI",
+    "atributos": { "Força": 2 },
+    "pericias": {},
     "habilidades": [
       { "nome": "Forte", "descricao": "Começam com Força d6. Máximo d12+1." },
       { "nome": "Tamanho +1", "descricao": "São grandes e robustos." },
