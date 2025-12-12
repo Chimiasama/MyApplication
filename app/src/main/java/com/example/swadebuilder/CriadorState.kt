@@ -45,6 +45,7 @@ class CriadorState {
     var compendioHorrorAtivo by mutableStateOf(false)
     var compendioSciFiAtivo by mutableStateOf(false)
     var compendioTrilhadorAtivo by mutableStateOf(false)
+    var compendioDeadlandsAtivo by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)

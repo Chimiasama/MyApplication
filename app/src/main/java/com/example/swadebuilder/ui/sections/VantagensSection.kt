@@ -8,13 +8,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -213,7 +213,7 @@ fun VantagensContent(
         }
     }
 
-    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioTrilhadorAtivo) {
+    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioTrilhadorAtivo, state.compendioDeadlandsAtivo) {
         listaVantagens.filter { vant ->
             val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase()
             val isBasico = origemNorm == "BASICO"
@@ -221,11 +221,12 @@ fun VantagensContent(
             val isFantasia = origemNorm == "FANTASIA"
             val isHorror = origemNorm == "HORROR"
             val isTrilhador = origemNorm == "FANTASIA_TRILHADOR"
+            val isDeadlands = origemNorm == "DEADLANDS"
 
             // Allow filtering logic to work properly: include items if their compendium is active OR if they are basic.
             // But we also need to allow users to filter via the dialog even if the compendium is active.
             // The logic below determines which items are *eligible* to be shown. The dialog filter is applied later.
-            isBasico || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isTrilhador && state.compendioTrilhadorAtivo)
+            isBasico || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isTrilhador && state.compendioTrilhadorAtivo) || (isDeadlands && state.compendioDeadlandsAtivo)
         }
     }
 
@@ -910,5 +911,3 @@ fun VantagensContent(
 
     }
 }
-
-

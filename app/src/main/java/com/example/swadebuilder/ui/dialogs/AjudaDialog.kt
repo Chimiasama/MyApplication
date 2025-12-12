@@ -69,6 +69,18 @@ fun AjudaDialog(
                     )
                 }
 
+                // Seção Deadlands
+                if (state.compendioDeadlandsAtivo) {
+                    InstructionSection(
+                        title = "Deadlands: O Oeste Estranho",
+                        content = """
+                            • Habilita Ancestralidades, Vantagens e Equipamentos de Deadlands.
+                            • Mecânica de Ressuscitado (Harrowed) e Antecedentes Arcanos específicos (Abençoado, Cientista Louco, etc).
+                            • Equipamentos como Armas de Pedra Fantasma e Dispositivos Infernais.
+                        """.trimIndent()
+                    )
+                }
+
                 // Seção Supers e Poderes
                 if (state.modoSupers) {
                     InstructionSection(

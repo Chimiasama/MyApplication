@@ -192,6 +192,7 @@ fun EquipamentoSection(
     compendioHorrorAtivo: Boolean = false,
     compendioSciFiAtivo: Boolean = false,
     compendioTrilhadorAtivo: Boolean = false,
+    compendioDeadlandsAtivo: Boolean = false,
     modoOficialAtivo: Boolean = false
 ) {
     val focusManager = LocalFocusManager.current
@@ -203,6 +204,7 @@ fun EquipamentoSection(
     var expHorrorEquip by rememberSaveable { mutableStateOf(false) }
     var expSciFiEquip by rememberSaveable { mutableStateOf(false) }
     var expTrilhadorEquip by rememberSaveable { mutableStateOf(false) }
+    var expDeadlandsEquip by rememberSaveable { mutableStateOf(false) }
 
     var filter by remember { mutableStateOf(EquipFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
@@ -230,7 +232,8 @@ fun EquipamentoSection(
             val isHorror = origem == "HORROR"
             val isSciFi = origem == "SCI_FI"
             val isTrilhador = origem == "FANTASIA_TRILHADOR"
-            !isFantasia && !isHorror && !isSciFi && !isTrilhador
+            val isDeadlands = origem == "DEADLANDS"
+            !isFantasia && !isHorror && !isSciFi && !isTrilhador && !isDeadlands
         }
 
         // Filtra as categorias de fantasia (se ativo)
@@ -262,6 +265,14 @@ fun EquipamentoSection(
         val trilhadorCategorias = if (compendioTrilhadorAtivo) {
             allCategorias.filter {
                 (it.origem?.uppercase() ?: "") == "FANTASIA_TRILHADOR"
+            }
+        } else {
+            emptyList()
+        }
+
+        val deadlandsCategorias = if (compendioDeadlandsAtivo) {
+            allCategorias.filter {
+                (it.origem?.uppercase() ?: "") == "DEADLANDS"
             }
         } else {
             emptyList()
@@ -431,6 +442,25 @@ fun EquipamentoSection(
             ) {
                 RenderCategoryList(
                     categories = trilhadorCategorias,
+                    filter = filter,
+                    dinheiro = dinheiro,
+                    allowLongTexts = allowLongTexts,
+                    detalhesExpandidos = detalhesExpandidos,
+                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
+                    showOriginalName = modoOficialAtivo
+                )
+            }
+        }
+
+        if (compendioDeadlandsAtivo && deadlandsCategorias.isNotEmpty()) {
+            Spacer(Modifier.padding(vertical = 4.dp))
+            CollapsibleSection(
+                title = "Equipamento de Deadlands",
+                expanded = expDeadlandsEquip,
+                onToggle = { expDeadlandsEquip = !expDeadlandsEquip }
+            ) {
+                RenderCategoryList(
+                    categories = deadlandsCategorias,
                     filter = filter,
                     dinheiro = dinheiro,
                     allowLongTexts = allowLongTexts,
@@ -810,6 +840,7 @@ fun EquipamentoListItem(
                 equipamento.tripulacao.contentString()?.let { add("Tripulação: $it") }
                 equipamento.tensao?.let { add("Tensão: $it") }
                 equipamento.mods_slots?.let { add("Slots de Mods: $it") }
+                equipamento.malfuncionamento?.let { add("Malfuncionamento: $it") }
             }
 
             if (allowLongTexts && detalhes.isNotEmpty()) {

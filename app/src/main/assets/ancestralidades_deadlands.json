@@ -1,0 +1,30 @@
+[
+  {
+    "id": "anc_humano_deadlands",
+    "nome": "Humano (Oeste Estranho)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "DEADLANDS",
+    "habilidades": [
+      {
+        "nome": "Adaptável",
+        "descricao": "Começa com uma Vantagem Novato extra de graça (deve atender aos requisitos)."
+      }
+    ]
+  },
+  {
+    "id": "anc_territorial",
+    "nome": "Nativo dos Territórios",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "DEADLANDS",
+    "habilidades": [
+      {
+        "nome": "Conhecimento do Terreno",
+        "descricao": "Começa com d6 em Sobrevivência e Conhecimento Geral sobre a região."
+      },
+      {
+        "nome": "Espírito do Oeste",
+        "descricao": "Começa com um Bene extra por sessão."
+      }
+    ]
+  }
+]
