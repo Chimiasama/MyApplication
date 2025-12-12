@@ -7,6 +7,8 @@ import kotlinx.serialization.Serializable
 data class Complicacao(
     val id: String,
     val name: String,
+    val originalName: String? = null,
+    val originalDescription: String? = null,
     val severity: String,
     val description: String,
     val origem: String,

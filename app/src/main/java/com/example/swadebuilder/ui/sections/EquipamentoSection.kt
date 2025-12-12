@@ -440,6 +440,7 @@ fun EquipamentoSection(
             emptyList()
         }
 
+
         val trilhadorCategorias = if (compendioTrilhadorAtivo) {
             allCategorias.filter {
                 it.origem?.uppercase() == "FANTASIA_TRILHADOR"
