@@ -189,7 +189,9 @@ fun EquipamentoSection(
     onEditarDinheiro: (Int) -> Unit,
     onToggleSoldadoCarga: () -> Unit,
     compendioFantasiaAtivo: Boolean = false,
-    compendioHorrorAtivo: Boolean = false
+    compendioHorrorAtivo: Boolean = false,
+    compendioTrilhadorAtivo: Boolean = false,
+    modoOficialAtivo: Boolean = false
 ) {
     val focusManager = LocalFocusManager.current
     var showMoneyDialog by rememberSaveable { mutableStateOf(false) }
@@ -198,6 +200,7 @@ fun EquipamentoSection(
     var expSuperequip by rememberSaveable { mutableStateOf(false) }
     var expFantasiaEquip by rememberSaveable { mutableStateOf(false) }
     var expHorrorEquip by rememberSaveable { mutableStateOf(false) }
+    var expTrilhadorEquip by rememberSaveable { mutableStateOf(false) }
 
     var filter by remember { mutableStateOf(EquipFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
@@ -348,6 +351,25 @@ fun EquipamentoSection(
             }
         }
 
+        if (compendioTrilhadorAtivo && trilhadorCategorias.isNotEmpty()) {
+            Spacer(Modifier.padding(vertical = 4.dp))
+            CollapsibleSection(
+                title = "Equipamento de Trilhador",
+                expanded = expTrilhadorEquip,
+                onToggle = { expTrilhadorEquip = !expTrilhadorEquip }
+            ) {
+                RenderCategoryList(
+                    categories = trilhadorCategorias,
+                    filter = filter,
+                    dinheiro = dinheiro,
+                    allowLongTexts = allowLongTexts,
+                    detalhesExpandidos = detalhesExpandidos,
+                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
+                    showOriginalName = modoOficialAtivo
+                )
+            }
+        }
+
         if (showMoneyDialog) {
             AlertDialog(
                 onDismissRequest = { showMoneyDialog = false },
@@ -396,7 +418,8 @@ fun EquipamentoSection(
             val origem = it.origem?.uppercase()
             val isFantasia = origem == "FANTASIA"
             val isHorror = origem == "HORROR"
-            !isFantasia && !isHorror
+            val isTrilhador = origem == "FANTASIA_TRILHADOR"
+            !isFantasia && !isHorror && !isTrilhador
         }
 
         // Filtra as categorias de fantasia (se ativo)
@@ -412,6 +435,14 @@ fun EquipamentoSection(
         val horrorCategorias = if (compendioHorrorAtivo) {
             allCategorias.filter {
                 it.origem?.uppercase() == "HORROR"
+            }
+        } else {
+            emptyList()
+        }
+
+        val trilhadorCategorias = if (compendioTrilhadorAtivo) {
+            allCategorias.filter {
+                it.origem?.uppercase() == "FANTASIA_TRILHADOR"
             }
         } else {
             emptyList()
@@ -605,7 +636,8 @@ fun EquipamentoSection(
                     dinheiro = dinheiro,
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
-                    onEquipamentoDoubleClick = onEquipamentoDoubleClick
+                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
+                    showOriginalName = modoOficialAtivo
                 )
             }
         }
@@ -624,7 +656,8 @@ fun EquipamentoSection(
                     dinheiro = dinheiro,
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
-                    onEquipamentoDoubleClick = onEquipamentoDoubleClick
+                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
+                    showOriginalName = modoOficialAtivo
                 )
             }
         }
@@ -686,7 +719,8 @@ fun EquipamentoListItem(
     onClick: () -> Unit,
     allowLongTexts: Boolean,
     expanded: Boolean,
-    onToggleDetails: () -> Unit
+    onToggleDetails: () -> Unit,
+    showOriginalName: Boolean = false
 ) {
     val resumo = equipamento.toResumo()
 
@@ -706,7 +740,7 @@ fun EquipamentoListItem(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    equipamento.nome,
+                    if (showOriginalName && !equipamento.originalName.isNullOrBlank()) equipamento.originalName else equipamento.nome,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.weight(1f)
                 )

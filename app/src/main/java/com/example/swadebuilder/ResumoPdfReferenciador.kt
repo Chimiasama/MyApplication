@@ -67,19 +67,27 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         limiteDePoderDaCampanha = this.limiteDePoderDaCampanha,
 
         anotacoes = this.anotacoes,
-        soldadoCargaAtivo = this.soldadoCargaAtivo
+        soldadoCargaAtivo = this.soldadoCargaAtivo,
+        modoOficialAtivo = this.modoOficialAtivo
     )
 }
 
-private fun complicationDisplayNames(rawIds: List<String>): List<String> {
+private fun complicationDisplayNames(rawIds: List<String>, modoOficialAtivo: Boolean): List<String> {
     val mapPorId = listaComplicacoes.associateBy { it.id.keyify() }
 
     return rawIds.map { compId ->
         val comp = mapPorId[compId.keyify()]
-        comp?.name ?: compId
-            .replace('_', ' ')
-            .lowercase()
-            .replaceFirstChar { it.titlecase() }
+        if (comp != null) {
+            if (modoOficialAtivo && !comp.originalName.isNullOrBlank()) {
+                comp.originalName
+            } else {
+                comp.name
+            }
+        } else {
+            compId.replace('_', ' ')
+                .lowercase()
+                .replaceFirstChar { it.titlecase() }
+        }
     }
 }
 
@@ -111,9 +119,14 @@ fun produzirEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) 
 fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val lines = mutableListOf<String>()
 
-    val ancestralidadeNome: String = listaAncestralidadesJson
+    val ancestralidadeNomeObj = listaAncestralidadesJson
         .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
-        ?.nome ?: personagem.ancestralidade
+
+    val ancestralidadeNome: String = if (personagem.modoOficialAtivo && ancestralidadeNomeObj?.originalName != null) {
+        ancestralidadeNomeObj.originalName
+    } else {
+        ancestralidadeNomeObj?.nome ?: personagem.ancestralidade
+    }
 
     val monstroNome = if (personagem.modoMonstroAtivo) {
         val tipoNome = listaMonstroTemplates.find { it.id == personagem.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
@@ -123,7 +136,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val vantagensNomeKey: List<String> = listaVantagens
         .filter { it.id in personagem.vantagens }
         .map { it.nome.keyify() }
-    val complicacoesNomeadas: List<String> = complicationDisplayNames(personagem.complicacoes)
+    val complicacoesNomeadas: List<String> = complicationDisplayNames(personagem.complicacoes, personagem.modoOficialAtivo)
     val vantagemChoices: MutableMap<String, MutableList<String>> = personagem.advantageChoices
         .mapValues { it.value.toMutableList() }
         .toMutableMap()
@@ -288,7 +301,8 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         lines += "Equipamentos:"
         personagem.equipamentos.forEach { eq ->
-            lines += "• ${eq.nome}"
+            val nomeEq = if (personagem.modoOficialAtivo && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nome
+            lines += "• $nomeEq"
         }
     }
     lines += ""
@@ -302,10 +316,12 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
             .map { vant ->
                 val escolha = vantagemChoices[vant.id]?.removeFirstOrNull()
                     ?.takeIf { it.isNotBlank() }
+                val rawName = if (personagem.modoOficialAtivo && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome
+
                 val baseNome = if (vant.id == "antecedente_arcano_milagres" && personagem.celestialAAMilagresDesabilitado) {
-                    "${vant.nome} (DESABILITADO)"
+                    "$rawName (DESABILITADO)"
                 } else {
-                    vant.nome
+                    rawName
                 }
                 if (escolha != null) "$baseNome (${escolha.trim()})" else baseNome
             }

@@ -192,7 +192,15 @@ class MainActivity : ComponentActivity() {
             it.origem.equals("HORROR", ignoreCase = true)
         }
 
-        listaVantagens = todasVantagens
+        val trilhadorVantagens: List<Vantagem> = try {
+            val jsonTrilhador = assets.open("vantagens_trilhador.json")
+                .bufferedReader().use { it.readText() }
+            json.decodeFromString(jsonTrilhador)
+        } catch (e: Exception) { emptyList() }
+
+        AppData.trilhadorVantagens = trilhadorVantagens
+
+        listaVantagens = todasVantagens + trilhadorVantagens
 
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
@@ -202,16 +210,39 @@ class MainActivity : ComponentActivity() {
             .bufferedReader()
             .use { it.readText() }
 
-        listaComplicacoes = json.decodeFromString(
-            ListSerializer(Complicacao.serializer()),
-            complicacoesJson
-        )
+        val complicacoesTrilhadorJson = try {
+            assets.open("complicacoes_trilhador.json")
+                .bufferedReader()
+                .use { it.readText() }
+        } catch (e: Exception) { "[]" }
+
+        val compsBase = json.decodeFromString(ListSerializer(Complicacao.serializer()), complicacoesJson)
+        val compsTrilhador = json.decodeFromString(ListSerializer(Complicacao.serializer()), complicacoesTrilhadorJson)
+
+        listaComplicacoes = compsBase + compsTrilhador
 
         val ancestralRaw = assets.open("listaancestralidade.json")
             .bufferedReader(Charsets.UTF_8)
             .use { it.readText() }
 
-        listaAncestralidadesJson = json.decodeFromString<List<RacialModifier>>(ancestralRaw)
+        val ancestralTrilhadorRaw = try {
+            assets.open("ancestralidades_trilhador.json")
+                .bufferedReader(Charsets.UTF_8)
+                .use { it.readText() }
+        } catch (e: Exception) { "[]" }
+
+        val ancsBase = json.decodeFromString<List<RacialModifier>>(ancestralRaw)
+        val ancsTrilhador = json.decodeFromString<List<RacialModifier>>(ancestralTrilhadorRaw)
+
+        listaAncestralidadesJson = ancsBase + ancsTrilhador
+
+        val equipTrilhadorRaw = try {
+            assets.open("equipamentos_trilhador.json")
+                .bufferedReader().use { it.readText() }
+        } catch (e: Exception) { "[]" }
+        val equipTrilhadorCategorias: List<EquipamentoCategoria> = try {
+            json.decodeFromString(equipTrilhadorRaw)
+        } catch (e: Exception) { emptyList() }
 
         val monstrosJson = assets
             .open("monstros.json")
@@ -329,6 +360,22 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Text(themeNames[theme] ?: theme.name)
+                                }
+                            }
+                            item {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable { state.modoOficialAtivo = !state.modoOficialAtivo }
+                                        .padding(vertical = 4.dp, horizontal = 12.dp)
+                                ) {
+                                    Checkbox(
+                                        checked = state.modoOficialAtivo,
+                                        onCheckedChange = { state.modoOficialAtivo = it }
+                                    )
+                                    Spacer(Modifier.width(8.dp))
+                                    Text("Modo Oficial/Licenciado (IP)")
                                 }
                             }
                         }
@@ -630,9 +677,10 @@ class MainActivity : ComponentActivity() {
                                             expMonstro = expMonstro,
                                             onToggleMonstro = { expMonstro = !expMonstro },
 
-                                            equipamentoCategorias = equipamentoCategorias,
+                                            equipamentoCategorias = equipamentoCategorias + equipTrilhadorCategorias,
                                             superequipCategorias  = superequipCategorias,
-                                            listaSuperPoderes     = listaSuperPoderes
+                                            listaSuperPoderes     = listaSuperPoderes,
+                                            modoOficialAtivo      = state.modoOficialAtivo
                                         )
                                     }
                                 }

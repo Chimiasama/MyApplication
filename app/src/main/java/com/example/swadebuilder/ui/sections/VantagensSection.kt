@@ -223,15 +223,16 @@ fun VantagensContent(
         }
     }
 
-    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo) {
+    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioTrilhadorAtivo) {
         listaVantagens.filter { vant ->
             val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase()
             val isBasico = origemNorm == "BASICO"
             val isSuper = origemNorm == "SUPER"
             val isFantasia = origemNorm == "FANTASIA"
             val isHorror = origemNorm == "HORROR"
+            val isTrilhador = origemNorm == "FANTASIA_TRILHADOR"
 
-            isBasico || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo)
+            isBasico || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isTrilhador && state.compendioTrilhadorAtivo)
         }
     }
 
@@ -459,7 +460,9 @@ fun VantagensContent(
 
         Spacer(Modifier.size(8.dp))
 
-        categoriasBy.forEach { (cat, lista) ->
+        // Iterate through Categoria enum to ensure consistent order
+        Categoria.entries.forEach { cat ->
+            val lista = categoriasBy[cat] ?: return@forEach
             if (state.modoSupers && cat == Categoria.PODER) return@forEach
 
             val expanded = expandedMap[cat] ?: false
@@ -648,7 +651,7 @@ fun VantagensContent(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        vant.nome,
+                                        if (state.modoOficialAtivo && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome,
                                         style = MaterialTheme.typography.titleSmall,
                                         modifier = Modifier.weight(1f)
                                     )
@@ -712,7 +715,7 @@ fun VantagensContent(
 
                                     AnimatedVisibility(visible = detalhesExpandidos[vant.id] == true) {
                                         Text(
-                                            text = vant.descricao.trim(),
+                                            text = if (state.modoOficialAtivo && !vant.originalDescription.isNullOrBlank()) vant.originalDescription.trim() else vant.descricao.trim(),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier.padding(top = 4.dp)

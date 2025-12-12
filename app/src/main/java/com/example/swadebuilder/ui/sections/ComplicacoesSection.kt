@@ -81,6 +81,7 @@ fun ComplicacoesSection(
         if (state.modoSuperComplicacoes) add("SUPER")
         if (state.compendioFantasiaAtivo) add("FANTASIA")
         if (state.compendioHorrorAtivo) add("HORROR")
+        if (state.compendioTrilhadorAtivo) add("FANTASIA_TRILHADOR")
     }
 
     val complicacoesFiltradas = listaComplicacoes.filter { comp ->
@@ -274,7 +275,7 @@ fun ComplicacoesSection(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = comp.name,
+                                    text = if (state.modoOficialAtivo && !comp.originalName.isNullOrBlank()) comp.originalName else comp.name,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
@@ -364,7 +365,7 @@ fun ComplicacoesSection(
 
                             AnimatedVisibility(visible = detalhesExpandidos[comp.id] == true) {
                                 Text(
-                                    text = comp.description.trim(),
+                                    text = if (state.modoOficialAtivo && !comp.originalDescription.isNullOrBlank()) comp.originalDescription.trim() else comp.description.trim(),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.padding(top = 4.dp)

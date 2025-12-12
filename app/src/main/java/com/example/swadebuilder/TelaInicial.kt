@@ -52,6 +52,7 @@ fun TelaInicial(
         modoSupers: Boolean,
         compendioFantasiaAtivo: Boolean,
         compendioHorrorAtivo: Boolean,
+        compendioTrilhadorAtivo: Boolean,
         modoMonstroAtivo: Boolean,
         modoSuperequipamentos: Boolean,
         modoSuperComplicacoes: Boolean,
@@ -96,6 +97,7 @@ fun TelaInicial(
     // Fantasia
     var expFantasia by rememberSaveable { mutableStateOf(false) }
     var optCompendioFantasia by rememberSaveable { mutableStateOf(false) }
+    var optCompendioTrilhador by rememberSaveable { mutableStateOf(false) }
 
     // Ficção Científica
     var expFiccao by rememberSaveable { mutableStateOf(false) }
@@ -500,6 +502,21 @@ Feito por Rafael S.W.
                             Spacer(Modifier.width(8.dp))
                             Text("Compêndio de Fantasia", fontWeight = FontWeight.Bold)
                         }
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { optCompendioTrilhador = !optCompendioTrilhador }
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Checkbox(
+                                checked = optCompendioTrilhador,
+                                onCheckedChange = { optCompendioTrilhador = it }
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text("Savage Pathfinder (Trilhador)", fontWeight = FontWeight.Bold)
+                        }
                     }
 
                     Spacer(Modifier.height(16.dp))
@@ -532,6 +549,7 @@ Feito por Rafael S.W.
                         optSuperPoderes,
                         optCompendioFantasia,
                         optCompendioHorror,
+                        optCompendioTrilhador,
                         optModoMonstro,
                         optSuperequipamentos,
                         optSuperComplicacoes,
@@ -542,6 +560,7 @@ Feito por Rafael S.W.
                         optGrandesResponsabilidades,
                         optShowHelpMessages
                     )
+                    viewModel.state.compendioTrilhadorAtivo = optCompendioTrilhador
 
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
                     viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
