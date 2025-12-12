@@ -43,6 +43,7 @@ class CriadorState {
     var modoSuperequip by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)
+    var compendioSciFiAtivo by mutableStateOf(false)
     var compendioTrilhadorAtivo by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
@@ -1657,6 +1658,7 @@ class CriadorState {
                 modoSupers = modoSupers,
                 compendioFantasiaAtivo = compendioFantasiaAtivo,
                 compendioHorrorAtivo = compendioHorrorAtivo,
+                compendioSciFiAtivo = compendioSciFiAtivo,
                 compendioTrilhadorAtivo = compendioTrilhadorAtivo,
                 modoOficialAtivo = modoOficialAtivo,
                 modoMonstroAtivo = modoMonstroAtivo,
@@ -1781,6 +1783,7 @@ class CriadorState {
         modoSupers = flags.modoSupers
         compendioFantasiaAtivo = flags.compendioFantasiaAtivo
         compendioHorrorAtivo = flags.compendioHorrorAtivo
+        compendioSciFiAtivo = flags.compendioSciFiAtivo
         compendioTrilhadorAtivo = flags.compendioTrilhadorAtivo
         modoOficialAtivo = flags.modoOficialAtivo
         modoMonstroAtivo = flags.modoMonstroAtivo

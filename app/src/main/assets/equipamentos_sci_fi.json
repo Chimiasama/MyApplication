@@ -1,0 +1,41 @@
+[
+  {
+    "tipo": "Armas de Energia",
+    "subtipo": "Lasers",
+    "origem": "SCI_FI",
+    "itens": [
+      { "nome": "Pistola Laser", "dano": "2d6", "pa": 2, "peso": "1", "custo": 300, "observacoes": "Sem recuo. Cargas: 50." },
+      { "nome": "Rifle Laser", "dano": "3d6", "pa": 2, "peso": "4", "custo": 700, "observacoes": "Sem recuo. Cargas: 100. Automático (CdT 3)." },
+      { "nome": "Canhão Laser (Gatling)", "dano": "3d6+4", "pa": 2, "peso": "10", "custo": 2000, "observacoes": "Arma Pesada. CdT 4. Requer Força d8." }
+    ]
+  },
+  {
+    "tipo": "Armas de Energia",
+    "subtipo": "Plasma",
+    "origem": "SCI_FI",
+    "itens": [
+      { "nome": "Pistola de Plasma", "dano": "2d10+2", "pa": 0, "peso": "2", "custo": 500, "observacoes": "Pode sobreaquecer." },
+      { "nome": "Rifle de Plasma", "dano": "3d10+2", "pa": 0, "peso": "6", "custo": 2000, "observacoes": "Pode sobreaquecer. Arma Pesada." }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Energia",
+    "origem": "SCI_FI",
+    "itens": [
+      { "nome": "Vibro-Faca", "dano": "For+d6", "pa": 4, "peso": "1", "custo": 200, "observacoes": "Lâmina vibratória." },
+      { "nome": "Vibro-Espada", "dano": "For+d8+2", "pa": 6, "peso": "2", "custo": 500, "observacoes": "Lâmina vibratória." },
+      { "nome": "Espada de Energia", "dano": "For+d8+4", "pa": 8, "peso": "1", "custo": 1000, "observacoes": "Ignora armaduras não seladas/energizadas." }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Trajes",
+    "origem": "SCI_FI",
+    "itens": [
+      { "nome": "Traje de Voo", "armadura": "+2", "peso": "3", "custo": 200, "observacoes": "Cobre tronco, braços e pernas." },
+      { "nome": "Armadura de Infantaria", "armadura": "+6", "peso": "10", "custo": 800, "observacoes": "Corpo todo. Reduz dano balístico em 2." },
+      { "nome": "Traje de Batalha (Energizado)", "armadura": "+8", "peso": "20", "custo": 5000, "observacoes": "Aumenta Força em um dado. Requer bateria." }
+    ]
+  }
+]
