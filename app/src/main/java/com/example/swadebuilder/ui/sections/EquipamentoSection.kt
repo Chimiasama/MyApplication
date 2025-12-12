@@ -215,6 +215,47 @@ fun EquipamentoSection(
     ) {
         if (!expanded) return@SectionCard
 
+        val allCategorias = (categorias + superequipCategorias)
+            .filterNot {
+                it.tipo.equals("Equipamento Supers", true) ||
+                        it.tipo.equals("Equipamentos Supers", true)
+            }
+
+        // Filtra as categorias normais (não fantasia nem horror)
+        val normalCategorias = allCategorias.filter {
+            val origem = it.origem?.uppercase()
+            val isFantasia = origem == "FANTASIA"
+            val isHorror = origem == "HORROR"
+            val isTrilhador = origem == "FANTASIA_TRILHADOR"
+            !isFantasia && !isHorror && !isTrilhador
+        }
+
+        // Filtra as categorias de fantasia (se ativo)
+        val fantasiaCategorias = if (compendioFantasiaAtivo) {
+            allCategorias.filter {
+                it.origem?.uppercase() == "FANTASIA"
+            }
+        } else {
+            emptyList()
+        }
+
+        // Filtra as categorias de horror (se ativo)
+        val horrorCategorias = if (compendioHorrorAtivo) {
+            allCategorias.filter {
+                it.origem?.uppercase() == "HORROR"
+            }
+        } else {
+            emptyList()
+        }
+
+        val trilhadorCategorias = if (compendioTrilhadorAtivo) {
+            allCategorias.filter {
+                it.origem?.uppercase() == "FANTASIA_TRILHADOR"
+            }
+        } else {
+            emptyList()
+        }
+
         SectionHeader(
             onHelpClick = null,
             centerText = "Dinheiro: $dinheiro",
@@ -405,48 +446,6 @@ fun EquipamentoSection(
                     TextButton(onClick = { showMoneyDialog = false }) { Text("Cancelar") }
                 }
             )
-        }
-
-        val allCategorias = (categorias + superequipCategorias)
-            .filterNot {
-                it.tipo.equals("Equipamento Supers", true) ||
-                        it.tipo.equals("Equipamentos Supers", true)
-            }
-
-        // Filtra as categorias normais (não fantasia nem horror)
-        val normalCategorias = allCategorias.filter {
-            val origem = it.origem?.uppercase()
-            val isFantasia = origem == "FANTASIA"
-            val isHorror = origem == "HORROR"
-            val isTrilhador = origem == "FANTASIA_TRILHADOR"
-            !isFantasia && !isHorror && !isTrilhador
-        }
-
-        // Filtra as categorias de fantasia (se ativo)
-        val fantasiaCategorias = if (compendioFantasiaAtivo) {
-            allCategorias.filter {
-                it.origem?.uppercase() == "FANTASIA"
-            }
-        } else {
-            emptyList()
-        }
-
-        // Filtra as categorias de horror (se ativo)
-        val horrorCategorias = if (compendioHorrorAtivo) {
-            allCategorias.filter {
-                it.origem?.uppercase() == "HORROR"
-            }
-        } else {
-            emptyList()
-        }
-
-
-        val trilhadorCategorias = if (compendioTrilhadorAtivo) {
-            allCategorias.filter {
-                it.origem?.uppercase() == "FANTASIA_TRILHADOR"
-            }
-        } else {
-            emptyList()
         }
 
         // Renderiza categorias normais
