@@ -59,6 +59,7 @@ import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
+import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
@@ -192,27 +193,16 @@ fun VantagensContent(
     multiplosAAHabilitados: Boolean,
     viewModel: CriadorViewModel = viewModel()
 ) {
-    val context = LocalContext.current
-
-    val listaVantagensRaw: List<Vantagem> = remember {
-        val jsonString = context.assets.open("Vantagens.json")
-            .bufferedReader()
-            .use { it.readText() }
-        val json = Json {
-            ignoreUnknownKeys = true
-            explicitNulls = false
-            isLenient = true
-            coerceInputValues = true
-        }
-        json.decodeFromString(jsonString)
-    }
+    // We use the global `listaVantagens` loaded in MainActivity (which includes compendium content)
+    // instead of reloading just the base `Vantagens.json`.
+    val listaVantagensGlobal = listaVantagens
 
     val listaVantagens: List<Vantagem> =
-        remember(multiplosAAHabilitados, listaVantagensRaw) {
+        remember(multiplosAAHabilitados, listaVantagensGlobal) {
             if (multiplosAAHabilitados) {
-                listaVantagensRaw.filterNot { it.id == "antecedente_arcano" }
+                listaVantagensGlobal.filterNot { it.id == "antecedente_arcano" }
             } else {
-                listaVantagensRaw.filterNot { it.id.startsWith("antecedente_arcano_") }
+                listaVantagensGlobal.filterNot { it.id.startsWith("antecedente_arcano_") }
             }
         }
 
