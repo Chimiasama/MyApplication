@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.ui.theme.AppTheme
 
 @Composable
 fun AjudaDialog(
@@ -92,11 +93,13 @@ fun AjudaDialog(
                     )
                 }
 
-                // Placeholder Ficção Científica
-                InstructionSection(
-                    title = "Ficção Científica",
-                    content = "Módulo de Ficção Científica (Em desenvolvimento)."
-                )
+                // Placeholder Ficção Científica (Baseado no tema por enquanto, já que não há modo ativo)
+                if (state.appTheme == AppTheme.SCIFI || state.appTheme == AppTheme.CYBERPUNK) {
+                    InstructionSection(
+                        title = "Ficção Científica",
+                        content = "Módulo de Ficção Científica (Em desenvolvimento)."
+                    )
+                }
             }
         },
         confirmButton = {
