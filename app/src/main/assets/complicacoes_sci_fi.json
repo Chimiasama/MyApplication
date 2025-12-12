@@ -1,0 +1,23 @@
+[
+  {
+    "id": "comp_enjoo_gravidade",
+    "nome": "ENJOO DE GRAVIDADE ZERO",
+    "tipo": "MENOR",
+    "origem": "SCI_FI",
+    "efeito": "Sofre -2 em todas as ações em gravidade zero ou microgravidade devido à náusea."
+  },
+  {
+    "id": "comp_dependencia_tech",
+    "nome": "DEPENDÊNCIA TECNOLÓGICA",
+    "tipo": "MAIOR",
+    "origem": "SCI_FI",
+    "efeito": "Deve consumir recargas de energia ou manutenção especializada diariamente ou sofre Fadiga."
+  },
+  {
+    "id": "comp_procurado_imperio",
+    "nome": "PROCURADO (Império/Corporação)",
+    "tipo": "MAIOR",
+    "origem": "SCI_FI",
+    "efeito": "Perseguido por uma organização galáctica. Recompensas altas pela captura."
+  }
+]

@@ -52,6 +52,7 @@ fun TelaInicial(
         modoSupers: Boolean,
         compendioFantasiaAtivo: Boolean,
         compendioHorrorAtivo: Boolean,
+        compendioSciFiAtivo: Boolean,
         compendioTrilhadorAtivo: Boolean,
         modoMonstroAtivo: Boolean,
         modoSuperequipamentos: Boolean,
@@ -101,6 +102,7 @@ fun TelaInicial(
 
     // Ficção Científica
     var expFiccao by rememberSaveable { mutableStateOf(false) }
+    var optCompendioSciFi by rememberSaveable { mutableStateOf(false) }
 
     var showCreditsDialog by remember { mutableStateOf(false) }
 
@@ -536,7 +538,22 @@ Feito por Rafael S.W.
                         )
                     }
                     if (expFiccao) {
-                        Text("— sem opções por enquanto —")
+                        Spacer(Modifier.height(4.dp))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { optCompendioSciFi = !optCompendioSciFi }
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Checkbox(
+                                checked = optCompendioSciFi,
+                                onCheckedChange = { optCompendioSciFi = it }
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text("Compêndio de Sci-Fi", fontWeight = FontWeight.Bold)
+                        }
                     }
                 }
             },
@@ -549,6 +566,7 @@ Feito por Rafael S.W.
                         optSuperPoderes,
                         optCompendioFantasia,
                         optCompendioHorror,
+                        optCompendioSciFi,
                         optCompendioTrilhador,
                         optModoMonstro,
                         optSuperequipamentos,

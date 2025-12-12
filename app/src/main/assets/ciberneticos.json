@@ -1,0 +1,51 @@
+[
+  {
+    "tipo": "CIBERNETICO",
+    "subtipo": "Implantes",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Olhos Biônicos",
+        "custo": 2000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Ignora penalidades de iluminação (Visão Noturna). Zoom 10x (+2 em Perceber visual)."
+      },
+      {
+        "nome": "Braço Cibernético",
+        "custo": 5000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Aumenta Força do braço em um dado. Dano desarmado For+d4. Não sente dor no membro."
+      },
+      {
+        "nome": "Pernas Cibernéticas",
+        "custo": 6000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Aumenta Movimentação em +2 e Salto."
+      },
+      {
+        "nome": "Blindagem Dérmica (Nível 1)",
+        "custo": 3000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Concede +2 de Armadura natural."
+      },
+      {
+        "nome": "Interface de Dados",
+        "custo": 1000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Permite conexão direta com computadores (+2 em Hacking/Eletrônica)."
+      },
+      {
+        "nome": "Reflexos Ampliados",
+        "custo": 10000,
+        "tensao": 3,
+        "origem": "SCI_FI",
+        "observacoes": "Requer Agilidade d8. Concede a vantagem Rápido ou Nível 1 de Rapidez."
+      }
+    ]
+  }
+]

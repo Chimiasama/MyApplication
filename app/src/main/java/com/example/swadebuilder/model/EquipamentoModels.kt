@@ -28,7 +28,9 @@ data class EquipamentoItem(
     val manobrabilidade: JsonElement? = null,
     val velMaxima: JsonElement? = null,
     val resistencia: JsonElement? = null,
-    val tripulacao: JsonElement? = null
+    val tripulacao: JsonElement? = null,
+    val tensao: Int? = null,
+    val mods_slots: Int? = null
 )
 
 @Serializable

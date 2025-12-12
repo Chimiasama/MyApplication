@@ -193,6 +193,12 @@ class MainActivity : ComponentActivity() {
             it.origem.equals("HORROR", ignoreCase = true)
         }
 
+        val sciFiVantagens: List<Vantagem> = try {
+            val jsonSciFi = assets.open("vantagens_sci_fi.json")
+                .bufferedReader().use { it.readText() }
+            json.decodeFromString(jsonSciFi)
+        } catch (e: Exception) { emptyList() }
+
         val trilhadorVantagens: List<Vantagem> = try {
             val jsonTrilhador = assets.open("vantagens_trilhador.json")
                 .bufferedReader().use { it.readText() }
@@ -201,7 +207,7 @@ class MainActivity : ComponentActivity() {
 
         AppData.trilhadorVantagens = trilhadorVantagens
 
-        listaVantagens = todasVantagens + trilhadorVantagens
+        listaVantagens = todasVantagens + trilhadorVantagens + sciFiVantagens
 
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
@@ -217,10 +223,17 @@ class MainActivity : ComponentActivity() {
                 .use { it.readText() }
         } catch (e: Exception) { "[]" }
 
+        val complicacoesSciFiJson = try {
+            assets.open("complicacoes_sci_fi.json")
+                .bufferedReader()
+                .use { it.readText() }
+        } catch (e: Exception) { "[]" }
+
         val compsBase = json.decodeFromString(ListSerializer(Complicacao.serializer()), complicacoesJson)
         val compsTrilhador = json.decodeFromString(ListSerializer(Complicacao.serializer()), complicacoesTrilhadorJson)
+        val compsSciFi = json.decodeFromString(ListSerializer(Complicacao.serializer()), complicacoesSciFiJson)
 
-        listaComplicacoes = compsBase + compsTrilhador
+        listaComplicacoes = compsBase + compsTrilhador + compsSciFi
 
         val ancestralRaw = assets.open("listaancestralidade.json")
             .bufferedReader(Charsets.UTF_8)
@@ -232,10 +245,17 @@ class MainActivity : ComponentActivity() {
                 .use { it.readText() }
         } catch (e: Exception) { "[]" }
 
+        val ancestralSciFiRaw = try {
+            assets.open("ancestralidades_sci_fi.json")
+                .bufferedReader(Charsets.UTF_8)
+                .use { it.readText() }
+        } catch (e: Exception) { "[]" }
+
         val ancsBase = json.decodeFromString<List<RacialModifier>>(ancestralRaw)
         val ancsTrilhador = json.decodeFromString<List<RacialModifier>>(ancestralTrilhadorRaw)
+        val ancsSciFi = json.decodeFromString<List<RacialModifier>>(ancestralSciFiRaw)
 
-        listaAncestralidadesJson = ancsBase + ancsTrilhador
+        listaAncestralidadesJson = ancsBase + ancsTrilhador + ancsSciFi
 
         val equipTrilhadorRaw = try {
             assets.open("equipamentos_trilhador.json")
@@ -243,6 +263,30 @@ class MainActivity : ComponentActivity() {
         } catch (e: Exception) { "[]" }
         val equipTrilhadorCategorias: List<EquipamentoCategoria> = try {
             json.decodeFromString(equipTrilhadorRaw)
+        } catch (e: Exception) { emptyList() }
+
+        val equipSciFiRaw = try {
+            assets.open("equipamentos_sci_fi.json")
+                .bufferedReader().use { it.readText() }
+        } catch (e: Exception) { "[]" }
+        val equipSciFiCategorias: List<EquipamentoCategoria> = try {
+            json.decodeFromString(equipSciFiRaw)
+        } catch (e: Exception) { emptyList() }
+
+        val ciberneticosRaw = try {
+            assets.open("ciberneticos.json")
+                .bufferedReader().use { it.readText() }
+        } catch (e: Exception) { "[]" }
+        val ciberneticosCategorias: List<EquipamentoCategoria> = try {
+            json.decodeFromString(ciberneticosRaw)
+        } catch (e: Exception) { emptyList() }
+
+        val chassisRaw = try {
+            assets.open("chassis_sci_fi.json")
+                .bufferedReader().use { it.readText() }
+        } catch (e: Exception) { "[]" }
+        val chassisCategorias: List<EquipamentoCategoria> = try {
+            json.decodeFromString(chassisRaw)
         } catch (e: Exception) { emptyList() }
 
         val monstrosJson = assets
@@ -539,7 +583,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioTrilhadorAtivo, modoMonstroAtivo, _, _,
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, modoMonstroAtivo, _, _,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, grandesResponsabilidades, showHelpMessages ->
 
@@ -551,6 +595,7 @@ class MainActivity : ComponentActivity() {
                                         modoSupers         = modoSupers,
                                         compendioFantasiaAtivo = compendioFantasiaAtivo,
                                         compendioHorrorAtivo = compendioHorrorAtivo,
+                                        compendioSciFiAtivo = compendioSciFiAtivo,
                                         compendioTrilhadorAtivo = compendioTrilhadorAtivo,
                                         modoMonstroAtivo = modoMonstroAtivo,
                                         usarEspecializacoesDePericia = usarEspecializacaoPer,
@@ -679,7 +724,7 @@ class MainActivity : ComponentActivity() {
                                             expMonstro = expMonstro,
                                             onToggleMonstro = { expMonstro = !expMonstro },
 
-                                            equipamentoCategorias = equipamentoCategorias + equipTrilhadorCategorias,
+                                            equipamentoCategorias = equipamentoCategorias + equipTrilhadorCategorias + equipSciFiCategorias + ciberneticosCategorias + chassisCategorias,
                                             superequipCategorias  = superequipCategorias,
                                             listaSuperPoderes     = listaSuperPoderes,
                                             modoOficialAtivo      = state.modoOficialAtivo

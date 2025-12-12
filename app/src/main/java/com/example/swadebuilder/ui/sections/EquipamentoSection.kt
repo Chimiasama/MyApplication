@@ -190,6 +190,7 @@ fun EquipamentoSection(
     onToggleSoldadoCarga: () -> Unit,
     compendioFantasiaAtivo: Boolean = false,
     compendioHorrorAtivo: Boolean = false,
+    compendioSciFiAtivo: Boolean = false,
     compendioTrilhadorAtivo: Boolean = false,
     modoOficialAtivo: Boolean = false
 ) {
@@ -200,6 +201,7 @@ fun EquipamentoSection(
     var expSuperequip by rememberSaveable { mutableStateOf(false) }
     var expFantasiaEquip by rememberSaveable { mutableStateOf(false) }
     var expHorrorEquip by rememberSaveable { mutableStateOf(false) }
+    var expSciFiEquip by rememberSaveable { mutableStateOf(false) }
     var expTrilhadorEquip by rememberSaveable { mutableStateOf(false) }
 
     var filter by remember { mutableStateOf(EquipFilter()) }
@@ -221,13 +223,14 @@ fun EquipamentoSection(
                         it.tipo.equals("Equipamentos Supers", true)
             }
 
-        // Filtra as categorias normais (não fantasia nem horror)
+        // Filtra as categorias normais (não fantasia nem horror nem sci-fi)
         val normalCategorias = allCategorias.filter {
             val origem = it.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
             val isFantasia = origem == "FANTASIA"
             val isHorror = origem == "HORROR"
+            val isSciFi = origem == "SCI_FI"
             val isTrilhador = origem == "FANTASIA_TRILHADOR"
-            !isFantasia && !isHorror && !isTrilhador
+            !isFantasia && !isHorror && !isSciFi && !isTrilhador
         }
 
         // Filtra as categorias de fantasia (se ativo)
@@ -243,6 +246,14 @@ fun EquipamentoSection(
         val horrorCategorias = if (compendioHorrorAtivo) {
             allCategorias.filter {
                 (it.origem?.uppercase() ?: "") == "HORROR"
+            }
+        } else {
+            emptyList()
+        }
+
+        val sciFiCategorias = if (compendioSciFiAtivo) {
+            allCategorias.filter {
+                (it.origem?.uppercase() ?: "") == "SCI_FI"
             }
         } else {
             emptyList()
@@ -388,6 +399,25 @@ fun EquipamentoSection(
                             if (soldadoCargaAtivo) "Bônus Soldado ativo" else "Bônus Soldado inativo"
                         )
                     }
+                )
+            }
+        }
+
+        if (compendioSciFiAtivo && sciFiCategorias.isNotEmpty()) {
+            Spacer(Modifier.padding(vertical = 4.dp))
+            CollapsibleSection(
+                title = "Equipamento Sci-Fi",
+                expanded = expSciFiEquip,
+                onToggle = { expSciFiEquip = !expSciFiEquip }
+            ) {
+                RenderCategoryList(
+                    categories = sciFiCategorias,
+                    filter = filter,
+                    dinheiro = dinheiro,
+                    allowLongTexts = allowLongTexts,
+                    detalhesExpandidos = detalhesExpandidos,
+                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
+                    showOriginalName = modoOficialAtivo
                 )
             }
         }
@@ -778,6 +808,8 @@ fun EquipamentoListItem(
                 equipamento.velMaxima.contentString()?.let { add("Velocidade Máx.: $it") }
                 equipamento.resistencia.contentString()?.let { add("Resistência: $it") }
                 equipamento.tripulacao.contentString()?.let { add("Tripulação: $it") }
+                equipamento.tensao?.let { add("Tensão: $it") }
+                equipamento.mods_slots?.let { add("Slots de Mods: $it") }
             }
 
             if (allowLongTexts && detalhes.isNotEmpty()) {

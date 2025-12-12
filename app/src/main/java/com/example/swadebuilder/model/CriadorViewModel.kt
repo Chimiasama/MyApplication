@@ -109,6 +109,7 @@ class CriadorViewModel : ViewModel() {
         modoSupers: Boolean,
         compendioFantasiaAtivo: Boolean,
         compendioHorrorAtivo: Boolean = false,
+        compendioSciFiAtivo: Boolean = false,
         compendioTrilhadorAtivo: Boolean = false,
         modoMonstroAtivo: Boolean = false,
         usarEspecializacoesDePericia: Boolean = false,
@@ -120,6 +121,7 @@ class CriadorViewModel : ViewModel() {
         state.modoSupers = modoSupers
         state.compendioFantasiaAtivo = compendioFantasiaAtivo
         state.compendioHorrorAtivo = compendioHorrorAtivo
+        state.compendioSciFiAtivo = compendioSciFiAtivo
         state.compendioTrilhadorAtivo = compendioTrilhadorAtivo
         state.modoMonstroAtivo = modoMonstroAtivo
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null

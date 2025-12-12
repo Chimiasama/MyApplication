@@ -620,6 +620,7 @@ private fun EquipamentoSection(
         },
         compendioFantasiaAtivo = state.compendioFantasiaAtivo,
         compendioHorrorAtivo = state.compendioHorrorAtivo,
+        compendioSciFiAtivo = state.compendioSciFiAtivo,
         compendioTrilhadorAtivo = state.compendioTrilhadorAtivo,
         modoOficialAtivo = state.modoOficialAtivo
     )
