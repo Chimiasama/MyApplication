@@ -46,7 +46,10 @@ fun RenderCategoryList(
                     .filter { it.tipo == tipo }
                     .let { list ->
                         if (filter.origens.isNotEmpty())
-                            list.filter { (it.origem?.uppercase() ?: "") in filter.origens }
+                            list.filter {
+                                val o = it.origem?.ifBlank { "BASICO" } ?: "BASICO"
+                                o.uppercase() in filter.origens
+                            }
                         else list
                     }
 

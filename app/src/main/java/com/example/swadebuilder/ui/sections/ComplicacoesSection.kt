@@ -85,7 +85,8 @@ fun ComplicacoesSection(
     }
 
     val complicacoesFiltradas = listaComplicacoes.filter { comp ->
-        comp.origem.uppercase().semAcentos().trim() in origensAtivas
+        val origemSafe = if (comp.origem.isBlank()) "BASICO" else comp.origem
+        origemSafe.uppercase().semAcentos().trim() in origensAtivas
     }
 
     SectionCard(
@@ -242,7 +243,7 @@ fun ComplicacoesSection(
 
             Spacer(Modifier.height(4.dp))
 
-            val pequComp = complicacoesFiltradas.first { it.id == "pequeno" }
+            val pequComp = complicacoesFiltradas.firstOrNull { it.id == "pequeno" }
 
             val listaParaMostrar = complicacoesFiltradas
                 .filter { comp ->
@@ -328,8 +329,10 @@ fun ComplicacoesSection(
                                                     state.rebuildAllPericiaStacks()
                                                 }
                                                 "jovem" -> {
-                                                    state.complicacoesSelecionadas[comp] = "Maior"
-                                                    state.applyYoungMajor(pequComp)
+                                                    if (pequComp != null) {
+                                                        state.complicacoesSelecionadas[comp] = "Maior"
+                                                        state.applyYoungMajor(pequComp)
+                                                    }
                                                 }
                                                 "obeso" -> {
                                                     state.complicacoesSelecionadas[comp] = "Maior"

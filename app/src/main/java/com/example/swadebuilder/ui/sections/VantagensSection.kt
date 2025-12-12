@@ -232,6 +232,9 @@ fun VantagensContent(
             val isHorror = origemNorm == "HORROR"
             val isTrilhador = origemNorm == "FANTASIA_TRILHADOR"
 
+            // Allow filtering logic to work properly: include items if their compendium is active OR if they are basic.
+            // But we also need to allow users to filter via the dialog even if the compendium is active.
+            // The logic below determines which items are *eligible* to be shown. The dialog filter is applied later.
             isBasico || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isTrilhador && state.compendioTrilhadorAtivo)
         }
     }
@@ -325,7 +328,7 @@ fun VantagensContent(
         )
 
         if (showFilterDialog) {
-            val allOrigens = listaVantagensAtivas.map { it.origem.uppercase() }.distinct()
+            val allOrigens = listaVantagensAtivas.map { it.origem.ifBlank { "BASICO" }.uppercase() }.distinct()
             val allEstagios = listaDeEstagios.map { it.nome }
             val allAtributos = mapaAtributosDisplay.values.toList()
             val requiredPericias = listaVantagensAtivas.flatMap { vant ->
@@ -491,8 +494,9 @@ fun VantagensContent(
                                         state.vantagensSelecionadas.any { it.id == "profissional" })
                     }
                     .filter { vant ->
+                        val vantOrigem = vant.origem.ifBlank { "BASICO" }.uppercase()
                         if (filter.origens.isNotEmpty() &&
-                            vant.origem.uppercase() !in filter.origens
+                            vantOrigem !in filter.origens
                         ) return@filter false
 
                         if (filter.estagios.isNotEmpty() &&

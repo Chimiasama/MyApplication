@@ -223,7 +223,7 @@ fun EquipamentoSection(
 
         // Filtra as categorias normais (não fantasia nem horror)
         val normalCategorias = allCategorias.filter {
-            val origem = it.origem?.uppercase()
+            val origem = it.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
             val isFantasia = origem == "FANTASIA"
             val isHorror = origem == "HORROR"
             val isTrilhador = origem == "FANTASIA_TRILHADOR"
@@ -233,7 +233,7 @@ fun EquipamentoSection(
         // Filtra as categorias de fantasia (se ativo)
         val fantasiaCategorias = if (compendioFantasiaAtivo) {
             allCategorias.filter {
-                it.origem?.uppercase() == "FANTASIA"
+                (it.origem?.uppercase() ?: "") == "FANTASIA"
             }
         } else {
             emptyList()
@@ -242,7 +242,7 @@ fun EquipamentoSection(
         // Filtra as categorias de horror (se ativo)
         val horrorCategorias = if (compendioHorrorAtivo) {
             allCategorias.filter {
-                it.origem?.uppercase() == "HORROR"
+                (it.origem?.uppercase() ?: "") == "HORROR"
             }
         } else {
             emptyList()
@@ -250,7 +250,7 @@ fun EquipamentoSection(
 
         val trilhadorCategorias = if (compendioTrilhadorAtivo) {
             allCategorias.filter {
-                it.origem?.uppercase() == "FANTASIA_TRILHADOR"
+                (it.origem?.uppercase() ?: "") == "FANTASIA_TRILHADOR"
             }
         } else {
             emptyList()
@@ -314,8 +314,8 @@ fun EquipamentoSection(
             val allTipos = allCategoriasVisiveis.map { it.tipo }.distinct()
             val allSubtipos = allCategoriasVisiveis.map { it.subtipo }.distinct()
 
-            val allOrigens = (categorias.mapNotNull { it.origem } +
-                    superequipCategorias.mapNotNull { it.origem })
+            val allOrigens = (categorias + superequipCategorias)
+                .map { it.origem?.ifBlank { "BASICO" } ?: "BASICO" }
                 .map { it.uppercase() }
                 .distinct()
 
@@ -479,7 +479,8 @@ fun EquipamentoSection(
                         .let { list ->
                             if (filter.origens.isNotEmpty())
                                 list.filter {
-                                    (it.origem?.uppercase() ?: "") in filter.origens
+                                    val safeOrigem = it.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
+                                    safeOrigem in filter.origens
                                 }
                             else list
                         }
@@ -532,28 +533,19 @@ fun EquipamentoSection(
                                             true
                                         }
                                         .forEach { equipamento ->
-                                            Row(
-                                                Modifier
-                                                    .fillMaxWidth()
-                                                    .clickable {
-                                                        onEquipamentoDoubleClick(equipamento)
-                                                    }
-                                                    .padding(
-                                                        vertical = 4.dp,
-                                                        horizontal = 4.dp
-                                                    ),
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
-                                                Text(
-                                                    equipamento.nome,
-                                                    Modifier.weight(1f),
-                                                    style = MaterialTheme.typography.bodyMedium
-                                                )
-                                                Text(
-                                                    equipamento.custo.toString(),
-                                                    style = MaterialTheme.typography.bodyMedium
-                                                )
-                                            }
+                                            EquipamentoListItem(
+                                                equipamento = equipamento,
+                                                onClick = {
+                                                    onEquipamentoDoubleClick(equipamento)
+                                                },
+                                                allowLongTexts = allowLongTexts,
+                                                expanded = detalhesExpandidos[equipamento.nome] == true,
+                                                onToggleDetails = {
+                                                    val current = detalhesExpandidos[equipamento.nome] ?: false
+                                                    detalhesExpandidos[equipamento.nome] = !current
+                                                },
+                                                showOriginalName = modoOficialAtivo
+                                            )
                                         }
                                 } else {
                                     subsub.forEach { ss ->
@@ -606,7 +598,8 @@ fun EquipamentoSection(
                                                               onToggleDetails = {
                                                                   val current = detalhesExpandidos[equipamento.nome] ?: false
                                                                   detalhesExpandidos[equipamento.nome] = !current
-                                                              }
+                                                              },
+                                                              showOriginalName = modoOficialAtivo
                                                           )
                                                       }
                                                   }
@@ -704,7 +697,8 @@ fun EquipamentoSection(
                                 onToggleDetails = {
                                     val current = detalhesExpandidos[equipamento.nome] ?: false
                                     detalhesExpandidos[equipamento.nome] = !current
-                                }
+                                },
+                                showOriginalName = modoOficialAtivo
                             )
                         }
                 }
