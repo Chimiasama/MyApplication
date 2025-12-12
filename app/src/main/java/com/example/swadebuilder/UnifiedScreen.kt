@@ -622,6 +622,7 @@ private fun EquipamentoSection(
         compendioHorrorAtivo = state.compendioHorrorAtivo,
         compendioSciFiAtivo = state.compendioSciFiAtivo,
         compendioTrilhadorAtivo = state.compendioTrilhadorAtivo,
+        compendioDeadlandsAtivo = state.compendioDeadlandsAtivo,
         modoOficialAtivo = state.modoOficialAtivo
     )
 }

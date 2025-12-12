@@ -3,5 +3,10 @@
   { "key": "MAGIA",     "slots": 3, "pp": 10, "foco": "Conjurar" },
   { "key": "MILAGRES",  "slots": 3, "pp": 10, "foco": "Fé" },
   { "key": "PSIÔNICOS", "slots": 3, "pp": 10, "foco": "Psiônicos" },
-  { "key": "CIÊNCIA ESTRANHA", "slots": 2, "pp": 15, "foco": "Ciência Estranha" }
+  { "key": "CIÊNCIA ESTRANHA", "slots": 2, "pp": 15, "foco": "Ciência Estranha" },
+  { "key": "ABENCOADO", "slots": 3, "pp": 15, "foco": "Fé" },
+  { "key": "CIENTISTA LOUCO", "slots": 2, "pp": 15, "foco": "Ciência Estranha" },
+  { "key": "MESTRE DO CHI", "slots": 3, "pp": 15, "foco": "Foco" },
+  { "key": "VIGARISTA", "slots": 3, "pp": 10, "foco": "Conjurar" },
+  { "key": "XAMA", "slots": 3, "pp": 15, "foco": "Fé" }
 ]

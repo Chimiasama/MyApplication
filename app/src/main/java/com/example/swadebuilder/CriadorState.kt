@@ -45,6 +45,7 @@ class CriadorState {
     var compendioHorrorAtivo by mutableStateOf(false)
     var compendioSciFiAtivo by mutableStateOf(false)
     var compendioTrilhadorAtivo by mutableStateOf(false)
+    var compendioDeadlandsAtivo by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
@@ -792,6 +793,12 @@ class CriadorState {
             val totalFeitas = comprasPpPorEstagio.values.sum()
             val maxPermitidas = maxComprasPpAteAgora()
             if (totalFeitas >= maxPermitidas) return false
+        }
+
+        // 2a) Vantagens exclusivas de Ressuscitado exigem ter a vantagem-base
+        if (v.categoria == Categoria.RESSUSCITADO) {
+            val temRessuscitado = vantagensSelecionadas.any { it.id == "ressuscitado" }
+            if (!temRessuscitado) return false
         }
 
         // 3) Antecedente Arcano e multi-arcano
@@ -1660,6 +1667,7 @@ class CriadorState {
                 compendioHorrorAtivo = compendioHorrorAtivo,
                 compendioSciFiAtivo = compendioSciFiAtivo,
                 compendioTrilhadorAtivo = compendioTrilhadorAtivo,
+                compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                 modoOficialAtivo = modoOficialAtivo,
                 modoMonstroAtivo = modoMonstroAtivo,
                 tipoMonstroSelecionado = tipoMonstroSelecionado,
@@ -1785,6 +1793,7 @@ class CriadorState {
         compendioHorrorAtivo = flags.compendioHorrorAtivo
         compendioSciFiAtivo = flags.compendioSciFiAtivo
         compendioTrilhadorAtivo = flags.compendioTrilhadorAtivo
+        compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo
         modoOficialAtivo = flags.modoOficialAtivo
         modoMonstroAtivo = flags.modoMonstroAtivo
         usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia

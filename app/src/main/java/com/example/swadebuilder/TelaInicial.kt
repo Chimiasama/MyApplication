@@ -25,6 +25,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -54,6 +55,7 @@ fun TelaInicial(
         compendioHorrorAtivo: Boolean,
         compendioSciFiAtivo: Boolean,
         compendioTrilhadorAtivo: Boolean,
+        compendioDeadlandsAtivo: Boolean,
         modoMonstroAtivo: Boolean,
         modoSuperequipamentos: Boolean,
         modoSuperComplicacoes: Boolean,
@@ -99,6 +101,7 @@ fun TelaInicial(
     var expFantasia by rememberSaveable { mutableStateOf(false) }
     var optCompendioFantasia by rememberSaveable { mutableStateOf(false) }
     var optCompendioTrilhador by rememberSaveable { mutableStateOf(false) }
+    var optCompendioDeadlands by rememberSaveable { mutableStateOf(false) }
 
     // Ficção Científica
     var expFiccao by rememberSaveable { mutableStateOf(false) }
@@ -555,6 +558,26 @@ Feito por Rafael S.W.
                             Text("Compêndio de Sci-Fi", fontWeight = FontWeight.Bold)
                         }
                     }
+
+                    Spacer(Modifier.height(16.dp))
+
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable { optCompendioDeadlands = !optCompendioDeadlands }
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            checked = optCompendioDeadlands,
+                            onCheckedChange = { optCompendioDeadlands = it }
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Column {
+                            Text("Deadlands: O Oeste Estranho", fontWeight = FontWeight.Bold)
+                            Text("Harroweds, dispositivos infernais e o Velho Oeste sombrio.", style = MaterialTheme.typography.bodySmall)
+                        }
+                    }
                 }
             },
             confirmButton = {
@@ -568,6 +591,7 @@ Feito por Rafael S.W.
                         optCompendioHorror,
                         optCompendioSciFi,
                         optCompendioTrilhador,
+                        optCompendioDeadlands,
                         optModoMonstro,
                         optSuperequipamentos,
                         optSuperComplicacoes,
@@ -579,6 +603,7 @@ Feito por Rafael S.W.
                         optShowHelpMessages
                     )
                     viewModel.state.compendioTrilhadorAtivo = optCompendioTrilhador
+                    viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
 
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
                     viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas

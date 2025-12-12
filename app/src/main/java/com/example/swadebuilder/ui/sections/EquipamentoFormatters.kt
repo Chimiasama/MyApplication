@@ -50,7 +50,13 @@ internal fun EquipamentoItem.toResumo(): EquipamentoResumo {
         linhaArma = linhaArma,
         linhaGeral = linhaGeral,
         linhaVeiculo = linhaVeiculo,
-        observacao = observacoes.asText()?.takeIf { it.isNotBlank() },
+        observacao = buildString {
+            observacoes.asText()?.takeIf { it.isNotBlank() }?.let { append(it) }
+            malfuncionamento.asText()?.takeIf { it.isNotBlank() }?.let { malf ->
+                if (isNotEmpty()) append("\n")
+                append("Malfuncionamento: $malf")
+            }
+        }.ifBlank { null },
         custo = custo.asText(),
     )
 }

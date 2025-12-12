@@ -69,6 +69,7 @@ class CriadorViewModel : ViewModel() {
             modoSupers = flags.modoSupers,
             compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
             compendioHorrorAtivo = flags.compendioHorrorAtivo,
+            compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo,
             modoMonstroAtivo = flags.modoMonstroAtivo,
             usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia,
             grandesResponsabilidades = flags.grandesResponsabilidades,
@@ -111,6 +112,7 @@ class CriadorViewModel : ViewModel() {
         compendioHorrorAtivo: Boolean = false,
         compendioSciFiAtivo: Boolean = false,
         compendioTrilhadorAtivo: Boolean = false,
+        compendioDeadlandsAtivo: Boolean = false,
         modoMonstroAtivo: Boolean = false,
         usarEspecializacoesDePericia: Boolean = false,
         grandesResponsabilidades: Boolean = false,
@@ -123,6 +125,7 @@ class CriadorViewModel : ViewModel() {
         state.compendioHorrorAtivo = compendioHorrorAtivo
         state.compendioSciFiAtivo = compendioSciFiAtivo
         state.compendioTrilhadorAtivo = compendioTrilhadorAtivo
+        state.compendioDeadlandsAtivo = compendioDeadlandsAtivo
         state.modoMonstroAtivo = modoMonstroAtivo
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
         state.modoSuperequip = modoSupers

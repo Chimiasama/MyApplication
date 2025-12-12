@@ -16,6 +16,11 @@ fun Vantagem.toArcanoKey(): String? {
         "(MILAGRES" in n -> "MILAGRES"
         ("(PSIONICOS" in n) || ("(PSIÔNICOS" in nome) -> "PSIONICOS"
         ("(CIENCIA ESTRANHA" in n) || ("(CIÊNCIA ESTRANHA" in nome) -> "CIENCIA ESTRANHA"
+        "ABENCOADO" in n -> "ABENCOADO"
+        "CIENTISTA LOUCO" in n -> "CIENTISTA LOUCO"
+        "MESTRE DO CHI" in n -> "MESTRE DO CHI"
+        "VIGARISTA" in n -> "VIGARISTA"
+        "XAMA" in n -> "XAMA"
         else -> null
     }
 }

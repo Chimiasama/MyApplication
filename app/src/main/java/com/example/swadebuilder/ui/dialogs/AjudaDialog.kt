@@ -69,6 +69,17 @@ fun AjudaDialog(
                     )
                 }
 
+                if (state.compendioDeadlandsAtivo) {
+                    InstructionSection(
+                        title = "Deadlands: O Oeste Estranho",
+                        content = """
+                            • Habilita ancestralidades, complicações e vantagens exclusivas de Deadlands.
+                            • Antecedentes Arcanos próprios (Abençoado, Cientista Louco, Mestre do Chi, Vigarista e Xamã) com PPs e perícias específicas.
+                            • Equipamentos inclui armas de época e dispositivos infernais com possíveis malfuncionamentos.
+                        """.trimIndent()
+                    )
+                }
+
                 // Seção Supers e Poderes
                 if (state.modoSupers) {
                     InstructionSection(

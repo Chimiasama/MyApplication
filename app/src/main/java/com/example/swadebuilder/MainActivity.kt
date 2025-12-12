@@ -199,6 +199,12 @@ class MainActivity : ComponentActivity() {
             json.decodeFromString(jsonSciFi)
         } catch (e: Exception) { emptyList() }
 
+        val deadlandsVantagens: List<Vantagem> = try {
+            val jsonDeadlands = assets.open("vantagens_deadlands.json")
+                .bufferedReader().use { it.readText() }
+            json.decodeFromString(jsonDeadlands)
+        } catch (e: Exception) { emptyList() }
+
         val trilhadorVantagens: List<Vantagem> = try {
             val jsonTrilhador = assets.open("vantagens_trilhador.json")
                 .bufferedReader().use { it.readText() }
@@ -207,7 +213,7 @@ class MainActivity : ComponentActivity() {
 
         AppData.trilhadorVantagens = trilhadorVantagens
 
-        listaVantagens = todasVantagens + trilhadorVantagens + sciFiVantagens
+        listaVantagens = todasVantagens + trilhadorVantagens + sciFiVantagens + deadlandsVantagens
 
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
@@ -229,11 +235,18 @@ class MainActivity : ComponentActivity() {
                 .use { it.readText() }
         } catch (e: Exception) { "[]" }
 
+        val complicacoesDeadlandsJson = try {
+            assets.open("complicacoes_deadlands.json")
+                .bufferedReader()
+                .use { it.readText() }
+        } catch (e: Exception) { "[]" }
+
         val compsBase = json.decodeFromString(ListSerializer(Complicacao.serializer()), complicacoesJson)
         val compsTrilhador = json.decodeFromString(ListSerializer(Complicacao.serializer()), complicacoesTrilhadorJson)
         val compsSciFi = json.decodeFromString(ListSerializer(Complicacao.serializer()), complicacoesSciFiJson)
+        val compsDeadlands = json.decodeFromString(ListSerializer(Complicacao.serializer()), complicacoesDeadlandsJson)
 
-        listaComplicacoes = compsBase + compsTrilhador + compsSciFi
+        listaComplicacoes = compsBase + compsTrilhador + compsSciFi + compsDeadlands
 
         val ancestralRaw = assets.open("listaancestralidade.json")
             .bufferedReader(Charsets.UTF_8)
@@ -251,11 +264,18 @@ class MainActivity : ComponentActivity() {
                 .use { it.readText() }
         } catch (e: Exception) { "[]" }
 
+        val ancestralDeadlandsRaw = try {
+            assets.open("ancestralidades_deadlands.json")
+                .bufferedReader(Charsets.UTF_8)
+                .use { it.readText() }
+        } catch (e: Exception) { "[]" }
+
         val ancsBase = json.decodeFromString<List<RacialModifier>>(ancestralRaw)
         val ancsTrilhador = json.decodeFromString<List<RacialModifier>>(ancestralTrilhadorRaw)
         val ancsSciFi = json.decodeFromString<List<RacialModifier>>(ancestralSciFiRaw)
+        val ancsDeadlands = json.decodeFromString<List<RacialModifier>>(ancestralDeadlandsRaw)
 
-        listaAncestralidadesJson = ancsBase + ancsTrilhador + ancsSciFi
+        listaAncestralidadesJson = ancsBase + ancsTrilhador + ancsSciFi + ancsDeadlands
 
         val equipTrilhadorRaw = try {
             assets.open("equipamentos_trilhador.json")
@@ -271,6 +291,14 @@ class MainActivity : ComponentActivity() {
         } catch (e: Exception) { "[]" }
         val equipSciFiCategorias: List<EquipamentoCategoria> = try {
             json.decodeFromString(equipSciFiRaw)
+        } catch (e: Exception) { emptyList() }
+
+        val equipDeadlandsRaw = try {
+            assets.open("equipamentos_deadlands.json")
+                .bufferedReader().use { it.readText() }
+        } catch (e: Exception) { "[]" }
+        val equipDeadlandsCategorias: List<EquipamentoCategoria> = try {
+            json.decodeFromString(equipDeadlandsRaw)
         } catch (e: Exception) { emptyList() }
 
         val ciberneticosRaw = try {
@@ -583,7 +611,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, modoMonstroAtivo, _, _,
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, modoMonstroAtivo, _, _,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, grandesResponsabilidades, showHelpMessages ->
 
@@ -597,6 +625,7 @@ class MainActivity : ComponentActivity() {
                                         compendioHorrorAtivo = compendioHorrorAtivo,
                                         compendioSciFiAtivo = compendioSciFiAtivo,
                                         compendioTrilhadorAtivo = compendioTrilhadorAtivo,
+                                        compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                                         modoMonstroAtivo = modoMonstroAtivo,
                                         usarEspecializacoesDePericia = usarEspecializacaoPer,
                                         showHelpMessages = showHelpMessages
@@ -724,7 +753,7 @@ class MainActivity : ComponentActivity() {
                                             expMonstro = expMonstro,
                                             onToggleMonstro = { expMonstro = !expMonstro },
 
-                                            equipamentoCategorias = equipamentoCategorias + equipTrilhadorCategorias + equipSciFiCategorias + ciberneticosCategorias + chassisCategorias,
+                                            equipamentoCategorias = equipamentoCategorias + equipTrilhadorCategorias + equipSciFiCategorias + equipDeadlandsCategorias + ciberneticosCategorias + chassisCategorias,
                                             superequipCategorias  = superequipCategorias,
                                             listaSuperPoderes     = listaSuperPoderes,
                                             modoOficialAtivo      = state.modoOficialAtivo
