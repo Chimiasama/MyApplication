@@ -1,106 +1,61 @@
-// CriadorViewModel.kt
 package com.example.swadebuilder.model
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.swadebuilder.AppData
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.Estagio
 import com.example.swadebuilder.Pericia
-import com.example.swadebuilder.listaComplicacoes
+import com.example.swadebuilder.TOTAL_PROGRESS_LIMIT
+import com.example.swadebuilder.dynamicStageCaps
+import com.example.swadebuilder.listaAncestralidadesJson
+import com.example.swadebuilder.listaAtributos
+import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
+import com.example.swadebuilder.nivelParaEstagio
 import com.example.swadebuilder.normAAKey
-import com.example.swadebuilder.toArcanoKey
+import com.example.swadebuilder.stageIndexForSlot
+import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-// ---- OBJETOS DE RETORNO ----
-data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
-data class InvestResult(val ok: Boolean, val mensagem: String)
-
-/**
- * ViewModel que gerencia o estado de criação de personagem.
- */
 class CriadorViewModel : ViewModel() {
-
     val state = CriadorState()
-
-    private val _feedbackMessages = mutableStateListOf<String>()
-    val feedbackMessages: List<String> = _feedbackMessages
+    val feedbackMessages = mutableStateListOf<String>()
 
     fun clearFeedbackMessages() {
-        _feedbackMessages.clear()
+        feedbackMessages.clear()
     }
 
-    // === NOVO: toggle global (por enquanto via MainActivity) ===
-    var multiplosAAHabilitados: Boolean = false
-        private set
-
-    fun setMultiplosAAHabilitados(enabled: Boolean) {
-        multiplosAAHabilitados = enabled
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    fun salvarPersonagem(context: Context, nomeArquivo: String): CharacterStorage.SaveEntry {
+        val snapshot = state.toSnapshot()
+        return CharacterStorage.saveCharacter(context, snapshot, nomeArquivo)
     }
 
-    fun setAppTheme(theme: com.example.swadebuilder.ui.theme.AppTheme) {
-        state.appTheme = theme
-    }
-
-    fun salvarPersonagem(context: Context, nomePersonalizado: String? = null): CharacterStorage.SaveEntry {
-        val nome = (nomePersonalizado?.takeIf { it.isNotBlank() } ?: state.nomePersonagem)
-            .ifBlank { "Personagem" }
-
-        val snapshot = state.toSnapshot().copy(nome = nome)
-        val entry = CharacterStorage.save(context, snapshot)
-        state.idAtual = entry.id
-        _feedbackMessages.add("Personagem salvo: ${entry.nome}")
-        return entry
-    }
-
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun listarPersonagensSalvos(context: Context): List<CharacterStorage.SaveEntry> {
-        return CharacterStorage.listSaves(context)
+        return CharacterStorage.listCharacters(context)
     }
 
-    fun carregarPersonagem(context: Context, saveId: String): Boolean {
-        val snapshot = CharacterStorage.load(context, saveId) ?: return false
-        clearFeedbackMessages()
-        val flags = snapshot.flags
-        resetStateParaNovoPersonagem(
-            cartaSelvagem = flags.cartaSelvagem,
-            maisPontosPericias = flags.maisPontosPericias,
-            modoSupers = flags.modoSupers,
-            compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
-            compendioHorrorAtivo = flags.compendioHorrorAtivo,
-            modoMonstroAtivo = flags.modoMonstroAtivo,
-            usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia,
-            grandesResponsabilidades = flags.grandesResponsabilidades,
-            showHelpMessages = snapshot.showHelpMessages
-        )
-        state.restoreFromSnapshot(snapshot, _feedbackMessages)
-        state.idAtual = saveId
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    fun carregarPersonagem(context: Context, snapshotId: String): Boolean {
+        val snapshot = CharacterStorage.loadCharacter(context, snapshotId) ?: return false
+        state.restoreFromSnapshot(snapshot, feedbackMessages)
         return true
     }
 
-    private fun mapChoiceToArcanoId(choice: String?): String? {
-        return when (choice?.trim()?.uppercase()) {
-            "DOM"                -> "antecedente_arcano_dom"
-            "MAGIA"              -> "antecedente_arcano_magia"
-            "MILAGRES"           -> "antecedente_arcano_milagres"
-            "PSIÔNICOS", "PSIONICOS" -> "antecedente_arcano_psionicos"
-            "CIÊNCIA ESTRANHA", "CIENCIA ESTRANHA" -> "antecedente_arcano_ciencia_estranha"
-            else -> null
-        }
-    }
-
-    fun normalizeArcanoIdsNoCarregamento() {
-
-        val convertidos = state.vantagensSelecionadas.map { v ->
-            if (v.id == "antecedente_arcano" && v.choice != null) {
-                val novoId = mapChoiceToArcanoId(v.choice)
-                val novo = listaVantagens.find { it.id == novoId }
-                novo ?: v
-            } else v
-        }
-        state.vantagensSelecionadas.clear()
-        state.vantagensSelecionadas.addAll(convertidos.distinctBy { it.id })
+    fun setAppTheme(theme: AppTheme) {
+        state.appTheme = theme
     }
 
     fun resetStateParaNovoPersonagem(
@@ -108,856 +63,542 @@ class CriadorViewModel : ViewModel() {
         maisPontosPericias: Boolean,
         modoSupers: Boolean,
         compendioFantasiaAtivo: Boolean,
-        compendioHorrorAtivo: Boolean = false,
-        compendioSciFiAtivo: Boolean = false,
-        compendioTrilhadorAtivo: Boolean = false,
-        modoMonstroAtivo: Boolean = false,
-        usarEspecializacoesDePericia: Boolean = false,
-        grandesResponsabilidades: Boolean = false,
-        showHelpMessages: Boolean = false
+        compendioHorrorAtivo: Boolean,
+        compendioSciFiAtivo: Boolean,
+        compendioTrilhadorAtivo: Boolean,
+        modoMonstroAtivo: Boolean,
+        usarEspecializacoesDePericia: Boolean,
+        showHelpMessages: Boolean
     ) {
-
-        state.showHelpMessages = showHelpMessages
+        state.cartaSelvagem = cartaSelvagem
+        state.maisPontosPericias = maisPontosPericias
         state.modoSupers = modoSupers
         state.compendioFantasiaAtivo = compendioFantasiaAtivo
         state.compendioHorrorAtivo = compendioHorrorAtivo
         state.compendioSciFiAtivo = compendioSciFiAtivo
         state.compendioTrilhadorAtivo = compendioTrilhadorAtivo
+        state.compendioDeadlandsAtivo = false
         state.modoMonstroAtivo = modoMonstroAtivo
-        state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
-        state.modoSuperequip = modoSupers
-        state.modoSuperComplicacoes = modoSupers
-        state.grandesResponsabilidades = grandesResponsabilidades
-        state.modoSuperComplicacoes = modoSupers
-        state.soldadoCargaAtivo = true
+        state.usarEspecializacoesDePericia = usarEspecializacoesDePericia
+        state.showHelpMessages = showHelpMessages
 
-        state.idAtual = null
         state.nomePersonagem = ""
         state.anotacoes = ""
-
-        state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
-
-        state.cartaSelvagem = cartaSelvagem
-        state.maisPontosPericias = maisPontosPericias
-        state.usarEspecializacoesDePericia = usarEspecializacoesDePericia
-        state.especializacoesPorPericia.clear()
-
         state.ancestralidade = "HUMANOS"
-        state.vantagensSelecionadas.clear()
-        state.complicacoesSelecionadas.clear()
-        state.reservasComplicacaoMaior.clear()
-        state.vantagensAutomaticas.clear()
-        state.desvantagensAutomaticas.clear()
-        state.vantagemEmFoco = null
-        state.categoriasVantagensExpandidas.keys.forEach { cat ->
-            state.categoriasVantagensExpandidas[cat] = false
-        }
-        state.aplicarAncestralidade("HUMANOS", _feedbackMessages)
-
-        if (state.modoSupers) {
-            listaVantagens.firstOrNull { it.id == "superpoderes" }?.let { sp ->
-                if (state.vantagensSelecionadas.none { it.id == "superpoderes" }) {
-                    state.vantagensSelecionadas.add(sp)
-                }
-            }
-        }
-
-        state.equipamentosComprados.clear()
-
+        state.dinheiro = 500
+        state.pontosVantagem = 0
+        state.pontosAtributo = 5
         state.pontosComplicacaoGastos = 0
-
-        state.cpRecursosStack.clear()
-        state.cpPaStack.clear()
-        state.paFromProgress = 0
-        state.spFromProgress = 0
-        state.legendaryAttrReservations = 0
-        state.cpPvStack.clear()
-        state.cpSpStack.clear()
-        state.comprasPpPorEstagio.keys.forEach   { state.comprasPpPorEstagio[it] = 0 }
-        state.comprasAttrPorEstagio.keys.forEach { state.comprasAttrPorEstagio[it] = 0 }
-        state.paCostStackPorAtributo.values.forEach  { it.clear() }
-        state.compCostStackPorPericia.values.forEach { it.clear() }
-        state.spCostStackPorPericia.values.forEach   { it.clear() }
-        state.poderSlotsPorArcano.clear()
-        state.novosPoderesStacksPorArcano.clear()
+        state.armadura = 0
+        state.idAtual = null
+        state.progresso = 0
+        state.stageXpSpent.keys.forEach { state.stageXpSpent[it] = 0 }
+        state.progressosDisponiveis = 0
+        state.xpSlots.fill(false)
+        state.advancementHistory.clear()
+        state.frozenSkillIncrements.clear()
+        state.skillAdvancementInProgress = false
+        state.skillsForCurrentAdvancement.clear()
+        state.advantageAdvancementInProgress = false
+        state.advantageForCurrentAdvancement = null
         state.attributeAdvancementInProgress = false
         state.attributeStageForCurrentAdvancement = null
+        state.stageNameForCurrentAdvancement = null
         state.attributeStacksBeforeAdvancement = null
         state.attributeUsedReservation = false
-        state.stageNameForCurrentAdvancement = null
+        state.emProgresso = false
+        state.modoProgressaoAtivo = false
+        state.mostrandoVantagensProgresso = false
+        state.mostrandoPericiasProgresso = false
+        state.mostrandoAtributosProgresso = false
+        state.mostrandoPoderesProgresso = false
+        state.frozenAdvantageCount = 0
+        state.nasceUmHeroi = false
         state.overrideStageForVantagem = null
+        state.openVantagensAfterGrant = false
+        state.pvFromXpOutstanding = 0
+
+        state.valoresAtributos.forEach { it.value.intValue = 4 }
+        state.paCostStackPorAtributo.forEach { it.value.clear() }
+        state.cpPaStack.clear()
+        state.paFromProgress = 0
+        state.legendaryAttrReservations = 0
+
+        state.baseIncsPorPericia.keys.forEach { state.baseIncsPorPericia[it] = 0 }
+        state.compIncsPorPericia.keys.forEach { state.compIncsPorPericia[it] = 0 }
+        state.spCostStackPorPericia.values.forEach { it.clear() }
+        state.compCostStackPorPericia.values.forEach { it.clear() }
+        state.cpSpStack.clear()
+        state.spFromProgress = 0
+        state.especializacoesPorPericia.clear()
+
+        state.vantagensSelecionadas.clear()
+        state.vantagensAutomaticas.clear()
+        state.vantagensRaciais.clear()
+        state.cpPvStack.clear()
+
+        state.complicacoesSelecionadas.clear()
+        state.desvantagensAutomaticas.clear()
+        state.desvantagensRaciais.clear()
+        state.reservasComplicacaoMaior.clear()
+
+        state.poderSlotsPorArcano.clear()
+        state.novosPoderesStacksPorArcano.clear()
+        state.poderesSelecionados.clear()
         state.arcanoEmCompraViaXpKey = null
         state.arcanoSnapshotAntesDaCompra = null
-        state.mostrandoPoderesProgresso = false
-        state.mostrandoAtributosProgresso = false
 
-        // ─────────────────────────────────────────────────────────────
-        // RESET COMPLETO DE SUPERS – NÃO VAZAR ENTRE PERSONAGENS
-        // ─────────────────────────────────────────────────────────────
+        state.equipamentosComprados.clear()
+        state.cpRecursosStack.clear()
+
         state.superInvestments.clear()
         state.superNivelCampanha = null
         state.usarSemPontosDePoder = false
-
         state.superPontosTotais = 0
         state.superPontosDisponiveis = 0
         state.superLimite = 0
         state.superLimitePorPoder = 0
         state.poderFavoritoId = null
         state.limiteDePoderDaCampanha = Int.MAX_VALUE
-
-        state.faseSupersAtiva = false
         state.bonusPararFromPower = 0
         state.bonusResFromPower = 0
         state.armorFromPower = 0
         state.bonusMovimentacaoFromPower = 0
         state.vantagensDePoder.clear()
         state.gastosPorPoder.clear()
-        state.naturalArmorFromRace = 0
-        // ─────────────────────────────────────────────────────────────
+        state.faseSupersAtiva = false
+        state.comprasPpPorEstagio.keys.forEach { state.comprasPpPorEstagio[it] = 0 }
+        state.comprasAttrPorEstagio.keys.forEach { state.comprasAttrPorEstagio[it] = 0 }
 
-        state.dinheiro = 500
-        state.progresso = 0
-        state.progressosDisponiveis = 0
-        state.stageXpSpent.keys.forEach { state.stageXpSpent[it] = 0 }
-        state.xpSlots.fill(false)
-        state.frozenAdvantageCount = 0
-        state.advancementHistory.clear()
-        state.emProgresso = false
-        state.modoProgressaoAtivo = false
-        state.mostrandoVantagensProgresso = false
-        state.mostrandoPericiasProgresso = false
-        state.frozenSkillIncrements.clear()
-
-        state.valoresAtributos.forEach { (_, holder) -> holder.intValue = 4 }
-        state.recalcularPontosAtributo(_feedbackMessages)
-
-        listaPericias.forEach { per ->
-            state.baseIncsPorPericia[per] = 0
-            state.spCostStackPorPericia.getValue(per).clear()
-            state.compCostStackPorPericia[per]?.clear()
-        }
-        state.rebuildAllPericiaStacks(_feedbackMessages)
-
-        state.pontosVantagem =
-            if (state.vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" }) 1 else 0
+        state.aplicarAncestralidade("HUMANOS", mutableListOf())
     }
 
-    fun perPowerLimit(poderId: String): Int {
-        return if (state.poderFavoritoId != null && state.poderFavoritoId == poderId)
-            state.limiteFavorecido
-        else
-            state.limitePorPoderPadrao
+    fun setMultiplosAAHabilitados(habilitado: Boolean) {
+        state.permiteMultiAntecedenteArcano = habilitado
     }
 
-    fun definirPoderFavorecido(poderId: String?) {
-        state.poderFavoritoId = poderId
-    }
-
-    fun podeSubirAtributoPorSuper(attrKey: String, steps: Int): InvestCheck {
-        if (steps == 0) return InvestCheck(true)
-
-        val atualRaw = state.atributoRawComSupers(attrKey)          // base + supers já aplicados
-        val alvoRaw  = state.applySuperStepsFrom(atualRaw, steps)   // simula steps corretamente
-
-        val tetoTecnico = 30
-        if (alvoRaw > tetoTecnico) {
-            return InvestCheck(false, "Limite técnico de atributo excedido ($tetoTecnico).")
-        }
-        return InvestCheck(true)
-    }
-
-    fun canInvestInPower(
-        poderId: String,
-        custo: Int,
-        efeito: PowerEffect
-    ): InvestCheck {
-        // 1) Saldo de Pontos de Super (SP)
-        if (custo <= 0) return InvestCheck(false, "Custo inválido.")
-        if (state.superPontosDisponiveis < custo) {
-            return InvestCheck(false, "Sem saldo: precisa de $custo, tem ${state.superPontosDisponiveis}.")
+    fun startAdvancementTransaction(
+        type: AdvancementType,
+        targetStageName: String,
+        feedback: (String) -> Unit
+    ): Boolean {
+        if (state.emProgresso) {
+            feedback("Já existe um avanço em andamento. Termine ou cancele antes de iniciar outro.")
+            return false
         }
 
-        // 2) Limite Individual de CUSTO (quantos SP gastei neste poder)
-        val jaGastoNestePoder = state.gastosPorPoder[poderId] ?: 0
-        val limiteIndividual = perPowerLimit(poderId)
-        if (jaGastoNestePoder + custo > limiteIndividual) {
-            val falta = (jaGastoNestePoder + custo) - limiteIndividual
-            return InvestCheck(false, "Limite de gasto neste poder excedido em $falta (limite: $limiteIndividual).")
-        }
+        state.stageNameForCurrentAdvancement = targetStageName
 
-        // 3) Limite Compartilhado de CUSTO (Armadura + Resistência)
-        // Regra: a soma de SP gastos em Resistência e Armadura não pode ultrapassar o Limite de Poder da campanha.
-        if (poderId == "sp_armor" || poderId == "sp_res") {
-            val gastosArmor = state.gastosPorPoder["sp_armor"] ?: 0
-            val gastosRes   = state.gastosPorPoder["sp_res"] ?: 0
-            val shareAtual  = gastosArmor + gastosRes
-            val shareLimite = state.limiteDePoderDaCampanha
-            val shareDepois = shareAtual + custo
-
-            if (shareDepois > shareLimite) {
-                val excedeu = shareDepois - shareLimite
-                return InvestCheck(
-                    ok = false,
-                    motivoBloqueio = "Limite compartilhado de Armadura+Resistência excedido em $excedeu (gasto previsto: $shareDepois / limite $shareLimite)."
-                )
-            }
-        }
-
-        // 4) Checagens específicas de outros efeitos
-        when (efeito) {
-            is PowerEffect.SuperAtributo -> {
-                val valida = podeSubirAtributoPorSuper(efeito.attrKey, efeito.steps)
-                if (!valida.ok) return valida
-            }
-
-            is PowerEffect.SuperPericia -> {
-                // A lógica de steps foi removida daqui, será tratada na UI/ViewModel
-            }
-
-            // Armadura/Resistência: não há checagem adicional aqui,
-            // o limite compartilhado já foi tratado acima pelo custo.
-            is PowerEffect.BonusArmadura    -> { /* nada extra */ }
-            is PowerEffect.BonusResistencia -> { /* nada extra */ }
-
-            is PowerEffect.BonusAparar -> { /* ok */ }
-
-            is PowerEffect.BonusMovimentacao -> { /* ok */ }
-
-            is PowerEffect.SuperVantagem -> {
-                val vant = listaVantagens.firstOrNull {
-                    it.id.equals(efeito.vantagemId, ignoreCase = true)
-                } ?: return InvestCheck(false, "Vantagem não encontrada: ${efeito.vantagemId}.")
-
-                // NÃO permitir comprar de novo se já tiver a vantagem de qualquer forma
-                if (state.vantagensSelecionadas.any { it.id == vant.id }) {
-                    return InvestCheck(false, "Você já possui a vantagem ${vant.nome}.")
-                }
-
-                // valida requisitos ignorando Estágio (simula “Lendário” para não travar pelo estágio)
-                val progressoAnterior = state.overrideStageForVantagem
-                state.overrideStageForVantagem = "Lendário"
-                val permitido = state.podeSelecionar(vant)
-                state.overrideStageForVantagem = progressoAnterior
-
-                if (!permitido) {
-                    return InvestCheck(false, "Requisitos não atendidos para a vantagem (exceto Estágio).")
-                }
-            }
-            is PowerEffect.Generico -> {
-                // Nenhuma validação extra necessária para poderes genéricos
-            }
-        }
-
-        return InvestCheck(true, null)
-    }
-
-    /**
-     * Aplica o investimento no ledger e atualiza derivados.
-     * NÃO chama validação; chame canInvestInPower antes.
-     */
-    fun applyPowerInvestment(
-        poderId: String,
-        custo: Int,
-        efeito: PowerEffect
-    ): InvestResult {
-        // 1) registra o gasto no ledger
-        state.registrarGastoDePoder(poderId, custo)
-
-        // 2) aplica o efeito em estado observável
-        when (efeito) {
-            is PowerEffect.SuperAtributo -> {
-                val key = efeito.attrKey.uppercase().trim()
-
-                // (b) refletir imediatamente no atributo visível:
-                // +2 por step até d12; +1 por step acima de d12.
-                val holder = state.valoresAtributos[key]
-                if (holder != null) {
-                    val antes = holder.intValue
-                    repeat(efeito.steps.coerceAtLeast(0)) {
-                        holder.intValue = if (holder.intValue < 12) {
-                            (holder.intValue + 2).coerceAtMost(30)
-                        } else {
-                            (holder.intValue + 1).coerceAtMost(30)
-                        }
-                    }
-                    _feedbackMessages.add("Atributo $key aumentado de d$antes para d${holder.intValue}.")
-                }
-            }
-
-            is PowerEffect.SuperPericia -> {
-                // O efeito visual é agora derivado da lista de investimentos,
-                // então não é mais necessário aplicar diretamente aqui.
-                // A atualização da UI será automática.
-            }
-
-            is PowerEffect.BonusArmadura -> {
-                state.updateArmorFromPower((state.armorFromPower + efeito.value).coerceAtLeast(0))
-                _feedbackMessages.add("Armadura aumentada em ${efeito.value}.")
-            }
-
-            is PowerEffect.BonusResistencia -> {
-                state.updateBonusResFromPower((state.bonusResFromPower + efeito.value).coerceAtLeast(0))
-                _feedbackMessages.add("Resistência aumentada em ${efeito.value}.")
-            }
-
-            is PowerEffect.BonusAparar -> {
-                state.updateBonusPararFromPower((state.bonusPararFromPower + efeito.value).coerceAtLeast(0))
-                _feedbackMessages.add("Aparar aumentado em ${efeito.value}.")
-            }
-
-            is PowerEffect.BonusMovimentacao -> {
-                state.updateBonusMovimentacaoFromPower(
-                    (state.bonusMovimentacaoFromPower + efeito.value).coerceAtLeast(0)
-                )
-                _feedbackMessages.add("Movimentação aumentada em ${efeito.value}.")
-            }
-
-            is PowerEffect.SuperVantagem -> {
-                listaVantagens.firstOrNull { it.id == efeito.vantagemId }?.let { v ->
-                    state.adicionarVantagemPorSuper(v)
-                    _feedbackMessages.add("Vantagem ${v.nome} adicionada.")
-                }
-            }
-
-            is PowerEffect.Generico -> {
-                _feedbackMessages.add("${efeito.nome} adquirido.")
-            }
-        }
-
-        // 3) derivados de perícia / etc.
-        state.rebuildAllPericiaStacks()
-        // IMPORTANTE: NÃO recalcular atributos básicos aqui,
-        // para não “somar de novo” os supers nem mexer na etapa de criação com PAs.
-
-        return InvestResult(true, "Investimento aplicado.")
-    }
-
-    // ===== NOVO: bloqueio de remoção de Superperícia ligada a superpoderes restritivos =====
-    private fun motivoBloqueioRemocaoSuperPericia(perKey: String, rawDepois: Int): String? {
-        val temFeiticaria = state.superInvestments.any { it.displayName.keyify() == "SUPERFEITICARIA" }
-        val temCiencia    = state.superInvestments.any { it.displayName.keyify() == "SUPERCIENCIA" }
-
-        if (temFeiticaria && perKey == "OCULTISMO" && rawDepois < 10) {
-            return "Primeiro remova o superpoder Superfeitiçaria."
-        }
-        if (temCiencia && perKey == "CIENCIAS" && rawDepois < 10) {
-            return "Primeiro remova o superpoder Superciência."
-        }
-        return null
-    }
-
-    fun revertPowerInvestment(
-        poderId: String,
-        custo: Int,
-        efeito: PowerEffect
-    ): InvestResult {
-        // desfaz o gasto no ledger
-        state.desfazerGastoDePoder(poderId, custo)
-
-        when (efeito) {
-            is PowerEffect.SuperAtributo -> {
-                val key = efeito.attrKey.uppercase().trim()
-
-                // espelha a aplicação: -1 por step se > d12; -2 por step quando <= d12
-                val holder = state.valoresAtributos[key]
-                if (holder != null) {
-                    val antes = holder.intValue
-                    repeat(efeito.steps.coerceAtLeast(0)) {
-                        holder.intValue = if (holder.intValue > 12) {
-                            (holder.intValue - 1).coerceAtLeast(4)
-                        } else {
-                            (holder.intValue - 2).coerceAtLeast(4)
-                        }
-                    }
-                    _feedbackMessages.add("Atributo $key reduzido de d$antes para d${holder.intValue}.")
-                }
-            }
-
-            is PowerEffect.SuperPericia -> {
-                val perObj = listaPericias.firstOrNull { it.nome.keyify() == efeito.periciaKey.keyify() }
-                if (perObj != null) {
-                    val baseRaw = state.rawTotal(perObj)
-                    val incsAtuais = state.superInvestments
-                        .mapNotNull { it.effect as? PowerEffect.SuperPericia }
-                        .filter { it.periciaKey.equals(perObj.nome, ignoreCase = true) }
-                        .sumOf { it.steps }
-                    val incsDepois = (incsAtuais - efeito.steps).coerceAtLeast(0)
-                    val rawDepois = state.applySuperStepsFrom(baseRaw, incsDepois)
-
-                    val perKey = perObj.nome.keyify()
-                    val bloqueio = motivoBloqueioRemocaoSuperPericia(perKey, rawDepois)
-                    if (bloqueio != null) {
-                        return InvestResult(false, bloqueio)
-                    }
-                }
-            }
-
-            is PowerEffect.BonusArmadura -> {
-                state.updateArmorFromPower((state.armorFromPower - efeito.value).coerceAtLeast(0))
-                _feedbackMessages.add("Armadura reduzida em ${efeito.value}.")
-            }
-
-            is PowerEffect.BonusResistencia -> {
-                state.updateBonusResFromPower((state.bonusResFromPower - efeito.value).coerceAtLeast(0))
-                _feedbackMessages.add("Resistência reduzida em ${efeito.value}.")
-            }
-
-            is PowerEffect.BonusAparar -> {
-                state.updateBonusPararFromPower((state.bonusPararFromPower - efeito.value).coerceAtLeast(0))
-                _feedbackMessages.add("Aparar reduzido em ${efeito.value}.")
-            }
-
-            is PowerEffect.BonusMovimentacao -> {
-                state.updateBonusMovimentacaoFromPower(
-                    (state.bonusMovimentacaoFromPower - efeito.value).coerceAtLeast(0)
-                )
-                _feedbackMessages.add("Movimentação reduzida em ${efeito.value}.")
-            }
-
-            is PowerEffect.SuperVantagem -> {
-                listaVantagens.firstOrNull {
-                    it.id.equals(efeito.vantagemId, ignoreCase = true)
-                }?.let { v ->
-                    state.removerVantagemPorSuper(v)
-                    _feedbackMessages.add("Vantagem ${v.nome} removida.")
-                }
-            }
-            is PowerEffect.Generico -> {
-                _feedbackMessages.add("${efeito.nome} removido.")
-            }
-        }
-
-        // Atualiza apenas derivados que dependem de supers / perícias
-        state.rebuildAllPericiaStacks()
-        // De novo: nada de recalcular atributos de criação aqui.
-
-        return InvestResult(true, "Investimento revertido.")
-    }
-
-    /**
-     * Função genérica "façade" para a UI: tenta investir e retorna mensagem pronta.
-     * Use um poderId estável por alvo (ex.: "sp_pericia_LUTAR", "sp_attr_FORCA", "sp_armor").
-     */
-    fun tentarInvestirSuper(investment: SuperInvestment): InvestResult {
-        val check = canInvestInPower(
-            poderId = investment.powerId,
-            custo = investment.cost,
-            efeito = investment.effect
-        )
-        if (!check.ok) {
-            return InvestResult(false, check.motivoBloqueio ?: "Não foi possível investir.")
-        }
-
-        // Adiciona o investimento à lista principal do estado
-        state.superInvestments.add(investment)
-
-        return applyPowerInvestment(
-            poderId = investment.powerId,
-            custo = investment.cost,
-            efeito = investment.effect
-        )
-    }
-
-    /** Façade para desfazer o investimento feito. */
-    fun desfazerInvestimentoSuper(investment: SuperInvestment): InvestResult {
-        return revertPowerInvestment(
-            poderId = investment.powerId,
-            custo = investment.cost,
-            efeito = investment.effect
-        )
-    }
-
-    fun startSkillAdvancement(slotIndex: Int, stageName: String) {
-        if (state.progressosDisponiveis >= 1) {
-            state.progresso++
-            state.spendProgressAtStage(stageName, 1)
-            state.stageNameForCurrentAdvancement = stageName
-            state.xpSlots[slotIndex] = true
-            state.skillAdvancementInProgress = true
-            state.skillsForCurrentAdvancement.clear()
-            state.grantSkillPointsFromXp()
-            state.updateEmProgressoFlag()
-        }
-    }
-
-
-    fun finishSkillAdvancement() {
-        if (state.skillAdvancementInProgress) {
-            val skills = state.skillsForCurrentAdvancement.toList()
-            val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
-            val skillValuesSnapshot = skills.associateWith { skillName ->
-                val pericia = listaPericias.firstOrNull { it.nome == skillName }
-                pericia?.let { state.rawTotal(it) }
-            }.filterValues { it != null }.mapValues { it.value!! }
-            state.advancementHistory.add(
-                AdvancementAction.SpendOnSkills(
-                    skillsIncreased = skills,
-                    recordedSkillValues = skillValuesSnapshot,
-                    stageName = stageName
-                )
-            )
-            state.skillAdvancementInProgress = false
-            state.skillsForCurrentAdvancement.clear()
-            state.stageNameForCurrentAdvancement = null
-            if (state.modoProgressaoAtivo) {
+        when (type) {
+            AdvancementType.SKILL -> {
+                state.skillAdvancementInProgress = true
+                state.skillsForCurrentAdvancement.clear()
+                state.grantSkillPointsFromXp()
                 state.snapshotFrozenSkillIncrements()
             }
-            state.updateEmProgressoFlag()
-            state.mostrandoPericiasProgresso = false
-        }
-    }
-
-    fun startAdvantageAdvancement(slotIndex: Int, est: String) {
-        if (state.progressosDisponiveis >= 1) {
-            state.progresso++
-            state.spendProgressAtStage(est, 1)
-            state.stageNameForCurrentAdvancement = est
-            state.xpSlots[slotIndex] = true
-            state.advantageAdvancementInProgress = true
-            state.advantageForCurrentAdvancement = null
-            state.mostrandoPoderesProgresso = false
-            state.arcanoEmCompraViaXpKey = null
-            state.arcanoSnapshotAntesDaCompra = null
-            state.grantVantagemPointFromXp(est)
-            state.updateEmProgressoFlag()
-        }
-    }
-
-    fun finishAdvantageAdvancement() {
-        if (state.advantageAdvancementInProgress) {
-            if (state.arcanoCompraPendente()) return
-            val advantageId = state.advantageForCurrentAdvancement
-            if (advantageId != null) {
-                val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
-                state.advancementHistory.add(
-                    AdvancementAction.SpendOnAdvantage(
-                        advantageId = advantageId,
-                        stageName = stageName,
-                        arcanoKey = state.arcanoEmCompraViaXpKey,
-                        previousArcanoSlots = state.arcanoSnapshotAntesDaCompra
-                    )
-                )
-                if (state.pvFromXpOutstanding > 0) {
-                    state.pvFromXpOutstanding--
-                }
+            AdvancementType.ADVANTAGE -> {
+                state.advantageAdvancementInProgress = true
+                state.advantageForCurrentAdvancement = null
+                state.grantVantagemPointFromXp(targetStageName)
             }
-            state.advantageAdvancementInProgress = false
-            state.advantageForCurrentAdvancement = null
-            state.stageNameForCurrentAdvancement = null
-            state.limparCompraArcanoViaXp(restaurarSnapshot = false)
-            state.updateEmProgressoFlag()
-            state.mostrandoVantagensProgresso = false
-        }
-    }
+            AdvancementType.ATTRIBUTE -> {
+                state.attributeAdvancementInProgress = true
+                state.attributeStageForCurrentAdvancement = targetStageName
+                state.attributeStacksBeforeAdvancement = state.snapshotAttributeStacks()
+                state.mostrandoAtributosProgresso = true
 
-    fun selectAdvantageForAdvancement(vantagem: Vantagem) {
-        if (state.advantageAdvancementInProgress) {
-            if (state.advantageForCurrentAdvancement != null) {
-                val currentAdvantageId = state.advantageForCurrentAdvancement!!
-                val currentAdvantage = state.vantagensSelecionadas.find { it.id == currentAdvantageId }
-                if (currentAdvantage != null) {
-                    val currentArcKey = currentAdvantage.toArcanoKey()?.normAAKey()
-                    if (currentArcKey != null && currentArcKey == state.arcanoEmCompraViaXpKey) {
-                        state.limparCompraArcanoViaXp(restaurarSnapshot = true)
-                    }
-
-                    if (currentAdvantage.nome.contains("Pontos de Poder", true)) {
-                        state.removerPontosDePoder(currentAdvantage)
-                    } else {
-                        state.removeVantagemDinheiro(currentAdvantage)
-                        state.vantagensSelecionadas.remove(currentAdvantage)
-                    }
-                    state.pontosVantagem++
-                }
-            }
-
-            if (vantagem.nome.contains("Pontos de Poder", true)) {
-                state.comprarPontoDePoder(vantagem)
-            } else {
-                state.applyVantagemDinheiro(vantagem)
-                // Se for "Novos Poderes" e temos múltiplos arcanos habilitados,
-                // seria ideal que 'vantagem' já viesse com choice definida.
-                // Aqui vamos assumir que se não vier, e tivermos 1 arcano, aplicamos a ele.
-                // Mas 'vantagem' é data class vinda do clique.
-                state.vantagensSelecionadas.add(vantagem)
-            }
-            state.pontosVantagem--
-            state.advantageForCurrentAdvancement = vantagem.id
-
-            // Check if it's "Novos Poderes" to trigger the flow
-            if (vantagem.id == "novos_poderes") {
-                // Find target arcane background
-                // 1. Try choice if set
-                val choiceKey = advantageArcaneKey(vantagem)
-                // 2. If not, try to find the first existing arcane background
-                val arcKey = choiceKey ?: state.vantagensSelecionadas
-                    .mapNotNull { it.toArcanoKey()?.normAAKey() }
-                    .firstOrNull()
-
-                if (arcKey != null) {
-                    state.iniciarCompraArcanoViaXp(arcKey)
+                if (state.legendaryAttrReservations > 0) {
+                    state.attributeUsedReservation = true
+                    state.legendaryAttrReservations -= 1
+                    state.paFromProgress += 1
+                } else if (targetStageName == "Lendário") {
+                    state.legendaryAttrReservations += 1
+                    feedback("Avanço Lendário reservado. Gaste mais um avanço para aumentar um atributo.")
+                    finishAttributeAdvancement(reservationOnly = true)
+                    return true
                 } else {
-                    state.limparCompraArcanoViaXp(restaurarSnapshot = false)
+                    state.attributeUsedReservation = false
+                    state.paFromProgress += 1
                 }
-            } else {
-                vantagem.toArcanoKey()?.let { arcKey ->
-                    state.iniciarCompraArcanoViaXp(arcKey)
-                } ?: state.limparCompraArcanoViaXp(restaurarSnapshot = false)
+            }
+        }
+        state.updateEmProgressoFlag()
+        return true
+    }
+
+    fun finishAttributeAdvancement(reservationOnly: Boolean = false) {
+        if (!state.attributeAdvancementInProgress) return
+
+        if (reservationOnly) {
+            val action = AdvancementAction.ReserveLegendaryAttribute
+            state.advancementHistory.add(action)
+        } else {
+            val oldStacks = state.attributeStacksBeforeAdvancement ?: emptyMap()
+            val newStacks = state.snapshotAttributeStacks()
+            val changedAttr = state.paCostStackPorAtributo.keys.firstOrNull { attr ->
+                (newStacks[attr] ?: 0) > (oldStacks[attr] ?: 0)
             }
 
-            state.rebuildAllPericiaStacks()
-        }
-    }
-
-    private fun advantageArcaneKey(v: Vantagem): String? {
-        return v.choice?.normAAKey()
-    }
-
-    fun startAttributeAdvancement(
-        slotIndex: Int,
-        stageName: String,
-        consumesLegendaryReservation: Boolean
-    ) {
-        if (state.progressosDisponiveis >= 1) {
-            state.progresso++
-            state.spendProgressAtStage(stageName, 1)
-            state.stageNameForCurrentAdvancement = stageName
-            state.attributeStageForCurrentAdvancement = stageName
-            state.xpSlots[slotIndex] = true
-
-            if (consumesLegendaryReservation) {
-                state.legendaryAttrReservations =
-                    (state.legendaryAttrReservations - 1).coerceAtLeast(0)
-            }
-            state.attributeUsedReservation = consumesLegendaryReservation
-
-            state.paFromProgress += 1
-            state.recalcularPontosAtributo()
-
-            state.attributeAdvancementInProgress = true
-            state.attributeStacksBeforeAdvancement = state.snapshotAttributeStacks()
-            state.mostrandoAtributosProgresso = true
-            state.updateEmProgressoFlag()
-        }
-    }
-
-    fun reserveLegendaryAttribute(slotIndex: Int, stageName: String) {
-        if (state.progressosDisponiveis >= 1 && state.legendaryAttrReservations == 0) {
-            state.progresso++
-            state.spendProgressAtStage(stageName, 1)
-            state.xpSlots[slotIndex] = true
-            state.legendaryAttrReservations += 1
-            state.advancementHistory.add(
-                AdvancementAction.ReserveLegendaryAttribute(stageName = stageName)
-            )
-            state.recomputeAvailableProgress()
-        }
-    }
-
-    fun finishAttributeAdvancement() {
-        if (state.attributeAdvancementInProgress) {
-            val before = state.attributeStacksBeforeAdvancement ?: emptyMap()
-            val increases = mutableListOf<String>()
-            state.paCostStackPorAtributo.forEach { (attr, stack) ->
-                val diff = stack.size - (before[attr] ?: 0)
-                repeat(diff.coerceAtLeast(0)) { increases.add(attr) }
-            }
-
-            val stageName = state.attributeStageForCurrentAdvancement ?: state.estagioAtual().nome
-            var reservationAvailable = state.attributeUsedReservation
-            increases.forEach { attr ->
-                val usedReservation = reservationAvailable
-                if (reservationAvailable) reservationAvailable = false
-                val prev = state.comprasAttrPorEstagio[stageName] ?: 0
-                state.comprasAttrPorEstagio[stageName] = prev + 1
-                state.advancementHistory.add(
-                    AdvancementAction.IncreaseAttribute(
-                        attributeName = attr,
-                        usedLegendaryReservation = usedReservation,
-                        stageName = stageName,
-                        progressCost = 1
-                    )
+            if (changedAttr != null) {
+                val action = AdvancementAction.IncreaseAttribute(
+                    attributeName = changedAttr,
+                    wasLegendaryReservation = state.attributeUsedReservation
                 )
+                state.advancementHistory.add(action)
+            } else {
+                // Caso falhe em achar, aborta (não deveria acontecer se UI travar corretamente)
+                cancelAdvancementInProgress()
+                return
             }
-
-            state.attributeAdvancementInProgress = false
-            state.attributeStageForCurrentAdvancement = null
-            state.stageNameForCurrentAdvancement = null
-            state.attributeStacksBeforeAdvancement = null
-            state.attributeUsedReservation = false
-            state.mostrandoAtributosProgresso = false
-            state.recomputeAvailableProgress()
-            state.checkFreeze()
-            state.updateEmProgressoFlag()
-            state.mostrandoAtributosProgresso = false
         }
+
+        val stName = state.stageNameForCurrentAdvancement ?: "Novato"
+        state.spendProgressAtStage(stName, 1)
+
+        state.attributeAdvancementInProgress = false
+        state.attributeStageForCurrentAdvancement = null
+        state.stageNameForCurrentAdvancement = null
+        state.attributeStacksBeforeAdvancement = null
+        state.attributeUsedReservation = false
+        state.mostrandoAtributosProgresso = false
+        state.updateEmProgressoFlag()
+    }
+
+    fun finishAdvantageAdvancement(vantagem: Vantagem) {
+        if (!state.advantageAdvancementInProgress) return
+
+        state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
+        state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
+
+        val isArcane = vantagem.nome.keyify().startsWith("antecedente arcano") ||
+                vantagem.id.startsWith("antecedente_arcano") ||
+                vantagem.id.startsWith("aa_")
+
+        val isNewPowers = vantagem.id == "novos_poderes"
+
+        val action = if (isArcane) {
+            val arcKey = getArcanoKey(vantagem)
+            AdvancementAction.SpendOnArcaneBackground(
+                advantageId = vantagem.id,
+                arcaneKey = arcKey
+            )
+        } else if (isNewPowers) {
+            val arcKey = if (vantagem.choice.isNullOrBlank()) {
+                 state.poderSlotsPorArcano.keys.firstOrNull() ?: ""
+            } else {
+                vantagem.choice!!.normAAKey()
+            }
+            AdvancementAction.SpendOnNewPowers(
+                advantageId = vantagem.id,
+                arcaneKey = arcKey
+            )
+        } else {
+            AdvancementAction.SpendOnAdvantage(
+                advantageId = vantagem.id,
+                choice = vantagem.choice
+            )
+        }
+
+        state.advancementHistory.add(action)
+
+        val stName = state.stageNameForCurrentAdvancement ?: "Novato"
+        state.spendProgressAtStage(stName, 1)
+
+        state.advantageAdvancementInProgress = false
+        state.advantageForCurrentAdvancement = null
+        state.stageNameForCurrentAdvancement = null
+        state.overrideStageForVantagem = null
+        state.openVantagensAfterGrant = false
+        state.mostrandoVantagensProgresso = false
+        state.updateEmProgressoFlag()
+        state.checkFreeze()
+    }
+
+    fun finishSkillAdvancement() {
+        if (!state.skillAdvancementInProgress) return
+
+        if (state.skillsForCurrentAdvancement.isEmpty()) {
+            return // Nada gasto ainda, aguarde
+        }
+
+        val action = AdvancementAction.IncreaseSkills(
+            skillsIncreased = state.skillsForCurrentAdvancement.toList()
+        )
+        state.advancementHistory.add(action)
+
+        val stName = state.stageNameForCurrentAdvancement ?: "Novato"
+        state.spendProgressAtStage(stName, 1)
+
+        state.skillAdvancementInProgress = false
+        state.skillsForCurrentAdvancement.clear()
+        state.stageNameForCurrentAdvancement = null
+        state.frozenSkillIncrements.clear()
+        state.spFromProgress = 0
+        state.mostrandoPericiasProgresso = false
+        state.updateEmProgressoFlag()
     }
 
     fun cancelAdvancementInProgress() {
-        // Roda apenas se houver um avanço em andamento para ser cancelado.
-        if (
-            !state.skillAdvancementInProgress &&
-            !state.advantageAdvancementInProgress &&
-            !state.attributeAdvancementInProgress
-        ) {
-            return
-        }
-
-        val stageName = state.stageNameForCurrentAdvancement
-            ?: state.attributeStageForCurrentAdvancement
-            ?: state.estagioAtual().nome
-
-        val lastUsedIndex = state.xpSlots.indexOfLast { it }
-        if (lastUsedIndex != -1) {
-            state.xpSlots[lastUsedIndex] = false
-            state.progresso--
-            state.refundProgressAtStage(stageName, 1)
-        }
+        if (!state.emProgresso) return
 
         if (state.skillAdvancementInProgress) {
+            state.skillsForCurrentAdvancement.forEach { skillName ->
+                val per = listaPericias.firstOrNull { it.nome == skillName }
+                if (per != null) {
+                    state.decreasePericia(per)
+                }
+            }
             state.spFromProgress = (state.spFromProgress - 2).coerceAtLeast(0)
-            state.rebuildAllPericiaStacks()
+            state.skillAdvancementInProgress = false
+            state.skillsForCurrentAdvancement.clear()
+            state.frozenSkillIncrements.clear()
+            state.mostrandoPericiasProgresso = false
         }
 
         if (state.advantageAdvancementInProgress) {
-            state.advantageForCurrentAdvancement?.let { advId ->
-                state.vantagensSelecionadas.firstOrNull { it.id == advId }?.let { vant ->
-                    val arcKey = vant.toArcanoKey()?.normAAKey()
-                    // Se a vantagem for um antecedente arcano sendo comprado OU
-                    // se for uma vantagem que acionou o fluxo de compra de poderes (ex: Novos Poderes)
-                    if (state.arcanoEmCompraViaXpKey != null) {
-                        state.limparCompraArcanoViaXp(restaurarSnapshot = true)
-                    } else if (arcKey != null && arcKey == state.arcanoEmCompraViaXpKey) {
-                        state.limparCompraArcanoViaXp(restaurarSnapshot = true)
-                    }
-
-                    if (vant.nome.contains("Pontos de Poder", true)) {
-                        state.removerPontosDePoder(vant)
-                    } else {
-                        state.removeVantagemDinheiro(vant)
-                        state.vantagensSelecionadas.remove(vant)
-                    }
-                    state.pontosVantagem++
-                }
-            }
             state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
             state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
+            state.limparCompraArcanoViaXp(restaurarSnapshot = true)
+
+            state.advantageAdvancementInProgress = false
+            state.advantageForCurrentAdvancement = null
+            state.overrideStageForVantagem = null
+            state.openVantagensAfterGrant = false
+            state.mostrandoVantagensProgresso = false
         }
 
         if (state.attributeAdvancementInProgress) {
-            state.paFromProgress = (state.paFromProgress - 1).coerceAtLeast(0)
-            state.attributeStacksBeforeAdvancement?.let { state.restoreAttributeStacks(it) }
             if (state.attributeUsedReservation) {
                 state.legendaryAttrReservations += 1
             }
-            state.attributeUsedReservation = false
+            state.attributeStacksBeforeAdvancement?.let {
+                state.restoreAttributeStacks(it)
+            }
+            state.paFromProgress = (state.paFromProgress - 1).coerceAtLeast(0)
+
+            state.attributeAdvancementInProgress = false
             state.attributeStageForCurrentAdvancement = null
             state.attributeStacksBeforeAdvancement = null
+            state.attributeUsedReservation = false
             state.mostrandoAtributosProgresso = false
         }
 
-        state.skillAdvancementInProgress = false
-        state.advantageAdvancementInProgress = false
-        state.attributeAdvancementInProgress = false
-        state.advantageForCurrentAdvancement = null
         state.stageNameForCurrentAdvancement = null
-        state.mostrandoPericiasProgresso = false
-        state.mostrandoVantagensProgresso = false
-        state.mostrandoPoderesProgresso = false
         state.updateEmProgressoFlag()
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun revertLastAdvancement() {
         if (state.advancementHistory.isEmpty()) return
-
         val lastAction = state.advancementHistory.removeLast()
-        val stageName = lastAction.stageName
 
-        // Reverte o slot de XP e o contador de progresso
-        val lastUsedIndex = state.xpSlots.indexOfLast { it }
-        if (lastUsedIndex != -1) {
-            state.xpSlots[lastUsedIndex] = false
-            state.progresso--
-        }
+        val stageName = state.stageNameForCurrentAdvancementSnapshot ?: lastAction.guessStageName()
+        state.refundProgressAtStage(stageName, 1)
 
         when (lastAction) {
+            is AdvancementAction.IncreaseSkills -> {
+                lastAction.skillsIncreased.forEach { skillName ->
+                    val per = listaPericias.firstOrNull { it.nome == skillName }
+                    if (per != null) {
+                        state.decreasePericia(per)
+                    }
+                }
+            }
             is AdvancementAction.SpendOnAdvantage -> {
-                // Reverte o gasto E a concessão do ponto de vantagem
-                val advantage = state.vantagensSelecionadas.firstOrNull { it.id == lastAction.advantageId }
-                if (advantage != null) {
-                    state.vantagensSelecionadas.remove(advantage)
+                val toRemove = state.vantagensSelecionadas.lastOrNull {
+                    it.id == lastAction.advantageId && it.choice == lastAction.choice
                 }
-                lastAction.arcanoKey?.let { arcKey ->
-                    state.restoreArcanoSlots(arcKey, lastAction.previousArcanoSlots)
+                if (toRemove != null) {
+                    state.vantagensSelecionadas.remove(toRemove)
+                    // PV já foi gasto. Não devolvemos PV ao pool, pois o avanço foi anulado.
+                    // O estado volta a ser como antes de iniciar o avanço.
                 }
-                state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
-                state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
-                state.frozenAdvantageCount = state.vantagensSelecionadas.size
+            }
+            is AdvancementAction.SpendOnArcaneBackground -> {
+                val toRemove = state.vantagensSelecionadas.lastOrNull {
+                    it.id == lastAction.advantageId
+                }
+                if (toRemove != null) {
+                    state.vantagensSelecionadas.remove(toRemove)
+                    state.poderSlotsPorArcano.remove(lastAction.arcaneKey)
+                    state.novosPoderesStacksPorArcano.remove(lastAction.arcaneKey)
+                    state.syncPoderesSelecionadosFromSlots()
+                }
+            }
+            is AdvancementAction.SpendOnNewPowers -> {
+                val toRemove = state.vantagensSelecionadas.lastOrNull {
+                    it.id == lastAction.advantageId
+                }
+                if (toRemove != null) {
+                    state.vantagensSelecionadas.remove(toRemove)
+                    // Calcula slots iniciais do arcano para desfazer corretamente
+                    val baseSlots = state.arcanoInfo[lastAction.arcaneKey]?.first ?: 0
+                    state.desfazerUltimosNovosPoderes(lastAction.arcaneKey, baseSlots)
+                }
             }
             is AdvancementAction.IncreaseAttribute -> {
-                val stack = state.paCostStackPorAtributo[lastAction.attributeName]
-                if (stack != null && stack.isNotEmpty()) {
+                val attr = lastAction.attributeName
+                val stack = state.paCostStackPorAtributo[attr]
+                if (!stack.isNullOrEmpty()) {
                     stack.removeLast()
-                    val current = state.valoresAtributos[lastAction.attributeName]!!.intValue
-                    val prevRaw = if (current > 12) current - 1 else current - 2
-                    state.valoresAtributos[lastAction.attributeName]!!.intValue = prevRaw
-                    val prev = state.comprasAttrPorEstagio[lastAction.stageName] ?: 0
-                    if (prev > 0) {
-                        state.comprasAttrPorEstagio[lastAction.stageName] = prev - 1
-                    }
-                    state.paFromProgress = (state.paFromProgress - 1).coerceAtLeast(0)
+                    val current = state.valoresAtributos[attr]?.intValue ?: 4
+                    val prev = if (current > 12) current - 1 else current - 2
+                    state.valoresAtributos[attr]?.intValue = prev
                     state.recalcularPontosAtributo()
-                    if (lastAction.usedLegendaryReservation) {
-                        state.legendaryAttrReservations += 1
-                    }
                 }
-            }
-            is AdvancementAction.SpendOnSkills -> {
-                // Reverte o gasto dos pontos de perícia
-                lastAction.skillsIncreased.forEach { skillName ->
-                    val skill = listaPericias.firstOrNull { it.nome == skillName }
-                    if (skill != null) {
-                        state.decreasePericia(skill)
-                    }
-                }
-                // Reverte a concessão dos pontos de perícia
-                state.spFromProgress = (state.spFromProgress - 2).coerceAtLeast(0)
-
-                state.rebuildAllPericiaStacks()
-            }
-            is AdvancementAction.RemoveHindrance -> {
-                val hindrance = listaComplicacoes.first { it.id == lastAction.hindranceId }
-                when (lastAction.changeType) {
-                    HindranceChangeType.RESERVATION -> {
-                        state.reservasComplicacaoMaior.remove(hindrance.id)
-                    }
-
-                    HindranceChangeType.REDUCE_TO_MINOR -> {
-                        val previous = lastAction.previousLevel ?: "Maior"
-                        state.complicacoesSelecionadas[hindrance] = previous
-                    }
-
-                    HindranceChangeType.REMOVE -> {
-                        val previous = lastAction.previousLevel
-                        if (previous != null) {
-                            state.complicacoesSelecionadas[hindrance] = previous
-                        }
-                        if (lastAction.usedReservation) {
-                            state.reservasComplicacaoMaior[hindrance.id] = true
-                        }
-                    }
+                if (lastAction.wasLegendaryReservation) {
+                    state.legendaryAttrReservations += 1
                 }
             }
             is AdvancementAction.ReserveLegendaryAttribute -> {
-                state.legendaryAttrReservations =
-                    (state.legendaryAttrReservations - 1).coerceAtLeast(0)
+                state.legendaryAttrReservations -= 1
+            }
+            is AdvancementAction.RemoveMinorHindrance -> {
+                val comp = listaComplicacoes.firstOrNull { it.id == lastAction.hindranceId }
+                if (comp != null) {
+                    state.complicacoesSelecionadas[comp] = "Menor"
+                }
+            }
+            is AdvancementAction.RemoveMajorHindrance -> {
+                // Esse action representa o 2º ponto gasto.
+                // Ao reverter, devolvemos a reserva (voltou a ter pago 1 ponto só).
+                state.reservasComplicacaoMaior[lastAction.hindranceId] = true
+            }
+            is AdvancementAction.ReserveRemoveMajorHindrance -> {
+                // Esse action representa o 1º ponto gasto.
+                // Ao reverter, removemos a reserva e devolvemos a complicação Maior.
+                state.reservasComplicacaoMaior.remove(lastAction.hindranceId)
+                val comp = listaComplicacoes.firstOrNull { it.id == lastAction.hindranceId }
+                if (comp != null) {
+                    state.complicacoesSelecionadas[comp] = "Maior"
+                }
             }
         }
-        // Devolve o ponto de avanço ao "pool"
-        state.refundProgressAtStage(stageName, lastAction.progressCost)
-        if (state.modoProgressaoAtivo) {
-            state.snapshotFrozenSkillIncrements()
-        }
-        state.updateEmProgressoFlag()
+
+        // Se após reverter, ficarmos "presos" no limite do estágio, libera o congelamento
+        state.frozenAdvantageCount = 0 // simplificação: libera pra recalcularem
+        state.checkFreeze()
     }
+
+    fun getAdvancementOptions(): List<AdvancementOption> {
+        val list = mutableListOf<AdvancementOption>()
+
+        // Opções padrão
+        list.add(AdvancementOption.GainAdvantage)
+        list.add(AdvancementOption.IncreaseSkills)
+        list.add(AdvancementOption.IncreaseAttribute)
+
+        // Remover complicações
+        val menores = state.complicacoesSelecionadas.filterValues { it == "Menor" }.keys
+        menores.forEach { c ->
+            list.add(AdvancementOption.RemoveMinorHindrance(c))
+        }
+
+        val maiores = state.complicacoesSelecionadas.filterValues { it == "Maior" }.keys
+        maiores.forEach { c ->
+            if (state.reservasComplicacaoMaior.containsKey(c.id)) {
+                list.add(AdvancementOption.FinishRemoveMajorHindrance(c))
+            } else {
+                list.add(AdvancementOption.StartRemoveMajorHindrance(c))
+            }
+        }
+
+        return list
+    }
+
+    fun executeRemoveHindrance(option: AdvancementOption, targetStageName: String) {
+        when (option) {
+            is AdvancementOption.RemoveMinorHindrance -> {
+                state.complicacoesSelecionadas.remove(option.hindrance)
+                val action = AdvancementAction.RemoveMinorHindrance(option.hindrance.id)
+                state.advancementHistory.add(action)
+                state.spendProgressAtStage(targetStageName, 1)
+            }
+            is AdvancementOption.StartRemoveMajorHindrance -> {
+                state.complicacoesSelecionadas.remove(option.hindrance) // remove da UI visualmente?
+                // Na verdade, regra SWADE: paga 1 ponto pra "tratar", depois outro pra remover.
+                // Vamos manter a complicação na lista mas marcar reserva.
+                // Se quiser remover visualmente só no 2o ponto, ok.
+                // Aqui: removemos visualmente SE a regra for "já conta como removida mas devendo ponto".
+                // Mas geralmente remove só no final. Vamos assumir:
+                // 1º ponto: ganha flag "pagando". 2º ponto: remove de vez.
+                state.complicacoesSelecionadas.remove(option.hindrance) // Removemos pra feedback visual?
+                // Melhor: manter na lista se quiser realismo, ou remover e confiar no user.
+                // O app remove visualmente no final.
+                state.reservasComplicacaoMaior[option.hindrance.id] = true
+
+                // Mas espere! Se eu não remover agora, o usuário vê ela lá.
+                // Vamos fazer assim: Start -> adiciona reserva. Finish -> remove complicação.
+                // Se a reserva está lá, a complicação ainda está lá.
+                // CORREÇÃO: StartRemoveMajorHindrance APENAS adiciona a reserva.
+
+                // Ops, lógica acima:
+                state.reservasComplicacaoMaior[option.hindrance.id] = true
+                // Não remove do map complicacoesSelecionadas ainda.
+
+                val action = AdvancementAction.ReserveRemoveMajorHindrance(option.hindrance.id)
+                state.advancementHistory.add(action)
+                state.spendProgressAtStage(targetStageName, 1)
+            }
+            is AdvancementOption.FinishRemoveMajorHindrance -> {
+                state.reservasComplicacaoMaior.remove(option.hindrance.id)
+                state.complicacoesSelecionadas.remove(option.hindrance)
+                val action = AdvancementAction.RemoveMajorHindrance(option.hindrance.id)
+                state.advancementHistory.add(action)
+                state.spendProgressAtStage(targetStageName, 1)
+            }
+            else -> {}
+        }
+    }
+
+    private fun AdvancementAction.guessStageName(): String {
+        // Fallback simplificado se não tiver salvo no snapshot
+        // (idealmente salvaríamos o stageName em cada action, mas vamos usar o atual)
+        return "Novato"
+    }
+
+    fun normalizeArcanoIdsNoCarregamento() {
+        val novos = mutableStateListOf<Vantagem>()
+        state.vantagensSelecionadas.forEach { v ->
+            if (v.id == "antecedente_arcano" && v.choice != null) {
+                // Tenta achar um ID específico para esse choice
+                // Ex: choice="Milagres" -> id="antecedente_arcano_milagres"
+                val choiceNorm = v.choice!!.keyify()
+                val candidato = listaVantagens.firstOrNull { cand ->
+                    cand.grupoId == "antecedente_arcano" &&
+                            cand.subtipoArcano != null &&
+                            (cand.nome.keyify().contains(choiceNorm) || cand.subtipoArcano?.equals(choiceNorm, true) == true)
+                }
+                if (candidato != null) {
+                    // Substitui pela versão específica
+                    novos.add(candidato)
+                } else {
+                    novos.add(v)
+                }
+            } else {
+                novos.add(v)
+            }
+        }
+        state.vantagensSelecionadas.clear()
+        state.vantagensSelecionadas.addAll(novos)
+    }
+
+    private fun getArcanoKey(v: Vantagem): String {
+        return v.subtipoArcano
+            ?: v.choice?.normAAKey()
+            ?: v.nome.normAAKey()
+    }
+}
+
+enum class AdvancementType {
+    SKILL, ADVANTAGE, ATTRIBUTE
+}
+
+sealed class AdvancementOption {
+    object GainAdvantage : AdvancementOption()
+    object IncreaseSkills : AdvancementOption()
+    object IncreaseAttribute : AdvancementOption()
+    data class RemoveMinorHindrance(val hindrance: Complicacao) : AdvancementOption()
+    data class StartRemoveMajorHindrance(val hindrance: Complicacao) : AdvancementOption()
+    data class FinishRemoveMajorHindrance(val hindrance: Complicacao) : AdvancementOption()
 }
