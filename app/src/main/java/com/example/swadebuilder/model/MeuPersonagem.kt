@@ -57,5 +57,6 @@ data class MeuPersonagem(
     // ===== ANOTAÇÕES LIVRES PARA RESUMO / FICHA =====
     val anotacoes: String = "",
 
-    val soldadoCargaAtivo: Boolean = true
+    val soldadoCargaAtivo: Boolean = true,
+    val modoOficialAtivo: Boolean = false
 )

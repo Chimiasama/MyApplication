@@ -1,0 +1,170 @@
+[
+  {
+    "id": "complicacao_almofadinha",
+    "name": "ALMOFADINHA",
+    "severity": "MENOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Subtrai 2 de rolagens de Intimidar. Aparenta fragilidade.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_anemico",
+    "name": "ANÊMICO",
+    "severity": "MENOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-2 em Vigor para resistir a veneno, doença, fadiga e perigos ambientais.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_arrogante",
+    "name": "ARROGANTE",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Sempre procura a maior ameaça em batalha. Deve provar superioridade.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_atrapalhado",
+    "name": "ATRAPALHADO",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-2 em rolagens de Atletismo e Furtividade.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_codigo_honra",
+    "name": "CÓDIGO DE HONRA",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Mantém a palavra, não abusa de prisioneiros, segue conduta da divindade/ordem.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_covarde",
+    "name": "COVARDE",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-2 em testes de Medo e para resistir a Intimidação.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_desagradavel",
+    "name": "DESAGRADÁVEL",
+    "severity": "MENOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-1 em rolagens de Persuadir. Mau humor constante.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_desastrado",
+    "name": "DESASTRADO",
+    "severity": "MENOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-2 ao usar dispositivos mecânicos/elétricos. Falha Crítica quebra o item.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_desejo_morrer",
+    "name": "DESEJO DE MORRER",
+    "severity": "MENOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Aceita qualquer risco para alcançar um objetivo nobre, mas mortal.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_guiado",
+    "name": "GUIADO",
+    "severity": "ESCOLHA",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Menor: objetivo frequente. Maior: objetivo impreterível que causa perigo.",
+    "originalName": "Driven"
+  },
+  {
+    "id": "complicacao_heroico",
+    "name": "HEROICO",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Nunca diz não a uma pessoa necessitada. Primeiro a se arriscar.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_hesitante",
+    "name": "HESITANTE",
+    "severity": "MENOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Saca duas cartas de ação e fica com a menor (exceto Curingas). Não pode ter Rápido.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_idoso",
+    "name": "IDOSO",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-1 em Movimentação, Corrida, Agilidade, Força e Vigor. Ganha 5 pontos de perícia (Astúcia).",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_impulsivo",
+    "name": "IMPULSIVO",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Age sem pensar, evita planos complexos, lidera a carga.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_jovem",
+    "name": "JOVEM",
+    "severity": "ESCOLHA",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Menor (12-15 anos): 4 pts atributo, 10 perícia, +1 Bene. Maior (8-11): 3 pts atributo, 10 perícia, +2 Benes, Pequeno.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_lento",
+    "name": "LENTO",
+    "severity": "ESCOLHA",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Menor: Mov -1, Corrida reduzida. Maior: Mov -2, Corrida reduzida, -2 em Atletismo.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_lingua_presa",
+    "name": "LÍNGUA PRESA",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-1 em Intimidar, Performance, Persuadir e Provocar orais.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_ma_sorte",
+    "name": "MÁ SORTE",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Um Bene a menos por sessão. Incompatível com Sorte.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_nao_sabe_nadar",
+    "name": "NÃO SABE NADAR",
+    "severity": "MENOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-2 em Atletismo (nadar). Cada quadro na água custa 3 de movimento.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_sem_escrupulos",
+    "name": "SEM ESCRÚPULOS",
+    "severity": "ESCOLHA",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Menor: para antes de danos reais. Maior: Causa danos a quem ficar no caminho.",
+    "originalName": "Ruthless"
+  },
+  {
+    "id": "complicacao_voto",
+    "name": "VOTO",
+    "severity": "ESCOLHA",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Menor: compromisso frequente. Maior: Risco de vida ou dedicação total (ex: Clérigos/Paladinos).",
+    "originalName": null
+  }
+]

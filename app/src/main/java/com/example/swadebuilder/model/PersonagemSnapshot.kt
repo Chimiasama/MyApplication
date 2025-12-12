@@ -29,6 +29,8 @@ data class SnapshotFlags(
     val modoSupers: Boolean,
     val compendioFantasiaAtivo: Boolean,
     val compendioHorrorAtivo: Boolean,
+    val compendioTrilhadorAtivo: Boolean = false,
+    val modoOficialAtivo: Boolean = false,
     val modoMonstroAtivo: Boolean,
     val tipoMonstroSelecionado: String?,
     val usarEspecializacoesDePericia: Boolean,

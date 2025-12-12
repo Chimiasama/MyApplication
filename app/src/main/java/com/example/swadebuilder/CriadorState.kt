@@ -43,6 +43,8 @@ class CriadorState {
     var modoSuperequip by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)
+    var compendioTrilhadorAtivo by mutableStateOf(false)
+    var modoOficialAtivo by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
     var grandesResponsabilidades by mutableStateOf(false)
@@ -1655,6 +1657,8 @@ class CriadorState {
                 modoSupers = modoSupers,
                 compendioFantasiaAtivo = compendioFantasiaAtivo,
                 compendioHorrorAtivo = compendioHorrorAtivo,
+                compendioTrilhadorAtivo = compendioTrilhadorAtivo,
+                modoOficialAtivo = modoOficialAtivo,
                 modoMonstroAtivo = modoMonstroAtivo,
                 tipoMonstroSelecionado = tipoMonstroSelecionado,
                 usarEspecializacoesDePericia = usarEspecializacoesDePericia,
@@ -1777,6 +1781,8 @@ class CriadorState {
         modoSupers = flags.modoSupers
         compendioFantasiaAtivo = flags.compendioFantasiaAtivo
         compendioHorrorAtivo = flags.compendioHorrorAtivo
+        compendioTrilhadorAtivo = flags.compendioTrilhadorAtivo
+        modoOficialAtivo = flags.modoOficialAtivo
         modoMonstroAtivo = flags.modoMonstroAtivo
         usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia
         grandesResponsabilidades = flags.grandesResponsabilidades

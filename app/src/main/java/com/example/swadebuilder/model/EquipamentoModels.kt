@@ -7,6 +7,8 @@ import kotlinx.serialization.json.JsonElement
 @Serializable
 data class EquipamentoItem(
     val nome: String,
+    val originalName: String? = null,
+    val originalDescription: String? = null,
     @SerialName("custo")
     val custo: JsonElement? = null,
     val peso: JsonElement? = null,

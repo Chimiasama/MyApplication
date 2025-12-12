@@ -25,7 +25,8 @@ fun RenderCategoryList(
     dinheiro: Int,
     allowLongTexts: Boolean,
     detalhesExpandidos: SnapshotStateMap<String, Boolean>,
-    onEquipamentoDoubleClick: (EquipamentoItem) -> Unit
+    onEquipamentoDoubleClick: (EquipamentoItem) -> Unit,
+    showOriginalName: Boolean = false
 ) {
     val tipos = categories.map { it.tipo }.distinct()
     val expandedTipoMap = remember { mutableStateMapOf<String, Boolean>() }
@@ -45,7 +46,10 @@ fun RenderCategoryList(
                     .filter { it.tipo == tipo }
                     .let { list ->
                         if (filter.origens.isNotEmpty())
-                            list.filter { (it.origem?.uppercase() ?: "") in filter.origens }
+                            list.filter {
+                                val o = it.origem?.ifBlank { "BASICO" } ?: "BASICO"
+                                o.uppercase() in filter.origens
+                            }
                         else list
                     }
 
@@ -94,7 +98,8 @@ fun RenderCategoryList(
                                                 onToggleDetails = {
                                                     val current = detalhesExpandidos[equipamento.nome] ?: false
                                                     detalhesExpandidos[equipamento.nome] = !current
-                                                }
+                                                },
+                                                showOriginalName = showOriginalName
                                             )
                                         }
                                 } else {
@@ -128,7 +133,8 @@ fun RenderCategoryList(
                                                         onToggleDetails = {
                                                             val current = detalhesExpandidos[equipamento.nome] ?: false
                                                             detalhesExpandidos[equipamento.nome] = !current
-                                                        }
+                                                        },
+                                                        showOriginalName = showOriginalName
                                                     )
                                                 }
                                         }

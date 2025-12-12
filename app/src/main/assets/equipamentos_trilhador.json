@@ -1,0 +1,95 @@
+[
+  {
+    "tipo": "Materiais Especiais",
+    "subtipo": "Metais e Madeiras",
+    "origem": "FANTASIA_TRILHADOR",
+    "itens": [
+      {
+        "nome": "Adamante",
+        "custo": 3000,
+        "peso": "—",
+        "observacoes": "Adiciona PA +1 a armas. Armaduras ignoram 2 pontos de PA. Aumenta dureza.",
+        "originalName": "Adamantina"
+      },
+      {
+        "nome": "Ferro Frio",
+        "custo": "Dobro do item",
+        "peso": "—",
+        "observacoes": "Útil contra fadas e demônios. Aumenta Dureza em 2.",
+        "originalName": null
+      },
+      {
+        "nome": "Mithral",
+        "custo": "Variável",
+        "peso": "Metade do item",
+        "observacoes": "Reduz Força Mínima em um dado. Armas custam 100x, Armaduras 10x.",
+        "originalName": "Mithral"
+      },
+      {
+        "nome": "Madeira Negra",
+        "custo": "+10 po/kg",
+        "peso": "Metade do item",
+        "observacoes": "Aumenta Dureza em 2. Versão obra-prima.",
+        "originalName": "Darkwood"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento de Aventura",
+    "subtipo": "Específicos do Cenário",
+    "origem": "FANTASIA_TRILHADOR",
+    "itens": [
+      {
+        "nome": "Bússola de Guia",
+        "custo": 500,
+        "peso": "0,5",
+        "observacoes": "Concede +2 em Sobrevivência para navegação. Pode emitir luz (comando).",
+        "originalName": "Wayfinder (Bússola de Desbravador)"
+      },
+      {
+        "nome": "Pedra Trovão",
+        "custo": 30,
+        "peso": "0,5",
+        "observacoes": "Explode em MME. Vigor ou Abalado e Surdo.",
+        "originalName": null
+      },
+      {
+        "nome": "Bolsa Enredapé",
+        "custo": 50,
+        "peso": "2",
+        "observacoes": "Cola alvo ao chão (Tamanho 3 ou menor). Distraído e preso (Atletismo para soltar).",
+        "originalName": "Tanglefoot Bag"
+      },
+      {
+        "nome": "Bastão Solar",
+        "custo": 2,
+        "peso": "0,5",
+        "observacoes": "Luz em 10m por 6 horas. Aumenta iluminação em +1 nível além disso.",
+        "originalName": "Sunrod"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Especiais",
+    "subtipo": "Exóticas",
+    "origem": "FANTASIA_TRILHADOR",
+    "itens": [
+      {
+        "nome": "Faca Estrela",
+        "dano": "For+d4",
+        "peso": "1,5",
+        "custo": 24,
+        "observacoes": "Alcance 3/6/12. Aparar +1. Pode ser usada corpo a corpo ou arremesso.",
+        "originalName": "Starknife"
+      },
+      {
+        "nome": "Espada do Templo",
+        "dano": "For+d6",
+        "peso": "1,5",
+        "custo": 30,
+        "observacoes": "Usada por monges. Aparar +1.",
+        "originalName": "Temple Sword"
+      }
+    ]
+  }
+]

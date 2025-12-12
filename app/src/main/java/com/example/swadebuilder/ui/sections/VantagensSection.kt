@@ -59,6 +59,7 @@ import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
+import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
@@ -192,27 +193,16 @@ fun VantagensContent(
     multiplosAAHabilitados: Boolean,
     viewModel: CriadorViewModel = viewModel()
 ) {
-    val context = LocalContext.current
-
-    val listaVantagensRaw: List<Vantagem> = remember {
-        val jsonString = context.assets.open("Vantagens.json")
-            .bufferedReader()
-            .use { it.readText() }
-        val json = Json {
-            ignoreUnknownKeys = true
-            explicitNulls = false
-            isLenient = true
-            coerceInputValues = true
-        }
-        json.decodeFromString(jsonString)
-    }
+    // We use the global `listaVantagens` loaded in MainActivity (which includes compendium content)
+    // instead of reloading just the base `Vantagens.json`.
+    val listaVantagensGlobal = listaVantagens
 
     val listaVantagens: List<Vantagem> =
-        remember(multiplosAAHabilitados, listaVantagensRaw) {
+        remember(multiplosAAHabilitados, listaVantagensGlobal) {
             if (multiplosAAHabilitados) {
-                listaVantagensRaw.filterNot { it.id == "antecedente_arcano" }
+                listaVantagensGlobal.filterNot { it.id == "antecedente_arcano" }
             } else {
-                listaVantagensRaw.filterNot { it.id.startsWith("antecedente_arcano_") }
+                listaVantagensGlobal.filterNot { it.id.startsWith("antecedente_arcano_") }
             }
         }
 
@@ -223,15 +213,19 @@ fun VantagensContent(
         }
     }
 
-    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo) {
+    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioTrilhadorAtivo) {
         listaVantagens.filter { vant ->
             val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase()
             val isBasico = origemNorm == "BASICO"
             val isSuper = origemNorm == "SUPER"
             val isFantasia = origemNorm == "FANTASIA"
             val isHorror = origemNorm == "HORROR"
+            val isTrilhador = origemNorm == "FANTASIA_TRILHADOR"
 
-            isBasico || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo)
+            // Allow filtering logic to work properly: include items if their compendium is active OR if they are basic.
+            // But we also need to allow users to filter via the dialog even if the compendium is active.
+            // The logic below determines which items are *eligible* to be shown. The dialog filter is applied later.
+            isBasico || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isTrilhador && state.compendioTrilhadorAtivo)
         }
     }
 
@@ -324,7 +318,7 @@ fun VantagensContent(
         )
 
         if (showFilterDialog) {
-            val allOrigens = listaVantagensAtivas.map { it.origem.uppercase() }.distinct()
+            val allOrigens = listaVantagensAtivas.map { it.origem.ifBlank { "BASICO" }.uppercase() }.distinct()
             val allEstagios = listaDeEstagios.map { it.nome }
             val allAtributos = mapaAtributosDisplay.values.toList()
             val requiredPericias = listaVantagensAtivas.flatMap { vant ->
@@ -459,7 +453,9 @@ fun VantagensContent(
 
         Spacer(Modifier.size(8.dp))
 
-        categoriasBy.forEach { (cat, lista) ->
+        // Iterate through Categoria enum to ensure consistent order
+        Categoria.entries.forEach { cat ->
+            val lista = categoriasBy[cat] ?: return@forEach
             if (state.modoSupers && cat == Categoria.PODER) return@forEach
 
             val expanded = expandedMap[cat] ?: false
@@ -488,8 +484,9 @@ fun VantagensContent(
                                         state.vantagensSelecionadas.any { it.id == "profissional" })
                     }
                     .filter { vant ->
+                        val vantOrigem = vant.origem.ifBlank { "BASICO" }.uppercase()
                         if (filter.origens.isNotEmpty() &&
-                            vant.origem.uppercase() !in filter.origens
+                            vantOrigem !in filter.origens
                         ) return@filter false
 
                         if (filter.estagios.isNotEmpty() &&
@@ -648,7 +645,7 @@ fun VantagensContent(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        vant.nome,
+                                        if (state.modoOficialAtivo && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome,
                                         style = MaterialTheme.typography.titleSmall,
                                         modifier = Modifier.weight(1f)
                                     )
@@ -712,7 +709,7 @@ fun VantagensContent(
 
                                     AnimatedVisibility(visible = detalhesExpandidos[vant.id] == true) {
                                         Text(
-                                            text = vant.descricao.trim(),
+                                            text = if (state.modoOficialAtivo && !vant.originalDescription.isNullOrBlank()) vant.originalDescription.trim() else vant.descricao.trim(),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier.padding(top = 4.dp)

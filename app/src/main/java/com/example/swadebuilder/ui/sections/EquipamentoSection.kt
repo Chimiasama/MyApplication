@@ -189,7 +189,9 @@ fun EquipamentoSection(
     onEditarDinheiro: (Int) -> Unit,
     onToggleSoldadoCarga: () -> Unit,
     compendioFantasiaAtivo: Boolean = false,
-    compendioHorrorAtivo: Boolean = false
+    compendioHorrorAtivo: Boolean = false,
+    compendioTrilhadorAtivo: Boolean = false,
+    modoOficialAtivo: Boolean = false
 ) {
     val focusManager = LocalFocusManager.current
     var showMoneyDialog by rememberSaveable { mutableStateOf(false) }
@@ -198,6 +200,7 @@ fun EquipamentoSection(
     var expSuperequip by rememberSaveable { mutableStateOf(false) }
     var expFantasiaEquip by rememberSaveable { mutableStateOf(false) }
     var expHorrorEquip by rememberSaveable { mutableStateOf(false) }
+    var expTrilhadorEquip by rememberSaveable { mutableStateOf(false) }
 
     var filter by remember { mutableStateOf(EquipFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
@@ -211,6 +214,47 @@ fun EquipamentoSection(
         icon     = Icons.Default.ShoppingCart
     ) {
         if (!expanded) return@SectionCard
+
+        val allCategorias = (categorias + superequipCategorias)
+            .filterNot {
+                it.tipo.equals("Equipamento Supers", true) ||
+                        it.tipo.equals("Equipamentos Supers", true)
+            }
+
+        // Filtra as categorias normais (não fantasia nem horror)
+        val normalCategorias = allCategorias.filter {
+            val origem = it.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
+            val isFantasia = origem == "FANTASIA"
+            val isHorror = origem == "HORROR"
+            val isTrilhador = origem == "FANTASIA_TRILHADOR"
+            !isFantasia && !isHorror && !isTrilhador
+        }
+
+        // Filtra as categorias de fantasia (se ativo)
+        val fantasiaCategorias = if (compendioFantasiaAtivo) {
+            allCategorias.filter {
+                (it.origem?.uppercase() ?: "") == "FANTASIA"
+            }
+        } else {
+            emptyList()
+        }
+
+        // Filtra as categorias de horror (se ativo)
+        val horrorCategorias = if (compendioHorrorAtivo) {
+            allCategorias.filter {
+                (it.origem?.uppercase() ?: "") == "HORROR"
+            }
+        } else {
+            emptyList()
+        }
+
+        val trilhadorCategorias = if (compendioTrilhadorAtivo) {
+            allCategorias.filter {
+                (it.origem?.uppercase() ?: "") == "FANTASIA_TRILHADOR"
+            }
+        } else {
+            emptyList()
+        }
 
         SectionHeader(
             onHelpClick = null,
@@ -270,8 +314,8 @@ fun EquipamentoSection(
             val allTipos = allCategoriasVisiveis.map { it.tipo }.distinct()
             val allSubtipos = allCategoriasVisiveis.map { it.subtipo }.distinct()
 
-            val allOrigens = (categorias.mapNotNull { it.origem } +
-                    superequipCategorias.mapNotNull { it.origem })
+            val allOrigens = (categorias + superequipCategorias)
+                .map { it.origem?.ifBlank { "BASICO" } ?: "BASICO" }
                 .map { it.uppercase() }
                 .distinct()
 
@@ -348,6 +392,25 @@ fun EquipamentoSection(
             }
         }
 
+        if (compendioTrilhadorAtivo && trilhadorCategorias.isNotEmpty()) {
+            Spacer(Modifier.padding(vertical = 4.dp))
+            CollapsibleSection(
+                title = "Equipamento de Trilhador",
+                expanded = expTrilhadorEquip,
+                onToggle = { expTrilhadorEquip = !expTrilhadorEquip }
+            ) {
+                RenderCategoryList(
+                    categories = trilhadorCategorias,
+                    filter = filter,
+                    dinheiro = dinheiro,
+                    allowLongTexts = allowLongTexts,
+                    detalhesExpandidos = detalhesExpandidos,
+                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
+                    showOriginalName = modoOficialAtivo
+                )
+            }
+        }
+
         if (showMoneyDialog) {
             AlertDialog(
                 onDismissRequest = { showMoneyDialog = false },
@@ -385,38 +448,6 @@ fun EquipamentoSection(
             )
         }
 
-        val allCategorias = (categorias + superequipCategorias)
-            .filterNot {
-                it.tipo.equals("Equipamento Supers", true) ||
-                        it.tipo.equals("Equipamentos Supers", true)
-            }
-
-        // Filtra as categorias normais (não fantasia nem horror)
-        val normalCategorias = allCategorias.filter {
-            val origem = it.origem?.uppercase()
-            val isFantasia = origem == "FANTASIA"
-            val isHorror = origem == "HORROR"
-            !isFantasia && !isHorror
-        }
-
-        // Filtra as categorias de fantasia (se ativo)
-        val fantasiaCategorias = if (compendioFantasiaAtivo) {
-            allCategorias.filter {
-                it.origem?.uppercase() == "FANTASIA"
-            }
-        } else {
-            emptyList()
-        }
-
-        // Filtra as categorias de horror (se ativo)
-        val horrorCategorias = if (compendioHorrorAtivo) {
-            allCategorias.filter {
-                it.origem?.uppercase() == "HORROR"
-            }
-        } else {
-            emptyList()
-        }
-
         // Renderiza categorias normais
         val tiposNormais = normalCategorias.map { it.tipo }.distinct()
         val expandedTipoMap = remember { mutableStateMapOf<String, Boolean>() }
@@ -448,7 +479,8 @@ fun EquipamentoSection(
                         .let { list ->
                             if (filter.origens.isNotEmpty())
                                 list.filter {
-                                    (it.origem?.uppercase() ?: "") in filter.origens
+                                    val safeOrigem = it.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
+                                    safeOrigem in filter.origens
                                 }
                             else list
                         }
@@ -501,28 +533,19 @@ fun EquipamentoSection(
                                             true
                                         }
                                         .forEach { equipamento ->
-                                            Row(
-                                                Modifier
-                                                    .fillMaxWidth()
-                                                    .clickable {
-                                                        onEquipamentoDoubleClick(equipamento)
-                                                    }
-                                                    .padding(
-                                                        vertical = 4.dp,
-                                                        horizontal = 4.dp
-                                                    ),
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
-                                                Text(
-                                                    equipamento.nome,
-                                                    Modifier.weight(1f),
-                                                    style = MaterialTheme.typography.bodyMedium
-                                                )
-                                                Text(
-                                                    equipamento.custo.toString(),
-                                                    style = MaterialTheme.typography.bodyMedium
-                                                )
-                                            }
+                                            EquipamentoListItem(
+                                                equipamento = equipamento,
+                                                onClick = {
+                                                    onEquipamentoDoubleClick(equipamento)
+                                                },
+                                                allowLongTexts = allowLongTexts,
+                                                expanded = detalhesExpandidos[equipamento.nome] == true,
+                                                onToggleDetails = {
+                                                    val current = detalhesExpandidos[equipamento.nome] ?: false
+                                                    detalhesExpandidos[equipamento.nome] = !current
+                                                },
+                                                showOriginalName = modoOficialAtivo
+                                            )
                                         }
                                 } else {
                                     subsub.forEach { ss ->
@@ -575,7 +598,8 @@ fun EquipamentoSection(
                                                               onToggleDetails = {
                                                                   val current = detalhesExpandidos[equipamento.nome] ?: false
                                                                   detalhesExpandidos[equipamento.nome] = !current
-                                                              }
+                                                              },
+                                                              showOriginalName = modoOficialAtivo
                                                           )
                                                       }
                                                   }
@@ -605,7 +629,8 @@ fun EquipamentoSection(
                     dinheiro = dinheiro,
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
-                    onEquipamentoDoubleClick = onEquipamentoDoubleClick
+                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
+                    showOriginalName = modoOficialAtivo
                 )
             }
         }
@@ -624,7 +649,8 @@ fun EquipamentoSection(
                     dinheiro = dinheiro,
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
-                    onEquipamentoDoubleClick = onEquipamentoDoubleClick
+                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
+                    showOriginalName = modoOficialAtivo
                 )
             }
         }
@@ -671,7 +697,8 @@ fun EquipamentoSection(
                                 onToggleDetails = {
                                     val current = detalhesExpandidos[equipamento.nome] ?: false
                                     detalhesExpandidos[equipamento.nome] = !current
-                                }
+                                },
+                                showOriginalName = modoOficialAtivo
                             )
                         }
                 }
@@ -686,7 +713,8 @@ fun EquipamentoListItem(
     onClick: () -> Unit,
     allowLongTexts: Boolean,
     expanded: Boolean,
-    onToggleDetails: () -> Unit
+    onToggleDetails: () -> Unit,
+    showOriginalName: Boolean = false
 ) {
     val resumo = equipamento.toResumo()
 
@@ -706,7 +734,7 @@ fun EquipamentoListItem(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    equipamento.nome,
+                    if (showOriginalName && !equipamento.originalName.isNullOrBlank()) equipamento.originalName else equipamento.nome,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.weight(1f)
                 )

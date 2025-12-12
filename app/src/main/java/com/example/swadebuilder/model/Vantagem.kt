@@ -1,4 +1,3 @@
-// Vantagem.kt
 package com.example.swadebuilder.model
 
 import kotlinx.serialization.SerialName
@@ -8,6 +7,8 @@ import kotlinx.serialization.Serializable
 data class Vantagem(
     val id: String,
     val nome: String,
+    val originalName: String? = null,
+    val originalDescription: String? = null,
 
     val categoria: Categoria,
 

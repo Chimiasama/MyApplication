@@ -81,10 +81,12 @@ fun ComplicacoesSection(
         if (state.modoSuperComplicacoes) add("SUPER")
         if (state.compendioFantasiaAtivo) add("FANTASIA")
         if (state.compendioHorrorAtivo) add("HORROR")
+        if (state.compendioTrilhadorAtivo) add("FANTASIA_TRILHADOR")
     }
 
     val complicacoesFiltradas = listaComplicacoes.filter { comp ->
-        comp.origem.uppercase().semAcentos().trim() in origensAtivas
+        val origemSafe = if (comp.origem.isBlank()) "BASICO" else comp.origem
+        origemSafe.uppercase().semAcentos().trim() in origensAtivas
     }
 
     SectionCard(
@@ -241,7 +243,7 @@ fun ComplicacoesSection(
 
             Spacer(Modifier.height(4.dp))
 
-            val pequComp = complicacoesFiltradas.first { it.id == "pequeno" }
+            val pequComp = complicacoesFiltradas.firstOrNull { it.id == "pequeno" }
 
             val listaParaMostrar = complicacoesFiltradas
                 .filter { comp ->
@@ -274,7 +276,7 @@ fun ComplicacoesSection(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = comp.name,
+                                    text = if (state.modoOficialAtivo && !comp.originalName.isNullOrBlank()) comp.originalName else comp.name,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
@@ -327,8 +329,10 @@ fun ComplicacoesSection(
                                                     state.rebuildAllPericiaStacks()
                                                 }
                                                 "jovem" -> {
-                                                    state.complicacoesSelecionadas[comp] = "Maior"
-                                                    state.applyYoungMajor(pequComp)
+                                                    if (pequComp != null) {
+                                                        state.complicacoesSelecionadas[comp] = "Maior"
+                                                        state.applyYoungMajor(pequComp)
+                                                    }
                                                 }
                                                 "obeso" -> {
                                                     state.complicacoesSelecionadas[comp] = "Maior"
@@ -364,7 +368,7 @@ fun ComplicacoesSection(
 
                             AnimatedVisibility(visible = detalhesExpandidos[comp.id] == true) {
                                 Text(
-                                    text = comp.description.trim(),
+                                    text = if (state.modoOficialAtivo && !comp.originalDescription.isNullOrBlank()) comp.originalDescription.trim() else comp.description.trim(),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.padding(top = 4.dp)

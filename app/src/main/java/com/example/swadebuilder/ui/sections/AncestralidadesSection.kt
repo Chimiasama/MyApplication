@@ -46,7 +46,8 @@ import com.example.swadebuilder.CriadorState
 
 @Serializable
 data class RacialModifierLite(
-    val nome: String
+    val nome: String,
+    val originalName: String? = null
 )
 
 private const val ASSET_ANCESTRALIDADES = "listaancestralidade.json"
@@ -76,13 +77,27 @@ fun AncestralidadesSection(
     }
 
     val compendioFantasiaAtivo = state.compendioFantasiaAtivo
+    val compendioTrilhadorAtivo = state.compendioTrilhadorAtivo
 
-    val ancestralidadesState = remember(compendioFantasiaAtivo) {
-        val all = context.loadJsonAsset<List<RacialModifier>>(ASSET_ANCESTRALIDADES)
+    val ancestralidadesState = remember(compendioFantasiaAtivo, compendioTrilhadorAtivo) {
+        // Load legacy list
+        val allLegacy = context.loadJsonAsset<List<RacialModifier>>(ASSET_ANCESTRALIDADES)
+
+        // Load Trilhador list
+        val allTrilhador = try {
+            context.loadJsonAsset<List<RacialModifier>>("ancestralidades_trilhador.json")
+        } catch (e: Exception) {
+            emptyList()
+        }
+
+        val all = allLegacy + allTrilhador
+
         val filtered = all.filter {
             val origin = it.origem?.uppercase() ?: "BASICO"
-            origin == "BASICO" || (origin == "FANTASIA" && compendioFantasiaAtivo)
-        }.map { RacialModifierLite(it.nome) }
+            origin == "BASICO" || (origin == "FANTASIA" && compendioFantasiaAtivo) || (origin == "FANTASIA_TRILHADOR" && compendioTrilhadorAtivo)
+        }.map {
+            RacialModifierLite(it.nome, it.originalName)
+        }
         mutableStateOf(filtered)
     }
 
@@ -191,8 +206,14 @@ fun AncestralidadesSection(
                                 Spacer(Modifier.padding(start = 8.dp))
 
                                 Column(Modifier.weight(1f)) {
+                                    val displayName = if (state.modoOficialAtivo && !item.originalName.isNullOrBlank()) {
+                                        item.originalName
+                                    } else {
+                                        item.nome
+                                    }
+
                                     Text(
-                                        text = item.nome,
+                                        text = displayName,
                                         style = MaterialTheme.typography.bodyLarge,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )

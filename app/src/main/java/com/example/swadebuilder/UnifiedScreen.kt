@@ -132,7 +132,8 @@ fun UnifiedScreen(
 
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
-    listaSuperPoderes: List<SuperPoder>
+    listaSuperPoderes: List<SuperPoder>,
+    modoOficialAtivo: Boolean = false
 ) {
     if (state.modoSupers) {
         Log.d("DEBUG", "modoSupers é ${state.modoSupers}")
@@ -617,6 +618,9 @@ private fun EquipamentoSection(
                 state.soldadoCargaAtivo = !state.soldadoCargaAtivo
             }
         },
-        compendioFantasiaAtivo = state.compendioFantasiaAtivo
+        compendioFantasiaAtivo = state.compendioFantasiaAtivo,
+        compendioHorrorAtivo = state.compendioHorrorAtivo,
+        compendioTrilhadorAtivo = state.compendioTrilhadorAtivo,
+        modoOficialAtivo = state.modoOficialAtivo
     )
 }
