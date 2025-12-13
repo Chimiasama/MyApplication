@@ -78,8 +78,10 @@ fun AncestralidadesSection(
 
     val compendioFantasiaAtivo = state.compendioFantasiaAtivo
     val compendioTrilhadorAtivo = state.compendioTrilhadorAtivo
+    val compendioDeadlandsAtivo = state.compendioDeadlandsAtivo
+    val compendioSciFiAtivo = state.compendioSciFiAtivo
 
-    val ancestralidadesState = remember(compendioFantasiaAtivo, compendioTrilhadorAtivo) {
+    val ancestralidadesState = remember(compendioFantasiaAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioSciFiAtivo) {
         // Load legacy list
         val allLegacy = context.loadJsonAsset<List<RacialModifier>>(ASSET_ANCESTRALIDADES)
 
@@ -90,11 +92,27 @@ fun AncestralidadesSection(
             emptyList()
         }
 
-        val all = allLegacy + allTrilhador
+        val allDeadlands = try {
+            context.loadJsonAsset<List<RacialModifier>>("ancestralidades_deadlands.json")
+        } catch (e: Exception) {
+            emptyList()
+        }
+
+        val allSciFi = try {
+            context.loadJsonAsset<List<RacialModifier>>("ancestralidades_sci_fi.json")
+        } catch (e: Exception) {
+            emptyList()
+        }
+
+        val all = allLegacy + allTrilhador + allDeadlands + allSciFi
 
         val filtered = all.filter {
             val origin = it.origem?.uppercase() ?: "BASICO"
-            origin == "BASICO" || (origin == "FANTASIA" && compendioFantasiaAtivo) || (origin == "FANTASIA_TRILHADOR" && compendioTrilhadorAtivo)
+            origin == "BASICO" ||
+            (origin == "FANTASIA" && compendioFantasiaAtivo) ||
+            (origin == "FANTASIA_TRILHADOR" && compendioTrilhadorAtivo) ||
+            (origin == "DEADLANDS" && compendioDeadlandsAtivo) ||
+            (origin == "SCI_FI" && compendioSciFiAtivo)
         }.map {
             RacialModifierLite(it.nome, it.originalName)
         }
