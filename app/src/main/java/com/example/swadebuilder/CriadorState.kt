@@ -810,16 +810,16 @@ class CriadorState {
 
     fun podeSelecionar(v: Vantagem): Boolean {
         val key = v.nome.keyify()
-        android.util.Log.d("SWADE_DEBUG", "--- Validando: ${v.nome} ($key) ---")
+        com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "--- Validando: ${v.nome} ($key) ---")
 
         // 1) Regra especial: O MELHOR QUE HÁ
         if (key == "o_melhor_que_ha") {
             if (emProgresso) {
-                android.util.Log.d("SWADE_DEBUG", "Rejeitado: O Melhor que Há (em progresso)")
+                com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "Rejeitado: O Melhor que Há (em progresso)")
                 return false
             }
             if (superInvestments.isEmpty()) {
-                android.util.Log.d("SWADE_DEBUG", "Rejeitado: O Melhor que Há (sem superInvestments)")
+                com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "Rejeitado: O Melhor que Há (sem superInvestments)")
                 return false
             }
         }
@@ -829,7 +829,7 @@ class CriadorState {
             val totalFeitas = comprasPpPorEstagio.values.sum()
             val maxPermitidas = maxComprasPpAteAgora()
             if (totalFeitas >= maxPermitidas) {
-                android.util.Log.d("SWADE_DEBUG", "Rejeitado: PP (feito: $totalFeitas, max: $maxPermitidas)")
+                com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "Rejeitado: PP (feito: $totalFeitas, max: $maxPermitidas)")
                 return false
             }
         }
@@ -970,9 +970,9 @@ class CriadorState {
 
             val fail = atual < min
             if (fail) {
-                android.util.Log.d("SWADE_DEBUG", "Falha Atributo: Req=$nome($min), Key=$attrKey, Atual=$atual (MapHasKey=${valoresAtributos.containsKey(attrKey)})")
+                com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "Falha Atributo: Req=$nome($min), Key=$attrKey, Atual=$atual (MapHasKey=${valoresAtributos.containsKey(attrKey)})")
             } else {
-                android.util.Log.d("SWADE_DEBUG", "OK Atributo: Req=$nome($min), Key=$attrKey, Atual=$atual")
+                com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "OK Atributo: Req=$nome($min), Key=$attrKey, Atual=$atual")
             }
             fail
         }
@@ -987,11 +987,11 @@ class CriadorState {
                 }
                 val total = per?.let { rawTotal(it) } ?: 0
                 val ok = per != null && total >= minRaw
-                android.util.Log.d("SWADE_DEBUG", "Check Pericia Vinculada: $perNome >= $minRaw? Atual=$total -> $ok")
+                com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "Check Pericia Vinculada: $perNome >= $minRaw? Atual=$total -> $ok")
                 ok
             }
             if (!atendeUma) {
-                android.util.Log.d("SWADE_DEBUG", "Falha: Nenhuma perícia vinculada atende aos requisitos.")
+                com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "Falha: Nenhuma perícia vinculada atende aos requisitos.")
                 return false
             }
         } else {
@@ -1000,15 +1000,15 @@ class CriadorState {
                     it.nome.equals(perNome, ignoreCase = true)
                 }
                 if (per == null) {
-                    android.util.Log.d("SWADE_DEBUG", "Falha Perícia: $perNome não encontrada na listaPericias.")
+                    com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "Falha Perícia: $perNome não encontrada na listaPericias.")
                     return@any true
                 }
                 val total = rawTotal(per)
                 val fail = total < minRaw
                 if (fail) {
-                    android.util.Log.d("SWADE_DEBUG", "Falha Perícia: $perNome ($minRaw), Atual=$total")
+                    com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "Falha Perícia: $perNome ($minRaw), Atual=$total")
                 } else {
-                    android.util.Log.d("SWADE_DEBUG", "OK Perícia: $perNome ($minRaw), Atual=$total")
+                    com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "OK Perícia: $perNome ($minRaw), Atual=$total")
                 }
                 fail
             }

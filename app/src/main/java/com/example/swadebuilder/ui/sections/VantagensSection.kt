@@ -584,17 +584,17 @@ fun VantagensContent(
                                 .fillMaxWidth()
                                 .padding(horizontal = 4.dp, vertical = 4.dp)
                                 .clickable(enabled = !locked) {
-                                    android.util.Log.d("SWADE_DEBUG", "Click na Vantagem: ${vant.nome}")
+                                    com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "Click na Vantagem: ${vant.nome}")
                                     if (!locked) {
                                         when {
                                             state.pontosVantagem <= 0 -> {
-                                                android.util.Log.d("SWADE_DEBUG", "Falha Click: Sem PV")
+                                                com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "Falha Click: Sem PV")
                                                 tempErrorMsg = "Sem PV disponível"
                                                 showTempError = true
                                             }
 
                                             !state.podeSelecionar(vant) -> {
-                                                android.util.Log.d("SWADE_DEBUG", "Falha Click: Requisitos não atendidos")
+                                                com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "Falha Click: Requisitos não atendidos")
                                                 tempErrorMsg =
                                                     "Faltam requisitos para '${vant.nome}'"
                                                 showTempError = true
