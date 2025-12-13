@@ -402,13 +402,13 @@ class CriadorState {
         vantagensSelecionadas += v
     }
 
-    fun removerPontosDePoder(v: Vantagem) {
+    fun removerPontosDePoder(v: Vantagem, estagioOverride: String? = null) {
         if (!vantagensSelecionadas.remove(v)) return
 
         val totalAntes = comprasPpPorEstagio.values.sum()
         if (totalAntes == 0) return
 
-        val estagio = estagioAtual().nome
+        val estagio = estagioOverride ?: estagioAtual().nome
         val feitas = comprasPpPorEstagio[estagio] ?: 0
         if (feitas > 0) {
             comprasPpPorEstagio[estagio] = feitas - 1

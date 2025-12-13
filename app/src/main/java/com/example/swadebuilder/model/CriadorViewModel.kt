@@ -890,7 +890,7 @@ class CriadorViewModel : ViewModel() {
                 val advantage = state.vantagensSelecionadas.lastOrNull { it.id == lastAction.advantageId }
                 if (advantage != null) {
                     if (advantage.nome.contains("Pontos de Poder", true)) {
-                        state.removerPontosDePoder(advantage)
+                        state.removerPontosDePoder(advantage, estagioOverride = lastAction.stageName)
                     } else {
                         state.removeVantagemDinheiro(advantage)
                         state.vantagensSelecionadas.remove(advantage)
