@@ -147,7 +147,10 @@ fun ProgressosDialog(
         }
         if (v.requisitos.atributoMin.any { (nome, min) ->
                 val chaveNorm = nome.uppercase().semAcentos().trim()
-                val valor = state.valoresAtributos[chaveNorm]?.intValue
+                val attrKey = mapaAtributosDisplay.keys.firstOrNull {
+                    it.equals(chaveNorm, ignoreCase = true)
+                } ?: chaveNorm
+                val valor = state.valoresAtributos[attrKey]?.intValue
                 valor == null || valor < min
             }
         ) return false

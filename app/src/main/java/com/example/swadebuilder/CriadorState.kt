@@ -951,7 +951,11 @@ class CriadorState {
         // 10) Atributos mínimos
         if (v.requisitos.atributoMin.any { (nome, min) ->
                 val chaveNorm = nome.uppercase().semAcentos().trim()
-                valoresAtributos[chaveNorm]?.intValue?.let { it < min } != false
+                val attrKey = mapaAtributosDisplay.keys.firstOrNull {
+                    it.equals(chaveNorm, ignoreCase = true)
+                } ?: chaveNorm
+                val atual = valoresAtributos[attrKey]?.intValue ?: return false
+                atual < min
             }) return false
 
         // 11) Perícias mínimas obrigatórias
