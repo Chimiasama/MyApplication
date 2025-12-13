@@ -101,6 +101,7 @@ fun TelaInicial(
     var expFantasia by rememberSaveable { mutableStateOf(false) }
     var optCompendioFantasia by rememberSaveable { mutableStateOf(false) }
     var optCompendioTrilhador by rememberSaveable { mutableStateOf(false) }
+    var expDeadlands by rememberSaveable { mutableStateOf(false) }
     var optCompendioDeadlands by rememberSaveable { mutableStateOf(false) }
 
     // Ficção Científica
@@ -564,18 +565,36 @@ Feito por Rafael S.W.
                     Row(
                         Modifier
                             .fillMaxWidth()
-                            .clickable { optCompendioDeadlands = !optCompendioDeadlands }
-                            .padding(vertical = 4.dp),
+                            .clickable { expDeadlands = !expDeadlands }
+                            .padding(vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Checkbox(
-                            checked = optCompendioDeadlands,
-                            onCheckedChange = { optCompendioDeadlands = it }
+                        Text("Deadlands: O Oeste Estranho", fontWeight = FontWeight.Bold)
+                        Icon(
+                            imageVector = if (expDeadlands) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                            contentDescription = stringResource(id = if (expDeadlands) R.string.cd_collapse else R.string.cd_expand)
                         )
-                        Spacer(Modifier.width(8.dp))
-                        Column {
-                            Text("Deadlands: O Oeste Estranho", fontWeight = FontWeight.Bold)
-                            Text("Harroweds, dispositivos infernais e o Velho Oeste sombrio.", style = MaterialTheme.typography.bodySmall)
+                    }
+                    if (expDeadlands) {
+                        Spacer(Modifier.height(4.dp))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { optCompendioDeadlands = !optCompendioDeadlands }
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Checkbox(
+                                checked = optCompendioDeadlands,
+                                onCheckedChange = { optCompendioDeadlands = it }
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text("Ativar conteúdo de Deadlands", fontWeight = FontWeight.Bold)
+                                Text("Harroweds, dispositivos infernais e o Velho Oeste sombrio.", style = MaterialTheme.typography.bodySmall)
+                            }
                         }
                     }
                 }
