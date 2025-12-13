@@ -195,19 +195,19 @@ class MainActivity : ComponentActivity() {
             val jsonSciFi = assets.open("vantagens_sci_fi.json")
                 .bufferedReader().use { it.readText() }
             json.decodeFromString(jsonSciFi)
-        } catch (e: Exception) { emptyList() }
+        } catch (_: Exception) { emptyList() }
 
         val deadlandsVantagens: List<Vantagem> = try {
             val jsonDeadlands = assets.open("vantagens_deadlands.json")
                 .bufferedReader().use { it.readText() }
             json.decodeFromString(jsonDeadlands)
-        } catch (e: Exception) { emptyList() }
+        } catch (_: Exception) { emptyList() }
 
         val trilhadorVantagens: List<Vantagem> = try {
             val jsonTrilhador = assets.open("vantagens_trilhador.json")
                 .bufferedReader().use { it.readText() }
             json.decodeFromString(jsonTrilhador)
-        } catch (e: Exception) { emptyList() }
+        } catch (_: Exception) { emptyList() }
 
         AppData.trilhadorVantagens = trilhadorVantagens
 
@@ -225,19 +225,19 @@ class MainActivity : ComponentActivity() {
             assets.open("complicacoes_trilhador.json")
                 .bufferedReader()
                 .use { it.readText() }
-        } catch (e: Exception) { "[]" }
+        } catch (_: Exception) { "[]" }
 
         val complicacoesSciFiJson = try {
             assets.open("complicacoes_sci_fi.json")
                 .bufferedReader()
                 .use { it.readText() }
-        } catch (e: Exception) { "[]" }
+        } catch (_: Exception) { "[]" }
 
         val complicacoesDeadlandsJson = try {
             assets.open("complicacoes_deadlands.json")
                 .bufferedReader()
                 .use { it.readText() }
-        } catch (e: Exception) { "[]" }
+        } catch (_: Exception) { "[]" }
 
         val compsBase = json.decodeFromString(ListSerializer(Complicacao.serializer()), complicacoesJson)
         val compsTrilhador = json.decodeFromString(ListSerializer(Complicacao.serializer()), complicacoesTrilhadorJson)
@@ -254,19 +254,19 @@ class MainActivity : ComponentActivity() {
             assets.open("ancestralidades_trilhador.json")
                 .bufferedReader(Charsets.UTF_8)
                 .use { it.readText() }
-        } catch (e: Exception) { "[]" }
+        } catch (_: Exception) { "[]" }
 
         val ancestralSciFiRaw = try {
             assets.open("ancestralidades_sci_fi.json")
                 .bufferedReader(Charsets.UTF_8)
                 .use { it.readText() }
-        } catch (e: Exception) { "[]" }
+        } catch (_: Exception) { "[]" }
 
         val ancestralDeadlandsRaw = try {
             assets.open("ancestralidades_deadlands.json")
                 .bufferedReader(Charsets.UTF_8)
                 .use { it.readText() }
-        } catch (e: Exception) { "[]" }
+        } catch (_: Exception) { "[]" }
 
         val ancsBase = json.decodeFromString<List<RacialModifier>>(ancestralRaw)
         val ancsTrilhador = json.decodeFromString<List<RacialModifier>>(ancestralTrilhadorRaw)
@@ -278,42 +278,42 @@ class MainActivity : ComponentActivity() {
         val equipTrilhadorRaw = try {
             assets.open("equipamentos_trilhador.json")
                 .bufferedReader().use { it.readText() }
-        } catch (e: Exception) { "[]" }
+        } catch (_: Exception) { "[]" }
         val equipTrilhadorCategorias: List<EquipamentoCategoria> = try {
             json.decodeFromString(equipTrilhadorRaw)
-        } catch (e: Exception) { emptyList() }
+        } catch (_: Exception) { emptyList() }
 
         val equipSciFiRaw = try {
             assets.open("equipamentos_sci_fi.json")
                 .bufferedReader().use { it.readText() }
-        } catch (e: Exception) { "[]" }
+        } catch (_: Exception) { "[]" }
         val equipSciFiCategorias: List<EquipamentoCategoria> = try {
             json.decodeFromString(equipSciFiRaw)
-        } catch (e: Exception) { emptyList() }
+        } catch (_: Exception) { emptyList() }
 
         val equipDeadlandsRaw = try {
             assets.open("equipamentos_deadlands.json")
                 .bufferedReader().use { it.readText() }
-        } catch (e: Exception) { "[]" }
+        } catch (_: Exception) { "[]" }
         val equipDeadlandsCategorias: List<EquipamentoCategoria> = try {
             json.decodeFromString(equipDeadlandsRaw)
-        } catch (e: Exception) { emptyList() }
+        } catch (_: Exception) { emptyList() }
 
         val ciberneticosRaw = try {
             assets.open("ciberneticos.json")
                 .bufferedReader().use { it.readText() }
-        } catch (e: Exception) { "[]" }
+        } catch (_: Exception) { "[]" }
         val ciberneticosCategorias: List<EquipamentoCategoria> = try {
             json.decodeFromString(ciberneticosRaw)
-        } catch (e: Exception) { emptyList() }
+        } catch (_: Exception) { emptyList() }
 
         val chassisRaw = try {
             assets.open("chassis_sci_fi.json")
                 .bufferedReader().use { it.readText() }
-        } catch (e: Exception) { "[]" }
+        } catch (_: Exception) { "[]" }
         val chassisCategorias: List<EquipamentoCategoria> = try {
             json.decodeFromString(chassisRaw)
-        } catch (e: Exception) { emptyList() }
+        } catch (_: Exception) { emptyList() }
 
         val monstrosJson = assets
             .open("monstros.json")
@@ -364,7 +364,6 @@ class MainActivity : ComponentActivity() {
             var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
             var showThemeDialog by rememberSaveable { mutableStateOf(false) }
 
-            var showFeedbackDialog by rememberSaveable { mutableStateOf(false) }
             var showSaveDialog by rememberSaveable { mutableStateOf(false) }
             var showLoadDialog by rememberSaveable { mutableStateOf(false) }
             var saveName by rememberSaveable { mutableStateOf("") }
@@ -547,12 +546,6 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 )
-            }
-
-            LaunchedEffect(criadorViewModel.feedbackMessages.size) {
-                if (criadorViewModel.feedbackMessages.isNotEmpty()) {
-                    showFeedbackDialog = true
-                }
             }
 
             LaunchedEffect(criadorViewModel.feedbackMessages.size) {
