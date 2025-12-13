@@ -9,13 +9,13 @@ data class Requisito(
     val estagio: String = "",
 
     @SerialName("atributos")
-    val atributoMin: Map<String, Int> = emptyMap(),
+    val atributoMin: Map<String, @Serializable(with = IntOrStringSerializer::class) Int> = emptyMap(),
 
     @SerialName("pericias")
     val periciaMin: Map<String, @Serializable(with = IntOrStringSerializer::class) Int> = emptyMap(),
 
     @SerialName("periciaMinOpcional")
-    val periciaMinOpcional: Map<String, Int> = emptyMap(),
+    val periciaMinOpcional: Map<String, @Serializable(with = IntOrStringSerializer::class) Int> = emptyMap(),
 
     @SerialName("vantagens_previas")
     val vantagensPrevias: List<String> = emptyList(),
