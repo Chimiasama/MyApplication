@@ -886,14 +886,24 @@ class CriadorViewModel : ViewModel() {
         when (lastAction) {
             is AdvancementAction.SpendOnAdvantage -> {
                 // Reverte o gasto E a concessão do ponto de vantagem
-                val advantage = state.vantagensSelecionadas.firstOrNull { it.id == lastAction.advantageId }
+                // Usa lastOrNull para pegar a instância mais recente (importante para Pontos de Poder que pode ter várias)
+                val advantage = state.vantagensSelecionadas.lastOrNull { it.id == lastAction.advantageId }
                 if (advantage != null) {
-                    state.vantagensSelecionadas.remove(advantage)
+                    if (advantage.nome.contains("Pontos de Poder", true)) {
+                        state.removerPontosDePoder(advantage)
+                    } else {
+                        state.removeVantagemDinheiro(advantage)
+                        state.vantagensSelecionadas.remove(advantage)
+                    }
                 }
                 lastAction.arcanoKey?.let { arcKey ->
                     state.restoreArcanoSlots(arcKey, lastAction.previousArcanoSlots)
                 }
-                state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
+                // Não decrementamos pontosVantagem aqui porque:
+                // 1) Ao remover a vantagem da lista, estamos "estornando" o gasto (o que incrementaria +1).
+                // 2) Ao desfazer o avanço, estamos removendo a concessão do ponto (o que decrementaria -1).
+                // Saldo líquido = 0. Então basta não mexer em pontosVantagem.
+
                 state.pvFromXpOutstanding = (state.pvFromXpOutstanding - 1).coerceAtLeast(0)
                 state.frozenAdvantageCount = state.vantagensSelecionadas.size
             }
