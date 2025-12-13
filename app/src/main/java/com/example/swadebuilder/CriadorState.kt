@@ -954,7 +954,7 @@ class CriadorState {
                 val attrKey = mapaAtributosDisplay.keys.firstOrNull {
                     it.equals(chaveNorm, ignoreCase = true)
                 } ?: chaveNorm
-                val atual = valoresAtributos[attrKey]?.intValue ?: return false
+                val atual = valoresAtributos[attrKey]?.intValue ?: 0
                 atual < min
             }) return false
 
@@ -972,7 +972,7 @@ class CriadorState {
             if (periciaMinMap.any { (perNome, minRaw) ->
                     val per = listaPericias.firstOrNull {
                         it.nome.equals(perNome, ignoreCase = true)
-                    } ?: return@any false
+                    } ?: return@any true
                     rawTotal(per) < minRaw
                 }) {
                 return false
