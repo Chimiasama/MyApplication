@@ -810,18 +810,28 @@ class CriadorState {
 
     fun podeSelecionar(v: Vantagem): Boolean {
         val key = v.nome.keyify()
+        android.util.Log.d("SWADE_DEBUG", "--- Validando: ${v.nome} ($key) ---")
 
         // 1) Regra especial: O MELHOR QUE HÁ
         if (key == "o_melhor_que_ha") {
-            if (emProgresso) return false
-            if (superInvestments.isEmpty()) return false
+            if (emProgresso) {
+                android.util.Log.d("SWADE_DEBUG", "Rejeitado: O Melhor que Há (em progresso)")
+                return false
+            }
+            if (superInvestments.isEmpty()) {
+                android.util.Log.d("SWADE_DEBUG", "Rejeitado: O Melhor que Há (sem superInvestments)")
+                return false
+            }
         }
 
         // 2) Pontos de Poder por estágio
         if (v.nome.contains("Pontos de Poder", ignoreCase = true)) {
             val totalFeitas = comprasPpPorEstagio.values.sum()
             val maxPermitidas = maxComprasPpAteAgora()
-            if (totalFeitas >= maxPermitidas) return false
+            if (totalFeitas >= maxPermitidas) {
+                android.util.Log.d("SWADE_DEBUG", "Rejeitado: PP (feito: $totalFeitas, max: $maxPermitidas)")
+                return false
+            }
         }
 
         // 2a) Vantagens exclusivas de Ressuscitado exigem ter a vantagem-base
@@ -949,14 +959,24 @@ class CriadorState {
         }
 
         // 10) Atributos mínimos
-        if (v.requisitos.atributoMin.any { (nome, min) ->
-                val chaveNorm = nome.uppercase().semAcentos().trim()
-                val attrKey = mapaAtributosDisplay.keys.firstOrNull {
-                    it.equals(chaveNorm, ignoreCase = true)
-                } ?: chaveNorm
-                val atual = valoresAtributos[attrKey]?.intValue ?: 0
-                atual < min
-            }) return false
+        val attrsFailed = v.requisitos.atributoMin.any { (nome, min) ->
+            val chaveNorm = nome.uppercase().semAcentos().trim()
+            val attrKey = mapaAtributosDisplay.keys.firstOrNull {
+                it.equals(chaveNorm, ignoreCase = true)
+            } ?: chaveNorm
+
+            val stateVal = valoresAtributos[attrKey]
+            val atual = stateVal?.intValue ?: 0
+
+            val fail = atual < min
+            if (fail) {
+                android.util.Log.d("SWADE_DEBUG", "Falha Atributo: Req=$nome($min), Key=$attrKey, Atual=$atual (MapHasKey=${valoresAtributos.containsKey(attrKey)})")
+            } else {
+                android.util.Log.d("SWADE_DEBUG", "OK Atributo: Req=$nome($min), Key=$attrKey, Atual=$atual")
+            }
+            fail
+        }
+        if (attrsFailed) return false
 
         // 11) Perícias mínimas obrigatórias
         val periciaMinMap = v.requisitos.periciaMin
@@ -965,18 +985,34 @@ class CriadorState {
                 val per = listaPericias.firstOrNull {
                     it.nome.equals(perNome, ignoreCase = true)
                 }
-                per != null && rawTotal(per) >= minRaw
+                val total = per?.let { rawTotal(it) } ?: 0
+                val ok = per != null && total >= minRaw
+                android.util.Log.d("SWADE_DEBUG", "Check Pericia Vinculada: $perNome >= $minRaw? Atual=$total -> $ok")
+                ok
             }
-            if (!atendeUma) return false
-        } else {
-            if (periciaMinMap.any { (perNome, minRaw) ->
-                    val per = listaPericias.firstOrNull {
-                        it.nome.equals(perNome, ignoreCase = true)
-                    } ?: return@any true
-                    rawTotal(per) < minRaw
-                }) {
+            if (!atendeUma) {
+                android.util.Log.d("SWADE_DEBUG", "Falha: Nenhuma perícia vinculada atende aos requisitos.")
                 return false
             }
+        } else {
+            val skillsFailed = periciaMinMap.any { (perNome, minRaw) ->
+                val per = listaPericias.firstOrNull {
+                    it.nome.equals(perNome, ignoreCase = true)
+                }
+                if (per == null) {
+                    android.util.Log.d("SWADE_DEBUG", "Falha Perícia: $perNome não encontrada na listaPericias.")
+                    return@any true
+                }
+                val total = rawTotal(per)
+                val fail = total < minRaw
+                if (fail) {
+                    android.util.Log.d("SWADE_DEBUG", "Falha Perícia: $perNome ($minRaw), Atual=$total")
+                } else {
+                    android.util.Log.d("SWADE_DEBUG", "OK Perícia: $perNome ($minRaw), Atual=$total")
+                }
+                fail
+            }
+            if (skillsFailed) return false
         }
 
         // 12) Perícias mínimas opcionais (qualquer uma)
