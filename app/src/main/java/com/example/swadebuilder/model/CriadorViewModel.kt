@@ -23,6 +23,10 @@ data class InvestResult(val ok: Boolean, val mensagem: String)
  */
 class CriadorViewModel : ViewModel() {
 
+    companion object {
+        private const val DEFAULT_CHARACTER_NAME = "Nome"
+    }
+
     val state = CriadorState()
 
     private val _feedbackMessages = mutableStateListOf<String>()
@@ -44,11 +48,59 @@ class CriadorViewModel : ViewModel() {
         state.appTheme = theme
     }
 
-    fun salvarPersonagem(context: Context, nomePersonalizado: String? = null): CharacterStorage.SaveEntry {
-        val nome = (nomePersonalizado?.takeIf { it.isNotBlank() } ?: state.nomePersonagem)
-            .ifBlank { "Personagem" }
+    fun prepararNomeInicial(context: Context) {
+        state.nomePersonagem = gerarNomeSequencial(
+            DEFAULT_CHARACTER_NAME,
+            listarPersonagensSalvos(context).map { it.nome },
+            usarParenteses = false
+        )
+    }
 
-        val snapshot = state.toSnapshot().copy(nome = nome)
+    private fun gerarNomeSequencial(
+        baseName: String,
+        existingNames: List<String>,
+        usarParenteses: Boolean
+    ): String {
+        val normalizedExisting = existingNames.map { it.lowercase() }.toSet()
+        val desiredBase = baseName.ifBlank { DEFAULT_CHARACTER_NAME }
+
+        if (!normalizedExisting.contains(desiredBase.lowercase())) {
+            return desiredBase
+        }
+
+        var counter = 2
+        var candidate: String
+
+        do {
+            candidate = if (usarParenteses) {
+                "$desiredBase ($counter)"
+            } else {
+                "$desiredBase $counter"
+            }
+            counter++
+        } while (normalizedExisting.contains(candidate.lowercase()))
+
+        return candidate
+    }
+
+    fun salvarPersonagem(context: Context, nomePersonalizado: String? = null): CharacterStorage.SaveEntry {
+        val desiredName = (nomePersonalizado?.takeIf { it.isNotBlank() } ?: state.nomePersonagem)
+            .ifBlank { DEFAULT_CHARACTER_NAME }
+
+        val savedEntries = listarPersonagensSalvos(context)
+        val otherNames = savedEntries
+            .filter { it.id != state.idAtual }
+            .map { it.nome }
+
+        val finalName = if (desiredName.equals(DEFAULT_CHARACTER_NAME, ignoreCase = true)) {
+            gerarNomeSequencial(DEFAULT_CHARACTER_NAME, otherNames, usarParenteses = false)
+        } else {
+            gerarNomeSequencial(desiredName, otherNames, usarParenteses = true)
+        }
+
+        state.nomePersonagem = finalName
+
+        val snapshot = state.toSnapshot().copy(nome = finalName)
         val entry = CharacterStorage.save(context, snapshot)
         state.idAtual = entry.id
         _feedbackMessages.add("Personagem salvo: ${entry.nome}")
@@ -135,7 +187,7 @@ class CriadorViewModel : ViewModel() {
         state.soldadoCargaAtivo = true
 
         state.idAtual = null
-        state.nomePersonagem = ""
+        state.nomePersonagem = DEFAULT_CHARACTER_NAME
         state.anotacoes = ""
 
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null

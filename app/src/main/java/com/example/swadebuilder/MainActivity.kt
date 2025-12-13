@@ -35,6 +35,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Print
 import androidx.compose.material.icons.filled.Remove
@@ -369,6 +370,7 @@ class MainActivity : ComponentActivity() {
             var saveName by rememberSaveable { mutableStateOf("") }
 
             val savedEntries = remember { mutableStateListOf<CharacterStorage.SaveEntry>() }
+            var entryToDelete by remember { mutableStateOf<CharacterStorage.SaveEntry?>(null) }
 
             LaunchedEffect(showLoadDialog) {
                 if (showLoadDialog) {
@@ -458,6 +460,36 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
+            if (entryToDelete != null) {
+                AlertDialog(
+                    onDismissRequest = { entryToDelete = null },
+                    title = { Text("Apagar personagem") },
+                    text = { Text("Deseja apagar \"${entryToDelete?.nome}\"?") },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            entryToDelete?.let { entry ->
+                                CharacterStorage.delete(context, entry.id)
+                                savedEntries.removeAll { it.id == entry.id }
+                                if (state.idAtual == entry.id) {
+                                    state.idAtual = null
+                                }
+                                scope.launch {
+                                    snackHost.showSnackbar("Personagem removido")
+                                }
+                            }
+                            entryToDelete = null
+                        }) {
+                            Text("Apagar")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { entryToDelete = null }) {
+                            Text(stringResource(R.string.cancel))
+                        }
+                    }
+                )
+            }
+
             if (showSaveDialog) {
                 AlertDialog(
                     onDismissRequest = { showSaveDialog = false },
@@ -518,22 +550,29 @@ class MainActivity : ComponentActivity() {
                                                 style = MaterialTheme.typography.bodySmall
                                             )
                                         }
-                                        TextButton(onClick = {
-                                            val loaded = criadorViewModel.carregarPersonagem(context, entry.id)
-                                            if (loaded) {
-                                                creationSession++
-                                                mostrouTelaInicial = false
-                                                showLoadDialog = false
-                                                scope.launch {
-                                                    snackHost.showSnackbar("Carregado: ${entry.nome}")
-                                                }
-                                            } else {
-                                                scope.launch {
-                                                    snackHost.showSnackbar("Falha ao carregar o personagem")
-                                                }
+                                        Row {
+                                            TextButton(onClick = { entryToDelete = entry }) {
+                                                Icon(Icons.Default.Delete, contentDescription = "Apagar personagem")
+                                                Spacer(Modifier.width(4.dp))
+                                                Text("Apagar")
                                             }
-                                        }) {
-                                            Text("Carregar")
+                                            TextButton(onClick = {
+                                                val loaded = criadorViewModel.carregarPersonagem(context, entry.id)
+                                                if (loaded) {
+                                                    creationSession++
+                                                    mostrouTelaInicial = false
+                                                    showLoadDialog = false
+                                                    scope.launch {
+                                                        snackHost.showSnackbar("Carregado: ${entry.nome}")
+                                                    }
+                                                } else {
+                                                    scope.launch {
+                                                        snackHost.showSnackbar("Falha ao carregar o personagem")
+                                                    }
+                                                }
+                                            }) {
+                                                Text("Carregar")
+                                            }
                                         }
                                     }
                                 }
@@ -621,6 +660,7 @@ class MainActivity : ComponentActivity() {
                                         usarEspecializacoesDePericia = usarEspecializacaoPer,
                                         showHelpMessages = showHelpMessages
                                     )
+                                    criadorViewModel.prepararNomeInicial(context)
                                     criadorViewModel.state.heroisSemArmadura     = heroisSemArmadura
                                     criadorViewModel.state.nasceUmHeroi          = nasceUmHeroi
 
@@ -633,6 +673,7 @@ class MainActivity : ComponentActivity() {
 
                                     mostrouTelaInicial = false
                                 },
+                                onCarregarPersonagem = { showLoadDialog = true },
                                 context   = context,
                                 viewModel = criadorViewModel
                             )
