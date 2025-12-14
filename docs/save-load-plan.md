@@ -11,6 +11,8 @@ Permitir que o jogador pause a construção do personagem e retome depois **com 
 - **Perícias**: `baseIncsPorPericia`, `spCostStackPorPericia` e `compCostStackPorPericia` guardam quantos incrementos cada perícia recebeu e quanto custaram, permitindo reembolsos automáticos quando o atributo base muda ou faltam pontos.【F:app/src/main/java/com/example/swadebuilder/CriadorState.kt†L960-L1004】【F:app/src/main/java/com/example/swadebuilder/CriadorState.kt†L1558-L1604】
 - **Seleções**: listas de vantagens, complicações (com severidade), equipamentos e poderes precisam ser salvas junto com as escolhas associadas (ex.: `choice` de Vantagem especialista).
 
+`SnapshotRecursos` serializa as pilhas completas de PB/PA/PV/SP (e não só contagens agregadas), garantindo que uma restauração devolva o histórico exato de compras e reembolsos de pontos.
+
 ### Ancestralidade e reajustes automáticos
 - A função `aplicarAncestralidade` remove/ajusta vantagens raciais, recalcula atributos dentro dos novos tetos e devolve pontos quando necessário, por isso os stacks e valores associados precisam estar íntegros ao restaurar para que os recálculos funcionem igual ao vivo.【F:app/src/main/java/com/example/swadebuilder/CriadorState.kt†L1075-L1179】
 

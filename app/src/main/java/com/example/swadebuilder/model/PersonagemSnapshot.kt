@@ -64,9 +64,9 @@ data class SnapshotRecursos(
     val spFromProgress: Int,
     val legendaryAttrReservations: Int,
     val cpPaStack: List<String>,
-    val cpSpCount: Int,
-    val cpPvCount: Int,
-    val cpRecursosCount: Int
+    val cpSpStack: List<Int>,
+    val cpPvStack: List<Int>,
+    val cpRecursosStack: List<Int>
 )
 
 @Serializable

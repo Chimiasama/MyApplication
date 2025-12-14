@@ -1731,9 +1731,9 @@ class CriadorState {
                 spFromProgress = spFromProgress,
                 legendaryAttrReservations = legendaryAttrReservations,
                 cpPaStack = cpPaStack.toList(),
-                cpSpCount = cpSpStack.size,
-                cpPvCount = cpPvStack.size,
-                cpRecursosCount = cpRecursosStack.size
+                cpSpStack = cpSpStack.map { 1 },
+                cpPvStack = cpPvStack.map { 1 },
+                cpRecursosStack = cpRecursosStack.map { 1 }
             ),
             atributos = SnapshotAtributos(
                 ancestralidade = ancestralidade,
@@ -1863,9 +1863,9 @@ class CriadorState {
         legendaryAttrReservations = snapshot.recursos.legendaryAttrReservations
 
         cpPaStack.apply { clear(); addAll(snapshot.recursos.cpPaStack) }
-        cpSpStack.apply { clear(); repeat(snapshot.recursos.cpSpCount) { add(Unit) } }
-        cpPvStack.apply { clear(); repeat(snapshot.recursos.cpPvCount) { add(Unit) } }
-        cpRecursosStack.apply { clear(); repeat(snapshot.recursos.cpRecursosCount) { add(Unit) } }
+        cpSpStack.apply { clear(); repeat(snapshot.recursos.cpSpStack.size) { add(Unit) } }
+        cpPvStack.apply { clear(); repeat(snapshot.recursos.cpPvStack.size) { add(Unit) } }
+        cpRecursosStack.apply { clear(); repeat(snapshot.recursos.cpRecursosStack.size) { add(Unit) } }
 
         aplicarAncestralidade(snapshot.atributos.ancestralidade, feedbackMessages)
 
