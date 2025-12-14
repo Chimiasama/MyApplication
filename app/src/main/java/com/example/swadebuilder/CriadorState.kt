@@ -242,6 +242,15 @@ class CriadorState {
         if (cpPvStack.isNotEmpty()) {
             cpPvStack.removeLast()
             pontosComplicacaoGastos -= 2
+
+            val removedAdvantage = if (pontosVantagem == 0) {
+                removerUltimaVantagemCompradaComPv()
+            } else false
+
+            if (removedAdvantage) {
+                pontosVantagem += 1 // devolve o PV gasto pela vantagem removida
+            }
+
             pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
         }
     }
@@ -421,6 +430,26 @@ class CriadorState {
 
         val ganhoRemovido = if (totalAntes <= 4) 5 else 2
         bonusPoderExtra = (bonusPoderExtra - ganhoRemovido).coerceAtLeast(0)
+    }
+
+    private fun removerUltimaVantagemCompradaComPv(): Boolean {
+        val autoKeys = (vantagensAutomaticas + vantagensRaciais)
+            .map { it.substringBefore("(").trim().keyify() }
+            .toSet()
+
+        val candidate = vantagensSelecionadas
+            .asReversed()
+            .firstOrNull { vant -> vant.nome.substringBefore("(").trim().keyify() !in autoKeys }
+            ?: return false
+
+        removeVantagemDinheiro(candidate)
+        vantagensSelecionadas.remove(candidate)
+        if (candidate.id == "o_melhor_que_ha") {
+            poderFavoritoId = null
+        }
+
+        rebuildAllPericiaStacks()
+        return true
     }
 
     fun comprarPontoDePoder(v: Vantagem) {
@@ -922,7 +951,11 @@ class CriadorState {
         // 10) Atributos mínimos
         if (v.requisitos.atributoMin.any { (nome, min) ->
                 val chaveNorm = nome.uppercase().semAcentos().trim()
-                valoresAtributos[chaveNorm]?.intValue?.let { it < min } != false
+                val attrKey = mapaAtributosDisplay.keys.firstOrNull {
+                    it.equals(chaveNorm, ignoreCase = true)
+                } ?: chaveNorm
+                val atual = valoresAtributos[attrKey]?.intValue ?: return false
+                atual < min
             }) return false
 
         // 11) Perícias mínimas obrigatórias

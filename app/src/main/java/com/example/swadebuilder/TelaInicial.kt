@@ -66,6 +66,7 @@ fun TelaInicial(
         grandesResponsabilidades: Boolean,
         showHelpMessages: Boolean
     ) -> Unit,
+    onCarregarPersonagem: () -> Unit,
     context: Context,
     viewModel: CriadorViewModel
 ) {
@@ -158,6 +159,14 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Criar Novo Personagem")
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Button(
+            onClick = onCarregarPersonagem,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Carregar Personagem")
         }
         Spacer(modifier = Modifier.height(240.dp))
 
