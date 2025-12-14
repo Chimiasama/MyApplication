@@ -12,7 +12,7 @@ data class Requisito(
     val atributoMin: Map<String, Int> = emptyMap(),
 
     @SerialName("pericias")
-    val periciaMin: Map<String, @Serializable(with = IntOrStringSerializer::class) Int> = emptyMap(),
+    val periciaMin: Map<String, Int> = emptyMap(),
 
     @SerialName("periciaMinOpcional")
     val periciaMinOpcional: Map<String, Int> = emptyMap(),

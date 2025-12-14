@@ -1463,15 +1463,13 @@
     "nome": "INSPIRAR",
     "categoria": "LIDERANCA",
     "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
-        "Conhecimento Batalha": ""
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": ["comando"],
+        "observacoes": ""
       },
-      "vantagens_previas": ["comando"],
-      "observacoes": ""
-    },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
@@ -2368,15 +2366,13 @@
     "nome": "NOÇÃO DO PERIGO",
     "categoria": "ESTRANHAS",
     "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
-        "Perceber": ""
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
       },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
