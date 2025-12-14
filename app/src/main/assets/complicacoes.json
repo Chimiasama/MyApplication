@@ -411,257 +411,523 @@
     "origem": "SUPER",
     "severity": "menor",
     "description": "A aparência deste super é de alguma forma diferente aos demais de sua raça (um humano de pele azul, um gorila falante etc.), o que o torna fácil de ser percebido, mesmo sem uniforme. Isso o torna fácil de ser rastreado e encontrado no meio de uma multidão e pode até mesmo causar algum tipo de complicação social entre os seus iguais.\nA aparência deve estar presente com e sem uniforme para contar como uma Complicação afinal de contas, todos os supers são chamativos de uniforme!"
-  },{
-  "id": "dependencia",
-  "name": "DEPENDÊNCIA",
-  "origem": "SUPER",
-  "severity": "maior",
-  "description": "Uma hora gasta se recuperando com a substância apropriada restaura todos os níveis de Fadiga ou perda de poderes causada por esta Complicação.\nObservação: Esta Complicação é a versão da Habilidade Racial Negativa presente no Savage Worlds Edição Aventura. Em uma campanha de supers, isso pode ser uma condição ou parte da história em vez de um traço hereditário da personagem.\nO super deve consumir ou ter contato com algum tipo relativamente comum de substância por uma hora a cada 24 horas. Caso contrário, não poderá usar seus poderes ou recebe um nível de Fadiga (decida qual quando a Complicação é comprada). Se escolher o segundo, recebe um nível adicional de Fadiga a cada 24 horas até que fique Incapacitado (isso pode causar morte)."
-},{
-  "id": "dependente",
-  "name": "DEPENDENTE",
-  "origem": "SUPER",
-  "severity": "menor ou maior",
-  "description": "Sua personagem tem alguma pessoa pela qual é completamente devotada e fará qualquer coisa para proteger. Pode ser uma esposa, marido, companheiro, uma criança, amigo de trabalho ou até mesmo um animal de estimação.\nEssa pessoa é uma personagem Carta Selvagem de Estágio Novato sem poderes que se mete em problemas constantemente, revela os segredos da equipe ou de alguma outra forma causa sofrimento sem fim a seu campeão. Claro, de vez em quando, o Dependente pode também salvar a vida do herói ou heroína em troca.\nSe essa pessoa morrer, o herói ou heroína ganha um ponto de Convicção e outro quando conseguir justiça... ou vingança!\nApós isso, é necessário trabalhar com o Mestre para criar um novo Dependente ou superar a Complicação com Progressos.\nComo uma Complicação Maior, o Dependente deve aparecer regularmente em sua campanha, ou de vez em quando como uma Complicação Menor."
-},{
-  "id": "doenca_terminal",
-  "name": "DOENÇA TERMINAL",
-  "origem": "SUPER",
-  "severity": "menor ou maior",
-  "description": "Esta desventurada alma sofre de uma doença terminal e incurável.\nComo Complicação Menor subtrai 1 de qualquer rolagem feita para resistir à Fadiga de qualquer fonte. Subtraia 2 se for uma Complicação Maior. Uma Falha Crítica numa rolagem deste tipo significa que as coisas estão piorando.\nSe sua personagem tiver a versão Menor, ela piora e a sua Complicação torna-se Maior. Se já tiver a versão maior, Falha Crítica na rolagem de Vigor significa que seu fim se aproxima. O herói ou heroína ganha imediatamente um ponto de Convicção, mas perecerá nesta sessão. É possível alcançar as Chamas da Glória (veja a pág. 42) ou morrer pacificamente cercado por amigos em seu covil nas montanhas de um mundo alienígena. Quando sua personagem finalmente perecer, as outras personagens ganham um ponto de Convicção, tirando forças da morte corajosa de seu companheiro.\nVocê também pode superar esta Complicação gastando um Progresso (reduzindo-a de Maior para Menor ou eliminando a versão Menor). Trabalhe com o Mestre para encontrar uma razão narrativa para a melhora – uma droga super tecnológica, uma cura milagrosa, uma transfusão de um doador único, ou algum tipo de explicação que justifique a melhora milagrosa."
-},{
-  "id": "forma_alienigena",
-  "name": "FORMA ALIENÍGENA",
-  "origem": "SUPER",
-  "severity": "maior",
-  "description": "Sua personagem tem uma aparência completamente alienígena: uma esfera brilhante de energia, uma ameba com tentáculos, um grande cérebro flutuante ou algo do tipo. É quase impossível que humanos entendam sua fisiologia. Rolagens de Cura para ajudar este super são feitas com -4.\nVários problemas interpretativos também devem ser um desafio – o indíviduo não consegue entrar em restaurantes, vestir roupas normais ou coletes de kevlar, entrar em um carro e assim por diante.\nSe cidadãos comuns não estão acostumados a ver seres alienígenas no cenário, considere pegar também a Complicação Forasteiro.\nNão importa como foi descrito, Forma Alienígena não garante nenhuma habilidade inerente; elas devem ser compradas separadamente. Se uma bola de energia brilhante quer ser capaz de atravessar paredes, por exemplo, pegue o poder intangibilidade."
-},{
-  "id": "fraqueza_ambiental",
-  "name": "FRAQUEZA AMBIENTAL",
-  "origem": "SUPER",
-  "severity": "menor",
-  "description": "Sua personagem é mais suscetível a um Tipo de Poder específico (veja a pág. 53), como Frio, Fogo, Mental e assim por diante.\nAtaques deste tipo causam +4 de dano e um redutor de -4 é aplicado nas rolagens de Resistência deste Tipo de Poder (poderes que funcionem como infecção ou controle de mente).\nConverse com o Mestre antes de assumir esta Complicação – não é realmente uma Complicação se pegar Fraqueza Ambiental a um Tipo de Poder que nunca aparece em sua campanha.\nÉ possível adquirir está Complicação mais de uma vez para fraquezas a mais de um Tipo de Poder."
-},{
-  "id": "idealista",
-  "name": "IDEALISTA",
-  "origem": "SUPER",
-  "severity": "menor",
-  "description": "Você acredita na verdade e justiça, a qualquer custo. As coisas são preto no branco para você, certo ou errado, o que lhe traz grandes problemas nas áreas cinzas da vida.\nA maioria das vezes esta é uma grande virtude, mas gera dificuldades para decidir se um ladrão faminto deve ser entregue à justiça ou se deve usar força letal contra alguém, mesmo se estiverem prestes a causar grande destruição e perdas de vidas."
-},{
-  "id": "identidade_secreta",
-  "name": "IDENTIDADE SECRETA",
-  "origem": "SUPER",
-  "severity": "maior",
-  "description": "Apenas as pessoas mais próximas conhecem sua identidade “civil” e seu super alter ego.\nSe o primeiro for descoberto, os inimigos irão atrás de você em casa ou no trabalho."
-},{
-  "id": "imprudente",
-  "name": "IMPRUDENTE",
-  "origem": "SUPER",
-  "severity": "maior",
-  "description": "Até mesmo os supers mais poderosos perdem o controle de suas habilidades de tempos em tempos. Quem possuir esta Complicação causa mais destruição do que a maioria.\nSeja por falta de controle, imprudência ou falta de cuidado, sempre que a personagem obter uma Falha Crítica em uma rolagem para ativar ou usar um poder, ela fica fora de controle. Afeta o alvo errado, tem o efeito inverso ou causa um enorme dano colateral.\nO efeito exato cabe ao Mestre baseado na situação, mas deve ser memorável e potencialmente desastroso!\nO super deve ter poderes que requeiram uma rolagem de ativação para assumir esta Complicação."
-},{
-  "id": "megalomaniaco",
-  "name": "MEGALOMANÍACO",
-  "origem": "SUPER",
-  "severity": "maior",
-  "description": "O vilão tem grandes planos e só você tem a visão para ver através deles. O super deve estar no comando de toda a situação. Se está em uma equipe, deve estar na liderança e coitado do tolo insolente que tente fazer dele alvo de suas piadas!\nA personagem não ganha os benefícios positivos de qualquer Efeito de Comando e sofre uma penalidade de -4 em qualquer tentativa de dar Suporte a rolagens de outras Personagens."
-},{
-  "id": "monologo",
-  "name": "MONOLÓGO",
-  "origem": "SUPER",
-  "severity": "maior",
-  "description": "Alguns vilões e vilãs são conhecidos por se vangloriar sobre seus oponentes quando deveriam matá-los e alguns heróis ou heroínas não conseguem resistir a oportunidade de dar um sermão ou repreender malfeitores.\nSempre que a Carta de Ação da personagem é Paus, é necessário fazer uma rolagem de Astúcia -2 ou então gasta todo o turno anunciando a perdição de seu oponente, dando desculpas para os fracassos anteriores, revelando seu sucesso ou repreendendo aqueles ao redor por seus erros. A prolixidade desta personagem permite que se mova e faça ações livres durante seu monólogo, mas para além disso, ela está mais preocupada em defender seu ponto de vista."
-},{
-  "id": "sinistro",
-  "name": "SINISTRO",
-  "origem": "SUPER",
-  "severity": "menor",
-  "description": "Este super não tem humor, nunca gargalha, sorri ou faz uma piada. Ele é Provocado (veja Savage Worlds Edição Aventura) com qualquer rolagem bem-sucedida de Provocar – quer o oponente tenha a Vantagem ou não.\nPersonagens Provocadas subtraem 2 de suas rolagens para afetar qualquer oponente exceto aquela que a provocou. Isso dura até que um Curinga tenha sido sacado ou mais alguém tenha Provocado o vingador sisudo.\nSinistro também conta como Requisito para a Vantagem Ameaçador (veja o Savage Worlds Edição Aventura)."
-},{
-  "id": "transformacao",
-  "name": "TRANSFORMAÇÃO",
-  "origem": "SUPER",
-  "severity": "menor ou maior",
-  "description": "Sua personagem precisa passar por uma mudança fundamental para acessar seus poderes. Talvez tenha que convocar energias místicas, tomar uma pílula, se machucar (Abalado ou Ferido), transformar seu corpo, vestir uma armadura ou dizer uma palavra mágica.\nQualquer que seja o gatilho, se não puder se transformar, não pode usar seus poderes.\nComo Complicação Menor, a personagem está no controle de sua transformação. A transformação ocorre ao gastar uma ação para uma rolagem de Foco.\nComo Complicação Maior, a transformação é mais difícil. Pode ser que necessite de um minuto inteiro, ou mais, para se transformar (talvez vestir um traje ou armadura complicada, ou se transformar lentamente em um lobisomem). A transformação também pode ocorrer a partir de um gatilho externo fora do controle direto da personagem, tal como ser Abalado ou Ferido por um ataque físico, lua cheia, a visão de sangue etc. Neste caso, o herói ou heroína pode fazer uma rolagem de Foco para não se transformar a cada rodada que o gatilho ocorra ou esteja presente, se assim desejar. Se isso também altera as Vantagens e Complicações de sua heroína ou herói, trabalhe com o mestre para construir uma segunda ficha para representar a personagem transformada."
-},{
-  "id": "vulnerabilidade",
-  "name": "VULNERABILIDADE",
-  "origem": "SUPER",
-  "severity": "menor ou maior",
-  "description": "Exposição a certas substâncias é algo potencialmente fatal para seu herói ou heroína.\nCom a versão Menor, causa o estado Distraído sempre que estiver a 12 quadros (24 metros) da substância.\nCom a versão Maior, também é necessário fazer uma rolagem de Vigor, ou sofre um nível de Fadiga que pode levar à morte."
-},{
-  "id": "altruista",
-  "name": "ALTRUÍSTA",
-  "origem": "FANTASIA",
-  "severity": "menor ou maior",
-  "description": "Você pensa nos outros antes de você mesmo. Você dorme no chão para dar a cama a outro. Você finge estar satisfeito para dar a seus amigos o último pedaço de carne. Você fica na frente quando o dragão cospe fogo. Você compra o livro que todos no seu grupo de aventureiros leem — de fato, verdadeiramente heroico!\nA extensão e a frequência do seu sacrifício determinam se esta é uma Complicação Menor ou Maior."
-},{
-  "id": "amaldicoado",
-  "name": "AMALDIÇOADO",
-  "origem": "FANTASIA",
-  "severity": "maior",
-  "description": "Seu herói ou heroína cruzou com algum poder sombrio e recebeu para sempre a marca de seu toque contaminado. Poderes e efeitos mágicos benéficos destinados a ajudar, incluindo aqueles conjurados por aliados ou por si mesmo, sofrem uma penalidade de -2 na rolagem de perícia arcana. Pior ainda, se a rolagem for uma Falha Crítica, quem conjurou ficará Atordoado! A penalidade se aplica se a personagem com a Complicação Amaldiçoado estiver dentro de um poder que afete área ou for alvo do modificador de Alvos Adicionais.\nA Maldição não tem efeito em poderes hostis."
-},{
-  "id": "apaixonado",
-  "name": "APAIXONADO",
-  "origem": "FANTASIA",
-  "severity": "menor",
-  "description": "A personagem se apaixona facilmente por um rostinho bonito. Quem sabe seja luxúria ou devassidão, ou quem sabe apenas tenha uma apreciação aguçada de belezas naturais.\nPersonagens com a Complicação Apaixonado sofrem uma penalidade adicional de -2 para resistir a Desafios de personagens com a Vantagem Atraente ou Muito Atraente."
-},{
-  "id": "componentes_materiais",
-  "name": "COMPONENTES MATERIAIS",
-  "origem": "FANTASIA",
-  "severity": "maior",
-  "description": "Esta Complicação só pode ser adquirida por aqueles com Antecedente Arcano. Os poderes do conjurador consomem componentes materiais. Talvez um mago precise de um pouco de enxofre para lançar uma bola de fogo (explosão com manifestação de fogo) ou uma sacerdotisa precise de um pouco de água benta para sua deusa conceder ferir.\nPresume-se que tais itens estejam à mão — geralmente em um bolso ou bolsa para componentes. Se o conjurador for despojado de seus pertences e não conseguir os materiais de que precisa, ele subtrai 4 de todas as rolagens de perícias arcanas até que sejam restaurados (50 PO × o Estágio do conjurador em uma loja ou um dia de coleta ou forrageamento em um ambiente apropriado com uma rolagem de Sobrevivência por Estágio).\nConjuradores também ficam sem componentes materiais se obtiverem uma Falha Crítica. Podem se reabastecer como acima."
-},{
-  "id": "condenado",
-  "name": "CONDENADO",
-  "origem": "FANTASIA",
-  "severity": "maior",
-  "description": "A morte está ansiosa por seu herói ou heroína. Talvez tenha fugido dela em algum momento da vida, ou voltado dos mortos e deixado uma dívida com o Barqueiro. Seja qual for o motivo, você subtrai 2 das rolagens de Absorção."
-},{
-  "id": "corrupcao",
-  "name": "CORRUPÇÃO",
-  "origem": "FANTASIA",
-  "severity": "maior",
-  "description": "OBS.: Esta Complicação só pode ser adquirida em um cenário que permita a Vantagem Antecedente Arcano (Milagres).\nEsta Complicação só pode ser adquirida por aqueles com Antecedente Arcano.\nA magia do conjurador recorre a alguma fonte abominável, maligna ou corrompida. Sempre que obtiver uma Falha Crítica em sua rolagem de perícia arcana, recebe uma nova Complicação Menor, ou troca/atualiza uma Complicação Menor obtida por Corrupção por uma Complicação Maior, que reflita a degradação da sua mente e corpo. Por exemplo, um mago pode receber Invejoso (Menor) ao perceber como é difícil aumentar seu poder. Então Sanguinário (Maior) quando sua raiva se transforma em pensamentos violentos.\nEssas Complicações duram até o próximo Progresso do conjurador, momento em que pode remover uma Complicação Menor, ou reduzir/trocar uma Complicação Maior por uma Complicação Menor. Isso é um acréscimo ao seu Progresso."
-},{
-  "id": "desajeitado",
-  "name": "DESAJETADO",
-  "origem": "FANTASIA",
-  "severity": "maior",
-  "description": "Alguns heróis e heroínas demoram um pouco para dominar seu ofício. Selecione uma perícia central para sua personagem, como Conjurar para um mago ou Lutar para um guerreiro. Você sofre uma Falha Crítica sempre que falhar em uma rolagem e o dado de perícia for 1."
-},{
-  "id": "idealista",
-  "name": "IDEALISTA",
-  "origem": "FANTASIA",
-  "severity": "menor",
-  "description": "Você vê certas coisas preto no branco e tem problemas com dilemas mais sutis. Na maioria das vezes, isso é uma virtude admirável, mas causa grandes questões com dilemas morais, como “Devo entregar um caçador faminto aos guardas do rei ou deixá-lo escapar impune do seu crime desesperado e talvez necessário?”"
-},{
-  "id": "interferencia_de_armadura",
-  "name": "INTERFERÊNCIA DE ARMADURA",
-  "origem": "FANTASIA",
-  "severity": "menor ou maior",
-  "description": "Esta Complicação só pode ser adquirida por aqueles com Antecedente Arcano.\nAqueles com esta Complicação subtraem 4 das rolagens de perícias arcanas e não podem usar outras habilidades concedidas por seu Antecedente Arcano ou qualquer Vantagem que tenha Antecedente Arcano como requisito ao usar armadura média ou pesada, ou ao usar um escudo médio ou pesado. A personagem pode usar tecido ou armadura leve, ou usar escudos leves, sem interferência.\nComo Complicação Maior, a penalidade também se aplica a armaduras e escudos leves."
-},{
-  "id": "jingoista",
-  "name": "JINGOÍSTA",
-  "origem": "FANTASIA",
-  "severity": "menor ou maior",
-  "description": "A personagem não gosta de pessoas de outras culturas e acredita que a sua é muito superior — por exemplo, um morador da cidade esnobe pode não gostar de bárbaros “grosseiros” ou dos cidadãos de uma cidade-estado rival. Ela não consegue deixar de menosprezar outras culturas em qualquer oportunidade.\nComo Complicação Menor, os alvos de sua ira não podem se beneficiar de suas Vantagens de Comando. Não consegue evitar insultá-los e subtrai 2 das rolagens de Persuadir ao interagir com eles. A penalidade aumenta para -4 com a Complicação Maior."
-},{
-  "id": "sensibilidade_arcana",
-  "name": "SENSIBILIDADE ARCANA",
-  "origem": "FANTASIA",
-  "severity": "menor ou maior",
-  "description": "Um feitiço que deu errado, uma maldição antiga, uma linhagem estranha ou algum outro acidente fez com que seu herói ou heroína fosse mais suscetível à energia arcana do que outros.\nComo uma Complicação Menor, subtraia 2 ao fazer uma rolagem de Característica para resistir a um poder, incluindo habilidades de criaturas arcanas (a critério do Mestre). Como uma Complicação Maior, subtraia 4."
-},{
-  "id": "sombrio",
-  "name": "SOMBRIO",
-  "origem": "FANTASIA",
-  "severity": "menor",
-  "description": "Você é sério, taciturno e acha a alegria cansativa. Recebe os efeitos da Vantagem Provocador (veja Savage Worlds Edição Aventura) ao ser provocado de forma bem-sucedida — quer o oponente tenha essa Vantagem ou não.\nPersonagens afetadas por Provocador subtraem 2 de suas rolagens para afetar qualquer oponente, exceto aquele que a insultou. Isso dura até que um Curinga seja sacado (de qualquer lado) ou alguém seja bem-sucedido em provocar seu provocador.\nSombrio também conta como requisito para a Vantagem Ameaçador (veja Savage Worlds Edição Aventura)."
-},{
-  "id": "talisma",
-  "name": "TALISMÃ",
-  "origem": "FANTASIA",
-  "severity": "menor ou maior",
-  "description": "Esta Complicação só pode ser adquirida por aqueles com Antecedente Arcano.\nO conjurador depende de um item físico para ativar seus poderes. O Talismã pode ser um cajado mágico, um símbolo sagrado, uma varinha, uma arma ou qualquer outro item transportável.\nQuando pego sem ele, subtrai 1 de todas as rolagens de perícias arcanas (-2 como uma Complicação Maior) e fica Atordoado se o teste for uma Falha Crítica.\nA substituição de um Talismã perdido depende do objeto, mas geralmente exige que o conjurador o pegue de volta. Se destruído, o Mestre deve trabalhar com o jogador para descobrir o que poderia ser um substituto adequado e como poderia ser obtido."
-},{
-  "id": "amaldicoado_horror",
-  "name": "AMALDIÇOADO (HORROR)",
-  "origem": "HORROR",
-  "severity": "maior",
-  "description": "OBS.: Esta Complicação só pode ser adquirida em um cenário que permita a Vantagem Antecedente Arcano (Milagres).\nA morte está ansiosa por seu herói ou heroína. Talvez tenha fugido dela em algum momento da vida, ou voltado dos mortos e deixado uma dívida com o Barqueiro. Seja qual for o motivo, você subtrai 2 das rolagens de Absorção."
-},{
-  "id": "amoroso",
-  "name": "AMOROSO",
-  "origem": "HORROR",
-  "severity": "menor",
-  "description": "Devido a luxúria ou a uma forma de verdadeira admiração, este indíviduo se apaixona facilmente. Personagens Amorosas sofrem uma penalidade de -2 para resistir a Desafios de qualquer personagem com as Vantagens Atraente ou Muito Atraente."
-},{
-  "id": "apetite_incomum",
-  "name": "APETITE INCOMUM",
-  "origem": "HORROR",
-  "severity": "menor",
-  "description": "Seu investigador ou investigadora come algo que a maioria acha perturbador, como papel, comida achada no lixo, insetos ou até mesmo comida podre.\nIsso reduz suas rolagens de Persuadir em -2 quando lida com aqueles que sabem de seus estranhos hábitos alimentares."
-},{
-  "id": "assustado",
-  "name": "ASSUSTADO",
-  "origem": "HORROR",
-  "severity": "menor",
-  "description": "Qualquer coisinha deixa esta personagem nervosa e assustada. Sempre que houver um barulho, choque ou surpresa repentinos (a critério do mestre), personagens Assustados devem fazer um teste de Medo."
-},{
-  "id": "componentes_materiais_horror",
-  "name": "COMPONENTES MATERIAIS (HORROR)",
-  "origem": "HORROR",
-  "severity": "maior",
-  "description": "Esta Complicação só pode ser adquirida por aqueles com Antecedente Arcano. Os poderes do conjurador consomem componentes materiais. Talvez um mago precise de um pouco de enxofre para lançar uma bola de fogo (explosão com manifestação de fogo) ou uma sacerdotisa precise de um pouco de água benta para sua deusa conceder ferir.\nPresume-se que tais itens estejam à mão — geralmente em um bolso ou bolsa para componentes. Se o conjurador for despojado de seus pertences e não conseguir os materiais de que precisa, ele subtrai 4 de todas as rolagens de perícias arcanas até que sejam restaurados (50 PO × o Estágio do conjurador em uma loja ou um dia de coleta ou forrageamento em um ambiente apropriado com uma rolagem de Sobrevivência por Estágio).\nConjuradores também ficam sem componentes materiais se obtiverem uma Falha Crítica. Podem se reabastecer como acima."
-},{
-  "id": "condenado_horror",
-  "name": "CONDENADO (HORROR)",
-  "origem": "HORROR",
-  "severity": "maior",
-  "description": "A morte está ansiosa por seu herói ou heroína. Talvez tenha fugido dela em algum momento da vida, ou voltado dos mortos e deixado uma dívida com o Barqueiro. Seja qual for o motivo, você subtrai 2 das rolagens de Absorção."
-},{
-  "id": "corrupcao_horror",
-  "name": "CORRUPÇÃO (HORROR)",
-  "origem": "HORROR",
-  "severity": "maior",
-  "description": "OBS.: Esta Complicação só pode ser adquirida em um cenário que permita a Vantagem Antecedente Arcano (Milagres).\nEsta Complicação só pode ser adquirida por aqueles com Antecedente Arcano.\nA magia do conjurador recorre a alguma fonte abominável, maligna ou corrompida. Sempre que obtiver uma Falha Crítica em sua rolagem de perícia arcana, recebe uma nova Complicação Menor, ou troca/atualiza uma Complicação Menor obtida por Corrupção por uma Complicação Maior, que reflita a degradação da sua mente e corpo. Por exemplo, um mago pode receber Invejoso (Menor) ao perceber como é difícil aumentar seu poder. Então Sanguinário (Maior) quando sua raiva se transforma em pensamentos violentos.\nEssas Complicações duram até o próximo Progresso do conjurador, momento em que pode remover uma Complicação Menor, ou reduzir/trocar uma Complicação Maior por uma Complicação Menor. Isso é um acréscimo ao seu Progresso."
-},{
-  "id": "hemofilico",
-  "name": "HEMOFÍLICO",
-  "origem": "HORROR",
-  "severity": "maior",
-  "description": "Alguns indivíduos sangram mais do que outros. Talvez seja uma condição genética, ou a vítima seja apenas azarada e é atingida em uma veia ou artéria toda vez que cruza com algum psicopata com uma faca.\nSempre que sofrer um Ferimento que não leva à Incapacitação, começa a sangrar. Toda rodada após sofrer o Ferimento é necessário fazer uma rolagem de Vigor como ação livre ou sofre um nível de Fadiga que pode levar à morte. O sangramento pode ser interrompido com uma ampliação na rolagem de Vigor ou uma rolagem de Curar bem-sucedida."
-},{
-  "id": "histerico",
-  "name": "HISTÉRICO",
-  "origem": "HORROR",
-  "severity": "menor ou maior",
-  "description": "Não importa o quanto este investigador ou investigadora tente impedir, medo e terror provocam um grito histérico. Sempre que falhar no teste de Medo, a personagem automaticamente emite um grito ensurdecedor.\nComo Complicação Maior, você continua gritando e fica em Estado Distraído até fazer uma rolagem de Astúcia como ação livre limitada. Aliados (que possam escutar) dentro de um Modelo Grande de Explosão centrado na personagem também ficam em Estado Distraído até que o grito se encerre ou se movam para fora do modelo."
-},{
-  "id": "ima_de_balas",
-  "name": "IMÃ DE BALAS",
-  "origem": "HORROR",
-  "severity": "menor",
-  "description": "Algumas pessoas sempre estão no lugar errado e na hora errada. Esta alma infeliz é atingida por disparos acidentais (usando as regras de Espectadores Inocentes) com 1–2 em armas de tiro único e 1–3 com escopetas e armas automáticas."
-},{
-  "id": "pessimista",
-  "name": "PESSIMISTA",
-  "origem": "HORROR",
-  "severity": "menor",
-  "description": "A personagem é do tipo pessimista que acredita que a luz no fim do túnel é um trem com seu nome nele. Adiciona +2 aos resultados de testes de Medo mal-sucedidos (pág. 50 do compêndio de Horror)."
-},{
-  "id": "sono_pesado",
-  "name": "SONO PESADO",
-  "origem": "HORROR",
-  "severity": "menor",
-  "description": "Uma tempestade do Inferno não acordaria este dorminhoco. Uma vez que apaga, é necessário uma rolagem de Perceber (-4) para acordar. Também sofre uma penalidade de -4 nas rolagens de Vigor para ficar acordado."
-},{
-  "id": "supersticioso",
-  "name": "SUPERSTICIOSO",
-  "origem": "HORROR",
-  "severity": "menor",
-  "description": "A personagem encontra algo que a ajuda a lidar com os terrores que enfrenta. Escolha uma rotina simples ou objeto que seja seu foco. Desde que o foco não seja perturbado, a personagem está bem. Se o foco for perdido ou perturbado todas as rolagens de Características são feitas com -1."
-},{
-  "id": "terrores_noturnos",
-  "name": "TERRORES NOTURNOS",
-  "origem": "HORROR",
-  "severity": "maior",
-  "description": "A Terra de Nod é um constante pesadelo para esta personagem investigadora. Você passa a noite se mexendo e provavelmente mantém todos ao alcance de sua voz acordados com seu tormento noturno. O repetido tormento em sua mente resulta em uma determinação enfraquecida. Por isso, subtraia 1 de todas as suas rolagens de Espírito.\nQualquer pessoa que durma próximo de você tem uma longa noite pela frente (veja Sono em Savage Worlds para possíveis consequências)."
-},{
-  "id": "valentao",
-  "name": "VALENTÃO",
-  "origem": "HORROR",
-  "severity": "menor ou maior",
-  "description": "Nada diverte mais este canalha do que tornar a vida dos outros miserável, especialmente se forem \"diferentes\". Em sua versão Menor personagens com a Complicação Valentão menosprezam aqueles que não gostam, que representem uma ameaça ou que pareçam deslocados. Em sua versão Maior, o Valentão está disposto e é capaz de confrontos físicos."
-},{
-  "id": "vitima",
-  "name": "VÍTIMA",
-  "origem": "HORROR",
-  "severity": "maior",
-  "description": "Todos já vimos os filmes. Alguns heróis ou heroínas solitários estão destinados a sobreviver enquanto seus amigos são mortos um a um. Sua personagem raramente sobrevive até o final da história.\nSempre que o Mestre decidir um alvo aleatoriamente, normalmente aquele coma Complicação Vítima deve ser escolhido. Qualquer adversário extra sem um alvo também deveria ir nesta personagem."
-}
+  },
+  {
+    "id": "dependencia",
+    "name": "DEPENDÊNCIA",
+    "origem": "SUPER",
+    "severity": "maior",
+    "description": "Uma hora gasta se recuperando com a substância apropriada restaura todos os níveis de Fadiga ou perda de poderes causada por esta Complicação.\nObservação: Esta Complicação é a versão da Habilidade Racial Negativa presente no Savage Worlds Edição Aventura. Em uma campanha de supers, isso pode ser uma condição ou parte da história em vez de um traço hereditário da personagem.\nO super deve consumir ou ter contato com algum tipo relativamente comum de substância por uma hora a cada 24 horas. Caso contrário, não poderá usar seus poderes ou recebe um nível de Fadiga (decida qual quando a Complicação é comprada). Se escolher o segundo, recebe um nível adicional de Fadiga a cada 24 horas até que fique Incapacitado (isso pode causar morte)."
+  },
+  {
+    "id": "dependente",
+    "name": "DEPENDENTE",
+    "origem": "SUPER",
+    "severity": "menor ou maior",
+    "description": "Sua personagem tem alguma pessoa pela qual é completamente devotada e fará qualquer coisa para proteger. Pode ser uma esposa, marido, companheiro, uma criança, amigo de trabalho ou até mesmo um animal de estimação.\nEssa pessoa é uma personagem Carta Selvagem de Estágio Novato sem poderes que se mete em problemas constantemente, revela os segredos da equipe ou de alguma outra forma causa sofrimento sem fim a seu campeão. Claro, de vez em quando, o Dependente pode também salvar a vida do herói ou heroína em troca.\nSe essa pessoa morrer, o herói ou heroína ganha um ponto de Convicção e outro quando conseguir justiça... ou vingança!\nApós isso, é necessário trabalhar com o Mestre para criar um novo Dependente ou superar a Complicação com Progressos.\nComo uma Complicação Maior, o Dependente deve aparecer regularmente em sua campanha, ou de vez em quando como uma Complicação Menor."
+  },
+  {
+    "id": "doenca_terminal",
+    "name": "DOENÇA TERMINAL",
+    "origem": "SUPER",
+    "severity": "menor ou maior",
+    "description": "Esta desventurada alma sofre de uma doença terminal e incurável.\nComo Complicação Menor subtrai 1 de qualquer rolagem feita para resistir à Fadiga de qualquer fonte. Subtraia 2 se for uma Complicação Maior. Uma Falha Crítica numa rolagem deste tipo significa que as coisas estão piorando.\nSe sua personagem tiver a versão Menor, ela piora e a sua Complicação torna-se Maior. Se já tiver a versão maior, Falha Crítica na rolagem de Vigor significa que seu fim se aproxima. O herói ou heroína ganha imediatamente um ponto de Convicção, mas perecerá nesta sessão. É possível alcançar as Chamas da Glória (veja a pág. 42) ou morrer pacificamente cercado por amigos em seu covil nas montanhas de um mundo alienígena. Quando sua personagem finalmente perecer, as outras personagens ganham um ponto de Convicção, tirando forças da morte corajosa de seu companheiro.\nVocê também pode superar esta Complicação gastando um Progresso (reduzindo-a de Maior para Menor ou eliminando a versão Menor). Trabalhe com o Mestre para encontrar uma razão narrativa para a melhora – uma droga super tecnológica, uma cura milagrosa, uma transfusão de um doador único, ou algum tipo de explicação que justifique a melhora milagrosa."
+  },
+  {
+    "id": "forma_alienigena",
+    "name": "FORMA ALIENÍGENA",
+    "origem": "SUPER",
+    "severity": "maior",
+    "description": "Sua personagem tem uma aparência completamente alienígena: uma esfera brilhante de energia, uma ameba com tentáculos, um grande cérebro flutuante ou algo do tipo. É quase impossível que humanos entendam sua fisiologia. Rolagens de Cura para ajudar este super são feitas com -4.\nVários problemas interpretativos também devem ser um desafio – o indíviduo não consegue entrar em restaurantes, vestir roupas normais ou coletes de kevlar, entrar em um carro e assim por diante.\nSe cidadãos comuns não estão acostumados a ver seres alienígenas no cenário, considere pegar também a Complicação Forasteiro.\nNão importa como foi descrito, Forma Alienígena não garante nenhuma habilidade inerente; elas devem ser compradas separadamente. Se uma bola de energia brilhante quer ser capaz de atravessar paredes, por exemplo, pegue o poder intangibilidade."
+  },
+  {
+    "id": "fraqueza_ambiental",
+    "name": "FRAQUEZA AMBIENTAL",
+    "origem": "SUPER",
+    "severity": "menor",
+    "description": "Sua personagem é mais suscetível a um Tipo de Poder específico (veja a pág. 53), como Frio, Fogo, Mental e assim por diante.\nAtaques deste tipo causam +4 de dano e um redutor de -4 é aplicado nas rolagens de Resistência deste Tipo de Poder (poderes que funcionem como infecção ou controle de mente).\nConverse com o Mestre antes de assumir esta Complicação – não é realmente uma Complicação se pegar Fraqueza Ambiental a um Tipo de Poder que nunca aparece em sua campanha.\nÉ possível adquirir está Complicação mais de uma vez para fraquezas a mais de um Tipo de Poder."
+  },
+  {
+    "id": "idealista",
+    "name": "IDEALISTA",
+    "origem": "SUPER",
+    "severity": "menor",
+    "description": "Você acredita na verdade e justiça, a qualquer custo. As coisas são preto no branco para você, certo ou errado, o que lhe traz grandes problemas nas áreas cinzas da vida.\nA maioria das vezes esta é uma grande virtude, mas gera dificuldades para decidir se um ladrão faminto deve ser entregue à justiça ou se deve usar força letal contra alguém, mesmo se estiverem prestes a causar grande destruição e perdas de vidas."
+  },
+  {
+    "id": "identidade_secreta",
+    "name": "IDENTIDADE SECRETA",
+    "origem": "SUPER",
+    "severity": "maior",
+    "description": "Apenas as pessoas mais próximas conhecem sua identidade “civil” e seu super alter ego.\nSe o primeiro for descoberto, os inimigos irão atrás de você em casa ou no trabalho."
+  },
+  {
+    "id": "imprudente",
+    "name": "IMPRUDENTE",
+    "origem": "SUPER",
+    "severity": "maior",
+    "description": "Até mesmo os supers mais poderosos perdem o controle de suas habilidades de tempos em tempos. Quem possuir esta Complicação causa mais destruição do que a maioria.\nSeja por falta de controle, imprudência ou falta de cuidado, sempre que a personagem obter uma Falha Crítica em uma rolagem para ativar ou usar um poder, ela fica fora de controle. Afeta o alvo errado, tem o efeito inverso ou causa um enorme dano colateral.\nO efeito exato cabe ao Mestre baseado na situação, mas deve ser memorável e potencialmente desastroso!\nO super deve ter poderes que requeiram uma rolagem de ativação para assumir esta Complicação."
+  },
+  {
+    "id": "megalomaniaco",
+    "name": "MEGALOMANÍACO",
+    "origem": "SUPER",
+    "severity": "maior",
+    "description": "O vilão tem grandes planos e só você tem a visão para ver através deles. O super deve estar no comando de toda a situação. Se está em uma equipe, deve estar na liderança e coitado do tolo insolente que tente fazer dele alvo de suas piadas!\nA personagem não ganha os benefícios positivos de qualquer Efeito de Comando e sofre uma penalidade de -4 em qualquer tentativa de dar Suporte a rolagens de outras Personagens."
+  },
+  {
+    "id": "monologo",
+    "name": "MONOLÓGO",
+    "origem": "SUPER",
+    "severity": "maior",
+    "description": "Alguns vilões e vilãs são conhecidos por se vangloriar sobre seus oponentes quando deveriam matá-los e alguns heróis ou heroínas não conseguem resistir a oportunidade de dar um sermão ou repreender malfeitores.\nSempre que a Carta de Ação da personagem é Paus, é necessário fazer uma rolagem de Astúcia -2 ou então gasta todo o turno anunciando a perdição de seu oponente, dando desculpas para os fracassos anteriores, revelando seu sucesso ou repreendendo aqueles ao redor por seus erros. A prolixidade desta personagem permite que se mova e faça ações livres durante seu monólogo, mas para além disso, ela está mais preocupada em defender seu ponto de vista."
+  },
+  {
+    "id": "sinistro",
+    "name": "SINISTRO",
+    "origem": "SUPER",
+    "severity": "menor",
+    "description": "Este super não tem humor, nunca gargalha, sorri ou faz uma piada. Ele é Provocado (veja Savage Worlds Edição Aventura) com qualquer rolagem bem-sucedida de Provocar – quer o oponente tenha a Vantagem ou não.\nPersonagens Provocadas subtraem 2 de suas rolagens para afetar qualquer oponente exceto aquela que a provocou. Isso dura até que um Curinga tenha sido sacado ou mais alguém tenha Provocado o vingador sisudo.\nSinistro também conta como Requisito para a Vantagem Ameaçador (veja o Savage Worlds Edição Aventura)."
+  },
+  {
+    "id": "transformacao",
+    "name": "TRANSFORMAÇÃO",
+    "origem": "SUPER",
+    "severity": "menor ou maior",
+    "description": "Sua personagem precisa passar por uma mudança fundamental para acessar seus poderes. Talvez tenha que convocar energias místicas, tomar uma pílula, se machucar (Abalado ou Ferido), transformar seu corpo, vestir uma armadura ou dizer uma palavra mágica.\nQualquer que seja o gatilho, se não puder se transformar, não pode usar seus poderes.\nComo Complicação Menor, a personagem está no controle de sua transformação. A transformação ocorre ao gastar uma ação para uma rolagem de Foco.\nComo Complicação Maior, a transformação é mais difícil. Pode ser que necessite de um minuto inteiro, ou mais, para se transformar (talvez vestir um traje ou armadura complicada, ou se transformar lentamente em um lobisomem). A transformação também pode ocorrer a partir de um gatilho externo fora do controle direto da personagem, tal como ser Abalado ou Ferido por um ataque físico, lua cheia, a visão de sangue etc. Neste caso, o herói ou heroína pode fazer uma rolagem de Foco para não se transformar a cada rodada que o gatilho ocorra ou esteja presente, se assim desejar. Se isso também altera as Vantagens e Complicações de sua heroína ou herói, trabalhe com o mestre para construir uma segunda ficha para representar a personagem transformada."
+  },
+  {
+    "id": "vulnerabilidade",
+    "name": "VULNERABILIDADE",
+    "origem": "SUPER",
+    "severity": "menor ou maior",
+    "description": "Exposição a certas substâncias é algo potencialmente fatal para seu herói ou heroína.\nCom a versão Menor, causa o estado Distraído sempre que estiver a 12 quadros (24 metros) da substância.\nCom a versão Maior, também é necessário fazer uma rolagem de Vigor, ou sofre um nível de Fadiga que pode levar à morte."
+  },
+  {
+    "id": "altruista",
+    "name": "ALTRUÍSTA",
+    "origem": "FANTASIA",
+    "severity": "menor ou maior",
+    "description": "Você pensa nos outros antes de você mesmo. Você dorme no chão para dar a cama a outro. Você finge estar satisfeito para dar a seus amigos o último pedaço de carne. Você fica na frente quando o dragão cospe fogo. Você compra o livro que todos no seu grupo de aventureiros leem — de fato, verdadeiramente heroico!\nA extensão e a frequência do seu sacrifício determinam se esta é uma Complicação Menor ou Maior."
+  },
+  {
+    "id": "amaldicoado",
+    "name": "AMALDIÇOADO",
+    "origem": "FANTASIA",
+    "severity": "maior",
+    "description": "Seu herói ou heroína cruzou com algum poder sombrio e recebeu para sempre a marca de seu toque contaminado. Poderes e efeitos mágicos benéficos destinados a ajudar, incluindo aqueles conjurados por aliados ou por si mesmo, sofrem uma penalidade de -2 na rolagem de perícia arcana. Pior ainda, se a rolagem for uma Falha Crítica, quem conjurou ficará Atordoado! A penalidade se aplica se a personagem com a Complicação Amaldiçoado estiver dentro de um poder que afete área ou for alvo do modificador de Alvos Adicionais.\nA Maldição não tem efeito em poderes hostis."
+  },
+  {
+    "id": "apaixonado",
+    "name": "APAIXONADO",
+    "origem": "FANTASIA",
+    "severity": "menor",
+    "description": "A personagem se apaixona facilmente por um rostinho bonito. Quem sabe seja luxúria ou devassidão, ou quem sabe apenas tenha uma apreciação aguçada de belezas naturais.\nPersonagens com a Complicação Apaixonado sofrem uma penalidade adicional de -2 para resistir a Desafios de personagens com a Vantagem Atraente ou Muito Atraente."
+  },
+  {
+    "id": "componentes_materiais",
+    "name": "COMPONENTES MATERIAIS",
+    "origem": "FANTASIA",
+    "severity": "maior",
+    "description": "Esta Complicação só pode ser adquirida por aqueles com Antecedente Arcano. Os poderes do conjurador consomem componentes materiais. Talvez um mago precise de um pouco de enxofre para lançar uma bola de fogo (explosão com manifestação de fogo) ou uma sacerdotisa precise de um pouco de água benta para sua deusa conceder ferir.\nPresume-se que tais itens estejam à mão — geralmente em um bolso ou bolsa para componentes. Se o conjurador for despojado de seus pertences e não conseguir os materiais de que precisa, ele subtrai 4 de todas as rolagens de perícias arcanas até que sejam restaurados (50 PO × o Estágio do conjurador em uma loja ou um dia de coleta ou forrageamento em um ambiente apropriado com uma rolagem de Sobrevivência por Estágio).\nConjuradores também ficam sem componentes materiais se obtiverem uma Falha Crítica. Podem se reabastecer como acima."
+  },
+  {
+    "id": "condenado",
+    "name": "CONDENADO",
+    "origem": "FANTASIA",
+    "severity": "maior",
+    "description": "A morte está ansiosa por seu herói ou heroína. Talvez tenha fugido dela em algum momento da vida, ou voltado dos mortos e deixado uma dívida com o Barqueiro. Seja qual for o motivo, você subtrai 2 das rolagens de Absorção."
+  },
+  {
+    "id": "corrupcao",
+    "name": "CORRUPÇÃO",
+    "origem": "FANTASIA",
+    "severity": "maior",
+    "description": "OBS.: Esta Complicação só pode ser adquirida em um cenário que permita a Vantagem Antecedente Arcano (Milagres).\nEsta Complicação só pode ser adquirida por aqueles com Antecedente Arcano.\nA magia do conjurador recorre a alguma fonte abominável, maligna ou corrompida. Sempre que obtiver uma Falha Crítica em sua rolagem de perícia arcana, recebe uma nova Complicação Menor, ou troca/atualiza uma Complicação Menor obtida por Corrupção por uma Complicação Maior, que reflita a degradação da sua mente e corpo. Por exemplo, um mago pode receber Invejoso (Menor) ao perceber como é difícil aumentar seu poder. Então Sanguinário (Maior) quando sua raiva se transforma em pensamentos violentos.\nEssas Complicações duram até o próximo Progresso do conjurador, momento em que pode remover uma Complicação Menor, ou reduzir/trocar uma Complicação Maior por uma Complicação Menor. Isso é um acréscimo ao seu Progresso."
+  },
+  {
+    "id": "desajeitado",
+    "name": "DESAJETADO",
+    "origem": "FANTASIA",
+    "severity": "maior",
+    "description": "Alguns heróis e heroínas demoram um pouco para dominar seu ofício. Selecione uma perícia central para sua personagem, como Conjurar para um mago ou Lutar para um guerreiro. Você sofre uma Falha Crítica sempre que falhar em uma rolagem e o dado de perícia for 1."
+  },
+  {
+    "id": "idealista",
+    "name": "IDEALISTA",
+    "origem": "FANTASIA",
+    "severity": "menor",
+    "description": "Você vê certas coisas preto no branco e tem problemas com dilemas mais sutis. Na maioria das vezes, isso é uma virtude admirável, mas causa grandes questões com dilemas morais, como “Devo entregar um caçador faminto aos guardas do rei ou deixá-lo escapar impune do seu crime desesperado e talvez necessário?”"
+  },
+  {
+    "id": "interferencia_de_armadura",
+    "name": "INTERFERÊNCIA DE ARMADURA",
+    "origem": "FANTASIA",
+    "severity": "menor ou maior",
+    "description": "Esta Complicação só pode ser adquirida por aqueles com Antecedente Arcano.\nAqueles com esta Complicação subtraem 4 das rolagens de perícias arcanas e não podem usar outras habilidades concedidas por seu Antecedente Arcano ou qualquer Vantagem que tenha Antecedente Arcano como requisito ao usar armadura média ou pesada, ou ao usar um escudo médio ou pesado. A personagem pode usar tecido ou armadura leve, ou usar escudos leves, sem interferência.\nComo Complicação Maior, a penalidade também se aplica a armaduras e escudos leves."
+  },
+  {
+    "id": "jingoista",
+    "name": "JINGOÍSTA",
+    "origem": "FANTASIA",
+    "severity": "menor ou maior",
+    "description": "A personagem não gosta de pessoas de outras culturas e acredita que a sua é muito superior — por exemplo, um morador da cidade esnobe pode não gostar de bárbaros “grosseiros” ou dos cidadãos de uma cidade-estado rival. Ela não consegue deixar de menosprezar outras culturas em qualquer oportunidade.\nComo Complicação Menor, os alvos de sua ira não podem se beneficiar de suas Vantagens de Comando. Não consegue evitar insultá-los e subtrai 2 das rolagens de Persuadir ao interagir com eles. A penalidade aumenta para -4 com a Complicação Maior."
+  },
+  {
+    "id": "sensibilidade_arcana",
+    "name": "SENSIBILIDADE ARCANA",
+    "origem": "FANTASIA",
+    "severity": "menor ou maior",
+    "description": "Um feitiço que deu errado, uma maldição antiga, uma linhagem estranha ou algum outro acidente fez com que seu herói ou heroína fosse mais suscetível à energia arcana do que outros.\nComo uma Complicação Menor, subtraia 2 ao fazer uma rolagem de Característica para resistir a um poder, incluindo habilidades de criaturas arcanas (a critério do Mestre). Como uma Complicação Maior, subtraia 4."
+  },
+  {
+    "id": "sombrio",
+    "name": "SOMBRIO",
+    "origem": "FANTASIA",
+    "severity": "menor",
+    "description": "Você é sério, taciturno e acha a alegria cansativa. Recebe os efeitos da Vantagem Provocador (veja Savage Worlds Edição Aventura) ao ser provocado de forma bem-sucedida — quer o oponente tenha essa Vantagem ou não.\nPersonagens afetadas por Provocador subtraem 2 de suas rolagens para afetar qualquer oponente, exceto aquele que a insultou. Isso dura até que um Curinga seja sacado (de qualquer lado) ou alguém seja bem-sucedido em provocar seu provocador.\nSombrio também conta como requisito para a Vantagem Ameaçador (veja Savage Worlds Edição Aventura)."
+  },
+  {
+    "id": "talisma",
+    "name": "TALISMÃ",
+    "origem": "FANTASIA",
+    "severity": "menor ou maior",
+    "description": "Esta Complicação só pode ser adquirida por aqueles com Antecedente Arcano.\nO conjurador depende de um item físico para ativar seus poderes. O Talismã pode ser um cajado mágico, um símbolo sagrado, uma varinha, uma arma ou qualquer outro item transportável.\nQuando pego sem ele, subtrai 1 de todas as rolagens de perícias arcanas (-2 como uma Complicação Maior) e fica Atordoado se o teste for uma Falha Crítica.\nA substituição de um Talismã perdido depende do objeto, mas geralmente exige que o conjurador o pegue de volta. Se destruído, o Mestre deve trabalhar com o jogador para descobrir o que poderia ser um substituto adequado e como poderia ser obtido."
+  },
+  {
+    "id": "amaldicoado_horror",
+    "name": "AMALDIÇOADO (HORROR)",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "OBS.: Esta Complicação só pode ser adquirida em um cenário que permita a Vantagem Antecedente Arcano (Milagres).\nA morte está ansiosa por seu herói ou heroína. Talvez tenha fugido dela em algum momento da vida, ou voltado dos mortos e deixado uma dívida com o Barqueiro. Seja qual for o motivo, você subtrai 2 das rolagens de Absorção."
+  },
+  {
+    "id": "amoroso",
+    "name": "AMOROSO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Devido a luxúria ou a uma forma de verdadeira admiração, este indíviduo se apaixona facilmente. Personagens Amorosas sofrem uma penalidade de -2 para resistir a Desafios de qualquer personagem com as Vantagens Atraente ou Muito Atraente."
+  },
+  {
+    "id": "apetite_incomum",
+    "name": "APETITE INCOMUM",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Seu investigador ou investigadora come algo que a maioria acha perturbador, como papel, comida achada no lixo, insetos ou até mesmo comida podre.\nIsso reduz suas rolagens de Persuadir em -2 quando lida com aqueles que sabem de seus estranhos hábitos alimentares."
+  },
+  {
+    "id": "assustado",
+    "name": "ASSUSTADO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Qualquer coisinha deixa esta personagem nervosa e assustada. Sempre que houver um barulho, choque ou surpresa repentinos (a critério do mestre), personagens Assustados devem fazer um teste de Medo."
+  },
+  {
+    "id": "componentes_materiais_horror",
+    "name": "COMPONENTES MATERIAIS (HORROR)",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Esta Complicação só pode ser adquirida por aqueles com Antecedente Arcano. Os poderes do conjurador consomem componentes materiais. Talvez um mago precise de um pouco de enxofre para lançar uma bola de fogo (explosão com manifestação de fogo) ou uma sacerdotisa precise de um pouco de água benta para sua deusa conceder ferir.\nPresume-se que tais itens estejam à mão — geralmente em um bolso ou bolsa para componentes. Se o conjurador for despojado de seus pertences e não conseguir os materiais de que precisa, ele subtrai 4 de todas as rolagens de perícias arcanas até que sejam restaurados (50 PO × o Estágio do conjurador em uma loja ou um dia de coleta ou forrageamento em um ambiente apropriado com uma rolagem de Sobrevivência por Estágio).\nConjuradores também ficam sem componentes materiais se obtiverem uma Falha Crítica. Podem se reabastecer como acima."
+  },
+  {
+    "id": "condenado_horror",
+    "name": "CONDENADO (HORROR)",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "A morte está ansiosa por seu herói ou heroína. Talvez tenha fugido dela em algum momento da vida, ou voltado dos mortos e deixado uma dívida com o Barqueiro. Seja qual for o motivo, você subtrai 2 das rolagens de Absorção."
+  },
+  {
+    "id": "corrupcao_horror",
+    "name": "CORRUPÇÃO (HORROR)",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "OBS.: Esta Complicação só pode ser adquirida em um cenário que permita a Vantagem Antecedente Arcano (Milagres).\nEsta Complicação só pode ser adquirida por aqueles com Antecedente Arcano.\nA magia do conjurador recorre a alguma fonte abominável, maligna ou corrompida. Sempre que obtiver uma Falha Crítica em sua rolagem de perícia arcana, recebe uma nova Complicação Menor, ou troca/atualiza uma Complicação Menor obtida por Corrupção por uma Complicação Maior, que reflita a degradação da sua mente e corpo. Por exemplo, um mago pode receber Invejoso (Menor) ao perceber como é difícil aumentar seu poder. Então Sanguinário (Maior) quando sua raiva se transforma em pensamentos violentos.\nEssas Complicações duram até o próximo Progresso do conjurador, momento em que pode remover uma Complicação Menor, ou reduzir/trocar uma Complicação Maior por uma Complicação Menor. Isso é um acréscimo ao seu Progresso."
+  },
+  {
+    "id": "hemofilico",
+    "name": "HEMOFÍLICO",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Alguns indivíduos sangram mais do que outros. Talvez seja uma condição genética, ou a vítima seja apenas azarada e é atingida em uma veia ou artéria toda vez que cruza com algum psicopata com uma faca.\nSempre que sofrer um Ferimento que não leva à Incapacitação, começa a sangrar. Toda rodada após sofrer o Ferimento é necessário fazer uma rolagem de Vigor como ação livre ou sofre um nível de Fadiga que pode levar à morte. O sangramento pode ser interrompido com uma ampliação na rolagem de Vigor ou uma rolagem de Curar bem-sucedida."
+  },
+  {
+    "id": "histerico",
+    "name": "HISTÉRICO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Não importa o quanto este investigador ou investigadora tente impedir, medo e terror provocam um grito histérico. Sempre que falhar no teste de Medo, a personagem automaticamente emite um grito ensurdecedor.\nComo Complicação Maior, você continua gritando e fica em Estado Distraído até fazer uma rolagem de Astúcia como ação livre limitada. Aliados (que possam escutar) dentro de um Modelo Grande de Explosão centrado na personagem também ficam em Estado Distraído até que o grito se encerre ou se movam para fora do modelo."
+  },
+  {
+    "id": "ima_de_balas",
+    "name": "IMÃ DE BALAS",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Algumas pessoas sempre estão no lugar errado e na hora errada. Esta alma infeliz é atingida por disparos acidentais (usando as regras de Espectadores Inocentes) com 1–2 em armas de tiro único e 1–3 com escopetas e armas automáticas."
+  },
+  {
+    "id": "pessimista",
+    "name": "PESSIMISTA",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "A personagem é do tipo pessimista que acredita que a luz no fim do túnel é um trem com seu nome nele. Adiciona +2 aos resultados de testes de Medo mal-sucedidos (pág. 50 do compêndio de Horror)."
+  },
+  {
+    "id": "sono_pesado",
+    "name": "SONO PESADO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Uma tempestade do Inferno não acordaria este dorminhoco. Uma vez que apaga, é necessário uma rolagem de Perceber (-4) para acordar. Também sofre uma penalidade de -4 nas rolagens de Vigor para ficar acordado."
+  },
+  {
+    "id": "supersticioso",
+    "name": "SUPERSTICIOSO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "A personagem encontra algo que a ajuda a lidar com os terrores que enfrenta. Escolha uma rotina simples ou objeto que seja seu foco. Desde que o foco não seja perturbado, a personagem está bem. Se o foco for perdido ou perturbado todas as rolagens de Características são feitas com -1."
+  },
+  {
+    "id": "terrores_noturnos",
+    "name": "TERRORES NOTURNOS",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "A Terra de Nod é um constante pesadelo para esta personagem investigadora. Você passa a noite se mexendo e provavelmente mantém todos ao alcance de sua voz acordados com seu tormento noturno. O repetido tormento em sua mente resulta em uma determinação enfraquecida. Por isso, subtraia 1 de todas as suas rolagens de Espírito.\nQualquer pessoa que durma próximo de você tem uma longa noite pela frente (veja Sono em Savage Worlds para possíveis consequências)."
+  },
+  {
+    "id": "valentao",
+    "name": "VALENTÃO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Nada diverte mais este canalha do que tornar a vida dos outros miserável, especialmente se forem \"diferentes\". Em sua versão Menor personagens com a Complicação Valentão menosprezam aqueles que não gostam, que representem uma ameaça ou que pareçam deslocados. Em sua versão Maior, o Valentão está disposto e é capaz de confrontos físicos."
+  },
+  {
+    "id": "vitima",
+    "name": "VÍTIMA",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Todos já vimos os filmes. Alguns heróis ou heroínas solitários estão destinados a sobreviver enquanto seus amigos são mortos um a um. Sua personagem raramente sobrevive até o final da história.\nSempre que o Mestre decidir um alvo aleatoriamente, normalmente aquele coma Complicação Vítima deve ser escolhido. Qualquer adversário extra sem um alvo também deveria ir nesta personagem."
+  },
+  {
+    "id": "complicacao_almofadinha",
+    "name": "ALMOFADINHA",
+    "severity": "MENOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Subtrai 2 de rolagens de Intimidar. Aparenta fragilidade.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_anemico",
+    "name": "ANÊMICO",
+    "severity": "MENOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-2 em Vigor para resistir a veneno, doença, fadiga e perigos ambientais.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_arrogante",
+    "name": "ARROGANTE",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Sempre procura a maior ameaça em batalha. Deve provar superioridade.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_atrapalhado",
+    "name": "ATRAPALHADO",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-2 em rolagens de Atletismo e Furtividade.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_codigo_honra",
+    "name": "CÓDIGO DE HONRA",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Mantém a palavra, não abusa de prisioneiros, segue conduta da divindade/ordem.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_covarde",
+    "name": "COVARDE",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-2 em testes de Medo e para resistir a Intimidação.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_desagradavel",
+    "name": "DESAGRADÁVEL",
+    "severity": "MENOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-1 em rolagens de Persuadir. Mau humor constante.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_desastrado",
+    "name": "DESASTRADO",
+    "severity": "MENOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-2 ao usar dispositivos mecânicos/elétricos. Falha Crítica quebra o item.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_desejo_morrer",
+    "name": "DESEJO DE MORRER",
+    "severity": "MENOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Aceita qualquer risco para alcançar um objetivo nobre, mas mortal.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_guiado",
+    "name": "GUIADO",
+    "severity": "ESCOLHA",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Menor: objetivo frequente. Maior: objetivo impreterível que causa perigo.",
+    "originalName": "Driven"
+  },
+  {
+    "id": "complicacao_heroico",
+    "name": "HEROICO",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Nunca diz não a uma pessoa necessitada. Primeiro a se arriscar.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_hesitante",
+    "name": "HESITANTE",
+    "severity": "MENOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Saca duas cartas de ação e fica com a menor (exceto Curingas). Não pode ter Rápido.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_idoso",
+    "name": "IDOSO",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-1 em Movimentação, Corrida, Agilidade, Força e Vigor. Ganha 5 pontos de perícia (Astúcia).",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_impulsivo",
+    "name": "IMPULSIVO",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Age sem pensar, evita planos complexos, lidera a carga.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_jovem",
+    "name": "JOVEM",
+    "severity": "ESCOLHA",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Menor (12-15 anos): 4 pts atributo, 10 perícia, +1 Bene. Maior (8-11): 3 pts atributo, 10 perícia, +2 Benes, Pequeno.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_lento",
+    "name": "LENTO",
+    "severity": "ESCOLHA",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Menor: Mov -1, Corrida reduzida. Maior: Mov -2, Corrida reduzida, -2 em Atletismo.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_lingua_presa",
+    "name": "LÍNGUA PRESA",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-1 em Intimidar, Performance, Persuadir e Provocar orais.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_ma_sorte",
+    "name": "MÁ SORTE",
+    "severity": "MAIOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Um Bene a menos por sessão. Incompatível com Sorte.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_nao_sabe_nadar",
+    "name": "NÃO SABE NADAR",
+    "severity": "MENOR",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "-2 em Atletismo (nadar). Cada quadro na água custa 3 de movimento.",
+    "originalName": null
+  },
+  {
+    "id": "complicacao_sem_escrupulos",
+    "name": "SEM ESCRÚPULOS",
+    "severity": "ESCOLHA",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Menor: para antes de danos reais. Maior: Causa danos a quem ficar no caminho.",
+    "originalName": "Ruthless"
+  },
+  {
+    "id": "complicacao_voto",
+    "name": "VOTO",
+    "severity": "ESCOLHA",
+    "origem": "FANTASIA_TRILHADOR",
+    "description": "Menor: compromisso frequente. Maior: Risco de vida ou dedicação total (ex: Clérigos/Paladinos).",
+    "originalName": null
+  },
+  {
+    "id": "comp_enjoo_gravidade",
+    "name": "ENJOO DE GRAVIDADE ZERO",
+    "severity": "MENOR",
+    "origem": "SCI_FI",
+    "description": "Sofre -2 em todas as ações em gravidade zero ou microgravidade devido à náusea."
+  },
+  {
+    "id": "comp_dependencia_tech",
+    "name": "DEPENDÊNCIA TECNOLÓGICA",
+    "severity": "MAIOR",
+    "origem": "SCI_FI",
+    "description": "Deve consumir recargas de energia ou manutenção especializada diariamente ou sofre Fadiga."
+  },
+  {
+    "id": "comp_procurado_imperio",
+    "name": "PROCURADO (Império/Corporação)",
+    "severity": "MAIOR",
+    "origem": "SCI_FI",
+    "description": "Perseguido por uma organização galáctica. Recompensas altas pela captura."
+  },
+  {
+    "id": "comp_pesadelos",
+    "name": "PESADELOS (Night Terrors)",
+    "origem": "DEADLANDS",
+    "severity": "maior",
+    "description": "Deve fazer teste de Espírito ao dormir. Falha causa Fadiga no dia seguinte. Crítica causa a perda de um Bene."
+  },
+  {
+    "id": "comp_servo_morte",
+    "name": "SERVO DA MORTE (Grim Servant)",
+    "origem": "DEADLANDS",
+    "severity": "maior",
+    "description": "+1 em rolagens de ataque/dano, mas Falhas Críticas atingem aliados automaticamente ou causam desastres graves."
+  },
+  {
+    "id": "comp_tome",
+    "name": "TOMÉ (Doubting Thomas)",
+    "origem": "DEADLANDS",
+    "severity": "menor",
+    "description": "Cético quanto ao sobrenatural. -2 em testes de Medo no início, mas racionaliza o horror rapidamente."
+  },
+  {
+    "id": "comp_loco",
+    "name": "LOCO",
+    "origem": "DEADLANDS",
+    "severity": "maior",
+    "description": "Insano ou irracional. O jogador deve interpretar uma delusão específica. -2 em Persuadir com pessoas 'normais'."
+  },
+  {
+    "id": "comp_procurado_deadlands",
+    "name": "PROCURADO (Texas Rangers/Agência)",
+    "origem": "DEADLANDS",
+    "severity": "maior",
+    "description": "Caçado por uma das grandes organizações da lei do Oeste. Recompensa alta pela cabeça."
+  }
 ]

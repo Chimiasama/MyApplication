@@ -100,7 +100,6 @@ import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import java.io.BufferedReader
@@ -183,7 +182,7 @@ class MainActivity : ComponentActivity() {
 
         val todasVantagens: List<Vantagem> = this.loadJsonAsset("Vantagens.json")
 
-        AppData.basicasVantagens          = todasVantagens.filter { it.origem.equals("BASICO", true) }
+        AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
         AppData.superVantagens = todasVantagens.filter {
             it.origem.equals("SUPER", ignoreCase = true)
         }
@@ -191,61 +190,18 @@ class MainActivity : ComponentActivity() {
         AppData.horrorVantagens = todasVantagens.filter {
             it.origem.equals("HORROR", ignoreCase = true)
         }
+        AppData.trilhadorVantagens = todasVantagens.filter {
+            it.origem.equals("TRILHADOR", ignoreCase = true)
+        }
 
-        val sciFiVantagens: List<Vantagem> = try {
-            val jsonSciFi = assets.open("vantagens_sci_fi.json")
-                .bufferedReader().use { it.readText() }
-            json.decodeFromString(jsonSciFi)
-        } catch (_: Exception) { emptyList() }
-
-        val deadlandsVantagens: List<Vantagem> = try {
-            val jsonDeadlands = assets.open("vantagens_deadlands.json")
-                .bufferedReader().use { it.readText() }
-            json.decodeFromString(jsonDeadlands)
-        } catch (_: Exception) { emptyList() }
-
-        val trilhadorVantagens: List<Vantagem> = try {
-            val jsonTrilhador = assets.open("vantagens_trilhador.json")
-                .bufferedReader().use { it.readText() }
-            json.decodeFromString(jsonTrilhador)
-        } catch (_: Exception) { emptyList() }
-
-        AppData.trilhadorVantagens = trilhadorVantagens
-
-        listaVantagens = todasVantagens + trilhadorVantagens + sciFiVantagens + deadlandsVantagens
+        listaVantagens = todasVantagens
 
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
 
-        val complicacoesJson = assets
-            .open("complicacoes.json")
-            .bufferedReader()
-            .use { it.readText() }
+        val todasComplicacoes = this.loadJsonAsset<List<Complicacao>>("complicacoes.json")
 
-        val complicacoesTrilhadorJson = try {
-            assets.open("complicacoes_trilhador.json")
-                .bufferedReader()
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val complicacoesSciFiJson = try {
-            assets.open("complicacoes_sci_fi.json")
-                .bufferedReader()
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val complicacoesDeadlandsJson = try {
-            assets.open("complicacoes_deadlands.json")
-                .bufferedReader()
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val compsBase = json.decodeFromString(ListSerializer(Complicacao.serializer()), complicacoesJson)
-        val compsTrilhador = json.decodeFromString(ListSerializer(Complicacao.serializer()), complicacoesTrilhadorJson)
-        val compsSciFi = json.decodeFromString(ListSerializer(Complicacao.serializer()), complicacoesSciFiJson)
-        val compsDeadlands = json.decodeFromString(ListSerializer(Complicacao.serializer()), complicacoesDeadlandsJson)
-
-        listaComplicacoes = compsBase + compsTrilhador + compsSciFi + compsDeadlands
+        listaComplicacoes = todasComplicacoes
 
         val ancestralRaw = assets.open("listaancestralidade.json")
             .bufferedReader(Charsets.UTF_8)
@@ -275,46 +231,6 @@ class MainActivity : ComponentActivity() {
         val ancsDeadlands = json.decodeFromString<List<RacialModifier>>(ancestralDeadlandsRaw)
 
         listaAncestralidadesJson = ancsBase + ancsTrilhador + ancsSciFi + ancsDeadlands
-
-        val equipTrilhadorRaw = try {
-            assets.open("equipamentos_trilhador.json")
-                .bufferedReader().use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        val equipTrilhadorCategorias: List<EquipamentoCategoria> = try {
-            json.decodeFromString(equipTrilhadorRaw)
-        } catch (_: Exception) { emptyList() }
-
-        val equipSciFiRaw = try {
-            assets.open("equipamentos_sci_fi.json")
-                .bufferedReader().use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        val equipSciFiCategorias: List<EquipamentoCategoria> = try {
-            json.decodeFromString(equipSciFiRaw)
-        } catch (_: Exception) { emptyList() }
-
-        val equipDeadlandsRaw = try {
-            assets.open("equipamentos_deadlands.json")
-                .bufferedReader().use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        val equipDeadlandsCategorias: List<EquipamentoCategoria> = try {
-            json.decodeFromString(equipDeadlandsRaw)
-        } catch (_: Exception) { emptyList() }
-
-        val ciberneticosRaw = try {
-            assets.open("ciberneticos.json")
-                .bufferedReader().use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        val ciberneticosCategorias: List<EquipamentoCategoria> = try {
-            json.decodeFromString(ciberneticosRaw)
-        } catch (_: Exception) { emptyList() }
-
-        val chassisRaw = try {
-            assets.open("chassis_sci_fi.json")
-                .bufferedReader().use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        val chassisCategorias: List<EquipamentoCategoria> = try {
-            json.decodeFromString(chassisRaw)
-        } catch (_: Exception) { emptyList() }
 
         val monstrosJson = assets
             .open("monstros.json")
@@ -785,7 +701,7 @@ class MainActivity : ComponentActivity() {
                                             expMonstro = expMonstro,
                                             onToggleMonstro = { expMonstro = !expMonstro },
 
-                                            equipamentoCategorias = equipamentoCategorias + equipTrilhadorCategorias + equipSciFiCategorias + equipDeadlandsCategorias + ciberneticosCategorias + chassisCategorias,
+                                            equipamentoCategorias = equipamentoCategorias,
                                             superequipCategorias  = superequipCategorias,
                                             listaSuperPoderes     = listaSuperPoderes,
                                             modoOficialAtivo      = state.modoOficialAtivo
