@@ -2,6 +2,7 @@ package com.example.swadebuilder
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,17 +16,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.FolderOpen
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -150,33 +159,98 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(32.dp),
-        verticalArrangement = Arrangement.Center,
+            .padding(horizontal = 24.dp, vertical = 32.dp),
+        verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(
-            onClick = { showNewOptionsDialog = true },
+        Surface(
+            tonalElevation = 4.dp,
+            shape = RoundedCornerShape(18.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Criar Novo Personagem")
-        }
-        Spacer(modifier = Modifier.height(12.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    text = "Construa seu personagem",
+                    style = MaterialTheme.typography.headlineSmall,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Escolha o tipo de aventura e os livros que vão guiar a criação.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
 
-        Button(
-            onClick = onCarregarPersonagem,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Carregar Personagem")
-        }
-        Spacer(modifier = Modifier.height(240.dp))
+                Button(
+                    onClick = { showNewOptionsDialog = true },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Icon(Icons.Default.PlayArrow, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text("Criar novo personagem")
+                }
 
-        Button(
-            onClick = { showCreditsDialog = true },
-            modifier = Modifier.fillMaxWidth()
-                .padding(bottom = 240.dp)
-                .alpha(0.6f)
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    ),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Quer retomar um herói?",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = "Carregue um personagem salvo para continuar de onde parou.",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                        TextButton(
+                            onClick = onCarregarPersonagem,
+                            modifier = Modifier.align(Alignment.End)
+                        ) {
+                            Icon(Icons.Default.FolderOpen, contentDescription = null)
+                            Spacer(Modifier.width(6.dp))
+                            Text("Carregar personagem")
+                        }
+                    }
+                }
+            }
+        }
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Text("Créditos e Licença")
+            Divider(modifier = Modifier.padding(horizontal = 48.dp))
+            TextButton(onClick = { showHelpAppDialog = true }) {
+                Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.alpha(0.7f))
+                Spacer(Modifier.width(6.dp))
+                Text("Guia rápido do app", modifier = Modifier.alpha(0.7f))
+            }
+            TextButton(onClick = { showCreditsDialog = true }) {
+                Text("Créditos e licença", modifier = Modifier.alpha(0.6f))
+            }
         }
 
         // --- Diálogo com a imagem e o texto ---
@@ -232,6 +306,12 @@ Feito por Rafael S.W.
                         .heightIn(max = 520.dp)
                         .verticalScroll(scrollState)
                 ) {
+                    Text(
+                        text = "Selecione quais livros e variações estarão disponíveis na criação.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+
                     // Livro Básico
                     Row(
                         Modifier
@@ -250,116 +330,62 @@ Feito por Rafael S.W.
                     if (expLivroBasico) {
                         Spacer(Modifier.height(4.dp))
 
-                        // Carta Selvagem (NEGRITO)
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optCartaSelvagem = !optCartaSelvagem }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optCartaSelvagem,
-                                onCheckedChange = { optCartaSelvagem = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Carta Selvagem", fontWeight = FontWeight.Bold)
-                        }
-
-                        // Mais pontos de perícias (NEGRITO)
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optMaisPontosPericias = !optMaisPontosPericias }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optMaisPontosPericias,
-                                onCheckedChange = { optMaisPontosPericias = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Mais pontos de perícias", fontWeight = FontWeight.Bold)
-                        }
-
-                        // (mantém as demais opções do Livro Básico como já existiam)
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optMultiAntecedenteArcano = !optMultiAntecedenteArcano }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(checked = optMultiAntecedenteArcano, onCheckedChange = { optMultiAntecedenteArcano = it })
-                            Spacer(Modifier.width(8.dp))
-                            Text("Múltiplos Antecedentes Arcanos")
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optEspecializacaoPer = !optEspecializacaoPer }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(checked = optEspecializacaoPer, onCheckedChange = { optEspecializacaoPer = it })
-                            Spacer(Modifier.width(8.dp))
-                            Text("Especialização de Perícias")
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optHeroiSemArmadura = !optHeroiSemArmadura }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(checked = optHeroiSemArmadura, onCheckedChange = { optHeroiSemArmadura = it })
-                            Spacer(Modifier.width(8.dp))
-                            Text("Heróis sem Armadura")
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optMultiplosIdiomas = !optMultiplosIdiomas }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(checked = optMultiplosIdiomas, onCheckedChange = { optMultiplosIdiomas = it })
-                            Spacer(Modifier.width(8.dp))
-                            Text("Múltiplos Idiomas")
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optNasceUmHeroi = !optNasceUmHeroi }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(checked = optNasceUmHeroi, onCheckedChange = { optNasceUmHeroi = it })
-                            Spacer(Modifier.width(8.dp))
-                            Text("Nasce um Herói")
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optSemPontosPoder = !optSemPontosPoder }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(checked = optSemPontosPoder, onCheckedChange = { optSemPontosPoder = it })
-                            Spacer(Modifier.width(8.dp))
-                            Text("Sem pontos de Poder")
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optShowHelpMessages = !optShowHelpMessages }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(checked = optShowHelpMessages, onCheckedChange = { optShowHelpMessages = it })
-                            Spacer(Modifier.width(8.dp))
-                            Text("Mostrar mensagens de auxílio")
-                        }
+                        OptionRow(
+                            checked = optCartaSelvagem,
+                            title = "Carta Selvagem",
+                            description = "Personagens com Benes extras e resistência heroica.",
+                            emphasis = true,
+                            onToggle = { optCartaSelvagem = !optCartaSelvagem }
+                        )
+                        OptionRow(
+                            checked = optMaisPontosPericias,
+                            title = "Mais pontos de perícias",
+                            description = "Distribua mais pontos iniciais para customizar o herói.",
+                            emphasis = true,
+                            onToggle = { optMaisPontosPericias = !optMaisPontosPericias }
+                        )
+                        OptionRow(
+                            checked = optMultiAntecedenteArcano,
+                            title = "Múltiplos Antecedentes Arcanos",
+                            description = "Permite combinar diferentes fontes de poder.",
+                            onToggle = { optMultiAntecedenteArcano = !optMultiAntecedenteArcano }
+                        )
+                        OptionRow(
+                            checked = optEspecializacaoPer,
+                            title = "Especialização de Perícias",
+                            description = "Ativa a regra opcional de especializações.",
+                            onToggle = { optEspecializacaoPer = !optEspecializacaoPer }
+                        )
+                        OptionRow(
+                            checked = optHeroiSemArmadura,
+                            title = "Heróis sem Armadura",
+                            description = "Crie personagens destemidos que não usam proteção pesada.",
+                            onToggle = { optHeroiSemArmadura = !optHeroiSemArmadura }
+                        )
+                        OptionRow(
+                            checked = optMultiplosIdiomas,
+                            title = "Múltiplos Idiomas",
+                            description = "Comece falando mais de um idioma.",
+                            onToggle = { optMultiplosIdiomas = !optMultiplosIdiomas }
+                        )
+                        OptionRow(
+                            checked = optNasceUmHeroi,
+                            title = "Nasce um Herói",
+                            description = "Seu personagem não pode morrer na criação.",
+                            onToggle = { optNasceUmHeroi = !optNasceUmHeroi }
+                        )
+                        OptionRow(
+                            checked = optSemPontosPoder,
+                            title = "Sem pontos de Poder",
+                            description = "Remove o custo de Pontos de Poder para poderes.",
+                            onToggle = { optSemPontosPoder = !optSemPontosPoder }
+                        )
+                        OptionRow(
+                            checked = optShowHelpMessages,
+                            title = "Mostrar mensagens de auxílio",
+                            description = "Sugestões rápidas aparecem enquanto você cria o personagem.",
+                            onToggle = { optShowHelpMessages = !optShowHelpMessages }
+                        )
                     }
 
                     Spacer(Modifier.height(16.dp))
@@ -403,35 +429,19 @@ Feito por Rafael S.W.
                     if (expSuper) {
                         Spacer(Modifier.height(4.dp))
 
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optSuperPoderes = !optSuperPoderes }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optSuperPoderes,
-                                onCheckedChange = { optSuperPoderes = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Superpoderes", fontWeight = FontWeight.Bold)
-                        }
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optGrandesResponsabilidades = !optGrandesResponsabilidades }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optGrandesResponsabilidades,
-                                onCheckedChange = { optGrandesResponsabilidades = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Grandes Responsabilidades")
-                        }
+                        OptionRow(
+                            checked = optSuperPoderes,
+                            title = "Superpoderes",
+                            description = "Ativa vantagens e poderes de heróis super-humanos.",
+                            emphasis = true,
+                            onToggle = { optSuperPoderes = !optSuperPoderes }
+                        )
+                        OptionRow(
+                            checked = optGrandesResponsabilidades,
+                            title = "Grandes Responsabilidades",
+                            description = "Personagens com superpoderes começam com Débitos adicionais.",
+                            onToggle = { optGrandesResponsabilidades = !optGrandesResponsabilidades }
+                        )
                     }
 
                     Spacer(Modifier.height(16.dp))
@@ -453,35 +463,20 @@ Feito por Rafael S.W.
                     if (expHorror) {
                         Spacer(Modifier.height(4.dp))
 
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optCompendioHorror = !optCompendioHorror }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optCompendioHorror,
-                                onCheckedChange = { optCompendioHorror = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Compêndio de Horror", fontWeight = FontWeight.Bold)
-                        }
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optModoMonstro = !optModoMonstro }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optModoMonstro,
-                                onCheckedChange = { optModoMonstro = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Monstros Heróis", fontWeight = FontWeight.Bold)
-                        }
+                        OptionRow(
+                            checked = optCompendioHorror,
+                            title = "Compêndio de Horror",
+                            description = "Climas sombrios, medos e criaturas aterrorizantes.",
+                            emphasis = true,
+                            onToggle = { optCompendioHorror = !optCompendioHorror }
+                        )
+                        OptionRow(
+                            checked = optModoMonstro,
+                            title = "Monstros Heróis",
+                            description = "Crie personagens usando modelos de criatura.",
+                            emphasis = true,
+                            onToggle = { optModoMonstro = !optModoMonstro }
+                        )
                     }
 
                     Spacer(Modifier.height(16.dp))
@@ -503,35 +498,21 @@ Feito por Rafael S.W.
                     if (expFantasia) {
                         Spacer(Modifier.height(4.dp))
 
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optCompendioFantasia = !optCompendioFantasia }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optCompendioFantasia,
-                                onCheckedChange = { optCompendioFantasia = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Compêndio de Fantasia", fontWeight = FontWeight.Bold)
-                        }
+                        OptionRow(
+                            checked = optCompendioFantasia,
+                            title = "Compêndio de Fantasia",
+                            description = "Elfos, magia e itens maravilhosos.",
+                            emphasis = true,
+                            onToggle = { optCompendioFantasia = !optCompendioFantasia }
+                        )
 
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optCompendioTrilhador = !optCompendioTrilhador }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optCompendioTrilhador,
-                                onCheckedChange = { optCompendioTrilhador = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Savage Pathfinder (Trilhador)", fontWeight = FontWeight.Bold)
-                        }
+                        OptionRow(
+                            checked = optCompendioTrilhador,
+                            title = "Savage Pathfinder (Trilhador)",
+                            description = "Regras oficiais para aventuras em Golarion.",
+                            emphasis = true,
+                            onToggle = { optCompendioTrilhador = !optCompendioTrilhador }
+                        )
                     }
 
                     Spacer(Modifier.height(16.dp))
@@ -553,20 +534,13 @@ Feito por Rafael S.W.
                     if (expFiccao) {
                         Spacer(Modifier.height(4.dp))
 
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optCompendioSciFi = !optCompendioSciFi }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optCompendioSciFi,
-                                onCheckedChange = { optCompendioSciFi = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Compêndio de Sci-Fi", fontWeight = FontWeight.Bold)
-                        }
+                        OptionRow(
+                            checked = optCompendioSciFi,
+                            title = "Compêndio de Sci-Fi",
+                            description = "Naves, tecnologias exóticas e mutações futuristas.",
+                            emphasis = true,
+                            onToggle = { optCompendioSciFi = !optCompendioSciFi }
+                        )
                     }
 
                     Spacer(Modifier.height(16.dp))
@@ -588,23 +562,13 @@ Feito por Rafael S.W.
                     if (expDeadlands) {
                         Spacer(Modifier.height(4.dp))
 
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { optCompendioDeadlands = !optCompendioDeadlands }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Checkbox(
-                                checked = optCompendioDeadlands,
-                                onCheckedChange = { optCompendioDeadlands = it }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text("Ativar conteúdo de Deadlands", fontWeight = FontWeight.Bold)
-                                Text("Harroweds, dispositivos infernais e o Velho Oeste sombrio.", style = MaterialTheme.typography.bodySmall)
-                            }
-                        }
+                        OptionRow(
+                            checked = optCompendioDeadlands,
+                            title = "Ativar conteúdo de Deadlands",
+                            description = "Harroweds, dispositivos infernais e o Velho Oeste sombrio.",
+                            emphasis = true,
+                            onToggle = { optCompendioDeadlands = !optCompendioDeadlands }
+                        )
                     }
                 }
             },
@@ -646,5 +610,38 @@ Feito por Rafael S.W.
                 }
             }
         )
+    }
+}
+
+@Composable
+private fun OptionRow(
+    checked: Boolean,
+    title: String,
+    description: String? = null,
+    emphasis: Boolean = false,
+    onToggle: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onToggle() }
+            .padding(vertical = 6.dp)
+    ) {
+        Checkbox(checked = checked, onCheckedChange = { onToggle() })
+        Spacer(Modifier.width(8.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                fontWeight = if (emphasis) FontWeight.Bold else FontWeight.SemiBold
+            )
+            if (description != null) {
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
     }
 }

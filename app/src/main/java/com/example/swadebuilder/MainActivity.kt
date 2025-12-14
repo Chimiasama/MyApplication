@@ -350,22 +350,6 @@ class MainActivity : ComponentActivity() {
                                     Text(themeNames[theme] ?: theme.name)
                                 }
                             }
-                            item {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable { state.modoOficialAtivo = !state.modoOficialAtivo }
-                                        .padding(vertical = 4.dp, horizontal = 12.dp)
-                                ) {
-                                    Checkbox(
-                                        checked = state.modoOficialAtivo,
-                                        onCheckedChange = { state.modoOficialAtivo = it }
-                                    )
-                                    Spacer(Modifier.width(8.dp))
-                                    Text("Modo Oficial/Licenciado (IP)")
-                                }
-                            }
                         }
                     },
                     confirmButton = {
