@@ -1467,7 +1467,6 @@
       "estagio": "Experiente",
       "atributos": {},
       "pericias": {
-        "Conhecimento Batalha": ""
       },
       "vantagens_previas": ["comando"],
       "observacoes": ""
@@ -2372,7 +2371,6 @@
       "estagio": "Novato",
       "atributos": {},
       "pericias": {
-        "Perceber": ""
       },
       "vantagens_previas": [],
       "observacoes": ""

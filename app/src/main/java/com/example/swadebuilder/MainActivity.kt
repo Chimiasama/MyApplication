@@ -183,11 +183,6 @@ class MainActivity : ComponentActivity() {
 
         val todasVantagens: List<Vantagem> = this.loadJsonAsset("Vantagens.json")
 
-        todasVantagens.firstOrNull { it.id == "atraente" }?.let { v ->
-            com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "LOAD CHECK - ATRAENTE: ${v.requisitos.atributoMin}")
-            com.example.swadebuilder.util.LogUtils.d("SWADE_DEBUG", "LOAD CHECK - RAW ATTR: ${v.requisitos.jsonAtributos}")
-        }
-
         AppData.basicasVantagens          = todasVantagens.filter { it.origem.equals("BASICO", true) }
         AppData.superVantagens = todasVantagens.filter {
             it.origem.equals("SUPER", ignoreCase = true)
