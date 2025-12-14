@@ -268,7 +268,7 @@ val PrideThemeData = AppThemeData(
         onPrimaryContainer = Color.White
     ),
     typography = PrideTypography,
-    // backgroundDrawable = com.example.swadebuilder.R.drawable.pride_background // CRASH FIX: Temporarily disabled
+    backgroundDrawable = com.example.swadebuilder.R.drawable.pride_background
 )
 
 // ─── Halloween Theme ─────────────────────────────────────────────────────────
