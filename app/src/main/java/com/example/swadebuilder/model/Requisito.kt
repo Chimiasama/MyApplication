@@ -11,13 +11,13 @@ data class Requisito(
     val estagio: String = "",
 
     @SerialName("atributos")
-    private val _atributoMin: Map<String, JsonElement> = emptyMap(),
+    val jsonAtributos: Map<String, JsonElement> = emptyMap(),
 
     @SerialName("pericias")
-    private val _periciaMin: Map<String, JsonElement> = emptyMap(),
+    val jsonPericias: Map<String, JsonElement> = emptyMap(),
 
     @SerialName("periciaMinOpcional")
-    private val _periciaMinOpcional: Map<String, JsonElement> = emptyMap(),
+    val jsonPericiasOpcional: Map<String, JsonElement> = emptyMap(),
 
     @SerialName("vantagens_previas")
     val vantagensPrevias: List<String> = emptyList(),
@@ -32,13 +32,13 @@ data class Requisito(
         get() = observacoes.contains("Carta Selvagem", ignoreCase = true)
 
     val atributoMin: Map<String, Int>
-        get() = _atributoMin.mapValues { parseJsonInt(it.value) }
+        get() = jsonAtributos.mapValues { parseJsonInt(it.value) }
 
     val periciaMin: Map<String, Int>
-        get() = _periciaMin.mapValues { parseJsonInt(it.value) }
+        get() = jsonPericias.mapValues { parseJsonInt(it.value) }
 
     val periciaMinOpcional: Map<String, Int>
-        get() = _periciaMinOpcional.mapValues { parseJsonInt(it.value) }
+        get() = jsonPericiasOpcional.mapValues { parseJsonInt(it.value) }
 
     private fun parseJsonInt(element: JsonElement): Int {
         if (element is JsonPrimitive) {
