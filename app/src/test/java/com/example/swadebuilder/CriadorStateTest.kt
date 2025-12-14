@@ -3,6 +3,7 @@ package com.example.swadebuilder
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.Vantagem
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -55,5 +56,35 @@ class CriadorStateTest {
         state.valoresAtributos["VIGOR"]!!.intValue = 8
 
         assertTrue(state.podeSelecionar(vantagem))
+    }
+
+    @Test
+    fun `snapshot restaura pilhas completas de recursos`() {
+        val state = CriadorState()
+
+        state.cpPaStack.addAll(listOf("PB", "PB"))
+        repeat(3) { state.cpSpStack.add(Unit) }
+        repeat(2) { state.cpPvStack.add(Unit) }
+        state.cpRecursosStack.add(Unit)
+        state.dinheiro = 1234
+        state.pontosComplicacaoGastos = 5
+
+        val snapshot = state.toSnapshot()
+
+        state.cpPaStack.clear()
+        state.cpSpStack.clear()
+        state.cpPvStack.clear()
+        state.cpRecursosStack.clear()
+        state.dinheiro = 0
+        state.pontosComplicacaoGastos = 0
+
+        state.restoreFromSnapshot(snapshot, mutableListOf())
+
+        assertEquals(listOf("PB", "PB"), state.cpPaStack.toList())
+        assertEquals(3, state.cpSpStack.size)
+        assertEquals(2, state.cpPvStack.size)
+        assertEquals(1, state.cpRecursosStack.size)
+        assertEquals(1234, state.dinheiro)
+        assertEquals(5, state.pontosComplicacaoGastos)
     }
 }
