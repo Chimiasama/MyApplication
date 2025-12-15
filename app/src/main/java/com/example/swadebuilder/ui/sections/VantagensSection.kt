@@ -369,6 +369,7 @@ fun VantagensContent(
 
                 val isFromSuperPoder = state.vantagensDePoder.contains(vant.id)
                 val isSuperpoderesLocked = state.modoSupers && vant.id == "superpoderes"
+                val isCrystalHeartLocked = state.compendioCrystalHeartAtivo && vant.id == "aa_agente_syn"
 
                 val isCelestialAAMilagres = state.ancestralidade == "CELESTIAIS" &&
                         vant.id == "antecedente_arcano_milagres"
@@ -387,7 +388,8 @@ fun VantagensContent(
                         !isRacialFree &&
                         !requiredByAnother &&
                         !isFromSuperPoder &&
-                        !isSuperpoderesLocked
+                        !isSuperpoderesLocked &&
+                        !isCrystalHeartLocked
 
                 val canRemove =
                     baseRemovable && !(state.emProgresso && vant.id == "novos_poderes")
