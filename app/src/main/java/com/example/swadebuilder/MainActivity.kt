@@ -88,6 +88,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.model.AtributoList
 import com.example.swadebuilder.model.Complicacao
+import com.example.swadebuilder.model.CoracaoCristal
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.MonstroTemplate
@@ -141,7 +142,7 @@ class MainActivity : ComponentActivity() {
             .bufferedReader()
             .use { it.readText() }
         val allEquipCategorias: List<EquipamentoCategoria> =
-            json.decodeFromString(allEquipJson)
+            json.decodeFromString(allEquipJson) + this.loadJsonAsset("equipamentos_crystal.json")
 
         val equipamentoCategorias = allEquipCategorias.filter { cat ->
             cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
@@ -183,7 +184,8 @@ class MainActivity : ComponentActivity() {
             )
         }
 
-        val todasVantagens: List<Vantagem> = this.loadJsonAsset("Vantagens.json")
+        val todasVantagens: List<Vantagem> =
+            this.loadJsonAsset("Vantagens.json") + this.loadJsonAsset("vantagens_crystal.json")
 
         AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
         AppData.superVantagens = todasVantagens.filter {
@@ -202,7 +204,8 @@ class MainActivity : ComponentActivity() {
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
 
-        val todasComplicacoes = this.loadJsonAsset<List<Complicacao>>("complicacoes.json")
+        val todasComplicacoes = this.loadJsonAsset<List<Complicacao>>("complicacoes.json") +
+            this.loadJsonAsset("complicacoes_crystal.json")
 
         listaComplicacoes = todasComplicacoes
 
@@ -232,14 +235,17 @@ class MainActivity : ComponentActivity() {
         val ancsTrilhador = json.decodeFromString<List<RacialModifier>>(ancestralTrilhadorRaw)
         val ancsSciFi = json.decodeFromString<List<RacialModifier>>(ancestralSciFiRaw)
         val ancsDeadlands = json.decodeFromString<List<RacialModifier>>(ancestralDeadlandsRaw)
+        val ancsCrystal = this.loadJsonAsset<List<RacialModifier>>("ancestralidades_crystal.json")
 
-        listaAncestralidadesJson = ancsBase + ancsTrilhador + ancsSciFi + ancsDeadlands
+        listaAncestralidadesJson = ancsBase + ancsTrilhador + ancsSciFi + ancsDeadlands + ancsCrystal
 
         val monstrosJson = assets
             .open("monstros.json")
             .bufferedReader()
             .use { it.readText() }
         listaMonstroTemplates = json.decodeFromString(monstrosJson)
+
+        listaCoracoesCristal = this.loadJsonAsset("coracoes_crystal.json")
 
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
             val m = rm.atributos
@@ -275,6 +281,7 @@ class MainActivity : ComponentActivity() {
             var expResumo  by rememberSaveable(creationSession) { mutableStateOf(false) }
             var expXp by rememberSaveable(creationSession) { mutableStateOf(false) }
             var expMonstro by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expCoracoes by rememberSaveable(creationSession) { mutableStateOf(false) }
 
             val context = LocalContext.current
             val activity = (context as? ComponentActivity)
@@ -591,7 +598,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, modoMonstroAtivo, _, _,
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, modoMonstroAtivo, _, _,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, grandesResponsabilidades, showHelpMessages ->
 
@@ -606,6 +613,7 @@ class MainActivity : ComponentActivity() {
                                         compendioSciFiAtivo = compendioSciFiAtivo,
                                         compendioTrilhadorAtivo = compendioTrilhadorAtivo,
                                         compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+                                        compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
                                         modoMonstroAtivo = modoMonstroAtivo,
                                         usarEspecializacoesDePericia = usarEspecializacaoPer,
                                         showHelpMessages = showHelpMessages
@@ -735,9 +743,13 @@ class MainActivity : ComponentActivity() {
                                             expMonstro = expMonstro,
                                             onToggleMonstro = { expMonstro = !expMonstro },
 
+                                            expCoracoes = expCoracoes,
+                                            onToggleCoracoes = { expCoracoes = !expCoracoes },
+
                                             equipamentoCategorias = equipamentoCategorias,
                                             superequipCategorias  = superequipCategorias,
                                             listaSuperPoderes     = listaSuperPoderes,
+                                            listaCoracoesCristal  = listaCoracoesCristal,
                                             modoOficialAtivo      = state.modoOficialAtivo
                                         )
                                     }
@@ -770,6 +782,7 @@ data class SuperPoder(
 
 lateinit var listaAncestralidadesJson: List<RacialModifier>
 lateinit var listaMonstroTemplates: List<MonstroTemplate>
+lateinit var listaCoracoesCristal: List<CoracaoCristal>
 
 lateinit var racialAttrMinMap: Map<String, Map<String,Int>>
 lateinit var racialSkillStartMap: Map<String, Map<String,Int>>

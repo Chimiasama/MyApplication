@@ -1,0 +1,50 @@
+[
+  {
+    "id": "heart_starter",
+    "nome": "Coração Inicial (Padrão)",
+    "estagio": "Novato",
+    "pontos_poder": 10,
+    "slots": 1,
+    "habilidade_passiva": "Nenhuma",
+    "poderes": ["Raio", "Proteção", "Luz"],
+    "complicacao_inerente": null,
+    "origem": "CRYSTAL_HEART",
+    "descricao": "O cristal padrão emitido para agentes novatos da Syn."
+  },
+  {
+    "id": "heart_feral",
+    "nome": "Coração Feral",
+    "estagio": "Novato",
+    "pontos_poder": 15,
+    "slots": 2,
+    "habilidade_passiva": "Garras (For+d6) e +2 em Atletismo.",
+    "poderes": ["Aumentar Característica (Força/Vigor)", "Velocidade", "Guerreiro"],
+    "complicacao_inerente": "Sanguinário",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Um cristal pulsante e vermelho que desperta a besta interior."
+  },
+  {
+    "id": "heart_golem",
+    "nome": "Coração de Golem",
+    "estagio": "Experiente",
+    "pontos_poder": 10,
+    "slots": 3,
+    "habilidade_passiva": "Armadura +4 (Pele de Pedra).",
+    "poderes": ["Barreira", "Cavar", "Dano (Esmagar)"],
+    "complicacao_inerente": "Lento (Movimentação -1)",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Transforma a pele do agente em rocha viva."
+  },
+  {
+    "id": "heart_wraith",
+    "nome": "Coração da Aparição",
+    "estagio": "Veterano",
+    "pontos_poder": 20,
+    "slots": 1,
+    "habilidade_passiva": "Intangibilidade (custo 1 PP/rodada para manter).",
+    "poderes": ["Invisibilidade", "Medo", "Atravessar"],
+    "complicacao_inerente": "Anêmico",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Um cristal nebuloso e frio ao toque."
+  }
+]

@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.CoracaoCristal
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
@@ -41,6 +42,7 @@ import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
 import com.example.swadebuilder.ui.sections.ComplicacoesSection
 import com.example.swadebuilder.ui.sections.EquipamentoSection
+import com.example.swadebuilder.ui.sections.CrystalHeartsSection
 import com.example.swadebuilder.ui.sections.PericiasContent
 import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.SummaryContent
@@ -87,9 +89,13 @@ fun PreviewApp() {
         expMonstro = true,
         onToggleMonstro = {},
 
+        expCoracoes = true,
+        onToggleCoracoes = {},
+
         equipamentoCategorias = emptyList(),
         superequipCategorias = emptyList(),
-        listaSuperPoderes = emptyList()
+        listaSuperPoderes = emptyList(),
+        listaCoracoesCristal = emptyList()
     )
 }
 
@@ -130,9 +136,13 @@ fun UnifiedScreen(
     expMonstro: Boolean,
     onToggleMonstro: () -> Unit,
 
+    expCoracoes: Boolean,
+    onToggleCoracoes: () -> Unit,
+
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
     listaSuperPoderes: List<SuperPoder>,
+    listaCoracoesCristal: List<CoracaoCristal>,
     modoOficialAtivo: Boolean = false
 ) {
     if (state.modoSupers) {
@@ -276,7 +286,14 @@ fun UnifiedScreen(
             } else {
                 // Default Progression View
                 ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
-                EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
+                EquipamentoSection(
+                    state = state,
+                    expanded = expEquip,
+                    onToggle = onToggleEquip,
+                    equipamentoCategorias = equipamentoCategorias,
+                    superequipCategorias = superequipCategorias,
+                    compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
+                )
 
                 Spacer(Modifier.height(16.dp))
                 HorizontalDivider(thickness = 3.dp)
@@ -381,13 +398,29 @@ fun UnifiedScreen(
                 )
             }
 
+            HorizontalDivider(thickness = 1.dp)
+
+            CrystalHeartsSection(
+                state = state,
+                expanded = expCoracoes,
+                onToggle = onToggleCoracoes,
+                coracoes = listaCoracoesCristal
+            )
+
             PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes)
 
             Spacer(Modifier.height(8.dp))
             HorizontalDivider(thickness = 1.dp)
 
             SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes)
-            EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
+            EquipamentoSection(
+                state = state,
+                expanded = expEquip,
+                onToggle = onToggleEquip,
+                equipamentoCategorias = equipamentoCategorias,
+                superequipCategorias = superequipCategorias,
+                compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
+            )
 
             Spacer(Modifier.height(16.dp))
             HorizontalDivider(thickness = 3.dp)

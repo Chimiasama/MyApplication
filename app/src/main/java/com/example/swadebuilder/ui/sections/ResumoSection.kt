@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.buildSummaryLines
+import com.example.swadebuilder.listaCoracoesCristal
 import com.example.swadebuilder.toMeuPersonagem
 import com.example.swadebuilder.util.keyify
 
@@ -80,7 +81,28 @@ fun SummaryContent(state: CriadorState) {
         )
     }
 
-    val sections = remember(lines) { lines.toSummarySections(headers) }
+    val sectionsBase = remember(lines) { lines.toSummarySections(headers) }
+
+    val heartSection = remember(state.coracaoCristalSelecionadoId) {
+        val heartId = state.coracaoCristalSelecionadoId ?: return@remember null
+        val heart = listaCoracoesCristal.firstOrNull { it.id == heartId } ?: return@remember null
+        SummarySection(
+            title = "Coração de Cristal",
+            items = listOfNotNull(
+                "Equipado: ${heart.nome}",
+                "Estágio: ${heart.estagio}",
+                "PP: ${heart.pontosPoder}, Slots: ${heart.slots}",
+                "Passiva: ${heart.habilidadePassiva.ifBlank { "Nenhuma" }}",
+                heart.poderes.takeIf { it.isNotEmpty() }?.joinToString(prefix = "Poderes: ", separator = ", "),
+                heart.complicacaoInerente?.let { "Complicação: $it" },
+                heart.descricao
+            )
+        )
+    }
+
+    val sections = remember(sectionsBase, heartSection) {
+        heartSection?.let { sectionsBase + it } ?: sectionsBase
+    }
 
     val identitySection = sections.firstOrNull { it.title == "Identidade" }
     val derivedSection = sections.firstOrNull { it.title == "Atributos derivados" }

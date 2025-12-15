@@ -213,7 +213,7 @@ fun VantagensContent(
         }
     }
 
-    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioTrilhadorAtivo, state.compendioDeadlandsAtivo) {
+    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioTrilhadorAtivo, state.compendioDeadlandsAtivo, state.compendioCrystalHeartAtivo) {
         listaVantagens.filter { vant ->
             val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase()
             val isBasico = origemNorm == "BASICO"
@@ -222,11 +222,12 @@ fun VantagensContent(
             val isHorror = origemNorm == "HORROR"
             val isTrilhador = origemNorm == "FANTASIA_TRILHADOR"
             val isDeadlands = origemNorm == "DEADLANDS"
+            val isCrystal = origemNorm == "CRYSTAL_HEART"
 
             // Allow filtering logic to work properly: include items if their compendium is active OR if they are basic.
             // But we also need to allow users to filter via the dialog even if the compendium is active.
             // The logic below determines which items are *eligible* to be shown. The dialog filter is applied later.
-            isBasico || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isTrilhador && state.compendioTrilhadorAtivo) || (isDeadlands && state.compendioDeadlandsAtivo)
+            isBasico || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isTrilhador && state.compendioTrilhadorAtivo) || (isDeadlands && state.compendioDeadlandsAtivo) || (isCrystal && state.compendioCrystalHeartAtivo)
         }
     }
 

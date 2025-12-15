@@ -11,6 +11,7 @@
     { "nome": "Conjurar",           "atributo": "Astúcia",   "basica": false },
     { "nome": "Consertar",          "atributo": "Astúcia",   "basica": false },
     { "nome": "Curar",              "atributo": "Astúcia",   "basica": false },
+    { "nome": "Canalizar",          "atributo": "Espírito",  "basica": false },
     { "nome": "Dirigir",            "atributo": "Agilidade", "basica": false },
     { "nome": "Eletrônica",         "atributo": "Astúcia",   "basica": false },
     { "nome": "Fé",                 "atributo": "Espírito",  "basica": false },

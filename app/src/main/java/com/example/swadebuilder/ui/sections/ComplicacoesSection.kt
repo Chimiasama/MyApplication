@@ -83,6 +83,7 @@ fun ComplicacoesSection(
         if (state.compendioHorrorAtivo) add("HORROR")
         if (state.compendioTrilhadorAtivo) add("FANTASIA_TRILHADOR")
         if (state.compendioDeadlandsAtivo) add("DEADLANDS")
+        if (state.compendioCrystalHeartAtivo) add("CRYSTAL_HEART")
     }
 
     val complicacoesFiltradas = listaComplicacoes.filter { comp ->

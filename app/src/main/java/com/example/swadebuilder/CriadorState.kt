@@ -46,6 +46,7 @@ class CriadorState {
     var compendioSciFiAtivo by mutableStateOf(false)
     var compendioTrilhadorAtivo by mutableStateOf(false)
     var compendioDeadlandsAtivo by mutableStateOf(false)
+    var compendioCrystalHeartAtivo by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
@@ -56,6 +57,7 @@ class CriadorState {
     var dinheiro by mutableIntStateOf(500)
     val poderesSelecionados = mutableStateListOf<String>()
     val equipamentosComprados = mutableStateListOf<EquipamentoItem>()
+    var coracaoCristalSelecionadoId by mutableStateOf<String?>(null)
     var heroisSemArmadura by mutableStateOf(false)
     private val _maxedTraits = mutableStateListOf<String>()
     val maxedTraits: List<String> get() = _maxedTraits
@@ -1701,6 +1703,7 @@ class CriadorState {
                 compendioSciFiAtivo = compendioSciFiAtivo,
                 compendioTrilhadorAtivo = compendioTrilhadorAtivo,
                 compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+                compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
                 modoOficialAtivo = modoOficialAtivo,
                 modoMonstroAtivo = modoMonstroAtivo,
                 tipoMonstroSelecionado = tipoMonstroSelecionado,
@@ -1757,6 +1760,7 @@ class CriadorState {
                     ComplicacaoSnapshot(comp.id, nivel)
                 },
                 reservasComplicacaoMaior = reservasComplicacaoMaior.toMap(),
+                coracaoCristalSelecionadoId = coracaoCristalSelecionadoId,
                 poderesSelecionados = poderesSelecionados.toList(),
                 poderSlotsPorArcano = poderSlotsPorArcano.mapValues { it.value.toList() },
                 novosPoderesStacksPorArcano = novosPoderesStacksPorArcano
@@ -1827,6 +1831,7 @@ class CriadorState {
         compendioSciFiAtivo = flags.compendioSciFiAtivo
         compendioTrilhadorAtivo = flags.compendioTrilhadorAtivo
         compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo
+        compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo
         modoOficialAtivo = flags.modoOficialAtivo
         modoMonstroAtivo = flags.modoMonstroAtivo
         usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia
@@ -1919,6 +1924,8 @@ class CriadorState {
         reservasComplicacaoMaior.putAll(snapshot.selecoes.reservasComplicacaoMaior)
 
         equipamentosComprados.apply { clear(); addAll(snapshot.selecoes.equipamentosComprados) }
+
+        coracaoCristalSelecionadoId = snapshot.selecoes.coracaoCristalSelecionadoId
 
         poderSlotsPorArcano.clear()
         snapshot.selecoes.poderSlotsPorArcano.forEach { (key, slots) ->

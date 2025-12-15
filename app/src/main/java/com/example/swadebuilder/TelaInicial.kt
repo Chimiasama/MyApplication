@@ -34,6 +34,7 @@ import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Warning
@@ -80,6 +81,7 @@ fun TelaInicial(
         compendioSciFiAtivo: Boolean,
         compendioTrilhadorAtivo: Boolean,
         compendioDeadlandsAtivo: Boolean,
+        compendioCrystalHeartAtivo: Boolean,
         modoMonstroAtivo: Boolean,
         modoSuperequipamentos: Boolean,
         modoSuperComplicacoes: Boolean,
@@ -119,6 +121,7 @@ fun TelaInicial(
     var optCompendioFantasia by rememberSaveable { mutableStateOf(false) }
     var optCompendioTrilhador by rememberSaveable { mutableStateOf(false) }
     var optCompendioDeadlands by rememberSaveable { mutableStateOf(false) }
+    var optCompendioCrystalHeart by rememberSaveable { mutableStateOf(false) }
 
     // SciFi
     var optCompendioSciFi by rememberSaveable { mutableStateOf(false) }
@@ -166,6 +169,7 @@ fun TelaInicial(
                         optCompendioSciFi,
                         optCompendioTrilhador,
                         optCompendioDeadlands,
+                        optCompendioCrystalHeart,
                         optModoMonstro,
                         optSuperPoderes, // superequipamentos enabled if supers enabled
                         optSuperPoderes, // supercomplicacoes enabled if supers enabled
@@ -179,6 +183,7 @@ fun TelaInicial(
                     // Set ViewModel states that are handled outside the creation lambda
                     viewModel.state.compendioTrilhadorAtivo = optCompendioTrilhador
                     viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
+                    viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
                     viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
                 },
@@ -260,6 +265,13 @@ fun TelaInicial(
                         icon = Icons.Default.Shield,
                         checked = optCompendioDeadlands,
                         onCheckedChange = { optCompendioDeadlands = it }
+                    )
+                    ModuleToggle(
+                        title = "Crystal Heart",
+                        description = "Agentes da Syn e seus Corações de Cristal.",
+                        icon = Icons.Default.FlashOn,
+                        checked = optCompendioCrystalHeart,
+                        onCheckedChange = { optCompendioCrystalHeart = it }
                     )
                 }
             }

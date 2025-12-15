@@ -193,6 +193,7 @@ fun EquipamentoSection(
     compendioSciFiAtivo: Boolean = false,
     compendioTrilhadorAtivo: Boolean = false,
     compendioDeadlandsAtivo: Boolean = false,
+    compendioCrystalHeartAtivo: Boolean = false,
     modoOficialAtivo: Boolean = false
 ) {
     val focusManager = LocalFocusManager.current
@@ -205,6 +206,7 @@ fun EquipamentoSection(
     var expSciFiEquip by rememberSaveable { mutableStateOf(false) }
     var expTrilhadorEquip by rememberSaveable { mutableStateOf(false) }
     var expDeadlandsEquip by rememberSaveable { mutableStateOf(false) }
+    var expCrystalEquip by rememberSaveable { mutableStateOf(false) }
 
     var filter by remember { mutableStateOf(EquipFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
@@ -233,7 +235,8 @@ fun EquipamentoSection(
             val isSciFi = origem == "SCI_FI"
             val isTrilhador = origem == "FANTASIA_TRILHADOR"
             val isDeadlands = origem == "DEADLANDS"
-            !isFantasia && !isHorror && !isSciFi && !isTrilhador && !isDeadlands
+            val isCrystal = origem == "CRYSTAL_HEART"
+            !isFantasia && !isHorror && !isSciFi && !isTrilhador && !isDeadlands && !isCrystal
         }
 
         // Filtra as categorias de fantasia (se ativo)
@@ -273,6 +276,14 @@ fun EquipamentoSection(
         val deadlandsCategorias = if (compendioDeadlandsAtivo) {
             allCategorias.filter {
                 (it.origem?.uppercase() ?: "") == "DEADLANDS"
+            }
+        } else {
+            emptyList()
+        }
+
+        val crystalCategorias = if (compendioCrystalHeartAtivo) {
+            allCategorias.filter {
+                (it.origem?.uppercase() ?: "") == "CRYSTAL_HEART"
             }
         } else {
             emptyList()
@@ -463,6 +474,25 @@ fun EquipamentoSection(
             ) {
                 RenderCategoryList(
                     categories = deadlandsCategorias,
+                    filter = filter,
+                    dinheiro = dinheiro,
+                    allowLongTexts = allowLongTexts,
+                    detalhesExpandidos = detalhesExpandidos,
+                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
+                    showOriginalName = modoOficialAtivo
+                )
+            }
+        }
+
+        if (compendioCrystalHeartAtivo && crystalCategorias.isNotEmpty()) {
+            Spacer(Modifier.padding(vertical = 4.dp))
+            CollapsibleSection(
+                title = "Equipamento Crystal Heart",
+                expanded = expCrystalEquip,
+                onToggle = { expCrystalEquip = !expCrystalEquip }
+            ) {
+                RenderCategoryList(
+                    categories = crystalCategorias,
                     filter = filter,
                     dinheiro = dinheiro,
                     allowLongTexts = allowLongTexts,

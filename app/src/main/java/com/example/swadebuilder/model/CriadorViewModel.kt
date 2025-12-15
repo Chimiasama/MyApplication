@@ -121,7 +121,10 @@ class CriadorViewModel : ViewModel() {
             modoSupers = flags.modoSupers,
             compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
             compendioHorrorAtivo = flags.compendioHorrorAtivo,
+            compendioSciFiAtivo = flags.compendioSciFiAtivo,
+            compendioTrilhadorAtivo = flags.compendioTrilhadorAtivo,
             compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo,
+            compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo,
             modoMonstroAtivo = flags.modoMonstroAtivo,
             usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia,
             grandesResponsabilidades = flags.grandesResponsabilidades,
@@ -165,6 +168,7 @@ class CriadorViewModel : ViewModel() {
         compendioSciFiAtivo: Boolean = false,
         compendioTrilhadorAtivo: Boolean = false,
         compendioDeadlandsAtivo: Boolean = false,
+        compendioCrystalHeartAtivo: Boolean = false,
         modoMonstroAtivo: Boolean = false,
         usarEspecializacoesDePericia: Boolean = false,
         grandesResponsabilidades: Boolean = false,
@@ -178,6 +182,7 @@ class CriadorViewModel : ViewModel() {
         state.compendioSciFiAtivo = compendioSciFiAtivo
         state.compendioTrilhadorAtivo = compendioTrilhadorAtivo
         state.compendioDeadlandsAtivo = compendioDeadlandsAtivo
+        state.compendioCrystalHeartAtivo = compendioCrystalHeartAtivo
         state.modoMonstroAtivo = modoMonstroAtivo
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
         state.modoSuperequip = modoSupers
@@ -204,6 +209,7 @@ class CriadorViewModel : ViewModel() {
         state.vantagensAutomaticas.clear()
         state.desvantagensAutomaticas.clear()
         state.vantagemEmFoco = null
+        state.coracaoCristalSelecionadoId = null
         state.categoriasVantagensExpandidas.keys.forEach { cat ->
             state.categoriasVantagensExpandidas[cat] = false
         }

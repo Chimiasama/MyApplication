@@ -80,6 +80,17 @@ fun AjudaDialog(
                     )
                 }
 
+                if (state.compendioCrystalHeartAtivo) {
+                    InstructionSection(
+                        title = "Crystal Heart",
+                        content = """
+                            • Ativa Corações de Cristal, vantagens e complicações da Syn.
+                            • Use a seção dedicada para escolher o Coração equipado.
+                            • Ancestralidades representam as terras de Syn ou os Artificiais.
+                        """.trimIndent()
+                    )
+                }
+
                 // Seção Supers e Poderes
                 if (state.modoSupers) {
                     InstructionSection(

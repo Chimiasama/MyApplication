@@ -1,0 +1,92 @@
+[
+  {
+    "id": "anc_bogandia",
+    "nome": "Bogandense",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "CRYSTAL_HEART",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      { "nome": "Vigoroso", "descricao": "Começa com Vigor d6. Máximo d12+1." },
+      { "nome": "Sangue Quente", "descricao": "+4 para resistir a Frio. Reduz dano de Frio em 4." },
+      { "nome": "Teimoso", "descricao": "Começa com a Complicação Teimoso." }
+    ]
+  },
+  {
+    "id": "anc_dodeca",
+    "nome": "Dodeca",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "CRYSTAL_HEART",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      { "nome": "Astuto", "descricao": "Começa com Astúcia d6. Máximo d12+1." },
+      { "nome": "Educação Superior", "descricao": "Começa com d6 em Conhecimento Geral e +1 perícia de Conhecimento à escolha." },
+      { "nome": "Cético", "descricao": "-2 em testes de Espírito para resistir a medo ou interações sociais emocionais." }
+    ]
+  },
+  {
+    "id": "anc_mot",
+    "nome": "Mot",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "CRYSTAL_HEART",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      { "nome": "Espiritual", "descricao": "Começa com Espírito d6. Máximo d12+1." },
+      { "nome": "Destemido", "descricao": "Começa com a Vantagem Corajoso." },
+      { "nome": "Fantasmagórico", "descricao": "Aparência pálida e estranha. -1 em Persuadir com não-Mots." }
+    ]
+  },
+  {
+    "id": "anc_oites",
+    "nome": "Oites",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "CRYSTAL_HEART",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      { "nome": "Forte", "descricao": "Começa com Força d6. Máximo d12+1." },
+      { "nome": "Trabalhador", "descricao": "+2 em rolagens de Vigor para resistir a Fadiga por trabalho físico." },
+      { "nome": "Direto", "descricao": "Não gostam de mentiras. -2 em Ladinagem e para mentir." }
+    ]
+  },
+  {
+    "id": "anc_zingama",
+    "nome": "Zingamita",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "CRYSTAL_HEART",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      { "nome": "Ágil", "descricao": "Começa com Agilidade d6. Máximo d12+1." },
+      { "nome": "Aptidão Aquática", "descricao": "Começa com d6 em Atletismo (Natação). Move-se velocidade normal na água." },
+      { "nome": "Curiosidade", "descricao": "Começa com a Complicação Curioso (Maior)." }
+    ]
+  },
+  {
+    "id": "anc_artificial",
+    "nome": "Artificial (Construto)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "CRYSTAL_HEART",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      { "nome": "Construto", "descricao": "+2 recuperar Abalado, não respira, imune a veneno/doença." },
+      { "nome": "Sem Coração", "descricao": "Não pode usar Corações de Cristal (usa bateria interna ou núcleo fixo)." },
+      { "nome": "Forasteiro", "descricao": "Visto como objeto. -2 em Persuadir." }
+    ]
+  }
+]
