@@ -135,23 +135,25 @@ fun AtributosContent(
 
         Spacer(Modifier.height(4.dp))
 
-        PbWalletBanner(
-            pcTotal = pcTotal,
-            pcLivres = pcLivres,
-            spendLabel = "Usar PB em Atributos",
-            refundLabel = "Desfazer uso de PB",
-            spendEnabled = !locked && pcLivres >= 2,
-            refundEnabled = !locked && paUsados > 0,
-            onSpend = { state.gastarPcParaAtributo() },
-            onRefund = {
-                state.cpPaStack.removeAt(state.cpPaStack.lastIndex)
-                state.pontosComplicacaoGastos =
-                    (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)
-                state.recalcularPontosAtributo()
-            }
-        )
+        if (!state.emProgresso) {
+            PbWalletBanner(
+                pcTotal = pcTotal,
+                pcLivres = pcLivres,
+                spendLabel = "Usar PB em Atributos",
+                refundLabel = "Desfazer uso de PB",
+                spendEnabled = !locked && pcLivres >= 2,
+                refundEnabled = !locked && paUsados > 0,
+                onSpend = { state.gastarPcParaAtributo() },
+                onRefund = {
+                    state.cpPaStack.removeAt(state.cpPaStack.lastIndex)
+                    state.pontosComplicacaoGastos =
+                        (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)
+                    state.recalcularPontosAtributo()
+                }
+            )
 
-        Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(8.dp))
+        }
 
         listaAtributos.forEach { nome ->
             val baseRaw = state.valoresAtributos[nome]!!.intValue

@@ -129,24 +129,26 @@ fun PericiasContent(
 
                     Spacer(Modifier.height(4.dp))
 
-                    PbWalletBanner(
-                        pcTotal = pcTotal,
-                        pcLivres = pcLivres,
-                        spendLabel = "Usar PB em Perícias",
-                        refundLabel = "Desfazer uso de PB",
-                        spendEnabled = !locked && pcLivres > 0,
-                        refundEnabled = !locked && spUsados > 0,
-                        onSpend = {
-                            state.cpSpStack.add(Unit)
-                            state.pontosComplicacaoGastos += 1
-                        },
-                        onRefund = {
-                            state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
-                            state.pontosComplicacaoGastos =
-                                (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                            state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                        }
-                    )
+                    if (!state.emProgresso) {
+                        PbWalletBanner(
+                            pcTotal = pcTotal,
+                            pcLivres = pcLivres,
+                            spendLabel = "Usar PB em Perícias",
+                            refundLabel = "Desfazer uso de PB",
+                            spendEnabled = !locked && pcLivres > 0,
+                            refundEnabled = !locked && spUsados > 0,
+                            onSpend = {
+                                state.cpSpStack.add(Unit)
+                                state.pontosComplicacaoGastos += 1
+                            },
+                            onRefund = {
+                                state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
+                                state.pontosComplicacaoGastos =
+                                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                                state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
+                            }
+                        )
+                    }
                 }
             }
         }

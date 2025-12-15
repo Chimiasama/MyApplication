@@ -285,18 +285,20 @@ fun VantagensContent(
 
         Spacer(Modifier.size(4.dp))
 
-        PbWalletBanner(
-            pcTotal = pcTotal,
-            pcLivres = pcLivres,
-            spendLabel = "Usar PB em Vantagens",
-            refundLabel = "Desfazer uso de PB",
-            spendEnabled = !locked && pcLivres >= 2,
-            refundEnabled = !locked && pvUsados > 0,
-            onSpend = { state.gastarPcParaVantagem() },
-            onRefund = { state.devolverPcDeVantagem() }
-        )
+        if (!state.emProgresso) {
+            PbWalletBanner(
+                pcTotal = pcTotal,
+                pcLivres = pcLivres,
+                spendLabel = "Usar PB em Vantagens",
+                refundLabel = "Desfazer uso de PB",
+                spendEnabled = !locked && pcLivres >= 2,
+                refundEnabled = !locked && pvUsados > 0,
+                onSpend = { state.gastarPcParaVantagem() },
+                onRefund = { state.devolverPcDeVantagem() }
+            )
 
-        Spacer(Modifier.size(8.dp))
+            Spacer(Modifier.size(8.dp))
+        }
 
         if (state.nasceUmHeroi && !state.emProgresso) {
             AssistChip(
