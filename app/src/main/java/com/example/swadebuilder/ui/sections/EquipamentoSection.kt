@@ -304,18 +304,20 @@ fun EquipamentoSection(
 
         Spacer(modifier = Modifier.size(4.dp))
 
-        PbWalletBanner(
-            pcTotal = pcTotal,
-            pcLivres = pcLivres,
-            spendLabel = "Usar PB em Recursos",
-            refundLabel = "Desfazer uso de PB",
-            spendEnabled = pcLivres > 0 && recursosPcUsados == 0,
-            refundEnabled = recursosPcUsados > 0,
-            onSpend = onUsarPontosBonusEmRecursos,
-            onRefund = onDesfazerPontosBonusEmRecursos
-        )
+        if (!emProgresso) {
+            PbWalletBanner(
+                pcTotal = pcTotal,
+                pcLivres = pcLivres,
+                spendLabel = "Usar PB em Recursos",
+                refundLabel = "Desfazer uso de PB",
+                spendEnabled = pcLivres > 0 && recursosPcUsados == 0,
+                refundEnabled = recursosPcUsados > 0,
+                onSpend = onUsarPontosBonusEmRecursos,
+                onRefund = onDesfazerPontosBonusEmRecursos
+            )
 
-        Spacer(Modifier.size(8.dp))
+            Spacer(Modifier.size(8.dp))
+        }
         Text(
             text = if (filter.isEmpty()) "Filtrar equipamentos"
             else "Filtros (${filter.totalSelections()})",
