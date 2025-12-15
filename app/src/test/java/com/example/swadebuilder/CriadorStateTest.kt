@@ -59,6 +59,58 @@ class CriadorStateTest {
     }
 
     @Test
+    fun `bloqueia segundo antecedente arcano quando multi desativado`() {
+        val arcanoMagia = Vantagem(
+            id = "antecedente_arcano_magia",
+            nome = "Antecedente Arcano (Magia)",
+            categoria = Categoria.ANTECEDENTE,
+            requisitos = Requisito(
+                estagio = "Novato"
+            )
+        )
+        val arcanoMilagres = Vantagem(
+            id = "antecedente_arcano_milagres",
+            nome = "Antecedente Arcano (Milagres)",
+            categoria = Categoria.ANTECEDENTE,
+            requisitos = Requisito(
+                estagio = "Novato"
+            )
+        )
+
+        val state = CriadorState()
+        state.permiteMultiAntecedenteArcano = false
+        state.vantagensSelecionadas.add(arcanoMagia)
+
+        assertFalse(state.podeSelecionar(arcanoMilagres))
+    }
+
+    @Test
+    fun `permite multiplos antecedentes arcanos quando habilitado`() {
+        val arcanoDom = Vantagem(
+            id = "antecedente_arcano_dom",
+            nome = "Antecedente Arcano (Dom)",
+            categoria = Categoria.ANTECEDENTE,
+            requisitos = Requisito(
+                estagio = "Novato"
+            )
+        )
+        val arcanoPsionico = Vantagem(
+            id = "antecedente_arcano_psionico",
+            nome = "Antecedente Arcano (Psionicos)",
+            categoria = Categoria.ANTECEDENTE,
+            requisitos = Requisito(
+                estagio = "Novato"
+            )
+        )
+
+        val state = CriadorState()
+        state.permiteMultiAntecedenteArcano = true
+        state.vantagensSelecionadas.add(arcanoDom)
+
+        assertTrue(state.podeSelecionar(arcanoPsionico))
+    }
+
+    @Test
     fun `snapshot restaura pilhas completas de recursos`() {
         val state = CriadorState()
 

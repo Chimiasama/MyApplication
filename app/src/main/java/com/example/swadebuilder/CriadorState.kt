@@ -831,9 +831,9 @@ class CriadorState {
         }
 
         // 3) Antecedente Arcano e multi-arcano
-        if (key.startsWith("antecedente arcano")) {
+        if (key.startsWith("ANTECEDENTE ARCANO")) {
             if (!permiteMultiAntecedenteArcano) {
-                val anyArcano = vantagensSelecionadas.any { it.nome.keyify().startsWith("antecedente arcano") }
+                val anyArcano = vantagensSelecionadas.any { it.nome.keyify().startsWith("ANTECEDENTE ARCANO") }
                 if (anyArcano && vantagensSelecionadas.none { it.nome.keyify() == key }) {
                     return false
                 }
