@@ -46,6 +46,7 @@ class CriadorState {
     var compendioSciFiAtivo by mutableStateOf(false)
     var compendioTrilhadorAtivo by mutableStateOf(false)
     var compendioDeadlandsAtivo by mutableStateOf(false)
+    var compendioCrystalHeartAtivo by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
@@ -62,6 +63,8 @@ class CriadorState {
     var idAtual by mutableStateOf<String?>(null)
 
     var anotacoes by mutableStateOf("")
+
+    var coracaoCrystalSelecionado by mutableStateOf<com.example.swadebuilder.model.CrystalHeart?>(null)
 
     val comprasPpPorEstagio = mutableStateMapOf<String, Int>().apply {
         listaDeEstagios.forEach { this[it.nome] = 0 }
@@ -1701,6 +1704,7 @@ class CriadorState {
                 compendioSciFiAtivo = compendioSciFiAtivo,
                 compendioTrilhadorAtivo = compendioTrilhadorAtivo,
                 compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+                compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
                 modoOficialAtivo = modoOficialAtivo,
                 modoMonstroAtivo = modoMonstroAtivo,
                 tipoMonstroSelecionado = tipoMonstroSelecionado,
@@ -1827,6 +1831,7 @@ class CriadorState {
         compendioSciFiAtivo = flags.compendioSciFiAtivo
         compendioTrilhadorAtivo = flags.compendioTrilhadorAtivo
         compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo
+        compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo
         modoOficialAtivo = flags.modoOficialAtivo
         modoMonstroAtivo = flags.modoMonstroAtivo
         usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia
@@ -1978,6 +1983,10 @@ class CriadorState {
 
         comprasPpPorEstagio.keys.forEach { comprasPpPorEstagio[it] = snapshot.supers.comprasPpPorEstagio[it] ?: 0 }
         comprasAttrPorEstagio.keys.forEach { comprasAttrPorEstagio[it] = snapshot.supers.comprasAttrPorEstagio[it] ?: 0 }
+
+        snapshot.selecoes.coracaoCrystalId?.let { cid ->
+            coracaoCrystalSelecionado = listaCoracoesCrystal.find { it.id == cid }
+        }
 
         recalcularPontosAtributo(feedbackMessages)
         rebuildAllPericiaStacks(feedbackMessages)

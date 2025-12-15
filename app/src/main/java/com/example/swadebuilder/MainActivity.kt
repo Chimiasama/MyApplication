@@ -89,6 +89,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.model.AtributoList
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.PericiaList
@@ -143,12 +144,26 @@ class MainActivity : ComponentActivity() {
         val allEquipCategorias: List<EquipamentoCategoria> =
             json.decodeFromString(allEquipJson)
 
-        val equipamentoCategorias = allEquipCategorias.filter { cat ->
+        val crystalEquipJson = try {
+            assets.open("equipamentos_crystal.json")
+                .bufferedReader()
+                .use { it.readText() }
+        } catch (_: Exception) { "[]" }
+        val crystalEquipCategorias: List<EquipamentoCategoria> = json.decodeFromString(crystalEquipJson)
+
+        val equipamentoCategorias = (allEquipCategorias + crystalEquipCategorias).filter { cat ->
             cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
         }
         val superequipCategorias = allEquipCategorias.filter { cat ->
             cat.origem?.equals("super", ignoreCase = true) ?: false
         }
+
+        val crystalHeartsJson = try {
+            assets.open("coracoes_crystal.json")
+                .bufferedReader()
+                .use { it.readText() }
+        } catch (_: Exception) { "[]" }
+        listaCoracoesCrystal = json.decodeFromString(crystalHeartsJson)
 
         val superPoderesJson = assets
             .open("superpoderes.json")
@@ -197,14 +212,24 @@ class MainActivity : ComponentActivity() {
             it.origem.equals("TRILHADOR", ignoreCase = true)
         }
 
-        listaVantagens = todasVantagens
+        val vantCrystal = try {
+             val txt = assets.open("vantagens_crystal.json").bufferedReader().use { it.readText() }
+             json.decodeFromString<List<Vantagem>>(txt)
+        } catch (_: Exception) { emptyList() }
+
+        listaVantagens = todasVantagens + vantCrystal
 
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
 
         val todasComplicacoes = this.loadJsonAsset<List<Complicacao>>("complicacoes.json")
 
-        listaComplicacoes = todasComplicacoes
+        val compCrystal = try {
+            val txt = assets.open("complicacoes_crystal.json").bufferedReader().use { it.readText() }
+            json.decodeFromString<List<Complicacao>>(txt)
+        } catch (_: Exception) { emptyList() }
+
+        listaComplicacoes = todasComplicacoes + compCrystal
 
         val ancestralRaw = assets.open("listaancestralidade.json")
             .bufferedReader(Charsets.UTF_8)
@@ -228,12 +253,19 @@ class MainActivity : ComponentActivity() {
                 .use { it.readText() }
         } catch (_: Exception) { "[]" }
 
+        val ancestralCrystalRaw = try {
+            assets.open("ancestralidades_crystal.json")
+                .bufferedReader(Charsets.UTF_8)
+                .use { it.readText() }
+        } catch (_: Exception) { "[]" }
+
         val ancsBase = json.decodeFromString<List<RacialModifier>>(ancestralRaw)
         val ancsTrilhador = json.decodeFromString<List<RacialModifier>>(ancestralTrilhadorRaw)
         val ancsSciFi = json.decodeFromString<List<RacialModifier>>(ancestralSciFiRaw)
         val ancsDeadlands = json.decodeFromString<List<RacialModifier>>(ancestralDeadlandsRaw)
+        val ancsCrystal = json.decodeFromString<List<RacialModifier>>(ancestralCrystalRaw)
 
-        listaAncestralidadesJson = ancsBase + ancsTrilhador + ancsSciFi + ancsDeadlands
+        listaAncestralidadesJson = ancsBase + ancsTrilhador + ancsSciFi + ancsDeadlands + ancsCrystal
 
         val monstrosJson = assets
             .open("monstros.json")
@@ -591,7 +623,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, modoMonstroAtivo, _, _,
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, modoMonstroAtivo, _, _,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, grandesResponsabilidades, showHelpMessages ->
 
@@ -606,6 +638,7 @@ class MainActivity : ComponentActivity() {
                                         compendioSciFiAtivo = compendioSciFiAtivo,
                                         compendioTrilhadorAtivo = compendioTrilhadorAtivo,
                                         compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+                                        compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
                                         modoMonstroAtivo = modoMonstroAtivo,
                                         usarEspecializacoesDePericia = usarEspecializacaoPer,
                                         showHelpMessages = showHelpMessages
@@ -757,6 +790,8 @@ fun Int.toDiceString(): String =
 data class Pericia(val nome: String, val atributo: String, val basica: Boolean)
 
 var listaComplicacoes: List<Complicacao> = emptyList()
+
+lateinit var listaCoracoesCrystal: List<CrystalHeart>
 
 @Serializable
 data class SuperPoder(

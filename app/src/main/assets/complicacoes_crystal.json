@@ -1,0 +1,23 @@
+[
+  {
+    "id": "comp_dessorna",
+    "nome": "DESSORNA (Doença do Cristal)",
+    "tipo": "MAIOR",
+    "origem": "CRYSTAL_HEART",
+    "efeito": "Rejeição ao cristal. Deve fazer teste de Vigor diário ou sofre Fadiga. Falha crítica causa ferimento."
+  },
+  {
+    "id": "comp_sensibilidade_obsidiana",
+    "nome": "SENSIBILIDADE À OBSIDIANA",
+    "tipo": "MENOR",
+    "origem": "CRYSTAL_HEART",
+    "efeito": "A proximidade com Obsidiana causa -2 em todas as rolagens de Traço."
+  },
+  {
+    "id": "comp_inimigo_syn",
+    "nome": "INIMIGO DA SYN",
+    "tipo": "MAIOR",
+    "origem": "CRYSTAL_HEART",
+    "efeito": "Caçado pela organização Syn ou por grupos renegados que roubam cristais."
+  }
+]

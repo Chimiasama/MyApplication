@@ -1,0 +1,42 @@
+[
+  {
+    "id": "aa_agente_syn",
+    "nome": "ANTECEDENTE ARCANO (Agente da Syn)",
+    "categoria": "ANTECEDENTE",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "atributos": { "Espírito": 6 } },
+    "descricao": "Permite equipar e usar Corações de Cristal. Perícia Arcana: Canalizar (Espírito). Se o cristal for removido, perde acesso aos poderes. Começa com um Coração Inicial."
+  },
+  {
+    "id": "sintonizacao_cristal",
+    "nome": "SINTONIZAÇÃO COM CRISTAL",
+    "categoria": "PODER",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "vantagens_previas": ["aa_agente_syn"] },
+    "descricao": "+2 nas rolagens de Canalizar para ativar poderes do Coração."
+  },
+  {
+    "id": "troca_rapida",
+    "nome": "TROCA RÁPIDA (Coração)",
+    "categoria": "PROFISSIONAL",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Experiente", "atributos": { "Agilidade": 8 } },
+    "descricao": "Pode trocar o Coração de Cristal ativo como uma ação (normalmente leva 1 minuto)."
+  },
+  {
+    "id": "resiliencia_cristalina",
+    "nome": "RESILIÊNCIA CRISTALINA",
+    "categoria": "COMBATE",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "atributos": { "Vigor": 8 } },
+    "descricao": "Enquanto tiver um Coração de Cristal equipado, ganha +1 de Resistência."
+  },
+  {
+    "id": "sobrecarga_segura",
+    "nome": "SOBRECARGA SEGURA",
+    "categoria": "PODER",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Veterano", "pericias": { "Canalizar": 8 } },
+    "descricao": "Pode gastar 2 PP extras para aumentar o efeito de um poder sem rolar o dado de Canalizar."
+  }
+]

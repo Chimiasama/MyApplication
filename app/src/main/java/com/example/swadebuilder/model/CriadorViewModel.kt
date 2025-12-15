@@ -165,6 +165,7 @@ class CriadorViewModel : ViewModel() {
         compendioSciFiAtivo: Boolean = false,
         compendioTrilhadorAtivo: Boolean = false,
         compendioDeadlandsAtivo: Boolean = false,
+        compendioCrystalHeartAtivo: Boolean = false,
         modoMonstroAtivo: Boolean = false,
         usarEspecializacoesDePericia: Boolean = false,
         grandesResponsabilidades: Boolean = false,
@@ -178,6 +179,7 @@ class CriadorViewModel : ViewModel() {
         state.compendioSciFiAtivo = compendioSciFiAtivo
         state.compendioTrilhadorAtivo = compendioTrilhadorAtivo
         state.compendioDeadlandsAtivo = compendioDeadlandsAtivo
+        state.compendioCrystalHeartAtivo = compendioCrystalHeartAtivo
         state.modoMonstroAtivo = modoMonstroAtivo
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
         state.modoSuperequip = modoSupers
@@ -189,6 +191,8 @@ class CriadorViewModel : ViewModel() {
         state.idAtual = null
         state.nomePersonagem = DEFAULT_CHARACTER_NAME
         state.anotacoes = ""
+
+        state.coracaoCrystalSelecionado = null
 
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
 
@@ -587,6 +591,14 @@ class CriadorViewModel : ViewModel() {
         // De novo: nada de recalcular atributos de criação aqui.
 
         return InvestResult(true, "Investimento revertido.")
+    }
+
+    fun selecionarCrystalHeart(heart: CrystalHeart) {
+        state.coracaoCrystalSelecionado = heart
+    }
+
+    fun desequiparCrystalHeart() {
+        state.coracaoCrystalSelecionado = null
     }
 
     /**

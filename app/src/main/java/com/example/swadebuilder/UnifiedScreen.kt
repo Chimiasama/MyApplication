@@ -40,6 +40,7 @@ import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
 import com.example.swadebuilder.ui.sections.ComplicacoesSection
+import com.example.swadebuilder.ui.sections.CrystalHeartSection
 import com.example.swadebuilder.ui.sections.EquipamentoSection
 import com.example.swadebuilder.ui.sections.PericiasContent
 import com.example.swadebuilder.ui.sections.PoderesSection
@@ -142,6 +143,8 @@ fun UnifiedScreen(
     var showAllocDialog by rememberSaveable { mutableStateOf(false) }
     var currentSlotIndex by rememberSaveable { mutableIntStateOf(-1) }
     val scrollState = rememberScrollState()
+
+    var expCrystalHeart by rememberSaveable { mutableStateOf(false) }
 
     // --- estados para o MEIO-ELFO ---
     var showMeioElfoDialog by rememberSaveable { mutableStateOf(false) }
@@ -379,6 +382,16 @@ fun UnifiedScreen(
                     multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
                     viewModel = viewModel
                 )
+            }
+
+            if (state.compendioCrystalHeartAtivo) {
+                 HorizontalDivider(thickness = 1.dp)
+                 CrystalHeartSection(
+                     state = state,
+                     viewModel = viewModel,
+                     expanded = expCrystalHeart,
+                     onToggle = { expCrystalHeart = !expCrystalHeart }
+                 )
             }
 
             PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes)
