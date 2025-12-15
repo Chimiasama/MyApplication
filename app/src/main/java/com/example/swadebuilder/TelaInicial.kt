@@ -338,7 +338,10 @@ fun TelaInicial(
             onDismissRequest = { showCreditsDialog = false },
             confirmButton = { TextButton(onClick = { showCreditsDialog = false }) { Text("Fechar") } },
             text = {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.verticalScroll(rememberScrollState())
+                ) {
                     Image(
                         painter = painterResource(id = R.drawable.sw_fan_logo),
                         contentDescription = "Savage Worlds Fan Logo",
@@ -346,12 +349,17 @@ fun TelaInicial(
                     )
                     Spacer(Modifier.height(16.dp))
                     Text(
-                        text = "Este jogo faz referência ao sistema de regras Savage Worlds... (Créditos completos mantidos)",
+                        text = """
+Este jogo faz referência ao sistema de regras Savage Worlds, disponibilizado mundialmente pela Pinnacle Entertainment Group (www.peginc.com) e no Brasil pela RetroPunk Publicações (www.retropunk.net).
+
+Savage Worlds e todas as suas logos e marcas associadas são de propriedade da Pinnacle Entertainment Group. Utilizadas com permissão. A Pinnacle e a RetroPunk não fazem nenhuma representação ou garantia quanto à qualidade, viabilidade ou adequação em relação a este produto.
+
+Feito por Rafael S.W.
+""".trimIndent(),
                         style = MaterialTheme.typography.bodySmall,
                         textAlign = TextAlign.Justify
                     )
                     Spacer(Modifier.height(8.dp))
-                    Text("Feito por Rafael S.W.", fontWeight = FontWeight.Bold)
                 }
             }
         )
