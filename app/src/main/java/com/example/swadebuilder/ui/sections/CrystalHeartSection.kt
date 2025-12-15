@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Diamond
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -112,7 +112,7 @@ fun CrystalHeartItem(heart: CrystalHeart, onClick: () -> Unit) {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Default.Diamond, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+            Icon(Icons.Default.Favorite, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
             Column(modifier = Modifier.padding(start = 16.dp)) {
                 Text(text = heart.nome, fontWeight = FontWeight.Bold)
                 Text(text = "PP: ${heart.pontos_poder} | Slots: ${heart.slots}", style = MaterialTheme.typography.bodySmall)

@@ -28,9 +28,9 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FolderOpen
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Map
@@ -268,7 +268,7 @@ fun TelaInicial(
                     ModuleToggle(
                         title = "Crystal Heart",
                         description = "Troque seu coração por um cristal mágico.",
-                        icon = Icons.Default.Diamond,
+                        icon = Icons.Default.Favorite,
                         checked = optCompendioCrystalHeart,
                         onCheckedChange = { optCompendioCrystalHeart = it }
                     )
