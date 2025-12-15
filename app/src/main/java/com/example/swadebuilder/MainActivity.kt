@@ -142,7 +142,8 @@ class MainActivity : ComponentActivity() {
             .bufferedReader()
             .use { it.readText() }
         val allEquipCategorias: List<EquipamentoCategoria> =
-            json.decodeFromString(allEquipJson) + this.loadJsonAsset("equipamentos_crystal.json")
+            json.decodeFromString(allEquipJson) +
+                    this.loadJsonAsset<List<EquipamentoCategoria>>("equipamentos_crystal.json")
 
         val equipamentoCategorias = allEquipCategorias.filter { cat ->
             cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
@@ -185,7 +186,8 @@ class MainActivity : ComponentActivity() {
         }
 
         val todasVantagens: List<Vantagem> =
-            this.loadJsonAsset("Vantagens.json") + this.loadJsonAsset("vantagens_crystal.json")
+            this.loadJsonAsset<List<Vantagem>>("Vantagens.json") +
+                    this.loadJsonAsset("vantagens_crystal.json")
 
         AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
         AppData.superVantagens = todasVantagens.filter {
@@ -205,7 +207,7 @@ class MainActivity : ComponentActivity() {
 
 
         val todasComplicacoes = this.loadJsonAsset<List<Complicacao>>("complicacoes.json") +
-            this.loadJsonAsset("complicacoes_crystal.json")
+            this.loadJsonAsset<List<Complicacao>>("complicacoes_crystal.json")
 
         listaComplicacoes = todasComplicacoes
 
@@ -245,7 +247,7 @@ class MainActivity : ComponentActivity() {
             .use { it.readText() }
         listaMonstroTemplates = json.decodeFromString(monstrosJson)
 
-        listaCoracoesCristal = this.loadJsonAsset("coracoes_crystal.json")
+        listaCoracoesCristal = this.loadJsonAsset<List<CoracaoCristal>>("coracoes_crystal.json")
 
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
             val m = rm.atributos

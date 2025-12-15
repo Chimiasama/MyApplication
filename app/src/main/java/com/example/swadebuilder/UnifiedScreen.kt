@@ -286,7 +286,7 @@ fun UnifiedScreen(
             } else {
                 // Default Progression View
                 ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
-                EquipamentoSection(
+                EquipamentoSectionHost(
                     state = state,
                     expanded = expEquip,
                     onToggle = onToggleEquip,
@@ -413,7 +413,7 @@ fun UnifiedScreen(
             HorizontalDivider(thickness = 1.dp)
 
             SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes)
-            EquipamentoSection(
+            EquipamentoSectionHost(
                 state = state,
                 expanded = expEquip,
                 onToggle = onToggleEquip,
@@ -587,12 +587,13 @@ private fun SuperPoderesSection(
 }
 
 @Composable
-private fun EquipamentoSection(
+private fun EquipamentoSectionHost(
     state: CriadorState,
     expanded: Boolean,
     onToggle: () -> Unit,
     equipamentoCategorias: List<EquipamentoCategoria>,
-    superequipCategorias: List<EquipamentoCategoria>
+    superequipCategorias: List<EquipamentoCategoria>,
+    compendioCrystalHeartAtivo: Boolean
 ) {
     val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
     val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
@@ -656,6 +657,7 @@ private fun EquipamentoSection(
         compendioSciFiAtivo = state.compendioSciFiAtivo,
         compendioTrilhadorAtivo = state.compendioTrilhadorAtivo,
         compendioDeadlandsAtivo = state.compendioDeadlandsAtivo,
+        compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
         modoOficialAtivo = state.modoOficialAtivo
     )
 }
