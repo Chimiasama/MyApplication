@@ -70,7 +70,7 @@ fun TelaInicial(
         modoSuperComplicacoes: Boolean,
         nasceUmHeroi: Boolean,
         heroisSemArmadura: Boolean,
-        expecializacaoPer: Boolean,
+        especializacaoPer: Boolean,
         semPontosDePoder: Boolean,
         grandesResponsabilidades: Boolean,
         showHelpMessages: Boolean
