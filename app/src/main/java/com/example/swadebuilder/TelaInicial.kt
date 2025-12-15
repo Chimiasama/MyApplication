@@ -9,14 +9,12 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -28,7 +26,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bolt
-import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
@@ -37,8 +34,6 @@ import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.RocketLaunch
-import androidx.compose.material.icons.filled.Science
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
@@ -46,11 +41,11 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -107,10 +102,10 @@ fun TelaInicial(
     var optMultiAntecedenteArcano by rememberSaveable { mutableStateOf(false) }
     var optEspecializacaoPer by rememberSaveable { mutableStateOf(false) }
     var optHeroiSemArmadura by rememberSaveable { mutableStateOf(false) }
-    var optMultiplosIdiomas by rememberSaveable { mutableStateOf(false) } // Added missing declaration
+    var optMultiplosIdiomas by rememberSaveable { mutableStateOf(false) }
     var optNasceUmHeroi by rememberSaveable { mutableStateOf(false) }
     var optSemPontosPoder by rememberSaveable { mutableStateOf(false) }
-    var optShowHelpMessages by rememberSaveable { mutableStateOf(false) }
+    // optShowHelpMessages removed from UI, defaulting to true or handled via settings
 
     // Supers
     var optSuperPoderes by rememberSaveable { mutableStateOf(false) }
@@ -180,7 +175,7 @@ fun TelaInicial(
                         optEspecializacaoPer,
                         optSemPontosPoder, // Fixed: purely positional
                         optGrandesResponsabilidades,
-                        optShowHelpMessages
+                        true // showHelpMessages defaulted to true (user can toggle in settings later)
                     )
                     // Set ViewModel states that are handled outside the creation lambda
                     viewModel.state.compendioTrilhadorAtivo = optCompendioTrilhador
@@ -235,9 +230,16 @@ fun TelaInicial(
                     ModuleToggle(
                         title = "Compêndio de Horror",
                         description = "Climas sombrios e criaturas aterrorizantes.",
-                        icon = Icons.Default.Warning, // Or Visibility off
+                        icon = Icons.Default.Warning,
                         checked = optCompendioHorror,
                         onCheckedChange = { optCompendioHorror = it }
+                    )
+                    ModuleToggle(
+                        title = "Superpoderes",
+                        description = "Ativa Compêndio de Superpoderes (SPC).",
+                        icon = Icons.Default.Bolt,
+                        checked = optSuperPoderes,
+                        onCheckedChange = { optSuperPoderes = it }
                     )
                     ModuleToggle(
                         title = "Compêndio de Sci-Fi",
@@ -256,60 +258,9 @@ fun TelaInicial(
                     ModuleToggle(
                         title = "Deadlands: O Oeste Estranho",
                         description = "Pistoleiros, Harroweds e o horror do Oeste.",
-                        icon = Icons.Default.Shield, // Sheriff badge metaphor
+                        icon = Icons.Default.Shield,
                         checked = optCompendioDeadlands,
                         onCheckedChange = { optCompendioDeadlands = it }
-                    )
-                }
-            }
-
-            // --- Modos de Jogo Section ---
-            item { SectionHeader("Modos Especiais") }
-
-            item {
-                Column(Modifier.padding(horizontal = 16.dp)) {
-                    ModuleToggle(
-                        title = "Superpoderes",
-                        description = "Ativa Compêndio de Superpoderes (SPC).",
-                        icon = Icons.Default.Bolt,
-                        checked = optSuperPoderes,
-                        onCheckedChange = { optSuperPoderes = it }
-                    )
-
-                    // Sub-options for Supers (conditionally visible or indented)
-                    AnimatedVisibility(
-                        visible = optSuperPoderes,
-                        enter = expandVertically() + fadeIn(),
-                        exit = shrinkVertically() + fadeOut()
-                    ) {
-                        Column(modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)) {
-                            SimpleCheckRow(
-                                title = "Grandes Responsabilidades",
-                                description = "Débitos de Poder adicionais.",
-                                checked = optGrandesResponsabilidades,
-                                onCheckedChange = { optGrandesResponsabilidades = it }
-                            )
-                            SimpleCheckRow(
-                                title = "Super Equipamentos",
-                                description = "Habilitar equipamentos de alta tecnologia.",
-                                checked = optSuperequipamentos,
-                                onCheckedChange = { optSuperequipamentos = it }
-                            )
-                            SimpleCheckRow(
-                                title = "Super Complicações",
-                                description = "Habilitar complicações específicas.",
-                                checked = optSuperComplicacoes,
-                                onCheckedChange = { optSuperComplicacoes = it }
-                            )
-                        }
-                    }
-
-                    ModuleToggle(
-                        title = "Monstros Heróis",
-                        description = "Jogar como vampiro, lobisomem, etc. (Horror).",
-                        icon = Icons.Default.BugReport,
-                        checked = optModoMonstro,
-                        onCheckedChange = { optModoMonstro = it }
                     )
                 }
             }
@@ -346,6 +297,14 @@ fun TelaInicial(
 
                         if (expandedRules) {
                             Spacer(Modifier.height(8.dp))
+
+                            // Regras Básico
+                            Text(
+                                "Livro Básico",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(vertical = 4.dp)
+                            )
                             SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
                             SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
                             SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) { optMultiAntecedenteArcano = it }
@@ -354,7 +313,56 @@ fun TelaInicial(
                             SimpleCheckRow("Múltiplos Idiomas", "Personagem inicia poliglota.", optMultiplosIdiomas) { optMultiplosIdiomas = it }
                             SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
                             SimpleCheckRow("Sem Pontos de Poder", "Conjuradores não usam PP.", optSemPontosPoder) { optSemPontosPoder = it }
-                            SimpleCheckRow("Mensagens de Ajuda", "Dicas durante a criação.", optShowHelpMessages) { optShowHelpMessages = it }
+
+                            // Regras Horror
+                            if (optCompendioHorror) {
+                                Spacer(Modifier.height(8.dp))
+                                Divider(color = MaterialTheme.colorScheme.outlineVariant)
+                                Spacer(Modifier.height(8.dp))
+                                Text(
+                                    "Horror",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.padding(vertical = 4.dp)
+                                )
+                                SimpleCheckRow(
+                                    title = "Monstros Heróis",
+                                    description = "Jogar como vampiro, lobisomem, etc.",
+                                    checked = optModoMonstro,
+                                    onCheckedChange = { optModoMonstro = it }
+                                )
+                            }
+
+                            // Regras Supers
+                            if (optSuperPoderes) {
+                                Spacer(Modifier.height(8.dp))
+                                Divider(color = MaterialTheme.colorScheme.outlineVariant)
+                                Spacer(Modifier.height(8.dp))
+                                Text(
+                                    "Superpoderes",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.padding(vertical = 4.dp)
+                                )
+                                SimpleCheckRow(
+                                    title = "Grandes Responsabilidades",
+                                    description = "Débitos de Poder adicionais.",
+                                    checked = optGrandesResponsabilidades,
+                                    onCheckedChange = { optGrandesResponsabilidades = it }
+                                )
+                                SimpleCheckRow(
+                                    title = "Super Equipamentos",
+                                    description = "Habilitar equipamentos de alta tecnologia.",
+                                    checked = optSuperequipamentos,
+                                    onCheckedChange = { optSuperequipamentos = it }
+                                )
+                                SimpleCheckRow(
+                                    title = "Super Complicações",
+                                    description = "Habilitar complicações específicas.",
+                                    checked = optSuperComplicacoes,
+                                    onCheckedChange = { optSuperComplicacoes = it }
+                                )
+                            }
                         }
                     }
                 }

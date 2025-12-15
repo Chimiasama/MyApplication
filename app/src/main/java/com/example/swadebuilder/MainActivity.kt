@@ -37,6 +37,7 @@ import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FolderOpen
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Print
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Save
@@ -45,6 +46,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -57,6 +59,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -279,7 +282,8 @@ class MainActivity : ComponentActivity() {
             var showExitDialog     by rememberSaveable { mutableStateOf(false) }
 
             var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
-            var showThemeDialog by rememberSaveable { mutableStateOf(false) }
+            var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
+            var showThemeSelectionDialog by rememberSaveable { mutableStateOf(false) }
 
             var showSaveDialog by rememberSaveable { mutableStateOf(false) }
             var showLoadDialog by rememberSaveable { mutableStateOf(false) }
@@ -320,7 +324,52 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            if (showThemeDialog) {
+            // -- Settings Dialog --
+            if (showSettingsDialog) {
+                AlertDialog(
+                    onDismissRequest = { showSettingsDialog = false },
+                    title = { Text("Configurações") },
+                    text = {
+                        Column {
+                            // Help Messages Toggle
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { state.showHelpMessages = !state.showHelpMessages }
+                                    .padding(vertical = 8.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text("Mensagens de Ajuda")
+                                Switch(
+                                    checked = state.showHelpMessages,
+                                    onCheckedChange = { state.showHelpMessages = it }
+                                )
+                            }
+
+                            Divider(modifier = Modifier.padding(vertical = 8.dp))
+
+                            // Theme Selection Button
+                            TextButton(
+                                onClick = { showThemeSelectionDialog = true },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(Icons.Default.Palette, contentDescription = null)
+                                Spacer(Modifier.width(8.dp))
+                                Text("Mudar Tema do App")
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { showSettingsDialog = false }) {
+                            Text("Fechar")
+                        }
+                    }
+                )
+            }
+
+            // -- Nested Theme Selection Dialog --
+            if (showThemeSelectionDialog) {
                 val themeNames = remember {
                     mapOf(
                         com.example.swadebuilder.ui.theme.AppTheme.DEFAULT   to "Padrão",
@@ -335,7 +384,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 AlertDialog(
-                    onDismissRequest = { showThemeDialog = false },
+                    onDismissRequest = { showThemeSelectionDialog = false },
                     title = { Text(stringResource(R.string.select_theme)) },
                     text = {
                         LazyColumn {
@@ -343,7 +392,8 @@ class MainActivity : ComponentActivity() {
                                 TextButton(
                                     onClick = {
                                         criadorViewModel.setAppTheme(theme)
-                                        showThemeDialog = false
+                                        showThemeSelectionDialog = false
+                                        // Also close main settings if desired? keeping open for now.
                                     },
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
@@ -353,7 +403,7 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     confirmButton = {
-                        TextButton(onClick = { showThemeDialog = false }) {
+                        TextButton(onClick = { showThemeSelectionDialog = false }) {
                             Text(stringResource(R.string.cancel))
                         }
                     }
@@ -639,7 +689,7 @@ class MainActivity : ComponentActivity() {
                                                 Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
                                             }
 
-                                            IconButton(onClick = { showThemeDialog = true }) {
+                                            IconButton(onClick = { showSettingsDialog = true }) {
                                                 Icon(Icons.Default.Settings, contentDescription = "Change Theme")
                                             }
                                         }
