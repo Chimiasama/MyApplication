@@ -791,7 +791,7 @@ data class Pericia(val nome: String, val atributo: String, val basica: Boolean)
 
 var listaComplicacoes: List<Complicacao> = emptyList()
 
-lateinit var listaCoracoesCrystal: List<CrystalHeart>
+var listaCoracoesCrystal: List<CrystalHeart> = emptyList()
 
 @Serializable
 data class SuperPoder(
