@@ -22,11 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.listaCoracoesCrystal
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.CrystalHeart
+import com.example.swadebuilder.ui.components.SectionCard
 
 @Composable
 fun CrystalHeartSection(
@@ -35,10 +35,11 @@ fun CrystalHeartSection(
     expanded: Boolean,
     onToggle: () -> Unit
 ) {
-    CollapsibleSection(
+    SectionCard(
         title = "Coração de Cristal",
         expanded = expanded,
-        onToggle = onToggle
+        onToggle = onToggle,
+        icon = Icons.Default.Favorite
     ) {
         val temAgenteSyn = state.vantagensSelecionadas.any { it.id == "aa_agente_syn" }
 

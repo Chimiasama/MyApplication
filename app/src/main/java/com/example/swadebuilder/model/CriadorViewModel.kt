@@ -221,6 +221,14 @@ class CriadorViewModel : ViewModel() {
             }
         }
 
+        if (state.compendioCrystalHeartAtivo) {
+            listaVantagens.firstOrNull { it.id == "aa_agente_syn" }?.let { aa ->
+                if (state.vantagensSelecionadas.none { it.id == "aa_agente_syn" }) {
+                    state.vantagensSelecionadas.add(aa)
+                }
+            }
+        }
+
         state.equipamentosComprados.clear()
 
         state.pontosComplicacaoGastos = 0
