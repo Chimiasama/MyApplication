@@ -10,6 +10,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,7 +42,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -105,13 +105,10 @@ fun TelaInicial(
     var optMultiplosIdiomas by rememberSaveable { mutableStateOf(false) }
     var optNasceUmHeroi by rememberSaveable { mutableStateOf(false) }
     var optSemPontosPoder by rememberSaveable { mutableStateOf(false) }
-    // optShowHelpMessages removed from UI, defaulting to true or handled via settings
 
     // Supers
     var optSuperPoderes by rememberSaveable { mutableStateOf(false) }
-    // These were hidden in previous UI but passed to callback. Exposing them now.
-    var optSuperequipamentos by rememberSaveable { mutableStateOf(false) }
-    var optSuperComplicacoes by rememberSaveable { mutableStateOf(false) }
+    // optSuperequipamentos and optSuperComplicacoes removed (now auto-enabled with optSuperPoderes)
     var optGrandesResponsabilidades by rememberSaveable { mutableStateOf(false) }
 
     // Horror
@@ -131,7 +128,9 @@ fun TelaInicial(
     var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
 
     // UI Expansion States
-    var expandedRules by rememberSaveable { mutableStateOf(false) }
+    var expandedBasicRules by rememberSaveable { mutableStateOf(false) }
+    var expandedHorrorRules by rememberSaveable { mutableStateOf(false) }
+    var expandedSupersRules by rememberSaveable { mutableStateOf(false) }
 
 
     Scaffold(
@@ -168,14 +167,14 @@ fun TelaInicial(
                         optCompendioTrilhador,
                         optCompendioDeadlands,
                         optModoMonstro,
-                        optSuperequipamentos,
-                        optSuperComplicacoes,
+                        optSuperPoderes, // superequipamentos enabled if supers enabled
+                        optSuperPoderes, // supercomplicacoes enabled if supers enabled
                         optNasceUmHeroi,
                         optHeroiSemArmadura,
                         optEspecializacaoPer,
-                        optSemPontosPoder, // Fixed: purely positional
+                        optSemPontosPoder,
                         optGrandesResponsabilidades,
-                        true // showHelpMessages defaulted to true (user can toggle in settings later)
+                        true // showHelpMessages defaulted to true
                     )
                     // Set ViewModel states that are handled outside the creation lambda
                     viewModel.state.compendioTrilhadorAtivo = optCompendioTrilhador
@@ -265,104 +264,62 @@ fun TelaInicial(
                 }
             }
 
-            // --- Regras da Mesa (Collapsible) ---
+            // --- Regras da Mesa (Collapsible Sections) ---
             item { SectionHeader("Regras de Criação") }
 
             item {
-                Card(
-                    modifier = Modifier
+                Column(
+                    Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .clickable { expandedRules = !expandedRules },
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                    )
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Column(Modifier.padding(12.dp)) {
-                        Row(
-                            Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                    // Livro Básico
+                    RuleGroupCard(
+                        title = "Regras: Livro Básico",
+                        expanded = expandedBasicRules,
+                        onToggle = { expandedBasicRules = !expandedBasicRules }
+                    ) {
+                        SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
+                        SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
+                        SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) { optMultiAntecedenteArcano = it }
+                        SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
+                        SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
+                        SimpleCheckRow("Múltiplos Idiomas", "Personagem inicia poliglota.", optMultiplosIdiomas) { optMultiplosIdiomas = it }
+                        SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
+                        SimpleCheckRow("Sem Pontos de Poder", "Conjuradores não usam PP.", optSemPontosPoder) { optSemPontosPoder = it }
+                    }
+
+                    // Regras Horror
+                    if (optCompendioHorror) {
+                        RuleGroupCard(
+                            title = "Regras: Horror",
+                            expanded = expandedHorrorRules,
+                            onToggle = { expandedHorrorRules = !expandedHorrorRules }
                         ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(Icons.Default.Build, null, modifier = Modifier.size(20.dp))
-                                Spacer(Modifier.width(8.dp))
-                                Text("Ajustes de Regras e Opções", fontWeight = FontWeight.SemiBold)
-                            }
-                            Icon(
-                                if (expandedRules) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                                null
+                            SimpleCheckRow(
+                                title = "Monstros Heróis",
+                                description = "Jogar como vampiro, lobisomem, etc.",
+                                checked = optModoMonstro,
+                                onCheckedChange = { optModoMonstro = it }
                             )
                         }
+                    }
 
-                        if (expandedRules) {
-                            Spacer(Modifier.height(8.dp))
-
-                            // Regras Básico
-                            Text(
-                                "Livro Básico",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(vertical = 4.dp)
+                    // Regras Supers
+                    if (optSuperPoderes) {
+                        RuleGroupCard(
+                            title = "Regras: Superpoderes",
+                            expanded = expandedSupersRules,
+                            onToggle = { expandedSupersRules = !expandedSupersRules }
+                        ) {
+                            SimpleCheckRow(
+                                title = "Grandes Responsabilidades",
+                                description = "Débitos de Poder adicionais.",
+                                checked = optGrandesResponsabilidades,
+                                onCheckedChange = { optGrandesResponsabilidades = it }
                             )
-                            SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
-                            SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
-                            SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) { optMultiAntecedenteArcano = it }
-                            SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
-                            SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
-                            SimpleCheckRow("Múltiplos Idiomas", "Personagem inicia poliglota.", optMultiplosIdiomas) { optMultiplosIdiomas = it }
-                            SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
-                            SimpleCheckRow("Sem Pontos de Poder", "Conjuradores não usam PP.", optSemPontosPoder) { optSemPontosPoder = it }
-
-                            // Regras Horror
-                            if (optCompendioHorror) {
-                                Spacer(Modifier.height(8.dp))
-                                Divider(color = MaterialTheme.colorScheme.outlineVariant)
-                                Spacer(Modifier.height(8.dp))
-                                Text(
-                                    "Horror",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.padding(vertical = 4.dp)
-                                )
-                                SimpleCheckRow(
-                                    title = "Monstros Heróis",
-                                    description = "Jogar como vampiro, lobisomem, etc.",
-                                    checked = optModoMonstro,
-                                    onCheckedChange = { optModoMonstro = it }
-                                )
-                            }
-
-                            // Regras Supers
-                            if (optSuperPoderes) {
-                                Spacer(Modifier.height(8.dp))
-                                Divider(color = MaterialTheme.colorScheme.outlineVariant)
-                                Spacer(Modifier.height(8.dp))
-                                Text(
-                                    "Superpoderes",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.padding(vertical = 4.dp)
-                                )
-                                SimpleCheckRow(
-                                    title = "Grandes Responsabilidades",
-                                    description = "Débitos de Poder adicionais.",
-                                    checked = optGrandesResponsabilidades,
-                                    onCheckedChange = { optGrandesResponsabilidades = it }
-                                )
-                                SimpleCheckRow(
-                                    title = "Super Equipamentos",
-                                    description = "Habilitar equipamentos de alta tecnologia.",
-                                    checked = optSuperequipamentos,
-                                    onCheckedChange = { optSuperequipamentos = it }
-                                )
-                                SimpleCheckRow(
-                                    title = "Super Complicações",
-                                    description = "Habilitar complicações específicas.",
-                                    checked = optSuperComplicacoes,
-                                    onCheckedChange = { optSuperComplicacoes = it }
-                                )
-                            }
+                            // Superequipamentos and Supercomplicacoes are now implied by the module itself
                         }
                     }
                 }
@@ -426,6 +383,45 @@ Este app ajuda você a criar personagens de Savage Worlds passo a passo.
                 }
             }
         )
+    }
+}
+
+@Composable
+fun RuleGroupCard(
+    title: String,
+    expanded: Boolean,
+    onToggle: () -> Unit,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onToggle() },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        )
+    ) {
+        Column(Modifier.padding(12.dp)) {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.Build, null, modifier = Modifier.size(20.dp))
+                    Spacer(Modifier.width(8.dp))
+                    Text(title, fontWeight = FontWeight.SemiBold)
+                }
+                Icon(
+                    if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                    null
+                )
+            }
+            if (expanded) {
+                Spacer(Modifier.height(8.dp))
+                content()
+            }
+        }
     }
 }
 
