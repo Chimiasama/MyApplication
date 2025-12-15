@@ -394,7 +394,9 @@ fun UnifiedScreen(
                  )
             }
 
-            PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes)
+            if (!state.compendioCrystalHeartAtivo) {
+                PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes)
+            }
 
             Spacer(Modifier.height(8.dp))
             HorizontalDivider(thickness = 1.dp)

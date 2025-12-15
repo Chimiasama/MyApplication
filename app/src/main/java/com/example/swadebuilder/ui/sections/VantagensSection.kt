@@ -213,7 +213,7 @@ fun VantagensContent(
         }
     }
 
-    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioTrilhadorAtivo, state.compendioDeadlandsAtivo) {
+    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioTrilhadorAtivo, state.compendioDeadlandsAtivo, state.compendioCrystalHeartAtivo) {
         listaVantagens.filter { vant ->
             val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase()
             val isBasico = origemNorm == "BASICO"
@@ -222,6 +222,17 @@ fun VantagensContent(
             val isHorror = origemNorm == "HORROR"
             val isTrilhador = origemNorm == "FANTASIA_TRILHADOR"
             val isDeadlands = origemNorm == "DEADLANDS"
+
+            if (state.compendioCrystalHeartAtivo) {
+                // If Crystal Heart is active, hide "Antecedente Arcano" if it's not "Agente da Syn"
+                // But we actually only have "aa_agente_syn" granted automatically.
+                // The user wants to hide the selection list for Arcane Backgrounds because they already have one.
+                // However, they might still want to see OTHER advantages.
+                // The request says: "a vantagem antecedente arcano pode sumir da lista dele seleção"
+                if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
+                     return@filter false
+                }
+            }
 
             // Allow filtering logic to work properly: include items if their compendium is active OR if they are basic.
             // But we also need to allow users to filter via the dialog even if the compendium is active.
