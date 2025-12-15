@@ -142,7 +142,7 @@ class MainActivity : ComponentActivity() {
             .bufferedReader()
             .use { it.readText() }
         val allEquipCategorias: List<EquipamentoCategoria> =
-            json.decodeFromString(allEquipJson) +
+            json.decodeFromString<List<EquipamentoCategoria>>(allEquipJson) +
                     this.loadJsonAsset<List<EquipamentoCategoria>>("equipamentos_crystal.json")
 
         val equipamentoCategorias = allEquipCategorias.filter { cat ->
@@ -157,12 +157,12 @@ class MainActivity : ComponentActivity() {
             .bufferedReader()
             .use { it.readText() }
         val listaSuperPoderes: List<SuperPoder> =
-            json.decodeFromString(superPoderesJson)
+            json.decodeFromString<List<SuperPoder>>(superPoderesJson)
 
         val arcanoJson = assets.open("arcano_info.json")
             .bufferedReader().use { it.readText() }
         val arcanoList: List<ArcanoInfo> =
-            json.decodeFromString(arcanoJson)
+            json.decodeFromString<List<ArcanoInfo>>(arcanoJson)
         arcanoInfo = arcanoList.associate {
             it.key
                 .uppercase()
@@ -187,7 +187,7 @@ class MainActivity : ComponentActivity() {
 
         val todasVantagens: List<Vantagem> =
             this.loadJsonAsset<List<Vantagem>>("Vantagens.json") +
-                    this.loadJsonAsset("vantagens_crystal.json")
+                    this.loadJsonAsset<List<Vantagem>>("vantagens_crystal.json")
 
         AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
         AppData.superVantagens = todasVantagens.filter {
