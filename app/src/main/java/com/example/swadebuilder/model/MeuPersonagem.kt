@@ -59,5 +59,6 @@ data class MeuPersonagem(
     val anotacoes: String = "",
 
     val soldadoCargaAtivo: Boolean = true,
-    val modoOficialAtivo: Boolean = false
+    val modoOficialAtivo: Boolean = false,
+    val compendioArteDaGuerraAtivo: Boolean = false
 )
