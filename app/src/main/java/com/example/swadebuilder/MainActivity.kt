@@ -45,7 +45,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -95,21 +94,21 @@ import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.loadJsonAsset
+import com.example.swadebuilder.model.loadOptionalList
+import com.example.swadebuilder.model.sharedJson
 import com.example.swadebuilder.ui.dialogs.AjudaDialog
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.text.DateFormat
-
 
 @Serializable
 data class ArcanoInfo(
@@ -120,10 +119,6 @@ data class ArcanoInfo(
 )
 
 lateinit var arcanoInfo: Map<String, Triple<Int, Int, String>>
-
-private val json = Json {
-    ignoreUnknownKeys = true
-}
 
 private const val MULTIPLOS_AA_HABILITADOS: Boolean = false
 
@@ -137,224 +132,128 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val allEquipJson = assets
-            .open("equipamentos.json")
-            .bufferedReader()
-            .use { it.readText() }
+        // --- LOAD EQUIPMENT ---
         val allEquipCategorias: List<EquipamentoCategoria> =
-            json.decodeFromString(allEquipJson)
+            this.loadJsonAsset("equipamentos.json")
 
-        val crystalEquipJson = try {
-            assets.open("equipamentos_crystal.json")
-                .bufferedReader()
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        val crystalEquipCategorias: List<EquipamentoCategoria> = json.decodeFromString(crystalEquipJson)
+        // Helper list of expansion files to load optional equipment from
+        val expansionEquipFiles = listOf(
+            "equipamentos_crystal.json",
+            "equipamentos_adg.json",
+            "equipamentos_sol_vapor.json",
+            "equipamentos_wiseguys.json"
+        )
+        val loadedExpansionEquip = expansionEquipFiles.flatMap {
+            this.loadOptionalList<EquipamentoCategoria>(it)
+        }
 
-        val adgEquipJson = try {
-            assets.open("equipamentos_adg.json")
-                .bufferedReader()
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        val adgEquipCategorias: List<EquipamentoCategoria> = json.decodeFromString(adgEquipJson)
+        // Merge Base + Expansions
+        val mergedEquipCategorias = allEquipCategorias + loadedExpansionEquip
 
-        val cidadeSolVaporEquipJson = try {
-            assets.open("equipamentos_sol_vapor.json")
-                .bufferedReader()
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        val cidadeSolVaporCategorias: List<EquipamentoCategoria> = json.decodeFromString(cidadeSolVaporEquipJson)
-
-        val wiseguysEquipJson = try {
-            assets.open("equipamentos_wiseguys.json")
-                .bufferedReader()
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        val wiseguysEquipCategorias: List<EquipamentoCategoria> = json.decodeFromString(wiseguysEquipJson)
-
-        val equipamentoCategorias = (allEquipCategorias + crystalEquipCategorias + adgEquipCategorias + cidadeSolVaporCategorias + wiseguysEquipCategorias).filter { cat ->
+        val equipamentoCategorias = mergedEquipCategorias.filter { cat ->
             cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
         }
-        val superequipCategorias = allEquipCategorias.filter { cat ->
+        val superequipCategorias = mergedEquipCategorias.filter { cat ->
             cat.origem?.equals("super", ignoreCase = true) ?: false
         }
 
-        val crystalHeartsJson = try {
-            assets.open("coracoes_crystal.json")
-                .bufferedReader()
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        listaCoracoesCrystal = json.decodeFromString(crystalHeartsJson)
+        // --- LOAD CRYSTAL HEARTS ---
+        listaCoracoesCrystal = this.loadOptionalList("coracoes_crystal.json")
 
-        val superPoderesJson = assets
-            .open("superpoderes.json")
-            .bufferedReader()
-            .use { it.readText() }
+        // --- LOAD SUPERPOWERS ---
         val listaSuperPoderes: List<SuperPoder> =
-            json.decodeFromString(superPoderesJson)
+            this.loadJsonAsset("superpoderes.json")
 
-        val arcanoJson = assets.open("arcano_info.json")
-            .bufferedReader().use { it.readText() }
-        val arcanoList: List<ArcanoInfo> =
-            json.decodeFromString(arcanoJson)
+        // --- LOAD ARCANE INFO ---
+        val arcanoList: List<ArcanoInfo> = this.loadJsonAsset("arcano_info.json")
         arcanoInfo = arcanoList.associate {
-            it.key
-                .uppercase()
-                .semAcentos()
-                .trim() to Triple(it.slots, it.pp, it.foco)
+            it.key.uppercase().semAcentos().trim() to Triple(it.slots, it.pp, it.foco)
         }
 
+        // --- LOAD ATTRIBUTES ---
         val atributosData = this.loadJsonAsset<AtributoList>("atributos.json")
-        listaAtributos = atributosData.atributos
-            .map { it.nome.keyify() }
-        mapaAtributosDisplay = atributosData.atributos
-            .associate { it.nome.keyify() to it.nome }
+        listaAtributos = atributosData.atributos.map { it.nome.keyify() }
+        mapaAtributosDisplay = atributosData.atributos.associate { it.nome.keyify() to it.nome }
 
+        // --- LOAD SKILLS ---
         val periciasData = this.loadJsonAsset<PericiaList>("pericias.json")
         listaPericias = periciasData.pericias.map { pj ->
             Pericia(
-                nome     = pj.nome,
+                nome = pj.nome,
                 atributo = pj.atributo.uppercase().semAcentos(),
-                basica   = pj.basica
+                basica = pj.basica
             )
         }
 
+        // --- LOAD ADVANTAGES ---
         val todasVantagens: List<Vantagem> = this.loadJsonAsset("Vantagens.json")
 
-        val vantagensAdg = try {
-            val txt = assets.open("vantagens_adg.json").bufferedReader().use { it.readText() }
-            json.decodeFromString<List<Vantagem>>(txt)
-        } catch (_: Exception) { emptyList() }
+        val expansionVantageFiles = listOf(
+            "vantagens_adg.json",
+            "vantagens_sol_vapor.json",
+            "vantagens_wiseguys.json",
+            "vantagens_crystal.json"
+        )
+        val loadedExpansionVantages = expansionVantageFiles.flatMap {
+            this.loadOptionalList<Vantagem>(it)
+        }
+        listaVantagens = todasVantagens + loadedExpansionVantages
 
-        val vantagensCidadeSolVapor = try {
-            val txt = assets.open("vantagens_sol_vapor.json").bufferedReader().use { it.readText() }
-            json.decodeFromString<List<Vantagem>>(txt)
-        } catch (_: Exception) { emptyList() }
-
-        val vantagensWiseguys = try {
-            val txt = assets.open("vantagens_wiseguys.json").bufferedReader().use { it.readText() }
-            json.decodeFromString<List<Vantagem>>(txt)
-        } catch (_: Exception) { emptyList() }
-
+        // Populate AppData filtered lists
         AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
-        AppData.superVantagens = todasVantagens.filter {
-            it.origem.equals("SUPER", ignoreCase = true)
-        }
-
-        AppData.horrorVantagens = todasVantagens.filter {
-            it.origem.equals("HORROR", ignoreCase = true)
-        }
-        AppData.trilhadorVantagens = todasVantagens.filter {
-            it.origem.equals("TRILHADOR", ignoreCase = true)
-        }
-
-        val vantCrystal = try {
-             val txt = assets.open("vantagens_crystal.json").bufferedReader().use { it.readText() }
-             json.decodeFromString<List<Vantagem>>(txt)
-        } catch (_: Exception) { emptyList() }
-
-        listaVantagens = todasVantagens + vantCrystal + vantagensAdg + vantagensCidadeSolVapor + vantagensWiseguys
-
+        AppData.superVantagens = todasVantagens.filter { it.origem.equals("SUPER", true) }
+        AppData.horrorVantagens = todasVantagens.filter { it.origem.equals("HORROR", true) }
+        AppData.trilhadorVantagens = todasVantagens.filter { it.origem.equals("TRILHADOR", true) }
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
-
+        // --- LOAD COMPLICATIONS ---
         val todasComplicacoes = this.loadJsonAsset<List<Complicacao>>("complicacoes.json")
+        val expansionCompFiles = listOf(
+            "complicacoes_crystal.json",
+            "complicacoes_adg.json",
+            "complicacoes_sol_vapor.json",
+            "complicacoes_wiseguys.json"
+        )
+        val loadedExpansionComps = expansionCompFiles.flatMap {
+            this.loadOptionalList<Complicacao>(it)
+        }
+        listaComplicacoes = todasComplicacoes + loadedExpansionComps
 
-        val compCrystal = try {
-            val txt = assets.open("complicacoes_crystal.json").bufferedReader().use { it.readText() }
-            json.decodeFromString<List<Complicacao>>(txt)
-        } catch (_: Exception) { emptyList() }
+        // --- LOAD ANCESTRIES ---
+        // Note: Ancestries are heterogeneous (some standard, some expansions).
+        // Standard "listaancestralidade.json" loads into `ancsBase`.
+        // Others load into specific lists.
+        val ancsBase = this.loadJsonAsset<List<RacialModifier>>("listaancestralidade.json")
 
-        val compAdg = try {
-            val txt = assets.open("complicacoes_adg.json").bufferedReader().use { it.readText() }
-            json.decodeFromString<List<Complicacao>>(txt)
-        } catch (_: Exception) { emptyList() }
+        val expansionAncestryFiles = listOf(
+            "ancestralidades_trilhador.json",
+            "ancestralidades_sci_fi.json",
+            "ancestralidades_deadlands.json",
+            "ancestralidades_crystal.json",
+            "ancestralidades_adg.json",
+            "ancestralidades_sol_vapor.json",
+            "ancestralidades_wiseguys.json"
+        )
+        val loadedExpansionAncs = expansionAncestryFiles.flatMap {
+            this.loadOptionalList<RacialModifier>(it)
+        }
 
-        val compCidadeSolVapor = try {
-            val txt = assets.open("complicacoes_sol_vapor.json").bufferedReader().use { it.readText() }
-            json.decodeFromString<List<Complicacao>>(txt)
-        } catch (_: Exception) { emptyList() }
+        listaAncestralidadesJson = ancsBase + loadedExpansionAncs
 
-        val compWiseguys = try {
-            val txt = assets.open("complicacoes_wiseguys.json").bufferedReader().use { it.readText() }
-            json.decodeFromString<List<Complicacao>>(txt)
-        } catch (_: Exception) { emptyList() }
+        // --- LOAD MONSTERS ---
+        listaMonstroTemplates = this.loadJsonAsset("monstros.json")
 
-        listaComplicacoes = todasComplicacoes + compCrystal + compAdg + compCidadeSolVapor + compWiseguys
-
-        val ancestralRaw = assets.open("listaancestralidade.json")
-            .bufferedReader(Charsets.UTF_8)
-            .use { it.readText() }
-
-        val ancestralTrilhadorRaw = try {
-            assets.open("ancestralidades_trilhador.json")
-                .bufferedReader(Charsets.UTF_8)
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val ancestralSciFiRaw = try {
-            assets.open("ancestralidades_sci_fi.json")
-                .bufferedReader(Charsets.UTF_8)
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val ancestralDeadlandsRaw = try {
-            assets.open("ancestralidades_deadlands.json")
-                .bufferedReader(Charsets.UTF_8)
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val ancestralAdgRaw = try {
-            assets.open("ancestralidades_adg.json")
-                .bufferedReader(Charsets.UTF_8)
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val ancestralCrystalRaw = try {
-            assets.open("ancestralidades_crystal.json")
-                .bufferedReader(Charsets.UTF_8)
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val ancestralCidadeSolVaporRaw = try {
-            assets.open("ancestralidades_sol_vapor.json")
-                .bufferedReader(Charsets.UTF_8)
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val ancestralWiseguysRaw = try {
-            assets.open("ancestralidades_wiseguys.json")
-                .bufferedReader(Charsets.UTF_8)
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val ancsBase = json.decodeFromString<List<RacialModifier>>(ancestralRaw)
-        val ancsTrilhador = json.decodeFromString<List<RacialModifier>>(ancestralTrilhadorRaw)
-        val ancsSciFi = json.decodeFromString<List<RacialModifier>>(ancestralSciFiRaw)
-        val ancsDeadlands = json.decodeFromString<List<RacialModifier>>(ancestralDeadlandsRaw)
-        val ancsCrystal = json.decodeFromString<List<RacialModifier>>(ancestralCrystalRaw)
-        val ancsAdg = json.decodeFromString<List<RacialModifier>>(ancestralAdgRaw)
-        val ancsCidadeSolVapor = json.decodeFromString<List<RacialModifier>>(ancestralCidadeSolVaporRaw)
-        val ancsWiseguys = json.decodeFromString<List<RacialModifier>>(ancestralWiseguysRaw)
-
-        listaAncestralidadesJson = ancsBase + ancsTrilhador + ancsSciFi + ancsDeadlands + ancsCrystal + ancsAdg + ancsCidadeSolVapor + ancsWiseguys
-
-        val monstrosJson = assets
-            .open("monstros.json")
-            .bufferedReader()
-            .use { it.readText() }
-        listaMonstroTemplates = json.decodeFromString(monstrosJson)
-
+        // --- PROCESS DERIVED DATA ---
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
             val m = rm.atributos
-                .mapKeys   { it.key.keyify() }
+                .mapKeys { it.key.keyify() }
                 .mapValues { 4 + it.value }
             rm.nome.keyify() to m
         }
 
         racialSkillStartMap = listaAncestralidadesJson.associate { rm ->
             val m = rm.pericias
-                .mapKeys   { it.key.keyify() }
+                .mapKeys { it.key.keyify() }
                 .mapValues { 4 + it.value }
             rm.nome.keyify() to m
         }
@@ -368,22 +267,22 @@ class MainActivity : ComponentActivity() {
 
             var creationSession by rememberSaveable { mutableIntStateOf(0) }
 
-            var expAncs    by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var expComps   by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var expEquip   by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expAncs by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expComps by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expEquip by rememberSaveable(creationSession) { mutableStateOf(false) }
 
-            var expAttrs   by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var expPer     by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var expVants   by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expAttrs by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expPer by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expVants by rememberSaveable(creationSession) { mutableStateOf(false) }
             var expPoderes by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var expResumo  by rememberSaveable(creationSession) { mutableStateOf(false) }
+            var expResumo by rememberSaveable(creationSession) { mutableStateOf(false) }
             var expXp by rememberSaveable(creationSession) { mutableStateOf(false) }
             var expMonstro by rememberSaveable(creationSession) { mutableStateOf(false) }
 
             val context = LocalContext.current
             val activity = (context as? ComponentActivity)
             var mostrouTelaInicial by rememberSaveable { mutableStateOf(true) }
-            var showExitDialog     by rememberSaveable { mutableStateOf(false) }
+            var showExitDialog by rememberSaveable { mutableStateOf(false) }
 
             var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
             var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
@@ -476,13 +375,13 @@ class MainActivity : ComponentActivity() {
             if (showThemeSelectionDialog) {
                 val themeNames = remember {
                     mapOf(
-                        com.example.swadebuilder.ui.theme.AppTheme.DEFAULT   to "Padrão",
-                        com.example.swadebuilder.ui.theme.AppTheme.MEDIEVAL  to "Medieval",
+                        com.example.swadebuilder.ui.theme.AppTheme.DEFAULT to "Padrão",
+                        com.example.swadebuilder.ui.theme.AppTheme.MEDIEVAL to "Medieval",
                         com.example.swadebuilder.ui.theme.AppTheme.CYBERPUNK to "Cyberpunk",
-                        com.example.swadebuilder.ui.theme.AppTheme.WW2       to "Segunda Guerra",
-                        com.example.swadebuilder.ui.theme.AppTheme.HORROR    to "Horror",
-                        com.example.swadebuilder.ui.theme.AppTheme.SCIFI     to "Sci-Fi",
-                        com.example.swadebuilder.ui.theme.AppTheme.PRIDE     to "Pride",
+                        com.example.swadebuilder.ui.theme.AppTheme.WW2 to "Segunda Guerra",
+                        com.example.swadebuilder.ui.theme.AppTheme.HORROR to "Horror",
+                        com.example.swadebuilder.ui.theme.AppTheme.SCIFI to "Sci-Fi",
+                        com.example.swadebuilder.ui.theme.AppTheme.PRIDE to "Pride",
                         com.example.swadebuilder.ui.theme.AppTheme.HALLOWEEN to "Halloween"
                     )
                 }
@@ -606,7 +505,10 @@ class MainActivity : ComponentActivity() {
                                         }
                                         Row {
                                             TextButton(onClick = { entryToDelete = entry }) {
-                                                Icon(Icons.Default.Delete, contentDescription = "Apagar personagem")
+                                                Icon(
+                                                    Icons.Default.Delete,
+                                                    contentDescription = "Apagar personagem"
+                                                )
                                                 Spacer(Modifier.width(4.dp))
                                                 Text("Apagar")
                                             }
@@ -666,15 +568,15 @@ class MainActivity : ComponentActivity() {
             if (showExitDialog) {
                 AlertDialog(
                     onDismissRequest = { showExitDialog = false },
-                    title            = { Text("Deseja encerrar o app?") },
-                    confirmButton    = {
+                    title = { Text("Deseja encerrar o app?") },
+                    confirmButton = {
                         TextButton(onClick = {
                             activity?.finishAffinity()
                         }) {
                             Text("Sim")
                         }
                     },
-                    dismissButton    = {
+                    dismissButton = {
                         TextButton(onClick = { showExitDialog = false }) {
                             Text("Não")
                         }
@@ -702,9 +604,9 @@ class MainActivity : ComponentActivity() {
                                     creationSession++
 
                                     criadorViewModel.resetStateParaNovoPersonagem(
-                                        cartaSelvagem      = cartaSelvagem,
+                                        cartaSelvagem = cartaSelvagem,
                                         maisPontosPericias = maisPontosPericias,
-                                        modoSupers         = modoSupers,
+                                        modoSupers = modoSupers,
                                         compendioFantasiaAtivo = compendioFantasiaAtivo,
                                         compendioHorrorAtivo = compendioHorrorAtivo,
                                         compendioSciFiAtivo = compendioSciFiAtivo,
@@ -719,20 +621,20 @@ class MainActivity : ComponentActivity() {
                                         showHelpMessages = showHelpMessages
                                     )
                                     criadorViewModel.prepararNomeInicial(context)
-                                    criadorViewModel.state.heroisSemArmadura     = heroisSemArmadura
-                                    criadorViewModel.state.nasceUmHeroi          = nasceUmHeroi
+                                    criadorViewModel.state.heroisSemArmadura = heroisSemArmadura
+                                    criadorViewModel.state.nasceUmHeroi = nasceUmHeroi
 
-                                    criadorViewModel.state.modoSuperequip        = modoSupers
+                                    criadorViewModel.state.modoSuperequip = modoSupers
                                     criadorViewModel.state.modoSuperComplicacoes = modoSupers
 
-                                    criadorViewModel.state.usarSemPontosDePoder  = semPontosDePoder
+                                    criadorViewModel.state.usarSemPontosDePoder = semPontosDePoder
                                     criadorViewModel.normalizeArcanoIdsNoCarregamento()
                                     criadorViewModel.state.grandesResponsabilidades = grandesResponsabilidades
 
                                     mostrouTelaInicial = false
                                 },
                                 onCarregarPersonagem = { showLoadDialog = true },
-                                context   = context,
+                                context = context,
                                 viewModel = criadorViewModel
                             )
                         } else {
@@ -743,7 +645,7 @@ class MainActivity : ComponentActivity() {
                             Scaffold(
                                 snackbarHost = { SnackbarHost(hostState = snackHost) },
                                 containerColor = Color.Transparent,
-                                topBar         = {
+                                topBar = {
                                     TopAppBar(
                                         colors = TopAppBarDefaults.topAppBarColors(
                                             containerColor = Color.Transparent
@@ -765,9 +667,9 @@ class MainActivity : ComponentActivity() {
                                         navigationIcon = {
                                             TextButton(onClick = { mostrouTelaInicial = true }) {
                                                 Text(
-                                                    text       = "Voltar",
+                                                    text = "Voltar",
                                                     fontWeight = FontWeight.Bold,
-                                                    fontSize   = 18.sp
+                                                    fontSize = 18.sp
                                                 )
                                             }
                                         },
@@ -778,13 +680,19 @@ class MainActivity : ComponentActivity() {
                                                 saveName = state.nomePersonagem
                                                 showSaveDialog = true
                                             }) {
-                                                Icon(Icons.Default.Save, contentDescription = "Salvar personagem")
+                                                Icon(
+                                                    Icons.Default.Save,
+                                                    contentDescription = "Salvar personagem"
+                                                )
                                             }
 
                                             IconButton(onClick = {
                                                 showLoadDialog = true
                                             }) {
-                                                Icon(Icons.Default.FolderOpen, contentDescription = "Carregar personagem")
+                                                Icon(
+                                                    Icons.Default.FolderOpen,
+                                                    contentDescription = "Carregar personagem"
+                                                )
                                             }
 
                                             IconButton(onClick = {
@@ -813,28 +721,28 @@ class MainActivity : ComponentActivity() {
                                             state = state,
                                             viewModel = criadorViewModel,
 
-                                            expAncs        = expAncs,
-                                            onToggleAncs   = { expAncs = !expAncs },
+                                            expAncs = expAncs,
+                                            onToggleAncs = { expAncs = !expAncs },
 
-                                            expComps       = expComps,
-                                            onToggleComps  = { expComps = !expComps },
+                                            expComps = expComps,
+                                            onToggleComps = { expComps = !expComps },
 
-                                            expEquip       = expEquip,
-                                            onToggleEquip  = { expEquip = !expEquip },
+                                            expEquip = expEquip,
+                                            onToggleEquip = { expEquip = !expEquip },
 
-                                            expAttrs       = expAttrs,
-                                            onToggleAttrs  = { expAttrs   = !expAttrs },
+                                            expAttrs = expAttrs,
+                                            onToggleAttrs = { expAttrs = !expAttrs },
 
-                                            expPer         = expPer,
-                                            onTogglePer    = { expPer     = !expPer },
+                                            expPer = expPer,
+                                            onTogglePer = { expPer = !expPer },
 
-                                            expVants       = expVants,
-                                            onToggleVants  = { expVants   = !expVants },
+                                            expVants = expVants,
+                                            onToggleVants = { expVants = !expVants },
 
-                                            expResumo      = expResumo,
-                                            onToggleResumo = { expResumo  = !expResumo },
+                                            expResumo = expResumo,
+                                            onToggleResumo = { expResumo = !expResumo },
 
-                                            expPoderes      = expPoderes,
+                                            expPoderes = expPoderes,
                                             onTogglePoderes = { expPoderes = !expPoderes },
 
                                             expXp = expXp,
@@ -844,9 +752,9 @@ class MainActivity : ComponentActivity() {
                                             onToggleMonstro = { expMonstro = !expMonstro },
 
                                             equipamentoCategorias = equipamentoCategorias,
-                                            superequipCategorias  = superequipCategorias,
-                                            listaSuperPoderes     = listaSuperPoderes,
-                                            modoOficialAtivo      = state.modoOficialAtivo
+                                            superequipCategorias = superequipCategorias,
+                                            listaSuperPoderes = listaSuperPoderes,
+                                            modoOficialAtivo = state.modoOficialAtivo
                                         )
                                     }
                                 }
@@ -881,8 +789,8 @@ data class SuperPoder(
 lateinit var listaAncestralidadesJson: List<RacialModifier>
 lateinit var listaMonstroTemplates: List<MonstroTemplate>
 
-lateinit var racialAttrMinMap: Map<String, Map<String,Int>>
-lateinit var racialSkillStartMap: Map<String, Map<String,Int>>
+lateinit var racialAttrMinMap: Map<String, Map<String, Int>>
+lateinit var racialSkillStartMap: Map<String, Map<String, Int>>
 
 lateinit var listaAtributos: List<String>
 lateinit var mapaAtributosDisplay: Map<String, String>
@@ -896,7 +804,7 @@ fun periciaStartRaw(anc: String, per: Pericia): Int {
         ?: if (per.basica) 4 else 0
 }
 
-var listaVantagens:    List<Vantagem>   = emptyList()
+var listaVantagens: List<Vantagem> = emptyList()
 
 fun loadRawText(context: Context, @RawRes resId: Int): String {
     val inputStream = context.resources.openRawResource(resId)
@@ -911,11 +819,11 @@ data class Estagio(
 )
 
 val listaDeEstagios = listOf(
-    Estagio("Novato",     0,  3),
-    Estagio("Experiente", 4,  7),
-    Estagio("Veterano",   8, 11),
-    Estagio("Heroico",   12, 15),
-    Estagio("Lendário",  16, Int.MAX_VALUE)
+    Estagio("Novato", 0, 3),
+    Estagio("Experiente", 4, 7),
+    Estagio("Veterano", 8, 11),
+    Estagio("Heroico", 12, 15),
+    Estagio("Lendário", 16, Int.MAX_VALUE)
 )
 
 fun stageIndexForSlot(slotIndex: Int): Int {
@@ -946,11 +854,6 @@ val dynamicStageCaps = listaDeEstagios.mapIndexed { idx, st ->
         (TOTAL_PROGRESS_LIMIT - prevMax).coerceAtLeast(0)
 }
 
-
-
-
-
-
 @Composable
 fun CollapsibleSection(
     title: String,
@@ -976,12 +879,6 @@ fun CollapsibleSection(
         if (expanded) content()
     }
 }
-
-
-
-
-
-
 
 @Composable
 fun PowerDropdownMenu(
@@ -1028,9 +925,6 @@ fun PowerDropdownMenu(
         }
     }
 }
-
-
-
 
 @Composable
 fun SelecaoCard(

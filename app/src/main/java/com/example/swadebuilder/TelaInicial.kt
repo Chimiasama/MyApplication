@@ -141,6 +141,7 @@ fun TelaInicial(
     var expandedBasicRules by rememberSaveable { mutableStateOf(false) }
     var expandedHorrorRules by rememberSaveable { mutableStateOf(false) }
     var expandedSupersRules by rememberSaveable { mutableStateOf(false) }
+    var expandedOthers by rememberSaveable { mutableStateOf(false) }
 
 
     Scaffold(
@@ -225,24 +226,31 @@ fun TelaInicial(
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = "Selecione os livros e regras para seu novo herói.",
+                        text = "Selecione os módulos e regras para seu novo herói.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
-            // --- Compêndios Section ---
-            item { SectionHeader("Compêndios & Cenários") }
+            // --- Módulos Básicos ---
+            item { SectionHeader("Módulos Básicos") }
 
             item {
                 Column(Modifier.padding(horizontal = 16.dp)) {
                     ModuleToggle(
                         title = "Compêndio de Fantasia",
-                        description = "Raças, itens mágicos e regras de fantasia.",
+                        description = "Raças, itens mágicos e regras de fantasia (Genérico).",
                         icon = Icons.Default.AutoAwesome,
                         checked = optCompendioFantasia,
                         onCheckedChange = { optCompendioFantasia = it }
+                    )
+                    ModuleToggle(
+                        title = "Compêndio de Sci-Fi",
+                        description = "Tecnologia avançada, naves e cibernéticos.",
+                        icon = Icons.Default.RocketLaunch,
+                        checked = optCompendioSciFi,
+                        onCheckedChange = { optCompendioSciFi = it }
                     )
                     ModuleToggle(
                         title = "Compêndio de Horror",
@@ -258,57 +266,69 @@ fun TelaInicial(
                         checked = optSuperPoderes,
                         onCheckedChange = { optSuperPoderes = it }
                     )
-                    ModuleToggle(
-                        title = "Compêndio de Sci-Fi",
-                        description = "Tecnologia avançada, naves e cibernéticos.",
-                        icon = Icons.Default.RocketLaunch,
-                        checked = optCompendioSciFi,
-                        onCheckedChange = { optCompendioSciFi = it }
-                    )
-                    ModuleToggle(
-                        title = "Savage Pathfinder",
-                        description = "Conteúdo oficial de Golarion (Classes, Raças).",
-                        icon = Icons.Default.Map,
-                        checked = optCompendioTrilhador,
-                        onCheckedChange = { optCompendioTrilhador = it }
-                    )
-                    ModuleToggle(
-                        title = "Deadlands: O Oeste Estranho",
-                        description = "Pistoleiros, Harroweds e o horror do Oeste.",
-                        icon = Icons.Default.Shield,
-                        checked = optCompendioDeadlands,
-                        onCheckedChange = { optCompendioDeadlands = it }
-                    )
-                    ModuleToggle(
-                        title = "Crystal Heart",
-                        description = "Troque seu coração por um cristal mágico.",
-                        icon = Icons.Default.Favorite,
-                        checked = optCompendioCrystalHeart,
-                        onCheckedChange = { optCompendioCrystalHeart = it }
-                    )
-                    ModuleToggle(
-                        title = "Arte da Guerra: Nova Era",
-                        description = "Ativa Chi, Tropos e equipamentos orientais.",
-                        icon = Icons.Default.Info,
-                        checked = optCompendioArteDaGuerra,
-                        onCheckedChange = { optCompendioArteDaGuerra = it }
-                    )
-                    ModuleToggle(
-                        title = "A Cidade do Sol a Vapor",
-                        description = "Estímulos vitorianos, vapor e tecnomagia.",
-                        icon = Icons.Default.Build,
-                        checked = optCompendioCidadeSolVapor,
-                        onCheckedChange = { optCompendioCidadeSolVapor = it }
-                    )
-                    ModuleToggle(
-                        title = "Wiseguys",
-                        description = "Crime organizado moderno, conexões e esquemas.",
-                        icon = Icons.Default.Groups,
-                        checked = optCompendioWiseguys,
-                        onCheckedChange = { optCompendioWiseguys = it }
-                    )
                 }
             }
+
+            // --- Outros / Cenários (Collapsible) ---
+            item {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    RuleGroupCard(
+                        title = "Cenários e Outros",
+                        expanded = expandedOthers,
+                        onToggle = { expandedOthers = !expandedOthers }
+                    ) {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            ModuleToggle(
+                                title = "Savage Pathfinder",
+                                description = "Conteúdo oficial de Golarion (Classes, Raças).",
+                                icon = Icons.Default.Map,
+                                checked = optCompendioTrilhador,
+                                onCheckedChange = { optCompendioTrilhador = it }
+                            )
+                            ModuleToggle(
+                                title = "Deadlands: O Oeste Estranho",
+                                description = "Pistoleiros, Harroweds e o horror do Oeste.",
+                                icon = Icons.Default.Shield,
+                                checked = optCompendioDeadlands,
+                                onCheckedChange = { optCompendioDeadlands = it }
+                            )
+                            ModuleToggle(
+                                title = "Crystal Heart",
+                                description = "Troque seu coração por um cristal mágico.",
+                                icon = Icons.Default.Favorite,
+                                checked = optCompendioCrystalHeart,
+                                onCheckedChange = { optCompendioCrystalHeart = it }
+                            )
+                            ModuleToggle(
+                                title = "Arte da Guerra: Nova Era",
+                                description = "Ativa Chi, Tropos e equipamentos orientais.",
+                                icon = Icons.Default.Info,
+                                checked = optCompendioArteDaGuerra,
+                                onCheckedChange = { optCompendioArteDaGuerra = it }
+                            )
+                            ModuleToggle(
+                                title = "A Cidade do Sol a Vapor",
+                                description = "Estímulos vitorianos, vapor e tecnomagia.",
+                                icon = Icons.Default.Build,
+                                checked = optCompendioCidadeSolVapor,
+                                onCheckedChange = { optCompendioCidadeSolVapor = it }
+                            )
+                            ModuleToggle(
+                                title = "Wiseguys",
+                                description = "Crime organizado moderno, conexões e esquemas.",
+                                icon = Icons.Default.Groups,
+                                checked = optCompendioWiseguys,
+                                onCheckedChange = { optCompendioWiseguys = it }
+                            )
+                        }
+                    }
+                }
+            }
+
 
             // --- Regras da Mesa (Collapsible Sections) ---
             item { SectionHeader("Regras de Criação") }
