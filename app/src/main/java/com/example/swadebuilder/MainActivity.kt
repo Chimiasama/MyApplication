@@ -647,7 +647,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, modoMonstroAtivo, _, _,
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, modoMonstroAtivo, _, _,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, grandesResponsabilidades, showHelpMessages ->
 
@@ -663,6 +663,7 @@ class MainActivity : ComponentActivity() {
                                         compendioTrilhadorAtivo = compendioTrilhadorAtivo,
                                         compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                                         compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+                                        compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
                                         modoMonstroAtivo = modoMonstroAtivo,
                                         usarEspecializacoesDePericia = usarEspecializacaoPer,
                                         showHelpMessages = showHelpMessages

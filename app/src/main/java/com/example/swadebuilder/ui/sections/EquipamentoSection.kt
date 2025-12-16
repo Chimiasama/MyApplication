@@ -193,6 +193,7 @@ fun EquipamentoSection(
     compendioSciFiAtivo: Boolean = false,
     compendioTrilhadorAtivo: Boolean = false,
     compendioDeadlandsAtivo: Boolean = false,
+    compendioArteDaGuerraAtivo: Boolean = false,
     modoOficialAtivo: Boolean = false
 ) {
     val focusManager = LocalFocusManager.current
@@ -224,6 +225,10 @@ fun EquipamentoSection(
                 it.tipo.equals("Equipamento Supers", true) ||
                         it.tipo.equals("Equipamentos Supers", true)
             }
+            .filter { categoria ->
+                val origem = categoria.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
+                origem != "ARTE_DA_GUERRA" || compendioArteDaGuerraAtivo
+            }
 
         // Filtra as categorias normais (não fantasia nem horror nem sci-fi)
         val normalCategorias = allCategorias.filter {
@@ -233,7 +238,8 @@ fun EquipamentoSection(
             val isSciFi = origem == "SCI_FI"
             val isTrilhador = origem == "FANTASIA_TRILHADOR"
             val isDeadlands = origem == "DEADLANDS"
-            !isFantasia && !isHorror && !isSciFi && !isTrilhador && !isDeadlands
+            val isArteDaGuerra = origem == "ARTE_DA_GUERRA"
+            !isFantasia && !isHorror && !isSciFi && !isTrilhador && !isDeadlands && (!isArteDaGuerra || compendioArteDaGuerraAtivo)
         }
 
         // Filtra as categorias de fantasia (se ativo)
