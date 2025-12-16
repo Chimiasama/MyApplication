@@ -279,7 +279,13 @@ fun UnifiedScreen(
             } else {
                 // Default Progression View
                 ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
-                EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
+                EquipamentoSection(
+                    state = state,
+                    expanded = expEquip,
+                    onToggle = onToggleEquip,
+                    equipamentoCategorias = equipamentoCategorias,
+                    superequipCategorias = superequipCategorias
+                )
 
                 Spacer(Modifier.height(16.dp))
                 HorizontalDivider(thickness = 3.dp)
@@ -402,7 +408,13 @@ fun UnifiedScreen(
             HorizontalDivider(thickness = 1.dp)
 
             SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes)
-            EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
+            EquipamentoSection(
+                state = state,
+                expanded = expEquip,
+                onToggle = onToggleEquip,
+                equipamentoCategorias = equipamentoCategorias,
+                superequipCategorias = superequipCategorias
+            )
 
             Spacer(Modifier.height(16.dp))
             HorizontalDivider(thickness = 3.dp)
@@ -649,6 +661,7 @@ private fun EquipamentoSection(
         compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo,
         compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo,
         compendioWiseguysAtivo = state.compendioWiseguysAtivo,
+        compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo,
         modoOficialAtivo = state.modoOficialAtivo
     )
 }
