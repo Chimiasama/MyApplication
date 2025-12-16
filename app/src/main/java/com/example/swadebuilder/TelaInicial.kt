@@ -83,6 +83,7 @@ fun TelaInicial(
         compendioDeadlandsAtivo: Boolean,
         compendioCrystalHeartAtivo: Boolean,
         compendioArteDaGuerraAtivo: Boolean,
+        compendioCidadeSolVaporAtivo: Boolean,
         modoMonstroAtivo: Boolean,
         modoSuperequipamentos: Boolean,
         modoSuperComplicacoes: Boolean,
@@ -124,6 +125,7 @@ fun TelaInicial(
     var optCompendioDeadlands by rememberSaveable { mutableStateOf(false) }
     var optCompendioCrystalHeart by rememberSaveable { mutableStateOf(false) }
     var optCompendioArteDaGuerra by rememberSaveable { mutableStateOf(false) }
+    var optCompendioCidadeSolVapor by rememberSaveable { mutableStateOf(false) }
 
     // SciFi
     var optCompendioSciFi by rememberSaveable { mutableStateOf(false) }
@@ -173,6 +175,7 @@ fun TelaInicial(
                         optCompendioDeadlands,
                         optCompendioCrystalHeart,
                         optCompendioArteDaGuerra,
+                        optCompendioCidadeSolVapor,
                         optModoMonstro,
                         optSuperPoderes, // superequipamentos enabled if supers enabled
                         optSuperPoderes, // supercomplicacoes enabled if supers enabled
@@ -188,6 +191,7 @@ fun TelaInicial(
                     viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
                     viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
                     viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
+                    viewModel.state.compendioCidadeSolVaporAtivo = optCompendioCidadeSolVapor
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
                     viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
                 },
@@ -283,6 +287,13 @@ fun TelaInicial(
                         icon = Icons.Default.Info,
                         checked = optCompendioArteDaGuerra,
                         onCheckedChange = { optCompendioArteDaGuerra = it }
+                    )
+                    ModuleToggle(
+                        title = "A Cidade do Sol a Vapor",
+                        description = "Estímulos vitorianos, vapor e tecnomagia.",
+                        icon = Icons.Default.Build,
+                        checked = optCompendioCidadeSolVapor,
+                        onCheckedChange = { optCompendioCidadeSolVapor = it }
                     )
                 }
             }

@@ -34,6 +34,7 @@ data class SnapshotFlags(
     val compendioDeadlandsAtivo: Boolean = false,
     val compendioCrystalHeartAtivo: Boolean = false,
     val compendioArteDaGuerraAtivo: Boolean = false,
+    val compendioCidadeSolVaporAtivo: Boolean = false,
     val modoOficialAtivo: Boolean = false,
     val modoMonstroAtivo: Boolean,
     val tipoMonstroSelecionado: String?,
