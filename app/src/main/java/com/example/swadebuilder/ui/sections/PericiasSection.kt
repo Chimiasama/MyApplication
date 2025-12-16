@@ -53,7 +53,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.PericiaRuleSnapshot
 import com.example.swadebuilder.R
+import com.example.swadebuilder.calcularPericiaRules
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.mapaAtributosDisplay
@@ -63,7 +65,6 @@ import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
-import kotlin.math.max
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -154,55 +155,11 @@ fun PericiasContent(
         }
 
         items(listaPericias) { per ->
-            val currentRaw = state.rawTotal(per)
-            val attrKey    = state.atributoBaseParaPericia(per)
-            val atrRaw     = state.valoresAtributos[attrKey]!!.intValue
-            val capRaw     = state.periciaCapRaw(per)
-
-            val displayRaw = state.rawTotalComSupers(per)
-
-            val nextRaw = when {
-                currentRaw == 0 && per.basica -> 4
-                currentRaw < 12               -> currentRaw + 2
-                else                          -> currentRaw + 1
-            }
-            val costNormal = if (nextRaw <= atrRaw) 1 else 2
-
-            val compStack = state.compCostStackPorPericia.getValue(per)
-            val spStack   = state.spCostStackPorPericia.getValue(per)
-
-            val minimoBasico: Int = state.minPericiaPorVantagem[per] ?: 0
-
-            val opcionalList: List<Int> = state.vantagensSelecionadas.flatMap { vant ->
-                val mapaOpc = vant.requisitos.periciaMinOpcional ?: emptyMap()
-                mapaOpc.entries
-                    .filter { it.key.equals(per.nome, ignoreCase = true) }
-                    .map { it.value }
-            }
-            val minimoOpcional: Int = opcionalList.maxOrNull() ?: 0
-            val minimoTotal = max(minimoBasico, minimoOpcional)
-
-            val canDecrease = if (state.modoProgressaoAtivo) {
-                val frozenIncs = state.frozenSkillIncrements[per.nome] ?: 0
-                state.baseIncsPorPericia.getValue(per) > frozenIncs
-            } else {
-                !locked &&
-                        (compStack.isNotEmpty() || spStack.any { it > 0 }) &&
-                        (currentRaw - 2 >= minimoTotal)
-            }
-
-            val astuciaSpent = state.spCostStackPorPericia
-                .filterKeys { p -> p.atributo == "ASTUCIA" }
-                .values
-                .sumOf { costs -> costs.sum() }
-
-            val canIncrease = !locked &&
-                    state.pontosPericia >= costNormal &&
-                    nextRaw <= capRaw &&
-                    (if (idosoActive && astuciaSpent < 5)
-                        per.atributo == "ASTUCIA"
-                    else
-                        true)
+            val regra: PericiaRuleSnapshot = state.calcularPericiaRules(
+                pericia = per,
+                idosoActive = idosoActive,
+                locked = locked
+            )
 
             val rawName = per.nome.removePrefix("*").trim()
             val descKey = "$rawName (${per.atributo})".uppercase().semAcentos()
@@ -240,7 +197,7 @@ fun PericiasContent(
                                 }
                             }
                             withStyle(SpanStyle(fontSize = defaultSize / 2)) {
-                                val displayAtr = mapaAtributosDisplay[attrKey] ?: attrKey
+                                val displayAtr = mapaAtributosDisplay[regra.attrKey] ?: regra.attrKey
                                 append(" ($displayAtr)")
                             }
                         },
@@ -257,7 +214,7 @@ fun PericiasContent(
                                 state.especializacoesPorPericia.remove(per.nome)
                             }
                         },
-                        enabled = canDecrease,
+                        enabled = regra.canDecrease,
                         modifier = Modifier
                             .size(32.dp)
                             .padding(4.dp)
@@ -271,9 +228,9 @@ fun PericiasContent(
 
                     Text(
                         text = when {
-                            displayRaw == 0 && per.basica -> "d4"
-                            displayRaw == 0 -> "-"
-                            else -> displayRaw.toDiceString()
+                            regra.displayRaw == 0 && per.basica -> "d4"
+                            regra.displayRaw == 0 -> "-"
+                            else -> regra.displayRaw.toDiceString()
                         },
                         modifier = Modifier.width(valorColWidthDp),
                         style = MaterialTheme.typography.bodyLarge,
@@ -282,36 +239,17 @@ fun PericiasContent(
 
                     IconButton(
                         onClick = {
-                            val currRawNow = state.rawTotal(per)
-                            val attrKeyNow = state.atributoBaseParaPericia(per)
-                            val atrRawNow  = state.valoresAtributos[attrKeyNow]!!.intValue
-                            val capRawNow  = state.periciaCapRaw(per)
+                            val regrasAtuais = state.calcularPericiaRules(
+                                pericia = per,
+                                idosoActive = idosoActive,
+                                locked = locked
+                            )
 
-                            val nextRawNow = when {
-                                currRawNow == 0 && per.basica -> 4
-                                currRawNow < 12               -> currRawNow + 2
-                                else                          -> currRawNow + 1
-                            }
-                            val costNow = if (nextRawNow <= atrRawNow) 1 else 2
-
-                            val astuciaSpentNow = state.spCostStackPorPericia
-                                .filterKeys { p -> p.atributo == "ASTUCIA" }
-                                .values
-                                .sumOf { costs -> costs.sum() }
-
-                            val canIncreaseNow = !locked &&
-                                    state.pontosPericia >= costNow &&
-                                    nextRawNow <= capRawNow &&
-                                    (if (idosoActive && astuciaSpentNow < 5)
-                                        per.atributo == "ASTUCIA"
-                                    else
-                                        true)
-
-                            if (!canIncreaseNow) {
+                            if (!regrasAtuais.canIncrease) {
                                 return@IconButton
                             }
 
-                            state.increasePericiaFromAdvancement(per, costNow)
+                            state.increasePericiaFromAdvancement(per, regrasAtuais.cost)
 
                             if (state.usarEspecializacoesDePericia) {
                                 val esp = state.especializacoesPorPericia[per.nome]
@@ -323,7 +261,7 @@ fun PericiasContent(
                                 }
                             }
                         },
-                        enabled = canIncrease,
+                        enabled = regra.canIncrease,
                         modifier = Modifier
                             .size(32.dp)
                             .padding(4.dp)
