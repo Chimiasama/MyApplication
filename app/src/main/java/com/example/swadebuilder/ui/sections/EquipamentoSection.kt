@@ -168,6 +168,8 @@ fun EquipFilterDialog(
 @Composable
 fun EquipamentoSection(
     dinheiro: Int,
+    usaRiqueza: Boolean,
+    dadoRiqueza: Int,
     pcTotal: Int,
     pcLivres: Int,
     recursosPcUsados: Int,
@@ -195,6 +197,7 @@ fun EquipamentoSection(
     compendioDeadlandsAtivo: Boolean = false,
     compendioArteDaGuerraAtivo: Boolean = false,
     compendioCidadeSolVaporAtivo: Boolean = false,
+    compendioWiseguysAtivo: Boolean = false,
     modoOficialAtivo: Boolean = false
 ) {
     val focusManager = LocalFocusManager.current
@@ -230,7 +233,8 @@ fun EquipamentoSection(
             .filter { categoria ->
                 val origem = categoria.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
                 (origem != "ARTE_DA_GUERRA" || compendioArteDaGuerraAtivo) &&
-                        (origem != "CIDADE_SOL_VAPOR" || compendioCidadeSolVaporAtivo)
+                        (origem != "CIDADE_SOL_VAPOR" || compendioCidadeSolVaporAtivo) &&
+                        (origem != "WISEGUYS" || compendioWiseguysAtivo)
             }
 
         // Filtra as categorias normais (não fantasia nem horror nem sci-fi)
@@ -243,7 +247,8 @@ fun EquipamentoSection(
             val isDeadlands = origem == "DEADLANDS"
             val isArteDaGuerra = origem == "ARTE_DA_GUERRA"
             val isCidadeSolVapor = origem == "CIDADE_SOL_VAPOR"
-            !isFantasia && !isHorror && !isSciFi && !isTrilhador && !isDeadlands && !isCidadeSolVapor && (!isArteDaGuerra || compendioArteDaGuerraAtivo)
+            val isWiseguys = origem == "WISEGUYS"
+            !isFantasia && !isHorror && !isSciFi && !isTrilhador && !isDeadlands && !isCidadeSolVapor && (!isArteDaGuerra || compendioArteDaGuerraAtivo) && (!isWiseguys || compendioWiseguysAtivo)
         }
 
         // Filtra as categorias de fantasia (se ativo)
@@ -298,13 +303,13 @@ fun EquipamentoSection(
 
         SectionHeader(
             onHelpClick = null,
-            centerText = "Dinheiro: $dinheiro",
+            centerText = if (usaRiqueza) "Riqueza: d$dadoRiqueza" else "Dinheiro: $dinheiro",
             onCenterClick = null,
             onListaCompletaClick = null,
             listaCompletaText = ""
         )
 
-        if (emProgresso || modoProgressaoAtivo) {
+        if (!usaRiqueza && (emProgresso || modoProgressaoAtivo)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -445,6 +450,7 @@ fun EquipamentoSection(
                     categories = sciFiCategorias,
                     filter = filter,
                     dinheiro = dinheiro,
+                    usaRiqueza = usaRiqueza,
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
@@ -464,6 +470,7 @@ fun EquipamentoSection(
                     categories = trilhadorCategorias,
                     filter = filter,
                     dinheiro = dinheiro,
+                    usaRiqueza = usaRiqueza,
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
@@ -483,6 +490,7 @@ fun EquipamentoSection(
                     categories = deadlandsCategorias,
                     filter = filter,
                     dinheiro = dinheiro,
+                    usaRiqueza = usaRiqueza,
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
@@ -707,6 +715,7 @@ fun EquipamentoSection(
                     categories = fantasiaCategorias,
                     filter = filter,
                     dinheiro = dinheiro,
+                    usaRiqueza = usaRiqueza,
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
@@ -727,6 +736,7 @@ fun EquipamentoSection(
                     categories = horrorCategorias,
                     filter = filter,
                     dinheiro = dinheiro,
+                    usaRiqueza = usaRiqueza,
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
@@ -746,6 +756,7 @@ fun EquipamentoSection(
                     categories = cidadeSolVaporCategorias,
                     filter = filter,
                     dinheiro = dinheiro,
+                    usaRiqueza = usaRiqueza,
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,

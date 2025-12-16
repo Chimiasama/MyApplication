@@ -23,6 +23,7 @@ data class MeuPersonagem(
 
     // Dinheiro e PV restantes (vantagens):
     val dinheiro: Int,
+    val dadoRiqueza: Int? = null,
     val pontosRestantes: Int,
 
     val naturalArmorFromRace: Int = 0,

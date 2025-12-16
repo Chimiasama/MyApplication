@@ -72,7 +72,7 @@ fun InformacoesSection(
 
             Spacer(Modifier.height(8.dp))
 
-            if (state.emProgresso) {
+            if (state.emProgresso && !state.usaRiqueza) {
                 TextButton(onClick = {
                     dinheiroInput = state.dinheiro.toString()
                     showMoneyDialog = true

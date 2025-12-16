@@ -49,6 +49,7 @@ class CriadorState {
     var compendioCrystalHeartAtivo by mutableStateOf(false)
     var compendioArteDaGuerraAtivo by mutableStateOf(false)
     var compendioCidadeSolVaporAtivo by mutableStateOf(false)
+    var compendioWiseguysAtivo by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
@@ -102,6 +103,35 @@ class CriadorState {
     val gastosPorPoder     = mutableStateMapOf<String, Int>()
     var naturalArmorFromRace by mutableIntStateOf(0)
     var soldadoCargaAtivo by mutableStateOf(true)
+
+    val origemPersonagem: String?
+        get() = listaAncestralidadesJson
+            .firstOrNull { it.nome.keyify() == ancestralidade }
+            ?.origem
+            ?.uppercase()
+
+    val usaRiqueza: Boolean
+        get() = origemPersonagem == "WISEGUYS"
+
+    val dadoRiqueza: Int
+        get() {
+            var die = 6
+            val hasPodreDeRico = vantagensSelecionadas.any { it.nome.keyify() == "PODRE DE RICO" }
+            val hasRico = vantagensSelecionadas.any { it.nome.keyify() == "RICO" }
+            val hasPobreza = complicacoesSelecionadas.keys.any { it.id.keyify() == "POBREZA" }
+
+            die = when {
+                hasPodreDeRico -> 10
+                hasRico -> 8
+                else -> 6
+            }
+
+            if (hasPobreza) {
+                die = 4
+            }
+
+            return die
+        }
 
     fun valorMovimentacao(): Int {
         val base = 6
@@ -496,6 +526,7 @@ class CriadorState {
     }
 
     fun applyVantagemDinheiro(v: Vantagem) {
+        if (usaRiqueza) return
         when (v.nome.trim().uppercase()) {
             "RICO"          -> dinheiro += 1000
             "PODRE DE RICO" -> dinheiro += 1500
@@ -503,6 +534,7 @@ class CriadorState {
     }
 
     fun removeVantagemDinheiro(vant: Vantagem) {
+        if (usaRiqueza) return
         val key = vant.nome.trim().uppercase()
         val amount = when (key) {
             "RICO"          -> 1000
@@ -1315,6 +1347,14 @@ class CriadorState {
                 vantagensAutomaticas.add("ANTECEDENTE ARCANO (MILAGRES)")
                 armadura = 0
             }
+            "HUMANO (WISEGUYS)".keyify() -> {
+                val conexoesMafia = listaVantagens.firstOrNull {
+                    it.nome.equals("Conexões (Máfia)", ignoreCase = true)
+                }
+                if (conexoesMafia != null && vantagensSelecionadas.none { it.nome.equals("Conexões (Máfia)", ignoreCase = true) }) {
+                    vantagensSelecionadas.add(conexoesMafia)
+                }
+            }
             else -> {
                 armadura = 0
             }
@@ -1722,6 +1762,7 @@ class CriadorState {
                 compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
                 compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
                 compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+                compendioWiseguysAtivo = compendioWiseguysAtivo,
                 modoOficialAtivo = modoOficialAtivo,
                 modoMonstroAtivo = modoMonstroAtivo,
                 tipoMonstroSelecionado = tipoMonstroSelecionado,
@@ -1851,6 +1892,7 @@ class CriadorState {
         compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo
         compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo
         compendioCidadeSolVaporAtivo = flags.compendioCidadeSolVaporAtivo
+        compendioWiseguysAtivo = flags.compendioWiseguysAtivo
         modoOficialAtivo = flags.modoOficialAtivo
         modoMonstroAtivo = flags.modoMonstroAtivo
         usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia

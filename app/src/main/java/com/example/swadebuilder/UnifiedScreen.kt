@@ -581,6 +581,8 @@ private fun EquipamentoSection(
 
     EquipamentoSection(
         dinheiro = state.dinheiro,
+        usaRiqueza = state.usaRiqueza,
+        dadoRiqueza = state.dadoRiqueza,
         pcTotal = state.pontosComplicacao,
         pcLivres = (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0),
         recursosPcUsados = state.cpRecursosStack.size,
@@ -589,6 +591,7 @@ private fun EquipamentoSection(
         expanded = expanded,
         onToggle = onToggle,
         onUsarPontosBonusEmRecursos = {
+            if (state.usaRiqueza) return@EquipamentoSection
             val pcLivresLocal =
                 (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0)
             if (pcLivresLocal > 0 && state.cpRecursosStack.isEmpty()) {
@@ -598,6 +601,7 @@ private fun EquipamentoSection(
             }
         },
         onDesfazerPontosBonusEmRecursos = {
+            if (state.usaRiqueza) return@EquipamentoSection
             if (state.cpRecursosStack.isNotEmpty() && state.dinheiro >= 500) {
                 state.cpRecursosStack.removeAt(state.cpRecursosStack.lastIndex)
                 state.pontosComplicacaoGastos =
@@ -608,9 +612,11 @@ private fun EquipamentoSection(
         onEquipamentoDoubleClick = { equipamento ->
             val custo = (equipamento.custo as? JsonPrimitive)
                 ?.content?.toIntOrNull() ?: 0
-            if (custo <= state.dinheiro) {
+            if (state.usaRiqueza || custo <= state.dinheiro) {
                 state.equipamentosComprados.add(equipamento)
-                state.dinheiro -= custo
+                if (!state.usaRiqueza) {
+                    state.dinheiro -= custo
+                }
             }
         },
         equipamentosComprados = state.equipamentosComprados,
@@ -618,7 +624,9 @@ private fun EquipamentoSection(
             val custo = (equipamento.custo as? JsonPrimitive)
                 ?.content?.toIntOrNull() ?: 0
             state.equipamentosComprados.remove(equipamento)
-            state.dinheiro += custo
+            if (!state.usaRiqueza) {
+                state.dinheiro += custo
+            }
         },
         categorias = equipamentoCategorias,
         superequipCategorias =
@@ -640,6 +648,7 @@ private fun EquipamentoSection(
         compendioDeadlandsAtivo = state.compendioDeadlandsAtivo,
         compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo,
         compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo,
+        compendioWiseguysAtivo = state.compendioWiseguysAtivo,
         modoOficialAtivo = state.modoOficialAtivo
     )
 }
