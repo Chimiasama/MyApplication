@@ -1,0 +1,86 @@
+package com.example.swadebuilder
+
+import com.example.swadebuilder.model.RuleConstants
+import kotlin.math.max
+
+/**
+ * Representa um retrato calculado das regras de investimento em uma perícia, sem efeitos colaterais na UI.
+ */
+data class PericiaRuleSnapshot(
+    val attrKey: String,
+    val currentRaw: Int,
+    val displayRaw: Int,
+    val nextRaw: Int,
+    val cost: Int,
+    val capRaw: Int,
+    val minimoTotal: Int,
+    val canIncrease: Boolean,
+    val canDecrease: Boolean
+)
+
+fun CriadorState.calcularPericiaRules(
+    pericia: Pericia,
+    idosoActive: Boolean,
+    locked: Boolean
+): PericiaRuleSnapshot {
+    val currentRaw = rawTotal(pericia)
+    val attrKey = atributoBaseParaPericia(pericia)
+    val atrRaw = valoresAtributos[attrKey]?.intValue ?: 0
+    val capRaw = periciaCapRaw(pericia)
+
+    val displayRaw = rawTotalComSupers(pericia)
+    val nextRaw = when {
+        currentRaw == 0 && pericia.basica -> 4
+        currentRaw < 12 -> currentRaw + 2
+        else -> currentRaw + 1
+    }
+    val costNormal = if (nextRaw <= atrRaw) 1 else 2
+
+    val compStack = compCostStackPorPericia.getValue(pericia)
+    val spStack = spCostStackPorPericia.getValue(pericia)
+
+    val minimoBasico: Int = minPericiaPorVantagem[pericia] ?: 0
+    val opcionalList: List<Int> = vantagensSelecionadas.flatMap { vant ->
+        val mapaOpc = vant.requisitos.periciaMinOpcional ?: emptyMap()
+        mapaOpc.entries
+            .filter { it.key.equals(pericia.nome, ignoreCase = true) }
+            .map { it.value }
+    }
+    val minimoOpcional: Int = opcionalList.maxOrNull() ?: 0
+    val minimoTotal = max(minimoBasico, minimoOpcional)
+
+    val canDecrease = if (modoProgressaoAtivo) {
+        val frozenIncs = frozenSkillIncrements[pericia.nome] ?: 0
+        baseIncsPorPericia.getValue(pericia) > frozenIncs
+    } else {
+        !locked &&
+            (compStack.isNotEmpty() || spStack.any { it > 0 }) &&
+            (currentRaw - 2 >= minimoTotal)
+    }
+
+    val astuciaSpent = spCostStackPorPericia
+        .filterKeys { p -> p.atributo == RuleConstants.ATRIBUTO_ASTUCIA }
+        .values
+        .sumOf { costs -> costs.sum() }
+
+    val canIncrease = !locked &&
+        pontosPericia >= costNormal &&
+        nextRaw <= capRaw &&
+        (if (idosoActive && astuciaSpent < 5) {
+            pericia.atributo == RuleConstants.ATRIBUTO_ASTUCIA
+        } else {
+            true
+        })
+
+    return PericiaRuleSnapshot(
+        attrKey = attrKey,
+        currentRaw = currentRaw,
+        displayRaw = displayRaw,
+        nextRaw = nextRaw,
+        cost = costNormal,
+        capRaw = capRaw,
+        minimoTotal = minimoTotal,
+        canIncrease = canIncrease,
+        canDecrease = canDecrease
+    )
+}
