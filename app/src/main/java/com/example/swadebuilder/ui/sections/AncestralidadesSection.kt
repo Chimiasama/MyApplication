@@ -80,8 +80,9 @@ fun AncestralidadesSection(
     val compendioTrilhadorAtivo = state.compendioTrilhadorAtivo
     val compendioDeadlandsAtivo = state.compendioDeadlandsAtivo
     val compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo
+    val compendioWiseguysAtivo = state.compendioWiseguysAtivo
 
-    val ancestralidadesState = remember(compendioFantasiaAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioArteDaGuerraAtivo) {
+    val ancestralidadesState = remember(compendioFantasiaAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioArteDaGuerraAtivo, compendioWiseguysAtivo) {
         // Load legacy list
         val allLegacy = context.loadJsonAsset<List<RacialModifier>>(ASSET_ANCESTRALIDADES)
 
@@ -110,11 +111,17 @@ fun AncestralidadesSection(
             emptyList()
         }
 
-        val all = allLegacy + allTrilhador + allDeadlands + allAdg + allCidadeSolVapor
+        val allWiseguys = try {
+            context.loadJsonAsset<List<RacialModifier>>("ancestralidades_wiseguys.json")
+        } catch (e: Exception) {
+            emptyList()
+        }
+
+        val all = allLegacy + allTrilhador + allDeadlands + allAdg + allCidadeSolVapor + allWiseguys
 
         val filtered = all.filter {
             val origin = it.origem?.uppercase() ?: "BASICO"
-            origin == "BASICO" || (origin == "FANTASIA" && compendioFantasiaAtivo) || (origin == "FANTASIA_TRILHADOR" && compendioTrilhadorAtivo) || (origin == "DEADLANDS" && compendioDeadlandsAtivo) || (origin == "ARTE_DA_GUERRA" && compendioArteDaGuerraAtivo) || (origin == "CIDADE_SOL_VAPOR" && state.compendioCidadeSolVaporAtivo)
+            origin == "BASICO" || (origin == "FANTASIA" && compendioFantasiaAtivo) || (origin == "FANTASIA_TRILHADOR" && compendioTrilhadorAtivo) || (origin == "DEADLANDS" && compendioDeadlandsAtivo) || (origin == "ARTE_DA_GUERRA" && compendioArteDaGuerraAtivo) || (origin == "CIDADE_SOL_VAPOR" && state.compendioCidadeSolVaporAtivo) || (origin == "WISEGUYS" && compendioWiseguysAtivo)
         }.map {
             RacialModifierLite(it.nome, it.originalName)
         }

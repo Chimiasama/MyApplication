@@ -44,6 +44,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         equipamentos = this.equipamentosComprados.toList(),
         poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
         dinheiro = this.dinheiro,
+        dadoRiqueza = if (this.usaRiqueza) this.dadoRiqueza else null,
         pontosRestantes = this.pontosVantagem,
         naturalArmorFromRace = this.naturalArmorFromRace,
         armorBase = this.armadura,
@@ -304,7 +305,11 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += ""
 
     lines += "Recursos & Equipamentos"
-    lines += "Dinheiro restante: ${personagem.dinheiro}"
+    if (personagem.dadoRiqueza != null) {
+        lines += "Riqueza: d${personagem.dadoRiqueza}"
+    } else {
+        lines += "Dinheiro restante: ${personagem.dinheiro}"
+    }
     if (personagem.equipamentos.isEmpty()) {
         lines += "Equipamentos: – Nenhum"
     } else {

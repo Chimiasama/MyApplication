@@ -23,6 +23,7 @@ fun RenderCategoryList(
     categories: List<EquipamentoCategoria>,
     filter: EquipFilter,
     dinheiro: Int,
+    usaRiqueza: Boolean,
     allowLongTexts: Boolean,
     detalhesExpandidos: SnapshotStateMap<String, Boolean>,
     onEquipamentoDoubleClick: (EquipamentoItem) -> Unit,
@@ -85,7 +86,7 @@ fun RenderCategoryList(
                                             if (filter.somenteAcessiveis) {
                                                 val c = (eq.custo as? JsonPrimitive)?.content?.toIntOrNull()
                                                     ?: Int.MAX_VALUE
-                                                if (c > dinheiro) return@filter false
+                                                if (!usaRiqueza && c > dinheiro) return@filter false
                                             }
                                             true
                                         }
@@ -120,7 +121,7 @@ fun RenderCategoryList(
                                                         val c =
                                                             (eq.custo as? JsonPrimitive)?.content?.toIntOrNull()
                                                                 ?: Int.MAX_VALUE
-                                                        if (c > dinheiro) return@filter false
+                                                        if (!usaRiqueza && c > dinheiro) return@filter false
                                                     }
                                                     true
                                                 }

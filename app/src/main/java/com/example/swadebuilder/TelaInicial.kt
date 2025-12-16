@@ -34,6 +34,7 @@ import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Shield
@@ -84,6 +85,7 @@ fun TelaInicial(
         compendioCrystalHeartAtivo: Boolean,
         compendioArteDaGuerraAtivo: Boolean,
         compendioCidadeSolVaporAtivo: Boolean,
+        compendioWiseguysAtivo: Boolean,
         modoMonstroAtivo: Boolean,
         modoSuperequipamentos: Boolean,
         modoSuperComplicacoes: Boolean,
@@ -126,6 +128,7 @@ fun TelaInicial(
     var optCompendioCrystalHeart by rememberSaveable { mutableStateOf(false) }
     var optCompendioArteDaGuerra by rememberSaveable { mutableStateOf(false) }
     var optCompendioCidadeSolVapor by rememberSaveable { mutableStateOf(false) }
+    var optCompendioWiseguys by rememberSaveable { mutableStateOf(false) }
 
     // SciFi
     var optCompendioSciFi by rememberSaveable { mutableStateOf(false) }
@@ -176,6 +179,7 @@ fun TelaInicial(
                         optCompendioCrystalHeart,
                         optCompendioArteDaGuerra,
                         optCompendioCidadeSolVapor,
+                        optCompendioWiseguys,
                         optModoMonstro,
                         optSuperPoderes, // superequipamentos enabled if supers enabled
                         optSuperPoderes, // supercomplicacoes enabled if supers enabled
@@ -192,6 +196,7 @@ fun TelaInicial(
                     viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
                     viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
                     viewModel.state.compendioCidadeSolVaporAtivo = optCompendioCidadeSolVapor
+                    viewModel.state.compendioWiseguysAtivo = optCompendioWiseguys
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
                     viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
                 },
@@ -294,6 +299,13 @@ fun TelaInicial(
                         icon = Icons.Default.Build,
                         checked = optCompendioCidadeSolVapor,
                         onCheckedChange = { optCompendioCidadeSolVapor = it }
+                    )
+                    ModuleToggle(
+                        title = "Wiseguys",
+                        description = "Crime organizado moderno, conexões e esquemas.",
+                        icon = Icons.Default.Groups,
+                        checked = optCompendioWiseguys,
+                        onCheckedChange = { optCompendioWiseguys = it }
                     )
                 }
             }
