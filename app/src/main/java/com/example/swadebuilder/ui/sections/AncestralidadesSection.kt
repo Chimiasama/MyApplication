@@ -104,11 +104,17 @@ fun AncestralidadesSection(
             emptyList()
         }
 
-        val all = allLegacy + allTrilhador + allDeadlands + allAdg
+        val allCidadeSolVapor = try {
+            context.loadJsonAsset<List<RacialModifier>>("ancestralidades_sol_vapor.json")
+        } catch (e: Exception) {
+            emptyList()
+        }
+
+        val all = allLegacy + allTrilhador + allDeadlands + allAdg + allCidadeSolVapor
 
         val filtered = all.filter {
             val origin = it.origem?.uppercase() ?: "BASICO"
-            origin == "BASICO" || (origin == "FANTASIA" && compendioFantasiaAtivo) || (origin == "FANTASIA_TRILHADOR" && compendioTrilhadorAtivo) || (origin == "DEADLANDS" && compendioDeadlandsAtivo) || (origin == "ARTE_DA_GUERRA" && compendioArteDaGuerraAtivo)
+            origin == "BASICO" || (origin == "FANTASIA" && compendioFantasiaAtivo) || (origin == "FANTASIA_TRILHADOR" && compendioTrilhadorAtivo) || (origin == "DEADLANDS" && compendioDeadlandsAtivo) || (origin == "ARTE_DA_GUERRA" && compendioArteDaGuerraAtivo) || (origin == "CIDADE_SOL_VAPOR" && state.compendioCidadeSolVaporAtivo)
         }.map {
             RacialModifierLite(it.nome, it.originalName)
         }

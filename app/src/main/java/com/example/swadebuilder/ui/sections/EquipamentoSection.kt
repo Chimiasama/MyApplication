@@ -194,6 +194,7 @@ fun EquipamentoSection(
     compendioTrilhadorAtivo: Boolean = false,
     compendioDeadlandsAtivo: Boolean = false,
     compendioArteDaGuerraAtivo: Boolean = false,
+    compendioCidadeSolVaporAtivo: Boolean = false,
     modoOficialAtivo: Boolean = false
 ) {
     val focusManager = LocalFocusManager.current
@@ -206,6 +207,7 @@ fun EquipamentoSection(
     var expSciFiEquip by rememberSaveable { mutableStateOf(false) }
     var expTrilhadorEquip by rememberSaveable { mutableStateOf(false) }
     var expDeadlandsEquip by rememberSaveable { mutableStateOf(false) }
+    var expCidadeSolVaporEquip by rememberSaveable { mutableStateOf(false) }
 
     var filter by remember { mutableStateOf(EquipFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
@@ -227,7 +229,8 @@ fun EquipamentoSection(
             }
             .filter { categoria ->
                 val origem = categoria.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
-                origem != "ARTE_DA_GUERRA" || compendioArteDaGuerraAtivo
+                (origem != "ARTE_DA_GUERRA" || compendioArteDaGuerraAtivo) &&
+                        (origem != "CIDADE_SOL_VAPOR" || compendioCidadeSolVaporAtivo)
             }
 
         // Filtra as categorias normais (não fantasia nem horror nem sci-fi)
@@ -239,7 +242,8 @@ fun EquipamentoSection(
             val isTrilhador = origem == "FANTASIA_TRILHADOR"
             val isDeadlands = origem == "DEADLANDS"
             val isArteDaGuerra = origem == "ARTE_DA_GUERRA"
-            !isFantasia && !isHorror && !isSciFi && !isTrilhador && !isDeadlands && (!isArteDaGuerra || compendioArteDaGuerraAtivo)
+            val isCidadeSolVapor = origem == "CIDADE_SOL_VAPOR"
+            !isFantasia && !isHorror && !isSciFi && !isTrilhador && !isDeadlands && !isCidadeSolVapor && (!isArteDaGuerra || compendioArteDaGuerraAtivo)
         }
 
         // Filtra as categorias de fantasia (se ativo)
@@ -263,6 +267,14 @@ fun EquipamentoSection(
         val sciFiCategorias = if (compendioSciFiAtivo) {
             allCategorias.filter {
                 (it.origem?.uppercase() ?: "") == "SCI_FI"
+            }
+        } else {
+            emptyList()
+        }
+
+        val cidadeSolVaporCategorias = if (compendioCidadeSolVaporAtivo) {
+            allCategorias.filter {
+                (it.origem?.uppercase() ?: "") == "CIDADE_SOL_VAPOR"
             }
         } else {
             emptyList()
@@ -723,6 +735,25 @@ fun EquipamentoSection(
             }
         }
 
+        if (compendioCidadeSolVaporAtivo && cidadeSolVaporCategorias.isNotEmpty()) {
+            Spacer(Modifier.padding(vertical = 4.dp))
+            CollapsibleSection(
+                title = "Equipamento – Cidade do Sol a Vapor",
+                expanded = expCidadeSolVaporEquip,
+                onToggle = { expCidadeSolVaporEquip = !expCidadeSolVaporEquip }
+            ) {
+                RenderCategoryList(
+                    categories = cidadeSolVaporCategorias,
+                    filter = filter,
+                    dinheiro = dinheiro,
+                    allowLongTexts = allowLongTexts,
+                    detalhesExpandidos = detalhesExpandidos,
+                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
+                    showOriginalName = modoOficialAtivo
+                )
+            }
+        }
+
         val supCatsFiltradas = superequipCategorias.let { list ->
             if (filter.origens.isNotEmpty()) {
                 list.filter { (it.origem?.uppercase() ?: "") in filter.origens }
@@ -837,6 +868,7 @@ fun EquipamentoListItem(
 
             val detalhes = buildList {
                 equipamento.observacoes.contentString()?.let { add("Observações: $it") }
+                equipamento.pmf.contentString()?.let { add("PMF: $it") }
                 equipamento.malfuncionamento.contentString()?.let { add("Malfuncionamento: $it") }
                 equipamento.forcaMin.contentString()?.let { add("Força mínima: $it") }
                 equipamento.distancia.contentString()?.let { add("Distância: $it") }

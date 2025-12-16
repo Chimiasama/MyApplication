@@ -48,6 +48,7 @@ class CriadorState {
     var compendioDeadlandsAtivo by mutableStateOf(false)
     var compendioCrystalHeartAtivo by mutableStateOf(false)
     var compendioArteDaGuerraAtivo by mutableStateOf(false)
+    var compendioCidadeSolVaporAtivo by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
@@ -1720,6 +1721,7 @@ class CriadorState {
                 compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                 compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
                 compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+                compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
                 modoOficialAtivo = modoOficialAtivo,
                 modoMonstroAtivo = modoMonstroAtivo,
                 tipoMonstroSelecionado = tipoMonstroSelecionado,
@@ -1848,6 +1850,7 @@ class CriadorState {
         compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo
         compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo
         compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo
+        compendioCidadeSolVaporAtivo = flags.compendioCidadeSolVaporAtivo
         modoOficialAtivo = flags.modoOficialAtivo
         modoMonstroAtivo = flags.modoMonstroAtivo
         usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia
