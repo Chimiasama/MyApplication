@@ -48,6 +48,7 @@ class CriadorState {
     var compendioDeadlandsAtivo by mutableStateOf(false)
     var compendioCrystalHeartAtivo by mutableStateOf(false)
     var compendioArteDaGuerraAtivo by mutableStateOf(false)
+    var compendioSolVaporAtivo by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
@@ -1319,6 +1320,16 @@ class CriadorState {
             }
         }
 
+        if (anc.equals("anc_demonio_csv", ignoreCase = true) || anc.equals("DEMÔNIO (ABISMO)", ignoreCase = true)) {
+            val aaDemonio = listaVantagens.firstOrNull { it.id == "aa_demonio" }
+            if (aaDemonio != null && vantagensSelecionadas.none { it.id == aaDemonio.id }) {
+                vantagensSelecionadas.add(aaDemonio)
+            }
+            if (vantagensAutomaticas.none { it.contains("ANTECEDENTE ARCANO (Demônio)", ignoreCase = true) }) {
+                vantagensAutomaticas.add("ANTECEDENTE ARCANO (Demônio)")
+            }
+        }
+
         // IMPORTANTE:
         // Removido: pontosVantagem = if (vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" }) 1 else 0
         // Agora o pool de PV não é mais zerado/redefinido ao trocar de raça.
@@ -1720,6 +1731,7 @@ class CriadorState {
                 compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                 compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
                 compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+                compendioSolVaporAtivo = compendioSolVaporAtivo,
                 modoOficialAtivo = modoOficialAtivo,
                 modoMonstroAtivo = modoMonstroAtivo,
                 tipoMonstroSelecionado = tipoMonstroSelecionado,
@@ -1848,6 +1860,7 @@ class CriadorState {
         compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo
         compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo
         compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo
+        compendioSolVaporAtivo = flags.compendioSolVaporAtivo
         modoOficialAtivo = flags.modoOficialAtivo
         modoMonstroAtivo = flags.modoMonstroAtivo
         usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia

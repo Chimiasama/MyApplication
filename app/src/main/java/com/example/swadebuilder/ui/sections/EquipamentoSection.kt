@@ -849,6 +849,7 @@ fun EquipamentoListItem(
                 equipamento.tripulacao.contentString()?.let { add("Tripulação: $it") }
                 equipamento.tensao?.let { add("Tensão: $it") }
                 equipamento.mods_slots?.let { add("Slots de Mods: $it") }
+    equipamento.pmf?.let { add("PMF (Malfunc.): $it") }
             }
 
             if (allowLongTexts && detalhes.isNotEmpty()) {

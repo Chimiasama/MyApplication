@@ -167,6 +167,7 @@ class CriadorViewModel : ViewModel() {
         compendioDeadlandsAtivo: Boolean = false,
         compendioCrystalHeartAtivo: Boolean = false,
         compendioArteDaGuerraAtivo: Boolean = false,
+        compendioSolVaporAtivo: Boolean,
         modoMonstroAtivo: Boolean = false,
         usarEspecializacoesDePericia: Boolean = false,
         grandesResponsabilidades: Boolean = false,
@@ -182,6 +183,7 @@ class CriadorViewModel : ViewModel() {
         state.compendioDeadlandsAtivo = compendioDeadlandsAtivo
         state.compendioCrystalHeartAtivo = compendioCrystalHeartAtivo
         state.compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo
+        state.compendioSolVaporAtivo = compendioSolVaporAtivo
         state.modoMonstroAtivo = modoMonstroAtivo
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
         state.modoSuperequip = modoSupers
