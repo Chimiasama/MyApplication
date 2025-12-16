@@ -85,29 +85,22 @@ import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.swadebuilder.model.ArcanoInfo
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.DataLoader
+import com.example.swadebuilder.model.Estagio
 import com.example.swadebuilder.model.GlobalData
+import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.ui.dialogs.AjudaDialog
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.toDiceString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.text.DateFormat
-
-@Serializable
-data class ArcanoInfo(
-    val key: String,
-    val slots: Int,
-    val pp: Int,
-    val foco: String
-)
 
 val arcanoInfo get() = GlobalData.arcanoInfo
 
@@ -626,20 +619,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-data class Pericia(val nome: String, val atributo: String, val basica: Boolean)
-
 val listaComplicacoes get() = GlobalData.listaComplicacoes
 val listaCoracoesCrystal get() = GlobalData.listaCoracoesCrystal
-
-@Serializable
-data class SuperPoder(
-    val nome: String,
-    val estagio: String = "iniciante",
-    val custoBase: String? = null,
-    val modificadores: List<String>? = null,
-    val descricao: String? = null,
-    val manifestacoes: JsonElement? = null
-)
 
 val listaAncestralidadesJson get() = GlobalData.listaAncestralidadesJson
 val listaMonstroTemplates get() = GlobalData.listaMonstroTemplates
@@ -678,7 +659,7 @@ fun stageIndexForSlot(slotIndex: Int): Int {
     return dynamicStageCaps.lastIndex
 }
 
-fun stageForSlot(slotIndex: Int): com.example.swadebuilder.Estagio = listaDeEstagios[stageIndexForSlot(slotIndex)]
+fun stageForSlot(slotIndex: Int): Estagio = listaDeEstagios[stageIndexForSlot(slotIndex)]
 
 val nivelParaEstagio get() = GlobalData.nivelParaEstagio
 
