@@ -200,6 +200,8 @@ class CriadorViewModel : ViewModel() {
 
         state.coracaoCrystalSelecionado = null
 
+        state.nasceUmHeroi = false // Fix: reset flag
+
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
 
         state.cartaSelvagem = cartaSelvagem
@@ -222,7 +224,8 @@ class CriadorViewModel : ViewModel() {
         if (state.modoSupers) {
             listaVantagens.firstOrNull { it.id == "superpoderes" }?.let { sp ->
                 if (state.vantagensSelecionadas.none { it.id == "superpoderes" }) {
-                    state.vantagensSelecionadas.add(sp)
+                    // Use copy to prevent shared state issues even here
+                    state.vantagensSelecionadas.add(sp.copy())
                 }
             }
         }
@@ -230,7 +233,7 @@ class CriadorViewModel : ViewModel() {
         if (state.compendioCrystalHeartAtivo) {
             listaVantagens.firstOrNull { it.id == "aa_agente_syn" }?.let { aa ->
                 if (state.vantagensSelecionadas.none { it.id == "aa_agente_syn" }) {
-                    state.vantagensSelecionadas.add(aa)
+                    state.vantagensSelecionadas.add(aa.copy())
                 }
             }
         }
@@ -243,6 +246,7 @@ class CriadorViewModel : ViewModel() {
         state.cpPaStack.clear()
         state.paFromProgress = 0
         state.spFromProgress = 0
+        state.pvFromXpOutstanding = 0 // Fix: reset outstanding points
         state.legendaryAttrReservations = 0
         state.cpPvStack.clear()
         state.cpSpStack.clear()
@@ -259,6 +263,7 @@ class CriadorViewModel : ViewModel() {
         state.attributeUsedReservation = false
         state.stageNameForCurrentAdvancement = null
         state.overrideStageForVantagem = null
+        state.openVantagensAfterGrant = false // Fix: reset UI flag
         state.arcanoEmCompraViaXpKey = null
         state.arcanoSnapshotAntesDaCompra = null
         state.mostrandoPoderesProgresso = false
@@ -311,6 +316,7 @@ class CriadorViewModel : ViewModel() {
         }
         state.rebuildAllPericiaStacks(_feedbackMessages)
 
+        // Points logic has changed; handled in applying ancestry/reset
         state.pontosVantagem =
             if (state.vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" }) 1 else 0
     }
@@ -487,7 +493,7 @@ class CriadorViewModel : ViewModel() {
 
             is PowerEffect.SuperVantagem -> {
                 listaVantagens.firstOrNull { it.id == efeito.vantagemId }?.let { v ->
-                    state.adicionarVantagemPorSuper(v)
+                    state.adicionarVantagemPorSuper(v.copy()) // Fix: Use copy
                     _feedbackMessages.add("Vantagem ${v.nome} adicionada.")
                 }
             }
@@ -752,24 +758,23 @@ class CriadorViewModel : ViewModel() {
                 }
             }
 
-            if (vantagem.nome.contains("Pontos de Poder", true)) {
-                state.comprarPontoDePoder(vantagem)
+            // Fix: Use copy() to avoid shared reference mutation
+            val vantagemCopia = vantagem.copy()
+
+            if (vantagemCopia.nome.contains("Pontos de Poder", true)) {
+                state.comprarPontoDePoder(vantagemCopia)
             } else {
-                state.applyVantagemDinheiro(vantagem)
-                // Se for "Novos Poderes" e temos múltiplos arcanos habilitados,
-                // seria ideal que 'vantagem' já viesse com choice definida.
-                // Aqui vamos assumir que se não vier, e tivermos 1 arcano, aplicamos a ele.
-                // Mas 'vantagem' é data class vinda do clique.
-                state.vantagensSelecionadas.add(vantagem)
+                state.applyVantagemDinheiro(vantagemCopia)
+                state.vantagensSelecionadas.add(vantagemCopia)
             }
             state.pontosVantagem--
-            state.advantageForCurrentAdvancement = vantagem.id
+            state.advantageForCurrentAdvancement = vantagemCopia.id
 
             // Check if it's "Novos Poderes" to trigger the flow
-            if (vantagem.id == "novos_poderes") {
+            if (vantagemCopia.id == "novos_poderes") {
                 // Find target arcane background
                 // 1. Try choice if set
-                val choiceKey = advantageArcaneKey(vantagem)
+                val choiceKey = advantageArcaneKey(vantagemCopia)
                 // 2. If not, try to find the first existing arcane background
                 val arcKey = choiceKey ?: state.vantagensSelecionadas
                     .mapNotNull { it.toArcanoKey()?.normAAKey() }
@@ -781,7 +786,7 @@ class CriadorViewModel : ViewModel() {
                     state.limparCompraArcanoViaXp(restaurarSnapshot = false)
                 }
             } else {
-                vantagem.toArcanoKey()?.let { arcKey ->
+                vantagemCopia.toArcanoKey()?.let { arcKey ->
                     state.iniciarCompraArcanoViaXp(arcKey)
                 } ?: state.limparCompraArcanoViaXp(restaurarSnapshot = false)
             }
