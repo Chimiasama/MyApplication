@@ -198,6 +198,7 @@ fun EquipamentoSection(
     compendioArteDaGuerraAtivo: Boolean = false,
     compendioCidadeSolVaporAtivo: Boolean = false,
     compendioWiseguysAtivo: Boolean = false,
+    compendioCrystalHeartAtivo: Boolean = false,
     modoOficialAtivo: Boolean = false
 ) {
     val focusManager = LocalFocusManager.current
@@ -234,7 +235,8 @@ fun EquipamentoSection(
                 val origem = categoria.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
                 (origem != "ARTE_DA_GUERRA" || compendioArteDaGuerraAtivo) &&
                         (origem != "CIDADE_SOL_VAPOR" || compendioCidadeSolVaporAtivo) &&
-                        (origem != "WISEGUYS" || compendioWiseguysAtivo)
+                        (origem != "WISEGUYS" || compendioWiseguysAtivo) &&
+                        (origem != "CRYSTAL_HEART" || compendioCrystalHeartAtivo)
             }
 
         // Filtra as categorias normais (não fantasia nem horror nem sci-fi)
@@ -248,7 +250,8 @@ fun EquipamentoSection(
             val isArteDaGuerra = origem == "ARTE_DA_GUERRA"
             val isCidadeSolVapor = origem == "CIDADE_SOL_VAPOR"
             val isWiseguys = origem == "WISEGUYS"
-            !isFantasia && !isHorror && !isSciFi && !isTrilhador && !isDeadlands && !isCidadeSolVapor && (!isArteDaGuerra || compendioArteDaGuerraAtivo) && (!isWiseguys || compendioWiseguysAtivo)
+            val isCrystalHeart = origem == "CRYSTAL_HEART"
+            !isFantasia && !isHorror && !isSciFi && !isTrilhador && !isDeadlands && !isCidadeSolVapor && (!isArteDaGuerra || compendioArteDaGuerraAtivo) && (!isWiseguys || compendioWiseguysAtivo) && (!isCrystalHeart || compendioCrystalHeartAtivo)
         }
 
         // Filtra as categorias de fantasia (se ativo)

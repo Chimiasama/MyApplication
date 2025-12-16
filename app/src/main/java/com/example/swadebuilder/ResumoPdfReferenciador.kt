@@ -69,7 +69,8 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
 
         anotacoes = this.anotacoes,
         soldadoCargaAtivo = this.soldadoCargaAtivo,
-        modoOficialAtivo = this.modoOficialAtivo
+        modoOficialAtivo = this.modoOficialAtivo,
+        compendioArteDaGuerraAtivo = this.compendioArteDaGuerraAtivo
     )
 }
 
@@ -275,7 +276,9 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += "Atributos derivados"
     lines += "Aparar: $aparar"
     lines += "Resistência: $resistenciaTexto"
-    lines += "Chi: $chi"
+    if (personagem.compendioArteDaGuerraAtivo) {
+        lines += "Chi: $chi"
+    }
     lines += "Tamanho: $tamanho"
     lines += "Movimento: $mov"
     lines += ""
