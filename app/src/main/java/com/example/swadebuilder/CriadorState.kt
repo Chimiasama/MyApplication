@@ -28,6 +28,8 @@ import com.example.swadebuilder.model.SnapshotRecursos
 import com.example.swadebuilder.model.SnapshotSelecoes
 import com.example.swadebuilder.model.SnapshotSupers
 import com.example.swadebuilder.model.SuperInvestment
+import com.example.swadebuilder.model.TecnicaChi
+import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
@@ -47,6 +49,7 @@ class CriadorState {
     var compendioTrilhadorAtivo by mutableStateOf(false)
     var compendioDeadlandsAtivo by mutableStateOf(false)
     var compendioCrystalHeartAtivo by mutableStateOf(false)
+    var compendioArteDaGuerraAtivo by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
@@ -65,6 +68,20 @@ class CriadorState {
     var anotacoes by mutableStateOf("")
 
     var coracaoCrystalSelecionado by mutableStateOf<com.example.swadebuilder.model.CrystalHeart?>(null)
+
+    // Arte da Guerra states
+    var tropoSelecionado by mutableStateOf<Tropo?>(null)
+    val tecnicasChiSelecionadas = mutableStateListOf<TecnicaChi>()
+    val chiMaximo by derivedStateOf {
+        val espirito = valoresAtributos["ESPIRITO"]?.intValue ?: 4
+        val base = 2 + (espirito / 2)
+        val hasReducedChi = listaAncestralidadesJson
+            .firstOrNull { it.nome.keyify() == ancestralidade }
+            ?.habilidades
+            ?.any { it.nome.contains("Chi Reduzido", ignoreCase = true) } == true
+        if (hasReducedChi) base - 1 else base
+    }
+    var chiAtual by mutableIntStateOf(0)
 
     val comprasPpPorEstagio = mutableStateMapOf<String, Int>().apply {
         listaDeEstagios.forEach { this[it.nome] = 0 }
@@ -158,9 +175,20 @@ class CriadorState {
     }
 
     fun valorAparar(): Int {
-        val perLutar = listaPericias.firstOrNull { it.nome.equals("Lutar", ignoreCase = true) }
-        val lutarRaw = perLutar?.let { rawTotalComSupers(it) } ?: 0
-        val base     = 2 + (lutarRaw / 2)
+        // Se Arte da Guerra está ativo, usa Jutsu em vez de Lutar para Aparar?
+        // SWADE Core: Parry = 2 + Fighting/2.
+        // Prompt says: "A perícia "Lutar" é substituída por "Jutsu"."
+        // Jutsu requires specialization. Usually Parry is derived from the highest fighting skill.
+        // I will assume Parry uses highest "Jutsu" skill if Art of War is active.
+        val baseSkillValue = if (compendioArteDaGuerraAtivo) {
+            listaPericias
+                .filter { it.nome.startsWith("Jutsu", ignoreCase = true) }
+                .maxOfOrNull { rawTotalComSupers(it) } ?: 0
+        } else {
+            val perLutar = listaPericias.firstOrNull { it.nome.equals("Lutar", ignoreCase = true) }
+            perLutar?.let { rawTotalComSupers(it) } ?: 0
+        }
+        val base = 2 + (baseSkillValue / 2)
 
         val bloquearBonus =
             if (vantagensSelecionadas.any { it.nome.keyify() == "BLOQUEAR" }) 1 else 0
@@ -1562,14 +1590,17 @@ class CriadorState {
     fun baseCreationComplete(): Boolean = pontosAtributo == 0 &&
             pontosPericia == 0 &&
             pontosVantagem == 0 &&
-            (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0) == 0
+            (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0) == 0 &&
+            (!compendioArteDaGuerraAtivo || tropoSelecionado != null)
 
     fun creationComplete(): Boolean {
         // "Ficha básica completa": todos os pontos iniciais foram distribuídos.
         // Em campanha supers, também exige ter zerado os Pontos de Super.
         val supersProntos = !modoSupers || superPontosTotais <= 0 || superPontosDisponiveis == 0
+        // Em Arte da Guerra, exige ter escolhido um tropo.
+        val tropoPronto = !compendioArteDaGuerraAtivo || tropoSelecionado != null
 
-        return baseCreationComplete() && supersProntos
+        return baseCreationComplete() && supersProntos && tropoPronto
     }
 
     val stageXpSpent: SnapshotStateMap<String, Int> = mutableStateMapOf<String, Int>().apply {
@@ -1710,6 +1741,7 @@ class CriadorState {
                 compendioTrilhadorAtivo = compendioTrilhadorAtivo,
                 compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                 compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+                compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
                 modoOficialAtivo = modoOficialAtivo,
                 modoMonstroAtivo = modoMonstroAtivo,
                 tipoMonstroSelecionado = tipoMonstroSelecionado,
@@ -1729,7 +1761,8 @@ class CriadorState {
                 idosoBonusSp = idosoBonusSp,
                 obesoBonusSize = obesoBonusSize,
                 obesoMalusMov = obesoMalusMov,
-                bonusPoderExtra = bonusPoderExtra
+                bonusPoderExtra = bonusPoderExtra,
+                tropoId = tropoSelecionado?.id
             ),
             recursos = SnapshotRecursos(
                 dinheiro = dinheiro,
@@ -1772,7 +1805,8 @@ class CriadorState {
                     .mapValues { (_, pilhas) -> pilhas.map { it.toList() } },
                 arcanoEmCompraViaXpKey = arcanoEmCompraViaXpKey,
                 arcanoSnapshotAntesDaCompra = arcanoSnapshotAntesDaCompra,
-                equipamentosComprados = equipamentosComprados.toList()
+                equipamentosComprados = equipamentosComprados.toList(),
+                tecnicasChiSelecionadas = tecnicasChiSelecionadas.map { it.id }
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -1837,6 +1871,7 @@ class CriadorState {
         compendioTrilhadorAtivo = flags.compendioTrilhadorAtivo
         compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo
         compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo
+        compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo ?: false
         modoOficialAtivo = flags.modoOficialAtivo
         modoMonstroAtivo = flags.modoMonstroAtivo
         usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia
@@ -1864,6 +1899,11 @@ class CriadorState {
         obesoMalusMov = flags.obesoMalusMov
         bonusPoderExtra = flags.bonusPoderExtra
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
+
+        // Restore Tropo
+        if (compendioArteDaGuerraAtivo && flags.tropoId != null) {
+            tropoSelecionado = listaTropos.firstOrNull { it.id == flags.tropoId }
+        }
 
         dinheiro = snapshot.recursos.dinheiro
         pontosVantagem = snapshot.recursos.pontosVantagem
@@ -1941,6 +1981,13 @@ class CriadorState {
         poderesSelecionados.apply { clear(); addAll(snapshot.selecoes.poderesSelecionados) }
         arcanoEmCompraViaXpKey = snapshot.selecoes.arcanoEmCompraViaXpKey
         arcanoSnapshotAntesDaCompra = snapshot.selecoes.arcanoSnapshotAntesDaCompra
+
+        tecnicasChiSelecionadas.clear()
+        snapshot.selecoes.tecnicasChiSelecionadas?.forEach { id ->
+             listaTecnicasChi.firstOrNull { it.id == id }?.let {
+                 tecnicasChiSelecionadas.add(it)
+             }
+        }
 
         progresso = snapshot.progresso.progresso
         progressosDisponiveis = snapshot.progresso.progressosDisponiveis

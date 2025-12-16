@@ -1,0 +1,62 @@
+[
+  {
+    "id": "chi_ataque_corporal",
+    "nome": "Ataque Chi Corpo a Corpo",
+    "custo": 1,
+    "duracao": "5",
+    "distancia": "Pessoal",
+    "estagio": "Novato",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Adiciona +1d6 ao dano desarmado ou com arma. Pode ser modificado para PA ou Dano Pesado."
+  },
+  {
+    "id": "chi_aljava",
+    "nome": "Aljava de Porco-Espinho",
+    "custo": 1,
+    "duracao": "5",
+    "distancia": "Pessoal",
+    "estagio": "Novato",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Cria munição de Chi (flechas, agulhas) infinitas pela duração."
+  },
+  {
+    "id": "chi_areia_bolso",
+    "nome": "Areia de Bolso",
+    "custo": 2,
+    "duracao": "5",
+    "distancia": "Espírito (Cone)",
+    "estagio": "Experiente",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Cega alvos no cone (Agilidade -2 nega). Sucesso parcial causa Distraído e -4 visão."
+  },
+  {
+    "id": "chi_clone",
+    "nome": "Clone",
+    "custo": 2,
+    "duracao": "5",
+    "distancia": "Espírito",
+    "estagio": "Experiente",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Cria uma cópia física (Extra) do herói. Clone tem 1 Chi e desaparece se ferido."
+  },
+  {
+    "id": "chi_hadouken",
+    "nome": "Hadouken (Raio)",
+    "custo": 1,
+    "duracao": "Instantânea",
+    "distancia": "Espírito x 2",
+    "estagio": "Experiente",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Dispara esfera de energia. 2d6 dano (3d6 ampliação). Funciona como o poder Raio."
+  },
+  {
+    "id": "chi_fuga_ninja",
+    "nome": "Fuga Ninja",
+    "custo": 3,
+    "duracao": "5",
+    "distancia": "Pessoal",
+    "estagio": "Experiente",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Teleporta curta distância e fica Invisível (-4 para ser acertado)."
+  }
+]

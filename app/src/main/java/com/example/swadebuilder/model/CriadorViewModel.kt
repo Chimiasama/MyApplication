@@ -9,6 +9,8 @@ import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
+import com.example.swadebuilder.listaTropos
+import com.example.swadebuilder.listaTecnicasChi
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.util.CharacterStorage
@@ -122,6 +124,7 @@ class CriadorViewModel : ViewModel() {
             compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
             compendioHorrorAtivo = flags.compendioHorrorAtivo,
             compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo,
+            compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo ?: false,
             modoMonstroAtivo = flags.modoMonstroAtivo,
             usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia,
             grandesResponsabilidades = flags.grandesResponsabilidades,
@@ -166,6 +169,7 @@ class CriadorViewModel : ViewModel() {
         compendioTrilhadorAtivo: Boolean = false,
         compendioDeadlandsAtivo: Boolean = false,
         compendioCrystalHeartAtivo: Boolean = false,
+        compendioArteDaGuerraAtivo: Boolean = false,
         modoMonstroAtivo: Boolean = false,
         usarEspecializacoesDePericia: Boolean = false,
         grandesResponsabilidades: Boolean = false,
@@ -180,6 +184,7 @@ class CriadorViewModel : ViewModel() {
         state.compendioTrilhadorAtivo = compendioTrilhadorAtivo
         state.compendioDeadlandsAtivo = compendioDeadlandsAtivo
         state.compendioCrystalHeartAtivo = compendioCrystalHeartAtivo
+        state.compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo
         state.modoMonstroAtivo = modoMonstroAtivo
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
         state.modoSuperequip = modoSupers
@@ -193,6 +198,9 @@ class CriadorViewModel : ViewModel() {
         state.anotacoes = ""
 
         state.coracaoCrystalSelecionado = null
+        state.tropoSelecionado = null
+        state.tecnicasChiSelecionadas.clear()
+        state.chiAtual = 0
 
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
 
@@ -1044,5 +1052,29 @@ class CriadorViewModel : ViewModel() {
             state.snapshotFrozenSkillIncrements()
         }
         state.updateEmProgressoFlag()
+    }
+
+    fun selecionarTropo(tropo: com.example.swadebuilder.model.Tropo) {
+        // Cleanup old trope advantages
+        state.tropoSelecionado?.let { oldTropo ->
+            oldTropo.ganha_ao_comprar.forEach { vantagemId ->
+                val v = listaVantagens.firstOrNull { it.id == vantagemId }
+                if (v != null) {
+                    state.vantagensSelecionadas.remove(v)
+                }
+            }
+        }
+
+        state.tropoSelecionado = tropo
+        state.tecnicasChiSelecionadas.clear()
+        state.chiAtual = state.chiMaximo
+
+        // Apply automatic advantages from Trope
+        tropo.ganha_ao_comprar.forEach { vantagemId ->
+            val v = listaVantagens.firstOrNull { it.id == vantagemId }
+            if (v != null && state.vantagensSelecionadas.none { it.id == v.id }) {
+                state.vantagensSelecionadas.add(v)
+            }
+        }
     }
 }

@@ -37,6 +37,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
@@ -122,6 +123,7 @@ fun TelaInicial(
     var optCompendioTrilhador by rememberSaveable { mutableStateOf(false) }
     var optCompendioDeadlands by rememberSaveable { mutableStateOf(false) }
     var optCompendioCrystalHeart by rememberSaveable { mutableStateOf(false) }
+    var optCompendioArteDaGuerra by rememberSaveable { mutableStateOf(false) }
 
     // SciFi
     var optCompendioSciFi by rememberSaveable { mutableStateOf(false) }
@@ -176,7 +178,7 @@ fun TelaInicial(
                         optNasceUmHeroi,
                         optHeroiSemArmadura,
                         optEspecializacaoPer,
-                        optSemPontosPoder,
+                        optSemPontosDePoder,
                         optGrandesResponsabilidades,
                         true // showHelpMessages defaulted to true
                     )
@@ -184,6 +186,7 @@ fun TelaInicial(
                     viewModel.state.compendioTrilhadorAtivo = optCompendioTrilhador
                     viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
                     viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
+                    viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
                     viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
                 },
@@ -272,6 +275,13 @@ fun TelaInicial(
                         icon = Icons.Default.Favorite,
                         checked = optCompendioCrystalHeart,
                         onCheckedChange = { optCompendioCrystalHeart = it }
+                    )
+                    ModuleToggle(
+                        title = "Arte da Guerra",
+                        description = "Cenário oriental de Wuxia e animes.",
+                        icon = Icons.Default.Star,
+                        checked = optCompendioArteDaGuerra,
+                        onCheckedChange = { optCompendioArteDaGuerra = it }
                     )
                 }
             }

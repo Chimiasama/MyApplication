@@ -33,6 +33,7 @@ data class SnapshotFlags(
     val compendioTrilhadorAtivo: Boolean = false,
     val compendioDeadlandsAtivo: Boolean = false,
     val compendioCrystalHeartAtivo: Boolean = false,
+    val compendioArteDaGuerraAtivo: Boolean? = false,
     val modoOficialAtivo: Boolean = false,
     val modoMonstroAtivo: Boolean,
     val tipoMonstroSelecionado: String?,
@@ -52,7 +53,8 @@ data class SnapshotFlags(
     val idosoBonusSp: Int,
     val obesoBonusSize: Int,
     val obesoMalusMov: Int,
-    val bonusPoderExtra: Int
+    val bonusPoderExtra: Int,
+    val tropoId: String? = null
 )
 
 @Serializable
@@ -113,7 +115,8 @@ data class SnapshotSelecoes(
     val arcanoEmCompraViaXpKey: String?,
     val arcanoSnapshotAntesDaCompra: List<String?>?,
     val equipamentosComprados: List<EquipamentoItem> = emptyList(),
-    val coracaoCrystalId: String? = null
+    val coracaoCrystalId: String? = null,
+    val tecnicasChiSelecionadas: List<String>? = null
 )
 
 @Serializable

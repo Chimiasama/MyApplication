@@ -47,6 +47,8 @@ import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.SummaryContent
 import com.example.swadebuilder.ui.sections.SuperPoderesContent
 import com.example.swadebuilder.ui.sections.TipoMonstroSection
+import com.example.swadebuilder.ui.sections.TroposSection
+import com.example.swadebuilder.ui.sections.TecnicasChiSection
 import com.example.swadebuilder.ui.sections.VantagensContent
 import com.example.swadebuilder.ui.sections.XpSection
 import com.example.swadebuilder.util.keyify
@@ -145,6 +147,8 @@ fun UnifiedScreen(
     val scrollState = rememberScrollState()
 
     var expCrystalHeart by rememberSaveable { mutableStateOf(false) }
+    var expTropos by rememberSaveable { mutableStateOf(false) }
+    var expTecnicasChi by rememberSaveable { mutableStateOf(false) }
 
     // --- estados para o MEIO-ELFO ---
     var showMeioElfoDialog by rememberSaveable { mutableStateOf(false) }
@@ -326,6 +330,17 @@ fun UnifiedScreen(
                 }
             )
 
+            // Tropos (Arte da Guerra)
+            if (state.compendioArteDaGuerraAtivo) {
+                HorizontalDivider(thickness = 1.dp)
+                TroposSection(
+                    state = state,
+                    viewModel = viewModel,
+                    expanded = expTropos,
+                    onToggle = { expTropos = !expTropos }
+                )
+            }
+
             if (state.modoMonstroAtivo) {
                 HorizontalDivider(thickness = 1.dp)
                 TipoMonstroSection(
@@ -396,6 +411,17 @@ fun UnifiedScreen(
 
             if (!state.compendioCrystalHeartAtivo) {
                 PoderesSection(state = state, expanded = expPoderes, onToggle = onTogglePoderes)
+            }
+
+            // Tecnicas Chi (Arte da Guerra)
+            if (state.compendioArteDaGuerraAtivo) {
+                HorizontalDivider(thickness = 1.dp)
+                TecnicasChiSection(
+                    state = state,
+                    viewModel = viewModel,
+                    expanded = expTecnicasChi,
+                    onToggle = { expTecnicasChi = !expTecnicasChi }
+                )
             }
 
             Spacer(Modifier.height(8.dp))
@@ -638,6 +664,7 @@ private fun EquipamentoSection(
         compendioSciFiAtivo = state.compendioSciFiAtivo,
         compendioTrilhadorAtivo = state.compendioTrilhadorAtivo,
         compendioDeadlandsAtivo = state.compendioDeadlandsAtivo,
+        compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo,
         modoOficialAtivo = state.modoOficialAtivo
     )
 }

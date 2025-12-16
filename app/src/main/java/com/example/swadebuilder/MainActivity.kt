@@ -94,6 +94,8 @@ import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.TecnicaChi
+import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.dialogs.AjudaDialog
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
@@ -151,7 +153,14 @@ class MainActivity : ComponentActivity() {
         } catch (_: Exception) { "[]" }
         val crystalEquipCategorias: List<EquipamentoCategoria> = json.decodeFromString(crystalEquipJson)
 
-        val equipamentoCategorias = (allEquipCategorias + crystalEquipCategorias).filter { cat ->
+        val adgEquipJson = try {
+            assets.open("equipamentos_adg.json")
+                .bufferedReader()
+                .use { it.readText() }
+        } catch (_: Exception) { "[]" }
+        val adgEquipCategorias: List<EquipamentoCategoria> = json.decodeFromString(adgEquipJson)
+
+        val equipamentoCategorias = (allEquipCategorias + crystalEquipCategorias + adgEquipCategorias).filter { cat ->
             cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
         }
         val superequipCategorias = allEquipCategorias.filter { cat ->
@@ -217,7 +226,13 @@ class MainActivity : ComponentActivity() {
              json.decodeFromString<List<Vantagem>>(txt)
         } catch (_: Exception) { emptyList() }
 
-        listaVantagens = todasVantagens + vantCrystal
+        val vantAdg = try {
+             val txt = assets.open("vantagens_adg.json").bufferedReader().use { it.readText() }
+             json.decodeFromString<List<Vantagem>>(txt)
+        } catch (_: Exception) { emptyList() }
+        AppData.arteDaGuerraVantagens = vantAdg
+
+        listaVantagens = todasVantagens + vantCrystal + vantAdg
 
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
@@ -229,7 +244,12 @@ class MainActivity : ComponentActivity() {
             json.decodeFromString<List<Complicacao>>(txt)
         } catch (_: Exception) { emptyList() }
 
-        listaComplicacoes = todasComplicacoes + compCrystal
+        val compAdg = try {
+            val txt = assets.open("complicacoes_adg.json").bufferedReader().use { it.readText() }
+            json.decodeFromString<List<Complicacao>>(txt)
+        } catch (_: Exception) { emptyList() }
+
+        listaComplicacoes = todasComplicacoes + compCrystal + compAdg
 
         val ancestralRaw = assets.open("listaancestralidade.json")
             .bufferedReader(Charsets.UTF_8)
@@ -259,19 +279,36 @@ class MainActivity : ComponentActivity() {
                 .use { it.readText() }
         } catch (_: Exception) { "[]" }
 
+        val ancestralAdgRaw = try {
+            assets.open("ancestralidades_adg.json")
+                .bufferedReader(Charsets.UTF_8)
+                .use { it.readText() }
+        } catch (_: Exception) { "[]" }
+
         val ancsBase = json.decodeFromString<List<RacialModifier>>(ancestralRaw)
         val ancsTrilhador = json.decodeFromString<List<RacialModifier>>(ancestralTrilhadorRaw)
         val ancsSciFi = json.decodeFromString<List<RacialModifier>>(ancestralSciFiRaw)
         val ancsDeadlands = json.decodeFromString<List<RacialModifier>>(ancestralDeadlandsRaw)
         val ancsCrystal = json.decodeFromString<List<RacialModifier>>(ancestralCrystalRaw)
+        val ancsAdg = json.decodeFromString<List<RacialModifier>>(ancestralAdgRaw)
 
-        listaAncestralidadesJson = ancsBase + ancsTrilhador + ancsSciFi + ancsDeadlands + ancsCrystal
+        listaAncestralidadesJson = ancsBase + ancsTrilhador + ancsSciFi + ancsDeadlands + ancsCrystal + ancsAdg
 
         val monstrosJson = assets
             .open("monstros.json")
             .bufferedReader()
             .use { it.readText() }
         listaMonstroTemplates = json.decodeFromString(monstrosJson)
+
+        val troposJson = try {
+            assets.open("tropos_adg.json").bufferedReader().use { it.readText() }
+        } catch (_: Exception) { "[]" }
+        listaTropos = json.decodeFromString(troposJson)
+
+        val tecnicasJson = try {
+            assets.open("tecnicas_chi.json").bufferedReader().use { it.readText() }
+        } catch (_: Exception) { "[]" }
+        listaTecnicasChi = json.decodeFromString(tecnicasJson)
 
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
             val m = rm.atributos
@@ -639,6 +676,7 @@ class MainActivity : ComponentActivity() {
                                         compendioTrilhadorAtivo = compendioTrilhadorAtivo,
                                         compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                                         compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+                                        compendioArteDaGuerraAtivo = criadorViewModel.state.compendioArteDaGuerraAtivo,
                                         modoMonstroAtivo = modoMonstroAtivo,
                                         usarEspecializacoesDePericia = usarEspecializacaoPer,
                                         showHelpMessages = showHelpMessages
@@ -805,6 +843,8 @@ data class SuperPoder(
 
 lateinit var listaAncestralidadesJson: List<RacialModifier>
 lateinit var listaMonstroTemplates: List<MonstroTemplate>
+lateinit var listaTropos: List<Tropo>
+lateinit var listaTecnicasChi: List<TecnicaChi>
 
 lateinit var racialAttrMinMap: Map<String, Map<String,Int>>
 lateinit var racialSkillStartMap: Map<String, Map<String,Int>>
