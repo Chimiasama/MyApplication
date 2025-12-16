@@ -82,6 +82,7 @@ fun TelaInicial(
         compendioTrilhadorAtivo: Boolean,
         compendioDeadlandsAtivo: Boolean,
         compendioCrystalHeartAtivo: Boolean,
+        compendioCidadeSolVaporAtivo: Boolean,
         modoMonstroAtivo: Boolean,
         modoSuperequipamentos: Boolean,
         modoSuperComplicacoes: Boolean,
@@ -122,6 +123,7 @@ fun TelaInicial(
     var optCompendioTrilhador by rememberSaveable { mutableStateOf(false) }
     var optCompendioDeadlands by rememberSaveable { mutableStateOf(false) }
     var optCompendioCrystalHeart by rememberSaveable { mutableStateOf(false) }
+    var optCompendioCidadeSolVapor by rememberSaveable { mutableStateOf(false) }
 
     // SciFi
     var optCompendioSciFi by rememberSaveable { mutableStateOf(false) }
@@ -170,6 +172,7 @@ fun TelaInicial(
                         optCompendioTrilhador,
                         optCompendioDeadlands,
                         optCompendioCrystalHeart,
+                        optCompendioCidadeSolVapor,
                         optModoMonstro,
                         optSuperPoderes, // superequipamentos enabled if supers enabled
                         optSuperPoderes, // supercomplicacoes enabled if supers enabled
@@ -184,6 +187,7 @@ fun TelaInicial(
                     viewModel.state.compendioTrilhadorAtivo = optCompendioTrilhador
                     viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
                     viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
+                    viewModel.state.compendioCidadeSolVaporAtivo = optCompendioCidadeSolVapor
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
                     viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
                 },
@@ -251,6 +255,13 @@ fun TelaInicial(
                         icon = Icons.Default.RocketLaunch,
                         checked = optCompendioSciFi,
                         onCheckedChange = { optCompendioSciFi = it }
+                    )
+                    ModuleToggle(
+                        title = "A Cidade do Sol a Vapor",
+                        description = "Steampunk/Vitoriano com arcanotecnologia e tarô.",
+                        icon = Icons.Default.Build,
+                        checked = optCompendioCidadeSolVapor,
+                        onCheckedChange = { optCompendioCidadeSolVapor = it }
                     )
                     ModuleToggle(
                         title = "Savage Pathfinder",

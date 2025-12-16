@@ -279,7 +279,7 @@ fun UnifiedScreen(
             } else {
                 // Default Progression View
                 ResumoSection(state = state, expanded = expResumo, onToggle = onToggleResumo)
-                EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
+                EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias, compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo)
 
                 Spacer(Modifier.height(16.dp))
                 HorizontalDivider(thickness = 3.dp)
@@ -402,7 +402,7 @@ fun UnifiedScreen(
             HorizontalDivider(thickness = 1.dp)
 
             SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = expPoderes, onToggle = onTogglePoderes)
-            EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias)
+            EquipamentoSection(state = state, expanded = expEquip, onToggle = onToggleEquip, equipamentoCategorias = equipamentoCategorias, superequipCategorias = superequipCategorias, compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo)
 
             Spacer(Modifier.height(16.dp))
             HorizontalDivider(thickness = 3.dp)
@@ -574,7 +574,8 @@ private fun EquipamentoSection(
     expanded: Boolean,
     onToggle: () -> Unit,
     equipamentoCategorias: List<EquipamentoCategoria>,
-    superequipCategorias: List<EquipamentoCategoria>
+    superequipCategorias: List<EquipamentoCategoria>,
+    compendioCidadeSolVaporAtivo: Boolean = false
 ) {
     val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
     val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
@@ -638,6 +639,7 @@ private fun EquipamentoSection(
         compendioSciFiAtivo = state.compendioSciFiAtivo,
         compendioTrilhadorAtivo = state.compendioTrilhadorAtivo,
         compendioDeadlandsAtivo = state.compendioDeadlandsAtivo,
+        compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
         modoOficialAtivo = state.modoOficialAtivo
     )
 }

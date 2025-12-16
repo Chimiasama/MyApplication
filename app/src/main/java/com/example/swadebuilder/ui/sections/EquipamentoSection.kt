@@ -193,6 +193,7 @@ fun EquipamentoSection(
     compendioSciFiAtivo: Boolean = false,
     compendioTrilhadorAtivo: Boolean = false,
     compendioDeadlandsAtivo: Boolean = false,
+    compendioCidadeSolVaporAtivo: Boolean = false,
     modoOficialAtivo: Boolean = false
 ) {
     val focusManager = LocalFocusManager.current
@@ -205,6 +206,7 @@ fun EquipamentoSection(
     var expSciFiEquip by rememberSaveable { mutableStateOf(false) }
     var expTrilhadorEquip by rememberSaveable { mutableStateOf(false) }
     var expDeadlandsEquip by rememberSaveable { mutableStateOf(false) }
+    var expCidadeSolVaporEquip by rememberSaveable { mutableStateOf(false) }
 
     var filter by remember { mutableStateOf(EquipFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
@@ -233,7 +235,8 @@ fun EquipamentoSection(
             val isSciFi = origem == "SCI_FI"
             val isTrilhador = origem == "FANTASIA_TRILHADOR"
             val isDeadlands = origem == "DEADLANDS"
-            !isFantasia && !isHorror && !isSciFi && !isTrilhador && !isDeadlands
+            val isCidadeSolVapor = origem == "CIDADE_SOL_VAPOR"
+            !isFantasia && !isHorror && !isSciFi && !isTrilhador && !isDeadlands && !isCidadeSolVapor
         }
 
         // Filtra as categorias de fantasia (se ativo)
@@ -273,6 +276,14 @@ fun EquipamentoSection(
         val deadlandsCategorias = if (compendioDeadlandsAtivo) {
             allCategorias.filter {
                 (it.origem?.uppercase() ?: "") == "DEADLANDS"
+            }
+        } else {
+            emptyList()
+        }
+
+        val cidadeSolVaporCategorias = if (compendioCidadeSolVaporAtivo) {
+            allCategorias.filter {
+                (it.origem?.uppercase() ?: "") == "CIDADE_SOL_VAPOR"
             }
         } else {
             emptyList()
@@ -463,6 +474,25 @@ fun EquipamentoSection(
             ) {
                 RenderCategoryList(
                     categories = deadlandsCategorias,
+                    filter = filter,
+                    dinheiro = dinheiro,
+                    allowLongTexts = allowLongTexts,
+                    detalhesExpandidos = detalhesExpandidos,
+                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
+                    showOriginalName = modoOficialAtivo
+                )
+            }
+        }
+
+        if (compendioCidadeSolVaporAtivo && cidadeSolVaporCategorias.isNotEmpty()) {
+            Spacer(Modifier.padding(vertical = 4.dp))
+            CollapsibleSection(
+                title = "Equipamento de Cidade do Sol a Vapor",
+                expanded = expCidadeSolVaporEquip,
+                onToggle = { expCidadeSolVaporEquip = !expCidadeSolVaporEquip }
+            ) {
+                RenderCategoryList(
+                    categories = cidadeSolVaporCategorias,
                     filter = filter,
                     dinheiro = dinheiro,
                     allowLongTexts = allowLongTexts,
@@ -832,6 +862,7 @@ fun EquipamentoListItem(
             val detalhes = buildList {
                 equipamento.observacoes.contentString()?.let { add("Observações: $it") }
                 equipamento.malfuncionamento.contentString()?.let { add("Malfuncionamento: $it") }
+                equipamento.pmf.contentString()?.let { add("PMF: $it") }
                 equipamento.forcaMin.contentString()?.let { add("Força mínima: $it") }
                 equipamento.distancia.contentString()?.let { add("Distância: $it") }
                 equipamento.dano.contentString()?.let { add("Dano: $it") }
