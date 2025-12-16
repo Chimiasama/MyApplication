@@ -19,6 +19,9 @@ import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
 import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.model.Estagio
+import com.example.swadebuilder.model.GlobalData
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.PersonagemSnapshot
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.SnapshotAtributos
@@ -71,7 +74,7 @@ class CriadorState {
     var coracaoCrystalSelecionado by mutableStateOf<com.example.swadebuilder.model.CrystalHeart?>(null)
 
     val comprasPpPorEstagio = mutableStateMapOf<String, Int>().apply {
-        listaDeEstagios.forEach { this[it.nome] = 0 }
+        GlobalData.listaDeEstagios.forEach { this[it.nome] = 0 }
     }
 
     val superInvestments = mutableStateListOf<SuperInvestment>()
@@ -106,7 +109,7 @@ class CriadorState {
     var soldadoCargaAtivo by mutableStateOf(true)
 
     val origemPersonagem: String?
-        get() = listaAncestralidadesJson
+        get() = GlobalData.listaAncestralidadesJson
             .firstOrNull { it.nome.keyify() == ancestralidade }
             ?.origem
             ?.uppercase()
@@ -138,7 +141,7 @@ class CriadorState {
         val base = 6
 
         val racialPenalty =
-            listaAncestralidadesJson
+            GlobalData.listaAncestralidadesJson
                 .firstOrNull { it.nome.keyify() == ancestralidade }
                 ?.desvantagens
                 ?.any { it.contains(Constants.HIND_NAME_REDUCED_PACE, ignoreCase = true) }
@@ -191,8 +194,8 @@ class CriadorState {
     }
 
     fun valorAparar(): Int {
-        val perLutar = listaPericias.firstOrNull { it.nome.equals(Constants.SKILL_FIGHTING, ignoreCase = true) }
-        val perJutsu = listaPericias.firstOrNull { it.nome.equals(Constants.SKILL_JUTSU, ignoreCase = true) }
+        val perLutar = GlobalData.listaPericias.firstOrNull { it.nome.equals(Constants.SKILL_FIGHTING, ignoreCase = true) }
+        val perJutsu = GlobalData.listaPericias.firstOrNull { it.nome.equals(Constants.SKILL_JUTSU, ignoreCase = true) }
         val lutarRaw = perLutar?.let { rawTotalComSupers(it) } ?: 0
         val jutsuRaw = perJutsu?.let { rawTotalComSupers(it) } ?: 0
         val melhorLuta = maxOf(lutarRaw, jutsuRaw)
@@ -242,7 +245,7 @@ class CriadorState {
     }
 
     fun valorTamanho(): Int {
-        val desc = listaAncestralidadesJson
+        val desc = GlobalData.listaAncestralidadesJson
             .firstOrNull { it.nome.keyify() == ancestralidade }
             ?.desvantagens
             ?.firstOrNull { it.startsWith(Constants.HIND_PREFIX_SIZE, ignoreCase = true) }
@@ -437,7 +440,7 @@ class CriadorState {
 
 
     fun maxComprasPpAteAgora(): Int {
-        return listaDeEstagios.indexOf(estagioAtual()) + 1
+        return GlobalData.listaDeEstagios.indexOf(estagioAtual()) + 1
     }
 
     private fun selecionarPontosDePoder(v: Vantagem) {
@@ -503,13 +506,13 @@ class CriadorState {
     }
 
     val comprasAttrPorEstagio = mutableStateMapOf<String, Int>().apply {
-        listaDeEstagios.forEach { this[it.nome] = 0 }
+        GlobalData.listaDeEstagios.forEach { this[it.nome] = 0 }
     }
 
     fun identifyMaxedTraits() {
         _maxedTraits.clear()
 
-        listaAtributos.forEach { attrKey ->
+        GlobalData.listaAtributos.forEach { attrKey ->
             val current    = valoresAtributos[attrKey]?.intValue ?: return@forEach
             val maxAllowed = atributoMaxRaw(attrKey)
             if (current == maxAllowed) {
@@ -517,7 +520,7 @@ class CriadorState {
             }
         }
 
-        listaPericias.forEach { per ->
+        GlobalData.listaPericias.forEach { per ->
             val current    = rawTotal(per)
             val maxAllowed = periciaCapRaw(per)
             if (current == maxAllowed) {
@@ -574,7 +577,7 @@ class CriadorState {
             val obrigatorias = vant.requisitos.periciaMin   // se for null, vira um Map vazio
                 .mapNotNull { (nomeRaw, min) ->
                     val chaveNorm = nomeRaw.uppercase().semAcentos().trim()
-                    listaPericias
+                    GlobalData.listaPericias
                         .firstOrNull { it.nome.uppercase().semAcentos() == chaveNorm }
                         ?.let { per -> per to min }
                 }
@@ -582,7 +585,7 @@ class CriadorState {
             val opcionais = vant.requisitos.periciaMinOpcional   // se null, vira Map vazio
                 .mapNotNull { (nomeRaw, min) ->
                     val chaveNorm = nomeRaw.uppercase().semAcentos().trim()
-                    listaPericias
+                    GlobalData.listaPericias
                         .firstOrNull { it.nome.uppercase().semAcentos() == chaveNorm }
                         ?.let { per -> per to min }
                 }
@@ -594,7 +597,7 @@ class CriadorState {
                     && choiceSnapshot != null
                 ) {
                     val key = choiceSnapshot.uppercase().semAcentos().trim()
-                    listaPericias
+                    GlobalData.listaPericias
                         .firstOrNull { it.nome.uppercase().semAcentos() == key }
                         ?.let { per -> listOf(per to 8) }
                         .orEmpty()
@@ -705,7 +708,7 @@ class CriadorState {
     }
 
     fun getSlotsCountForArcano(arcKey: String): Int {
-        val base = arcanoInfo[arcKey]?.first ?: 0
+        val base = GlobalData.arcanoInfo[arcKey]?.first ?: 0
         val newPowersCount = vantagensSelecionadas.count {
             it.id == Constants.ADV_ID_NEW_POWERS &&
                     (it.choice.isNullOrBlank() || it.choice?.normAAKey() == arcKey)
@@ -769,21 +772,21 @@ class CriadorState {
 
     var progresso by mutableIntStateOf(0)
     fun estagioAtual(): Estagio {
-        return listaDeEstagios.first { progresso in it.minProgress .. it.maxProgress }
+        return GlobalData.listaDeEstagios.first { progresso in it.minProgress .. it.maxProgress }
     }
 
     private fun effectiveProgressoParaVantagens(): Int {
         val stName = overrideStageForVantagem ?: return progresso
-        val st = listaDeEstagios.firstOrNull { it.nome.equals(stName, ignoreCase = true) }
+        val st = GlobalData.listaDeEstagios.firstOrNull { it.nome.equals(stName, ignoreCase = true) }
         return st?.minProgress ?: progresso
     }
 
     private fun currentProgressStageIndex(): Int {
         var firstOpen = -1
 
-        listaDeEstagios.forEachIndexed { idx, st ->
-            val prevMax = listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: 0
-            val cap = if (idx < listaDeEstagios.lastIndex) {
+        GlobalData.listaDeEstagios.forEachIndexed { idx, st ->
+            val prevMax = GlobalData.listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: 0
+            val cap = if (idx < GlobalData.listaDeEstagios.lastIndex) {
                 st.maxProgress - prevMax
             } else {
                 (TOTAL_PROGRESS_LIMIT - prevMax).coerceAtLeast(0)
@@ -794,7 +797,7 @@ class CriadorState {
             }
         }
 
-        return if (firstOpen >= 0) firstOpen else listaDeEstagios.lastIndex
+        return if (firstOpen >= 0) firstOpen else GlobalData.listaDeEstagios.lastIndex
     }
 
     var ancestralidade by mutableStateOf(Constants.RACE_HUMAN)
@@ -817,7 +820,7 @@ class CriadorState {
 
     var nasceUmHeroi by mutableStateOf(false)
 
-    val valoresAtributos = listaAtributos.associateWith { mutableIntStateOf(4) }
+    val valoresAtributos = GlobalData.listaAtributos.associateWith { mutableIntStateOf(4) }
 
     val complicacoesSelecionadas: SnapshotStateMap<Complicacao, String?> = mutableStateMapOf()
     val reservasComplicacaoMaior: SnapshotStateMap<String, Boolean> = mutableStateMapOf()
@@ -920,20 +923,20 @@ class CriadorState {
             }
 
             if (choiceSeguro == null) {
-                val anyMaxAttr = listaAtributos.any { a ->
+                val anyMaxAttr = GlobalData.listaAtributos.any { a ->
                     valoresAtributos[a]!!.intValue == atributoMaxRaw(a)
                 }
-                val anyMaxPer = listaPericias.any { p ->
+                val anyMaxPer = GlobalData.listaPericias.any { p ->
                     rawTotal(p) == periciaCapRaw(p)
                 }
                 return anyMaxAttr || anyMaxPer
             }
 
             val choiceKey = choiceSeguro.keyify()
-            return if (listaAtributos.contains(choiceKey)) {
+            return if (GlobalData.listaAtributos.contains(choiceKey)) {
                 valoresAtributos[choiceKey]!!.intValue == atributoMaxRaw(choiceKey)
             } else {
-                val per = listaPericias.first { it.nome.keyify() == choiceKey }
+                val per = GlobalData.listaPericias.first { it.nome.keyify() == choiceKey }
                 rawTotal(per) == periciaCapRaw(per)
             }
         }
@@ -941,13 +944,13 @@ class CriadorState {
         // 5) Estágio mínimo (respeita Nasce um Herói)
         val ignorarEstagioPorNasce = (nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0)
         if (!ignorarEstagioPorNasce) {
-            val estagioRequerido = listaDeEstagios.firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
+            val estagioRequerido = GlobalData.listaDeEstagios.firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
             if (estagioRequerido != null) {
                 val estagioAtual = overrideStageForVantagem?.let { stageName ->
-                    listaDeEstagios.firstOrNull { it.nome.equals(stageName, ignoreCase = true) }
+                    GlobalData.listaDeEstagios.firstOrNull { it.nome.equals(stageName, ignoreCase = true) }
                 } ?: estagioAtual()
 
-                if (listaDeEstagios.indexOf(estagioAtual) < listaDeEstagios.indexOf(estagioRequerido)) {
+                if (GlobalData.listaDeEstagios.indexOf(estagioAtual) < GlobalData.listaDeEstagios.indexOf(estagioRequerido)) {
                     return false
                 }
             }
@@ -995,14 +998,14 @@ class CriadorState {
         }
 
         // 9) Estágio alternativo (tabela nivelParaEstagio)
-        nivelParaEstagio[v.requisitos.estagio]?.let { estReqObj2 ->
+        GlobalData.nivelParaEstagio[v.requisitos.estagio]?.let { estReqObj2 ->
             if (estReqObj2.minProgress > effectiveProgressoParaVantagens()) return false
         }
 
         // 10) Atributos mínimos
         if (v.requisitos.atributoMin.any { (nome, min) ->
                 val chaveNorm = nome.uppercase().semAcentos().trim()
-                val attrKey = mapaAtributosDisplay.keys.firstOrNull {
+                val attrKey = GlobalData.mapaAtributosDisplay.keys.firstOrNull {
                     it.equals(chaveNorm, ignoreCase = true)
                 } ?: chaveNorm
                 val atual = valoresAtributos[attrKey]?.intValue ?: return false
@@ -1013,7 +1016,7 @@ class CriadorState {
         val periciaMinMap = v.requisitos.periciaMin
         if (v.vinculadoPericia && periciaMinMap.isNotEmpty()) {
             val atendeUma = periciaMinMap.any { (perNome, minRaw) ->
-                val per = listaPericias.firstOrNull {
+                val per = GlobalData.listaPericias.firstOrNull {
                     it.nome.equals(perNome, ignoreCase = true)
                 }
                 per != null && rawTotal(per) >= minRaw
@@ -1021,7 +1024,7 @@ class CriadorState {
             if (!atendeUma) return false
         } else {
             if (periciaMinMap.any { (perNome, minRaw) ->
-                    val per = listaPericias.firstOrNull {
+                    val per = GlobalData.listaPericias.firstOrNull {
                         it.nome.equals(perNome, ignoreCase = true)
                     } ?: return@any false
                     rawTotal(per) < minRaw
@@ -1034,7 +1037,7 @@ class CriadorState {
         val periciaMinOpcMap = v.requisitos.periciaMinOpcional
         if (periciaMinOpcMap.isNotEmpty()) {
             val atendeUmaOpc = periciaMinOpcMap.any { (perNome, minRaw) ->
-                val per = listaPericias.firstOrNull {
+                val per = GlobalData.listaPericias.firstOrNull {
                     it.nome.equals(perNome, ignoreCase = true)
                 }
                 per != null && rawTotal(per) >= minRaw
@@ -1063,23 +1066,23 @@ class CriadorState {
     }
 
     var pontosComplicacaoGastos by mutableIntStateOf(0)
-    val baseIncsPorPericia = mutableStateMapOf<Pericia, Int>().also { m -> listaPericias.forEach { m[it] = 0 } }
-    private val compIncsPorPericia = mutableStateMapOf<Pericia, Int>().also { m -> listaPericias.forEach { m[it] = 0 } }
+    val baseIncsPorPericia = mutableStateMapOf<Pericia, Int>().also { m -> GlobalData.listaPericias.forEach { m[it] = 0 } }
+    private val compIncsPorPericia = mutableStateMapOf<Pericia, Int>().also { m -> GlobalData.listaPericias.forEach { m[it] = 0 } }
     val compCostStackPorPericia = mutableStateMapOf<Pericia, MutableList<Int>>().also { m ->
-        listaPericias.forEach { m[it] = mutableListOf() }
+        GlobalData.listaPericias.forEach { m[it] = mutableListOf() }
     }
     val paCostStackPorAtributo = mutableStateMapOf<String, MutableList<Int>>().also { m ->
-        listaAtributos.forEach { m[it] = mutableListOf() }
+        GlobalData.listaAtributos.forEach { m[it] = mutableListOf() }
     }
     val spCostStackPorPericia = mutableStateMapOf<Pericia, SnapshotStateList<Int>>().also { m ->
-        listaPericias.forEach { m[it] = mutableStateListOf() }
+        GlobalData.listaPericias.forEach { m[it] = mutableStateListOf() }
     }
 
     fun rebuildPericias(desiredRaw: Map<Pericia, Int>) {
         val poolSize = BASE_SP_POOL + cpSpStack.size
         var cumulativeCost = 0
 
-        listaPericias.forEach { per ->
+        GlobalData.listaPericias.forEach { per ->
 
             val cap = periciaCapRaw(per)
             val target = desiredRaw.getValue(per).coerceAtMost(cap)
@@ -1122,7 +1125,7 @@ class CriadorState {
     }
 
     fun atributoMinRaw(a: String): Int =
-        racialAttrMinMap[ancestralidade]?.get(a) ?: 4
+        GlobalData.racialAttrMinMap[ancestralidade]?.get(a) ?: 4
 
     fun atributoMaxRaw(a: String): Int {
         val minRaw = atributoMinRaw(a)
@@ -1248,11 +1251,11 @@ class CriadorState {
 
         // --- Ajuste de atributos pela nova raça ---
 
-        listaPericias.associateWith { rawTotal(it) }
+        GlobalData.listaPericias.associateWith { rawTotal(it) }
 
-        val newAttrMods = racialAttrMinMap[anc] ?: emptyMap()
+        val newAttrMods = GlobalData.racialAttrMinMap[anc] ?: emptyMap()
 
-        listaAtributos.forEach { nome ->
+        GlobalData.listaAtributos.forEach { nome ->
             val st     = valoresAtributos[nome]!!
             val newMin = newAttrMods[nome] ?: 4
 
@@ -1302,7 +1305,7 @@ class CriadorState {
         vantagensRaciais.clear()
         desvantagensRaciais.clear()
 
-        listaAncestralidadesJson
+        GlobalData.listaAncestralidadesJson
             .firstOrNull { it.nome.keyify() == anc }
             ?.let { rm ->
                 desvantagensAutomaticas.addAll(rm.desvantagens)
@@ -1317,9 +1320,9 @@ class CriadorState {
         naturalArmorFromRace = 0
         when (anc) {
             Constants.RACE_SAURIAN -> {
-                listaVantagens.firstOrNull { it.nome.equals(Constants.ADV_NAME_KEEN_SENSES, ignoreCase = true) }
+                GlobalData.listaVantagens.firstOrNull { it.nome.equals(Constants.ADV_NAME_KEEN_SENSES, ignoreCase = true) }
                     ?.let { vantagensSelecionadas.add(it) }
-                listaVantagens.firstOrNull { it.nome.equals(Constants.ADV_NAME_ALERTNESS, ignoreCase = true) }
+                GlobalData.listaVantagens.firstOrNull { it.nome.equals(Constants.ADV_NAME_ALERTNESS, ignoreCase = true) }
                     ?.let { vantagensSelecionadas.add(it) }
                 vantagensAutomaticas.add(Constants.ADV_NAME_ALERTNESS)
                 vantagensRaciais.add(Constants.ADV_NAME_ALERTNESS)
@@ -1327,7 +1330,7 @@ class CriadorState {
                 armadura = 0
             }
             Constants.RACE_HALFLING -> {
-                listaVantagens.firstOrNull { it.nome.equals(Constants.ADV_NAME_LUCK, ignoreCase = true) }
+                GlobalData.listaVantagens.firstOrNull { it.nome.equals(Constants.ADV_NAME_LUCK, ignoreCase = true) }
                     ?.let { vantagensSelecionadas.add(it) }
                 vantagensAutomaticas.add(Constants.ADV_NAME_LUCK)
                 if (desvantagensRaciais.none { it.contains(Constants.HIND_PREFIX_SIZE, ignoreCase = true) }) {
@@ -1339,7 +1342,7 @@ class CriadorState {
                 armadura = 0
             }
             Constants.RACE_CELESTIAL -> {
-                val aaMilagres = listaVantagens.firstOrNull {
+                val aaMilagres = GlobalData.listaVantagens.firstOrNull {
                     it.id == Constants.ADV_ID_AA_MIRACLES
                 }
                 if (aaMilagres != null && vantagensSelecionadas.none { it.id == aaMilagres.id }) {
@@ -1349,7 +1352,7 @@ class CriadorState {
                 armadura = 0
             }
             Constants.RACE_HUMAN_WISEGUYS.keyify() -> {
-                val conexoesMafia = listaVantagens.firstOrNull {
+                val conexoesMafia = GlobalData.listaVantagens.firstOrNull {
                     it.nome.equals(Constants.ADV_NAME_MAFIA_CONNECTIONS, ignoreCase = true)
                 }
                 if (conexoesMafia != null && vantagensSelecionadas.none { it.nome.equals(Constants.ADV_NAME_MAFIA_CONNECTIONS, ignoreCase = true) }) {
@@ -1368,7 +1371,7 @@ class CriadorState {
 
         // --- Complicações raciais automáticas ---
 
-        val oldAutoKeys = listaAncestralidadesJson
+        val oldAutoKeys = GlobalData.listaAncestralidadesJson
             .firstOrNull { it.nome.keyify() == prevAnc }
             ?.desvantagens
             ?.map { it.substringBefore("(").trim().keyify() }
@@ -1383,7 +1386,7 @@ class CriadorState {
             .map { it.substringBefore("(").trim().keyify() }
             .toSet()
 
-        listaComplicacoes
+        GlobalData.listaComplicacoes
             .filter { it.id.keyify() in autoBaseKeys }
             .forEach { comp ->
                 val hasMenor = desvantagensAutomaticas.any {
@@ -1418,7 +1421,7 @@ class CriadorState {
         var remaining = n
         reachedStages().mapIndexed { idx, est -> idx to est }.forEach { (idx, est) ->
             if (remaining == 0) return@forEach
-            val cap   = dynamicStageCaps[idx]
+            val cap   = GlobalData.dynamicStageCaps[idx]
             val spent = stageXpSpent.getValue(est.nome)
             val avail = (cap - spent).coerceAtLeast(0)
             val use   = avail.coerceAtMost(remaining)
@@ -1465,8 +1468,8 @@ class CriadorState {
 
         val remainingStageCapacity = reachedStages()
             .sumOf { stage ->
-                val stageIndex = listaDeEstagios.indexOf(stage)
-                val cap = dynamicStageCaps[stageIndex]
+                val stageIndex = GlobalData.listaDeEstagios.indexOf(stage)
+                val cap = GlobalData.dynamicStageCaps[stageIndex]
                 val spentHere = stageXpSpent.getValue(stage.nome)
                 (cap - spentHere).coerceAtLeast(0)
             }
@@ -1476,8 +1479,8 @@ class CriadorState {
 
     fun checkFreeze() {
         val idx = currentProgressStageIndex()
-        val est = listaDeEstagios[idx]
-        val cap = dynamicStageCaps[idx]
+        val est = GlobalData.listaDeEstagios[idx]
+        val cap = GlobalData.dynamicStageCaps[idx]
         val spent = stageXpSpent.getValue(est.nome)
         if (spent == cap) {
             frozenAdvantageCount = vantagensSelecionadas.size
@@ -1485,10 +1488,10 @@ class CriadorState {
     }
 
     private fun calcularPontosAtributoRestantes(): Int {
-        val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
+        val mods = GlobalData.racialAttrMinMap[ancestralidade] ?: emptyMap()
         var usados = 0
 
-        for (nome in listaAtributos) {
+        for (nome in GlobalData.listaAtributos) {
             val atual = valoresAtributos[nome]!!.intValue
             val base  = mods[nome] ?: 4
 
@@ -1524,7 +1527,7 @@ class CriadorState {
 
             stack.removeAt(stack.size - 1)
 
-            val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
+            val mods = GlobalData.racialAttrMinMap[ancestralidade] ?: emptyMap()
             val base = mods[nomeAttr] ?: 4
 
             val atual = valoresAtributos[nomeAttr]!!.intValue
@@ -1624,7 +1627,7 @@ class CriadorState {
     }
 
     val stageXpSpent: SnapshotStateMap<String, Int> = mutableStateMapOf<String, Int>().apply {
-        listaDeEstagios.forEach { this[it.nome] = 0 }
+        GlobalData.listaDeEstagios.forEach { this[it.nome] = 0 }
     }
 
     var progressosDisponiveis by mutableIntStateOf(0)
@@ -1634,11 +1637,11 @@ class CriadorState {
     }
 
     private fun reachedStages(): List<Estagio> =
-        listaDeEstagios.filter { progresso >= it.minProgress }
+        GlobalData.listaDeEstagios.filter { progresso >= it.minProgress }
 
     fun atributoRawBaseSemSupers(attrKey: String): Int {
         val key = attrKey.uppercase().trim()
-        val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
+        val mods = GlobalData.racialAttrMinMap[ancestralidade] ?: emptyMap()
         val baseMin = mods[key] ?: 4
 
         // Quantos "steps" base foram comprados na criação
@@ -1655,7 +1658,7 @@ class CriadorState {
         paCostStackPorAtributo.mapValues { (_, stack) -> stack.size }
 
     fun restoreAttributeStacks(snapshot: Map<String, Int>) {
-        listaAtributos.forEach { attr ->
+        GlobalData.listaAtributos.forEach { attr ->
             val stack = paCostStackPorAtributo.getValue(attr)
             val target = snapshot[attr] ?: 0
             while (stack.size > target) {
@@ -1674,7 +1677,7 @@ class CriadorState {
         var cumulativeCost = 0
         val pool = totalSpPool
 
-        listaPericias.forEach { per ->
+        GlobalData.listaPericias.forEach { per ->
 
             val desiredRaw = rawTotal(per)
             val cap       = periciaCapRaw(per)
@@ -1939,13 +1942,13 @@ class CriadorState {
         paCostStackPorAtributo.forEach { (attr, stack) ->
             stack.clear()
             stack.addAll(snapshot.atributos.paCostStackPorAtributo[attr].orEmpty())
-            val base = racialAttrMinMap[snapshot.atributos.ancestralidade]?.get(attr) ?: 4
+            val base = GlobalData.racialAttrMinMap[snapshot.atributos.ancestralidade]?.get(attr) ?: 4
             valoresAtributos[attr]!!.intValue = applySuperStepsFrom(base, stack.size)
         }
         pontosAtributo = calcularPontosAtributoRestantes()
 
         especializacoesPorPericia.clear()
-        listaPericias.forEach { per ->
+        GlobalData.listaPericias.forEach { per ->
             baseIncsPorPericia[per] = snapshot.pericias.baseIncsPorPericia[per.nome] ?: 0
             compIncsPorPericia[per] = snapshot.pericias.compIncsPorPericia[per.nome] ?: 0
 
@@ -1965,7 +1968,7 @@ class CriadorState {
 
         vantagensSelecionadas.clear()
         snapshot.selecoes.vantagens.forEach { snap ->
-            listaVantagens.firstOrNull { it.id == snap.id }?.let { vant ->
+            GlobalData.listaVantagens.firstOrNull { it.id == snap.id }?.let { vant ->
                 vant.choice = snap.choice
                 vantagensSelecionadas.add(vant)
             }
@@ -1978,7 +1981,7 @@ class CriadorState {
 
         complicacoesSelecionadas.clear()
         snapshot.selecoes.complicacoesSelecionadas.forEach { compSnap ->
-            listaComplicacoes.firstOrNull { it.id == compSnap.id }?.let { comp ->
+            GlobalData.listaComplicacoes.firstOrNull { it.id == compSnap.id }?.let { comp ->
                 complicacoesSelecionadas[comp] = compSnap.nivel
             }
         }
@@ -2047,7 +2050,7 @@ class CriadorState {
         comprasAttrPorEstagio.keys.forEach { comprasAttrPorEstagio[it] = snapshot.supers.comprasAttrPorEstagio[it] ?: 0 }
 
         snapshot.selecoes.coracaoCrystalId?.let { cid ->
-            coracaoCrystalSelecionado = listaCoracoesCrystal.find { it.id == cid }
+            coracaoCrystalSelecionado = GlobalData.listaCoracoesCrystal.find { it.id == cid }
         }
 
         recalcularPontosAtributo(feedbackMessages)

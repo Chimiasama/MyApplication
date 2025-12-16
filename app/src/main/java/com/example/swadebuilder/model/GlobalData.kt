@@ -1,9 +1,9 @@
 package com.example.swadebuilder.model
 
-import com.example.swadebuilder.ArcanoInfo
-import com.example.swadebuilder.Estagio
-import com.example.swadebuilder.Pericia
-import com.example.swadebuilder.SuperPoder
+import com.example.swadebuilder.model.ArcanoInfo
+import com.example.swadebuilder.model.Estagio
+import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.TOTAL_PROGRESS_LIMIT
 
 object GlobalData {

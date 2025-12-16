@@ -2,9 +2,9 @@ package com.example.swadebuilder.model
 
 import android.content.res.AssetManager
 import com.example.swadebuilder.AppData
-import com.example.swadebuilder.ArcanoInfo
-import com.example.swadebuilder.Pericia
-import com.example.swadebuilder.SuperPoder
+import com.example.swadebuilder.model.ArcanoInfo
+import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.Json
