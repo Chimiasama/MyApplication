@@ -45,7 +45,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -95,16 +94,17 @@ import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.loadJsonAsset
+import com.example.swadebuilder.model.loadOptionalList
+import com.example.swadebuilder.model.sharedJson
 import com.example.swadebuilder.ui.dialogs.AjudaDialog
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -121,10 +121,6 @@ data class ArcanoInfo(
 
 lateinit var arcanoInfo: Map<String, Triple<Int, Int, String>>
 
-private val json = Json {
-    ignoreUnknownKeys = true
-}
-
 private const val MULTIPLOS_AA_HABILITADOS: Boolean = false
 
 class MainActivity : ComponentActivity() {
@@ -137,66 +133,30 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val allEquipJson = assets
-            .open("equipamentos.json")
-            .bufferedReader()
-            .use { it.readText() }
+        // --- LOAD EQUIPMENT ---
         val allEquipCategorias: List<EquipamentoCategoria> =
-            json.decodeFromString(allEquipJson)
+            loadOptionalList("equipamentos.json") +
+            loadOptionalList("equipamentos_crystal.json") +
+            loadOptionalList("equipamentos_adg.json") +
+            loadOptionalList("equipamentos_sol_vapor.json") +
+            loadOptionalList("equipamentos_wiseguys.json")
 
-        val crystalEquipJson = try {
-            assets.open("equipamentos_crystal.json")
-                .bufferedReader()
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        val crystalEquipCategorias: List<EquipamentoCategoria> = json.decodeFromString(crystalEquipJson)
-
-        val adgEquipJson = try {
-            assets.open("equipamentos_adg.json")
-                .bufferedReader()
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        val adgEquipCategorias: List<EquipamentoCategoria> = json.decodeFromString(adgEquipJson)
-
-        val cidadeSolVaporEquipJson = try {
-            assets.open("equipamentos_sol_vapor.json")
-                .bufferedReader()
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        val cidadeSolVaporCategorias: List<EquipamentoCategoria> = json.decodeFromString(cidadeSolVaporEquipJson)
-
-        val wiseguysEquipJson = try {
-            assets.open("equipamentos_wiseguys.json")
-                .bufferedReader()
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        val wiseguysEquipCategorias: List<EquipamentoCategoria> = json.decodeFromString(wiseguysEquipJson)
-
-        val equipamentoCategorias = (allEquipCategorias + crystalEquipCategorias + adgEquipCategorias + cidadeSolVaporCategorias + wiseguysEquipCategorias).filter { cat ->
+        val equipamentoCategorias = allEquipCategorias.filter { cat ->
             cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
         }
         val superequipCategorias = allEquipCategorias.filter { cat ->
             cat.origem?.equals("super", ignoreCase = true) ?: false
         }
 
-        val crystalHeartsJson = try {
-            assets.open("coracoes_crystal.json")
-                .bufferedReader()
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        listaCoracoesCrystal = json.decodeFromString(crystalHeartsJson)
+        // --- LOAD CRYSTAL HEARTS ---
+        listaCoracoesCrystal = loadOptionalList("coracoes_crystal.json")
 
-        val superPoderesJson = assets
-            .open("superpoderes.json")
-            .bufferedReader()
-            .use { it.readText() }
+        // --- LOAD SUPERPOWERS ---
         val listaSuperPoderes: List<SuperPoder> =
-            json.decodeFromString(superPoderesJson)
+            loadOptionalList("superpoderes.json")
 
-        val arcanoJson = assets.open("arcano_info.json")
-            .bufferedReader().use { it.readText() }
-        val arcanoList: List<ArcanoInfo> =
-            json.decodeFromString(arcanoJson)
+        // --- LOAD ARCANE INFO ---
+        val arcanoList: List<ArcanoInfo> = loadOptionalList("arcano_info.json")
         arcanoInfo = arcanoList.associate {
             it.key
                 .uppercase()
@@ -204,12 +164,14 @@ class MainActivity : ComponentActivity() {
                 .trim() to Triple(it.slots, it.pp, it.foco)
         }
 
+        // --- LOAD ATTRIBUTES ---
         val atributosData = this.loadJsonAsset<AtributoList>("atributos.json")
         listaAtributos = atributosData.atributos
             .map { it.nome.keyify() }
         mapaAtributosDisplay = atributosData.atributos
             .associate { it.nome.keyify() to it.nome }
 
+        // --- LOAD SKILLS ---
         val periciasData = this.loadJsonAsset<PericiaList>("pericias.json")
         listaPericias = periciasData.pericias.map { pj ->
             Pericia(
@@ -219,132 +181,57 @@ class MainActivity : ComponentActivity() {
             )
         }
 
-        val todasVantagens: List<Vantagem> = this.loadJsonAsset("Vantagens.json")
+        // --- LOAD ADVANTAGES ---
+        val allAdvantages: List<Vantagem> =
+            loadOptionalList("Vantagens.json") +
+            loadOptionalList("vantagens_adg.json") +
+            loadOptionalList("vantagens_sol_vapor.json") +
+            loadOptionalList("vantagens_wiseguys.json") +
+            loadOptionalList("vantagens_crystal.json")
 
-        val vantagensAdg = try {
-            val txt = assets.open("vantagens_adg.json").bufferedReader().use { it.readText() }
-            json.decodeFromString<List<Vantagem>>(txt)
-        } catch (_: Exception) { emptyList() }
+        listaVantagens = allAdvantages
 
-        val vantagensCidadeSolVapor = try {
-            val txt = assets.open("vantagens_sol_vapor.json").bufferedReader().use { it.readText() }
-            json.decodeFromString<List<Vantagem>>(txt)
-        } catch (_: Exception) { emptyList() }
-
-        val vantagensWiseguys = try {
-            val txt = assets.open("vantagens_wiseguys.json").bufferedReader().use { it.readText() }
-            json.decodeFromString<List<Vantagem>>(txt)
-        } catch (_: Exception) { emptyList() }
-
-        AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
-        AppData.superVantagens = todasVantagens.filter {
+        AppData.basicasVantagens = allAdvantages.filter { it.origem.equals("BASICO", true) }
+        AppData.superVantagens = allAdvantages.filter {
             it.origem.equals("SUPER", ignoreCase = true)
         }
-
-        AppData.horrorVantagens = todasVantagens.filter {
+        AppData.horrorVantagens = allAdvantages.filter {
             it.origem.equals("HORROR", ignoreCase = true)
         }
-        AppData.trilhadorVantagens = todasVantagens.filter {
+        AppData.trilhadorVantagens = allAdvantages.filter {
             it.origem.equals("TRILHADOR", ignoreCase = true)
         }
-
-        val vantCrystal = try {
-             val txt = assets.open("vantagens_crystal.json").bufferedReader().use { it.readText() }
-             json.decodeFromString<List<Vantagem>>(txt)
-        } catch (_: Exception) { emptyList() }
-
-        listaVantagens = todasVantagens + vantCrystal + vantagensAdg + vantagensCidadeSolVapor + vantagensWiseguys
-
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
 
-        val todasComplicacoes = this.loadJsonAsset<List<Complicacao>>("complicacoes.json")
+        // --- LOAD COMPLICATIONS ---
+        listaComplicacoes =
+            loadOptionalList<Complicacao>("complicacoes.json") +
+            loadOptionalList("complicacoes_crystal.json") +
+            loadOptionalList("complicacoes_adg.json") +
+            loadOptionalList("complicacoes_sol_vapor.json") +
+            loadOptionalList("complicacoes_wiseguys.json")
 
-        val compCrystal = try {
-            val txt = assets.open("complicacoes_crystal.json").bufferedReader().use { it.readText() }
-            json.decodeFromString<List<Complicacao>>(txt)
-        } catch (_: Exception) { emptyList() }
 
-        val compAdg = try {
-            val txt = assets.open("complicacoes_adg.json").bufferedReader().use { it.readText() }
-            json.decodeFromString<List<Complicacao>>(txt)
-        } catch (_: Exception) { emptyList() }
+        // --- LOAD ANCESTRIES ---
+        // Note: Base ancestries are handled differently in original code ("listaancestralidade.json"),
+        // so we preserve that but switch to the unified loader.
+        listaAncestralidadesJson =
+            loadOptionalList<RacialModifier>("listaancestralidade.json") +
+            loadOptionalList("ancestralidades_trilhador.json") +
+            loadOptionalList("ancestralidades_sci_fi.json") +
+            loadOptionalList("ancestralidades_deadlands.json") +
+            loadOptionalList("ancestralidades_adg.json") +
+            loadOptionalList("ancestralidades_crystal.json") +
+            loadOptionalList("ancestralidades_sol_vapor.json") +
+            loadOptionalList("ancestralidades_wiseguys.json")
 
-        val compCidadeSolVapor = try {
-            val txt = assets.open("complicacoes_sol_vapor.json").bufferedReader().use { it.readText() }
-            json.decodeFromString<List<Complicacao>>(txt)
-        } catch (_: Exception) { emptyList() }
 
-        val compWiseguys = try {
-            val txt = assets.open("complicacoes_wiseguys.json").bufferedReader().use { it.readText() }
-            json.decodeFromString<List<Complicacao>>(txt)
-        } catch (_: Exception) { emptyList() }
+        // --- LOAD MONSTERS ---
+        listaMonstroTemplates = loadOptionalList("monstros.json")
 
-        listaComplicacoes = todasComplicacoes + compCrystal + compAdg + compCidadeSolVapor + compWiseguys
 
-        val ancestralRaw = assets.open("listaancestralidade.json")
-            .bufferedReader(Charsets.UTF_8)
-            .use { it.readText() }
-
-        val ancestralTrilhadorRaw = try {
-            assets.open("ancestralidades_trilhador.json")
-                .bufferedReader(Charsets.UTF_8)
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val ancestralSciFiRaw = try {
-            assets.open("ancestralidades_sci_fi.json")
-                .bufferedReader(Charsets.UTF_8)
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val ancestralDeadlandsRaw = try {
-            assets.open("ancestralidades_deadlands.json")
-                .bufferedReader(Charsets.UTF_8)
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val ancestralAdgRaw = try {
-            assets.open("ancestralidades_adg.json")
-                .bufferedReader(Charsets.UTF_8)
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val ancestralCrystalRaw = try {
-            assets.open("ancestralidades_crystal.json")
-                .bufferedReader(Charsets.UTF_8)
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val ancestralCidadeSolVaporRaw = try {
-            assets.open("ancestralidades_sol_vapor.json")
-                .bufferedReader(Charsets.UTF_8)
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val ancestralWiseguysRaw = try {
-            assets.open("ancestralidades_wiseguys.json")
-                .bufferedReader(Charsets.UTF_8)
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-
-        val ancsBase = json.decodeFromString<List<RacialModifier>>(ancestralRaw)
-        val ancsTrilhador = json.decodeFromString<List<RacialModifier>>(ancestralTrilhadorRaw)
-        val ancsSciFi = json.decodeFromString<List<RacialModifier>>(ancestralSciFiRaw)
-        val ancsDeadlands = json.decodeFromString<List<RacialModifier>>(ancestralDeadlandsRaw)
-        val ancsCrystal = json.decodeFromString<List<RacialModifier>>(ancestralCrystalRaw)
-        val ancsAdg = json.decodeFromString<List<RacialModifier>>(ancestralAdgRaw)
-        val ancsCidadeSolVapor = json.decodeFromString<List<RacialModifier>>(ancestralCidadeSolVaporRaw)
-        val ancsWiseguys = json.decodeFromString<List<RacialModifier>>(ancestralWiseguysRaw)
-
-        listaAncestralidadesJson = ancsBase + ancsTrilhador + ancsSciFi + ancsDeadlands + ancsCrystal + ancsAdg + ancsCidadeSolVapor + ancsWiseguys
-
-        val monstrosJson = assets
-            .open("monstros.json")
-            .bufferedReader()
-            .use { it.readText() }
-        listaMonstroTemplates = json.decodeFromString(monstrosJson)
-
+        // --- RACIAL HELPERS ---
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
             val m = rm.atributos
                 .mapKeys   { it.key.keyify() }
