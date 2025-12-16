@@ -79,6 +79,9 @@ fun AncestralidadesSection(
     val compendioFantasiaAtivo = state.compendioFantasiaAtivo
     val compendioTrilhadorAtivo = state.compendioTrilhadorAtivo
     val compendioDeadlandsAtivo = state.compendioDeadlandsAtivo
+    val compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo
+
+    val ancestralidadesState = remember(compendioFantasiaAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioCidadeSolVaporAtivo) {
     val compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo
 
     val ancestralidadesState = remember(compendioFantasiaAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioArteDaGuerraAtivo) {
@@ -98,12 +101,19 @@ fun AncestralidadesSection(
             emptyList()
         }
 
+        val allCidadeSolVapor = try {
+            context.loadJsonAsset<List<RacialModifier>>("ancestralidades_sol_vapor.json")
         val allAdg = try {
             context.loadJsonAsset<List<RacialModifier>>("ancestralidades_adg.json")
         } catch (e: Exception) {
             emptyList()
         }
 
+        val all = allLegacy + allTrilhador + allDeadlands + allCidadeSolVapor
+
+        val filtered = all.filter {
+            val origin = it.origem?.uppercase() ?: "BASICO"
+            origin == "BASICO" || (origin == "FANTASIA" && compendioFantasiaAtivo) || (origin == "FANTASIA_TRILHADOR" && compendioTrilhadorAtivo) || (origin == "DEADLANDS" && compendioDeadlandsAtivo) || (origin == "CIDADE_SOL_VAPOR" && compendioCidadeSolVaporAtivo)
         val all = allLegacy + allTrilhador + allDeadlands + allAdg
 
         val filtered = all.filter {

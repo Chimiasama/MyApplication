@@ -151,6 +151,14 @@ class MainActivity : ComponentActivity() {
         } catch (_: Exception) { "[]" }
         val crystalEquipCategorias: List<EquipamentoCategoria> = json.decodeFromString(crystalEquipJson)
 
+        val solVaporEquipJson = try {
+            assets.open("equipamentos_sol_vapor.json")
+                .bufferedReader()
+                .use { it.readText() }
+        } catch (_: Exception) { "[]" }
+        val solVaporEquipCategorias: List<EquipamentoCategoria> = json.decodeFromString(solVaporEquipJson)
+
+        val equipamentoCategorias = (allEquipCategorias + crystalEquipCategorias + solVaporEquipCategorias).filter { cat ->
         val adgEquipJson = try {
             assets.open("equipamentos_adg.json")
                 .bufferedReader()
@@ -229,6 +237,12 @@ class MainActivity : ComponentActivity() {
              json.decodeFromString<List<Vantagem>>(txt)
         } catch (_: Exception) { emptyList() }
 
+        val vantCidadeSolVapor = try {
+            val txt = assets.open("vantagens_sol_vapor.json").bufferedReader().use { it.readText() }
+            json.decodeFromString<List<Vantagem>>(txt)
+        } catch (_: Exception) { emptyList() }
+
+        listaVantagens = todasVantagens + vantCrystal + vantCidadeSolVapor
         listaVantagens = todasVantagens + vantCrystal + vantagensAdg
 
         AppData.superVantagensParaDetalhe = AppData.superVantagens
@@ -241,6 +255,12 @@ class MainActivity : ComponentActivity() {
             json.decodeFromString<List<Complicacao>>(txt)
         } catch (_: Exception) { emptyList() }
 
+        val compCidadeSolVapor = try {
+            val txt = assets.open("complicacoes_sol_vapor.json").bufferedReader().use { it.readText() }
+            json.decodeFromString<List<Complicacao>>(txt)
+        } catch (_: Exception) { emptyList() }
+
+        listaComplicacoes = todasComplicacoes + compCrystal + compCidadeSolVapor
         val compAdg = try {
             val txt = assets.open("complicacoes_adg.json").bufferedReader().use { it.readText() }
             json.decodeFromString<List<Complicacao>>(txt)
@@ -282,6 +302,12 @@ class MainActivity : ComponentActivity() {
                 .use { it.readText() }
         } catch (_: Exception) { "[]" }
 
+        val ancestralCidadeSolVaporRaw = try {
+            assets.open("ancestralidades_sol_vapor.json")
+                .bufferedReader(Charsets.UTF_8)
+                .use { it.readText() }
+        } catch (_: Exception) { "[]" }
+
         val ancsBase = json.decodeFromString<List<RacialModifier>>(ancestralRaw)
         val ancsTrilhador = json.decodeFromString<List<RacialModifier>>(ancestralTrilhadorRaw)
         val ancsSciFi = json.decodeFromString<List<RacialModifier>>(ancestralSciFiRaw)
@@ -289,6 +315,9 @@ class MainActivity : ComponentActivity() {
         val ancsCrystal = json.decodeFromString<List<RacialModifier>>(ancestralCrystalRaw)
         val ancsAdg = json.decodeFromString<List<RacialModifier>>(ancestralAdgRaw)
 
+        val ancsCidadeSolVapor = json.decodeFromString<List<RacialModifier>>(ancestralCidadeSolVaporRaw)
+
+        listaAncestralidadesJson = ancsBase + ancsTrilhador + ancsSciFi + ancsDeadlands + ancsCrystal + ancsCidadeSolVapor
         listaAncestralidadesJson = ancsBase + ancsTrilhador + ancsSciFi + ancsDeadlands + ancsCrystal + ancsAdg
 
         val monstrosJson = assets
@@ -647,6 +676,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioCidadeSolVaporAtivo, modoMonstroAtivo, _, _,
                                 onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, modoMonstroAtivo, _, _,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, grandesResponsabilidades, showHelpMessages ->
@@ -663,6 +693,7 @@ class MainActivity : ComponentActivity() {
                                         compendioTrilhadorAtivo = compendioTrilhadorAtivo,
                                         compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                                         compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+                                        compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
                                         compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
                                         modoMonstroAtivo = modoMonstroAtivo,
                                         usarEspecializacoesDePericia = usarEspecializacaoPer,

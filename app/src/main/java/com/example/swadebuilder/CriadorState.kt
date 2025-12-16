@@ -47,6 +47,7 @@ class CriadorState {
     var compendioTrilhadorAtivo by mutableStateOf(false)
     var compendioDeadlandsAtivo by mutableStateOf(false)
     var compendioCrystalHeartAtivo by mutableStateOf(false)
+    var compendioCidadeSolVaporAtivo by mutableStateOf(false)
     var compendioArteDaGuerraAtivo by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
@@ -1719,6 +1720,7 @@ class CriadorState {
                 compendioTrilhadorAtivo = compendioTrilhadorAtivo,
                 compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                 compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+                compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
                 compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
                 modoOficialAtivo = modoOficialAtivo,
                 modoMonstroAtivo = modoMonstroAtivo,
@@ -1847,6 +1849,7 @@ class CriadorState {
         compendioTrilhadorAtivo = flags.compendioTrilhadorAtivo
         compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo
         compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo
+        compendioCidadeSolVaporAtivo = flags.compendioCidadeSolVaporAtivo
         compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo
         modoOficialAtivo = flags.modoOficialAtivo
         modoMonstroAtivo = flags.modoMonstroAtivo
