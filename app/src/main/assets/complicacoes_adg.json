@@ -1,0 +1,34 @@
+[
+  {
+    "id": "comp_sangramento_nasal",
+    "name": "SANGRAMENTO NASAL",
+    "origem": "ARTE_DA_GUERRA",
+    "severity": "menor/maior",
+    "description": "Fica Distraído (Menor) ou Atordoado (Maior) ao ver cenas levemente eróticas ou românticas (tropo de anime).",
+    "observacoes": ""
+  },
+  {
+    "id": "comp_roupas_rasgadas",
+    "name": "ROUPAS RASGADAS",
+    "origem": "ARTE_DA_GUERRA",
+    "severity": "menor",
+    "description": "Ao gastar Chi ou sofrer dano, rola dado de roupa. Se falhar, roupas rasgam (cosmético, mas embaraçoso).",
+    "observacoes": ""
+  },
+  {
+    "id": "comp_prisioneiro_espiritual",
+    "name": "PRISIONEIRO ESPIRITUAL",
+    "origem": "ARTE_DA_GUERRA",
+    "severity": "menor/maior",
+    "description": "Deve favores a um espírito/kami. Se não cumprir, sofre penalidades ou bloqueio de Chi.",
+    "observacoes": ""
+  },
+  {
+    "id": "comp_gemeo_maligno",
+    "name": "GÊMEO MALIGNO",
+    "origem": "ARTE_DA_GUERRA",
+    "severity": "menor/maior",
+    "description": "Existe um NPC idêntico que causa problemas e mancha sua reputação.",
+    "observacoes": ""
+  }
+]
