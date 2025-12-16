@@ -4,6 +4,8 @@
     "nome": "Humano (Teia)",
     "categoria": "ANCESTRALIDADE",
     "origem": "CIDADE_SOL_VAPOR",
+    "atributos": {},
+    "pericias": {},
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -16,6 +18,8 @@
     "nome": "Demônio (Abismo)",
     "categoria": "ANCESTRALIDADE",
     "origem": "CIDADE_SOL_VAPOR",
+    "atributos": {},
+    "pericias": {},
     "habilidades": [
       {
         "nome": "Antecedente Arcano (Demônio)",
@@ -32,6 +36,8 @@
     "nome": "Meio-Demônio",
     "categoria": "ANCESTRALIDADE",
     "origem": "CIDADE_SOL_VAPOR",
+    "atributos": {},
+    "pericias": {},
     "habilidades": [
       {
         "nome": "Herança Mista",
@@ -48,6 +54,8 @@
     "nome": "Anjo",
     "categoria": "ANCESTRALIDADE",
     "origem": "CIDADE_SOL_VAPOR",
+    "atributos": {},
+    "pericias": {},
     "habilidades": [
       {
         "nome": "Asas de Anjo",
