@@ -1,6 +1,6 @@
 package com.example.swadebuilder.model
 
-import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.util.toDiceString
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

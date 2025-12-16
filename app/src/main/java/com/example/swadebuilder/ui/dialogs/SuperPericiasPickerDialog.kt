@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.listaPericias
-import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.util.toDiceString
 import com.example.swadebuilder.util.keyify
 
 /**

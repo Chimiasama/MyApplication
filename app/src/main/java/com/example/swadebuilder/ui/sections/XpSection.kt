@@ -37,7 +37,7 @@ import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.HindranceChangeType
-import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.util.toDiceString
 import com.example.swadebuilder.ui.components.SectionCard
 
 @Composable

@@ -11,8 +11,8 @@ object AppData {
     var superVantagens: List<Vantagem> = emptyList()
     var horrorVantagens: List<Vantagem> = emptyList()
     var trilhadorVantagens: List<Vantagem> = emptyList()
+    var arteDaGuerraVantagens: List<Vantagem> = emptyList() // Added as per my analysis of other compendiums
 
     /** Texto completo de cada supervantagem (acrescentado à lista normal). */
     var superVantagensParaDetalhe: List<Vantagem> = emptyList()
-
 }

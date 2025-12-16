@@ -41,7 +41,7 @@ import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.loadRawText
 import com.example.swadebuilder.mapaAtributosDisplay
-import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.util.toDiceString
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos

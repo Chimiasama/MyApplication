@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.listaAtributos
-import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.util.toDiceString
 
 @Composable
 fun SuperAtributosPickerDialog(

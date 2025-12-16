@@ -17,6 +17,7 @@ import com.example.swadebuilder.model.AdvantageSnapshot
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.PersonagemSnapshot
 import com.example.swadebuilder.model.PowerEffect
@@ -83,7 +84,7 @@ class CriadorState {
     var superLimitePorPoder by mutableIntStateOf(0)
     var poderFavoritoId by mutableStateOf<String?>(null)
     val oMelhorQueHaSelecionada by derivedStateOf {
-        vantagensSelecionadas.any { it.id == "o_melhor_que_ha" }
+        vantagensSelecionadas.any { it.id == Constants.ADV_ID_THE_BEST_THERE_IS }
     }
     val limitePorPoderPadrao: Int
         get() = kotlin.math.floor(superPontosTotais / 3.0).toInt()
@@ -111,14 +112,14 @@ class CriadorState {
             ?.uppercase()
 
     val usaRiqueza: Boolean
-        get() = origemPersonagem == "WISEGUYS"
+        get() = origemPersonagem == Constants.ORIGIN_WISEGUYS
 
     val dadoRiqueza: Int
         get() {
             var die = 6
-            val hasPodreDeRico = vantagensSelecionadas.any { it.nome.keyify() == "PODRE DE RICO" }
-            val hasRico = vantagensSelecionadas.any { it.nome.keyify() == "RICO" }
-            val hasPobreza = complicacoesSelecionadas.keys.any { it.id.keyify() == "POBREZA" }
+            val hasPodreDeRico = vantagensSelecionadas.any { it.nome.keyify() == Constants.ADV_KEY_FILTHY_RICH }
+            val hasRico = vantagensSelecionadas.any { it.nome.keyify() == Constants.ADV_KEY_RICH }
+            val hasPobreza = complicacoesSelecionadas.keys.any { it.id.keyify() == Constants.HIND_KEY_POVERTY }
 
             die = when {
                 hasPodreDeRico -> 10
@@ -140,14 +141,14 @@ class CriadorState {
             listaAncestralidadesJson
                 .firstOrNull { it.nome.keyify() == ancestralidade }
                 ?.desvantagens
-                ?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
+                ?.any { it.contains(Constants.HIND_NAME_REDUCED_PACE, ignoreCase = true) }
                 .takeIf { it == true }
                 ?.let { 1 }
                 ?: 0
 
         val idosoPenalty =
             complicacoesSelecionadas
-                .filterKeys { it.id.keyify() == "IDOSO" }
+                .filterKeys { it.id.keyify() == Constants.HIND_KEY_ELDERLY }
                 .isNotEmpty()
                 .takeIf { it }
                 ?.let { 1 }
@@ -155,11 +156,11 @@ class CriadorState {
 
         val lentoPenalty = complicacoesSelecionadas
             .entries
-            .firstOrNull { it.key.id.keyify() == "LENTO" }
+            .firstOrNull { it.key.id.keyify() == Constants.HIND_KEY_SLOW }
             ?.let { (_, grau) ->
                 when (grau) {
-                    "Menor" -> 1
-                    "Maior" -> 2
+                    Constants.LEVEL_MINOR -> 1
+                    Constants.LEVEL_MAJOR -> 2
                     else    -> 0
                 }
             }
@@ -167,14 +168,14 @@ class CriadorState {
 
         val obesoPenalty =
             complicacoesSelecionadas
-                .filterKeys { it.id.keyify() == "OBESO" }
+                .filterKeys { it.id.keyify() == Constants.HIND_KEY_OBESE }
                 .isNotEmpty()
                 .takeIf { it }
                 ?.let { 1 }
                 ?: 0
 
         val ligeiroBonus =
-            if (vantagensSelecionadas.any { it.nome.keyify() == "LIGEIRO" })
+            if (vantagensSelecionadas.any { it.nome.keyify() == Constants.ADV_KEY_FLEET_FOOTED })
                 2
             else
                 0
@@ -190,33 +191,33 @@ class CriadorState {
     }
 
     fun valorAparar(): Int {
-        val perLutar = listaPericias.firstOrNull { it.nome.equals("Lutar", ignoreCase = true) }
-        val perJutsu = listaPericias.firstOrNull { it.nome.equals("Jutsu", ignoreCase = true) }
+        val perLutar = listaPericias.firstOrNull { it.nome.equals(Constants.SKILL_FIGHTING, ignoreCase = true) }
+        val perJutsu = listaPericias.firstOrNull { it.nome.equals(Constants.SKILL_JUTSU, ignoreCase = true) }
         val lutarRaw = perLutar?.let { rawTotalComSupers(it) } ?: 0
         val jutsuRaw = perJutsu?.let { rawTotalComSupers(it) } ?: 0
         val melhorLuta = maxOf(lutarRaw, jutsuRaw)
         val base     = 2 + (melhorLuta / 2)
 
         val bloquearBonus =
-            if (vantagensSelecionadas.any { it.nome.keyify() == "BLOQUEAR" }) 1 else 0
+            if (vantagensSelecionadas.any { it.nome.keyify() == Constants.ADV_KEY_BLOCK }) 1 else 0
         val bloquearAprimoradoBonus =
-            if (vantagensSelecionadas.any { it.nome.keyify() == "BLOQUEAR APRIMORADO" }) 1 else 0
+            if (vantagensSelecionadas.any { it.nome.keyify() == Constants.ADV_KEY_IMPROVED_BLOCK }) 1 else 0
 
         return base + bloquearBonus + bloquearAprimoradoBonus + bonusPararFromPower
     }
 
     fun valorResistenciaBase(): Int {
-        val vigorRaw = valoresAtributos["VIGOR"]?.intValue ?: 4
+        val vigorRaw = valoresAtributos[Constants.ATTR_VIGOR]?.intValue ?: 4
         val base     = 2 + (vigorRaw / 2)
 
         val bonusPos = if (vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" }) 1 else 0
         val bonusNeg =
-            if (desvantagensAutomaticas.any { it.keyify() == "FRAGIL" } ||
-                desvantagensRaciais.any { it.keyify() == "FRAGIL" }) -1 else 0
+            if (desvantagensAutomaticas.any { it.keyify() == Constants.HIND_KEY_FRAGILE } ||
+                desvantagensRaciais.any { it.keyify() == Constants.HIND_KEY_FRAGILE }) -1 else 0
 
         // Bônus de “Brigão / Pugilista” continua igual
         val brigaoBonus = vantagensSelecionadas
-            .count { it.nome.keyify() in listOf("BRIGAO", "PUGILISTA") }
+            .count { it.nome.keyify() in listOf(Constants.ADV_KEY_BRAWLER, Constants.ADV_KEY_BRUISER) }
 
         // Em vez de recalcular tamanho aqui, usamos a função centralizada:
         val sizeRaw = valorTamanho()   // já inclui racial, OBESO, PEQUENO, MUSCULOSO, com clamp -1..+3
@@ -230,7 +231,7 @@ class CriadorState {
     }
 
     fun valorChi(): Int {
-        val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 4
+        val espiritoRaw = valoresAtributos[Constants.ATTR_SPIRIT]?.intValue ?: 4
         return 2 + (espiritoRaw / 2)
     }
 
@@ -244,25 +245,25 @@ class CriadorState {
         val desc = listaAncestralidadesJson
             .firstOrNull { it.nome.keyify() == ancestralidade }
             ?.desvantagens
-            ?.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
+            ?.firstOrNull { it.startsWith(Constants.HIND_PREFIX_SIZE, ignoreCase = true) }
 
         val racialSize = desc
-            ?.substringAfter("TAMANHO")
+            ?.substringAfter(Constants.HIND_PREFIX_SIZE)
             ?.trim()
             ?.toIntOrNull()
             ?: 0
         val obesoBonus =
-            if (complicacoesSelecionadas.keys.any { it.id.keyify() == "OBESO" })
+            if (complicacoesSelecionadas.keys.any { it.id.keyify() == Constants.HIND_KEY_OBESE })
                 1
             else
                 0
         val pequenoPenalty =
-            if (complicacoesSelecionadas.keys.any { it.id.keyify() == "PEQUENO" })
+            if (complicacoesSelecionadas.keys.any { it.id.keyify() == Constants.HIND_KEY_SMALL })
                 -1
             else
                 0
         val musculosoBonus =
-            if (vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" })
+            if (vantagensSelecionadas.any { it.nome.keyify() == Constants.ADV_KEY_BRAWNY })
                 1
             else
                 0
@@ -318,10 +319,10 @@ class CriadorState {
     }
 
     fun adicionarVantagemPorSuper(v: Vantagem): Boolean {
-        if (v.categoria == Categoria.LENDARIAS) return false
+        if (v.categoria.name == Constants.CAT_LEGENDARY) return false
 
         val progressoAnterior = overrideStageForVantagem
-        overrideStageForVantagem = "Lendário"
+        overrideStageForVantagem = Constants.STAGE_LEGENDARY
 
         val permitido = podeSelecionar(v)
         overrideStageForVantagem = progressoAnterior
@@ -487,7 +488,7 @@ class CriadorState {
 
         removeVantagemDinheiro(candidate)
         vantagensSelecionadas.remove(candidate)
-        if (candidate.id == "o_melhor_que_ha") {
+        if (candidate.id == Constants.ADV_ID_THE_BEST_THERE_IS) {
             poderFavoritoId = null
         }
 
@@ -528,8 +529,8 @@ class CriadorState {
     fun applyVantagemDinheiro(v: Vantagem) {
         if (usaRiqueza) return
         when (v.nome.trim().uppercase()) {
-            "RICO"          -> dinheiro += 1000
-            "PODRE DE RICO" -> dinheiro += 1500
+            Constants.ADV_KEY_RICH          -> dinheiro += 1000
+            Constants.ADV_KEY_FILTHY_RICH -> dinheiro += 1500
         }
     }
 
@@ -537,8 +538,8 @@ class CriadorState {
         if (usaRiqueza) return
         val key = vant.nome.trim().uppercase()
         val amount = when (key) {
-            "RICO"          -> 1000
-            "PODRE DE RICO" -> 1500
+            Constants.ADV_KEY_RICH          -> 1000
+            Constants.ADV_KEY_FILTHY_RICH -> 1500
             else            -> 0
         }
         if (amount <= 0) return
@@ -589,7 +590,7 @@ class CriadorState {
             val fav = run {
                 val choiceSnapshot = vant.choice
                 if (
-                    vant.nome.trim().equals("Arma Predileta", ignoreCase = true)
+                    vant.nome.trim().equals(Constants.ADV_NAME_FAVORED_WEAPON, ignoreCase = true)
                     && choiceSnapshot != null
                 ) {
                     val key = choiceSnapshot.uppercase().semAcentos().trim()
@@ -611,23 +612,23 @@ class CriadorState {
     }
 
     fun atributoBaseParaPericia(per: Pericia): String {
-        return if (per.nome.equals("Atletismo", ignoreCase = true)
-            && vantagensSelecionadas.any { it.nome.keyify() == "BRUTAMONTES" }
+        return if (per.nome.equals(Constants.SKILL_ATHLETICS, ignoreCase = true)
+            && vantagensSelecionadas.any { it.nome.keyify() == Constants.ADV_KEY_BRAWNY }
         ) {
-            "FORCA"
+            Constants.ATTR_STRENGTH
         } else {
             per.atributo
         }
     }
 
     private val incompatibilidades: Map<String, Set<String>> = mapOf(
-        "LENTO"   to setOf("LIGEIRO"),
-        "LIGEIRO" to setOf("LENTO"),
-        "OBESO"      to setOf("MUSCULOSO"),
-        "MUSCULOSO"  to setOf("OBESO"),
-        "POBREZA"        to setOf("RICO", "PODRE DE RICO"),
-        "RICO"           to setOf("POBREZA"),
-        "PODRE DE RICO"  to setOf("POBREZA")
+        Constants.HIND_KEY_SLOW   to setOf(Constants.ADV_KEY_FLEET_FOOTED),
+        Constants.ADV_KEY_FLEET_FOOTED to setOf(Constants.HIND_KEY_SLOW),
+        Constants.HIND_KEY_OBESE      to setOf(Constants.ADV_KEY_BRAWNY),
+        Constants.ADV_KEY_BRAWNY  to setOf(Constants.HIND_KEY_OBESE),
+        Constants.HIND_KEY_POVERTY        to setOf(Constants.ADV_KEY_RICH, Constants.ADV_KEY_FILTHY_RICH),
+        Constants.ADV_KEY_RICH           to setOf(Constants.HIND_KEY_POVERTY),
+        Constants.ADV_KEY_FILTHY_RICH  to setOf(Constants.HIND_KEY_POVERTY)
     )
 
     val poderSlotsPorArcano = mutableStateMapOf<String, SnapshotStateList<String?>>()
@@ -706,7 +707,7 @@ class CriadorState {
     fun getSlotsCountForArcano(arcKey: String): Int {
         val base = arcanoInfo[arcKey]?.first ?: 0
         val newPowersCount = vantagensSelecionadas.count {
-            it.id == "novos_poderes" &&
+            it.id == Constants.ADV_ID_NEW_POWERS &&
                     (it.choice.isNullOrBlank() || it.choice?.normAAKey() == arcKey)
         }
         return base + (newPowersCount * 2)
@@ -796,7 +797,7 @@ class CriadorState {
         return if (firstOpen >= 0) firstOpen else listaDeEstagios.lastIndex
     }
 
-    var ancestralidade by mutableStateOf("HUMANOS")
+    var ancestralidade by mutableStateOf(Constants.RACE_HUMAN)
     var celestialAAMilagresDesabilitado by mutableStateOf(false)
     var meioElfoAgil by mutableStateOf(false)
 
@@ -833,8 +834,8 @@ class CriadorState {
             for ((comp, tipo) in complicacoesSelecionadas) {
                 if (comp.id.keyify() in autoKeys) continue
                 when (tipo) {
-                    "Maior" -> { total += 2; temMaior = true }
-                    "Menor" -> { total += 1 }
+                    Constants.LEVEL_MAJOR -> { total += 2; temMaior = true }
+                    Constants.LEVEL_MINOR -> { total += 1 }
                 }
             }
 
@@ -857,7 +858,7 @@ class CriadorState {
         val key = v.nome.keyify()
 
         // 1) Regra especial: O MELHOR QUE HÁ
-        if (key == "o_melhor_que_ha") {
+        if (key == Constants.ADV_ID_THE_BEST_THERE_IS) {
             if (emProgresso) return false
             if (superInvestments.isEmpty()) return false
         }
@@ -871,28 +872,28 @@ class CriadorState {
 
         // 2a) Vantagens exclusivas de Ressuscitado exigem ter a vantagem-base
         if (v.categoria == Categoria.RESSUSCITADO) {
-            val temRessuscitado = vantagensSelecionadas.any { it.id == "ressuscitado" }
+            val temRessuscitado = vantagensSelecionadas.any { it.id == Constants.ADV_ID_HARROWED }
             if (!temRessuscitado) return false
         }
 
         // 3) Antecedente Arcano e multi-arcano
-        if (key.startsWith("ANTECEDENTE ARCANO")) {
+        if (key.startsWith(Constants.ADV_KEY_ARCANE_BACKGROUND_PREFIX)) {
             if (compendioCrystalHeartAtivo) {
                 // Em jogos de Crystal Heart, apenas "Agente da Syn" é permitido.
-                if (v.id != "aa_agente_syn") return false
+                if (v.id != Constants.ADV_ID_AA_SYN_AGENT) return false
             }
 
             if (!permiteMultiAntecedenteArcano) {
-                val anyArcano = vantagensSelecionadas.any { it.nome.keyify().startsWith("ANTECEDENTE ARCANO") }
+                val anyArcano = vantagensSelecionadas.any { it.nome.keyify().startsWith(Constants.ADV_KEY_ARCANE_BACKGROUND_PREFIX) }
                 if (anyArcano && vantagensSelecionadas.none { it.nome.keyify() == key }) {
                     return false
                 }
             } else {
                 val jaTemMesmoId = vantagensSelecionadas.any { it.id == v.id }
                 if (jaTemMesmoId) return false
-                if (v.id == "antecedente_arcano" && v.choice != null) {
+                if (v.id == Constants.ADV_ID_AA_BASE && v.choice != null) {
                     val jaTemMesmaChoice = vantagensSelecionadas.any {
-                        it.id == "antecedente_arcano" && it.choice?.keyify() == v.choice?.keyify()
+                        it.id == Constants.ADV_ID_AA_BASE && it.choice?.keyify() == v.choice?.keyify()
                     }
                     if (jaTemMesmaChoice) return false
                 }
@@ -900,7 +901,7 @@ class CriadorState {
         }
 
         // 4) PROFISSIONAL / ESPECIALISTA
-        if (key == "profissional" || key == "especialista") {
+        if (key == Constants.ADV_KEY_PROFESSIONAL || key == Constants.ADV_KEY_EXPERT) {
             val choiceSeguro = v.choice
 
             if (v.requiresChoice && choiceSeguro != null) {
@@ -911,9 +912,9 @@ class CriadorState {
                 if (already) return false
             }
 
-            if (key == "especialista" && choiceSeguro != null) {
+            if (key == Constants.ADV_KEY_EXPERT && choiceSeguro != null) {
                 val profExist = vantagensSelecionadas.any {
-                    it.id == "profissional" && it.choice?.keyify() == choiceSeguro.keyify()
+                    it.id == Constants.ADV_KEY_PROFESSIONAL && it.choice?.keyify() == choiceSeguro.keyify()
                 }
                 if (!profExist) return false
             }
@@ -959,7 +960,7 @@ class CriadorState {
                     "antecedente_arcano", "antecedente_arcano:*" -> {
                         vantagensSelecionadas.none { poss ->
                             poss.id.startsWith("antecedente_arcano_") ||
-                                    (poss.id == "antecedente_arcano" && !poss.choice.isNullOrBlank())
+                                    (poss.id == Constants.ADV_ID_AA_BASE && !poss.choice.isNullOrBlank())
                         }
                     }
                     else -> {
@@ -1047,9 +1048,9 @@ class CriadorState {
         // 14) Conflitos com complicações (Lento x Ligeiro, etc.)
         val compsConfl = incompatibilidades[key] ?: emptySet()
         val vantKey = v.nome.trim().uppercase()
-        if (vantKey == "RICO" || vantKey == "PODRE DE RICO") {
+        if (vantKey == Constants.ADV_KEY_RICH || vantKey == Constants.ADV_KEY_FILTHY_RICH) {
             val tenhoPobreza = complicacoesSelecionadas.keys.any {
-                it.id.trim().uppercase() == "POBREZA"
+                it.id.trim().uppercase() == Constants.HIND_KEY_POVERTY
             }
             if (tenhoPobreza) return false
         }
@@ -1127,17 +1128,17 @@ class CriadorState {
         val minRaw = atributoMinRaw(a)
 
         var extras = ((minRaw - 4).coerceAtLeast(0) / 2)
-        if (a.keyify() == "AGILIDADE" && meioElfoAgil) {
+        if (a.keyify() == Constants.ATTR_AGILITY && meioElfoAgil) {
             extras += 1
         }
         val baseCap = 12 + extras
 
         val chave = a.keyify()
         val profCount = vantagensSelecionadas.count {
-            it.nome.keyify() == "PROFISSIONAL" && it.choice?.keyify() == chave
+            it.nome.keyify() == Constants.ADV_KEY_PROFESSIONAL && it.choice?.keyify() == chave
         }
         val espCount = vantagensSelecionadas.count {
-            it.nome.keyify() == "ESPECIALISTA" && it.choice?.keyify() == chave
+            it.nome.keyify() == Constants.ADV_KEY_EXPERT && it.choice?.keyify() == chave
         }
 
         return baseCap + (profCount + espCount) * 2
@@ -1150,10 +1151,10 @@ class CriadorState {
 
         val chave = per.nome.keyify()
         val profCount = vantagensSelecionadas.count {
-            it.nome.keyify() == "PROFISSIONAL" && it.choice?.keyify() == chave
+            it.nome.keyify() == Constants.ADV_KEY_PROFESSIONAL && it.choice?.keyify() == chave
         }
         val espCount = vantagensSelecionadas.count {
-            it.nome.keyify() == "ESPECIALISTA" && it.choice?.keyify() == chave
+            it.nome.keyify() == Constants.ADV_KEY_EXPERT && it.choice?.keyify() == chave
         }
 
         return baseCap + (profCount + espCount) * 2
@@ -1178,8 +1179,8 @@ class CriadorState {
 
     fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>) {
         val prevAnc = ancestralidade
-        val wasHumano = (prevAnc == "HUMANOS")
-        val vaiSerHumano = (anc == "HUMANOS")
+        val wasHumano = (prevAnc == Constants.RACE_HUMAN)
+        val vaiSerHumano = (anc == Constants.RACE_HUMAN)
 
         val paAntes = pontosAtributo
         val spAntes = pontosPericia
@@ -1189,9 +1190,9 @@ class CriadorState {
         val prevFreeKeys: Set<String> =
             (vantagensAutomaticas.toSet() +
                     when (prevAnc) {
-                        "SAURIOS"    -> setOf("Sentidos Aguçados", "Prontidão")
-                        "PEQUENINOS" -> setOf("Sorte")
-            "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
+                        Constants.RACE_SAURIAN    -> setOf(Constants.ADV_NAME_KEEN_SENSES, Constants.ADV_NAME_ALERTNESS)
+                        Constants.RACE_HALFLING -> setOf(Constants.ADV_NAME_LUCK)
+                        Constants.RACE_CELESTIAL -> setOf(Constants.ADV_NAME_AA_MIRACLES, Constants.ADV_NAME_AA_MIRACLES)
                         else         -> emptySet()
                     }
                     ).map { it.keyify() }
@@ -1213,7 +1214,7 @@ class CriadorState {
                             "antecedente_arcano",
                             "antecedente_arcano:*" -> {
                                 other.id.startsWith("antecedente_arcano_") ||
-                                        (other.id == "antecedente_arcano" && !other.choice.isNullOrBlank())
+                                        (other.id == Constants.ADV_ID_AA_BASE && !other.choice.isNullOrBlank())
                             }
                             else -> other.id == prevId
                         }
@@ -1228,7 +1229,7 @@ class CriadorState {
             val candidatos = vantagensSelecionadas.filter { v ->
                 !isRacialFree(v) &&
                         !isUsedAsPrereq(v) &&
-                        !v.categoria.name.equals("PODER", ignoreCase = true)
+                        !v.categoria.name.equals(Constants.CAT_POWER, ignoreCase = true)
             }
 
             if (candidatos.isNotEmpty()) {
@@ -1284,8 +1285,8 @@ class CriadorState {
 
         // Troca efetiva da ancestralidade
         ancestralidade = anc
-        celestialAAMilagresDesabilitado = (anc == "CELESTIAIS" && modoSupers)
-        if (anc != "MEIO-ELFOS") {
+        celestialAAMilagresDesabilitado = (anc == Constants.RACE_CELESTIAL && modoSupers)
+        if (anc != Constants.RACE_HALF_ELF) {
             meioElfoAgil = false
         }
 
@@ -1315,43 +1316,43 @@ class CriadorState {
 
         naturalArmorFromRace = 0
         when (anc) {
-            "SAURIOS" -> {
-                listaVantagens.firstOrNull { it.nome.equals("Sentidos Aguçados", ignoreCase = true) }
+            Constants.RACE_SAURIAN -> {
+                listaVantagens.firstOrNull { it.nome.equals(Constants.ADV_NAME_KEEN_SENSES, ignoreCase = true) }
                     ?.let { vantagensSelecionadas.add(it) }
-                listaVantagens.firstOrNull { it.nome.equals("Prontidão", ignoreCase = true) }
+                listaVantagens.firstOrNull { it.nome.equals(Constants.ADV_NAME_ALERTNESS, ignoreCase = true) }
                     ?.let { vantagensSelecionadas.add(it) }
-                vantagensAutomaticas.add("Prontidão")
-                vantagensRaciais.add("Prontidão")
+                vantagensAutomaticas.add(Constants.ADV_NAME_ALERTNESS)
+                vantagensRaciais.add(Constants.ADV_NAME_ALERTNESS)
                 naturalArmorFromRace = 2
                 armadura = 0
             }
-            "PEQUENINOS" -> {
-                listaVantagens.firstOrNull { it.nome.equals("Sorte", ignoreCase = true) }
+            Constants.RACE_HALFLING -> {
+                listaVantagens.firstOrNull { it.nome.equals(Constants.ADV_NAME_LUCK, ignoreCase = true) }
                     ?.let { vantagensSelecionadas.add(it) }
-                vantagensAutomaticas.add("Sorte")
-                if (desvantagensRaciais.none { it.contains("Tamanho", ignoreCase = true) }) {
-                    desvantagensRaciais.add("Tamanho -1")
+                vantagensAutomaticas.add(Constants.ADV_NAME_LUCK)
+                if (desvantagensRaciais.none { it.contains(Constants.HIND_PREFIX_SIZE, ignoreCase = true) }) {
+                    desvantagensRaciais.add(Constants.HIND_NAME_SIZE_MINUS_1)
                 }
-                if (desvantagensRaciais.none { it.contains("Movimentação Reduzida", ignoreCase = true) }) {
-                    desvantagensRaciais.add("Movimentação Reduzida")
+                if (desvantagensRaciais.none { it.contains(Constants.HIND_NAME_REDUCED_PACE, ignoreCase = true) }) {
+                    desvantagensRaciais.add(Constants.HIND_NAME_REDUCED_PACE)
                 }
                 armadura = 0
             }
-            "CELESTIAIS" -> {
+            Constants.RACE_CELESTIAL -> {
                 val aaMilagres = listaVantagens.firstOrNull {
-                    it.id == "antecedente_arcano_milagres"
+                    it.id == Constants.ADV_ID_AA_MIRACLES
                 }
                 if (aaMilagres != null && vantagensSelecionadas.none { it.id == aaMilagres.id }) {
                     vantagensSelecionadas.add(aaMilagres)
                 }
-                vantagensAutomaticas.add("ANTECEDENTE ARCANO (MILAGRES)")
+                vantagensAutomaticas.add(Constants.ADV_NAME_AA_MIRACLES)
                 armadura = 0
             }
-            "HUMANO (WISEGUYS)".keyify() -> {
+            Constants.RACE_HUMAN_WISEGUYS.keyify() -> {
                 val conexoesMafia = listaVantagens.firstOrNull {
-                    it.nome.equals("Conexões (Máfia)", ignoreCase = true)
+                    it.nome.equals(Constants.ADV_NAME_MAFIA_CONNECTIONS, ignoreCase = true)
                 }
-                if (conexoesMafia != null && vantagensSelecionadas.none { it.nome.equals("Conexões (Máfia)", ignoreCase = true) }) {
+                if (conexoesMafia != null && vantagensSelecionadas.none { it.nome.equals(Constants.ADV_NAME_MAFIA_CONNECTIONS, ignoreCase = true) }) {
                     vantagensSelecionadas.add(conexoesMafia)
                 }
             }
@@ -1387,16 +1388,16 @@ class CriadorState {
             .forEach { comp ->
                 val hasMenor = desvantagensAutomaticas.any {
                     it.substringBefore("(").trim().keyify() == comp.id.keyify()
-                            && it.contains("Menor", ignoreCase = true)
+                            && it.contains(Constants.LEVEL_MINOR, ignoreCase = true)
                 }
                 val hasMaior = desvantagensAutomaticas.any {
                     it.substringBefore("(").trim().keyify() == comp.id.keyify()
-                            && it.contains("Maior", ignoreCase = true)
+                            && it.contains(Constants.LEVEL_MAJOR, ignoreCase = true)
                 }
 
                 when {
-                    hasMaior -> complicacoesSelecionadas[comp] = "Maior"
-                    hasMenor -> complicacoesSelecionadas[comp] = "Menor"
+                    hasMaior -> complicacoesSelecionadas[comp] = Constants.LEVEL_MAJOR
+                    hasMenor -> complicacoesSelecionadas[comp] = Constants.LEVEL_MINOR
                 }
             }
 
@@ -1549,7 +1550,7 @@ class CriadorState {
         jovemMalusPa = 2
         jovemMalusSp = 2
         desvantagensAutomaticas.add(pequComp.id.substringBefore("(").trim())
-        complicacoesSelecionadas[pequComp] = "Menor"
+        complicacoesSelecionadas[pequComp] = Constants.LEVEL_MINOR
         recalcularPontosAtributo()
     }
 

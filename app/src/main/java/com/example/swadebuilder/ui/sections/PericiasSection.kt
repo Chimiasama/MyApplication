@@ -2,20 +2,16 @@ package com.example.swadebuilder.ui.sections
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,7 +20,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,16 +49,15 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
-import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.EspecializacoesDto
+import com.example.swadebuilder.model.SkillDomain
 import com.example.swadebuilder.model.loadPericiasDescriptions
-import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.ui.components.StandardListItem
 import com.example.swadebuilder.util.semAcentos
-import kotlin.math.max
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -76,9 +70,8 @@ fun PericiasContent(
     val descricoes = remember(allowLongTexts) {
         if (!allowLongTexts) emptyMap() else loadPericiasDescriptions(context, R.raw.pericias)
     }
-    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
-    val locked = state.criacaoBasicaCongelada && !state.skillAdvancementInProgress
+    val locked = state.criacaoBasicaCongeladaComXp && !state.skillAdvancementInProgress
 
     val pcTotal  = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
@@ -95,8 +88,6 @@ fun PericiasContent(
     var editPerTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
     var editOldName by rememberSaveable { mutableStateOf("") }
     var editNewName by rememberSaveable { mutableStateOf("") }
-
-    val idosoActive = state.idosoBonusSp > 0
 
     val valorColWidthDp = 80.dp
 
@@ -154,75 +145,17 @@ fun PericiasContent(
         }
 
         items(listaPericias) { per ->
-            val currentRaw = state.rawTotal(per)
-            val attrKey    = state.atributoBaseParaPericia(per)
-            val atrRaw     = state.valoresAtributos[attrKey]!!.intValue
-            val capRaw     = state.periciaCapRaw(per)
-
-            val displayRaw = state.rawTotalComSupers(per)
-
-            val nextRaw = when {
-                currentRaw == 0 && per.basica -> 4
-                currentRaw < 12               -> currentRaw + 2
-                else                          -> currentRaw + 1
-            }
-            val costNormal = if (nextRaw <= atrRaw) 1 else 2
-
-            val compStack = state.compCostStackPorPericia.getValue(per)
-            val spStack   = state.spCostStackPorPericia.getValue(per)
-
-            val minimoBasico: Int = state.minPericiaPorVantagem[per] ?: 0
-
-            val opcionalList: List<Int> = state.vantagensSelecionadas.flatMap { vant ->
-                val mapaOpc = vant.requisitos.periciaMinOpcional ?: emptyMap()
-                mapaOpc.entries
-                    .filter { it.key.equals(per.nome, ignoreCase = true) }
-                    .map { it.value }
-            }
-            val minimoOpcional: Int = opcionalList.maxOrNull() ?: 0
-            val minimoTotal = max(minimoBasico, minimoOpcional)
-
-            val canDecrease = if (state.modoProgressaoAtivo) {
-                val frozenIncs = state.frozenSkillIncrements[per.nome] ?: 0
-                state.baseIncsPorPericia.getValue(per) > frozenIncs
-            } else {
-                !locked &&
-                        (compStack.isNotEmpty() || spStack.any { it > 0 }) &&
-                        (currentRaw - 2 >= minimoTotal)
-            }
-
-            val astuciaSpent = state.spCostStackPorPericia
-                .filterKeys { p -> p.atributo == "ASTUCIA" }
-                .values
-                .sumOf { costs -> costs.sum() }
-
-            val canIncrease = !locked &&
-                    state.pontosPericia >= costNormal &&
-                    nextRaw <= capRaw &&
-                    (if (idosoActive && astuciaSpent < 5)
-                        per.atributo == "ASTUCIA"
-                    else
-                        true)
+            val costResult = SkillDomain.calculateCost(state, per)
+            val canIncrease = SkillDomain.canIncrease(state, per, costResult)
+            val canDecrease = SkillDomain.canDecrease(state, per)
 
             val rawName = per.nome.removePrefix("*").trim()
             val descKey = "$rawName (${per.atributo})".uppercase().semAcentos()
             val descricao = descricoes[descKey].orEmpty()
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                        shape = RoundedCornerShape(10.dp)
-                    )
-                    .padding(horizontal = 10.dp, vertical = 4.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
+            StandardListItem(
+                title = {
                     val defaultSize = MaterialTheme.typography.bodyLarge.fontSize
-
                     Text(
                         text = buildAnnotatedString {
                             if (per.basica) {
@@ -240,16 +173,17 @@ fun PericiasContent(
                                 }
                             }
                             withStyle(SpanStyle(fontSize = defaultSize / 2)) {
+                                val attrKey = state.atributoBaseParaPericia(per)
                                 val displayAtr = mapaAtributosDisplay[attrKey] ?: attrKey
                                 append(" ($displayAtr)")
                             }
                         },
-                        modifier = Modifier.weight(1f),
                         style = MaterialTheme.typography.bodyLarge,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-
+                },
+                trailingContent = {
                     IconButton(
                         onClick = {
                             state.decreasePericia(per)
@@ -258,23 +192,13 @@ fun PericiasContent(
                             }
                         },
                         enabled = canDecrease,
-                        modifier = Modifier
-                            .size(32.dp)
-                            .padding(4.dp)
+                        modifier = Modifier.size(32.dp).padding(4.dp)
                     ) {
-                        Icon(
-                            Icons.Default.Remove,
-                            contentDescription = "Diminuir ${per.nome}",
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        Icon(Icons.Default.Remove, "Diminuir ${per.nome}")
                     }
 
                     Text(
-                        text = when {
-                            displayRaw == 0 && per.basica -> "d4"
-                            displayRaw == 0 -> "-"
-                            else -> displayRaw.toDiceString()
-                        },
+                        text = costResult.displayDice,
                         modifier = Modifier.width(valorColWidthDp),
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center
@@ -282,61 +206,28 @@ fun PericiasContent(
 
                     IconButton(
                         onClick = {
-                            val currRawNow = state.rawTotal(per)
-                            val attrKeyNow = state.atributoBaseParaPericia(per)
-                            val atrRawNow  = state.valoresAtributos[attrKeyNow]!!.intValue
-                            val capRawNow  = state.periciaCapRaw(per)
-
-                            val nextRawNow = when {
-                                currRawNow == 0 && per.basica -> 4
-                                currRawNow < 12               -> currRawNow + 2
-                                else                          -> currRawNow + 1
-                            }
-                            val costNow = if (nextRawNow <= atrRawNow) 1 else 2
-
-                            val astuciaSpentNow = state.spCostStackPorPericia
-                                .filterKeys { p -> p.atributo == "ASTUCIA" }
-                                .values
-                                .sumOf { costs -> costs.sum() }
-
-                            val canIncreaseNow = !locked &&
-                                    state.pontosPericia >= costNow &&
-                                    nextRawNow <= capRawNow &&
-                                    (if (idosoActive && astuciaSpentNow < 5)
-                                        per.atributo == "ASTUCIA"
-                                    else
-                                        true)
-
-                            if (!canIncreaseNow) {
-                                return@IconButton
-                            }
-
-                            state.increasePericiaFromAdvancement(per, costNow)
-
-                            if (state.usarEspecializacoesDePericia) {
-                                val esp = state.especializacoesPorPericia[per.nome]
-                                if (esp?.principal == null) {
-                                    specTarget = per
-                                    specText = ""
-                                    buyingExtraSpec = false
-                                    showSpecDialog = true
+                            val newCostResult = SkillDomain.calculateCost(state, per)
+                            if (SkillDomain.canIncrease(state, per, newCostResult)) {
+                                state.increasePericiaFromAdvancement(per, newCostResult.cost)
+                                if (state.usarEspecializacoesDePericia) {
+                                    val esp = state.especializacoesPorPericia[per.nome]
+                                    if (esp?.principal == null) {
+                                        specTarget = per
+                                        specText = ""
+                                        buyingExtraSpec = false
+                                        showSpecDialog = true
+                                    }
                                 }
                             }
                         },
                         enabled = canIncrease,
-                        modifier = Modifier
-                            .size(32.dp)
-                            .padding(4.dp)
+                        modifier = Modifier.size(32.dp).padding(4.dp)
                     ) {
-                        Icon(
-                            Icons.Default.Add,
-                            contentDescription = "Aumentar ${per.nome}",
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        Icon(Icons.Default.Add, "Aumentar ${per.nome}")
                     }
 
-                    val jaTemPrincipal =
-                        state.especializacoesPorPericia[per.nome]?.principal != null
+                    // Specialization Button logic preserved
+                    val jaTemPrincipal = state.especializacoesPorPericia[per.nome]?.principal != null
                     if (state.usarEspecializacoesDePericia && jaTemPrincipal) {
                         TextButton(
                             onClick = {
@@ -350,97 +241,74 @@ fun PericiasContent(
                             Text("Esp+")
                         }
                     }
-                }
-
-                if (allowLongTexts && descricao.isNotBlank()) {
-                    Spacer(Modifier.height(2.dp))
-                    TextButton(
-                        onClick = {
-                            val current = detalhesExpandidos[descKey] ?: false
-                            detalhesExpandidos[descKey] = !current
-                        },
-                        colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.primary),
-                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
-                    ) {
-                        Text(
-                            if (detalhesExpandidos[descKey] == true) "Ocultar detalhes" else "Ver detalhes",
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                    }
-
-                    AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
+                },
+                detailsContent = if (allowLongTexts && descricao.isNotBlank()) {
+                    {
                         Text(
                             text = descricao,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                }
+                } else null,
+                bottomContent = {
+                    val espDto: EspecializacoesDto? = state.especializacoesPorPericia[per.nome]
+                    val principal = espDto?.principal
+                    val extras: List<String> = when {
+                        espDto == null -> emptyList()
+                        else -> espDto.lista
+                            .filter { it.isNotBlank() }
+                            .distinct()
+                            .filter { it != principal }
+                    }
+                    val canRemoveSpecs = !locked
 
-                val espDto: EspecializacoesDto? = state.especializacoesPorPericia[per.nome]
-                val principal = espDto?.principal
-                val extras: List<String> = when {
-                    espDto == null -> emptyList()
-                    else -> espDto.lista
-                        .filter { it.isNotBlank() }
-                        .distinct()
-                        .filter { it != principal }
-                }
-
-                val canRemoveSpecs = !locked
-
-                if (principal != null || extras.isNotEmpty()) {
-                    Spacer(Modifier.width(8.dp))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (principal != null) {
-                            SpecChip(
-                                label = principal,
-                                isPrincipal = true,
-                                onEdit = {
-                                    editIsPrincipal = true
-                                    editPerTarget = per
-                                    editOldName = principal
-                                    editNewName = principal
-                                    showEditDialog = true
-                                },
-                                onRemove = null
-                            )
-                        }
-
-                        extras.forEach { extra ->
-                            SpecChip(
-                                label = extra,
-                                isPrincipal = false,
-                                onEdit = {
-                                    editIsPrincipal = false
-                                    editPerTarget = per
-                                    editOldName = extra
-                                    editNewName = extra
-                                    showEditDialog = true
-                                },
-                                onRemove =
-                                    if (canRemoveSpecs) {
+                    if (principal != null || extras.isNotEmpty()) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            if (principal != null) {
+                                SpecChip(
+                                    label = principal,
+                                    isPrincipal = true,
+                                    onEdit = {
+                                        editIsPrincipal = true
+                                        editPerTarget = per
+                                        editOldName = principal
+                                        editNewName = principal
+                                        showEditDialog = true
+                                    },
+                                    onRemove = null
+                                )
+                            }
+                            extras.forEach { extra ->
+                                SpecChip(
+                                    label = extra,
+                                    isPrincipal = false,
+                                    onEdit = {
+                                        editIsPrincipal = false
+                                        editPerTarget = per
+                                        editOldName = extra
+                                        editNewName = extra
+                                        showEditDialog = true
+                                    },
+                                    onRemove = if (canRemoveSpecs) {
                                         {
-                                            val atual =
-                                                state.especializacoesPorPericia[per.nome]
-                                                    ?: EspecializacoesDto()
-                                            val novaLista =
-                                                atual.lista.filter { it != extra }
-                                            state.especializacoesPorPericia[per.nome] =
-                                                atual.copy(lista = novaLista)
+                                            val atual = state.especializacoesPorPericia[per.nome] ?: EspecializacoesDto()
+                                            val novaLista = atual.lista.filter { it != extra }
+                                            state.especializacoesPorPericia[per.nome] = atual.copy(lista = novaLista)
                                         }
                                     } else null
-                            )
+                                )
+                            }
                         }
                     }
-                }
-            }
+                },
+                // onClick not needed for the whole card as actions are buttons
+                onClick = null
+            )
         }
     }
 

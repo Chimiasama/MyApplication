@@ -7,7 +7,6 @@ package com.example.swadebuilder
 
 import android.content.Context
 import android.os.Build
-import android.content.res.AssetManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -46,7 +45,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -87,30 +85,21 @@ import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.swadebuilder.model.AtributoList
-import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
-import com.example.swadebuilder.model.CrystalHeart
-import com.example.swadebuilder.model.EquipamentoCategoria
-import com.example.swadebuilder.model.MonstroTemplate
-import com.example.swadebuilder.model.PericiaList
-import com.example.swadebuilder.model.RacialModifier
-import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.DataLoader
+import com.example.swadebuilder.model.GlobalData
 import com.example.swadebuilder.ui.dialogs.AjudaDialog
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.loadJsonAsset
-import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toDiceString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.text.DateFormat
-
 
 @Serializable
 data class ArcanoInfo(
@@ -120,25 +109,7 @@ data class ArcanoInfo(
     val foco: String
 )
 
-lateinit var arcanoInfo: Map<String, Triple<Int, Int, String>>
-
-private val json = Json {
-    ignoreUnknownKeys = true
-}
-
-private inline fun <reified T> AssetManager.readJsonList(fileName: String): List<T> =
-    open(fileName).bufferedReader().use { reader -> json.decodeFromString(reader.readText()) }
-
-private inline fun <reified T> AssetManager.readJsonListOrEmpty(fileName: String): List<T> =
-    runCatching { readJsonList<T>(fileName) }.getOrElse { emptyList() }
-
-private inline fun <reified T> AssetManager.readMultipleJsonLists(files: List<String>): List<T> =
-    files.flatMap { readJsonListOrEmpty<T>(it) }
-
-private inline fun <reified T> AssetManager.mergeJsonLists(
-    primaryFile: String,
-    extraFiles: List<String>
-): List<T> = readJsonList<T>(primaryFile) + readMultipleJsonLists<T>(extraFiles)
+val arcanoInfo get() = GlobalData.arcanoInfo
 
 private const val MULTIPLOS_AA_HABILITADOS: Boolean = false
 
@@ -152,138 +123,8 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val equipamentoCategorias = assets.mergeJsonLists<EquipamentoCategoria>(
-            primaryFile = "equipamentos.json",
-            extraFiles = listOf(
-                "equipamentos_crystal.json",
-                "equipamentos_adg.json",
-                "equipamentos_sol_vapor.json",
-                "equipamentos_wiseguys.json"
-            )
-        ).filter { cat ->
-            cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
-        }
-        val superequipCategorias = assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
-            cat.origem?.equals("super", ignoreCase = true) ?: false
-        }
-
-        val crystalHeartsJson = try {
-            assets.open("coracoes_crystal.json")
-                .bufferedReader()
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        listaCoracoesCrystal = json.decodeFromString(crystalHeartsJson)
-
-        val superPoderesJson = assets
-            .open("superpoderes.json")
-            .bufferedReader()
-            .use { it.readText() }
-        val listaSuperPoderes: List<SuperPoder> =
-            json.decodeFromString(superPoderesJson)
-
-        val arcanoJson = assets.open("arcano_info.json")
-            .bufferedReader().use { it.readText() }
-        val arcanoList: List<ArcanoInfo> =
-            json.decodeFromString(arcanoJson)
-        arcanoInfo = arcanoList.associate {
-            it.key
-                .uppercase()
-                .semAcentos()
-                .trim() to Triple(it.slots, it.pp, it.foco)
-        }
-
-        val atributosData = this.loadJsonAsset<AtributoList>("atributos.json")
-        listaAtributos = atributosData.atributos
-            .map { it.nome.keyify() }
-        mapaAtributosDisplay = atributosData.atributos
-            .associate { it.nome.keyify() to it.nome }
-
-        val periciasData = this.loadJsonAsset<PericiaList>("pericias.json")
-        listaPericias = periciasData.pericias.map { pj ->
-            Pericia(
-                nome     = pj.nome,
-                atributo = pj.atributo.uppercase().semAcentos(),
-                basica   = pj.basica
-            )
-        }
-
-        val todasVantagens: List<Vantagem> = this.loadJsonAsset("Vantagens.json")
-
-
-        val vantagensExtras = assets.readMultipleJsonLists<Vantagem>(
-            listOf(
-                "vantagens_adg.json",
-                "vantagens_sol_vapor.json",
-                "vantagens_wiseguys.json"
-            )
-        )
-
-        AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
-        AppData.superVantagens = todasVantagens.filter {
-            it.origem.equals("SUPER", ignoreCase = true)
-        }
-
-        AppData.horrorVantagens = todasVantagens.filter {
-            it.origem.equals("HORROR", ignoreCase = true)
-        }
-        AppData.trilhadorVantagens = todasVantagens.filter {
-            it.origem.equals("TRILHADOR", ignoreCase = true)
-        }
-
-        val vantCrystal = assets.readJsonListOrEmpty<Vantagem>("vantagens_crystal.json")
-
-        listaVantagens = todasVantagens + vantCrystal + vantagensExtras
-
-        AppData.superVantagensParaDetalhe = AppData.superVantagens
-
-
-        val todasComplicacoes = this.loadJsonAsset<List<Complicacao>>("complicacoes.json")
-
-        val complicacaoExtras = assets.readMultipleJsonLists<Complicacao>(
-            listOf(
-                "complicacoes_crystal.json",
-                "complicacoes_adg.json",
-                "complicacoes_sol_vapor.json",
-                "complicacoes_wiseguys.json"
-            )
-        )
-
-        listaComplicacoes = todasComplicacoes + complicacaoExtras
-
-        val ancestralFiles = listOf(
-            "ancestralidades_trilhador.json",
-            "ancestralidades_sci_fi.json",
-            "ancestralidades_deadlands.json",
-            "ancestralidades_adg.json",
-            "ancestralidades_crystal.json",
-            "ancestralidades_sol_vapor.json",
-            "ancestralidades_wiseguys.json"
-        )
-
-        listaAncestralidadesJson = assets.mergeJsonLists<RacialModifier>(
-            primaryFile = "listaancestralidade.json",
-            extraFiles = ancestralFiles
-        )
-
-        val monstrosJson = assets
-            .open("monstros.json")
-            .bufferedReader()
-            .use { it.readText() }
-        listaMonstroTemplates = json.decodeFromString(monstrosJson)
-
-        racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
-            val m = rm.atributos
-                .mapKeys   { it.key.keyify() }
-                .mapValues { 4 + it.value }
-            rm.nome.keyify() to m
-        }
-
-        racialSkillStartMap = listaAncestralidadesJson.associate { rm ->
-            val m = rm.pericias
-                .mapKeys   { it.key.keyify() }
-                .mapValues { 4 + it.value }
-            rm.nome.keyify() to m
-        }
+        // Unified loading
+        DataLoader.loadAllData(assets)
 
         setContent {
             val criadorViewModel: CriadorViewModel = viewModel()
@@ -769,9 +610,9 @@ class MainActivity : ComponentActivity() {
                                             expMonstro = expMonstro,
                                             onToggleMonstro = { expMonstro = !expMonstro },
 
-                                            equipamentoCategorias = equipamentoCategorias,
-                                            superequipCategorias  = superequipCategorias,
-                                            listaSuperPoderes     = listaSuperPoderes,
+                                            equipamentoCategorias = GlobalData.equipamentoCategorias,
+                                            superequipCategorias  = GlobalData.superequipCategorias,
+                                            listaSuperPoderes     = GlobalData.listaSuperPoderes,
                                             modoOficialAtivo      = state.modoOficialAtivo
                                         )
                                     }
@@ -785,14 +626,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun Int.toDiceString(): String =
-    if (this <= 12) "d$this" else "d12+${(this - 12)}"
-
 data class Pericia(val nome: String, val atributo: String, val basica: Boolean)
 
-var listaComplicacoes: List<Complicacao> = emptyList()
-
-var listaCoracoesCrystal: List<CrystalHeart> = emptyList()
+val listaComplicacoes get() = GlobalData.listaComplicacoes
+val listaCoracoesCrystal get() = GlobalData.listaCoracoesCrystal
 
 @Serializable
 data class SuperPoder(
@@ -804,16 +641,16 @@ data class SuperPoder(
     val manifestacoes: JsonElement? = null
 )
 
-lateinit var listaAncestralidadesJson: List<RacialModifier>
-lateinit var listaMonstroTemplates: List<MonstroTemplate>
+val listaAncestralidadesJson get() = GlobalData.listaAncestralidadesJson
+val listaMonstroTemplates get() = GlobalData.listaMonstroTemplates
 
-lateinit var racialAttrMinMap: Map<String, Map<String,Int>>
-lateinit var racialSkillStartMap: Map<String, Map<String,Int>>
+val racialAttrMinMap get() = GlobalData.racialAttrMinMap
+val racialSkillStartMap get() = GlobalData.racialSkillStartMap
 
-lateinit var listaAtributos: List<String>
-lateinit var mapaAtributosDisplay: Map<String, String>
+val listaAtributos get() = GlobalData.listaAtributos
+val mapaAtributosDisplay get() = GlobalData.mapaAtributosDisplay
 
-lateinit var listaPericias: List<Pericia>
+val listaPericias get() = GlobalData.listaPericias
 
 fun periciaStartRaw(anc: String, per: Pericia): Int {
     val ancKey = anc.keyify()
@@ -822,7 +659,7 @@ fun periciaStartRaw(anc: String, per: Pericia): Int {
         ?: if (per.basica) 4 else 0
 }
 
-var listaVantagens:    List<Vantagem>   = emptyList()
+val listaVantagens get() = GlobalData.listaVantagens
 
 fun loadRawText(context: Context, @RawRes resId: Int): String {
     val inputStream = context.resources.openRawResource(resId)
@@ -830,19 +667,7 @@ fun loadRawText(context: Context, @RawRes resId: Int): String {
     return reader.readText()
 }
 
-data class Estagio(
-    val nome: String,
-    val minProgress: Int,
-    val maxProgress: Int
-)
-
-val listaDeEstagios = listOf(
-    Estagio("Novato",     0,  3),
-    Estagio("Experiente", 4,  7),
-    Estagio("Veterano",   8, 11),
-    Estagio("Heroico",   12, 15),
-    Estagio("Lendário",  16, Int.MAX_VALUE)
-)
+val listaDeEstagios get() = GlobalData.listaDeEstagios
 
 fun stageIndexForSlot(slotIndex: Int): Int {
     var remaining = slotIndex
@@ -853,28 +678,12 @@ fun stageIndexForSlot(slotIndex: Int): Int {
     return dynamicStageCaps.lastIndex
 }
 
-fun stageForSlot(slotIndex: Int): Estagio = listaDeEstagios[stageIndexForSlot(slotIndex)]
+fun stageForSlot(slotIndex: Int): com.example.swadebuilder.Estagio = listaDeEstagios[stageIndexForSlot(slotIndex)]
 
-val nivelParaEstagio = mapOf(
-    "N" to listaDeEstagios.first { it.nome == "Novato" },
-    "E" to listaDeEstagios.first { it.nome == "Experiente" },
-    "V" to listaDeEstagios.first { it.nome == "Veterano" },
-    "H" to listaDeEstagios.first { it.nome == "Heroico" },
-    "L" to listaDeEstagios.first { it.nome == "Lendário" }
-)
+val nivelParaEstagio get() = GlobalData.nivelParaEstagio
 
 const val TOTAL_PROGRESS_LIMIT = 20
-val dynamicStageCaps = listaDeEstagios.mapIndexed { idx, st ->
-    val prevMax = listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: 0
-    if (idx < listaDeEstagios.lastIndex)
-        st.maxProgress - prevMax
-    else
-        (TOTAL_PROGRESS_LIMIT - prevMax).coerceAtLeast(0)
-}
-
-
-
-
+val dynamicStageCaps get() = GlobalData.dynamicStageCaps
 
 
 @Composable
@@ -902,12 +711,6 @@ fun CollapsibleSection(
         if (expanded) content()
     }
 }
-
-
-
-
-
-
 
 @Composable
 fun PowerDropdownMenu(
@@ -954,9 +757,6 @@ fun PowerDropdownMenu(
         }
     }
 }
-
-
-
 
 @Composable
 fun SelecaoCard(
