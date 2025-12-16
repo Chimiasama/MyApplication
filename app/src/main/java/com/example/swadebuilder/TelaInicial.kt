@@ -138,6 +138,8 @@ fun TelaInicial(
     var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
 
     // UI Expansion States
+    var expandedBasicModules by rememberSaveable { mutableStateOf(true) }
+    var expandedOtherModules by rememberSaveable { mutableStateOf(false) }
     var expandedBasicRules by rememberSaveable { mutableStateOf(false) }
     var expandedHorrorRules by rememberSaveable { mutableStateOf(false) }
     var expandedSupersRules by rememberSaveable { mutableStateOf(false) }
@@ -237,76 +239,93 @@ fun TelaInicial(
 
             item {
                 Column(Modifier.padding(horizontal = 16.dp)) {
-                    ModuleToggle(
-                        title = "Compêndio de Fantasia",
-                        description = "Raças, itens mágicos e regras de fantasia.",
-                        icon = Icons.Default.AutoAwesome,
-                        checked = optCompendioFantasia,
-                        onCheckedChange = { optCompendioFantasia = it }
-                    )
-                    ModuleToggle(
-                        title = "Compêndio de Horror",
-                        description = "Climas sombrios e criaturas aterrorizantes.",
-                        icon = Icons.Default.Warning,
-                        checked = optCompendioHorror,
-                        onCheckedChange = { optCompendioHorror = it }
-                    )
-                    ModuleToggle(
-                        title = "Superpoderes",
-                        description = "Ativa Compêndio de Superpoderes (SPC).",
-                        icon = Icons.Default.Bolt,
-                        checked = optSuperPoderes,
-                        onCheckedChange = { optSuperPoderes = it }
-                    )
-                    ModuleToggle(
-                        title = "Compêndio de Sci-Fi",
-                        description = "Tecnologia avançada, naves e cibernéticos.",
-                        icon = Icons.Default.RocketLaunch,
-                        checked = optCompendioSciFi,
-                        onCheckedChange = { optCompendioSciFi = it }
-                    )
-                    ModuleToggle(
-                        title = "Savage Pathfinder",
-                        description = "Conteúdo oficial de Golarion (Classes, Raças).",
-                        icon = Icons.Default.Map,
-                        checked = optCompendioTrilhador,
-                        onCheckedChange = { optCompendioTrilhador = it }
-                    )
-                    ModuleToggle(
-                        title = "Deadlands: O Oeste Estranho",
-                        description = "Pistoleiros, Harroweds e o horror do Oeste.",
-                        icon = Icons.Default.Shield,
-                        checked = optCompendioDeadlands,
-                        onCheckedChange = { optCompendioDeadlands = it }
-                    )
-                    ModuleToggle(
-                        title = "Crystal Heart",
-                        description = "Troque seu coração por um cristal mágico.",
-                        icon = Icons.Default.Favorite,
-                        checked = optCompendioCrystalHeart,
-                        onCheckedChange = { optCompendioCrystalHeart = it }
-                    )
-                    ModuleToggle(
-                        title = "Arte da Guerra: Nova Era",
-                        description = "Ativa Chi, Tropos e equipamentos orientais.",
-                        icon = Icons.Default.Info,
-                        checked = optCompendioArteDaGuerra,
-                        onCheckedChange = { optCompendioArteDaGuerra = it }
-                    )
-                    ModuleToggle(
-                        title = "A Cidade do Sol a Vapor",
-                        description = "Estímulos vitorianos, vapor e tecnomagia.",
-                        icon = Icons.Default.Build,
-                        checked = optCompendioCidadeSolVapor,
-                        onCheckedChange = { optCompendioCidadeSolVapor = it }
-                    )
-                    ModuleToggle(
-                        title = "Wiseguys",
-                        description = "Crime organizado moderno, conexões e esquemas.",
-                        icon = Icons.Default.Groups,
-                        checked = optCompendioWiseguys,
-                        onCheckedChange = { optCompendioWiseguys = it }
-                    )
+                    ModuleGroupCard(
+                        title = "Básico",
+                        description = "Opções essenciais para a maioria das mesas.",
+                        expanded = expandedBasicModules,
+                        onToggle = { expandedBasicModules = !expandedBasicModules }
+                    ) {
+                        ModuleToggle(
+                            title = "Compêndio de Fantasia",
+                            description = "Raças, itens mágicos e regras de fantasia.",
+                            icon = Icons.Default.AutoAwesome,
+                            checked = optCompendioFantasia,
+                            onCheckedChange = { optCompendioFantasia = it }
+                        )
+                        ModuleToggle(
+                            title = "Compêndio de Ficção",
+                            description = "Tecnologia avançada, naves e cibernéticos.",
+                            icon = Icons.Default.RocketLaunch,
+                            checked = optCompendioSciFi,
+                            onCheckedChange = { optCompendioSciFi = it }
+                        )
+                        ModuleToggle(
+                            title = "Compêndio de Horror",
+                            description = "Climas sombrios e criaturas aterrorizantes.",
+                            icon = Icons.Default.Warning,
+                            checked = optCompendioHorror,
+                            onCheckedChange = { optCompendioHorror = it }
+                        )
+                        ModuleToggle(
+                            title = "Superpoderes",
+                            description = "Ativa Compêndio de Superpoderes (SPC).",
+                            icon = Icons.Default.Bolt,
+                            checked = optSuperPoderes,
+                            onCheckedChange = { optSuperPoderes = it }
+                        )
+                    }
+
+                    Spacer(Modifier.height(12.dp))
+
+                    ModuleGroupCard(
+                        title = "Outros Cenários",
+                        description = "Para livros e ambientações adicionais.",
+                        expanded = expandedOtherModules,
+                        onToggle = { expandedOtherModules = !expandedOtherModules }
+                    ) {
+                        ModuleToggle(
+                            title = "Savage Pathfinder",
+                            description = "Conteúdo oficial de Golarion (Classes, Raças).",
+                            icon = Icons.Default.Map,
+                            checked = optCompendioTrilhador,
+                            onCheckedChange = { optCompendioTrilhador = it }
+                        )
+                        ModuleToggle(
+                            title = "Deadlands: O Oeste Estranho",
+                            description = "Pistoleiros, Harroweds e o horror do Oeste.",
+                            icon = Icons.Default.Shield,
+                            checked = optCompendioDeadlands,
+                            onCheckedChange = { optCompendioDeadlands = it }
+                        )
+                        ModuleToggle(
+                            title = "Crystal Heart",
+                            description = "Troque seu coração por um cristal mágico.",
+                            icon = Icons.Default.Favorite,
+                            checked = optCompendioCrystalHeart,
+                            onCheckedChange = { optCompendioCrystalHeart = it }
+                        )
+                        ModuleToggle(
+                            title = "Arte da Guerra: Nova Era",
+                            description = "Ativa Chi, Tropos e equipamentos orientais.",
+                            icon = Icons.Default.Info,
+                            checked = optCompendioArteDaGuerra,
+                            onCheckedChange = { optCompendioArteDaGuerra = it }
+                        )
+                        ModuleToggle(
+                            title = "A Cidade do Sol a Vapor",
+                            description = "Estímulos vitorianos, vapor e tecnomagia.",
+                            icon = Icons.Default.Build,
+                            checked = optCompendioCidadeSolVapor,
+                            onCheckedChange = { optCompendioCidadeSolVapor = it }
+                        )
+                        ModuleToggle(
+                            title = "Wiseguys",
+                            description = "Crime organizado moderno, conexões e esquemas.",
+                            icon = Icons.Default.Groups,
+                            checked = optCompendioWiseguys,
+                            onCheckedChange = { optCompendioWiseguys = it }
+                        )
+                    }
                 }
             }
 
@@ -488,6 +507,53 @@ fun SectionHeader(title: String) {
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp)
     )
+}
+
+@Composable
+fun ModuleGroupCard(
+    title: String,
+    description: String,
+    expanded: Boolean,
+    onToggle: () -> Unit,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+        )
+    ) {
+        Column(Modifier.padding(12.dp)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onToggle() },
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(Modifier.weight(1f)) {
+                    Text(title, fontWeight = FontWeight.SemiBold)
+                    Text(
+                        description,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Icon(
+                    imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                    contentDescription = null
+                )
+            }
+
+            AnimatedVisibility(visible = expanded) {
+                Column(Modifier.padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    content()
+                }
+            }
+        }
+    }
 }
 
 @Composable
