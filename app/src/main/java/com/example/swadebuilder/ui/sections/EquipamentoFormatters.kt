@@ -24,7 +24,6 @@ internal fun EquipamentoItem.toResumo(): EquipamentoResumo {
         cdt.asText()?.let { "CdT: $it" },
         distancia.asText()?.let { "Distância: $it" },
         tiros.asText()?.let { "Tiros: $it" },
-        pmf.asText()?.let { "PMF: $it" },
     ).joinToString("  •  ")
         .takeIf { it.isNotBlank() }
 
@@ -56,10 +55,6 @@ internal fun EquipamentoItem.toResumo(): EquipamentoResumo {
             malfuncionamento.asText()?.takeIf { it.isNotBlank() }?.let { malf ->
                 if (isNotEmpty()) append("\n")
                 append("Malfuncionamento: $malf")
-            }
-            pmf.asText()?.takeIf { it.isNotBlank() }?.let { pmfValue ->
-                if (isNotEmpty()) append("\n")
-                append("PMF: $pmfValue")
             }
         }.ifBlank { null },
         custo = custo.asText(),

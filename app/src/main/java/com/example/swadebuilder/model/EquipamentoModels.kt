@@ -30,7 +30,6 @@ data class EquipamentoItem(
     val resistencia: JsonElement? = null,
     val tripulacao: JsonElement? = null,
     val malfuncionamento: JsonElement? = null,
-    val pmf: JsonElement? = null,
     val tensao: Int? = null,
     val mods_slots: Int? = null
 )
