@@ -222,6 +222,7 @@ fun VantagensContent(
             val isHorror = origemNorm == "HORROR"
             val isTrilhador = origemNorm == "FANTASIA_TRILHADOR"
             val isDeadlands = origemNorm == "DEADLANDS"
+            val isAdg = origemNorm == "ARTE_DA_GUERRA"
 
             if (state.compendioCrystalHeartAtivo) {
                 // If Crystal Heart is active, hide "Antecedente Arcano" if it's not "Agente da Syn"
@@ -237,7 +238,7 @@ fun VantagensContent(
             // Allow filtering logic to work properly: include items if their compendium is active OR if they are basic.
             // But we also need to allow users to filter via the dialog even if the compendium is active.
             // The logic below determines which items are *eligible* to be shown. The dialog filter is applied later.
-            isBasico || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isTrilhador && state.compendioTrilhadorAtivo) || (isDeadlands && state.compendioDeadlandsAtivo)
+            isBasico || isAdg || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isTrilhador && state.compendioTrilhadorAtivo) || (isDeadlands && state.compendioDeadlandsAtivo)
         }
     }
 

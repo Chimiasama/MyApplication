@@ -1,0 +1,65 @@
+[
+  {
+    "id": "tropo_artista_marcial",
+    "nome": "Artista Marcial",
+    "categoria": "TROPO",
+    "origem": "ARTE_DA_GUERRA",
+    "tecnicas_iniciais": 0,
+    "descricao": "Foca no corpo físico. Começa com Vantagem Artista Marcial e Estudante de Artes Marciais. Escolhe um atributo físico para aumentar + Vantagem associada (Agilidade/Esquiva, Força/Bloquear, Vigor/Reflexos).",
+    "ganha_ao_comprar": ["artista_marcial", "estudante_artes_marciais"]
+  },
+  {
+    "id": "tropo_buxista",
+    "nome": "Bu Xista (Monge)",
+    "categoria": "TROPO",
+    "origem": "ARTE_DA_GUERRA",
+    "tecnicas_iniciais": 2,
+    "descricao": "Conselheiros espirituais. Ganha Ocultismo d4 e Convenção d4. Pode entrar em Transe (Mente sobre a Matéria) para ganhar bônus. Escolhe uma Seita (estilo de transe).",
+    "ganha_ao_comprar": []
+  },
+  {
+    "id": "tropo_elementalista",
+    "nome": "Elementalista",
+    "categoria": "TROPO",
+    "origem": "ARTE_DA_GUERRA",
+    "tecnicas_iniciais": 0,
+    "descricao": "Manipula elementos. Começa com Jutsu d4 e Transição d4. Conhece Manobras Elementais de um elemento (Fogo, Água, Ar, Terra, Metal, Madeira). Usa Vigor para ativar poderes.",
+    "ganha_ao_comprar": ["estudante_artes_marciais"]
+  },
+  {
+    "id": "tropo_samurai",
+    "nome": "Samurai",
+    "categoria": "TROPO",
+    "origem": "ARTE_DA_GUERRA",
+    "tecnicas_iniciais": 1,
+    "descricao": "Soldado de elite. Começa com Conhecimento Batalha d6. Ganha Vantagem Comando ou de Combate. Possui um Domínio (terra). Pode assumir Posturas de combate.",
+    "ganha_ao_comprar": ["comando", "dominio"]
+  },
+  {
+    "id": "tropo_shinobi",
+    "nome": "Shinobi",
+    "categoria": "TROPO",
+    "origem": "ARTE_DA_GUERRA",
+    "tecnicas_iniciais": 2,
+    "descricao": "Espião e assassino. Escolhe um Talento Shinobi (Alteração, Pés Leves, Místico, Passo das Sombras). Escolhe um treinamento (Infiltrador, Batedor, Espião) para rerrolagens com Chi.",
+    "ganha_ao_comprar": []
+  },
+  {
+    "id": "tropo_youxia",
+    "nome": "Youxia",
+    "categoria": "TROPO",
+    "origem": "ARTE_DA_GUERRA",
+    "tecnicas_iniciais": 2,
+    "descricao": "Guerreiro errante. Começa com Arma Predileta (Kensai). Pode usar Chi para proteger aliados (desviar ataques). Arma ganha qualidades místicas.",
+    "ganha_ao_comprar": ["arma_predileta"]
+  },
+  {
+    "id": "tropo_mon",
+    "nome": "Mon (Domador)",
+    "categoria": "TROPO",
+    "origem": "ARTE_DA_GUERRA",
+    "tecnicas_iniciais": 0,
+    "descricao": "Vinculado a um animal especial (Mon). Ganha Técnica Forma Bestial (apenas do Mon). Mon é Carta Selvagem. Sentidos compartilhados.",
+    "ganha_ao_comprar": ["senhor_das_feras"]
+  }
+]

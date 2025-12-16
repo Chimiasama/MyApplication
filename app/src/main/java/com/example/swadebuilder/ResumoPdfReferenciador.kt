@@ -229,13 +229,15 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
 
     fun calcAparar(): Int {
         val lutarRawBase = personagem.pericias["Lutar"] ?: 0
+        val jutsuRawBase = personagem.pericias["Jutsu"] ?: 0
         val lutarStepsFromSupers = personagem.superInvestments
             .mapNotNull { it.effect as? com.example.swadebuilder.model.PowerEffect.SuperPericia }
             .filter { it.periciaKey.equals("Lutar", ignoreCase = true) }
             .sumOf { it.steps }
         val lutarComSupers = applySuperStepsFrom(lutarRawBase, lutarStepsFromSupers)
+        val jutsuComSupers = jutsuRawBase
 
-        val base = 2 + (lutarComSupers / 2)
+        val base = 2 + (maxOf(lutarComSupers, jutsuComSupers) / 2)
 
         val bloquearBonus =
             if (vantagensNomeKey.any { it == "BLOQUEAR" }) 1 else 0
@@ -250,11 +252,17 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         return (melhorExterna + personagem.naturalArmorFromRace).coerceAtLeast(0)
     }
 
+    fun calcChi(): Int {
+        val espRaw = personagem.atributos["ESPIRITO"] ?: 4
+        return 2 + (espRaw / 2)
+    }
+
     val aparar = calcAparar()
     val resFinal = resistenciaFinal()
     val tamanho = tamanhoTotal()
     val mov = calcMovimento()
     val armadura = calcArmaduraEfetiva()
+    val chi = calcChi()
     val resistenciaTexto =
         if (armadura > 0) "${resFinal}(${armadura})" else resFinal.toString()
 
@@ -266,6 +274,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += "Atributos derivados"
     lines += "Aparar: $aparar"
     lines += "Resistência: $resistenciaTexto"
+    lines += "Chi: $chi"
     lines += "Tamanho: $tamanho"
     lines += "Movimento: $mov"
     lines += ""

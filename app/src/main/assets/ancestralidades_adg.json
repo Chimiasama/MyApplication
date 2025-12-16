@@ -1,0 +1,67 @@
+[
+  {
+    "id": "anc_humano_adg",
+    "nome": "Humano (Império San)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "ARTE_DA_GUERRA",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      { "nome": "Versátil", "descricao": "Começa com uma Vantagem Novato extra de graça." },
+      { "nome": "Pontos de Perícia", "descricao": "Começa com 15 pontos de perícia em vez de 12." },
+      {
+        "nome": "Signo de Nascença",
+        "descricao": "Escolha um Signo que concede um benefício específico (ex: Tigre: +1 em Medo e Comando; Lebre: Cura natural rápida)."
+      }
+    ]
+  },
+  {
+    "id": "anc_kemonomimi",
+    "nome": "Kemonomimi (Espírito Animal)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "ARTE_DA_GUERRA",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      { "nome": "Visão no Escuro", "descricao": "Ignora penalidades de iluminação." },
+      {
+        "nome": "Sub-raça",
+        "descricao": "Deve escolher um tipo: Inumimi (Cão, +1 Resistência, Mordida), Kitsunemimi (Raposa, Cativar), Nekomimi (Gato, Sorte/Azar), etc."
+      }
+    ]
+  },
+  {
+    "id": "anc_terracota",
+    "nome": "Terracota",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "ARTE_DA_GUERRA",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      { "nome": "Metade Construto", "descricao": "+3 Resistência, não respira, imune a veneno/doença. Cura difícil (apenas Consertar)." },
+      { "nome": "Chi Reduzido", "descricao": "-1 na Reserva de Chi inicial." },
+      { "nome": "Voto Maior", "descricao": "Trazido de volta para uma tarefa específica. Morre se falhar ou completar." }
+    ]
+  },
+  {
+    "id": "anc_onigem",
+    "nome": "Onigem (Sangue de Oni)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "ARTE_DA_GUERRA",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      { "nome": "Tripas Resistentes", "descricao": "+1 em Medo, Absorção e resistir a venenos." },
+      { "nome": "Forte", "descricao": "Força inicial d6, máximo d12+1." },
+      { "nome": "Ancestralidade Infame", "descricao": "-2 em Persuadir com desconhecidos." }
+    ]
+  }
+]

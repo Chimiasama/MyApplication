@@ -75,7 +75,9 @@ fun PoderesSection(
     if (arcanosAtivos.isEmpty()) return
 
     val allPoderes: List<Poder> = remember {
-        runCatching { context.loadJsonAsset<List<Poder>>("poderes.json") }.getOrElse { emptyList() }
+        val poderesBase = runCatching { context.loadJsonAsset<List<Poder>>("poderes.json") }.getOrElse { emptyList() }
+        val tecnicasChi = runCatching { context.loadJsonAsset<List<Poder>>("tecnicas_chi.json") }.getOrElse { emptyList() }
+        poderesBase + tecnicasChi
     }
     val poderesElegiveis = remember(allPoderes) { allPoderes }
 

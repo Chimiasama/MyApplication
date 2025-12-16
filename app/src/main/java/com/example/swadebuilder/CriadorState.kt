@@ -159,8 +159,11 @@ class CriadorState {
 
     fun valorAparar(): Int {
         val perLutar = listaPericias.firstOrNull { it.nome.equals("Lutar", ignoreCase = true) }
+        val perJutsu = listaPericias.firstOrNull { it.nome.equals("Jutsu", ignoreCase = true) }
         val lutarRaw = perLutar?.let { rawTotalComSupers(it) } ?: 0
-        val base     = 2 + (lutarRaw / 2)
+        val jutsuRaw = perJutsu?.let { rawTotalComSupers(it) } ?: 0
+        val melhorLuta = maxOf(lutarRaw, jutsuRaw)
+        val base     = 2 + (melhorLuta / 2)
 
         val bloquearBonus =
             if (vantagensSelecionadas.any { it.nome.keyify() == "BLOQUEAR" }) 1 else 0
@@ -192,6 +195,11 @@ class CriadorState {
 
     fun valorResistenciaFinal(): Int {
         return valorResistenciaBase() + bonusResFromPower
+    }
+
+    fun valorChi(): Int {
+        val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 4
+        return 2 + (espiritoRaw / 2)
     }
 
     fun valorArmaduraEfetiva(): Int {

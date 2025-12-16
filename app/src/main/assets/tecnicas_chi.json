@@ -1,0 +1,74 @@
+[
+  {
+    "id": "chi_ataque_corporal",
+    "nome": "Ataque Chi Corpo a Corpo",
+    "origem": "ARTE_DA_GUERRA",
+    "estagio": "Novato",
+    "pontosDePoder": "1",
+    "distancia": "Pessoal",
+    "duracao": "5",
+    "manifestacoes": [],
+    "descricao": "Adiciona +1d6 ao dano desarmado ou com arma. Pode ser modificado para PA ou Dano Pesado.",
+    "modificadores": []
+  },
+  {
+    "id": "chi_aljava",
+    "nome": "Aljava de Porco-Espinho",
+    "origem": "ARTE_DA_GUERRA",
+    "estagio": "Novato",
+    "pontosDePoder": "1",
+    "distancia": "Pessoal",
+    "duracao": "5",
+    "manifestacoes": [],
+    "descricao": "Cria munição de Chi (flechas, agulhas) infinitas pela duração.",
+    "modificadores": []
+  },
+  {
+    "id": "chi_areia_bolso",
+    "nome": "Areia de Bolso",
+    "origem": "ARTE_DA_GUERRA",
+    "estagio": "Experiente",
+    "pontosDePoder": "2",
+    "distancia": "Espírito (Cone)",
+    "duracao": "5",
+    "manifestacoes": [],
+    "descricao": "Cega alvos no cone (Agilidade -2 nega). Sucesso parcial causa Distraído e -4 visão.",
+    "modificadores": []
+  },
+  {
+    "id": "chi_clone",
+    "nome": "Clone",
+    "origem": "ARTE_DA_GUERRA",
+    "estagio": "Experiente",
+    "pontosDePoder": "2",
+    "distancia": "Espírito",
+    "duracao": "5",
+    "manifestacoes": [],
+    "descricao": "Cria uma cópia física (Extra) do herói. Clone tem 1 Chi e desaparece se ferido.",
+    "modificadores": []
+  },
+  {
+    "id": "chi_hadouken",
+    "nome": "Hadouken (Raio)",
+    "origem": "ARTE_DA_GUERRA",
+    "estagio": "Experiente",
+    "pontosDePoder": "1",
+    "distancia": "Espírito x 2",
+    "duracao": "Instantânea",
+    "manifestacoes": [],
+    "descricao": "Dispara esfera de energia. 2d6 dano (3d6 ampliação). Funciona como o poder Raio.",
+    "modificadores": []
+  },
+  {
+    "id": "chi_fuga_ninja",
+    "nome": "Fuga Ninja",
+    "origem": "ARTE_DA_GUERRA",
+    "estagio": "Experiente",
+    "pontosDePoder": "3",
+    "distancia": "Pessoal",
+    "duracao": "5",
+    "manifestacoes": [],
+    "descricao": "Teleporta curta distância e fica Invisível (-4 para ser acertado).",
+    "modificadores": []
+  }
+]
