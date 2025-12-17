@@ -2,7 +2,7 @@
   {
     "nome": "ANDROIDES",
     "origem": "BASICO",
-    "descricao": "São criaturas semi-orgânicas criadas por tecnologia avançada. O exemplo aqui simula seres humanos em muitos aspectos, podendo ter passabilidade humana quando desejar. Sua rede neural avançada lhes dá uma inteligência artificial completa, com personalidades individuais.",
+    "descricao": "O ser é uma entidade mecânica e eletrônica criada por outros. Robôs não respiram, são imunes a doenças e venenos, ignoram descompressão e radiação. Os robôs têm um número de espaços de Mods Robóticos com base em seu Tamanho. Cibernéticos podem ser instalados (se disponíveis no cenário) com Tensão contando como Mods. Robôs não podem fazer testes de cura naturais, devem ser consertados em vez de curados e ignoram a Hora de Ouro para Ferimentos. Eles recarregam de fontes ambientais ou baterias 'fora de cena'.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
@@ -17,7 +17,7 @@
   {
     "nome": "ANÕES",
     "origem": "BASICO",
-    "descricao": "São um povo baixo, robusto e resistente que vêm de cavernas imensas ou altas montanhas. São um povo orgulhoso e guerreiro, graças ao contato constante com criaturas hostis como orcs e goblins. Geralmente vivem mais de 200 anos.",
+    "descricao": "Os anões são um povo de baixa estatura, robusto e resistente que vem de cavernas imensas nas altas fortalezas montanhosas. São orgulhosos e belicosos, normalmente devido ao contato constante com ancestralidades hostis como orcs e goblins. Anões geralmente vivem mais de 200 anos. São conhecidos por seu amor pela cerveja, conhecimento em trabalho com pedra e barbas impressionantes. Possuem Visão no Escuro, são Robustos (Vigor d6 inicial) e têm Movimentação Reduzida.",
     "atributos": {
       "Vigor": 2
     },
@@ -143,7 +143,7 @@
   {
     "nome": "SÁURIOS",
     "origem": "BASICO",
-    "descricao": "Lagartos humanoides que normalmente vêm de selvas escaldantes ou de desertos ermos onde possuem civilizações únicas que são desconhecidas por outros seres sencientes.",
+    "descricao": "Homens-lagarto normalmente vêm de selvas escaldantes, pântanos úmidos ou de desertos ermos, onde possuem civilizações ímpares desconhecidas por outras ancestralidades. Eles possuem uma pele escamosa que funciona como armadura natural (+2), mordidas poderosas e sentidos aprimorados (Prontidão), mas sofrem com o frio (Fraqueza Ambiental) e são vistos com desconfiança (Forasteiro Menor).",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
@@ -209,7 +209,7 @@
   {
     "nome": "DESCENDENTE ELEMENTAL (AR)",
     "origem": "FANTASIA",
-    "descricao": "Descendentes do ar têm cabelos brancos que se agitam continuamente como se fossem soprados por um vento fantasma. Não precisam respirar.",
+    "descricao": "Descendentes elementais estão de alguma forma conectados por nascimento a um dos quatro elementos: terra, fogo, água ou ar. Parecem humanos à primeira vista, mas podem ter sinais de sua herança, como cabelos que se agitam como vento, pele avermelhada ou pupilas de fogo. Eles possuem Resistência Ambiental ao seu elemento (+4 para resistir e redução de dano) e sofrem preconceito (Forasteiro Menor) por sua natureza estranha.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
@@ -223,7 +223,7 @@
   {
     "nome": "DESCENDENTE ELEMENTAL (ÁGUA)",
     "origem": "FANTASIA",
-    "descricao": "Descendentes da água têm uma tonalidade azulada na pele e no cabelo e falam com vozes mansas. Não se afogam na água.",
+    "descricao": "Descendentes elementais estão de alguma forma conectados por nascimento a um dos quatro elementos: terra, fogo, água ou ar. Parecem humanos à primeira vista, mas podem ter sinais de sua herança, como cabelos que se agitam como vento, pele avermelhada ou pupilas de fogo. Eles possuem Resistência Ambiental ao seu elemento (+4 para resistir e redução de dano) e sofrem preconceito (Forasteiro Menor) por sua natureza estranha.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
@@ -237,7 +237,7 @@
   {
     "nome": "DESCENDENTE ELEMENTAL (FOGO)",
     "origem": "FANTASIA",
-    "descricao": "Descendentes do fogo têm cabelos de um laranja ou amarelo brilhante, vozes sibilantes e pupilas vermelhas. São frenéticos e rápidos.",
+    "descricao": "Descendentes elementais estão de alguma forma conectados por nascimento a um dos quatro elementos: terra, fogo, água ou ar. Parecem humanos à primeira vista, mas podem ter sinais de sua herança, como cabelos que se agitam como vento, pele avermelhada ou pupilas de fogo. Eles possuem Resistência Ambiental ao seu elemento (+4 para resistir e redução de dano) e sofrem preconceito (Forasteiro Menor) por sua natureza estranha.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
@@ -251,7 +251,7 @@
   {
     "nome": "DESCENDENTE ELEMENTAL (TERRA)",
     "origem": "FANTASIA",
-    "descricao": "Descendentes da terra têm vozes roucas, corpos musculosos e um tom avermelhado em sua pele. São resistentes como rocha.",
+    "descricao": "Descendentes elementais estão de alguma forma conectados por nascimento a um dos quatro elementos: terra, fogo, água ou ar. Parecem humanos à primeira vista, mas podem ter sinais de sua herança, como cabelos que se agitam como vento, pele avermelhada ou pupilas de fogo. Eles possuem Resistência Ambiental ao seu elemento (+4 para resistir e redução de dano) e sofrem preconceito (Forasteiro Menor) por sua natureza estranha.",
     "atributos": {
       "Vigor": 2
     },
@@ -339,7 +339,7 @@
   {
     "nome": "GOLENS",
     "origem": "FANTASIA",
-    "descricao": "Geralmente autômatos de pedra, metal ou outro material, criados por magia ou ciência estranha. São densos, fortes e não possuem necessidades biológicas.",
+    "descricao": "Golens geralmente são autômatos irracionais criados por um feiticeiro ou inventor para proteger seus covis. Alguns são dotados de senciência ou a alcançam devido a acidentes misteriosos, feitiços poderosos, bênçãos de divindades benevolentes ou outros meios pouco ortodoxos. Golens são feitos de materiais como pedra, metal ou carne. Eles não respiram, não comem, são imunes a doenças e veneno, não ficam Sangrando e curam seus Ferimentos com Consertar. São grandes (Tamanho +2), fortes e resistentes, mas desajeitados e sem as habilidades sociais básicas.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
@@ -574,7 +574,7 @@
   {
     "nome": "TRANSMORFOS",
     "origem": "FANTASIA",
-    "descricao": "Criaturas capazes de mudar sua aparência para se parecer com outras pessoas. São camaleões sociais, muitas vezes atuando como espiões ou vigaristas.",
+    "descricao": "Estas criaturas peculiares e geralmente malvistas conseguem mudar sua aparência para se parecer com outra pessoa. São camaleões sociais, que se movem furtivamente pela sociedade. Alguns transmorfos inescrupulosos usam essa habilidade para se tornarem vigaristas, ladrões ou até mesmo assassinos, enquanto outros a usam em apresentações para melhorar suas performances. Sua forma verdadeira é perturbadora de ver — um humanoide sem expressão, com pele cinza e olhos sem pupilas. Mudar de Forma: Transmorfos têm Antecedente Arcano (Dom). Como ação livre limitada, podem mudar sua aparência física da mesma forma que o poder disfarce com a Limitação Pessoal.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
