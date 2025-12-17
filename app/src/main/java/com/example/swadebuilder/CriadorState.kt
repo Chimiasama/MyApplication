@@ -38,6 +38,8 @@ import com.example.swadebuilder.normAAKey
 
 class CriadorState {
     var appTheme by mutableStateOf(AppTheme.DEFAULT)
+    var hapticStrength by mutableIntStateOf(DEFAULT_HAPTIC_STRENGTH)
+    var soundVolume by mutableIntStateOf(DEFAULT_SOUND_VOLUME)
     // showHelpMessages removido
     var modoSupers by mutableStateOf(false)
     var modoSuperComplicacoes by mutableStateOf(false)
@@ -55,7 +57,11 @@ class CriadorState {
     var modoMonstroAtivo by mutableStateOf(false)
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
     var grandesResponsabilidades by mutableStateOf(false)
-    companion object { const val BASE_SP_POOL = 15 }
+    companion object {
+        const val BASE_SP_POOL = 15
+        const val DEFAULT_HAPTIC_STRENGTH = 70
+        const val DEFAULT_SOUND_VOLUME = 70
+    }
     var maisPontosPericias by mutableStateOf(true)
     var cartaSelvagem       by mutableStateOf(true)
     var dinheiro by mutableIntStateOf(500)
@@ -1772,6 +1778,8 @@ class CriadorState {
             nome = nomePersonagem,
             timestamp = System.currentTimeMillis(),
             appTheme = appTheme.name,
+            hapticStrength = hapticStrength,
+            soundVolume = soundVolume,
             // showHelpMessages removido (PersonagemSnapshot tem default = false)
             anotacoes = anotacoes,
             flags = SnapshotFlags(
@@ -1926,6 +1934,8 @@ class CriadorState {
         nomePersonagem = snapshot.nome
         anotacoes = snapshot.anotacoes
         appTheme = com.example.swadebuilder.ui.theme.AppTheme.valueOf(snapshot.appTheme)
+        hapticStrength = snapshot.hapticStrength
+        soundVolume = snapshot.soundVolume
 
         // Flags adicionais
         modoSuperComplicacoes = flags.modoSuperComplicacoes

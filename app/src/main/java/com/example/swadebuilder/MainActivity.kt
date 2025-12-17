@@ -56,16 +56,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -108,6 +110,7 @@ import kotlinx.serialization.json.JsonElement
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.text.DateFormat
+import kotlin.math.roundToInt
 
 
 @Serializable
@@ -297,6 +300,14 @@ class MainActivity : ComponentActivity() {
             var mostrouTelaInicial by rememberSaveable { mutableStateOf(true) }
             var showExitDialog     by rememberSaveable { mutableStateOf(false) }
 
+            val feedbackController = remember { FeedbackController(context) }
+            DisposableEffect(Unit) {
+                onDispose { feedbackController.dispose() }
+            }
+            val triggerFeedback = remember(state.hapticStrength, state.soundVolume) {
+                { feedbackController.play(state.hapticStrength, state.soundVolume) }
+            }
+
             var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
             var showThemeSelectionDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -346,43 +357,68 @@ class MainActivity : ComponentActivity() {
                     title = { Text("Configurações") },
                     text = {
                         Column {
-                            // Placeholder: Resposta Haptica
+                            Text("Resposta háptica")
+                            Slider(
+                                value = state.hapticStrength.toFloat(),
+                                onValueChange = { state.hapticStrength = it.roundToInt() },
+                                valueRange = 0f..100f,
+                                steps = 4,
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = SliderDefaults.colors(
+                                    thumbColor = MaterialTheme.colorScheme.primary,
+                                    activeTrackColor = MaterialTheme.colorScheme.primary,
+                                    inactiveTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                                )
+                            )
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 8.dp),
+                                    .padding(bottom = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text("Resposta Haptica")
-                                Switch(
-                                    checked = false, // Placeholder
-                                    onCheckedChange = { }
-                                )
+                                Text("Intensidade: ${state.hapticStrength}%")
+                                TextButton(onClick = { feedbackController.play(state.hapticStrength, 0) }) {
+                                    Text("Testar vibração")
+                                }
                             }
 
                             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-                            // Placeholder: Sons
+                            Text("Sons do app")
+                            Slider(
+                                value = state.soundVolume.toFloat(),
+                                onValueChange = { state.soundVolume = it.roundToInt() },
+                                valueRange = 0f..100f,
+                                steps = 4,
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = SliderDefaults.colors(
+                                    thumbColor = MaterialTheme.colorScheme.secondary,
+                                    activeTrackColor = MaterialTheme.colorScheme.secondary,
+                                    inactiveTrackColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
+                                )
+                            )
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 8.dp),
+                                    .padding(bottom = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text("Sons")
-                                Switch(
-                                    checked = false, // Placeholder
-                                    onCheckedChange = { }
-                                )
+                                Text("Volume: ${state.soundVolume}%")
+                                TextButton(onClick = { feedbackController.play(0, state.soundVolume) }) {
+                                    Text("Testar som")
+                                }
                             }
 
                             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
                             // Theme Selection Button
                             TextButton(
-                                onClick = { showThemeSelectionDialog = true },
+                                onClick = {
+                                    triggerFeedback()
+                                    showThemeSelectionDialog = true
+                                },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Icon(Icons.Default.Palette, contentDescription = null)
@@ -568,18 +604,6 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            LaunchedEffect(criadorViewModel.feedbackMessages.size) {
-                // Removido verificação de showHelpMessages
-                if (criadorViewModel.feedbackMessages.isNotEmpty()) {
-                    criadorViewModel.feedbackMessages.forEach { msg ->
-                        scope.launch {
-                            snackHost.showSnackbar(msg)
-                        }
-                    }
-                    criadorViewModel.clearFeedbackMessages()
-                }
-            }
-
             BackHandler(enabled = mostrouTelaInicial) {
                 showExitDialog = true
             }
@@ -679,6 +703,7 @@ class MainActivity : ComponentActivity() {
                                         },
                                         navigationIcon = {
                                             TextButton(onClick = {
+                                                triggerFeedback()
                                                 criadorViewModel.resetToEmptyState()
                                                 mostrouTelaInicial = true
                                             }) {
@@ -693,6 +718,7 @@ class MainActivity : ComponentActivity() {
                                             val scope = rememberCoroutineScope()
 
                                             IconButton(onClick = {
+                                                triggerFeedback()
                                                 saveName = state.nomePersonagem
                                                 showSaveDialog = true
                                             }) {
@@ -700,12 +726,14 @@ class MainActivity : ComponentActivity() {
                                             }
 
                                             IconButton(onClick = {
+                                                triggerFeedback()
                                                 showLoadDialog = true
                                             }) {
                                                 Icon(Icons.Default.FolderOpen, contentDescription = "Carregar personagem")
                                             }
 
                                             IconButton(onClick = {
+                                                triggerFeedback()
                                                 val personagem = state.toMeuPersonagem()
 
                                                 scope.launch(Dispatchers.IO) {
@@ -715,7 +743,10 @@ class MainActivity : ComponentActivity() {
                                                 Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
                                             }
 
-                                            IconButton(onClick = { showSettingsDialog = true }) {
+                                            IconButton(onClick = {
+                                                triggerFeedback()
+                                                showSettingsDialog = true
+                                            }) {
                                                 Icon(Icons.Default.Settings, contentDescription = "Change Theme")
                                             }
                                         }
