@@ -23,7 +23,8 @@ import com.example.swadebuilder.ui.components.SectionCard
 fun TipoMonstroSection(
     state: CriadorState,
     expanded: Boolean,
-    onToggle: () -> Unit
+    onToggle: () -> Unit,
+    onUserFeedback: () -> Unit
 ) {
     if (!state.modoMonstroAtivo) return
 
@@ -31,7 +32,8 @@ fun TipoMonstroSection(
         title = "Tipo de Monstro",
         expanded = expanded,
         onToggle = onToggle,
-        icon = Icons.Default.BugReport
+        icon = Icons.Default.BugReport,
+        onToggleFeedback = onUserFeedback
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -47,7 +49,10 @@ fun TipoMonstroSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
-                        .clickable { state.tipoMonstroSelecionado = template.id },
+                        .clickable {
+                            onUserFeedback()
+                            state.tipoMonstroSelecionado = template.id
+                        },
                     colors = CardDefaults.cardColors(
                         containerColor = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
                     )

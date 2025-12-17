@@ -64,7 +64,8 @@ fun ComplicacoesSection(
     state: CriadorState,
     expanded: Boolean,
     onToggle: () -> Unit,
-    feedbackMessages: MutableList<String>
+    feedbackMessages: MutableList<String>,
+    onUserFeedback: () -> Unit
 ) {
     val locked = state.criacaoBasicaCongelada
 
@@ -99,7 +100,8 @@ fun ComplicacoesSection(
         title    = "Complicações",
         expanded = expanded,
         onToggle = onToggle,
-        icon     = Icons.Default.Warning
+        icon     = Icons.Default.Warning,
+        onToggleFeedback = onUserFeedback
     ) {
         val totalPc = state.pontosComplicacao
         val usadosPc = state.pontosComplicacaoGastos
@@ -152,6 +154,7 @@ fun ComplicacoesSection(
                     AssistChip(
                         onClick = {
                             if (!isClickable) return@AssistChip
+                            onUserFeedback()
 
                             if (canRemove) {
                                 when (comp.id) {
@@ -299,6 +302,7 @@ fun ComplicacoesSection(
                                     TextButton(
                                         onClick = {
                                             if (!enabledMenor) return@TextButton
+                                            onUserFeedback()
                                             when (comp.id) {
                                                 "jovem" -> {
                                                     state.complicacoesSelecionadas[comp] = "Menor"
@@ -328,6 +332,7 @@ fun ComplicacoesSection(
                                     TextButton(
                                         onClick = {
                                             if (!enabledMaior) return@TextButton
+                                            onUserFeedback()
                                             when (comp.id) {
                                                 "idoso" -> {
                                                     state.complicacoesSelecionadas[comp] = "Maior"
@@ -361,6 +366,7 @@ fun ComplicacoesSection(
                         if (allowLongTexts && comp.description.isNotBlank()) {
                             TextButton(
                                 onClick = {
+                                    onUserFeedback()
                                     val current = detalhesExpandidos[comp.id] ?: false
                                     detalhesExpandidos[comp.id] = !current
                                 },

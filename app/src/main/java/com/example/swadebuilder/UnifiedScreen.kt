@@ -388,7 +388,8 @@ fun ProgressionModeContent(
             onUseProgress = onUseProgress,
             onUndo = {
                 viewModel.revertLastAdvancement()
-            }
+            },
+            onUserFeedback = onUserFeedback
         )
     }
 }
@@ -417,7 +418,8 @@ fun CreationModeContent(
         onToggle = { state.toggleSection(MainSection.ANCESTRALIDADES) },
         supersLocked = creationLocked,
         ancestralidadeEmFoco = state.ancestralidadeEmFoco,
-        onSelectAncestralidade = onSelectAncestralidade
+        onSelectAncestralidade = onSelectAncestralidade,
+        onUserFeedback = onUserFeedback
     )
 
     if (state.modoMonstroAtivo) {
@@ -425,7 +427,8 @@ fun CreationModeContent(
         TipoMonstroSection(
             state = state,
             expanded = state.sectionsExpanded[MainSection.MONSTRO] ?: false,
-            onToggle = { state.toggleSection(MainSection.MONSTRO) }
+            onToggle = { state.toggleSection(MainSection.MONSTRO) },
+            onUserFeedback = onUserFeedback
         )
     }
 
@@ -435,7 +438,8 @@ fun CreationModeContent(
         state = state,
         expanded = state.sectionsExpanded[MainSection.COMPLICACOES] ?: false,
         onToggle = { state.toggleSection(MainSection.COMPLICACOES) },
-        feedbackMessages = viewModel.feedbackMessages as MutableList<String>
+        feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
+        onUserFeedback = onUserFeedback
     )
 
     HorizontalDivider(thickness = 1.dp)

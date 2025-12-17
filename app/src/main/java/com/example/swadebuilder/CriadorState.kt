@@ -1934,8 +1934,6 @@ class CriadorState {
         nomePersonagem = snapshot.nome
         anotacoes = snapshot.anotacoes
         appTheme = com.example.swadebuilder.ui.theme.AppTheme.valueOf(snapshot.appTheme)
-        hapticStrength = snapshot.hapticStrength
-        soundVolume = snapshot.soundVolume
 
         // Flags adicionais
         modoSuperComplicacoes = flags.modoSuperComplicacoes

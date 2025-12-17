@@ -98,6 +98,7 @@ import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
+import com.example.swadebuilder.util.AppPreferences
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.loadJsonAsset
@@ -304,6 +305,24 @@ class MainActivity : ComponentActivity() {
             DisposableEffect(Unit) {
                 onDispose { feedbackController.dispose() }
             }
+            LaunchedEffect(Unit) {
+                val prefs = AppPreferences.loadFeedbackPrefs(
+                    context,
+                    CriadorState.DEFAULT_HAPTIC_STRENGTH,
+                    CriadorState.DEFAULT_SOUND_VOLUME
+                )
+                state.hapticStrength = prefs.hapticStrength
+                state.soundVolume = prefs.soundVolume
+            }
+            val persistFeedbackPrefs: () -> Unit = remember {
+                {
+                    AppPreferences.saveFeedbackPrefs(
+                        context,
+                        state.hapticStrength,
+                        state.soundVolume
+                    )
+                }
+            }
             val triggerFeedback = remember(state.hapticStrength, state.soundVolume) {
                 { feedbackController.play(state.hapticStrength, state.soundVolume) }
             }
@@ -361,6 +380,10 @@ class MainActivity : ComponentActivity() {
                             Slider(
                                 value = state.hapticStrength.toFloat(),
                                 onValueChange = { state.hapticStrength = it.roundToInt() },
+                                onValueChangeFinished = {
+                                    persistFeedbackPrefs()
+                                    feedbackController.play(state.hapticStrength, 0)
+                                },
                                 valueRange = 0f..100f,
                                 steps = 4,
                                 modifier = Modifier.fillMaxWidth(),
@@ -378,9 +401,6 @@ class MainActivity : ComponentActivity() {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text("Intensidade: ${state.hapticStrength}%")
-                                TextButton(onClick = { feedbackController.play(state.hapticStrength, 0) }) {
-                                    Text("Testar vibração")
-                                }
                             }
 
                             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -389,6 +409,10 @@ class MainActivity : ComponentActivity() {
                             Slider(
                                 value = state.soundVolume.toFloat(),
                                 onValueChange = { state.soundVolume = it.roundToInt() },
+                                onValueChangeFinished = {
+                                    persistFeedbackPrefs()
+                                    feedbackController.play(0, state.soundVolume)
+                                },
                                 valueRange = 0f..100f,
                                 steps = 4,
                                 modifier = Modifier.fillMaxWidth(),
@@ -406,9 +430,6 @@ class MainActivity : ComponentActivity() {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text("Volume: ${state.soundVolume}%")
-                                TextButton(onClick = { feedbackController.play(0, state.soundVolume) }) {
-                                    Text("Testar som")
-                                }
                             }
 
                             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -524,6 +545,7 @@ class MainActivity : ComponentActivity() {
                     },
                     confirmButton = {
                         TextButton(onClick = {
+                            triggerFeedback()
                             val entry = criadorViewModel.salvarPersonagem(
                                 context,
                                 saveName.ifBlank { state.nomePersonagem }
@@ -574,6 +596,7 @@ class MainActivity : ComponentActivity() {
                                                 Text("Apagar")
                                             }
                                             TextButton(onClick = {
+                                                triggerFeedback()
                                                 val loaded = criadorViewModel.carregarPersonagem(context, entry.id)
                                                 if (loaded) {
                                                     creationSession++
