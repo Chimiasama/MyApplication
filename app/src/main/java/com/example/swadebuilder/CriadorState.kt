@@ -235,6 +235,17 @@ class CriadorState {
         return 2 + (espiritoRaw / 2)
     }
 
+    fun valorSanidade(): Int {
+        val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 4
+        return 2 + (espiritoRaw / 2)
+    }
+
+    fun valorDominio(): Int {
+        val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 4
+        // Domínio inicial para ressuscitados é geralmente o dado de Espírito
+        return espiritoRaw
+    }
+
     fun valorArmaduraEfetiva(): Int {
         val armorFromEquipment = armadura
         val melhorExterna = kotlin.math.max(armorFromPower, armorFromEquipment)

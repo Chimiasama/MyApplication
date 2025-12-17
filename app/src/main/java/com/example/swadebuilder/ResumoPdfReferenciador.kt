@@ -70,7 +70,12 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         anotacoes = this.anotacoes,
         soldadoCargaAtivo = this.soldadoCargaAtivo,
         modoOficialAtivo = this.modoOficialAtivo,
-        compendioArteDaGuerraAtivo = this.compendioArteDaGuerraAtivo
+        compendioArteDaGuerraAtivo = this.compendioArteDaGuerraAtivo,
+        compendioDeadlandsAtivo = this.compendioDeadlandsAtivo,
+        compendioHorrorAtivo = this.compendioHorrorAtivo,
+        sanidade = if (this.compendioHorrorAtivo) this.valorSanidade() else null,
+        dominio = if (this.compendioDeadlandsAtivo) this.valorDominio() else null,
+        coracaoCrystalSelecionado = this.coracaoCrystalSelecionado
     )
 }
 
@@ -271,6 +276,9 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += "Identidade"
     lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"
     lines += "Ancestralidade: $ancestralidadeNome$monstroNome"
+    if (personagem.coracaoCrystalSelecionado != null) {
+        lines += "Coração de Cristal: ${personagem.coracaoCrystalSelecionado.nome}"
+    }
     lines += ""
 
     lines += "Atributos derivados"
@@ -278,6 +286,12 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += "Resistência: $resistenciaTexto"
     if (personagem.compendioArteDaGuerraAtivo) {
         lines += "Chi: $chi"
+    }
+    if (personagem.sanidade != null) {
+        lines += "Sanidade: ${personagem.sanidade}"
+    }
+    if (personagem.dominio != null) {
+        lines += "Domínio: ${personagem.dominio}"
     }
     lines += "Tamanho: $tamanho"
     lines += "Movimento: $mov"
