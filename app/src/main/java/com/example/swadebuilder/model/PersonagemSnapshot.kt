@@ -11,7 +11,7 @@ data class PersonagemSnapshot(
     val nome: String,
     val timestamp: Long,
     val appTheme: String,
-    val showHelpMessages: Boolean,
+    val showHelpMessages: Boolean = false,
     val anotacoes: String,
     val flags: SnapshotFlags,
     val recursos: SnapshotRecursos,

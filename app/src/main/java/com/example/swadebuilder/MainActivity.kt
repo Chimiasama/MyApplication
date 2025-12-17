@@ -96,7 +96,6 @@ import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.ui.dialogs.AjudaDialog
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
@@ -299,7 +298,6 @@ class MainActivity : ComponentActivity() {
             var mostrouTelaInicial by rememberSaveable { mutableStateOf(true) }
             var showExitDialog     by rememberSaveable { mutableStateOf(false) }
 
-            var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
             var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
             var showThemeSelectionDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -349,19 +347,35 @@ class MainActivity : ComponentActivity() {
                     title = { Text("Configurações") },
                     text = {
                         Column {
-                            // Help Messages Toggle
+                            // Placeholder: Resposta Haptica
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { state.showHelpMessages = !state.showHelpMessages }
                                     .padding(vertical = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text("Mensagens de Ajuda")
+                                Text("Resposta Haptica")
                                 Switch(
-                                    checked = state.showHelpMessages,
-                                    onCheckedChange = { state.showHelpMessages = it }
+                                    checked = false, // Placeholder
+                                    onCheckedChange = { }
+                                )
+                            }
+
+                            Divider(modifier = Modifier.padding(vertical = 8.dp))
+
+                            // Placeholder: Sons
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text("Sons")
+                                Switch(
+                                    checked = false, // Placeholder
+                                    onCheckedChange = { }
                                 )
                             }
 
@@ -556,7 +570,8 @@ class MainActivity : ComponentActivity() {
             }
 
             LaunchedEffect(criadorViewModel.feedbackMessages.size) {
-                if (state.showHelpMessages && criadorViewModel.feedbackMessages.isNotEmpty()) {
+                // Removido verificação de showHelpMessages
+                if (criadorViewModel.feedbackMessages.isNotEmpty()) {
                     criadorViewModel.feedbackMessages.forEach { msg ->
                         scope.launch {
                             snackHost.showSnackbar(msg)
@@ -568,13 +583,6 @@ class MainActivity : ComponentActivity() {
 
             BackHandler(enabled = mostrouTelaInicial) {
                 showExitDialog = true
-            }
-
-            if (showHelpAppDialog) {
-                AjudaDialog(
-                    state = state,
-                    onDismiss = { showHelpAppDialog = false }
-                )
             }
 
             if (showExitDialog) {
@@ -611,7 +619,7 @@ class MainActivity : ComponentActivity() {
                             TelaInicial(
                                 onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo, _, _,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
-                                                semPontosDePoder, grandesResponsabilidades, showHelpMessages ->
+                                                semPontosDePoder, grandesResponsabilidades ->
 
                                     creationSession++
 
@@ -629,8 +637,8 @@ class MainActivity : ComponentActivity() {
                                         compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
                                         compendioWiseguysAtivo = compendioWiseguysAtivo,
                                         modoMonstroAtivo = modoMonstroAtivo,
-                                        usarEspecializacoesDePericia = usarEspecializacaoPer,
-                                        showHelpMessages = showHelpMessages
+                                        usarEspecializacoesDePericia = usarEspecializacaoPer
+                                        // showHelpMessages removido
                                     )
                                     criadorViewModel.prepararNomeInicial(context)
                                     criadorViewModel.state.heroisSemArmadura     = heroisSemArmadura
@@ -667,13 +675,7 @@ class MainActivity : ComponentActivity() {
                                                 modifier = Modifier.fillMaxWidth(),
                                                 contentAlignment = Alignment.Center
                                             ) {
-                                                TextButton(onClick = { showHelpAppDialog = true }) {
-                                                    Text(
-                                                        text = "Como usar o app",
-                                                        fontSize = 16.sp,
-                                                        fontWeight = FontWeight.Medium
-                                                    )
-                                                }
+                                                // Titulo de ajuda removido
                                             }
                                         },
                                         navigationIcon = {

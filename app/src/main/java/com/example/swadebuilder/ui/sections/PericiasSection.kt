@@ -154,7 +154,15 @@ fun PericiasContent(
             }
         }
 
-        items(listaPericias) { per ->
+        items(
+            listaPericias.filter { per ->
+                if (per.nome.equals("Jutsu", ignoreCase = true)) {
+                    state.compendioArteDaGuerraAtivo
+                } else {
+                    true
+                }
+            }
+        ) { per ->
             val regra: PericiaRuleSnapshot = state.calcularPericiaRules(
                 pericia = per,
                 idosoActive = idosoActive,
