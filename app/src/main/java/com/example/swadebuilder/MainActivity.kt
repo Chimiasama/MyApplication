@@ -294,18 +294,6 @@ class MainActivity : ComponentActivity() {
 
             var creationSession by rememberSaveable { mutableIntStateOf(0) }
 
-            var expAncs    by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var expComps   by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var expEquip   by rememberSaveable(creationSession) { mutableStateOf(false) }
-
-            var expAttrs   by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var expPer     by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var expVants   by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var expPoderes by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var expResumo  by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var expXp by rememberSaveable(creationSession) { mutableStateOf(false) }
-            var expMonstro by rememberSaveable(creationSession) { mutableStateOf(false) }
-
             val context = LocalContext.current
             val activity = (context as? ComponentActivity)
             var mostrouTelaInicial by rememberSaveable { mutableStateOf(true) }
@@ -331,26 +319,26 @@ class MainActivity : ComponentActivity() {
 
             LaunchedEffect(state.mostrandoPericiasProgresso) {
                 if (state.mostrandoPericiasProgresso) {
-                    expPer = true
+                    state.sectionsExpanded[com.example.swadebuilder.ui.MainSection.PERICIAS] = true
                 }
             }
 
             LaunchedEffect(state.mostrandoVantagensProgresso) {
                 if (state.mostrandoVantagensProgresso) {
-                    expVants = true
+                    state.sectionsExpanded[com.example.swadebuilder.ui.MainSection.VANTAGENS] = true
                 }
             }
 
             LaunchedEffect(state.mostrandoAtributosProgresso) {
                 if (state.mostrandoAtributosProgresso) {
-                    expAttrs = true
+                    state.sectionsExpanded[com.example.swadebuilder.ui.MainSection.ATRIBUTOS] = true
                 }
             }
 
             LaunchedEffect(state.mostrandoPoderesProgresso, state.arcanoCompraPendente()) {
                 if (state.mostrandoPoderesProgresso || state.arcanoCompraPendente()) {
-                    expPoderes = true
-                    expVants = true
+                    state.sectionsExpanded[com.example.swadebuilder.ui.MainSection.PODERES] = true
+                    state.sectionsExpanded[com.example.swadebuilder.ui.MainSection.VANTAGENS] = true
                 }
             }
 
@@ -738,37 +726,6 @@ class MainActivity : ComponentActivity() {
                                         UnifiedScreen(
                                             state = state,
                                             viewModel = criadorViewModel,
-
-                                            expAncs        = expAncs,
-                                            onToggleAncs   = { expAncs = !expAncs },
-
-                                            expComps       = expComps,
-                                            onToggleComps  = { expComps = !expComps },
-
-                                            expEquip       = expEquip,
-                                            onToggleEquip  = { expEquip = !expEquip },
-
-                                            expAttrs       = expAttrs,
-                                            onToggleAttrs  = { expAttrs   = !expAttrs },
-
-                                            expPer         = expPer,
-                                            onTogglePer    = { expPer     = !expPer },
-
-                                            expVants       = expVants,
-                                            onToggleVants  = { expVants   = !expVants },
-
-                                            expResumo      = expResumo,
-                                            onToggleResumo = { expResumo  = !expResumo },
-
-                                            expPoderes      = expPoderes,
-                                            onTogglePoderes = { expPoderes = !expPoderes },
-
-                                            expXp = expXp,
-                                            onToggleXp = { expXp = !expXp },
-
-                                            expMonstro = expMonstro,
-                                            onToggleMonstro = { expMonstro = !expMonstro },
-
                                             equipamentoCategorias = equipamentoCategorias,
                                             superequipCategorias  = superequipCategorias,
                                             listaSuperPoderes     = listaSuperPoderes,
