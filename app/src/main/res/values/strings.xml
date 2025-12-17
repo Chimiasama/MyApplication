@@ -3,4 +3,6 @@
     <string name="cancel">Cancel</string>
     <string name="cd_expand">Expand section</string>
     <string name="cd_collapse">Collapse section</string>
+    <string name="state_expanded">Expanded</string>
+    <string name="state_collapsed">Collapsed</string>
 </resources>
