@@ -55,6 +55,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import java.util.Locale
 import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.listaDeEstagios
@@ -196,6 +197,8 @@ fun VantagensContent(
     // We use the global `listaVantagens` loaded in MainActivity (which includes compendium content)
     // instead of reloading just the base `Vantagens.json`.
     val listaVantagensGlobal = listaVantagens
+
+    val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
 
     val listaVantagens: List<Vantagem> =
         remember(multiplosAAHabilitados, listaVantagensGlobal) {
@@ -664,7 +667,7 @@ fun VantagensContent(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        if (state.modoOficialAtivo && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome,
+                                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome,
                                         style = MaterialTheme.typography.titleSmall,
                                         modifier = Modifier.weight(1f)
                                     )
@@ -728,7 +731,7 @@ fun VantagensContent(
 
                                     AnimatedVisibility(visible = detalhesExpandidos[vant.id] == true) {
                                         Text(
-                                            text = if (state.modoOficialAtivo && !vant.originalDescription.isNullOrBlank()) vant.originalDescription.trim() else vant.descricao.trim(),
+                                            text = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) vant.originalDescription.trim() else vant.descricao.trim(),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier.padding(top = 4.dp)

@@ -50,6 +50,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.ui.components.SectionCard
@@ -75,6 +76,7 @@ fun ComplicacoesSection(
 
     val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
+    val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
 
     val origensAtivas: Set<String> = buildSet {
         add("BASICO")
@@ -280,7 +282,7 @@ fun ComplicacoesSection(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = if (state.modoOficialAtivo && !comp.originalName.isNullOrBlank()) comp.originalName else comp.name,
+                                    text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName else comp.name,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
@@ -372,7 +374,7 @@ fun ComplicacoesSection(
 
                             AnimatedVisibility(visible = detalhesExpandidos[comp.id] == true) {
                                 Text(
-                                    text = if (state.modoOficialAtivo && !comp.originalDescription.isNullOrBlank()) comp.originalDescription.trim() else comp.description.trim(),
+                                    text = if (showOfficialNames && !comp.originalDescription.isNullOrBlank()) comp.originalDescription.trim() else comp.description.trim(),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.padding(top = 4.dp)

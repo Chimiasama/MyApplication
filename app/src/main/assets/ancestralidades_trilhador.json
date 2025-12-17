@@ -1,7 +1,7 @@
 [
   {
     "id": "anc_anao_trilhador",
-    "nome": "Anão (Trilhador)",
+    "nome": "Anão (Buscatrilha)",
     "categoria": "ANCESTRALIDADE",
     "origem": "FANTASIA_TRILHADOR",
     "atributos": { "Vigor": 2 },
@@ -34,7 +34,7 @@
   },
   {
     "id": "anc_elfo_trilhador",
-    "nome": "Elfo (Trilhador)",
+    "nome": "Elfo (Buscatrilha)",
     "categoria": "ANCESTRALIDADE",
     "origem": "FANTASIA_TRILHADOR",
     "atributos": { "Agilidade": 2, "Astúcia": 2 },
@@ -71,7 +71,7 @@
   },
   {
     "id": "anc_gnomo_trilhador",
-    "nome": "Gnomo (Trilhador)",
+    "nome": "Gnomo (Buscatrilha)",
     "categoria": "ANCESTRALIDADE",
     "origem": "FANTASIA_TRILHADOR",
     "atributos": { "Vigor": 2 },
@@ -112,7 +112,7 @@
   },
   {
     "id": "anc_halfling_trilhador",
-    "nome": "Halfling (Trilhador)",
+    "nome": "Halfling (Buscatrilha)",
     "categoria": "ANCESTRALIDADE",
     "origem": "FANTASIA_TRILHADOR",
     "atributos": { "Agilidade": 2 },
@@ -149,7 +149,7 @@
   },
   {
     "id": "anc_humano_trilhador",
-    "nome": "Humano (Trilhador)",
+    "nome": "Humano (Buscatrilha)",
     "categoria": "ANCESTRALIDADE",
     "origem": "FANTASIA_TRILHADOR",
     "atributos": {},
@@ -166,7 +166,7 @@
   },
   {
     "id": "anc_meio_elfo_trilhador",
-    "nome": "Meio-Elfo (Trilhador)",
+    "nome": "Meio-Elfo (Buscatrilha)",
     "categoria": "ANCESTRALIDADE",
     "origem": "FANTASIA_TRILHADOR",
     "atributos": {},
@@ -191,7 +191,7 @@
   },
   {
     "id": "anc_meio_orc_trilhador",
-    "nome": "Meio-Orc (Trilhador)",
+    "nome": "Meio-Orc (Buscatrilha)",
     "categoria": "ANCESTRALIDADE",
     "origem": "FANTASIA_TRILHADOR",
     "atributos": { "Força": 2 },
