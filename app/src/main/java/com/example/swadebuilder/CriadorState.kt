@@ -38,7 +38,7 @@ import com.example.swadebuilder.normAAKey
 
 class CriadorState {
     var appTheme by mutableStateOf(AppTheme.DEFAULT)
-    var showHelpMessages by mutableStateOf(false)
+    // showHelpMessages removido
     var modoSupers by mutableStateOf(false)
     var modoSuperComplicacoes by mutableStateOf(false)
     var modoSuperequip by mutableStateOf(false)
@@ -1761,7 +1761,7 @@ class CriadorState {
             nome = nomePersonagem,
             timestamp = System.currentTimeMillis(),
             appTheme = appTheme.name,
-            showHelpMessages = showHelpMessages,
+            // showHelpMessages removido (PersonagemSnapshot tem default = false)
             anotacoes = anotacoes,
             flags = SnapshotFlags(
                 cartaSelvagem = cartaSelvagem,
@@ -1893,7 +1893,7 @@ class CriadorState {
     fun restoreFromSnapshot(snapshot: PersonagemSnapshot, feedbackMessages: MutableList<String>) {
         val flags = snapshot.flags
 
-        showHelpMessages = snapshot.showHelpMessages
+        // showHelpMessages = snapshot.showHelpMessages
         cartaSelvagem = flags.cartaSelvagem
         maisPontosPericias = flags.maisPontosPericias
         modoSupers = flags.modoSupers

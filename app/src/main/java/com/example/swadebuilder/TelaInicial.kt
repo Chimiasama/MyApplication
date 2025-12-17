@@ -93,8 +93,8 @@ fun TelaInicial(
         heroisSemArmadura: Boolean,
         especializacaoPer: Boolean,
         semPontosDePoder: Boolean,
-        grandesResponsabilidades: Boolean,
-        showHelpMessages: Boolean
+        grandesResponsabilidades: Boolean
+        // showHelpMessages removido
     ) -> Unit,
     onCarregarPersonagem: () -> Unit,
     context: Context,
@@ -157,9 +157,7 @@ fun TelaInicial(
                     IconButton(onClick = onCarregarPersonagem) {
                         Icon(Icons.Default.FolderOpen, contentDescription = "Carregar Personagem")
                     }
-                    IconButton(onClick = { showHelpAppDialog = true }) {
-                        Icon(Icons.Default.Help, contentDescription = "Ajuda")
-                    }
+                    // Help button removed
                     IconButton(onClick = { showCreditsDialog = true }) {
                         Icon(Icons.Default.Info, contentDescription = "Créditos")
                     }
@@ -189,8 +187,8 @@ fun TelaInicial(
                         optHeroiSemArmadura,
                         optEspecializacaoPer,
                         optSemPontosPoder,
-                        optGrandesResponsabilidades,
-                        true // showHelpMessages defaulted to true
+                        optGrandesResponsabilidades
+                        // true // showHelpMessages removido
                     )
                     // Set ViewModel states that are handled outside the creation lambda
                     viewModel.state.compendioTrilhadorAtivo = optCompendioTrilhador
@@ -430,33 +428,7 @@ Feito por Rafael S.W.
         )
     }
 
-    if (showHelpAppDialog) {
-        val helpAppText = """
-Este app ajuda você a criar personagens de Savage Worlds passo a passo.
-
-1) Tela Inicial
-   • Escolha os livros e modos de jogo.
-   • Toque em "CRIAR PERSONAGEM".
-
-2) Fluxo
-   • Ancestralidade → Atributos → Perícias → Complicações → Vantagens.
-
-3) Pontos
-   • Complicações geram pontos bônus para gastar em outras áreas.
-   • Use os botões dentro de cada seção para gastar esses pontos.
-""".trimIndent()
-
-        AlertDialog(
-            onDismissRequest = { showHelpAppDialog = false },
-            confirmButton = { TextButton(onClick = { showHelpAppDialog = false }) { Text("OK") } },
-            title = { Text("Guia Rápido") },
-            text = {
-                Column(Modifier.verticalScroll(rememberScrollState())) {
-                    Text(helpAppText)
-                }
-            }
-        )
-    }
+    // showHelpAppDialog dialog logic removed
 }
 
 @Composable

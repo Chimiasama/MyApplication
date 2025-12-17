@@ -124,8 +124,8 @@ class CriadorViewModel : ViewModel() {
             compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo,
             modoMonstroAtivo = flags.modoMonstroAtivo,
             usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia,
-            grandesResponsabilidades = flags.grandesResponsabilidades,
-            showHelpMessages = snapshot.showHelpMessages
+            grandesResponsabilidades = flags.grandesResponsabilidades
+            // showHelpMessages removido
         )
         state.restoreFromSnapshot(snapshot, _feedbackMessages)
         state.idAtual = saveId
@@ -172,10 +172,10 @@ class CriadorViewModel : ViewModel() {
         modoMonstroAtivo: Boolean = false,
         usarEspecializacoesDePericia: Boolean = false,
         grandesResponsabilidades: Boolean = false,
-        showHelpMessages: Boolean = false
+        // showHelpMessages removido
     ) {
 
-        state.showHelpMessages = showHelpMessages
+        // state.showHelpMessages = showHelpMessages (Removido)
         state.modoSupers = modoSupers
         state.compendioFantasiaAtivo = compendioFantasiaAtivo
         state.compendioHorrorAtivo = compendioHorrorAtivo
