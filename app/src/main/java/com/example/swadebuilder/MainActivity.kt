@@ -20,6 +20,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,10 +35,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Print
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
@@ -88,7 +91,6 @@ import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.model.EquipamentoCategoria
-import com.example.swadebuilder.model.GlobalData
 import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.RacialModifier
@@ -159,8 +161,6 @@ class MainActivity : ComponentActivity() {
         ).filter { cat ->
             cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
         }
-        GlobalData.listaEquipamentosJson = equipamentoCategorias
-
         val superequipCategorias = assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
             cat.origem?.equals("super", ignoreCase = true) ?: false
         }
@@ -231,7 +231,6 @@ class MainActivity : ComponentActivity() {
         val vantCrystal = assets.readJsonListOrEmpty<Vantagem>("vantagens_crystal.json")
 
         listaVantagens = todasVantagens + vantCrystal + vantagensExtras
-        GlobalData.listaVantagens = listaVantagens
 
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
@@ -248,10 +247,9 @@ class MainActivity : ComponentActivity() {
         )
 
         listaComplicacoes = todasComplicacoes + complicacaoExtras
-        GlobalData.listaComplicacoes = listaComplicacoes
 
         val ancestralFiles = listOf(
-            "ancestralidades_buscatrilha.json", // Renamed
+            "ancestralidades_trilhador.json",
             "ancestralidades_sci_fi.json",
             "ancestralidades_deadlands.json",
             "ancestralidades_adg.json",
@@ -730,11 +728,12 @@ class MainActivity : ComponentActivity() {
                                             .padding(innerPadding)
                                     ) {
                                         UnifiedScreen(
-                                            onBack = {
-                                                criadorViewModel.resetToEmptyState()
-                                                mostrouTelaInicial = true
-                                            },
-                                            criadorViewModel = criadorViewModel
+                                            state = state,
+                                            viewModel = criadorViewModel,
+                                            equipamentoCategorias = equipamentoCategorias,
+                                            superequipCategorias  = superequipCategorias,
+                                            listaSuperPoderes     = listaSuperPoderes,
+                                            modoOficialAtivo      = state.modoOficialAtivo
                                         )
                                     }
                                 }
@@ -833,6 +832,38 @@ val dynamicStageCaps = listaDeEstagios.mapIndexed { idx, st ->
     else
         (TOTAL_PROGRESS_LIMIT - prevMax).coerceAtLeast(0)
 }
+
+
+
+
+
+
+@Composable
+fun CollapsibleSection(
+    title: String,
+    expanded: Boolean,
+    onToggle: () -> Unit,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Column {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onToggle)
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(title, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Icon(
+                imageVector = if (expanded) Icons.Default.Remove else Icons.Default.Add,
+                contentDescription = stringResource(id = if (expanded) R.string.cd_collapse else R.string.cd_expand)
+            )
+        }
+        if (expanded) content()
+    }
+}
+
 
 
 

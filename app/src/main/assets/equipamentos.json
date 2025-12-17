@@ -5636,7 +5636,7 @@
   {
     "tipo": "Materiais Especiais",
     "subtipo": "Metais e Madeiras",
-    "origem": "FANTASIA_BUSCATRILHA",
+    "origem": "FANTASIA_TRILHADOR",
     "itens": [
       {
         "nome": "Adamante",
@@ -5671,7 +5671,7 @@
   {
     "tipo": "Equipamento de Aventura",
     "subtipo": "Específicos do Cenário",
-    "origem": "FANTASIA_BUSCATRILHA",
+    "origem": "FANTASIA_TRILHADOR",
     "itens": [
       {
         "nome": "Bússola de Guia",
@@ -5706,7 +5706,7 @@
   {
     "tipo": "Armas Especiais",
     "subtipo": "Exóticas",
-    "origem": "FANTASIA_BUSCATRILHA",
+    "origem": "FANTASIA_TRILHADOR",
     "itens": [
       {
         "nome": "Faca Estrela",
