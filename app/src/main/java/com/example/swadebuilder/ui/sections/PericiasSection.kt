@@ -158,6 +158,8 @@ fun PericiasContent(
             listaPericias.filter { per ->
                 if (per.nome.equals("Jutsu", ignoreCase = true)) {
                     state.compendioArteDaGuerraAtivo
+                } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
+                    state.compendioFantasiaAtivo || state.compendioHorrorAtivo
                 } else {
                     true
                 }
@@ -171,7 +173,23 @@ fun PericiasContent(
 
             val rawName = per.nome.removePrefix("*").trim()
             val descKey = "$rawName (${per.atributo})".uppercase().semAcentos()
-            val descricao = descricoes[descKey].orEmpty()
+
+            val descricao = if (per.nome.equals("Alquimia", ignoreCase = true)) {
+                val fantasiaAtivo = state.compendioFantasiaAtivo
+                val horrorAtivo = state.compendioHorrorAtivo
+                val txtFantasia = "Esta é a perícia arcana para alquimistas (veja a página 102), mas também pode ser usada para criar itens alquímicos (página 68). Pode ser usada no lugar de Ciências ao examinar reações químicas, estudar reagentes e outros tópicos relacionados."
+                val txtHorror = "Esta é a perícia arcana para alquimistas (veja p. 70) e também pode ser usada para criar itens alquímicos (p. 117) ou ser usada no lugar de Ciências ao examinar reações químicas, estudar reagentes ou assuntos relacionados."
+
+                when {
+                    fantasiaAtivo && horrorAtivo ->
+                        "[FANTASIA] $txtFantasia\n\n[HORROR] $txtHorror"
+                    fantasiaAtivo -> txtFantasia
+                    horrorAtivo -> txtHorror
+                    else -> ""
+                }
+            } else {
+                descricoes[descKey].orEmpty()
+            }
 
             Column(
                 modifier = Modifier

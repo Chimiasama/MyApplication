@@ -1,5 +1,6 @@
 {
   "pericias": [
+    { "nome": "Alquimia",           "atributo": "Astúcia",   "basica": false },
     { "nome": "Atirar",             "atributo": "Agilidade", "basica": false },
     { "nome": "Atletismo",          "atributo": "Agilidade", "basica": true  },
     { "nome": "Cavalgar",           "atributo": "Agilidade", "basica": false },
