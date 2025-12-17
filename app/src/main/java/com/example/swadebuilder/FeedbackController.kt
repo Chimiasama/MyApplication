@@ -2,14 +2,19 @@ package com.example.swadebuilder
 
 import android.content.Context
 import android.media.AudioManager
-import android.media.ToneGenerator
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.view.SoundEffectConstants
 import kotlin.math.roundToInt
 
 class FeedbackController(context: Context) {
+    private val audioManager = context.getSystemService(AudioManager::class.java)
     private val vibrator = context.getSystemService(Vibrator::class.java)
+
+    init {
+        audioManager?.loadSoundEffects()
+    }
 
     fun play(hapticStrength: Int, soundVolume: Int) {
         triggerHaptics(hapticStrength)
@@ -34,12 +39,11 @@ class FeedbackController(context: Context) {
         val clamped = soundVolume.coerceIn(0, 100)
         if (clamped <= 0) return
 
-        val toneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, clamped)
-        toneGenerator.startTone(ToneGenerator.TONE_PROP_PROMPT, 120)
-        toneGenerator.release()
+        val volume = clamped / 100f
+        audioManager?.playSoundEffect(SoundEffectConstants.CLICK, volume)
     }
 
     fun dispose() {
-        // No resources to release when using ToneGenerator per play.
+        audioManager?.unloadSoundEffects()
     }
 }
