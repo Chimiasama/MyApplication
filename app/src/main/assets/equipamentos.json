@@ -6073,14 +6073,26 @@
       },
       {
         "nome": "Sentinela de Combate",
-        "tamanho": 0,
+        "tamanho": -1,
         "resistencia": 10,
         "armadura": 4,
-        "movimentacao": 6,
+        "movimentacao": 12,
         "custo": 5000,
         "mods_slots": 4,
         "origem": "SCI_FI",
-        "observacoes": "Robô soldado padrão."
+        "observacoes": "Voo: Movimentação 12. Tamanho -1 (Pequeno).",
+        "descricao": "Pequenas plataformas aéreas projetadas para auxiliar soldados em escaramuças, flanquear inimigos ou realizar reconhecimento. Possuem corpo reforçado (Armadura +4), sensores avançados que ignoram iluminação e são destemidos. Vulneráveis a PEM e bloqueio de sinal (falha de controle remoto)."
+      },
+      {
+        "nome": "Drone de Batalha",
+        "origem": "SCI_FI",
+        "mods_slots": 0,
+        "resistencia": 10,
+        "descricao": "Drones de médio porte capazes de transportar munições pesadas. Podem pairar sobre uma área e liberar poder de fogo devastador com precisão mortal. Armadura pesada (+4) e sensores táticos.",
+        "observacoes": "Voo: Movimentação 24. Tamanho 1 (Normal).",
+        "tamanho": 1,
+        "movimentacao": 24,
+        "armadura": 4
       }
     ]
   }
