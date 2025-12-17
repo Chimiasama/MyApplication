@@ -24,9 +24,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.swadebuilder.R
 
 @Composable
 fun SectionCard(
@@ -40,10 +45,16 @@ fun SectionCard(
     val cardColor   = MaterialTheme.colorScheme.surfaceVariant
 
     Column(modifier = Modifier.fillMaxWidth()) {
+        val stateDesc = if (expanded)
+            stringResource(R.string.state_expanded)
+        else
+            stringResource(R.string.state_collapsed)
+
         Row(
             Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onToggle)
+                .clickable(onClick = onToggle, role = Role.Button)
+                .semantics { stateDescription = stateDesc }
                 .padding(vertical = 12.dp, horizontal = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -66,7 +77,7 @@ fun SectionCard(
             Spacer(Modifier.weight(1f))
             Icon(
                 imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                contentDescription = stringResource(id = if (expanded) com.example.swadebuilder.R.string.cd_collapse else com.example.swadebuilder.R.string.cd_expand),
+                contentDescription = stringResource(id = if (expanded) R.string.cd_collapse else R.string.cd_expand),
                 modifier = Modifier.size(28.dp),
                 tint = headerColor
             )
