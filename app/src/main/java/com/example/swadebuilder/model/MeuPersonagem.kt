@@ -60,5 +60,12 @@ data class MeuPersonagem(
 
     val soldadoCargaAtivo: Boolean = true,
     val modoOficialAtivo: Boolean = false,
-    val compendioArteDaGuerraAtivo: Boolean = false
+    val compendioArteDaGuerraAtivo: Boolean = false,
+
+    // ===== NOVOS CAMPOS (PDF EXTENDIDO) =====
+    val coracaoCrystalSelecionado: CrystalHeart? = null,
+    val sanidade: Int? = null,
+    val dominio: Int? = null,
+    val compendioDeadlandsAtivo: Boolean = false,
+    val compendioHorrorAtivo: Boolean = false
 )
