@@ -1,0 +1,51 @@
+
+name: Build Debug APK (Lite)
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to build the APK (ex.: master)'
+        required: true
+        default: 'master'
+      buildType:
+        description: 'Build type (Debug ou Release)'
+        required: true
+        default: 'Debug'
+
+jobs:
+  build-lite:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Build APK (Lite${{ github.event.inputs.buildType }})
+        run: |
+          ./gradlew :app:clean \
+                     :app:assembleLite${{ github.event.inputs.buildType }} \
+                     --stacktrace
+
+      # Sanitiza o nome do artifact com base na branch
+      - name: Sanitize artifact name
+        run: echo "ARTIFACT_NAME=$(echo '${{ github.event.inputs.branch }}' | tr '/' '-')" >> $GITHUB_ENV
+
+      - name: Upload APK (Lite)
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk-Lite-${{ github.event.inputs.buildType }}-${{ env.ARTIFACT_NAME }}
+          path: |
+            app/build/outputs/apk/lite/**/*.apk
+           
