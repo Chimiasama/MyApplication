@@ -39,8 +39,8 @@ fun SectionCard(
     expanded: Boolean,
     onToggle: () -> Unit,
     icon: ImageVector,
-    content: @Composable ColumnScope.() -> Unit,
-    onToggleFeedback: (() -> Unit)? = null
+    onToggleFeedback: (() -> Unit)? = null,
+    content: @Composable ColumnScope.() -> Unit
 ) {
     val headerColor = MaterialTheme.colorScheme.onBackground
     val cardColor   = MaterialTheme.colorScheme.surfaceVariant

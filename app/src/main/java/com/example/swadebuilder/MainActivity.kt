@@ -875,8 +875,8 @@ fun CollapsibleSection(
     title: String,
     expanded: Boolean,
     onToggle: () -> Unit,
-    content: @Composable ColumnScope.() -> Unit,
-    onToggleFeedback: (() -> Unit)? = null
+    onToggleFeedback: (() -> Unit)? = null,
+    content: @Composable ColumnScope.() -> Unit
 ) {
     Column {
         Row(
