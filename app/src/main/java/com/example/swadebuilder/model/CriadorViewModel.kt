@@ -56,7 +56,7 @@ class CriadorViewModel : ViewModel() {
             compendioFantasiaAtivo = false,
             compendioHorrorAtivo = false,
             compendioSciFiAtivo = false,
-            compendioTrilhadorAtivo = false,
+            compendioBuscatrilhaAtivo = false,
             compendioDeadlandsAtivo = false,
             compendioCrystalHeartAtivo = false,
             compendioArteDaGuerraAtivo = false,
@@ -183,7 +183,7 @@ class CriadorViewModel : ViewModel() {
         compendioFantasiaAtivo: Boolean,
         compendioHorrorAtivo: Boolean = false,
         compendioSciFiAtivo: Boolean = false,
-        compendioTrilhadorAtivo: Boolean = false,
+        compendioBuscatrilhaAtivo: Boolean = false,
         compendioDeadlandsAtivo: Boolean = false,
         compendioCrystalHeartAtivo: Boolean = false,
         compendioArteDaGuerraAtivo: Boolean = false,
@@ -200,7 +200,7 @@ class CriadorViewModel : ViewModel() {
         state.compendioFantasiaAtivo = compendioFantasiaAtivo
         state.compendioHorrorAtivo = compendioHorrorAtivo
         state.compendioSciFiAtivo = compendioSciFiAtivo
-        state.compendioTrilhadorAtivo = compendioTrilhadorAtivo
+        state.compendioBuscatrilhaAtivo = compendioBuscatrilhaAtivo
         state.compendioDeadlandsAtivo = compendioDeadlandsAtivo
         state.compendioCrystalHeartAtivo = compendioCrystalHeartAtivo
         state.compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo

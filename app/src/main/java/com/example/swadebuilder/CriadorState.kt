@@ -45,7 +45,7 @@ class CriadorState {
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)
     var compendioSciFiAtivo by mutableStateOf(false)
-    var compendioTrilhadorAtivo by mutableStateOf(false)
+    var compendioBuscatrilhaAtivo by mutableStateOf(false)
     var compendioDeadlandsAtivo by mutableStateOf(false)
     var compendioCrystalHeartAtivo by mutableStateOf(false)
     var compendioArteDaGuerraAtivo by mutableStateOf(false)
@@ -1088,6 +1088,7 @@ class CriadorState {
     var pontosComplicacaoGastos by mutableIntStateOf(0)
     val baseIncsPorPericia = mutableStateMapOf<Pericia, Int>().also { m -> listaPericias.forEach { m[it] = 0 } }
     private val compIncsPorPericia = mutableStateMapOf<Pericia, Int>().also { m -> listaPericias.forEach { m[it] = 0 } }
+    val compCostStackPorPericia = mutableStateMapOf<Pericia, Int>().also { m -> listaPericias.forEach { m[it] = 0 } }
     val compCostStackPorPericia = mutableStateMapOf<Pericia, MutableList<Int>>().also { m ->
         listaPericias.forEach { m[it] = mutableListOf() }
     }
@@ -1781,7 +1782,7 @@ class CriadorState {
                 compendioFantasiaAtivo = compendioFantasiaAtivo,
                 compendioHorrorAtivo = compendioHorrorAtivo,
                 compendioSciFiAtivo = compendioSciFiAtivo,
-                compendioTrilhadorAtivo = compendioTrilhadorAtivo,
+                compendioTrilhadorAtivo = compendioBuscatrilhaAtivo, // Updated to Buscatrilha, maintaining internal serialization compatibility or need to update Snapshot? Let's check Snapshot.
                 compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                 compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
                 compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
@@ -1911,7 +1912,7 @@ class CriadorState {
         compendioFantasiaAtivo = flags.compendioFantasiaAtivo
         compendioHorrorAtivo = flags.compendioHorrorAtivo
         compendioSciFiAtivo = flags.compendioSciFiAtivo
-        compendioTrilhadorAtivo = flags.compendioTrilhadorAtivo
+        compendioBuscatrilhaAtivo = flags.compendioTrilhadorAtivo // Map Trilhador to Buscatrilha
         compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo
         compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo
         compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo

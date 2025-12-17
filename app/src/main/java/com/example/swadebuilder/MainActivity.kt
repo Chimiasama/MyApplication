@@ -249,7 +249,7 @@ class MainActivity : ComponentActivity() {
         listaComplicacoes = todasComplicacoes + complicacaoExtras
 
         val ancestralFiles = listOf(
-            "ancestralidades_trilhador.json",
+            "ancestralidades_buscatrilha.json", // Renamed
             "ancestralidades_sci_fi.json",
             "ancestralidades_deadlands.json",
             "ancestralidades_adg.json",
@@ -616,7 +616,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo, _, _,
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioBuscatrilhaAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo, _, _,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, grandesResponsabilidades ->
 
@@ -629,7 +629,7 @@ class MainActivity : ComponentActivity() {
                                         compendioFantasiaAtivo = compendioFantasiaAtivo,
                                         compendioHorrorAtivo = compendioHorrorAtivo,
                                         compendioSciFiAtivo = compendioSciFiAtivo,
-                                        compendioTrilhadorAtivo = compendioTrilhadorAtivo,
+                                        compendioBuscatrilhaAtivo = compendioBuscatrilhaAtivo, // Updated
                                         compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                                         compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
                                         compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,

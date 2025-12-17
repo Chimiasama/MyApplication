@@ -77,18 +77,18 @@ fun AncestralidadesSection(
     }
 
     val compendioFantasiaAtivo = state.compendioFantasiaAtivo
-    val compendioTrilhadorAtivo = state.compendioTrilhadorAtivo
+    val compendioBuscatrilhaAtivo = state.compendioBuscatrilhaAtivo // Updated
     val compendioDeadlandsAtivo = state.compendioDeadlandsAtivo
     val compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo
     val compendioWiseguysAtivo = state.compendioWiseguysAtivo
 
-    val ancestralidadesState = remember(compendioFantasiaAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioArteDaGuerraAtivo, compendioWiseguysAtivo) {
+    val ancestralidadesState = remember(compendioFantasiaAtivo, compendioBuscatrilhaAtivo, compendioDeadlandsAtivo, compendioArteDaGuerraAtivo, compendioWiseguysAtivo) {
         // Load legacy list
         val allLegacy = context.loadJsonAsset<List<RacialModifier>>(ASSET_ANCESTRALIDADES)
 
-        // Load Trilhador list
-        val allTrilhador = try {
-            context.loadJsonAsset<List<RacialModifier>>("ancestralidades_trilhador.json")
+        // Load Buscatrilha list
+        val allBuscatrilha = try {
+            context.loadJsonAsset<List<RacialModifier>>("ancestralidades_buscatrilha.json")
         } catch (e: Exception) {
             emptyList()
         }
@@ -117,11 +117,17 @@ fun AncestralidadesSection(
             emptyList()
         }
 
-        val all = allLegacy + allTrilhador + allDeadlands + allAdg + allCidadeSolVapor + allWiseguys
+        val all = allLegacy + allBuscatrilha + allDeadlands + allAdg + allCidadeSolVapor + allWiseguys
 
         val filtered = all.filter {
             val origin = it.origem?.uppercase() ?: "BASICO"
-            origin == "BASICO" || (origin == "FANTASIA" && compendioFantasiaAtivo) || (origin == "FANTASIA_TRILHADOR" && compendioTrilhadorAtivo) || (origin == "DEADLANDS" && compendioDeadlandsAtivo) || (origin == "ARTE_DA_GUERRA" && compendioArteDaGuerraAtivo) || (origin == "CIDADE_SOL_VAPOR" && state.compendioCidadeSolVaporAtivo) || (origin == "WISEGUYS" && compendioWiseguysAtivo)
+            origin == "BASICO" ||
+            (origin == "FANTASIA" && compendioFantasiaAtivo) ||
+            (origin == "FANTASIA_BUSCATRILHA" && compendioBuscatrilhaAtivo) || // Updated check
+            (origin == "DEADLANDS" && compendioDeadlandsAtivo) ||
+            (origin == "ARTE_DA_GUERRA" && compendioArteDaGuerraAtivo) ||
+            (origin == "CIDADE_SOL_VAPOR" && state.compendioCidadeSolVaporAtivo) ||
+            (origin == "WISEGUYS" && compendioWiseguysAtivo)
         }.map {
             RacialModifierLite(it.nome, it.originalName)
         }

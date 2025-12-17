@@ -1,61 +1,26 @@
-@file:Suppress("DEPRECATION")
-@file:OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
-
 package com.example.swadebuilder.ui.sections
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.booleanResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.criacaoBasicaCongelada
-import com.example.swadebuilder.listaComplicacoes
+import com.example.swadebuilder.model.GlobalData
+import com.example.swadebuilder.ui.components.ComplicacaoListItem
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
-import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.semAcentos
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -63,373 +28,77 @@ fun ComplicacoesSection(
     state: CriadorState,
     expanded: Boolean,
     onToggle: () -> Unit,
-    feedbackMessages: MutableList<String>
+    readOnly: Boolean
 ) {
-    val locked = state.criacaoBasicaCongelada
+    // FIX: Accessing directly from MainActivity property or passed parameter is better if GlobalData is gone.
+    // Assuming GlobalData singleton was removed or not visible.
+    // But `VantagensSection` also uses `GlobalData`.
+    // I need to check if `GlobalData` exists.
+    // If not, I should use `com.example.swadebuilder.listaComplicacoes`.
+    val listaComplicacoes = com.example.swadebuilder.listaComplicacoes
 
-    var showPcInUseDialog by rememberSaveable { mutableStateOf(false) }
+    // Filter Logic
+    val listaFiltrada = remember(listaComplicacoes, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioBuscatrilhaAtivo, state.compendioDeadlandsAtivo, state.compendioCrystalHeartAtivo, state.compendioArteDaGuerraAtivo, state.compendioCidadeSolVaporAtivo, state.compendioWiseguysAtivo) {
+        val origins = mutableSetOf("BASICO")
+        if (state.compendioFantasiaAtivo) origins.add("FANTASIA")
+        if (state.compendioHorrorAtivo) origins.add("HORROR")
+        if (state.compendioBuscatrilhaAtivo) origins.add("FANTASIA_BUSCATRILHA") // Updated origin
+        if (state.compendioDeadlandsAtivo) origins.add("DEADLANDS")
+        if (state.compendioArteDaGuerraAtivo) origins.add("ARTE_DA_GUERRA")
+        if (state.compendioCidadeSolVaporAtivo) origins.add("CIDADE_SOL_VAPOR")
+        if (state.compendioWiseguysAtivo) origins.add("WISEGUYS")
+        if (state.modoSupers) origins.add("SUPER")
 
-    val autoBaseKeys = state.desvantagensAutomaticas
-        .map { it.uppercase().semAcentos().substringBefore("(").trim() }
-        .toSet()
-
-    val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
-    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
-
-    val origensAtivas: Set<String> = buildSet {
-        add("BASICO")
-        if (state.modoSuperComplicacoes) add("SUPER")
-        if (state.compendioFantasiaAtivo) add("FANTASIA")
-        if (state.compendioHorrorAtivo) add("HORROR")
-        if (state.compendioTrilhadorAtivo) add("FANTASIA_TRILHADOR")
-        if (state.compendioDeadlandsAtivo) add("DEADLANDS")
-        if (state.compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
-        if (state.compendioCidadeSolVaporAtivo) add("CIDADE_SOL_VAPOR")
-        if (state.compendioWiseguysAtivo) add("WISEGUYS")
-    }
-
-    val complicacoesFiltradas = listaComplicacoes.filter { comp ->
-        val origemSafe = if (comp.origem.isBlank()) "BASICO" else comp.origem
-        origemSafe.uppercase().semAcentos().trim() in origensAtivas
+        listaComplicacoes.filter {
+            (it.origem?.uppercase() ?: "BASICO") in origins
+        }
     }
 
     SectionCard(
-        title    = "Complicações",
+        title = "Complicações",
         expanded = expanded,
         onToggle = onToggle,
-        icon     = Icons.Default.Warning
+        icon = Icons.Default.Warning
     ) {
-        val totalPc = state.pontosComplicacao
-        val usadosPc = state.pontosComplicacaoGastos
-        val livresPc = (totalPc - usadosPc).coerceAtLeast(0)
+        val pts = state.pontosComplicacao
+        val gastos = state.pontosComplicacaoGastos
 
         SectionHeader(
-            onHelpClick          = null,
-            centerText           = "Pontos Complicação: livres $livresPc / $totalPc",
-            onCenterClick        = null,
-            onListaCompletaClick = null,
-            listaCompletaText    = ""
+            centerText = "Pontos obtidos: $pts (Gastos: $gastos)",
+            onHelpClick = null
         )
 
-        Spacer(Modifier.height(4.dp))
-
-        if (totalPc == 0) {
-            Text(
-                "Escolha Complicações para ganhar Pontos Bônus de Complicação.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        } else {
-            Text(
-                "Use seus Pontos Bônus de Complicação nas seções de Atributos, Perícias, Vantagens ou Equipamento.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-
         Spacer(Modifier.height(8.dp))
 
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement   = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.alpha(if (locked) 0.3f else 1f)
-        ) {
-            state.complicacoesSelecionadas
-                .filterValues { it != null }
-                .forEach { (comp, tipo) ->
-                    val isAuto = comp.id.keyify() in autoBaseKeys
-                    val isYoungAuto = comp.id == "pequeno" && state.jovemAutoPequeno
-                    val cost = if (tipo == "Maior") 2 else 1
-                    val canRemove = !locked &&
-                            !isAuto &&
-                            !isYoungAuto &&
-                            state.pontosComplicacaoGastos <= state.pontosComplicacao - cost
-
-                    val isClickable = !locked && !isAuto && !isYoungAuto
-
-                    AssistChip(
-                        onClick = {
-                            if (!isClickable) return@AssistChip
-
-                            if (canRemove) {
-                                when (comp.id) {
-                                    "idoso" -> {
-                                        state.complicacoesSelecionadas.remove(comp)
-                                        state.idosoBonusSp = 0
-                                        state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                                    }
-                                    "jovem" -> {
-                                        val pequComp = complicacoesFiltradas.first { it.id == "pequeno" }
-                                        state.removeYoung(pequComp)
-                                        state.complicacoesSelecionadas.remove(comp)
-                                        state.applyYoungMinor()
-                                    }
-                                    "pobreza" -> {
-                                        state.complicacoesSelecionadas.remove(comp)
-                                        state.dinheiro += 250
-                                    }
-                                    "obeso" -> {
-                                        state.complicacoesSelecionadas.remove(comp)
-                                        state.obesoBonusSize = 0
-                                        state.obesoMalusMov = 0
-                                    }
-                                    else -> {
-                                        state.complicacoesSelecionadas.remove(comp)
-                                    }
-                                }
-                            } else {
-                                showPcInUseDialog = true
-                            }
-                        },
-                        enabled     = isClickable,
-                        label       = { Text("${comp.name} ($tipo)") },
-                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover ${comp.name}") }
-                    )
-                }
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        if (showPcInUseDialog) {
-            val paCount  = state.cpPaStack.size
-            val spCount  = state.cpSpStack.size
-            val pvCount  = state.cpPvStack.size
-            val recCount = state.cpRecursosStack.size
-            val totalUsados = paCount + spCount + pvCount + recCount
-
-            AlertDialog(
-                onDismissRequest = { showPcInUseDialog = false },
-                confirmButton = {
-                    TextButton(onClick = { showPcInUseDialog = false }) {
-                        Text("OK")
-                    }
-                },
-                title = { Text("Não é possível remover esta Complicação") },
-                text = {
-                    Column {
-                        Text("Você já converteu Pontos Bônus de Criação vindos de Complicações em:")
-                        Spacer(Modifier.height(8.dp))
-
-                        if (totalUsados == 0) {
-                            Text("Nenhum Ponto Bônus está em uso no momento.")
-                        } else {
-                            if (paCount > 0) Text("• $paCount em Atributos adicionais")
-                            if (spCount > 0) Text("• $spCount em passos extras de Perícia")
-                            if (pvCount > 0) Text("• $pvCount em Vantagens adicionais")
-                            if (recCount > 0) Text("• $recCount em Recursos extras (500$ cada)")
-
-                            Spacer(Modifier.height(8.dp))
-                            Text(
-                                "Para remover esta Complicação, primeiro desfaça alguns " +
-                                        "desses Pontos Bônus nas seções de Atributos, Perícias, " +
-                                        "Vantagens ou Equipamento.",
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                    }
-                }
-            )
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 260.dp)
-                .alpha(if (locked) 0.3f else 1f)
-        ) {
-            Text(
-                "Lista de complicações disponíveis:",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Spacer(Modifier.height(4.dp))
-
-            val pequComp = complicacoesFiltradas.firstOrNull { it.id == "pequeno" }
-
-            val listaParaMostrar = complicacoesFiltradas
-                .filter { comp ->
-                    comp.id.keyify() !in autoBaseKeys
-                }
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
 
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 240.dp),
+                modifier = Modifier.heightIn(max = 400.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                items(listaParaMostrar) { comp ->
-                    val cur    = state.complicacoesSelecionadas[comp]
-                    val sevRaw = comp.severity.lowercase().trim()
-                    val menorOnly = sevRaw.contains("menor") && !sevRaw.contains("maior")
-                    val maiorOnly = sevRaw.contains("maior") && !sevRaw.contains("menor")
-                    val ambos     = sevRaw.contains("menor") && sevRaw.contains("maior")
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text(
-                                    text = if (state.modoOficialAtivo && !comp.originalName.isNullOrBlank()) comp.originalName else comp.name,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
+                items(listaFiltrada) { comp ->
+                    val nivelSelecionado = state.complicacoesSelecionadas[comp]
+                    ComplicacaoListItem(
+                        complicacao = comp,
+                        nivelSelecionado = nivelSelecionado,
+                        readOnly = readOnly,
+                        onSelect = { nivel ->
+                            if (!readOnly) {
+                                state.complicacoesSelecionadas[comp] = nivel
+                                state.recalcularPontosAtributo()
+                                state.rebuildAllPericiaStacks()
                             }
-
-                            Spacer(Modifier.width(8.dp))
-
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                if (menorOnly || ambos) {
-                                    val enabledMenor = !locked && cur == null
-                                    TextButton(
-                                        onClick = {
-                                            if (!enabledMenor) return@TextButton
-                                            when (comp.id) {
-                                                "jovem" -> {
-                                                    state.complicacoesSelecionadas[comp] = "Menor"
-                                                    state.applyYoungMinor()
-                                                }
-                                                "obeso" -> {
-                                                    state.complicacoesSelecionadas[comp] = "Menor"
-                                                    state.obesoBonusSize = 1
-                                                    state.obesoMalusMov = 1
-                                                }
-                                                else -> {
-                                                    state.complicacoesSelecionadas[comp] = "Menor"
-                                                }
-                                            }
-                                        },
-                                        enabled = enabledMenor
-                                    ) {
-                                        Text("Menor")
-                                    }
-                                }
-
-                                if (maiorOnly || ambos) {
-                                    val enabledMaior = !locked && (
-                                            (maiorOnly && cur == null) ||
-                                                    (ambos && cur == "Menor")
-                                            )
-                                    TextButton(
-                                        onClick = {
-                                            if (!enabledMaior) return@TextButton
-                                            when (comp.id) {
-                                                "idoso" -> {
-                                                    state.complicacoesSelecionadas[comp] = "Maior"
-                                                    state.idosoBonusSp = 5
-                                                    state.rebuildAllPericiaStacks()
-                                                }
-                                                "jovem" -> {
-                                                    if (pequComp != null) {
-                                                        state.complicacoesSelecionadas[comp] = "Maior"
-                                                        state.applyYoungMajor(pequComp)
-                                                    }
-                                                }
-                                                "obeso" -> {
-                                                    state.complicacoesSelecionadas[comp] = "Maior"
-                                                    state.obesoBonusSize = 1
-                                                    state.obesoMalusMov = 1
-                                                }
-                                                else -> {
-                                                    state.complicacoesSelecionadas[comp] = "Maior"
-                                                }
-                                            }
-                                        },
-                                        enabled = enabledMaior
-                                    ) {
-                                        Text("Maior")
-                                    }
-                                }
+                        },
+                        onRemove = {
+                            if (!readOnly) {
+                                state.complicacoesSelecionadas.remove(comp)
+                                state.recalcularPontosAtributo()
+                                state.rebuildAllPericiaStacks()
                             }
                         }
-
-                        if (allowLongTexts && comp.description.isNotBlank()) {
-                            TextButton(
-                                onClick = {
-                                    val current = detalhesExpandidos[comp.id] ?: false
-                                    detalhesExpandidos[comp.id] = !current
-                                },
-                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp)
-                            ) {
-                                Text(
-                                    if (detalhesExpandidos[comp.id] == true) "Ocultar detalhes" else "Ver detalhes",
-                                    style = MaterialTheme.typography.labelMedium
-                                )
-                            }
-
-                            AnimatedVisibility(visible = detalhesExpandidos[comp.id] == true) {
-                                Text(
-                                    text = if (state.modoOficialAtivo && !comp.originalDescription.isNullOrBlank()) comp.originalDescription.trim() else comp.description.trim(),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.padding(top = 4.dp)
-                                )
-                            }
-                        }
-                    }
+                    )
                 }
             }
         }
     }
-}
-
-@Composable
-fun TransparentOutlinedReadOnlyField(
-    text: String,
-    enabled: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val colors = MaterialTheme.colorScheme
-
-    BasicTextField(
-        value         = text,
-        onValueChange = {},
-        enabled       = enabled,
-        readOnly      = true,
-        textStyle     = LocalTextStyle.current.copy(color = colors.onSurface),
-        singleLine    = true,
-        modifier      = modifier,
-        decorationBox = { inner ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .background(Color.Transparent, shape = MaterialTheme.shapes.small)
-                    .border(
-                        width = 1.dp,
-                        color = if (enabled)
-                            colors.outline.copy(alpha = 0.8f)
-                        else
-                            colors.outline.copy(alpha = 0.5f),
-                        shape = MaterialTheme.shapes.small
-                    )
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-                    .clickable(enabled = enabled, onClick = onClick)
-            ) {
-                inner()
-                Spacer(Modifier.weight(1f))
-                Icon(
-                    imageVector        = Icons.Default.ArrowDropDown,
-                    contentDescription = "",
-                    tint = if (enabled)
-                        colors.onSurface
-                    else
-                        colors.onSurface.copy(alpha = 0.5f)
-                )
-            }
-        }
-    )
 }

@@ -1,16 +1,15 @@
 package com.example.swadebuilder.model
 
-import com.example.swadebuilder.model.AdvancementAction
-import com.example.swadebuilder.model.SuperInvestment
+import com.example.swadebuilder.ui.theme.AppTheme
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class PersonagemSnapshot(
-    val version: Int = 1,
     val id: String,
     val nome: String,
     val timestamp: Long,
     val appTheme: String,
+    // showHelpMessages removido (defaults to false for compatibility)
     val showHelpMessages: Boolean = false,
     val anotacoes: String,
     val flags: SnapshotFlags,
@@ -29,33 +28,33 @@ data class SnapshotFlags(
     val modoSupers: Boolean,
     val compendioFantasiaAtivo: Boolean,
     val compendioHorrorAtivo: Boolean,
-    val compendioSciFiAtivo: Boolean = false,
-    val compendioTrilhadorAtivo: Boolean = false,
-    val compendioDeadlandsAtivo: Boolean = false,
-    val compendioCrystalHeartAtivo: Boolean = false,
-    val compendioArteDaGuerraAtivo: Boolean = false,
-    val compendioCidadeSolVaporAtivo: Boolean = false,
-    val compendioWiseguysAtivo: Boolean = false,
-    val modoOficialAtivo: Boolean = false,
+    val compendioSciFiAtivo: Boolean,
+    val compendioTrilhadorAtivo: Boolean,
+    val compendioDeadlandsAtivo: Boolean,
+    val compendioCrystalHeartAtivo: Boolean,
+    val compendioArteDaGuerraAtivo: Boolean,
+    val compendioCidadeSolVaporAtivo: Boolean,
+    val compendioWiseguysAtivo: Boolean,
+    val modoOficialAtivo: Boolean,
     val modoMonstroAtivo: Boolean,
-    val tipoMonstroSelecionado: String?,
+    val tipoMonstroSelecionado: String? = null,
     val usarEspecializacoesDePericia: Boolean,
     val grandesResponsabilidades: Boolean,
-    val modoSuperComplicacoes: Boolean,
-    val modoSuperequip: Boolean,
-    val heroisSemArmadura: Boolean,
-    val nasceUmHeroi: Boolean,
-    val soldadoCargaAtivo: Boolean,
-    val permiteMultiAntecedenteArcano: Boolean,
-    val meioElfoAgil: Boolean,
-    val celestialAAMilagresDesabilitado: Boolean,
-    val jovemAutoPequeno: Boolean,
-    val jovemMalusPa: Int,
-    val jovemMalusSp: Int,
-    val idosoBonusSp: Int,
-    val obesoBonusSize: Int,
-    val obesoMalusMov: Int,
-    val bonusPoderExtra: Int
+    val modoSuperComplicacoes: Boolean = false,
+    val modoSuperequip: Boolean = false,
+    val heroisSemArmadura: Boolean = false,
+    val nasceUmHeroi: Boolean = false,
+    val soldadoCargaAtivo: Boolean = true,
+    val permiteMultiAntecedenteArcano: Boolean = false,
+    val meioElfoAgil: Boolean = false,
+    val celestialAAMilagresDesabilitado: Boolean = false,
+    val jovemAutoPequeno: Boolean = false,
+    val jovemMalusPa: Int = 0,
+    val jovemMalusSp: Int = 0,
+    val idosoBonusSp: Int = 0,
+    val obesoBonusSize: Int = 0,
+    val obesoMalusMov: Int = 0,
+    val bonusPoderExtra: Int = 0
 )
 
 @Serializable
@@ -68,9 +67,9 @@ data class SnapshotRecursos(
     val spFromProgress: Int,
     val legendaryAttrReservations: Int,
     val cpPaStack: List<String>,
-    val cpSpStack: List<Int>,
-    val cpPvStack: List<Int>,
-    val cpRecursosStack: List<Int>
+    val cpSpStack: List<Int>, // dummy list of 1s
+    val cpPvStack: List<Int>, // dummy list of 1s
+    val cpRecursosStack: List<Int> // dummy list of 1s
 )
 
 @Serializable
@@ -84,21 +83,9 @@ data class SnapshotAtributos(
 data class SnapshotPericias(
     val baseIncsPorPericia: Map<String, Int>,
     val compIncsPorPericia: Map<String, Int>,
-    val spCostStackPorPericia: Map<String, List<Int>>, 
-    val compCostStackPorPericia: Map<String, List<Int>>, 
+    val spCostStackPorPericia: Map<String, List<Int>>,
+    val compCostStackPorPericia: Map<String, List<Int>>,
     val especializacoesPorPericia: Map<String, EspecializacoesDto>
-)
-
-@Serializable
-data class AdvantageSnapshot(
-    val id: String,
-    val choice: String? = null
-)
-
-@Serializable
-data class ComplicacaoSnapshot(
-    val id: String,
-    val nivel: String?
 )
 
 @Serializable
@@ -111,12 +98,24 @@ data class SnapshotSelecoes(
     val complicacoesSelecionadas: List<ComplicacaoSnapshot>,
     val reservasComplicacaoMaior: Map<String, Boolean>,
     val poderesSelecionados: List<String>,
-    val poderSlotsPorArcano: Map<String, List<String?>>, 
+    val poderSlotsPorArcano: Map<String, List<String?>>,
     val novosPoderesStacksPorArcano: Map<String, List<List<String>>>,
     val arcanoEmCompraViaXpKey: String?,
     val arcanoSnapshotAntesDaCompra: List<String?>?,
-    val equipamentosComprados: List<EquipamentoItem> = emptyList(),
+    val equipamentosComprados: List<EquipamentoItem>,
     val coracaoCrystalId: String? = null
+)
+
+@Serializable
+data class AdvantageSnapshot(
+    val id: String,
+    val choice: String?
+)
+
+@Serializable
+data class ComplicacaoSnapshot(
+    val id: String,
+    val nivel: String? // "Menor" or "Maior"
 )
 
 @Serializable
@@ -144,7 +143,7 @@ data class SnapshotProgresso(
     val mostrandoAtributosProgresso: Boolean,
     val mostrandoPoderesProgresso: Boolean,
     val frozenAdvantageCount: Int,
-    val stageNameForCurrentAdvancementSnapshot: String?
+    val stageNameForCurrentAdvancementSnapshot: String? = null
 )
 
 @Serializable

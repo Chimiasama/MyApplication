@@ -63,6 +63,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -80,7 +81,7 @@ fun TelaInicial(
         compendioFantasiaAtivo: Boolean,
         compendioHorrorAtivo: Boolean,
         compendioSciFiAtivo: Boolean,
-        compendioTrilhadorAtivo: Boolean,
+        compendioBuscatrilhaAtivo: Boolean,
         compendioDeadlandsAtivo: Boolean,
         compendioCrystalHeartAtivo: Boolean,
         compendioArteDaGuerraAtivo: Boolean,
@@ -123,7 +124,7 @@ fun TelaInicial(
 
     // Fantasy
     var optCompendioFantasia by rememberSaveable { mutableStateOf(false) }
-    var optCompendioTrilhador by rememberSaveable { mutableStateOf(false) }
+    var optCompendioBuscatrilha by rememberSaveable { mutableStateOf(false) }
     var optCompendioDeadlands by rememberSaveable { mutableStateOf(false) }
     var optCompendioCrystalHeart by rememberSaveable { mutableStateOf(false) }
     var optCompendioArteDaGuerra by rememberSaveable { mutableStateOf(false) }
@@ -144,6 +145,8 @@ fun TelaInicial(
     var expandedHorrorRules by rememberSaveable { mutableStateOf(false) }
     var expandedSupersRules by rememberSaveable { mutableStateOf(false) }
 
+    // Check if full version features should be shown
+    val showFullDescriptions = LocalContext.current.resources.getBoolean(R.bool.show_full_descriptions)
 
     Scaffold(
         topBar = {
@@ -174,7 +177,7 @@ fun TelaInicial(
                         optCompendioFantasia,
                         optCompendioHorror,
                         optCompendioSciFi,
-                        optCompendioTrilhador,
+                        optCompendioBuscatrilha,
                         optCompendioDeadlands,
                         optCompendioCrystalHeart,
                         optCompendioArteDaGuerra,
@@ -191,7 +194,7 @@ fun TelaInicial(
                         // true // showHelpMessages removido
                     )
                     // Set ViewModel states that are handled outside the creation lambda
-                    viewModel.state.compendioTrilhadorAtivo = optCompendioTrilhador
+                    viewModel.state.compendioBuscatrilhaAtivo = optCompendioBuscatrilha
                     viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
                     viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
                     viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
@@ -282,11 +285,11 @@ fun TelaInicial(
                         onToggle = { expandedOtherModules = !expandedOtherModules }
                     ) {
                         ModuleToggle(
-                            title = "Savage Pathfinder",
-                            description = "Conteúdo oficial de Golarion (Classes, Raças).",
+                            title = if (showFullDescriptions) "Savage Pathfinder" else "Buscatrilha Selvagem",
+                            description = if (showFullDescriptions) "Conteúdo oficial de Golarion (Classes, Raças)." else "Conteúdo de Buscatrilha (Classes, Raças).",
                             icon = Icons.Default.Map,
-                            checked = optCompendioTrilhador,
-                            onCheckedChange = { optCompendioTrilhador = it }
+                            checked = optCompendioBuscatrilha,
+                            onCheckedChange = { optCompendioBuscatrilha = it }
                         )
                         ModuleToggle(
                             title = "Deadlands: O Oeste Estranho",
