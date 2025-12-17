@@ -48,6 +48,26 @@ class CriadorViewModel : ViewModel() {
         state.appTheme = theme
     }
 
+    fun resetToEmptyState() {
+        resetStateParaNovoPersonagem(
+            cartaSelvagem = true,
+            maisPontosPericias = true,
+            modoSupers = false,
+            compendioFantasiaAtivo = false,
+            compendioHorrorAtivo = false,
+            compendioSciFiAtivo = false,
+            compendioTrilhadorAtivo = false,
+            compendioDeadlandsAtivo = false,
+            compendioCrystalHeartAtivo = false,
+            compendioArteDaGuerraAtivo = false,
+            compendioCidadeSolVaporAtivo = false,
+            compendioWiseguysAtivo = false,
+            modoMonstroAtivo = false,
+            usarEspecializacoesDePericia = false,
+            grandesResponsabilidades = false
+        )
+    }
+
     fun prepararNomeInicial(context: Context) {
         state.nomePersonagem = gerarNomeSequencial(
             DEFAULT_CHARACTER_NAME,
@@ -219,6 +239,11 @@ class CriadorViewModel : ViewModel() {
         state.categoriasVantagensExpandidas.keys.forEach { cat ->
             state.categoriasVantagensExpandidas[cat] = false
         }
+        state.sectionsExpanded.keys.forEach { section ->
+            state.sectionsExpanded[section] = false
+        }
+        state.sectionsExpanded[com.example.swadebuilder.ui.MainSection.RESUMO] = true
+
         state.aplicarAncestralidade("HUMANOS", _feedbackMessages)
 
         if (state.modoSupers) {
@@ -261,6 +286,10 @@ class CriadorViewModel : ViewModel() {
         state.attributeStageForCurrentAdvancement = null
         state.attributeStacksBeforeAdvancement = null
         state.attributeUsedReservation = false
+        state.skillAdvancementInProgress = false
+        state.skillsForCurrentAdvancement.clear()
+        state.advantageAdvancementInProgress = false
+        state.advantageForCurrentAdvancement = null
         state.stageNameForCurrentAdvancement = null
         state.overrideStageForVantagem = null
         state.openVantagensAfterGrant = false // Fix: reset UI flag
