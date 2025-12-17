@@ -218,9 +218,6 @@ class CriadorViewModel : ViewModel() {
         state.modoSuperComplicacoes = modoSupers
         state.soldadoCargaAtivo = true
 
-        state.hapticStrength = com.example.swadebuilder.CriadorState.DEFAULT_HAPTIC_STRENGTH
-        state.soundVolume = com.example.swadebuilder.CriadorState.DEFAULT_SOUND_VOLUME
-
         state.idAtual = null
         state.nomePersonagem = DEFAULT_CHARACTER_NAME
         state.anotacoes = ""
