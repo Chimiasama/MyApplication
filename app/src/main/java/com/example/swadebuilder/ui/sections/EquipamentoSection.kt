@@ -560,13 +560,13 @@ fun EquipamentoSection(
             CollapsibleSection(
                 title = tipo,
                 expanded = isTipoExpanded,
-                onToggle = {,
-                onToggleFeedback = onUserFeedback
+                onToggle = {
                     val newState = !isTipoExpanded
                     // Fecha outros se quiser comportamento de acordeão, ou apenas toggle
                     // expandedTipoMap.keys.forEach { expandedTipoMap[it] = false }
                     expandedTipoMap[tipo] = newState
-                }
+                },
+                onToggleFeedback = onUserFeedback
             ) {
                 val scroll = rememberScrollState()
                 Column(
@@ -601,13 +601,13 @@ fun EquipamentoSection(
                         CollapsibleSection(
                             title = subtipo,
                             expanded = isSubExpanded,
-                            onToggle = {,
-                onToggleFeedback = onUserFeedback
+                            onToggle = {
                                 expandedSubtipoMap.forEach { (st, stState) ->
                                     stState.value =
                                         if (st == subtipo) !isSubExpanded else false
                                 }
-                            }
+                            },
+                            onToggleFeedback = onUserFeedback
                         ) {
                             val scroll2 = rememberScrollState()
                             Column(
@@ -657,13 +657,13 @@ fun EquipamentoSection(
                                         CollapsibleSection(
                                             title = ss,
                                             expanded = isSsExpanded,
-                                            onToggle = {,
-                onToggleFeedback = onUserFeedback
+                                            onToggle = {
                                                 expandedSubsub.forEach { (s, sState) ->
                                                     sState.value =
                                                         if (s == ss) !isSsExpanded else false
                                                 }
-                                            }
+                                            },
+                                            onToggleFeedback = onUserFeedback
                                         ) {
                                             val scroll3 = rememberScrollState()
                                             Column(
