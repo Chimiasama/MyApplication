@@ -100,6 +100,8 @@ fun TelaInicial(
     context: Context,
     viewModel: CriadorViewModel
 ) {
+    val isFullEdition = EditionConfig.isFullEdition
+
     // --- State Variables (matching original logic) ---
 
     // Core Rules
@@ -282,8 +284,12 @@ fun TelaInicial(
                         onToggle = { expandedOtherModules = !expandedOtherModules }
                     ) {
                         ModuleToggle(
-                            title = "Savage Pathfinder",
-                            description = "Conteúdo oficial de Golarion (Classes, Raças).",
+                            title = if (isFullEdition) "Savage Pathfinder" else "Buscatrilha",
+                            description = if (isFullEdition) {
+                                "Conteúdo oficial de Golarion (Classes, Raças)."
+                            } else {
+                                "Cenário Buscatrilha e material temático."
+                            },
                             icon = Icons.Default.Map,
                             checked = optCompendioTrilhador,
                             onCheckedChange = { optCompendioTrilhador = it }

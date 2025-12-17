@@ -38,6 +38,7 @@ import com.example.swadebuilder.R
 import com.example.swadebuilder.loadRawText
 import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.Serializable
@@ -76,6 +77,8 @@ fun AncestralidadesSection(
         }
     }
 
+    val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
+
     val compendioFantasiaAtivo = state.compendioFantasiaAtivo
     val compendioTrilhadorAtivo = state.compendioTrilhadorAtivo
     val compendioDeadlandsAtivo = state.compendioDeadlandsAtivo
@@ -86,7 +89,7 @@ fun AncestralidadesSection(
         // Load legacy list
         val allLegacy = context.loadJsonAsset<List<RacialModifier>>(ASSET_ANCESTRALIDADES)
 
-        // Load Trilhador list
+        // Load Buscatrilha list
         val allTrilhador = try {
             context.loadJsonAsset<List<RacialModifier>>("ancestralidades_trilhador.json")
         } catch (e: Exception) {
@@ -123,7 +126,9 @@ fun AncestralidadesSection(
             val origin = it.origem?.uppercase() ?: "BASICO"
             origin == "BASICO" || (origin == "FANTASIA" && compendioFantasiaAtivo) || (origin == "FANTASIA_TRILHADOR" && compendioTrilhadorAtivo) || (origin == "DEADLANDS" && compendioDeadlandsAtivo) || (origin == "ARTE_DA_GUERRA" && compendioArteDaGuerraAtivo) || (origin == "CIDADE_SOL_VAPOR" && state.compendioCidadeSolVaporAtivo) || (origin == "WISEGUYS" && compendioWiseguysAtivo)
         }.map {
-            RacialModifierLite(it.nome, it.originalName)
+            val buscatrilhaName = it.nome.replace("Trilhador", "Buscatrilha")
+            val originalName = if (EditionConfig.isFullEdition) it.originalName else null
+            RacialModifierLite(buscatrilhaName, originalName)
         }
         mutableStateOf(filtered)
     }
@@ -233,7 +238,7 @@ fun AncestralidadesSection(
                                 Spacer(Modifier.padding(start = 8.dp))
 
                                 Column(Modifier.weight(1f)) {
-                                    val displayName = if (state.modoOficialAtivo && !item.originalName.isNullOrBlank()) {
+                                    val displayName = if (showOfficialNames && !item.originalName.isNullOrBlank()) {
                                         item.originalName
                                     } else {
                                         item.nome

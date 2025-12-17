@@ -47,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.R
+import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.ui.components.PbWalletBanner
@@ -217,6 +218,7 @@ fun EquipamentoSection(
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
+    val showOfficialNames = EditionConfig.isFullEdition && modoOficialAtivo
 
     SectionCard(
         title    = "Equipamento",
@@ -457,7 +459,7 @@ fun EquipamentoSection(
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = modoOficialAtivo
+                    showOriginalName = showOfficialNames
                 )
             }
         }
@@ -465,7 +467,7 @@ fun EquipamentoSection(
         if (compendioTrilhadorAtivo && trilhadorCategorias.isNotEmpty()) {
             Spacer(Modifier.padding(vertical = 4.dp))
             CollapsibleSection(
-                title = "Equipamento de Trilhador",
+                title = "Equipamento Buscatrilha",
                 expanded = expTrilhadorEquip,
                 onToggle = { expTrilhadorEquip = !expTrilhadorEquip }
             ) {
@@ -477,7 +479,7 @@ fun EquipamentoSection(
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = modoOficialAtivo
+                    showOriginalName = showOfficialNames
                 )
             }
         }
@@ -497,7 +499,7 @@ fun EquipamentoSection(
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = modoOficialAtivo
+                    showOriginalName = showOfficialNames
                 )
             }
         }
@@ -635,7 +637,7 @@ fun EquipamentoSection(
                                                     val current = detalhesExpandidos[equipamento.nome] ?: false
                                                     detalhesExpandidos[equipamento.nome] = !current
                                                 },
-                                                showOriginalName = modoOficialAtivo
+                                                showOriginalName = showOfficialNames
                                             )
                                         }
                                 } else {
@@ -690,7 +692,7 @@ fun EquipamentoSection(
                                                                   val current = detalhesExpandidos[equipamento.nome] ?: false
                                                                   detalhesExpandidos[equipamento.nome] = !current
                                                               },
-                                                              showOriginalName = modoOficialAtivo
+                                                              showOriginalName = showOfficialNames
                                                           )
                                                       }
                                                   }
@@ -722,7 +724,7 @@ fun EquipamentoSection(
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = modoOficialAtivo
+                    showOriginalName = showOfficialNames
                 )
             }
         }
@@ -743,7 +745,7 @@ fun EquipamentoSection(
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = modoOficialAtivo
+                    showOriginalName = showOfficialNames
                 )
             }
         }
@@ -763,7 +765,7 @@ fun EquipamentoSection(
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = modoOficialAtivo
+                    showOriginalName = showOfficialNames
                 )
             }
         }
@@ -811,7 +813,7 @@ fun EquipamentoSection(
                                     val current = detalhesExpandidos[equipamento.nome] ?: false
                                     detalhesExpandidos[equipamento.nome] = !current
                                 },
-                                showOriginalName = modoOficialAtivo
+                                showOriginalName = showOfficialNames
                             )
                         }
                 }
