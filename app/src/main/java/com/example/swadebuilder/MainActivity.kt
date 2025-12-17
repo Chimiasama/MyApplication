@@ -679,7 +679,10 @@ class MainActivity : ComponentActivity() {
                                             }
                                         },
                                         navigationIcon = {
-                                            TextButton(onClick = { mostrouTelaInicial = true }) {
+                                            TextButton(onClick = {
+                                                criadorViewModel.resetToEmptyState()
+                                                mostrouTelaInicial = true
+                                            }) {
                                                 Text(
                                                     text       = "Voltar",
                                                     fontWeight = FontWeight.Bold,
