@@ -44,28 +44,30 @@ fun SectionCard(
             Modifier
                 .fillMaxWidth()
                 .clickable(onClick = onToggle)
-                .padding(vertical = 8.dp, horizontal = 4.dp),
+                .padding(vertical = 12.dp, horizontal = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = title,
                 modifier = Modifier
-                    .size(36.dp)
+                    .size(32.dp)
                     .padding(end = 12.dp),
                 tint = headerColor
             )
             Text(
                 text       = title,
-                fontSize   = 27.sp,
-                fontWeight = FontWeight.Bold,
+                style      = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp
+                ),
                 color      = headerColor
             )
             Spacer(Modifier.weight(1f))
             Icon(
                 imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
                 contentDescription = stringResource(id = if (expanded) com.example.swadebuilder.R.string.cd_collapse else com.example.swadebuilder.R.string.cd_expand),
-                modifier = Modifier.size(36.dp),
+                modifier = Modifier.size(28.dp),
                 tint = headerColor
             )
         }
@@ -74,15 +76,15 @@ fun SectionCard(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 4.dp, vertical = 8.dp),
-                shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    .padding(horizontal = 4.dp, vertical = 0.dp),
+                shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = cardColor
                 )
             ) {
-                Column(modifier = Modifier.padding(8.dp)) {
+                Column(modifier = Modifier.padding(12.dp)) {
                     content()
                 }
             }

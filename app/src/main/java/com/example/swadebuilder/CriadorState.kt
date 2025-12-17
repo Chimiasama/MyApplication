@@ -29,6 +29,7 @@ import com.example.swadebuilder.model.SnapshotSelecoes
 import com.example.swadebuilder.model.SnapshotSupers
 import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
@@ -849,6 +850,18 @@ class CriadorState {
         mutableStateMapOf<Categoria, Boolean>().apply {
             Categoria.entries.forEach { this[it] = false }
         }
+
+    val sectionsExpanded: SnapshotStateMap<MainSection, Boolean> =
+        mutableStateMapOf<MainSection, Boolean>().apply {
+            MainSection.entries.forEach { this[it] = false }
+            // Opcional: deixar algumas abertas por padrão
+            this[MainSection.RESUMO] = true
+        }
+
+    fun toggleSection(section: MainSection) {
+        val current = sectionsExpanded[section] ?: false
+        sectionsExpanded[section] = !current
+    }
 
     // guarda o nome da vantagem que está em foco (usada ao voltar da tela de detalhes)
     var vantagemEmFoco by mutableStateOf<String?>(null)
