@@ -63,7 +63,8 @@ fun AncestralidadesSection(
     onToggle: () -> Unit,
     supersLocked: Boolean,
     ancestralidadeEmFoco: String?,
-    onSelectAncestralidade: (String) -> Unit
+    onSelectAncestralidade: (String) -> Unit,
+    onUserFeedback: () -> Unit
 ) {
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
@@ -163,7 +164,8 @@ fun AncestralidadesSection(
         title = "Ancestralidades",
         expanded = expanded,
         onToggle = onToggle,
-        icon = Icons.AutoMirrored.Filled.MenuBook
+        icon = Icons.AutoMirrored.Filled.MenuBook,
+        onToggleFeedback = onUserFeedback
     ) {
         val centerLabel = if (supersLocked) {
             "Ancestralidade: $selectedDisplayName (travado na fase Supers)"
@@ -217,12 +219,13 @@ fun AncestralidadesSection(
                         }
                     ) {
                         Column(
-                            modifier = Modifier
-                                .clickable(enabled = !supersLocked) {
-                                    if (supersLocked) return@clickable
-                                    selectedKey.value = itemKey
-                                    onSelectAncestralidade(item.nome)
-                                }
+                        modifier = Modifier
+                            .clickable(enabled = !supersLocked) {
+                                if (supersLocked) return@clickable
+                                onUserFeedback()
+                                selectedKey.value = itemKey
+                                onSelectAncestralidade(item.nome)
+                            }
                                 .padding(horizontal = 12.dp, vertical = 10.dp)
                         ) {
                             Row(

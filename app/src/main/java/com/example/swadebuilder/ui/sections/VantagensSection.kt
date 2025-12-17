@@ -192,7 +192,8 @@ fun VantFilterDialog(
 fun VantagensContent(
     state: CriadorState,
     multiplosAAHabilitados: Boolean,
-    viewModel: CriadorViewModel = viewModel()
+    viewModel: CriadorViewModel = viewModel(),
+    onUserFeedback: () -> Unit = {}
 ) {
     // We use the global `listaVantagens` loaded in MainActivity (which includes compendium content)
     // instead of reloading just the base `Vantagens.json`.
@@ -427,9 +428,10 @@ fun VantagensContent(
                                 state.rebuildAllPericiaStacks()
                             } else {
                                 state.removeVantagemDinheiro(vant)
-                                state.vantagensSelecionadas.remove(vant)
-                                state.pontosVantagem++
-                                state.rebuildAllPericiaStacks()
+                            state.vantagensSelecionadas.remove(vant)
+                            state.pontosVantagem++
+                            state.rebuildAllPericiaStacks()
+                            onUserFeedback()
 
                                 if (vant.id == "o_melhor_que_ha") {
                                     state.poderFavoritoId = null
@@ -485,7 +487,8 @@ fun VantagensContent(
             CollapsibleSection(
                 title = cat.name,
                 expanded = expanded,
-                onToggle = { expandedMap[cat] = !expanded }
+                onToggle = { expandedMap[cat] = !expanded },
+                onToggleFeedback = onUserFeedback
             ) {
                 val listaFiltrada = lista
                     .filter { vant ->
@@ -630,6 +633,7 @@ fun VantagensContent(
                                             else -> {
                                                 if (state.advantageAdvancementInProgress) {
                                                     viewModel.selectAdvantageForAdvancement(vant)
+                                                    onUserFeedback()
                                                 } else {
                                                     if (vant.nome.contains(
                                                             "Pontos de Poder",
@@ -637,12 +641,14 @@ fun VantagensContent(
                                                         )
                                                     ) {
                                                         state.comprarPontoDePoder(vant)
+                                                        onUserFeedback()
                                                     } else {
                                                         state.applyVantagemDinheiro(vant)
                                                         state.vantagensSelecionadas += vant
                                                     }
                                                     state.pontosVantagem--
                                                     state.rebuildAllPericiaStacks()
+                                                    onUserFeedback()
                                                 }
                                             }
                                         }
@@ -793,6 +799,7 @@ fun VantagensContent(
                                     state.pontosVantagem--
                                     state.rebuildAllPericiaStacks()
                                 }
+                                onUserFeedback()
                             }
                             dialogMostrandoAntecedente = null
                             subOpcaoSelecionada = null
@@ -849,6 +856,7 @@ fun VantagensContent(
                             state.rebuildAllPericiaStacks()
                             showChoiceDialog = false
                             pendingVantagem = null
+                            onUserFeedback()
                         },
                         onDismiss = {
                             showChoiceDialog = false
@@ -920,6 +928,7 @@ fun VantagensContent(
                             state.rebuildAllPericiaStacks()
                             showChoiceDialog = false
                             pendingVantagem = null
+                            onUserFeedback()
                         },
                         onDismiss = {
                             showChoiceDialog = false

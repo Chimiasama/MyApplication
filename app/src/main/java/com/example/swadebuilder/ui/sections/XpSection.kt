@@ -46,13 +46,15 @@ fun XpSection(
     expanded: Boolean,
     onToggle: () -> Unit,
     onUseProgress: (Int) -> Unit,
-    onUndo: () -> Unit
+    onUndo: () -> Unit,
+    onUserFeedback: () -> Unit
 ) {
     SectionCard(
         title = "XP",
         expanded = expanded,
         onToggle = onToggle,
-        icon = Icons.Default.Star
+        icon = Icons.Default.Star,
+        onToggleFeedback = onUserFeedback
     ) {
         LaunchedEffect(
             state.progresso,

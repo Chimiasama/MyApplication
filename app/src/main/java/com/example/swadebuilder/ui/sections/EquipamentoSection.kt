@@ -200,7 +200,8 @@ fun EquipamentoSection(
     compendioCidadeSolVaporAtivo: Boolean = false,
     compendioWiseguysAtivo: Boolean = false,
     compendioCrystalHeartAtivo: Boolean = false,
-    modoOficialAtivo: Boolean = false
+    modoOficialAtivo: Boolean = false,
+    onUserFeedback: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     var showMoneyDialog by rememberSaveable { mutableStateOf(false) }
@@ -224,7 +225,8 @@ fun EquipamentoSection(
         title    = "Equipamento",
         expanded = expanded,
         onToggle = onToggle,
-        icon     = Icons.Default.ShoppingCart
+        icon     = Icons.Default.ShoppingCart,
+        onToggleFeedback = onUserFeedback
     ) {
         if (!expanded) return@SectionCard
 
@@ -449,7 +451,8 @@ fun EquipamentoSection(
             CollapsibleSection(
                 title = "Equipamento Sci-Fi",
                 expanded = expSciFiEquip,
-                onToggle = { expSciFiEquip = !expSciFiEquip }
+                onToggle = { expSciFiEquip = !expSciFiEquip },
+                onToggleFeedback = onUserFeedback
             ) {
                 RenderCategoryList(
                     categories = sciFiCategorias,
@@ -459,7 +462,8 @@ fun EquipamentoSection(
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = showOfficialNames
+                    showOriginalName = showOfficialNames,
+                    onUserFeedback = onUserFeedback
                 )
             }
         }
@@ -469,7 +473,8 @@ fun EquipamentoSection(
             CollapsibleSection(
                 title = "Equipamento Buscatrilha",
                 expanded = expTrilhadorEquip,
-                onToggle = { expTrilhadorEquip = !expTrilhadorEquip }
+                onToggle = { expTrilhadorEquip = !expTrilhadorEquip },
+                onToggleFeedback = onUserFeedback
             ) {
                 RenderCategoryList(
                     categories = trilhadorCategorias,
@@ -479,7 +484,8 @@ fun EquipamentoSection(
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = showOfficialNames
+                    showOriginalName = showOfficialNames,
+                    onUserFeedback = onUserFeedback
                 )
             }
         }
@@ -489,7 +495,8 @@ fun EquipamentoSection(
             CollapsibleSection(
                 title = "Equipamento de Deadlands",
                 expanded = expDeadlandsEquip,
-                onToggle = { expDeadlandsEquip = !expDeadlandsEquip }
+                onToggle = { expDeadlandsEquip = !expDeadlandsEquip },
+                onToggleFeedback = onUserFeedback
             ) {
                 RenderCategoryList(
                     categories = deadlandsCategorias,
@@ -499,7 +506,8 @@ fun EquipamentoSection(
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = showOfficialNames
+                    showOriginalName = showOfficialNames,
+                    onUserFeedback = onUserFeedback
                 )
             }
         }
@@ -557,7 +565,8 @@ fun EquipamentoSection(
                     // Fecha outros se quiser comportamento de acordeão, ou apenas toggle
                     // expandedTipoMap.keys.forEach { expandedTipoMap[it] = false }
                     expandedTipoMap[tipo] = newState
-                }
+                },
+                onToggleFeedback = onUserFeedback
             ) {
                 val scroll = rememberScrollState()
                 Column(
@@ -597,7 +606,8 @@ fun EquipamentoSection(
                                     stState.value =
                                         if (st == subtipo) !isSubExpanded else false
                                 }
-                            }
+                            },
+                            onToggleFeedback = onUserFeedback
                         ) {
                             val scroll2 = rememberScrollState()
                             Column(
@@ -652,7 +662,8 @@ fun EquipamentoSection(
                                                     sState.value =
                                                         if (s == ss) !isSsExpanded else false
                                                 }
-                                            }
+                                            },
+                                            onToggleFeedback = onUserFeedback
                                         ) {
                                             val scroll3 = rememberScrollState()
                                             Column(
@@ -714,7 +725,8 @@ fun EquipamentoSection(
             CollapsibleSection(
                 title = "Equipamento de Fantasia",
                 expanded = expFantasiaEquip,
-                onToggle = { expFantasiaEquip = !expFantasiaEquip }
+                onToggle = { expFantasiaEquip = !expFantasiaEquip },
+                onToggleFeedback = onUserFeedback
             ) {
                 RenderCategoryList(
                     categories = fantasiaCategorias,
@@ -724,7 +736,8 @@ fun EquipamentoSection(
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = showOfficialNames
+                    showOriginalName = showOfficialNames,
+                    onUserFeedback = onUserFeedback
                 )
             }
         }
@@ -735,7 +748,8 @@ fun EquipamentoSection(
             CollapsibleSection(
                 title = "Equipamento de Horror",
                 expanded = expHorrorEquip,
-                onToggle = { expHorrorEquip = !expHorrorEquip }
+                onToggle = { expHorrorEquip = !expHorrorEquip },
+                onToggleFeedback = onUserFeedback
             ) {
                 RenderCategoryList(
                     categories = horrorCategorias,
@@ -745,7 +759,8 @@ fun EquipamentoSection(
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = showOfficialNames
+                    showOriginalName = showOfficialNames,
+                    onUserFeedback = onUserFeedback
                 )
             }
         }
@@ -755,7 +770,8 @@ fun EquipamentoSection(
             CollapsibleSection(
                 title = "Equipamento – Cidade do Sol a Vapor",
                 expanded = expCidadeSolVaporEquip,
-                onToggle = { expCidadeSolVaporEquip = !expCidadeSolVaporEquip }
+                onToggle = { expCidadeSolVaporEquip = !expCidadeSolVaporEquip },
+                onToggleFeedback = onUserFeedback
             ) {
                 RenderCategoryList(
                     categories = cidadeSolVaporCategorias,
@@ -765,7 +781,8 @@ fun EquipamentoSection(
                     allowLongTexts = allowLongTexts,
                     detalhesExpandidos = detalhesExpandidos,
                     onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = showOfficialNames
+                    showOriginalName = showOfficialNames,
+                    onUserFeedback = onUserFeedback
                 )
             }
         }
@@ -782,7 +799,8 @@ fun EquipamentoSection(
             CollapsibleSection(
                 title = "Superequipamentos",
                 expanded = expSuperequip,
-                onToggle = { expSuperequip = !expSuperequip }
+                onToggle = { expSuperequip = !expSuperequip },
+                onToggleFeedback = onUserFeedback
             ) {
                 val scrollSup = rememberScrollState()
                 Column(

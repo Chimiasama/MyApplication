@@ -32,6 +32,10 @@ class CriadorViewModel : ViewModel() {
     private val _feedbackMessages = mutableStateListOf<String>()
     val feedbackMessages: List<String> = _feedbackMessages
 
+    private fun logFeedback(message: String) {
+        // Ajuda desativada: mantemos o sink para compatibilidade sem exibir mensagens.
+    }
+
     fun clearFeedbackMessages() {
         _feedbackMessages.clear()
     }
@@ -123,7 +127,7 @@ class CriadorViewModel : ViewModel() {
         val snapshot = state.toSnapshot().copy(nome = finalName)
         val entry = CharacterStorage.save(context, snapshot)
         state.idAtual = entry.id
-        _feedbackMessages.add("Personagem salvo: ${entry.nome}")
+        logFeedback("Personagem salvo: ${entry.nome}")
         return entry
     }
 
@@ -147,7 +151,7 @@ class CriadorViewModel : ViewModel() {
             grandesResponsabilidades = flags.grandesResponsabilidades
             // showHelpMessages removido
         )
-        state.restoreFromSnapshot(snapshot, _feedbackMessages)
+        state.restoreFromSnapshot(snapshot, mutableListOf())
         state.idAtual = saveId
         return true
     }
@@ -244,7 +248,7 @@ class CriadorViewModel : ViewModel() {
         }
         state.sectionsExpanded[com.example.swadebuilder.ui.MainSection.RESUMO] = true
 
-        state.aplicarAncestralidade("HUMANOS", _feedbackMessages)
+        state.aplicarAncestralidade("HUMANOS", mutableListOf())
 
         if (state.modoSupers) {
             listaVantagens.firstOrNull { it.id == "superpoderes" }?.let { sp ->
@@ -336,14 +340,14 @@ class CriadorViewModel : ViewModel() {
         state.frozenSkillIncrements.clear()
 
         state.valoresAtributos.forEach { (_, holder) -> holder.intValue = 4 }
-        state.recalcularPontosAtributo(_feedbackMessages)
+        state.recalcularPontosAtributo(mutableListOf())
 
         listaPericias.forEach { per ->
             state.baseIncsPorPericia[per] = 0
             state.spCostStackPorPericia.getValue(per).clear()
             state.compCostStackPorPericia[per]?.clear()
         }
-        state.rebuildAllPericiaStacks(_feedbackMessages)
+        state.rebuildAllPericiaStacks(mutableListOf())
 
         // Points logic has changed; handled in applying ancestry/reset
         state.pontosVantagem =
@@ -488,7 +492,7 @@ class CriadorViewModel : ViewModel() {
                             (holder.intValue + 1).coerceAtMost(30)
                         }
                     }
-                    _feedbackMessages.add("Atributo $key aumentado de d$antes para d${holder.intValue}.")
+                    logFeedback("Atributo $key aumentado de d$antes para d${holder.intValue}.")
                 }
             }
 
@@ -500,35 +504,35 @@ class CriadorViewModel : ViewModel() {
 
             is PowerEffect.BonusArmadura -> {
                 state.updateArmorFromPower((state.armorFromPower + efeito.value).coerceAtLeast(0))
-                _feedbackMessages.add("Armadura aumentada em ${efeito.value}.")
+                logFeedback("Armadura aumentada em ${efeito.value}.")
             }
 
             is PowerEffect.BonusResistencia -> {
                 state.updateBonusResFromPower((state.bonusResFromPower + efeito.value).coerceAtLeast(0))
-                _feedbackMessages.add("Resistência aumentada em ${efeito.value}.")
+                logFeedback("Resistência aumentada em ${efeito.value}.")
             }
 
             is PowerEffect.BonusAparar -> {
                 state.updateBonusPararFromPower((state.bonusPararFromPower + efeito.value).coerceAtLeast(0))
-                _feedbackMessages.add("Aparar aumentado em ${efeito.value}.")
+                logFeedback("Aparar aumentado em ${efeito.value}.")
             }
 
             is PowerEffect.BonusMovimentacao -> {
                 state.updateBonusMovimentacaoFromPower(
                     (state.bonusMovimentacaoFromPower + efeito.value).coerceAtLeast(0)
                 )
-                _feedbackMessages.add("Movimentação aumentada em ${efeito.value}.")
+                logFeedback("Movimentação aumentada em ${efeito.value}.")
             }
 
             is PowerEffect.SuperVantagem -> {
                 listaVantagens.firstOrNull { it.id == efeito.vantagemId }?.let { v ->
                     state.adicionarVantagemPorSuper(v.copy()) // Fix: Use copy
-                    _feedbackMessages.add("Vantagem ${v.nome} adicionada.")
+                    logFeedback("Vantagem ${v.nome} adicionada.")
                 }
             }
 
             is PowerEffect.Generico -> {
-                _feedbackMessages.add("${efeito.nome} adquirido.")
+                logFeedback("${efeito.nome} adquirido.")
             }
         }
 
@@ -577,7 +581,7 @@ class CriadorViewModel : ViewModel() {
                             (holder.intValue - 2).coerceAtLeast(4)
                         }
                     }
-                    _feedbackMessages.add("Atributo $key reduzido de d$antes para d${holder.intValue}.")
+                    logFeedback("Atributo $key reduzido de d$antes para d${holder.intValue}.")
                 }
             }
 
@@ -602,24 +606,24 @@ class CriadorViewModel : ViewModel() {
 
             is PowerEffect.BonusArmadura -> {
                 state.updateArmorFromPower((state.armorFromPower - efeito.value).coerceAtLeast(0))
-                _feedbackMessages.add("Armadura reduzida em ${efeito.value}.")
+                logFeedback("Armadura reduzida em ${efeito.value}.")
             }
 
             is PowerEffect.BonusResistencia -> {
                 state.updateBonusResFromPower((state.bonusResFromPower - efeito.value).coerceAtLeast(0))
-                _feedbackMessages.add("Resistência reduzida em ${efeito.value}.")
+                logFeedback("Resistência reduzida em ${efeito.value}.")
             }
 
             is PowerEffect.BonusAparar -> {
                 state.updateBonusPararFromPower((state.bonusPararFromPower - efeito.value).coerceAtLeast(0))
-                _feedbackMessages.add("Aparar reduzido em ${efeito.value}.")
+                logFeedback("Aparar reduzido em ${efeito.value}.")
             }
 
             is PowerEffect.BonusMovimentacao -> {
                 state.updateBonusMovimentacaoFromPower(
                     (state.bonusMovimentacaoFromPower - efeito.value).coerceAtLeast(0)
                 )
-                _feedbackMessages.add("Movimentação reduzida em ${efeito.value}.")
+                logFeedback("Movimentação reduzida em ${efeito.value}.")
             }
 
             is PowerEffect.SuperVantagem -> {
@@ -627,11 +631,11 @@ class CriadorViewModel : ViewModel() {
                     it.id.equals(efeito.vantagemId, ignoreCase = true)
                 }?.let { v ->
                     state.removerVantagemPorSuper(v)
-                    _feedbackMessages.add("Vantagem ${v.nome} removida.")
+                    logFeedback("Vantagem ${v.nome} removida.")
                 }
             }
             is PowerEffect.Generico -> {
-                _feedbackMessages.add("${efeito.nome} removido.")
+                logFeedback("${efeito.nome} removido.")
             }
         }
 

@@ -27,7 +27,8 @@ fun RenderCategoryList(
     allowLongTexts: Boolean,
     detalhesExpandidos: SnapshotStateMap<String, Boolean>,
     onEquipamentoDoubleClick: (EquipamentoItem) -> Unit,
-    showOriginalName: Boolean = false
+    showOriginalName: Boolean = false,
+    onUserFeedback: () -> Unit
 ) {
     val tipos = categories.map { it.tipo }.distinct()
     val expandedTipoMap = remember { mutableStateMapOf<String, Boolean>() }
@@ -41,7 +42,8 @@ fun RenderCategoryList(
             CollapsibleSection(
                 title = tipo,
                 expanded = isTipoExpanded,
-                onToggle = { expandedTipoMap[tipo] = !isTipoExpanded }
+                onToggle = { expandedTipoMap[tipo] = !isTipoExpanded },
+                onToggleFeedback = onUserFeedback
             ) {
                 val catsPorTipo = categories
                     .filter { it.tipo == tipo }
@@ -67,7 +69,8 @@ fun RenderCategoryList(
                         CollapsibleSection(
                             title = subtipo,
                             expanded = isSubExpanded,
-                            onToggle = { expandedSubtipoMap.getValue(subtipo).value = !isSubExpanded }
+                            onToggle = { expandedSubtipoMap.getValue(subtipo).value = !isSubExpanded },
+                            onToggleFeedback = onUserFeedback
                         ) {
                             val scroll = rememberScrollState()
                             Column(

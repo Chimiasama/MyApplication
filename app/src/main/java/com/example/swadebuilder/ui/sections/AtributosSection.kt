@@ -80,7 +80,8 @@ fun parseAtributos(rawText: String): List<AtributoDesc> {
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun AtributosContent(
-    state: CriadorState
+    state: CriadorState,
+    onUserFeedback: () -> Unit
 ) {
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
@@ -224,6 +225,7 @@ fun AtributosContent(
                         state.valoresAtributos[nome]!!.intValue = prevRaw
                         state.pontosAtributo++
                         state.recalcularPontosAtributo()
+                        onUserFeedback()
                     },
                     enabled = canReduce,
                     modifier = Modifier
@@ -253,6 +255,7 @@ fun AtributosContent(
                         state.valoresAtributos[nome]!!.intValue = nextRaw
                         state.pontosAtributo--
                         state.recalcularPontosAtributo()
+                        onUserFeedback()
                     },
                     enabled = canIncrease,
                     modifier = Modifier

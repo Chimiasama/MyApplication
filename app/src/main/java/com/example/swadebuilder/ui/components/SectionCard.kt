@@ -39,6 +39,7 @@ fun SectionCard(
     expanded: Boolean,
     onToggle: () -> Unit,
     icon: ImageVector,
+    onToggleFeedback: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val headerColor = MaterialTheme.colorScheme.onBackground
@@ -53,7 +54,13 @@ fun SectionCard(
         Row(
             Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onToggle, role = Role.Button)
+                .clickable(
+                    onClick = {
+                        onToggleFeedback?.invoke()
+                        onToggle()
+                    },
+                    role = Role.Button
+                )
                 .semantics { stateDescription = stateDesc }
                 .padding(vertical = 12.dp, horizontal = 4.dp),
             verticalAlignment = Alignment.CenterVertically

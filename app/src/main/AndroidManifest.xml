@@ -3,6 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Permissão necessária para disparar vibrações personalizadas no FeedbackController -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
     <!-- Permite que o sistema resolva VIEW de PDFs em aplicativos externos -->
     <queries>
         <intent>
