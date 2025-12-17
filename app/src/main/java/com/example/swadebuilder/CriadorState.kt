@@ -1761,7 +1761,7 @@ class CriadorState {
             nome = nomePersonagem,
             timestamp = System.currentTimeMillis(),
             appTheme = appTheme.name,
-            showHelpMessages = showHelpMessages,
+            // showHelpMessages removido (PersonagemSnapshot tem default = false)
             anotacoes = anotacoes,
             flags = SnapshotFlags(
                 cartaSelvagem = cartaSelvagem,
