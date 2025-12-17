@@ -70,7 +70,8 @@ import com.example.swadebuilder.util.semAcentos
 @Composable
 fun PericiasContent(
     state: CriadorState,
-    feedbackMessages: MutableList<String>
+    feedbackMessages: MutableList<String>,
+    onUserFeedback: () -> Unit
 ) {
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
@@ -239,6 +240,7 @@ fun PericiasContent(
                             if (state.rawTotal(per) == 0) {
                                 state.especializacoesPorPericia.remove(per.nome)
                             }
+                            onUserFeedback()
                         },
                         enabled = regra.canDecrease,
                         modifier = Modifier
@@ -276,6 +278,7 @@ fun PericiasContent(
                             }
 
                             state.increasePericiaFromAdvancement(per, regrasAtuais.cost)
+                            onUserFeedback()
 
                             if (state.usarEspecializacoesDePericia) {
                                 val esp = state.especializacoesPorPericia[per.nome]
@@ -308,6 +311,7 @@ fun PericiasContent(
                                 specText = ""
                                 buyingExtraSpec = true
                                 showSpecDialog = true
+                                onUserFeedback()
                             },
                             enabled = !locked && state.pontosPericia >= 1
                         ) {

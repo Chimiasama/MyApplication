@@ -64,7 +64,8 @@ fun PreviewApp() {
         viewModel = vm,
         equipamentoCategorias = emptyList(),
         superequipCategorias = emptyList(),
-        listaSuperPoderes = emptyList()
+        listaSuperPoderes = emptyList(),
+        onUserFeedback = {}
     )
 }
 
@@ -76,7 +77,8 @@ fun UnifiedScreen(
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
     listaSuperPoderes: List<SuperPoder>,
-    modoOficialAtivo: Boolean = false
+    modoOficialAtivo: Boolean = false,
+    onUserFeedback: () -> Unit
 ) {
     if (state.modoSupers) {
         Log.d("DEBUG", "modoSupers é ${state.modoSupers}")
@@ -117,7 +119,8 @@ fun UnifiedScreen(
                 onUseProgress = { index ->
                     currentSlotIndex = index
                     showAllocDialog = true
-                }
+                },
+                onUserFeedback = onUserFeedback
             )
         } else {
             CreationModeContent(
@@ -139,7 +142,8 @@ fun UnifiedScreen(
                             viewModel.feedbackMessages as MutableList<String>
                         )
                     }
-                }
+                },
+                onUserFeedback = onUserFeedback
             )
         }
     }
@@ -237,28 +241,31 @@ fun ProgressionModeContent(
     viewModel: CriadorViewModel,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
-    onUseProgress: (Int) -> Unit
+    onUseProgress: (Int) -> Unit,
+    onUserFeedback: () -> Unit
 ) {
     if (state.mostrandoVantagensProgresso) {
         // Progression: Advantages
-        ResumoSection(state = state)
+        ResumoSection(state = state, onUserFeedback = onUserFeedback)
 
         SectionCard(
             title    = "Vantagens",
             expanded = state.sectionsExpanded[MainSection.VANTAGENS] ?: false,
             onToggle = { state.toggleSection(MainSection.VANTAGENS) },
-            icon     = Icons.Default.Star
+            icon     = Icons.Default.Star,
+            onToggleFeedback = onUserFeedback
         ) {
             VantagensContent(
                 state = state,
                 multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-                viewModel = viewModel
+                viewModel = viewModel,
+                onUserFeedback = onUserFeedback
             )
         }
 
         if (state.mostrandoPoderesProgresso || state.arcanoCompraPendente()) {
             Spacer(Modifier.height(8.dp))
-            PoderesSection(state = state)
+            PoderesSection(state = state, onUserFeedback = onUserFeedback)
         }
 
         Spacer(Modifier.height(16.dp))
@@ -285,17 +292,19 @@ fun ProgressionModeContent(
 
     } else if (state.mostrandoPericiasProgresso) {
         // Progression: Skills
-        ResumoSection(state = state)
+        ResumoSection(state = state, onUserFeedback = onUserFeedback)
 
         SectionCard(
             title    = "Perícias",
             expanded = state.sectionsExpanded[MainSection.PERICIAS] ?: false,
             onToggle = { state.toggleSection(MainSection.PERICIAS) },
-            icon     = Icons.Default.School
+            icon     = Icons.Default.School,
+            onToggleFeedback = onUserFeedback
         ) {
             PericiasContent(
                 state = state,
-                feedbackMessages = viewModel.feedbackMessages as MutableList<String>
+                feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
+                onUserFeedback = onUserFeedback
             )
         }
 
@@ -323,15 +332,16 @@ fun ProgressionModeContent(
 
     } else if (state.mostrandoAtributosProgresso) {
         // Progression: Attributes
-        ResumoSection(state = state)
+        ResumoSection(state = state, onUserFeedback = onUserFeedback)
 
         SectionCard(
             title    = "Atributos",
             expanded = state.sectionsExpanded[MainSection.ATRIBUTOS] ?: false,
             onToggle = { state.toggleSection(MainSection.ATRIBUTOS) },
-            icon     = Icons.Default.FitnessCenter
+            icon     = Icons.Default.FitnessCenter,
+            onToggleFeedback = onUserFeedback
         ) {
-            AtributosContent(state = state)
+            AtributosContent(state = state, onUserFeedback = onUserFeedback)
         }
 
         Spacer(Modifier.height(16.dp))
@@ -358,13 +368,14 @@ fun ProgressionModeContent(
 
     } else {
         // Default Progression View
-        ResumoSection(state = state)
+        ResumoSection(state = state, onUserFeedback = onUserFeedback)
         EquipamentoSection(
             state = state,
             expanded = state.sectionsExpanded[MainSection.EQUIPAMENTOS] ?: false,
             onToggle = { state.toggleSection(MainSection.EQUIPAMENTOS) },
             equipamentoCategorias = equipamentoCategorias,
-            superequipCategorias = superequipCategorias
+            superequipCategorias = superequipCategorias,
+            onUserFeedback = onUserFeedback
         )
 
         Spacer(Modifier.height(16.dp))
@@ -390,11 +401,12 @@ fun CreationModeContent(
     listaSuperPoderes: List<SuperPoder>,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
-    onSelectAncestralidade: (String) -> Unit
+    onSelectAncestralidade: (String) -> Unit,
+    onUserFeedback: () -> Unit
 ) {
     val creationLocked = state.criacaoBasicaCongelada
 
-    ResumoSection(state = state)
+    ResumoSection(state = state, onUserFeedback = onUserFeedback)
 
     HorizontalDivider(thickness = 1.dp)
 
@@ -432,9 +444,10 @@ fun CreationModeContent(
         title    = "Atributos",
         expanded = state.sectionsExpanded[MainSection.ATRIBUTOS] ?: false,
         onToggle = { state.toggleSection(MainSection.ATRIBUTOS) },
-        icon     = Icons.Default.FitnessCenter
+        icon     = Icons.Default.FitnessCenter,
+        onToggleFeedback = onUserFeedback
     ) {
-        AtributosContent(state)
+        AtributosContent(state, onUserFeedback)
     }
 
     HorizontalDivider(thickness = 1.dp)
@@ -443,11 +456,13 @@ fun CreationModeContent(
         title    = "Perícias",
         expanded = state.sectionsExpanded[MainSection.PERICIAS] ?: false,
         onToggle = { state.toggleSection(MainSection.PERICIAS) },
-        icon     = Icons.Default.School
+        icon     = Icons.Default.School,
+        onToggleFeedback = onUserFeedback
     ) {
         PericiasContent(
             state = state,
-            feedbackMessages = viewModel.feedbackMessages
+            feedbackMessages = viewModel.feedbackMessages,
+            onUserFeedback = onUserFeedback
         )
     }
 
@@ -457,12 +472,14 @@ fun CreationModeContent(
         title    = "Vantagens",
         expanded = state.sectionsExpanded[MainSection.VANTAGENS] ?: false,
         onToggle = { state.toggleSection(MainSection.VANTAGENS) },
-        icon     = Icons.Default.Star
+        icon     = Icons.Default.Star,
+        onToggleFeedback = onUserFeedback
     ) {
         VantagensContent(
             state = state,
             multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-            viewModel = viewModel
+            viewModel = viewModel,
+            onUserFeedback = onUserFeedback
         )
     }
 
@@ -477,7 +494,7 @@ fun CreationModeContent(
     }
 
     if (!state.compendioCrystalHeartAtivo) {
-        PoderesSection(state = state)
+        PoderesSection(state = state, onUserFeedback = onUserFeedback)
     }
 
     Spacer(Modifier.height(8.dp))
@@ -489,7 +506,8 @@ fun CreationModeContent(
         expanded = state.sectionsExpanded[MainSection.EQUIPAMENTOS] ?: false,
         onToggle = { state.toggleSection(MainSection.EQUIPAMENTOS) },
         equipamentoCategorias = equipamentoCategorias,
-        superequipCategorias = superequipCategorias
+        superequipCategorias = superequipCategorias,
+        onUserFeedback = onUserFeedback
     )
 
     Spacer(Modifier.height(16.dp))
@@ -513,13 +531,15 @@ fun CreationModeContent(
 
 @Composable
 private fun ResumoSection(
-    state: CriadorState
+    state: CriadorState,
+    onUserFeedback: () -> Unit = {}
 ) {
     SectionCard(
         title = "Resumo do Personagem",
         expanded = state.sectionsExpanded[MainSection.RESUMO] ?: false,
         onToggle = { state.toggleSection(MainSection.RESUMO) },
-        icon = Icons.Default.Description
+        icon = Icons.Default.Description,
+        onToggleFeedback = onUserFeedback
     ) {
         SummaryContent(state)
     }
@@ -527,7 +547,8 @@ private fun ResumoSection(
 
 @Composable
 private fun PoderesSection(
-    state: CriadorState
+    state: CriadorState,
+    onUserFeedback: () -> Unit
 ) {
     val temArcano = state.vantagensSelecionadas.any {
         it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
@@ -538,7 +559,8 @@ private fun PoderesSection(
             title = "Poderes",
             expanded = state.sectionsExpanded[MainSection.PODERES] ?: false,
             onToggle = { state.toggleSection(MainSection.PODERES) },
-            icon = Icons.Default.FlashOn
+            icon = Icons.Default.FlashOn,
+            onToggleFeedback = onUserFeedback
         ) {
             PoderesSection(
                 state = state
@@ -571,7 +593,8 @@ private fun EquipamentoSection(
     expanded: Boolean,
     onToggle: () -> Unit,
     equipamentoCategorias: List<EquipamentoCategoria>,
-    superequipCategorias: List<EquipamentoCategoria>
+    superequipCategorias: List<EquipamentoCategoria>,
+    onUserFeedback: () -> Unit
 ) {
     val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
     val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
@@ -647,6 +670,7 @@ private fun EquipamentoSection(
         compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo,
         compendioWiseguysAtivo = state.compendioWiseguysAtivo,
         compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo,
-        modoOficialAtivo = state.modoOficialAtivo
+        modoOficialAtivo = state.modoOficialAtivo,
+        onUserFeedback = onUserFeedback
     )
 }

@@ -764,7 +764,8 @@ class MainActivity : ComponentActivity() {
                                             equipamentoCategorias = equipamentoCategorias,
                                             superequipCategorias  = superequipCategorias,
                                             listaSuperPoderes     = listaSuperPoderes,
-                                            modoOficialAtivo      = state.modoOficialAtivo
+                                            modoOficialAtivo      = state.modoOficialAtivo,
+                                            onUserFeedback        = triggerFeedback
                                         )
                                     }
                                 }
@@ -874,13 +875,17 @@ fun CollapsibleSection(
     title: String,
     expanded: Boolean,
     onToggle: () -> Unit,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
+    onToggleFeedback: (() -> Unit)? = null
 ) {
     Column {
         Row(
             Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onToggle)
+                .clickable(onClick = {
+                    onToggleFeedback?.invoke()
+                    onToggle()
+                })
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
