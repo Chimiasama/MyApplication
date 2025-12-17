@@ -1088,7 +1088,6 @@ class CriadorState {
     var pontosComplicacaoGastos by mutableIntStateOf(0)
     val baseIncsPorPericia = mutableStateMapOf<Pericia, Int>().also { m -> listaPericias.forEach { m[it] = 0 } }
     private val compIncsPorPericia = mutableStateMapOf<Pericia, Int>().also { m -> listaPericias.forEach { m[it] = 0 } }
-    val compCostStackPorPericia = mutableStateMapOf<Pericia, Int>().also { m -> listaPericias.forEach { m[it] = 0 } }
     val compCostStackPorPericia = mutableStateMapOf<Pericia, MutableList<Int>>().also { m ->
         listaPericias.forEach { m[it] = mutableListOf() }
     }
@@ -1782,7 +1781,7 @@ class CriadorState {
                 compendioFantasiaAtivo = compendioFantasiaAtivo,
                 compendioHorrorAtivo = compendioHorrorAtivo,
                 compendioSciFiAtivo = compendioSciFiAtivo,
-                compendioTrilhadorAtivo = compendioBuscatrilhaAtivo, // Updated to Buscatrilha, maintaining internal serialization compatibility or need to update Snapshot? Let's check Snapshot.
+                compendioTrilhadorAtivo = compendioBuscatrilhaAtivo, // Updated to Buscatrilha
                 compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                 compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
                 compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,

@@ -35,7 +35,7 @@ fun ComplicacoesSection(
     // But `VantagensSection` also uses `GlobalData`.
     // I need to check if `GlobalData` exists.
     // If not, I should use `com.example.swadebuilder.listaComplicacoes`.
-    val listaComplicacoes = com.example.swadebuilder.listaComplicacoes
+    val listaComplicacoes = com.example.swadebuilder.model.GlobalData.listaComplicacoes
 
     // Filter Logic
     val listaFiltrada = remember(listaComplicacoes, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioBuscatrilhaAtivo, state.compendioDeadlandsAtivo, state.compendioCrystalHeartAtivo, state.compendioArteDaGuerraAtivo, state.compendioCidadeSolVaporAtivo, state.compendioWiseguysAtivo) {

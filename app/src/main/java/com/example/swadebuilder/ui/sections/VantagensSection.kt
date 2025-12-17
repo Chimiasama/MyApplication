@@ -43,8 +43,8 @@ fun VantagensSection(
     compendioWiseguysAtivo: Boolean
 ) {
     val context = LocalContext.current
-    // FIX: Use top-level property instead of GlobalData
-    val listaVantagens = com.example.swadebuilder.listaVantagens
+    // FIX: Use top-level property or GlobalData if accessible
+    val listaVantagens = com.example.swadebuilder.model.GlobalData.listaVantagens
 
     // Filter Logic
     val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioBuscatrilhaAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo) {
