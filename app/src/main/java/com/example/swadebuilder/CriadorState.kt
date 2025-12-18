@@ -781,8 +781,9 @@ class CriadorState {
         val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 0
         val racialPenalty = if (ancestralidade.keyify() == "TERRACOTA") 1 else 0
         val bonusFromChiEdges = vantagensSelecionadas.count { it.categoria == Categoria.CHI }
+        val bonusFromTropo = if (compendioArteDaGuerraAtivo) tecnicasIniciaisFromTropo else 0
 
-        (espiritoRaw / 2 - racialPenalty + bonusFromChiEdges).coerceAtLeast(0)
+        (espiritoRaw / 2 - racialPenalty + bonusFromChiEdges + bonusFromTropo).coerceAtLeast(0)
     }
 
     var nomePersonagem by mutableStateOf("")
