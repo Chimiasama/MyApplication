@@ -346,6 +346,7 @@ fun VantagensContent(
                 // Hide specific categories if their compendium is not active
                 if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioTrilhadorAtivo) return@items
                 if (cat == Categoria.ESTRANHAS && !state.compendioDeadlandsAtivo) return@items
+                if (cat == Categoria.RESSUSCITADO && !state.compendioDeadlandsAtivo) return@items
                 if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@items
                 if (cat == Categoria.SUPER && !state.modoSupers) return@items
                 if (cat == Categoria.MONSTRUOSAS && !state.compendioHorrorAtivo) return@items
@@ -618,6 +619,7 @@ fun VantagensContent(
                 // Also hide in accordion view if filtered out by active mods (consistency)
                 if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioTrilhadorAtivo) return@forEach
                 if (cat == Categoria.ESTRANHAS && !state.compendioDeadlandsAtivo) return@forEach
+                if (cat == Categoria.RESSUSCITADO && !state.compendioDeadlandsAtivo) return@forEach
                 if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@forEach
 
                 val expanded = expandedMap[cat] ?: false
