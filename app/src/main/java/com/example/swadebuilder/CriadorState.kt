@@ -100,7 +100,7 @@ class CriadorState {
 
     var faseSupersAtiva by mutableStateOf(false)
 
-    var bonusPararFromPower by mutableIntStateOf(0)
+    var bonusApararFromPower by mutableIntStateOf(0)
     var bonusResFromPower  by mutableIntStateOf(0)
     var armorFromPower     by mutableIntStateOf(0)
 
@@ -209,7 +209,7 @@ class CriadorState {
         val bloquearAprimoradoBonus =
             if (vantagensSelecionadas.any { it.nome.keyify() == "BLOQUEAR APRIMORADO" }) 1 else 0
 
-        return base + bloquearBonus + bloquearAprimoradoBonus + bonusPararFromPower
+        return base + bloquearBonus + bloquearAprimoradoBonus + bonusApararFromPower
     }
 
     fun valorResistenciaBase(): Int {
@@ -388,8 +388,8 @@ class CriadorState {
         superPontosDisponiveis = (superPontosTotais - gastosPorPoder.values.sum()).coerceAtLeast(0)
     }
 
-    fun updateBonusPararFromPower(value: Int) {
-        bonusPararFromPower = value.coerceAtLeast(0)
+    fun updateBonusApararFromPower(value: Int) {
+        bonusApararFromPower = value.coerceAtLeast(0)
     }
 
     fun updateBonusResFromPower(value: Int) {
@@ -1895,7 +1895,7 @@ class CriadorState {
                 superLimitePorPoder = superLimitePorPoder,
                 poderFavoritoId = poderFavoritoId,
                 limiteDePoderDaCampanha = limiteDePoderDaCampanha,
-                bonusPararFromPower = bonusPararFromPower,
+                bonusApararFromPower = bonusApararFromPower,
                 bonusResFromPower = bonusResFromPower,
                 armorFromPower = armorFromPower,
                 bonusMovimentacaoFromPower = bonusMovimentacaoFromPower,
@@ -2066,7 +2066,7 @@ class CriadorState {
         superLimitePorPoder = snapshot.supers.superLimitePorPoder
         poderFavoritoId = snapshot.supers.poderFavoritoId
         limiteDePoderDaCampanha = snapshot.supers.limiteDePoderDaCampanha
-        bonusPararFromPower = snapshot.supers.bonusPararFromPower
+        bonusApararFromPower = snapshot.supers.bonusApararFromPower
         bonusResFromPower = snapshot.supers.bonusResFromPower
         armorFromPower = snapshot.supers.armorFromPower
         bonusMovimentacaoFromPower = snapshot.supers.bonusMovimentacaoFromPower

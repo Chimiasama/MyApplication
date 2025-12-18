@@ -3,6 +3,7 @@ package com.example.swadebuilder.model
 import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.SuperInvestment
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
 @Serializable
 data class PersonagemSnapshot(
@@ -160,7 +161,8 @@ data class SnapshotSupers(
     val superLimitePorPoder: Int,
     val poderFavoritoId: String?,
     val limiteDePoderDaCampanha: Int,
-    val bonusPararFromPower: Int,
+    @JsonNames("bonusPararFromPower")
+    val bonusApararFromPower: Int,
     val bonusResFromPower: Int,
     val armorFromPower: Int,
     val bonusMovimentacaoFromPower: Int,

@@ -323,7 +323,7 @@ class CriadorViewModel : ViewModel() {
         state.limiteDePoderDaCampanha = Int.MAX_VALUE
 
         state.faseSupersAtiva = false
-        state.bonusPararFromPower = 0
+        state.bonusApararFromPower = 0
         state.bonusResFromPower = 0
         state.armorFromPower = 0
         state.bonusMovimentacaoFromPower = 0
@@ -519,7 +519,7 @@ class CriadorViewModel : ViewModel() {
             }
 
             is PowerEffect.BonusAparar -> {
-                state.updateBonusPararFromPower((state.bonusPararFromPower + efeito.value).coerceAtLeast(0))
+                state.updateBonusApararFromPower((state.bonusApararFromPower + efeito.value).coerceAtLeast(0))
                 logFeedback("Aparar aumentado em ${efeito.value}.")
             }
 
@@ -621,7 +621,7 @@ class CriadorViewModel : ViewModel() {
             }
 
             is PowerEffect.BonusAparar -> {
-                state.updateBonusPararFromPower((state.bonusPararFromPower - efeito.value).coerceAtLeast(0))
+                state.updateBonusApararFromPower((state.bonusApararFromPower - efeito.value).coerceAtLeast(0))
                 logFeedback("Aparar reduzido em ${efeito.value}.")
             }
 
