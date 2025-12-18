@@ -327,6 +327,53 @@ fun EquipamentoSection(
                 )
             }
 
+            // --- Origin Mini Cards (Chips) ---
+            if (compendioFantasiaAtivo) {
+                item {
+                    val label = "Medievais"
+                    val key = "FANTASIA"
+                    FilterChip(
+                        selected = key in filter.origens,
+                        onClick = {
+                            val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
+                            filter = filter.copy(origens = newSet)
+                        },
+                        label = { Text(label) }
+                    )
+                }
+            }
+
+            if (compendioSciFiAtivo) {
+                item {
+                    val label = "Futuristas"
+                    val key = "SCI_FI"
+                    FilterChip(
+                        selected = key in filter.origens,
+                        onClick = {
+                            val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
+                            filter = filter.copy(origens = newSet)
+                        },
+                        label = { Text(label) }
+                    )
+                }
+            }
+
+            // Add "Modernas" (Basic) if any other compendium is active to allow filtering it out
+            if (compendioFantasiaAtivo || compendioSciFiAtivo || compendioHorrorAtivo || compendioDeadlandsAtivo) {
+                item {
+                    val label = "Modernas"
+                    val key = "BASICO"
+                    FilterChip(
+                        selected = key in filter.origens,
+                        onClick = {
+                            val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
+                            filter = filter.copy(origens = newSet)
+                        },
+                        label = { Text(label) }
+                    )
+                }
+            }
+
             items(availableTypes) { type ->
                 FilterChip(
                     selected = type in selectedTypes,
@@ -443,7 +490,6 @@ fun EquipamentoSection(
                         val c = (item.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
                         if (!usaRiqueza && c > dinheiro) return@filter false
                      }
-
                      if (selectedTypes.isNotEmpty() && cat.tipo !in selectedTypes) return@filter false
 
                      if (isSearching) {
@@ -468,11 +514,6 @@ fun EquipamentoSection(
                              equipamento = item,
                              onClick = { onEquipamentoDoubleClick(item) },
                              allowLongTexts = allowLongTexts,
-                             expanded = detalhesExpandidos[item.nome] == true,
-                             onToggleDetails = {
-                                val current = detalhesExpandidos[item.nome] ?: false
-                                detalhesExpandidos[item.nome] = !current
-                             },
                              showOriginalName = showOfficialNames
                          )
                      }
@@ -496,7 +537,15 @@ fun EquipamentoSection(
                     ) {
                          // Inside the type, we have subtypes (categories with same type but different subtype)
                          val cats = categoriesByType[type] ?: emptyList()
-                         val catsBySubtype = cats.groupBy { it.subtipo }
+
+                         // Apply filters to categories here too!
+                         val filteredCats = cats.filter { cat ->
+                             val catOrigem = cat.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
+                             if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@filter false
+                             true
+                         }
+
+                         val catsBySubtype = filteredCats.groupBy { it.subtipo }
 
                          Column(Modifier.padding(start = 8.dp)) {
                              catsBySubtype.keys.sorted().forEach { subtype ->
@@ -526,11 +575,6 @@ fun EquipamentoSection(
                                              equipamento = item,
                                              onClick = { onEquipamentoDoubleClick(item) },
                                              allowLongTexts = allowLongTexts,
-                                             expanded = detalhesExpandidos[item.nome] == true,
-                                             onToggleDetails = {
-                                                val current = detalhesExpandidos[item.nome] ?: false
-                                                detalhesExpandidos[item.nome] = !current
-                                             },
                                              showOriginalName = showOfficialNames
                                          )
                                      }
