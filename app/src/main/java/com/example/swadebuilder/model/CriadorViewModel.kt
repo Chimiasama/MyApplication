@@ -145,7 +145,13 @@ class CriadorViewModel : ViewModel() {
             modoSupers = flags.modoSupers,
             compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
             compendioHorrorAtivo = flags.compendioHorrorAtivo,
+            compendioSciFiAtivo = flags.compendioSciFiAtivo,
+            compendioTrilhadorAtivo = flags.compendioTrilhadorAtivo,
             compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo,
+            compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo,
+            compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo,
+            compendioCidadeSolVaporAtivo = flags.compendioCidadeSolVaporAtivo,
+            compendioWiseguysAtivo = flags.compendioWiseguysAtivo,
             modoMonstroAtivo = flags.modoMonstroAtivo,
             usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia,
             grandesResponsabilidades = flags.grandesResponsabilidades
