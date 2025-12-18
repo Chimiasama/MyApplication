@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.ui.components.StandardEquipamentoItem
 import kotlinx.serialization.json.JsonPrimitive
 
 @Composable
@@ -94,15 +95,10 @@ fun RenderCategoryList(
                                             true
                                         }
                                         .forEach { equipamento ->
-                                            EquipamentoListItem(
+                                            StandardEquipamentoItem(
                                                 equipamento = equipamento,
                                                 onClick = { onEquipamentoDoubleClick(equipamento) },
                                                 allowLongTexts = allowLongTexts,
-                                                expanded = detalhesExpandidos[equipamento.nome] == true,
-                                                onToggleDetails = {
-                                                    val current = detalhesExpandidos[equipamento.nome] ?: false
-                                                    detalhesExpandidos[equipamento.nome] = !current
-                                                },
                                                 showOriginalName = showOriginalName
                                             )
                                         }
@@ -129,15 +125,10 @@ fun RenderCategoryList(
                                                     true
                                                 }
                                                 .forEach { equipamento ->
-                                                    EquipamentoListItem(
+                                                    StandardEquipamentoItem(
                                                         equipamento = equipamento,
                                                         onClick = { onEquipamentoDoubleClick(equipamento) },
                                                         allowLongTexts = allowLongTexts,
-                                                        expanded = detalhesExpandidos[equipamento.nome] == true,
-                                                        onToggleDetails = {
-                                                            val current = detalhesExpandidos[equipamento.nome] ?: false
-                                                            detalhesExpandidos[equipamento.nome] = !current
-                                                        },
                                                         showOriginalName = showOriginalName
                                                     )
                                                 }

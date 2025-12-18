@@ -4,7 +4,7 @@ import com.example.swadebuilder.model.EquipamentoItem
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 
-internal data class EquipamentoResumo(
+data class EquipamentoResumo(
     val linhaArma: String?,
     val linhaGeral: String?,
     val linhaVeiculo: String?,
@@ -12,12 +12,12 @@ internal data class EquipamentoResumo(
     val custo: String?
 )
 
-internal fun JsonElement?.asText(): String? = when (this) {
+fun JsonElement?.asText(): String? = when (this) {
     is JsonPrimitive -> this.content
     else -> this?.toString()
 }?.takeIf { it.isNotBlank() }
 
-internal fun EquipamentoItem.toResumo(): EquipamentoResumo {
+fun EquipamentoItem.toResumo(): EquipamentoResumo {
     val linhaArma = listOfNotNull(
         dano.asText()?.let { "Dano: $it" },
         pa.asText()?.let { "PA: $it" },

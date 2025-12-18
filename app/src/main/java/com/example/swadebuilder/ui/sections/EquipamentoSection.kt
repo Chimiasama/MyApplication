@@ -14,6 +14,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -25,6 +29,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -33,6 +38,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -53,9 +59,12 @@ import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.ui.components.SearchTextField
+import com.example.swadebuilder.ui.components.StandardEquipamentoItem
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import com.example.swadebuilder.ui.sections.toResumo
+import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
@@ -85,7 +94,7 @@ fun EquipFilterDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Filtros de Equipamentos") },
+        title = { Text("Filtros Avançados") },
         text = {
             Column(
                 Modifier
@@ -207,19 +216,20 @@ fun EquipamentoSection(
     var showMoneyDialog by rememberSaveable { mutableStateOf(false) }
     var dinheiroInput by rememberSaveable { mutableStateOf(dinheiro.toString()) }
 
-    var expSuperequip by rememberSaveable { mutableStateOf(false) }
-    var expFantasiaEquip by rememberSaveable { mutableStateOf(false) }
-    var expHorrorEquip by rememberSaveable { mutableStateOf(false) }
-    var expSciFiEquip by rememberSaveable { mutableStateOf(false) }
-    var expTrilhadorEquip by rememberSaveable { mutableStateOf(false) }
-    var expDeadlandsEquip by rememberSaveable { mutableStateOf(false) }
-    var expCidadeSolVaporEquip by rememberSaveable { mutableStateOf(false) }
-
     var filter by remember { mutableStateOf(EquipFilter()) }
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
+
+    // UI State for Search & Filters
+    var searchQuery by remember { mutableStateOf("") }
+    var selectedTypes = remember { mutableStateListOf<String>() }
+
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
     val showOfficialNames = EditionConfig.isFullEdition && modoOficialAtivo
+
+    // Accordion State for browse mode
+    // Map of Category Type -> Expanded
+    val expandedTypeMap = remember { mutableStateMapOf<String, Boolean>() }
 
     SectionCard(
         title    = "Equipamento",
@@ -230,6 +240,7 @@ fun EquipamentoSection(
     ) {
         if (!expanded) return@SectionCard
 
+        // 1. Prepare Data
         val allCategorias = (categorias + superequipCategorias)
             .filterNot {
                 it.tipo.equals("Equipamento Supers", true) ||
@@ -240,74 +251,15 @@ fun EquipamentoSection(
                 (origem != "ARTE_DA_GUERRA" || compendioArteDaGuerraAtivo) &&
                         (origem != "CIDADE_SOL_VAPOR" || compendioCidadeSolVaporAtivo) &&
                         (origem != "WISEGUYS" || compendioWiseguysAtivo) &&
-                        (origem != "CRYSTAL_HEART" || compendioCrystalHeartAtivo)
+                        (origem != "CRYSTAL_HEART" || compendioCrystalHeartAtivo) &&
+                        (origem != "FANTASIA" || compendioFantasiaAtivo) &&
+                        (origem != "HORROR" || compendioHorrorAtivo) &&
+                        (origem != "SCI_FI" || compendioSciFiAtivo) &&
+                        (origem != "FANTASIA_TRILHADOR" || compendioTrilhadorAtivo) &&
+                        (origem != "DEADLANDS" || compendioDeadlandsAtivo)
             }
 
-        // Filtra as categorias normais (não fantasia nem horror nem sci-fi)
-        val normalCategorias = allCategorias.filter {
-            val origem = it.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
-            val isFantasia = origem == "FANTASIA"
-            val isHorror = origem == "HORROR"
-            val isSciFi = origem == "SCI_FI"
-            val isTrilhador = origem == "FANTASIA_TRILHADOR"
-            val isDeadlands = origem == "DEADLANDS"
-            val isArteDaGuerra = origem == "ARTE_DA_GUERRA"
-            val isCidadeSolVapor = origem == "CIDADE_SOL_VAPOR"
-            val isWiseguys = origem == "WISEGUYS"
-            val isCrystalHeart = origem == "CRYSTAL_HEART"
-            !isFantasia && !isHorror && !isSciFi && !isTrilhador && !isDeadlands && !isCidadeSolVapor && (!isArteDaGuerra || compendioArteDaGuerraAtivo) && (!isWiseguys || compendioWiseguysAtivo) && (!isCrystalHeart || compendioCrystalHeartAtivo)
-        }
-
-        // Filtra as categorias de fantasia (se ativo)
-        val fantasiaCategorias = if (compendioFantasiaAtivo) {
-            allCategorias.filter {
-                (it.origem?.uppercase() ?: "") == "FANTASIA"
-            }
-        } else {
-            emptyList()
-        }
-
-        // Filtra as categorias de horror (se ativo)
-        val horrorCategorias = if (compendioHorrorAtivo) {
-            allCategorias.filter {
-                (it.origem?.uppercase() ?: "") == "HORROR"
-            }
-        } else {
-            emptyList()
-        }
-
-        val sciFiCategorias = if (compendioSciFiAtivo) {
-            allCategorias.filter {
-                (it.origem?.uppercase() ?: "") == "SCI_FI"
-            }
-        } else {
-            emptyList()
-        }
-
-        val cidadeSolVaporCategorias = if (compendioCidadeSolVaporAtivo) {
-            allCategorias.filter {
-                (it.origem?.uppercase() ?: "") == "CIDADE_SOL_VAPOR"
-            }
-        } else {
-            emptyList()
-        }
-
-        val trilhadorCategorias = if (compendioTrilhadorAtivo) {
-            allCategorias.filter {
-                (it.origem?.uppercase() ?: "") == "FANTASIA_TRILHADOR"
-            }
-        } else {
-            emptyList()
-        }
-
-        val deadlandsCategorias = if (compendioDeadlandsAtivo) {
-            allCategorias.filter {
-                (it.origem?.uppercase() ?: "") == "DEADLANDS"
-            }
-        } else {
-            emptyList()
-        }
-
+        // 2. Header (Money)
         SectionHeader(
             onHelpClick = null,
             centerText = if (usaRiqueza) "Riqueza: d$dadoRiqueza" else "Dinheiro: $dinheiro",
@@ -345,30 +297,99 @@ fun EquipamentoSection(
                 onSpend = onUsarPontosBonusEmRecursos,
                 onRefund = onDesfazerPontosBonusEmRecursos
             )
-
             Spacer(Modifier.size(8.dp))
         }
-        Text(
-            text = if (filter.isEmpty()) "Filtrar equipamentos"
-            else "Filtros (${filter.totalSelections()})",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 4.dp)
-                .clickable { showFilterDialog = true }
+
+        // 3. Search & Filter UI
+        SearchTextField(
+            query = searchQuery,
+            onQueryChange = { searchQuery = it },
+            modifier = Modifier.padding(horizontal = 8.dp)
         )
 
-        if (showFilterDialog) {
+        Spacer(Modifier.size(8.dp))
 
-            val allCategoriasVisiveis = (categorias + superequipCategorias)
-                .filterNot {
-                    it.tipo.equals("Equipamento Supers", true) ||
-                            it.tipo.equals("Equipamentos Supers", true)
+        // Dynamic Categories for Chips
+        val availableTypes = remember(allCategorias) {
+            allCategorias.map { it.tipo }.distinct().sorted()
+        }
+
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(horizontal = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            item {
+                FilterChip(
+                    selected = !filter.isEmpty(),
+                    onClick = { showFilterDialog = true },
+                    label = { Text("Filtros Avançados${if(!filter.isEmpty()) " (!)" else ""}") }
+                )
+            }
+
+            // --- Origin Mini Cards (Chips) ---
+            if (compendioFantasiaAtivo) {
+                item {
+                    val label = "Medievais"
+                    val key = "FANTASIA"
+                    FilterChip(
+                        selected = key in filter.origens,
+                        onClick = {
+                            val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
+                            filter = filter.copy(origens = newSet)
+                        },
+                        label = { Text(label) }
+                    )
                 }
+            }
 
-            val allTipos = allCategoriasVisiveis.map { it.tipo }.distinct()
-            val allSubtipos = allCategoriasVisiveis.map { it.subtipo }.distinct()
+            if (compendioSciFiAtivo) {
+                item {
+                    val label = "Futuristas"
+                    val key = "SCI_FI"
+                    FilterChip(
+                        selected = key in filter.origens,
+                        onClick = {
+                            val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
+                            filter = filter.copy(origens = newSet)
+                        },
+                        label = { Text(label) }
+                    )
+                }
+            }
 
-            val allOrigens = (categorias + superequipCategorias)
+            // Add "Modernas" (Basic) if any other compendium is active to allow filtering it out
+            if (compendioFantasiaAtivo || compendioSciFiAtivo || compendioHorrorAtivo || compendioDeadlandsAtivo) {
+                item {
+                    val label = "Modernas"
+                    val key = "BASICO"
+                    FilterChip(
+                        selected = key in filter.origens,
+                        onClick = {
+                            val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
+                            filter = filter.copy(origens = newSet)
+                        },
+                        label = { Text(label) }
+                    )
+                }
+            }
+
+            items(availableTypes) { type ->
+                FilterChip(
+                    selected = type in selectedTypes,
+                    onClick = {
+                        if (type in selectedTypes) selectedTypes.remove(type)
+                        else selectedTypes.add(type)
+                    },
+                    label = { Text(type) }
+                )
+            }
+        }
+
+        if (showFilterDialog) {
+            val allTipos = allCategorias.map { it.tipo }.distinct()
+            val allSubtipos = allCategorias.map { it.subtipo }.distinct()
+            val allOrigens = allCategorias
                 .map { it.origem?.ifBlank { "BASICO" } ?: "BASICO" }
                 .map { it.uppercase() }
                 .distinct()
@@ -385,6 +406,7 @@ fun EquipamentoSection(
 
         Spacer(Modifier.padding(vertical = 4.dp))
 
+        // 4. Purchased Items
         if (equipamentosComprados.isNotEmpty()) {
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -409,6 +431,7 @@ fun EquipamentoSection(
             Spacer(Modifier.padding(vertical = 4.dp))
         }
 
+        // 5. Weight Calculation
         val totalWeight = equipamentosComprados
             .mapNotNull {
                 (it.peso as? JsonPrimitive)?.content?.replace(",", ".")?.toFloatOrNull()
@@ -446,69 +469,122 @@ fun EquipamentoSection(
             }
         }
 
-        if (compendioSciFiAtivo && sciFiCategorias.isNotEmpty()) {
-            Spacer(Modifier.padding(vertical = 4.dp))
-            CollapsibleSection(
-                title = "Equipamento Sci-Fi",
-                expanded = expSciFiEquip,
-                onToggle = { expSciFiEquip = !expSciFiEquip },
-                onToggleFeedback = onUserFeedback
-            ) {
-                RenderCategoryList(
-                    categories = sciFiCategorias,
-                    filter = filter,
-                    dinheiro = dinheiro,
-                    usaRiqueza = usaRiqueza,
-                    allowLongTexts = allowLongTexts,
-                    detalhesExpandidos = detalhesExpandidos,
-                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = showOfficialNames,
-                    onUserFeedback = onUserFeedback
-                )
-            }
-        }
+        Spacer(Modifier.size(4.dp))
 
-        if (compendioTrilhadorAtivo && trilhadorCategorias.isNotEmpty()) {
-            Spacer(Modifier.padding(vertical = 4.dp))
-            CollapsibleSection(
-                title = "Equipamento Buscatrilha",
-                expanded = expTrilhadorEquip,
-                onToggle = { expTrilhadorEquip = !expTrilhadorEquip },
-                onToggleFeedback = onUserFeedback
-            ) {
-                RenderCategoryList(
-                    categories = trilhadorCategorias,
-                    filter = filter,
-                    dinheiro = dinheiro,
-                    usaRiqueza = usaRiqueza,
-                    allowLongTexts = allowLongTexts,
-                    detalhesExpandidos = detalhesExpandidos,
-                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = showOfficialNames,
-                    onUserFeedback = onUserFeedback
-                )
-            }
-        }
+        // 6. List Content
+        val isSearching = searchQuery.isNotBlank()
+        val isFilteringTypes = selectedTypes.isNotEmpty()
 
-        if (compendioDeadlandsAtivo && deadlandsCategorias.isNotEmpty()) {
-            Spacer(Modifier.padding(vertical = 4.dp))
-            CollapsibleSection(
-                title = "Equipamento de Deadlands",
-                expanded = expDeadlandsEquip,
-                onToggle = { expDeadlandsEquip = !expDeadlandsEquip },
-                onToggleFeedback = onUserFeedback
+        if (isSearching || isFilteringTypes) {
+            // Flat List View
+            // Collect all items first
+             val finalFlatList = allCategorias.filter { cat ->
+                 val catOrigem = cat.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
+                 if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@filter false
+                 if (filter.tipos.isNotEmpty() && cat.tipo !in filter.tipos) return@filter false
+                 if (filter.subtipos.isNotEmpty() && cat.subtipo !in filter.subtipos) return@filter false
+                 true
+             }.flatMap { cat ->
+                 cat.itens.filter { item ->
+                     if (filter.somenteAcessiveis) {
+                        val c = (item.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
+                        if (!usaRiqueza && c > dinheiro) return@filter false
+                     }
+                     if (selectedTypes.isNotEmpty() && cat.tipo !in selectedTypes) return@filter false
+
+                     if (isSearching) {
+                         val q = searchQuery.semAcentos().lowercase()
+                         val n = item.nome.semAcentos().lowercase()
+                         n.contains(q)
+                     } else true
+                 }
+             }
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 400.dp)
+                    .padding(horizontal = 8.dp)
             ) {
-                RenderCategoryList(
-                    categories = deadlandsCategorias,
-                    filter = filter,
-                    dinheiro = dinheiro,
-                    usaRiqueza = usaRiqueza,
-                    allowLongTexts = allowLongTexts,
-                    detalhesExpandidos = detalhesExpandidos,
-                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = showOfficialNames,
-                    onUserFeedback = onUserFeedback
-                )
+                 if (finalFlatList.isEmpty()) {
+                     item { Text("Nenhum equipamento encontrado.", modifier = Modifier.padding(8.dp)) }
+                 } else {
+                     items(finalFlatList, key = { it.nome + it.hashCode() }) { item ->
+                         StandardEquipamentoItem(
+                             equipamento = item,
+                             onClick = { onEquipamentoDoubleClick(item) },
+                             allowLongTexts = allowLongTexts,
+                             showOriginalName = showOfficialNames
+                         )
+                     }
+                 }
+            }
+
+        } else {
+            // Browse Mode (Accordions)
+            // Group by Type
+            val categoriesByType = allCategorias.groupBy { it.tipo }
+
+            Column(Modifier.padding(horizontal = 4.dp)) {
+                categoriesByType.keys.sorted().forEach { type ->
+                    val isExpanded = expandedTypeMap[type] ?: false
+
+                    CollapsibleSection(
+                        title = type,
+                        expanded = isExpanded,
+                        onToggle = { expandedTypeMap[type] = !isExpanded },
+                        onToggleFeedback = onUserFeedback
+                    ) {
+                         // Inside the type, we have subtypes (categories with same type but different subtype)
+                         val cats = categoriesByType[type] ?: emptyList()
+
+                         // Apply filters to categories here too!
+                         val filteredCats = cats.filter { cat ->
+                             val catOrigem = cat.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
+                             if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@filter false
+                             true
+                         }
+
+                         val catsBySubtype = filteredCats.groupBy { it.subtipo }
+
+                         Column(Modifier.padding(start = 8.dp)) {
+                             catsBySubtype.keys.sorted().forEach { subtype ->
+
+                                 Text(
+                                     text = subtype,
+                                     style = MaterialTheme.typography.titleSmall,
+                                     color = MaterialTheme.colorScheme.primary,
+                                     fontWeight = FontWeight.Bold,
+                                     modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+                                 )
+
+                                 val subtypeCats = catsBySubtype[subtype] ?: emptyList()
+                                 val subtypeItems = subtypeCats.flatMap { it.itens }.filter { eq ->
+                                      if (filter.somenteAcessiveis) {
+                                          val c = (eq.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
+                                          if (!usaRiqueza && c > dinheiro) return@filter false
+                                      }
+                                      true
+                                 }
+
+                                 if (subtypeItems.isEmpty()) {
+                                     Text("- Nenhum item -", style = MaterialTheme.typography.bodySmall)
+                                 } else {
+                                     subtypeItems.forEach { item ->
+                                         StandardEquipamentoItem(
+                                             equipamento = item,
+                                             onClick = { onEquipamentoDoubleClick(item) },
+                                             allowLongTexts = allowLongTexts,
+                                             showOriginalName = showOfficialNames
+                                         )
+                                     }
+                                 }
+                             }
+                             Spacer(Modifier.height(8.dp))
+                         }
+                    }
+                    Spacer(Modifier.height(4.dp))
+                }
             }
         }
 
@@ -548,400 +624,5 @@ fun EquipamentoSection(
                 }
             )
         }
-
-        // Renderiza categorias normais
-        val tiposNormais = normalCategorias.map { it.tipo }.distinct()
-        val expandedTipoMap = remember { mutableStateMapOf<String, Boolean>() }
-
-        tiposNormais.forEach { tipo ->
-            if (filter.tipos.isNotEmpty() && tipo !in filter.tipos) return@forEach
-
-            val isTipoExpanded = expandedTipoMap[tipo] ?: false
-            CollapsibleSection(
-                title = tipo,
-                expanded = isTipoExpanded,
-                onToggle = {
-                    val newState = !isTipoExpanded
-                    // Fecha outros se quiser comportamento de acordeão, ou apenas toggle
-                    // expandedTipoMap.keys.forEach { expandedTipoMap[it] = false }
-                    expandedTipoMap[tipo] = newState
-                },
-                onToggleFeedback = onUserFeedback
-            ) {
-                val scroll = rememberScrollState()
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 200.dp)
-                        .verticalScroll(scroll)
-                        .padding(start = 8.dp, bottom = 8.dp)
-                ) {
-                    val catsPorTipo = normalCategorias
-                        .filter { it.tipo == tipo }
-                        .let { list ->
-                            if (filter.origens.isNotEmpty())
-                                list.filter {
-                                    val safeOrigem = it.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
-                                    safeOrigem in filter.origens
-                                }
-                            else list
-                        }
-                    if (catsPorTipo.isEmpty()) return@Column
-
-                    val subtipos = catsPorTipo.map { it.subtipo }.distinct()
-                    val expandedSubtipoMap = remember(tipo) {
-                        subtipos.associateWith { mutableStateOf(false) }
-                    }
-
-                    subtipos.forEach subtiposLoop@{ subtipo ->
-                        if (filter.subtipos.isNotEmpty() && subtipo !in filter.subtipos)
-                            return@subtiposLoop
-
-                        val isSubExpanded = expandedSubtipoMap.getValue(subtipo).value
-                        CollapsibleSection(
-                            title = subtipo,
-                            expanded = isSubExpanded,
-                            onToggle = {
-                                expandedSubtipoMap.forEach { (st, stState) ->
-                                    stState.value =
-                                        if (st == subtipo) !isSubExpanded else false
-                                }
-                            },
-                            onToggleFeedback = onUserFeedback
-                        ) {
-                            val scroll2 = rememberScrollState()
-                            Column(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .heightIn(max = 200.dp)
-                                    .verticalScroll(scroll2)
-                                    .padding(start = 8.dp, bottom = 8.dp)
-                            ) {
-                                val catsPorSub = catsPorTipo.filter { it.subtipo == subtipo }
-                                val subsub = catsPorSub.mapNotNull { it.subsubtipo }.distinct()
-                                val expandedSubsub = remember(tipo, subtipo) {
-                                    subsub.associateWith { mutableStateOf(false) }
-                                }
-
-                                if (subsub.isEmpty()) {
-                                    catsPorSub
-                                        .flatMap { it.itens }
-                                        .filter { eq ->
-                                            if (filter.somenteAcessiveis) {
-                                                val c = (eq.custo as? JsonPrimitive)
-                                                    ?.content?.toIntOrNull()
-                                                    ?: Int.MAX_VALUE
-                                                if (c > dinheiro) return@filter false
-                                            }
-                                            true
-                                        }
-                                        .forEach { equipamento ->
-                                            EquipamentoListItem(
-                                                equipamento = equipamento,
-                                                onClick = {
-                                                    onEquipamentoDoubleClick(equipamento)
-                                                },
-                                                allowLongTexts = allowLongTexts,
-                                                expanded = detalhesExpandidos[equipamento.nome] == true,
-                                                onToggleDetails = {
-                                                    val current = detalhesExpandidos[equipamento.nome] ?: false
-                                                    detalhesExpandidos[equipamento.nome] = !current
-                                                },
-                                                showOriginalName = showOfficialNames
-                                            )
-                                        }
-                                } else {
-                                    subsub.forEach { ss ->
-                                        val isSsExpanded =
-                                            expandedSubsub.getValue(ss).value
-                                        CollapsibleSection(
-                                            title = ss,
-                                            expanded = isSsExpanded,
-                                            onToggle = {
-                                                expandedSubsub.forEach { (s, sState) ->
-                                                    sState.value =
-                                                        if (s == ss) !isSsExpanded else false
-                                                }
-                                            },
-                                            onToggleFeedback = onUserFeedback
-                                        ) {
-                                            val scroll3 = rememberScrollState()
-                                            Column(
-                                                Modifier
-                                                    .fillMaxWidth()
-                                                    .heightIn(max = 200.dp)
-                                                    .verticalScroll(scroll3)
-                                                    .padding(
-                                                        start = 8.dp,
-                                                        bottom = 8.dp
-                                                    )
-                                            ) {
-                                                catsPorSub
-                                                    .filter { it.subsubtipo == ss }
-                                                    .flatMap { it.itens }
-                                                      .filter { eq ->
-                                                          if (filter.somenteAcessiveis) {
-                                                              val c =
-                                                                  (eq.custo as? JsonPrimitive)
-                                                                      ?.content?.toIntOrNull()
-                                                                      ?: Int.MAX_VALUE
-                                                              if (c > dinheiro) return@filter false
-                                                          }
-                                                          true
-                                                      }
-                                                      .forEach { equipamento ->
-                                                          EquipamentoListItem(
-                                                              equipamento = equipamento,
-                                                              onClick = {
-                                                                  onEquipamentoDoubleClick(
-                                                                      equipamento
-                                                                  )
-                                                              },
-                                                              allowLongTexts = allowLongTexts,
-                                                              expanded = detalhesExpandidos[equipamento.nome] == true,
-                                                              onToggleDetails = {
-                                                                  val current = detalhesExpandidos[equipamento.nome] ?: false
-                                                                  detalhesExpandidos[equipamento.nome] = !current
-                                                              },
-                                                              showOriginalName = showOfficialNames
-                                                          )
-                                                      }
-                                                  }
-                                              }
-                                          }
-                                }
-                            }
-                        }
-                        Spacer(Modifier.padding(vertical = 2.dp))
-                    }
-                }
-            }
-            Spacer(Modifier.padding(vertical = 4.dp))
-        }
-
-        // Seção Especial: Equipamento de Fantasia
-        if (compendioFantasiaAtivo && fantasiaCategorias.isNotEmpty()) {
-            Spacer(Modifier.padding(vertical = 4.dp))
-            CollapsibleSection(
-                title = "Equipamento de Fantasia",
-                expanded = expFantasiaEquip,
-                onToggle = { expFantasiaEquip = !expFantasiaEquip },
-                onToggleFeedback = onUserFeedback
-            ) {
-                RenderCategoryList(
-                    categories = fantasiaCategorias,
-                    filter = filter,
-                    dinheiro = dinheiro,
-                    usaRiqueza = usaRiqueza,
-                    allowLongTexts = allowLongTexts,
-                    detalhesExpandidos = detalhesExpandidos,
-                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = showOfficialNames,
-                    onUserFeedback = onUserFeedback
-                )
-            }
-        }
-
-        // Seção Especial: Equipamento de Horror
-        if (compendioHorrorAtivo && horrorCategorias.isNotEmpty()) {
-            Spacer(Modifier.padding(vertical = 4.dp))
-            CollapsibleSection(
-                title = "Equipamento de Horror",
-                expanded = expHorrorEquip,
-                onToggle = { expHorrorEquip = !expHorrorEquip },
-                onToggleFeedback = onUserFeedback
-            ) {
-                RenderCategoryList(
-                    categories = horrorCategorias,
-                    filter = filter,
-                    dinheiro = dinheiro,
-                    usaRiqueza = usaRiqueza,
-                    allowLongTexts = allowLongTexts,
-                    detalhesExpandidos = detalhesExpandidos,
-                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = showOfficialNames,
-                    onUserFeedback = onUserFeedback
-                )
-            }
-        }
-
-        if (compendioCidadeSolVaporAtivo && cidadeSolVaporCategorias.isNotEmpty()) {
-            Spacer(Modifier.padding(vertical = 4.dp))
-            CollapsibleSection(
-                title = "Equipamento – Cidade do Sol a Vapor",
-                expanded = expCidadeSolVaporEquip,
-                onToggle = { expCidadeSolVaporEquip = !expCidadeSolVaporEquip },
-                onToggleFeedback = onUserFeedback
-            ) {
-                RenderCategoryList(
-                    categories = cidadeSolVaporCategorias,
-                    filter = filter,
-                    dinheiro = dinheiro,
-                    usaRiqueza = usaRiqueza,
-                    allowLongTexts = allowLongTexts,
-                    detalhesExpandidos = detalhesExpandidos,
-                    onEquipamentoDoubleClick = onEquipamentoDoubleClick,
-                    showOriginalName = showOfficialNames,
-                    onUserFeedback = onUserFeedback
-                )
-            }
-        }
-
-        val supCatsFiltradas = superequipCategorias.let { list ->
-            if (filter.origens.isNotEmpty()) {
-                list.filter { (it.origem?.uppercase() ?: "") in filter.origens }
-            } else {
-                list
-            }
-        }
-
-        if (supCatsFiltradas.isNotEmpty()) {
-            CollapsibleSection(
-                title = "Superequipamentos",
-                expanded = expSuperequip,
-                onToggle = { expSuperequip = !expSuperequip },
-                onToggleFeedback = onUserFeedback
-            ) {
-                val scrollSup = rememberScrollState()
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 200.dp)
-                        .verticalScroll(scrollSup)
-                        .padding(start = 8.dp, bottom = 8.dp)
-                ) {
-                    supCatsFiltradas
-                        .flatMap { it.itens }
-                        .filter { eq ->
-                            if (filter.somenteAcessiveis) {
-                                val c = (eq.custo as? JsonPrimitive)
-                                    ?.content?.toIntOrNull()
-                                    ?: Int.MAX_VALUE
-                                if (c > dinheiro) return@filter false
-                            }
-                            true
-                        }
-                        .forEach { equipamento ->
-                            EquipamentoListItem(
-                                equipamento = equipamento,
-                                onClick = { onEquipamentoDoubleClick(equipamento) },
-                                allowLongTexts = allowLongTexts,
-                                expanded = detalhesExpandidos[equipamento.nome] == true,
-                                onToggleDetails = {
-                                    val current = detalhesExpandidos[equipamento.nome] ?: false
-                                    detalhesExpandidos[equipamento.nome] = !current
-                                },
-                                showOriginalName = showOfficialNames
-                            )
-                        }
-                }
-            }
-        }
     }
 }
-
-@Composable
-fun EquipamentoListItem(
-    equipamento: EquipamentoItem,
-    onClick: () -> Unit,
-    allowLongTexts: Boolean,
-    expanded: Boolean,
-    onToggleDetails: () -> Unit,
-    showOriginalName: Boolean = false
-) {
-    val resumo = equipamento.toResumo()
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 2.dp)
-            .clickable { onClick() },
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
-    ) {
-        Column(Modifier.padding(horizontal = 12.dp, vertical = 4.dp)) {
-            Row(
-                Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    if (showOriginalName && !equipamento.originalName.isNullOrBlank()) equipamento.originalName else equipamento.nome,
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.weight(1f)
-                )
-                resumo.custo?.let {
-                    Text(
-                        it,
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-
-            listOfNotNull(
-                resumo.linhaArma,
-                resumo.linhaGeral,
-                resumo.linhaVeiculo,
-            ).forEach { linha ->
-                Text(
-                    linha,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 2.dp)
-                )
-            }
-
-            resumo.observacao?.let {
-                Text(
-                    it,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-            }
-
-            val detalhes = buildList {
-                equipamento.observacoes.contentString()?.let { add("Observações: $it") }
-                equipamento.pmf.contentString()?.let { add("PMF: $it") }
-                equipamento.malfuncionamento.contentString()?.let { add("Malfuncionamento: $it") }
-                equipamento.forcaMin.contentString()?.let { add("Força mínima: $it") }
-                equipamento.distancia.contentString()?.let { add("Distância: $it") }
-                equipamento.dano.contentString()?.let { add("Dano: $it") }
-                equipamento.tiros.contentString()?.let { add("Tiros: $it") }
-                equipamento.tamanho.contentString()?.let { add("Tamanho: $it") }
-                equipamento.manobrabilidade.contentString()?.let { add("Manobrabilidade: $it") }
-                equipamento.velMaxima.contentString()?.let { add("Velocidade Máx.: $it") }
-                equipamento.resistencia.contentString()?.let { add("Resistência: $it") }
-                equipamento.tripulacao.contentString()?.let { add("Tripulação: $it") }
-                equipamento.tensao?.let { add("Tensão: $it") }
-                equipamento.mods_slots?.let { add("Slots de Mods: $it") }
-            }
-
-            if (allowLongTexts && detalhes.isNotEmpty()) {
-                Spacer(Modifier.height(2.dp))
-                TextButton(
-                    onClick = onToggleDetails,
-                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
-                ) {
-                    Text(
-                        if (expanded) "Ocultar detalhes" else "Ver detalhes",
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                }
-
-                AnimatedVisibility(visible = expanded) {
-                    Column(Modifier.padding(top = 4.dp)) {
-                        detalhes.forEach { linha ->
-                            Text(linha, style = MaterialTheme.typography.bodySmall)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-private fun JsonElement?.contentString(): String? = this
-    ?.jsonPrimitive
-    ?.contentOrNull
-    ?.takeIf { it.isNotBlank() }
