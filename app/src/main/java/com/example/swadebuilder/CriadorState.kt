@@ -34,6 +34,7 @@ import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.arcanoInfo
+import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.normAAKey
 
 class CriadorState {
@@ -195,8 +196,8 @@ class CriadorState {
     }
 
     fun valorAparar(): Int {
-        val perLutar = listaPericias.firstOrNull { it.nome.equals("Lutar", ignoreCase = true) }
-        val perJutsu = listaPericias.firstOrNull { it.nome.equals("Jutsu", ignoreCase = true) }
+        val perLutar = mapaPericias["LUTAR"]
+        val perJutsu = mapaPericias["JUTSU"]
         val lutarRaw = perLutar?.let { rawTotalComSupers(it) } ?: 0
         val jutsuRaw = perJutsu?.let { rawTotalComSupers(it) } ?: 0
         val melhorLuta = maxOf(lutarRaw, jutsuRaw)
@@ -589,16 +590,14 @@ class CriadorState {
             val obrigatorias = vant.requisitos.periciaMin   // se for null, vira um Map vazio
                 .mapNotNull { (nomeRaw, min) ->
                     val chaveNorm = nomeRaw.uppercase().semAcentos().trim()
-                    listaPericias
-                        .firstOrNull { it.nome.uppercase().semAcentos() == chaveNorm }
+                    mapaPericias[chaveNorm]
                         ?.let { per -> per to min }
                 }
 
             val opcionais = vant.requisitos.periciaMinOpcional   // se null, vira Map vazio
                 .mapNotNull { (nomeRaw, min) ->
                     val chaveNorm = nomeRaw.uppercase().semAcentos().trim()
-                    listaPericias
-                        .firstOrNull { it.nome.uppercase().semAcentos() == chaveNorm }
+                    mapaPericias[chaveNorm]
                         ?.let { per -> per to min }
                 }
 
@@ -609,8 +608,7 @@ class CriadorState {
                     && choiceSnapshot != null
                 ) {
                     val key = choiceSnapshot.uppercase().semAcentos().trim()
-                    listaPericias
-                        .firstOrNull { it.nome.uppercase().semAcentos() == key }
+                    mapaPericias[key]
                         ?.let { per -> listOf(per to 8) }
                         .orEmpty()
                 } else {
@@ -960,7 +958,7 @@ class CriadorState {
             return if (listaAtributos.contains(choiceKey)) {
                 valoresAtributos[choiceKey]!!.intValue == atributoMaxRaw(choiceKey)
             } else {
-                val per = listaPericias.first { it.nome.keyify() == choiceKey }
+                val per = mapaPericias[choiceKey] ?: return false
                 rawTotal(per) == periciaCapRaw(per)
             }
         }
@@ -1040,17 +1038,13 @@ class CriadorState {
         val periciaMinMap = v.requisitos.periciaMin
         if (v.vinculadoPericia && periciaMinMap.isNotEmpty()) {
             val atendeUma = periciaMinMap.any { (perNome, minRaw) ->
-                val per = listaPericias.firstOrNull {
-                    it.nome.equals(perNome, ignoreCase = true)
-                }
+                val per = mapaPericias[perNome.keyify()]
                 per != null && rawTotal(per) >= minRaw
             }
             if (!atendeUma) return false
         } else {
             if (periciaMinMap.any { (perNome, minRaw) ->
-                    val per = listaPericias.firstOrNull {
-                        it.nome.equals(perNome, ignoreCase = true)
-                    } ?: return@any false
+                    val per = mapaPericias[perNome.keyify()] ?: return@any false
                     rawTotal(per) < minRaw
                 }) {
                 return false
@@ -1061,9 +1055,7 @@ class CriadorState {
         val periciaMinOpcMap = v.requisitos.periciaMinOpcional
         if (periciaMinOpcMap.isNotEmpty()) {
             val atendeUmaOpc = periciaMinOpcMap.any { (perNome, minRaw) ->
-                val per = listaPericias.firstOrNull {
-                    it.nome.equals(perNome, ignoreCase = true)
-                }
+                val per = mapaPericias[perNome.keyify()]
                 per != null && rawTotal(per) >= minRaw
             }
             if (!atendeUmaOpc) return false

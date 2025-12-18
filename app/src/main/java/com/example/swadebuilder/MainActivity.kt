@@ -208,6 +208,7 @@ class MainActivity : ComponentActivity() {
                 basica   = pj.basica
             )
         }
+        mapaPericias = listaPericias.associateBy { it.nome.keyify() }
 
         val todasVantagens: List<Vantagem> = this.loadJsonAsset("Vantagens.json")
 
@@ -827,6 +828,7 @@ lateinit var listaAtributos: List<String>
 lateinit var mapaAtributosDisplay: Map<String, String>
 
 lateinit var listaPericias: List<Pericia>
+lateinit var mapaPericias: Map<String, Pericia>
 
 fun periciaStartRaw(anc: String, per: Pericia): Int {
     val ancKey = anc.keyify()

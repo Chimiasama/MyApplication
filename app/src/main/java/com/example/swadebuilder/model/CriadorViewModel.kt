@@ -8,6 +8,7 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.listaPericias
+import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
@@ -589,7 +590,7 @@ class CriadorViewModel : ViewModel() {
             }
 
             is PowerEffect.SuperPericia -> {
-                val perObj = listaPericias.firstOrNull { it.nome.keyify() == efeito.periciaKey.keyify() }
+                val perObj = mapaPericias[efeito.periciaKey.keyify()]
                 if (perObj != null) {
                     val baseRaw = state.rawTotal(perObj)
                     val incsAtuais = state.superInvestments
@@ -709,7 +710,7 @@ class CriadorViewModel : ViewModel() {
             val skills = state.skillsForCurrentAdvancement.toList()
             val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
             val skillValuesSnapshot = skills.associateWith { skillName ->
-                val pericia = listaPericias.firstOrNull { it.nome == skillName }
+                val pericia = mapaPericias[skillName.keyify()]
                 pericia?.let { state.rawTotal(it) }
             }.filterValues { it != null }.mapValues { it.value!! }
             state.advancementHistory.add(
@@ -1047,7 +1048,7 @@ class CriadorViewModel : ViewModel() {
             is AdvancementAction.SpendOnSkills -> {
                 // Reverte o gasto dos pontos de perícia
                 lastAction.skillsIncreased.forEach { skillName ->
-                    val skill = listaPericias.firstOrNull { it.nome == skillName }
+                    val skill = mapaPericias[skillName.keyify()]
                     if (skill != null) {
                         state.decreasePericia(skill)
                     }
