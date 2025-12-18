@@ -96,6 +96,7 @@ import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.AppPreferences
@@ -238,6 +239,8 @@ class MainActivity : ComponentActivity() {
         listaVantagens = todasVantagens + vantCrystal + vantagensExtras
 
         AppData.superVantagensParaDetalhe = AppData.superVantagens
+
+        listaTropos = this.loadJsonAsset("tropos_adg.json")
 
 
         val todasComplicacoes = this.loadJsonAsset<List<Complicacao>>("complicacoes.json")
@@ -838,6 +841,7 @@ fun periciaStartRaw(anc: String, per: Pericia): Int {
 }
 
 var listaVantagens:    List<Vantagem>   = emptyList()
+lateinit var listaTropos: List<Tropo>
 
 fun loadRawText(context: Context, @RawRes resId: Int): String {
     val inputStream = context.resources.openRawResource(resId)

@@ -167,6 +167,11 @@ fun InformacoesSection(
                         StatItem("Tamanho", tamanhoTexto)
                     }
                 }
+
+                if (state.compendioArteDaGuerraAtivo) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    StatItem("Reserva de Chi", state.reservaChi.toString())
+                }
             }
 
             val spentOnCreation = state.progresso - state.progressosDisponiveis

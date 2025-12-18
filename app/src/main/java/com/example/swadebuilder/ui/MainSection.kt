@@ -2,6 +2,7 @@ package com.example.swadebuilder.ui
 
 enum class MainSection {
     ANCESTRALIDADES,
+    TROPOS,
     COMPLICACOES,
     ATRIBUTOS,
     PERICIAS,
