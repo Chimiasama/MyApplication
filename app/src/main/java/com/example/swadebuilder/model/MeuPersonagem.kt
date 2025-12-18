@@ -1,6 +1,7 @@
 package com.example.swadebuilder.model
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
 @Serializable
 data class MeuPersonagem(
@@ -45,7 +46,8 @@ data class MeuPersonagem(
 
     // Ledger de efeitos de poder (somente supers)
     val superInvestments: List<SuperInvestment> = emptyList(),
-    val bonusPararFromPower: Int = 0,
+    @JsonNames("bonusPararFromPower")
+    val bonusApararFromPower: Int = 0,
     val bonusResFromPower: Int = 0,
     val armorFromPower: Int = 0,
     val bonusMovimentacaoFromPower: Int = 0,

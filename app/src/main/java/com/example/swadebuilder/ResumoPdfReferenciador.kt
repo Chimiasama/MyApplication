@@ -59,7 +59,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         limiteFavorecido = this.limiteFavorecido,
         poderFavoritoId = this.poderFavoritoId,
         superInvestments = this.superInvestments.toList(),
-        bonusPararFromPower = this.bonusPararFromPower,
+        bonusApararFromPower = this.bonusApararFromPower,
         bonusResFromPower = this.bonusResFromPower,
         armorFromPower = this.armorFromPower,
         bonusMovimentacaoFromPower = this.bonusMovimentacaoFromPower,
@@ -254,7 +254,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         val bloquearAprimoradoBonus =
             if (vantagensNomeKey.any { it == "BLOQUEAR APRIMORADO" }) 1 else 0
 
-        return base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusPararFromPower
+        return base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusApararFromPower
     }
 
     fun calcArmaduraEfetiva(): Int {
