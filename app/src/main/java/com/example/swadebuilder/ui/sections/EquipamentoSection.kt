@@ -507,16 +507,10 @@ fun EquipamentoSection(
 
         if (showFilterDialog) {
 
-            val allCategoriasVisiveis = (categorias + superequipCategorias)
-                .filterNot {
-                    it.tipo.equals("Equipamento Supers", true) ||
-                            it.tipo.equals("Equipamentos Supers", true)
-                }
+            val allTipos = todasCategoriasFiltraveis.map { it.tipo }.distinct()
+            val allSubtipos = todasCategoriasFiltraveis.map { it.subtipo }.distinct()
 
-            val allTipos = allCategoriasVisiveis.map { it.tipo }.distinct()
-            val allSubtipos = allCategoriasVisiveis.map { it.subtipo }.distinct()
-
-            val allOrigens = (categorias + superequipCategorias)
+            val allOrigens = todasCategoriasFiltraveis
                 .map { it.origem?.ifBlank { "BASICO" } ?: "BASICO" }
                 .map { it.uppercase() }
                 .distinct()
@@ -1065,31 +1059,6 @@ fun EquipamentoListItem(
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(top = 4.dp)
                 )
-            }
-
-            val origemTag = categoria?.origem?.ifBlank { "BASICO" }
-                ?: equipamento.origem?.ifBlank { "BASICO" }
-            val infoTags = listOfNotNull(
-                categoria?.tipo,
-                categoria?.subtipo ?: equipamento.subtipo,
-                categoria?.subsubtipo ?: equipamento.subsubtipo,
-                origemTag?.let { "Origem: ${it.replace('_', ' ')}" }
-            )
-
-            if (infoTags.isNotEmpty()) {
-                Spacer(Modifier.height(4.dp))
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    infoTags.forEach { tag ->
-                        AssistChip(
-                            onClick = {},
-                            enabled = false,
-                            label = { Text(tag) }
-                        )
-                    }
-                }
             }
 
             val detalhes = buildList {
