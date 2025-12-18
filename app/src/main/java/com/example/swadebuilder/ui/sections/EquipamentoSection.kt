@@ -313,6 +313,11 @@ fun EquipamentoSection(
         val availableTypes = remember(allCategorias) {
             allCategorias.map { it.tipo }.distinct().sorted()
         }
+        val availableSubtypesByType = remember(allCategorias) {
+            allCategorias.groupBy { it.tipo }.mapValues { (_, cats) ->
+                cats.map { it.subtipo }.distinct().sorted()
+            }
+        }
 
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
@@ -383,6 +388,46 @@ fun EquipamentoSection(
                     },
                     label = { Text(type) }
                 )
+            }
+        }
+
+        if (selectedTypes.isNotEmpty() || filter.subtipos.isNotEmpty()) {
+            Spacer(Modifier.size(8.dp))
+            val subtypesForSelection = if (selectedTypes.isNotEmpty()) {
+                selectedTypes
+                    .flatMap { type -> availableSubtypesByType[type].orEmpty() }
+            } else {
+                allCategorias.map { it.subtipo }
+            }
+                .distinct()
+                .sorted()
+
+            if (subtypesForSelection.isNotEmpty()) {
+                Text(
+                    "Filtrar subcategorias:",
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                    style = MaterialTheme.typography.labelLarge
+                )
+                FlowRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    subtypesForSelection.forEach { subtype ->
+                        FilterChip(
+                            selected = subtype in filter.subtipos,
+                            onClick = {
+                                val newSet = filter.subtipos.toMutableSet()
+                                if (subtype in newSet) newSet.remove(subtype) else newSet.add(subtype)
+                                filter = filter.copy(subtipos = newSet)
+                            },
+                            label = { Text(subtype) }
+                        )
+                    }
+                }
+                Spacer(Modifier.size(8.dp))
             }
         }
 
@@ -473,9 +518,8 @@ fun EquipamentoSection(
 
         // 6. List Content
         val isSearching = searchQuery.isNotBlank()
-        val isFilteringTypes = selectedTypes.isNotEmpty()
 
-        if (isSearching || isFilteringTypes) {
+        if (isSearching) {
             // Flat List View
             // Collect all items first
              val finalFlatList = allCategorias.filter { cat ->
@@ -527,6 +571,8 @@ fun EquipamentoSection(
 
             Column(Modifier.padding(horizontal = 4.dp)) {
                 categoriesByType.keys.sorted().forEach { type ->
+                    if (selectedTypes.isNotEmpty() && type !in selectedTypes) return@forEach
+                    if (filter.tipos.isNotEmpty() && type !in filter.tipos) return@forEach
                     val isExpanded = expandedTypeMap[type] ?: false
 
                     CollapsibleSection(
@@ -542,6 +588,7 @@ fun EquipamentoSection(
                          val filteredCats = cats.filter { cat ->
                              val catOrigem = cat.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
                              if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@filter false
+                             if (filter.subtipos.isNotEmpty() && cat.subtipo !in filter.subtipos) return@filter false
                              true
                          }
 
