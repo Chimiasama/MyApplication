@@ -3,6 +3,8 @@ package com.example.swadebuilder.ui.sections
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,9 +25,10 @@ fun TroposSection(
 ) {
     SectionCard(
         title = "Tropos (Arte da Guerra)",
-        section = MainSection.TROPOS,
-        state = state,
-        onToggle = { state.toggleSection(MainSection.TROPOS) }
+        expanded = state.sectionsExpanded[MainSection.TROPOS] ?: false,
+        onToggle = { state.toggleSection(MainSection.TROPOS) },
+        icon = Icons.Default.Star,
+        onToggleFeedback = onUserFeedback
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
             Text(
