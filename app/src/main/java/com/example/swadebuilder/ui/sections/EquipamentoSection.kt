@@ -241,10 +241,13 @@ fun EquipamentoSection(
         if (!expanded) return@SectionCard
 
         // 1. Prepare Data
+        val esconderSupers = superequipCategorias.isEmpty()
         val allCategorias = (categorias + superequipCategorias)
             .filterNot {
-                it.tipo.equals("Equipamento Supers", true) ||
-                        it.tipo.equals("Equipamentos Supers", true)
+                esconderSupers && (
+                        it.tipo.equals("Equipamento Supers", true) ||
+                                it.tipo.equals("Equipamentos Supers", true)
+                        )
             }
             .filter { categoria ->
                 val origem = categoria.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"

@@ -42,8 +42,6 @@ class CriadorState {
     var soundVolume by mutableIntStateOf(DEFAULT_SOUND_VOLUME)
     // showHelpMessages removido
     var modoSupers by mutableStateOf(false)
-    var modoSuperComplicacoes by mutableStateOf(false)
-    var modoSuperequip by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)
     var compendioSciFiAtivo by mutableStateOf(false)
@@ -1800,8 +1798,6 @@ class CriadorState {
                 tipoMonstroSelecionado = tipoMonstroSelecionado,
                 usarEspecializacoesDePericia = usarEspecializacoesDePericia,
                 grandesResponsabilidades = grandesResponsabilidades,
-                modoSuperComplicacoes = modoSuperComplicacoes,
-                modoSuperequip = modoSuperequip,
                 heroisSemArmadura = heroisSemArmadura,
                 nasceUmHeroi = nasceUmHeroi,
                 soldadoCargaAtivo = soldadoCargaAtivo,
@@ -1936,8 +1932,6 @@ class CriadorState {
         appTheme = com.example.swadebuilder.ui.theme.AppTheme.valueOf(snapshot.appTheme)
 
         // Flags adicionais
-        modoSuperComplicacoes = flags.modoSuperComplicacoes
-        modoSuperequip = flags.modoSuperequip
         heroisSemArmadura = flags.heroisSemArmadura
         nasceUmHeroi = flags.nasceUmHeroi
         soldadoCargaAtivo = flags.soldadoCargaAtivo

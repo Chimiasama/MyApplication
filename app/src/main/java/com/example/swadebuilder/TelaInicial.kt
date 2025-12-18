@@ -87,8 +87,6 @@ fun TelaInicial(
         compendioCidadeSolVaporAtivo: Boolean,
         compendioWiseguysAtivo: Boolean,
         modoMonstroAtivo: Boolean,
-        modoSuperequipamentos: Boolean,
-        modoSuperComplicacoes: Boolean,
         nasceUmHeroi: Boolean,
         heroisSemArmadura: Boolean,
         especializacaoPer: Boolean,
@@ -116,7 +114,7 @@ fun TelaInicial(
 
     // Supers
     var optSuperPoderes by rememberSaveable { mutableStateOf(false) }
-    // optSuperequipamentos and optSuperComplicacoes removed (now auto-enabled with optSuperPoderes)
+    // Superequipamentos e supercomplicações usam esta flag única
     var optGrandesResponsabilidades by rememberSaveable { mutableStateOf(false) }
 
     // Horror
@@ -183,8 +181,6 @@ fun TelaInicial(
                         optCompendioCidadeSolVapor,
                         optCompendioWiseguys,
                         optModoMonstro,
-                        optSuperPoderes, // superequipamentos enabled if supers enabled
-                        optSuperPoderes, // supercomplicacoes enabled if supers enabled
                         optNasceUmHeroi,
                         optHeroiSemArmadura,
                         optEspecializacaoPer,
