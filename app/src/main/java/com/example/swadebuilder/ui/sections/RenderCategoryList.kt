@@ -99,11 +99,6 @@ fun RenderCategoryList(
                                                 equipamento = equipamento,
                                                 onClick = { onEquipamentoDoubleClick(equipamento) },
                                                 allowLongTexts = allowLongTexts,
-                                                expanded = detalhesExpandidos[equipamento.nome] == true,
-                                                onToggleDetails = {
-                                                    val current = detalhesExpandidos[equipamento.nome] ?: false
-                                                    detalhesExpandidos[equipamento.nome] = !current
-                                                },
                                                 showOriginalName = showOriginalName
                                             )
                                         }
@@ -134,11 +129,6 @@ fun RenderCategoryList(
                                                         equipamento = equipamento,
                                                         onClick = { onEquipamentoDoubleClick(equipamento) },
                                                         allowLongTexts = allowLongTexts,
-                                                        expanded = detalhesExpandidos[equipamento.nome] == true,
-                                                        onToggleDetails = {
-                                                            val current = detalhesExpandidos[equipamento.nome] ?: false
-                                                            detalhesExpandidos[equipamento.nome] = !current
-                                                        },
                                                         showOriginalName = showOriginalName
                                                     )
                                                 }

@@ -31,8 +31,6 @@ fun StandardEquipamentoItem(
     equipamento: EquipamentoItem,
     onClick: () -> Unit,
     allowLongTexts: Boolean,
-    expanded: Boolean,
-    onToggleDetails: () -> Unit,
     showOriginalName: Boolean = false
 ) {
     val resumo = equipamento.toResumo()
@@ -124,28 +122,14 @@ fun StandardEquipamentoItem(
 
             if (allowLongTexts && detalhes.isNotEmpty()) {
                 Spacer(Modifier.height(4.dp))
-
-                AnimatedVisibility(visible = expanded) {
-                    Column(Modifier.padding(bottom = 4.dp)) {
-                        detalhes.forEach { linha ->
-                            Text(
-                                text = "• $linha",
-                                style = MaterialTheme.typography.bodySmall,
-                                modifier = Modifier.padding(bottom = 2.dp)
-                            )
-                        }
+                Column(Modifier.padding(bottom = 4.dp)) {
+                    detalhes.forEach { linha ->
+                        Text(
+                            text = "• $linha",
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(bottom = 2.dp)
+                        )
                     }
-                }
-
-                TextButton(
-                    onClick = onToggleDetails,
-                    contentPadding = PaddingValues(0.dp),
-                    modifier = Modifier.height(30.dp)
-                ) {
-                    Text(
-                        if (expanded) "Ocultar detalhes" else "Ver detalhes",
-                        style = MaterialTheme.typography.labelMedium
-                    )
                 }
             }
         }

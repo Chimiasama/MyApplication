@@ -8,13 +8,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -40,8 +40,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -54,7 +54,6 @@ import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import java.util.Locale
 import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
@@ -68,19 +67,16 @@ import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.ui.components.PbWalletBanner
-import com.example.swadebuilder.ui.components.SectionHeader
-import com.example.swadebuilder.ui.components.SearchTextField
-import com.example.swadebuilder.ui.components.FilterChipRow
-import com.example.swadebuilder.ui.dialogs.ChoiceDialog
-import com.example.swadebuilder.ui.dialogs.MultipleSelectionDialog
 import com.example.swadebuilder.toArcanoKey
+import com.example.swadebuilder.ui.components.PbWalletBanner
+import com.example.swadebuilder.ui.components.SearchTextField
+import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
+import java.util.Locale
 
 data class VantFilter(
     val origens: Set<String> = emptySet(),
@@ -346,6 +342,12 @@ fun VantagensContent(
             items(Categoria.entries.toTypedArray()) { cat ->
                 if (state.modoSupers && cat == Categoria.PODER) return@items
 
+                // --- NEW FILTERING LOGIC ---
+                // Hide specific categories if their compendium is not active
+                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioTrilhadorAtivo) return@items
+                if (cat == Categoria.ESTRANHAS && !state.compendioDeadlandsAtivo) return@items
+                if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@items
+
                 FilterChip(
                     selected = cat in selectedCategories,
                     onClick = {
@@ -609,6 +611,11 @@ fun VantagensContent(
             Categoria.entries.forEach { cat ->
                 val lista = categoriasBy[cat] ?: return@forEach
                 if (state.modoSupers && cat == Categoria.PODER) return@forEach
+
+                // Also hide in accordion view if filtered out by active mods (consistency)
+                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioTrilhadorAtivo) return@forEach
+                if (cat == Categoria.ESTRANHAS && !state.compendioDeadlandsAtivo) return@forEach
+                if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@forEach
 
                 val expanded = expandedMap[cat] ?: false
 
