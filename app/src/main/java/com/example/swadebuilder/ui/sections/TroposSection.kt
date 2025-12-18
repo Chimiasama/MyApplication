@@ -13,6 +13,7 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.listaTropos
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.components.RadioButtonRow
+import com.example.swadebuilder.ui.components.SectionCard
 
 @Composable
 fun TroposSection(
