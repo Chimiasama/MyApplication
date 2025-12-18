@@ -28,6 +28,27 @@ object CharacterStorage {
         return File(context.filesDir, SAVE_DIR).apply { mkdirs() }
     }
 
+    /**
+     * Retorna um arquivo seguro, verificando se não há Path Traversal.
+     * @throws SecurityException se o ID tentar sair do diretório de salvamento.
+     */
+    private fun getSafeFile(context: Context, id: String): File {
+        val dir = savesDirectory(context)
+        // Sanitização básica extra
+        if (id.contains(File.separator) || id.contains("/") || id.contains("\\")) {
+             throw IllegalArgumentException("ID de arquivo inválido: $id")
+        }
+
+        val file = File(dir, "$id.json")
+
+        // Verificação canônica robusta (Path Traversal Protection)
+        if (!file.canonicalPath.startsWith(dir.canonicalPath)) {
+            throw SecurityException("Tentativa de Path Traversal detectada: $id")
+        }
+
+        return file
+    }
+
     fun listSaves(context: Context): List<SaveEntry> {
         val dir = savesDirectory(context)
         return dir.listFiles()?.mapNotNull { file ->
@@ -39,25 +60,37 @@ object CharacterStorage {
     }
 
     fun load(context: Context, id: String): PersonagemSnapshot? {
-        val file = File(savesDirectory(context), "$id.json")
-        if (!file.exists()) return null
-        return runCatching {
-            json.decodeFromString<PersonagemSnapshot>(file.readText())
-        }.getOrNull()
+        return try {
+            val file = getSafeFile(context, id)
+            if (!file.exists()) return null
+            runCatching {
+                json.decodeFromString<PersonagemSnapshot>(file.readText())
+            }.getOrNull()
+        } catch (e: Exception) {
+            // Retorna null se houver erro de segurança ou IO, tratando como arquivo não encontrado/inválido
+            null
+        }
     }
 
     fun save(context: Context, snapshot: PersonagemSnapshot): SaveEntry {
-        val dir = savesDirectory(context)
+        // Gera ID novo se estiver em branco
         val saveId = snapshot.id.ifBlank { UUID.randomUUID().toString() }
-        val file = File(dir, "$saveId.json")
+
+        // Obtém arquivo seguro
+        val file = getSafeFile(context, saveId)
+
         file.writeText(json.encodeToString(snapshot))
         return SaveEntry(saveId, snapshot.nome, snapshot.timestamp)
     }
 
     fun delete(context: Context, id: String) {
-        val file = File(savesDirectory(context), "$id.json")
-        if (file.exists()) {
-            file.delete()
+        try {
+            val file = getSafeFile(context, id)
+            if (file.exists()) {
+                file.delete()
+            }
+        } catch (e: Exception) {
+            // Ignora erro se ID for inválido (nada a deletar)
         }
     }
 }
