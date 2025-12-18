@@ -207,14 +207,14 @@ fun VantagensContent(
             }
         }
 
-    remember(state.modoSupers) {
+    remember(state.compendioSupersAtivo) {
         buildSet {
             add("BASICO")
-            if (state.modoSupers) add("SUPER")
+            if (state.compendioSupersAtivo) add("SUPER")
         }
     }
 
-    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioTrilhadorAtivo, state.compendioDeadlandsAtivo, state.compendioCrystalHeartAtivo, state.compendioArteDaGuerraAtivo, state.compendioCidadeSolVaporAtivo, state.compendioWiseguysAtivo) {
+    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.compendioSupersAtivo, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioTrilhadorAtivo, state.compendioDeadlandsAtivo, state.compendioCrystalHeartAtivo, state.compendioArteDaGuerraAtivo, state.compendioCidadeSolVaporAtivo, state.compendioWiseguysAtivo) {
         listaVantagens.filter { vant ->
             val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase()
             val isBasico = origemNorm == "BASICO"
@@ -233,7 +233,7 @@ fun VantagensContent(
                 }
             }
 
-            isBasico || (isAdg && state.compendioArteDaGuerraAtivo) || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isTrilhador && state.compendioTrilhadorAtivo) || (isDeadlands && state.compendioDeadlandsAtivo) || (isCidadeSolVapor && state.compendioCidadeSolVaporAtivo) || (isWiseguys && state.compendioWiseguysAtivo)
+            isBasico || (isAdg && state.compendioArteDaGuerraAtivo) || (isSuper && state.compendioSupersAtivo) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isTrilhador && state.compendioTrilhadorAtivo) || (isDeadlands && state.compendioDeadlandsAtivo) || (isCidadeSolVapor && state.compendioCidadeSolVaporAtivo) || (isWiseguys && state.compendioWiseguysAtivo)
         }
     }
 
@@ -340,7 +340,7 @@ fun VantagensContent(
 
             // Category Chips
             items(Categoria.entries.toTypedArray()) { cat ->
-                if (state.modoSupers && cat == Categoria.PODER) return@items
+                if (state.compendioSupersAtivo && cat == Categoria.PODER) return@items
 
                 // --- NEW FILTERING LOGIC ---
                 // Hide specific categories if their compendium is not active
@@ -348,7 +348,7 @@ fun VantagensContent(
                 if (cat == Categoria.ESTRANHAS && !state.compendioDeadlandsAtivo) return@items
                 if (cat == Categoria.RESSUSCITADO && !state.compendioDeadlandsAtivo) return@items
                 if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@items
-                if (cat == Categoria.SUPER && !state.modoSupers) return@items
+                if (cat == Categoria.SUPER && !state.compendioSupersAtivo) return@items
                 if (cat == Categoria.MONSTRUOSAS && !state.compendioHorrorAtivo) return@items
                 if (cat == Categoria.CHI && !state.compendioArteDaGuerraAtivo) return@items
 
@@ -413,7 +413,7 @@ fun VantagensContent(
                 }
 
                 val isFromSuperPoder = state.vantagensDePoder.contains(vant.id)
-                val isSuperpoderesLocked = state.modoSupers && vant.id == "superpoderes"
+                val isSuperpoderesLocked = state.compendioSupersAtivo && vant.id == "superpoderes"
                 val isCrystalHeartLocked = state.compendioCrystalHeartAtivo && vant.id == "aa_agente_syn"
                 val isCelestialAAMilagres = state.ancestralidade == "CELESTIAIS" &&
                         vant.id == "antecedente_arcano_milagres"
@@ -512,14 +512,14 @@ fun VantagensContent(
             // Flat List View
             val flatList = listaVantagensAtivas.filter { vant ->
                 // Basic Filter Logic
-                 if (!state.modoSupers) {
+                 if (!state.compendioSupersAtivo) {
                     true
                 } else {
                     vant.id != "antecedente_arcano" &&
                             !vant.requisitos.vantagensPrevias.contains("antecedente_arcano")
                 }
             }.filter { vant ->
-                if (state.modoSupers) vant.id != "superpoderes" else true
+                if (state.compendioSupersAtivo) vant.id != "superpoderes" else true
             }.filter { vant ->
                  vant.id != "especialista" || state.vantagensSelecionadas.any { it.id == "profissional" }
             }.filter { vant ->
@@ -614,7 +614,7 @@ fun VantagensContent(
 
             Categoria.entries.forEach { cat ->
                 val lista = categoriasBy[cat] ?: return@forEach
-                if (state.modoSupers && cat == Categoria.PODER) return@forEach
+                if (state.compendioSupersAtivo && cat == Categoria.PODER) return@forEach
 
                 // Also hide in accordion view if filtered out by active mods (consistency)
                 if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioTrilhadorAtivo) return@forEach
@@ -632,7 +632,7 @@ fun VantagensContent(
                 ) {
                     val listaFiltrada = lista
                         .filter { vant ->
-                            if (!state.modoSupers) {
+                            if (!state.compendioSupersAtivo) {
                                 true
                             } else {
                                 vant.id != "antecedente_arcano" &&
@@ -640,7 +640,7 @@ fun VantagensContent(
                             }
                         }
                         .filter { vant ->
-                            if (state.modoSupers) vant.id != "superpoderes" else true
+                            if (state.compendioSupersAtivo) vant.id != "superpoderes" else true
                         }
                         .filter { vant ->
                             vant.categoria == cat &&

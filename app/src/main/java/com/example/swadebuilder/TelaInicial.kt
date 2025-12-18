@@ -76,7 +76,7 @@ fun TelaInicial(
     onCriarNovo: (
         cartaSelvagem: Boolean,
         maisPontosPericias: Boolean,
-        modoSupers: Boolean,
+        compendioSupersAtivo: Boolean,
         compendioFantasiaAtivo: Boolean,
         compendioHorrorAtivo: Boolean,
         compendioSciFiAtivo: Boolean,
@@ -87,8 +87,7 @@ fun TelaInicial(
         compendioCidadeSolVaporAtivo: Boolean,
         compendioWiseguysAtivo: Boolean,
         modoMonstroAtivo: Boolean,
-        modoSuperequipamentos: Boolean,
-        modoSuperComplicacoes: Boolean,
+        // Removed modoSuperequipamentos and modoSuperComplicacoes
         nasceUmHeroi: Boolean,
         heroisSemArmadura: Boolean,
         especializacaoPer: Boolean,
@@ -115,8 +114,7 @@ fun TelaInicial(
     var optSemPontosPoder by rememberSaveable { mutableStateOf(false) }
 
     // Supers
-    var optSuperPoderes by rememberSaveable { mutableStateOf(false) }
-    // optSuperequipamentos and optSuperComplicacoes removed (now auto-enabled with optSuperPoderes)
+    var optCompendioSupers by rememberSaveable { mutableStateOf(false) }
     var optGrandesResponsabilidades by rememberSaveable { mutableStateOf(false) }
 
     // Horror
@@ -172,7 +170,7 @@ fun TelaInicial(
                     onCriarNovo(
                         optCartaSelvagem,
                         optMaisPontosPericias,
-                        optSuperPoderes,
+                        optCompendioSupers,
                         optCompendioFantasia,
                         optCompendioHorror,
                         optCompendioSciFi,
@@ -183,8 +181,6 @@ fun TelaInicial(
                         optCompendioCidadeSolVapor,
                         optCompendioWiseguys,
                         optModoMonstro,
-                        optSuperPoderes, // superequipamentos enabled if supers enabled
-                        optSuperPoderes, // supercomplicacoes enabled if supers enabled
                         optNasceUmHeroi,
                         optHeroiSemArmadura,
                         optEspecializacaoPer,
@@ -270,8 +266,8 @@ fun TelaInicial(
                             title = "Superpoderes",
                             description = "Ativa Compêndio de Superpoderes (SPC).",
                             icon = Icons.Default.Bolt,
-                            checked = optSuperPoderes,
-                            onCheckedChange = { optSuperPoderes = it }
+                            checked = optCompendioSupers,
+                            onCheckedChange = { optCompendioSupers = it }
                         )
                     }
 
@@ -376,7 +372,7 @@ fun TelaInicial(
                     }
 
                     // Regras Supers
-                    if (optSuperPoderes) {
+                    if (optCompendioSupers) {
                         RuleGroupCard(
                             title = "Regras: Superpoderes",
                             expanded = expandedSupersRules,
@@ -388,7 +384,6 @@ fun TelaInicial(
                                 checked = optGrandesResponsabilidades,
                                 onCheckedChange = { optGrandesResponsabilidades = it }
                             )
-                            // Superequipamentos and Supercomplicacoes are now implied by the module itself
                         }
                     }
                 }

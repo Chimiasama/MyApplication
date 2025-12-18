@@ -56,7 +56,7 @@ class CriadorViewModel : ViewModel() {
         resetStateParaNovoPersonagem(
             cartaSelvagem = true,
             maisPontosPericias = true,
-            modoSupers = false,
+            compendioSupersAtivo = false,
             compendioFantasiaAtivo = false,
             compendioHorrorAtivo = false,
             compendioSciFiAtivo = false,
@@ -142,7 +142,7 @@ class CriadorViewModel : ViewModel() {
         resetStateParaNovoPersonagem(
             cartaSelvagem = flags.cartaSelvagem,
             maisPontosPericias = flags.maisPontosPericias,
-            modoSupers = flags.modoSupers,
+            compendioSupersAtivo = flags.compendioSupersAtivo || flags.modoSupers, // Backward compatibility
             compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
             compendioHorrorAtivo = flags.compendioHorrorAtivo,
             compendioSciFiAtivo = flags.compendioSciFiAtivo,
@@ -189,7 +189,7 @@ class CriadorViewModel : ViewModel() {
     fun resetStateParaNovoPersonagem(
         cartaSelvagem: Boolean,
         maisPontosPericias: Boolean,
-        modoSupers: Boolean,
+        compendioSupersAtivo: Boolean,
         compendioFantasiaAtivo: Boolean,
         compendioHorrorAtivo: Boolean = false,
         compendioSciFiAtivo: Boolean = false,
@@ -206,7 +206,7 @@ class CriadorViewModel : ViewModel() {
     ) {
 
         // state.showHelpMessages = showHelpMessages (Removido)
-        state.modoSupers = modoSupers
+        state.compendioSupersAtivo = compendioSupersAtivo
         state.compendioFantasiaAtivo = compendioFantasiaAtivo
         state.compendioHorrorAtivo = compendioHorrorAtivo
         state.compendioSciFiAtivo = compendioSciFiAtivo
@@ -218,10 +218,7 @@ class CriadorViewModel : ViewModel() {
         state.compendioWiseguysAtivo = compendioWiseguysAtivo
         state.modoMonstroAtivo = modoMonstroAtivo
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
-        state.modoSuperequip = modoSupers
-        state.modoSuperComplicacoes = modoSupers
         state.grandesResponsabilidades = grandesResponsabilidades
-        state.modoSuperComplicacoes = modoSupers
         state.soldadoCargaAtivo = true
 
         state.idAtual = null
@@ -256,7 +253,7 @@ class CriadorViewModel : ViewModel() {
 
         state.aplicarAncestralidade("HUMANOS", mutableListOf())
 
-        if (state.modoSupers) {
+        if (state.compendioSupersAtivo) {
             listaVantagens.firstOrNull { it.id == "superpoderes" }?.let { sp ->
                 if (state.vantagensSelecionadas.none { it.id == "superpoderes" }) {
                     // Use copy to prevent shared state issues even here

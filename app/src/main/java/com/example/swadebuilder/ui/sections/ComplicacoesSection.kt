@@ -81,7 +81,7 @@ fun ComplicacoesSection(
 
     val origensAtivas: Set<String> = buildSet {
         add("BASICO")
-        if (state.modoSuperComplicacoes) add("SUPER")
+        if (state.compendioSupersAtivo) add("SUPER")
         if (state.compendioFantasiaAtivo) add("FANTASIA")
         if (state.compendioHorrorAtivo) add("HORROR")
         if (state.compendioTrilhadorAtivo) add("FANTASIA_TRILHADOR")

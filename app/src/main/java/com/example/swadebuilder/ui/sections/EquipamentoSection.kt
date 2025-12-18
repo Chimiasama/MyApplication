@@ -200,6 +200,7 @@ fun EquipamentoSection(
     soldadoCargaAtivo: Boolean,
     onEditarDinheiro: (Int) -> Unit,
     onToggleSoldadoCarga: () -> Unit,
+    compendioSupersAtivo: Boolean = false,
     compendioFantasiaAtivo: Boolean = false,
     compendioHorrorAtivo: Boolean = false,
     compendioSciFiAtivo: Boolean = false,
@@ -248,15 +249,21 @@ fun EquipamentoSection(
             }
             .filter { categoria ->
                 val origem = categoria.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
-                (origem != "ARTE_DA_GUERRA" || compendioArteDaGuerraAtivo) &&
-                        (origem != "CIDADE_SOL_VAPOR" || compendioCidadeSolVaporAtivo) &&
-                        (origem != "WISEGUYS" || compendioWiseguysAtivo) &&
-                        (origem != "CRYSTAL_HEART" || compendioCrystalHeartAtivo) &&
-                        (origem != "FANTASIA" || compendioFantasiaAtivo) &&
-                        (origem != "HORROR" || compendioHorrorAtivo) &&
-                        (origem != "SCI_FI" || compendioSciFiAtivo) &&
-                        (origem != "FANTASIA_TRILHADOR" || compendioTrilhadorAtivo) &&
-                        (origem != "DEADLANDS" || compendioDeadlandsAtivo)
+                val isSuper = origem == "SUPER"
+
+                if (isSuper) {
+                    compendioSupersAtivo
+                } else {
+                    (origem != "ARTE_DA_GUERRA" || compendioArteDaGuerraAtivo) &&
+                            (origem != "CIDADE_SOL_VAPOR" || compendioCidadeSolVaporAtivo) &&
+                            (origem != "WISEGUYS" || compendioWiseguysAtivo) &&
+                            (origem != "CRYSTAL_HEART" || compendioCrystalHeartAtivo) &&
+                            (origem != "FANTASIA" || compendioFantasiaAtivo) &&
+                            (origem != "HORROR" || compendioHorrorAtivo) &&
+                            (origem != "SCI_FI" || compendioSciFiAtivo) &&
+                            (origem != "FANTASIA_TRILHADOR" || compendioTrilhadorAtivo) &&
+                            (origem != "DEADLANDS" || compendioDeadlandsAtivo)
+                }
             }
 
         // 2. Header (Money)
@@ -363,8 +370,23 @@ fun EquipamentoSection(
                 }
             }
 
+            if (compendioSupersAtivo) {
+                item {
+                    val label = "Super"
+                    val key = "SUPER"
+                    FilterChip(
+                        selected = key in filter.origens,
+                        onClick = {
+                            val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
+                            filter = filter.copy(origens = newSet)
+                        },
+                        label = { Text(label) }
+                    )
+                }
+            }
+
             // Add "Modernas" (Basic) if any other compendium is active to allow filtering it out
-            if (compendioFantasiaAtivo || compendioSciFiAtivo || compendioHorrorAtivo || compendioDeadlandsAtivo) {
+            if (compendioFantasiaAtivo || compendioSciFiAtivo || compendioHorrorAtivo || compendioDeadlandsAtivo || compendioSupersAtivo) {
                 item {
                     val label = "Modernas"
                     val key = "BASICO"

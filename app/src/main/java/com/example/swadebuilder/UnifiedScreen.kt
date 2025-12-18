@@ -80,8 +80,8 @@ fun UnifiedScreen(
     modoOficialAtivo: Boolean = false,
     onUserFeedback: () -> Unit
 ) {
-    if (state.modoSupers) {
-        Log.d("DEBUG", "modoSupers é ${state.modoSupers}")
+    if (state.compendioSupersAtivo) {
+        Log.d("DEBUG", "compendioSupersAtivo é ${state.compendioSupersAtivo}")
     }
 
     var showAllocDialog by rememberSaveable { mutableStateOf(false) }
@@ -581,7 +581,7 @@ private fun SuperPoderesSection(
     expanded: Boolean,
     onToggle: () -> Unit
 ) {
-    if (state.modoSupers) {
+    if (state.compendioSupersAtivo) {
         SuperPoderesContent(
             state = state,
             listaSuperPoderes = listaSuperPoderes,
@@ -654,7 +654,7 @@ private fun EquipamentoSection(
         },
         categorias = equipamentoCategorias,
         superequipCategorias =
-            if (state.modoSuperequip) superequipCategorias else emptyList(),
+            if (state.compendioSupersAtivo) superequipCategorias else emptyList(),
         forcaRaw = state.valoresAtributos["FORCA"]?.intValue ?: 4,
         hasMusculoso = hasMusculoso,
         hasSoldado = hasSoldado,
@@ -665,6 +665,7 @@ private fun EquipamentoSection(
                 state.soldadoCargaAtivo = !state.soldadoCargaAtivo
             }
         },
+        compendioSupersAtivo = state.compendioSupersAtivo,
         compendioFantasiaAtivo = state.compendioFantasiaAtivo,
         compendioHorrorAtivo = state.compendioHorrorAtivo,
         compendioSciFiAtivo = state.compendioSciFiAtivo,

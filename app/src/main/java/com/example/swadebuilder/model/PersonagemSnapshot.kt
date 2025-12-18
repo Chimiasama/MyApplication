@@ -29,7 +29,7 @@ data class PersonagemSnapshot(
 data class SnapshotFlags(
     val cartaSelvagem: Boolean,
     val maisPontosPericias: Boolean,
-    val modoSupers: Boolean,
+    val compendioSupersAtivo: Boolean = false, // Renamed from modoSupers
     val compendioFantasiaAtivo: Boolean,
     val compendioHorrorAtivo: Boolean,
     val compendioSciFiAtivo: Boolean = false,
@@ -44,8 +44,7 @@ data class SnapshotFlags(
     val tipoMonstroSelecionado: String?,
     val usarEspecializacoesDePericia: Boolean,
     val grandesResponsabilidades: Boolean,
-    val modoSuperComplicacoes: Boolean,
-    val modoSuperequip: Boolean,
+    // Removed: modoSuperComplicacoes, modoSuperequip
     val heroisSemArmadura: Boolean,
     val nasceUmHeroi: Boolean,
     val soldadoCargaAtivo: Boolean,
@@ -58,7 +57,11 @@ data class SnapshotFlags(
     val idosoBonusSp: Int,
     val obesoBonusSize: Int,
     val obesoMalusMov: Int,
-    val bonusPoderExtra: Int
+    val bonusPoderExtra: Int,
+    // Legacy fields for backward compatibility (optional/defaulted)
+    val modoSupers: Boolean = false,
+    val modoSuperComplicacoes: Boolean = false,
+    val modoSuperequip: Boolean = false
 )
 
 @Serializable

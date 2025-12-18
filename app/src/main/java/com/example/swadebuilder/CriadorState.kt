@@ -41,9 +41,7 @@ class CriadorState {
     var hapticStrength by mutableIntStateOf(DEFAULT_HAPTIC_STRENGTH)
     var soundVolume by mutableIntStateOf(DEFAULT_SOUND_VOLUME)
     // showHelpMessages removido
-    var modoSupers by mutableStateOf(false)
-    var modoSuperComplicacoes by mutableStateOf(false)
-    var modoSuperequip by mutableStateOf(false)
+    var compendioSupersAtivo by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)
     var compendioSciFiAtivo by mutableStateOf(false)
@@ -1314,7 +1312,7 @@ class CriadorState {
 
         // Troca efetiva da ancestralidade
         ancestralidade = anc
-        celestialAAMilagresDesabilitado = (anc == "CELESTIAIS" && modoSupers)
+        celestialAAMilagresDesabilitado = (anc == "CELESTIAIS" && compendioSupersAtivo)
         if (anc != "MEIO-ELFOS") {
             meioElfoAgil = false
         }
@@ -1647,7 +1645,7 @@ class CriadorState {
     fun creationComplete(): Boolean {
         // "Ficha básica completa": todos os pontos iniciais foram distribuídos.
         // Em campanha supers, também exige ter zerado os Pontos de Super.
-        val supersProntos = !modoSupers || superPontosTotais <= 0 || superPontosDisponiveis == 0
+        val supersProntos = !compendioSupersAtivo || superPontosTotais <= 0 || superPontosDisponiveis == 0
 
         return baseCreationComplete() && supersProntos
     }
@@ -1785,7 +1783,7 @@ class CriadorState {
             flags = SnapshotFlags(
                 cartaSelvagem = cartaSelvagem,
                 maisPontosPericias = maisPontosPericias,
-                modoSupers = modoSupers,
+                compendioSupersAtivo = compendioSupersAtivo,
                 compendioFantasiaAtivo = compendioFantasiaAtivo,
                 compendioHorrorAtivo = compendioHorrorAtivo,
                 compendioSciFiAtivo = compendioSciFiAtivo,
@@ -1800,8 +1798,8 @@ class CriadorState {
                 tipoMonstroSelecionado = tipoMonstroSelecionado,
                 usarEspecializacoesDePericia = usarEspecializacoesDePericia,
                 grandesResponsabilidades = grandesResponsabilidades,
-                modoSuperComplicacoes = modoSuperComplicacoes,
-                modoSuperequip = modoSuperequip,
+                modoSuperComplicacoes = compendioSupersAtivo,
+                modoSuperequip = compendioSupersAtivo,
                 heroisSemArmadura = heroisSemArmadura,
                 nasceUmHeroi = nasceUmHeroi,
                 soldadoCargaAtivo = soldadoCargaAtivo,
@@ -1814,7 +1812,8 @@ class CriadorState {
                 idosoBonusSp = idosoBonusSp,
                 obesoBonusSize = obesoBonusSize,
                 obesoMalusMov = obesoMalusMov,
-                bonusPoderExtra = bonusPoderExtra
+                bonusPoderExtra = bonusPoderExtra,
+                modoSupers = compendioSupersAtivo // Backwards compatibility
             ),
             recursos = SnapshotRecursos(
                 dinheiro = dinheiro,
@@ -1915,7 +1914,7 @@ class CriadorState {
         // showHelpMessages = snapshot.showHelpMessages
         cartaSelvagem = flags.cartaSelvagem
         maisPontosPericias = flags.maisPontosPericias
-        modoSupers = flags.modoSupers
+        compendioSupersAtivo = flags.compendioSupersAtivo || flags.modoSupers // Backward compatibility
         compendioFantasiaAtivo = flags.compendioFantasiaAtivo
         compendioHorrorAtivo = flags.compendioHorrorAtivo
         compendioSciFiAtivo = flags.compendioSciFiAtivo
@@ -1936,8 +1935,6 @@ class CriadorState {
         appTheme = com.example.swadebuilder.ui.theme.AppTheme.valueOf(snapshot.appTheme)
 
         // Flags adicionais
-        modoSuperComplicacoes = flags.modoSuperComplicacoes
-        modoSuperequip = flags.modoSuperequip
         heroisSemArmadura = flags.heroisSemArmadura
         nasceUmHeroi = flags.nasceUmHeroi
         soldadoCargaAtivo = flags.soldadoCargaAtivo
