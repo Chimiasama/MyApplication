@@ -350,6 +350,7 @@ fun VantagensContent(
                 if (cat == Categoria.SUPER && !state.modoSupers) return@items
                 if (cat == Categoria.MONSTRUOSAS && !state.compendioHorrorAtivo) return@items
                 if (cat == Categoria.CHI && !state.compendioArteDaGuerraAtivo) return@items
+                if (cat == Categoria.RESSUSCITADO && !state.compendioDeadlandsAtivo) return@items
 
                 FilterChip(
                     selected = cat in selectedCategories,
@@ -619,6 +620,7 @@ fun VantagensContent(
                 if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioTrilhadorAtivo) return@forEach
                 if (cat == Categoria.ESTRANHAS && !state.compendioDeadlandsAtivo) return@forEach
                 if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@forEach
+                if (cat == Categoria.RESSUSCITADO && !state.compendioDeadlandsAtivo) return@forEach
 
                 val expanded = expandedMap[cat] ?: false
 
