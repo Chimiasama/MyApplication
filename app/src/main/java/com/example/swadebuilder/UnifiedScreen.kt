@@ -654,7 +654,7 @@ private fun EquipamentoSection(
         },
         categorias = equipamentoCategorias,
         superequipCategorias =
-            if (state.modoSuperequip) superequipCategorias else emptyList(),
+            if (state.modoSupers) superequipCategorias else emptyList(),
         forcaRaw = state.valoresAtributos["FORCA"]?.intValue ?: 4,
         hasMusculoso = hasMusculoso,
         hasSoldado = hasSoldado,

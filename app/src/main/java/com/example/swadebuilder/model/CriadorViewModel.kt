@@ -218,10 +218,7 @@ class CriadorViewModel : ViewModel() {
         state.compendioWiseguysAtivo = compendioWiseguysAtivo
         state.modoMonstroAtivo = modoMonstroAtivo
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
-        state.modoSuperequip = modoSupers
-        state.modoSuperComplicacoes = modoSupers
         state.grandesResponsabilidades = grandesResponsabilidades
-        state.modoSuperComplicacoes = modoSupers
         state.soldadoCargaAtivo = true
 
         state.idAtual = null

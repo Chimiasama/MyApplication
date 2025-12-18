@@ -663,7 +663,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo, _, _,
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, grandesResponsabilidades ->
 
@@ -689,9 +689,6 @@ class MainActivity : ComponentActivity() {
                                     criadorViewModel.prepararNomeInicial(context)
                                     criadorViewModel.state.heroisSemArmadura     = heroisSemArmadura
                                     criadorViewModel.state.nasceUmHeroi          = nasceUmHeroi
-
-                                    criadorViewModel.state.modoSuperequip        = modoSupers
-                                    criadorViewModel.state.modoSuperComplicacoes = modoSupers
 
                                     criadorViewModel.state.usarSemPontosDePoder  = semPontosDePoder
                                     criadorViewModel.normalizeArcanoIdsNoCarregamento()
