@@ -314,7 +314,7 @@ fun EquipamentoSection(
             emptyList()
         }
 
-        val superequipCategoriasAtivos = if (state.modoSuperequip) superequipCategorias else emptyList()
+        val superequipCategoriasAtivos = superequipCategorias
 
         val todasCategoriasFiltraveis = buildList {
             addAll(normalCategorias)
