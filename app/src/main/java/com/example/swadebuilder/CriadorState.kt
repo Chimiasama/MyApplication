@@ -496,10 +496,14 @@ class CriadorState {
         val autoKeys = (vantagensAutomaticas + vantagensRaciais)
             .map { it.substringBefore("(").trim().keyify() }
             .toSet()
+        val autoIds = vantagensAutomaticasDoTropo.toSet()
 
         val candidate = vantagensSelecionadas
             .asReversed()
-            .firstOrNull { vant -> vant.nome.substringBefore("(").trim().keyify() !in autoKeys }
+            .firstOrNull { vant ->
+                val key = vant.nome.substringBefore("(").trim().keyify()
+                key !in autoKeys && vant.id !in autoIds
+            }
             ?: return false
 
         removeVantagemDinheiro(candidate)
