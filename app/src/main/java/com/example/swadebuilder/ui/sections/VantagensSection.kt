@@ -347,6 +347,9 @@ fun VantagensContent(
                 if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioTrilhadorAtivo) return@items
                 if (cat == Categoria.ESTRANHAS && !state.compendioDeadlandsAtivo) return@items
                 if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@items
+                if (cat == Categoria.SUPER && !state.modoSupers) return@items
+                if (cat == Categoria.MONSTRUOSAS && !state.compendioHorrorAtivo) return@items
+                if (cat == Categoria.CHI && !state.compendioArteDaGuerraAtivo) return@items
 
                 FilterChip(
                     selected = cat in selectedCategories,

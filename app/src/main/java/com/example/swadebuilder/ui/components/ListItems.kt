@@ -104,18 +104,7 @@ fun StandardEquipamentoItem(
 
             // Details
             val detalhes = buildList {
-                equipamento.observacoes.contentString()?.let { add("Observações: $it") }
-                equipamento.pmf.contentString()?.let { add("PMF: $it") }
-                equipamento.malfuncionamento.contentString()?.let { add("Malfuncionamento: $it") }
-                equipamento.forcaMin.contentString()?.let { add("Força mínima: $it") }
-                equipamento.distancia.contentString()?.let { add("Distância: $it") }
-                equipamento.dano.contentString()?.let { add("Dano: $it") }
-                equipamento.tiros.contentString()?.let { add("Tiros: $it") }
-                equipamento.tamanho.contentString()?.let { add("Tamanho: $it") }
-                equipamento.manobrabilidade.contentString()?.let { add("Manobrabilidade: $it") }
-                equipamento.velMaxima.contentString()?.let { add("Velocidade Máx.: $it") }
-                equipamento.resistencia.contentString()?.let { add("Resistência: $it") }
-                equipamento.tripulacao.contentString()?.let { add("Tripulação: $it") }
+                // Fields already in summary (linhaArma, linhaGeral, linhaVeiculo, observacao) are excluded here to avoid duplication.
                 equipamento.tensao?.let { add("Tensão: $it") }
                 equipamento.mods_slots?.let { add("Slots de Mods: $it") }
             }
