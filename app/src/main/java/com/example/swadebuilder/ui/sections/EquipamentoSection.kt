@@ -385,6 +385,10 @@ fun EquipamentoSection(
                     onClick = {
                         if (type in selectedTypes) selectedTypes.remove(type)
                         else selectedTypes.add(type)
+
+                        if (filter.subtipos.isNotEmpty()) {
+                            filter = filter.copy(subtipos = emptySet())
+                        }
                     },
                     label = { Text(type) }
                 )
@@ -423,7 +427,8 @@ fun EquipamentoSection(
                                 if (subtype in newSet) newSet.remove(subtype) else newSet.add(subtype)
                                 filter = filter.copy(subtipos = newSet)
                             },
-                            label = { Text(subtype) }
+                            modifier = Modifier.heightIn(min = 30.dp),
+                            label = { Text(subtype, style = MaterialTheme.typography.labelMedium) }
                         )
                     }
                 }
