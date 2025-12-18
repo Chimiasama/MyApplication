@@ -19,6 +19,7 @@ class CriadorStateTest {
         listaAtributos = listOf("VIGOR")
         mapaAtributosDisplay = mapOf("VIGOR" to "Vigor")
         listaPericias = emptyList()
+        mapaPericias = emptyMap()
         listaVantagens = emptyList()
     }
 
@@ -138,5 +139,36 @@ class CriadorStateTest {
         assertEquals(1, state.cpRecursosStack.size)
         assertEquals(1234, state.dinheiro)
         assertEquals(5, state.pontosComplicacaoGastos)
+    }
+
+    @Test
+    fun `brutamontes vincula atletismo a forca e aumenta custo quando forca menor`() {
+        val atletismo = Pericia("Atletismo", "AGILIDADE", basica = true)
+
+        listaAtributos = listOf("AGILIDADE", "FORCA")
+        mapaAtributosDisplay = mapOf("AGILIDADE" to "Agilidade", "FORCA" to "Força")
+        listaPericias = listOf(atletismo)
+        mapaPericias = mapOf("ATLETISMO" to atletismo)
+        racialAttrMinMap = mapOf("HUMANOS" to mapOf("AGILIDADE" to 4, "FORCA" to 4))
+        racialSkillStartMap = emptyMap()
+
+        val state = CriadorState()
+        state.valoresAtributos["AGILIDADE"]!!.intValue = 8
+        state.valoresAtributos["FORCA"]!!.intValue = 4
+        state.baseIncsPorPericia[atletismo] = 1
+
+        val brutamontes = Vantagem(
+            id = "brawny",
+            nome = "Brutamontes",
+            categoria = Categoria.ANTECEDENTE,
+            requisitos = Requisito(estagio = "Novato")
+        )
+
+        state.vantagensSelecionadas.add(brutamontes)
+
+        val snapshot = state.calcularPericiaRules(atletismo, idosoActive = false, locked = false)
+
+        assertEquals("FORCA", snapshot.attrKey)
+        assertEquals(2, snapshot.cost)
     }
 }

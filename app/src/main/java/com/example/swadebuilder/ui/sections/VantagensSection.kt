@@ -448,16 +448,18 @@ fun VantagensContent(
                         onClick = {
                             if (!canRemove) return@AssistChip
 
+                            val enforcePoolLimit = !vant.isBrutamontes()
+
                             if (vant.nome.contains("Pontos de Poder", true)) {
                                 state.removerPontosDePoder(vant)
                                 state.pontosVantagem++
-                                state.rebuildAllPericiaStacks()
+                                state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                             } else {
                                 state.removeVantagemDinheiro(vant)
-                            state.vantagensSelecionadas.remove(vant)
-                            state.pontosVantagem++
-                            state.rebuildAllPericiaStacks()
-                            onUserFeedback()
+                                state.vantagensSelecionadas.remove(vant)
+                                state.pontosVantagem++
+                                state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
+                                onUserFeedback()
 
                                 if (vant.id == "o_melhor_que_ha") {
                                     state.poderFavoritoId = null
@@ -580,6 +582,7 @@ fun VantagensContent(
                                         viewModel.selectAdvantageForAdvancement(vant)
                                         onUserFeedback()
                                     } else {
+                                        val enforcePoolLimit = !vant.isBrutamontes()
                                         if (vant.nome.contains("Pontos de Poder", true)) {
                                             state.comprarPontoDePoder(vant)
                                             onUserFeedback()
@@ -587,12 +590,12 @@ fun VantagensContent(
                                             state.applyVantagemDinheiro(vant)
                                             state.vantagensSelecionadas += vant
                                             state.pontosVantagem--
-                                            state.rebuildAllPericiaStacks()
+                                            state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                                             onUserFeedback()
                                         }
                                     }
                                 }
-                             },
+                            },
                              onError = { msg ->
                                  tempErrorMsg = msg
                                  showTempError = true
@@ -711,6 +714,7 @@ fun VantagensContent(
                                             viewModel.selectAdvantageForAdvancement(vant)
                                             onUserFeedback()
                                         } else {
+                                            val enforcePoolLimit = !vant.isBrutamontes()
                                             if (vant.nome.contains("Pontos de Poder", true)) {
                                                 state.comprarPontoDePoder(vant)
                                                 onUserFeedback()
@@ -718,7 +722,7 @@ fun VantagensContent(
                                                 state.applyVantagemDinheiro(vant)
                                                 state.vantagensSelecionadas += vant
                                                 state.pontosVantagem--
-                                                state.rebuildAllPericiaStacks()
+                                                state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                                                 onUserFeedback()
                                             }
                                         }
@@ -779,12 +783,14 @@ fun VantagensContent(
                             )
 
                             if (state.podeSelecionar(novaVantagem)) {
+                                val enforcePoolLimit = !novaVantagem.isBrutamontes()
+
                                 if (state.advantageAdvancementInProgress) {
                                     viewModel.selectAdvantageForAdvancement(novaVantagem)
                                 } else {
                                     state.vantagensSelecionadas += novaVantagem
                                     state.pontosVantagem--
-                                    state.rebuildAllPericiaStacks()
+                                    state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                                 }
                                 onUserFeedback()
                             }
@@ -836,12 +842,13 @@ fun VantagensContent(
                         pendingVantagem = null
                     }
                 } else {
-                    ChoiceDialog(
-                        options = knowledgeOptions,
-                        onConfirm = { choice ->
+                        ChoiceDialog(
+                            options = knowledgeOptions,
+                            onConfirm = { choice ->
+                            val enforcePoolLimit = !vant.isBrutamontes()
                             state.vantagensSelecionadas += vant.copy(choice = choice)
                             state.pontosVantagem--
-                            state.rebuildAllPericiaStacks()
+                            state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                             showChoiceDialog = false
                             pendingVantagem = null
                             onUserFeedback()
@@ -911,9 +918,10 @@ fun VantagensContent(
                     ChoiceDialog(
                         options = validOptions,
                         onConfirm = { choice ->
+                            val enforcePoolLimit = !vant.isBrutamontes()
                             state.vantagensSelecionadas += vant.copy(choice = choice)
                             state.pontosVantagem--
-                            state.rebuildAllPericiaStacks()
+                            state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                             showChoiceDialog = false
                             pendingVantagem = null
                             onUserFeedback()
@@ -1092,4 +1100,10 @@ private fun VantagemItem(
             }
         }
     }
+}
+
+private fun Vantagem.isBrutamontes(): Boolean {
+    val idKey = id.keyify()
+    val nameKey = nome.keyify()
+    return idKey == "BRUTAMONTES" || idKey == "BRAWNY" || nameKey == "BRUTAMONTES" || nameKey == "BRAWNY"
 }
