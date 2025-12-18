@@ -624,16 +624,6 @@ class CriadorState {
             }
     }
 
-    fun atributoBaseParaPericia(per: Pericia): String {
-        return if (per.nome.equals("Atletismo", ignoreCase = true)
-            && vantagensSelecionadas.any { it.nome.keyify() == "BRUTAMONTES" }
-        ) {
-            "FORCA"
-        } else {
-            per.atributo
-        }
-    }
-
     private val incompatibilidades: Map<String, Set<String>> = mapOf(
         "LENTO"   to setOf("LIGEIRO"),
         "LIGEIRO" to setOf("LENTO"),
@@ -1687,7 +1677,10 @@ class CriadorState {
         recalcularPontosAtributo()
     }
 
-    fun rebuildAllPericiaStacks(feedbackMessages: MutableList<String> = mutableListOf()) {
+    fun rebuildAllPericiaStacks(
+        feedbackMessages: MutableList<String> = mutableListOf(),
+        enforcePoolLimit: Boolean = true
+    ) {
         if (modoProgressaoAtivo) return
 
         var cumulativeCost = 0
@@ -1725,10 +1718,10 @@ class CriadorState {
 
             var cost = costFor(target)
 
-            if (cost > 0 && cumulativeCost + cost > pool) {
+            if (enforcePoolLimit && cost > 0 && cumulativeCost + cost > pool) {
                 feedbackMessages?.add("Perícia ${per.nome} reduzida para d$target para compensar pontos.")
             }
-            while (cumulativeCost + cost > pool) {
+            while (enforcePoolLimit && cumulativeCost + cost > pool) {
                 target = (target - 2).coerceAtLeast(minRaw)
                 cost   = costFor(target)
             }
