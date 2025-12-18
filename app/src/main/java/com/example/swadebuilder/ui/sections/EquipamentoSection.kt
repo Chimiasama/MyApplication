@@ -18,6 +18,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.FilterAlt
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
@@ -41,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.booleanResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.font.FontWeight
@@ -56,6 +59,7 @@ import com.example.swadebuilder.ui.components.SectionHeader
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import com.example.swadebuilder.ui.sections.toResumo
+import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
@@ -63,13 +67,15 @@ import kotlinx.serialization.json.jsonPrimitive
 
 data class EquipFilter(
     val somenteAcessiveis: Boolean = false,
+    val busca: String = "",
     val origens: Set<String> = emptySet(),
     val tipos: Set<String> = emptySet(),
     val subtipos: Set<String> = emptySet()
 ) {
     fun totalSelections() =
         (if (somenteAcessiveis) 1 else 0) +
-                origens.size + tipos.size + subtipos.size
+                origens.size + tipos.size + subtipos.size +
+                if (busca.isNotBlank()) 1 else 0
 
     fun isEmpty() = totalSelections() == 0
 }
@@ -308,6 +314,59 @@ fun EquipamentoSection(
             emptyList()
         }
 
+        val superequipCategoriasAtivos = if (state.modoSuperequip) superequipCategorias else emptyList()
+
+        val todasCategoriasFiltraveis = buildList {
+            addAll(normalCategorias)
+            addAll(fantasiaCategorias)
+            addAll(horrorCategorias)
+            addAll(sciFiCategorias)
+            addAll(cidadeSolVaporCategorias)
+            addAll(trilhadorCategorias)
+            addAll(deadlandsCategorias)
+            addAll(superequipCategoriasAtivos)
+        }
+
+        val buscaNormalizada = filter.busca.lowercase().trim().semAcentos()
+
+        fun EquipamentoCategoria.combinaFiltros(): Boolean {
+            val safeOrigem = origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
+            if (filter.origens.isNotEmpty() && safeOrigem !in filter.origens) return false
+            if (filter.tipos.isNotEmpty() && tipo !in filter.tipos) return false
+            if (filter.subtipos.isNotEmpty() && subtipo !in filter.subtipos) return false
+            return true
+        }
+
+        fun EquipamentoItem.combinaBusca(): Boolean {
+            if (buscaNormalizada.isBlank()) return true
+            val texto = buildList {
+                add(nome)
+                originalName?.let { add(it) }
+                originalDescription?.let { add(it) }
+                observacoes.contentString()?.let { add(it) }
+                subtipo?.let { add(it) }
+                subsubtipo?.let { add(it) }
+
+                val resumo = toResumo()
+                resumo.linhaArma?.let { add(it) }
+                resumo.linhaGeral?.let { add(it) }
+                resumo.linhaVeiculo?.let { add(it) }
+                resumo.observacao?.let { add(it) }
+            }.joinToString("\n").semAcentos().lowercase()
+            return texto.contains(buscaNormalizada)
+        }
+
+        fun EquipamentoItem.ehAcessivel(): Boolean {
+            if (!filter.somenteAcessiveis || usaRiqueza) return true
+            val custoInt = (custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
+            return custoInt <= dinheiro
+        }
+
+        val equipamentosFiltrados = todasCategoriasFiltraveis
+            .filter { it.combinaFiltros() }
+            .flatMap { cat -> cat.itens.map { it to cat } }
+            .filter { (equip, _) -> equip.ehAcessivel() && equip.combinaBusca() }
+
         SectionHeader(
             onHelpClick = null,
             centerText = if (usaRiqueza) "Riqueza: d$dadoRiqueza" else "Dinheiro: $dinheiro",
@@ -348,6 +407,30 @@ fun EquipamentoSection(
 
             Spacer(Modifier.size(8.dp))
         }
+
+        OutlinedTextField(
+            value = filter.busca,
+            onValueChange = { novo -> filter = filter.copy(busca = novo) },
+            label = { Text("Buscar equipamentos") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 4.dp),
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.FilterAlt,
+                    contentDescription = "Filtros",
+                    modifier = Modifier.clickable { showFilterDialog = true }
+                )
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Sentences,
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() })
+        )
+
         Text(
             text = if (filter.isEmpty()) "Filtrar equipamentos"
             else "Filtros (${filter.totalSelections()})",
@@ -356,6 +439,71 @@ fun EquipamentoSection(
                 .padding(horizontal = 16.dp, vertical = 4.dp)
                 .clickable { showFilterDialog = true }
         )
+
+        if (!filter.isEmpty()) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                if (filter.busca.isNotBlank()) {
+                    AssistChip(
+                        onClick = { filter = filter.copy(busca = "") },
+                        label = { Text("Busca: ${filter.busca}") },
+                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Limpar busca") }
+                    )
+                }
+
+                if (filter.somenteAcessiveis) {
+                    AssistChip(
+                        onClick = { filter = filter.copy(somenteAcessiveis = false) },
+                        label = { Text("Somente acessíveis") },
+                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover filtro") }
+                    )
+                }
+
+                filter.origens.forEach { origem ->
+                    AssistChip(
+                        onClick = {
+                            val nova = filter.origens.toMutableSet().apply { remove(origem) }
+                            filter = filter.copy(origens = nova)
+                        },
+                        label = { Text("Origem: $origem") },
+                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover origem") }
+                    )
+                }
+
+                filter.tipos.forEach { tipo ->
+                    AssistChip(
+                        onClick = {
+                            val nova = filter.tipos.toMutableSet().apply { remove(tipo) }
+                            filter = filter.copy(tipos = nova)
+                        },
+                        label = { Text("Tipo: $tipo") },
+                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover tipo") }
+                    )
+                }
+
+                filter.subtipos.forEach { subtipo ->
+                    AssistChip(
+                        onClick = {
+                            val nova = filter.subtipos.toMutableSet().apply { remove(subtipo) }
+                            filter = filter.copy(subtipos = nova)
+                        },
+                        label = { Text("Subtipo: $subtipo") },
+                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover subtipo") }
+                    )
+                }
+
+                AssistChip(
+                    onClick = { filter = EquipFilter(busca = filter.busca) },
+                    label = { Text("Limpar filtros") },
+                    leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Limpar filtros") }
+                )
+            }
+        }
 
         if (showFilterDialog) {
 
@@ -380,6 +528,42 @@ fun EquipamentoSection(
                 current = filter,
                 onChange = { filter = it },
                 onDismiss = { showFilterDialog = false }
+            )
+        }
+
+        if (equipamentosFiltrados.isNotEmpty()) {
+            Text(
+                text = "Resultados (${equipamentosFiltrados.size})",
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 320.dp)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 8.dp)
+            ) {
+                equipamentosFiltrados.forEach { (equipamento, categoria) ->
+                    EquipamentoListItem(
+                        equipamento = equipamento,
+                        categoria = categoria,
+                        onClick = { onEquipamentoDoubleClick(equipamento) },
+                        allowLongTexts = allowLongTexts,
+                        expanded = detalhesExpandidos[equipamento.nome] == true,
+                        onToggleDetails = {
+                            val current = detalhesExpandidos[equipamento.nome] ?: false
+                            detalhesExpandidos[equipamento.nome] = !current
+                        },
+                        showOriginalName = showOfficialNames
+                    )
+                }
+            }
+        } else if (!filter.isEmpty()) {
+            Text(
+                text = "Nenhum equipamento encontrado com os filtros atuais.",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
             )
         }
 
@@ -624,32 +808,26 @@ fun EquipamentoSection(
                                 }
 
                                 if (subsub.isEmpty()) {
-                                    catsPorSub
-                                        .flatMap { it.itens }
-                                        .filter { eq ->
-                                            if (filter.somenteAcessiveis) {
-                                                val c = (eq.custo as? JsonPrimitive)
-                                                    ?.content?.toIntOrNull()
-                                                    ?: Int.MAX_VALUE
-                                                if (c > dinheiro) return@filter false
+                                    catsPorSub.forEach { categoriaAtual ->
+                                        categoriaAtual.itens
+                                            .filter { eq -> eq.ehAcessivel() && eq.combinaBusca() }
+                                            .forEach { equipamento ->
+                                                EquipamentoListItem(
+                                                    equipamento = equipamento,
+                                                    categoria = categoriaAtual,
+                                                    onClick = {
+                                                        onEquipamentoDoubleClick(equipamento)
+                                                    },
+                                                    allowLongTexts = allowLongTexts,
+                                                    expanded = detalhesExpandidos[equipamento.nome] == true,
+                                                    onToggleDetails = {
+                                                        val current = detalhesExpandidos[equipamento.nome] ?: false
+                                                        detalhesExpandidos[equipamento.nome] = !current
+                                                    },
+                                                    showOriginalName = showOfficialNames
+                                                )
                                             }
-                                            true
-                                        }
-                                        .forEach { equipamento ->
-                                            EquipamentoListItem(
-                                                equipamento = equipamento,
-                                                onClick = {
-                                                    onEquipamentoDoubleClick(equipamento)
-                                                },
-                                                allowLongTexts = allowLongTexts,
-                                                expanded = detalhesExpandidos[equipamento.nome] == true,
-                                                onToggleDetails = {
-                                                    val current = detalhesExpandidos[equipamento.nome] ?: false
-                                                    detalhesExpandidos[equipamento.nome] = !current
-                                                },
-                                                showOriginalName = showOfficialNames
-                                            )
-                                        }
+                                    }
                                 } else {
                                     subsub.forEach { ss ->
                                         val isSsExpanded =
@@ -678,39 +856,33 @@ fun EquipamentoSection(
                                             ) {
                                                 catsPorSub
                                                     .filter { it.subsubtipo == ss }
-                                                    .flatMap { it.itens }
-                                                      .filter { eq ->
-                                                          if (filter.somenteAcessiveis) {
-                                                              val c =
-                                                                  (eq.custo as? JsonPrimitive)
-                                                                      ?.content?.toIntOrNull()
-                                                                      ?: Int.MAX_VALUE
-                                                              if (c > dinheiro) return@filter false
-                                                          }
-                                                          true
-                                                      }
-                                                      .forEach { equipamento ->
-                                                          EquipamentoListItem(
-                                                              equipamento = equipamento,
-                                                              onClick = {
-                                                                  onEquipamentoDoubleClick(
-                                                                      equipamento
-                                                                  )
-                                                              },
-                                                              allowLongTexts = allowLongTexts,
-                                                              expanded = detalhesExpandidos[equipamento.nome] == true,
-                                                              onToggleDetails = {
-                                                                  val current = detalhesExpandidos[equipamento.nome] ?: false
-                                                                  detalhesExpandidos[equipamento.nome] = !current
-                                                              },
-                                                              showOriginalName = showOfficialNames
-                                                          )
-                                                      }
-                                                  }
+                                                    .forEach { categoriaAtual ->
+                                                        categoriaAtual.itens
+                                                            .filter { eq -> eq.ehAcessivel() && eq.combinaBusca() }
+                                                            .forEach { equipamento ->
+                                                                EquipamentoListItem(
+                                                                    equipamento = equipamento,
+                                                                    categoria = categoriaAtual,
+                                                                    onClick = {
+                                                                        onEquipamentoDoubleClick(
+                                                                            equipamento
+                                                                        )
+                                                                    },
+                                                                    allowLongTexts = allowLongTexts,
+                                                                    expanded = detalhesExpandidos[equipamento.nome] == true,
+                                                                    onToggleDetails = {
+                                                                        val current = detalhesExpandidos[equipamento.nome] ?: false
+                                                                        detalhesExpandidos[equipamento.nome] = !current
+                                                                    },
+                                                                    showOriginalName = showOfficialNames
+                                                                )
+                                                            }
+                                                    }
                                               }
                                           }
                                 }
                             }
+                        }
                         }
                         Spacer(Modifier.padding(vertical = 2.dp))
                     }
@@ -810,30 +982,24 @@ fun EquipamentoSection(
                         .verticalScroll(scrollSup)
                         .padding(start = 8.dp, bottom = 8.dp)
                 ) {
-                    supCatsFiltradas
-                        .flatMap { it.itens }
-                        .filter { eq ->
-                            if (filter.somenteAcessiveis) {
-                                val c = (eq.custo as? JsonPrimitive)
-                                    ?.content?.toIntOrNull()
-                                    ?: Int.MAX_VALUE
-                                if (c > dinheiro) return@filter false
+                    supCatsFiltradas.forEach { categoriaAtual ->
+                        categoriaAtual.itens
+                            .filter { eq -> eq.ehAcessivel() && eq.combinaBusca() }
+                            .forEach { equipamento ->
+                                EquipamentoListItem(
+                                    equipamento = equipamento,
+                                    categoria = categoriaAtual,
+                                    onClick = { onEquipamentoDoubleClick(equipamento) },
+                                    allowLongTexts = allowLongTexts,
+                                    expanded = detalhesExpandidos[equipamento.nome] == true,
+                                    onToggleDetails = {
+                                        val current = detalhesExpandidos[equipamento.nome] ?: false
+                                        detalhesExpandidos[equipamento.nome] = !current
+                                    },
+                                    showOriginalName = showOfficialNames
+                                )
                             }
-                            true
-                        }
-                        .forEach { equipamento ->
-                            EquipamentoListItem(
-                                equipamento = equipamento,
-                                onClick = { onEquipamentoDoubleClick(equipamento) },
-                                allowLongTexts = allowLongTexts,
-                                expanded = detalhesExpandidos[equipamento.nome] == true,
-                                onToggleDetails = {
-                                    val current = detalhesExpandidos[equipamento.nome] ?: false
-                                    detalhesExpandidos[equipamento.nome] = !current
-                                },
-                                showOriginalName = showOfficialNames
-                            )
-                        }
+                    }
                 }
             }
         }
@@ -843,6 +1009,7 @@ fun EquipamentoSection(
 @Composable
 fun EquipamentoListItem(
     equipamento: EquipamentoItem,
+    categoria: EquipamentoCategoria? = null,
     onClick: () -> Unit,
     allowLongTexts: Boolean,
     expanded: Boolean,
@@ -898,6 +1065,31 @@ fun EquipamentoListItem(
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(top = 4.dp)
                 )
+            }
+
+            val origemTag = categoria?.origem?.ifBlank { "BASICO" }
+                ?: equipamento.origem?.ifBlank { "BASICO" }
+            val infoTags = listOfNotNull(
+                categoria?.tipo,
+                categoria?.subtipo ?: equipamento.subtipo,
+                categoria?.subsubtipo ?: equipamento.subsubtipo,
+                origemTag?.let { "Origem: ${it.replace('_', ' ')}" }
+            )
+
+            if (infoTags.isNotEmpty()) {
+                Spacer(Modifier.height(4.dp))
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    infoTags.forEach { tag ->
+                        AssistChip(
+                            onClick = {},
+                            enabled = false,
+                            label = { Text(tag) }
+                        )
+                    }
+                }
             }
 
             val detalhes = buildList {

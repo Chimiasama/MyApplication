@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
 
 @Composable
@@ -30,6 +31,29 @@ fun RenderCategoryList(
     showOriginalName: Boolean = false,
     onUserFeedback: () -> Unit
 ) {
+    val buscaNormalizada = filter.busca.lowercase().trim().semAcentos()
+
+    fun EquipamentoItem.combinaBusca(): Boolean {
+        if (buscaNormalizada.isBlank()) return true
+        val texto = listOfNotNull(
+            nome,
+            originalName,
+            originalDescription,
+            observacoes?.toString(),
+            toResumo().linhaArma,
+            toResumo().linhaGeral,
+            toResumo().linhaVeiculo,
+            toResumo().observacao
+        ).joinToString("\n").semAcentos().lowercase()
+        return texto.contains(buscaNormalizada)
+    }
+
+    fun EquipamentoItem.ehAcessivel(): Boolean {
+        if (!filter.somenteAcessiveis || usaRiqueza) return true
+        val c = (custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
+        return c <= dinheiro
+    }
+
     val tipos = categories.map { it.tipo }.distinct()
     val expandedTipoMap = remember { mutableStateMapOf<String, Boolean>() }
 
@@ -84,28 +108,24 @@ fun RenderCategoryList(
                                 val subsub = catsPorSub.mapNotNull { it.subsubtipo }.distinct()
 
                                 if (subsub.isEmpty()) {
-                                    catsPorSub.flatMap { it.itens }
-                                        .filter { eq ->
-                                            if (filter.somenteAcessiveis) {
-                                                val c = (eq.custo as? JsonPrimitive)?.content?.toIntOrNull()
-                                                    ?: Int.MAX_VALUE
-                                                if (!usaRiqueza && c > dinheiro) return@filter false
+                                    catsPorSub.forEach { categoriaAtual ->
+                                        categoriaAtual.itens
+                                            .filter { eq -> eq.ehAcessivel() && eq.combinaBusca() }
+                                            .forEach { equipamento ->
+                                                EquipamentoListItem(
+                                                    equipamento = equipamento,
+                                                    categoria = categoriaAtual,
+                                                    onClick = { onEquipamentoDoubleClick(equipamento) },
+                                                    allowLongTexts = allowLongTexts,
+                                                    expanded = detalhesExpandidos[equipamento.nome] == true,
+                                                    onToggleDetails = {
+                                                        val current = detalhesExpandidos[equipamento.nome] ?: false
+                                                        detalhesExpandidos[equipamento.nome] = !current
+                                                    },
+                                                    showOriginalName = showOriginalName
+                                                )
                                             }
-                                            true
-                                        }
-                                        .forEach { equipamento ->
-                                            EquipamentoListItem(
-                                                equipamento = equipamento,
-                                                onClick = { onEquipamentoDoubleClick(equipamento) },
-                                                allowLongTexts = allowLongTexts,
-                                                expanded = detalhesExpandidos[equipamento.nome] == true,
-                                                onToggleDetails = {
-                                                    val current = detalhesExpandidos[equipamento.nome] ?: false
-                                                    detalhesExpandidos[equipamento.nome] = !current
-                                                },
-                                                showOriginalName = showOriginalName
-                                            )
-                                        }
+                                    }
                                 } else {
                                     val expandedSubsub = remember(tipo, subtipo) {
                                         subsub.associateWith { mutableStateOf(false) }
@@ -118,28 +138,23 @@ fun RenderCategoryList(
                                             onToggle = { expandedSubsub.getValue(ss).value = !isSsExpanded }
                                         ) {
                                             catsPorSub.filter { it.subsubtipo == ss }
-                                                .flatMap { it.itens }
-                                                .filter { eq ->
-                                                    if (filter.somenteAcessiveis) {
-                                                        val c =
-                                                            (eq.custo as? JsonPrimitive)?.content?.toIntOrNull()
-                                                                ?: Int.MAX_VALUE
-                                                        if (!usaRiqueza && c > dinheiro) return@filter false
-                                                    }
-                                                    true
-                                                }
-                                                .forEach { equipamento ->
-                                                    EquipamentoListItem(
-                                                        equipamento = equipamento,
-                                                        onClick = { onEquipamentoDoubleClick(equipamento) },
-                                                        allowLongTexts = allowLongTexts,
-                                                        expanded = detalhesExpandidos[equipamento.nome] == true,
-                                                        onToggleDetails = {
-                                                            val current = detalhesExpandidos[equipamento.nome] ?: false
-                                                            detalhesExpandidos[equipamento.nome] = !current
-                                                        },
-                                                        showOriginalName = showOriginalName
-                                                    )
+                                                .forEach { categoriaAtual ->
+                                                    categoriaAtual.itens
+                                                        .filter { eq -> eq.ehAcessivel() && eq.combinaBusca() }
+                                                        .forEach { equipamento ->
+                                                            EquipamentoListItem(
+                                                                equipamento = equipamento,
+                                                                categoria = categoriaAtual,
+                                                                onClick = { onEquipamentoDoubleClick(equipamento) },
+                                                                allowLongTexts = allowLongTexts,
+                                                                expanded = detalhesExpandidos[equipamento.nome] == true,
+                                                                onToggleDetails = {
+                                                                    val current = detalhesExpandidos[equipamento.nome] ?: false
+                                                                    detalhesExpandidos[equipamento.nome] = !current
+                                                                },
+                                                                showOriginalName = showOriginalName
+                                                            )
+                                                        }
                                                 }
                                         }
                                     }

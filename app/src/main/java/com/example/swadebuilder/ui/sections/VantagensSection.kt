@@ -20,8 +20,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
@@ -31,6 +34,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -47,8 +51,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.booleanResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -79,16 +85,19 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 data class VantFilter(
+    val busca: String = "",
     val origens: Set<String> = emptySet(),
     val estagios: Set<String> = emptySet(),
     val atributos: Set<String> = emptySet(),
     val pericias: Set<String> = emptySet()
 ) {
     fun isEmpty() =
-        origens.isEmpty() && estagios.isEmpty() && atributos.isEmpty() && pericias.isEmpty()
+        origens.isEmpty() && estagios.isEmpty() && atributos.isEmpty() && pericias.isEmpty() &&
+                busca.isBlank()
 
     fun totalSelections() =
-        origens.size + estagios.size + atributos.size + pericias.size
+        origens.size + estagios.size + atributos.size + pericias.size +
+                if (busca.isNotBlank()) 1 else 0
 }
 
 @Composable
@@ -201,6 +210,8 @@ fun VantagensContent(
 
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
 
+    val focusManager = LocalFocusManager.current
+
     val listaVantagens: List<Vantagem> =
         remember(multiplosAAHabilitados, listaVantagensGlobal) {
             if (multiplosAAHabilitados) {
@@ -269,6 +280,7 @@ fun VantagensContent(
 
     val expandedMap = state.categoriasVantagensExpandidas
     val vantagemEmFoco = state.vantagemEmFoco
+    val buscaNormalizada = filter.busca.lowercase().trim().semAcentos()
 
     LaunchedEffect(vantagemEmFoco) {
         if (!vantagemEmFoco.isNullOrBlank()) {
@@ -329,6 +341,22 @@ fun VantagensContent(
 
         Spacer(Modifier.size(8.dp))
 
+        OutlinedTextField(
+            value = filter.busca,
+            onValueChange = { filtro -> filter = filter.copy(busca = filtro) },
+            label = { Text("Buscar vantagens") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 4.dp),
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Sentences,
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() })
+        )
+
         Text(
             text = if (filter.isEmpty()) "Filtrar vantagens"
             else "Filtros (${filter.totalSelections()})",
@@ -337,6 +365,74 @@ fun VantagensContent(
                 .padding(horizontal = 16.dp, vertical = 4.dp)
                 .clickable { showFilterDialog = true }
         )
+
+        if (!filter.isEmpty()) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                if (filter.busca.isNotBlank()) {
+                    AssistChip(
+                        onClick = { filter = filter.copy(busca = "") },
+                        label = { Text("Busca: ${filter.busca}") },
+                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Limpar busca") }
+                    )
+                }
+
+                filter.origens.forEach { origem ->
+                    AssistChip(
+                        onClick = {
+                            val novas = filter.origens.toMutableSet().apply { remove(origem) }
+                            filter = filter.copy(origens = novas)
+                        },
+                        label = { Text("Origem: $origem") },
+                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = null) }
+                    )
+                }
+
+                filter.estagios.forEach { estagio ->
+                    AssistChip(
+                        onClick = {
+                            val novos = filter.estagios.toMutableSet().apply { remove(estagio) }
+                            filter = filter.copy(estagios = novos)
+                        },
+                        label = { Text("Estágio: $estagio") },
+                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = null) }
+                    )
+                }
+
+                filter.atributos.forEach { atributo ->
+                    AssistChip(
+                        onClick = {
+                            val novos = filter.atributos.toMutableSet().apply { remove(atributo) }
+                            filter = filter.copy(atributos = novos)
+                        },
+                        label = { Text("Atributo: $atributo") },
+                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = null) }
+                    )
+                }
+
+                filter.pericias.forEach { pericia ->
+                    AssistChip(
+                        onClick = {
+                            val novas = filter.pericias.toMutableSet().apply { remove(pericia) }
+                            filter = filter.copy(pericias = novas)
+                        },
+                        label = { Text("Perícia: $pericia") },
+                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = null) }
+                    )
+                }
+
+                AssistChip(
+                    onClick = { filter = VantFilter(busca = filter.busca) },
+                    label = { Text("Limpar filtros") },
+                    leadingIcon = { Icon(Icons.Default.Close, contentDescription = null) }
+                )
+            }
+        }
 
         if (showFilterDialog) {
             val allOrigens = listaVantagensAtivas.map { it.origem.ifBlank { "BASICO" }.uppercase() }.distinct()
@@ -532,6 +628,16 @@ fun VantagensContent(
                                 return@filter false
                         }
                         true
+                    }
+                    .filter { vant ->
+                        if (buscaNormalizada.isBlank()) return@filter true
+                        val texto = listOfNotNull(
+                            vant.nome,
+                            vant.originalName,
+                            vant.originalDescription,
+                            vant.descricao
+                        ).joinToString("\n").semAcentos().lowercase()
+                        texto.contains(buscaNormalizada)
                     }
 
                 val listState = rememberLazyListState()
