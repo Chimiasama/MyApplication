@@ -545,43 +545,54 @@ fun EquipamentoSection(
                              true
                          }
 
-                         val catsBySubtype = filteredCats.groupBy { it.subtipo }
+                        val catsBySubtype = filteredCats.groupBy { it.subtipo }
+                        val subtypeEntries = catsBySubtype.entries.sortedBy { it.key }
 
-                         Column(Modifier.padding(start = 8.dp)) {
-                             catsBySubtype.keys.sorted().forEach { subtype ->
+                        LazyColumn(
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .fillMaxWidth()
+                                .heightIn(min = 200.dp, max = 520.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                            contentPadding = PaddingValues(bottom = 8.dp)
+                        ) {
+                            subtypeEntries.forEach { (subtype, subtypeCats) ->
+                                item(key = "header_$subtype") {
+                                    Text(
+                                        text = subtype,
+                                        style = MaterialTheme.typography.titleSmall,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+                                    )
+                                }
 
-                                 Text(
-                                     text = subtype,
-                                     style = MaterialTheme.typography.titleSmall,
-                                     color = MaterialTheme.colorScheme.primary,
-                                     fontWeight = FontWeight.Bold,
-                                     modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
-                                 )
-
-                                 val subtypeCats = catsBySubtype[subtype] ?: emptyList()
-                                 val subtypeItems = subtypeCats.flatMap { it.itens }.filter { eq ->
-                                      if (filter.somenteAcessiveis) {
-                                          val c = (eq.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
-                                          if (!usaRiqueza && c > dinheiro) return@filter false
-                                      }
-                                      true
-                                 }
-
-                                 if (subtypeItems.isEmpty()) {
-                                     Text("- Nenhum item -", style = MaterialTheme.typography.bodySmall)
-                                 } else {
-                                     subtypeItems.forEach { item ->
-                                         StandardEquipamentoItem(
-                                             equipamento = item,
-                                             onClick = { onEquipamentoDoubleClick(item) },
-                                             allowLongTexts = allowLongTexts,
-                                             showOriginalName = showOfficialNames
-                                         )
+                                val subtypeItems = subtypeCats.flatMap { it.itens }.filter { eq ->
+                                     if (filter.somenteAcessiveis) {
+                                         val c = (eq.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
+                                         if (!usaRiqueza && c > dinheiro) return@filter false
                                      }
-                                 }
-                             }
-                             Spacer(Modifier.height(8.dp))
-                         }
+                                     true
+                                }
+
+                                if (subtypeItems.isEmpty()) {
+                                    item(key = "empty_$subtype") {
+                                        Text("- Nenhum item -", style = MaterialTheme.typography.bodySmall)
+                                    }
+                                } else {
+                                    items(subtypeItems, key = { item -> item.nome + item.hashCode() }) { item ->
+                                        StandardEquipamentoItem(
+                                            equipamento = item,
+                                            onClick = { onEquipamentoDoubleClick(item) },
+                                            allowLongTexts = allowLongTexts,
+                                            showOriginalName = showOfficialNames
+                                        )
+                                    }
+                                }
+
+                                item(key = "spacer_$subtype") { Spacer(Modifier.height(8.dp)) }
+                            }
+                        }
                     }
                     Spacer(Modifier.height(4.dp))
                 }
