@@ -50,7 +50,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         armorBase = this.armadura,
 
         // supers
-        modoSupers = this.modoSupers,
+        modoSupers = this.compendioSupersAtivo,
         modoMonstroAtivo = this.modoMonstroAtivo,
         tipoMonstroSelecionado = this.tipoMonstroSelecionado,
         superPontosTotais = this.superPontosTotais,

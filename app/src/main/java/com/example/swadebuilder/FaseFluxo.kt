@@ -27,7 +27,7 @@ val CriadorState.faseFluxo: FaseFluxo
         progresso > 0 && !modoSupersComSaldoDeSupers -> FaseFluxo.PROGRESSOS
 
         // 2) Campanha supers, com nível já definido e pontos calculados
-        modoSupers &&
+        compendioSupersAtivo &&
                 superNivelCampanha != null &&
                 superPontosTotais > 0 ->
             FaseFluxo.SUPERS
@@ -37,7 +37,7 @@ val CriadorState.faseFluxo: FaseFluxo
     }
 
 private val CriadorState.modoSupersComSaldoDeSupers: Boolean
-    get() = modoSupers && superPontosTotais > 0 && superPontosDisponiveis > 0
+    get() = compendioSupersAtivo && superPontosTotais > 0 && superPontosDisponiveis > 0
 
 /**
  * Criação básica congelada?
