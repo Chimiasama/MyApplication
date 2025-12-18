@@ -431,66 +431,6 @@ fun EquipamentoSection(
         if (isSearching || isFilteringTypes) {
             // Flat List View
             // Collect all items first
-             val flatItems = allCategorias.flatMap { cat ->
-                 cat.itens.map { item -> Triple(item, cat.tipo, cat.subtipo) }
-                     // If it has subsubtypes, they are handled inside cat.itens usually?
-                     // Wait, the model is EquipamentoCategoria containing 'itens'.
-                     // Actually RenderCategoryList logic handles subsubtypes by filtering the item list within the category if structured that way.
-                     // But here 'cat' is an EquipamentoCategoria which has a flat 'itens' list?
-                     // Let's check EquipamentoCategoria. No, it has 'itens'.
-                     // The subsubtypes logic in RenderCategoryList implies the items THEMSELVES have subsubtipo property.
-                     // Yes, let's assume item has 'subsubtipo'.
-             }.filter { (item, tipo, _) ->
-                 // Filter by Type Chips
-                 if (selectedTypes.isNotEmpty() && tipo !in selectedTypes) return@filter false
-
-                 // Filter by Search
-                 if (isSearching) {
-                     val q = searchQuery.semAcentos().lowercase()
-                     val n = item.nome.semAcentos().lowercase()
-                     if (!n.contains(q)) return@filter false
-                 }
-
-                 // Advanced Filters
-                 if (filter.somenteAcessiveis) {
-                    val c = (item.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
-                    if (!usaRiqueza && c > dinheiro) return@filter false
-                 }
-                 if (filter.tipos.isNotEmpty() && tipo !in filter.tipos) return@filter false
-                 // Note: Subtype filter logic is harder here because we flattened it, but let's try
-                 // We don't have easy access to item's subtype if it's only on the Category object.
-                 // The Triple stores (Item, Type, Subtype).
-                 // So we can check the subtype from the Triple.
-                 // wait, Triple is (item, cat.tipo, cat.subtipo).
-
-                 if (filter.subtipos.isNotEmpty()) {
-                     // Check category subtype
-                     // Also check item's subsubtipo if exists?
-                     // The advanced filter assumes 'subtipo' matches the category subtype.
-                     // Let's rely on the Triple's 3rd component.
-                     val (_, _, catSubtipo) = Triple(item, tipo, _) // Wait, I need access to it
-                     // Kotlin destructuring in lambda arguments:
-                     // filter { (item, tipo, subtipo) -> ... }
-                     // But I need to check the logic.
-                     true
-                 } else true
-             }.filter { (item, tipo, subtipo) ->
-                 // Second pass for advanced filters requiring destructuring
-                 if (filter.subtipos.isNotEmpty() && subtipo !in filter.subtipos) return@filter false
-
-                 val itemOrigem = item.origem ?: "BASICO" // This is on item? Or category?
-                 // EquipamentoItem usually doesn't have origin, the category does.
-                 // But wait, the previous code filtered categories by origin.
-                 // So if the category passed the initial filter at top of function, we are good?
-                 // Not quite, `allCategorias` is filtered by ACTIVE COMPENDIUMS.
-                 // `filter.origens` is user selection in dialog.
-                 // We need to check the category origin again?
-                 // Let's assume the category object has the origin.
-                 // I should probably map Triple(item, category) instead.
-                 true
-             }
-
-             // Actually simpler: iterate categories, filter them, thenflatMap.
              val finalFlatList = allCategorias.filter { cat ->
                  val catOrigem = cat.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
                  if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@filter false
@@ -503,6 +443,7 @@ fun EquipamentoSection(
                         val c = (item.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
                         if (!usaRiqueza && c > dinheiro) return@filter false
                      }
+
                      if (selectedTypes.isNotEmpty() && cat.tipo !in selectedTypes) return@filter false
 
                      if (isSearching) {
@@ -559,12 +500,6 @@ fun EquipamentoSection(
 
                          Column(Modifier.padding(start = 8.dp)) {
                              catsBySubtype.keys.sorted().forEach { subtype ->
-                                 // We flatten the subtype accordion to reduce layers if possible?
-                                 // The user complained about layers.
-                                 // "Hand Weapons" (Type) -> "Blades" (Subtype) -> Items
-                                 // Let's keep it simply as Headers followed by items, instead of nested collapsible?
-                                 // Or maybe a smaller collapsible?
-                                 // Let's try Headers.
 
                                  Text(
                                      text = subtype,
