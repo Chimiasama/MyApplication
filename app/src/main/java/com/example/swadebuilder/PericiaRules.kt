@@ -1,6 +1,7 @@
 package com.example.swadebuilder
 
 import com.example.swadebuilder.model.RuleConstants
+import com.example.swadebuilder.util.keyify
 import kotlin.math.max
 
 /**
@@ -83,4 +84,17 @@ fun CriadorState.calcularPericiaRules(
         canIncrease = canIncrease,
         canDecrease = canDecrease
     )
+}
+
+fun CriadorState.atributoBaseParaPericia(per: Pericia): String {
+    val hasBrutamontes = vantagensSelecionadas.any {
+        val kid = it.id.keyify()
+        kid == "brutamontes" || kid == "brawny"
+    }
+
+    return if (per.nome.equals("Atletismo", ignoreCase = true) && hasBrutamontes) {
+        "FORCA"
+    } else {
+        per.atributo
+    }
 }
