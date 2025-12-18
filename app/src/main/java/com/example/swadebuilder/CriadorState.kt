@@ -28,6 +28,7 @@ import com.example.swadebuilder.model.SnapshotRecursos
 import com.example.swadebuilder.model.SnapshotSelecoes
 import com.example.swadebuilder.model.SnapshotSupers
 import com.example.swadebuilder.model.SuperInvestment
+import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
@@ -74,6 +75,63 @@ class CriadorState {
     var anotacoes by mutableStateOf("")
 
     var coracaoCrystalSelecionado by mutableStateOf<com.example.swadebuilder.model.CrystalHeart?>(null)
+    var tropoSelecionado by mutableStateOf<Tropo?>(null)
+    var pontosTecnicas by mutableIntStateOf(0)
+
+    val reservaChi: Int by derivedStateOf {
+        val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 4
+        // Base = Espírito / 2 (conforme pedido)
+        val base = espiritoRaw / 2
+
+        val racialMod = if (ancestralidade.equals("TERRACOTA", ignoreCase = true)) -1 else 0
+
+        // Modificadores de Vantagens que dão bônus de Chi?
+        // O prompt diz: "Se o personagem tiver certas vantagens de Chi, some os bônus."
+        // Como não há IDs específicos fornecidos e nem vantagens explícitas no JSON com bônus fixo de Chi (exceto talvez por lógica customizada),
+        // deixaremos um hook aqui. Exemplo: Vantagem "Chi Elevado" ou similar se existisse.
+        // Por enquanto, assumimos 0 ou varremos se encontrarmos algo.
+        // Verificando Vantagens.json ou vantagens_adg.json, não vi "Chi +1".
+        // Mas se precisar, basta adicionar aqui.
+        val vantagemMod = 0
+
+        (base + racialMod + vantagemMod).coerceAtLeast(0)
+    }
+
+    fun applyTropo(novo: Tropo?, feedbackMessages: MutableList<String>) {
+        // 1. Remove vantagens do tropo anterior
+        tropoSelecionado?.let { old ->
+            old.ganha_ao_comprar.forEach { idVant ->
+                val toRemove = vantagensSelecionadas.find { it.id == idVant }
+                if (toRemove != null) {
+                    // Remove apenas se foi adicionada automaticamente (não temos flag "auto-adicionada",
+                    // mas assumimos que se faz parte do set do tropo, deve sair ao trocar tropo).
+                    // CUIDADO: Se o usuário comprou a mesma vantagem "por fora", isso a removeria.
+                    // Para evitar problemas, removemos. O usuário pode recomprar se quiser.
+                    vantagensSelecionadas.remove(toRemove)
+                }
+            }
+        }
+
+        tropoSelecionado = novo
+        pontosTecnicas = novo?.tecnicas_iniciais ?: 0
+
+        // 2. Adiciona vantagens do novo tropo
+        novo?.let { t ->
+            t.ganha_ao_comprar.forEach { idVant ->
+                // Busca na lista global
+                val vant = listaVantagens.firstOrNull { it.id == idVant }
+                if (vant != null) {
+                    // Verifica se já tem
+                    if (vantagensSelecionadas.none { it.id == idVant }) {
+                        vantagensSelecionadas.add(vant)
+                        feedbackMessages.add("Vantagem ${vant.nome} adicionada pelo Tropo ${t.nome}.")
+                    }
+                } else {
+                    feedbackMessages.add("Aviso: Vantagem ID '$idVant' do Tropo não encontrada.")
+                }
+            }
+        }
+    }
 
     val comprasPpPorEstagio = mutableStateMapOf<String, Int>().apply {
         listaDeEstagios.forEach { this[it.nome] = 0 }

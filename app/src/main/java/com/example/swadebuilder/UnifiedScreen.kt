@@ -45,6 +45,7 @@ import com.example.swadebuilder.ui.sections.PericiasContent
 import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.SummaryContent
 import com.example.swadebuilder.ui.sections.SuperPoderesContent
+import com.example.swadebuilder.ui.sections.TroposSection
 import com.example.swadebuilder.ui.sections.TipoMonstroSection
 import com.example.swadebuilder.ui.sections.VantagensContent
 import com.example.swadebuilder.ui.sections.XpSection
@@ -486,6 +487,15 @@ fun CreationModeContent(
             onUserFeedback = onUserFeedback
         )
     }
+
+        if (state.compendioArteDaGuerraAtivo) {
+            HorizontalDivider(thickness = 1.dp)
+            TroposSection(
+                state = state,
+                feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
+                onUserFeedback = onUserFeedback
+            )
+        }
 
     if (state.compendioCrystalHeartAtivo) {
         HorizontalDivider(thickness = 1.dp)

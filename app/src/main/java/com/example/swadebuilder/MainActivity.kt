@@ -96,6 +96,7 @@ import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.AppPreferences
@@ -273,6 +274,12 @@ class MainActivity : ComponentActivity() {
             .bufferedReader()
             .use { it.readText() }
         listaMonstroTemplates = json.decodeFromString(monstrosJson)
+
+        listaTropos = try {
+            assets.readJsonList<Tropo>("tropos_adg.json")
+        } catch (_: Exception) {
+            emptyList()
+        }
 
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
             val m = rm.atributos
@@ -820,6 +827,7 @@ data class SuperPoder(
 
 lateinit var listaAncestralidadesJson: List<RacialModifier>
 lateinit var listaMonstroTemplates: List<MonstroTemplate>
+var listaTropos: List<Tropo> = emptyList()
 
 lateinit var racialAttrMinMap: Map<String, Map<String,Int>>
 lateinit var racialSkillStartMap: Map<String, Map<String,Int>>

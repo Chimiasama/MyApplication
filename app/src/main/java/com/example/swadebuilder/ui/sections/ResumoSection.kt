@@ -85,6 +85,17 @@ fun SummaryContent(state: CriadorState) {
     val identitySection = sections.firstOrNull { it.title == "Identidade" }
     val derivedSection = sections.firstOrNull { it.title == "Atributos derivados" }
     val attributesSection = sections.firstOrNull { it.title == "Atributos" }
+
+    if (state.compendioArteDaGuerraAtivo) {
+        val newDerivedItems = derivedSection?.items.orEmpty().toMutableList()
+        if (newDerivedItems.none { it.startsWith("Chi:") }) {
+            newDerivedItems.add("Chi: ${state.reservaChi}")
+            // Update the section in place if possible, or we rely on the UI recreating it.
+            // Since `sections` is local val, we can't easily modify it to reflect in `derivedSection`.
+            // But `derivedSection` is a local val reference.
+            // We need to intercept the display logic below.
+        }
+    }
     val skillsSection = sections.firstOrNull { it.title == "Perícias" }
 
     val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
@@ -160,8 +171,12 @@ fun SummaryContent(state: CriadorState) {
 
         Spacer(Modifier.height(12.dp))
 
-        derivedSection?.let {
-            DerivedStatsRow(stats = it.toStats())
+        derivedSection?.let { sec ->
+            val items = sec.items.toMutableList()
+            if (state.compendioArteDaGuerraAtivo && items.none { it.startsWith("Chi:") }) {
+                items.add("Chi: ${state.reservaChi}")
+            }
+            DerivedStatsRow(stats = sec.copy(items = items).toStats())
             Spacer(Modifier.height(12.dp))
         }
 

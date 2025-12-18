@@ -127,6 +127,7 @@ fun InformacoesSection(
 
             val movimento = state.valorMovimentacao()
             val aparar = state.valorAparar()
+            val chi = state.reservaChi
 
             val temArmaduraDeEquip =
                 state.equipamentosComprados.any { it.armadura != null }
@@ -165,6 +166,10 @@ fun InformacoesSection(
                         StatItem("Aparar", aparar.toString())
                         Spacer(modifier = Modifier.height(8.dp))
                         StatItem("Tamanho", tamanhoTexto)
+                        if (state.compendioArteDaGuerraAtivo) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            StatItem("Chi", chi.toString())
+                        }
                     }
                 }
             }
