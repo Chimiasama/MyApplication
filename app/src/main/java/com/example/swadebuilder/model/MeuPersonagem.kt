@@ -22,6 +22,7 @@ data class MeuPersonagem(
 
     // Poderes arcanos, como antes:
     val poderes: Map<String, List<String>>,
+    val manifestacoesPoderes: Map<String, String> = emptyMap(),
 
     // Dinheiro e PV restantes (vantagens):
     val dinheiro: Int,

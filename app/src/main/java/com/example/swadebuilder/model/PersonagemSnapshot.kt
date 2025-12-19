@@ -112,6 +112,7 @@ data class SnapshotSelecoes(
     val complicacoesSelecionadas: List<ComplicacaoSnapshot>,
     val reservasComplicacaoMaior: Map<String, Boolean>,
     val poderesSelecionados: List<String>,
+    val manifestacoesPoderes: Map<String, String> = emptyMap(),
     val poderSlotsPorArcano: Map<String, List<String?>>, 
     val novosPoderesStacksPorArcano: Map<String, List<List<String>>>,
     val arcanoEmCompraViaXpKey: String?,

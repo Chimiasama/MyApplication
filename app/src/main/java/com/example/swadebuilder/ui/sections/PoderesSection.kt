@@ -18,6 +18,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -180,6 +181,7 @@ private fun ArcanoArea(
                             if (!isSlotLocked && poderId != null) {
                                 slots[idx] = null
                                 state.syncPoderesSelecionadosFromSlots()
+                                state.manifestacoesPoderes.remove(poderId)
                             }
                         },
                         label = { Text("${idx + 1}: $label") },
@@ -220,6 +222,7 @@ private fun ArcanoArea(
                             if (idx >= 0 && idx >= lockedCount) {
                                 slots[idx] = null
                                 state.syncPoderesSelecionadosFromSlots()
+                                state.manifestacoesPoderes.remove(poder.id)
                             }
                         } else {
                             val firstEmpty = slots.indexOfFirst { it == null }
@@ -294,6 +297,22 @@ private fun ArcanoArea(
                                 }
                             }
                         }
+                    }
+
+                    if (selecionado) {
+                        Spacer(Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = state.manifestacoesPoderes[poder.id].orEmpty(),
+                            onValueChange = { value ->
+                                if (value.isBlank()) {
+                                    state.manifestacoesPoderes.remove(poder.id)
+                                } else {
+                                    state.manifestacoesPoderes[poder.id] = value
+                                }
+                            },
+                            label = { Text("Manifestação/Aparência") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
                 }
             }

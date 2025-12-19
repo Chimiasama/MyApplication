@@ -67,6 +67,7 @@ class CriadorState {
     var cartaSelvagem       by mutableStateOf(true)
     var dinheiro by mutableIntStateOf(500)
     val poderesSelecionados = mutableStateListOf<String>()
+    val manifestacoesPoderes = mutableStateMapOf<String, String>()
     val equipamentosComprados = mutableStateListOf<EquipamentoItem>()
     var heroisSemArmadura by mutableStateOf(false)
     private val _maxedTraits = mutableStateListOf<String>()
@@ -196,6 +197,9 @@ class CriadorState {
                 + bonusMovimentacaoFromPower)
             .coerceAtLeast(0)
     }
+
+    fun totalTensaoEquipamentos(): Int =
+        equipamentosComprados.sumOf { it.tensao ?: 0 }
 
     fun valorAparar(): Int {
         val perLutar = mapaPericias["LUTAR"]
@@ -1888,6 +1892,7 @@ class CriadorState {
                 },
                 reservasComplicacaoMaior = reservasComplicacaoMaior.toMap(),
                 poderesSelecionados = poderesSelecionados.toList(),
+                manifestacoesPoderes = manifestacoesPoderes.toMap(),
                 poderSlotsPorArcano = poderSlotsPorArcano.mapValues { it.value.toList() },
                 novosPoderesStacksPorArcano = novosPoderesStacksPorArcano
                     .mapValues { (_, pilhas) -> pilhas.map { it.toList() } },
@@ -2072,6 +2077,10 @@ class CriadorState {
             novosPoderesStacksPorArcano[key] = pilhas.map { it.toMutableList() }.toMutableList()
         }
         poderesSelecionados.apply { clear(); addAll(snapshot.selecoes.poderesSelecionados) }
+        manifestacoesPoderes.apply {
+            clear()
+            putAll(snapshot.selecoes.manifestacoesPoderes)
+        }
         arcanoEmCompraViaXpKey = snapshot.selecoes.arcanoEmCompraViaXpKey
         arcanoSnapshotAntesDaCompra = snapshot.selecoes.arcanoSnapshotAntesDaCompra
 
