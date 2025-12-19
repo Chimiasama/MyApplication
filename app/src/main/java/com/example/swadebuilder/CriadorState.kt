@@ -783,6 +783,7 @@ class CriadorState {
     var usarEspecializacoesDePericia by mutableStateOf(false)
 
     val especializacoesPorPericia: SnapshotStateMap<String, com.example.swadebuilder.model.EspecializacoesDto> = mutableStateMapOf()
+    val notasPorPericia: SnapshotStateMap<String, String> = mutableStateMapOf()
 
     var bonusPoderExtra by mutableIntStateOf(0)
 
@@ -1938,7 +1939,8 @@ class CriadorState {
                 compIncsPorPericia = compIncsPorPericia.mapKeys { it.key.nome },
                 spCostStackPorPericia = spCostStackPorPericia.mapKeys { it.key.nome }.mapValues { it.value.toList() },
                 compCostStackPorPericia = compCostStackPorPericia.mapKeys { it.key.nome }.mapValues { it.value.toList() },
-                especializacoesPorPericia = especializacoesPorPericia.toMap()
+                especializacoesPorPericia = especializacoesPorPericia.toMap(),
+                notasPorPericia = notasPorPericia.toMap()
             ),
             selecoes = SnapshotSelecoes(
                 vantagens = vantagensSelecionadas.map { AdvantageSnapshot(it.id, it.choice) },
@@ -2078,6 +2080,7 @@ class CriadorState {
         pontosAtributo = calcularPontosAtributoRestantes()
 
         especializacoesPorPericia.clear()
+        notasPorPericia.clear()
         listaPericias.forEach { per ->
             baseIncsPorPericia[per] = snapshot.pericias.baseIncsPorPericia[per.nome] ?: 0
             compIncsPorPericia[per] = snapshot.pericias.compIncsPorPericia[per.nome] ?: 0
@@ -2093,6 +2096,11 @@ class CriadorState {
 
             snapshot.pericias.especializacoesPorPericia[per.nome]?.let { dto ->
                 especializacoesPorPericia[per.nome] = dto
+            }
+            snapshot.pericias.notasPorPericia[per.nome]?.let { nota ->
+                if (nota.isNotBlank()) {
+                    notasPorPericia[per.nome] = nota
+                }
             }
         }
 

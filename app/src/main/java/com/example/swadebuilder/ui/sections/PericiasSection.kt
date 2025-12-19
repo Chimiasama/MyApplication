@@ -238,9 +238,7 @@ fun PericiasContent(
                         overflow = TextOverflow.Ellipsis
                     )
 
-                    val notaPericia = state.especializacoesPorPericia[per.nome]?.principal
-                        ?.trim()
-                        .orEmpty()
+                    val notaPericia = state.notasPorPericia[per.nome]?.trim().orEmpty()
                     val podeEditarNota = !locked && state.rawTotal(per) > 0
 
                     if (state.rawTotal(per) > 0) {
@@ -270,6 +268,7 @@ fun PericiasContent(
                             state.decreasePericia(per)
                             if (state.rawTotal(per) == 0) {
                                 state.especializacoesPorPericia.remove(per.nome)
+                                state.notasPorPericia.remove(per.nome)
                             }
                             onUserFeedback()
                         },
@@ -600,21 +599,9 @@ fun PericiasContent(
                         val per = notaTarget!!
                         val nota = notaText.trim()
                         if (nota.isBlank()) {
-                            val atual =
-                                state.especializacoesPorPericia[per.nome]
-                                    ?: EspecializacoesDto()
-                            if (atual.lista.isEmpty()) {
-                                state.especializacoesPorPericia.remove(per.nome)
-                            } else {
-                                state.especializacoesPorPericia[per.nome] =
-                                    atual.copy(principal = null)
-                            }
+                            state.notasPorPericia.remove(per.nome)
                         } else {
-                            val atual =
-                                state.especializacoesPorPericia[per.nome]
-                                    ?: EspecializacoesDto()
-                            state.especializacoesPorPericia[per.nome] =
-                                atual.copy(principal = nota)
+                            state.notasPorPericia[per.nome] = nota
                         }
                         showNotaDialog = false
                     }

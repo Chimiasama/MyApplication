@@ -27,9 +27,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         nome = this.nomePersonagem,
         atributos = this.valoresAtributos.mapValues { it.value.intValue },
         pericias = listaPericias.associate { per -> per.nome to this.rawTotal(per) },
-        notasPericia = this.especializacoesPorPericia
-            .mapValues { it.value.principal.orEmpty().trim() }
-            .filterValues { it.isNotBlank() },
+        notasPericia = this.notasPorPericia.toMap(),
         ancestralidade = this.ancestralidade,
         celestialAAMilagresDesabilitado = this.celestialAAMilagresDesabilitado,
         tropoSelecionadoId = this.tropoSelecionado?.id,

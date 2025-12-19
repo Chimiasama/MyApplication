@@ -236,6 +236,7 @@ class CriadorViewModel : ViewModel() {
         state.maisPontosPericias = maisPontosPericias
         state.usarEspecializacoesDePericia = usarEspecializacoesDePericia
         state.especializacoesPorPericia.clear()
+        state.notasPorPericia.clear()
 
         state.ancestralidade = "HUMANOS"
         state.vantagensSelecionadas.clear()
