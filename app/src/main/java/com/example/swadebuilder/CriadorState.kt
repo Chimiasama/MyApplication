@@ -292,7 +292,7 @@ class CriadorState {
     }
 
     private fun valorTamanhoRaw(): Int {
-        val racialDesc = desvantagensRaciais
+        val racialDesc = (desvantagensRaciais + desvantagensAutomaticas)
             .firstOrNull { it.contains("TAMANHO", ignoreCase = true) }
             ?: listaAncestralidadesJson
                 .firstOrNull { it.nome.keyify() == ancestralidade }
