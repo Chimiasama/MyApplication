@@ -6095,5 +6095,456 @@
         "armadura": 4
       }
     ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Orientais",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Katana",
+        "dano": "For+d6+1",
+        "pa": 1,
+        "peso": "1,5",
+        "custo": 500,
+        "observacoes": "Jutsu (Espada). Duas mãos: d8 dano.",
+        "jutsu_grupo": "Espada"
+      },
+      {
+        "nome": "Nodachi",
+        "dano": "For+d8",
+        "pa": 2,
+        "peso": "6",
+        "custo": 500,
+        "observacoes": "Jutsu (Espada). Duas mãos. Aparar -1.",
+        "jutsu_grupo": "Espada"
+      },
+      {
+        "nome": "Kusarigama",
+        "dano": "For+d6/d4",
+        "peso": "2",
+        "custo": 200,
+        "observacoes": "Jutsu (Corrente). Alcance 2, Duas mãos, Desarmar, Enredar.",
+        "jutsu_grupo": "Corrente"
+      },
+      {
+        "nome": "Tetsubo",
+        "dano": "For+d10",
+        "peso": "7,5",
+        "custo": 300,
+        "observacoes": "Jutsu (Concussão). Duas mãos. Arma Pesada se tiver For d10+.",
+        "jutsu_grupo": "Concussão"
+      },
+      {
+        "nome": "Kunai",
+        "dano": "For+d4",
+        "peso": "0,5",
+        "custo": 35,
+        "observacoes": "Jutsu (Leve). Pode ser arremessada.",
+        "jutsu_grupo": "Leve"
+      }
+    ]
+  },
+  {
+    "tipo": "Itens Especiais",
+    "subtipo": "Talismãs",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Talismã Explosivo",
+        "custo": 75,
+        "peso": "-",
+        "observacoes": "Papel adesivo. Causa 2d4 de dano em MPE ao ser rasgado."
+      },
+      {
+        "nome": "Talismã de Papel Protetor",
+        "custo": 50,
+        "peso": "-",
+        "observacoes": "Cria santuário (MGE). Inimigos sofrem -4 para entrar ou atacar quem está dentro."
+      },
+      {
+        "nome": "Talismã de Ilusão",
+        "custo": 75,
+        "peso": "-",
+        "observacoes": "Cria ilusão sensorial em objeto (ex: porta parece parede)."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas",
+    "subtipo": "Armas de Cristal",
+    "origem": "CRYSTAL_HEART",
+    "itens": [
+      {
+        "nome": "Espada de Fragmento",
+        "dano": "For+d8",
+        "pa": 2,
+        "peso": "2",
+        "custo": 500,
+        "observacoes": "Lâmina afiada de cristal bruto."
+      },
+      {
+        "nome": "Rifle de Pulso Syn",
+        "dano": "2d8",
+        "pa": 4,
+        "peso": "4",
+        "custo": 800,
+        "observacoes": "Dispara energia concentrada. Alcance 24/48/96. Cargas: 20."
+      }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Trajes Syn",
+    "origem": "CRYSTAL_HEART",
+    "itens": [
+      {
+        "nome": "Traje de Campo Syn",
+        "armadura": "+2",
+        "peso": "2",
+        "custo": 200,
+        "observacoes": "Uniforme padrão. Cobre tronco e braços."
+      },
+      {
+        "nome": "Armadura de Combate Syn",
+        "armadura": "+6",
+        "peso": "8",
+        "custo": 1200,
+        "observacoes": "Proteção completa. Máscara de gás inclusa. Reduz Agilidade em d6 se não tiver Força d8."
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento",
+    "subtipo": "Util utilitários",
+    "origem": "CRYSTAL_HEART",
+    "itens": [
+      {
+        "nome": "Estojo de Transporte de Cristal",
+        "peso": "1",
+        "custo": 100,
+        "observacoes": "Protege um Coração de Cristal inativo (Dureza 12)."
+      },
+      {
+        "nome": "Scanner de Ressonância",
+        "peso": "0.5",
+        "custo": 300,
+        "observacoes": "Detecta cristais ativos a 20 quadros."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Ar",
+    "subtipo": "Pistolas",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Pistola de Ar 'Brisa'",
+        "dano": "2d4",
+        "pmf": 2,
+        "peso": "1",
+        "custo": 150,
+        "observacoes": "Silenciosa. 30 tiros. Dist 6/12/24."
+      },
+      {
+        "nome": "Pistola de Ar 'Siroco'",
+        "dano": "2d4+1",
+        "pmf": 1,
+        "peso": "1",
+        "custo": 350,
+        "observacoes": "Silenciosa. 25 tiros. Dist 10/20/40."
+      },
+      {
+        "nome": "Pistola de Ar 'Pixie'",
+        "dano": "2d6",
+        "pmf": 2,
+        "peso": "2",
+        "custo": 300,
+        "observacoes": "Silenciosa. 20 tiros. CdT 2. Dist 10/20/40."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Ar",
+    "subtipo": "Rifles",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Rifle de Ar 'Chinook'",
+        "dano": "2d6-1",
+        "pmf": 2,
+        "peso": "4.5",
+        "custo": 300,
+        "observacoes": "Silenciosa. 10 tiros. Dist 20/40/80."
+      },
+      {
+        "nome": "Rifle de Ar 'Garmsil'",
+        "dano": "2d6",
+        "pmf": 1,
+        "peso": "5",
+        "custo": 600,
+        "observacoes": "Silenciosa. PA 1. 20 tiros. Dist 20/40/80."
+      },
+      {
+        "nome": "Rifle de Ar 'Pampeiro'",
+        "dano": "2d6+1",
+        "pmf": 2,
+        "peso": "4",
+        "custo": 1200,
+        "observacoes": "Silenciosa. PA 1. 22 tiros. Dist 24/48/96."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas a Vapor",
+    "subtipo": "Pesadas",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Rifle a Vapor",
+        "dano": "2d12",
+        "pmf": 2,
+        "peso": "20",
+        "custo": 12000,
+        "observacoes": "Tiro Rápido, Pesada, PA 4. Proibida."
+      },
+      {
+        "nome": "Lança-Vapores",
+        "dano": "2d8",
+        "pmf": 2,
+        "peso": "25",
+        "custo": 10000,
+        "observacoes": "Cone. Tiro Rápido, PA 2. Proibida."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Aço Vermelho",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Faca de Aço Vermelho",
+        "dano": "For+d4+2",
+        "peso": "0.25",
+        "custo": 50,
+        "observacoes": "PA 1."
+      },
+      {
+        "nome": "Sabre de Aço Vermelho",
+        "dano": "For+d6+2",
+        "peso": "1.5",
+        "custo": 400,
+        "observacoes": "PA 2."
+      },
+      {
+        "nome": "Espada-Bengala de Aço Vermelho",
+        "dano": "For+d4+2",
+        "peso": "0.75",
+        "custo": 450,
+        "observacoes": "Aparar +1, PA 1, Porte Oculto."
+      }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Especiais",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Sobretudo de Lã Pesada",
+        "armadura": "+1",
+        "peso": "4",
+        "custo": 150,
+        "observacoes": "Cobre tronco, braços e pernas."
+      },
+      {
+        "nome": "Peitoral de Aço Vermelho",
+        "armadura": "+4",
+        "peso": "8",
+        "custo": 5000,
+        "observacoes": "Cobre tronco."
+      },
+      {
+        "nome": "Armadura a Vapor",
+        "armadura": "+6",
+        "peso": "90",
+        "custo": 20000,
+        "observacoes": "Corpo todo. For Min d10 se sem combustível. Aumenta Força em 2 passos."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Armas de Rua",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Garrote",
+        "dano": "Especial",
+        "forcaMin": "d4",
+        "peso": "1",
+        "observacoes": "Requer Surpresa e Agarrar. +2 em Força para sufocar."
+      },
+      {
+        "nome": "Facão",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": "2",
+        "custo": 25,
+        "observacoes": "PA 1."
+      },
+      {
+        "nome": "Nunchaku",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": "4",
+        "custo": 50,
+        "observacoes": "Ignora escudos. Requer Agilidade d8."
+      },
+      {
+        "nome": "Sai",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": "2",
+        "custo": 20,
+        "observacoes": "Aparar +1. +1 Desarmar."
+      },
+      {
+        "nome": "Shuriken",
+        "dano": "For+1",
+        "forcaMin": "d4",
+        "peso": "0.5",
+        "custo": 5,
+        "observacoes": "Distância 3/6/12."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Especiais",
+    "subtipo": "Explosivos e Incendiários",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Coquetel Molotov",
+        "dano": "2d10",
+        "peso": "2",
+        "custo": 10,
+        "observacoes": "MPE. Pode incendiar. Falha crítica incendeia usuário."
+      },
+      {
+        "nome": "Explosivos Improvisados",
+        "dano": "4d6",
+        "peso": "10",
+        "custo": 50,
+        "observacoes": "MME. Arma Pesada."
+      },
+      {
+        "nome": "Explosivos Militares",
+        "dano": "4d6",
+        "peso": "7",
+        "custo": 1500,
+        "observacoes": "MGE. Arma Pesada. +1d6 por carga extra."
+      }
+    ]
+  },
+  {
+    "tipo": "Acessórios",
+    "subtipo": "Trapaça",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Dados Adulterados",
+        "custo": 20,
+        "observacoes": "+2 em Jogar (dados)."
+      },
+      {
+        "nome": "Dispositivo Óptico",
+        "custo": 200,
+        "peso": "1",
+        "observacoes": "Engana caça-níqueis. +2 em Ladinagem/Jogar."
+      },
+      {
+        "nome": "Patas de Macaco",
+        "custo": 50,
+        "peso": "1",
+        "observacoes": "Manipula alavancas de caça-níqueis. +2 Ladinagem."
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Mundano",
+    "subtipo": "Ferramentas do Crime",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Máscara Balaclava",
+        "custo": 10,
+        "observacoes": "Esconde identidade."
+      },
+      {
+        "nome": "Kit de Limpeza",
+        "peso": "15",
+        "custo": 100,
+        "observacoes": "Remove evidências."
+      },
+      {
+        "nome": "Kit de Arrombamento de Cofres",
+        "peso": "20",
+        "custo": 2500,
+        "observacoes": "Brocas, C-4, etc."
+      },
+      {
+        "nome": "Supressor",
+        "peso": "2",
+        "custo": 100,
+        "observacoes": "-2 para Perceber tiros."
+      },
+      {
+        "nome": "Soro da Verdade",
+        "peso": "1",
+        "custo": 200,
+        "observacoes": "Vigor ou Distraído/Fatigado."
+      },
+      {
+        "nome": "Estojo de Instrumento (Arma)",
+        "peso": "12",
+        "custo": 50,
+        "observacoes": "-2 para perceber arma dentro."
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Carros",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Carro Luxuoso",
+        "tamanho": 5,
+        "resistencia": "12(3)",
+        "velMaxima": 140,
+        "custo": 40000,
+        "observacoes": "Cadillac/Lincoln."
+      },
+      {
+        "nome": "Muscle Car",
+        "tamanho": 4,
+        "resistencia": "11(3)",
+        "velMaxima": 160,
+        "manobrabilidade": 2,
+        "custo": 20000,
+        "observacoes": "GTO, Mustang."
+      },
+      {
+        "nome": "Caminhão Blindado",
+        "tamanho": 5,
+        "resistencia": "18(6)",
+        "velMaxima": 90,
+        "manobrabilidade": -2,
+        "custo": 50000,
+        "observacoes": "Armadura Pesada."
+      }
+    ]
   }
 ]

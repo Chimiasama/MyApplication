@@ -929,5 +929,213 @@
     "origem": "DEADLANDS",
     "severity": "maior",
     "description": "Caçado por uma das grandes organizações da lei do Oeste. Recompensa alta pela cabeça."
+  },
+  {
+    "id": "comp_sangramento_nasal",
+    "name": "SANGRAMENTO NASAL",
+    "origem": "ARTE_DA_GUERRA",
+    "severity": "menor/maior",
+    "description": "Fica Distraído (Menor) ou Atordoado (Maior) ao ver cenas levemente eróticas ou românticas (tropo de anime).",
+    "observacoes": ""
+  },
+  {
+    "id": "comp_roupas_rasgadas",
+    "name": "ROUPAS RASGADAS",
+    "origem": "ARTE_DA_GUERRA",
+    "severity": "menor",
+    "description": "Ao gastar Chi ou sofrer dano, rola dado de roupa. Se falhar, roupas rasgam (cosmético, mas embaraçoso).",
+    "observacoes": ""
+  },
+  {
+    "id": "comp_prisioneiro_espiritual",
+    "name": "PRISIONEIRO ESPIRITUAL",
+    "origem": "ARTE_DA_GUERRA",
+    "severity": "menor/maior",
+    "description": "Deve favores a um espírito/kami. Se não cumprir, sofre penalidades ou bloqueio de Chi.",
+    "observacoes": ""
+  },
+  {
+    "id": "comp_gemeo_maligno",
+    "name": "GÊMEO MALIGNO",
+    "origem": "ARTE_DA_GUERRA",
+    "severity": "menor/maior",
+    "description": "Existe um NPC idêntico que causa problemas e mancha sua reputação.",
+    "observacoes": ""
+  },
+  {
+    "id": "comp_dessorna",
+    "name": "DESSORNA (Doença do Cristal)",
+    "origem": "CRYSTAL_HEART",
+    "severity": "maior",
+    "description": "Rejeição ao cristal. Deve fazer teste de Vigor diário ou sofre Fadiga. Falha crítica causa ferimento."
+  },
+  {
+    "id": "comp_sensibilidade_obsidiana",
+    "name": "SENSIBILIDADE À OBSIDIANA",
+    "origem": "CRYSTAL_HEART",
+    "severity": "menor",
+    "description": "A proximidade com Obsidiana causa -2 em todas as rolagens de Traço."
+  },
+  {
+    "id": "comp_inimigo_syn",
+    "name": "INIMIGO DA SYN",
+    "origem": "CRYSTAL_HEART",
+    "severity": "maior",
+    "description": "Caçado pela organização Syn ou por grupos renegados que roubam cristais."
+  },
+  {
+    "id": "comp_alma_penhorada",
+    "name": "ALMA PENHORADA",
+    "severity": "menor",
+    "origem": "CIDADE_SOL_VAPOR",
+    "description": "Deve 5.000 sóis aos demônios. Recebe o dobro do dinheiro inicial. -2 em Conhecimento Geral até pagar. Incompatível com AA (Milagres)."
+  },
+  {
+    "id": "comp_alma_vendida",
+    "name": "ALMA VENDIDA",
+    "severity": "maior",
+    "origem": "CIDADE_SOL_VAPOR",
+    "description": "Sua alma pertence ao Abismo. No início da aventura, faça teste de Espírito (-2) ou sofra 1 nível de Fadiga permanente até o fim da aventura."
+  },
+  {
+    "id": "comp_maldicao_gremlin",
+    "name": "MALDIÇÃO DO GREMLIN",
+    "severity": "menor/maior",
+    "origem": "CIDADE_SOL_VAPOR",
+    "description": "Aumenta a Probabilidade de Mau Funcionamento (PMF) de itens em 1 (Menor) ou 2 (Maior). Afeta itens num raio de 5m (Maior)."
+  },
+  {
+    "id": "comp_tecnofobia",
+    "name": "TECNOFOBIA",
+    "severity": "maior",
+    "origem": "CIDADE_SOL_VAPOR",
+    "description": "Deve testar Espírito para usar dispositivos a vapor/tecnomágicos. Autômatos causam Medo."
+  },
+  {
+    "id": "comp_gosto_sofisticado",
+    "name": "GOSTO SOFISTICADO",
+    "severity": "maior",
+    "origem": "CIDADE_SOL_VAPOR",
+    "description": "Sofre Fadiga se comer comida de baixa qualidade (ratos/cogumelos comuns). Custo de vida diário +20 sóis."
+  },
+  {
+    "id": "comp_arauto_morte",
+    "name": "ARAUTO DA MORTE",
+    "tipo": "MENOR",
+    "origem": "WISEGUYS",
+    "severity": "menor",
+    "description": "Pessoas próximas tendem a morrer. Extras aliados sofrem -2 em testes de Vigor para sobreviver."
+  },
+  {
+    "id": "comp_brincalhao",
+    "name": "BRINCALHÃO",
+    "tipo": "MENOR",
+    "origem": "WISEGUYS",
+    "severity": "menor",
+    "description": "Faz piadas em momentos tensos. Causa -2 em rolagens de Intimidar/Provocar de aliados."
+  },
+  {
+    "id": "comp_chamativo",
+    "name": "CHAMATIVO",
+    "tipo": "MENOR",
+    "origem": "WISEGUYS",
+    "severity": "menor",
+    "description": "Maneirismos ou aparência exagerada. -2 em Furtividade para se misturar. Facilmente identificado."
+  },
+  {
+    "id": "comp_cidadao_integro",
+    "name": "CIDADÃO ÍNTEGRO",
+    "tipo": "MAIOR",
+    "origem": "WISEGUYS",
+    "severity": "maior",
+    "description": "Não serve para o crime. Sofre -2 em qualquer traço enquanto comete um crime."
+  },
+  {
+    "id": "comp_cugine",
+    "name": "CUGINE",
+    "tipo": "MENOR",
+    "origem": "WISEGUYS",
+    "severity": "menor",
+    "description": "Novato do grupo. Encarregado de tarefas humilhantes e alvo de piadas."
+  },
+  {
+    "id": "comp_divida",
+    "name": "DÍVIDA",
+    "tipo": "MENOR_MAIOR",
+    "origem": "WISEGUYS",
+    "severity": "menor/maior",
+    "description": "Deve favores ou dinheiro. Menor: Culpa/Incômodo. Maior: Chantagem/Risco de Vida."
+  },
+  {
+    "id": "comp_dedo_leve",
+    "name": "DEDO LEVE",
+    "tipo": "MENOR",
+    "origem": "WISEGUYS",
+    "severity": "menor",
+    "description": "-1 em Persuadir (exceto ameaças). Em falha crítica de Intimidar com arma, a arma dispara acidentalmente."
+  },
+  {
+    "id": "comp_condicional",
+    "name": "EM CONDICIONAL",
+    "tipo": "MAIOR",
+    "origem": "WISEGUYS",
+    "severity": "maior",
+    "description": "Se sacar um Curinga no início da sessão, violou a condicional e será preso ao fim da sessão."
+  },
+  {
+    "id": "comp_fardo",
+    "name": "FARDO",
+    "tipo": "MENOR_MAIOR",
+    "origem": "WISEGUYS",
+    "severity": "menor/maior",
+    "description": "Atrai a ira do chefe. Cartas de face no início da sessão trazem punições ou tentativas de assassinato (se Maior)."
+  },
+  {
+    "id": "comp_ma_reputacao",
+    "name": "MÁ REPUTAÇÃO",
+    "tipo": "MENOR",
+    "origem": "WISEGUYS",
+    "severity": "menor",
+    "description": "Conhecido como criminoso. -2 em Persuadir com não-criminosos."
+  },
+  {
+    "id": "comp_lista_negra",
+    "name": "NA LISTA NEGRA",
+    "tipo": "MENOR",
+    "origem": "WISEGUYS",
+    "severity": "menor",
+    "description": "Banido de cassinos. Escoltado para fora se identificado pela segurança."
+  },
+  {
+    "id": "comp_suspeito",
+    "name": "O SUSPEITO",
+    "tipo": "MAIOR",
+    "origem": "WISEGUYS",
+    "severity": "maior",
+    "description": "Primeiro a ser interrogado pela polícia quando algo acontece. Vigilância constante."
+  },
+  {
+    "id": "comp_pe_frio",
+    "name": "PÉ-FRIO",
+    "tipo": "MENOR",
+    "origem": "WISEGUYS",
+    "severity": "menor",
+    "description": "Traz azar. Ninguém perto pode gastar Benes em rolagens de Jogar."
+  },
+  {
+    "id": "comp_peso_consciencia",
+    "name": "PESO NA CONSCIÊNCIA",
+    "tipo": "MENOR_MAIOR",
+    "origem": "WISEGUYS",
+    "severity": "menor/maior",
+    "description": "Sente culpa. Maior: O Don ganha um Bene para usar contra você após atos hediondos."
+  },
+  {
+    "id": "comp_relacao_disfuncional",
+    "name": "RELAÇÃO DISFUNCIONAL",
+    "tipo": "MENOR_MAIOR",
+    "origem": "WISEGUYS",
+    "severity": "menor/maior",
+    "description": "Parente ou amigo problemático que causa inconveniência (Menor) ou perigo real (Maior)."
   }
 ]
