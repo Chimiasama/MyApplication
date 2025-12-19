@@ -44,6 +44,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
             .map { it.id },
         equipamentos = this.equipamentosComprados.toList(),
         poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
+        manifestacoesPoderes = this.manifestacoesPoderes.toMap(),
         dinheiro = this.dinheiro,
         dadoRiqueza = if (this.usaRiqueza) this.dadoRiqueza else null,
         pontosRestantes = this.pontosVantagem,
@@ -398,7 +399,13 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
             lines += if (lista.isEmpty()) {
                 "• $label: – nenhum poder escolhido"
             } else {
-                "• $label: ${lista.joinToString(", ")}"
+                val poderesComManifestacao = lista.map { poderId ->
+                    val manifestacao = personagem.manifestacoesPoderes[poderId]
+                        ?.trim()
+                        ?.takeIf { it.isNotBlank() }
+                    if (manifestacao != null) "$poderId (${manifestacao})" else poderId
+                }
+                "• $label: ${poderesComManifestacao.joinToString(", ")}"
             }
         }
         lines += ""
@@ -597,5 +604,3 @@ fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
     FileOutputStream(destino).use { out -> doc.writeTo(out) }
     doc.close()
 }
-
-

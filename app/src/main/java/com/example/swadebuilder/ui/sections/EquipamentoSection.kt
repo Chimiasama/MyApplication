@@ -194,6 +194,8 @@ fun EquipamentoSection(
     onRemoveEquipamentoClick: (EquipamentoItem) -> Unit,
     categorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
+    tensaoTotal: Int,
+    vigorRaw: Int,
     forcaRaw: Int,
     hasMusculoso: Boolean,
     hasSoldado: Boolean,
@@ -523,6 +525,15 @@ fun EquipamentoSection(
         }
 
         Spacer(Modifier.size(4.dp))
+
+        if (tensaoTotal > vigorRaw) {
+            Text(
+                "Limite de Tensão Excedido!",
+                color = MaterialTheme.colorScheme.error,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+            )
+        }
 
         // 6. List Content
         val isSearching = searchQuery.isNotBlank()
