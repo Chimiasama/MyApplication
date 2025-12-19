@@ -265,7 +265,7 @@ class CriadorState {
         val brigaoBonus = vantagensSelecionadas
             .count { it.nome.keyify() in listOf("BRIGAO", "PUGILISTA") }
 
-        val sizeRaw = valorTamanho()   // já inclui racial, OBESO, PEQUENO, MUSCULOSO, com clamp -1..+3
+        val sizeRaw = valorTamanhoParaResistencia()
 
         return (base + bonusPos + bonusNeg + brigaoBonus + sizeRaw + brawnyBonus)
             .coerceAtLeast(0)
@@ -291,7 +291,7 @@ class CriadorState {
         return (melhorExterna + naturalArmorFromRace).coerceAtLeast(0)
     }
 
-    fun valorTamanho(): Int {
+    private fun valorTamanhoRaw(): Int {
         val desc = listaAncestralidadesJson
             .firstOrNull { it.nome.keyify() == ancestralidade }
             ?.desvantagens
@@ -317,8 +317,15 @@ class CriadorState {
                 1
             else
                 0
-        val raw = racialSize + obesoBonus + pequenoPenalty + musculosoBonus
-        return raw.coerceIn(-1, 3)
+        return racialSize + obesoBonus + pequenoPenalty + musculosoBonus
+    }
+
+    fun valorTamanho(): Int {
+        return valorTamanhoRaw().coerceIn(-1, 3)
+    }
+
+    private fun valorTamanhoParaResistencia(): Int {
+        return valorTamanhoRaw().coerceAtMost(3)
     }
 
     // PROMPT 2: Brawny (Brutamontes) Carga calculation
