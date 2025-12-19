@@ -522,11 +522,13 @@ fun EquipamentoSection(
                 modifier = Modifier.weight(1f)
             )
             Column(horizontalAlignment = Alignment.End) {
-                Text(
-                    "$tensaoLabel: $tensaoTotal/$tensaoLimite",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = tensaoColor
-                )
+                if (compendioSciFiAtivo) {
+                    Text(
+                        "$tensaoLabel: $tensaoTotal/$tensaoLimite",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = tensaoColor
+                    )
+                }
                 if (hasSoldado) {
                     AssistChip(
                         onClick = onToggleSoldadoCarga,
@@ -542,7 +544,7 @@ fun EquipamentoSection(
 
         Spacer(Modifier.size(4.dp))
 
-        if (tensaoExcedida) {
+        if (compendioSciFiAtivo && tensaoExcedida) {
             val excess = tensaoTotal - tensaoLimite
             Text(
                 "Sobrecarga Cibernética: Personagem recebe o estado Fatigado (ou Exausto se X > Y+2).",
@@ -606,7 +608,8 @@ fun EquipamentoSection(
                              equipamento = item,
                              onClick = { onEquipamentoDoubleClick(item) },
                              allowLongTexts = allowLongTexts,
-                             showOriginalName = showOfficialNames
+                             showOriginalName = showOfficialNames,
+                             showTensao = compendioSciFiAtivo
                          )
                      }
                  }
@@ -680,7 +683,8 @@ fun EquipamentoSection(
                                             equipamento = item,
                                             onClick = { onEquipamentoDoubleClick(item) },
                                             allowLongTexts = allowLongTexts,
-                                            showOriginalName = showOfficialNames
+                                            showOriginalName = showOfficialNames,
+                                            showTensao = compendioSciFiAtivo
                                         )
                                     }
                                 }
