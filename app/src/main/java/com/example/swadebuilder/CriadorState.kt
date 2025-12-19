@@ -292,12 +292,14 @@ class CriadorState {
     }
 
     private fun valorTamanhoRaw(): Int {
-        val desc = listaAncestralidadesJson
-            .firstOrNull { it.nome.keyify() == ancestralidade }
-            ?.desvantagens
-            ?.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
+        val racialDesc = desvantagensRaciais
+            .firstOrNull { it.contains("TAMANHO", ignoreCase = true) }
+            ?: listaAncestralidadesJson
+                .firstOrNull { it.nome.keyify() == ancestralidade }
+                ?.desvantagens
+                ?.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
 
-        val racialSize = desc
+        val racialSize = racialDesc
             ?.substringAfter("TAMANHO")
             ?.trim()
             ?.toIntOrNull()
