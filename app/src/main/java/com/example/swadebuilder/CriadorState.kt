@@ -265,9 +265,21 @@ class CriadorState {
         val brigaoBonus = vantagensSelecionadas
             .count { it.nome.keyify() in listOf("BRIGAO", "PUGILISTA") }
 
-        val sizeRaw = valorTamanho()   // já inclui racial, OBESO, PEQUENO, MUSCULOSO, com clamp -1..+3
+        val racialSize = listaAncestralidadesJson
+            .firstOrNull { it.nome.keyify() == ancestralidade }
+            ?.desvantagens
+            ?.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
+            ?.substringAfter("TAMANHO")
+            ?.trim()
+            ?.toIntOrNull()
+            ?: 0
+        val obesoBonus = if (complicacoesSelecionadas.keys.any { it.id.keyify() == "OBESO" }) 1 else 0
+        val pequenoPenalty =
+            if (complicacoesSelecionadas.keys.any { it.id.keyify() == "PEQUENO" }) -1 else 0
+        val musculosoBonus = if (vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }) 1 else 0
+        val tamanhoParaResistencia = racialSize + obesoBonus + pequenoPenalty + musculosoBonus
 
-        return (base + bonusPos + bonusNeg + brigaoBonus + sizeRaw + brawnyBonus)
+        return (base + bonusPos + bonusNeg + brigaoBonus + tamanhoParaResistencia + brawnyBonus)
             .coerceAtLeast(0)
     }
 
