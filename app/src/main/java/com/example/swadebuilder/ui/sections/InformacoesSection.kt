@@ -164,7 +164,17 @@ fun InformacoesSection(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         StatItem("Aparar", aparar.toString())
                         Spacer(modifier = Modifier.height(8.dp))
-                        StatItem("Tamanho", tamanhoTexto)
+                        if (state.compendioHorrorAtivo) {
+                            StatItem("Sanidade", state.sanidade.toString())
+                        } else {
+                            StatItem("Tamanho", tamanhoTexto)
+                        }
+                    }
+
+                    if (state.compendioHorrorAtivo) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            StatItem("Tamanho", tamanhoTexto)
+                        }
                     }
                 }
 

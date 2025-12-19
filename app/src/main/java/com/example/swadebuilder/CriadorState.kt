@@ -245,9 +245,26 @@ class CriadorState {
         return reservaChi
     }
 
-    fun valorSanidade(): Int {
+    val sanidade by derivedStateOf {
         val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 4
-        return 2 + (espiritoRaw / 2)
+        val base = 2 + (espiritoRaw / 2)
+        val vantagemKeys = buildSet {
+            addAll(vantagensSelecionadas.map { it.id.keyify() })
+            addAll(vantagensSelecionadas.map { it.nome.keyify() })
+            addAll(vantagensAutomaticas.map { it.keyify() })
+            addAll(vantagensAutomaticasDoTropo.map { it.keyify() })
+            addAll(vantagensRaciais.map { it.keyify() })
+        }
+        val bonusSanidade = listOf(
+            "corajoso" to 2,
+            "determinacao inabalavel" to 2
+        ).sumOf { (key, bonus) -> if (vantagemKeys.contains(key.keyify())) bonus else 0 }
+
+        base + bonusSanidade
+    }
+
+    fun valorSanidade(): Int {
+        return sanidade
     }
 
     fun valorDominio(): Int {

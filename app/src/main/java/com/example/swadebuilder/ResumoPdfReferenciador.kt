@@ -75,7 +75,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         compendioArteDaGuerraAtivo = this.compendioArteDaGuerraAtivo,
         compendioDeadlandsAtivo = this.compendioDeadlandsAtivo,
         compendioHorrorAtivo = this.compendioHorrorAtivo,
-        sanidade = if (this.compendioHorrorAtivo) this.valorSanidade() else null,
+        sanidade = if (this.compendioHorrorAtivo) this.sanidade else null,
         dominio = if (this.compendioDeadlandsAtivo) this.valorDominio() else null,
         coracaoCrystalSelecionado = this.coracaoCrystalSelecionado,
         tecnicasIniciaisTropo = this.tecnicasIniciaisFromTropo,
