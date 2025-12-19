@@ -205,6 +205,8 @@ fun PericiasContent(
                     )
                     .padding(horizontal = 10.dp, vertical = 4.dp)
             ) {
+                val notaPericia = state.notasPorPericia[per.nome]?.trim().orEmpty()
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
@@ -238,7 +240,6 @@ fun PericiasContent(
                         overflow = TextOverflow.Ellipsis
                     )
 
-                    val notaPericia = state.notasPorPericia[per.nome]?.trim().orEmpty()
                     val podeEditarNota = !locked && state.rawTotal(per) > 0
 
                     if (state.rawTotal(per) > 0) {
