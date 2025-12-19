@@ -201,6 +201,27 @@ class CriadorState {
     fun totalTensaoEquipamentos(): Int =
         equipamentosComprados.sumOf { it.tensao ?: 0 }
 
+    fun totalModSlotsEquipamentos(): Int =
+        equipamentosComprados.sumOf { it.mods_slots ?: 0 }
+
+    val isAndroide: Boolean
+        get() {
+            val anc = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade }
+            return anc?.habilidades?.any { it.nome.contains("Mods Robóticos", ignoreCase = true) } == true
+        }
+
+    fun limitTensao(): Int {
+        return valoresAtributos["VIGOR"]?.intValue ?: 4
+    }
+
+    fun limitModSlots(): Int {
+        // Robôs tem slots iguais ao Tamanho (mínimo de 1? O prompt diz Tamanho 0 = 1 slot)
+        // Se Tamanho 0 = 1, então é Tamanho + 1.
+        // O prompt cita "baseado no Tamanho + Vantagens", então somamos "Upgrade" se existir.
+        val upgradeBonus = vantagensSelecionadas.count { it.nome.keyify() == "UPGRADE" }
+        return (valorTamanho() + 1 + upgradeBonus).coerceAtLeast(1)
+    }
+
     fun valorAparar(): Int {
         val perLutar = mapaPericias["LUTAR"]
         val perJutsu = mapaPericias["JUTSU"]

@@ -672,6 +672,10 @@ private fun EquipamentoSection(
         hasMusculoso = hasMusculoso,
         hasSoldado = hasSoldado,
         soldadoCargaAtivo = state.soldadoCargaAtivo,
+        tensaoLimit = state.limitTensao(),
+        isAndroide = state.isAndroide,
+        totalModSlots = state.totalModSlotsEquipamentos(),
+        limitModSlots = state.limitModSlots(),
         onEditarDinheiro = { novoValor -> state.dinheiro = novoValor },
         onToggleSoldadoCarga = {
             if (hasSoldado) {

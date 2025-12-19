@@ -200,6 +200,10 @@ fun EquipamentoSection(
     hasMusculoso: Boolean,
     hasSoldado: Boolean,
     soldadoCargaAtivo: Boolean,
+    tensaoLimit: Int = 4,
+    isAndroide: Boolean = false,
+    totalModSlots: Int = 0,
+    limitModSlots: Int = 0,
     onEditarDinheiro: (Int) -> Unit,
     onToggleSoldadoCarga: () -> Unit,
     compendioFantasiaAtivo: Boolean = false,
@@ -526,7 +530,63 @@ fun EquipamentoSection(
 
         Spacer(Modifier.size(4.dp))
 
-        if (tensaoTotal > vigorRaw) {
+        if (compendioSciFiAtivo) {
+            if (isAndroide) {
+                // Modo Androide: usa Slots de Mods
+                val exceeded = totalModSlots > limitModSlots
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        "Slots de Mods: $totalModSlots / $limitModSlots",
+                        color = if (exceeded) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = if (exceeded) FontWeight.Bold else FontWeight.Normal
+                    )
+                }
+
+                if (exceeded) {
+                    Text(
+                        "Capacidade de Mods Excedida!",
+                        color = MaterialTheme.colorScheme.error,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                    )
+                }
+            } else {
+                // Modo Orgânico: usa Tensão (Strain)
+                val diff = tensaoTotal - tensaoLimit
+                val color = if (diff > 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+                val weight = if (diff > 0) FontWeight.Bold else FontWeight.Normal
+
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        "Tensão: $tensaoTotal / $tensaoLimit",
+                        color = color,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = weight
+                    )
+                }
+
+                if (diff > 0) {
+                    val status = if (diff > 2) "Exausto" else "Fatigado"
+                    Text(
+                        "Sobrecarga Cibernética: Personagem recebe o estado $status",
+                        color = MaterialTheme.colorScheme.error,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                    )
+                }
+            }
+        } else if (tensaoTotal > vigorRaw) {
+            // Fallback (ex: deadlands tem tensão? Não lembro, mas mantendo lógica legada se houver)
+            // Se não tiver sci-fi ativo, a regra antiga era tensaoTotal > vigorRaw.
+            // Mas agora vigorRaw é o que passamos como tensaoLimit...
+            // O código antigo usava "tensaoTotal > vigorRaw". VigorRaw é o dado (ex: 8).
             Text(
                 "Limite de Tensão Excedido!",
                 color = MaterialTheme.colorScheme.error,
