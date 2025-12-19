@@ -250,7 +250,8 @@ fun PericiasContent(
                     }
 
                     // PROMPT 5: Edit Note Button
-                    if (regra.displayRaw > 0) { // Only allow notes if skill is purchased/has value
+                    // Correction: Show edit button ONLY if optional rule is active
+                    if (regra.displayRaw > 0 && state.usarEspecializacoesDePericia) {
                         IconButton(
                             onClick = {
                                 noteTarget = per

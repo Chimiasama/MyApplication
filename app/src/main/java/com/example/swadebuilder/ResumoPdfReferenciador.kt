@@ -77,7 +77,6 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         compendioArteDaGuerraAtivo = this.compendioArteDaGuerraAtivo,
         compendioDeadlandsAtivo = this.compendioDeadlandsAtivo,
         compendioHorrorAtivo = this.compendioHorrorAtivo,
-        sanidade = if (this.compendioHorrorAtivo) this.valorSanidade() else null,
         dominio = if (this.compendioDeadlandsAtivo) this.valorDominio() else null,
         coracaoCrystalSelecionado = this.coracaoCrystalSelecionado,
         tecnicasIniciaisTropo = this.tecnicasIniciaisFromTropo,
@@ -307,9 +306,6 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += "Resistência: $resistenciaTexto"
     if (personagem.compendioArteDaGuerraAtivo) {
         lines += "Reserva de Chi: $chi"
-    }
-    if (personagem.sanidade != null) {
-        lines += "Sanidade: ${personagem.sanidade}"
     }
     if (personagem.dominio != null) {
         lines += "Domínio: ${personagem.dominio}"

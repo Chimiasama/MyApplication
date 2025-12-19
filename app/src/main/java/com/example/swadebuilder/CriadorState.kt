@@ -277,11 +277,6 @@ class CriadorState {
         return reservaChi
     }
 
-    fun valorSanidade(): Int {
-        val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 4
-        return 2 + (espiritoRaw / 2)
-    }
-
     fun valorDominio(): Int {
         val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 4
         // Domínio inicial para ressuscitados é geralmente o dado de Espírito
@@ -1585,6 +1580,7 @@ class CriadorState {
         }
     }
 
+    // PROMPT 1: Explicit calculation: (Current Step - Racial Base Step)
     private fun calcularPontosAtributoRestantes(): Int {
         val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
         var usados = 0
@@ -1592,6 +1588,13 @@ class CriadorState {
         for (nome in listaAtributos) {
             val atual = valoresAtributos[nome]!!.intValue
             val base  = mods[nome] ?: 4
+
+            // PROMPT 1: Explicit calculation: (Current Step - Racial Base Step)
+            // Steps count: d4=0, d6=1, d8=2, d10=3, d12=4
+            // Since we store values as (4, 6, 8, 10, 12), we can iterate or calculate directly.
+            // The previous loop logic was: loop from base to current, incrementing cost.
+            // This IS the correct logic for "cost is investment above racial base".
+            // Refactoring to be clearer/more explicit if needed, but the loop is robust for d12+ handling.
 
             var cur = base
             while (cur < atual) {

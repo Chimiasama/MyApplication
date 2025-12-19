@@ -71,7 +71,6 @@ data class MeuPersonagem(
 
     // ===== NOVOS CAMPOS (PDF EXTENDIDO) =====
     val coracaoCrystalSelecionado: CrystalHeart? = null,
-    val sanidade: Int? = null,
     val dominio: Int? = null,
     val compendioDeadlandsAtivo: Boolean = false,
     val compendioHorrorAtivo: Boolean = false,
