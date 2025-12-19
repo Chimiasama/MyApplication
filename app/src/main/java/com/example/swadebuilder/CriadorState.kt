@@ -266,8 +266,11 @@ class CriadorState {
             .count { it.nome.keyify() in listOf("BRIGAO", "PUGILISTA") }
 
         val sizeRaw = valorTamanhoParaResistencia()
+        val isPequenino = ancestralidade.keyify() == "PEQUENINOS"
+        val hasPequenoComp = complicacoesSelecionadas.keys.any { it.id.keyify() == "PEQUENO" }
+        val pequenoPenaltyExtra = if (isPequenino && hasPequenoComp) -1 else 0
 
-        return (base + bonusPos + bonusNeg + brigaoBonus + sizeRaw + brawnyBonus)
+        return (base + bonusPos + bonusNeg + brigaoBonus + sizeRaw + brawnyBonus + pequenoPenaltyExtra)
             .coerceAtLeast(0)
     }
 
@@ -310,7 +313,9 @@ class CriadorState {
             else
                 0
         val pequenoPenalty =
-            if (complicacoesSelecionadas.keys.any { it.id.keyify() == "PEQUENO" })
+            if (ancestralidade.keyify() != "PEQUENINOS" &&
+                complicacoesSelecionadas.keys.any { it.id.keyify() == "PEQUENO" }
+            )
                 -1
             else
                 0
