@@ -161,7 +161,7 @@ class CriadorState {
 
         val idosoPenalty =
             complicacoesSelecionadas
-                .filterKeys { it.id.keyify() == "IDOSO" }
+                .filterKeys { it.name.keyify() == "IDOSO" || it.id.keyify().endsWith("IDOSO") }
                 .isNotEmpty()
                 .takeIf { it }
                 ?.let { 1 }
@@ -169,7 +169,9 @@ class CriadorState {
 
         val lentoPenalty = complicacoesSelecionadas
             .entries
-            .firstOrNull { it.key.id.keyify() == "LENTO" }
+            .firstOrNull {
+                it.key.name.keyify() == "LENTO" || it.key.id.keyify().endsWith("LENTO")
+            }
             ?.let { (_, grau) ->
                 when (grau) {
                     "Menor" -> 1
@@ -181,7 +183,7 @@ class CriadorState {
 
         val obesoPenalty =
             complicacoesSelecionadas
-                .filterKeys { it.id.keyify() == "OBESO" }
+                .filterKeys { it.name.keyify() == "OBESO" || it.id.keyify().endsWith("OBESO") }
                 .isNotEmpty()
                 .takeIf { it }
                 ?.let { 1 }
