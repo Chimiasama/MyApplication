@@ -30,6 +30,7 @@ import com.example.swadebuilder.model.SnapshotSupers
 import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
@@ -892,6 +893,9 @@ class CriadorState {
 
     fun podeSelecionar(v: Vantagem): Boolean {
         val key = v.nome.keyify()
+
+        // 0) Exclusividade de Classe/Prestígio (Buscatrilha)
+        if (vantagensSelecionadas.classeExclusivaBloqueada(v)) return false
 
         // 1) Regra especial: O MELHOR QUE HÁ
         if (key == "o_melhor_que_ha") {

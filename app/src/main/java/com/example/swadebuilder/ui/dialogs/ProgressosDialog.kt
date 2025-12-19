@@ -54,7 +54,9 @@ import com.example.swadebuilder.dynamicStageCaps
 import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.HindranceChangeType
+import com.example.swadebuilder.model.MENSAGEM_EXCLUSIVIDADE_CLASSE
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.periciaStartRaw
 import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.stageIndexForSlot
@@ -221,6 +223,15 @@ fun ProgressosDialog(
                     ( slot1IsSpec && slot1SpecPer == perDesteSlot && slot1SpecName.trim().isNotEmpty())
         }
         return !outroJaInformou
+    }
+
+    fun bloquearExclusividadeClasse(vant: Vantagem): Boolean {
+        return if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant)) {
+            showSnack(MENSAGEM_EXCLUSIVIDADE_CLASSE)
+            true
+        } else {
+            false
+        }
     }
 
     AlertDialog(
@@ -793,6 +804,9 @@ fun ProgressosDialog(
                                             showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
                                             return@clickable
                                         }
+                                        if (bloquearExclusividadeClasse(vant)) {
+                                            return@clickable
+                                        }
                                         if (state.progressosDisponiveis < 1) {
                                             showSnack("Você não tem progressos suficientes.")
                                             return@clickable
@@ -869,6 +883,9 @@ fun ProgressosDialog(
                             showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
                             return@onConfirm
                         }
+                        if (bloquearExclusividadeClasse(vant)) {
+                            return@onConfirm
+                        }
 
                         state.spendProgressAtStage(estSel.nome, 1)
                         state.vantagensSelecionadas += vant.copy(choice = choice)
@@ -924,6 +941,9 @@ fun ProgressosDialog(
                                 showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
                                 return@onConfirm
                             }
+                            if (bloquearExclusividadeClasse(vant)) {
+                                return@onConfirm
+                            }
 
                             state.spendProgressAtStage(estSel.nome, 1)
                             state.vantagensSelecionadas += vant.copy(choice = choice)
@@ -966,6 +986,9 @@ fun ProgressosDialog(
                         val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
                         if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndexFinal)) {
                             showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
+                            return@onConfirm
+                        }
+                        if (bloquearExclusividadeClasse(vant)) {
                             return@onConfirm
                         }
 
