@@ -31,7 +31,8 @@ fun StandardEquipamentoItem(
     equipamento: EquipamentoItem,
     onClick: () -> Unit,
     allowLongTexts: Boolean,
-    showOriginalName: Boolean = false
+    showOriginalName: Boolean = false,
+    showTensao: Boolean = false
 ) {
     val resumo = equipamento.toResumo()
 
@@ -105,7 +106,9 @@ fun StandardEquipamentoItem(
             // Details
             val detalhes = buildList {
                 // Fields already in summary (linhaArma, linhaGeral, linhaVeiculo, observacao) are excluded here to avoid duplication.
-                equipamento.tensao?.let { add("Tensão: $it") }
+                if (showTensao) {
+                    equipamento.tensao?.let { add("Tensão: $it") }
+                }
                 equipamento.mods_slots?.let { add("Slots de Mods: $it") }
             }
 

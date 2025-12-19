@@ -142,18 +142,20 @@ fun SummaryContent(state: CriadorState) {
                 else -> ""
             }
             val weightLine = "Peso: ${"%.1f".format(totalWeight)} / ${"%.1f".format(weightLimit)}$soldierLabel"
-            val tensaoLine = "$tensaoLabel: $tensaoTotal/$tensaoLimite"
-            val tensaoWarning = if (tensaoTotal > tensaoLimite) {
-                val excess = tensaoTotal - tensaoLimite
-                "• Sobrecarga Cibernética: ${if (excess > 2) "Exausto" else "Fatigado"}"
-            } else {
-                null
-            }
             val updatedItems = buildList {
                 add(weightLine)
-                add(tensaoLine)
+                if (state.compendioSciFiAtivo) {
+                    val tensaoLine = "$tensaoLabel: $tensaoTotal/$tensaoLimite"
+                    val tensaoWarning = if (tensaoTotal > tensaoLimite) {
+                        val excess = tensaoTotal - tensaoLimite
+                        "• Sobrecarga Cibernética: ${if (excess > 2) "Exausto" else "Fatigado"}"
+                    } else {
+                        null
+                    }
+                    add(tensaoLine)
+                    tensaoWarning?.let { add(it) }
+                }
                 weightWarning?.let { add("• $it") }
-                tensaoWarning?.let { add(it) }
                 addAll(section.items)
             }
             section.copy(items = updatedItems)
