@@ -41,6 +41,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -59,6 +60,8 @@ import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -82,6 +85,9 @@ fun ComplicacoesSection(
     val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
+    val scope = rememberCoroutineScope()
+    var tempErrorMsg by remember { mutableStateOf("") }
+    var showTempError by remember { mutableStateOf(false) }
 
     val origensAtivas: Set<String> = buildSet {
         add("BASICO")
@@ -118,6 +124,15 @@ fun ComplicacoesSection(
             onListaCompletaClick = null,
             listaCompletaText    = ""
         )
+
+        if (showTempError) {
+            Spacer(Modifier.height(8.dp))
+            Text(
+                tempErrorMsg,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+        }
 
         Spacer(Modifier.height(4.dp))
 
@@ -353,6 +368,16 @@ fun ComplicacoesSection(
                                         TextButton(
                                             onClick = {
                                                 if (!enabledMenor) return@TextButton
+                                                val conflitoMsg = state.mensagemConflitoParaComplicacao(comp)
+                                                if (conflitoMsg != null) {
+                                                    tempErrorMsg = conflitoMsg
+                                                    showTempError = true
+                                                    scope.launch {
+                                                        delay(2_000)
+                                                        showTempError = false
+                                                    }
+                                                    return@TextButton
+                                                }
                                                 onUserFeedback()
                                                 when (comp.id) {
                                                     "jovem" -> {
@@ -383,6 +408,16 @@ fun ComplicacoesSection(
                                         TextButton(
                                             onClick = {
                                                 if (!enabledMaior) return@TextButton
+                                                val conflitoMsg = state.mensagemConflitoParaComplicacao(comp)
+                                                if (conflitoMsg != null) {
+                                                    tempErrorMsg = conflitoMsg
+                                                    showTempError = true
+                                                    scope.launch {
+                                                        delay(2_000)
+                                                        showTempError = false
+                                                    }
+                                                    return@TextButton
+                                                }
                                                 onUserFeedback()
                                                 when (comp.id) {
                                                     "idoso" -> {

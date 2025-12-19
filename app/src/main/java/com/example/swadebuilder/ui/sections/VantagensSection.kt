@@ -1017,10 +1017,12 @@ private fun VantagemItem(
             .padding(vertical = 4.dp)
             .clickable(enabled = !locked) {
                 if (!locked) {
+                    val conflitoMsg = state.mensagemConflitoParaVantagem(vant)
                     when {
                         state.pontosVantagem <= 0 -> onError("Sem PV disponível")
                         // PROMPT 4: Check class blocking specifically for error message
                         state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
+                        conflitoMsg != null -> onError(conflitoMsg)
                         !state.podeSelecionar(vant) -> onError("Faltam requisitos para '${vant.nome}'")
                         else -> onSelect()
                     }

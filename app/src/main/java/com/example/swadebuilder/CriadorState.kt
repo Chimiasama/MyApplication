@@ -700,6 +700,24 @@ class CriadorState {
         "PODRE DE RICO"  to setOf("POBREZA")
     )
 
+    fun mensagemConflitoParaVantagem(vantagem: Vantagem): String? {
+        val key = vantagem.nome.keyify()
+        val compsConfl = incompatibilidades[key] ?: return null
+        val conflito = complicacoesSelecionadas.keys.firstOrNull { comp ->
+            comp.id.keyify() in compsConfl
+        }
+        return conflito?.let { "Remova ${it.name} para pegar ${vantagem.nome}." }
+    }
+
+    fun mensagemConflitoParaComplicacao(complicacao: Complicacao): String? {
+        val key = complicacao.id.keyify()
+        val vantConfl = incompatibilidades[key] ?: return null
+        val conflito = vantagensSelecionadas.firstOrNull { vant ->
+            vant.nome.keyify() in vantConfl
+        }
+        return conflito?.let { "Remova ${it.nome} para pegar ${complicacao.name}." }
+    }
+
     val poderSlotsPorArcano = mutableStateMapOf<String, SnapshotStateList<String?>>()
 
     val novosPoderesStacksPorArcano = mutableStateMapOf<String, MutableList<List<String>>>()
