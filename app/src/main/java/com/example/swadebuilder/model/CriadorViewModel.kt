@@ -41,6 +41,28 @@ class CriadorViewModel : ViewModel() {
         _feedbackMessages.clear()
     }
 
+    fun ensureDefaultSpecializations() {
+        if (!state.usarEspecializacoesDePericia) return
+
+        listaPericias.forEach { per ->
+            val raw = state.rawTotal(per)
+            // Skills that have points or are basic (unless 0 and non-basic, which rawTotal handles)
+            val visible = raw > 0 || per.basica
+
+            if (visible) {
+                val spec = state.especializacoesPorPericia[per.nome]
+                if (spec?.principal == null) {
+                    val currentList = spec?.lista ?: emptyList()
+                    val novo = com.example.swadebuilder.model.EspecializacoesDto(
+                        principal = "Especialização 1",
+                        lista = currentList
+                    )
+                    state.especializacoesPorPericia[per.nome] = novo
+                }
+            }
+        }
+    }
+
     // === NOVO: toggle global (por enquanto via MainActivity) ===
     var multiplosAAHabilitados: Boolean = false
         private set

@@ -531,6 +531,7 @@ fun CreationModeContent(
     if (state.creationComplete()) {
         Button(
             onClick = {
+                viewModel.ensureDefaultSpecializations()
                 state.modoProgressaoAtivo = true
                 state.progresso = 4
                 state.frozenAdvantageCount = state.vantagensSelecionadas.size
