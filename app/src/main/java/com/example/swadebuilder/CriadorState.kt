@@ -1210,7 +1210,15 @@ class CriadorState {
         val idx = spStack.indexOfLast { it > 0 }
         if (idx >= 0) {
             spStack.removeAt(idx)
-            baseIncsPorPericia[per] = baseIncsPorPericia.getValue(per) - 1
+            val newIncs = baseIncsPorPericia.getValue(per) - 1
+            baseIncsPorPericia[per] = newIncs
+
+            if (newIncs == 0) {
+                spStack.clear()
+                especializacoesPorPericia.remove(per.nome)
+                notasPericia.remove(per.nome)
+            }
+
             if (skillAdvancementInProgress) {
                 skillsForCurrentAdvancement.remove(per.nome)
             }
