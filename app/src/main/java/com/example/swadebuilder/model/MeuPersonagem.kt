@@ -10,6 +10,7 @@ data class MeuPersonagem(
     val pericias: Map<String, Int>,
     val ancestralidade: String,
     val celestialAAMilagresDesabilitado: Boolean,
+    val tropoSelecionadoId: String? = null,
 
     // Vantagens e Complicações já persistidas por ID:
     val vantagens: List<String>,
@@ -31,6 +32,8 @@ data class MeuPersonagem(
     val armorBase: Int = 0,
     val advantageChoices: Map<String, List<String>> = emptyMap(),
     val vantagensRaciais: List<String> = emptyList(),
+    val tecnicasIniciaisTropo: Int = 0,
+    val reservaChi: Int? = null,
 
     // ===== NOVOS CAMPOS (SUPERS) =====
     val modoSupers: Boolean = false,

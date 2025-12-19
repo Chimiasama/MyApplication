@@ -24,6 +24,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -85,8 +86,32 @@ fun AncestralidadesSection(
     val compendioDeadlandsAtivo = state.compendioDeadlandsAtivo
     val compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo
     val compendioWiseguysAtivo = state.compendioWiseguysAtivo
+    val compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo
+    val compendioHorrorAtivo = state.compendioHorrorAtivo
+    val compendioSciFiAtivo = state.compendioSciFiAtivo
+    val compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
 
-    val ancestralidadesState = remember(compendioFantasiaAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioArteDaGuerraAtivo, compendioWiseguysAtivo) {
+    val apenasArteDaGuerra = compendioArteDaGuerraAtivo &&
+            !compendioFantasiaAtivo &&
+            !compendioTrilhadorAtivo &&
+            !compendioDeadlandsAtivo &&
+            !compendioCidadeSolVaporAtivo &&
+            !compendioWiseguysAtivo &&
+            !compendioHorrorAtivo &&
+            !compendioSciFiAtivo &&
+            !compendioCrystalHeartAtivo
+
+    val ancestralidadesState = remember(
+        compendioFantasiaAtivo,
+        compendioTrilhadorAtivo,
+        compendioDeadlandsAtivo,
+        compendioArteDaGuerraAtivo,
+        compendioWiseguysAtivo,
+        compendioCidadeSolVaporAtivo,
+        compendioHorrorAtivo,
+        compendioSciFiAtivo,
+        compendioCrystalHeartAtivo
+    ) {
         // Load legacy list
         val allLegacy = context.loadJsonAsset<List<RacialModifier>>(ASSET_ANCESTRALIDADES)
 
@@ -125,7 +150,17 @@ fun AncestralidadesSection(
 
         val filtered = all.filter {
             val origin = it.origem?.uppercase() ?: "BASICO"
-            origin == "BASICO" || (origin == "FANTASIA" && compendioFantasiaAtivo) || (origin == "FANTASIA_TRILHADOR" && compendioTrilhadorAtivo) || (origin == "DEADLANDS" && compendioDeadlandsAtivo) || (origin == "ARTE_DA_GUERRA" && compendioArteDaGuerraAtivo) || (origin == "CIDADE_SOL_VAPOR" && state.compendioCidadeSolVaporAtivo) || (origin == "WISEGUYS" && compendioWiseguysAtivo)
+
+            when (origin) {
+                "BASICO" -> !apenasArteDaGuerra
+                "ARTE_DA_GUERRA" -> compendioArteDaGuerraAtivo
+                "FANTASIA" -> compendioFantasiaAtivo
+                "FANTASIA_TRILHADOR" -> compendioTrilhadorAtivo
+                "DEADLANDS" -> compendioDeadlandsAtivo
+                "CIDADE_SOL_VAPOR" -> compendioCidadeSolVaporAtivo
+                "WISEGUYS" -> compendioWiseguysAtivo
+                else -> false
+            }
         }.map {
             val buscatrilhaName = it.nome.replace("Trilhador", "Buscatrilha")
             val originalName = if (EditionConfig.isFullEdition) it.originalName else null
@@ -134,10 +169,35 @@ fun AncestralidadesSection(
         mutableStateOf(filtered)
     }
 
-    val selectedKey = rememberSaveable(currentAncestralidade) {
-        mutableStateOf(
-            currentAncestralidade.uppercase().semAcentos().ifBlank { "HUMANOS" }
-        )
+    val selectedKey = rememberSaveable { mutableStateOf("") }
+
+    LaunchedEffect(ancestralidadesState.value, currentAncestralidade) {
+        val available = ancestralidadesState.value
+        val availableKeys = available.map { it.nome.uppercase().semAcentos() }
+        val currentKey = currentAncestralidade.uppercase().semAcentos()
+
+        val preferredKey = when {
+            currentKey.isNotBlank() && availableKeys.contains(currentKey) -> currentKey
+            else -> {
+                available.firstOrNull { it.nome.contains("Humano", ignoreCase = true) }
+                    ?.nome
+                    ?.uppercase()
+                    ?.semAcentos()
+                    ?: availableKeys.firstOrNull()
+            }
+        }
+
+        preferredKey?.let { key ->
+            if (selectedKey.value != key) {
+                selectedKey.value = key
+            }
+
+            available.firstOrNull { it.nome.uppercase().semAcentos() == key }?.nome?.let { nome ->
+                if (nome != currentAncestralidade) {
+                    onSelectAncestralidade(nome)
+                }
+            }
+        }
     }
 
     val selectedDisplayName =

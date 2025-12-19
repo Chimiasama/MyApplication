@@ -117,7 +117,10 @@ data class SnapshotSelecoes(
     val arcanoEmCompraViaXpKey: String?,
     val arcanoSnapshotAntesDaCompra: List<String?>?,
     val equipamentosComprados: List<EquipamentoItem> = emptyList(),
-    val coracaoCrystalId: String? = null
+    val coracaoCrystalId: String? = null,
+    val tropoSelecionadoId: String? = null,
+    val vantagensTropoAutomaticas: List<String> = emptyList(),
+    val tecnicasIniciaisTropo: Int = 0
 )
 
 @Serializable

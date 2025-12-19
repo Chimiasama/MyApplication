@@ -406,6 +406,7 @@ fun VantagensContent(
             state.vantagensSelecionadas.forEachIndexed { index, vant ->
                 val isRacialFree =
                     vant.nome.keyify() in state.vantagensAutomaticas.map { it.keyify() }
+                val isTropoAutomatic = state.vantagensAutomaticasDoTropo.contains(vant.id)
                 val requiredByAnother = state.vantagensSelecionadas.any { other ->
                     other != vant && other.requisitos.vantagensPrevias.any { reqId ->
                         reqId == vant.id
@@ -430,6 +431,7 @@ fun VantagensContent(
                         index >= initialCount &&
                         index >= state.frozenAdvantageCount &&
                         !isRacialFree &&
+                        !isTropoAutomatic &&
                         !requiredByAnother &&
                         !isFromSuperPoder &&
                         !isSuperpoderesLocked &&

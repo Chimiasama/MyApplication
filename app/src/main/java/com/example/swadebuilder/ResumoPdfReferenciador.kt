@@ -29,6 +29,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         pericias = listaPericias.associate { per -> per.nome to this.rawTotal(per) },
         ancestralidade = this.ancestralidade,
         celestialAAMilagresDesabilitado = this.celestialAAMilagresDesabilitado,
+        tropoSelecionadoId = this.tropoSelecionado?.id,
         vantagens = this.vantagensSelecionadas.map { it.id },
         advantageChoices = this.vantagensSelecionadas
             .groupBy { it.id }
@@ -75,7 +76,9 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         compendioHorrorAtivo = this.compendioHorrorAtivo,
         sanidade = if (this.compendioHorrorAtivo) this.valorSanidade() else null,
         dominio = if (this.compendioDeadlandsAtivo) this.valorDominio() else null,
-        coracaoCrystalSelecionado = this.coracaoCrystalSelecionado
+        coracaoCrystalSelecionado = this.coracaoCrystalSelecionado,
+        tecnicasIniciaisTropo = this.tecnicasIniciaisFromTropo,
+        reservaChi = if (this.compendioArteDaGuerraAtivo) this.reservaChi else null
     )
 }
 
@@ -263,8 +266,15 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     }
 
     fun calcChi(): Int {
-        val espRaw = personagem.atributos["ESPIRITO"] ?: 4
-        return 2 + (espRaw / 2)
+        personagem.reservaChi?.let { return it }
+
+        val espRaw = personagem.atributos["ESPIRITO"] ?: 0
+        val racialPenalty = if (personagem.ancestralidade.keyify() == "TERRACOTA") 1 else 0
+        val chiBonus = listaVantagens
+            .filter { it.id in personagem.vantagens }
+            .count { it.categoria == com.example.swadebuilder.model.Categoria.CHI }
+
+        return (espRaw / 2 - racialPenalty + chiBonus).coerceAtLeast(0)
     }
 
     val aparar = calcAparar()
@@ -288,7 +298,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += "Aparar: $aparar"
     lines += "Resistência: $resistenciaTexto"
     if (personagem.compendioArteDaGuerraAtivo) {
-        lines += "Chi: $chi"
+        lines += "Reserva de Chi: $chi"
     }
     if (personagem.sanidade != null) {
         lines += "Sanidade: ${personagem.sanidade}"

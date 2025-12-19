@@ -46,6 +46,7 @@ import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.SummaryContent
 import com.example.swadebuilder.ui.sections.SuperPoderesContent
 import com.example.swadebuilder.ui.sections.TipoMonstroSection
+import com.example.swadebuilder.ui.sections.TroposSection
 import com.example.swadebuilder.ui.sections.VantagensContent
 import com.example.swadebuilder.ui.sections.XpSection
 import com.example.swadebuilder.util.keyify
@@ -421,6 +422,16 @@ fun CreationModeContent(
         onSelectAncestralidade = onSelectAncestralidade,
         onUserFeedback = onUserFeedback
     )
+
+    if (state.compendioArteDaGuerraAtivo) {
+        HorizontalDivider(thickness = 1.dp)
+        TroposSection(
+            state = state,
+            expanded = state.sectionsExpanded[MainSection.TROPOS] ?: false,
+            onToggle = { state.toggleSection(MainSection.TROPOS) },
+            onUserFeedback = onUserFeedback
+        )
+    }
 
     if (state.modoMonstroAtivo) {
         HorizontalDivider(thickness = 1.dp)

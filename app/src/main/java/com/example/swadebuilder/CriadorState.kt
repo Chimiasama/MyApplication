@@ -28,6 +28,7 @@ import com.example.swadebuilder.model.SnapshotRecursos
 import com.example.swadebuilder.model.SnapshotSelecoes
 import com.example.swadebuilder.model.SnapshotSupers
 import com.example.swadebuilder.model.SuperInvestment
+import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
@@ -236,8 +237,7 @@ class CriadorState {
     }
 
     fun valorChi(): Int {
-        val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 4
-        return 2 + (espiritoRaw / 2)
+        return reservaChi
     }
 
     fun valorSanidade(): Int {
@@ -496,10 +496,14 @@ class CriadorState {
         val autoKeys = (vantagensAutomaticas + vantagensRaciais)
             .map { it.substringBefore("(").trim().keyify() }
             .toSet()
+        val autoIds = vantagensAutomaticasDoTropo.toSet()
 
         val candidate = vantagensSelecionadas
             .asReversed()
-            .firstOrNull { vant -> vant.nome.substringBefore("(").trim().keyify() !in autoKeys }
+            .firstOrNull { vant ->
+                val key = vant.nome.substringBefore("(").trim().keyify()
+                key !in autoKeys && vant.id !in autoIds
+            }
             ?: return false
 
         removeVantagemDinheiro(candidate)
@@ -713,7 +717,8 @@ class CriadorState {
             it.id == "novos_poderes" &&
                     (it.choice.isNullOrBlank() || it.choice?.normAAKey() == arcKey)
         }
-        return base + (newPowersCount * 2)
+        val bonusTecnicas = if (arcKey == "MESTRE DO CHI") tecnicasIniciaisFromTropo else 0
+        return base + (newPowersCount * 2) + bonusTecnicas
     }
 
     fun arcanoCompraPendente(): Boolean {
@@ -768,6 +773,19 @@ class CriadorState {
         totalSpPool - used
     }
 
+    val tecnicasIniciaisFromTropo by derivedStateOf {
+        tropoSelecionado?.tecnicasIniciais ?: 0
+    }
+
+    val reservaChi by derivedStateOf {
+        val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 0
+        val racialPenalty = if (ancestralidade.keyify() == "TERRACOTA") 1 else 0
+        val bonusFromChiEdges = vantagensSelecionadas.count { it.categoria == Categoria.CHI }
+        val bonusFromTropo = if (compendioArteDaGuerraAtivo) tecnicasIniciaisFromTropo else 0
+
+        (espiritoRaw / 2 - racialPenalty + bonusFromChiEdges + bonusFromTropo).coerceAtLeast(0)
+    }
+
     var nomePersonagem by mutableStateOf("")
 
     var progresso by mutableIntStateOf(0)
@@ -803,6 +821,9 @@ class CriadorState {
     var ancestralidade by mutableStateOf("HUMANOS")
     var celestialAAMilagresDesabilitado by mutableStateOf(false)
     var meioElfoAgil by mutableStateOf(false)
+
+    var tropoSelecionado by mutableStateOf<Tropo?>(null)
+    val vantagensAutomaticasDoTropo = mutableStateListOf<String>()
 
     val vantagensAutomaticas = mutableStateListOf<String>()
     val vantagensRaciais = mutableStateListOf<String>()
@@ -1520,6 +1541,36 @@ class CriadorState {
         rebuildAllPericiaStacks(feedbackMessages)
     }
 
+    fun selecionarTropo(novoTropo: Tropo) {
+        if (tropoSelecionado?.id == novoTropo.id) return
+
+        if (vantagensAutomaticasDoTropo.isNotEmpty()) {
+            vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoTropo }
+            vantagensAutomaticasDoTropo.clear()
+        }
+
+        tropoSelecionado = novoTropo
+
+        novoTropo.ganhaAoComprar.forEach { vantId ->
+            val vant = listaVantagens.firstOrNull { it.id == vantId } ?: return@forEach
+            if (vantagensSelecionadas.none { it.id == vant.id }) {
+                vantagensSelecionadas += vant
+                vantagensAutomaticasDoTropo += vant.id
+            }
+        }
+
+        rebuildAllPericiaStacks()
+
+        poderSlotsPorArcano["MESTRE DO CHI"]?.let { slots ->
+            val required = getSlotsCountForArcano("MESTRE DO CHI")
+            while (slots.size < required) slots.add(null)
+            while (slots.size > required && slots.lastOrNull() == null) {
+                slots.removeLast()
+            }
+            syncPoderesSelecionadosFromSlots()
+        }
+    }
+
     private fun trimAttributeStacks(feedbackMessages: MutableList<String> = mutableListOf()) {
 
         while (pontosAtributo < 0) {
@@ -1838,7 +1889,10 @@ class CriadorState {
                     .mapValues { (_, pilhas) -> pilhas.map { it.toList() } },
                 arcanoEmCompraViaXpKey = arcanoEmCompraViaXpKey,
                 arcanoSnapshotAntesDaCompra = arcanoSnapshotAntesDaCompra,
-                equipamentosComprados = equipamentosComprados.toList()
+                equipamentosComprados = equipamentosComprados.toList(),
+                tropoSelecionadoId = tropoSelecionado?.id,
+                vantagensTropoAutomaticas = vantagensAutomaticasDoTropo.toList(),
+                tecnicasIniciaisTropo = tecnicasIniciaisFromTropo
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -1996,6 +2050,14 @@ class CriadorState {
         reservasComplicacaoMaior.putAll(snapshot.selecoes.reservasComplicacaoMaior)
 
         equipamentosComprados.apply { clear(); addAll(snapshot.selecoes.equipamentosComprados) }
+
+        tropoSelecionado = snapshot.selecoes.tropoSelecionadoId?.let { id ->
+            listaTropos.firstOrNull { it.id == id }
+        }
+        vantagensAutomaticasDoTropo.apply {
+            clear()
+            addAll(snapshot.selecoes.vantagensTropoAutomaticas)
+        }
 
         poderSlotsPorArcano.clear()
         snapshot.selecoes.poderSlotsPorArcano.forEach { (key, slots) ->
