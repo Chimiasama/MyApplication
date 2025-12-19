@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 const val MULTICLASSE_VANTAGEM_ID = "multiclasse"
 const val MENSAGEM_EXCLUSIVIDADE_CLASSE =
-    "Você já possui uma Classe. Requer a vantagem Multiclasse para adicionar outra."
+    "Requer a vantagem Multiclasse para possuir duas classes."
 
 @Serializable
 data class Requisito(

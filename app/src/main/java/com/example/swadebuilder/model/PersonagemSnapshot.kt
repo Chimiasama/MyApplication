@@ -110,6 +110,7 @@ data class SnapshotSelecoes(
     val desvantagensAutomaticas: List<String>,
     val desvantagensRaciais: List<String>,
     val complicacoesSelecionadas: List<ComplicacaoSnapshot>,
+    val transtornosGratuitos: List<String> = emptyList(),
     val reservasComplicacaoMaior: Map<String, Boolean>,
     val poderesSelecionados: List<String>,
     val manifestacoesPoderes: Map<String, String> = emptyMap(),

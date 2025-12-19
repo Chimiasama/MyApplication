@@ -27,6 +27,9 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         nome = this.nomePersonagem,
         atributos = this.valoresAtributos.mapValues { it.value.intValue },
         pericias = listaPericias.associate { per -> per.nome to this.rawTotal(per) },
+        notasPericia = this.especializacoesPorPericia
+            .mapValues { it.value.principal.orEmpty().trim() }
+            .filterValues { it.isNotBlank() },
         ancestralidade = this.ancestralidade,
         celestialAAMilagresDesabilitado = this.celestialAAMilagresDesabilitado,
         tropoSelecionadoId = this.tropoSelecionado?.id,
@@ -42,6 +45,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
             .filterValues { it != null }
             .keys
             .map { it.id },
+        transtornosGratuitos = this.transtornosGratuitos.toList(),
         equipamentos = this.equipamentosComprados.toList(),
         poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
         manifestacoesPoderes = this.manifestacoesPoderes.toMap(),
@@ -188,8 +192,10 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
             if (allComplicationsKeys.any { it.keyify() == "FRAGIL" }) -1 else 0
 
         val brigaoBonus = vantagensNomeKey.count { it in listOf("BRIGAO", "PUGILISTA") }
+        val brutamontesBonus =
+            if (vantagensNomeKey.any { it == "BRUTAMONTES" || it == "BRAWNY" }) 1 else 0
 
-        return (base + bonusPos + bonusNeg + brigaoBonus + tamanhoTotal())
+        return (base + bonusPos + brutamontesBonus + bonusNeg + brigaoBonus + tamanhoTotal())
             .coerceAtLeast(0)
     }
 
@@ -330,7 +336,9 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         periciasParaMostrar.forEach { per ->
             val raw = personagem.pericias[per.nome] ?: 0
-            lines += "${per.nome} d$raw"
+            val nota = personagem.notasPericia[per.nome]?.trim().orEmpty()
+            val label = if (nota.isNotBlank()) "${per.nome} d$raw ($nota)" else "${per.nome} d$raw"
+            lines += label
         }
     }
     lines += ""
@@ -378,8 +386,9 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += ""
 
     lines += "Complicações"
+    val transtornos = personagem.transtornosGratuitos.filter { it.isNotBlank() }
     val complicacoesText =
-        (complicacoesNomeadas + personagem.desvantagensRaciais)
+        (complicacoesNomeadas + personagem.desvantagensRaciais + transtornos)
             .joinToString(", ")
             .ifBlank { "– Nenhuma" }
     lines += complicacoesText

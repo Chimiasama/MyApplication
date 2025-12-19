@@ -56,7 +56,6 @@ import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.HindranceChangeType
 import com.example.swadebuilder.model.MENSAGEM_EXCLUSIVIDADE_CLASSE
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.periciaStartRaw
 import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.stageIndexForSlot
@@ -226,7 +225,7 @@ fun ProgressosDialog(
     }
 
     fun bloquearExclusividadeClasse(vant: Vantagem): Boolean {
-        return if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant)) {
+        return if (state.classeBloqueadaBuscatrilha(vant)) {
             showSnack(MENSAGEM_EXCLUSIVIDADE_CLASSE)
             true
         } else {

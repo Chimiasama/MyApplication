@@ -8,6 +8,7 @@ data class MeuPersonagem(
     val nome: String,
     val atributos: Map<String, Int>,
     val pericias: Map<String, Int>,
+    val notasPericia: Map<String, String> = emptyMap(),
     val ancestralidade: String,
     val celestialAAMilagresDesabilitado: Boolean,
     val tropoSelecionadoId: String? = null,
@@ -16,6 +17,7 @@ data class MeuPersonagem(
     val vantagens: List<String>,
     val complicacoes: List<String>,
     val desvantagensRaciais: List<String>,
+    val transtornosGratuitos: List<String> = emptyList(),
 
     // Equipamentos com dados para impressão:
     val equipamentos: List<EquipamentoItem>,

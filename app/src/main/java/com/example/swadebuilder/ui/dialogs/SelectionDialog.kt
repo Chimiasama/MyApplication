@@ -1,6 +1,7 @@
 package com.example.swadebuilder.ui.dialogs
 
 // imports
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,13 +28,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.model.MENSAGEM_EXCLUSIVIDADE_CLASSE
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.model.classeExclusivaBloqueada
 
 /* ===========================================================
    1) Dialog GENÉRICO para seleção (single/multi)
@@ -47,6 +48,7 @@ private fun <T> SelectDialog(
     maxSelections: Int = Int.MAX_VALUE,
     label: (T) -> String,
     enabled: (T) -> Boolean = { true },
+    onDisabledClick: ((T) -> Unit)? = null,
     onValidateSelection: ((List<T>) -> String?)? = null,
     onConfirm: (List<T>) -> Unit,
     onDismiss: () -> Unit
@@ -71,7 +73,11 @@ private fun <T> SelectDialog(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable(enabled = isEnabled) {
+                                .clickable {
+                                    if (!isEnabled) {
+                                        onDisabledClick?.invoke(item)
+                                        return@clickable
+                                    }
                                     errorMessage = null
                                     if (singleSelection) {
                                         selected.clear()
@@ -138,17 +144,25 @@ fun AdvantageSelectionDialog(
     onSelect: (Vantagem) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val candidatas = listaVantagens.filter { state.podeSelecionar(it) }
+    val context = LocalContext.current
+    val candidatas = listaVantagens.filter {
+        state.podeSelecionar(it) || state.classeBloqueadaBuscatrilha(it)
+    }
 
     SelectDialog(
         title = "Escolha sua Vantagem",
         items = candidatas,
         singleSelection = true,
         label = { v -> "${v.nome} (${v.requisitos.estagio})" },
-        enabled = { _ -> true },
+        enabled = { v -> !state.classeBloqueadaBuscatrilha(v) },
+        onDisabledClick = { v ->
+            if (state.classeBloqueadaBuscatrilha(v)) {
+                Toast.makeText(context, MENSAGEM_EXCLUSIVIDADE_CLASSE, Toast.LENGTH_SHORT).show()
+            }
+        },
         onValidateSelection = { selection ->
             val vantagem = selection.firstOrNull() ?: return@SelectDialog null
-            if (state.vantagensSelecionadas.classeExclusivaBloqueada(vantagem)) {
+            if (state.classeBloqueadaBuscatrilha(vantagem)) {
                 MENSAGEM_EXCLUSIVIDADE_CLASSE
             } else {
                 null

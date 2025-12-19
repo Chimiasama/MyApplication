@@ -240,6 +240,7 @@ class CriadorViewModel : ViewModel() {
         state.ancestralidade = "HUMANOS"
         state.vantagensSelecionadas.clear()
         state.complicacoesSelecionadas.clear()
+        state.transtornosGratuitos.clear()
         state.reservasComplicacaoMaior.clear()
         state.vantagensAutomaticas.clear()
         state.desvantagensAutomaticas.clear()
@@ -383,7 +384,7 @@ class CriadorViewModel : ViewModel() {
     }
 
     private fun bloqueioClasseExclusiva(vant: Vantagem): String? {
-        return if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant)) {
+        return if (state.classeBloqueadaBuscatrilha(vant)) {
             MENSAGEM_EXCLUSIVIDADE_CLASSE
         } else {
             null

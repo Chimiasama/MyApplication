@@ -92,6 +92,10 @@ fun PericiasContent(
     var specTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
     var buyingExtraSpec by rememberSaveable { mutableStateOf(false) }
 
+    var showNotaDialog by rememberSaveable { mutableStateOf(false) }
+    var notaText by rememberSaveable { mutableStateOf("") }
+    var notaTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
+
     var showEditDialog by rememberSaveable { mutableStateOf(false) }
     var editIsPrincipal by rememberSaveable { mutableStateOf(false) }
     var editPerTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
@@ -234,6 +238,33 @@ fun PericiasContent(
                         overflow = TextOverflow.Ellipsis
                     )
 
+                    val notaPericia = state.especializacoesPorPericia[per.nome]?.principal
+                        ?.trim()
+                        .orEmpty()
+                    val podeEditarNota = !locked && state.rawTotal(per) > 0
+
+                    if (state.rawTotal(per) > 0) {
+                        IconButton(
+                            onClick = {
+                                if (!podeEditarNota) return@IconButton
+                                notaTarget = per
+                                notaText = notaPericia
+                                showNotaDialog = true
+                                onUserFeedback()
+                            },
+                            enabled = podeEditarNota,
+                            modifier = Modifier
+                                .size(32.dp)
+                                .padding(4.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Edit,
+                                contentDescription = "Editar nota de ${per.nome}",
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                    }
+
                     IconButton(
                         onClick = {
                             state.decreasePericia(per)
@@ -318,6 +349,15 @@ fun PericiasContent(
                             Text("Esp+")
                         }
                     }
+                }
+
+                if (notaPericia.isNotBlank()) {
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = "Nota: $notaPericia",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
 
                 if (allowLongTexts && descricao.isNotBlank()) {
@@ -532,6 +572,56 @@ fun PericiasContent(
             },
             dismissButton = {
                 TextButton(onClick = { showEditDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
+    if (showNotaDialog && notaTarget != null) {
+        AlertDialog(
+            onDismissRequest = { showNotaDialog = false },
+            title = { Text("Nota da perícia") },
+            text = {
+                Column {
+                    Text("Perícia: ${notaTarget!!.nome}")
+                    Spacer(Modifier.width(8.dp))
+                    OutlinedTextField(
+                        value = notaText,
+                        onValueChange = { notaText = it },
+                        label = { Text("Especialização") },
+                        singleLine = true
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val per = notaTarget!!
+                        val nota = notaText.trim()
+                        if (nota.isBlank()) {
+                            val atual =
+                                state.especializacoesPorPericia[per.nome]
+                                    ?: EspecializacoesDto()
+                            if (atual.lista.isEmpty()) {
+                                state.especializacoesPorPericia.remove(per.nome)
+                            } else {
+                                state.especializacoesPorPericia[per.nome] =
+                                    atual.copy(principal = null)
+                            }
+                        } else {
+                            val atual =
+                                state.especializacoesPorPericia[per.nome]
+                                    ?: EspecializacoesDto()
+                            state.especializacoesPorPericia[per.nome] =
+                                atual.copy(principal = nota)
+                        }
+                        showNotaDialog = false
+                    }
+                ) { Text("Salvar") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showNotaDialog = false }) {
                     Text("Cancelar")
                 }
             }

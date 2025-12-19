@@ -30,7 +30,8 @@ import com.example.swadebuilder.model.SnapshotSupers
 import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.model.classeExclusivaBloqueada
+import com.example.swadebuilder.model.isClasseOuPrestigio
+import com.example.swadebuilder.model.temMulticlasse
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
@@ -198,6 +199,29 @@ class CriadorState {
             .coerceAtLeast(0)
     }
 
+    fun temBrutamontes(): Boolean {
+        return vantagensSelecionadas.any { vant ->
+            val idKey = vant.id.keyify()
+            val nomeKey = vant.nome.keyify()
+            idKey == "BRUTAMONTES" || idKey == "BRAWNY" || nomeKey == "BRUTAMONTES" || nomeKey == "BRAWNY"
+        }
+    }
+
+    private fun proximoDado(raw: Int): Int =
+        if (raw < 12) raw + 2 else raw + 1
+
+    fun forcaEfetivaParaCarga(): Int {
+        var value = valoresAtributos["FORCA"]?.intValue ?: 4
+        val hasSoldado = vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
+        if (hasSoldado && soldadoCargaAtivo) {
+            value = proximoDado(value)
+        }
+        if (temBrutamontes()) {
+            value = proximoDado(value)
+        }
+        return value
+    }
+
     fun totalTensaoEquipamentos(): Int =
         equipamentosComprados.sumOf { it.tensao ?: 0 }
 
@@ -241,6 +265,7 @@ class CriadorState {
         val base     = 2 + (vigorRaw / 2)
 
         val bonusPos = if (vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" }) 1 else 0
+        val brutamontesBonus = if (temBrutamontes()) 1 else 0
         val bonusNeg =
             if (desvantagensAutomaticas.any { it.keyify() == "FRAGIL" } ||
                 desvantagensRaciais.any { it.keyify() == "FRAGIL" }) -1 else 0
@@ -252,7 +277,7 @@ class CriadorState {
         // Em vez de recalcular tamanho aqui, usamos a função centralizada:
         val sizeRaw = valorTamanho()   // já inclui racial, OBESO, PEQUENO, MUSCULOSO, com clamp -1..+3
 
-        return (base + bonusPos + bonusNeg + brigaoBonus + sizeRaw)
+        return (base + bonusPos + brutamontesBonus + bonusNeg + brigaoBonus + sizeRaw)
             .coerceAtLeast(0)
     }
 
@@ -869,6 +894,7 @@ class CriadorState {
 
     val complicacoesSelecionadas: SnapshotStateMap<Complicacao, String?> = mutableStateMapOf()
     val reservasComplicacaoMaior: SnapshotStateMap<String, Boolean> = mutableStateMapOf()
+    val transtornosGratuitos = mutableStateListOf<String>()
 
     val pontosComplicacao: Int
         get() {
@@ -914,11 +940,18 @@ class CriadorState {
     // guarda o nome da vantagem que está em foco (usada ao voltar da tela de detalhes)
     var vantagemEmFoco by mutableStateOf<String?>(null)
 
+    fun classeBloqueadaBuscatrilha(v: Vantagem): Boolean {
+        if (!compendioTrilhadorAtivo) return false
+        if (!v.isClasseOuPrestigio()) return false
+        if (vantagensSelecionadas.temMulticlasse()) return false
+        return vantagensSelecionadas.any { it.isClasseOuPrestigio() }
+    }
+
     fun podeSelecionar(v: Vantagem): Boolean {
         val key = v.nome.keyify()
 
         // 0) Exclusividade de Classe/Prestígio (Buscatrilha)
-        if (vantagensSelecionadas.classeExclusivaBloqueada(v)) return false
+        if (classeBloqueadaBuscatrilha(v)) return false
 
         // 1) Regra especial: O MELHOR QUE HÁ
         if (key == "o_melhor_que_ha") {
@@ -1545,15 +1578,22 @@ class CriadorState {
         val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
         var usados = 0
 
+        fun stepsBetween(from: Int, to: Int): Int {
+            var cur = from
+            var steps = 0
+            while (cur < to) {
+                cur += if (cur < 12) 2 else 1
+                steps += 1
+            }
+            return steps
+        }
+
         for (nome in listaAtributos) {
             val atual = valoresAtributos[nome]!!.intValue
             val base  = mods[nome] ?: 4
-
-            var cur = base
-            while (cur < atual) {
-                cur += if (cur < 12) 2 else 1
-                usados += 1
-            }
+            val totalSteps = stepsBetween(4, atual)
+            val bonusSteps = stepsBetween(4, base)
+            usados += (totalSteps - bonusSteps).coerceAtLeast(0)
         }
 
         return (5 + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
@@ -1909,6 +1949,7 @@ class CriadorState {
                 complicacoesSelecionadas = complicacoesSelecionadas.map { (comp, nivel) ->
                     ComplicacaoSnapshot(comp.id, nivel)
                 },
+                transtornosGratuitos = transtornosGratuitos.toList(),
                 reservasComplicacaoMaior = reservasComplicacaoMaior.toMap(),
                 poderesSelecionados = poderesSelecionados.toList(),
                 manifestacoesPoderes = manifestacoesPoderes.toMap(),
@@ -2073,6 +2114,10 @@ class CriadorState {
             listaComplicacoes.firstOrNull { it.id == compSnap.id }?.let { comp ->
                 complicacoesSelecionadas[comp] = compSnap.nivel
             }
+        }
+        transtornosGratuitos.apply {
+            clear()
+            addAll(snapshot.selecoes.transtornosGratuitos)
         }
         reservasComplicacaoMaior.clear()
         reservasComplicacaoMaior.putAll(snapshot.selecoes.reservasComplicacaoMaior)

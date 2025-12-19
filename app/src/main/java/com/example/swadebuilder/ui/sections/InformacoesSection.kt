@@ -270,12 +270,7 @@ fun InformacoesSection(
             }
             val bonusCapacity = if (hasMusculoso) 10f else 0f
 
-            val strengthRaw = state.valoresAtributos["FORCA"]!!.intValue
-            val effectiveStrength = if (hasSoldado && state.soldadoCargaAtivo) {
-                if (strengthRaw < 12) strengthRaw + 2 else strengthRaw + 1
-            } else {
-                strengthRaw
-            }
+            val effectiveStrength = state.forcaEfetivaParaCarga()
             val baseLimit = ((effectiveStrength - 2) / 2) * 10f
             val limit = baseLimit + bonusCapacity
 

@@ -34,6 +34,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -52,7 +53,10 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.criacaoBasicaCongelada
+import com.example.swadebuilder.faseFluxo
 import com.example.swadebuilder.listaComplicacoes
+import com.example.swadebuilder.FaseFluxo
+import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.keyify
@@ -70,6 +74,9 @@ fun ComplicacoesSection(
     val locked = state.criacaoBasicaCongelada
 
     var showPcInUseDialog by rememberSaveable { mutableStateOf(false) }
+    var showTranstornoDialog by rememberSaveable { mutableStateOf(false) }
+    var transtornoInput by rememberSaveable { mutableStateOf("") }
+    var showTranstornoChoice by rememberSaveable { mutableStateOf(false) }
 
     val autoBaseKeys = state.desvantagensAutomaticas
         .map { it.uppercase().semAcentos().substringBefore("(").trim() }
@@ -106,6 +113,19 @@ fun ComplicacoesSection(
         val totalPc = state.pontosComplicacao
         val usadosPc = state.pontosComplicacaoGastos
         val livresPc = (totalPc - usadosPc).coerceAtLeast(0)
+        val podeAdicionarTranstorno =
+            state.faseFluxo == FaseFluxo.PROGRESSOS && state.compendioHorrorAtivo
+        val transtornosPorEvolucao = state.complicacoesSelecionadas
+            .keys
+            .filter { it.observacoes.contains("TRANSTORNO", ignoreCase = true) }
+            .map { comp ->
+                if (showOfficialNames && !comp.originalName.isNullOrBlank()) {
+                    comp.originalName
+                } else {
+                    comp.name
+                }
+            }
+            .filter { it.isNotBlank() }
 
         SectionHeader(
             onHelpClick          = null,
@@ -132,6 +152,22 @@ fun ComplicacoesSection(
         }
 
         Spacer(Modifier.height(8.dp))
+
+        if (podeAdicionarTranstorno) {
+            TextButton(
+                onClick = {
+                    if (transtornosPorEvolucao.isNotEmpty()) {
+                        showTranstornoChoice = true
+                    } else {
+                        transtornoInput = ""
+                        showTranstornoDialog = true
+                    }
+                }
+            ) {
+                Text("Adicionar Transtorno")
+            }
+            Spacer(Modifier.height(4.dp))
+        }
 
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -193,6 +229,32 @@ fun ComplicacoesSection(
                 }
         }
 
+        if (state.transtornosGratuitos.isNotEmpty()) {
+            Spacer(Modifier.height(8.dp))
+            Text(
+                "Transtornos (Horror):",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(Modifier.height(4.dp))
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement   = Arrangement.spacedBy(8.dp)
+            ) {
+                state.transtornosGratuitos.forEach { transtorno ->
+                    AssistChip(
+                        onClick = {
+                            if (!podeAdicionarTranstorno) return@AssistChip
+                            state.transtornosGratuitos.remove(transtorno)
+                        },
+                        enabled = podeAdicionarTranstorno,
+                        label = { Text(transtorno) },
+                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover transtorno") }
+                    )
+                }
+            }
+        }
+
         Spacer(Modifier.height(8.dp))
 
         if (showPcInUseDialog) {
@@ -233,6 +295,56 @@ fun ComplicacoesSection(
                         }
                     }
                 }
+            )
+        }
+
+        if (showTranstornoDialog) {
+            AlertDialog(
+                onDismissRequest = { showTranstornoDialog = false },
+                title = { Text("Adicionar transtorno") },
+                text = {
+                    Column {
+                        Text("Descreva a sequela narrativa")
+                        Spacer(Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = transtornoInput,
+                            onValueChange = { transtornoInput = it },
+                            label = { Text("Transtorno") },
+                            singleLine = true
+                        )
+                    }
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            val novo = transtornoInput.trim()
+                            if (novo.isNotEmpty() && novo !in state.transtornosGratuitos) {
+                                state.transtornosGratuitos.add(novo)
+                            }
+                            showTranstornoDialog = false
+                        }
+                    ) { Text("Adicionar") }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showTranstornoDialog = false }) {
+                        Text("Cancelar")
+                    }
+                }
+            )
+        }
+
+        if (showTranstornoChoice) {
+            ChoiceDialog(
+                title = "Transtorno por evolução",
+                options = transtornosPorEvolucao.distinct(),
+                onConfirm = { escolha ->
+                    val novo = escolha.trim()
+                    if (novo.isNotEmpty() && novo !in state.transtornosGratuitos) {
+                        state.transtornosGratuitos.add(novo)
+                    }
+                    showTranstornoChoice = false
+                },
+                onDismiss = { showTranstornoChoice = false }
             )
         }
 

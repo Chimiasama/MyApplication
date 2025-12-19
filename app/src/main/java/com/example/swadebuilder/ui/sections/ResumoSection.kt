@@ -90,12 +90,7 @@ fun SummaryContent(state: CriadorState) {
     val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
     val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
     val bonusCapacity = if (hasMusculoso) 10f else 0f
-    val strengthRaw = state.valoresAtributos["FORCA"]?.intValue ?: 4
-    val effectiveStrengthForLoad = if (hasSoldado && state.soldadoCargaAtivo) {
-        if (strengthRaw < 12) strengthRaw + 2 else strengthRaw + 1
-    } else {
-        strengthRaw
-    }
+    val effectiveStrengthForLoad = state.forcaEfetivaParaCarga()
     val baseLimit = ((effectiveStrengthForLoad - 2) / 2) * 10f
     val weightLimit = baseLimit + bonusCapacity
     val totalWeight = state.equipamentosComprados
