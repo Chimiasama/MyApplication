@@ -302,7 +302,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         lines += "Reserva de Chi: $chi"
     }
     if (personagem.sanidade != null) {
-        lines += "Sanidade: ${personagem.sanidade}"
+        lines += "Sanidade: ${personagem.sanidade}" // Horror Companion
     }
     if (personagem.dominio != null) {
         lines += "Domínio: ${personagem.dominio}"

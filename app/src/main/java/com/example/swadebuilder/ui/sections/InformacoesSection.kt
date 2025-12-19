@@ -172,6 +172,11 @@ fun InformacoesSection(
                     Spacer(modifier = Modifier.height(8.dp))
                     StatItem("Reserva de Chi", state.reservaChi.toString())
                 }
+
+                if (state.compendioHorrorAtivo) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    StatItem("Sanidade", state.valorSanidade().toString())
+                }
             }
 
             val spentOnCreation = state.progresso - state.progressosDisponiveis

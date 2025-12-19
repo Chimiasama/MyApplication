@@ -247,7 +247,17 @@ class CriadorState {
 
     fun valorSanidade(): Int {
         val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 4
-        return 2 + (espiritoRaw / 2)
+        var base = 2 + (espiritoRaw / 2)
+
+        if (vantagensSelecionadas.any { it.nome.keyify() == "CORAJOSO" }) base += 2
+
+        // Verifica Obstinado ou Determinação Inabalável (termo alternativo comum)
+        if (vantagensSelecionadas.any {
+            val k = it.nome.keyify()
+            k == "OBSTINADO" || k == "DETERMINACAO INABALAVEL"
+        }) base += 2
+
+        return base
     }
 
     fun valorDominio(): Int {

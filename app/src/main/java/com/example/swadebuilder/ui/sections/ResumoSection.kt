@@ -83,6 +83,7 @@ fun SummaryContent(state: CriadorState) {
     val sections = remember(lines) { lines.toSummarySections(headers) }
 
     val identitySection = sections.firstOrNull { it.title == "Identidade" }
+    // A seção de atributos derivados já inclui Sanidade se estiver presente nas linhas geradas por buildSummaryLines
     val derivedSection = sections.firstOrNull { it.title == "Atributos derivados" }
     val attributesSection = sections.firstOrNull { it.title == "Atributos" }
     val skillsSection = sections.firstOrNull { it.title == "Perícias" }
