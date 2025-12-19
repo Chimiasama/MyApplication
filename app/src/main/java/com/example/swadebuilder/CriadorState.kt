@@ -198,6 +198,41 @@ class CriadorState {
             .coerceAtLeast(0)
     }
 
+    val isRobot: Boolean
+        get() {
+            val key = ancestralidade.keyify()
+            if (key.contains("CONSTRUCTO") ||
+                key.contains("ROBO") ||
+                key.contains("ANDROIDE") ||
+                key == "anc_constructo_scifi") return true
+
+            val entry = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == key }
+            return entry?.habilidades?.any {
+                it.nome.contains("Modificações", ignoreCase = true) ||
+                        it.nome.contains("Constructo", ignoreCase = true)
+            } == true
+        }
+
+    val maxTensao: Int
+        get() {
+            var vig = valoresAtributos["VIGOR"]?.intValue ?: 4
+            // Ciborgue Edge: Increases Strain limit by one die type
+            if (vantagensSelecionadas.any { it.nome.keyify() == "CIBORGUE" }) {
+                vig = if (vig < 12) vig + 2 else vig + 1
+            }
+            return vig
+        }
+
+    val maxModSlots: Int
+        get() {
+            // Base slots = Size + 1 (Size 0 = 1 slot)
+            val size = valorTamanho()
+            return (size + 1).coerceAtLeast(0)
+        }
+
+    fun totalModSlotsEquipados(): Int =
+        equipamentosComprados.sumOf { it.mods_slots ?: 0 }
+
     fun totalTensaoEquipamentos(): Int =
         equipamentosComprados.sumOf { it.tensao ?: 0 }
 

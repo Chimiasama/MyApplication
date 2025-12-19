@@ -195,6 +195,10 @@ fun EquipamentoSection(
     categorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
     tensaoTotal: Int,
+    isRobot: Boolean = false,
+    maxTensao: Int = 4,
+    currentModSlots: Int = 0,
+    maxModSlots: Int = 0,
     vigorRaw: Int,
     forcaRaw: Int,
     hasMusculoso: Boolean,
@@ -526,13 +530,60 @@ fun EquipamentoSection(
 
         Spacer(Modifier.size(4.dp))
 
-        if (tensaoTotal > vigorRaw) {
-            Text(
-                "Limite de Tensão Excedido!",
-                color = MaterialTheme.colorScheme.error,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-            )
+        // Tensão / Mods Display
+        if (compendioSciFiAtivo) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                if (isRobot) {
+                    val color = if (currentModSlots > maxModSlots) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+                    Text(
+                        "Mods: $currentModSlots / $maxModSlots",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = color
+                    )
+                } else {
+                    val color = if (tensaoTotal > maxTensao) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+                    Text(
+                        "Tensão: $tensaoTotal / $maxTensao",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = color
+                    )
+                }
+            }
+
+            // Warnings
+            if (isRobot) {
+                if (currentModSlots > maxModSlots) {
+                    Text(
+                        "Limite de Slots de Modificação excedido!",
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                }
+            } else {
+                if (tensaoTotal > maxTensao) {
+                    val msg = if (tensaoTotal > maxTensao + 2)
+                        "Sobrecarga Cibernética: Personagem recebe o estado Exausto."
+                    else
+                        "Sobrecarga Cibernética: Personagem recebe o estado Fatigado."
+
+                    Text(
+                        msg,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                }
+            }
+            Spacer(Modifier.size(4.dp))
         }
 
         // 6. List Content
