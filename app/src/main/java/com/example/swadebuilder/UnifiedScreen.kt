@@ -613,6 +613,12 @@ private fun EquipamentoSection(
 ) {
     val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
     val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
+    val isPersonagemRobotico = state.isPersonagemRobotico()
+    val tensaoLimite = if (isPersonagemRobotico) {
+        state.limiteModsRoboticos()
+    } else {
+        state.valoresAtributos["VIGOR"]?.intValue ?: 4
+    }
 
     EquipamentoSection(
         dinheiro = state.dinheiro,
@@ -667,7 +673,8 @@ private fun EquipamentoSection(
         superequipCategorias =
             if (state.modoSupers) superequipCategorias else emptyList(),
         tensaoTotal = state.totalTensaoEquipamentos(),
-        vigorRaw = state.valoresAtributos["VIGOR"]?.intValue ?: 4,
+        tensaoLimite = tensaoLimite,
+        isPersonagemRobotico = isPersonagemRobotico,
         forcaRaw = state.valoresAtributos["FORCA"]?.intValue ?: 4,
         hasMusculoso = hasMusculoso,
         hasSoldado = hasSoldado,

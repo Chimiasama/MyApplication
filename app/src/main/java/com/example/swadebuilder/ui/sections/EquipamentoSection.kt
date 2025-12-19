@@ -195,7 +195,8 @@ fun EquipamentoSection(
     categorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
     tensaoTotal: Int,
-    vigorRaw: Int,
+    tensaoLimite: Int,
+    isPersonagemRobotico: Boolean,
     forcaRaw: Int,
     hasMusculoso: Boolean,
     hasSoldado: Boolean,
@@ -500,6 +501,14 @@ fun EquipamentoSection(
         val baseLimit = ((effectiveStrength - 2) / 2) * 10f
         val limit = baseLimit + if (hasMusculoso) 10f else 0f
 
+        val tensaoExcedida = tensaoTotal > tensaoLimite
+        val tensaoLabel = if (isPersonagemRobotico) "Mods" else "Tensão"
+        val tensaoColor = if (tensaoExcedida) {
+            MaterialTheme.colorScheme.error
+        } else {
+            MaterialTheme.colorScheme.onSurface
+        }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -512,27 +521,47 @@ fun EquipamentoSection(
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1f)
             )
-            if (hasSoldado) {
-                AssistChip(
-                    onClick = onToggleSoldadoCarga,
-                    label = {
-                        Text(
-                            if (soldadoCargaAtivo) "Bônus Soldado ativo" else "Bônus Soldado inativo"
-                        )
-                    }
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    "$tensaoLabel: $tensaoTotal/$tensaoLimite",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = tensaoColor
                 )
+                if (hasSoldado) {
+                    AssistChip(
+                        onClick = onToggleSoldadoCarga,
+                        label = {
+                            Text(
+                                if (soldadoCargaAtivo) "Bônus Soldado ativo" else "Bônus Soldado inativo"
+                            )
+                        }
+                    )
+                }
             }
         }
 
         Spacer(Modifier.size(4.dp))
 
-        if (tensaoTotal > vigorRaw) {
+        if (tensaoExcedida) {
+            val excess = tensaoTotal - tensaoLimite
             Text(
-                "Limite de Tensão Excedido!",
+                "Sobrecarga Cibernética: Personagem recebe o estado Fatigado (ou Exausto se X > Y+2).",
                 color = MaterialTheme.colorScheme.error,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
             )
+            Text(
+                "Estado atual: ${if (excess > 2) "Exausto" else "Fatigado"}.",
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+            )
+            if (excess > 2) {
+                Text(
+                    "Personagem incapacitado enquanto o excesso persistir.",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                )
+            }
         }
 
         // 6. List Content
