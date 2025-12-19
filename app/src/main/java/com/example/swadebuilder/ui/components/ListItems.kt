@@ -102,11 +102,29 @@ fun StandardEquipamentoItem(
                 )
             }
 
+            // Stats (Tensão/Mods) - Always visible
+            val statsExtras = buildList {
+                equipamento.tensao?.let { add("Tensão: $it") }
+                equipamento.mods_slots?.let { add("Slots de Mods: $it") }
+            }
+
+            if (statsExtras.isNotEmpty()) {
+                Spacer(Modifier.height(2.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    statsExtras.forEach { stat ->
+                        Text(
+                            text = stat,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.secondary,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                }
+            }
+
             // Details
             val detalhes = buildList {
                 // Fields already in summary (linhaArma, linhaGeral, linhaVeiculo, observacao) are excluded here to avoid duplication.
-                equipamento.tensao?.let { add("Tensão: $it") }
-                equipamento.mods_slots?.let { add("Slots de Mods: $it") }
             }
 
             if (allowLongTexts && detalhes.isNotEmpty()) {

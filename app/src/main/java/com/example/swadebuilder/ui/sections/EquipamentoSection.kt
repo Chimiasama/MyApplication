@@ -531,55 +531,75 @@ fun EquipamentoSection(
         Spacer(Modifier.size(4.dp))
 
         if (compendioSciFiAtivo) {
-            if (isAndroide) {
-                // Modo Androide: usa Slots de Mods
-                val exceeded = totalModSlots > limitModSlots
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        "Slots de Mods: $totalModSlots / $limitModSlots",
-                        color = if (exceeded) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = if (exceeded) FontWeight.Bold else FontWeight.Normal
-                    )
-                }
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp, vertical = 4.dp)
+            ) {
+                Column(Modifier.padding(8.dp)) {
+                    if (isAndroide) {
+                        // Modo Androide: usa Slots de Mods
+                        val exceeded = totalModSlots > limitModSlots
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                "Slots de Mods:",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                            Text(
+                                "$totalModSlots / $limitModSlots",
+                                color = if (exceeded) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
 
-                if (exceeded) {
-                    Text(
-                        "Capacidade de Mods Excedida!",
-                        color = MaterialTheme.colorScheme.error,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                    )
-                }
-            } else {
-                // Modo Orgânico: usa Tensão (Strain)
-                val diff = tensaoTotal - tensaoLimit
-                val color = if (diff > 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
-                val weight = if (diff > 0) FontWeight.Bold else FontWeight.Normal
+                        if (exceeded) {
+                            Text(
+                                "Capacidade de Mods Excedida!",
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 4.dp)
+                            )
+                        }
+                    } else {
+                        // Modo Orgânico: usa Tensão (Strain)
+                        val diff = tensaoTotal - tensaoLimit
+                        val color = if (diff > 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
 
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        "Tensão: $tensaoTotal / $tensaoLimit",
-                        color = color,
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = weight
-                    )
-                }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                "Tensão Cibernética:",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                            Text(
+                                "$tensaoTotal / $tensaoLimit",
+                                color = color,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
 
-                if (diff > 0) {
-                    val status = if (diff > 2) "Exausto" else "Fatigado"
-                    Text(
-                        "Sobrecarga Cibernética: Personagem recebe o estado $status",
-                        color = MaterialTheme.colorScheme.error,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                    )
+                        if (diff > 0) {
+                            val status = if (diff > 2) "Exausto" else "Fatigado"
+                            Text(
+                                "Sobrecarga: Personagem está $status",
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 4.dp)
+                            )
+                        }
+                    }
                 }
             }
         } else if (tensaoTotal > vigorRaw) {
