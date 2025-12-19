@@ -75,6 +75,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         soldadoCargaAtivo = this.soldadoCargaAtivo,
         modoOficialAtivo = this.modoOficialAtivo,
         compendioArteDaGuerraAtivo = this.compendioArteDaGuerraAtivo,
+        heroisSemArmadura = this.heroisSemArmadura,
         compendioDeadlandsAtivo = this.compendioDeadlandsAtivo,
         compendioHorrorAtivo = this.compendioHorrorAtivo,
         dominio = if (this.compendioDeadlandsAtivo) this.valorDominio() else null,
@@ -181,7 +182,9 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         val base = racialSize()
         val obesoBonus = if (temComp("OBESO")) 1 else 0
         val pequenoPenalty = if (temComp("PEQUENO")) -1 else 0
-        return base + obesoBonus + pequenoPenalty
+        val musculosoBonus = if (vantagensNomeKey.any { it == "MUSCULOSO" }) 1 else 0
+        return (base + obesoBonus + pequenoPenalty + musculosoBonus)
+            .coerceIn(-1, 3)
     }
 
     fun resistenciaBase(): Int {
@@ -289,9 +292,13 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val tamanho = tamanhoTotal()
     val mov = calcMovimento()
     val armadura = calcArmaduraEfetiva()
+    val temArmaduraDeEquip = personagem.equipamentos.any { it.armadura != null }
+    val bonusSemArmadura =
+        if (personagem.heroisSemArmadura && !temArmaduraDeEquip) 2 else 0
     val chi = calcChi()
+    val resistenciaTotal = resFinal + armadura + bonusSemArmadura
     val resistenciaTexto =
-        if (armadura > 0) "${resFinal}(${armadura})" else resFinal.toString()
+        if ((armadura + bonusSemArmadura) > 0) "${resFinal}(${resistenciaTotal})" else resFinal.toString()
 
     lines += "Identidade"
     lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"

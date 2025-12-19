@@ -183,7 +183,6 @@ fun ComplicacoesSection(
                                         val pequComp = complicacoesFiltradas.first { it.id == "pequeno" }
                                         state.removeYoung(pequComp)
                                         state.complicacoesSelecionadas.remove(comp)
-                                        state.applyYoungMinor()
                                     }
                                     "pobreza" -> {
                                         state.complicacoesSelecionadas.remove(comp)
