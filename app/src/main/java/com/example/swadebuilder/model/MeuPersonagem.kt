@@ -15,6 +15,7 @@ data class MeuPersonagem(
     // Vantagens e Complicações já persistidas por ID:
     val vantagens: List<String>,
     val complicacoes: List<String>,
+    val transtornos: List<String> = emptyList(), // PROMPT 3
     val desvantagensRaciais: List<String>,
 
     // Equipamentos com dados para impressão:
@@ -73,5 +74,6 @@ data class MeuPersonagem(
     val sanidade: Int? = null,
     val dominio: Int? = null,
     val compendioDeadlandsAtivo: Boolean = false,
-    val compendioHorrorAtivo: Boolean = false
+    val compendioHorrorAtivo: Boolean = false,
+    val notasPericia: Map<String, String> = emptyMap() // PROMPT 5
 )

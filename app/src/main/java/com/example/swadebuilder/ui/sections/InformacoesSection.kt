@@ -262,22 +262,8 @@ fun InformacoesSection(
                 }
                 .sum()
 
-            val hasMusculoso = state.vantagensSelecionadas.any {
-                it.nome.keyify() == "MUSCULOSO"
-            }
-            val hasSoldado = state.vantagensSelecionadas.any {
-                it.nome.keyify() == "SOLDADO"
-            }
-            val bonusCapacity = if (hasMusculoso) 10f else 0f
-
-            val strengthRaw = state.valoresAtributos["FORCA"]!!.intValue
-            val effectiveStrength = if (hasSoldado && state.soldadoCargaAtivo) {
-                if (strengthRaw < 12) strengthRaw + 2 else strengthRaw + 1
-            } else {
-                strengthRaw
-            }
-            val baseLimit = ((effectiveStrength - 2) / 2) * 10f
-            val limit = baseLimit + bonusCapacity
+            // PROMPT 2: Use new centralized logic
+            val limit = state.valorCargaMaxima()
 
             Text(
                 text = "Peso Total: ${"%.1f".format(totalWeight)} / ${"%.1f".format(limit)}",
@@ -288,6 +274,7 @@ fun InformacoesSection(
                 textAlign = TextAlign.Center
             )
 
+            val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
             if (hasSoldado) {
                 AssistChip(
                     onClick = { state.soldadoCargaAtivo = !state.soldadoCargaAtivo },
