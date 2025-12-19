@@ -112,41 +112,7 @@ fun AncestralidadesSection(
         compendioSciFiAtivo,
         compendioCrystalHeartAtivo
     ) {
-        // Load legacy list
-        val allLegacy = context.loadJsonAsset<List<RacialModifier>>(ASSET_ANCESTRALIDADES)
-
-        // Load Buscatrilha list
-        val allTrilhador = try {
-            context.loadJsonAsset<List<RacialModifier>>("ancestralidades_trilhador.json")
-        } catch (e: Exception) {
-            emptyList()
-        }
-
-        val allDeadlands = try {
-            context.loadJsonAsset<List<RacialModifier>>("ancestralidades_deadlands.json")
-        } catch (e: Exception) {
-            emptyList()
-        }
-
-        val allAdg = try {
-            context.loadJsonAsset<List<RacialModifier>>("ancestralidades_adg.json")
-        } catch (e: Exception) {
-            emptyList()
-        }
-
-        val allCidadeSolVapor = try {
-            context.loadJsonAsset<List<RacialModifier>>("ancestralidades_sol_vapor.json")
-        } catch (e: Exception) {
-            emptyList()
-        }
-
-        val allWiseguys = try {
-            context.loadJsonAsset<List<RacialModifier>>("ancestralidades_wiseguys.json")
-        } catch (e: Exception) {
-            emptyList()
-        }
-
-        val all = allLegacy + allTrilhador + allDeadlands + allAdg + allCidadeSolVapor + allWiseguys
+        val all = context.loadJsonAsset<List<RacialModifier>>(ASSET_ANCESTRALIDADES)
 
         val filtered = all.filter {
             val origin = it.origem?.uppercase() ?: "BASICO"
@@ -159,6 +125,9 @@ fun AncestralidadesSection(
                 "DEADLANDS" -> compendioDeadlandsAtivo
                 "CIDADE_SOL_VAPOR" -> compendioCidadeSolVaporAtivo
                 "WISEGUYS" -> compendioWiseguysAtivo
+                "SCI_FI" -> compendioSciFiAtivo
+                "CRYSTAL_HEART" -> compendioCrystalHeartAtivo
+                "HORROR" -> compendioHorrorAtivo
                 else -> false
             }
         }.map {

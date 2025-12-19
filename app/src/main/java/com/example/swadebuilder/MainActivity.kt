@@ -132,17 +132,6 @@ private val json = Json {
 private inline fun <reified T> AssetManager.readJsonList(fileName: String): List<T> =
     open(fileName).bufferedReader().use { reader -> json.decodeFromString(reader.readText()) }
 
-private inline fun <reified T> AssetManager.readJsonListOrEmpty(fileName: String): List<T> =
-    runCatching { readJsonList<T>(fileName) }.getOrElse { emptyList() }
-
-private inline fun <reified T> AssetManager.readMultipleJsonLists(files: List<String>): List<T> =
-    files.flatMap { readJsonListOrEmpty<T>(it) }
-
-private inline fun <reified T> AssetManager.mergeJsonLists(
-    primaryFile: String,
-    extraFiles: List<String>
-): List<T> = readJsonList<T>(primaryFile) + readMultipleJsonLists<T>(extraFiles)
-
 private const val MULTIPLOS_AA_HABILITADOS: Boolean = false
 
 class MainActivity : ComponentActivity() {
@@ -155,15 +144,7 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val equipamentoCategorias = assets.mergeJsonLists<EquipamentoCategoria>(
-            primaryFile = "equipamentos.json",
-            extraFiles = listOf(
-                "equipamentos_crystal.json",
-                "equipamentos_adg.json",
-                "equipamentos_sol_vapor.json",
-                "equipamentos_wiseguys.json"
-            )
-        ).filter { cat ->
+        val equipamentoCategorias = assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
             cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
         }
         val superequipCategorias = assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
@@ -214,14 +195,6 @@ class MainActivity : ComponentActivity() {
         val todasVantagens: List<Vantagem> = this.loadJsonAsset("Vantagens.json")
 
 
-        val vantagensExtras = assets.readMultipleJsonLists<Vantagem>(
-            listOf(
-                "vantagens_adg.json",
-                "vantagens_sol_vapor.json",
-                "vantagens_wiseguys.json"
-            )
-        )
-
         AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
         AppData.superVantagens = todasVantagens.filter {
             it.origem.equals("SUPER", ignoreCase = true)
@@ -234,9 +207,7 @@ class MainActivity : ComponentActivity() {
             it.origem.equals("TRILHADOR", ignoreCase = true)
         }
 
-        val vantCrystal = assets.readJsonListOrEmpty<Vantagem>("vantagens_crystal.json")
-
-        listaVantagens = todasVantagens + vantCrystal + vantagensExtras
+        listaVantagens = todasVantagens
 
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
@@ -245,31 +216,9 @@ class MainActivity : ComponentActivity() {
 
         val todasComplicacoes = this.loadJsonAsset<List<Complicacao>>("complicacoes.json")
 
-        val complicacaoExtras = assets.readMultipleJsonLists<Complicacao>(
-            listOf(
-                "complicacoes_crystal.json",
-                "complicacoes_adg.json",
-                "complicacoes_sol_vapor.json",
-                "complicacoes_wiseguys.json"
-            )
-        )
+        listaComplicacoes = todasComplicacoes
 
-        listaComplicacoes = todasComplicacoes + complicacaoExtras
-
-        val ancestralFiles = listOf(
-            "ancestralidades_trilhador.json",
-            "ancestralidades_sci_fi.json",
-            "ancestralidades_deadlands.json",
-            "ancestralidades_adg.json",
-            "ancestralidades_crystal.json",
-            "ancestralidades_sol_vapor.json",
-            "ancestralidades_wiseguys.json"
-        )
-
-        listaAncestralidadesJson = assets.mergeJsonLists<RacialModifier>(
-            primaryFile = "listaancestralidade.json",
-            extraFiles = ancestralFiles
-        )
+        listaAncestralidadesJson = assets.readJsonList("listaancestralidade.json")
 
         val monstrosJson = assets
             .open("monstros.json")
