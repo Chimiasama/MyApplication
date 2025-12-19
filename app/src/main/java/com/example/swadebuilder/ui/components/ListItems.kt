@@ -103,7 +103,7 @@ fun StandardEquipamentoItem(
             }
 
             // Stats (Tensão/Mods) - Always visible
-            val statsExtras = buildList {
+            val statsExtras = buildList<String> {
                 equipamento.tensao?.let { add("Tensão: $it") }
                 equipamento.mods_slots?.let { add("Slots de Mods: $it") }
             }
@@ -123,7 +123,7 @@ fun StandardEquipamentoItem(
             }
 
             // Details
-            val detalhes = buildList {
+            val detalhes = buildList<String> {
                 // Fields already in summary (linhaArma, linhaGeral, linhaVeiculo, observacao) are excluded here to avoid duplication.
             }
 
