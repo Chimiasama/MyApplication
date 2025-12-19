@@ -13,15 +13,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,8 +44,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.buildSummaryLines
+import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.toMeuPersonagem
 import com.example.swadebuilder.util.keyify
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import com.example.swadebuilder.Pericia
 
 @Composable
 fun SummaryContent(state: CriadorState) {
@@ -201,6 +213,11 @@ fun SummaryContent(state: CriadorState) {
                     )
                 }
             }
+            Spacer(Modifier.height(12.dp))
+        }
+
+        if (state.usarEspecializacoesDePericia) {
+            SpecializationsSummaryCard(state = state)
             Spacer(Modifier.height(12.dp))
         }
 
@@ -423,6 +440,134 @@ fun CircleStat(
             text = label,
             style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+private fun SpecializationsSummaryCard(
+    state: CriadorState,
+    modifier: Modifier = Modifier
+) {
+    var showEditDialog by rememberSaveable { mutableStateOf(false) }
+    var editPerTarget by rememberSaveable { mutableStateOf<Pericia?>(null) }
+    var editOldName by rememberSaveable { mutableStateOf("") }
+    var editNewName by rememberSaveable { mutableStateOf("") }
+    var editIsPrincipal by rememberSaveable { mutableStateOf(false) }
+
+    val skillsWithSpecs = listaPericias.filter { per ->
+        val hasPoints = state.rawTotal(per) > 0 || per.basica
+        val specs = state.especializacoesPorPericia[per.nome]
+        hasPoints && specs != null && (specs.principal != null || specs.lista.isNotEmpty())
+    }
+
+    if (skillsWithSpecs.isEmpty()) return
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(Modifier.padding(12.dp)) {
+            Text(
+                text = "Especializações",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(Modifier.height(8.dp))
+
+            skillsWithSpecs.forEach { per ->
+                val specDto = state.especializacoesPorPericia[per.nome] ?: return@forEach
+                val list = mutableListOf<Pair<String, Boolean>>()
+                specDto.principal?.let { list.add(it to true) }
+                specDto.lista.filter { it != specDto.principal }.forEach { list.add(it to false) }
+
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = per.nome,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    list.forEach { (name, isPrincipal) ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(start = 8.dp, bottom = 2.dp)
+                        ) {
+                            Text(
+                                text = "• $name",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(end = 4.dp)
+                            )
+                            IconButton(
+                                onClick = {
+                                    editPerTarget = per
+                                    editOldName = name
+                                    editNewName = name
+                                    editIsPrincipal = isPrincipal
+                                    showEditDialog = true
+                                },
+                                modifier = Modifier.size(20.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Edit,
+                                    contentDescription = "Edit",
+                                    modifier = Modifier.size(14.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                    Spacer(Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+
+    if (showEditDialog && editPerTarget != null) {
+        AlertDialog(
+            onDismissRequest = { showEditDialog = false },
+            title = { Text("Renomear Especialização") },
+            text = {
+                Column {
+                    Text("Perícia: ${editPerTarget!!.nome}")
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = editNewName,
+                        onValueChange = { editNewName = it },
+                        label = { Text("Nome") },
+                        singleLine = true
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val per = editPerTarget!!
+                        val novo = editNewName.trim()
+                        if (novo.isNotEmpty()) {
+                            val atual = state.especializacoesPorPericia[per.nome]
+                            if (atual != null) {
+                                val newDto = if (editIsPrincipal) {
+                                    val listClean = atual.lista.filter { it != editOldName }
+                                    atual.copy(principal = novo, lista = (listClean + novo).distinct())
+                                } else {
+                                    val newList = atual.lista.map { if (it == editOldName) novo else it }.distinct()
+                                    atual.copy(lista = newList)
+                                }
+                                state.especializacoesPorPericia[per.nome] = newDto
+                            }
+                        }
+                        showEditDialog = false
+                    }
+                ) { Text("Salvar") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showEditDialog = false }) { Text("Cancelar") }
+            }
         )
     }
 }

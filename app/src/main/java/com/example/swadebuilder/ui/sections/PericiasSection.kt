@@ -515,7 +515,15 @@ fun PericiasContent(
                 TextButton(
                     onClick = {
                         val per = specTarget!!
-                        val nomeEsp = specText.trim()
+                        var nomeEsp = specText.trim()
+
+                        // AUTO-FILL PLACEHOLDER IF EMPTY
+                        if (nomeEsp.isEmpty()) {
+                            val atual = state.especializacoesPorPericia[per.nome]
+                            val count = (if (atual?.principal != null) 1 else 0) + (atual?.lista?.size ?: 0)
+                            nomeEsp = "Especialização ${count + 1}"
+                        }
+
                         if (nomeEsp.isNotEmpty()) {
                             val atual =
                                 state.especializacoesPorPericia[per.nome]
