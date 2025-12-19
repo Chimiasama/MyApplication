@@ -382,6 +382,14 @@ class CriadorViewModel : ViewModel() {
         return InvestCheck(true)
     }
 
+    private fun bloqueioClasseExclusiva(vant: Vantagem): String? {
+        return if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant)) {
+            MENSAGEM_EXCLUSIVIDADE_CLASSE
+        } else {
+            null
+        }
+    }
+
     fun canInvestInPower(
         poderId: String,
         custo: Int,
@@ -443,6 +451,11 @@ class CriadorViewModel : ViewModel() {
                 val vant = listaVantagens.firstOrNull {
                     it.id.equals(efeito.vantagemId, ignoreCase = true)
                 } ?: return InvestCheck(false, "Vantagem não encontrada: ${efeito.vantagemId}.")
+
+                val bloqueioClasse = bloqueioClasseExclusiva(vant)
+                if (bloqueioClasse != null) {
+                    return InvestCheck(false, bloqueioClasse)
+                }
 
                 // NÃO permitir comprar de novo se já tiver a vantagem de qualquer forma
                 if (state.vantagensSelecionadas.any { it.id == vant.id }) {
