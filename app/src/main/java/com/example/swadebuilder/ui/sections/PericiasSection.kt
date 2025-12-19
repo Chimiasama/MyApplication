@@ -98,6 +98,11 @@ fun PericiasContent(
     var editOldName by rememberSaveable { mutableStateOf("") }
     var editNewName by rememberSaveable { mutableStateOf("") }
 
+    // PROMPT 5: State for Note Dialog
+    var showNoteDialog by rememberSaveable { mutableStateOf(false) }
+    var noteText by rememberSaveable { mutableStateOf("") }
+    var noteTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
+
     val idosoActive = state.idosoBonusSp > 0
 
     val valorColWidthDp = 80.dp
@@ -207,38 +212,71 @@ fun PericiasContent(
                 ) {
                     val defaultSize = MaterialTheme.typography.bodyLarge.fontSize
 
-                    Text(
-                        text = buildAnnotatedString {
-                            if (per.basica) {
-                                withStyle(
-                                    SpanStyle(
-                                        color = Color.Red,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                ) {
-                                    append("✯ ${per.nome}")
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = buildAnnotatedString {
+                                if (per.basica) {
+                                    withStyle(
+                                        SpanStyle(
+                                            color = Color.Red,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    ) {
+                                        append("✯ ${per.nome}")
+                                    }
+                                } else {
+                                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                                        append(per.nome)
+                                    }
                                 }
-                            } else {
-                                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append(per.nome)
+                                withStyle(SpanStyle(fontSize = defaultSize / 2)) {
+                                    val displayAtr = mapaAtributosDisplay[regra.attrKey] ?: regra.attrKey
+                                    append(" ($displayAtr)")
                                 }
-                            }
-                            withStyle(SpanStyle(fontSize = defaultSize / 2)) {
-                                val displayAtr = mapaAtributosDisplay[regra.attrKey] ?: regra.attrKey
-                                append(" ($displayAtr)")
-                            }
-                        },
-                        modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.bodyLarge,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                            },
+                            style = MaterialTheme.typography.bodyLarge,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        // PROMPT 5: Display Skill Note
+                        val note = state.notasPericia[per.nome]
+                        if (!note.isNullOrBlank()) {
+                            Text(
+                                text = "($note)",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.tertiary
+                            )
+                        }
+                    }
+
+                    // PROMPT 5: Edit Note Button
+                    // Correction: Show edit button ONLY if optional rule is active
+                    if (regra.displayRaw > 0 && state.usarEspecializacoesDePericia) {
+                        IconButton(
+                            onClick = {
+                                noteTarget = per
+                                noteText = state.notasPericia[per.nome] ?: ""
+                                showNoteDialog = true
+                            },
+                            modifier = Modifier
+                                .size(32.dp)
+                                .padding(4.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Edit,
+                                contentDescription = "Editar nota",
+                                modifier = Modifier.size(16.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
 
                     IconButton(
                         onClick = {
                             state.decreasePericia(per)
                             if (state.rawTotal(per) == 0) {
                                 state.especializacoesPorPericia.remove(per.nome)
+                                state.notasPericia.remove(per.nome) // Clear note if skill is removed
                             }
                             onUserFeedback()
                         },
@@ -410,6 +448,44 @@ fun PericiasContent(
                 }
             }
         }
+    }
+
+    // PROMPT 5: Note Dialog
+    if (showNoteDialog && noteTarget != null) {
+        AlertDialog(
+            onDismissRequest = { showNoteDialog = false },
+            title = { Text("Nota de Perícia (Especialização)") },
+            text = {
+                Column {
+                    Text("Perícia: ${noteTarget!!.nome}")
+                    Spacer(Modifier.width(8.dp))
+                    OutlinedTextField(
+                        value = noteText,
+                        onValueChange = { noteText = it },
+                        label = { Text("Ex: Pistolas, Espadas, etc.") },
+                        singleLine = true
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val per = noteTarget!!
+                        if (noteText.isBlank()) {
+                            state.notasPericia.remove(per.nome)
+                        } else {
+                            state.notasPericia[per.nome] = noteText.trim()
+                        }
+                        showNoteDialog = false
+                    }
+                ) { Text("Salvar") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showNoteDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 
     if (showSpecDialog && specTarget != null) {

@@ -87,7 +87,8 @@ data class SnapshotPericias(
     val compIncsPorPericia: Map<String, Int>,
     val spCostStackPorPericia: Map<String, List<Int>>, 
     val compCostStackPorPericia: Map<String, List<Int>>, 
-    val especializacoesPorPericia: Map<String, EspecializacoesDto>
+    val especializacoesPorPericia: Map<String, EspecializacoesDto>,
+    val notasPericia: Map<String, String>? = null
 )
 
 @Serializable
@@ -110,6 +111,7 @@ data class SnapshotSelecoes(
     val desvantagensAutomaticas: List<String>,
     val desvantagensRaciais: List<String>,
     val complicacoesSelecionadas: List<ComplicacaoSnapshot>,
+    val transtornos: List<ComplicacaoSnapshot>? = null,
     val reservasComplicacaoMaior: Map<String, Boolean>,
     val poderesSelecionados: List<String>,
     val manifestacoesPoderes: Map<String, String> = emptyMap(),

@@ -42,6 +42,8 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
             .filterValues { it != null }
             .keys
             .map { it.id },
+        // PROMPT 3: Include Transtornos in PDF snapshot
+        transtornos = this.transtornos.map { it.id },
         equipamentos = this.equipamentosComprados.toList(),
         poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
         manifestacoesPoderes = this.manifestacoesPoderes.toMap(),
@@ -75,11 +77,12 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         compendioArteDaGuerraAtivo = this.compendioArteDaGuerraAtivo,
         compendioDeadlandsAtivo = this.compendioDeadlandsAtivo,
         compendioHorrorAtivo = this.compendioHorrorAtivo,
-        sanidade = if (this.compendioHorrorAtivo) this.valorSanidade() else null,
         dominio = if (this.compendioDeadlandsAtivo) this.valorDominio() else null,
         coracaoCrystalSelecionado = this.coracaoCrystalSelecionado,
         tecnicasIniciaisTropo = this.tecnicasIniciaisFromTropo,
-        reservaChi = if (this.compendioArteDaGuerraAtivo) this.reservaChi else null
+        reservaChi = if (this.compendioArteDaGuerraAtivo) this.reservaChi else null,
+        // PROMPT 5: Include Skill Notes in PDF snapshot
+        notasPericia = this.notasPericia.toMap()
     )
 }
 
@@ -151,12 +154,15 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         .filter { it.id in personagem.vantagens }
         .map { it.nome.keyify() }
     val complicacoesNomeadas: List<String> = complicationDisplayNames(personagem.complicacoes, showOfficialNames)
+    // PROMPT 3: Display Transtornos names
+    val transtornosNomeados: List<String> = complicationDisplayNames(personagem.transtornos, showOfficialNames)
+
     val vantagemChoices: MutableMap<String, MutableList<String>> = personagem.advantageChoices
         .mapValues { it.value.toMutableList() }
         .toMutableMap()
 
     val allComplicationsKeys: List<String> =
-        personagem.complicacoes + personagem.desvantagensRaciais
+        personagem.complicacoes + personagem.desvantagensRaciais + personagem.transtornos
 
     fun temComp(key: String): Boolean =
         allComplicationsKeys.any { it.keyify() == key }
@@ -301,9 +307,6 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     if (personagem.compendioArteDaGuerraAtivo) {
         lines += "Reserva de Chi: $chi"
     }
-    if (personagem.sanidade != null) {
-        lines += "Sanidade: ${personagem.sanidade}"
-    }
     if (personagem.dominio != null) {
         lines += "Domínio: ${personagem.dominio}"
     }
@@ -330,7 +333,10 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         periciasParaMostrar.forEach { per ->
             val raw = personagem.pericias[per.nome] ?: 0
-            lines += "${per.nome} d$raw"
+            // PROMPT 5: Include skill notes in output
+            val note = personagem.notasPericia[per.nome]
+            val noteStr = if (!note.isNullOrBlank()) " ($note)" else ""
+            lines += "${per.nome} d$raw$noteStr"
         }
     }
     lines += ""
@@ -378,8 +384,8 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += ""
 
     lines += "Complicações"
-    val complicacoesText =
-        (complicacoesNomeadas + personagem.desvantagensRaciais)
+    val allComplicationsList = complicacoesNomeadas + transtornosNomeados.map { "$it (Transtorno)" } + personagem.desvantagensRaciais
+    val complicacoesText = allComplicationsList
             .joinToString(", ")
             .ifBlank { "– Nenhuma" }
     lines += complicacoesText

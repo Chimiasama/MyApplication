@@ -53,8 +53,10 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaComplicacoes
+import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 
@@ -70,6 +72,8 @@ fun ComplicacoesSection(
     val locked = state.criacaoBasicaCongelada
 
     var showPcInUseDialog by rememberSaveable { mutableStateOf(false) }
+    // PROMPT 3: State for adding disorders
+    var showAddTranstornoDialog by rememberSaveable { mutableStateOf(false) }
 
     val autoBaseKeys = state.desvantagensAutomaticas
         .map { it.uppercase().semAcentos().substringBefore("(").trim() }
@@ -119,7 +123,7 @@ fun ComplicacoesSection(
 
         if (totalPc == 0) {
             Text(
-                "Escolha Complicações para ganhar Pontos Bônus de Complicação.",
+                "Escolha Complicações para ganhar Pontos Bônus de Criação.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -133,11 +137,23 @@ fun ComplicacoesSection(
 
         Spacer(Modifier.height(8.dp))
 
+        // PROMPT 3: Add Disorder Button
+        if (state.modoProgressaoAtivo && state.compendioHorrorAtivo) {
+            TextButton(
+                onClick = { showAddTranstornoDialog = true },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Adicionar Transtorno (Gratuito)")
+            }
+            Spacer(Modifier.height(8.dp))
+        }
+
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement   = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.alpha(if (locked) 0.3f else 1f)
+            modifier = Modifier.alpha(if (locked && !state.modoProgressaoAtivo) 0.3f else 1f)
         ) {
+            // Standard Complications
             state.complicacoesSelecionadas
                 .filterValues { it != null }
                 .forEach { (comp, tipo) ->
@@ -191,6 +207,21 @@ fun ComplicacoesSection(
                         leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover ${comp.name}") }
                     )
                 }
+
+            // PROMPT 3: Display Transtornos
+            state.transtornos.forEach { transtorno ->
+                AssistChip(
+                    onClick = {
+                        state.transtornos.remove(transtorno)
+                        onUserFeedback()
+                    },
+                    label = { Text("${transtorno.name} (Transtorno)") },
+                    leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover Transtorno") },
+                    colors = androidx.compose.material3.AssistChipDefaults.assistChipColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    )
+                )
+            }
         }
 
         Spacer(Modifier.height(8.dp))
@@ -236,155 +267,177 @@ fun ComplicacoesSection(
             )
         }
 
+        // PROMPT 3: Add Disorder Dialog
+        if (showAddTranstornoDialog) {
+            val available = complicacoesFiltradas.filter {
+                !state.complicacoesSelecionadas.containsKey(it) && !state.transtornos.contains(it)
+            }.map { it.name }.sorted()
+
+            ChoiceDialog(
+                options = available,
+                onConfirm = { choice ->
+                    val selected = complicacoesFiltradas.firstOrNull { it.name == choice }
+                    if (selected != null) {
+                        state.transtornos.add(selected)
+                        onUserFeedback()
+                    }
+                    showAddTranstornoDialog = false
+                },
+                onDismiss = { showAddTranstornoDialog = false }
+            )
+        }
+
         Spacer(Modifier.height(8.dp))
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 260.dp)
-                .alpha(if (locked) 0.3f else 1f)
-        ) {
-            Text(
-                "Lista de complicações disponíveis:",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Spacer(Modifier.height(4.dp))
-
-            val pequComp = complicacoesFiltradas.firstOrNull { it.id == "pequeno" }
-
-            val listaParaMostrar = complicacoesFiltradas
-                .filter { comp ->
-                    comp.id.keyify() !in autoBaseKeys
-                }
-
-            LazyColumn(
+        // Only show list if not locked (Creation phase)
+        if (!locked) {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 240.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                    .heightIn(max = 260.dp)
             ) {
-                items(listaParaMostrar) { comp ->
-                    val cur    = state.complicacoesSelecionadas[comp]
-                    val sevRaw = comp.severity.lowercase().trim()
-                    val menorOnly = sevRaw.contains("menor") && !sevRaw.contains("maior")
-                    val maiorOnly = sevRaw.contains("maior") && !sevRaw.contains("menor")
-                    val ambos     = sevRaw.contains("menor") && sevRaw.contains("maior")
+                Text(
+                    "Lista de complicações disponíveis:",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                Spacer(Modifier.height(4.dp))
+
+                val pequComp = complicacoesFiltradas.firstOrNull { it.id == "pequeno" }
+
+                val listaParaMostrar = complicacoesFiltradas
+                    .filter { comp ->
+                        comp.id.keyify() !in autoBaseKeys
+                    }
+
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 240.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    items(listaParaMostrar) { comp ->
+                        val cur    = state.complicacoesSelecionadas[comp]
+                        val sevRaw = comp.severity.lowercase().trim()
+                        val menorOnly = sevRaw.contains("menor") && !sevRaw.contains("maior")
+                        val maiorOnly = sevRaw.contains("maior") && !sevRaw.contains("menor")
+                        val ambos     = sevRaw.contains("menor") && sevRaw.contains("maior")
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
                         ) {
-                            Column(
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text(
-                                    text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName else comp.name,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-
-                            Spacer(Modifier.width(8.dp))
-
                             Row(
-                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                if (menorOnly || ambos) {
-                                    val enabledMenor = !locked && cur == null
-                                    TextButton(
-                                        onClick = {
-                                            if (!enabledMenor) return@TextButton
-                                            onUserFeedback()
-                                            when (comp.id) {
-                                                "jovem" -> {
-                                                    state.complicacoesSelecionadas[comp] = "Menor"
-                                                    state.applyYoungMinor()
-                                                }
-                                                "obeso" -> {
-                                                    state.complicacoesSelecionadas[comp] = "Menor"
-                                                    state.obesoBonusSize = 1
-                                                    state.obesoMalusMov = 1
-                                                }
-                                                else -> {
-                                                    state.complicacoesSelecionadas[comp] = "Menor"
-                                                }
-                                            }
-                                        },
-                                        enabled = enabledMenor
-                                    ) {
-                                        Text("Menor")
-                                    }
+                                Column(
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(
+                                        text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName else comp.name,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
                                 }
 
-                                if (maiorOnly || ambos) {
-                                    val enabledMaior = !locked && (
-                                            (maiorOnly && cur == null) ||
-                                                    (ambos && cur == "Menor")
-                                            )
-                                    TextButton(
-                                        onClick = {
-                                            if (!enabledMaior) return@TextButton
-                                            onUserFeedback()
-                                            when (comp.id) {
-                                                "idoso" -> {
-                                                    state.complicacoesSelecionadas[comp] = "Maior"
-                                                    state.idosoBonusSp = 5
-                                                    state.rebuildAllPericiaStacks()
-                                                }
-                                                "jovem" -> {
-                                                    if (pequComp != null) {
-                                                        state.complicacoesSelecionadas[comp] = "Maior"
-                                                        state.applyYoungMajor(pequComp)
+                                Spacer(Modifier.width(8.dp))
+
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    if (menorOnly || ambos) {
+                                        val enabledMenor = !locked && cur == null
+                                        TextButton(
+                                            onClick = {
+                                                if (!enabledMenor) return@TextButton
+                                                onUserFeedback()
+                                                when (comp.id) {
+                                                    "jovem" -> {
+                                                        state.complicacoesSelecionadas[comp] = "Menor"
+                                                        state.applyYoungMinor()
+                                                    }
+                                                    "obeso" -> {
+                                                        state.complicacoesSelecionadas[comp] = "Menor"
+                                                        state.obesoBonusSize = 1
+                                                        state.obesoMalusMov = 1
+                                                    }
+                                                    else -> {
+                                                        state.complicacoesSelecionadas[comp] = "Menor"
                                                     }
                                                 }
-                                                "obeso" -> {
-                                                    state.complicacoesSelecionadas[comp] = "Maior"
-                                                    state.obesoBonusSize = 1
-                                                    state.obesoMalusMov = 1
+                                            },
+                                            enabled = enabledMenor
+                                        ) {
+                                            Text("Menor")
+                                        }
+                                    }
+
+                                    if (maiorOnly || ambos) {
+                                        val enabledMaior = !locked && (
+                                                (maiorOnly && cur == null) ||
+                                                        (ambos && cur == "Menor")
+                                                )
+                                        TextButton(
+                                            onClick = {
+                                                if (!enabledMaior) return@TextButton
+                                                onUserFeedback()
+                                                when (comp.id) {
+                                                    "idoso" -> {
+                                                        state.complicacoesSelecionadas[comp] = "Maior"
+                                                        state.idosoBonusSp = 5
+                                                        state.rebuildAllPericiaStacks()
+                                                    }
+                                                    "jovem" -> {
+                                                        if (pequComp != null) {
+                                                            state.complicacoesSelecionadas[comp] = "Maior"
+                                                            state.applyYoungMajor(pequComp)
+                                                        }
+                                                    }
+                                                    "obeso" -> {
+                                                        state.complicacoesSelecionadas[comp] = "Maior"
+                                                        state.obesoBonusSize = 1
+                                                        state.obesoMalusMov = 1
+                                                    }
+                                                    else -> {
+                                                        state.complicacoesSelecionadas[comp] = "Maior"
+                                                    }
                                                 }
-                                                else -> {
-                                                    state.complicacoesSelecionadas[comp] = "Maior"
-                                                }
-                                            }
-                                        },
-                                        enabled = enabledMaior
-                                    ) {
-                                        Text("Maior")
+                                            },
+                                            enabled = enabledMaior
+                                        ) {
+                                            Text("Maior")
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        if (allowLongTexts && comp.description.isNotBlank()) {
-                            TextButton(
-                                onClick = {
-                                    onUserFeedback()
-                                    val current = detalhesExpandidos[comp.id] ?: false
-                                    detalhesExpandidos[comp.id] = !current
-                                },
-                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp)
-                            ) {
-                                Text(
-                                    if (detalhesExpandidos[comp.id] == true) "Ocultar detalhes" else "Ver detalhes",
-                                    style = MaterialTheme.typography.labelMedium
-                                )
-                            }
+                            if (allowLongTexts && comp.description.isNotBlank()) {
+                                TextButton(
+                                    onClick = {
+                                        onUserFeedback()
+                                        val current = detalhesExpandidos[comp.id] ?: false
+                                        detalhesExpandidos[comp.id] = !current
+                                    },
+                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp)
+                                ) {
+                                    Text(
+                                        if (detalhesExpandidos[comp.id] == true) "Ocultar detalhes" else "Ver detalhes",
+                                        style = MaterialTheme.typography.labelMedium
+                                    )
+                                }
 
-                            AnimatedVisibility(visible = detalhesExpandidos[comp.id] == true) {
-                                Text(
-                                    text = if (showOfficialNames && !comp.originalDescription.isNullOrBlank()) comp.originalDescription.trim() else comp.description.trim(),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.padding(top = 4.dp)
-                                )
+                                AnimatedVisibility(visible = detalhesExpandidos[comp.id] == true) {
+                                    Text(
+                                        text = if (showOfficialNames && !comp.originalDescription.isNullOrBlank()) comp.originalDescription.trim() else comp.description.trim(),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.padding(top = 4.dp)
+                                    )
+                                }
                             }
                         }
                     }

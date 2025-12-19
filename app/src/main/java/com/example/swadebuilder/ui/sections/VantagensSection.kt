@@ -66,7 +66,9 @@ import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.Poder
+import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SearchTextField
@@ -991,13 +993,20 @@ private fun VantagemItem(
 
     val jaTem = state.vantagensSelecionadas.any { it.id == vant.id }
     val requisitosOk = state.podeSelecionar(vant)
+    // PROMPT 4: Specific logic for Pathfinder Class validation
+    val bloqueioClasse = if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant)) {
+        "Requer Multiclasse"
+    } else null
+
     val statusText = when {
         jaTem -> "Já selecionada"
+        bloqueioClasse != null -> bloqueioClasse
         requisitosOk -> "Requisitos OK"
         else -> "Requisitos pendentes"
     }
     val statusColor = when {
         jaTem -> MaterialTheme.colorScheme.tertiary
+        bloqueioClasse != null -> MaterialTheme.colorScheme.error
         requisitosOk -> MaterialTheme.colorScheme.primary
         else -> MaterialTheme.colorScheme.error
     }
@@ -1010,6 +1019,8 @@ private fun VantagemItem(
                 if (!locked) {
                     when {
                         state.pontosVantagem <= 0 -> onError("Sem PV disponível")
+                        // PROMPT 4: Check class blocking specifically for error message
+                        state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
                         !state.podeSelecionar(vant) -> onError("Faltam requisitos para '${vant.nome}'")
                         else -> onSelect()
                     }
@@ -1018,7 +1029,7 @@ private fun VantagemItem(
         colors = CardDefaults.cardColors(
             containerColor = when {
                 jaTem -> MaterialTheme.colorScheme.tertiaryContainer
-                requisitosOk -> MaterialTheme.colorScheme.surfaceVariant
+                requisitosOk && bloqueioClasse == null -> MaterialTheme.colorScheme.surfaceVariant
                 else -> MaterialTheme.colorScheme.errorContainer
             }
         )

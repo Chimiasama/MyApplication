@@ -113,6 +113,11 @@ class CriadorState {
     var naturalArmorFromRace by mutableIntStateOf(0)
     var soldadoCargaAtivo by mutableStateOf(true)
 
+    // PROMPT 3: Transtornos Gratuitos (Horror Mode)
+    val transtornos: SnapshotStateList<Complicacao> = mutableStateListOf()
+    // PROMPT 5: Notas de Perícia (Sci-Fi / Wiseguys)
+    val notasPericia: SnapshotStateMap<String, String> = mutableStateMapOf()
+
     val origemPersonagem: String?
         get() = listaAncestralidadesJson
             .firstOrNull { it.nome.keyify() == ancestralidade }
@@ -236,6 +241,7 @@ class CriadorState {
         return base + bloquearBonus + bloquearAprimoradoBonus + bonusApararFromPower
     }
 
+    // PROMPT 2: Brawny (Brutamontes) +1 Toughness
     fun valorResistenciaBase(): Int {
         val vigorRaw = valoresAtributos["VIGOR"]?.intValue ?: 4
         val base     = 2 + (vigorRaw / 2)
@@ -246,13 +252,20 @@ class CriadorState {
                 desvantagensRaciais.any { it.keyify() == "FRAGIL" }) -1 else 0
 
         // Bônus de “Brigão / Pugilista” continua igual
+        // PROMPT 2: Add Brutamontes (Brawny) here if it's not covered by 'sizeRaw' but it is Toughness +1 directly.
+        // Actually, Brawny gives +1 Size for Load, but +1 Toughness directly.
+        // The prompt says: "resistencia deve incluir + (if (temVantagem("brutamontes")) 1 else 0)"
+        val brawnyBonus = if (vantagensSelecionadas.any {
+            val nk = it.nome.keyify()
+            nk == "BRUTAMONTES" || nk == "BRAWNY"
+        }) 1 else 0
+
         val brigaoBonus = vantagensSelecionadas
             .count { it.nome.keyify() in listOf("BRIGAO", "PUGILISTA") }
 
-        // Em vez de recalcular tamanho aqui, usamos a função centralizada:
         val sizeRaw = valorTamanho()   // já inclui racial, OBESO, PEQUENO, MUSCULOSO, com clamp -1..+3
 
-        return (base + bonusPos + bonusNeg + brigaoBonus + sizeRaw)
+        return (base + bonusPos + bonusNeg + brigaoBonus + sizeRaw + brawnyBonus)
             .coerceAtLeast(0)
     }
 
@@ -262,11 +275,6 @@ class CriadorState {
 
     fun valorChi(): Int {
         return reservaChi
-    }
-
-    fun valorSanidade(): Int {
-        val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 4
-        return 2 + (espiritoRaw / 2)
     }
 
     fun valorDominio(): Int {
@@ -309,6 +317,34 @@ class CriadorState {
                 0
         val raw = racialSize + obesoBonus + pequenoPenalty + musculosoBonus
         return raw.coerceIn(-1, 3)
+    }
+
+    // PROMPT 2: Brawny (Brutamontes) Carga calculation
+    fun valorCargaMaxima(): Float {
+        val strengthRaw = valoresAtributos["FORCA"]?.intValue ?: 4
+        val hasSoldado = vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
+        val hasMusculoso = vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
+        // PROMPT 2: "Brawny treats Strength as one die type higher"
+        val hasBrutamontes = vantagensSelecionadas.any {
+            val nk = it.nome.keyify()
+            nk == "BRUTAMONTES" || nk == "BRAWNY"
+        }
+
+        var effectiveStrength = strengthRaw
+
+        // Brawny logic: treat as one die higher
+        if (hasBrutamontes) {
+             effectiveStrength = if (effectiveStrength < 12) effectiveStrength + 2 else effectiveStrength + 1
+        }
+
+        // Soldier logic: treat as one die higher (if active)
+        if (hasSoldado && soldadoCargaAtivo) {
+             effectiveStrength = if (effectiveStrength < 12) effectiveStrength + 2 else effectiveStrength + 1
+        }
+
+        val bonusCapacity = if (hasMusculoso) 10f else 0f
+        val baseLimit = if (effectiveStrength >= 4) ((effectiveStrength - 2) / 2) * 10f else 0f
+        return baseLimit + bonusCapacity
     }
 
     fun gastarPcParaVantagem(): Boolean {
@@ -881,6 +917,9 @@ class CriadorState {
 
             for ((comp, tipo) in complicacoesSelecionadas) {
                 if (comp.id.keyify() in autoKeys) continue
+                // PROMPT 3: Ignora complicações (Transtornos) ganhos em progresso para cálculo de PC
+                if (transtornos.any { it.id == comp.id }) continue
+
                 when (tipo) {
                     "Maior" -> { total += 2; temMaior = true }
                     "Menor" -> { total += 1 }
@@ -1171,7 +1210,15 @@ class CriadorState {
         val idx = spStack.indexOfLast { it > 0 }
         if (idx >= 0) {
             spStack.removeAt(idx)
-            baseIncsPorPericia[per] = baseIncsPorPericia.getValue(per) - 1
+            val newIncs = baseIncsPorPericia.getValue(per) - 1
+            baseIncsPorPericia[per] = newIncs
+
+            if (newIncs == 0) {
+                spStack.clear()
+                especializacoesPorPericia.remove(per.nome)
+                notasPericia.remove(per.nome)
+            }
+
             if (skillAdvancementInProgress) {
                 skillsForCurrentAdvancement.remove(per.nome)
             }
@@ -1541,6 +1588,7 @@ class CriadorState {
         }
     }
 
+    // PROMPT 1: Explicit calculation: (Current Step - Racial Base Step)
     private fun calcularPontosAtributoRestantes(): Int {
         val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
         var usados = 0
@@ -1548,6 +1596,13 @@ class CriadorState {
         for (nome in listaAtributos) {
             val atual = valoresAtributos[nome]!!.intValue
             val base  = mods[nome] ?: 4
+
+            // PROMPT 1: Explicit calculation: (Current Step - Racial Base Step)
+            // Steps count: d4=0, d6=1, d8=2, d10=3, d12=4
+            // Since we store values as (4, 6, 8, 10, 12), we can iterate or calculate directly.
+            // The previous loop logic was: loop from base to current, incrementing cost.
+            // This IS the correct logic for "cost is investment above racial base".
+            // Refactoring to be clearer/more explicit if needed, but the loop is robust for d12+ handling.
 
             var cur = base
             while (cur < atual) {
@@ -1898,7 +1953,9 @@ class CriadorState {
                 compIncsPorPericia = compIncsPorPericia.mapKeys { it.key.nome },
                 spCostStackPorPericia = spCostStackPorPericia.mapKeys { it.key.nome }.mapValues { it.value.toList() },
                 compCostStackPorPericia = compCostStackPorPericia.mapKeys { it.key.nome }.mapValues { it.value.toList() },
-                especializacoesPorPericia = especializacoesPorPericia.toMap()
+                especializacoesPorPericia = especializacoesPorPericia.toMap(),
+                // PROMPT 5: Persist Skill Notes
+                notasPericia = notasPericia.toMap()
             ),
             selecoes = SnapshotSelecoes(
                 vantagens = vantagensSelecionadas.map { AdvantageSnapshot(it.id, it.choice) },
@@ -1909,6 +1966,8 @@ class CriadorState {
                 complicacoesSelecionadas = complicacoesSelecionadas.map { (comp, nivel) ->
                     ComplicacaoSnapshot(comp.id, nivel)
                 },
+                // PROMPT 3: Transtornos
+                transtornos = transtornos.map { ComplicacaoSnapshot(it.id, null) },
                 reservasComplicacaoMaior = reservasComplicacaoMaior.toMap(),
                 poderesSelecionados = poderesSelecionados.toList(),
                 manifestacoesPoderes = manifestacoesPoderes.toMap(),
@@ -2054,6 +2113,10 @@ class CriadorState {
                 especializacoesPorPericia[per.nome] = dto
             }
         }
+        // PROMPT 5: Restore Skill Notes
+        notasPericia.clear()
+        notasPericia.putAll(snapshot.pericias.notasPericia ?: emptyMap())
+
 
         vantagensSelecionadas.clear()
         snapshot.selecoes.vantagens.forEach { snap ->
@@ -2076,6 +2139,14 @@ class CriadorState {
         }
         reservasComplicacaoMaior.clear()
         reservasComplicacaoMaior.putAll(snapshot.selecoes.reservasComplicacaoMaior)
+
+        // PROMPT 3: Restore Transtornos
+        transtornos.clear()
+        snapshot.selecoes.transtornos?.forEach { compSnap ->
+            listaComplicacoes.firstOrNull { it.id == compSnap.id }?.let { comp ->
+                transtornos.add(comp)
+            }
+        }
 
         equipamentosComprados.apply { clear(); addAll(snapshot.selecoes.equipamentosComprados) }
 
