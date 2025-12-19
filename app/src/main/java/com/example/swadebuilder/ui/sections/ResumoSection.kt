@@ -106,6 +106,14 @@ fun SummaryContent(state: CriadorState) {
                 ?.toFloatOrNull()
         }
         .sum()
+    val isPersonagemRobotico = state.isPersonagemRobotico()
+    val tensaoTotal = state.totalTensaoEquipamentos()
+    val tensaoLimite = if (isPersonagemRobotico) {
+        state.limiteModsRoboticos()
+    } else {
+        state.valoresAtributos["VIGOR"]?.intValue ?: 4
+    }
+    val tensaoLabel = if (isPersonagemRobotico) "Mods" else "Tensão"
     val ratio = if (weightLimit > 0f) totalWeight / weightLimit else Float.POSITIVE_INFINITY
     val weightWarning = when {
         ratio >= 4f -> "Impossível carregar tanto peso, remova itens ou aumente a força."
@@ -122,9 +130,18 @@ fun SummaryContent(state: CriadorState) {
                 else -> ""
             }
             val weightLine = "Peso: ${"%.1f".format(totalWeight)} / ${"%.1f".format(weightLimit)}$soldierLabel"
+            val tensaoLine = "$tensaoLabel: $tensaoTotal/$tensaoLimite"
+            val tensaoWarning = if (tensaoTotal > tensaoLimite) {
+                val excess = tensaoTotal - tensaoLimite
+                "• Sobrecarga Cibernética: ${if (excess > 2) "Exausto" else "Fatigado"}"
+            } else {
+                null
+            }
             val updatedItems = buildList {
                 add(weightLine)
+                add(tensaoLine)
                 weightWarning?.let { add("• $it") }
+                tensaoWarning?.let { add(it) }
                 addAll(section.items)
             }
             section.copy(items = updatedItems)

@@ -201,6 +201,25 @@ class CriadorState {
     fun totalTensaoEquipamentos(): Int =
         equipamentosComprados.sumOf { it.tensao ?: 0 }
 
+    fun isPersonagemRobotico(): Boolean {
+        val ancestral = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade }
+        val nomeKey = (ancestral?.nome ?: ancestralidade).keyify()
+        val robotByName = listOf("ANDROID", "CONSTRUTO", "CONSTRUCTO").any { nomeKey.contains(it) }
+        val robotBySkill = ancestral?.habilidades?.any { it.nome.keyify() == "MODIFICACOES" } == true
+        val robotByAdvantage = ancestral?.vantagensGratis?.any { it.keyify() == "CONSTRUTO" } == true
+
+        return robotByName || robotBySkill || robotByAdvantage
+    }
+
+    fun limiteModsRoboticos(): Int {
+        val baseSlots = (valorTamanho() + 1).coerceAtLeast(1)
+        val bonusSlots = vantagensSelecionadas.count {
+            val nomeKey = it.nome.keyify()
+            nomeKey.contains("MODS") && nomeKey.contains("ROBOT")
+        }
+        return (baseSlots + bonusSlots).coerceAtLeast(0)
+    }
+
     fun valorAparar(): Int {
         val perLutar = mapaPericias["LUTAR"]
         val perJutsu = mapaPericias["JUTSU"]
