@@ -83,7 +83,9 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         tecnicasIniciaisTropo = this.tecnicasIniciaisFromTropo,
         reservaChi = if (this.compendioArteDaGuerraAtivo) this.reservaChi else null,
         // PROMPT 5: Include Skill Notes in PDF snapshot
-        notasPericia = this.notasPericia.toMap()
+        notasPericia = this.notasPericia.toMap(),
+        tamanho = this.tamanhoExibido(),
+        resistencia = this.resistenciaBase()
     )
 }
 
@@ -168,43 +170,6 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     fun temComp(key: String): Boolean =
         allComplicationsKeys.any { it.keyify() == key }
 
-    fun racialSize(): Int =
-        listaAncestralidadesJson
-            .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
-            ?.desvantagens
-            ?.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
-            ?.substringAfter("TAMANHO")
-            ?.trim()
-            ?.toIntOrNull()
-            ?: 0
-
-    fun tamanhoTotal(): Int {
-        val base = racialSize()
-        val obesoBonus = if (temComp("OBESO")) 1 else 0
-        val pequenoPenalty = if (temComp("PEQUENO")) -1 else 0
-        val musculosoBonus = if (vantagensNomeKey.any { it == "MUSCULOSO" }) 1 else 0
-        return (base + obesoBonus + pequenoPenalty + musculosoBonus)
-            .coerceIn(-1, 3)
-    }
-
-    fun resistenciaBase(): Int {
-        val vigorRaw = personagem.atributos["VIGOR"] ?: 4
-        val base = 2 + (vigorRaw / 2)
-
-        val bonusPos =
-            if (vantagensNomeKey.any { it == "RESISTENCIA" }) 1 else 0
-        val bonusNeg =
-            if (allComplicationsKeys.any { it.keyify() == "FRAGIL" }) -1 else 0
-
-        val brigaoBonus = vantagensNomeKey.count { it in listOf("BRIGAO", "PUGILISTA") }
-
-        return (base + bonusPos + bonusNeg + brigaoBonus + tamanhoTotal())
-            .coerceAtLeast(0)
-    }
-
-    fun resistenciaFinal(): Int =
-        resistenciaBase() + personagem.bonusResFromPower
-
     fun calcMovimento(): Int {
         val base = 6
 
@@ -288,8 +253,8 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     }
 
     val aparar = calcAparar()
-    val resFinal = resistenciaFinal()
-    val tamanho = tamanhoTotal()
+    val resFinal = personagem.resistencia
+    val tamanho = personagem.tamanho
     val mov = calcMovimento()
     val armadura = calcArmaduraEfetiva()
     val temArmaduraDeEquip = personagem.equipamentos.any { it.armadura != null }
