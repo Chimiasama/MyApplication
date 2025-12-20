@@ -131,7 +131,7 @@ fun AncestralidadesSection(
                 else -> false
             }
         }.map {
-            val buscatrilhaName = it.nome.replace("Buscatrilha", "Buscatrilha")
+            val buscatrilhaName = it.nome.replace("Trilhador", "Buscatrilha")
             val originalName = if (EditionConfig.isFullEdition) it.originalName else null
             RacialModifierLite(buscatrilhaName, originalName)
         }
