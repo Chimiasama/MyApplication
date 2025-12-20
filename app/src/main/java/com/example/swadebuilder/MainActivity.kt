@@ -617,7 +617,7 @@ class MainActivity : ComponentActivity() {
                         if (mostrouTelaInicial) {
                             TelaInicial(
                                 onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioBuscatrilhaAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo,
-                                                nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
+                                                regraMultiplosIdiomas, nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, grandesResponsabilidades ->
 
                                     creationSession++
@@ -636,7 +636,8 @@ class MainActivity : ComponentActivity() {
                                         compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
                                         compendioWiseguysAtivo = compendioWiseguysAtivo,
                                         modoMonstroAtivo = modoMonstroAtivo,
-                                        usarEspecializacoesDePericia = usarEspecializacaoPer
+                                        usarEspecializacoesDePericia = usarEspecializacaoPer,
+                                        regraMultiplosIdiomas = regraMultiplosIdiomas
                                         // showHelpMessages removido
                                     )
                                     criadorViewModel.prepararNomeInicial(context)
@@ -646,7 +647,6 @@ class MainActivity : ComponentActivity() {
                                     criadorViewModel.state.usarSemPontosDePoder  = semPontosDePoder
                                     criadorViewModel.normalizeArcanoIdsNoCarregamento()
                                     criadorViewModel.state.grandesResponsabilidades = grandesResponsabilidades
-
                                     mostrouTelaInicial = false
                                 },
                                 onCarregarPersonagem = { showLoadDialog = true },

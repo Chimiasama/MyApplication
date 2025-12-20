@@ -91,6 +91,7 @@ class CriadorViewModel : ViewModel() {
             compendioWiseguysAtivo = false,
             modoMonstroAtivo = false,
             usarEspecializacoesDePericia = false,
+            regraMultiplosIdiomas = false,
             grandesResponsabilidades = false
         )
     }
@@ -166,6 +167,7 @@ class CriadorViewModel : ViewModel() {
             cartaSelvagem = flags.cartaSelvagem,
             maisPontosPericias = flags.maisPontosPericias,
             modoSupers = flags.modoSupers,
+            regraMultiplosIdiomas = flags.regraMultiplosIdiomas,
             compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
             compendioHorrorAtivo = flags.compendioHorrorAtivo,
             compendioSciFiAtivo = flags.compendioSciFiAtivo,
@@ -224,6 +226,7 @@ class CriadorViewModel : ViewModel() {
         compendioWiseguysAtivo: Boolean = false,
         modoMonstroAtivo: Boolean = false,
         usarEspecializacoesDePericia: Boolean = false,
+        regraMultiplosIdiomas: Boolean = false,
         grandesResponsabilidades: Boolean = false,
         // showHelpMessages removido
     ) {
@@ -257,7 +260,7 @@ class CriadorViewModel : ViewModel() {
         state.cartaSelvagem = cartaSelvagem
         state.maisPontosPericias = maisPontosPericias
         state.usarEspecializacoesDePericia = usarEspecializacoesDePericia
-        state.regraMultiplosIdiomas = false
+        state.regraMultiplosIdiomas = regraMultiplosIdiomas
         state.especializacoesPorPericia.clear()
 
         state.ancestralidade = "HUMANOS"

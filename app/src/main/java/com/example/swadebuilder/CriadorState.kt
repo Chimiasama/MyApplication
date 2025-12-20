@@ -590,9 +590,14 @@ class CriadorState {
 
     private fun linguistaTargetIdiomas(): Int {
         val hasLinguista = vantagensSelecionadas.any { it.id == "linguista" }
-        if (!hasLinguista) return 0
         val astuciaRaw = valoresAtributos[RuleConstants.ATRIBUTO_ASTUCIA]?.intValue ?: 0
-        return if (regraMultiplosIdiomas) astuciaRaw else astuciaRaw / 2
+
+        return when {
+            hasLinguista && regraMultiplosIdiomas -> astuciaRaw
+            hasLinguista -> astuciaRaw / 2
+            regraMultiplosIdiomas -> astuciaRaw / 2
+            else -> 0
+        }
     }
 
     fun syncIdiomasLinguista() {
