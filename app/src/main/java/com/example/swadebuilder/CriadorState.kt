@@ -245,30 +245,7 @@ class CriadorState {
 
     // PROMPT 2: Brawny (Brutamontes) +1 Toughness
     fun valorResistenciaBase(): Int {
-        val vigorRaw = valoresAtributos["VIGOR"]?.intValue ?: 4
-        val base     = 2 + (vigorRaw / 2)
-
-        val bonusPos = if (vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" }) 1 else 0
-        val bonusNeg =
-            if (desvantagensAutomaticas.any { it.keyify() == "FRAGIL" } ||
-                desvantagensRaciais.any { it.keyify() == "FRAGIL" }) -1 else 0
-
-        // Bônus de “Brigão / Pugilista” continua igual
-        // PROMPT 2: Add Brutamontes (Brawny) here if it's not covered by 'sizeRaw' but it is Toughness +1 directly.
-        // Actually, Brawny gives +1 Size for Load, but +1 Toughness directly.
-        // The prompt says: "resistencia deve incluir + (if (temVantagem("brutamontes")) 1 else 0)"
-        val brawnyBonus = if (vantagensSelecionadas.any {
-            val nk = it.nome.keyify()
-            nk == "BRUTAMONTES" || nk == "BRAWNY"
-        }) 1 else 0
-
-        val brigaoBonus = vantagensSelecionadas
-            .count { it.nome.keyify() in listOf("BRIGAO", "PUGILISTA") }
-
-        val sizeRaw = valorTamanho()   // já inclui racial, OBESO, PEQUENO, MUSCULOSO, com clamp -1..+3
-
-        return (base + bonusPos + bonusNeg + brigaoBonus + sizeRaw + brawnyBonus)
-            .coerceAtLeast(0)
+        return resistenciaBase()
     }
 
     fun valorResistenciaFinal(): Int {
@@ -292,34 +269,17 @@ class CriadorState {
     }
 
     fun valorTamanho(): Int {
-        val desc = listaAncestralidadesJson
-            .firstOrNull { it.nome.keyify() == ancestralidade }
-            ?.desvantagens
-            ?.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
-
-        val racialSize = desc
-            ?.substringAfter("TAMANHO")
-            ?.trim()
-            ?.toIntOrNull()
-            ?: 0
-        val obesoBonus =
-            if (complicacoesSelecionadas.keys.any { it.id.keyify() == "OBESO" })
-                1
-            else
-                0
-        val pequenoPenalty =
-            if (complicacoesSelecionadas.keys.any { it.id.keyify() == "PEQUENO" })
-                -1
-            else
-                0
-        val musculosoBonus =
-            if (vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" })
-                1
-            else
-                0
-        val raw = racialSize + obesoBonus + pequenoPenalty + musculosoBonus
-        return raw.coerceIn(-1, 3)
+        return tamanhoExibido()
     }
+
+    fun tamanhoExibido(): Int =
+        ModifierEngine.sizeDisplay(this)
+
+    fun tamanhoParaResistencia(): Int =
+        ModifierEngine.sizeForToughness(this)
+
+    fun resistenciaBase(): Int =
+        ModifierEngine.toughnessBase(this)
 
     // PROMPT 2: Brawny (Brutamontes) Carga calculation
     fun valorCargaMaxima(): Float {
