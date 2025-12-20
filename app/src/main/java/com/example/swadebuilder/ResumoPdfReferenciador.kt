@@ -9,10 +9,13 @@ import android.graphics.pdf.PdfDocument
 import android.net.Uri
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.util.keyify
 import java.io.File
 import java.io.FileOutputStream
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
 
 /**
  * Fonte única para Resumo e PDF.
@@ -132,6 +135,33 @@ fun produzirEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) 
         Toast.makeText(context, "Nenhum app de PDF encontrado.", Toast.LENGTH_SHORT).show()
     }
 }
+
+private fun JsonElement?.asText(): String? = when (this) {
+    is JsonPrimitive -> this.content
+    else -> this?.toString()
+}?.takeIf { it.isNotBlank() }
+
+private fun EquipamentoItem.isWeapon(): Boolean {
+    return listOf(dano, pa, cdt, distancia, tiros).any { it != null }
+}
+
+private fun EquipamentoItem.formatWeaponStats(): String? = listOfNotNull(
+    dano.asText()?.let { "Dano: $it" },
+    pa.asText()?.let { "PA: $it" },
+    cdt.asText()?.let { "CdT: $it" },
+    distancia.asText()?.let { "Distância: $it" },
+    tiros.asText()?.let { "Tiros: $it" },
+    forcaMin.asText()?.let { "Força mín.: $it" },
+    peso.asText()?.let { "Peso: $it" },
+    aparar.asText()?.let { "Aparar: $it" }
+).joinToString(" • ").takeIf { it.isNotBlank() }
+
+private fun EquipamentoItem.formatArmorStats(): String? = listOfNotNull(
+    armadura.asText()?.let { "Armadura: $it" },
+    aparar.asText()?.let { "Aparar: $it" },
+    forcaMin.asText()?.let { "Força mín.: $it" },
+    peso.asText()?.let { "Peso: $it" }
+).joinToString(" • ").takeIf { it.isNotBlank() }
 
 // ✅ 3) Texto-base do resumo (UI e PDF)
 fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
@@ -336,11 +366,51 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         lines += "Dinheiro restante: ${personagem.dinheiro}"
     }
-    if (personagem.equipamentos.isEmpty()) {
-        lines += "Equipamentos: – Nenhum"
+    val naturalAttackSources = mutableListOf<String>()
+    val hasGarras = personagem.vantagensRaciais.any { it.contains("Garra", ignoreCase = true) }
+    val hasArtistaMarcial = personagem.vantagens.any { it == "artista_marcial" }
+    val hasBrigao = personagem.vantagens.any { it == "brigao" }
+    if (hasGarras) naturalAttackSources += "Garras"
+    if (hasArtistaMarcial) naturalAttackSources += "Artista Marcial"
+    if (hasBrigao) naturalAttackSources += "Brigão"
+    val naturalDamage = if (naturalAttackSources.isEmpty()) "Força" else "Força+d4"
+    lines += "Ataques naturais: $naturalDamage"
+    if (naturalAttackSources.isNotEmpty()) {
+        lines += "Observações (Ataques naturais): ${naturalAttackSources.joinToString(", ")}"
+    }
+
+    val equipamentos = personagem.equipamentos
+    val armas = equipamentos.filter { it.isWeapon() }
+    val armaduras = equipamentos.filter { it.armadura != null && it !in armas }
+    val outrosEquipamentos = equipamentos.filterNot { it in armas || it in armaduras }
+
+    lines += "Armaduras:"
+    if (armaduras.isEmpty()) {
+        lines += "– Nenhuma"
     } else {
-        lines += "Equipamentos:"
-        personagem.equipamentos.forEach { eq ->
+        armaduras.forEach { eq ->
+            val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nome
+            val stats = eq.formatArmorStats()
+            lines += if (stats.isNullOrBlank()) "• $nomeEq" else "• $nomeEq ($stats)"
+        }
+    }
+
+    lines += "Armas:"
+    if (armas.isEmpty()) {
+        lines += "– Nenhuma"
+    } else {
+        armas.forEach { eq ->
+            val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nome
+            val stats = eq.formatWeaponStats()
+            lines += if (stats.isNullOrBlank()) "• $nomeEq" else "• $nomeEq ($stats)"
+        }
+    }
+
+    lines += "Outros equipamentos:"
+    if (outrosEquipamentos.isEmpty()) {
+        lines += "– Nenhum"
+    } else {
+        outrosEquipamentos.forEach { eq ->
             val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nome
             lines += "• $nomeEq"
         }
