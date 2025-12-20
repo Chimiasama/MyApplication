@@ -30,6 +30,7 @@ data class SnapshotFlags(
     val cartaSelvagem: Boolean,
     val maisPontosPericias: Boolean,
     val modoSupers: Boolean,
+    val regraMultiplosIdiomas: Boolean = false,
     val compendioFantasiaAtivo: Boolean,
     val compendioHorrorAtivo: Boolean,
     val compendioSciFiAtivo: Boolean = false,
@@ -88,7 +89,9 @@ data class SnapshotPericias(
     val spCostStackPorPericia: Map<String, List<Int>>, 
     val compCostStackPorPericia: Map<String, List<Int>>, 
     val especializacoesPorPericia: Map<String, EspecializacoesDto>,
-    val notasPericia: Map<String, String>? = null
+    val notasPericia: Map<String, String>? = null,
+    val idiomasLabels: Map<String, String>? = null,
+    val idiomasAutoSlots: List<String>? = null
 )
 
 @Serializable

@@ -57,7 +57,6 @@ import com.example.swadebuilder.PericiaRuleSnapshot
 import com.example.swadebuilder.R
 import com.example.swadebuilder.calcularPericiaRules
 import com.example.swadebuilder.criacaoBasicaCongelada
-import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.model.loadPericiasDescriptions
@@ -97,6 +96,11 @@ fun PericiasContent(
     var editPerTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
     var editOldName by rememberSaveable { mutableStateOf("") }
     var editNewName by rememberSaveable { mutableStateOf("") }
+
+    var showIdiomaDialog by rememberSaveable { mutableStateOf(false) }
+    var idiomaText by rememberSaveable { mutableStateOf("") }
+    var idiomaTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
+    var idiomaPendingCost by rememberSaveable { mutableStateOf(0) }
 
     // PROMPT 5: State for Note Dialog
     var showNoteDialog by rememberSaveable { mutableStateOf(false) }
@@ -161,7 +165,7 @@ fun PericiasContent(
         }
 
         items(
-            listaPericias.filter { per ->
+            state.periciasAtivas().filter { per ->
                 if (per.nome.equals("Jutsu", ignoreCase = true)) {
                     state.compendioArteDaGuerraAtivo
                 } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
@@ -177,8 +181,8 @@ fun PericiasContent(
                 locked = locked
             )
 
-            val rawName = per.nome.removePrefix("*").trim()
-            val descKey = "$rawName (${per.atributo})".uppercase().semAcentos()
+            val baseName = state.nomeBasePericia(per).removePrefix("*").trim()
+            val descKey = "$baseName (${per.atributo})".uppercase().semAcentos()
 
             val descricao = if (per.nome.equals("Alquimia", ignoreCase = true)) {
                 val fantasiaAtivo = state.compendioFantasiaAtivo
@@ -211,6 +215,7 @@ fun PericiasContent(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     val defaultSize = MaterialTheme.typography.bodyLarge.fontSize
+                    val displayName = state.nomeExibicaoPericia(per)
 
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
@@ -222,11 +227,11 @@ fun PericiasContent(
                                             fontWeight = FontWeight.Bold
                                         )
                                     ) {
-                                        append("✯ ${per.nome}")
+                                        append("✯ $displayName")
                                     }
                                 } else {
                                     withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        append(per.nome)
+                                        append(displayName)
                                     }
                                 }
                                 withStyle(SpanStyle(fontSize = defaultSize / 2)) {
@@ -287,7 +292,7 @@ fun PericiasContent(
                     ) {
                         Icon(
                             Icons.Default.Remove,
-                            contentDescription = "Diminuir ${per.nome}",
+                            contentDescription = "Diminuir $displayName",
                             modifier = Modifier.fillMaxSize()
                         )
                     }
@@ -315,6 +320,14 @@ fun PericiasContent(
                                 return@IconButton
                             }
 
+                            if (state.isIdiomaPericia(per) && state.rawTotal(per) == 0) {
+                                idiomaTarget = per
+                                idiomaText = ""
+                                idiomaPendingCost = regrasAtuais.cost
+                                showIdiomaDialog = true
+                                return@IconButton
+                            }
+
                             state.increasePericiaFromAdvancement(per, regrasAtuais.cost)
                             onUserFeedback()
 
@@ -335,7 +348,7 @@ fun PericiasContent(
                     ) {
                         Icon(
                             Icons.Default.Add,
-                            contentDescription = "Aumentar ${per.nome}",
+                            contentDescription = "Aumentar $displayName",
                             modifier = Modifier.fillMaxSize()
                         )
                     }
@@ -450,6 +463,46 @@ fun PericiasContent(
         }
     }
 
+    if (showIdiomaDialog && idiomaTarget != null) {
+        AlertDialog(
+            onDismissRequest = { showIdiomaDialog = false },
+            title = { Text("Idioma da perícia") },
+            text = {
+                Column {
+                    Text("Perícia: ${state.nomeExibicaoPericia(idiomaTarget!!)}")
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = idiomaText,
+                        onValueChange = { idiomaText = it },
+                        label = { Text("Idioma") },
+                        singleLine = true
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val per = idiomaTarget!!
+                        state.comprarIdioma(per, idiomaText, idiomaPendingCost)
+                        onUserFeedback()
+                        showIdiomaDialog = false
+                        idiomaTarget = null
+                        idiomaText = ""
+                    }
+                ) { Text("Salvar") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showIdiomaDialog = false
+                        idiomaTarget = null
+                        idiomaText = ""
+                    }
+                ) { Text("Cancelar") }
+            }
+        )
+    }
+
     // PROMPT 5: Note Dialog
     if (showNoteDialog && noteTarget != null) {
         AlertDialog(
@@ -457,7 +510,7 @@ fun PericiasContent(
             title = { Text("Nota de Perícia (Especialização)") },
             text = {
                 Column {
-                    Text("Perícia: ${noteTarget!!.nome}")
+                    Text("Perícia: ${state.nomeExibicaoPericia(noteTarget!!)}")
                     Spacer(Modifier.width(8.dp))
                     OutlinedTextField(
                         value = noteText,
@@ -501,7 +554,7 @@ fun PericiasContent(
             },
             text = {
                 Column {
-                    Text("Perícia: ${specTarget!!.nome}")
+                    Text("Perícia: ${state.nomeExibicaoPericia(specTarget!!)}")
                     Spacer(Modifier.width(8.dp))
                     OutlinedTextField(
                         value = specText,

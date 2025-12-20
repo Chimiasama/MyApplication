@@ -20,6 +20,7 @@ import com.example.swadebuilder.model.ComplicacaoSnapshot
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.PersonagemSnapshot
 import com.example.swadebuilder.model.PowerEffect
+import com.example.swadebuilder.model.RuleConstants
 import com.example.swadebuilder.model.SnapshotAtributos
 import com.example.swadebuilder.model.SnapshotFlags
 import com.example.swadebuilder.model.SnapshotPericias
@@ -435,6 +436,189 @@ class CriadorState {
     }
 
     var regraMultiplosIdiomas by mutableStateOf(false)
+        set(value) {
+            field = value
+            if (value) {
+                syncIdiomasLinguista()
+            } else {
+                clearIdiomaSlots()
+            }
+        }
+
+    private val idiomaSlots = mutableStateListOf<Pericia>()
+    private val idiomasLabels = mutableStateMapOf<String, String>()
+    private val idiomasAutoSlots = mutableStateSetOf<String>()
+    private var nextIdiomaIndex by mutableIntStateOf(1)
+
+    private fun idiomaBasePericia(): Pericia? =
+        listaPericias.firstOrNull { it.nome.equals("Idiomas", ignoreCase = true) }
+
+    private fun idiomaInternalName(index: Int): String = "IDIOMA_$index"
+
+    private fun idiomaIndexFromName(name: String): Int? =
+        name.removePrefix("IDIOMA_").toIntOrNull()
+
+    fun periciasAtivas(): List<Pericia> {
+        if (!regraMultiplosIdiomas) return listaPericias
+
+        val idiomasIndex = listaPericias.indexOfFirst { it.nome.equals("Idiomas", ignoreCase = true) }
+        if (idiomasIndex < 0) return listaPericias + idiomaSlots
+
+        return buildList {
+            addAll(listaPericias.take(idiomasIndex))
+            addAll(idiomaSlots)
+            addAll(listaPericias.drop(idiomasIndex + 1))
+        }
+    }
+
+    fun periciaPorNome(nome: String): Pericia? =
+        periciasAtivas().firstOrNull { it.nome == nome }
+
+    fun nomeExibicaoPorNome(nome: String): String =
+        periciaPorNome(nome)?.let { nomeExibicaoPericia(it) } ?: nome
+
+    fun isIdiomaPericia(per: Pericia): Boolean =
+        regraMultiplosIdiomas && idiomaSlots.any { it.nome == per.nome }
+
+    fun nomeExibicaoPericia(per: Pericia): String {
+        if (!isIdiomaPericia(per)) return per.nome
+        val label = idiomasLabels[per.nome].orEmpty().trim()
+        return if (label.isBlank()) "Idiomas" else "Idiomas ($label)"
+    }
+
+    fun nomeBasePericia(per: Pericia): String =
+        if (isIdiomaPericia(per)) "Idiomas" else per.nome
+
+    fun isIdiomaAuto(per: Pericia): Boolean = idiomasAutoSlots.contains(per.nome)
+
+    fun minIdiomaAuto(per: Pericia): Int = if (isIdiomaAuto(per)) 6 else 0
+
+    private fun addIdiomaSlot(auto: Boolean, label: String? = null): Pericia {
+        val base = idiomaBasePericia() ?: Pericia("Idiomas", RuleConstants.ATRIBUTO_ASTUCIA, false)
+        val index = nextIdiomaIndex++
+        val pericia = Pericia(idiomaInternalName(index), base.atributo, base.basica)
+
+        idiomaSlots.add(pericia)
+        if (!label.isNullOrBlank()) {
+            idiomasLabels[pericia.nome] = label.trim()
+        }
+        if (auto) {
+            idiomasAutoSlots.add(pericia.nome)
+        }
+
+        baseIncsPorPericia[pericia] = 0
+        compIncsPorPericia[pericia] = if (auto) 2 else 0
+        spCostStackPorPericia[pericia] = mutableStateListOf()
+        compCostStackPorPericia[pericia] = mutableListOf()
+
+        return pericia
+    }
+
+    private fun removeIdiomaSlot(pericia: Pericia) {
+        idiomaSlots.removeAll { it.nome == pericia.nome }
+        idiomasLabels.remove(pericia.nome)
+        idiomasAutoSlots.remove(pericia.nome)
+        baseIncsPorPericia.remove(pericia)
+        compIncsPorPericia.remove(pericia)
+        spCostStackPorPericia.remove(pericia)
+        compCostStackPorPericia.remove(pericia)
+        especializacoesPorPericia.remove(pericia.nome)
+        notasPericia.remove(pericia.nome)
+        skillsForCurrentAdvancement.remove(pericia.nome)
+    }
+
+    private fun clearIdiomaSlots() {
+        idiomaSlots.toList().forEach { removeIdiomaSlot(it) }
+        idiomaSlots.clear()
+        idiomasLabels.clear()
+        idiomasAutoSlots.clear()
+        nextIdiomaIndex = 1
+    }
+
+    private fun restoreIdiomaSlotsFromSnapshot(snapshot: PersonagemSnapshot) {
+        clearIdiomaSlots()
+        if (!regraMultiplosIdiomas) return
+
+        val idiomaKeys = snapshot.pericias.baseIncsPorPericia.keys
+            .filter { it.startsWith("IDIOMA_") }
+            .sortedBy { idiomaIndexFromName(it) ?: Int.MAX_VALUE }
+
+        val base = idiomaBasePericia() ?: Pericia("Idiomas", RuleConstants.ATRIBUTO_ASTUCIA, false)
+
+        idiomaKeys.forEach { key ->
+            val pericia = Pericia(key, base.atributo, base.basica)
+            idiomaSlots.add(pericia)
+            baseIncsPorPericia[pericia] = 0
+            compIncsPorPericia[pericia] = 0
+            spCostStackPorPericia[pericia] = mutableStateListOf()
+            compCostStackPorPericia[pericia] = mutableListOf()
+        }
+
+        idiomasLabels.putAll(snapshot.pericias.idiomasLabels.orEmpty())
+        snapshot.pericias.idiomasAutoSlots?.forEach { idiomasAutoSlots.add(it) }
+
+        nextIdiomaIndex = (idiomaKeys.mapNotNull { idiomaIndexFromName(it) }.maxOrNull() ?: 0) + 1
+    }
+
+    private fun ensureIdiomaPlaceholder() {
+        val emptySlots = idiomaSlots.filter { !isIdiomaAuto(it) && rawTotal(it) == 0 }
+        if (emptySlots.isEmpty()) {
+            addIdiomaSlot(auto = false)
+        } else if (emptySlots.size > 1) {
+            emptySlots.dropLast(1).forEach { removeIdiomaSlot(it) }
+        }
+    }
+
+    fun definirIdioma(pericia: Pericia, nome: String?) {
+        val label = nome?.trim().orEmpty()
+        val finalLabel = if (label.isBlank()) {
+            val index = idiomaIndexFromName(pericia.nome) ?: (idiomaSlots.indexOf(pericia) + 1)
+            "Idioma $index"
+        } else {
+            label
+        }
+        idiomasLabels[pericia.nome] = finalLabel
+    }
+
+    fun comprarIdioma(pericia: Pericia, nome: String?, cost: Int) {
+        definirIdioma(pericia, nome)
+        increasePericiaFromAdvancement(pericia, cost)
+        ensureIdiomaPlaceholder()
+    }
+
+    private fun linguistaTargetIdiomas(): Int {
+        val hasLinguista = vantagensSelecionadas.any { it.id == "linguista" }
+        if (!hasLinguista) return 0
+        val astuciaRaw = valoresAtributos[RuleConstants.ATRIBUTO_ASTUCIA]?.intValue ?: 0
+        return if (regraMultiplosIdiomas) astuciaRaw else astuciaRaw / 2
+    }
+
+    fun syncIdiomasLinguista() {
+        if (!regraMultiplosIdiomas) return
+
+        val target = linguistaTargetIdiomas()
+        val manualKnown = idiomaSlots.count { !isIdiomaAuto(it) && rawTotal(it) > 0 }
+        val requiredAuto = (target - manualKnown).coerceAtLeast(0)
+
+        val autoSlots = idiomaSlots.filter { isIdiomaAuto(it) }
+        if (autoSlots.size > requiredAuto) {
+            autoSlots.drop(requiredAuto).forEach { removeIdiomaSlot(it) }
+        } else if (autoSlots.size < requiredAuto) {
+            repeat(requiredAuto - autoSlots.size) {
+                val pericia = addIdiomaSlot(auto = true)
+                definirIdioma(pericia, null)
+            }
+        }
+
+        idiomaSlots.filter { isIdiomaAuto(it) }.forEach { pericia ->
+            compIncsPorPericia[pericia] = 2
+            if (!idiomasLabels.containsKey(pericia.nome)) {
+                definirIdioma(pericia, null)
+            }
+        }
+
+        ensureIdiomaPlaceholder()
+    }
 
     var pvFromXpOutstanding by mutableIntStateOf(0)
     var overrideStageForVantagem by mutableStateOf<String?>(null)
@@ -558,7 +742,7 @@ class CriadorState {
             }
         }
 
-        listaPericias.forEach { per ->
+        periciasAtivas().forEach { per ->
             val current    = rawTotal(per)
             val maxAllowed = periciaCapRaw(per)
             if (current == maxAllowed) {
@@ -1004,7 +1188,7 @@ class CriadorState {
                 val anyMaxAttr = listaAtributos.any { a ->
                     valoresAtributos[a]!!.intValue == atributoMaxRaw(a)
                 }
-                val anyMaxPer = listaPericias.any { p ->
+                val anyMaxPer = periciasAtivas().any { p ->
                     rawTotal(p) == periciaCapRaw(p)
                 }
                 return anyMaxAttr || anyMaxPer
@@ -1154,16 +1338,20 @@ class CriadorState {
         val poolSize = BASE_SP_POOL + cpSpStack.size
         var cumulativeCost = 0
 
-        listaPericias.forEach { per ->
+        syncIdiomasLinguista()
+        periciasAtivas().forEach { per ->
 
             val cap = periciaCapRaw(per)
-            val target = desiredRaw.getValue(per).coerceAtMost(cap)
+            val startRaw = periciaStartRaw(ancestralidade, per)
+            val freeIncs = compIncsPorPericia.getValue(per)
+            val freeRaw = applySuperStepsFrom(startRaw, freeIncs)
+            val target = desiredRaw.getValue(per).coerceIn(freeRaw, cap)
 
             val stack = spCostStackPorPericia.getValue(per)
             stack.clear()
             baseIncsPorPericia[per] = 0
 
-            var curr = periciaStartRaw(ancestralidade, per)
+            var curr = freeRaw
 
             while (curr < target && cumulativeCost < poolSize) {
                 val next = when {
@@ -1200,6 +1388,11 @@ class CriadorState {
 
             if (skillAdvancementInProgress) {
                 skillsForCurrentAdvancement.remove(per.nome)
+            }
+
+            if (isIdiomaPericia(per) && !isIdiomaAuto(per) && rawTotal(per) == 0) {
+                removeIdiomaSlot(per)
+                ensureIdiomaPlaceholder()
             }
         }
     }
@@ -1331,7 +1524,7 @@ class CriadorState {
 
         // --- Ajuste de atributos pela nova raça ---
 
-        listaPericias.associateWith { rawTotal(it) }
+        periciasAtivas().associateWith { rawTotal(it) }
 
         val newAttrMods = racialAttrMinMap[anc] ?: emptyMap()
 
@@ -1795,19 +1988,25 @@ class CriadorState {
     ) {
         if (modoProgressaoAtivo) return
 
+        syncIdiomasLinguista()
         var cumulativeCost = 0
         val pool = totalSpPool
 
-        listaPericias.forEach { per ->
+        periciasAtivas().forEach { per ->
 
             val desiredRaw = rawTotal(per)
             val cap       = periciaCapRaw(per)
             val minRaw    = if (per.basica) 4 else 0
 
-            var target = desiredRaw.coerceIn(minRaw, cap)
+            val startRaw = periciaStartRaw(ancestralidade, per)
+            val freeIncs = compIncsPorPericia.getValue(per)
+            val freeRaw = applySuperStepsFrom(startRaw, freeIncs)
+            val minWithFree = maxOf(minRaw, freeRaw)
+
+            var target = desiredRaw.coerceIn(minWithFree, cap)
 
             fun costFor(tgt: Int): Int {
-                var curr = periciaStartRaw(ancestralidade, per)
+                var curr = freeRaw
                 var sum  = 0
                 while (curr < tgt) {
                     val next     = if (curr == 0) 4 else curr + 2
@@ -1842,7 +2041,7 @@ class CriadorState {
             stack.clear()
             baseIncsPorPericia[per] = 0
 
-            var currRaw = periciaStartRaw(ancestralidade, per)
+            var currRaw = freeRaw
             while (currRaw < target) {
                 val next     = if (currRaw == 0) 4 else currRaw + 2
                 val attrKey  = atributoBaseParaPericia(per)
@@ -1881,6 +2080,7 @@ class CriadorState {
                 cartaSelvagem = cartaSelvagem,
                 maisPontosPericias = maisPontosPericias,
                 modoSupers = modoSupers,
+                regraMultiplosIdiomas = regraMultiplosIdiomas,
                 compendioFantasiaAtivo = compendioFantasiaAtivo,
                 compendioHorrorAtivo = compendioHorrorAtivo,
                 compendioSciFiAtivo = compendioSciFiAtivo,
@@ -1934,7 +2134,9 @@ class CriadorState {
                 compCostStackPorPericia = compCostStackPorPericia.mapKeys { it.key.nome }.mapValues { it.value.toList() },
                 especializacoesPorPericia = especializacoesPorPericia.toMap(),
                 // PROMPT 5: Persist Skill Notes
-                notasPericia = notasPericia.toMap()
+                notasPericia = notasPericia.toMap(),
+                idiomasLabels = idiomasLabels.toMap(),
+                idiomasAutoSlots = idiomasAutoSlots.toList()
             ),
             selecoes = SnapshotSelecoes(
                 vantagens = vantagensSelecionadas.map { AdvantageSnapshot(it.id, it.choice) },
@@ -2017,6 +2219,7 @@ class CriadorState {
         cartaSelvagem = flags.cartaSelvagem
         maisPontosPericias = flags.maisPontosPericias
         modoSupers = flags.modoSupers
+        regraMultiplosIdiomas = flags.regraMultiplosIdiomas
         compendioFantasiaAtivo = flags.compendioFantasiaAtivo
         compendioHorrorAtivo = flags.compendioHorrorAtivo
         compendioSciFiAtivo = flags.compendioSciFiAtivo
@@ -2075,7 +2278,8 @@ class CriadorState {
         pontosAtributo = calcularPontosAtributoRestantes()
 
         especializacoesPorPericia.clear()
-        listaPericias.forEach { per ->
+        restoreIdiomaSlotsFromSnapshot(snapshot)
+        periciasAtivas().forEach { per ->
             baseIncsPorPericia[per] = snapshot.pericias.baseIncsPorPericia[per.nome] ?: 0
             compIncsPorPericia[per] = snapshot.pericias.compIncsPorPericia[per.nome] ?: 0
 
@@ -2104,6 +2308,7 @@ class CriadorState {
                 vantagensSelecionadas.add(vant)
             }
         }
+        syncIdiomasLinguista()
 
         vantagensAutomaticas.apply { clear(); addAll(snapshot.selecoes.vantagensAutomaticas) }
         vantagensRaciais.apply { clear(); addAll(snapshot.selecoes.vantagensRaciais) }

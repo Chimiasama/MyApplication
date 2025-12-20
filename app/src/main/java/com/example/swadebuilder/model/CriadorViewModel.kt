@@ -257,6 +257,7 @@ class CriadorViewModel : ViewModel() {
         state.cartaSelvagem = cartaSelvagem
         state.maisPontosPericias = maisPontosPericias
         state.usarEspecializacoesDePericia = usarEspecializacoesDePericia
+        state.regraMultiplosIdiomas = false
         state.especializacoesPorPericia.clear()
 
         state.ancestralidade = "HUMANOS"

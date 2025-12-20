@@ -32,7 +32,6 @@ import com.example.swadebuilder.TOTAL_PROGRESS_LIMIT
 import com.example.swadebuilder.dynamicStageCaps
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.listaDeEstagios
-import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.AdvancementAction
@@ -178,11 +177,11 @@ private fun describeAction(action: AdvancementAction, state: CriadorState): Stri
 
     is AdvancementAction.SpendOnSkills -> {
         val skills = action.skillsIncreased.distinct().mapNotNull { skillName ->
-            val per = listaPericias.firstOrNull { it.nome == skillName }
+            val per = state.periciaPorNome(skillName)
             per?.let {
                 val dieValue = action.recordedSkillValues?.get(skillName) ?: state.rawTotal(it)
                 val die = dieValue.toDiceString()
-                "$die ${it.nome}"
+                "$die ${state.nomeExibicaoPericia(it)}"
             } ?: skillName
         }
         "Perícias: ${skills.joinToString(", ")}".trim()

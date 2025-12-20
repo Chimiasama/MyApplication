@@ -26,7 +26,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
     return MeuPersonagem(
         nome = this.nomePersonagem,
         atributos = this.valoresAtributos.mapValues { it.value.intValue },
-        pericias = listaPericias.associate { per -> per.nome to this.rawTotal(per) },
+        pericias = periciasAtivas().associate { per -> nomeExibicaoPericia(per) to this.rawTotal(per) },
         ancestralidade = this.ancestralidade,
         celestialAAMilagresDesabilitado = this.celestialAAMilagresDesabilitado,
         tropoSelecionadoId = this.tropoSelecionado?.id,
@@ -298,9 +298,17 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         per.basica || (personagem.pericias[per.nome] ?: 0) >
                 periciaStartRaw(personagem.ancestralidade, per)
     }
+    val idiomasExtras = personagem.pericias
+        .filter { (nome, valor) ->
+            nome.startsWith("Idiomas") &&
+                    nome !in periciasParaMostrar.map { it.nome } &&
+                    valor > 0
+        }
+        .toList()
+        .sortedBy { it.first }
 
     lines += "Perícias"
-    if (periciasParaMostrar.isEmpty()) {
+    if (periciasParaMostrar.isEmpty() && idiomasExtras.isEmpty()) {
         lines += "– Nenhuma"
     } else {
         periciasParaMostrar.forEach { per ->
@@ -309,6 +317,9 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
             val note = personagem.notasPericia[per.nome]
             val noteStr = if (!note.isNullOrBlank()) " ($note)" else ""
             lines += "${per.nome} d$raw$noteStr"
+        }
+        idiomasExtras.forEach { (nome, raw) ->
+            lines += "$nome d$raw"
         }
     }
     lines += ""
