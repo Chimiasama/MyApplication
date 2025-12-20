@@ -1,0 +1,37 @@
+[
+  {
+    "id": "comp_pesadelos",
+    "name": "PESADELOS (Night Terrors)",
+    "origem": "DEADLANDS",
+    "severity": "maior",
+    "description": "Deve fazer teste de Espírito ao dormir. Falha causa Fadiga no dia seguinte. Crítica causa a perda de um Bene."
+  },
+  {
+    "id": "comp_servo_morte",
+    "name": "SERVO DA MORTE (Grim Servant)",
+    "origem": "DEADLANDS",
+    "severity": "maior",
+    "description": "+1 em rolagens de ataque/dano, mas Falhas Críticas atingem aliados automaticamente ou causam desastres graves."
+  },
+  {
+    "id": "comp_tome",
+    "name": "TOMÉ (Doubting Thomas)",
+    "origem": "DEADLANDS",
+    "severity": "menor",
+    "description": "Cético quanto ao sobrenatural. -2 em testes de Medo no início, mas racionaliza o horror rapidamente."
+  },
+  {
+    "id": "comp_loco",
+    "name": "LOCO",
+    "origem": "DEADLANDS",
+    "severity": "maior",
+    "description": "Insano ou irracional. O jogador deve interpretar uma delusão específica. -2 em Persuadir com pessoas 'normais'."
+  },
+  {
+    "id": "comp_procurado_deadlands",
+    "name": "PROCURADO (Texas Rangers/Agência)",
+    "origem": "DEADLANDS",
+    "severity": "maior",
+    "description": "Caçado por uma das grandes organizações da lei do Oeste. Recompensa alta pela cabeça."
+  }
+]
