@@ -47,7 +47,6 @@ import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.ui.components.RadioButtonRow
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.listaDeEstagios
-import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.dynamicStageCaps
@@ -160,13 +159,13 @@ fun ProgressosDialog(
         if (perMin.isNotEmpty()) {
             if (v.vinculadoPericia) {
                 val atendeUma = perMin.any { (perNome, minRaw) ->
-                    val per = listaPericias.firstOrNull { it.nome.equals(perNome, ignoreCase = true) }
+                    val per = state.periciasComIdiomas().firstOrNull { it.nome.equals(perNome, ignoreCase = true) }
                     per != null && state.rawTotal(per) >= minRaw
                 }
                 if (!atendeUma) return false
             } else {
                 val falhaAlguma = perMin.any { (perNome, minRaw) ->
-                    val per = listaPericias.firstOrNull { it.nome.equals(perNome, ignoreCase = true) }
+                    val per = state.periciasComIdiomas().firstOrNull { it.nome.equals(perNome, ignoreCase = true) }
                         ?: return@any true
                     state.rawTotal(per) < minRaw
                 }
@@ -176,7 +175,7 @@ fun ProgressosDialog(
         val perMinOpc = v.requisitos.periciaMinOpcional
         if (perMinOpc.isNotEmpty()) {
             val ok = perMinOpc.any { (perNome, minRaw) ->
-                val per = listaPericias.firstOrNull { it.nome.equals(perNome, ignoreCase = true) }
+                val per = state.periciasComIdiomas().firstOrNull { it.nome.equals(perNome, ignoreCase = true) }
                 per != null && state.rawTotal(per) >= minRaw
             }
             if (!ok) return false
@@ -859,7 +858,7 @@ fun ProgressosDialog(
                 val maxedAttrs = listaAtributos
                     .filter { a -> state.valoresAtributos[a]!!.intValue == state.atributoMaxRaw(a) }
                     .map { mapaAtributosDisplay[it] ?: it }
-                val maxedSkills = listaPericias
+                val maxedSkills = state.periciasComIdiomas()
                     .filter { p -> state.rawTotal(p) == state.periciaCapRaw(p) }
                     .map { it.nome }
 
@@ -902,7 +901,7 @@ fun ProgressosDialog(
                         if (state.valoresAtributos.containsKey(choiceKey)) {
                             state.valoresAtributos[choiceKey]!!.intValue += 2
                         } else {
-                            val per = listaPericias.first { it.nome == choice }
+                            val per = state.periciasComIdiomas().first { it.nome == choice }
                             state.baseIncsPorPericia[per] = state.baseIncsPorPericia.getValue(per) + 1
                             state.spCostStackPorPericia[per]?.add(0)
                         }
@@ -960,7 +959,7 @@ fun ProgressosDialog(
                             if (state.valoresAtributos.containsKey(choiceKey)) {
                                 state.valoresAtributos[choiceKey]!!.intValue += 2
                             } else {
-                                val per = listaPericias.first { it.nome == choice }
+                                val per = state.periciasComIdiomas().first { it.nome == choice }
                                 state.baseIncsPorPericia[per] = state.baseIncsPorPericia.getValue(per) + 1
                                 state.spCostStackPorPericia[per]?.add(0)
                             }

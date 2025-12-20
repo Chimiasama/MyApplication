@@ -26,7 +26,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
     return MeuPersonagem(
         nome = this.nomePersonagem,
         atributos = this.valoresAtributos.mapValues { it.value.intValue },
-        pericias = listaPericias.associate { per -> per.nome to this.rawTotal(per) },
+        pericias = periciasComIdiomas().associate { per -> per.nome to this.rawTotal(per) },
         ancestralidade = this.ancestralidade,
         celestialAAMilagresDesabilitado = this.celestialAAMilagresDesabilitado,
         tropoSelecionadoId = this.tropoSelecionado?.id,
@@ -294,21 +294,38 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     }
     lines += ""
 
-    val periciasParaMostrar = listaPericias.filter { per ->
-        per.basica || (personagem.pericias[per.nome] ?: 0) >
-                periciaStartRaw(personagem.ancestralidade, per)
+    val idiomaRegex = Regex("^Idiomas\\s+(\\d+)$", RegexOption.IGNORE_CASE)
+    val idiomaBase = listaPericias.firstOrNull { it.nome.equals("Idiomas", ignoreCase = true) }
+    val idiomaExtras = personagem.pericias.keys
+        .filter { idiomaRegex.matches(it) }
+        .sortedBy { idiomaRegex.find(it)?.groupValues?.getOrNull(1)?.toIntOrNull() ?: Int.MAX_VALUE }
+    val periciasOrdenadas = buildList {
+        listaPericias.forEach { per ->
+            add(per.nome)
+            if (per.nome.equals("Idiomas", ignoreCase = true)) {
+                addAll(idiomaExtras)
+            }
+        }
+    }
+    val periciasParaMostrar = periciasOrdenadas.mapNotNull { nome ->
+        val basePericia = listaPericias.firstOrNull { it.nome == nome }
+            ?: idiomaBase?.takeIf { idiomaRegex.matches(nome) }
+        val raw = personagem.pericias[nome] ?: 0
+        if (basePericia == null) return@mapNotNull null
+        val shouldShow = basePericia.basica || raw > periciaStartRaw(personagem.ancestralidade, basePericia)
+        if (shouldShow) nome to raw else null
     }
 
     lines += "Perícias"
     if (periciasParaMostrar.isEmpty()) {
         lines += "– Nenhuma"
     } else {
-        periciasParaMostrar.forEach { per ->
-            val raw = personagem.pericias[per.nome] ?: 0
+        periciasParaMostrar.forEach { (nome, raw) ->
             // PROMPT 5: Include skill notes in output
-            val note = personagem.notasPericia[per.nome]
+            val note = personagem.notasPericia[nome]
             val noteStr = if (!note.isNullOrBlank()) " ($note)" else ""
-            lines += "${per.nome} d$raw$noteStr"
+            val displayNome = if (idiomaRegex.matches(nome)) "Idiomas" else nome
+            lines += "$displayNome d$raw$noteStr"
         }
     }
     lines += ""
