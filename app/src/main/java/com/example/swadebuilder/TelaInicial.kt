@@ -91,6 +91,7 @@ fun TelaInicial(
         heroisSemArmadura: Boolean,
         especializacaoPer: Boolean,
         semPontosDePoder: Boolean,
+        multiplosIdiomas: Boolean,
         grandesResponsabilidades: Boolean
         // showHelpMessages removido
     ) -> Unit,
@@ -185,6 +186,7 @@ fun TelaInicial(
                         optHeroiSemArmadura,
                         optEspecializacaoPer,
                         optSemPontosPoder,
+                        optMultiplosIdiomas,
                         optGrandesResponsabilidades
                         // true // showHelpMessages removido
                     )

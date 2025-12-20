@@ -57,7 +57,6 @@ import com.example.swadebuilder.PericiaRuleSnapshot
 import com.example.swadebuilder.R
 import com.example.swadebuilder.calcularPericiaRules
 import com.example.swadebuilder.criacaoBasicaCongelada
-import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.model.loadPericiasDescriptions
@@ -102,6 +101,12 @@ fun PericiasContent(
     var showNoteDialog by rememberSaveable { mutableStateOf(false) }
     var noteText by rememberSaveable { mutableStateOf("") }
     var noteTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
+
+    var showIdiomaDialog by rememberSaveable { mutableStateOf(false) }
+    var idiomaText by rememberSaveable { mutableStateOf("") }
+    var idiomaTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
+    var idiomaPendingCost by rememberSaveable { mutableStateOf(0) }
+    var idiomaEditMode by rememberSaveable { mutableStateOf(false) }
 
     val idosoActive = state.idosoBonusSp > 0
 
@@ -161,7 +166,7 @@ fun PericiasContent(
         }
 
         items(
-            listaPericias.filter { per ->
+            state.periciasComIdiomas().filter { per ->
                 if (per.nome.equals("Jutsu", ignoreCase = true)) {
                     state.compendioArteDaGuerraAtivo
                 } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
@@ -177,7 +182,8 @@ fun PericiasContent(
                 locked = locked
             )
 
-            val rawName = per.nome.removePrefix("*").trim()
+            val isIdioma = state.isIdiomaPericia(per)
+            val rawName = if (isIdioma) "Idiomas" else per.nome.removePrefix("*").trim()
             val descKey = "$rawName (${per.atributo})".uppercase().semAcentos()
 
             val descricao = if (per.nome.equals("Alquimia", ignoreCase = true)) {
@@ -215,6 +221,7 @@ fun PericiasContent(
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = buildAnnotatedString {
+                                val displayName = if (isIdioma) "Idiomas" else per.nome
                                 if (per.basica) {
                                     withStyle(
                                         SpanStyle(
@@ -222,11 +229,11 @@ fun PericiasContent(
                                             fontWeight = FontWeight.Bold
                                         )
                                     ) {
-                                        append("✯ ${per.nome}")
+                                        append("✯ $displayName")
                                     }
                                 } else {
                                     withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        append(per.nome)
+                                        append(displayName)
                                     }
                                 }
                                 withStyle(SpanStyle(fontSize = defaultSize / 2)) {
@@ -251,7 +258,26 @@ fun PericiasContent(
 
                     // PROMPT 5: Edit Note Button
                     // Correction: Show edit button ONLY if optional rule is active
-                    if (regra.displayRaw > 0 && state.usarEspecializacoesDePericia) {
+                    if (isIdioma && regra.displayRaw > 0) {
+                        IconButton(
+                            onClick = {
+                                idiomaTarget = per
+                                idiomaText = state.notasPericia[per.nome] ?: ""
+                                idiomaEditMode = true
+                                showIdiomaDialog = true
+                            },
+                            modifier = Modifier
+                                .size(32.dp)
+                                .padding(4.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Edit,
+                                contentDescription = "Editar idioma",
+                                modifier = Modifier.size(16.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    } else if (regra.displayRaw > 0 && state.usarEspecializacoesDePericia) {
                         IconButton(
                             onClick = {
                                 noteTarget = per
@@ -277,6 +303,9 @@ fun PericiasContent(
                             if (state.rawTotal(per) == 0) {
                                 state.especializacoesPorPericia.remove(per.nome)
                                 state.notasPericia.remove(per.nome) // Clear note if skill is removed
+                            }
+                            if (isIdioma) {
+                                state.syncIdiomaSlots()
                             }
                             onUserFeedback()
                         },
@@ -315,10 +344,22 @@ fun PericiasContent(
                                 return@IconButton
                             }
 
+                            if (isIdioma && state.rawTotal(per) == 0) {
+                                idiomaTarget = per
+                                idiomaText = ""
+                                idiomaPendingCost = regrasAtuais.cost
+                                idiomaEditMode = false
+                                showIdiomaDialog = true
+                                return@IconButton
+                            }
+
                             state.increasePericiaFromAdvancement(per, regrasAtuais.cost)
+                            if (isIdioma) {
+                                state.syncIdiomaSlots()
+                            }
                             onUserFeedback()
 
-                            if (state.usarEspecializacoesDePericia) {
+                            if (!isIdioma && state.usarEspecializacoesDePericia) {
                                 val esp = state.especializacoesPorPericia[per.nome]
                                 if (esp?.principal == null) {
                                     specTarget = per
@@ -342,7 +383,7 @@ fun PericiasContent(
 
                     val jaTemPrincipal =
                         state.especializacoesPorPericia[per.nome]?.principal != null
-                    if (state.usarEspecializacoesDePericia && jaTemPrincipal) {
+                    if (!isIdioma && state.usarEspecializacoesDePericia && jaTemPrincipal) {
                         TextButton(
                             onClick = {
                                 specTarget = per
@@ -383,71 +424,122 @@ fun PericiasContent(
                     }
                 }
 
-                val espDto: EspecializacoesDto? = state.especializacoesPorPericia[per.nome]
-                val principal = espDto?.principal
-                val extras: List<String> = when {
-                    espDto == null -> emptyList()
-                    else -> espDto.lista
-                        .filter { it.isNotBlank() }
-                        .distinct()
-                        .filter { it != principal }
-                }
+                if (!isIdioma) {
+                    val espDto: EspecializacoesDto? = state.especializacoesPorPericia[per.nome]
+                    val principal = espDto?.principal
+                    val extras: List<String> = when {
+                        espDto == null -> emptyList()
+                        else -> espDto.lista
+                            .filter { it.isNotBlank() }
+                            .distinct()
+                            .filter { it != principal }
+                    }
 
-                val canRemoveSpecs = !locked
+                    val canRemoveSpecs = !locked
 
-                if (principal != null || extras.isNotEmpty()) {
-                    Spacer(Modifier.width(8.dp))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (principal != null) {
-                            SpecChip(
-                                label = principal,
-                                isPrincipal = true,
-                                onEdit = {
-                                    editIsPrincipal = true
-                                    editPerTarget = per
-                                    editOldName = principal
-                                    editNewName = principal
-                                    showEditDialog = true
-                                },
-                                onRemove = null
-                            )
-                        }
+                    if (principal != null || extras.isNotEmpty()) {
+                        Spacer(Modifier.width(8.dp))
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            if (principal != null) {
+                                SpecChip(
+                                    label = principal,
+                                    isPrincipal = true,
+                                    onEdit = {
+                                        editIsPrincipal = true
+                                        editPerTarget = per
+                                        editOldName = principal
+                                        editNewName = principal
+                                        showEditDialog = true
+                                    },
+                                    onRemove = null
+                                )
+                            }
 
-                        extras.forEach { extra ->
-                            SpecChip(
-                                label = extra,
-                                isPrincipal = false,
-                                onEdit = {
-                                    editIsPrincipal = false
-                                    editPerTarget = per
-                                    editOldName = extra
-                                    editNewName = extra
-                                    showEditDialog = true
-                                },
-                                onRemove =
-                                    if (canRemoveSpecs) {
-                                        {
-                                            val atual =
-                                                state.especializacoesPorPericia[per.nome]
-                                                    ?: EspecializacoesDto()
-                                            val novaLista =
-                                                atual.lista.filter { it != extra }
-                                            state.especializacoesPorPericia[per.nome] =
-                                                atual.copy(lista = novaLista)
-                                        }
-                                    } else null
-                            )
+                            extras.forEach { extra ->
+                                SpecChip(
+                                    label = extra,
+                                    isPrincipal = false,
+                                    onEdit = {
+                                        editIsPrincipal = false
+                                        editPerTarget = per
+                                        editOldName = extra
+                                        editNewName = extra
+                                        showEditDialog = true
+                                    },
+                                    onRemove =
+                                        if (canRemoveSpecs) {
+                                            {
+                                                val atual =
+                                                    state.especializacoesPorPericia[per.nome]
+                                                        ?: EspecializacoesDto()
+                                                val novaLista =
+                                                    atual.lista.filter { it != extra }
+                                                state.especializacoesPorPericia[per.nome] =
+                                                    atual.copy(lista = novaLista)
+                                            }
+                                        } else null
+                                )
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    if (showIdiomaDialog && idiomaTarget != null) {
+        AlertDialog(
+            onDismissRequest = {
+                showIdiomaDialog = false
+                idiomaEditMode = false
+                idiomaTarget = null
+            },
+            title = { Text(if (idiomaEditMode) "Editar idioma" else "Selecionar idioma") },
+            text = {
+                Column {
+                    Text("Perícia: Idiomas")
+                    Spacer(Modifier.width(8.dp))
+                    OutlinedTextField(
+                        value = idiomaText,
+                        onValueChange = { idiomaText = it },
+                        label = { Text("Ex: Espanhol, Língua de Sinais, etc.") },
+                        singleLine = true
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val per = idiomaTarget!!
+                        val label = idiomaText.trim().ifBlank { state.idiomaDefaultLabel(per) }
+                        state.notasPericia[per.nome] = label
+                        if (!idiomaEditMode) {
+                            state.increasePericiaFromAdvancement(per, idiomaPendingCost)
+                            state.syncIdiomaSlots()
+                            onUserFeedback()
+                        }
+                        showIdiomaDialog = false
+                        idiomaEditMode = false
+                        idiomaTarget = null
+                    }
+                ) { Text("Salvar") }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showIdiomaDialog = false
+                    idiomaEditMode = false
+                    idiomaTarget = null
+                }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 
     // PROMPT 5: Note Dialog

@@ -48,7 +48,8 @@ fun CriadorState.calcularPericiaRules(
             .map { it.value }
     }
     val minimoOpcional: Int = opcionalList.maxOrNull() ?: 0
-    val minimoTotal = max(minimoBasico, minimoOpcional)
+    val linguistaMin = linguistaMinRawFor(pericia)
+    val minimoTotal = max(max(minimoBasico, minimoOpcional), linguistaMin)
 
     val canDecrease = if (modoProgressaoAtivo) {
         val frozenIncs = frozenSkillIncrements[pericia.nome] ?: 0
