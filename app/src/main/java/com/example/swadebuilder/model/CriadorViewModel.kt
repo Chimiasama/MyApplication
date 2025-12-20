@@ -91,7 +91,8 @@ class CriadorViewModel : ViewModel() {
             compendioWiseguysAtivo = false,
             modoMonstroAtivo = false,
             usarEspecializacoesDePericia = false,
-            grandesResponsabilidades = false
+            grandesResponsabilidades = false,
+            regraMultiplosIdiomas = false
         )
     }
 
@@ -225,6 +226,7 @@ class CriadorViewModel : ViewModel() {
         modoMonstroAtivo: Boolean = false,
         usarEspecializacoesDePericia: Boolean = false,
         grandesResponsabilidades: Boolean = false,
+        regraMultiplosIdiomas: Boolean = false,
         // showHelpMessages removido
     ) {
 
@@ -243,6 +245,7 @@ class CriadorViewModel : ViewModel() {
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
         state.grandesResponsabilidades = grandesResponsabilidades
         state.soldadoCargaAtivo = true
+        state.regraMultiplosIdiomas = regraMultiplosIdiomas
 
         state.idAtual = null
         state.nomePersonagem = DEFAULT_CHARACTER_NAME

@@ -618,7 +618,7 @@ class MainActivity : ComponentActivity() {
                             TelaInicial(
                                 onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioBuscatrilhaAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
-                                                semPontosDePoder, grandesResponsabilidades ->
+                                                semPontosDePoder, multiplosIdiomas, grandesResponsabilidades ->
 
                                     creationSession++
 
@@ -636,7 +636,8 @@ class MainActivity : ComponentActivity() {
                                         compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
                                         compendioWiseguysAtivo = compendioWiseguysAtivo,
                                         modoMonstroAtivo = modoMonstroAtivo,
-                                        usarEspecializacoesDePericia = usarEspecializacaoPer
+                                        usarEspecializacoesDePericia = usarEspecializacaoPer,
+                                        regraMultiplosIdiomas = multiplosIdiomas
                                         // showHelpMessages removido
                                     )
                                     criadorViewModel.prepararNomeInicial(context)
