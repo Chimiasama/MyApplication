@@ -538,9 +538,13 @@ class CriadorState {
 
     private fun linguistaLanguageCount(): Int {
         val hasLinguista = vantagensSelecionadas.any { it.id == "linguista" }
-        if (!hasLinguista) return 0
         val astuciaRaw = valoresAtributos["ASTUCIA"]?.intValue ?: 0
-        return if (regraMultiplosIdiomas) astuciaRaw else astuciaRaw / 2
+        return when {
+            regraMultiplosIdiomas && hasLinguista -> astuciaRaw
+            regraMultiplosIdiomas -> astuciaRaw / 2
+            hasLinguista -> astuciaRaw / 2
+            else -> 0
+        }
     }
 
     fun linguistaMinRawFor(pericia: Pericia): Int {
