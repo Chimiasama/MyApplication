@@ -479,6 +479,13 @@ class CriadorState {
     fun nomeExibicaoPorNome(nome: String): String =
         periciaPorNome(nome)?.let { nomeExibicaoPericia(it) } ?: nome
 
+    private fun astuciaRawAtual(): Int {
+        val entry = valoresAtributos.entries.firstOrNull {
+            it.key.semAcentos().uppercase() == RuleConstants.ATRIBUTO_ASTUCIA
+        }
+        return entry?.value?.intValue ?: 0
+    }
+
     fun isIdiomaPericia(per: Pericia): Boolean =
         regraMultiplosIdiomas && idiomaSlots.any { it.nome == per.nome }
 
@@ -590,7 +597,7 @@ class CriadorState {
 
     private fun linguistaTargetIdiomas(): Int {
         val hasLinguista = vantagensSelecionadas.any { it.id == "linguista" }
-        val astuciaRaw = valoresAtributos[RuleConstants.ATRIBUTO_ASTUCIA]?.intValue ?: 0
+        val astuciaRaw = astuciaRawAtual()
 
         return when {
             hasLinguista && regraMultiplosIdiomas -> astuciaRaw
