@@ -435,9 +435,11 @@ class CriadorState {
         return applySuperStepsFrom(base, incs)
     }
 
-    var regraMultiplosIdiomas by mutableStateOf(false)
+    private var _regraMultiplosIdiomas by mutableStateOf(false)
+    var regraMultiplosIdiomas: Boolean
+        get() = _regraMultiplosIdiomas
         set(value) {
-            field = value
+            _regraMultiplosIdiomas = value
             if (value) {
                 syncIdiomasLinguista()
             } else {
