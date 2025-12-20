@@ -94,7 +94,7 @@ fun ComplicacoesSection(
         if (state.modoSupers) add("SUPER")
         if (state.compendioFantasiaAtivo) add("FANTASIA")
         if (state.compendioHorrorAtivo) add("HORROR")
-        if (state.compendioTrilhadorAtivo) add("FANTASIA_TRILHADOR")
+        if (state.compendioBuscatrilhaAtivo) add("FANTASIABUSCATRILHA")
         if (state.compendioDeadlandsAtivo) add("DEADLANDS")
         if (state.compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
         if (state.compendioCidadeSolVaporAtivo) add("CIDADE_SOL_VAPOR")

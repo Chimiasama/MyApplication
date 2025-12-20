@@ -82,7 +82,7 @@ fun AncestralidadesSection(
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
 
     val compendioFantasiaAtivo = state.compendioFantasiaAtivo
-    val compendioTrilhadorAtivo = state.compendioTrilhadorAtivo
+    val compendioBuscatrilhaAtivo = state.compendioBuscatrilhaAtivo
     val compendioDeadlandsAtivo = state.compendioDeadlandsAtivo
     val compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo
     val compendioWiseguysAtivo = state.compendioWiseguysAtivo
@@ -93,7 +93,7 @@ fun AncestralidadesSection(
 
     val apenasArteDaGuerra = compendioArteDaGuerraAtivo &&
             !compendioFantasiaAtivo &&
-            !compendioTrilhadorAtivo &&
+            !compendioBuscatrilhaAtivo &&
             !compendioDeadlandsAtivo &&
             !compendioCidadeSolVaporAtivo &&
             !compendioWiseguysAtivo &&
@@ -103,7 +103,7 @@ fun AncestralidadesSection(
 
     val ancestralidadesState = remember(
         compendioFantasiaAtivo,
-        compendioTrilhadorAtivo,
+        compendioBuscatrilhaAtivo,
         compendioDeadlandsAtivo,
         compendioArteDaGuerraAtivo,
         compendioWiseguysAtivo,
@@ -121,7 +121,7 @@ fun AncestralidadesSection(
                 "BASICO" -> !apenasArteDaGuerra
                 "ARTE_DA_GUERRA" -> compendioArteDaGuerraAtivo
                 "FANTASIA" -> compendioFantasiaAtivo
-                "FANTASIA_TRILHADOR" -> compendioTrilhadorAtivo
+                "FANTASIABUSCATRILHA" -> compendioBuscatrilhaAtivo
                 "DEADLANDS" -> compendioDeadlandsAtivo
                 "CIDADE_SOL_VAPOR" -> compendioCidadeSolVaporAtivo
                 "WISEGUYS" -> compendioWiseguysAtivo
@@ -131,7 +131,7 @@ fun AncestralidadesSection(
                 else -> false
             }
         }.map {
-            val buscatrilhaName = it.nome.replace("Trilhador", "Buscatrilha")
+            val buscatrilhaName = it.nome.replace("Buscatrilha", "Buscatrilha")
             val originalName = if (EditionConfig.isFullEdition) it.originalName else null
             RacialModifierLite(buscatrilhaName, originalName)
         }

@@ -216,14 +216,14 @@ fun VantagensContent(
         }
     }
 
-    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioTrilhadorAtivo, state.compendioDeadlandsAtivo, state.compendioCrystalHeartAtivo, state.compendioArteDaGuerraAtivo, state.compendioCidadeSolVaporAtivo, state.compendioWiseguysAtivo) {
+    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioBuscatrilhaAtivo, state.compendioDeadlandsAtivo, state.compendioCrystalHeartAtivo, state.compendioArteDaGuerraAtivo, state.compendioCidadeSolVaporAtivo, state.compendioWiseguysAtivo) {
         listaVantagens.filter { vant ->
             val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase()
             val isBasico = origemNorm == "BASICO"
             val isSuper = origemNorm == "SUPER"
             val isFantasia = origemNorm == "FANTASIA"
             val isHorror = origemNorm == "HORROR"
-            val isTrilhador = origemNorm == "FANTASIA_TRILHADOR"
+            val isBuscatrilha = origemNorm == "FANTASIABUSCATRILHA"
             val isDeadlands = origemNorm == "DEADLANDS"
             val isAdg = origemNorm == "ARTE_DA_GUERRA"
             val isCidadeSolVapor = origemNorm == "CIDADE_SOL_VAPOR"
@@ -235,7 +235,7 @@ fun VantagensContent(
                 }
             }
 
-            isBasico || (isAdg && state.compendioArteDaGuerraAtivo) || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isTrilhador && state.compendioTrilhadorAtivo) || (isDeadlands && state.compendioDeadlandsAtivo) || (isCidadeSolVapor && state.compendioCidadeSolVaporAtivo) || (isWiseguys && state.compendioWiseguysAtivo)
+            isBasico || (isAdg && state.compendioArteDaGuerraAtivo) || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isBuscatrilha && state.compendioBuscatrilhaAtivo) || (isDeadlands && state.compendioDeadlandsAtivo) || (isCidadeSolVapor && state.compendioCidadeSolVaporAtivo) || (isWiseguys && state.compendioWiseguysAtivo)
         }
     }
 
@@ -346,7 +346,7 @@ fun VantagensContent(
 
                 // --- NEW FILTERING LOGIC ---
                 // Hide specific categories if their compendium is not active
-                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioTrilhadorAtivo) return@items
+                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioBuscatrilhaAtivo) return@items
                 if (cat == Categoria.ESTRANHAS && !state.compendioDeadlandsAtivo) return@items
                 if (cat == Categoria.RESSUSCITADO && !state.compendioDeadlandsAtivo) return@items
                 if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@items
@@ -624,7 +624,7 @@ fun VantagensContent(
                 if (state.modoSupers && cat == Categoria.PODER) return@forEach
 
                 // Also hide in accordion view if filtered out by active mods (consistency)
-                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioTrilhadorAtivo) return@forEach
+                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioBuscatrilhaAtivo) return@forEach
                 if (cat == Categoria.ESTRANHAS && !state.compendioDeadlandsAtivo) return@forEach
                 if (cat == Categoria.RESSUSCITADO && !state.compendioDeadlandsAtivo) return@forEach
                 if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@forEach

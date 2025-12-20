@@ -48,7 +48,7 @@ class CriadorState {
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)
     var compendioSciFiAtivo by mutableStateOf(false)
-    var compendioTrilhadorAtivo by mutableStateOf(false)
+    var compendioBuscatrilhaAtivo by mutableStateOf(false)
     var compendioDeadlandsAtivo by mutableStateOf(false)
     var compendioCrystalHeartAtivo by mutableStateOf(false)
     var compendioArteDaGuerraAtivo by mutableStateOf(false)
@@ -1925,7 +1925,7 @@ class CriadorState {
                 compendioFantasiaAtivo = compendioFantasiaAtivo,
                 compendioHorrorAtivo = compendioHorrorAtivo,
                 compendioSciFiAtivo = compendioSciFiAtivo,
-                compendioTrilhadorAtivo = compendioTrilhadorAtivo,
+                compendioBuscatrilhaAtivo = compendioBuscatrilhaAtivo,
                 compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                 compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
                 compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
@@ -2061,7 +2061,7 @@ class CriadorState {
         compendioFantasiaAtivo = flags.compendioFantasiaAtivo
         compendioHorrorAtivo = flags.compendioHorrorAtivo
         compendioSciFiAtivo = flags.compendioSciFiAtivo
-        compendioTrilhadorAtivo = flags.compendioTrilhadorAtivo
+        compendioBuscatrilhaAtivo = flags.compendioBuscatrilhaAtivo
         compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo
         compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo
         compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo

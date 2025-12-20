@@ -56,9 +56,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -66,8 +66,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -203,8 +203,8 @@ class MainActivity : ComponentActivity() {
         AppData.horrorVantagens = todasVantagens.filter {
             it.origem.equals("HORROR", ignoreCase = true)
         }
-        AppData.trilhadorVantagens = todasVantagens.filter {
-            it.origem.equals("TRILHADOR", ignoreCase = true)
+        AppData.buscatrilhaVantagens = todasVantagens.filter {
+            it.origem.equals("BUSCATRILHA", ignoreCase = true)
         }
 
         listaVantagens = todasVantagens
@@ -616,7 +616,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioTrilhadorAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo,
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioBuscatrilhaAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, grandesResponsabilidades ->
 
@@ -629,7 +629,7 @@ class MainActivity : ComponentActivity() {
                                         compendioFantasiaAtivo = compendioFantasiaAtivo,
                                         compendioHorrorAtivo = compendioHorrorAtivo,
                                         compendioSciFiAtivo = compendioSciFiAtivo,
-                                        compendioTrilhadorAtivo = compendioTrilhadorAtivo,
+                                        compendioBuscatrilhaAtivo = compendioBuscatrilhaAtivo,
                                         compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                                         compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
                                         compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,

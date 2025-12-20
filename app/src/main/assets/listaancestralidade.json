@@ -1138,10 +1138,10 @@
     ]
   },
   {
-    "id": "anc_anao_trilhador",
+    "id": "anc_anaobuscatrilha",
     "nome": "Anão (Buscatrilha)",
     "categoria": "ANCESTRALIDADE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "FANTASIABUSCATRILHA",
     "atributos": {
       "Vigor": 2
     },
@@ -1173,10 +1173,10 @@
     "originalName": "Anão (Golarion)"
   },
   {
-    "id": "anc_elfo_trilhador",
+    "id": "anc_elfobuscatrilha",
     "nome": "Elfo (Buscatrilha)",
     "categoria": "ANCESTRALIDADE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "FANTASIABUSCATRILHA",
     "atributos": {
       "Agilidade": 2,
       "Astúcia": 2
@@ -1215,10 +1215,10 @@
     "originalName": "Elfo (Golarion)"
   },
   {
-    "id": "anc_gnomo_trilhador",
+    "id": "anc_gnomobuscatrilha",
     "nome": "Gnomo (Buscatrilha)",
     "categoria": "ANCESTRALIDADE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "FANTASIABUSCATRILHA",
     "atributos": {
       "Vigor": 2
     },
@@ -1260,10 +1260,10 @@
     "originalName": "Gnomo (Golarion)"
   },
   {
-    "id": "anc_halfling_trilhador",
+    "id": "anc_halflingbuscatrilha",
     "nome": "Halfling (Buscatrilha)",
     "categoria": "ANCESTRALIDADE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "FANTASIABUSCATRILHA",
     "atributos": {
       "Agilidade": 2
     },
@@ -1304,10 +1304,10 @@
     "originalName": "Halfling (Golarion)"
   },
   {
-    "id": "anc_humano_trilhador",
+    "id": "anc_humanobuscatrilha",
     "nome": "Humano (Buscatrilha)",
     "categoria": "ANCESTRALIDADE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "FANTASIABUSCATRILHA",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
@@ -1323,10 +1323,10 @@
     "originalName": "Humano (Golarion)"
   },
   {
-    "id": "anc_meio_elfo_trilhador",
+    "id": "anc_meio_elfobuscatrilha",
     "nome": "Meio-Elfo (Buscatrilha)",
     "categoria": "ANCESTRALIDADE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "FANTASIABUSCATRILHA",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [],
@@ -1348,10 +1348,10 @@
     "originalName": "Meio-Elfo (Golarion)"
   },
   {
-    "id": "anc_meio_orc_trilhador",
+    "id": "anc_meio_orcbuscatrilha",
     "nome": "Meio-Orc (Buscatrilha)",
     "categoria": "ANCESTRALIDADE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "FANTASIABUSCATRILHA",
     "atributos": {
       "Força": 2
     },

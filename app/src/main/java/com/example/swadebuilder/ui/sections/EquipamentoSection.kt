@@ -206,7 +206,7 @@ fun EquipamentoSection(
     compendioFantasiaAtivo: Boolean = false,
     compendioHorrorAtivo: Boolean = false,
     compendioSciFiAtivo: Boolean = false,
-    compendioTrilhadorAtivo: Boolean = false,
+    compendioBuscatrilhaAtivo: Boolean = false,
     compendioDeadlandsAtivo: Boolean = false,
     compendioArteDaGuerraAtivo: Boolean = false,
     compendioCidadeSolVaporAtivo: Boolean = false,
@@ -261,7 +261,7 @@ fun EquipamentoSection(
                         (origem != "FANTASIA" || compendioFantasiaAtivo) &&
                         (origem != "HORROR" || compendioHorrorAtivo) &&
                         (origem != "SCI_FI" || compendioSciFiAtivo) &&
-                        (origem != "FANTASIA_TRILHADOR" || compendioTrilhadorAtivo) &&
+                        (origem != "FANTASIABUSCATRILHA" || compendioBuscatrilhaAtivo) &&
                         (origem != "DEADLANDS" || compendioDeadlandsAtivo)
             }
 

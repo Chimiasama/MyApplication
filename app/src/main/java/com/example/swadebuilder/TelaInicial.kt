@@ -80,7 +80,7 @@ fun TelaInicial(
         compendioFantasiaAtivo: Boolean,
         compendioHorrorAtivo: Boolean,
         compendioSciFiAtivo: Boolean,
-        compendioTrilhadorAtivo: Boolean,
+        compendioBuscatrilhaAtivo: Boolean,
         compendioDeadlandsAtivo: Boolean,
         compendioCrystalHeartAtivo: Boolean,
         compendioArteDaGuerraAtivo: Boolean,
@@ -123,7 +123,7 @@ fun TelaInicial(
 
     // Fantasy
     var optCompendioFantasia by rememberSaveable { mutableStateOf(false) }
-    var optCompendioTrilhador by rememberSaveable { mutableStateOf(false) }
+    var optCompendioBuscatrilha by rememberSaveable { mutableStateOf(false) }
     var optCompendioDeadlands by rememberSaveable { mutableStateOf(false) }
     var optCompendioCrystalHeart by rememberSaveable { mutableStateOf(false) }
     var optCompendioArteDaGuerra by rememberSaveable { mutableStateOf(false) }
@@ -174,7 +174,7 @@ fun TelaInicial(
                         optCompendioFantasia,
                         optCompendioHorror,
                         optCompendioSciFi,
-                        optCompendioTrilhador,
+                        optCompendioBuscatrilha,
                         optCompendioDeadlands,
                         optCompendioCrystalHeart,
                         optCompendioArteDaGuerra,
@@ -189,7 +189,7 @@ fun TelaInicial(
                         // true // showHelpMessages removido
                     )
                     // Set ViewModel states that are handled outside the creation lambda
-                    viewModel.state.compendioTrilhadorAtivo = optCompendioTrilhador
+                    viewModel.state.compendioBuscatrilhaAtivo = optCompendioBuscatrilha
                     viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
                     viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
                     viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
@@ -287,8 +287,8 @@ fun TelaInicial(
                                 "Cenário Buscatrilha e material temático."
                             },
                             icon = Icons.Default.Map,
-                            checked = optCompendioTrilhador,
-                            onCheckedChange = { optCompendioTrilhador = it }
+                            checked = optCompendioBuscatrilha,
+                            onCheckedChange = { optCompendioBuscatrilha = it }
                         )
                         ModuleToggle(
                             title = "Deadlands: O Oeste Estranho",

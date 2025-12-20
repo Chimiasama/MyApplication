@@ -10,7 +10,7 @@ object AppData {
     var basicasVantagens: List<Vantagem> = emptyList()
     var superVantagens: List<Vantagem> = emptyList()
     var horrorVantagens: List<Vantagem> = emptyList()
-    var trilhadorVantagens: List<Vantagem> = emptyList()
+    var buscatrilhaVantagens: List<Vantagem> = emptyList()
 
     /** Texto completo de cada supervantagem (acrescentado à lista normal). */
     var superVantagensParaDetalhe: List<Vantagem> = emptyList()
