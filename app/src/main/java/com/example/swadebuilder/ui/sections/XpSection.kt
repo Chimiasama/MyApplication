@@ -42,18 +42,12 @@ import com.example.swadebuilder.ui.components.SectionCard
 @Composable
 fun XpSection(
     state: CriadorState,
-    expanded: Boolean,
-    onToggle: () -> Unit,
     onUseProgress: (Int) -> Unit,
-    onUndo: () -> Unit,
-    onUserFeedback: () -> Unit
+    onUndo: () -> Unit
 ) {
     SectionCard(
         title = "XP",
-        expanded = expanded,
-        onToggle = onToggle,
-        icon = Icons.Default.Star,
-        onToggleFeedback = onUserFeedback
+        icon = Icons.Default.Star
     ) {
         LaunchedEffect(
             state.progresso,

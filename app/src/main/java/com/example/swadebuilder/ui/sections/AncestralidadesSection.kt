@@ -60,8 +60,6 @@ private const val ASSET_ANCESTRALIDADES = "listaancestralidade.json"
 fun AncestralidadesSection(
     state: CriadorState,
     currentAncestralidade: String,
-    expanded: Boolean,
-    onToggle: () -> Unit,
     supersLocked: Boolean,
     ancestralidadeEmFoco: String?,
     onSelectAncestralidade: (String) -> Unit,
@@ -191,10 +189,7 @@ fun AncestralidadesSection(
 
     SectionCard(
         title = "Ancestralidades",
-        expanded = expanded,
-        onToggle = onToggle,
-        icon = Icons.AutoMirrored.Filled.MenuBook,
-        onToggleFeedback = onUserFeedback
+        icon = Icons.AutoMirrored.Filled.MenuBook
     ) {
         val centerLabel = if (supersLocked) {
             "Ancestralidade: $selectedDisplayName (travado na fase Supers)"

@@ -744,7 +744,6 @@ class MainActivity : ComponentActivity() {
                                             superequipCategorias  = superequipCategorias,
                                             listaSuperPoderes     = listaSuperPoderes,
                                             modoOficialAtivo      = state.modoOficialAtivo,
-                                            onImportRequested     = { showLoadDialog = true },
                                             onShowMessage         = { message ->
                                                 scope.launch {
                                                     snackHost.showSnackbar(message)

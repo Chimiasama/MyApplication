@@ -339,10 +339,8 @@ private fun Vantagem.bloqueadaComoSuperVantagem(): Boolean {
 fun SuperPoderesSection(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
-    expanded: Boolean,
     viewModel: CriadorViewModel = viewModel()
 ) {
-    if (!expanded) return
     val context = LocalContext.current
     var poderParaComprar by remember { mutableStateOf<SuperPoder?>(null) }
 
@@ -1165,28 +1163,23 @@ fun SuperPoderesSection(
 @Composable
 fun SuperPoderesContent(
     state: CriadorState,
-    listaSuperPoderes: List<SuperPoder>,
-    expanded: Boolean,
-    onToggle: () -> Unit
+    listaSuperPoderes: List<SuperPoder>
 ) {
     SectionCard(
         title = "Superpoderes",
-        expanded = expanded,
-        onToggle = onToggle,
         icon = Icons.Filled.FlashOn
     ) {
         SectionHeader(
             onHelpClick = null,
             centerText = "Pontos de Super: ${state.superPontosDisponiveis}",
-            onCenterClick = onToggle,
+            onCenterClick = null,
             onListaCompletaClick = null,
             listaCompletaText = ""
         )
 
         SuperPoderesSection(
             state = state,
-            listaSuperPoderes = listaSuperPoderes,
-            expanded = expanded
+            listaSuperPoderes = listaSuperPoderes
         )
     }
 }

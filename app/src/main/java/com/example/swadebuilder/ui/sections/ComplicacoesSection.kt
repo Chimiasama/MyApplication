@@ -67,8 +67,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun ComplicacoesSection(
     state: CriadorState,
-    expanded: Boolean,
-    onToggle: () -> Unit,
     feedbackMessages: MutableList<String>,
     onUserFeedback: () -> Unit
 ) {
@@ -108,10 +106,7 @@ fun ComplicacoesSection(
 
     SectionCard(
         title    = "Complicações",
-        expanded = expanded,
-        onToggle = onToggle,
-        icon     = Icons.Default.Warning,
-        onToggleFeedback = onUserFeedback
+        icon     = Icons.Default.Warning
     ) {
         val totalPc = state.pontosComplicacao
         val usadosPc = state.pontosComplicacaoGastos

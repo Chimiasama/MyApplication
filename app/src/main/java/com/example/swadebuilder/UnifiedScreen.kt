@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +18,6 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.FlashOn
-import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
@@ -81,7 +79,6 @@ fun PreviewApp() {
         equipamentoCategorias = emptyList(),
         superequipCategorias = emptyList(),
         listaSuperPoderes = emptyList(),
-        onImportRequested = {},
         onShowMessage = {},
         onUserFeedback = {}
     )
@@ -96,7 +93,6 @@ fun UnifiedScreen(
     superequipCategorias: List<EquipamentoCategoria>,
     listaSuperPoderes: List<SuperPoder>,
     modoOficialAtivo: Boolean = false,
-    onImportRequested: () -> Unit,
     onShowMessage: (String) -> Unit,
     onUserFeedback: () -> Unit
 ) {
@@ -163,10 +159,6 @@ fun UnifiedScreen(
             listaSuperPoderes = listaSuperPoderes,
             equipamentoCategorias = equipamentoCategorias,
             superequipCategorias = superequipCategorias,
-            onImportRequested = {
-                onUserFeedback()
-                onImportRequested()
-            },
             onClearRequested = {
                 onUserFeedback()
                 showClearDialog = true
@@ -349,7 +341,6 @@ fun UnifiedScreen(
 private fun GlobalActionButtons(
     state: CriadorState,
     viewModel: CriadorViewModel,
-    onImportRequested: () -> Unit,
     onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit
 ) {
@@ -359,26 +350,13 @@ private fun GlobalActionButtons(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        Button(
+            onClick = onClearRequested,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Button(
-                onClick = onImportRequested,
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(Icons.Default.FolderOpen, contentDescription = null)
-                Spacer(Modifier.width(8.dp))
-                Text("Importar")
-            }
-            Button(
-                onClick = onClearRequested,
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(Icons.Default.Delete, contentDescription = null)
-                Spacer(Modifier.width(8.dp))
-                Text("Limpar")
-            }
+            Icon(Icons.Default.Delete, contentDescription = null)
+            Spacer(Modifier.width(8.dp))
+            Text("Limpar")
         }
 
         Button(
@@ -466,7 +444,6 @@ private fun SectionDetailPane(
     listaSuperPoderes: List<SuperPoder>,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
-    onImportRequested: () -> Unit,
     onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit,
     onSelectAncestralidade: (String) -> Unit,
@@ -487,7 +464,6 @@ private fun SectionDetailPane(
                 selectedSection = selectedSection,
                 equipamentoCategorias = equipamentoCategorias,
                 superequipCategorias = superequipCategorias,
-                onImportRequested = onImportRequested,
                 onClearRequested = onClearRequested,
                 onShowMessage = onShowMessage,
                 onUseProgress = onUseProgress,
@@ -501,7 +477,6 @@ private fun SectionDetailPane(
                 listaSuperPoderes = listaSuperPoderes,
                 equipamentoCategorias = equipamentoCategorias,
                 superequipCategorias = superequipCategorias,
-                onImportRequested = onImportRequested,
                 onClearRequested = onClearRequested,
                 onShowMessage = onShowMessage,
                 onSelectAncestralidade = onSelectAncestralidade,
@@ -579,7 +554,6 @@ private fun ProgressionDetailContent(
     selectedSection: MainSection,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
-    onImportRequested: () -> Unit,
     onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit,
     onUseProgress: (Int) -> Unit,
@@ -589,10 +563,7 @@ private fun ProgressionDetailContent(
         MainSection.VANTAGENS -> {
             SectionCard(
                 title    = "Vantagens",
-                expanded = state.sectionsExpanded[MainSection.VANTAGENS] ?: false,
-                onToggle = { state.toggleSection(MainSection.VANTAGENS) },
-                icon     = Icons.Default.Star,
-                onToggleFeedback = onUserFeedback
+                icon     = Icons.Default.Star
             ) {
                 VantagensContent(
                     state = state,
@@ -604,7 +575,7 @@ private fun ProgressionDetailContent(
 
             if (state.mostrandoPoderesProgresso || state.arcanoCompraPendente()) {
                 Spacer(Modifier.height(8.dp))
-                PoderesSection(state = state, onUserFeedback = onUserFeedback)
+                PoderesSection(state = state)
             }
 
             Spacer(Modifier.height(16.dp))
@@ -632,10 +603,7 @@ private fun ProgressionDetailContent(
         MainSection.PERICIAS -> {
             SectionCard(
                 title    = "Perícias",
-                expanded = state.sectionsExpanded[MainSection.PERICIAS] ?: false,
-                onToggle = { state.toggleSection(MainSection.PERICIAS) },
-                icon     = Icons.Default.School,
-                onToggleFeedback = onUserFeedback
+                icon     = Icons.Default.School
             ) {
                 PericiasContent(
                     state = state,
@@ -669,10 +637,7 @@ private fun ProgressionDetailContent(
         MainSection.ATRIBUTOS -> {
             SectionCard(
                 title    = "Atributos",
-                expanded = state.sectionsExpanded[MainSection.ATRIBUTOS] ?: false,
-                onToggle = { state.toggleSection(MainSection.ATRIBUTOS) },
-                icon     = Icons.Default.FitnessCenter,
-                onToggleFeedback = onUserFeedback
+                icon     = Icons.Default.FitnessCenter
             ) {
                 AtributosContent(state = state, onUserFeedback = onUserFeedback)
             }
@@ -701,26 +666,20 @@ private fun ProgressionDetailContent(
         }
         MainSection.EQUIPAMENTOS -> EquipamentoSection(
             state = state,
-            expanded = state.sectionsExpanded[MainSection.EQUIPAMENTOS] ?: false,
-            onToggle = { state.toggleSection(MainSection.EQUIPAMENTOS) },
             equipamentoCategorias = equipamentoCategorias,
             superequipCategorias = superequipCategorias,
             onUserFeedback = onUserFeedback
         )
         MainSection.XP -> XpSection(
             state = state,
-            expanded = state.sectionsExpanded[MainSection.XP] ?: false,
-            onToggle = { state.toggleSection(MainSection.XP) },
             onUseProgress = onUseProgress,
             onUndo = {
                 viewModel.revertLastAdvancement()
-            },
-            onUserFeedback = onUserFeedback
+            }
         )
         else -> SummaryTabContent(
             state = state,
             viewModel = viewModel,
-            onImportRequested = onImportRequested,
             onClearRequested = onClearRequested,
             onShowMessage = onShowMessage
         )
@@ -736,7 +695,6 @@ private fun CreationDetailContent(
     listaSuperPoderes: List<SuperPoder>,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
-    onImportRequested: () -> Unit,
     onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit,
     onSelectAncestralidade: (String) -> Unit,
@@ -748,15 +706,12 @@ private fun CreationDetailContent(
         MainSection.RESUMO -> SummaryTabContent(
             state = state,
             viewModel = viewModel,
-            onImportRequested = onImportRequested,
             onClearRequested = onClearRequested,
             onShowMessage = onShowMessage
         )
         MainSection.ANCESTRALIDADES -> AncestralidadesSection(
             state = state,
             currentAncestralidade = state.ancestralidade,
-            expanded = state.sectionsExpanded[MainSection.ANCESTRALIDADES] ?: false,
-            onToggle = { state.toggleSection(MainSection.ANCESTRALIDADES) },
             supersLocked = creationLocked,
             ancestralidadeEmFoco = state.ancestralidadeEmFoco,
             onSelectAncestralidade = onSelectAncestralidade,
@@ -764,38 +719,26 @@ private fun CreationDetailContent(
         )
         MainSection.TROPOS -> TroposSection(
             state = state,
-            expanded = state.sectionsExpanded[MainSection.TROPOS] ?: false,
-            onToggle = { state.toggleSection(MainSection.TROPOS) },
             onUserFeedback = onUserFeedback
         )
         MainSection.MONSTRO -> TipoMonstroSection(
             state = state,
-            expanded = state.sectionsExpanded[MainSection.MONSTRO] ?: false,
-            onToggle = { state.toggleSection(MainSection.MONSTRO) },
             onUserFeedback = onUserFeedback
         )
         MainSection.COMPLICACOES -> ComplicacoesSection(
             state = state,
-            expanded = state.sectionsExpanded[MainSection.COMPLICACOES] ?: false,
-            onToggle = { state.toggleSection(MainSection.COMPLICACOES) },
             feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
             onUserFeedback = onUserFeedback
         )
         MainSection.ATRIBUTOS -> SectionCard(
             title    = "Atributos",
-            expanded = state.sectionsExpanded[MainSection.ATRIBUTOS] ?: false,
-            onToggle = { state.toggleSection(MainSection.ATRIBUTOS) },
-            icon     = Icons.Default.FitnessCenter,
-            onToggleFeedback = onUserFeedback
+            icon     = Icons.Default.FitnessCenter
         ) {
             AtributosContent(state, onUserFeedback)
         }
         MainSection.PERICIAS -> SectionCard(
             title    = "Perícias",
-            expanded = state.sectionsExpanded[MainSection.PERICIAS] ?: false,
-            onToggle = { state.toggleSection(MainSection.PERICIAS) },
-            icon     = Icons.Default.School,
-            onToggleFeedback = onUserFeedback
+            icon     = Icons.Default.School
         ) {
             PericiasContent(
                 state = state,
@@ -805,10 +748,7 @@ private fun CreationDetailContent(
         }
         MainSection.VANTAGENS -> SectionCard(
             title    = "Vantagens",
-            expanded = state.sectionsExpanded[MainSection.VANTAGENS] ?: false,
-            onToggle = { state.toggleSection(MainSection.VANTAGENS) },
-            icon     = Icons.Default.Star,
-            onToggleFeedback = onUserFeedback
+            icon     = Icons.Default.Star
         ) {
             VantagensContent(
                 state = state,
@@ -819,26 +759,20 @@ private fun CreationDetailContent(
         }
         MainSection.CRYSTAL_HEART -> CrystalHeartSection(
             state = state,
-            viewModel = viewModel,
-            expanded = state.sectionsExpanded[MainSection.CRYSTAL_HEART] ?: false,
-            onToggle = { state.toggleSection(MainSection.CRYSTAL_HEART) }
+            viewModel = viewModel
         )
         MainSection.PODERES -> {
             if (!state.compendioCrystalHeartAtivo) {
-                PoderesSection(state = state, onUserFeedback = onUserFeedback)
+                PoderesSection(state = state)
                 Spacer(Modifier.height(8.dp))
             }
             SuperPoderesSection(
                 state = state,
-                listaSuperPoderes = listaSuperPoderes,
-                expanded = state.sectionsExpanded[MainSection.PODERES] ?: false,
-                onToggle = { state.toggleSection(MainSection.PODERES) }
+                listaSuperPoderes = listaSuperPoderes
             )
         }
         MainSection.EQUIPAMENTOS -> EquipamentoSection(
             state = state,
-            expanded = state.sectionsExpanded[MainSection.EQUIPAMENTOS] ?: false,
-            onToggle = { state.toggleSection(MainSection.EQUIPAMENTOS) },
             equipamentoCategorias = equipamentoCategorias,
             superequipCategorias = superequipCategorias,
             onUserFeedback = onUserFeedback
@@ -846,7 +780,6 @@ private fun CreationDetailContent(
         else -> SummaryTabContent(
             state = state,
             viewModel = viewModel,
-            onImportRequested = onImportRequested,
             onClearRequested = onClearRequested,
             onShowMessage = onShowMessage
         )
@@ -857,7 +790,6 @@ private fun CreationDetailContent(
 private fun SummaryTabContent(
     state: CriadorState,
     viewModel: CriadorViewModel,
-    onImportRequested: () -> Unit,
     onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit
 ) {
@@ -867,7 +799,6 @@ private fun SummaryTabContent(
         GlobalActionButtons(
             state = state,
             viewModel = viewModel,
-            onImportRequested = onImportRequested,
             onClearRequested = onClearRequested,
             onShowMessage = onShowMessage
         )
@@ -878,8 +809,7 @@ private fun SummaryTabContent(
 
 @Composable
 private fun PoderesSection(
-    state: CriadorState,
-    onUserFeedback: () -> Unit
+    state: CriadorState
 ) {
     val temArcano = state.vantagensSelecionadas.any {
         it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
@@ -888,10 +818,7 @@ private fun PoderesSection(
         HorizontalDivider(thickness = 1.dp)
         SectionCard(
             title = "Poderes",
-            expanded = state.sectionsExpanded[MainSection.PODERES] ?: false,
-            onToggle = { state.toggleSection(MainSection.PODERES) },
-            icon = Icons.Default.FlashOn,
-            onToggleFeedback = onUserFeedback
+            icon = Icons.Default.FlashOn
         ) {
             PoderesSection(
                 state = state
@@ -904,16 +831,12 @@ private fun PoderesSection(
 @Composable
 private fun SuperPoderesSection(
     state: CriadorState,
-    listaSuperPoderes: List<SuperPoder>,
-    expanded: Boolean,
-    onToggle: () -> Unit
+    listaSuperPoderes: List<SuperPoder>
 ) {
     if (state.modoSupers) {
         SuperPoderesContent(
             state = state,
-            listaSuperPoderes = listaSuperPoderes,
-            expanded = expanded,
-            onToggle = onToggle
+            listaSuperPoderes = listaSuperPoderes
         )
     }
 }
@@ -921,8 +844,6 @@ private fun SuperPoderesSection(
 @Composable
 private fun EquipamentoSection(
     state: CriadorState,
-    expanded: Boolean,
-    onToggle: () -> Unit,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
     onUserFeedback: () -> Unit
@@ -945,8 +866,6 @@ private fun EquipamentoSection(
         recursosPcUsados = state.cpRecursosStack.size,
         emProgresso = state.emProgresso,
         modoProgressaoAtivo = state.modoProgressaoAtivo,
-        expanded = expanded,
-        onToggle = onToggle,
         onUsarPontosBonusEmRecursos = {
             if (state.usaRiqueza) return@EquipamentoSection
             val pcLivresLocal =

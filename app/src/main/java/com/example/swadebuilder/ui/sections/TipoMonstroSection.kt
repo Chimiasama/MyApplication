@@ -22,18 +22,13 @@ import com.example.swadebuilder.ui.components.SectionCard
 @Composable
 fun TipoMonstroSection(
     state: CriadorState,
-    expanded: Boolean,
-    onToggle: () -> Unit,
     onUserFeedback: () -> Unit
 ) {
     if (!state.modoMonstroAtivo) return
 
     SectionCard(
         title = "Tipo de Monstro",
-        expanded = expanded,
-        onToggle = onToggle,
-        icon = Icons.Default.BugReport,
-        onToggleFeedback = onUserFeedback
+        icon = Icons.Default.BugReport
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(

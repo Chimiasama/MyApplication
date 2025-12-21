@@ -44,8 +44,6 @@ import kotlin.math.roundToInt
 @Composable
 fun InformacoesSection(
     state: CriadorState,
-    expanded: Boolean,
-    onToggle: () -> Unit,
     onUseProgress: () -> Unit
 ) {
 
@@ -56,8 +54,6 @@ fun InformacoesSection(
 
     SectionCard(
         title = "Informações",
-        expanded = expanded,
-        onToggle = onToggle,
         icon = Icons.Default.Person
     ) {
         Column(Modifier.padding(8.dp)) {
