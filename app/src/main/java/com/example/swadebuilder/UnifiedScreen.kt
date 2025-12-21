@@ -13,12 +13,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.FlashOn
+import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
@@ -27,6 +31,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -39,6 +44,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -80,6 +86,8 @@ fun PreviewApp() {
         equipamentoCategorias = emptyList(),
         superequipCategorias = emptyList(),
         listaSuperPoderes = emptyList(),
+        onImportRequested = {},
+        onShowMessage = {},
         onUserFeedback = {}
     )
 }
@@ -93,6 +101,8 @@ fun UnifiedScreen(
     superequipCategorias: List<EquipamentoCategoria>,
     listaSuperPoderes: List<SuperPoder>,
     modoOficialAtivo: Boolean = false,
+    onImportRequested: () -> Unit,
+    onShowMessage: (String) -> Unit,
     onUserFeedback: () -> Unit
 ) {
     if (state.modoSupers) {
@@ -101,6 +111,8 @@ fun UnifiedScreen(
 
     var showAllocDialog by rememberSaveable { mutableStateOf(false) }
     var currentSlotIndex by rememberSaveable { mutableIntStateOf(-1) }
+    var showClearDialog by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
 
     // --- estados para o MEIO-ELFO ---
     var showMeioElfoDialog by rememberSaveable { mutableStateOf(false) }
@@ -179,7 +191,16 @@ fun UnifiedScreen(
                     Spacer(Modifier.height(12.dp))
                     GlobalActionButtons(
                         state = state,
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        onImportRequested = {
+                            onUserFeedback()
+                            onImportRequested()
+                        },
+                        onClearRequested = {
+                            onUserFeedback()
+                            showClearDialog = true
+                        },
+                        onShowMessage = onShowMessage
                     )
                     Spacer(Modifier.height(12.dp))
                     SectionDetailPane(
@@ -244,7 +265,16 @@ fun UnifiedScreen(
                     Spacer(Modifier.height(12.dp))
                     GlobalActionButtons(
                         state = state,
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        onImportRequested = {
+                            onUserFeedback()
+                            onImportRequested()
+                        },
+                        onClearRequested = {
+                            onUserFeedback()
+                            showClearDialog = true
+                        },
+                        onShowMessage = onShowMessage
                     )
                 }
 
@@ -287,6 +317,70 @@ fun UnifiedScreen(
                 }
             }
         }
+    }
+
+    if (showClearDialog) {
+        AlertDialog(
+            onDismissRequest = { showClearDialog = false },
+            title = { Text("Limpar personagem") },
+            text = { Text("Deseja limpar a ficha atual e iniciar um novo personagem?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    val cartaSelvagem = state.cartaSelvagem
+                    val maisPontosPericias = state.maisPontosPericias
+                    val modoSupers = state.modoSupers
+                    val compendioFantasiaAtivo = state.compendioFantasiaAtivo
+                    val compendioHorrorAtivo = state.compendioHorrorAtivo
+                    val compendioSciFiAtivo = state.compendioSciFiAtivo
+                    val compendioBuscatrilhaAtivo = state.compendioBuscatrilhaAtivo
+                    val compendioDeadlandsAtivo = state.compendioDeadlandsAtivo
+                    val compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
+                    val compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo
+                    val compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo
+                    val compendioWiseguysAtivo = state.compendioWiseguysAtivo
+                    val modoMonstroAtivo = state.modoMonstroAtivo
+                    val usarEspecializacoesDePericia = state.usarEspecializacoesDePericia
+                    val grandesResponsabilidades = state.grandesResponsabilidades
+                    val regraMultiplosIdiomas = state.regraMultiplosIdiomas
+                    val heroisSemArmadura = state.heroisSemArmadura
+                    val nasceUmHeroi = state.nasceUmHeroi
+                    val usarSemPontosDePoder = state.usarSemPontosDePoder
+
+                    viewModel.resetStateParaNovoPersonagem(
+                        cartaSelvagem = cartaSelvagem,
+                        maisPontosPericias = maisPontosPericias,
+                        modoSupers = modoSupers,
+                        compendioFantasiaAtivo = compendioFantasiaAtivo,
+                        compendioHorrorAtivo = compendioHorrorAtivo,
+                        compendioSciFiAtivo = compendioSciFiAtivo,
+                        compendioBuscatrilhaAtivo = compendioBuscatrilhaAtivo,
+                        compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+                        compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+                        compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+                        compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+                        compendioWiseguysAtivo = compendioWiseguysAtivo,
+                        modoMonstroAtivo = modoMonstroAtivo,
+                        usarEspecializacoesDePericia = usarEspecializacoesDePericia,
+                        grandesResponsabilidades = grandesResponsabilidades,
+                        regraMultiplosIdiomas = regraMultiplosIdiomas
+                    )
+                    viewModel.prepararNomeInicial(context)
+                    state.heroisSemArmadura = heroisSemArmadura
+                    state.nasceUmHeroi = nasceUmHeroi
+                    state.usarSemPontosDePoder = usarSemPontosDePoder
+                    state.grandesResponsabilidades = grandesResponsabilidades
+                    showClearDialog = false
+                    onShowMessage("Ficha limpa.")
+                }) {
+                    Text("Limpar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showClearDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 
     if (showMeioElfoDialog && pendingMeioElfoKey != null) {
@@ -424,11 +518,46 @@ private fun SectionMenu(
 @Composable
 private fun GlobalActionButtons(
     state: CriadorState,
-    viewModel: CriadorViewModel
+    viewModel: CriadorViewModel,
+    onImportRequested: () -> Unit,
+    onClearRequested: () -> Unit,
+    onShowMessage: (String) -> Unit
 ) {
-    if (!state.modoProgressaoAtivo && state.creationComplete()) {
+    val canFinalize = !state.modoProgressaoAtivo && state.creationComplete()
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Button(
+                onClick = onImportRequested,
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(Icons.Default.FolderOpen, contentDescription = null)
+                Spacer(Modifier.width(8.dp))
+                Text("Importar")
+            }
+            Button(
+                onClick = onClearRequested,
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(Icons.Default.Delete, contentDescription = null)
+                Spacer(Modifier.width(8.dp))
+                Text("Limpar")
+            }
+        }
+
         Button(
             onClick = {
+                if (!canFinalize) {
+                    onShowMessage("Finalize a criação antes de iniciar a progressão.")
+                    return@Button
+                }
+
                 viewModel.ensureDefaultSpecializations()
                 state.modoProgressaoAtivo = true
                 state.progresso = 4
@@ -436,9 +565,12 @@ private fun GlobalActionButtons(
                 state.snapshotFrozenSkillIncrements()
                 state.recomputeAvailableProgress()
             },
+            enabled = canFinalize,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Iniciar Progressão")
+            Icon(Icons.Default.ArrowForward, contentDescription = null)
+            Spacer(Modifier.width(8.dp))
+            Text("Finalizar")
         }
     }
 }
