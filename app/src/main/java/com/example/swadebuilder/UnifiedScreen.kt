@@ -1,10 +1,14 @@
 package com.example.swadebuilder
 
+import android.content.res.Configuration
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,10 +23,15 @@ import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +39,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
@@ -38,6 +49,9 @@ import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
+import com.example.swadebuilder.ui.sections.BasicCharacterInfo
+import com.example.swadebuilder.ui.sections.CharacterPortraitSummary
+import com.example.swadebuilder.ui.sections.CompactSummaryPanels
 import com.example.swadebuilder.ui.sections.ComplicacoesSection
 import com.example.swadebuilder.ui.sections.CrystalHeartSection
 import com.example.swadebuilder.ui.sections.EquipamentoSection
@@ -87,65 +101,189 @@ fun UnifiedScreen(
 
     var showAllocDialog by rememberSaveable { mutableStateOf(false) }
     var currentSlotIndex by rememberSaveable { mutableIntStateOf(-1) }
-    val scrollState = rememberScrollState()
 
     // --- estados para o MEIO-ELFO ---
     var showMeioElfoDialog by rememberSaveable { mutableStateOf(false) }
     var pendingMeioElfoKey by rememberSaveable { mutableStateOf<String?>(null) }
     // --------------------------------
 
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val availableSections = availableSectionsFor(state)
+    var selectedSection by rememberSaveable { mutableStateOf(MainSection.RESUMO) }
+
+    val forcedSection = when {
+        state.mostrandoVantagensProgresso -> MainSection.VANTAGENS
+        state.mostrandoPericiasProgresso -> MainSection.PERICIAS
+        state.mostrandoAtributosProgresso -> MainSection.ATRIBUTOS
+        else -> null
+    }
+    val activeSection = forcedSection ?: selectedSection
+
+    LaunchedEffect(availableSections, forcedSection) {
+        if (forcedSection != null) {
+            selectedSection = forcedSection
+        } else if (availableSections.isNotEmpty() && selectedSection !in availableSections) {
+            selectedSection = availableSections.first()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
             .padding(16.dp)
     ) {
         if (state.modoProgressaoAtivo) {
             Text(
                 text = "MODO DE PROGRESSÃO",
-                style = androidx.compose.material3.MaterialTheme.typography.headlineSmall,
-                color = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
             HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp))
+        }
 
-            ProgressionModeContent(
-                state = state,
-                viewModel = viewModel,
-                equipamentoCategorias = equipamentoCategorias,
-                superequipCategorias = superequipCategorias,
-                onUseProgress = { index ->
-                    currentSlotIndex = index
-                    showAllocDialog = true
-                },
-                onUserFeedback = onUserFeedback
-            )
-        } else {
-            CreationModeContent(
-                state = state,
-                viewModel = viewModel,
-                listaSuperPoderes = listaSuperPoderes,
-                equipamentoCategorias = equipamentoCategorias,
-                superequipCategorias = superequipCategorias,
-                onSelectAncestralidade = { nome ->
-                    val key = nome.uppercase().semAcentos()
-                    if (key == state.ancestralidade) return@CreationModeContent
-                    if (key == "MEIO-ELFOS") {
-                        pendingMeioElfoKey = key
-                        showMeioElfoDialog = true
-                    } else {
-                        pendingMeioElfoKey = null
-                        state.aplicarAncestralidade(
-                            key,
-                            viewModel.feedbackMessages as MutableList<String>
-                        )
-                    }
-                },
-                onUserFeedback = onUserFeedback
-            )
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            if (isLandscape) {
+                Column(
+                    modifier = Modifier
+                        .weight(0.28f)
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    SectionMenu(
+                        sections = availableSections,
+                        selectedSection = activeSection,
+                        enabled = forcedSection == null,
+                        onSelectSection = {
+                            onUserFeedback()
+                            selectedSection = it
+                        }
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    BasicCharacterInfo(state = state)
+                }
+
+                Column(
+                    modifier = Modifier
+                        .weight(0.44f)
+                        .fillMaxHeight()
+                ) {
+                    CharacterPortraitSummary(state = state)
+                    Spacer(Modifier.height(12.dp))
+                    GlobalActionButtons(
+                        state = state,
+                        viewModel = viewModel
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    SectionDetailPane(
+                        modifier = Modifier.weight(1f),
+                        state = state,
+                        viewModel = viewModel,
+                        selectedSection = activeSection,
+                        listaSuperPoderes = listaSuperPoderes,
+                        equipamentoCategorias = equipamentoCategorias,
+                        superequipCategorias = superequipCategorias,
+                        onSelectAncestralidade = { nome ->
+                            val key = nome.uppercase().semAcentos()
+                            if (key != state.ancestralidade) {
+                                if (key == "MEIO-ELFOS") {
+                                    pendingMeioElfoKey = key
+                                    showMeioElfoDialog = true
+                                } else {
+                                    pendingMeioElfoKey = null
+                                    state.aplicarAncestralidade(
+                                        key,
+                                        viewModel.feedbackMessages as MutableList<String>
+                                    )
+                                }
+                            }
+                        },
+                        onUseProgress = { index ->
+                            currentSlotIndex = index
+                            showAllocDialog = true
+                        },
+                        onUserFeedback = onUserFeedback
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .weight(0.28f)
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    CompactSummaryPanels(state = state)
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .weight(0.4f)
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    SectionMenu(
+                        sections = availableSections,
+                        selectedSection = activeSection,
+                        enabled = forcedSection == null,
+                        onSelectSection = {
+                            onUserFeedback()
+                            selectedSection = it
+                        }
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    BasicCharacterInfo(state = state)
+                    Spacer(Modifier.height(12.dp))
+                    GlobalActionButtons(
+                        state = state,
+                        viewModel = viewModel
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .weight(0.6f)
+                        .fillMaxHeight()
+                ) {
+                    CompactSummaryPanels(state = state)
+                    Spacer(Modifier.height(12.dp))
+                    SectionDetailPane(
+                        modifier = Modifier.weight(1f),
+                        state = state,
+                        viewModel = viewModel,
+                        selectedSection = activeSection,
+                        listaSuperPoderes = listaSuperPoderes,
+                        equipamentoCategorias = equipamentoCategorias,
+                        superequipCategorias = superequipCategorias,
+                        onSelectAncestralidade = { nome ->
+                            val key = nome.uppercase().semAcentos()
+                            if (key != state.ancestralidade) {
+                                if (key == "MEIO-ELFOS") {
+                                    pendingMeioElfoKey = key
+                                    showMeioElfoDialog = true
+                                } else {
+                                    pendingMeioElfoKey = null
+                                    state.aplicarAncestralidade(
+                                        key,
+                                        viewModel.feedbackMessages as MutableList<String>
+                                    )
+                                }
+                            }
+                        },
+                        onUseProgress = { index ->
+                            currentSlotIndex = index
+                            showAllocDialog = true
+                        },
+                        onUserFeedback = onUserFeedback
+                    )
+                }
+            }
         }
     }
 
@@ -235,18 +373,184 @@ fun UnifiedScreen(
     }
 }
 
+@Composable
+private fun SectionMenu(
+    sections: List<MainSection>,
+    selectedSection: MainSection,
+    enabled: Boolean,
+    onSelectSection: (MainSection) -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+        Column(Modifier.padding(12.dp)) {
+            Text(
+                text = "Seções",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            sections.forEach { section ->
+                val isSelected = section == selectedSection
+                TextButton(
+                    onClick = { onSelectSection(section) },
+                    enabled = enabled,
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = if (isSelected) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurface
+                        }
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = section.label(),
+                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun GlobalActionButtons(
+    state: CriadorState,
+    viewModel: CriadorViewModel
+) {
+    if (!state.modoProgressaoAtivo && state.creationComplete()) {
+        Button(
+            onClick = {
+                viewModel.ensureDefaultSpecializations()
+                state.modoProgressaoAtivo = true
+                state.progresso = 4
+                state.frozenAdvantageCount = state.vantagensSelecionadas.size
+                state.snapshotFrozenSkillIncrements()
+                state.recomputeAvailableProgress()
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Iniciar Progressão")
+        }
+    }
+}
+
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-fun ProgressionModeContent(
+private fun SectionDetailPane(
+    modifier: Modifier,
     state: CriadorState,
     viewModel: CriadorViewModel,
+    selectedSection: MainSection,
+    listaSuperPoderes: List<SuperPoder>,
+    equipamentoCategorias: List<EquipamentoCategoria>,
+    superequipCategorias: List<EquipamentoCategoria>,
+    onSelectAncestralidade: (String) -> Unit,
+    onUseProgress: (Int) -> Unit,
+    onUserFeedback: () -> Unit
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ) {
+        if (state.modoProgressaoAtivo) {
+            ProgressionDetailContent(
+                state = state,
+                viewModel = viewModel,
+                selectedSection = selectedSection,
+                equipamentoCategorias = equipamentoCategorias,
+                superequipCategorias = superequipCategorias,
+                onUseProgress = onUseProgress,
+                onUserFeedback = onUserFeedback
+            )
+        } else {
+            CreationDetailContent(
+                state = state,
+                viewModel = viewModel,
+                selectedSection = selectedSection,
+                listaSuperPoderes = listaSuperPoderes,
+                equipamentoCategorias = equipamentoCategorias,
+                superequipCategorias = superequipCategorias,
+                onSelectAncestralidade = onSelectAncestralidade,
+                onUserFeedback = onUserFeedback
+            )
+        }
+    }
+}
+
+private fun availableSectionsFor(state: CriadorState): List<MainSection> {
+    val sections = mutableListOf(MainSection.RESUMO)
+    if (state.modoProgressaoAtivo) {
+        if (state.mostrandoAtributosProgresso) {
+            sections += MainSection.ATRIBUTOS
+        }
+        if (state.mostrandoPericiasProgresso) {
+            sections += MainSection.PERICIAS
+        }
+        if (state.mostrandoVantagensProgresso) {
+            sections += MainSection.VANTAGENS
+        }
+        sections += MainSection.EQUIPAMENTOS
+        sections += MainSection.XP
+        return sections
+    }
+
+    sections += MainSection.ANCESTRALIDADES
+    if (state.compendioArteDaGuerraAtivo) {
+        sections += MainSection.TROPOS
+    }
+    if (state.modoMonstroAtivo) {
+        sections += MainSection.MONSTRO
+    }
+    sections += MainSection.COMPLICACOES
+    sections += MainSection.ATRIBUTOS
+    sections += MainSection.PERICIAS
+    sections += MainSection.VANTAGENS
+    if (state.compendioCrystalHeartAtivo) {
+        sections += MainSection.CRYSTAL_HEART
+    }
+
+    val hasArcano = state.vantagensSelecionadas.any {
+        it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
+    } && !state.celestialAAMilagresDesabilitado
+    if (hasArcano || state.modoSupers) {
+        sections += MainSection.PODERES
+    }
+
+    sections += MainSection.EQUIPAMENTOS
+    return sections
+}
+
+private fun MainSection.label(): String = when (this) {
+    MainSection.ANCESTRALIDADES -> "Ancestralidades"
+    MainSection.TROPOS -> "Tropos"
+    MainSection.COMPLICACOES -> "Complicações"
+    MainSection.ATRIBUTOS -> "Atributos"
+    MainSection.PERICIAS -> "Perícias"
+    MainSection.VANTAGENS -> "Vantagens"
+    MainSection.EQUIPAMENTOS -> "Equipamentos"
+    MainSection.RESUMO -> "Resumo"
+    MainSection.PODERES -> "Poderes"
+    MainSection.XP -> "XP"
+    MainSection.MONSTRO -> "Monstro"
+    MainSection.CRYSTAL_HEART -> "Crystal Heart"
+}
+
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+@Composable
+private fun ProgressionDetailContent(
+    state: CriadorState,
+    viewModel: CriadorViewModel,
+    selectedSection: MainSection,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
     onUseProgress: (Int) -> Unit,
     onUserFeedback: () -> Unit
 ) {
     if (state.mostrandoVantagensProgresso) {
-        // Progression: Advantages
         ResumoSection(state = state, onUserFeedback = onUserFeedback)
 
         SectionCard(
@@ -292,7 +596,6 @@ fun ProgressionModeContent(
         }
 
     } else if (state.mostrandoPericiasProgresso) {
-        // Progression: Skills
         ResumoSection(state = state, onUserFeedback = onUserFeedback)
 
         SectionCard(
@@ -332,7 +635,6 @@ fun ProgressionModeContent(
         }
 
     } else if (state.mostrandoAtributosProgresso) {
-        // Progression: Attributes
         ResumoSection(state = state, onUserFeedback = onUserFeedback)
 
         SectionCard(
@@ -368,38 +670,36 @@ fun ProgressionModeContent(
         }
 
     } else {
-        // Default Progression View
-        ResumoSection(state = state, onUserFeedback = onUserFeedback)
-        EquipamentoSection(
-            state = state,
-            expanded = state.sectionsExpanded[MainSection.EQUIPAMENTOS] ?: false,
-            onToggle = { state.toggleSection(MainSection.EQUIPAMENTOS) },
-            equipamentoCategorias = equipamentoCategorias,
-            superequipCategorias = superequipCategorias,
-            onUserFeedback = onUserFeedback
-        )
-
-        Spacer(Modifier.height(16.dp))
-        HorizontalDivider(thickness = 3.dp)
-
-        XpSection(
-            state = state,
-            expanded = state.sectionsExpanded[MainSection.XP] ?: false,
-            onToggle = { state.toggleSection(MainSection.XP) },
-            onUseProgress = onUseProgress,
-            onUndo = {
-                viewModel.revertLastAdvancement()
-            },
-            onUserFeedback = onUserFeedback
-        )
+        when (selectedSection) {
+            MainSection.EQUIPAMENTOS -> EquipamentoSection(
+                state = state,
+                expanded = state.sectionsExpanded[MainSection.EQUIPAMENTOS] ?: false,
+                onToggle = { state.toggleSection(MainSection.EQUIPAMENTOS) },
+                equipamentoCategorias = equipamentoCategorias,
+                superequipCategorias = superequipCategorias,
+                onUserFeedback = onUserFeedback
+            )
+            MainSection.XP -> XpSection(
+                state = state,
+                expanded = state.sectionsExpanded[MainSection.XP] ?: false,
+                onToggle = { state.toggleSection(MainSection.XP) },
+                onUseProgress = onUseProgress,
+                onUndo = {
+                    viewModel.revertLastAdvancement()
+                },
+                onUserFeedback = onUserFeedback
+            )
+            else -> ResumoSection(state = state, onUserFeedback = onUserFeedback)
+        }
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-fun CreationModeContent(
+private fun CreationDetailContent(
     state: CriadorState,
     viewModel: CriadorViewModel,
+    selectedSection: MainSection,
     listaSuperPoderes: List<SuperPoder>,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
@@ -408,140 +708,100 @@ fun CreationModeContent(
 ) {
     val creationLocked = state.criacaoBasicaCongelada
 
-    ResumoSection(state = state, onUserFeedback = onUserFeedback)
-
-    HorizontalDivider(thickness = 1.dp)
-
-    AncestralidadesSection(
-        state = state,
-        currentAncestralidade = state.ancestralidade,
-        expanded = state.sectionsExpanded[MainSection.ANCESTRALIDADES] ?: false,
-        onToggle = { state.toggleSection(MainSection.ANCESTRALIDADES) },
-        supersLocked = creationLocked,
-        ancestralidadeEmFoco = state.ancestralidadeEmFoco,
-        onSelectAncestralidade = onSelectAncestralidade,
-        onUserFeedback = onUserFeedback
-    )
-
-    if (state.compendioArteDaGuerraAtivo) {
-        HorizontalDivider(thickness = 1.dp)
-        TroposSection(
+    when (selectedSection) {
+        MainSection.RESUMO -> ResumoSection(state = state, onUserFeedback = onUserFeedback)
+        MainSection.ANCESTRALIDADES -> AncestralidadesSection(
+            state = state,
+            currentAncestralidade = state.ancestralidade,
+            expanded = state.sectionsExpanded[MainSection.ANCESTRALIDADES] ?: false,
+            onToggle = { state.toggleSection(MainSection.ANCESTRALIDADES) },
+            supersLocked = creationLocked,
+            ancestralidadeEmFoco = state.ancestralidadeEmFoco,
+            onSelectAncestralidade = onSelectAncestralidade,
+            onUserFeedback = onUserFeedback
+        )
+        MainSection.TROPOS -> TroposSection(
             state = state,
             expanded = state.sectionsExpanded[MainSection.TROPOS] ?: false,
             onToggle = { state.toggleSection(MainSection.TROPOS) },
             onUserFeedback = onUserFeedback
         )
-    }
-
-    if (state.modoMonstroAtivo) {
-        HorizontalDivider(thickness = 1.dp)
-        TipoMonstroSection(
+        MainSection.MONSTRO -> TipoMonstroSection(
             state = state,
             expanded = state.sectionsExpanded[MainSection.MONSTRO] ?: false,
             onToggle = { state.toggleSection(MainSection.MONSTRO) },
             onUserFeedback = onUserFeedback
         )
-    }
-
-    HorizontalDivider(thickness = 1.dp)
-
-    ComplicacoesSection(
-        state = state,
-        expanded = state.sectionsExpanded[MainSection.COMPLICACOES] ?: false,
-        onToggle = { state.toggleSection(MainSection.COMPLICACOES) },
-        feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
-        onUserFeedback = onUserFeedback
-    )
-
-    HorizontalDivider(thickness = 1.dp)
-
-    SectionCard(
-        title    = "Atributos",
-        expanded = state.sectionsExpanded[MainSection.ATRIBUTOS] ?: false,
-        onToggle = { state.toggleSection(MainSection.ATRIBUTOS) },
-        icon     = Icons.Default.FitnessCenter,
-        onToggleFeedback = onUserFeedback
-    ) {
-        AtributosContent(state, onUserFeedback)
-    }
-
-    HorizontalDivider(thickness = 1.dp)
-
-    SectionCard(
-        title    = "Perícias",
-        expanded = state.sectionsExpanded[MainSection.PERICIAS] ?: false,
-        onToggle = { state.toggleSection(MainSection.PERICIAS) },
-        icon     = Icons.Default.School,
-        onToggleFeedback = onUserFeedback
-    ) {
-        PericiasContent(
+        MainSection.COMPLICACOES -> ComplicacoesSection(
             state = state,
-            feedbackMessages = viewModel.feedbackMessages,
+            expanded = state.sectionsExpanded[MainSection.COMPLICACOES] ?: false,
+            onToggle = { state.toggleSection(MainSection.COMPLICACOES) },
+            feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
             onUserFeedback = onUserFeedback
         )
-    }
-
-    HorizontalDivider(thickness = 1.dp)
-
-    SectionCard(
-        title    = "Vantagens",
-        expanded = state.sectionsExpanded[MainSection.VANTAGENS] ?: false,
-        onToggle = { state.toggleSection(MainSection.VANTAGENS) },
-        icon     = Icons.Default.Star,
-        onToggleFeedback = onUserFeedback
-    ) {
-        VantagensContent(
-            state = state,
-            multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-            viewModel = viewModel,
-            onUserFeedback = onUserFeedback
-        )
-    }
-
-    if (state.compendioCrystalHeartAtivo) {
-        HorizontalDivider(thickness = 1.dp)
-        CrystalHeartSection(
+        MainSection.ATRIBUTOS -> SectionCard(
+            title    = "Atributos",
+            expanded = state.sectionsExpanded[MainSection.ATRIBUTOS] ?: false,
+            onToggle = { state.toggleSection(MainSection.ATRIBUTOS) },
+            icon     = Icons.Default.FitnessCenter,
+            onToggleFeedback = onUserFeedback
+        ) {
+            AtributosContent(state, onUserFeedback)
+        }
+        MainSection.PERICIAS -> SectionCard(
+            title    = "Perícias",
+            expanded = state.sectionsExpanded[MainSection.PERICIAS] ?: false,
+            onToggle = { state.toggleSection(MainSection.PERICIAS) },
+            icon     = Icons.Default.School,
+            onToggleFeedback = onUserFeedback
+        ) {
+            PericiasContent(
+                state = state,
+                feedbackMessages = viewModel.feedbackMessages,
+                onUserFeedback = onUserFeedback
+            )
+        }
+        MainSection.VANTAGENS -> SectionCard(
+            title    = "Vantagens",
+            expanded = state.sectionsExpanded[MainSection.VANTAGENS] ?: false,
+            onToggle = { state.toggleSection(MainSection.VANTAGENS) },
+            icon     = Icons.Default.Star,
+            onToggleFeedback = onUserFeedback
+        ) {
+            VantagensContent(
+                state = state,
+                multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
+                viewModel = viewModel,
+                onUserFeedback = onUserFeedback
+            )
+        }
+        MainSection.CRYSTAL_HEART -> CrystalHeartSection(
             state = state,
             viewModel = viewModel,
             expanded = state.sectionsExpanded[MainSection.CRYSTAL_HEART] ?: false,
             onToggle = { state.toggleSection(MainSection.CRYSTAL_HEART) }
         )
-    }
-
-    if (!state.compendioCrystalHeartAtivo) {
-        PoderesSection(state = state, onUserFeedback = onUserFeedback)
-    }
-
-    Spacer(Modifier.height(8.dp))
-    HorizontalDivider(thickness = 1.dp)
-
-    SuperPoderesSection(state = state, listaSuperPoderes = listaSuperPoderes, expanded = state.sectionsExpanded[MainSection.PODERES] ?: false, onToggle = { state.toggleSection(MainSection.PODERES) })
-    EquipamentoSection(
-        state = state,
-        expanded = state.sectionsExpanded[MainSection.EQUIPAMENTOS] ?: false,
-        onToggle = { state.toggleSection(MainSection.EQUIPAMENTOS) },
-        equipamentoCategorias = equipamentoCategorias,
-        superequipCategorias = superequipCategorias,
-        onUserFeedback = onUserFeedback
-    )
-
-    Spacer(Modifier.height(16.dp))
-    HorizontalDivider(thickness = 3.dp)
-
-    if (state.creationComplete()) {
-        Button(
-            onClick = {
-                viewModel.ensureDefaultSpecializations()
-                state.modoProgressaoAtivo = true
-                state.progresso = 4
-                state.frozenAdvantageCount = state.vantagensSelecionadas.size
-                state.snapshotFrozenSkillIncrements()
-                state.recomputeAvailableProgress()
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Iniciar Progressão")
+        MainSection.PODERES -> {
+            if (!state.compendioCrystalHeartAtivo) {
+                PoderesSection(state = state, onUserFeedback = onUserFeedback)
+                Spacer(Modifier.height(8.dp))
+            }
+            SuperPoderesSection(
+                state = state,
+                listaSuperPoderes = listaSuperPoderes,
+                expanded = state.sectionsExpanded[MainSection.PODERES] ?: false,
+                onToggle = { state.toggleSection(MainSection.PODERES) }
+            )
         }
+        MainSection.EQUIPAMENTOS -> EquipamentoSection(
+            state = state,
+            expanded = state.sectionsExpanded[MainSection.EQUIPAMENTOS] ?: false,
+            onToggle = { state.toggleSection(MainSection.EQUIPAMENTOS) },
+            equipamentoCategorias = equipamentoCategorias,
+            superequipCategorias = superequipCategorias,
+            onUserFeedback = onUserFeedback
+        )
+        else -> ResumoSection(state = state, onUserFeedback = onUserFeedback)
     }
 }
 
