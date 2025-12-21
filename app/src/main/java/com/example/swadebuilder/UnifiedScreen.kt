@@ -51,7 +51,7 @@ import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
 import com.example.swadebuilder.ui.sections.BasicCharacterInfo
 import com.example.swadebuilder.ui.sections.CharacterPortraitSummary
-import com.example.swadebuilder.ui.sections.CompactSummaryPanels
+import com.example.swadebuilder.ui.sections.SummaryCompact
 import com.example.swadebuilder.ui.sections.ComplicacoesSection
 import com.example.swadebuilder.ui.sections.CrystalHeartSection
 import com.example.swadebuilder.ui.sections.EquipamentoSection
@@ -219,7 +219,7 @@ fun UnifiedScreen(
                         .fillMaxHeight()
                         .verticalScroll(rememberScrollState())
                 ) {
-                    CompactSummaryPanels(state = state)
+                    SummaryCompact(state = state)
                 }
             } else {
                 Column(
@@ -251,7 +251,7 @@ fun UnifiedScreen(
                         .weight(0.6f)
                         .fillMaxHeight()
                 ) {
-                    CompactSummaryPanels(state = state)
+                    SummaryCompact(state = state)
                     Spacer(Modifier.height(12.dp))
                     SectionDetailPane(
                         modifier = Modifier.weight(1f),

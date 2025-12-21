@@ -72,27 +72,7 @@ fun SummaryContent(state: CriadorState) {
         }
     }
 
-    val personagem = state.toMeuPersonagem()
-    val allLines = buildSummaryLines(personagem)
-
-    val anotIndex = allLines.indexOf("Anotações")
-    val lines = if (anotIndex >= 0) allLines.take(anotIndex) else allLines
-
-    val headers = remember {
-        setOf(
-            "Identidade",
-            "Atributos derivados",
-            "Atributos",
-            "Perícias",
-            "Recursos & Equipamentos",
-            "Vantagens",
-            "Complicações",
-            "Poderes arcanos",
-            "Superpoderes"
-        )
-    }
-
-    val sections = remember(lines) { lines.toSummarySections(headers) }
+    val sections = rememberSummarySections(state)
 
     val identitySection = sections.firstOrNull { it.title == "Identidade" }
     val derivedSection = sections.firstOrNull { it.title == "Atributos derivados" }
@@ -257,27 +237,7 @@ fun BasicCharacterInfo(
     state: CriadorState,
     showDerivedStats: Boolean = false
 ) {
-    val personagem = state.toMeuPersonagem()
-    val allLines = buildSummaryLines(personagem)
-
-    val anotIndex = allLines.indexOf("Anotações")
-    val lines = if (anotIndex >= 0) allLines.take(anotIndex) else allLines
-
-    val headers = remember {
-        setOf(
-            "Identidade",
-            "Atributos derivados",
-            "Atributos",
-            "Perícias",
-            "Recursos & Equipamentos",
-            "Vantagens",
-            "Complicações",
-            "Poderes arcanos",
-            "Superpoderes"
-        )
-    }
-
-    val sections = remember(lines) { lines.toSummarySections(headers) }
+    val sections = rememberSummarySections(state)
     val identitySection = sections.firstOrNull { it.title == "Identidade" }
     val derivedSection = sections.firstOrNull { it.title == "Atributos derivados" }
 
@@ -324,42 +284,29 @@ fun CharacterPortraitSummary(state: CriadorState) {
 }
 
 @Composable
-fun CompactSummaryPanels(state: CriadorState) {
-    val personagem = state.toMeuPersonagem()
-    val allLines = buildSummaryLines(personagem)
-    val anotIndex = allLines.indexOf("Anotações")
-    val lines = if (anotIndex >= 0) allLines.take(anotIndex) else allLines
+fun SummaryCompact(state: CriadorState) {
+    val sections = rememberSummarySections(state)
+    val traitsSection = sections.firstOrNull { it.title == "Atributos" }
+    val skillsSection = sections.firstOrNull { it.title == "Perícias" }
+    val gearSection = sections.firstOrNull { it.title == "Recursos & Equipamentos" }
+    val inventorySections = sections.filter { it.title in inventoryTitles }
+        .filterNot { it.isEmptyPlaceholder() }
 
-    val headers = remember {
-        setOf(
-            "Identidade",
-            "Atributos derivados",
-            "Atributos",
-            "Perícias",
-            "Recursos & Equipamentos",
-            "Vantagens",
-            "Complicações",
-            "Poderes arcanos",
-            "Superpoderes"
-        )
-    }
-
-    val sections = remember(lines) { lines.toSummarySections(headers) }
-    val targetTitles = setOf(
-        "Atributos",
-        "Perícias",
-        "Recursos & Equipamentos"
+    val cards = listOfNotNull(
+        traitsSection?.let { "Traits" to listOf(it) },
+        skillsSection?.let { "Skills" to listOf(it) },
+        gearSection?.let { "Gear" to listOf(it) },
+        inventorySections.takeIf { it.isNotEmpty() }?.let { "Inventory" to it }
     )
 
-    val compactSections = sections.filter { it.title in targetTitles }
-
     Column(Modifier.fillMaxWidth()) {
-        compactSections.forEachIndexed { idx, section ->
-            SummarySectionCard(
-                section = section,
+        cards.forEachIndexed { idx, (title, cardSections) ->
+            SummaryCompactCard(
+                title = title,
+                sections = cardSections,
                 textStyle = MaterialTheme.typography.bodySmall
             )
-            if (idx != compactSections.lastIndex) {
+            if (idx != cards.lastIndex) {
                 Spacer(Modifier.height(12.dp))
             }
         }
@@ -370,6 +317,41 @@ private data class SummarySection(
     val title: String,
     val items: List<String>
 )
+
+private val summaryHeaders = setOf(
+    "Identidade",
+    "Atributos derivados",
+    "Atributos",
+    "Perícias",
+    "Recursos & Equipamentos",
+    "Vantagens",
+    "Complicações",
+    "Poderes arcanos",
+    "Superpoderes"
+)
+
+private val inventoryTitles = setOf(
+    "Vantagens",
+    "Complicações",
+    "Poderes arcanos",
+    "Superpoderes"
+)
+
+@Composable
+private fun rememberSummarySections(state: CriadorState): List<SummarySection> {
+    val personagem = state.toMeuPersonagem()
+    val allLines = buildSummaryLines(personagem)
+    val anotIndex = allLines.indexOf("Anotações")
+    val lines = if (anotIndex >= 0) allLines.take(anotIndex) else allLines
+
+    return remember(lines) { lines.toSummarySections(summaryHeaders) }
+}
+
+private fun SummarySection.isEmptyPlaceholder(): Boolean =
+    items.all { item ->
+        val trimmed = item.trim()
+        trimmed == "– Nenhuma" || trimmed == "– Nenhum"
+    }
 
 private fun List<String>.toSummarySections(headers: Set<String>): List<SummarySection> {
     val sections = mutableListOf<SummarySection>()
@@ -582,14 +564,63 @@ private fun SummarySectionCard(
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.height(8.dp))
-            section.items.forEach { item ->
-                when {
-                    item.startsWith("•") -> BulletRow(text = item.removePrefix("•").trim(), textStyle = textStyle)
-                    item.contains(":") -> LabelValueRow(item, textStyle)
-                    else -> Text(text = item, style = textStyle)
+            SummarySectionItems(items = section.items, textStyle = textStyle)
+        }
+    }
+}
+
+@Composable
+private fun SummaryCompactCard(
+    title: String,
+    sections: List<SummarySection>,
+    textStyle: TextStyle
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(Modifier.padding(12.dp)) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(Modifier.height(8.dp))
+            sections.forEachIndexed { idx, section ->
+                if (sections.size > 1) {
+                    Text(
+                        text = section.title,
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(Modifier.height(6.dp))
                 }
-                Spacer(Modifier.height(6.dp))
+                SummarySectionItems(items = section.items, textStyle = textStyle)
+                if (idx != sections.lastIndex) {
+                    Spacer(Modifier.height(10.dp))
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun SummarySectionItems(
+    items: List<String>,
+    textStyle: TextStyle
+) {
+    items.forEachIndexed { idx, item ->
+        when {
+            item.startsWith("•") -> BulletRow(text = item.removePrefix("•").trim(), textStyle = textStyle)
+            item.contains(":") -> LabelValueRow(item, textStyle)
+            else -> Text(text = item, style = textStyle)
+        }
+        if (idx != items.lastIndex) {
+            Spacer(Modifier.height(6.dp))
         }
     }
 }
