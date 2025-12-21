@@ -406,7 +406,11 @@ private fun SectionMenu(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = section.label(),
+                        text = if (isSelected) {
+                            "● ${section.label()}"
+                        } else {
+                            section.label()
+                        },
                         fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
                     )
                 }
@@ -550,147 +554,139 @@ private fun ProgressionDetailContent(
     onUseProgress: (Int) -> Unit,
     onUserFeedback: () -> Unit
 ) {
-    if (state.mostrandoVantagensProgresso) {
-        ResumoSection(state = state, onUserFeedback = onUserFeedback)
+    when (selectedSection) {
+        MainSection.VANTAGENS -> {
+            SectionCard(
+                title    = "Vantagens",
+                expanded = state.sectionsExpanded[MainSection.VANTAGENS] ?: false,
+                onToggle = { state.toggleSection(MainSection.VANTAGENS) },
+                icon     = Icons.Default.Star,
+                onToggleFeedback = onUserFeedback
+            ) {
+                VantagensContent(
+                    state = state,
+                    multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
+                    viewModel = viewModel,
+                    onUserFeedback = onUserFeedback
+                )
+            }
 
-        SectionCard(
-            title    = "Vantagens",
-            expanded = state.sectionsExpanded[MainSection.VANTAGENS] ?: false,
-            onToggle = { state.toggleSection(MainSection.VANTAGENS) },
-            icon     = Icons.Default.Star,
-            onToggleFeedback = onUserFeedback
-        ) {
-            VantagensContent(
-                state = state,
-                multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-                viewModel = viewModel,
-                onUserFeedback = onUserFeedback
-            )
-        }
+            if (state.mostrandoPoderesProgresso || state.arcanoCompraPendente()) {
+                Spacer(Modifier.height(8.dp))
+                PoderesSection(state = state, onUserFeedback = onUserFeedback)
+            }
 
-        if (state.mostrandoPoderesProgresso || state.arcanoCompraPendente()) {
-            Spacer(Modifier.height(8.dp))
-            PoderesSection(state = state, onUserFeedback = onUserFeedback)
-        }
+            Spacer(Modifier.height(16.dp))
+            HorizontalDivider(thickness = 3.dp)
 
-        Spacer(Modifier.height(16.dp))
-        HorizontalDivider(thickness = 3.dp)
-
-        Button(
-            onClick = {
-                viewModel.finishAdvantageAdvancement()
-                state.mostrandoVantagensProgresso = false
-            },
-            enabled = state.pontosVantagem == 0 && !state.arcanoCompraPendente(),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Confirmar Vantagem e Voltar")
-        }
-        TextButton(
-            onClick = {
-                viewModel.cancelAdvancementInProgress()
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Cancelar")
-        }
-
-    } else if (state.mostrandoPericiasProgresso) {
-        ResumoSection(state = state, onUserFeedback = onUserFeedback)
-
-        SectionCard(
-            title    = "Perícias",
-            expanded = state.sectionsExpanded[MainSection.PERICIAS] ?: false,
-            onToggle = { state.toggleSection(MainSection.PERICIAS) },
-            icon     = Icons.Default.School,
-            onToggleFeedback = onUserFeedback
-        ) {
-            PericiasContent(
-                state = state,
-                feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
-                onUserFeedback = onUserFeedback
-            )
-        }
-
-        Spacer(Modifier.height(16.dp))
-        HorizontalDivider(thickness = 3.dp)
-
-        Button(
-            onClick = {
-                viewModel.finishSkillAdvancement()
-                state.mostrandoPericiasProgresso = false
-            },
-            enabled = state.pontosPericia == 0,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Confirmar Perícias e Voltar")
-        }
-        TextButton(
-            onClick = {
-                viewModel.cancelAdvancementInProgress()
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Cancelar")
-        }
-
-    } else if (state.mostrandoAtributosProgresso) {
-        ResumoSection(state = state, onUserFeedback = onUserFeedback)
-
-        SectionCard(
-            title    = "Atributos",
-            expanded = state.sectionsExpanded[MainSection.ATRIBUTOS] ?: false,
-            onToggle = { state.toggleSection(MainSection.ATRIBUTOS) },
-            icon     = Icons.Default.FitnessCenter,
-            onToggleFeedback = onUserFeedback
-        ) {
-            AtributosContent(state = state, onUserFeedback = onUserFeedback)
-        }
-
-        Spacer(Modifier.height(16.dp))
-        HorizontalDivider(thickness = 3.dp)
-
-        Button(
-            onClick = {
-                viewModel.finishAttributeAdvancement()
-                state.mostrandoAtributosProgresso = false
-            },
-            enabled = state.pontosAtributo == 0,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Confirmar Atributo e Voltar")
-        }
-        TextButton(
-            onClick = {
-                viewModel.cancelAdvancementInProgress()
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Cancelar")
-        }
-
-    } else {
-        when (selectedSection) {
-            MainSection.EQUIPAMENTOS -> EquipamentoSection(
-                state = state,
-                expanded = state.sectionsExpanded[MainSection.EQUIPAMENTOS] ?: false,
-                onToggle = { state.toggleSection(MainSection.EQUIPAMENTOS) },
-                equipamentoCategorias = equipamentoCategorias,
-                superequipCategorias = superequipCategorias,
-                onUserFeedback = onUserFeedback
-            )
-            MainSection.XP -> XpSection(
-                state = state,
-                expanded = state.sectionsExpanded[MainSection.XP] ?: false,
-                onToggle = { state.toggleSection(MainSection.XP) },
-                onUseProgress = onUseProgress,
-                onUndo = {
-                    viewModel.revertLastAdvancement()
+            Button(
+                onClick = {
+                    viewModel.finishAdvantageAdvancement()
+                    state.mostrandoVantagensProgresso = false
                 },
-                onUserFeedback = onUserFeedback
-            )
-            else -> ResumoSection(state = state, onUserFeedback = onUserFeedback)
+                enabled = state.pontosVantagem == 0 && !state.arcanoCompraPendente(),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Confirmar Vantagem e Voltar")
+            }
+            TextButton(
+                onClick = {
+                    viewModel.cancelAdvancementInProgress()
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Cancelar")
+            }
         }
+        MainSection.PERICIAS -> {
+            SectionCard(
+                title    = "Perícias",
+                expanded = state.sectionsExpanded[MainSection.PERICIAS] ?: false,
+                onToggle = { state.toggleSection(MainSection.PERICIAS) },
+                icon     = Icons.Default.School,
+                onToggleFeedback = onUserFeedback
+            ) {
+                PericiasContent(
+                    state = state,
+                    feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
+                    onUserFeedback = onUserFeedback
+                )
+            }
+
+            Spacer(Modifier.height(16.dp))
+            HorizontalDivider(thickness = 3.dp)
+
+            Button(
+                onClick = {
+                    viewModel.finishSkillAdvancement()
+                    state.mostrandoPericiasProgresso = false
+                },
+                enabled = state.pontosPericia == 0,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Confirmar Perícias e Voltar")
+            }
+            TextButton(
+                onClick = {
+                    viewModel.cancelAdvancementInProgress()
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Cancelar")
+            }
+        }
+        MainSection.ATRIBUTOS -> {
+            SectionCard(
+                title    = "Atributos",
+                expanded = state.sectionsExpanded[MainSection.ATRIBUTOS] ?: false,
+                onToggle = { state.toggleSection(MainSection.ATRIBUTOS) },
+                icon     = Icons.Default.FitnessCenter,
+                onToggleFeedback = onUserFeedback
+            ) {
+                AtributosContent(state = state, onUserFeedback = onUserFeedback)
+            }
+
+            Spacer(Modifier.height(16.dp))
+            HorizontalDivider(thickness = 3.dp)
+
+            Button(
+                onClick = {
+                    viewModel.finishAttributeAdvancement()
+                    state.mostrandoAtributosProgresso = false
+                },
+                enabled = state.pontosAtributo == 0,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Confirmar Atributo e Voltar")
+            }
+            TextButton(
+                onClick = {
+                    viewModel.cancelAdvancementInProgress()
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Cancelar")
+            }
+        }
+        MainSection.EQUIPAMENTOS -> EquipamentoSection(
+            state = state,
+            expanded = state.sectionsExpanded[MainSection.EQUIPAMENTOS] ?: false,
+            onToggle = { state.toggleSection(MainSection.EQUIPAMENTOS) },
+            equipamentoCategorias = equipamentoCategorias,
+            superequipCategorias = superequipCategorias,
+            onUserFeedback = onUserFeedback
+        )
+        MainSection.XP -> XpSection(
+            state = state,
+            expanded = state.sectionsExpanded[MainSection.XP] ?: false,
+            onToggle = { state.toggleSection(MainSection.XP) },
+            onUseProgress = onUseProgress,
+            onUndo = {
+                viewModel.revertLastAdvancement()
+            },
+            onUserFeedback = onUserFeedback
+        )
+        else -> ResumoSection(state = state, onUserFeedback = onUserFeedback)
     }
 }
 
