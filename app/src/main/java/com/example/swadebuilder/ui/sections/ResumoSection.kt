@@ -276,14 +276,6 @@ fun BasicCharacterInfo(
 }
 
 @Composable
-fun CharacterPortraitSummary(state: CriadorState) {
-    BasicCharacterInfo(
-        state = state,
-        showDerivedStats = true
-    )
-}
-
-@Composable
 fun SummaryCompact(state: CriadorState) {
     val sections = rememberSummarySections(state)
     val traitsSection = sections.firstOrNull { it.title == "Atributos" }
