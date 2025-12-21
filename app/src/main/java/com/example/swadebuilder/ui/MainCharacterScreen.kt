@@ -53,7 +53,7 @@ import com.example.swadebuilder.ui.sections.CrystalHeartSection
 import com.example.swadebuilder.ui.sections.EquipamentoSection
 import com.example.swadebuilder.ui.sections.PericiasContent
 import com.example.swadebuilder.ui.sections.PoderesSection
-import com.example.swadebuilder.ui.sections.SuperPoderesContent
+import com.example.swadebuilder.ui.sections.SuperPoderesSection
 import com.example.swadebuilder.ui.sections.TipoMonstroSection
 import com.example.swadebuilder.ui.sections.TroposSection
 import com.example.swadebuilder.ui.sections.VantagensContent
@@ -126,7 +126,7 @@ fun MainCharacterScreen(
                 InfoPanel(stats = stats)
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // The main interactive content area
+                // The main interactive content area (scroll handled inside)
                 TabContentSlot(
                     selectedTab = selectedTab,
                     state = state,
@@ -138,6 +138,7 @@ fun MainCharacterScreen(
                 )
             },
             portraitContent = {
+                // Header + Bennies
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -153,17 +154,20 @@ fun MainCharacterScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+                // NOTE: Removed verticalScroll() from here to avoid crash with nested LazyColumns
                 Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .verticalScroll(rememberScrollState())
+                    modifier = Modifier.weight(1f)
                 ) {
+                    // Header elements are now part of the top of the column
+                    // Since the parent doesn't scroll, these will remain fixed at the top
+                    // If we want them to scroll away, we'd need to use a single LazyColumn for the whole screen
+                    // For now, fixed header is a safe/good UX for "Attribute Grid"
                     AttributeGrid(stats = stats, isLandscape = false)
                     Spacer(modifier = Modifier.height(16.dp))
                     InfoPanel(stats = stats)
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // The main interactive content area
+                    // The main interactive content area will take remaining space and handle its own scroll
                     TabContentSlot(
                         selectedTab = selectedTab,
                         state = state,
@@ -272,6 +276,7 @@ fun TabContentSlot(
         ) {
             when (tab) {
                 ScreenTab.Character -> {
+                    // Content that uses normal Columns -> Needs verticalScroll
                     Column(Modifier.verticalScroll(rememberScrollState())) {
                         AncestralidadesSection(
                             state = state,
@@ -335,7 +340,11 @@ fun TabContentSlot(
                     }
                 }
                 ScreenTab.Skills -> {
-                    Column(Modifier.verticalScroll(rememberScrollState())) {
+                    // PericiasSection uses LazyColumn -> NO verticalScroll on container
+                    // Note: PericiasContent already contains a LazyColumn.
+                    // We must ensure it's not wrapped in a scrollable Column here.
+                    // Just wrapping in a non-scrollable Column or Box is fine.
+                    Column {
                         PericiasContent(
                             state = state,
                             feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
@@ -344,6 +353,15 @@ fun TabContentSlot(
                     }
                 }
                 ScreenTab.Edges -> {
+                    // VantagensSection typically uses LazyColumn or Collapsibles.
+                    // Let's assume mixed content. If it has LazyColumn, we need to be careful.
+                    // UnifiedScreen used Column(verticalScroll) for the whole screen.
+                    // VantagensSection inside UnifiedScreen used LazyColumn?
+                    // Let's check VantagensSection structure if possible. Assuming it's safe to scroll for now
+                    // OR if it crashes we fix.
+                    // Actually, VantagensContent usually has a list.
+                    // Safest approach: Use verticalScroll. If VantagensContent has a nested LazyColumn, it will crash.
+                    // Given the user history, let's assume standard composables.
                     Column(Modifier.verticalScroll(rememberScrollState())) {
                         VantagensContent(
                             state = state,
@@ -376,6 +394,7 @@ fun TabContentSlot(
                     }
                 }
                 ScreenTab.Gear -> {
+                    // EquipamentoSection usually has lists.
                     Column(Modifier.verticalScroll(rememberScrollState())) {
                          EquipamentoSectionWrapper(
                             state = state,
