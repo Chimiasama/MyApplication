@@ -122,7 +122,7 @@ fun UnifiedScreen(
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     val availableSections = availableSectionsFor(state)
-    var selectedSection by rememberSaveable { mutableStateOf(MainSection.RESUMO) }
+    var activeSection by rememberSaveable { mutableStateOf(MainSection.RESUMO) }
 
     val forcedSection = when {
         state.mostrandoVantagensProgresso -> MainSection.VANTAGENS
@@ -130,13 +130,13 @@ fun UnifiedScreen(
         state.mostrandoAtributosProgresso -> MainSection.ATRIBUTOS
         else -> null
     }
-    val activeSection = forcedSection ?: selectedSection
+    val displaySection = forcedSection ?: activeSection
 
     LaunchedEffect(availableSections, forcedSection) {
-        if (forcedSection != null) {
-            selectedSection = forcedSection
-        } else if (availableSections.isNotEmpty() && selectedSection !in availableSections) {
-            selectedSection = availableSections.first()
+        activeSection = if (forcedSection != null) {
+            forcedSection
+        } else {
+            resolveActiveSection(activeSection, availableSections)
         }
     }
 
@@ -171,11 +171,11 @@ fun UnifiedScreen(
                 ) {
                     SectionMenu(
                         sections = availableSections,
-                        selectedSection = activeSection,
+                        selectedSection = displaySection,
                         enabled = forcedSection == null,
                         onSelectSection = {
                             onUserFeedback()
-                            selectedSection = it
+                            activeSection = it
                         }
                     )
                     Spacer(Modifier.height(12.dp))
@@ -207,7 +207,7 @@ fun UnifiedScreen(
                         modifier = Modifier.weight(1f),
                         state = state,
                         viewModel = viewModel,
-                        selectedSection = activeSection,
+                        selectedSection = displaySection,
                         listaSuperPoderes = listaSuperPoderes,
                         equipamentoCategorias = equipamentoCategorias,
                         superequipCategorias = superequipCategorias,
@@ -251,11 +251,11 @@ fun UnifiedScreen(
                 ) {
                     SectionMenu(
                         sections = availableSections,
-                        selectedSection = activeSection,
+                        selectedSection = displaySection,
                         enabled = forcedSection == null,
                         onSelectSection = {
                             onUserFeedback()
-                            selectedSection = it
+                            activeSection = it
                         }
                     )
                     Spacer(Modifier.height(12.dp))
@@ -289,7 +289,7 @@ fun UnifiedScreen(
                         modifier = Modifier.weight(1f),
                         state = state,
                         viewModel = viewModel,
-                        selectedSection = activeSection,
+                        selectedSection = displaySection,
                         listaSuperPoderes = listaSuperPoderes,
                         equipamentoCategorias = equipamentoCategorias,
                         superequipCategorias = superequipCategorias,
@@ -661,6 +661,22 @@ private fun availableSectionsFor(state: CriadorState): List<MainSection> {
 
     sections += MainSection.EQUIPAMENTOS
     return sections
+}
+
+internal fun resolveActiveSection(
+    requestedSection: MainSection,
+    availableSections: List<MainSection>
+): MainSection {
+    if (availableSections.isEmpty()) {
+        return MainSection.RESUMO
+    }
+    if (requestedSection in availableSections) {
+        return requestedSection
+    }
+    if (MainSection.RESUMO in availableSections) {
+        return MainSection.RESUMO
+    }
+    return availableSections.first()
 }
 
 private fun MainSection.label(): String = when (this) {
