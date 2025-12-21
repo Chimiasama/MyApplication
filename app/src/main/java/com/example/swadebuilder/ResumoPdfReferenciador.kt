@@ -375,19 +375,6 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         lines += "Dinheiro restante: ${personagem.dinheiro}"
     }
-    val naturalAttackSources = mutableListOf<String>()
-    val hasGarras = personagem.vantagensRaciais.any { it.contains("Garra", ignoreCase = true) }
-    val hasArtistaMarcial = personagem.vantagens.any { it == "artista_marcial" }
-    val hasBrigao = personagem.vantagens.any { it == "brigao" }
-    if (hasGarras) naturalAttackSources += "Garras"
-    if (hasArtistaMarcial) naturalAttackSources += "Artista Marcial"
-    if (hasBrigao) naturalAttackSources += "Brigão"
-    val naturalDamage = if (naturalAttackSources.isEmpty()) "Força" else "Força+d4"
-    lines += "Ataques naturais: $naturalDamage"
-    if (naturalAttackSources.isNotEmpty()) {
-        lines += "Observações (Ataques naturais): ${naturalAttackSources.joinToString(", ")}"
-    }
-
     val equipamentos = personagem.equipamentos
     val armas = equipamentos.filter { it.isWeapon() }
     val armaduras = equipamentos.filter { it.armadura != null && it !in armas }
@@ -405,14 +392,21 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     }
 
     lines += "Armas:"
-    if (armas.isEmpty()) {
-        lines += "– Nenhuma"
-    } else {
-        armas.forEach { eq ->
-            val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nome
-            val detalhes = buildEquipamentoDetalhes(eq.formatWeaponStats(), eq.formatObservacao())
-            lines += if (detalhes.isNullOrBlank()) "• $nomeEq" else "• $nomeEq ($detalhes)"
-        }
+    val naturalAttackSources = mutableListOf<String>()
+    val hasGarras = personagem.vantagensRaciais.any { it.contains("Garra", ignoreCase = true) }
+    val hasArtistaMarcial = personagem.vantagens.any { it == "artista_marcial" }
+    val hasBrigao = personagem.vantagens.any { it == "brigao" }
+    if (hasGarras) naturalAttackSources += "Garras"
+    if (hasArtistaMarcial) naturalAttackSources += "Artista Marcial"
+    if (hasBrigao) naturalAttackSources += "Brigão"
+    val naturalDamage = if (naturalAttackSources.isEmpty()) "Força" else "Força+d4"
+    val naturalObs = if (naturalAttackSources.isEmpty()) null else "Obs.: ${naturalAttackSources.joinToString(", ")}"
+    val naturalDetails = buildEquipamentoDetalhes("Dano: $naturalDamage", naturalObs)
+    lines += "• Ataque natural${naturalDetails?.let { " ($it)" } ?: ""}"
+    armas.forEach { eq ->
+        val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nome
+        val detalhes = buildEquipamentoDetalhes(eq.formatWeaponStats(), eq.formatObservacao())
+        lines += if (detalhes.isNullOrBlank()) "• $nomeEq" else "• $nomeEq ($detalhes)"
     }
 
     lines += "Outros equipamentos:"
