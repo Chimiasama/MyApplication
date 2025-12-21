@@ -61,6 +61,7 @@ import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.model.loadPericiasDescriptions
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
@@ -74,6 +75,7 @@ fun PericiasContent(
 ) {
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
+    val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
     val descricoes = remember(allowLongTexts) {
         if (!allowLongTexts) emptyMap() else loadPericiasDescriptions(context, R.raw.pericias)
     }
@@ -142,24 +144,43 @@ fun PericiasContent(
                     Spacer(Modifier.height(4.dp))
 
                     if (!state.emProgresso) {
-                        PbWalletBanner(
-                            pcTotal = pcTotal,
-                            pcLivres = pcLivres,
-                            spendLabel = "Usar PB em Perícias",
-                            refundLabel = "Desfazer uso de PB",
-                            spendEnabled = !locked && pcLivres > 0,
-                            refundEnabled = !locked && spUsados > 0,
-                            onSpend = {
-                                state.cpSpStack.add(Unit)
-                                state.pontosComplicacaoGastos += 1
-                            },
-                            onRefund = {
-                                state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
-                                state.pontosComplicacaoGastos =
-                                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                                state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                            }
-                        )
+                        if (usePbWalletRedesign) {
+                            PbWalletBanner(
+                                pcTotal = pcTotal,
+                                pcLivres = pcLivres,
+                                spendLabel = "Usar PB em Perícias",
+                                refundLabel = "Desfazer uso de PB",
+                                spendEnabled = !locked && pcLivres > 0,
+                                refundEnabled = !locked && spUsados > 0,
+                                onSpend = {
+                                    state.cpSpStack.add(Unit)
+                                    state.pontosComplicacaoGastos += 1
+                                },
+                                onRefund = {
+                                    state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
+                                    state.pontosComplicacaoGastos =
+                                        (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                                    state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
+                                }
+                            )
+                        } else {
+                            PbLegacyActions(
+                                spendLabel = "Usar PB em Perícias",
+                                refundLabel = "Desfazer uso de PB",
+                                spendEnabled = !locked && pcLivres > 0,
+                                refundEnabled = !locked && spUsados > 0,
+                                onSpend = {
+                                    state.cpSpStack.add(Unit)
+                                    state.pontosComplicacaoGastos += 1
+                                },
+                                onRefund = {
+                                    state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
+                                    state.pontosComplicacaoGastos =
+                                        (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                                    state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
+                                }
+                            )
+                        }
                     }
                 }
             }

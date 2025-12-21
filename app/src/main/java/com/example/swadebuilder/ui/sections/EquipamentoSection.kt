@@ -56,6 +56,7 @@ import com.example.swadebuilder.R
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -227,6 +228,7 @@ fun EquipamentoSection(
     var selectedTypes = remember { mutableStateListOf<String>() }
 
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
+    val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
     val showOfficialNames = EditionConfig.isFullEdition && modoOficialAtivo
 
@@ -293,16 +295,27 @@ fun EquipamentoSection(
         Spacer(modifier = Modifier.size(4.dp))
 
         if (!emProgresso) {
-            PbWalletBanner(
-                pcTotal = pcTotal,
-                pcLivres = pcLivres,
-                spendLabel = "Usar PB em Recursos",
-                refundLabel = "Desfazer uso de PB",
-                spendEnabled = pcLivres > 0 && recursosPcUsados == 0,
-                refundEnabled = recursosPcUsados > 0,
-                onSpend = onUsarPontosBonusEmRecursos,
-                onRefund = onDesfazerPontosBonusEmRecursos
-            )
+            if (usePbWalletRedesign) {
+                PbWalletBanner(
+                    pcTotal = pcTotal,
+                    pcLivres = pcLivres,
+                    spendLabel = "Usar PB em Recursos",
+                    refundLabel = "Desfazer uso de PB",
+                    spendEnabled = pcLivres > 0 && recursosPcUsados == 0,
+                    refundEnabled = recursosPcUsados > 0,
+                    onSpend = onUsarPontosBonusEmRecursos,
+                    onRefund = onDesfazerPontosBonusEmRecursos
+                )
+            } else {
+                PbLegacyActions(
+                    spendLabel = "Usar PB em Recursos",
+                    refundLabel = "Desfazer uso de PB",
+                    spendEnabled = pcLivres > 0 && recursosPcUsados == 0,
+                    refundEnabled = recursosPcUsados > 0,
+                    onSpend = onUsarPontosBonusEmRecursos,
+                    onRefund = onDesfazerPontosBonusEmRecursos
+                )
+            }
             Spacer(Modifier.size(8.dp))
         }
 

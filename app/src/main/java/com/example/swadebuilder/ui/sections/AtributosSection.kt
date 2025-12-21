@@ -42,6 +42,7 @@ import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.loadRawText
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
@@ -85,6 +86,7 @@ fun AtributosContent(
 ) {
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
+    val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val descricaoPorAtributo = remember(allowLongTexts) {
@@ -137,21 +139,37 @@ fun AtributosContent(
         Spacer(Modifier.height(4.dp))
 
         if (!state.emProgresso) {
-            PbWalletBanner(
-                pcTotal = pcTotal,
-                pcLivres = pcLivres,
-                spendLabel = "Usar PB em Atributos",
-                refundLabel = "Desfazer uso de PB",
-                spendEnabled = !locked && pcLivres >= 2,
-                refundEnabled = !locked && paUsados > 0,
-                onSpend = { state.gastarPcParaAtributo() },
-                onRefund = {
-                    state.cpPaStack.removeAt(state.cpPaStack.lastIndex)
-                    state.pontosComplicacaoGastos =
-                        (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)
-                    state.recalcularPontosAtributo()
-                }
-            )
+            if (usePbWalletRedesign) {
+                PbWalletBanner(
+                    pcTotal = pcTotal,
+                    pcLivres = pcLivres,
+                    spendLabel = "Usar PB em Atributos",
+                    refundLabel = "Desfazer uso de PB",
+                    spendEnabled = !locked && pcLivres >= 2,
+                    refundEnabled = !locked && paUsados > 0,
+                    onSpend = { state.gastarPcParaAtributo() },
+                    onRefund = {
+                        state.cpPaStack.removeAt(state.cpPaStack.lastIndex)
+                        state.pontosComplicacaoGastos =
+                            (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)
+                        state.recalcularPontosAtributo()
+                    }
+                )
+            } else {
+                PbLegacyActions(
+                    spendLabel = "Usar PB em Atributos",
+                    refundLabel = "Desfazer uso de PB",
+                    spendEnabled = !locked && pcLivres >= 2,
+                    refundEnabled = !locked && paUsados > 0,
+                    onSpend = { state.gastarPcParaAtributo() },
+                    onRefund = {
+                        state.cpPaStack.removeAt(state.cpPaStack.lastIndex)
+                        state.pontosComplicacaoGastos =
+                            (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)
+                        state.recalcularPontosAtributo()
+                    }
+                )
+            }
 
             Spacer(Modifier.height(8.dp))
         }
