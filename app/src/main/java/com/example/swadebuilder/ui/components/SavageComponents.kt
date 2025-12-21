@@ -1,18 +1,14 @@
 package com.example.swadebuilder.ui.components
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,13 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import com.example.swadebuilder.model.CharacterStats
 import com.example.swadebuilder.model.ScreenTab
 import com.example.swadebuilder.ui.theme.SwadeDesignSystem
@@ -69,7 +61,7 @@ fun SavageNavigationMenu(
     }
 }
 
-// 2. Attribute Grid (ConstraintLayout)
+// 2. Attribute Grid (Standard Layout Implementation)
 @Composable
 fun AttributeGrid(
     stats: CharacterStats,
@@ -84,46 +76,44 @@ fun AttributeGrid(
         "Vigor" to stats.vigor
     )
 
-    ConstraintLayout(modifier = modifier.fillMaxWidth()) {
-        // Create references for each attribute row
-        val refs = attributes.map { createRef() }
+    if (isLandscape) {
+        // Landscape: 2 Columns using Row + 2 Columns
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // Split attributes into two lists
+            val midPoint = (attributes.size + 1) / 2
+            val leftCol = attributes.take(midPoint)
+            val rightCol = attributes.drop(midPoint)
 
-        attributes.forEachIndexed { index, (name, value) ->
-            val ref = refs[index]
-
-            val rowModifier = if (isLandscape) {
-                // In Landscape: 2 Columns
-                // Even index: Left Column
-                // Odd index: Right Column
-                Modifier.constrainAs(ref) {
-                    width = Dimension.fillToConstraints
-                    top.linkTo(if (index < 2) parent.top else refs[index - 2].bottom, margin = 8.dp)
-
-                    if (index % 2 == 0) {
-                        // Left Column
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.centerX, margin = 8.dp)
-                    } else {
-                        // Right Column
-                        start.linkTo(parent.centerX, margin = 8.dp)
-                        end.linkTo(parent.end)
-                    }
-                }
-            } else {
-                // In Portrait: Vertical Stack
-                Modifier.constrainAs(ref) {
-                    width = Dimension.fillToConstraints
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(if (index == 0) parent.top else refs[index - 1].bottom, margin = 8.dp)
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                leftCol.forEach { (name, value) ->
+                    AttributeRow(name, value)
                 }
             }
 
-            AttributeRow(
-                name = name,
-                value = value,
-                modifier = rowModifier
-            )
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                rightCol.forEach { (name, value) ->
+                    AttributeRow(name, value)
+                }
+            }
+        }
+    } else {
+        // Portrait: Vertical Stack
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            attributes.forEach { (name, value) ->
+                AttributeRow(name, value)
+            }
         }
     }
 }
@@ -136,6 +126,7 @@ fun AttributeRow(
 ) {
     Row(
         modifier = modifier
+            .fillMaxWidth()
             .background(SwadeDesignSystem.colors.surface.copy(alpha = 0.5f), SwadeDesignSystem.shapes.card)
             .padding(8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -148,7 +139,7 @@ fun AttributeRow(
         )
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            // Dice Icon (Simulated with a box for now, as requested "representative icons")
+            // Dice Icon (Simulated with a box for now)
             Box(
                 modifier = Modifier
                     .size(24.dp)
