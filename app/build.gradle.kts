@@ -59,10 +59,12 @@ android {
             // Flags de build (para controle dentro do app)
             buildConfigField("boolean", "SHOW_LISTA_COMPLETA", "false")
             buildConfigField("boolean", "ENABLE_LONG_TEXTS", "false")
+            buildConfigField("boolean", "ENABLE_PB_WALLET_REDESIGN", "true")
 
             resValue("string", "app_name", "SWADEbuilder")
             resValue("bool", "show_lista_completa", "false")
             resValue("bool", "enable_long_texts", "false")
+            resValue("bool", "enable_pb_wallet_redesign", "true")
         }
 
         create("full") {
@@ -72,10 +74,12 @@ android {
 
             buildConfigField("boolean", "SHOW_LISTA_COMPLETA", "true")
             buildConfigField("boolean", "ENABLE_LONG_TEXTS", "true")
+            buildConfigField("boolean", "ENABLE_PB_WALLET_REDESIGN", "true")
 
             resValue("string", "app_name", "SWADEbuilder (Completo)")
             resValue("bool", "show_lista_completa", "true")
             resValue("bool", "enable_long_texts", "true")
+            resValue("bool", "enable_pb_wallet_redesign", "true")
         }
     }
 

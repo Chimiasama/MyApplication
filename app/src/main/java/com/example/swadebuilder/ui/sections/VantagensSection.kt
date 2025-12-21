@@ -70,6 +70,7 @@ import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.toArcanoKey
+import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SearchTextField
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -277,6 +278,7 @@ fun VantagensContent(
 
     val locked = state.criacaoBasicaCongeladaComXp
     val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
+    val usePbWalletRedesign = booleanResource(com.example.swadebuilder.R.bool.enable_pb_wallet_redesign)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val pcTotal = state.pontosComplicacao
@@ -295,16 +297,27 @@ fun VantagensContent(
         Spacer(Modifier.size(4.dp))
 
         if (!state.emProgresso) {
-            PbWalletBanner(
-                pcTotal = pcTotal,
-                pcLivres = pcLivres,
-                spendLabel = "Usar PB em Vantagens",
-                refundLabel = "Desfazer uso de PB",
-                spendEnabled = !locked && pcLivres >= 2,
-                refundEnabled = !locked && pvUsados > 0,
-                onSpend = { state.gastarPcParaVantagem() },
-                onRefund = { state.devolverPcDeVantagem() }
-            )
+            if (usePbWalletRedesign) {
+                PbWalletBanner(
+                    pcTotal = pcTotal,
+                    pcLivres = pcLivres,
+                    spendLabel = "Usar PB em Vantagens",
+                    refundLabel = "Desfazer uso de PB",
+                    spendEnabled = !locked && pcLivres >= 2,
+                    refundEnabled = !locked && pvUsados > 0,
+                    onSpend = { state.gastarPcParaVantagem() },
+                    onRefund = { state.devolverPcDeVantagem() }
+                )
+            } else {
+                PbLegacyActions(
+                    spendLabel = "Usar PB em Vantagens",
+                    refundLabel = "Desfazer uso de PB",
+                    spendEnabled = !locked && pcLivres >= 2,
+                    refundEnabled = !locked && pvUsados > 0,
+                    onSpend = { state.gastarPcParaVantagem() },
+                    onRefund = { state.devolverPcDeVantagem() }
+                )
+            }
             Spacer(Modifier.size(8.dp))
         }
 
