@@ -194,17 +194,13 @@ private fun ArcanoArea(
 
     val detalhesExpandidos = remember(arcKey) { mutableStateMapOf<String, Boolean>() }
 
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(max = 400.dp)
             .padding(bottom = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(
-            items = poderesElegiveis,
-            key = { it.id }
-        ) { poder ->
+        poderesElegiveis.forEach { poder ->
             val selecionado = slots.any { it?.equals(poder.id, ignoreCase = true) == true }
 
             Card(

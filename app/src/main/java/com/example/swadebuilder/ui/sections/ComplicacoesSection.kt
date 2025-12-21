@@ -325,13 +325,12 @@ fun ComplicacoesSection(
                         comp.id.keyify() !in autoBaseKeys
                     }
 
-                LazyColumn(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 240.dp),
+                        .fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    items(listaParaMostrar) { comp ->
+                    listaParaMostrar.forEach { comp ->
                         val cur    = state.complicacoesSelecionadas[comp]
                         val sevRaw = comp.severity.lowercase().trim()
                         val menorOnly = sevRaw.contains("menor") && !sevRaw.contains("maior")

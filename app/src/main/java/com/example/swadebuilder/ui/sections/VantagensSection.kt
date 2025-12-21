@@ -570,16 +570,15 @@ fun VantagensContent(
                 true
             }
 
-            LazyColumn(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 400.dp) // Taller list for flat view
                     .padding(horizontal = 8.dp, vertical = 8.dp)
             ) {
                  if (flatList.isEmpty()) {
-                     item { Text("Nenhuma vantagem encontrada.", modifier = Modifier.padding(8.dp)) }
+                     Text("Nenhuma vantagem encontrada.", modifier = Modifier.padding(8.dp))
                  } else {
-                     items(flatList, key = { it.id }) { vant ->
+                     flatList.forEach { vant ->
                          VantagemItem(
                              vant = vant,
                              state = state,
@@ -693,25 +692,12 @@ fun VantagensContent(
                             true
                         }
 
-                    val listState = rememberLazyListState()
-
-                    LaunchedEffect(vantagemEmFoco, expanded, listaFiltrada) {
-                        if (expanded && !vantagemEmFoco.isNullOrBlank()) {
-                            val targetIndex = listaFiltrada.indexOfFirst { it.nome == vantagemEmFoco }
-                            if (targetIndex >= 0) {
-                                listState.animateScrollToItem(targetIndex)
-                            }
-                        }
-                    }
-
-                    LazyColumn(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(max = 200.dp)
-                            .padding(start = 8.dp, bottom = 8.dp),
-                        state = listState
+                            .padding(start = 8.dp, bottom = 8.dp)
                     ) {
-                        items(listaFiltrada, key = { it.id }) { vant ->
+                        listaFiltrada.forEach { vant ->
                             VantagemItem(
                                 vant = vant,
                                 state = state,
