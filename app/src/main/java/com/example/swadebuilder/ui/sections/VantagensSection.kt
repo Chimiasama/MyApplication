@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -573,7 +574,7 @@ fun VantagensContent(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 400.dp) // Taller list for flat view
+                    .fillMaxHeight()
                     .padding(horizontal = 8.dp, vertical = 8.dp)
             ) {
                  if (flatList.isEmpty()) {
@@ -707,7 +708,7 @@ fun VantagensContent(
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(max = 200.dp)
+                            .fillMaxHeight()
                             .padding(start = 8.dp, bottom = 8.dp),
                         state = listState
                     ) {

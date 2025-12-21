@@ -603,7 +603,6 @@ fun EquipamentoSection(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 400.dp)
                     .padding(horizontal = 8.dp)
             ) {
                  if (finalFlatList.isEmpty()) {
@@ -656,7 +655,7 @@ fun EquipamentoSection(
                             modifier = Modifier
                                 .padding(start = 8.dp)
                                 .fillMaxWidth()
-                                .heightIn(min = 200.dp, max = 520.dp),
+                                .heightIn(min = 200.dp),
                             verticalArrangement = Arrangement.spacedBy(6.dp),
                             contentPadding = PaddingValues(bottom = 8.dp)
                         ) {

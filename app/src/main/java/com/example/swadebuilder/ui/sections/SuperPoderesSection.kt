@@ -545,8 +545,7 @@ fun SuperPoderesSection(
         LazyColumn(
             state = listState,
             modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 220.dp),
+                .fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
         ) {
             items(listaSuperPoderes, key = { it.nome }) { poder ->
