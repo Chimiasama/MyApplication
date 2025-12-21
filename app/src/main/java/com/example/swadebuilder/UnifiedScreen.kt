@@ -757,7 +757,7 @@ private fun CreationDetailContent(
         ) {
             PericiasContent(
                 state = state,
-                feedbackMessages = viewModel.feedbackMessages,
+                feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
                 onUserFeedback = onUserFeedback
             )
         }
