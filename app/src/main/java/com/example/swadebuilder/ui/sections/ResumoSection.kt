@@ -134,38 +134,33 @@ fun SummaryContent(state: CriadorState) {
         else -> null
     }
 
-    val sectionsWithWeight = sections.map { section ->
-        if (section.title == "Recursos & Equipamentos") {
-            val soldierLabel = when {
-                hasSoldado && state.soldadoCargaAtivo -> " (Soldado +1 dado)"
-                hasSoldado -> " (Soldado inativo)"
-                else -> ""
-            }
-            val weightLine = "Peso: ${"%.1f".format(totalWeight)} / ${"%.1f".format(weightLimit)}$soldierLabel"
-            val updatedItems = buildList {
-                add(weightLine)
-                if (state.compendioSciFiAtivo) {
-                    val tensaoLine = "$tensaoLabel: $tensaoTotal/$tensaoLimite"
-                    val tensaoWarning = if (tensaoTotal > tensaoLimite) {
-                        val excess = tensaoTotal - tensaoLimite
-                        "• Sobrecarga Cibernética: ${if (excess > 2) "Exausto" else "Fatigado"}"
-                    } else {
-                        null
-                    }
-                    add(tensaoLine)
-                    tensaoWarning?.let { add(it) }
+    // Calculate weight info separately to pass to the custom card
+    val weightInfoLines = remember(state.equipamentosComprados, state.valoresAtributos, state.vantagensSelecionadas) {
+        val soldierLabel = when {
+            hasSoldado && state.soldadoCargaAtivo -> " (Soldado +1 dado)"
+            hasSoldado -> " (Soldado inativo)"
+            else -> ""
+        }
+        val weightLine = "Peso: ${"%.1f".format(totalWeight)} / ${"%.1f".format(weightLimit)}$soldierLabel"
+        buildList {
+            add(weightLine)
+            if (state.compendioSciFiAtivo) {
+                val tensaoLine = "$tensaoLabel: $tensaoTotal/$tensaoLimite"
+                val tensaoWarning = if (tensaoTotal > tensaoLimite) {
+                    val excess = tensaoTotal - tensaoLimite
+                    "• Sobrecarga Cibernética: ${if (excess > 2) "Exausto" else "Fatigado"}"
+                } else {
+                    null
                 }
-                weightWarning?.let { add("• $it") }
-                addAll(section.items)
+                add(tensaoLine)
+                tensaoWarning?.let { add(it) }
             }
-            section.copy(items = updatedItems)
-        } else {
-            section
+            weightWarning?.let { add("• $it") }
         }
     }
 
-    val otherSections = sectionsWithWeight.filterNot {
-        it.title in setOf("Identidade", "Atributos derivados", "Atributos", "Perícias")
+    val otherSections = sections.filterNot {
+        it.title in setOf("Identidade", "Atributos derivados", "Atributos", "Perícias", "Recursos & Equipamentos")
     }
 
     val nome = state.nomePersonagem
@@ -231,6 +226,10 @@ fun SummaryContent(state: CriadorState) {
                 else -> false
             }
         }
+
+        // Render Custom Equipment Card
+        CombatAndEquipmentCard(state = state, weightInfo = weightInfoLines)
+        Spacer(Modifier.height(12.dp))
 
         filteredSections.forEachIndexed { idx, section ->
             SummarySectionCard(section = section)
@@ -321,6 +320,112 @@ private fun IdentityCard(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+        }
+    }
+}
+
+@Composable
+private fun CombatAndEquipmentCard(
+    state: CriadorState,
+    weightInfo: List<String>
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(Modifier.padding(12.dp)) {
+            Text(
+                text = "Combate & Equipamentos",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(Modifier.height(8.dp))
+
+            // Weight Info
+            weightInfo.forEach { item ->
+                if (item.contains("Peso:")) {
+                    Text(text = item, style = MaterialTheme.typography.bodySmall)
+                } else if (item.startsWith("•")) {
+                    Text(text = item, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+                } else {
+                    Text(text = item, style = MaterialTheme.typography.bodySmall)
+                }
+            }
+            Spacer(Modifier.height(8.dp))
+            HorizontalDivider()
+            Spacer(Modifier.height(8.dp))
+
+            // --- ATAQUES ---
+            Text(text = "Ataques", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(4.dp))
+
+            // Natural Attack
+            val (unarmedDmg, unarmedNotes) = state.calculaAtaqueDesarmado()
+            CombatRow(name = "Desarmado", stats = unarmedDmg, notes = unarmedNotes)
+
+            // Weapons
+            val weapons = state.equipamentosComprados.filter { it.dano != null }
+            weapons.forEach { weapon ->
+                val dmg = (weapon.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: "-"
+                val apVal = (weapon.pa as? kotlinx.serialization.json.JsonPrimitive)?.content
+                val ap = if (!apVal.isNullOrBlank() && apVal != "0") "PA $apVal" else ""
+                val range = (weapon.distancia as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
+                val stats = listOf(dmg, ap, range).filter { it.isNotBlank() && it != "-" }.joinToString(", ")
+                val notes = (weapon.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
+                CombatRow(name = weapon.nome, stats = stats.ifBlank { dmg }, notes = notes)
+            }
+
+            Spacer(Modifier.height(12.dp))
+
+            // --- DEFESA ---
+            Text(text = "Armaduras", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(4.dp))
+            val armors = state.equipamentosComprados.filter { it.armadura != null || it.aparar != null }
+            if (armors.isEmpty()) {
+                Text("– Nenhuma", style = MaterialTheme.typography.bodySmall)
+            } else {
+                armors.forEach { item ->
+                    val armorVal = (item.armadura as? kotlinx.serialization.json.JsonPrimitive)?.content?.toIntOrNull()
+                    val parryVal = (item.aparar as? kotlinx.serialization.json.JsonPrimitive)?.content?.toIntOrNull()
+
+                    val parts = mutableListOf<String>()
+                    if (armorVal != null && armorVal != 0) parts.add("Armadura +$armorVal")
+                    if (parryVal != null && parryVal != 0) parts.add("Aparar +$parryVal")
+
+                    val notes = (item.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
+                    CombatRow(name = item.nome, stats = parts.joinToString(", "), notes = notes)
+                }
+            }
+
+            Spacer(Modifier.height(12.dp))
+
+            // --- OUTROS ---
+            Text(text = "Outros Itens", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(4.dp))
+            val others = state.equipamentosComprados.filter { it.dano == null && it.armadura == null && it.aparar == null }
+            if (others.isEmpty()) {
+                Text("– Nenhum", style = MaterialTheme.typography.bodySmall)
+            } else {
+                others.forEach { item ->
+                    Text("• ${item.nome}", style = MaterialTheme.typography.bodySmall)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CombatRow(name: String, stats: String, notes: String) {
+    Column(Modifier.padding(vertical = 2.dp)) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(text = name, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+            Text(text = stats, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+        }
+        if (notes.isNotBlank()) {
+            Text(text = notes, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }

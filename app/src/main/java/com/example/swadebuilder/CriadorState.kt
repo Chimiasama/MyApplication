@@ -262,6 +262,53 @@ class CriadorState {
         return resistenciaBase()
     }
 
+    fun calculaAtaqueDesarmado(): Pair<String, String> {
+        val modifiers = mutableListOf<String>()
+        var steps = 0
+
+        // Check Martial Artist (id: artista_marcial)
+        if (vantagensSelecionadas.any { it.id == "artista_marcial" }) {
+            modifiers.add("Artista Marcial")
+            steps++
+        }
+
+        // Check Brawler (id: brigao)
+        if (vantagensSelecionadas.any { it.id == "brigao" }) {
+            modifiers.add("Brigão")
+            steps++
+        }
+
+        // Check Claws (Garra)
+        val ancestry = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade }
+        val hasRacialClaws = ancestry?.habilidades?.any { it.nome.keyify().contains("GARRA") } == true ||
+                ancestry?.vantagensGratis?.any { it.keyify().contains("GARRA") } == true
+
+        // Check Edge Claws
+        val hasEdgeClaws = vantagensSelecionadas.any { it.nome.keyify().contains("GARRA") }
+
+        if (hasRacialClaws || hasEdgeClaws) {
+            modifiers.add("Garra")
+            steps++
+        }
+
+        val damageStr = if (steps == 0) {
+            "For"
+        } else {
+            // Base die for natural weapon is d4. Steps increase it: d4->d6->d8->d10->d12->d12+1...
+            val dieType = when (steps) {
+                1 -> "d4"
+                2 -> "d6"
+                3 -> "d8"
+                4 -> "d10"
+                5 -> "d12"
+                else -> "d12+${steps-5}"
+            }
+            "For+$dieType"
+        }
+
+        return damageStr to modifiers.joinToString(", ")
+    }
+
     fun valorChi(): Int {
         return reservaChi
     }
