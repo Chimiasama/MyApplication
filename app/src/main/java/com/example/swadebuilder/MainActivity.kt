@@ -99,6 +99,7 @@ import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
+import com.example.swadebuilder.ui.charactercreator.CharacterCreatorScreen
 import com.example.swadebuilder.util.AppPreferences
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
@@ -732,14 +733,8 @@ class MainActivity : ComponentActivity() {
                                             .fillMaxSize()
                                             .padding(innerPadding)
                                     ) {
-                                        UnifiedScreen(
-                                            state = state,
-                                            viewModel = criadorViewModel,
-                                            equipamentoCategorias = equipamentoCategorias,
-                                            superequipCategorias  = superequipCategorias,
-                                            listaSuperPoderes     = listaSuperPoderes,
-                                            modoOficialAtivo      = state.modoOficialAtivo,
-                                            onUserFeedback        = triggerFeedback
+                                        CharacterCreatorScreen(
+                                            modifier = Modifier.fillMaxSize()
                                         )
                                     }
                                 }
