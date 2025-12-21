@@ -156,11 +156,20 @@ private fun EquipamentoItem.formatWeaponStats(): String? = listOfNotNull(
     aparar.asText()?.let { "Aparar: $it" }
 ).joinToString(" • ").takeIf { it.isNotBlank() }
 
+private fun EquipamentoItem.formatObservacao(): String? = observacoes.asText()
+    ?.takeIf { it.isNotBlank() }
+    ?.let { "Obs.: $it" }
+
 private fun EquipamentoItem.formatArmorStats(): String? = listOfNotNull(
     armadura.asText()?.let { "Armadura: $it" },
     aparar.asText()?.let { "Aparar: $it" },
     forcaMin.asText()?.let { "Força mín.: $it" },
     peso.asText()?.let { "Peso: $it" }
+).joinToString(" • ").takeIf { it.isNotBlank() }
+
+private fun buildEquipamentoDetalhes(stats: String?, observacao: String?): String? = listOfNotNull(
+    stats,
+    observacao
 ).joinToString(" • ").takeIf { it.isNotBlank() }
 
 // ✅ 3) Texto-base do resumo (UI e PDF)
@@ -390,8 +399,8 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         armaduras.forEach { eq ->
             val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nome
-            val stats = eq.formatArmorStats()
-            lines += if (stats.isNullOrBlank()) "• $nomeEq" else "• $nomeEq ($stats)"
+            val detalhes = buildEquipamentoDetalhes(eq.formatArmorStats(), eq.formatObservacao())
+            lines += if (detalhes.isNullOrBlank()) "• $nomeEq" else "• $nomeEq ($detalhes)"
         }
     }
 
@@ -401,8 +410,8 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         armas.forEach { eq ->
             val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nome
-            val stats = eq.formatWeaponStats()
-            lines += if (stats.isNullOrBlank()) "• $nomeEq" else "• $nomeEq ($stats)"
+            val detalhes = buildEquipamentoDetalhes(eq.formatWeaponStats(), eq.formatObservacao())
+            lines += if (detalhes.isNullOrBlank()) "• $nomeEq" else "• $nomeEq ($detalhes)"
         }
     }
 
@@ -412,7 +421,8 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         outrosEquipamentos.forEach { eq ->
             val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nome
-            lines += "• $nomeEq"
+            val detalhes = buildEquipamentoDetalhes(null, eq.formatObservacao())
+            lines += if (detalhes.isNullOrBlank()) "• $nomeEq" else "• $nomeEq ($detalhes)"
         }
     }
     lines += ""
