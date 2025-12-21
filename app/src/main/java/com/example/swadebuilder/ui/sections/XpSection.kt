@@ -55,77 +55,86 @@ fun XpSection(
         icon = Icons.Default.Star,
         onToggleFeedback = onUserFeedback
     ) {
-        LaunchedEffect(
-            state.progresso,
-            state.stageXpSpent.values.toList(),
-            state.xpSlots.toList(),
-            state.modoProgressaoAtivo
+        XpContent(state, onUseProgress, onUndo)
+    }
+}
+
+@Composable
+fun XpContent(
+    state: CriadorState,
+    onUseProgress: (Int) -> Unit,
+    onUndo: () -> Unit
+) {
+    LaunchedEffect(
+        state.progresso,
+        state.stageXpSpent.values.toList(),
+        state.xpSlots.toList(),
+        state.modoProgressaoAtivo
+    ) {
+        state.recomputeAvailableProgress()
+    }
+
+    val slotDescriptions = buildSlotDescriptions(state)
+    val slotStageLabels = buildStageLabels()
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(state.xpSlots.toList()) {
+        val lastUsedIndex = state.xpSlots.indexOfLast { it }
+        if (lastUsedIndex > 0) {
+            listState.animateScrollToItem(lastUsedIndex)
+        }
+    }
+
+    Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        LazyColumn(
+            modifier = Modifier.heightIn(max = 420.dp),
+            state = listState,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            state.recomputeAvailableProgress()
-        }
+            items(TOTAL_PROGRESS_LIMIT) { index ->
+                val slotUsed = state.xpSlots[index]
+                val isEnabled = (if (index == 0) !slotUsed else state.xpSlots[index - 1] && !slotUsed) && state.pontosVantagem == 0 && state.pontosPericia == 0 && state.progressosDisponiveis > 0
+                val isLastUsed = state.xpSlots.indexOfLast { it } == index
+                val label = slotStageLabels.getOrNull(index) ?: (index + 1).toString()
+                val contentText = slotDescriptions.getOrNull(index)
 
-        val slotDescriptions = buildSlotDescriptions(state)
-        val slotStageLabels = buildStageLabels()
-        val listState = rememberLazyListState()
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Box(Modifier.width(44.dp), contentAlignment = Alignment.Center) {
+                        Text(label, fontWeight = FontWeight.SemiBold)
+                    }
 
-        LaunchedEffect(state.xpSlots.toList()) {
-            val lastUsedIndex = state.xpSlots.indexOfLast { it }
-            if (lastUsedIndex > 0) {
-                listState.animateScrollToItem(lastUsedIndex)
-            }
-        }
-
-        Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            LazyColumn(
-                modifier = Modifier.heightIn(max = 420.dp),
-                state = listState,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(TOTAL_PROGRESS_LIMIT) { index ->
-                    val slotUsed = state.xpSlots[index]
-                    val isEnabled = (if (index == 0) !slotUsed else state.xpSlots[index - 1] && !slotUsed) && state.pontosVantagem == 0 && state.pontosPericia == 0 && state.progressosDisponiveis > 0
-                    val isLastUsed = state.xpSlots.indexOfLast { it } == index
-                    val label = slotStageLabels.getOrNull(index) ?: (index + 1).toString()
-                    val contentText = slotDescriptions.getOrNull(index)
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    Surface(
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(min = 52.dp)
+                            .alpha(if (isEnabled || slotUsed) 1f else 0.5f)
+                            .clickable(enabled = isEnabled) { onUseProgress(index) },
+                        shape = RoundedCornerShape(8.dp),
+                        tonalElevation = if (slotUsed) 4.dp else 0.dp,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                        color = if (slotUsed) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
                     ) {
-                        Box(Modifier.width(44.dp), contentAlignment = Alignment.Center) {
-                            Text(label, fontWeight = FontWeight.SemiBold)
-                        }
-
-                        Surface(
+                        Box(
                             modifier = Modifier
-                                .weight(1f)
-                                .heightIn(min = 52.dp)
-                                .alpha(if (isEnabled || slotUsed) 1f else 0.5f)
-                                .clickable(enabled = isEnabled) { onUseProgress(index) },
-                            shape = RoundedCornerShape(8.dp),
-                            tonalElevation = if (slotUsed) 4.dp else 0.dp,
-                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-                            color = if (slotUsed) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp, vertical = 10.dp),
+                            contentAlignment = Alignment.CenterStart
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 12.dp, vertical = 10.dp),
-                                contentAlignment = Alignment.CenterStart
-                            ) {
-                                Text(
-                                    text = contentText ?: if (slotUsed) "Em andamento" else "Usar progresso",
-                                    fontSize = 15.sp,
-                                    fontWeight = if (slotUsed) FontWeight.Medium else FontWeight.Normal
-                                )
-                            }
+                            Text(
+                                text = contentText ?: if (slotUsed) "Em andamento" else "Usar progresso",
+                                fontSize = 15.sp,
+                                fontWeight = if (slotUsed) FontWeight.Medium else FontWeight.Normal
+                            )
                         }
+                    }
 
-                        if (slotUsed && isLastUsed) {
-                            TextButton(onClick = onUndo) {
-                                Text("Desfazer")
-                            }
+                    if (slotUsed && isLastUsed) {
+                        TextButton(onClick = onUndo) {
+                            Text("Desfazer")
                         }
                     }
                 }

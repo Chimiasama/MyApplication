@@ -215,6 +215,66 @@ fun EquipamentoSection(
     modoOficialAtivo: Boolean = false,
     onUserFeedback: () -> Unit
 ) {
+    SectionCard(
+        title    = "Equipamento",
+        expanded = expanded,
+        onToggle = onToggle,
+        icon     = Icons.Default.ShoppingCart,
+        onToggleFeedback = onUserFeedback
+    ) {
+        if (expanded) {
+            EquipamentoContent(
+                dinheiro, usaRiqueza, dadoRiqueza, pcTotal, pcLivres, recursosPcUsados, emProgresso, modoProgressaoAtivo,
+                onUsarPontosBonusEmRecursos, onDesfazerPontosBonusEmRecursos, onEquipamentoDoubleClick, equipamentosComprados,
+                onRemoveEquipamentoClick, categorias, superequipCategorias, tensaoTotal, tensaoLimite, isPersonagemRobotico,
+                forcaRaw, hasMusculoso, hasSoldado, soldadoCargaAtivo, onEditarDinheiro, onToggleSoldadoCarga,
+                compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioBuscatrilhaAtivo,
+                compendioDeadlandsAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo,
+                compendioWiseguysAtivo, compendioCrystalHeartAtivo, modoOficialAtivo, onUserFeedback
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun EquipamentoContent(
+    dinheiro: Int,
+    usaRiqueza: Boolean,
+    dadoRiqueza: Int,
+    pcTotal: Int,
+    pcLivres: Int,
+    recursosPcUsados: Int,
+    emProgresso: Boolean,
+    modoProgressaoAtivo: Boolean,
+    onUsarPontosBonusEmRecursos: () -> Unit,
+    onDesfazerPontosBonusEmRecursos: () -> Unit,
+    onEquipamentoDoubleClick: (EquipamentoItem) -> Unit,
+    equipamentosComprados: List<EquipamentoItem>,
+    onRemoveEquipamentoClick: (EquipamentoItem) -> Unit,
+    categorias: List<EquipamentoCategoria>,
+    superequipCategorias: List<EquipamentoCategoria>,
+    tensaoTotal: Int,
+    tensaoLimite: Int,
+    isPersonagemRobotico: Boolean,
+    forcaRaw: Int,
+    hasMusculoso: Boolean,
+    hasSoldado: Boolean,
+    soldadoCargaAtivo: Boolean,
+    onEditarDinheiro: (Int) -> Unit,
+    onToggleSoldadoCarga: () -> Unit,
+    compendioFantasiaAtivo: Boolean = false,
+    compendioHorrorAtivo: Boolean = false,
+    compendioSciFiAtivo: Boolean = false,
+    compendioBuscatrilhaAtivo: Boolean = false,
+    compendioDeadlandsAtivo: Boolean = false,
+    compendioArteDaGuerraAtivo: Boolean = false,
+    compendioCidadeSolVaporAtivo: Boolean = false,
+    compendioWiseguysAtivo: Boolean = false,
+    compendioCrystalHeartAtivo: Boolean = false,
+    modoOficialAtivo: Boolean = false,
+    onUserFeedback: () -> Unit
+) {
     val focusManager = LocalFocusManager.current
     var showMoneyDialog by rememberSaveable { mutableStateOf(false) }
     var dinheiroInput by rememberSaveable { mutableStateOf(dinheiro.toString()) }
@@ -227,22 +287,13 @@ fun EquipamentoSection(
     var selectedTypes = remember { mutableStateListOf<String>() }
 
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
-    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
     val showOfficialNames = EditionConfig.isFullEdition && modoOficialAtivo
 
     // Accordion State for browse mode
     // Map of Category Type -> Expanded
     val expandedTypeMap = remember { mutableStateMapOf<String, Boolean>() }
 
-    SectionCard(
-        title    = "Equipamento",
-        expanded = expanded,
-        onToggle = onToggle,
-        icon     = Icons.Default.ShoppingCart,
-        onToggleFeedback = onUserFeedback
-    ) {
-        if (!expanded) return@SectionCard
-
+    Column {
         // 1. Prepare Data
         val esconderSupers = superequipCategorias.isEmpty()
         val allCategorias = (categorias + superequipCategorias)

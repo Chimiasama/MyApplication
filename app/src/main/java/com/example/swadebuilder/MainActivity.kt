@@ -98,6 +98,7 @@ import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.ui.DashboardScreen
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.AppPreferences
 import com.example.swadebuilder.util.CharacterStorage
@@ -732,7 +733,7 @@ class MainActivity : ComponentActivity() {
                                             .fillMaxSize()
                                             .padding(innerPadding)
                                     ) {
-                                        UnifiedScreen(
+                                        DashboardScreen(
                                             state = state,
                                             viewModel = criadorViewModel,
                                             equipamentoCategorias = equipamentoCategorias,

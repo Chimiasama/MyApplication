@@ -70,6 +70,7 @@ fun PreviewApp() {
     )
 }
 
+@Deprecated("Use DashboardScreen instead")
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun UnifiedScreen(

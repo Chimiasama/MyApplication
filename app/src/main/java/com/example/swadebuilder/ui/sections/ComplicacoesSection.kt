@@ -72,6 +72,25 @@ fun ComplicacoesSection(
     feedbackMessages: MutableList<String>,
     onUserFeedback: () -> Unit
 ) {
+    SectionCard(
+        title    = "Complicações",
+        expanded = expanded,
+        onToggle = onToggle,
+        icon     = Icons.Default.Warning,
+        onToggleFeedback = onUserFeedback
+    ) {
+        ComplicacoesContent(state, feedbackMessages, onUserFeedback)
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+@Composable
+fun ComplicacoesContent(
+    state: CriadorState,
+    feedbackMessages: MutableList<String>,
+    onUserFeedback: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val locked = state.criacaoBasicaCongelada
 
     var showPcInUseDialog by rememberSaveable { mutableStateOf(false) }
@@ -106,13 +125,7 @@ fun ComplicacoesSection(
         origemSafe.uppercase().semAcentos().trim() in origensAtivas
     }
 
-    SectionCard(
-        title    = "Complicações",
-        expanded = expanded,
-        onToggle = onToggle,
-        icon     = Icons.Default.Warning,
-        onToggleFeedback = onUserFeedback
-    ) {
+    Column(modifier = modifier) {
         val totalPc = state.pontosComplicacao
         val usadosPc = state.pontosComplicacaoGastos
         val livresPc = (totalPc - usadosPc).coerceAtLeast(0)

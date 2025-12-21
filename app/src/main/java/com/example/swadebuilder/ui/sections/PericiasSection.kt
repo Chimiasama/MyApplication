@@ -70,7 +70,11 @@ import com.example.swadebuilder.util.semAcentos
 fun PericiasContent(
     state: CriadorState,
     feedbackMessages: MutableList<String>,
-    onUserFeedback: () -> Unit
+    onUserFeedback: () -> Unit,
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .heightIn(max = 400.dp)
+        .padding(vertical = 8.dp)
 ) {
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
@@ -113,10 +117,7 @@ fun PericiasContent(
     val valorColWidthDp = 80.dp
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(max = 400.dp)
-            .padding(vertical = 8.dp),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         stickyHeader {
