@@ -1818,6 +1818,7 @@ class CriadorState {
         rebuildAllPericiaStacks(feedbackMessages)
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun selecionarTropo(novoTropo: Tropo) {
         if (tropoSelecionado?.id == novoTropo.id) return
 
@@ -1997,6 +1998,7 @@ class CriadorState {
     fun snapshotAttributeStacks(): Map<String, Int> =
         paCostStackPorAtributo.mapValues { (_, stack) -> stack.size }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun restoreAttributeStacks(snapshot: Map<String, Int>) {
         listaAtributos.forEach { attr ->
             val stack = paCostStackPorAtributo.getValue(attr)

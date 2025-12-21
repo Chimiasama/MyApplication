@@ -2,14 +2,15 @@
 package com.example.swadebuilder.model
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.listaPericias
-import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.listaVantagens
+import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.util.CharacterStorage
@@ -1028,6 +1029,7 @@ class CriadorViewModel : ViewModel() {
         state.updateEmProgressoFlag()
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun revertLastAdvancement() {
         if (state.advancementHistory.isEmpty()) return
 
