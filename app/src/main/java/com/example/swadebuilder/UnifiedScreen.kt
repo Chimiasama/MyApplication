@@ -654,7 +654,8 @@ private fun availableSectionsFor(state: CriadorState): List<MainSection> {
     val hasArcano = state.vantagensSelecionadas.any {
         it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
     } && !state.celestialAAMilagresDesabilitado
-    if (hasArcano || state.modoSupers) {
+    val mostraPoderesArcanos = hasArcano && !state.compendioCrystalHeartAtivo
+    if (mostraPoderesArcanos || state.modoSupers) {
         sections += MainSection.PODERES
     }
 
