@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -50,24 +51,23 @@ fun MainCharacterScreen(
     SwadeTheme {
         MainCharacterScreenLayout(
             sidebarContent = {
-                Column {
-                   Text(
-                        text = "SAVAGE WORLDS",
-                        style = SwadeDesignSystem.typography.header,
-                        color = SwadeDesignSystem.colors.onBackground
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    SavageNavigationMenu(
-                        tabs = listOf(ScreenTab.Character, ScreenTab.Skills, ScreenTab.Edges, ScreenTab.Gear, ScreenTab.Notes),
-                        selectedTab = selectedTab,
-                        onTabSelected = { viewModel.selectTab(it) }
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    HorizontalDivider(color = SwadeDesignSystem.colors.border)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    // In Landscape, attributes live in Sidebar
-                    AttributeGrid(stats = stats, isLandscape = true)
-                }
+                // ColumnScope is now available here
+                Text(
+                    text = "SAVAGE WORLDS",
+                    style = SwadeDesignSystem.typography.header,
+                    color = SwadeDesignSystem.colors.onBackground
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                SavageNavigationMenu(
+                    tabs = listOf(ScreenTab.Character, ScreenTab.Skills, ScreenTab.Edges, ScreenTab.Gear, ScreenTab.Notes),
+                    selectedTab = selectedTab,
+                    onTabSelected = { viewModel.selectTab(it) }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                HorizontalDivider(color = SwadeDesignSystem.colors.border)
+                Spacer(modifier = Modifier.height(16.dp))
+                // In Landscape, attributes live in Sidebar
+                AttributeGrid(stats = stats, isLandscape = true)
             },
             centerContent = {
                 // Portrait Placeholder
@@ -106,6 +106,7 @@ fun MainCharacterScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Main Scrollable Area
+                // weight(1f) requires ColumnScope, which MainCharacterScreenLayout now provides
                 Column(
                     modifier = Modifier
                         .weight(1f)
@@ -138,10 +139,10 @@ fun MainCharacterScreen(
 
 @Composable
 fun MainCharacterScreenLayout(
-    sidebarContent: @Composable () -> Unit,
-    centerContent: @Composable () -> Unit,
-    rightContent: @Composable () -> Unit,
-    portraitContent: @Composable () -> Unit
+    sidebarContent: @Composable ColumnScope.() -> Unit,
+    centerContent: @Composable ColumnScope.() -> Unit,
+    rightContent: @Composable ColumnScope.() -> Unit,
+    portraitContent: @Composable ColumnScope.() -> Unit
 ) {
     Scaffold(
         containerColor = SwadeDesignSystem.colors.background
