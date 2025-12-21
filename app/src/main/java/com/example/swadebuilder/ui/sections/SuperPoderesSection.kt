@@ -19,8 +19,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -544,14 +542,12 @@ fun SuperPoderesSection(
         val allowLongTexts = booleanResource(R.bool.enable_long_texts)
         val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
-        LazyColumn(
-            state = listState,
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(max = 220.dp),
-            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                .padding(horizontal = 8.dp, vertical = 4.dp)
         ) {
-            items(listaSuperPoderes, key = { it.nome }) { poder ->
+            listaSuperPoderes.forEach { poder ->
                 val manifestacoesList = remember(poder.nome, poder.manifestacoes) {
                     when (val m = poder.manifestacoes) {
                         is JsonArray -> m.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }

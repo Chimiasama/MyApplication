@@ -112,89 +112,86 @@ fun PericiasContent(
 
     val valorColWidthDp = 80.dp
 
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(max = 400.dp)
             .padding(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
-        stickyHeader {
-            val pergaminho = MaterialTheme.colorScheme.surfaceVariant
+        val pergaminho = MaterialTheme.colorScheme.surfaceVariant
 
-            Surface(
-                tonalElevation = 0.dp,
-                color = pergaminho,
-                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+        Surface(
+            tonalElevation = 0.dp,
+            color = pergaminho,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                ) {
-                    SectionHeader(
-                        onHelpClick          = null,
-                        centerText           = "Pontos de Perícia: ${state.pontosPericia}",
-                        onListaCompletaClick = null,
-                        listaCompletaText    = ""
-                    )
+                SectionHeader(
+                    onHelpClick          = null,
+                    centerText           = "Pontos de Perícia: ${state.pontosPericia}",
+                    onListaCompletaClick = null,
+                    listaCompletaText    = ""
+                )
 
-                    Spacer(Modifier.height(4.dp))
+                Spacer(Modifier.height(4.dp))
 
-                    if (!state.emProgresso) {
-                        if (usePbWalletRedesign) {
-                            PbWalletBanner(
-                                pcTotal = pcTotal,
-                                pcLivres = pcLivres,
-                                spendLabel = "Usar PB em Perícias",
-                                refundLabel = "Desfazer uso de PB",
-                                spendEnabled = !locked && pcLivres > 0,
-                                refundEnabled = !locked && spUsados > 0,
-                                onSpend = {
-                                    state.cpSpStack.add(Unit)
-                                    state.pontosComplicacaoGastos += 1
-                                },
-                                onRefund = {
-                                    state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
-                                    state.pontosComplicacaoGastos =
-                                        (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                                    state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                                }
-                            )
-                        } else {
-                            PbLegacyActions(
-                                spendLabel = "Usar PB em Perícias",
-                                refundLabel = "Desfazer uso de PB",
-                                spendEnabled = !locked && pcLivres > 0,
-                                refundEnabled = !locked && spUsados > 0,
-                                onSpend = {
-                                    state.cpSpStack.add(Unit)
-                                    state.pontosComplicacaoGastos += 1
-                                },
-                                onRefund = {
-                                    state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
-                                    state.pontosComplicacaoGastos =
-                                        (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                                    state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                                }
-                            )
-                        }
+                if (!state.emProgresso) {
+                    if (usePbWalletRedesign) {
+                        PbWalletBanner(
+                            pcTotal = pcTotal,
+                            pcLivres = pcLivres,
+                            spendLabel = "Usar PB em Perícias",
+                            refundLabel = "Desfazer uso de PB",
+                            spendEnabled = !locked && pcLivres > 0,
+                            refundEnabled = !locked && spUsados > 0,
+                            onSpend = {
+                                state.cpSpStack.add(Unit)
+                                state.pontosComplicacaoGastos += 1
+                            },
+                            onRefund = {
+                                state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
+                                state.pontosComplicacaoGastos =
+                                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                                state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
+                            }
+                        )
+                    } else {
+                        PbLegacyActions(
+                            spendLabel = "Usar PB em Perícias",
+                            refundLabel = "Desfazer uso de PB",
+                            spendEnabled = !locked && pcLivres > 0,
+                            refundEnabled = !locked && spUsados > 0,
+                            onSpend = {
+                                state.cpSpStack.add(Unit)
+                                state.pontosComplicacaoGastos += 1
+                            },
+                            onRefund = {
+                                state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
+                                state.pontosComplicacaoGastos =
+                                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                                state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
+                            }
+                        )
                     }
                 }
             }
         }
 
-        items(
-            state.periciasComIdiomas().filter { per ->
-                if (per.nome.equals("Jutsu", ignoreCase = true)) {
-                    state.compendioArteDaGuerraAtivo
-                } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
-                    state.compendioFantasiaAtivo || state.compendioHorrorAtivo
-                } else {
-                    true
-                }
+        val listaFiltrada = state.periciasComIdiomas().filter { per ->
+            if (per.nome.equals("Jutsu", ignoreCase = true)) {
+                state.compendioArteDaGuerraAtivo
+            } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
+                state.compendioFantasiaAtivo || state.compendioHorrorAtivo
+            } else {
+                true
             }
-        ) { per ->
+        }
+
+        listaFiltrada.forEach { per ->
             val regra: PericiaRuleSnapshot = state.calcularPericiaRules(
                 pericia = per,
                 idosoActive = idosoActive,

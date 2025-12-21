@@ -571,7 +571,7 @@ private fun MainSection.label(): String = when (this) {
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-private fun ProgressionDetailContent(
+private fun ColumnScope.ProgressionDetailContent(
     state: CriadorState,
     viewModel: CriadorViewModel,
     selectedSection: MainSection,
@@ -679,6 +679,7 @@ private fun ProgressionDetailContent(
             }
         }
         MainSection.EQUIPAMENTOS -> EquipamentoContent(
+            modifier = Modifier.weight(1f),
             dinheiro = state.dinheiro,
             usaRiqueza = state.usaRiqueza,
             dadoRiqueza = state.dadoRiqueza,
@@ -767,7 +768,7 @@ private fun ProgressionDetailContent(
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-private fun CreationDetailContent(
+private fun ColumnScope.CreationDetailContent(
     state: CriadorState,
     viewModel: CriadorViewModel,
     selectedSection: MainSection,
@@ -889,6 +890,7 @@ private fun CreationDetailContent(
             }
         }
         MainSection.EQUIPAMENTOS -> EquipamentoContent(
+            modifier = Modifier.weight(1f),
             dinheiro = state.dinheiro,
             usaRiqueza = state.usaRiqueza,
             dadoRiqueza = state.dadoRiqueza,

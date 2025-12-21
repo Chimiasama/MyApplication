@@ -171,6 +171,7 @@ fun EquipFilterDialog(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun EquipamentoContent(
+    modifier: Modifier = Modifier,
     dinheiro: Int,
     usaRiqueza: Boolean,
     dadoRiqueza: Int,
@@ -279,7 +280,7 @@ fun EquipamentoContent(
     // We will build a list of sealed class or generic items to render
 
     LazyColumn(
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         // --- HEADER SECTION (Money, Filters, Chips) ---
         item(key = "header_section") {

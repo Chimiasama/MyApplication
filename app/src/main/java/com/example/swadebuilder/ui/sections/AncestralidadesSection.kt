@@ -224,13 +224,11 @@ fun AncestralidadesSection(
 
             Spacer(Modifier.height(4.dp))
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 240.dp),
+            Column(
+                modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)
             ) {
-                items(listaOrdenada) { item ->
+                listaOrdenada.forEach { item ->
                     val itemKey = item.nome.uppercase().semAcentos()
                     val isSelected = itemKey == selectedKey.value
                     val descricao = descricaoPorAncestralidade[itemKey].orEmpty()
@@ -246,13 +244,13 @@ fun AncestralidadesSection(
                         }
                     ) {
                         Column(
-                        modifier = Modifier
-                            .clickable(enabled = !supersLocked) {
-                                if (supersLocked) return@clickable
-                                onUserFeedback()
-                                selectedKey.value = itemKey
-                                onSelectAncestralidade(item.nome)
-                            }
+                            modifier = Modifier
+                                .clickable(enabled = !supersLocked) {
+                                    if (supersLocked) return@clickable
+                                    onUserFeedback()
+                                    selectedKey.value = itemKey
+                                    onSelectAncestralidade(item.nome)
+                                }
                                 .padding(horizontal = 12.dp, vertical = 10.dp)
                         ) {
                             Row(
