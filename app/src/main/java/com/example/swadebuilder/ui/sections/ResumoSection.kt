@@ -252,6 +252,120 @@ fun SummaryContent(state: CriadorState) {
     }
 }
 
+@Composable
+fun BasicCharacterInfo(
+    state: CriadorState,
+    showDerivedStats: Boolean = false
+) {
+    val personagem = state.toMeuPersonagem()
+    val allLines = buildSummaryLines(personagem)
+
+    val anotIndex = allLines.indexOf("Anotações")
+    val lines = if (anotIndex >= 0) allLines.take(anotIndex) else allLines
+
+    val headers = remember {
+        setOf(
+            "Identidade",
+            "Atributos derivados",
+            "Atributos",
+            "Perícias",
+            "Recursos & Equipamentos",
+            "Vantagens",
+            "Complicações",
+            "Poderes arcanos",
+            "Superpoderes"
+        )
+    }
+
+    val sections = remember(lines) { lines.toSummarySections(headers) }
+    val identitySection = sections.firstOrNull { it.title == "Identidade" }
+    val derivedSection = sections.firstOrNull { it.title == "Atributos derivados" }
+
+    val nome = state.nomePersonagem
+    val ancestralidadeValue = identitySection?.items
+        ?.firstOrNull { it.startsWith("Ancestralidade:") }
+        ?.substringAfter(":")
+        ?.trim()
+        .orEmpty()
+        .ifBlank { "–" }
+
+    val monstroInfo = if (state.modoMonstroAtivo) {
+        val tipoNome = com.example.swadebuilder.listaMonstroTemplates
+            .find { it.id == state.tipoMonstroSelecionado }
+            ?.nome
+            ?: "Desconhecido"
+        "\nTipo de Monstro: $tipoNome"
+    } else {
+        ""
+    }
+
+    Column(Modifier.fillMaxWidth()) {
+        IdentityCard(
+            nome = nome,
+            onNomeChange = { state.nomePersonagem = it },
+            ancestralidade = "Ancestralidade: $ancestralidadeValue$monstroInfo"
+        )
+
+        if (showDerivedStats) {
+            Spacer(Modifier.height(12.dp))
+            derivedSection?.let {
+                DerivedStatsRow(stats = it.toStats())
+            }
+        }
+    }
+}
+
+@Composable
+fun CharacterPortraitSummary(state: CriadorState) {
+    BasicCharacterInfo(
+        state = state,
+        showDerivedStats = true
+    )
+}
+
+@Composable
+fun CompactSummaryPanels(state: CriadorState) {
+    val personagem = state.toMeuPersonagem()
+    val allLines = buildSummaryLines(personagem)
+    val anotIndex = allLines.indexOf("Anotações")
+    val lines = if (anotIndex >= 0) allLines.take(anotIndex) else allLines
+
+    val headers = remember {
+        setOf(
+            "Identidade",
+            "Atributos derivados",
+            "Atributos",
+            "Perícias",
+            "Recursos & Equipamentos",
+            "Vantagens",
+            "Complicações",
+            "Poderes arcanos",
+            "Superpoderes"
+        )
+    }
+
+    val sections = remember(lines) { lines.toSummarySections(headers) }
+    val targetTitles = setOf(
+        "Atributos",
+        "Perícias",
+        "Recursos & Equipamentos"
+    )
+
+    val compactSections = sections.filter { it.title in targetTitles }
+
+    Column(Modifier.fillMaxWidth()) {
+        compactSections.forEachIndexed { idx, section ->
+            SummarySectionCard(
+                section = section,
+                textStyle = MaterialTheme.typography.bodySmall
+            )
+            if (idx != compactSections.lastIndex) {
+                Spacer(Modifier.height(12.dp))
+            }
+        }
+    }
+}
+
 private data class SummarySection(
     val title: String,
     val items: List<String>
