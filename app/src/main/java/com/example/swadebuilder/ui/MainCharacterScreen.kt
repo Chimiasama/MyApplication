@@ -41,6 +41,7 @@ import com.example.swadebuilder.model.CharacterViewModel
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.ScreenTab
+import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.components.AttributeGrid
 import com.example.swadebuilder.ui.components.BennieComponent
 import com.example.swadebuilder.ui.components.InfoPanel
@@ -52,14 +53,16 @@ import com.example.swadebuilder.ui.sections.CrystalHeartSection
 import com.example.swadebuilder.ui.sections.EquipamentoSection
 import com.example.swadebuilder.ui.sections.PericiasContent
 import com.example.swadebuilder.ui.sections.PoderesSection
-import com.example.swadebuilder.ui.sections.SuperPoderesSection
+import com.example.swadebuilder.ui.sections.SuperPoderesContent
 import com.example.swadebuilder.ui.sections.TipoMonstroSection
 import com.example.swadebuilder.ui.sections.TroposSection
 import com.example.swadebuilder.ui.sections.VantagensContent
 import com.example.swadebuilder.ui.sections.XpSection
 import com.example.swadebuilder.ui.theme.SwadeDesignSystem
 import com.example.swadebuilder.ui.theme.SwadeTheme
+import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import kotlinx.serialization.json.JsonPrimitive
 
 @Composable
 fun MainCharacterScreen(
@@ -80,10 +83,10 @@ fun MainCharacterScreen(
         spirit = state.valoresAtributos["ESPIRITO"]?.intValue ?: 4,
         strength = state.valoresAtributos["FORCA"]?.intValue ?: 4,
         vigor = state.valoresAtributos["VIGOR"]?.intValue ?: 4,
-        pace = state.movimentacao(),
-        parry = state.aparar(),
-        toughness = state.resistencia(),
-        bennies = state.bennies
+        pace = state.valorMovimentacao(),
+        parry = state.valorAparar(),
+        toughness = state.valorResistenciaFinal(),
+        bennies = 3 // Standard default
     )
 
     SwadeTheme {
@@ -275,7 +278,7 @@ fun TabContentSlot(
                             currentAncestralidade = state.ancestralidade,
                             expanded = true,
                             onToggle = {}, // Always expanded in this view
-                            supersLocked = state.criacaoBasicaCongelada,
+                            supersLocked = state.baseCreationComplete() && state.modoProgressaoAtivo, // Fixed: logic for freeze
                             ancestralidadeEmFoco = state.ancestralidadeEmFoco,
                             onSelectAncestralidade = { nome ->
                                 // Logic from UnifiedScreen
@@ -374,7 +377,7 @@ fun TabContentSlot(
                 }
                 ScreenTab.Gear -> {
                     Column(Modifier.verticalScroll(rememberScrollState())) {
-                         EquipamentoSection(
+                         EquipamentoSectionWrapper(
                             state = state,
                             expanded = true,
                             onToggle = {},
@@ -399,5 +402,135 @@ fun TabContentSlot(
                 }
             }
         }
+    }
+}
+
+// Wrapper to handle calculated properties for Equipment Section
+@Composable
+private fun EquipamentoSectionWrapper(
+    state: CriadorState,
+    expanded: Boolean,
+    onToggle: () -> Unit,
+    equipamentoCategorias: List<EquipamentoCategoria>,
+    superequipCategorias: List<EquipamentoCategoria>,
+    onUserFeedback: () -> Unit
+) {
+    val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
+    val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
+    val isPersonagemRobotico = state.isPersonagemRobotico()
+    val tensaoLimite = if (isPersonagemRobotico) {
+        state.limiteModsRoboticos()
+    } else {
+        state.valoresAtributos["VIGOR"]?.intValue ?: 4
+    }
+
+    EquipamentoSection(
+        dinheiro = state.dinheiro,
+        usaRiqueza = state.usaRiqueza,
+        dadoRiqueza = state.dadoRiqueza,
+        pcTotal = state.pontosComplicacao,
+        pcLivres = (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0),
+        recursosPcUsados = state.cpRecursosStack.size,
+        emProgresso = state.emProgresso,
+        modoProgressaoAtivo = state.modoProgressaoAtivo,
+        expanded = expanded,
+        onToggle = onToggle,
+        onUsarPontosBonusEmRecursos = {
+            if (state.usaRiqueza) return@EquipamentoSection
+            val pcLivresLocal =
+                (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0)
+            if (pcLivresLocal > 0 && state.cpRecursosStack.isEmpty()) {
+                state.cpRecursosStack.add(Unit)
+                state.pontosComplicacaoGastos += 1
+                state.dinheiro += 500
+            }
+        },
+        onDesfazerPontosBonusEmRecursos = {
+            if (state.usaRiqueza) return@EquipamentoSection
+            if (state.cpRecursosStack.isNotEmpty() && state.dinheiro >= 500) {
+                state.cpRecursosStack.removeAt(state.cpRecursosStack.lastIndex)
+                state.pontosComplicacaoGastos =
+                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                state.dinheiro -= 500
+            }
+        },
+        onEquipamentoDoubleClick = { equipamento ->
+            val custo = (equipamento.custo as? JsonPrimitive)
+                ?.content?.toIntOrNull() ?: 0
+            if (state.usaRiqueza || custo <= state.dinheiro) {
+                state.equipamentosComprados.add(equipamento)
+                if (!state.usaRiqueza) {
+                    state.dinheiro -= custo
+                }
+            }
+        },
+        equipamentosComprados = state.equipamentosComprados,
+        onRemoveEquipamentoClick = { equipamento ->
+            val custo = (equipamento.custo as? JsonPrimitive)
+                ?.content?.toIntOrNull() ?: 0
+            state.equipamentosComprados.remove(equipamento)
+            if (!state.usaRiqueza) {
+                state.dinheiro += custo
+            }
+        },
+        categorias = equipamentoCategorias,
+        superequipCategorias =
+            if (state.modoSupers) superequipCategorias else emptyList(),
+        tensaoTotal = state.totalTensaoEquipamentos(),
+        tensaoLimite = tensaoLimite,
+        isPersonagemRobotico = isPersonagemRobotico,
+        forcaRaw = state.valoresAtributos["FORCA"]?.intValue ?: 4,
+        hasMusculoso = hasMusculoso,
+        hasSoldado = hasSoldado,
+        soldadoCargaAtivo = state.soldadoCargaAtivo,
+        onEditarDinheiro = { novoValor -> state.dinheiro = novoValor },
+        onToggleSoldadoCarga = {
+            if (hasSoldado) {
+                state.soldadoCargaAtivo = !state.soldadoCargaAtivo
+            }
+        },
+        compendioFantasiaAtivo = state.compendioFantasiaAtivo,
+        compendioHorrorAtivo = state.compendioHorrorAtivo,
+        compendioSciFiAtivo = state.compendioSciFiAtivo,
+        compendioBuscatrilhaAtivo = state.compendioBuscatrilhaAtivo,
+        compendioDeadlandsAtivo = state.compendioDeadlandsAtivo,
+        compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo,
+        compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo,
+        compendioWiseguysAtivo = state.compendioWiseguysAtivo,
+        compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo,
+        modoOficialAtivo = state.modoOficialAtivo,
+        onUserFeedback = onUserFeedback
+    )
+}
+
+@Composable
+private fun PoderesSection(
+    state: CriadorState,
+    onUserFeedback: () -> Unit
+) {
+    val temArcano = state.vantagensSelecionadas.any {
+        it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
+    }
+    if (temArcano && !state.celestialAAMilagresDesabilitado) {
+        PoderesSection(
+            state = state
+        )
+    }
+}
+
+@Composable
+private fun SuperPoderesSection(
+    state: CriadorState,
+    listaSuperPoderes: List<SuperPoder>,
+    expanded: Boolean,
+    onToggle: () -> Unit
+) {
+    if (state.modoSupers) {
+        SuperPoderesContent(
+            state = state,
+            listaSuperPoderes = listaSuperPoderes,
+            expanded = expanded,
+            onToggle = onToggle
+        )
     }
 }
