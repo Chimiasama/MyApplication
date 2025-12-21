@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
-import com.example.swadebuilder.model.SuperPoder
+import com.example.swadebuilder.SuperPoder
 import com.example.swadebuilder.ui.components.LiveSummaryPanel
 import com.example.swadebuilder.ui.dashboard.ConfigTab
 import com.example.swadebuilder.ui.dashboard.EdgesTab

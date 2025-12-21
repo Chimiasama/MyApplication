@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -124,10 +125,10 @@ fun DerivedStatsCard(state: CriadorState) {
 
 @Composable
 fun LoadStatusCard(state: CriadorState) {
-    val totalWeight = state.equipamentosComprados.sumOf { item ->
+    val totalWeight: Float = state.equipamentosComprados.map { item ->
          (item.peso as? kotlinx.serialization.json.JsonPrimitive)
             ?.content?.replace(",", ".")?.toFloatOrNull() ?: 0f
-    }
+    }.sum()
     val maxLoad = state.valorCargaMaxima()
     val isOverloaded = totalWeight > maxLoad
 

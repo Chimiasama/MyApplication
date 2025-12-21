@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.CriadorViewModel
-import com.example.swadebuilder.model.SuperPoder
+import com.example.swadebuilder.SuperPoder
 import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.SuperPoderesSection
 
