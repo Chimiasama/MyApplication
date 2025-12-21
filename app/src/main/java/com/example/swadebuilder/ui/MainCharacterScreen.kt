@@ -53,7 +53,7 @@ import com.example.swadebuilder.ui.sections.CrystalHeartSection
 import com.example.swadebuilder.ui.sections.EquipamentoSection
 import com.example.swadebuilder.ui.sections.PericiasContent
 import com.example.swadebuilder.ui.sections.PoderesSection
-import com.example.swadebuilder.ui.sections.SuperPoderesSection
+import com.example.swadebuilder.ui.sections.SuperPoderesContent
 import com.example.swadebuilder.ui.sections.TipoMonstroSection
 import com.example.swadebuilder.ui.sections.TroposSection
 import com.example.swadebuilder.ui.sections.VantagensContent
@@ -384,7 +384,7 @@ fun TabContentSlot(
 
                         if (state.modoSupers) {
                              HorizontalDivider(Modifier.padding(vertical = 8.dp))
-                             SuperPoderesSection(
+                             SuperPoderesContent(
                                 state = state,
                                 listaSuperPoderes = listaSuperPoderes,
                                 expanded = true,
