@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Delete
@@ -789,7 +791,11 @@ private fun SummaryTabContent(
     onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ) {
         CharacterPortraitCard()
         Spacer(Modifier.height(12.dp))
         GlobalActionButtons(
