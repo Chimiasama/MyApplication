@@ -5,6 +5,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -462,10 +463,10 @@ private fun SectionDetailPane(
     onUseProgress: (Int) -> Unit,
     onUserFeedback: () -> Unit
 ) {
+    // REMOVED .verticalScroll(rememberScrollState())
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
         if (state.modoProgressaoAtivo) {
@@ -581,95 +582,100 @@ private fun ProgressionDetailContent(
 ) {
     when (selectedSection) {
         MainSection.VANTAGENS -> {
-            // Full Screen Content
-            VantagensContent(
-                state = state,
-                multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-                viewModel = viewModel,
-                onUserFeedback = onUserFeedback
-            )
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                VantagensContent(
+                    state = state,
+                    multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
+                    viewModel = viewModel,
+                    onUserFeedback = onUserFeedback
+                )
 
-            if (state.mostrandoPoderesProgresso || state.arcanoCompraPendente()) {
+                if (state.mostrandoPoderesProgresso || state.arcanoCompraPendente()) {
+                    Spacer(Modifier.height(16.dp))
+                    HorizontalDivider(thickness = 1.dp)
+                    Spacer(Modifier.height(16.dp))
+                    PoderesSection(state = state, onUserFeedback = onUserFeedback)
+                }
+
                 Spacer(Modifier.height(16.dp))
-                HorizontalDivider(thickness = 1.dp)
-                Spacer(Modifier.height(16.dp))
-                PoderesSection(state = state, onUserFeedback = onUserFeedback)
-            }
+                HorizontalDivider(thickness = 3.dp)
 
-            Spacer(Modifier.height(16.dp))
-            HorizontalDivider(thickness = 3.dp)
-
-            Button(
-                onClick = {
-                    viewModel.finishAdvantageAdvancement()
-                    state.mostrandoVantagensProgresso = false
-                },
-                enabled = state.pontosVantagem == 0 && !state.arcanoCompraPendente(),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Confirmar Vantagem e Voltar")
-            }
-            TextButton(
-                onClick = {
-                    viewModel.cancelAdvancementInProgress()
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Cancelar")
+                Button(
+                    onClick = {
+                        viewModel.finishAdvantageAdvancement()
+                        state.mostrandoVantagensProgresso = false
+                    },
+                    enabled = state.pontosVantagem == 0 && !state.arcanoCompraPendente(),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Confirmar Vantagem e Voltar")
+                }
+                TextButton(
+                    onClick = {
+                        viewModel.cancelAdvancementInProgress()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Cancelar")
+                }
             }
         }
         MainSection.PERICIAS -> {
-            PericiasContent(
-                state = state,
-                feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
-                onUserFeedback = onUserFeedback
-            )
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                PericiasContent(
+                    state = state,
+                    feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
+                    onUserFeedback = onUserFeedback
+                )
 
-            Spacer(Modifier.height(16.dp))
-            HorizontalDivider(thickness = 3.dp)
+                Spacer(Modifier.height(16.dp))
+                HorizontalDivider(thickness = 3.dp)
 
-            Button(
-                onClick = {
-                    viewModel.finishSkillAdvancement()
-                    state.mostrandoPericiasProgresso = false
-                },
-                enabled = state.pontosPericia == 0,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Confirmar Perícias e Voltar")
-            }
-            TextButton(
-                onClick = {
-                    viewModel.cancelAdvancementInProgress()
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Cancelar")
+                Button(
+                    onClick = {
+                        viewModel.finishSkillAdvancement()
+                        state.mostrandoPericiasProgresso = false
+                    },
+                    enabled = state.pontosPericia == 0,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Confirmar Perícias e Voltar")
+                }
+                TextButton(
+                    onClick = {
+                        viewModel.cancelAdvancementInProgress()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Cancelar")
+                }
             }
         }
         MainSection.ATRIBUTOS -> {
-            AtributosContent(state = state, onUserFeedback = onUserFeedback)
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                AtributosContent(state = state, onUserFeedback = onUserFeedback)
 
-            Spacer(Modifier.height(16.dp))
-            HorizontalDivider(thickness = 3.dp)
+                Spacer(Modifier.height(16.dp))
+                HorizontalDivider(thickness = 3.dp)
 
-            Button(
-                onClick = {
-                    viewModel.finishAttributeAdvancement()
-                    state.mostrandoAtributosProgresso = false
-                },
-                enabled = state.pontosAtributo == 0,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Confirmar Atributo e Voltar")
-            }
-            TextButton(
-                onClick = {
-                    viewModel.cancelAdvancementInProgress()
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Cancelar")
+                Button(
+                    onClick = {
+                        viewModel.finishAttributeAdvancement()
+                        state.mostrandoAtributosProgresso = false
+                    },
+                    enabled = state.pontosAtributo == 0,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Confirmar Atributo e Voltar")
+                }
+                TextButton(
+                    onClick = {
+                        viewModel.cancelAdvancementInProgress()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Cancelar")
+                }
             }
         }
         MainSection.EQUIPAMENTOS -> EquipamentoContent(
@@ -778,60 +784,103 @@ private fun CreationDetailContent(
              // Should not happen as RESUMO is handled by Crossfade now,
              // but if logic fails through:
         }
-        MainSection.ANCESTRALIDADES -> AncestralidadesSection(
-            state = state,
-            currentAncestralidade = state.ancestralidade,
-            expanded = true, // Force expanded
-            onToggle = { }, // No toggle needed
-            supersLocked = creationLocked,
-            ancestralidadeEmFoco = state.ancestralidadeEmFoco,
-            onSelectAncestralidade = onSelectAncestralidade,
-            onUserFeedback = onUserFeedback
-        )
-        MainSection.TROPOS -> TroposSection(
-            state = state,
-            expanded = true,
-            onToggle = { },
-            onUserFeedback = onUserFeedback
-        )
-        MainSection.MONSTRO -> TipoMonstroSection(
-            state = state,
-            expanded = true,
-            onToggle = { },
-            onUserFeedback = onUserFeedback
-        )
-        MainSection.COMPLICACOES -> ComplicacoesSection(
-            state = state,
-            expanded = true,
-            onToggle = { },
-            feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
-            onUserFeedback = onUserFeedback
-        )
-        MainSection.ATRIBUTOS -> AtributosContent(state, onUserFeedback)
-        MainSection.PERICIAS -> PericiasContent(
-            state = state,
-            feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
-            onUserFeedback = onUserFeedback
-        )
-        MainSection.VANTAGENS -> VantagensContent(
-            state = state,
-            multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-            viewModel = viewModel,
-            onUserFeedback = onUserFeedback
-        )
-        MainSection.CRYSTAL_HEART -> CrystalHeartSection(
-            state = state,
-            viewModel = viewModel,
-            expanded = true,
-            onToggle = { }
-        )
+        MainSection.ANCESTRALIDADES -> {
+            // Apply vertical scroll locally
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                AncestralidadesSection(
+                    state = state,
+                    currentAncestralidade = state.ancestralidade,
+                    expanded = true, // Force expanded
+                    onToggle = { }, // No toggle needed
+                    supersLocked = creationLocked,
+                    ancestralidadeEmFoco = state.ancestralidadeEmFoco,
+                    onSelectAncestralidade = onSelectAncestralidade,
+                    onUserFeedback = onUserFeedback
+                )
+            }
+        }
+        MainSection.TROPOS -> {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                TroposSection(
+                    state = state,
+                    expanded = true,
+                    onToggle = { },
+                    onUserFeedback = onUserFeedback
+                )
+            }
+        }
+        MainSection.MONSTRO -> {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                TipoMonstroSection(
+                    state = state,
+                    expanded = true,
+                    onToggle = { },
+                    onUserFeedback = onUserFeedback
+                )
+            }
+        }
+        MainSection.COMPLICACOES -> {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                ComplicacoesSection(
+                    state = state,
+                    expanded = true,
+                    onToggle = { },
+                    feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
+                    onUserFeedback = onUserFeedback
+                )
+            }
+        }
+        MainSection.ATRIBUTOS -> {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                AtributosContent(state, onUserFeedback)
+            }
+        }
+        MainSection.PERICIAS -> {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                PericiasContent(
+                    state = state,
+                    feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
+                    onUserFeedback = onUserFeedback
+                )
+            }
+        }
+        MainSection.VANTAGENS -> {
+            // VantagensContent usually contains a list, but often wrapped.
+            // Let's assume it needs scrolling unless it's a LazyColumn itself.
+            // VantagensSection uses LazyColumn inside? No, it uses CollapsibleSection which uses Column.
+            // Actually `VantagensSection` uses `CollapsibleSection`s which contain `LazyColumn` in standard code.
+            // BUT wait, `VantagensContent` iterates categories and creates multiple lists?
+            // If it creates multiple LazyColumns, that's bad in a Scroll.
+            // Let's look at `VantagensContent` implementation or assumption.
+            // The existing `VantagensSection` uses `items` inside a lazy column usually?
+            // Actually, `VantagensContent` in `VantagensSection.kt` uses `Column`.
+            // So we need a scroll here.
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                 VantagensContent(
+                    state = state,
+                    multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
+                    viewModel = viewModel,
+                    onUserFeedback = onUserFeedback
+                )
+            }
+        }
+        MainSection.CRYSTAL_HEART -> {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                CrystalHeartSection(
+                    state = state,
+                    viewModel = viewModel,
+                    expanded = true,
+                    onToggle = { }
+                )
+            }
+        }
         MainSection.PODERES -> {
-            Column {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                  if (!state.compendioCrystalHeartAtivo) {
                     PoderesSection(state = state, onUserFeedback = onUserFeedback)
                     Spacer(Modifier.height(8.dp))
                 }
-                SuperPoderesContent(
+                SuperPoderesSection(
                     state = state,
                     listaSuperPoderes = listaSuperPoderes,
                     expanded = true,
@@ -972,12 +1021,3 @@ private fun SuperPoderesSection(
         )
     }
 }
-
-// NOTE: EquipamentoSection Composable is defined in com.example.swadebuilder.ui.sections.EquipamentoSection.kt
-// But here we use a local one or the imported one?
-// The file imports com.example.swadebuilder.ui.sections.EquipamentoSection
-// However, it seems we might have name shadowing if we define one here.
-// But we removed the old one. We only call the one from ui.sections package.
-// EXCEPT, the one in ui.sections.EquipamentoSection.kt expects (state: CriadorState, ...)
-// but we might need the one that takes individual params if we want direct control.
-// But we have a wrapper in ui.sections that takes State.
