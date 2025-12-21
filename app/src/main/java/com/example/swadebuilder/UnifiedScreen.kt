@@ -1,6 +1,5 @@
 package com.example.swadebuilder
 
-import android.content.res.Configuration
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,7 +17,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.FolderOpen
@@ -27,12 +24,13 @@ import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -45,7 +43,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
@@ -55,8 +52,6 @@ import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
-import com.example.swadebuilder.ui.sections.BasicCharacterInfo
-import com.example.swadebuilder.ui.sections.SummaryCompact
 import com.example.swadebuilder.ui.sections.ComplicacoesSection
 import com.example.swadebuilder.ui.sections.CrystalHeartSection
 import com.example.swadebuilder.ui.sections.EquipamentoSection
@@ -119,8 +114,6 @@ fun UnifiedScreen(
     var pendingMeioElfoKey by rememberSaveable { mutableStateOf<String?>(null) }
     // --------------------------------
 
-    val configuration = LocalConfiguration.current
-    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     val availableSections = availableSectionsFor(state)
     var activeSection by rememberSaveable { mutableStateOf(MainSection.RESUMO) }
 
@@ -130,193 +123,76 @@ fun UnifiedScreen(
         state.mostrandoAtributosProgresso -> MainSection.ATRIBUTOS
         else -> null
     }
-    val displaySection = forcedSection ?: activeSection
+    LaunchedEffect(availableSections) {
+        activeSection = resolveActiveSection(activeSection, availableSections)
+    }
 
-    LaunchedEffect(availableSections, forcedSection) {
-        activeSection = if (forcedSection != null) {
-            forcedSection
-        } else {
-            resolveActiveSection(activeSection, availableSections)
-        }
+    LaunchedEffect(forcedSection) {
+        forcedSection?.let { activeSection = it }
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
     ) {
         if (state.modoProgressaoAtivo) {
             Text(
                 text = "MODO DE PROGRESSÃO",
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
+                modifier = Modifier.fillMaxWidth(),
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
-            HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp))
+            HorizontalDivider()
         }
 
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            if (isLandscape) {
-                Column(
-                    modifier = Modifier
-                        .weight(0.28f)
-                        .fillMaxHeight()
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    SectionMenu(
-                        sections = availableSections,
-                        selectedSection = displaySection,
-                        enabled = forcedSection == null,
-                        onSelectSection = {
-                            onUserFeedback()
-                            activeSection = it
-                        }
-                    )
-                    Spacer(Modifier.height(12.dp))
-                    BasicCharacterInfo(state = state)
-                }
-
-                Column(
-                    modifier = Modifier
-                        .weight(0.44f)
-                        .fillMaxHeight()
-                ) {
-                    CharacterPortraitCard()
-                    Spacer(Modifier.height(12.dp))
-                    GlobalActionButtons(
-                        state = state,
-                        viewModel = viewModel,
-                        onImportRequested = {
-                            onUserFeedback()
-                            onImportRequested()
-                        },
-                        onClearRequested = {
-                            onUserFeedback()
-                            showClearDialog = true
-                        },
-                        onShowMessage = onShowMessage
-                    )
-                    Spacer(Modifier.height(12.dp))
-                    SectionDetailPane(
-                        modifier = Modifier.weight(1f),
-                        state = state,
-                        viewModel = viewModel,
-                        selectedSection = displaySection,
-                        listaSuperPoderes = listaSuperPoderes,
-                        equipamentoCategorias = equipamentoCategorias,
-                        superequipCategorias = superequipCategorias,
-                        onSelectAncestralidade = { nome ->
-                            val key = nome.uppercase().semAcentos()
-                            if (key != state.ancestralidade) {
-                                if (key == "MEIO-ELFOS") {
-                                    pendingMeioElfoKey = key
-                                    showMeioElfoDialog = true
-                                } else {
-                                    pendingMeioElfoKey = null
-                                    state.aplicarAncestralidade(
-                                        key,
-                                        viewModel.feedbackMessages as MutableList<String>
-                                    )
-                                }
-                            }
-                        },
-                        onUseProgress = { index ->
-                            currentSlotIndex = index
-                            showAllocDialog = true
-                        },
-                        onUserFeedback = onUserFeedback
-                    )
-                }
-
-                Column(
-                    modifier = Modifier
-                        .weight(0.28f)
-                        .fillMaxHeight()
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    SummaryCompact(state = state)
-                }
-            } else {
-                Column(
-                    modifier = Modifier
-                        .weight(0.4f)
-                        .fillMaxHeight()
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    SectionMenu(
-                        sections = availableSections,
-                        selectedSection = displaySection,
-                        enabled = forcedSection == null,
-                        onSelectSection = {
-                            onUserFeedback()
-                            activeSection = it
-                        }
-                    )
-                    Spacer(Modifier.height(12.dp))
-                    BasicCharacterInfo(state = state)
-                    Spacer(Modifier.height(12.dp))
-                    CharacterPortraitCard()
-                    Spacer(Modifier.height(12.dp))
-                    GlobalActionButtons(
-                        state = state,
-                        viewModel = viewModel,
-                        onImportRequested = {
-                            onUserFeedback()
-                            onImportRequested()
-                        },
-                        onClearRequested = {
-                            onUserFeedback()
-                            showClearDialog = true
-                        },
-                        onShowMessage = onShowMessage
-                    )
-                }
-
-                Column(
-                    modifier = Modifier
-                        .weight(0.6f)
-                        .fillMaxHeight()
-                ) {
-                    SummaryCompact(state = state)
-                    Spacer(Modifier.height(12.dp))
-                    SectionDetailPane(
-                        modifier = Modifier.weight(1f),
-                        state = state,
-                        viewModel = viewModel,
-                        selectedSection = displaySection,
-                        listaSuperPoderes = listaSuperPoderes,
-                        equipamentoCategorias = equipamentoCategorias,
-                        superequipCategorias = superequipCategorias,
-                        onSelectAncestralidade = { nome ->
-                            val key = nome.uppercase().semAcentos()
-                            if (key != state.ancestralidade) {
-                                if (key == "MEIO-ELFOS") {
-                                    pendingMeioElfoKey = key
-                                    showMeioElfoDialog = true
-                                } else {
-                                    pendingMeioElfoKey = null
-                                    state.aplicarAncestralidade(
-                                        key,
-                                        viewModel.feedbackMessages as MutableList<String>
-                                    )
-                                }
-                            }
-                        },
-                        onUseProgress = { index ->
-                            currentSlotIndex = index
-                            showAllocDialog = true
-                        },
-                        onUserFeedback = onUserFeedback
-                    )
-                }
+        CreatorTabRow(
+            sections = availableSections,
+            selectedSection = activeSection,
+            onSelectSection = {
+                onUserFeedback()
+                activeSection = it
             }
-        }
+        )
+
+        SectionDetailPane(
+            modifier = Modifier.fillMaxSize(),
+            state = state,
+            viewModel = viewModel,
+            selectedSection = activeSection,
+            listaSuperPoderes = listaSuperPoderes,
+            equipamentoCategorias = equipamentoCategorias,
+            superequipCategorias = superequipCategorias,
+            onImportRequested = {
+                onUserFeedback()
+                onImportRequested()
+            },
+            onClearRequested = {
+                onUserFeedback()
+                showClearDialog = true
+            },
+            onShowMessage = onShowMessage,
+            onSelectAncestralidade = { nome ->
+                val key = nome.uppercase().semAcentos()
+                if (key != state.ancestralidade) {
+                    if (key == "MEIO-ELFOS") {
+                        pendingMeioElfoKey = key
+                        showMeioElfoDialog = true
+                    } else {
+                        pendingMeioElfoKey = null
+                        state.aplicarAncestralidade(
+                            key,
+                            viewModel.feedbackMessages as MutableList<String>
+                        )
+                    }
+                }
+            },
+            onUseProgress = { index ->
+                currentSlotIndex = index
+                showAllocDialog = true
+            },
+            onUserFeedback = onUserFeedback
+        )
     }
 
     if (showClearDialog) {
@@ -470,52 +346,6 @@ fun UnifiedScreen(
 }
 
 @Composable
-private fun SectionMenu(
-    sections: List<MainSection>,
-    selectedSection: MainSection,
-    enabled: Boolean,
-    onSelectSection: (MainSection) -> Unit
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-    ) {
-        Column(Modifier.padding(12.dp)) {
-            Text(
-                text = "Seções",
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            sections.forEach { section ->
-                val isSelected = section == selectedSection
-                TextButton(
-                    onClick = { onSelectSection(section) },
-                    enabled = enabled,
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = if (isSelected) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onSurface
-                        }
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = if (isSelected) {
-                            "● ${section.label()}"
-                        } else {
-                            section.label()
-                        },
-                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
 private fun GlobalActionButtons(
     state: CriadorState,
     viewModel: CriadorViewModel,
@@ -575,6 +405,57 @@ private fun GlobalActionButtons(
     }
 }
 
+private data class SectionTab(
+    val section: MainSection,
+    val label: String
+)
+
+@Composable
+private fun CreatorTabRow(
+    sections: List<MainSection>,
+    selectedSection: MainSection,
+    onSelectSection: (MainSection) -> Unit
+) {
+    val tabs = remember(sections) { sections.map { SectionTab(it, it.tabLabel()) } }
+    if (tabs.isEmpty()) {
+        return
+    }
+    val selectedIndex = tabs.indexOfFirst { it.section == selectedSection }.coerceAtLeast(0)
+
+    ScrollableTabRow(
+        selectedTabIndex = selectedIndex,
+        edgePadding = 0.dp,
+        indicator = { tabPositions ->
+            TabRowDefaults.PrimaryIndicator(
+                modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex])
+            )
+        }
+    ) {
+        tabs.forEach { tab ->
+            Tab(
+                selected = tab.section == selectedSection,
+                onClick = { onSelectSection(tab.section) },
+                text = { Text(tab.label) }
+            )
+        }
+    }
+}
+
+private fun MainSection.tabLabel(): String = when (this) {
+    MainSection.ANCESTRALIDADES -> "Ancestr."
+    MainSection.TROPOS -> "Tropos"
+    MainSection.COMPLICACOES -> "Complic."
+    MainSection.ATRIBUTOS -> "Atributos"
+    MainSection.PERICIAS -> "Perícias"
+    MainSection.VANTAGENS -> "Vantagens"
+    MainSection.EQUIPAMENTOS -> "Equip."
+    MainSection.RESUMO -> "Resumo"
+    MainSection.PODERES -> "Poderes"
+    MainSection.XP -> "XP"
+    MainSection.MONSTRO -> "Monstro"
+    MainSection.CRYSTAL_HEART -> "Crystal Heart"
+}
+
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 private fun SectionDetailPane(
@@ -585,14 +466,19 @@ private fun SectionDetailPane(
     listaSuperPoderes: List<SuperPoder>,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
+    onImportRequested: () -> Unit,
+    onClearRequested: () -> Unit,
+    onShowMessage: (String) -> Unit,
     onSelectAncestralidade: (String) -> Unit,
     onUseProgress: (Int) -> Unit,
     onUserFeedback: () -> Unit
 ) {
+    val scrollState = rememberScrollState()
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
+            .padding(16.dp)
     ) {
         if (state.modoProgressaoAtivo) {
             ProgressionDetailContent(
@@ -601,6 +487,9 @@ private fun SectionDetailPane(
                 selectedSection = selectedSection,
                 equipamentoCategorias = equipamentoCategorias,
                 superequipCategorias = superequipCategorias,
+                onImportRequested = onImportRequested,
+                onClearRequested = onClearRequested,
+                onShowMessage = onShowMessage,
                 onUseProgress = onUseProgress,
                 onUserFeedback = onUserFeedback
             )
@@ -612,6 +501,9 @@ private fun SectionDetailPane(
                 listaSuperPoderes = listaSuperPoderes,
                 equipamentoCategorias = equipamentoCategorias,
                 superequipCategorias = superequipCategorias,
+                onImportRequested = onImportRequested,
+                onClearRequested = onClearRequested,
+                onShowMessage = onShowMessage,
                 onSelectAncestralidade = onSelectAncestralidade,
                 onUserFeedback = onUserFeedback
             )
@@ -679,21 +571,6 @@ internal fun resolveActiveSection(
     return availableSections.first()
 }
 
-private fun MainSection.label(): String = when (this) {
-    MainSection.ANCESTRALIDADES -> "Ancestralidades"
-    MainSection.TROPOS -> "Tropos"
-    MainSection.COMPLICACOES -> "Complicações"
-    MainSection.ATRIBUTOS -> "Atributos"
-    MainSection.PERICIAS -> "Perícias"
-    MainSection.VANTAGENS -> "Vantagens"
-    MainSection.EQUIPAMENTOS -> "Equipamentos"
-    MainSection.RESUMO -> "Resumo"
-    MainSection.PODERES -> "Poderes"
-    MainSection.XP -> "XP"
-    MainSection.MONSTRO -> "Monstro"
-    MainSection.CRYSTAL_HEART -> "Crystal Heart"
-}
-
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 private fun ProgressionDetailContent(
@@ -702,6 +579,9 @@ private fun ProgressionDetailContent(
     selectedSection: MainSection,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
+    onImportRequested: () -> Unit,
+    onClearRequested: () -> Unit,
+    onShowMessage: (String) -> Unit,
     onUseProgress: (Int) -> Unit,
     onUserFeedback: () -> Unit
 ) {
@@ -837,7 +717,13 @@ private fun ProgressionDetailContent(
             },
             onUserFeedback = onUserFeedback
         )
-        else -> ResumoSection(state = state, onUserFeedback = onUserFeedback)
+        else -> SummaryTabContent(
+            state = state,
+            viewModel = viewModel,
+            onImportRequested = onImportRequested,
+            onClearRequested = onClearRequested,
+            onShowMessage = onShowMessage
+        )
     }
 }
 
@@ -850,13 +736,22 @@ private fun CreationDetailContent(
     listaSuperPoderes: List<SuperPoder>,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
+    onImportRequested: () -> Unit,
+    onClearRequested: () -> Unit,
+    onShowMessage: (String) -> Unit,
     onSelectAncestralidade: (String) -> Unit,
     onUserFeedback: () -> Unit
 ) {
     val creationLocked = state.criacaoBasicaCongelada
 
     when (selectedSection) {
-        MainSection.RESUMO -> ResumoSection(state = state, onUserFeedback = onUserFeedback)
+        MainSection.RESUMO -> SummaryTabContent(
+            state = state,
+            viewModel = viewModel,
+            onImportRequested = onImportRequested,
+            onClearRequested = onClearRequested,
+            onShowMessage = onShowMessage
+        )
         MainSection.ANCESTRALIDADES -> AncestralidadesSection(
             state = state,
             currentAncestralidade = state.ancestralidade,
@@ -948,22 +843,35 @@ private fun CreationDetailContent(
             superequipCategorias = superequipCategorias,
             onUserFeedback = onUserFeedback
         )
-        else -> ResumoSection(state = state, onUserFeedback = onUserFeedback)
+        else -> SummaryTabContent(
+            state = state,
+            viewModel = viewModel,
+            onImportRequested = onImportRequested,
+            onClearRequested = onClearRequested,
+            onShowMessage = onShowMessage
+        )
     }
 }
 
 @Composable
-private fun ResumoSection(
+private fun SummaryTabContent(
     state: CriadorState,
-    onUserFeedback: () -> Unit = {}
+    viewModel: CriadorViewModel,
+    onImportRequested: () -> Unit,
+    onClearRequested: () -> Unit,
+    onShowMessage: (String) -> Unit
 ) {
-    SectionCard(
-        title = "Resumo do Personagem",
-        expanded = state.sectionsExpanded[MainSection.RESUMO] ?: false,
-        onToggle = { state.toggleSection(MainSection.RESUMO) },
-        icon = Icons.Default.Description,
-        onToggleFeedback = onUserFeedback
-    ) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        CharacterPortraitCard()
+        Spacer(Modifier.height(12.dp))
+        GlobalActionButtons(
+            state = state,
+            viewModel = viewModel,
+            onImportRequested = onImportRequested,
+            onClearRequested = onClearRequested,
+            onShowMessage = onShowMessage
+        )
+        Spacer(Modifier.height(12.dp))
         SummaryContent(state)
     }
 }

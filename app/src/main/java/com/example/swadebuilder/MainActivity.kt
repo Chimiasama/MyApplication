@@ -83,6 +83,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -672,7 +673,11 @@ class MainActivity : ComponentActivity() {
                                                 modifier = Modifier.fillMaxWidth(),
                                                 contentAlignment = Alignment.Center
                                             ) {
-                                                // Titulo de ajuda removido
+                                                Text(
+                                                    text = state.nomePersonagem.ifBlank { "Criador" },
+                                                    style = MaterialTheme.typography.titleLarge,
+                                                    textAlign = TextAlign.Center
+                                                )
                                             }
                                         },
                                         navigationIcon = {
