@@ -50,7 +50,6 @@ import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
 import com.example.swadebuilder.ui.sections.BasicCharacterInfo
-import com.example.swadebuilder.ui.sections.CharacterPortraitSummary
 import com.example.swadebuilder.ui.sections.SummaryCompact
 import com.example.swadebuilder.ui.sections.ComplicacoesSection
 import com.example.swadebuilder.ui.sections.CrystalHeartSection
@@ -63,6 +62,7 @@ import com.example.swadebuilder.ui.sections.TipoMonstroSection
 import com.example.swadebuilder.ui.sections.TroposSection
 import com.example.swadebuilder.ui.sections.VantagensContent
 import com.example.swadebuilder.ui.sections.XpSection
+import com.example.swadebuilder.ui.components.CharacterPortraitCard
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
@@ -175,7 +175,7 @@ fun UnifiedScreen(
                         .weight(0.44f)
                         .fillMaxHeight()
                 ) {
-                    CharacterPortraitSummary(state = state)
+                    CharacterPortraitCard()
                     Spacer(Modifier.height(12.dp))
                     GlobalActionButtons(
                         state = state,
@@ -239,6 +239,8 @@ fun UnifiedScreen(
                     )
                     Spacer(Modifier.height(12.dp))
                     BasicCharacterInfo(state = state)
+                    Spacer(Modifier.height(12.dp))
+                    CharacterPortraitCard()
                     Spacer(Modifier.height(12.dp))
                     GlobalActionButtons(
                         state = state,
