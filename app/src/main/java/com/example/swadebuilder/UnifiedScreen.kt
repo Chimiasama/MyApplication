@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Delete
@@ -65,6 +67,7 @@ import com.example.swadebuilder.ui.components.CharacterPortraitCard
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
+import android.net.Uri
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 // @Preview(showBackground = true) // Commented out to avoid build errors with ViewModel
@@ -356,7 +359,7 @@ private fun GlobalActionButtons(
         ) {
             Icon(Icons.Default.Delete, contentDescription = null)
             Spacer(Modifier.width(8.dp))
-            Text("Limpar")
+            Text("Reiniciar personagem")
         }
 
         Button(
@@ -378,7 +381,7 @@ private fun GlobalActionButtons(
         ) {
             Icon(Icons.Default.ArrowForward, contentDescription = null)
             Spacer(Modifier.width(8.dp))
-            Text("Finalizar")
+            Text("Finalizar criação")
         }
     }
 }
@@ -791,12 +794,24 @@ private fun SummaryTabContent(
     onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit
 ) {
+    var portraitUri by rememberSaveable { mutableStateOf<String?>(null) }
+    val portraitLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        portraitUri = uri?.toString()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
-        CharacterPortraitCard()
+        SummaryContent(state)
+        Spacer(Modifier.height(12.dp))
+        CharacterPortraitCard(
+            imageUri = portraitUri?.let(Uri::parse),
+            onSelectImage = { portraitLauncher.launch("image/*") }
+        )
         Spacer(Modifier.height(12.dp))
         GlobalActionButtons(
             state = state,
@@ -804,8 +819,6 @@ private fun SummaryTabContent(
             onClearRequested = onClearRequested,
             onShowMessage = onShowMessage
         )
-        Spacer(Modifier.height(12.dp))
-        SummaryContent(state)
     }
 }
 
