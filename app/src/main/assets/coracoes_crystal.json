@@ -9,7 +9,7 @@
     "poderes": ["Raio", "Proteção", "Luz"],
     "complicacao_inerente": null,
     "origem": "CRYSTAL_HEART",
-    "descricao": "O cristal padrão emitido para agentes novatos da Syn."
+    "descricao": "O cristal padrão emitido para agentes novatos da Agência."
   },
   {
     "id": "heart_feral",

@@ -283,9 +283,9 @@ fun TelaInicial(
                         onToggle = { expandedOtherModules = !expandedOtherModules }
                     ) {
                         ModuleToggle(
-                            title = if (isFullEdition) "Savage Pathfinder" else "Buscatrilha",
+                            title = if (isFullEdition) "Alta Fantasia" else "Buscatrilha",
                             description = if (isFullEdition) {
-                                "Conteúdo oficial de Golarion (Classes, Raças)."
+                                "Conteúdo oficial de Mundo Ancestral (Classes, Raças)."
                             } else {
                                 "Cenário Buscatrilha e material temático."
                             },
@@ -294,8 +294,8 @@ fun TelaInicial(
                             onCheckedChange = { optCompendioBuscatrilha = it }
                         )
                         ModuleToggle(
-                            title = "Deadlands: O Oeste Estranho".toEditionDisplayName(),
-                            description = "Pistoleiros, Harroweds e o horror do Oeste.",
+                            title = "Faroeste Assombrado".toEditionDisplayName(),
+                            description = "Pistoleiros, revividos e o horror do Oeste.",
                             icon = Icons.Default.Shield,
                             checked = optCompendioDeadlands,
                             onCheckedChange = { optCompendioDeadlands = it }
@@ -322,7 +322,7 @@ fun TelaInicial(
                             onCheckedChange = { optCompendioCidadeSolVapor = it }
                         )
                         ModuleToggle(
-                            title = "Wiseguys".toEditionDisplayName(),
+                            title = "Malandros".toEditionDisplayName(),
                             description = "Crime organizado moderno, conexões e esquemas.",
                             icon = Icons.Default.Groups,
                             checked = optCompendioWiseguys,

@@ -3,7 +3,7 @@ package com.example.swadebuilder.util
 import com.example.swadebuilder.EditionConfig
 
 private val liteDisplayReplacements = listOf(
-    "Deadlands: O Oeste Estranho" to "Faroeste Estranho",
+    "Deadlands: O Oeste Estranho" to "Faroeste Assombrado",
     "Arte da Guerra: Nova Era" to "Arte de Combate Novo Tempo",
     "Arte da Guerra Nova Era" to "Arte de Combate Novo Tempo",
     "Arte da Guerra" to "Arte de Combate Novo Tempo",
@@ -11,12 +11,16 @@ private val liteDisplayReplacements = listOf(
     "Cidade do Sol a Vapor" to "Steampunk do Sol",
     "Cidade Sol V'apor" to "Steampunk do Sol",
     "Crystal Heart" to "Coração de Pedra",
-    "Deadlands" to "Faroeste Estranho",
+    "Deadlands" to "Faroeste Assombrado",
     "Wiseguys" to "Malandros",
+    "Kemonomimi (Espírito Animal)" to "Povo Animal Espiritual",
+    "Humano (Império do Sol)" to "Humano (Império Oriental)",
+    "Terracota" to "Povo de Barro",
+    "Onigem (Sangue de Oni)" to "Sangue de Demônio",
     "ARTE_DA_GUERRA" to "ARTE DE COMBATE NOVO TEMPO",
     "CIDADE_SOL_VAPOR" to "STEAMPUNK DO SOL",
     "CRYSTAL_HEART" to "CORAÇÃO DE PEDRA",
-    "DEADLANDS" to "FAROESTE ESTRANHO",
+    "OESTE_ESTRANHO" to "FAROESTE ASSOMBRADO",
     "WISEGUYS" to "MALANDROS"
 )
 
