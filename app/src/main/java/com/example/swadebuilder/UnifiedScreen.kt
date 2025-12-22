@@ -140,15 +140,22 @@ fun UnifiedScreen(
     }
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }.collect { page ->
+    LaunchedEffect(pagerState, availableSections) {
+        snapshotFlow {
+            val page = if (pagerState.isScrollInProgress) {
+                pagerState.targetPage
+            } else {
+                pagerState.currentPage
+            }
+            page
+        }.collect { page ->
             availableSections.getOrNull(page)?.let { activeSection = it }
         }
     }
 
-    LaunchedEffect(activeSection, availableSections) {
+    LaunchedEffect(activeSection, availableSections, pagerState.isScrollInProgress) {
         val targetIndex = activeSectionIndex(availableSections, activeSection)
-        if (targetIndex != pagerState.currentPage) {
+        if (!pagerState.isScrollInProgress && targetIndex != pagerState.currentPage) {
             coroutineScope.launch {
                 pagerState.animateScrollToPage(targetIndex)
             }
@@ -176,12 +183,6 @@ fun UnifiedScreen(
             onSelectSection = {
                 onUserFeedback()
                 activeSection = it
-                val targetIndex = activeSectionIndex(availableSections, it)
-                if (targetIndex != pagerState.currentPage) {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(targetIndex)
-                    }
-                }
             }
         )
 
