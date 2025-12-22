@@ -51,7 +51,8 @@ import com.example.swadebuilder.CriadorState
 data class RacialModifierLite(
     val nome: String,
     val displayName: String,
-    val originalName: String? = null
+    val originalName: String? = null,
+    val aliases: Set<String> = emptySet()
 )
 
 private const val ASSET_ANCESTRALIDADES = "listaancestralidade.json"
@@ -62,6 +63,43 @@ private fun RacialModifierLite.displayName(showOfficialNames: Boolean): String {
     } else {
         displayName
     }
+}
+
+private data class RacialAbilitySignature(
+    val nome: String,
+    val descricao: String
+)
+
+private data class RacialSignature(
+    val atributos: Map<String, Int>,
+    val pericias: Map<String, Int>,
+    val vantagensGratis: List<String>,
+    val desvantagens: List<String>,
+    val habilidades: List<RacialAbilitySignature>
+)
+
+private fun RacialModifier.signature(): RacialSignature {
+    fun normalizeList(values: List<String>): List<String> {
+        return values.sortedBy { it.uppercase().semAcentos() }
+    }
+
+    return RacialSignature(
+        atributos = atributos,
+        pericias = pericias,
+        vantagensGratis = normalizeList(vantagensGratis),
+        desvantagens = normalizeList(desvantagens),
+        habilidades = habilidades
+            .map { RacialAbilitySignature(it.nome, it.descricao) }
+            .sortedWith(compareBy({ it.nome.uppercase().semAcentos() }, { it.descricao.uppercase().semAcentos() }))
+    )
+}
+
+private fun stripScenarioSuffix(nome: String): String {
+    return nome.replace(Regex("\\s*\\([^)]*\\)\\s*$"), "").trim()
+}
+
+private fun adjustBuscatrilhaName(nome: String): String {
+    return nome.replace("Trilhador", "Buscatrilha")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -99,16 +137,6 @@ fun AncestralidadesSection(
     val compendioSciFiAtivo = state.compendioSciFiAtivo
     val compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
 
-    val apenasArteDaGuerra = compendioArteDaGuerraAtivo &&
-            !compendioFantasiaAtivo &&
-            !compendioBuscatrilhaAtivo &&
-            !compendioDeadlandsAtivo &&
-            !compendioCidadeSolVaporAtivo &&
-            !compendioWiseguysAtivo &&
-            !compendioHorrorAtivo &&
-            !compendioSciFiAtivo &&
-            !compendioCrystalHeartAtivo
-
     val ancestralidadesState = remember(
         compendioFantasiaAtivo,
         compendioBuscatrilhaAtivo,
@@ -122,61 +150,82 @@ fun AncestralidadesSection(
     ) {
         val all = context.loadJsonAsset<List<RacialModifier>>(ASSET_ANCESTRALIDADES)
 
+        val activeOrigins = buildList {
+            if (compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
+            if (compendioFantasiaAtivo) add("FANTASIA")
+            if (compendioBuscatrilhaAtivo) add("FANTASIABUSCATRILHA")
+            if (compendioDeadlandsAtivo) add("OESTE_ESTRANHO")
+            if (compendioCidadeSolVaporAtivo) add("CIDADE_SOL_VAPOR")
+            if (compendioWiseguysAtivo) add("WISEGUYS")
+            if (compendioHorrorAtivo) add("HORROR")
+            if (compendioSciFiAtivo) add("SCI_FI")
+            if (compendioCrystalHeartAtivo) add("CRYSTAL_HEART")
+        }
+
+        val allowedOrigins = when (activeOrigins.size) {
+            0 -> setOf("BASICO")
+            1 -> setOf(activeOrigins.first())
+            else -> (activeOrigins + "BASICO").toSet()
+        }
+
         val filtered = all.filter {
             val origin = it.origem?.uppercase() ?: "BASICO"
 
-            when (origin) {
-                "BASICO" -> !apenasArteDaGuerra
-                "ARTE_DA_GUERRA" -> compendioArteDaGuerraAtivo
-                "FANTASIA" -> compendioFantasiaAtivo
-                "FANTASIABUSCATRILHA" -> compendioBuscatrilhaAtivo
-                "OESTE_ESTRANHO" -> compendioDeadlandsAtivo
-                "CIDADE_SOL_VAPOR" -> compendioCidadeSolVaporAtivo
-                "WISEGUYS" -> compendioWiseguysAtivo
-                "SCI_FI" -> compendioSciFiAtivo
-                "CRYSTAL_HEART" -> compendioCrystalHeartAtivo
-                "HORROR" -> compendioHorrorAtivo
-                else -> false
-            }
-        }.map {
-            val buscatrilhaName = it.nome.replace("Trilhador", "Buscatrilha")
-            val originalName = if (EditionConfig.isFullEdition) it.originalName else null
-            RacialModifierLite(
-                nome = buscatrilhaName,
-                displayName = buscatrilhaName.toEditionDisplayName(),
-                originalName = originalName
-            )
+            origin in allowedOrigins
         }
-        mutableStateOf(filtered)
+
+        val deduped = filtered
+            .groupBy { it.signature() }
+            .values
+            .map { group ->
+                val representative = group.first()
+                val hasMultipleOrigins = group.map { (it.origem ?: "BASICO").uppercase() }.toSet().size > 1
+                val baseDisplayName = if (hasMultipleOrigins) {
+                    stripScenarioSuffix(representative.nome)
+                } else {
+                    representative.nome
+                }
+                val adjustedName = adjustBuscatrilhaName(representative.nome)
+                val displayName = adjustBuscatrilhaName(baseDisplayName)
+                val originalName = if (EditionConfig.isFullEdition && !hasMultipleOrigins) {
+                    representative.originalName
+                } else {
+                    null
+                }
+                val aliasKeys = group
+                    .map { adjustBuscatrilhaName(it.nome).uppercase().semAcentos() }
+                    .toSet()
+                RacialModifierLite(
+                    nome = adjustedName,
+                    displayName = displayName.toEditionDisplayName(),
+                    originalName = originalName,
+                    aliases = aliasKeys
+                )
+            }
+
+        mutableStateOf(deduped)
     }
 
     val selectedKey = rememberSaveable { mutableStateOf("") }
 
     LaunchedEffect(ancestralidadesState.value, currentAncestralidade) {
         val available = ancestralidadesState.value
-        val availableKeys = available.map { it.nome.uppercase().semAcentos() }
         val currentKey = currentAncestralidade.uppercase().semAcentos()
 
-        val preferredKey = when {
-            currentKey.isNotBlank() && availableKeys.contains(currentKey) -> currentKey
-            else -> {
-                available.firstOrNull { it.nome.contains("Humano", ignoreCase = true) }
-                    ?.nome
-                    ?.uppercase()
-                    ?.semAcentos()
-                    ?: availableKeys.firstOrNull()
-            }
-        }
+        val preferredItem = when {
+            currentKey.isNotBlank() -> available.firstOrNull { it.aliases.contains(currentKey) }
+            else -> null
+        } ?: available.firstOrNull { it.nome.contains("Humano", ignoreCase = true) }
+            ?: available.firstOrNull()
 
-        preferredKey?.let { key ->
+        preferredItem?.let { item ->
+            val key = item.nome.uppercase().semAcentos()
             if (selectedKey.value != key) {
                 selectedKey.value = key
             }
 
-            available.firstOrNull { it.nome.uppercase().semAcentos() == key }?.nome?.let { nome ->
-                if (nome != currentAncestralidade) {
-                    onSelectAncestralidade(nome)
-                }
+            if (item.nome != currentAncestralidade) {
+                onSelectAncestralidade(item.nome)
             }
         }
     }
