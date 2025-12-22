@@ -99,7 +99,7 @@ class CriadorViewModel : ViewModel() {
         )
     }
 
-    fun prepararNomeInicial(context: Context) {
+    suspend fun prepararNomeInicial(context: Context) {
         state.nomePersonagem = gerarNomeSequencial(
             DEFAULT_CHARACTER_NAME,
             listarPersonagensSalvos(context).map { it.nome },
@@ -134,8 +134,16 @@ class CriadorViewModel : ViewModel() {
         return candidate
     }
 
-    fun salvarPersonagem(context: Context, nomePersonalizado: String? = null): CharacterStorage.SaveEntry {
-        val previousSnapshot = state.idAtual?.let { CharacterStorage.load(context, it) }
+    suspend fun salvarPersonagem(
+        context: Context,
+        nomePersonalizado: String? = null
+    ): CharacterStorage.SaveEntry {
+        val previousSnapshot = state.idAtual?.let { id ->
+            when (val result = CharacterStorage.load(context, id)) {
+                is CharacterStorage.LoadResult.Success -> result.snapshot
+                else -> null
+            }
+        }
         val desiredName = (nomePersonalizado?.takeIf { it.isNotBlank() } ?: state.nomePersonagem)
             .ifBlank { DEFAULT_CHARACTER_NAME }
 
@@ -164,12 +172,28 @@ class CriadorViewModel : ViewModel() {
         return entry
     }
 
-    fun listarPersonagensSalvos(context: Context): List<CharacterStorage.SaveEntry> {
+    suspend fun listarPersonagensSalvos(context: Context): List<CharacterStorage.SaveEntry> {
         return CharacterStorage.listSaves(context)
     }
 
-    fun carregarPersonagem(context: Context, saveId: String): Boolean {
-        val snapshot = CharacterStorage.load(context, saveId) ?: return false
+    data class LoadOutcome(
+        val success: Boolean,
+        val message: String? = null
+    )
+
+    suspend fun carregarPersonagem(context: Context, saveId: String): LoadOutcome {
+        val result = CharacterStorage.load(context, saveId)
+        val snapshot = when (result) {
+            is CharacterStorage.LoadResult.Success -> result.snapshot
+            is CharacterStorage.LoadResult.Failure -> return LoadOutcome(
+                success = false,
+                message = result.message
+            )
+            CharacterStorage.LoadResult.NotFound -> return LoadOutcome(
+                success = false,
+                message = "Arquivo de personagem não encontrado."
+            )
+        }
         clearFeedbackMessages()
         val flags = snapshot.flags
         resetStateParaNovoPersonagem(
@@ -192,7 +216,7 @@ class CriadorViewModel : ViewModel() {
         )
         state.restoreFromSnapshot(snapshot, mutableListOf())
         state.idAtual = saveId
-        return true
+        return LoadOutcome(success = true)
     }
 
     private fun mapChoiceToArcanoId(choice: String?): String? {
@@ -393,7 +417,7 @@ class CriadorViewModel : ViewModel() {
             if (state.vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" }) 1 else 0
     }
 
-    fun atualizarRetrato(context: Context, sourceUri: Uri?) {
+    suspend fun atualizarRetrato(context: Context, sourceUri: Uri?) {
         if (sourceUri == null) {
             state.portraitFileName = null
             return

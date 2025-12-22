@@ -6,6 +6,8 @@ import java.io.File
 import java.util.Locale
 import java.util.UUID
 import com.example.swadebuilder.util.CharacterStorage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 object CharacterPortraitStorage {
     private const val PORTRAIT_DIR = "portraits"
@@ -24,8 +26,8 @@ object CharacterPortraitStorage {
         }
     }
 
-    fun savePortrait(context: Context, sourceUri: Uri): String? {
-        return runCatching {
+    suspend fun savePortrait(context: Context, sourceUri: Uri): String? = withContext(Dispatchers.IO) {
+        runCatching {
             val dir = portraitsDirectory(context)
             val fileName = "portrait_${UUID.randomUUID()}${extensionFor(sourceUri, context)}"
             val destination = File(dir, fileName)
@@ -34,27 +36,29 @@ object CharacterPortraitStorage {
                 destination.outputStream().use { output ->
                     input.copyTo(output)
                 }
-            } ?: return null
+            } ?: return@withContext null
 
             fileName
         }.getOrNull()
     }
 
-    fun deleteIfUnused(
+    suspend fun deleteIfUnused(
         context: Context,
         fileName: String,
         excludingSaveIds: Set<String> = emptySet()
-    ) {
+    ) = withContext(Dispatchers.IO) {
         val referenced = CharacterStorage.listSaves(context).any { entry ->
             if (entry.id in excludingSaveIds) {
                 return@any false
             }
-            CharacterStorage.load(context, entry.id)
-                ?.selecoes
-                ?.retratoFileName == fileName
+            when (val result = CharacterStorage.load(context, entry.id)) {
+                is CharacterStorage.LoadResult.Success ->
+                    result.snapshot.selecoes.retratoFileName == fileName
+                else -> false
+            }
         }
 
-        if (referenced) return
+        if (referenced) return@withContext
 
         val file = File(portraitsDirectory(context), fileName)
         if (file.exists()) {

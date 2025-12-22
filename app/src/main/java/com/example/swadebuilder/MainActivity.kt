@@ -553,16 +553,21 @@ class MainActivity : ComponentActivity() {
                     confirmButton = {
                         TextButton(onClick = {
                             entryToDelete?.let { entry ->
-                                val snapshotToDelete = CharacterStorage.load(context, entry.id)
-                                CharacterStorage.delete(context, entry.id)
-                                savedEntries.removeAll { it.id == entry.id }
-                                if (state.idAtual == entry.id) {
-                                    state.idAtual = null
-                                }
-                                snapshotToDelete?.selecoes?.retratoFileName?.let { fileName ->
-                                    CharacterPortraitStorage.deleteIfUnused(context, fileName)
-                                }
                                 scope.launch {
+                                    val snapshotToDelete = when (
+                                        val result = CharacterStorage.load(context, entry.id)
+                                    ) {
+                                        is CharacterStorage.LoadResult.Success -> result.snapshot
+                                        else -> null
+                                    }
+                                    CharacterStorage.delete(context, entry.id)
+                                    savedEntries.removeAll { it.id == entry.id }
+                                    if (state.idAtual == entry.id) {
+                                        state.idAtual = null
+                                    }
+                                    snapshotToDelete?.selecoes?.retratoFileName?.let { fileName ->
+                                        CharacterPortraitStorage.deleteIfUnused(context, fileName)
+                                    }
                                     snackHost.showSnackbar("Personagem removido")
                                 }
                             }
@@ -597,12 +602,12 @@ class MainActivity : ComponentActivity() {
                     confirmButton = {
                         TextButton(onClick = {
                             triggerFeedback()
-                            val entry = criadorViewModel.salvarPersonagem(
-                                context,
-                                saveName.ifBlank { state.nomePersonagem }
-                            )
-                            showSaveDialog = false
                             scope.launch {
+                                val entry = criadorViewModel.salvarPersonagem(
+                                    context,
+                                    saveName.ifBlank { state.nomePersonagem }
+                                )
+                                showSaveDialog = false
                                 snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
                             }
                         }) {
@@ -638,16 +643,16 @@ class MainActivity : ComponentActivity() {
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             TextButton(onClick = {
                                 triggerFeedback()
-                                val entry = criadorViewModel.salvarPersonagem(
-                                    context,
-                                    state.nomePersonagem
-                                )
-                                showSaveBeforeNavigateDialog = false
-                                pendingNavigationAction = null
                                 scope.launch {
+                                    val entry = criadorViewModel.salvarPersonagem(
+                                        context,
+                                        state.nomePersonagem
+                                    )
+                                    showSaveBeforeNavigateDialog = false
+                                    pendingNavigationAction = null
                                     snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
+                                    executePendingNavigation(action)
                                 }
-                                executePendingNavigation(action)
                             }) {
                                 Text("Salvar")
                             }
@@ -703,17 +708,21 @@ class MainActivity : ComponentActivity() {
                                             }
                                             TextButton(onClick = {
                                                 triggerFeedback()
-                                                val loaded = criadorViewModel.carregarPersonagem(context, entry.id)
-                                                if (loaded) {
-                                                    creationSession++
-                                                    mostrouTelaInicial = false
-                                                    showLoadDialog = false
-                                                    scope.launch {
+                                                scope.launch {
+                                                    val result = criadorViewModel.carregarPersonagem(
+                                                        context,
+                                                        entry.id
+                                                    )
+                                                    if (result.success) {
+                                                        creationSession++
+                                                        mostrouTelaInicial = false
+                                                        showLoadDialog = false
                                                         snackHost.showSnackbar("Carregado: ${entry.nome}")
-                                                    }
-                                                } else {
-                                                    scope.launch {
-                                                        snackHost.showSnackbar("Falha ao carregar o personagem")
+                                                    } else {
+                                                        snackHost.showSnackbar(
+                                                            result.message
+                                                                ?: "Falha ao carregar o personagem"
+                                                        )
                                                     }
                                                 }
                                             }) {
@@ -793,7 +802,9 @@ class MainActivity : ComponentActivity() {
                                         regraMultiplosIdiomas = multiplosIdiomas
                                         // showHelpMessages removido
                                     )
-                                    criadorViewModel.prepararNomeInicial(context)
+                                    scope.launch {
+                                        criadorViewModel.prepararNomeInicial(context)
+                                    }
                                     criadorViewModel.state.heroisSemArmadura     = heroisSemArmadura
                                     criadorViewModel.state.nasceUmHeroi          = nasceUmHeroi
 

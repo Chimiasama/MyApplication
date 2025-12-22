@@ -143,6 +143,7 @@ fun UnifiedScreen(
         availableSections.size
     }
     val coroutineScope = rememberCoroutineScope()
+    var lastAutoSaveSection by remember { mutableStateOf<MainSection?>(null) }
 
     LaunchedEffect(pagerState, availableSections) {
         snapshotFlow {
@@ -162,6 +163,18 @@ fun UnifiedScreen(
         if (!pagerState.isScrollInProgress && targetIndex != pagerState.currentPage) {
             coroutineScope.launch {
                 pagerState.animateScrollToPage(targetIndex)
+            }
+        }
+    }
+
+    LaunchedEffect(activeSection) {
+        val previousSection = lastAutoSaveSection
+        lastAutoSaveSection = activeSection
+        if (previousSection != null && previousSection != activeSection && state.idAtual != null) {
+            try {
+                viewModel.salvarPersonagem(context, state.nomePersonagem)
+            } catch (e: Exception) {
+                // Auto-save falhou silenciosamente para evitar interrupção do fluxo.
             }
         }
     }
@@ -278,7 +291,9 @@ fun UnifiedScreen(
                         grandesResponsabilidades = grandesResponsabilidades,
                         regraMultiplosIdiomas = regraMultiplosIdiomas
                     )
-                    viewModel.prepararNomeInicial(context)
+                    coroutineScope.launch {
+                        viewModel.prepararNomeInicial(context)
+                    }
                     state.heroisSemArmadura = heroisSemArmadura
                     state.nasceUmHeroi = nasceUmHeroi
                     state.usarSemPontosDePoder = usarSemPontosDePoder
@@ -867,10 +882,13 @@ private fun SummaryTabContent(
     onRequestProgression: () -> Unit
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val portraitLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
-        viewModel.atualizarRetrato(context, uri)
+        coroutineScope.launch {
+            viewModel.atualizarRetrato(context, uri)
+        }
     }
     val portraitFile = remember(state.portraitFileName, context) {
         state.portraitFileName?.let { File(context.filesDir, "portraits/$it") }

@@ -22,7 +22,8 @@ data class PersonagemSnapshot(
     val pericias: SnapshotPericias,
     val selecoes: SnapshotSelecoes,
     val progresso: SnapshotProgresso,
-    val supers: SnapshotSupers
+    val supers: SnapshotSupers,
+    val checksum: String? = null
 )
 
 @Serializable
