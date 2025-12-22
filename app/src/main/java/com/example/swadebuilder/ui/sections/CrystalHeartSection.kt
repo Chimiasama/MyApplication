@@ -2,13 +2,15 @@ package com.example.swadebuilder.ui.sections
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Favorite
@@ -39,55 +41,60 @@ fun CrystalHeartSection(
     ) {
         val temAgenteSyn = state.vantagensSelecionadas.any { it.id == "aa_agente_syn" }
 
-        if (!temAgenteSyn) {
-            Text(
-                text = "Você precisa da vantagem 'Antecedente Arcano (Agente da Agência)' para equipar um Coração de Cristal.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(8.dp)
-            )
-        } else {
-            val selectedHeart = state.coracaoCrystalSelecionado
-
-            if (selectedHeart != null) {
-                 Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(4.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-                ) {
-                    Column(Modifier.padding(16.dp)) {
-                        Text("Coração Equipado: ${selectedHeart.nome}", fontWeight = FontWeight.Bold)
-                        Text("Estágio: ${selectedHeart.estagio}")
-                        Text("PP: ${selectedHeart.pontos_poder}")
-                        Text("Slots: ${selectedHeart.slots}")
-                        if (selectedHeart.habilidade_passiva != null) {
-                            Text("Passiva: ${selectedHeart.habilidade_passiva}")
-                        }
-                        if (selectedHeart.complicacao_inerente != null) {
-                            Text("Complicação: ${selectedHeart.complicacao_inerente}", color = MaterialTheme.colorScheme.error)
-                        }
-                        Spacer(Modifier.height(8.dp))
-                        Text("Poderes: ${selectedHeart.poderes.joinToString(", ")}")
-
-                        Spacer(Modifier.height(8.dp))
-                        Text(
-                            text = "Trocar Coração",
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.clickable { viewModel.desequiparCrystalHeart() }
-                        )
-                    }
-                }
-            } else {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            if (!temAgenteSyn) {
                 Text(
-                    text = "Selecione um Coração de Cristal:",
-                    modifier = Modifier.padding(8.dp)
+                    text = "Você precisa da vantagem 'Antecedente Arcano (Agente da Agência)' para equipar um Coração de Cristal.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error
                 )
+            } else {
+                val selectedHeart = state.coracaoCrystalSelecionado
 
-                Column {
-                    listaCoracoesCrystal.forEach { heart ->
-                        CrystalHeartItem(heart) {
-                            viewModel.selecionarCrystalHeart(heart)
+                if (selectedHeart != null) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                    ) {
+                        Column(Modifier.padding(16.dp)) {
+                            Text("Coração Equipado: ${selectedHeart.nome}", fontWeight = FontWeight.Bold)
+                            Text("Estágio: ${selectedHeart.estagio}")
+                            Text("PP: ${selectedHeart.pontos_poder}")
+                            Text("Slots: ${selectedHeart.slots}")
+                            if (selectedHeart.habilidade_passiva != null) {
+                                Text("Passiva: ${selectedHeart.habilidade_passiva}")
+                            }
+                            if (selectedHeart.complicacao_inerente != null) {
+                                Text("Complicação: ${selectedHeart.complicacao_inerente}", color = MaterialTheme.colorScheme.error)
+                            }
+                            Spacer(Modifier.height(8.dp))
+                            Text("Poderes: ${selectedHeart.poderes.joinToString(", ")}")
+
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                text = "Trocar Coração",
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.clickable { viewModel.desequiparCrystalHeart() }
+                            )
+                        }
+                    }
+                } else {
+                    Text(
+                        text = "Selecione um Coração de Cristal:",
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+
+                    Column {
+                        listaCoracoesCrystal.forEach { heart ->
+                            CrystalHeartItem(heart) {
+                                viewModel.selecionarCrystalHeart(heart)
+                            }
                         }
                     }
                 }
