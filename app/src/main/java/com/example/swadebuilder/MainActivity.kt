@@ -138,6 +138,12 @@ private inline fun <reified T> AssetManager.readJsonList(fileName: String): List
 
 private const val MULTIPLOS_AA_HABILITADOS: Boolean = false
 
+enum class PendingNavigationAction {
+    ReturnToHome,
+    ResetAndReturnHome,
+    StartProgression
+}
+
 private fun buildUsageInstructions(state: CriadorState): String {
     val activeBooks = buildList {
         add("Básico (sempre ativo)")
@@ -322,9 +328,42 @@ class MainActivity : ComponentActivity() {
             var showSaveDialog by rememberSaveable { mutableStateOf(false) }
             var showLoadDialog by rememberSaveable { mutableStateOf(false) }
             var saveName by rememberSaveable { mutableStateOf("") }
+            var pendingNavigationAction by rememberSaveable {
+                mutableStateOf<PendingNavigationAction?>(null)
+            }
+            var showSaveBeforeNavigateDialog by rememberSaveable { mutableStateOf(false) }
 
             val savedEntries = remember { mutableStateListOf<CharacterStorage.SaveEntry>() }
             var entryToDelete by remember { mutableStateOf<CharacterStorage.SaveEntry?>(null) }
+
+            val startProgression = {
+                criadorViewModel.ensureDefaultSpecializations()
+                state.modoProgressaoAtivo = true
+                state.progresso = 4
+                state.frozenAdvantageCount = state.vantagensSelecionadas.size
+                state.snapshotFrozenSkillIncrements()
+                state.recomputeAvailableProgress()
+            }
+
+            val executePendingNavigation: (PendingNavigationAction) -> Unit = { action ->
+                when (action) {
+                    PendingNavigationAction.ReturnToHome -> {
+                        mostrouTelaInicial = true
+                    }
+                    PendingNavigationAction.ResetAndReturnHome -> {
+                        criadorViewModel.resetToEmptyState()
+                        mostrouTelaInicial = true
+                    }
+                    PendingNavigationAction.StartProgression -> {
+                        startProgression()
+                    }
+                }
+            }
+
+            val requestNavigation: (PendingNavigationAction) -> Unit = { action ->
+                pendingNavigationAction = action
+                showSaveBeforeNavigateDialog = true
+            }
 
             LaunchedEffect(showLoadDialog) {
                 if (showLoadDialog) {
@@ -577,6 +616,61 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
+            if (showSaveBeforeNavigateDialog && pendingNavigationAction != null) {
+                val action = pendingNavigationAction!!
+                val dialogMessage = when (action) {
+                    PendingNavigationAction.StartProgression ->
+                        "Deseja salvar o personagem antes de ir para os progressos?"
+                    PendingNavigationAction.ReturnToHome,
+                    PendingNavigationAction.ResetAndReturnHome ->
+                        "Deseja salvar o personagem antes de voltar para a tela inicial?"
+                }
+
+                AlertDialog(
+                    onDismissRequest = {
+                        showSaveBeforeNavigateDialog = false
+                        pendingNavigationAction = null
+                    },
+                    title = { Text("Salvar personagem?") },
+                    text = { Text(dialogMessage) },
+                    confirmButton = {
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            TextButton(onClick = {
+                                triggerFeedback()
+                                val entry = criadorViewModel.salvarPersonagem(
+                                    context,
+                                    state.nomePersonagem
+                                )
+                                showSaveBeforeNavigateDialog = false
+                                pendingNavigationAction = null
+                                scope.launch {
+                                    snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
+                                }
+                                executePendingNavigation(action)
+                            }) {
+                                Text("Salvar")
+                            }
+                            TextButton(onClick = {
+                                triggerFeedback()
+                                showSaveBeforeNavigateDialog = false
+                                pendingNavigationAction = null
+                                executePendingNavigation(action)
+                            }) {
+                                Text("Não salvar")
+                            }
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = {
+                            showSaveBeforeNavigateDialog = false
+                            pendingNavigationAction = null
+                        }) {
+                            Text(stringResource(R.string.cancel))
+                        }
+                    }
+                )
+            }
+
             if (showLoadDialog) {
                 AlertDialog(
                     onDismissRequest = { showLoadDialog = false },
@@ -714,7 +808,7 @@ class MainActivity : ComponentActivity() {
                             )
                         } else {
                             BackHandler {
-                                mostrouTelaInicial = true
+                                requestNavigation(PendingNavigationAction.ReturnToHome)
                             }
 
                             Scaffold(
@@ -745,8 +839,7 @@ class MainActivity : ComponentActivity() {
                                         navigationIcon = {
                                             TextButton(onClick = {
                                                 triggerFeedback()
-                                                criadorViewModel.resetToEmptyState()
-                                                mostrouTelaInicial = true
+                                                requestNavigation(PendingNavigationAction.ResetAndReturnHome)
                                             }) {
                                                 Text(
                                                     text       = "Voltar",
@@ -811,7 +904,10 @@ class MainActivity : ComponentActivity() {
                                                     snackHost.showSnackbar(message)
                                                 }
                                             },
-                                            onUserFeedback        = triggerFeedback
+                                            onUserFeedback        = triggerFeedback,
+                                            onRequestProgression  = {
+                                                requestNavigation(PendingNavigationAction.StartProgression)
+                                            }
                                         )
                                     }
                                 }

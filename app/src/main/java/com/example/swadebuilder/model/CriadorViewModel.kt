@@ -2,6 +2,7 @@
 package com.example.swadebuilder.model
 
 import android.content.Context
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateListOf
@@ -13,6 +14,7 @@ import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
+import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
 
@@ -251,6 +253,7 @@ class CriadorViewModel : ViewModel() {
         state.idAtual = null
         state.nomePersonagem = DEFAULT_CHARACTER_NAME
         state.anotacoes = ""
+        state.portraitFileName = null
 
         state.coracaoCrystalSelecionado = null
 
@@ -382,6 +385,18 @@ class CriadorViewModel : ViewModel() {
         // Points logic has changed; handled in applying ancestry/reset
         state.pontosVantagem =
             if (state.vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" }) 1 else 0
+    }
+
+    fun atualizarRetrato(context: Context, sourceUri: Uri?) {
+        if (sourceUri == null) {
+            state.portraitFileName = null
+            return
+        }
+
+        val fileName = CharacterPortraitStorage.savePortrait(context, sourceUri)
+        if (fileName != null) {
+            state.portraitFileName = fileName
+        }
     }
 
     fun perPowerLimit(poderId: String): Int {

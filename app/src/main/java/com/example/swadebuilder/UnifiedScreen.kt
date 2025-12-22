@@ -74,6 +74,7 @@ import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.serialization.json.JsonPrimitive
 import android.net.Uri
+import java.io.File
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 // @Preview(showBackground = true) // Commented out to avoid build errors with ViewModel
@@ -89,7 +90,8 @@ fun PreviewApp() {
         superequipCategorias = emptyList(),
         listaSuperPoderes = emptyList(),
         onShowMessage = {},
-        onUserFeedback = {}
+        onUserFeedback = {},
+        onRequestProgression = {}
     )
 }
 
@@ -103,7 +105,8 @@ fun UnifiedScreen(
     listaSuperPoderes: List<SuperPoder>,
     modoOficialAtivo: Boolean = false,
     onShowMessage: (String) -> Unit,
-    onUserFeedback: () -> Unit
+    onUserFeedback: () -> Unit,
+    onRequestProgression: () -> Unit
 ) {
     if (state.modoSupers) {
         Log.d("DEBUG", "modoSupers é ${state.modoSupers}")
@@ -205,6 +208,7 @@ fun UnifiedScreen(
                     showClearDialog = true
                 },
                 onShowMessage = onShowMessage,
+                onRequestProgression = onRequestProgression,
                 onSelectAncestralidade = { nome ->
                     val key = nome.uppercase().semAcentos()
                     if (key != state.ancestralidade) {
@@ -382,9 +386,9 @@ fun UnifiedScreen(
 @Composable
 private fun GlobalActionButtons(
     state: CriadorState,
-    viewModel: CriadorViewModel,
     onClearRequested: () -> Unit,
-    onShowMessage: (String) -> Unit
+    onShowMessage: (String) -> Unit,
+    onRequestProgression: () -> Unit
 ) {
     val canFinalize = !state.modoProgressaoAtivo && state.creationComplete()
 
@@ -408,12 +412,7 @@ private fun GlobalActionButtons(
                     return@Button
                 }
 
-                viewModel.ensureDefaultSpecializations()
-                state.modoProgressaoAtivo = true
-                state.progresso = 4
-                state.frozenAdvantageCount = state.vantagensSelecionadas.size
-                state.snapshotFrozenSkillIncrements()
-                state.recomputeAvailableProgress()
+                onRequestProgression()
             },
             enabled = canFinalize,
             modifier = Modifier.fillMaxWidth()
@@ -496,6 +495,7 @@ private fun SectionDetailPane(
     superequipCategorias: List<EquipamentoCategoria>,
     onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit,
+    onRequestProgression: () -> Unit,
     onSelectAncestralidade: (String) -> Unit,
     onUseProgress: (Int) -> Unit,
     onUserFeedback: () -> Unit
@@ -514,6 +514,7 @@ private fun SectionDetailPane(
                 superequipCategorias = superequipCategorias,
                 onClearRequested = onClearRequested,
                 onShowMessage = onShowMessage,
+                onRequestProgression = onRequestProgression,
                 onUseProgress = onUseProgress,
                 onUserFeedback = onUserFeedback
             )
@@ -527,6 +528,7 @@ private fun SectionDetailPane(
                 superequipCategorias = superequipCategorias,
                 onClearRequested = onClearRequested,
                 onShowMessage = onShowMessage,
+                onRequestProgression = onRequestProgression,
                 onSelectAncestralidade = onSelectAncestralidade,
                 onUserFeedback = onUserFeedback
             )
@@ -604,6 +606,7 @@ private fun ProgressionDetailContent(
     superequipCategorias: List<EquipamentoCategoria>,
     onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit,
+    onRequestProgression: () -> Unit,
     onUseProgress: (Int) -> Unit,
     onUserFeedback: () -> Unit
 ) {
@@ -729,7 +732,8 @@ private fun ProgressionDetailContent(
             state = state,
             viewModel = viewModel,
             onClearRequested = onClearRequested,
-            onShowMessage = onShowMessage
+            onShowMessage = onShowMessage,
+            onRequestProgression = onRequestProgression
         )
     }
 }
@@ -745,6 +749,7 @@ private fun CreationDetailContent(
     superequipCategorias: List<EquipamentoCategoria>,
     onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit,
+    onRequestProgression: () -> Unit,
     onSelectAncestralidade: (String) -> Unit,
     onUserFeedback: () -> Unit
 ) {
@@ -755,7 +760,8 @@ private fun CreationDetailContent(
             state = state,
             viewModel = viewModel,
             onClearRequested = onClearRequested,
-            onShowMessage = onShowMessage
+            onShowMessage = onShowMessage,
+            onRequestProgression = onRequestProgression
         )
         MainSection.ANCESTRALIDADES -> AncestralidadesSection(
             state = state,
@@ -829,7 +835,8 @@ private fun CreationDetailContent(
             state = state,
             viewModel = viewModel,
             onClearRequested = onClearRequested,
-            onShowMessage = onShowMessage
+            onShowMessage = onShowMessage,
+            onRequestProgression = onRequestProgression
         )
     }
 }
@@ -839,14 +846,19 @@ private fun SummaryTabContent(
     state: CriadorState,
     viewModel: CriadorViewModel,
     onClearRequested: () -> Unit,
-    onShowMessage: (String) -> Unit
+    onShowMessage: (String) -> Unit,
+    onRequestProgression: () -> Unit
 ) {
-    var portraitUri by rememberSaveable { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
     val portraitLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
-        portraitUri = uri?.toString()
+        viewModel.atualizarRetrato(context, uri)
     }
+    val portraitFile = remember(state.portraitFileName, context) {
+        state.portraitFileName?.let { File(context.filesDir, "portraits/$it") }
+    }
+    val portraitUri = portraitFile?.takeIf { it.exists() }?.let(Uri::fromFile)
 
     Column(
         modifier = Modifier
@@ -856,16 +868,16 @@ private fun SummaryTabContent(
         SummaryContent(state)
         Spacer(Modifier.height(12.dp))
         CharacterPortraitCard(
-            imageUri = portraitUri?.let(Uri::parse),
+            imageUri = portraitUri,
             onSelectImage = { portraitLauncher.launch("image/*") }
         )
         Spacer(Modifier.height(12.dp))
         if (!state.modoProgressaoAtivo) {
             GlobalActionButtons(
                 state = state,
-                viewModel = viewModel,
                 onClearRequested = onClearRequested,
-                onShowMessage = onShowMessage
+                onShowMessage = onShowMessage,
+                onRequestProgression = onRequestProgression
             )
         }
     }
