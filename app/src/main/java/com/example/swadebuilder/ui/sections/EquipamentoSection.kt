@@ -199,6 +199,7 @@ fun EquipamentoSection(
     superequipCategorias: List<EquipamentoCategoria>,
     tensaoTotal: Int,
     tensaoLimite: Int,
+    mechaSlotsTotal: Int,
     isPersonagemRobotico: Boolean,
     forcaRaw: Int,
     hasMusculoso: Boolean,
@@ -521,7 +522,7 @@ fun EquipamentoSection(
         val limit = baseLimit + if (hasMusculoso) 10f else 0f
 
         val tensaoExcedida = tensaoTotal > tensaoLimite
-        val tensaoLabel = if (isPersonagemRobotico) "Mods" else "Tensão"
+        val tensaoLabel = if (isPersonagemRobotico) "Mods (Robô)" else "Tensão (Ciber)"
         val tensaoColor = if (tensaoExcedida) {
             MaterialTheme.colorScheme.error
         } else {
@@ -536,7 +537,7 @@ fun EquipamentoSection(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                "Peso total: ${"%.1f".format(totalWeight)} / ${"%.1f".format(limit)}",
+                "Peso: ${"%.1f".format(totalWeight)} / ${"%.1f".format(limit)}",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1f)
             )
@@ -547,13 +548,21 @@ fun EquipamentoSection(
                         style = MaterialTheme.typography.bodyMedium,
                         color = tensaoColor
                     )
+                    // Show Mecha Slots if present (assuming unlimited or checked elsewhere for now)
+                    if (mechaSlotsTotal > 0) {
+                        Text(
+                            "Slots Mecha/Veículo usados: $mechaSlotsTotal",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
                 }
                 if (hasSoldado) {
                     AssistChip(
                         onClick = onToggleSoldadoCarga,
                         label = {
                             Text(
-                                if (soldadoCargaAtivo) "Bônus Soldado ativo" else "Bônus Soldado inativo"
+                                if (soldadoCargaAtivo) "Soldado (+1)" else "Soldado (Off)"
                             )
                         }
                     )
@@ -584,6 +593,70 @@ fun EquipamentoSection(
                 )
             }
         }
+
+        Spacer(Modifier.padding(vertical = 4.dp))
+
+        // 4. Purchased Items - Grouped
+        if (equipamentosComprados.isNotEmpty()) {
+            val ciberItems = equipamentosComprados.filter { (it.tensao ?: 0) > 0 }
+            val mechaItems = equipamentosComprados.filter { (it.mods_slots ?: 0) > 0 && (it.tensao ?: 0) == 0 }
+            val otherItems = equipamentosComprados.filter { (it.tensao ?: 0) == 0 && (it.mods_slots ?: 0) == 0 }
+
+            if (ciberItems.isNotEmpty()) {
+                Text("Implantes / Cibernéticos", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                ) {
+                    ciberItems.forEach { eq ->
+                        AssistChip(
+                            onClick = { onRemoveEquipamentoClick(eq) },
+                            label = { Text("${eq.nome} (${eq.tensao} T)") },
+                            leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover") }
+                        )
+                    }
+                }
+            }
+
+            if (mechaItems.isNotEmpty()) {
+                Text("Mods de Mecha / Veículo", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                ) {
+                    mechaItems.forEach { eq ->
+                        AssistChip(
+                            onClick = { onRemoveEquipamentoClick(eq) },
+                            label = { Text("${eq.nome} (${eq.mods_slots} Slots)") },
+                            leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover") }
+                        )
+                    }
+                }
+            }
+
+            if (otherItems.isNotEmpty()) {
+                if (ciberItems.isNotEmpty() || mechaItems.isNotEmpty()) {
+                     Text("Outros Equipamentos", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                }
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                ) {
+                    otherItems.forEach { eq ->
+                        AssistChip(
+                            onClick = { onRemoveEquipamentoClick(eq) },
+                            label = { Text(eq.nome) },
+                            leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover") }
+                        )
+                    }
+                }
+            }
+            Spacer(Modifier.padding(vertical = 4.dp))
+        }
+
 
         // 6. List Content
         if (isSearching) {

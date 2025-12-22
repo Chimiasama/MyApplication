@@ -32,6 +32,7 @@ import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.model.ModifierEngine
+import com.example.swadebuilder.model.ModifierTarget
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
@@ -249,8 +250,13 @@ class CriadorState {
             .coerceAtLeast(0)
     }
 
-    fun totalTensaoEquipamentos(): Int =
+    fun totalTensaoEquipamentos(): Int = totalTensaoCibernetica()
+
+    fun totalTensaoCibernetica(): Int =
         equipamentosComprados.sumOf { it.tensao ?: 0 }
+
+    fun totalSlotsMecha(): Int =
+        equipamentosComprados.sumOf { it.mods_slots ?: 0 }
 
     fun isPersonagemRobotico(): Boolean {
         val ancestral = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade }
@@ -363,9 +369,23 @@ class CriadorState {
     }
 
     fun valorArmaduraEfetiva(): Int {
-        val armorFromEquipment = armadura
+        // Agora usa o Engine para somar armadura de equipamentos (filtrando Mechas)
+        // A variável 'armadura' permanece como fallback ou armadura base manual se houver
+        val armorFromEquipment = ModifierEngine.sum(this, ModifierTarget.ARMOR)
         val melhorExterna = kotlin.math.max(armorFromPower, armorFromEquipment)
-        return (melhorExterna + naturalArmorFromRace).coerceAtLeast(0)
+        // 'armadura' variável de estado ainda pode ser usada se setada manualmente por raças (ex: Saurios)
+        // Mas Saurios setam naturalArmorFromRace = 2 e armadura = 0 no código atual.
+        // Se houver algum caso de uso para 'armadura' (variável), ela deveria ser somada?
+        // No código original: val armorFromEquipment = armadura.
+        // Assumimos que 'armadura' state var era SÓ para equipamento ou manual override.
+        // Se o Engine já pega equipment, e 'armadura' é 0 na maioria dos casos, ok.
+        // Se 'armadura' for usada para outra coisa, precisamos somar ou max.
+        // Vamos somar 'armadura' (state var) com o do Engine por segurança,
+        // caso algum sistema legado use 'armadura' para "Armadura Mágica Permanente" não listada em itens.
+        val totalEquipmentArmor = armorFromEquipment + armadura
+
+        val bestArmor = kotlin.math.max(armorFromPower, totalEquipmentArmor)
+        return (bestArmor + naturalArmorFromRace).coerceAtLeast(0)
     }
 
     fun valorTamanho(): Int = tamanhoExibido()
