@@ -39,8 +39,11 @@ import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.normAAKey
+import com.example.swadebuilder.util.SettingsStorage
 
 class CriadorState {
+    var livroSwadeSelecionado by mutableStateOf(true)
+    var livroPathfinderSelecionado by mutableStateOf(false)
     var appTheme by mutableStateOf(AppTheme.DEFAULT)
     var hapticStrength by mutableIntStateOf(DEFAULT_HAPTIC_STRENGTH)
     var soundVolume by mutableIntStateOf(DEFAULT_SOUND_VOLUME)
@@ -1086,6 +1089,33 @@ class CriadorState {
     var armadura by mutableIntStateOf(0)
 
     var nasceUmHeroi by mutableStateOf(false)
+
+    init {
+        SettingsStorage.loadEditionSettingsOrNull()?.let { settings ->
+            livroSwadeSelecionado = settings.livroSwade
+            livroPathfinderSelecionado = settings.livroPathfinder
+            cartaSelvagem = settings.cartaSelvagem
+            maisPontosPericias = settings.maisPontosPericias
+            modoSupers = settings.modoSupers
+            compendioFantasiaAtivo = settings.compendioFantasia
+            compendioHorrorAtivo = settings.compendioHorror
+            compendioSciFiAtivo = settings.compendioSciFi
+            compendioBuscatrilhaAtivo = settings.compendioBuscatrilha
+            compendioDeadlandsAtivo = settings.compendioDeadlands
+            compendioCrystalHeartAtivo = settings.compendioCrystalHeart
+            compendioArteDaGuerraAtivo = settings.compendioArteDaGuerra
+            compendioCidadeSolVaporAtivo = settings.compendioCidadeSolVapor
+            compendioWiseguysAtivo = settings.compendioWiseguys
+            modoMonstroAtivo = settings.modoMonstro
+            grandesResponsabilidades = settings.grandesResponsabilidades
+            heroisSemArmadura = settings.heroisSemArmadura
+            usarEspecializacoesDePericia = settings.especializacaoPer
+            usarSemPontosDePoder = settings.semPontosPoder
+            regraMultiplosIdiomas = settings.multiplosIdiomas
+            nasceUmHeroi = settings.nasceUmHeroi
+            permiteMultiAntecedenteArcano = settings.multiAntecedenteArcano
+        }
+    }
 
     val valoresAtributos = listaAtributos.associateWith { mutableIntStateOf(4) }
 
