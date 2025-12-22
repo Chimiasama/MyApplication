@@ -69,17 +69,11 @@ fun XpSection(
             // Using standard Column instead of LazyColumn to allow parent scrolling
             repeat(TOTAL_PROGRESS_LIMIT) { index ->
                 val slotUsed = index < state.advancementHistory.sumOf { it.progressCost }
-                // Determine if enabled:
-                // Must be the next available slot (index == total spent), or this specific slot logic?
-                // Actually the logic was based on xpSlots. But we removed xpSlots from state in favor of history.
-                // Reconstruct simple "is used" logic.
                 val totalUsed = state.advancementHistory.sumOf { it.progressCost }
                 val isNextAvailable = index == totalUsed
 
                 val isEnabled = isNextAvailable && state.pontosVantagem == 0 && state.pontosPericia == 0 && state.progressosDisponiveis > 0
 
-                // Last used is the last slot covered by the last action?
-                // If action cost 2, we have used index X and X+1. Last used is X+1.
                 val isLastUsed = index == totalUsed - 1
 
                 val label = slotStageLabels.getOrNull(index) ?: (index + 1).toString()
@@ -165,9 +159,7 @@ private fun describeAction(action: AdvancementAction, state: CriadorState): Stri
         val advantageName = listaVantagens.firstOrNull { it.id == action.advantageId }?.nome
         "Vantagem: ${advantageName ?: action.advantageId}"
     }
-    is AdvancementAction.SpendOnArcaneBackground -> {
-         "Antecedente Arcano"
-    }
+
     is AdvancementAction.IncreaseAttribute -> {
         val attrName = mapaAtributosDisplay[action.attributeName] ?: action.attributeName
         "Atributo: $attrName"
@@ -185,22 +177,14 @@ private fun describeAction(action: AdvancementAction, state: CriadorState): Stri
         "Perícias: ${skills.joinToString(", ")}".trim()
     }
 
-    is AdvancementAction.RemoveMinorHindrance -> {
+    is AdvancementAction.RemoveHindrance -> {
         val compName = listaComplicacoes.firstOrNull { it.id == action.hindranceId }
         val baseLabel = compName?.name ?: action.hindranceId
-        "Remover Complicação Menor: $baseLabel"
-    }
-
-    is AdvancementAction.ReserveRemoveMajorHindrance -> {
-        val compName = listaComplicacoes.firstOrNull { it.id == action.hindranceId }
-        val baseLabel = compName?.name ?: action.hindranceId
-        "Reserva (Remover Maior): $baseLabel"
-    }
-
-    is AdvancementAction.FinishRemoveMajorHindrance -> {
-        val compName = listaComplicacoes.firstOrNull { it.id == action.hindranceId }
-        val baseLabel = compName?.name ?: action.hindranceId
-        "Remover Complicação Maior: $baseLabel"
+        when (action.changeType) {
+            HindranceChangeType.RESERVATION -> "Reserva de Complicação: $baseLabel"
+            HindranceChangeType.REDUCE_TO_MINOR -> "Reduzir Complicação: $baseLabel"
+            HindranceChangeType.REMOVE -> "Remover Complicação: $baseLabel"
+        }
     }
 
     is AdvancementAction.ReserveLegendaryAttribute -> "Reserva de atributo lendário"

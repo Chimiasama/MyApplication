@@ -464,7 +464,20 @@ private fun SectionDetailPane(
     onUseProgress: (Int) -> Unit,
     onUserFeedback: () -> Unit
 ) {
-    // REMOVED .verticalScroll(rememberScrollState())
+    // We already have modifier.weight(1f) passed from UnifiedScreen's Crossfade
+    // But inside here, we branch:
+    // If it's Equipamentos, we use EquipamentoContent(modifier = modifier...) directly.
+    // If it's others, we call CreationDetailContent which wraps things in Column(verticalScroll).
+    // The issue is CreationDetailContent creates a NEW Column that needs weight(1f) inside THIS column.
+    // Actually, SectionDetailPane IS a Column.
+
+    // Let's refine:
+    // SectionDetailPane receives `modifier` which has `weight(1f)`.
+    // It applies it to its root Column.
+    // Inside, it calls `CreationDetailContent` or `ProgressionDetailContent`.
+    // Those functions are extensions on `ColumnScope`.
+    // Inside them, they need to create a child that fills the space.
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -583,7 +596,7 @@ private fun ColumnScope.ProgressionDetailContent(
 ) {
     when (selectedSection) {
         MainSection.VANTAGENS -> {
-            Column(Modifier.verticalScroll(rememberScrollState())) {
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
                 VantagensContent(
                     state = state,
                     multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
@@ -622,7 +635,7 @@ private fun ColumnScope.ProgressionDetailContent(
             }
         }
         MainSection.PERICIAS -> {
-            Column(Modifier.verticalScroll(rememberScrollState())) {
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
                 PericiasContent(
                     state = state,
                     feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
@@ -653,7 +666,7 @@ private fun ColumnScope.ProgressionDetailContent(
             }
         }
         MainSection.ATRIBUTOS -> {
-            Column(Modifier.verticalScroll(rememberScrollState())) {
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
                 AtributosContent(state = state, onUserFeedback = onUserFeedback)
 
                 Spacer(Modifier.height(16.dp))
@@ -788,7 +801,7 @@ private fun ColumnScope.CreationDetailContent(
         }
         MainSection.ANCESTRALIDADES -> {
             // Apply vertical scroll locally
-            Column(Modifier.verticalScroll(rememberScrollState())) {
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
                 AncestralidadesSection(
                     state = state,
                     currentAncestralidade = state.ancestralidade,
@@ -802,7 +815,7 @@ private fun ColumnScope.CreationDetailContent(
             }
         }
         MainSection.TROPOS -> {
-            Column(Modifier.verticalScroll(rememberScrollState())) {
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
                 TroposSection(
                     state = state,
                     expanded = true,
@@ -812,7 +825,7 @@ private fun ColumnScope.CreationDetailContent(
             }
         }
         MainSection.MONSTRO -> {
-            Column(Modifier.verticalScroll(rememberScrollState())) {
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
                 TipoMonstroSection(
                     state = state,
                     expanded = true,
@@ -822,7 +835,7 @@ private fun ColumnScope.CreationDetailContent(
             }
         }
         MainSection.COMPLICACOES -> {
-            Column(Modifier.verticalScroll(rememberScrollState())) {
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
                 ComplicacoesSection(
                     state = state,
                     expanded = true,
@@ -833,12 +846,12 @@ private fun ColumnScope.CreationDetailContent(
             }
         }
         MainSection.ATRIBUTOS -> {
-            Column(Modifier.verticalScroll(rememberScrollState())) {
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
                 AtributosContent(state, onUserFeedback)
             }
         }
         MainSection.PERICIAS -> {
-            Column(Modifier.verticalScroll(rememberScrollState())) {
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
                 PericiasContent(
                     state = state,
                     feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
@@ -847,17 +860,7 @@ private fun ColumnScope.CreationDetailContent(
             }
         }
         MainSection.VANTAGENS -> {
-            // VantagensContent usually contains a list, but often wrapped.
-            // Let's assume it needs scrolling unless it's a LazyColumn itself.
-            // VantagensSection uses LazyColumn inside? No, it uses CollapsibleSection which uses Column.
-            // Actually `VantagensSection` uses `CollapsibleSection`s which contain `LazyColumn` in standard code.
-            // BUT wait, `VantagensContent` iterates categories and creates multiple lists?
-            // If it creates multiple LazyColumns, that's bad in a Scroll.
-            // Let's look at `VantagensContent` implementation or assumption.
-            // The existing `VantagensSection` uses `items` inside a lazy column usually?
-            // Actually, `VantagensContent` in `VantagensSection.kt` uses `Column`.
-            // So we need a scroll here.
-            Column(Modifier.verticalScroll(rememberScrollState())) {
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
                  VantagensContent(
                     state = state,
                     multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
@@ -867,7 +870,7 @@ private fun ColumnScope.CreationDetailContent(
             }
         }
         MainSection.CRYSTAL_HEART -> {
-            Column(Modifier.verticalScroll(rememberScrollState())) {
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
                 CrystalHeartSection(
                     state = state,
                     viewModel = viewModel,
@@ -877,7 +880,7 @@ private fun ColumnScope.CreationDetailContent(
             }
         }
         MainSection.PODERES -> {
-            Column(Modifier.verticalScroll(rememberScrollState())) {
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
                  if (!state.compendioCrystalHeartAtivo) {
                     PoderesSection(state = state, onUserFeedback = onUserFeedback)
                     Spacer(Modifier.height(8.dp))
