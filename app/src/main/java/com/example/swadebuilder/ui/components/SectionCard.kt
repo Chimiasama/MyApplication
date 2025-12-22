@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,13 +27,14 @@ import androidx.compose.ui.unit.sp
 fun SectionCard(
     title: String,
     icon: ImageVector,
+    modifier: Modifier = Modifier,
     expand: Boolean = false,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val headerColor = MaterialTheme.colorScheme.onBackground
     val cardColor   = MaterialTheme.colorScheme.surfaceVariant
 
-    Column(modifier = if (expand) Modifier.fillMaxWidth().weight(1f) else Modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth()) {
         Row(
             Modifier
                 .fillMaxWidth()

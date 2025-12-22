@@ -215,6 +215,7 @@ fun EquipamentoSection(
     compendioWiseguysAtivo: Boolean = false,
     compendioCrystalHeartAtivo: Boolean = false,
     modoOficialAtivo: Boolean = false,
+    modifier: Modifier = Modifier,
     expand: Boolean = false,
     onUserFeedback: () -> Unit
 ) {
@@ -241,6 +242,7 @@ fun EquipamentoSection(
     SectionCard(
         title    = "Equipamento",
         icon     = Icons.Default.ShoppingCart,
+        modifier = modifier,
         expand   = expand
     ) {
         // 1. Prepare Data
@@ -325,7 +327,7 @@ fun EquipamentoSection(
                 }
             }
 
-            // 4. Search Field
+            // 4. Search & Filter UI
             item {
                 SearchTextField(
                     query = searchQuery,
@@ -335,7 +337,7 @@ fun EquipamentoSection(
                 Spacer(Modifier.size(8.dp))
             }
 
-            // 5. Dynamic Categories (LazyRow inside Item)
+            // 5. Dynamic Categories for Chips
             item {
                 val availableTypes = allCategorias.map { it.tipo }.distinct().sorted()
                 val availableSubtypesByType = allCategorias.groupBy { it.tipo }.mapValues { (_, cats) ->
@@ -577,7 +579,8 @@ fun EquipamentoSection(
 
             if (isSearching) {
                 // Flat List View
-                val finalFlatList = allCategorias.filter { cat ->
+                // Collect all items first
+                 val finalFlatList = allCategorias.filter { cat ->
                      val catOrigem = cat.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
                      if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@filter false
                      if (filter.tipos.isNotEmpty() && cat.tipo !in filter.tipos) return@filter false
