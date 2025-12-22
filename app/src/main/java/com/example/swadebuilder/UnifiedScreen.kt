@@ -764,7 +764,8 @@ private fun ProgressionDetailContent(
             state = state,
             viewModel = viewModel,
             onClearRequested = onClearRequested,
-            onShowMessage = onShowMessage
+            onShowMessage = onShowMessage,
+            onSaveRequested = onSaveRequested
         )
     }
 }
@@ -791,7 +792,8 @@ private fun CreationDetailContent(
             state = state,
             viewModel = viewModel,
             onClearRequested = onClearRequested,
-            onShowMessage = onShowMessage
+            onShowMessage = onShowMessage,
+            onSaveRequested = onSaveRequested
         )
         MainSection.ANCESTRALIDADES -> AncestralidadesSection(
             state = state,
