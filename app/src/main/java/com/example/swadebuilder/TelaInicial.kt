@@ -11,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,7 +29,8 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.CheckBox
+import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FolderOpen
@@ -37,7 +39,6 @@ import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Warning
@@ -247,28 +248,24 @@ fun TelaInicial(
                     ) {
                         ModuleToggle(
                             title = "Compêndio de Fantasia",
-                            description = "Raças, itens mágicos e regras de fantasia.",
                             icon = Icons.Default.AutoAwesome,
                             checked = optCompendioFantasia,
                             onCheckedChange = { optCompendioFantasia = it }
                         )
                         ModuleToggle(
                             title = "Compêndio de Ficção",
-                            description = "Tecnologia avançada, naves e cibernéticos.",
                             icon = Icons.Default.RocketLaunch,
                             checked = optCompendioSciFi,
                             onCheckedChange = { optCompendioSciFi = it }
                         )
                         ModuleToggle(
                             title = "Compêndio de Horror",
-                            description = "Climas sombrios e criaturas aterrorizantes.",
                             icon = Icons.Default.Warning,
                             checked = optCompendioHorror,
                             onCheckedChange = { optCompendioHorror = it }
                         )
                         ModuleToggle(
                             title = "Superpoderes",
-                            description = "Ativa Compêndio de Superpoderes (SPC).",
                             icon = Icons.Default.Bolt,
                             checked = optSuperPoderes,
                             onCheckedChange = { optSuperPoderes = it }
@@ -285,46 +282,36 @@ fun TelaInicial(
                     ) {
                         ModuleToggle(
                             title = if (isFullEdition) "Alta Fantasia" else "Buscatrilha",
-                            description = if (isFullEdition) {
-                                "Conteúdo oficial de Mundo Ancestral (Classes, Raças)."
-                            } else {
-                                "Cenário Buscatrilha e material temático."
-                            },
                             icon = Icons.Default.Map,
                             checked = optCompendioBuscatrilha,
                             onCheckedChange = { optCompendioBuscatrilha = it }
                         )
                         ModuleToggle(
                             title = "Faroeste Assombrado".toEditionDisplayName(),
-                            description = "Pistoleiros, revividos e o horror do Oeste.",
                             icon = Icons.Default.Shield,
                             checked = optCompendioDeadlands,
                             onCheckedChange = { optCompendioDeadlands = it }
                         )
                         ModuleToggle(
                             title = "Crystal Heart".toEditionDisplayName(),
-                            description = "Troque seu coração por um cristal mágico.",
                             icon = Icons.Default.Favorite,
                             checked = optCompendioCrystalHeart,
                             onCheckedChange = { optCompendioCrystalHeart = it }
                         )
                         ModuleToggle(
                             title = "Arte da Guerra: Nova Era".toEditionDisplayName(),
-                            description = "Ativa Chi, Tropos e equipamentos orientais.",
                             icon = Icons.Default.Info,
                             checked = optCompendioArteDaGuerra,
                             onCheckedChange = { optCompendioArteDaGuerra = it }
                         )
                         ModuleToggle(
                             title = "A Cidade do Sol a Vapor".toEditionDisplayName(),
-                            description = "Estímulos vitorianos, vapor e tecnomagia.",
                             icon = Icons.Default.Build,
                             checked = optCompendioCidadeSolVapor,
                             onCheckedChange = { optCompendioCidadeSolVapor = it }
                         )
                         ModuleToggle(
                             title = "Malandros".toEditionDisplayName(),
-                            description = "Crime organizado moderno, conexões e esquemas.",
                             icon = Icons.Default.Groups,
                             checked = optCompendioWiseguys,
                             onCheckedChange = { optCompendioWiseguys = it }
@@ -526,7 +513,12 @@ fun ModuleGroupCard(
             }
 
             AnimatedVisibility(visible = expanded) {
-                Column(Modifier.padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                FlowRow(
+                    modifier = Modifier.padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    maxItemsInEachRow = 2
+                ) {
                     content()
                 }
             }
@@ -537,15 +529,13 @@ fun ModuleGroupCard(
 @Composable
 fun ModuleToggle(
     title: String,
-    description: String,
     icon: ImageVector,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 8.dp)
+            .size(160.dp)
             .clickable { onCheckedChange(!checked) },
         colors = CardDefaults.cardColors(
             containerColor = if (checked) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
@@ -553,46 +543,30 @@ fun ModuleToggle(
         ),
         border = if (checked) null else androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
-        Row(
-            modifier = Modifier.padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                modifier = Modifier.size(32.dp),
+                modifier = Modifier.size(28.dp),
                 tint = if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
             )
-            Spacer(Modifier.width(16.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (checked) MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha=0.8f) else MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            Column(horizontalAlignment = Alignment.End) {
-                Icon(
-                    imageVector = if (checked) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked,
-                    contentDescription = null,
-                    tint = if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = if (checked) "Selecionado" else "Selecionar",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = if (checked) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    }
-                )
-            }
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyMedium,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Icon(
+                imageVector = if (checked) Icons.Default.CheckBox else Icons.Default.CheckBoxOutlineBlank,
+                contentDescription = null,
+                modifier = Modifier.size(22.dp),
+                tint = if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
+            )
         }
     }
 }
