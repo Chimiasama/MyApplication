@@ -93,7 +93,7 @@ fun ComplicacoesSection(
         if (state.compendioFantasiaAtivo) add("FANTASIA")
         if (state.compendioHorrorAtivo) add("HORROR")
         if (state.compendioBuscatrilhaAtivo) add("FANTASIABUSCATRILHA")
-        if (state.compendioDeadlandsAtivo) add("DEADLANDS")
+        if (state.compendioDeadlandsAtivo) add("OESTE_ESTRANHO")
         if (state.compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
         if (state.compendioCidadeSolVaporAtivo) add("CIDADE_SOL_VAPOR")
         if (state.compendioWiseguysAtivo) add("WISEGUYS")

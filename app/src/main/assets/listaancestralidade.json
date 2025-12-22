@@ -587,7 +587,7 @@
   },
   {
     "id": "anc_humano_adg",
-    "nome": "Humano (Império San)",
+    "nome": "Humano (Império do Sol)",
     "categoria": "ANCESTRALIDADE",
     "origem": "ARTE_DA_GUERRA",
     "atributos": {},
@@ -811,9 +811,9 @@
   },
   {
     "id": "anc_humano_deadlands",
-    "nome": "Humano (Oeste Estranho)",
+    "nome": "Humano (Faroeste Assombrado)",
     "categoria": "ANCESTRALIDADE",
-    "origem": "DEADLANDS",
+    "origem": "OESTE_ESTRANHO",
     "atributos": {},
     "pericias": {},
     "habilidades": [
@@ -827,7 +827,7 @@
     "id": "anc_territorial",
     "nome": "Nativo dos Territórios",
     "categoria": "ANCESTRALIDADE",
-    "origem": "DEADLANDS",
+    "origem": "OESTE_ESTRANHO",
     "atributos": {},
     "pericias": {},
     "habilidades": [
@@ -843,7 +843,7 @@
   },
   {
     "id": "anc_aurax",
-    "nome": "Aurax",
+    "nome": "Povo-Búfalo",
     "categoria": "ANCESTRALIDADE",
     "origem": "SCI_FI",
     "atributos": {
@@ -867,7 +867,7 @@
   },
   {
     "id": "anc_avion",
-    "nome": "Avion",
+    "nome": "Povo-Alado",
     "categoria": "ANCESTRALIDADE",
     "origem": "SCI_FI",
     "atributos": {
@@ -961,7 +961,7 @@
   },
   {
     "id": "anc_kalian",
-    "nome": "Kalian",
+    "nome": "Povo de Quatro Braços",
     "categoria": "ANCESTRALIDADE",
     "origem": "SCI_FI",
     "atributos": {},
@@ -983,7 +983,7 @@
   },
   {
     "id": "anc_rakashan",
-    "nome": "Rakashan",
+    "nome": "Felinídeo",
     "categoria": "ANCESTRALIDADE",
     "origem": "SCI_FI",
     "atributos": {
@@ -1170,7 +1170,7 @@
         "descricao": "Ignora penalidades de iluminação até 10 quadros."
       }
     ],
-    "originalName": "Anão (Golarion)"
+    "originalName": "Anão (Mundo Ancestral)"
   },
   {
     "id": "anc_elfobuscatrilha",
@@ -1212,7 +1212,7 @@
         "descricao": "Ignora penalidades por Penumbra e Escuridão."
       }
     ],
-    "originalName": "Elfo (Golarion)"
+    "originalName": "Elfo (Mundo Ancestral)"
   },
   {
     "id": "anc_gnomobuscatrilha",
@@ -1257,7 +1257,7 @@
         "descricao": "Ignora penalidades por Penumbra e Escuridão."
       }
     ],
-    "originalName": "Gnomo (Golarion)"
+    "originalName": "Gnomo (Mundo Ancestral)"
   },
   {
     "id": "anc_halflingbuscatrilha",
@@ -1301,7 +1301,7 @@
         "descricao": "Reduz Tamanho e Resistência em 1."
       }
     ],
-    "originalName": "Halfling (Golarion)"
+    "originalName": "Halfling (Mundo Ancestral)"
   },
   {
     "id": "anc_humanobuscatrilha",
@@ -1320,7 +1320,7 @@
         "descricao": "Começa com uma Vantagem Novato extra e um d6 em um Atributo à escolha (em vez de d4)."
       }
     ],
-    "originalName": "Humano (Golarion)"
+    "originalName": "Humano (Mundo Ancestral)"
   },
   {
     "id": "anc_meio_elfobuscatrilha",
@@ -1345,7 +1345,7 @@
         "descricao": "Ignora penalidades por Penumbra e Escuridão."
       }
     ],
-    "originalName": "Meio-Elfo (Golarion)"
+    "originalName": "Meio-Elfo (Mundo Ancestral)"
   },
   {
     "id": "anc_meio_orcbuscatrilha",
@@ -1382,11 +1382,11 @@
         "descricao": "Ignora penalidades de iluminação até 10 quadros."
       }
     ],
-    "originalName": "Meio-Orc (Golarion)"
+    "originalName": "Meio-Orc (Mundo Ancestral)"
   },
   {
     "id": "anc_humano_wiseguys",
-    "nome": "Humano (Wiseguys)",
+    "nome": "Humano (Malandros)",
     "categoria": "ANCESTRALIDADE",
     "origem": "WISEGUYS",
     "atributos": {},

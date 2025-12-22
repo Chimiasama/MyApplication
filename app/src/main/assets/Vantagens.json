@@ -6451,7 +6451,7 @@
     "id": "aa_abencoado",
     "nome": "ANTECEDENTE ARCANO (Abençoado)",
     "categoria": "ANTECEDENTE",
-    "origem": "DEADLANDS",
+    "origem": "OESTE_ESTRANHO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -6467,7 +6467,7 @@
     "id": "aa_cientista_louco",
     "nome": "ANTECEDENTE ARCANO (Cientista Louco)",
     "categoria": "ANTECEDENTE",
-    "origem": "DEADLANDS",
+    "origem": "OESTE_ESTRANHO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -6483,7 +6483,7 @@
     "id": "aa_huckster",
     "nome": "ANTECEDENTE ARCANO (Vigarista)",
     "categoria": "ANTECEDENTE",
-    "origem": "DEADLANDS",
+    "origem": "OESTE_ESTRANHO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -6494,13 +6494,13 @@
         "Conjurar": 6
       }
     },
-    "descricao": "Usa Conjurar (com baralho de poker para efeitos extras). 10 PP. Magia através de jogos com manitus."
+    "descricao": "Usa Conjurar (com baralho de poker para efeitos extras). 10 PP. Magia através de jogos com espíritos obscuros."
   },
   {
     "id": "aa_mestre_chi",
     "nome": "ANTECEDENTE ARCANO (Mestre do Chi)",
     "categoria": "ANTECEDENTE",
-    "origem": "DEADLANDS",
+    "origem": "OESTE_ESTRANHO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -6517,7 +6517,7 @@
     "id": "aa_xama",
     "nome": "ANTECEDENTE ARCANO (Xamã)",
     "categoria": "ANTECEDENTE",
-    "origem": "DEADLANDS",
+    "origem": "OESTE_ESTRANHO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -6533,7 +6533,7 @@
     "id": "pistoleiro",
     "nome": "PISTOLEIRO",
     "categoria": "PROFISSIONAL",
-    "origem": "DEADLANDS",
+    "origem": "OESTE_ESTRANHO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -6547,9 +6547,9 @@
   },
   {
     "id": "veterano_oeste",
-    "nome": "VETERANO DO OESTE ESTRANHO",
+    "nome": "VETERANO DO FAROESTE ASSOMBRADO",
     "categoria": "ANTECEDENTE",
-    "origem": "DEADLANDS",
+    "origem": "OESTE_ESTRANHO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -6561,9 +6561,9 @@
   },
   {
     "id": "ressuscitado",
-    "nome": "RESSUSCITADO (Harrowed)",
+    "nome": "RESSUSCITADO (Revivido)",
     "categoria": "ESTRANHAS",
-    "origem": "DEADLANDS",
+    "origem": "OESTE_ESTRANHO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -6572,13 +6572,13 @@
       },
       "observacoes": "Deve ter morrido e voltado"
     },
-    "descricao": "+2 em Intimidar. Não respira, não come. +2 para recuperar Abalado. Precisa lutar contra o Manitu pelo controle (Dominion)."
+    "descricao": "+2 em Intimidar. Não respira, não come. +2 para recuperar Abalado. Precisa lutar contra o Espírito Obscuro pelo controle (Dominion)."
   },
   {
     "id": "garras_ressuscitado",
     "nome": "GARRAS (Ressuscitado)",
     "categoria": "RESSUSCITADO",
-    "origem": "DEADLANDS",
+    "origem": "OESTE_ESTRANHO",
     "requisitos": {
       "estagio": "Novato",
       "vantagens_previas": [
@@ -6591,7 +6591,7 @@
     "id": "costura_cadaverica",
     "nome": "COSTURA CADAVÉRICA (Ressuscitado)",
     "categoria": "RESSUSCITADO",
-    "origem": "DEADLANDS",
+    "origem": "OESTE_ESTRANHO",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": [
@@ -6720,7 +6720,7 @@
   },
   {
     "id": "aa_agente_syn",
-    "nome": "ANTECEDENTE ARCANO (Agente da Syn)",
+    "nome": "ANTECEDENTE ARCANO (Agente da Agência)",
     "categoria": "ANTECEDENTE",
     "origem": "CRYSTAL_HEART",
     "requisitos": {

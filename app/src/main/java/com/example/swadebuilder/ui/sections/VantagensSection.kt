@@ -226,7 +226,7 @@ fun VantagensContent(
             val isFantasia = origemNorm == "FANTASIA"
             val isHorror = origemNorm == "HORROR"
             val isBuscatrilha = origemNorm == "FANTASIABUSCATRILHA"
-            val isDeadlands = origemNorm == "DEADLANDS"
+            val isDeadlands = origemNorm == "OESTE_ESTRANHO"
             val isAdg = origemNorm == "ARTE_DA_GUERRA"
             val isCidadeSolVapor = origemNorm == "CIDADE_SOL_VAPOR"
             val isWiseguys = origemNorm == "WISEGUYS"
@@ -1002,7 +1002,7 @@ private fun VantagemItem(
 
     val jaTem = state.vantagensSelecionadas.any { it.id == vant.id }
     val requisitosOk = state.podeSelecionar(vant)
-    // PROMPT 4: Specific logic for Pathfinder Class validation
+    // PROMPT 4: Specific logic for fantasy class validation
     val bloqueioClasse = if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant)) {
         "Requer Multiclasse"
     } else null

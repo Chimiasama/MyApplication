@@ -1167,7 +1167,7 @@ class CriadorState {
         // 3) Antecedente Arcano e multi-arcano
         if (key.startsWith("ANTECEDENTE ARCANO")) {
             if (compendioCrystalHeartAtivo) {
-                // Em jogos de Crystal Heart, apenas "Agente da Syn" é permitido.
+                // Em jogos de Crystal Heart, apenas "Agente da Agência" é permitido.
                 if (v.id != "aa_agente_syn") return false
             }
 

@@ -130,7 +130,7 @@ fun AncestralidadesSection(
                 "ARTE_DA_GUERRA" -> compendioArteDaGuerraAtivo
                 "FANTASIA" -> compendioFantasiaAtivo
                 "FANTASIABUSCATRILHA" -> compendioBuscatrilhaAtivo
-                "DEADLANDS" -> compendioDeadlandsAtivo
+                "OESTE_ESTRANHO" -> compendioDeadlandsAtivo
                 "CIDADE_SOL_VAPOR" -> compendioCidadeSolVaporAtivo
                 "WISEGUYS" -> compendioWiseguysAtivo
                 "SCI_FI" -> compendioSciFiAtivo

@@ -68,7 +68,7 @@ exótica dos gatos siameses. Possuem garras e presas afiadas e uma natureza crue
 É possível encontrar esse povo em suas próprias cidades exóticas e remotas ou como elementos marginais da sociedade normal.
 Sua beleza impede que sejam rejeitados, mas sagazes o suficiente para ganhar a confiança de outras pessoas.
 - ÁGIL: A graça felina lhes concede um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.
-- INIMIGO RACIAL: A sociedade Rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam com os da outra e geralmente se atacam à primeira vista.
+- INIMIGO RACIAL: A sociedade felinídea cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam com os da outra e geralmente se atacam à primeira vista.
 - MORDIDA/GARRAS: As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.
 - NÃO SABE NADAR: Até podem nadar, mas evitam e não têm boa habilidade nisso. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro de movimento na água custa 3 quadros de Movimentação.
 - SANGUINÁRIO: Podem ser cruéis com seus por pura diversão. Raramente capturam rivais e quando o fazem não sentem muito remorso.

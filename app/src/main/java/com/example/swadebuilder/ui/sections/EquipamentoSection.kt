@@ -264,7 +264,7 @@ fun EquipamentoSection(
                         (origem != "HORROR" || compendioHorrorAtivo) &&
                         (origem != "SCI_FI" || compendioSciFiAtivo) &&
                         (origem != "FANTASIABUSCATRILHA" || compendioBuscatrilhaAtivo) &&
-                        (origem != "DEADLANDS" || compendioDeadlandsAtivo)
+                        (origem != "OESTE_ESTRANHO" || compendioDeadlandsAtivo)
             }
 
         // 2. Header (Money)
