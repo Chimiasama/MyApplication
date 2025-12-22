@@ -31,8 +31,10 @@ import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.SportsMma
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
@@ -161,12 +163,12 @@ fun TelaInicial(
         ModuleItemData(
             "Compêndio de Horror",
             "Climas sombrios e criaturas aterrorizantes.",
-            Icons.Default.Warning,
+            Icons.Default.MoodBad,
             optCompendioHorror
         ) { optCompendioHorror = !optCompendioHorror },
         ModuleItemData(
             "Superpoderes",
-            "Ativa Compêndio de Superpoderes (SPC).",
+            "Seja um superherói dos quadrinhos!",
             Icons.Default.Bolt,
             optSuperPoderes
         ) { optSuperPoderes = !optSuperPoderes }
@@ -187,14 +189,14 @@ fun TelaInicial(
         ) { optCompendioDeadlands = !optCompendioDeadlands },
         ModuleItemData(
             "Crystal Heart".toEditionDisplayName(),
-            "Troque seu coração por um cristal mágico.",
+            if (isFullEdition) "Troque seu coração por um cristal mágico." else "Troque seu coração por uma pedra mágica.",
             Icons.Default.Favorite,
             optCompendioCrystalHeart
         ) { optCompendioCrystalHeart = !optCompendioCrystalHeart },
         ModuleItemData(
             "Arte da Guerra: Nova Era".toEditionDisplayName(),
             "Ativa Chi, Tropos e equipamentos orientais.",
-            Icons.Default.Info,
+            Icons.Default.SportsMma,
             optCompendioArteDaGuerra
         ) { optCompendioArteDaGuerra = !optCompendioArteDaGuerra },
         ModuleItemData(
@@ -249,7 +251,7 @@ fun TelaInicial(
                         optNasceUmHeroi,
                         optHeroiSemArmadura,
                         optEspecializacaoPer,
-                        optSemPontosPoder,
+                        optSemPontosDePoder,
                         optMultiplosIdiomas,
                         optGrandesResponsabilidades
                     )
