@@ -99,7 +99,7 @@ fun SummaryContent(state: CriadorState) {
         }
         .sum()
     val isPersonagemRobotico = state.isPersonagemRobotico()
-    val tensaoTotal = state.totalTensaoEquipamentos()
+    val tensaoTotal = state.totalTensaoCibernetica()
     val tensaoLimite = if (isPersonagemRobotico) {
         state.limiteModsRoboticos()
     } else {

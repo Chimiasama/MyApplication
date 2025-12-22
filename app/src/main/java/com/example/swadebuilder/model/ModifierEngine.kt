@@ -7,7 +7,8 @@ import com.example.swadebuilder.util.keyify
 enum class ModifierTarget {
     SIZE_DISPLAY,
     SIZE_TOUGHNESS,
-    TOUGHNESS_FLAT
+    TOUGHNESS_FLAT,
+    ARMOR
 }
 
 enum class StackRule {
@@ -35,7 +36,35 @@ object ModifierEngine {
     fun collect(state: CriadorState): List<Modifier> {
         val modifiers = mutableListOf<Modifier>()
 
-        // 1. Ancestralidade
+        // 1. Equipamento (Armadura)
+        state.equipamentosComprados.forEach { item ->
+            val armorVal = (item.armadura as? kotlinx.serialization.json.JsonPrimitive)
+                ?.content?.toIntOrNull() ?: 0
+
+            if (armorVal > 0) {
+                // Checa se é item de Mecha/Veículo que não deve somar
+                val isMechaOrVehicle = item.subtipo?.uppercase()?.let { s ->
+                    s.contains("VEICULO") || s.contains("VEÍCULO") ||
+                            s.contains("CHASSIS") || s.contains("MECHA")
+                } == true
+
+                val shouldExclude = isMechaOrVehicle
+
+                if (!shouldExclude) {
+                    modifiers.add(
+                        Modifier(
+                            id = "equip_${item.nome.keyify()}",
+                            sourceType = SourceType.OUTRO,
+                            sourceName = item.nome,
+                            target = ModifierTarget.ARMOR,
+                            value = armorVal
+                        )
+                    )
+                }
+            }
+        }
+
+        // 2. Ancestralidade
         val ancestralName = state.ancestralidade
         val ancestral = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralName.keyify() }
 
@@ -74,7 +103,7 @@ object ModifierEngine {
             }
         }
 
-        // 2. Complications
+        // 3. Complications
         state.complicacoesSelecionadas.keys.forEach { comp ->
             val key = comp.id.keyify()
             if (key == "PEQUENO") {
@@ -87,7 +116,7 @@ object ModifierEngine {
             }
         }
 
-        // 3. Advantages
+        // 4. Advantages
         state.vantagensSelecionadas.forEach { vant ->
             val key = vant.nome.keyify()
             if (key == "MUSCULOSO") {
@@ -102,7 +131,7 @@ object ModifierEngine {
             }
         }
 
-        // 4. Powers / Other
+        // 5. Powers / Other
         if (state.bonusResFromPower != 0) {
             modifiers.add(Modifier("power_bonus_res", SourceType.OUTRO, "Poderes", ModifierTarget.TOUGHNESS_FLAT, state.bonusResFromPower))
         }

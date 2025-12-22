@@ -1019,8 +1019,9 @@ private fun EquipamentoSection(
         categorias = equipamentoCategorias,
         superequipCategorias =
             if (state.modoSupers) superequipCategorias else emptyList(),
-        tensaoTotal = state.totalTensaoEquipamentos(),
+        tensaoTotal = state.totalTensaoCibernetica(),
         tensaoLimite = tensaoLimite,
+        mechaSlotsTotal = state.totalSlotsMecha(),
         isPersonagemRobotico = isPersonagemRobotico,
         forcaRaw = state.valoresAtributos["FORCA"]?.intValue ?: 4,
         hasMusculoso = hasMusculoso,
