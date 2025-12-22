@@ -194,18 +194,18 @@ class MainActivity : ComponentActivity() {
             cat.origem?.equals("super", ignoreCase = true) ?: false
         }
 
-        listaCoracoesCrystal = runCatching {
+        listaCoracoesCrystal = runCatching<List<CrystalHeart>> {
             assets.open("coracoes_crystal.json")
-                .use { input -> json.decodeFromStream(input) }
+                .use { input -> json.decodeFromStream<List<CrystalHeart>>(input) }
         }.getOrElse { emptyList() }
 
         val listaSuperPoderes: List<SuperPoder> =
             assets.open("superpoderes.json")
-                .use { input -> json.decodeFromStream(input) }
+                .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
 
         val arcanoList: List<ArcanoInfo> =
             assets.open("arcano_info.json")
-                .use { input -> json.decodeFromStream(input) }
+                .use { input -> json.decodeFromStream<List<ArcanoInfo>>(input) }
         arcanoInfo = arcanoList.associate {
             it.key
                 .uppercase()
@@ -259,7 +259,7 @@ class MainActivity : ComponentActivity() {
 
         listaMonstroTemplates = assets
             .open("monstros.json")
-            .use { input -> json.decodeFromStream(input) }
+            .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
 
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
             val m = rm.atributos
