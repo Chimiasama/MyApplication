@@ -13,6 +13,7 @@ private val liteDisplayReplacements = listOf(
     "Crystal Heart" to "Coração de Pedra",
     "Deadlands" to "Faroeste Assombrado",
     "Wiseguys" to "Malandros",
+    "Kemonomimi (Espírito Animal)" to "Povo Animal Espiritual",
     "ARTE_DA_GUERRA" to "ARTE DE COMBATE NOVO TEMPO",
     "CIDADE_SOL_VAPOR" to "STEAMPUNK DO SOL",
     "CRYSTAL_HEART" to "CORAÇÃO DE PEDRA",
