@@ -330,6 +330,7 @@ fun UnifiedScreen(
                         }
 
                         state.meioElfoAgil = true
+                        state.recalcularPontosAtributo(viewModel.feedbackMessages as MutableList<String>)
                         pendingMeioElfoKey = null
                         showMeioElfoDialog = false
                     }
@@ -343,6 +344,7 @@ fun UnifiedScreen(
                     onClick = {
                         val key = pendingMeioElfoKey ?: return@TextButton
                         val hadMeioElfoAgil = state.meioElfoAgil
+                        state.meioElfoAgil = false
 
                         // Aplica a ancestralidade Meio-Elfo
                         state.aplicarAncestralidade(
@@ -352,7 +354,6 @@ fun UnifiedScreen(
 
                         // Dá 1 ponto de vantagem extra
                         state.pontosVantagem += 1
-                        state.meioElfoAgil = false
                         if (hadMeioElfoAgil) {
                             val agilityKey = "AGILIDADE"
                             val agiState = state.valoresAtributos[agilityKey]
