@@ -5,6 +5,7 @@ import android.net.Uri
 import java.io.File
 import java.util.Locale
 import java.util.UUID
+import com.example.swadebuilder.util.CharacterStorage
 
 object CharacterPortraitStorage {
     private const val PORTRAIT_DIR = "portraits"
@@ -37,5 +38,27 @@ object CharacterPortraitStorage {
 
             fileName
         }.getOrNull()
+    }
+
+    fun deleteIfUnused(
+        context: Context,
+        fileName: String,
+        excludingSaveIds: Set<String> = emptySet()
+    ) {
+        val referenced = CharacterStorage.listSaves(context).any { entry ->
+            if (entry.id in excludingSaveIds) {
+                return@any false
+            }
+            CharacterStorage.load(context, entry.id)
+                ?.selecoes
+                ?.retratoFileName == fileName
+        }
+
+        if (referenced) return
+
+        val file = File(portraitsDirectory(context), fileName)
+        if (file.exists()) {
+            file.delete()
+        }
     }
 }

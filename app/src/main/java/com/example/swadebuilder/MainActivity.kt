@@ -103,6 +103,7 @@ import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.AppPreferences
+import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.loadJsonAsset
@@ -556,10 +557,14 @@ class MainActivity : ComponentActivity() {
                     confirmButton = {
                         TextButton(onClick = {
                             entryToDelete?.let { entry ->
+                                val snapshotToDelete = CharacterStorage.load(context, entry.id)
                                 CharacterStorage.delete(context, entry.id)
                                 savedEntries.removeAll { it.id == entry.id }
                                 if (state.idAtual == entry.id) {
                                     state.idAtual = null
+                                }
+                                snapshotToDelete?.selecoes?.retratoFileName?.let { fileName ->
+                                    CharacterPortraitStorage.deleteIfUnused(context, fileName)
                                 }
                                 scope.launch {
                                     snackHost.showSnackbar("Personagem removido")

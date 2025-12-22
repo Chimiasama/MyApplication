@@ -135,6 +135,7 @@ class CriadorViewModel : ViewModel() {
     }
 
     fun salvarPersonagem(context: Context, nomePersonalizado: String? = null): CharacterStorage.SaveEntry {
+        val previousSnapshot = state.idAtual?.let { CharacterStorage.load(context, it) }
         val desiredName = (nomePersonalizado?.takeIf { it.isNotBlank() } ?: state.nomePersonagem)
             .ifBlank { DEFAULT_CHARACTER_NAME }
 
@@ -154,6 +155,11 @@ class CriadorViewModel : ViewModel() {
         val snapshot = state.toSnapshot().copy(nome = finalName)
         val entry = CharacterStorage.save(context, snapshot)
         state.idAtual = entry.id
+        val previousPortrait = previousSnapshot?.selecoes?.retratoFileName
+        val currentPortrait = snapshot.selecoes.retratoFileName
+        if (previousPortrait != null && previousPortrait != currentPortrait) {
+            CharacterPortraitStorage.deleteIfUnused(context, previousPortrait)
+        }
         logFeedback("Personagem salvo: ${entry.nome}")
         return entry
     }
