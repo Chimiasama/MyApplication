@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.MaterialTheme
@@ -57,7 +56,7 @@ fun XpSection(
         LaunchedEffect(
             state.progresso,
             state.stageXpSpent.values.toList(),
-            state.xpSlots.toList(),
+            state.advancementHistory.toList(),
             state.modoProgressaoAtivo
         ) {
             state.recomputeAvailableProgress()
@@ -65,66 +64,64 @@ fun XpSection(
 
         val slotDescriptions = buildSlotDescriptions(state)
         val slotStageLabels = buildStageLabels()
-        val listState = rememberLazyListState()
-
-        LaunchedEffect(state.xpSlots.toList()) {
-            val lastUsedIndex = state.xpSlots.indexOfLast { it }
-            if (lastUsedIndex > 0) {
-                listState.animateScrollToItem(lastUsedIndex)
-            }
-        }
 
         Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            LazyColumn(
-                modifier = Modifier.heightIn(max = 420.dp),
-                state = listState,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(TOTAL_PROGRESS_LIMIT) { index ->
-                    val slotUsed = state.xpSlots[index]
-                    val isEnabled = (if (index == 0) !slotUsed else state.xpSlots[index - 1] && !slotUsed) && state.pontosVantagem == 0 && state.pontosPericia == 0 && state.progressosDisponiveis > 0
-                    val isLastUsed = state.xpSlots.indexOfLast { it } == index
-                    val label = slotStageLabels.getOrNull(index) ?: (index + 1).toString()
-                    val contentText = slotDescriptions.getOrNull(index)
+            // Using standard Column instead of LazyColumn to allow parent scrolling
+            repeat(TOTAL_PROGRESS_LIMIT) { index ->
+                val slotUsed = index < state.advancementHistory.sumOf { it.progressCost }
+                // Determine if enabled:
+                // Must be the next available slot (index == total spent), or this specific slot logic?
+                // Actually the logic was based on xpSlots. But we removed xpSlots from state in favor of history.
+                // Reconstruct simple "is used" logic.
+                val totalUsed = state.advancementHistory.sumOf { it.progressCost }
+                val isNextAvailable = index == totalUsed
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                val isEnabled = isNextAvailable && state.pontosVantagem == 0 && state.pontosPericia == 0 && state.progressosDisponiveis > 0
+
+                // Last used is the last slot covered by the last action?
+                // If action cost 2, we have used index X and X+1. Last used is X+1.
+                val isLastUsed = index == totalUsed - 1
+
+                val label = slotStageLabels.getOrNull(index) ?: (index + 1).toString()
+                val contentText = slotDescriptions.getOrNull(index)
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Box(Modifier.width(44.dp), contentAlignment = Alignment.Center) {
+                        Text(label, fontWeight = FontWeight.SemiBold)
+                    }
+
+                    Surface(
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(min = 52.dp)
+                            .alpha(if (isEnabled || slotUsed) 1f else 0.5f)
+                            .clickable(enabled = isEnabled) { onUseProgress(index) },
+                        shape = RoundedCornerShape(8.dp),
+                        tonalElevation = if (slotUsed) 4.dp else 0.dp,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                        color = if (slotUsed) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
                     ) {
-                        Box(Modifier.width(44.dp), contentAlignment = Alignment.Center) {
-                            Text(label, fontWeight = FontWeight.SemiBold)
-                        }
-
-                        Surface(
+                        Box(
                             modifier = Modifier
-                                .weight(1f)
-                                .heightIn(min = 52.dp)
-                                .alpha(if (isEnabled || slotUsed) 1f else 0.5f)
-                                .clickable(enabled = isEnabled) { onUseProgress(index) },
-                            shape = RoundedCornerShape(8.dp),
-                            tonalElevation = if (slotUsed) 4.dp else 0.dp,
-                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-                            color = if (slotUsed) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp, vertical = 10.dp),
+                            contentAlignment = Alignment.CenterStart
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 12.dp, vertical = 10.dp),
-                                contentAlignment = Alignment.CenterStart
-                            ) {
-                                Text(
-                                    text = contentText ?: if (slotUsed) "Em andamento" else "Usar progresso",
-                                    fontSize = 15.sp,
-                                    fontWeight = if (slotUsed) FontWeight.Medium else FontWeight.Normal
-                                )
-                            }
+                            Text(
+                                text = contentText ?: if (slotUsed) "Em andamento" else "Usar progresso",
+                                fontSize = 15.sp,
+                                fontWeight = if (slotUsed) FontWeight.Medium else FontWeight.Normal
+                            )
                         }
+                    }
 
-                        if (slotUsed && isLastUsed) {
-                            TextButton(onClick = onUndo) {
-                                Text("Desfazer")
-                            }
+                    if (slotUsed && isLastUsed) {
+                        TextButton(onClick = onUndo) {
+                            Text("Desfazer")
                         }
                     }
                 }
@@ -168,7 +165,9 @@ private fun describeAction(action: AdvancementAction, state: CriadorState): Stri
         val advantageName = listaVantagens.firstOrNull { it.id == action.advantageId }?.nome
         "Vantagem: ${advantageName ?: action.advantageId}"
     }
-
+    is AdvancementAction.SpendOnArcaneBackground -> {
+         "Antecedente Arcano"
+    }
     is AdvancementAction.IncreaseAttribute -> {
         val attrName = mapaAtributosDisplay[action.attributeName] ?: action.attributeName
         "Atributo: $attrName"
@@ -186,14 +185,22 @@ private fun describeAction(action: AdvancementAction, state: CriadorState): Stri
         "Perícias: ${skills.joinToString(", ")}".trim()
     }
 
-    is AdvancementAction.RemoveHindrance -> {
+    is AdvancementAction.RemoveMinorHindrance -> {
         val compName = listaComplicacoes.firstOrNull { it.id == action.hindranceId }
-        val baseLabel = compName?.id ?: action.hindranceId
-        when (action.changeType) {
-            HindranceChangeType.RESERVATION -> "Reserva de Complicação: $baseLabel"
-            HindranceChangeType.REDUCE_TO_MINOR -> "Reduzir Complicação: $baseLabel"
-            HindranceChangeType.REMOVE -> "Remover Complicação: $baseLabel"
-        }
+        val baseLabel = compName?.name ?: action.hindranceId
+        "Remover Complicação Menor: $baseLabel"
+    }
+
+    is AdvancementAction.ReserveRemoveMajorHindrance -> {
+        val compName = listaComplicacoes.firstOrNull { it.id == action.hindranceId }
+        val baseLabel = compName?.name ?: action.hindranceId
+        "Reserva (Remover Maior): $baseLabel"
+    }
+
+    is AdvancementAction.FinishRemoveMajorHindrance -> {
+        val compName = listaComplicacoes.firstOrNull { it.id == action.hindranceId }
+        val baseLabel = compName?.name ?: action.hindranceId
+        "Remover Complicação Maior: $baseLabel"
     }
 
     is AdvancementAction.ReserveLegendaryAttribute -> "Reserva de atributo lendário"
