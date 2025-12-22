@@ -242,7 +242,7 @@ fun VantagensContent(
     }
 
     val idParaNome = remember(listaVantagens) {
-        listaVantagens.associate { it.id to it.nome }
+        listaVantagens.associate { it.id to it.nomeExibicao }
     }
 
     // --- Search & Filter State ---
@@ -265,7 +265,7 @@ fun VantagensContent(
 
     LaunchedEffect(vantagemEmFoco) {
         if (!vantagemEmFoco.isNullOrBlank()) {
-            val v = listaVantagensAtivas.firstOrNull { it.nome == vantagemEmFoco }
+            val v = listaVantagensAtivas.firstOrNull { it.nome == vantagemEmFoco || it.nomeExibicao == vantagemEmFoco }
             if (v != null) {
                 expandedMap[v.categoria] = true
             }
@@ -432,7 +432,8 @@ fun VantagensContent(
 
             state.vantagensSelecionadas.forEachIndexed { index, vant ->
                 val isRacialFree =
-                    vant.nome.keyify() in state.vantagensAutomaticas.map { it.keyify() }
+                    vant.nomeExibicao.keyify() in state.vantagensAutomaticas.map { it.keyify() } ||
+                            vant.nome.keyify() in state.vantagensAutomaticas.map { it.keyify() }
                 val isTropoAutomatic = state.vantagensAutomaticasDoTropo.contains(vant.id)
                 val requiredByAnother = state.vantagensSelecionadas.any { other ->
                     other != vant && other.requisitos.vantagensPrevias.any { reqId ->
@@ -479,7 +480,7 @@ fun VantagensContent(
 
                             val enforcePoolLimit = !vant.isBrutamontes()
 
-                            if (vant.nome.contains("Pontos de Poder", true)) {
+                            if (vant.nome.contains("Pontos de Poder", true) || vant.nomeExibicao.contains("Pontos de Poder", true)) {
                                 state.removerPontosDePoder(vant)
                                 state.pontosVantagem++
                                 state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
@@ -504,7 +505,7 @@ fun VantagensContent(
                         },
                     enabled = canRemove,
                     label = {
-                        val labelText = vant.choice?.let { "${vant.nome} ($it)" } ?: vant.nome
+                        val labelText = vant.choice?.let { "${vant.nomeExibicao} ($it)" } ?: vant.nomeExibicao
                         val finalText = if (isCelestialAAMilagresDesabilitado) {
                             "$labelText (DESABILITADO)"
                         } else {
@@ -557,9 +558,10 @@ fun VantagensContent(
                 // Search Query
                 if (isSearching) {
                     val q = searchQuery.semAcentos().lowercase()
-                    val n = vant.nome.semAcentos().lowercase()
+                    val n = vant.nomeExibicao.semAcentos().lowercase()
                     val d = vant.descricao.semAcentos().lowercase()
-                    if (!n.contains(q) && !d.contains(q)) return@filter false
+                    val original = vant.nome.semAcentos().lowercase()
+                    if (!n.contains(q) && !d.contains(q) && !original.contains(q)) return@filter false
                 }
 
                 // Advanced Filters
@@ -609,7 +611,7 @@ fun VantagensContent(
                                         onUserFeedback()
                                     } else {
                                         val enforcePoolLimit = !vant.isBrutamontes()
-                                        if (vant.nome.contains("Pontos de Poder", true)) {
+                                        if (vant.nome.contains("Pontos de Poder", true) || vant.nomeExibicao.contains("Pontos de Poder", true)) {
                                             state.comprarPontoDePoder(vant)
                                             onUserFeedback()
                                         } else {
@@ -728,7 +730,7 @@ fun VantagensContent(
                                             onUserFeedback()
                                         } else {
                                             val enforcePoolLimit = !vant.isBrutamontes()
-                                            if (vant.nome.contains("Pontos de Poder", true)) {
+                                            if (vant.nome.contains("Pontos de Poder", true) || vant.nomeExibicao.contains("Pontos de Poder", true)) {
                                                 state.comprarPontoDePoder(vant)
                                                 onUserFeedback()
                                             } else {
@@ -1032,7 +1034,7 @@ private fun VantagemItem(
                         // PROMPT 4: Check class blocking specifically for error message
                         state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
                         conflitoMsg != null -> onError(conflitoMsg)
-                        !state.podeSelecionar(vant) -> onError("Faltam requisitos para '${vant.nome}'")
+                            !state.podeSelecionar(vant) -> onError("Faltam requisitos para '${vant.nomeExibicao}'")
                         else -> onSelect()
                     }
                 }
@@ -1051,7 +1053,7 @@ private fun VantagemItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome,
+                    if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nomeExibicao,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.weight(1f)
                 )

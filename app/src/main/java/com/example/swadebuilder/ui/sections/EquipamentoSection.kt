@@ -605,8 +605,9 @@ fun EquipamentoSection(
 
                      if (isSearching) {
                          val q = searchQuery.semAcentos().lowercase()
-                         val n = item.nome.semAcentos().lowercase()
-                         n.contains(q)
+                         val n = item.nomeExibicao.semAcentos().lowercase()
+                         val original = item.nome.semAcentos().lowercase()
+                         n.contains(q) || original.contains(q)
                      } else true
                  }.map { item ->
                      val origem = item.origem?.ifBlank { cat.origem ?: "BASICO" } ?: (cat.origem ?: "BASICO")

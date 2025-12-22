@@ -57,7 +57,7 @@ fun StandardEquipamentoItem(
                 Column(Modifier.weight(1f)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            if (showOriginalName && !equipamento.originalName.isNullOrBlank()) equipamento.originalName else equipamento.nome,
+                            if (showOriginalName && !equipamento.originalName.isNullOrBlank()) equipamento.originalName else equipamento.nomeExibicao,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )

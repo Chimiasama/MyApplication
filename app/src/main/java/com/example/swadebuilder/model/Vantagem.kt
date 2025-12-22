@@ -1,5 +1,7 @@
 package com.example.swadebuilder.model
 
+import com.example.swadebuilder.EditionConfig
+import com.example.swadebuilder.util.GenericNameMapper
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -52,4 +54,11 @@ data class Vantagem(
     // 4) “choice” (a própria escolha que o usuário fez) permanece mutável, mas não é serializado:
     @kotlinx.serialization.Transient
     var choice: String? = null
-)
+) {
+    val nomeExibicao: String
+        get() = if (EditionConfig.isFullEdition) {
+            nome
+        } else {
+            GenericNameMapper.map(nome)
+        }
+}
