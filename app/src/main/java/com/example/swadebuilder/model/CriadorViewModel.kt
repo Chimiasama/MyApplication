@@ -976,6 +976,7 @@ class CriadorViewModel : ViewModel() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun cancelAdvancementInProgress() {
         // Roda apenas se houver um avanço em andamento para ser cancelado.
         if (

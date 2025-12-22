@@ -33,8 +33,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Add
@@ -111,6 +111,7 @@ import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -135,6 +136,7 @@ private val json = Json {
     ignoreUnknownKeys = true
 }
 
+@OptIn(ExperimentalSerializationApi::class)
 private inline fun <reified T> AssetManager.readJsonList(fileName: String): List<T> =
     open(fileName).use { input -> json.decodeFromStream(input) }
 
@@ -177,6 +179,7 @@ private fun buildUsageInstructions(state: CriadorState): String {
     }
 }
 
+@ExperimentalSerializationApi
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     @OptIn(ExperimentalMaterial3Api::class)

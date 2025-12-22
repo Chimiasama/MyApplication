@@ -35,7 +35,6 @@ import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.SportsMma
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -251,7 +250,7 @@ fun TelaInicial(
                         optNasceUmHeroi,
                         optHeroiSemArmadura,
                         optEspecializacaoPer,
-                        optSemPontosDePoder,
+                        optSemPontosPoder,
                         optMultiplosIdiomas,
                         optGrandesResponsabilidades
                     )
