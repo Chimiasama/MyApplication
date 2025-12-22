@@ -102,6 +102,7 @@ import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
+import com.example.swadebuilder.ui.dialogs.ConfirmActionDialog
 import com.example.swadebuilder.util.AppPreferences
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
@@ -322,6 +323,11 @@ class MainActivity : ComponentActivity() {
             var showSaveDialog by rememberSaveable { mutableStateOf(false) }
             var showLoadDialog by rememberSaveable { mutableStateOf(false) }
             var saveName by rememberSaveable { mutableStateOf("") }
+            // NEW: Dialog states for dirty exit logic
+            var showSafeExitDialog by rememberSaveable { mutableStateOf(false) }
+            var pendingExitAction by remember { mutableStateOf<(() -> Unit)?>(null) }
+            // Action to run after a successful manual save (e.g. switch to progression)
+            var postSaveAction by remember { mutableStateOf<(() -> Unit)?>(null) }
 
             val savedEntries = remember { mutableStateListOf<CharacterStorage.SaveEntry>() }
             var entryToDelete by remember { mutableStateOf<CharacterStorage.SaveEntry?>(null) }
@@ -541,7 +547,14 @@ class MainActivity : ComponentActivity() {
 
             if (showSaveDialog) {
                 AlertDialog(
-                    onDismissRequest = { showSaveDialog = false },
+                    onDismissRequest = {
+                         // If we were in a "Safe Exit" flow, cancelling save means we just close the dialog.
+                         // But if pendingExitAction is set, user might expect to resume it or not.
+                         // Standard behavior: Cancel save -> Do NOT execute pending action.
+                         showSaveDialog = false
+                         pendingExitAction = null // Abort exit
+                         postSaveAction = null
+                    },
                     title = { Text("Salvar personagem") },
                     text = {
                         Column {
@@ -565,14 +578,51 @@ class MainActivity : ComponentActivity() {
                             scope.launch {
                                 snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
                             }
+                            // If we had a pending exit action (e.g. Go Home or Quit App), run it now
+                            pendingExitAction?.invoke()
+                            pendingExitAction = null
+
+                            // If we had a post-save action (e.g. Go to Progression), run it now
+                            postSaveAction?.invoke()
+                            postSaveAction = null
                         }) {
                             Text("Salvar")
                         }
                     },
                     dismissButton = {
-                        TextButton(onClick = { showSaveDialog = false }) {
+                        TextButton(onClick = {
+                            showSaveDialog = false
+                            pendingExitAction = null // Abort exit
+                            postSaveAction = null
+                        }) {
                             Text(stringResource(R.string.cancel))
                         }
+                    }
+                )
+            }
+
+            if (showSafeExitDialog) {
+                ConfirmActionDialog(
+                    title = "Alterações não salvas",
+                    text = "Deseja salvar o personagem antes de sair?",
+                    confirmText = "Salvar",
+                    dismissText = "Sair sem salvar",
+                    onConfirm = {
+                        // User wants to save first
+                        showSafeExitDialog = false
+                        saveName = state.nomePersonagem
+                        showSaveDialog = true // This will handle saving and then executing pendingExitAction
+                    },
+                    onDismiss = {
+                        // User wants to exit WITHOUT saving
+                        showSafeExitDialog = false
+                        pendingExitAction?.invoke()
+                        pendingExitAction = null
+                    },
+                    onCancel = {
+                        // User wants to cancel the exit entirely
+                        showSafeExitDialog = false
+                        pendingExitAction = null
                     }
                 )
             }
@@ -714,7 +764,12 @@ class MainActivity : ComponentActivity() {
                             )
                         } else {
                             BackHandler {
-                                mostrouTelaInicial = true
+                                // Intercept back button on UnifiedScreen
+                                pendingExitAction = {
+                                    criadorViewModel.resetToEmptyState()
+                                    mostrouTelaInicial = true
+                                }
+                                showSafeExitDialog = true
                             }
 
                             Scaffold(
@@ -745,8 +800,11 @@ class MainActivity : ComponentActivity() {
                                         navigationIcon = {
                                             TextButton(onClick = {
                                                 triggerFeedback()
-                                                criadorViewModel.resetToEmptyState()
-                                                mostrouTelaInicial = true
+                                                pendingExitAction = {
+                                                    criadorViewModel.resetToEmptyState()
+                                                    mostrouTelaInicial = true
+                                                }
+                                                showSafeExitDialog = true
                                             }) {
                                                 Text(
                                                     text       = "Voltar",
@@ -811,7 +869,12 @@ class MainActivity : ComponentActivity() {
                                                     snackHost.showSnackbar(message)
                                                 }
                                             },
-                                            onUserFeedback        = triggerFeedback
+                                            onUserFeedback        = triggerFeedback,
+                                            onSaveRequested       = { onSavedCallback ->
+                                                saveName = state.nomePersonagem
+                                                postSaveAction = onSavedCallback
+                                                showSaveDialog = true
+                                            }
                                         )
                                     }
                                 }

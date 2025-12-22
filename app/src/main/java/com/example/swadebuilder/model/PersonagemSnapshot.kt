@@ -16,6 +16,7 @@ data class PersonagemSnapshot(
     val soundVolume: Int = 70,
     val showHelpMessages: Boolean = false,
     val anotacoes: String,
+    val fotoCaminho: String? = null,
     val flags: SnapshotFlags,
     val recursos: SnapshotRecursos,
     val atributos: SnapshotAtributos,

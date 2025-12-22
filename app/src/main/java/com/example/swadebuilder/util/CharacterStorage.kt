@@ -87,6 +87,15 @@ object CharacterStorage {
         try {
             val file = getSafeFile(context, id)
             if (file.exists()) {
+                // Tenta carregar antes de deletar pra pegar a imagem associada
+                val snapshot = runCatching {
+                    json.decodeFromString<PersonagemSnapshot>(file.readText())
+                }.getOrNull()
+
+                if (snapshot?.fotoCaminho != null) {
+                    ImageStorage.deleteImage(context, snapshot.fotoCaminho)
+                }
+
                 file.delete()
             }
         } catch (e: Exception) {

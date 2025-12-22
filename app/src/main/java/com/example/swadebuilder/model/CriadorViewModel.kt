@@ -14,7 +14,9 @@ import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.util.CharacterStorage
+import com.example.swadebuilder.util.ImageStorage
 import com.example.swadebuilder.util.keyify
+import android.net.Uri
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -156,6 +158,25 @@ class CriadorViewModel : ViewModel() {
         return entry
     }
 
+    /**
+     * Define uma nova imagem para o personagem, salvando-a imediatamente no armazenamento interno.
+     */
+    fun setFotoPersonagem(context: Context, uri: Uri?) {
+        if (uri == null) {
+            state.fotoCaminho = null
+            return
+        }
+
+        // Não deletamos a imagem anterior aqui para evitar perda de dados caso o usuário cancele a edição
+        // e volte para a versão salva em disco (que referencia a imagem antiga).
+        // A limpeza acontece apenas ao deletar o personagem.
+
+        val novoCaminho = ImageStorage.saveImage(context, uri)
+        if (novoCaminho != null) {
+            state.fotoCaminho = novoCaminho
+        }
+    }
+
     fun listarPersonagensSalvos(context: Context): List<CharacterStorage.SaveEntry> {
         return CharacterStorage.listSaves(context)
     }
@@ -251,6 +272,7 @@ class CriadorViewModel : ViewModel() {
         state.idAtual = null
         state.nomePersonagem = DEFAULT_CHARACTER_NAME
         state.anotacoes = ""
+        state.fotoCaminho = null
 
         state.coracaoCrystalSelecionado = null
 

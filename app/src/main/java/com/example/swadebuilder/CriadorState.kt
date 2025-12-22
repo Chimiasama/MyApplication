@@ -76,6 +76,7 @@ class CriadorState {
     var idAtual by mutableStateOf<String?>(null)
 
     var anotacoes by mutableStateOf("")
+    var fotoCaminho by mutableStateOf<String?>(null)
 
     var coracaoCrystalSelecionado by mutableStateOf<com.example.swadebuilder.model.CrystalHeart?>(null)
 
@@ -2113,6 +2114,7 @@ class CriadorState {
             soundVolume = soundVolume,
             // showHelpMessages removido (PersonagemSnapshot tem default = false)
             anotacoes = anotacoes,
+            fotoCaminho = fotoCaminho,
             flags = SnapshotFlags(
                 cartaSelvagem = cartaSelvagem,
                 maisPontosPericias = maisPontosPericias,
@@ -2270,6 +2272,7 @@ class CriadorState {
         idAtual = snapshot.id
         nomePersonagem = snapshot.nome
         anotacoes = snapshot.anotacoes
+        fotoCaminho = snapshot.fotoCaminho
         appTheme = com.example.swadebuilder.ui.theme.AppTheme.valueOf(snapshot.appTheme)
 
         // Flags adicionais

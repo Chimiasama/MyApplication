@@ -72,6 +72,7 @@ import com.example.swadebuilder.ui.components.CharacterPortraitCard
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
+import com.example.swadebuilder.util.ImageStorage
 import kotlinx.serialization.json.JsonPrimitive
 import android.net.Uri
 
@@ -103,7 +104,8 @@ fun UnifiedScreen(
     listaSuperPoderes: List<SuperPoder>,
     modoOficialAtivo: Boolean = false,
     onShowMessage: (String) -> Unit,
-    onUserFeedback: () -> Unit
+    onUserFeedback: () -> Unit,
+    onSaveRequested: (onSaved: (() -> Unit)?) -> Unit = {}
 ) {
     if (state.modoSupers) {
         Log.d("DEBUG", "modoSupers é ${state.modoSupers}")
@@ -112,6 +114,7 @@ fun UnifiedScreen(
     var showAllocDialog by rememberSaveable { mutableStateOf(false) }
     var currentSlotIndex by rememberSaveable { mutableIntStateOf(-1) }
     var showClearDialog by rememberSaveable { mutableStateOf(false) }
+    var showSavePrompt by rememberSaveable { mutableStateOf(false) } // Prompt para Progressão
     val context = LocalContext.current
 
     // --- estados para o MEIO-ELFO ---
@@ -224,7 +227,8 @@ fun UnifiedScreen(
                     currentSlotIndex = index
                     showAllocDialog = true
                 },
-                onUserFeedback = onUserFeedback
+                onUserFeedback = onUserFeedback,
+                onSaveRequested = onSaveRequested
             )
         }
     }
@@ -384,9 +388,41 @@ private fun GlobalActionButtons(
     state: CriadorState,
     viewModel: CriadorViewModel,
     onClearRequested: () -> Unit,
-    onShowMessage: (String) -> Unit
+    onShowMessage: (String) -> Unit,
+    onSaveRequested: (onSaved: (() -> Unit)?) -> Unit
 ) {
     val canFinalize = !state.modoProgressaoAtivo && state.creationComplete()
+    var showSaveBeforeProgression by rememberSaveable { mutableStateOf(false) }
+
+    // Logic to actually switch to progression
+    val doSwitchToProgression = {
+        viewModel.ensureDefaultSpecializations()
+        state.modoProgressaoAtivo = true
+        state.progresso = 4
+        state.frozenAdvantageCount = state.vantagensSelecionadas.size
+        state.snapshotFrozenSkillIncrements()
+        state.recomputeAvailableProgress()
+    }
+
+    if (showSaveBeforeProgression) {
+        com.example.swadebuilder.ui.dialogs.ConfirmActionDialog(
+            title = "Salvar Personagem",
+            text = "Deseja salvar o personagem antes de iniciar a fase de progressão?",
+            confirmText = "Salvar",
+            dismissText = "Não salvar",
+            onConfirm = {
+                showSaveBeforeProgression = false
+                onSaveRequested(doSwitchToProgression)
+            },
+            onDismiss = {
+                showSaveBeforeProgression = false
+                doSwitchToProgression()
+            },
+            onCancel = {
+                showSaveBeforeProgression = false
+            }
+        )
+    }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -407,13 +443,8 @@ private fun GlobalActionButtons(
                     onShowMessage("Finalize a criação antes de iniciar a progressão.")
                     return@Button
                 }
-
-                viewModel.ensureDefaultSpecializations()
-                state.modoProgressaoAtivo = true
-                state.progresso = 4
-                state.frozenAdvantageCount = state.vantagensSelecionadas.size
-                state.snapshotFrozenSkillIncrements()
-                state.recomputeAvailableProgress()
+                // Prompt before switching
+                showSaveBeforeProgression = true
             },
             enabled = canFinalize,
             modifier = Modifier.fillMaxWidth()
@@ -498,7 +529,8 @@ private fun SectionDetailPane(
     onShowMessage: (String) -> Unit,
     onSelectAncestralidade: (String) -> Unit,
     onUseProgress: (Int) -> Unit,
-    onUserFeedback: () -> Unit
+    onUserFeedback: () -> Unit,
+    onSaveRequested: (onSaved: (() -> Unit)?) -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -515,7 +547,8 @@ private fun SectionDetailPane(
                 onClearRequested = onClearRequested,
                 onShowMessage = onShowMessage,
                 onUseProgress = onUseProgress,
-                onUserFeedback = onUserFeedback
+                onUserFeedback = onUserFeedback,
+                onSaveRequested = onSaveRequested
             )
         } else {
             CreationDetailContent(
@@ -528,7 +561,8 @@ private fun SectionDetailPane(
                 onClearRequested = onClearRequested,
                 onShowMessage = onShowMessage,
                 onSelectAncestralidade = onSelectAncestralidade,
-                onUserFeedback = onUserFeedback
+                onUserFeedback = onUserFeedback,
+                onSaveRequested = onSaveRequested
             )
         }
     }
@@ -605,7 +639,8 @@ private fun ProgressionDetailContent(
     onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit,
     onUseProgress: (Int) -> Unit,
-    onUserFeedback: () -> Unit
+    onUserFeedback: () -> Unit,
+    onSaveRequested: (onSaved: (() -> Unit)?) -> Unit = {}
 ) {
     when (selectedSection) {
         MainSection.VANTAGENS -> {
@@ -746,7 +781,8 @@ private fun CreationDetailContent(
     onClearRequested: () -> Unit,
     onShowMessage: (String) -> Unit,
     onSelectAncestralidade: (String) -> Unit,
-    onUserFeedback: () -> Unit
+    onUserFeedback: () -> Unit,
+    onSaveRequested: (onSaved: (() -> Unit)?) -> Unit
 ) {
     val creationLocked = state.criacaoBasicaCongelada
 
@@ -829,7 +865,8 @@ private fun CreationDetailContent(
             state = state,
             viewModel = viewModel,
             onClearRequested = onClearRequested,
-            onShowMessage = onShowMessage
+            onShowMessage = onShowMessage,
+            onSaveRequested = onSaveRequested
         )
     }
 }
@@ -839,13 +876,21 @@ private fun SummaryTabContent(
     state: CriadorState,
     viewModel: CriadorViewModel,
     onClearRequested: () -> Unit,
-    onShowMessage: (String) -> Unit
+    onShowMessage: (String) -> Unit,
+    onSaveRequested: (onSaved: (() -> Unit)?) -> Unit
 ) {
-    var portraitUri by rememberSaveable { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
     val portraitLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
-        portraitUri = uri?.toString()
+        viewModel.setFotoPersonagem(context, uri)
+    }
+
+    val displayUri = remember(state.fotoCaminho) {
+        state.fotoCaminho?.let { fileName ->
+            val file = ImageStorage.getImageFile(context, fileName)
+            file?.let { Uri.fromFile(it) }
+        }
     }
 
     Column(
@@ -856,7 +901,7 @@ private fun SummaryTabContent(
         SummaryContent(state)
         Spacer(Modifier.height(12.dp))
         CharacterPortraitCard(
-            imageUri = portraitUri?.let(Uri::parse),
+            imageUri = displayUri,
             onSelectImage = { portraitLauncher.launch("image/*") }
         )
         Spacer(Modifier.height(12.dp))
@@ -865,7 +910,8 @@ private fun SummaryTabContent(
                 state = state,
                 viewModel = viewModel,
                 onClearRequested = onClearRequested,
-                onShowMessage = onShowMessage
+                onShowMessage = onShowMessage,
+                onSaveRequested = onSaveRequested
             )
         }
     }
