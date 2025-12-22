@@ -159,6 +159,10 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val complicacoesNomeadas: List<String> = complicationDisplayNames(personagem.complicacoes, showOfficialNames)
     // PROMPT 3: Display Transtornos names
     val transtornosNomeados: List<String> = complicationDisplayNames(personagem.transtornos, showOfficialNames)
+    val complicacoesNomeKeyset = listaComplicacoes
+        .flatMap { comp -> listOfNotNull(comp.name, comp.originalName) }
+        .map { it.keyify() }
+        .toSet()
 
     val vantagemChoices: MutableMap<String, MutableList<String>> = personagem.advantageChoices
         .mapValues { it.value.toMutableList() }
@@ -372,14 +376,32 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     }
     lines += ""
 
+    val desvantagensRaciaisComplicacoes = personagem.desvantagensRaciais.filter { desvantagem ->
+        desvantagem.substringBefore("(").trim().keyify() in complicacoesNomeKeyset
+    }
+    val desvantagensRaciaisAnotacoes = personagem.desvantagensRaciais.filterNot { desvantagem ->
+        desvantagem.substringBefore("(").trim().keyify() in complicacoesNomeKeyset
+    }
+
     lines += "Complicações"
-    val allComplicationsList = complicacoesNomeadas + transtornosNomeados.map { "$it (Transtorno)" } + personagem.desvantagensRaciais
+    val complicationKeys = complicacoesNomeadas.map { it.keyify() }.toMutableSet()
+    val allComplicationsList = buildList {
+        addAll(complicacoesNomeadas)
+        addAll(transtornosNomeados.map { "$it (Transtorno)" })
+        desvantagensRaciaisComplicacoes.forEach { comp ->
+            val compKey = comp.substringBefore("(").trim().keyify()
+            if (compKey !in complicationKeys) {
+                add(comp)
+                complicationKeys.add(compKey)
+            }
+        }
+    }
     val complicacoesText = allComplicationsList
-            .joinToString(", ")
-            .ifBlank { "– Nenhuma" }
+        .joinToString(", ")
+        .ifBlank { "– Nenhuma" }
     lines += complicacoesText
-    if (personagem.desvantagensRaciais.isNotEmpty()) {
-        lines += "Anotações Raciais: ${personagem.desvantagensRaciais.joinToString(", ")}"
+    if (desvantagensRaciaisAnotacoes.isNotEmpty()) {
+        lines += "Anotações Raciais: ${desvantagensRaciaisAnotacoes.joinToString(", ")}"
     }
     lines += ""
 
