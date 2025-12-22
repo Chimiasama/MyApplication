@@ -514,8 +514,10 @@ fun ModuleGroupCard(
 
             AnimatedVisibility(visible = expanded) {
                 FlowRow(
-                    modifier = Modifier.padding(top = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     maxItemsInEachRow = 2
                 ) {
@@ -547,7 +549,8 @@ fun ModuleToggle(
             modifier = Modifier
                 .padding(10.dp)
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
                 imageVector = icon,
