@@ -41,6 +41,7 @@ import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.Serializable
 import com.example.swadebuilder.model.RacialModifier
@@ -131,7 +132,7 @@ fun AncestralidadesSection(
         }.map {
             val buscatrilhaName = it.nome.replace("Trilhador", "Buscatrilha")
             val originalName = if (EditionConfig.isFullEdition) it.originalName else null
-            RacialModifierLite(buscatrilhaName, originalName)
+            RacialModifierLite(buscatrilhaName.toEditionDisplayName(), originalName)
         }
         mutableStateOf(filtered)
     }

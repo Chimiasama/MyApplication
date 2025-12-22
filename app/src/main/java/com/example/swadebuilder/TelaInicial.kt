@@ -69,6 +69,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.util.toEditionDisplayName
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -293,35 +294,35 @@ fun TelaInicial(
                             onCheckedChange = { optCompendioBuscatrilha = it }
                         )
                         ModuleToggle(
-                            title = "Deadlands: O Oeste Estranho",
+                            title = "Deadlands: O Oeste Estranho".toEditionDisplayName(),
                             description = "Pistoleiros, Harroweds e o horror do Oeste.",
                             icon = Icons.Default.Shield,
                             checked = optCompendioDeadlands,
                             onCheckedChange = { optCompendioDeadlands = it }
                         )
                         ModuleToggle(
-                            title = "Crystal Heart",
+                            title = "Crystal Heart".toEditionDisplayName(),
                             description = "Troque seu coração por um cristal mágico.",
                             icon = Icons.Default.Favorite,
                             checked = optCompendioCrystalHeart,
                             onCheckedChange = { optCompendioCrystalHeart = it }
                         )
                         ModuleToggle(
-                            title = "Arte da Guerra: Nova Era",
+                            title = "Arte da Guerra: Nova Era".toEditionDisplayName(),
                             description = "Ativa Chi, Tropos e equipamentos orientais.",
                             icon = Icons.Default.Info,
                             checked = optCompendioArteDaGuerra,
                             onCheckedChange = { optCompendioArteDaGuerra = it }
                         )
                         ModuleToggle(
-                            title = "A Cidade do Sol a Vapor",
+                            title = "A Cidade do Sol a Vapor".toEditionDisplayName(),
                             description = "Estímulos vitorianos, vapor e tecnomagia.",
                             icon = Icons.Default.Build,
                             checked = optCompendioCidadeSolVapor,
                             onCheckedChange = { optCompendioCidadeSolVapor = it }
                         )
                         ModuleToggle(
-                            title = "Wiseguys",
+                            title = "Wiseguys".toEditionDisplayName(),
                             description = "Crime organizado moderno, conexões e esquemas.",
                             icon = Icons.Default.Groups,
                             checked = optCompendioWiseguys,

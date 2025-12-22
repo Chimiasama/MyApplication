@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.util.toEditionDisplayName
 
 /**
  * Dialog para distribuir "slots" de SUPERVANTAGEM.
@@ -127,7 +128,7 @@ fun SuperVantagensPickerDialog(
                                 Column(Modifier.weight(1f)) {
                                     Text(v.nome, style = MaterialTheme.typography.bodyMedium)
                                     Text(
-                                        "${v.categoriaRotulo()} • ${v.origem}",
+                                        "${v.categoriaRotulo()} • ${v.origem.toEditionDisplayName()}",
                                         style = MaterialTheme.typography.bodySmall
                                     )
                                 }

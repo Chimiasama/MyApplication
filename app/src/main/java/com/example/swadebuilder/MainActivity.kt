@@ -107,6 +107,7 @@ import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -144,11 +145,11 @@ private fun buildUsageInstructions(state: CriadorState): String {
         if (state.compendioHorrorAtivo) add("Compêndio Horror")
         if (state.compendioSciFiAtivo) add("Compêndio Sci-Fi")
         if (state.compendioBuscatrilhaAtivo) add("Compêndio Buscatrilha")
-        if (state.compendioDeadlandsAtivo) add("Compêndio Deadlands")
-        if (state.compendioArteDaGuerraAtivo) add("Arte da Guerra")
-        if (state.compendioCidadeSolVaporAtivo) add("Cidade Sol V'apor")
-        if (state.compendioWiseguysAtivo) add("Wiseguys")
-        if (state.compendioCrystalHeartAtivo) add("Crystal Heart")
+        if (state.compendioDeadlandsAtivo) add("Compêndio Deadlands".toEditionDisplayName())
+        if (state.compendioArteDaGuerraAtivo) add("Arte da Guerra".toEditionDisplayName())
+        if (state.compendioCidadeSolVaporAtivo) add("Cidade Sol V'apor".toEditionDisplayName())
+        if (state.compendioWiseguysAtivo) add("Wiseguys".toEditionDisplayName())
+        if (state.compendioCrystalHeartAtivo) add("Crystal Heart".toEditionDisplayName())
         if (state.modoSupers) add("Supers")
         if (state.modoMonstroAtivo) add("Monstros")
     }
