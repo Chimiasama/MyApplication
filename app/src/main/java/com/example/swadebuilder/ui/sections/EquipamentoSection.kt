@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -21,7 +22,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
@@ -51,7 +54,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.swadebuilder.CollapsibleSection
+import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.R
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.model.EquipamentoCategoria
@@ -212,6 +215,7 @@ fun EquipamentoSection(
     compendioWiseguysAtivo: Boolean = false,
     compendioCrystalHeartAtivo: Boolean = false,
     modoOficialAtivo: Boolean = false,
+    expand: Boolean = false,
     onUserFeedback: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
@@ -236,7 +240,8 @@ fun EquipamentoSection(
 
     SectionCard(
         title    = "Equipamento",
-        icon     = Icons.Default.ShoppingCart
+        icon     = Icons.Default.ShoppingCart,
+        expand   = expand
     ) {
         // 1. Prepare Data
         val esconderSupers = superequipCategorias.isEmpty()
@@ -260,387 +265,380 @@ fun EquipamentoSection(
                         (origem != "DEADLANDS" || compendioDeadlandsAtivo)
             }
 
-        // 2. Header (Money)
-        SectionHeader(
-            onHelpClick = null,
-            centerText = if (usaRiqueza) "Riqueza: d$dadoRiqueza" else "Dinheiro: $dinheiro",
-            onCenterClick = null,
-            onListaCompletaClick = null,
-            listaCompletaText = ""
-        )
-
-        if (!usaRiqueza && (emProgresso || modoProgressaoAtivo)) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-                Button(onClick = {
-                    dinheiroInput = dinheiro.toString()
-                    showMoneyDialog = true
-                }) {
-                    Text("Editar dinheiro")
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.size(4.dp))
-
-        if (!emProgresso) {
-            if (usePbWalletRedesign) {
-                PbWalletBanner(
-                    pcTotal = pcTotal,
-                    pcLivres = pcLivres,
-                    spendLabel = "Usar PB em Recursos",
-                    refundLabel = "Desfazer uso de PB",
-                    spendEnabled = pcLivres > 0 && recursosPcUsados == 0,
-                    refundEnabled = recursosPcUsados > 0,
-                    onSpend = onUsarPontosBonusEmRecursos,
-                    onRefund = onDesfazerPontosBonusEmRecursos
-                )
-            } else {
-                PbLegacyActions(
-                    spendLabel = "Usar PB em Recursos",
-                    refundLabel = "Desfazer uso de PB",
-                    spendEnabled = pcLivres > 0 && recursosPcUsados == 0,
-                    refundEnabled = recursosPcUsados > 0,
-                    onSpend = onUsarPontosBonusEmRecursos,
-                    onRefund = onDesfazerPontosBonusEmRecursos
-                )
-            }
-            Spacer(Modifier.size(8.dp))
-        }
-
-        // 3. Search & Filter UI
-        SearchTextField(
-            query = searchQuery,
-            onQueryChange = { searchQuery = it },
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
-
-        Spacer(Modifier.size(8.dp))
-
-        // Dynamic Categories for Chips
-        val availableTypes = remember(allCategorias) {
-            allCategorias.map { it.tipo }.distinct().sorted()
-        }
-        val availableSubtypesByType = remember(allCategorias) {
-            allCategorias.groupBy { it.tipo }.mapValues { (_, cats) ->
-                cats.map { it.subtipo }.distinct().sorted()
-            }
-        }
-
-        LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        // Use LazyColumn for the entire content
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(bottom = 16.dp)
         ) {
+            // 2. Header (Money)
             item {
-                FilterChip(
-                    selected = !filter.isEmpty(),
-                    onClick = { showFilterDialog = true },
-                    label = { Text("Filtros Avançados${if(!filter.isEmpty()) " (!)" else ""}") }
+                SectionHeader(
+                    onHelpClick = null,
+                    centerText = if (usaRiqueza) "Riqueza: d$dadoRiqueza" else "Dinheiro: $dinheiro",
+                    onCenterClick = null,
+                    onListaCompletaClick = null,
+                    listaCompletaText = ""
                 )
-            }
-
-            // --- Origin Mini Cards (Chips) ---
-            if (compendioFantasiaAtivo) {
-                item {
-                    val label = "Medievais"
-                    val key = "FANTASIA"
-                    FilterChip(
-                        selected = key in filter.origens,
-                        onClick = {
-                            val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
-                            filter = filter.copy(origens = newSet)
-                        },
-                        label = { Text(label) }
-                    )
-                }
-            }
-
-            if (compendioSciFiAtivo) {
-                item {
-                    val label = "Futuristas"
-                    val key = "SCI_FI"
-                    FilterChip(
-                        selected = key in filter.origens,
-                        onClick = {
-                            val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
-                            filter = filter.copy(origens = newSet)
-                        },
-                        label = { Text(label) }
-                    )
-                }
-            }
-
-            // Add "Modernas" (Basic) if any other compendium is active to allow filtering it out
-            if (compendioFantasiaAtivo || compendioSciFiAtivo || compendioHorrorAtivo || compendioDeadlandsAtivo) {
-                item {
-                    val label = "Modernas"
-                    val key = "BASICO"
-                    FilterChip(
-                        selected = key in filter.origens,
-                        onClick = {
-                            val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
-                            filter = filter.copy(origens = newSet)
-                        },
-                        label = { Text(label) }
-                    )
-                }
-            }
-
-            items(availableTypes) { type ->
-                FilterChip(
-                    selected = type in selectedTypes,
-                    onClick = {
-                        if (type in selectedTypes) selectedTypes.remove(type)
-                        else selectedTypes.add(type)
-
-                        if (filter.subtipos.isNotEmpty()) {
-                            filter = filter.copy(subtipos = emptySet())
+                if (!usaRiqueza && (emProgresso || modoProgressaoAtivo)) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Button(onClick = {
+                            dinheiroInput = dinheiro.toString()
+                            showMoneyDialog = true
+                        }) {
+                            Text("Editar dinheiro")
                         }
-                    },
-                    label = { Text(type) }
-                )
+                    }
+                }
+                Spacer(modifier = Modifier.size(4.dp))
             }
-        }
 
-        if (selectedTypes.isNotEmpty() || filter.subtipos.isNotEmpty()) {
-            Spacer(Modifier.size(8.dp))
-            val subtypesForSelection = if (selectedTypes.isNotEmpty()) {
-                selectedTypes
-                    .flatMap { type -> availableSubtypesByType[type].orEmpty() }
-            } else {
-                allCategorias.map { it.subtipo }
+            // 3. PB Banner
+            if (!emProgresso) {
+                item {
+                    if (usePbWalletRedesign) {
+                        PbWalletBanner(
+                            pcTotal = pcTotal,
+                            pcLivres = pcLivres,
+                            spendLabel = "Usar PB em Recursos",
+                            refundLabel = "Desfazer uso de PB",
+                            spendEnabled = pcLivres > 0 && recursosPcUsados == 0,
+                            refundEnabled = recursosPcUsados > 0,
+                            onSpend = onUsarPontosBonusEmRecursos,
+                            onRefund = onDesfazerPontosBonusEmRecursos
+                        )
+                    } else {
+                        PbLegacyActions(
+                            spendLabel = "Usar PB em Recursos",
+                            refundLabel = "Desfazer uso de PB",
+                            spendEnabled = pcLivres > 0 && recursosPcUsados == 0,
+                            refundEnabled = recursosPcUsados > 0,
+                            onSpend = onUsarPontosBonusEmRecursos,
+                            onRefund = onDesfazerPontosBonusEmRecursos
+                        )
+                    }
+                    Spacer(Modifier.size(8.dp))
+                }
             }
-                .distinct()
-                .sorted()
 
-            if (subtypesForSelection.isNotEmpty()) {
-                Text(
-                    "Filtrar subcategorias:",
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                    style = MaterialTheme.typography.labelLarge
+            // 4. Search Field
+            item {
+                SearchTextField(
+                    query = searchQuery,
+                    onQueryChange = { searchQuery = it },
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
-                FlowRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                Spacer(Modifier.size(8.dp))
+            }
+
+            // 5. Dynamic Categories (LazyRow inside Item)
+            item {
+                val availableTypes = allCategorias.map { it.tipo }.distinct().sorted()
+                val availableSubtypesByType = allCategorias.groupBy { it.tipo }.mapValues { (_, cats) ->
+                    cats.map { it.subtipo }.distinct().sorted()
+                }
+
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    subtypesForSelection.forEach { subtype ->
+                    item {
                         FilterChip(
-                            selected = subtype in filter.subtipos,
+                            selected = !filter.isEmpty(),
+                            onClick = { showFilterDialog = true },
+                            label = { Text("Filtros Avançados${if(!filter.isEmpty()) " (!)" else ""}") }
+                        )
+                    }
+
+                    // --- Origin Mini Cards (Chips) ---
+                    if (compendioFantasiaAtivo) {
+                        item {
+                            val label = "Medievais"
+                            val key = "FANTASIA"
+                            FilterChip(
+                                selected = key in filter.origens,
+                                onClick = {
+                                    val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
+                                    filter = filter.copy(origens = newSet)
+                                },
+                                label = { Text(label) }
+                            )
+                        }
+                    }
+
+                    if (compendioSciFiAtivo) {
+                        item {
+                            val label = "Futuristas"
+                            val key = "SCI_FI"
+                            FilterChip(
+                                selected = key in filter.origens,
+                                onClick = {
+                                    val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
+                                    filter = filter.copy(origens = newSet)
+                                },
+                                label = { Text(label) }
+                            )
+                        }
+                    }
+
+                    if (compendioFantasiaAtivo || compendioSciFiAtivo || compendioHorrorAtivo || compendioDeadlandsAtivo) {
+                        item {
+                            val label = "Modernas"
+                            val key = "BASICO"
+                            FilterChip(
+                                selected = key in filter.origens,
+                                onClick = {
+                                    val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
+                                    filter = filter.copy(origens = newSet)
+                                },
+                                label = { Text(label) }
+                            )
+                        }
+                    }
+
+                    items(availableTypes) { type ->
+                        FilterChip(
+                            selected = type in selectedTypes,
                             onClick = {
-                                val newSet = filter.subtipos.toMutableSet()
-                                if (subtype in newSet) newSet.remove(subtype) else newSet.add(subtype)
-                                filter = filter.copy(subtipos = newSet)
+                                if (type in selectedTypes) selectedTypes.remove(type)
+                                else selectedTypes.add(type)
+
+                                if (filter.subtipos.isNotEmpty()) {
+                                    filter = filter.copy(subtipos = emptySet())
+                                }
                             },
-                            modifier = Modifier.heightIn(min = 30.dp),
-                            label = { Text(subtype, style = MaterialTheme.typography.labelMedium) }
+                            label = { Text(type) }
                         )
                     }
                 }
-                Spacer(Modifier.size(8.dp))
             }
-        }
 
-        if (showFilterDialog) {
-            val allTipos = allCategorias.map { it.tipo }.distinct()
-            val allSubtipos = allCategorias.map { it.subtipo }.distinct()
-            val allOrigens = allCategorias
-                .map { it.origem?.ifBlank { "BASICO" } ?: "BASICO" }
-                .map { it.uppercase() }
-                .distinct()
+            // 6. Subtypes Filter
+            if (selectedTypes.isNotEmpty() || filter.subtipos.isNotEmpty()) {
+                item {
+                    val availableSubtypesByType = allCategorias.groupBy { it.tipo }.mapValues { (_, cats) ->
+                        cats.map { it.subtipo }.distinct().sorted()
+                    }
+                    Spacer(Modifier.size(8.dp))
+                    val subtypesForSelection = if (selectedTypes.isNotEmpty()) {
+                        selectedTypes
+                            .flatMap { type -> availableSubtypesByType[type].orEmpty() }
+                    } else {
+                        allCategorias.map { it.subtipo }
+                    }
+                        .distinct()
+                        .sorted()
 
-            EquipFilterDialog(
-                allOrigens = allOrigens,
-                allTipos = allTipos,
-                allSubtipos = allSubtipos,
-                current = filter,
-                onChange = { filter = it },
-                onDismiss = { showFilterDialog = false }
-            )
-        }
-
-        Spacer(Modifier.padding(vertical = 4.dp))
-
-        // 4. Purchased Items
-        if (equipamentosComprados.isNotEmpty()) {
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
-                equipamentosComprados.forEach { eq ->
-                    AssistChip(
-                        onClick = { onRemoveEquipamentoClick(eq) },
-                        label = { Text(eq.nome) },
-                        leadingIcon = {
-                            Icon(
-                                Icons.Default.Close,
-                                contentDescription = "Remover"
-                            )
+                    if (subtypesForSelection.isNotEmpty()) {
+                        Text(
+                            "Filtrar subcategorias:",
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                        FlowRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            subtypesForSelection.forEach { subtype ->
+                                FilterChip(
+                                    selected = subtype in filter.subtipos,
+                                    onClick = {
+                                        val newSet = filter.subtipos.toMutableSet()
+                                        if (subtype in newSet) newSet.remove(subtype) else newSet.add(subtype)
+                                        filter = filter.copy(subtipos = newSet)
+                                    },
+                                    modifier = Modifier.heightIn(min = 30.dp),
+                                    label = { Text(subtype, style = MaterialTheme.typography.labelMedium) }
+                                )
+                            }
                         }
-                    )
+                        Spacer(Modifier.size(8.dp))
+                    }
                 }
             }
-            Spacer(Modifier.padding(vertical = 4.dp))
-        }
 
-        // 5. Weight Calculation
-        val totalWeight = equipamentosComprados
-            .mapNotNull {
-                (it.peso as? JsonPrimitive)?.content?.replace(",", ".")?.toFloatOrNull()
+            // 7. Purchased Items
+            if (equipamentosComprados.isNotEmpty()) {
+                item {
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    ) {
+                        equipamentosComprados.forEach { eq ->
+                            AssistChip(
+                                onClick = { onRemoveEquipamentoClick(eq) },
+                                label = { Text(eq.nome) },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Default.Close,
+                                        contentDescription = "Remover"
+                                    )
+                                }
+                            )
+                        }
+                    }
+                    Spacer(Modifier.padding(vertical = 4.dp))
+                }
             }
-            .sum()
-        val effectiveStrength = if (hasSoldado && soldadoCargaAtivo) {
-            if (forcaRaw < 12) forcaRaw + 2 else forcaRaw + 1
-        } else {
-            forcaRaw
-        }
-        val baseLimit = ((effectiveStrength - 2) / 2) * 10f
-        val limit = baseLimit + if (hasMusculoso) 10f else 0f
 
-        val tensaoExcedida = tensaoTotal > tensaoLimite
-        val tensaoLabel = if (isPersonagemRobotico) "Mods" else "Tensão"
-        val tensaoColor = if (tensaoExcedida) {
-            MaterialTheme.colorScheme.error
-        } else {
-            MaterialTheme.colorScheme.onSurface
-        }
+            // 8. Weight Calculation
+            item {
+                val totalWeight = equipamentosComprados
+                    .mapNotNull {
+                        (it.peso as? JsonPrimitive)?.content?.replace(",", ".")?.toFloatOrNull()
+                    }
+                    .sum()
+                val effectiveStrength = if (hasSoldado && soldadoCargaAtivo) {
+                    if (forcaRaw < 12) forcaRaw + 2 else forcaRaw + 1
+                } else {
+                    forcaRaw
+                }
+                val baseLimit = ((effectiveStrength - 2) / 2) * 10f
+                val limit = baseLimit + if (hasMusculoso) 10f else 0f
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                "Peso total: ${"%.1f".format(totalWeight)} / ${"%.1f".format(limit)}",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1f)
-            )
-            Column(horizontalAlignment = Alignment.End) {
-                if (compendioSciFiAtivo) {
+                val tensaoExcedida = tensaoTotal > tensaoLimite
+                val tensaoLabel = if (isPersonagemRobotico) "Mods" else "Tensão"
+                val tensaoColor = if (tensaoExcedida) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Text(
-                        "$tensaoLabel: $tensaoTotal/$tensaoLimite",
+                        "Peso total: ${"%.1f".format(totalWeight)} / ${"%.1f".format(limit)}",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = tensaoColor
+                        modifier = Modifier.weight(1f)
                     )
-                }
-                if (hasSoldado) {
-                    AssistChip(
-                        onClick = onToggleSoldadoCarga,
-                        label = {
+                    Column(horizontalAlignment = Alignment.End) {
+                        if (compendioSciFiAtivo) {
                             Text(
-                                if (soldadoCargaAtivo) "Bônus Soldado ativo" else "Bônus Soldado inativo"
+                                "$tensaoLabel: $tensaoTotal/$tensaoLimite",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = tensaoColor
                             )
                         }
+                        if (hasSoldado) {
+                            AssistChip(
+                                onClick = onToggleSoldadoCarga,
+                                label = {
+                                    Text(
+                                        if (soldadoCargaAtivo) "Bônus Soldado ativo" else "Bônus Soldado inativo"
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+                Spacer(Modifier.size(4.dp))
+
+                if (compendioSciFiAtivo && tensaoExcedida) {
+                    val excess = tensaoTotal - tensaoLimite
+                    Text(
+                        "Sobrecarga Cibernética: Personagem recebe o estado Fatigado (ou Exausto se X > Y+2).",
+                        color = MaterialTheme.colorScheme.error,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
+                    Text(
+                        "Estado atual: ${if (excess > 2) "Exausto" else "Fatigado"}.",
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                    )
+                    if (excess > 2) {
+                        Text(
+                            "Personagem incapacitado enquanto o excesso persistir.",
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                        )
+                    }
                 }
             }
-        }
 
-        Spacer(Modifier.size(4.dp))
+            // 9. List Content
+            val isSearching = searchQuery.isNotBlank()
 
-        if (compendioSciFiAtivo && tensaoExcedida) {
-            val excess = tensaoTotal - tensaoLimite
-            Text(
-                "Sobrecarga Cibernética: Personagem recebe o estado Fatigado (ou Exausto se X > Y+2).",
-                color = MaterialTheme.colorScheme.error,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-            )
-            Text(
-                "Estado atual: ${if (excess > 2) "Exausto" else "Fatigado"}.",
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-            )
-            if (excess > 2) {
-                Text(
-                    "Personagem incapacitado enquanto o excesso persistir.",
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                )
-            }
-        }
+            if (isSearching) {
+                // Flat List View
+                val finalFlatList = allCategorias.filter { cat ->
+                     val catOrigem = cat.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
+                     if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@filter false
+                     if (filter.tipos.isNotEmpty() && cat.tipo !in filter.tipos) return@filter false
+                     if (filter.subtipos.isNotEmpty() && cat.subtipo !in filter.subtipos) return@filter false
+                     true
+                 }.flatMap { cat ->
+                     cat.itens.filter { item ->
+                         if (filter.somenteAcessiveis) {
+                            val c = (item.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
+                            if (!usaRiqueza && c > dinheiro) return@filter false
+                         }
+                         if (selectedTypes.isNotEmpty() && cat.tipo !in selectedTypes) return@filter false
 
-        // 6. List Content
-        val isSearching = searchQuery.isNotBlank()
-
-        if (isSearching) {
-            // Flat List View
-            // Collect all items first
-             val finalFlatList = allCategorias.filter { cat ->
-                 val catOrigem = cat.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
-                 if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@filter false
-                 if (filter.tipos.isNotEmpty() && cat.tipo !in filter.tipos) return@filter false
-                 if (filter.subtipos.isNotEmpty() && cat.subtipo !in filter.subtipos) return@filter false
-                 true
-             }.flatMap { cat ->
-                 cat.itens.filter { item ->
-                     if (filter.somenteAcessiveis) {
-                        val c = (item.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
-                        if (!usaRiqueza && c > dinheiro) return@filter false
-                     }
-                     if (selectedTypes.isNotEmpty() && cat.tipo !in selectedTypes) return@filter false
-
-                     if (isSearching) {
-                         val q = searchQuery.semAcentos().lowercase()
-                         val n = item.nome.semAcentos().lowercase()
-                         n.contains(q)
-                     } else true
-                 }
-             }
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-            ) {
-                 if (finalFlatList.isEmpty()) {
-                     item { Text("Nenhum equipamento encontrado.", modifier = Modifier.padding(8.dp)) }
-                 } else {
-                     items(finalFlatList, key = { it.nome + it.hashCode() }) { item ->
-                         StandardEquipamentoItem(
-                             equipamento = item,
-                             onClick = { onEquipamentoDoubleClick(item) },
-                             allowLongTexts = allowLongTexts,
-                             showOriginalName = showOfficialNames,
-                             showTensao = compendioSciFiAtivo
-                         )
+                         if (isSearching) {
+                             val q = searchQuery.semAcentos().lowercase()
+                             val n = item.nome.semAcentos().lowercase()
+                             n.contains(q)
+                         } else true
                      }
                  }
-            }
 
-        } else {
-            // Browse Mode (Accordions)
-            // Group by Type
-            val categoriesByType = allCategorias.groupBy { it.tipo }
+                if (finalFlatList.isEmpty()) {
+                    item { Text("Nenhum equipamento encontrado.", modifier = Modifier.padding(8.dp)) }
+                } else {
+                    items(finalFlatList, key = { it.nome + it.hashCode() }) { item ->
+                        StandardEquipamentoItem(
+                            equipamento = item,
+                            onClick = { onEquipamentoDoubleClick(item) },
+                            allowLongTexts = allowLongTexts,
+                            showOriginalName = showOfficialNames,
+                            showTensao = compendioSciFiAtivo
+                        )
+                    }
+                }
 
-            Column(Modifier.padding(horizontal = 4.dp)) {
-                categoriesByType.keys.sorted().forEach { type ->
+            } else {
+                // Browse Mode (Accordions) - Flattened
+                val categoriesByType = allCategorias.groupBy { it.tipo }
+                val sortedTypes = categoriesByType.keys.sorted()
+
+                sortedTypes.forEach { type ->
+                    // Type Filters
                     if (selectedTypes.isNotEmpty() && type !in selectedTypes) return@forEach
                     if (filter.tipos.isNotEmpty() && type !in filter.tipos) return@forEach
+
                     val isExpanded = expandedTypeMap[type] ?: false
 
-                    CollapsibleSection(
-                        title = type,
-                        expanded = isExpanded,
-                        onToggle = { expandedTypeMap[type] = !isExpanded },
-                        onToggleFeedback = onUserFeedback
-                    ) {
-                         // Inside the type, we have subtypes (categories with same type but different subtype)
-                         val cats = categoriesByType[type] ?: emptyList()
+                    item {
+                        EquipTypeHeader(
+                            title = type,
+                            expanded = isExpanded,
+                            onToggle = {
+                                expandedTypeMap[type] = !isExpanded
+                                onUserFeedback()
+                            }
+                        )
+                    }
 
-                         // Apply filters to categories here too!
+                    if (isExpanded) {
+                         // Inside the type, we have subtypes
+                         val cats = categoriesByType[type] ?: emptyList()
                          val filteredCats = cats.filter { cat ->
                              val catOrigem = cat.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
                              if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@filter false
@@ -651,39 +649,37 @@ fun EquipamentoSection(
                         val catsBySubtype = filteredCats.groupBy { it.subtipo }
                         val subtypeEntries = catsBySubtype.entries.sortedBy { it.key }
 
-                        LazyColumn(
-                            modifier = Modifier
-                                .padding(start = 8.dp)
-                                .fillMaxWidth()
-                                .heightIn(min = 200.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp),
-                            contentPadding = PaddingValues(bottom = 8.dp)
-                        ) {
-                            subtypeEntries.forEach { (subtype, subtypeCats) ->
-                                item(key = "header_$subtype") {
+                        subtypeEntries.forEach { (subtype, subtypeCats) ->
+                            item {
+                                Text(
+                                    text = subtype,
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 4.dp)
+                                )
+                            }
+
+                            val subtypeItems = subtypeCats.flatMap { it.itens }.filter { eq ->
+                                 if (filter.somenteAcessiveis) {
+                                     val c = (eq.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
+                                     if (!usaRiqueza && c > dinheiro) return@filter false
+                                 }
+                                 true
+                            }
+
+                            if (subtypeItems.isEmpty()) {
+                                item {
                                     Text(
-                                        text = subtype,
-                                        style = MaterialTheme.typography.titleSmall,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+                                        "- Nenhum item -",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
                                     )
                                 }
-
-                                val subtypeItems = subtypeCats.flatMap { it.itens }.filter { eq ->
-                                     if (filter.somenteAcessiveis) {
-                                         val c = (eq.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
-                                         if (!usaRiqueza && c > dinheiro) return@filter false
-                                     }
-                                     true
-                                }
-
-                                if (subtypeItems.isEmpty()) {
-                                    item(key = "empty_$subtype") {
-                                        Text("- Nenhum item -", style = MaterialTheme.typography.bodySmall)
-                                    }
-                                } else {
-                                    items(subtypeItems, key = { item -> item.nome + item.hashCode() }) { item ->
+                            } else {
+                                items(subtypeItems, key = { item -> item.nome + item.hashCode() }) { item ->
+                                    // Wrap item to add start padding for hierarchy visual
+                                    Column(Modifier.padding(start = 8.dp)) {
                                         StandardEquipamentoItem(
                                             equipamento = item,
                                             onClick = { onEquipamentoDoubleClick(item) },
@@ -693,12 +689,10 @@ fun EquipamentoSection(
                                         )
                                     }
                                 }
-
-                                item(key = "spacer_$subtype") { Spacer(Modifier.height(8.dp)) }
                             }
                         }
+                        item { Spacer(Modifier.height(8.dp)) }
                     }
-                    Spacer(Modifier.height(4.dp))
                 }
             }
         }
@@ -739,5 +733,56 @@ fun EquipamentoSection(
                 }
             )
         }
+
+        if (showFilterDialog) {
+            // Need to recalculate lists for the dialog (same logic as before)
+            // But now context is inside the LazyColumn? No, dialog is separate composable.
+            // But we are inside the function scope so variables are available.
+             val allCategorias = (categorias + superequipCategorias)
+                .filterNot {
+                    superequipCategorias.isEmpty() && (
+                            it.tipo.equals("Equipamento Supers", true) ||
+                                    it.tipo.equals("Equipamentos Supers", true)
+                            )
+                }
+
+            val allTipos = allCategorias.map { it.tipo }.distinct()
+            val allSubtipos = allCategorias.map { it.subtipo }.distinct()
+            val allOrigens = allCategorias
+                .map { it.origem?.ifBlank { "BASICO" } ?: "BASICO" }
+                .map { it.uppercase() }
+                .distinct()
+
+            EquipFilterDialog(
+                allOrigens = allOrigens,
+                allTipos = allTipos,
+                allSubtipos = allSubtipos,
+                current = filter,
+                onChange = { filter = it },
+                onDismiss = { showFilterDialog = false }
+            )
+        }
+    }
+}
+
+@Composable
+private fun EquipTypeHeader(
+    title: String,
+    expanded: Boolean,
+    onToggle: () -> Unit
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onToggle)
+            .padding(vertical = 8.dp, horizontal = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(title, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        Icon(
+            imageVector = if (expanded) Icons.Default.Remove else Icons.Default.Add,
+            contentDescription = if (expanded) "Colapsar" else "Expandir"
+        )
     }
 }

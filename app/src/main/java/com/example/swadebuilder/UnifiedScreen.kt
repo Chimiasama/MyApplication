@@ -140,7 +140,7 @@ fun UnifiedScreen(
     }
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(pagerState) {
+    LaunchedEffect(pagerState, availableSections) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
             availableSections.getOrNull(page)?.let { activeSection = it }
         }
@@ -603,7 +603,8 @@ private fun ProgressionDetailContent(
         MainSection.VANTAGENS -> {
             SectionCard(
                 title    = "Vantagens",
-                icon     = Icons.Default.Star
+                icon     = Icons.Default.Star,
+                expand   = true
             ) {
                 VantagensContent(
                     state = state,
@@ -643,7 +644,8 @@ private fun ProgressionDetailContent(
         MainSection.PERICIAS -> {
             SectionCard(
                 title    = "Perícias",
-                icon     = Icons.Default.School
+                icon     = Icons.Default.School,
+                expand   = true
             ) {
                 PericiasContent(
                     state = state,
@@ -677,7 +679,8 @@ private fun ProgressionDetailContent(
         MainSection.ATRIBUTOS -> {
             SectionCard(
                 title    = "Atributos",
-                icon     = Icons.Default.FitnessCenter
+                icon     = Icons.Default.FitnessCenter,
+                expand   = true
             ) {
                 AtributosContent(state = state, onUserFeedback = onUserFeedback)
             }
@@ -708,6 +711,7 @@ private fun ProgressionDetailContent(
             state = state,
             equipamentoCategorias = equipamentoCategorias,
             superequipCategorias = superequipCategorias,
+            expand = true,
             onUserFeedback = onUserFeedback
         )
         MainSection.XP -> XpSection(
@@ -772,13 +776,15 @@ private fun CreationDetailContent(
         )
         MainSection.ATRIBUTOS -> SectionCard(
             title    = "Atributos",
-            icon     = Icons.Default.FitnessCenter
+            icon     = Icons.Default.FitnessCenter,
+            expand   = true
         ) {
             AtributosContent(state, onUserFeedback)
         }
         MainSection.PERICIAS -> SectionCard(
             title    = "Perícias",
-            icon     = Icons.Default.School
+            icon     = Icons.Default.School,
+            expand   = true
         ) {
             PericiasContent(
                 state = state,
@@ -788,7 +794,8 @@ private fun CreationDetailContent(
         }
         MainSection.VANTAGENS -> SectionCard(
             title    = "Vantagens",
-            icon     = Icons.Default.Star
+            icon     = Icons.Default.Star,
+            expand   = true
         ) {
             VantagensContent(
                 state = state,
@@ -815,6 +822,7 @@ private fun CreationDetailContent(
             state = state,
             equipamentoCategorias = equipamentoCategorias,
             superequipCategorias = superequipCategorias,
+            expand = true,
             onUserFeedback = onUserFeedback
         )
         else -> SummaryTabContent(
@@ -872,7 +880,8 @@ private fun PoderesSection(
         HorizontalDivider(thickness = 1.dp)
         SectionCard(
             title = "Poderes",
-            icon = Icons.Default.FlashOn
+            icon = Icons.Default.FlashOn,
+            expand = true
         ) {
             PoderesSection(
                 state = state
@@ -900,6 +909,7 @@ private fun EquipamentoSection(
     state: CriadorState,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
+    expand: Boolean = false,
     onUserFeedback: () -> Unit
 ) {
     val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
@@ -984,6 +994,7 @@ private fun EquipamentoSection(
         compendioWiseguysAtivo = state.compendioWiseguysAtivo,
         compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo,
         modoOficialAtivo = state.modoOficialAtivo,
+        expand = expand,
         onUserFeedback = onUserFeedback
     )
 }

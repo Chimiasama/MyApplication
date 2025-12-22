@@ -26,12 +26,13 @@ import androidx.compose.ui.unit.sp
 fun SectionCard(
     title: String,
     icon: ImageVector,
+    expand: Boolean = false,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val headerColor = MaterialTheme.colorScheme.onBackground
     val cardColor   = MaterialTheme.colorScheme.surfaceVariant
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = if (expand) Modifier.fillMaxWidth().weight(1f) else Modifier.fillMaxWidth()) {
         Row(
             Modifier
                 .fillMaxWidth()
@@ -57,9 +58,15 @@ fun SectionCard(
         }
 
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 4.dp, vertical = 0.dp),
+            modifier = if (expand)
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(horizontal = 4.dp, vertical = 0.dp)
+            else
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp, vertical = 0.dp),
             shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -67,7 +74,14 @@ fun SectionCard(
                 containerColor = cardColor
             )
         ) {
-            Column(modifier = Modifier.padding(12.dp)) {
+            Column(
+                modifier = if (expand)
+                    Modifier
+                        .fillMaxSize()
+                        .padding(12.dp)
+                else
+                    Modifier.padding(12.dp)
+            ) {
                 content()
             }
         }
