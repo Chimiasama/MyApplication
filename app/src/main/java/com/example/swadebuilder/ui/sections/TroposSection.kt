@@ -51,7 +51,8 @@ fun TroposSection(
 
     SectionCard(
         title = "Tropos",
-        icon = Icons.Default.AutoAwesome
+        icon = Icons.Default.AutoAwesome,
+        showHeader = false
     ) {
         Column(
             modifier = Modifier

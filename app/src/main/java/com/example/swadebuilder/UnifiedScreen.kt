@@ -625,7 +625,8 @@ private fun ProgressionDetailContent(
         MainSection.VANTAGENS -> {
             SectionCard(
                 title    = "Vantagens",
-                icon     = Icons.Default.Star
+                icon     = Icons.Default.Star,
+                showHeader = false
             ) {
                 VantagensContent(
                     state = state,
@@ -665,7 +666,8 @@ private fun ProgressionDetailContent(
         MainSection.PERICIAS -> {
             SectionCard(
                 title    = "Perícias",
-                icon     = Icons.Default.School
+                icon     = Icons.Default.School,
+                showHeader = false
             ) {
                 PericiasContent(
                     state = state,
@@ -699,7 +701,8 @@ private fun ProgressionDetailContent(
         MainSection.ATRIBUTOS -> {
             SectionCard(
                 title    = "Atributos",
-                icon     = Icons.Default.FitnessCenter
+                icon     = Icons.Default.FitnessCenter,
+                showHeader = false
             ) {
                 AtributosContent(state = state, onUserFeedback = onUserFeedback)
             }
@@ -797,13 +800,15 @@ private fun CreationDetailContent(
         )
         MainSection.ATRIBUTOS -> SectionCard(
             title    = "Atributos",
-            icon     = Icons.Default.FitnessCenter
+            icon     = Icons.Default.FitnessCenter,
+            showHeader = false
         ) {
             AtributosContent(state, onUserFeedback)
         }
         MainSection.PERICIAS -> SectionCard(
             title    = "Perícias",
-            icon     = Icons.Default.School
+            icon     = Icons.Default.School,
+            showHeader = false
         ) {
             PericiasContent(
                 state = state,
@@ -813,7 +818,8 @@ private fun CreationDetailContent(
         }
         MainSection.VANTAGENS -> SectionCard(
             title    = "Vantagens",
-            icon     = Icons.Default.Star
+            icon     = Icons.Default.Star,
+            showHeader = false
         ) {
             VantagensContent(
                 state = state,
@@ -905,7 +911,8 @@ private fun PoderesSection(
         HorizontalDivider(thickness = 1.dp)
         SectionCard(
             title = "Poderes",
-            icon = Icons.Default.FlashOn
+            icon = Icons.Default.FlashOn,
+            showHeader = false
         ) {
             PoderesSection(
                 state = state

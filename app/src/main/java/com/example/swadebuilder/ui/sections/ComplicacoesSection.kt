@@ -106,7 +106,8 @@ fun ComplicacoesSection(
 
     SectionCard(
         title    = "Complicações",
-        icon     = Icons.Default.Warning
+        icon     = Icons.Default.Warning,
+        showHeader = false
     ) {
         val totalPc = state.pontosComplicacao
         val usadosPc = state.pontosComplicacaoGastos

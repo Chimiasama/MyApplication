@@ -37,7 +37,8 @@ fun CrystalHeartSection(
 ) {
     SectionCard(
         title = "Coração de Cristal",
-        icon = Icons.Default.Favorite
+        icon = Icons.Default.Favorite,
+        showHeader = false
     ) {
         val temAgenteSyn = state.vantagensSelecionadas.any { it.id == "aa_agente_syn" }
 

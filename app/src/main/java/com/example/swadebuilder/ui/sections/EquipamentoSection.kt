@@ -236,7 +236,8 @@ fun EquipamentoSection(
 
     SectionCard(
         title    = "Equipamento",
-        icon     = Icons.Default.ShoppingCart
+        icon     = Icons.Default.ShoppingCart,
+        showHeader = false
     ) {
         val containerModifier = if (isSearching) {
             Modifier
