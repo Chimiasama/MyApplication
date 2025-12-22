@@ -1421,8 +1421,17 @@ class CriadorState {
         }
     }
 
+    private fun atributoBaseRacial(a: String): Int {
+        val base = racialAttrMinMap[ancestralidade]?.get(a) ?: 4
+        return if (a.keyify() == "AGILIDADE" && meioElfoAgil) {
+            maxOf(base, 6)
+        } else {
+            base
+        }
+    }
+
     fun atributoMinRaw(a: String): Int =
-        racialAttrMinMap[ancestralidade]?.get(a) ?: 4
+        atributoBaseRacial(a)
 
     fun atributoMaxRaw(a: String): Int {
         val minRaw = atributoMinRaw(a)
@@ -1786,12 +1795,11 @@ class CriadorState {
 
     // PROMPT 1: Explicit calculation: (Current Step - Racial Base Step)
     private fun calcularPontosAtributoRestantes(): Int {
-        val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
         var usados = 0
 
         for (nome in listaAtributos) {
             val atual = valoresAtributos[nome]!!.intValue
-            val base  = mods[nome] ?: 4
+            val base = atributoBaseRacial(nome)
 
             // PROMPT 1: Explicit calculation: (Current Step - Racial Base Step)
             // Steps count: d4=0, d6=1, d8=2, d10=3, d12=4
@@ -1863,8 +1871,7 @@ class CriadorState {
 
             stack.removeAt(stack.size - 1)
 
-            val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
-            val base = mods[nomeAttr] ?: 4
+            val base = atributoBaseRacial(nomeAttr)
 
             val atual = valoresAtributos[nomeAttr]!!.intValue
 
