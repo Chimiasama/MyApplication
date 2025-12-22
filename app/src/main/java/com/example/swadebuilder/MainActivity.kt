@@ -96,6 +96,7 @@ import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.model.EquipamentoCategoria
+import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.RacialModifier
@@ -190,12 +191,16 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val equipamentoCategorias = assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
-            cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
-        }
-        val superequipCategorias = assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
-            cat.origem?.equals("super", ignoreCase = true) ?: false
-        }
+        val equipamentoCategorias = deduplicarEquipamentoCategorias(
+            assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
+                cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
+            }
+        )
+        val superequipCategorias = deduplicarEquipamentoCategorias(
+            assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
+                cat.origem?.equals("super", ignoreCase = true) ?: false
+            }
+        )
 
         listaCoracoesCrystal = runCatching<List<CrystalHeart>> {
             assets.open("coracoes_crystal.json")
@@ -1020,6 +1025,46 @@ val dynamicStageCaps = listaDeEstagios.mapIndexed { idx, st ->
     else
         (TOTAL_PROGRESS_LIMIT - prevMax).coerceAtLeast(0)
 }
+
+private fun deduplicarEquipamentoCategorias(
+    categorias: List<EquipamentoCategoria>
+): List<EquipamentoCategoria> {
+    return categorias.map { categoria ->
+        val itensDeduplicados = categoria.itens.distinctBy { equipamentoKey(it) }
+        if (itensDeduplicados.size == categoria.itens.size) {
+            categoria
+        } else {
+            categoria.copy(itens = itensDeduplicados)
+        }
+    }
+}
+
+private fun equipamentoKey(item: EquipamentoItem): String = listOfNotNull(
+    item.nome.keyify(),
+    item.custo?.toString(),
+    item.peso?.toString(),
+    item.origem?.keyify(),
+    item.subtipo?.keyify(),
+    item.subsubtipo?.keyify(),
+    item.forcaMin?.toString(),
+    item.armadura?.toString(),
+    item.aparar?.toString(),
+    item.observacoes?.toString(),
+    item.dano?.toString(),
+    item.pa?.toString(),
+    item.cdt?.toString(),
+    item.distancia?.toString(),
+    item.tiros?.toString(),
+    item.tamanho?.toString(),
+    item.manobrabilidade?.toString(),
+    item.velMaxima?.toString(),
+    item.resistencia?.toString(),
+    item.tripulacao?.toString(),
+    item.pmf?.toString(),
+    item.malfuncionamento?.toString(),
+    item.tensao?.toString(),
+    item.mods_slots?.toString()
+).joinToString("|")
 
 
 
