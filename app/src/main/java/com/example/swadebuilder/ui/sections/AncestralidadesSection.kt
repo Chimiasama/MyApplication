@@ -50,10 +50,19 @@ import com.example.swadebuilder.CriadorState
 @Serializable
 data class RacialModifierLite(
     val nome: String,
+    val displayName: String,
     val originalName: String? = null
 )
 
 private const val ASSET_ANCESTRALIDADES = "listaancestralidade.json"
+
+private fun RacialModifierLite.displayName(showOfficialNames: Boolean): String {
+    return if (showOfficialNames && !originalName.isNullOrBlank()) {
+        originalName
+    } else {
+        displayName
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -132,7 +141,11 @@ fun AncestralidadesSection(
         }.map {
             val buscatrilhaName = it.nome.replace("Trilhador", "Buscatrilha")
             val originalName = if (EditionConfig.isFullEdition) it.originalName else null
-            RacialModifierLite(buscatrilhaName.toEditionDisplayName(), originalName)
+            RacialModifierLite(
+                nome = buscatrilhaName,
+                displayName = buscatrilhaName.toEditionDisplayName(),
+                originalName = originalName
+            )
         }
         mutableStateOf(filtered)
     }
@@ -171,7 +184,7 @@ fun AncestralidadesSection(
     val selectedDisplayName =
         ancestralidadesState.value.firstOrNull { item ->
             item.nome.uppercase().semAcentos() == selectedKey.value
-        }?.nome ?: "HUMANOS"
+        }?.displayName(showOfficialNames) ?: "HUMANOS"
 
     val focoKey = ancestralidadeEmFoco
         ?.uppercase()
@@ -265,11 +278,7 @@ fun AncestralidadesSection(
                                 Spacer(Modifier.padding(start = 8.dp))
 
                                 Column(Modifier.weight(1f)) {
-                                    val displayName = if (showOfficialNames && !item.originalName.isNullOrBlank()) {
-                                        item.originalName
-                                    } else {
-                                        item.nome
-                                    }
+                                    val displayName = item.displayName(showOfficialNames)
 
                                     Text(
                                         text = displayName,
