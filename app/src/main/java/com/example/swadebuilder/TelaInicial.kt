@@ -1,6 +1,8 @@
 package com.example.swadebuilder
 
 import android.content.Context
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +22,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Build
@@ -32,6 +33,7 @@ import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.MoodBad
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.SportsMma
@@ -58,12 +60,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.ui.components.ModuleCard
+import com.example.swadebuilder.util.SettingsStorage
 import com.example.swadebuilder.util.toEditionDisplayName
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,38 +100,79 @@ fun TelaInicial(
     viewModel: CriadorViewModel
 ) {
     val isFullEdition = EditionConfig.isFullEdition
+    val currentContext = LocalContext.current
 
-    // --- State Variables ---
+    // --- State Variables (Initialized from SettingsStorage) ---
 
     // Core Rules
-    var optCartaSelvagem by rememberSaveable { mutableStateOf(true) }
-    var optMaisPontosPericias by rememberSaveable { mutableStateOf(true) }
-    var optMultiAntecedenteArcano by rememberSaveable { mutableStateOf(false) }
-    var optEspecializacaoPer by rememberSaveable { mutableStateOf(false) }
-    var optHeroiSemArmadura by rememberSaveable { mutableStateOf(false) }
-    var optMultiplosIdiomas by rememberSaveable { mutableStateOf(false) }
-    var optNasceUmHeroi by rememberSaveable { mutableStateOf(false) }
-    var optSemPontosPoder by rememberSaveable { mutableStateOf(false) }
+    var optCartaSelvagem by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_WILDCARD, true))
+    }
+    var optMaisPontosPericias by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_MORE_SKILL_POINTS, true))
+    }
+    var optMultiAntecedenteArcano by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_MULTI_ARCANE, false))
+    }
+    var optEspecializacaoPer by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_SPECIALIZATION, false))
+    }
+    var optHeroiSemArmadura by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_UNARMORED_HERO, false))
+    }
+    var optMultiplosIdiomas by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_MULTI_LANG, false))
+    }
+    var optNasceUmHeroi by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_BORN_A_HERO, false))
+    }
+    var optSemPontosPoder by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_NO_POWER_POINTS, false))
+    }
 
     // Supers
-    var optSuperPoderes by rememberSaveable { mutableStateOf(false) }
-    var optGrandesResponsabilidades by rememberSaveable { mutableStateOf(false) }
+    var optSuperPoderes by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_SUPERS, false))
+    }
+    var optGrandesResponsabilidades by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_BIG_RESPONSIBILITIES, false))
+    }
 
     // Horror
-    var optCompendioHorror by rememberSaveable { mutableStateOf(false) }
-    var optModoMonstro by rememberSaveable { mutableStateOf(false) }
+    var optCompendioHorror by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_HORROR, false))
+    }
+    var optModoMonstro by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_MONSTER_MODE, false))
+    }
 
     // Fantasy
-    var optCompendioFantasia by rememberSaveable { mutableStateOf(false) }
-    var optCompendioBuscatrilha by rememberSaveable { mutableStateOf(false) }
-    var optCompendioDeadlands by rememberSaveable { mutableStateOf(false) }
-    var optCompendioCrystalHeart by rememberSaveable { mutableStateOf(false) }
-    var optCompendioArteDaGuerra by rememberSaveable { mutableStateOf(false) }
-    var optCompendioCidadeSolVapor by rememberSaveable { mutableStateOf(false) }
-    var optCompendioWiseguys by rememberSaveable { mutableStateOf(false) }
+    var optCompendioFantasia by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_FANTASY, false))
+    }
+    var optCompendioBuscatrilha by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_BUSCATRILHA, false))
+    }
+    var optCompendioDeadlands by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_DEADLANDS, false))
+    }
+    var optCompendioCrystalHeart by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_CRYSTAL_HEART, false))
+    }
+    var optCompendioArteDaGuerra by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_WAR_ARTS, false))
+    }
+    var optCompendioCidadeSolVapor by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_STEAM_SUN, false))
+    }
+    var optCompendioWiseguys by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_WISEGUYS, false))
+    }
 
     // SciFi
-    var optCompendioSciFi by rememberSaveable { mutableStateOf(false) }
+    var optCompendioSciFi by rememberSaveable {
+        mutableStateOf(SettingsStorage.getBoolean(currentContext, SettingsStorage.KEY_SCIFI, false))
+    }
 
     // Dialog States
     var showCreditsDialog by remember { mutableStateOf(false) }
@@ -152,25 +197,37 @@ fun TelaInicial(
             "Raças, itens mágicos e regras de fantasia.",
             Icons.Default.AutoAwesome,
             optCompendioFantasia
-        ) { optCompendioFantasia = !optCompendioFantasia },
+        ) {
+            optCompendioFantasia = !optCompendioFantasia
+            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_FANTASY, optCompendioFantasia)
+        },
         ModuleItemData(
             "Compêndio de Ficção",
             "Tecnologia avançada, naves e cibernéticos.",
             Icons.Default.RocketLaunch,
             optCompendioSciFi
-        ) { optCompendioSciFi = !optCompendioSciFi },
+        ) {
+            optCompendioSciFi = !optCompendioSciFi
+            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_SCIFI, optCompendioSciFi)
+        },
         ModuleItemData(
             "Compêndio de Horror",
             "Climas sombrios e criaturas aterrorizantes.",
             Icons.Default.MoodBad,
             optCompendioHorror
-        ) { optCompendioHorror = !optCompendioHorror },
+        ) {
+            optCompendioHorror = !optCompendioHorror
+            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_HORROR, optCompendioHorror)
+        },
         ModuleItemData(
             "Superpoderes",
             "Seja um superherói dos quadrinhos!",
             Icons.Default.Bolt,
             optSuperPoderes
-        ) { optSuperPoderes = !optSuperPoderes }
+        ) {
+            optSuperPoderes = !optSuperPoderes
+            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_SUPERS, optSuperPoderes)
+        }
     )
 
     val settingModules = listOf(
@@ -179,38 +236,59 @@ fun TelaInicial(
             if (isFullEdition) "Conteúdo oficial de Mundo Ancestral (Classes, Raças)." else "Cenário Buscatrilha e material temático.",
             Icons.Default.Map,
             optCompendioBuscatrilha
-        ) { optCompendioBuscatrilha = !optCompendioBuscatrilha },
+        ) {
+            optCompendioBuscatrilha = !optCompendioBuscatrilha
+            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_BUSCATRILHA, optCompendioBuscatrilha)
+        },
         ModuleItemData(
             "Faroeste Assombrado".toEditionDisplayName(),
             "Pistoleiros, revividos e o horror do Oeste.",
             Icons.Default.Shield,
             optCompendioDeadlands
-        ) { optCompendioDeadlands = !optCompendioDeadlands },
+        ) {
+            optCompendioDeadlands = !optCompendioDeadlands
+            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_DEADLANDS, optCompendioDeadlands)
+        },
         ModuleItemData(
             "Crystal Heart".toEditionDisplayName(),
             if (isFullEdition) "Troque seu coração por um cristal mágico." else "Troque seu coração por uma pedra mágica.",
             Icons.Default.Favorite,
             optCompendioCrystalHeart
-        ) { optCompendioCrystalHeart = !optCompendioCrystalHeart },
+        ) {
+            optCompendioCrystalHeart = !optCompendioCrystalHeart
+            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_CRYSTAL_HEART, optCompendioCrystalHeart)
+        },
         ModuleItemData(
             "Arte da Guerra: Nova Era".toEditionDisplayName(),
             "Ativa Chi, Tropos e equipamentos orientais.",
             Icons.Default.SportsMma,
             optCompendioArteDaGuerra
-        ) { optCompendioArteDaGuerra = !optCompendioArteDaGuerra },
+        ) {
+            optCompendioArteDaGuerra = !optCompendioArteDaGuerra
+            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_WAR_ARTS, optCompendioArteDaGuerra)
+        },
         ModuleItemData(
             "A Cidade do Sol a Vapor".toEditionDisplayName(),
             "Estímulos vitorianos, vapor e tecnomagia.",
             Icons.Default.Build,
             optCompendioCidadeSolVapor
-        ) { optCompendioCidadeSolVapor = !optCompendioCidadeSolVapor },
+        ) {
+            optCompendioCidadeSolVapor = !optCompendioCidadeSolVapor
+            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_STEAM_SUN, optCompendioCidadeSolVapor)
+        },
         ModuleItemData(
             "Malandros".toEditionDisplayName(),
             "Crime organizado moderno, conexões e esquemas.",
             Icons.Default.Groups,
             optCompendioWiseguys
-        ) { optCompendioWiseguys = !optCompendioWiseguys }
+        ) {
+            optCompendioWiseguys = !optCompendioWiseguys
+            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_WISEGUYS, optCompendioWiseguys)
+        }
     )
+
+    // Count active modules for the header
+    val activeModulesCount = officialModules.count { it.isSelected } + settingModules.count { it.isSelected }
 
     Scaffold(
         topBar = {
@@ -231,43 +309,48 @@ fun TelaInicial(
             )
         },
         floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = {
-                    onCriarNovo(
-                        optCartaSelvagem,
-                        optMaisPontosPericias,
-                        optSuperPoderes,
-                        optCompendioFantasia,
-                        optCompendioHorror,
-                        optCompendioSciFi,
-                        optCompendioBuscatrilha,
-                        optCompendioDeadlands,
-                        optCompendioCrystalHeart,
-                        optCompendioArteDaGuerra,
-                        optCompendioCidadeSolVapor,
-                        optCompendioWiseguys,
-                        optModoMonstro,
-                        optNasceUmHeroi,
-                        optHeroiSemArmadura,
-                        optEspecializacaoPer,
-                        optSemPontosPoder,
-                        optMultiplosIdiomas,
-                        optGrandesResponsabilidades
-                    )
-                    viewModel.state.compendioBuscatrilhaAtivo = optCompendioBuscatrilha
-                    viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
-                    viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
-                    viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
-                    viewModel.state.compendioCidadeSolVaporAtivo = optCompendioCidadeSolVapor
-                    viewModel.state.compendioWiseguysAtivo = optCompendioWiseguys
-                    viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
-                    viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
-                },
-                icon = { Icon(Icons.Default.ArrowForward, contentDescription = null) },
-                text = { Text("CRIAR PERSONAGEM") },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            )
+            AnimatedVisibility(
+                visible = true,
+                enter = slideInVertically { height -> height }
+            ) {
+                ExtendedFloatingActionButton(
+                    onClick = {
+                        onCriarNovo(
+                            optCartaSelvagem,
+                            optMaisPontosPericias,
+                            optSuperPoderes,
+                            optCompendioFantasia,
+                            optCompendioHorror,
+                            optCompendioSciFi,
+                            optCompendioBuscatrilha,
+                            optCompendioDeadlands,
+                            optCompendioCrystalHeart,
+                            optCompendioArteDaGuerra,
+                            optCompendioCidadeSolVapor,
+                            optCompendioWiseguys,
+                            optModoMonstro,
+                            optNasceUmHeroi,
+                            optHeroiSemArmadura,
+                            optEspecializacaoPer,
+                            optSemPontosPoder,
+                            optMultiplosIdiomas,
+                            optGrandesResponsabilidades
+                        )
+                        viewModel.state.compendioBuscatrilhaAtivo = optCompendioBuscatrilha
+                        viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
+                        viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
+                        viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
+                        viewModel.state.compendioCidadeSolVaporAtivo = optCompendioCidadeSolVapor
+                        viewModel.state.compendioWiseguysAtivo = optCompendioWiseguys
+                        viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
+                        viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
+                    },
+                    icon = { Icon(Icons.Default.PlayArrow, contentDescription = null) },
+                    text = { Text("Começar Aventura") },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         }
     ) { innerPadding ->
         LazyVerticalGrid(
@@ -279,19 +362,43 @@ fun TelaInicial(
                 .fillMaxWidth()
                 .padding(innerPadding)
         ) {
-            // Header Text
+            // Dynamic Header Card
+            item(span = { GridItemSpan(2) }) {
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Configure sua Mesa",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "$activeModulesCount módulos ativos no momento",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+            }
+
+            // Header Text (Original)
             item(span = { GridItemSpan(2) }) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp),
+                        .padding(bottom = 8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "Configuração da Campanha",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
                     Text(
                         text = "Selecione os livros e regras para seu novo herói.",
                         style = MaterialTheme.typography.bodyMedium,
@@ -340,14 +447,38 @@ fun TelaInicial(
                         expanded = expandedBasicRules,
                         onToggle = { expandedBasicRules = !expandedBasicRules }
                     ) {
-                        SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
-                        SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
-                        SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) { optMultiAntecedenteArcano = it }
-                        SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
-                        SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
-                        SimpleCheckRow("Múltiplos Idiomas", "Personagem inicia poliglota.", optMultiplosIdiomas) { optMultiplosIdiomas = it }
-                        SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
-                        SimpleCheckRow("Sem Pontos de Poder", "Conjuradores não usam PP.", optSemPontosPoder) { optSemPontosPoder = it }
+                        SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) {
+                            optCartaSelvagem = it
+                            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_WILDCARD, it)
+                        }
+                        SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) {
+                            optMaisPontosPericias = it
+                            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_MORE_SKILL_POINTS, it)
+                        }
+                        SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) {
+                            optMultiAntecedenteArcano = it
+                            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_MULTI_ARCANE, it)
+                        }
+                        SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) {
+                            optEspecializacaoPer = it
+                            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_SPECIALIZATION, it)
+                        }
+                        SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) {
+                            optHeroiSemArmadura = it
+                            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_UNARMORED_HERO, it)
+                        }
+                        SimpleCheckRow("Múltiplos Idiomas", "Personagem inicia poliglota.", optMultiplosIdiomas) {
+                            optMultiplosIdiomas = it
+                            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_MULTI_LANG, it)
+                        }
+                        SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) {
+                            optNasceUmHeroi = it
+                            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_BORN_A_HERO, it)
+                        }
+                        SimpleCheckRow("Sem Pontos de Poder", "Conjuradores não usam PP.", optSemPontosPoder) {
+                            optSemPontosPoder = it
+                            SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_NO_POWER_POINTS, it)
+                        }
                     }
 
                     // Regras Horror
@@ -361,7 +492,10 @@ fun TelaInicial(
                                 title = "Monstros Heróis",
                                 description = "Jogar como vampiro, lobisomem, etc.",
                                 checked = optModoMonstro,
-                                onCheckedChange = { optModoMonstro = it }
+                                onCheckedChange = {
+                                    optModoMonstro = it
+                                    SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_MONSTER_MODE, it)
+                                }
                             )
                         }
                     }
@@ -377,7 +511,10 @@ fun TelaInicial(
                                 title = "Grandes Responsabilidades",
                                 description = "Débitos de Poder adicionais.",
                                 checked = optGrandesResponsabilidades,
-                                onCheckedChange = { optGrandesResponsabilidades = it }
+                                onCheckedChange = {
+                                    optGrandesResponsabilidades = it
+                                    SettingsStorage.saveBoolean(currentContext, SettingsStorage.KEY_BIG_RESPONSIBILITIES, it)
+                                }
                             )
                         }
                     }

@@ -282,12 +282,16 @@ class MainActivity : ComponentActivity() {
             val criadorViewModel: CriadorViewModel = viewModel()
             criadorViewModel.setMultiplosAAHabilitados(MULTIPLOS_AA_HABILITADOS)
             val state = criadorViewModel.state
+            val context = LocalContext.current
+            // Load persisted settings into state to ensure consistency on startup
+            LaunchedEffect(Unit) {
+                state.loadInitialSettings(context)
+            }
+
             val snackHost = remember { SnackbarHostState() }
             val scope = rememberCoroutineScope()
 
             var creationSession by rememberSaveable { mutableIntStateOf(0) }
-
-            val context = LocalContext.current
             val activity = (context as? ComponentActivity)
             var mostrouTelaInicial by rememberSaveable { mutableStateOf(true) }
             var showExitDialog     by rememberSaveable { mutableStateOf(false) }

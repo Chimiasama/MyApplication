@@ -64,6 +64,32 @@ class CriadorState {
         const val DEFAULT_HAPTIC_STRENGTH = 70
         const val DEFAULT_SOUND_VOLUME = 70
     }
+
+    // Método para satisfazer requisito explícito de carregamento de configurações em CriadorState,
+    // embora a UI TelaInicial já gerencie isso visualmente.
+    fun loadInitialSettings(context: android.content.Context) {
+        val prefs = com.example.swadebuilder.util.SettingsStorage
+        cartaSelvagem = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_WILDCARD, true)
+        maisPontosPericias = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_MORE_SKILL_POINTS, true)
+        compendioFantasiaAtivo = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_FANTASY, false)
+        compendioHorrorAtivo = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_HORROR, false)
+        compendioSciFiAtivo = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_SCIFI, false)
+        compendioBuscatrilhaAtivo = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_BUSCATRILHA, false)
+        compendioDeadlandsAtivo = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_DEADLANDS, false)
+        compendioCrystalHeartAtivo = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_CRYSTAL_HEART, false)
+        compendioArteDaGuerraAtivo = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_WAR_ARTS, false)
+        compendioCidadeSolVaporAtivo = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_STEAM_SUN, false)
+        compendioWiseguysAtivo = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_WISEGUYS, false)
+        modoSupers = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_SUPERS, false)
+        grandesResponsabilidades = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_BIG_RESPONSIBILITIES, false)
+        modoMonstroAtivo = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_MONSTER_MODE, false)
+        permiteMultiAntecedenteArcano = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_MULTI_ARCANE, false)
+        usarEspecializacoesDePericia = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_SPECIALIZATION, false)
+        heroisSemArmadura = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_UNARMORED_HERO, false)
+        regraMultiplosIdiomas = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_MULTI_LANG, false)
+        nasceUmHeroi = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_BORN_A_HERO, false)
+        usarSemPontosDePoder = prefs.getBoolean(context, com.example.swadebuilder.util.SettingsStorage.KEY_NO_POWER_POINTS, false)
+    }
     var maisPontosPericias by mutableStateOf(true)
     var cartaSelvagem       by mutableStateOf(true)
     var dinheiro by mutableIntStateOf(500)
