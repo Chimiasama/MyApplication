@@ -71,6 +71,7 @@ import com.example.swadebuilder.ui.sections.XpSection
 import com.example.swadebuilder.ui.components.CharacterPortraitCard
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.serialization.json.JsonPrimitive
 import android.net.Uri
 
@@ -472,7 +473,7 @@ private fun MainSection.tabLabel(): String = when (this) {
     MainSection.PODERES -> "Poderes"
     MainSection.XP -> "XP"
     MainSection.MONSTRO -> "Monstro"
-    MainSection.CRYSTAL_HEART -> "Crystal Heart"
+    MainSection.CRYSTAL_HEART -> "Crystal Heart".toEditionDisplayName()
 }
 
 private fun activeSectionIndex(

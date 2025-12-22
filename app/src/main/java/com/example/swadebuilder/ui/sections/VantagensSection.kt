@@ -77,6 +77,7 @@ import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -127,7 +128,7 @@ fun VantFilterDialog(
                             }
                         )
                         Spacer(Modifier.size(4.dp))
-                        Text(o)
+                        Text(o.toEditionDisplayName())
                     }
                 }
                 Spacer(Modifier.size(8.dp))
