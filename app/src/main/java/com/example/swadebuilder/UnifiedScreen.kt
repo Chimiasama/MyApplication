@@ -175,7 +175,12 @@ fun UnifiedScreen(
             selectedSection = activeSection,
             onSelectSection = {
                 onUserFeedback()
-                activeSection = it
+                val targetIndex = activeSectionIndex(availableSections, it)
+                if (targetIndex != pagerState.currentPage) {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(targetIndex)
+                    }
+                }
             }
         )
 

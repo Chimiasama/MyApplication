@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -229,6 +228,7 @@ fun EquipamentoSection(
     val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
     val showOfficialNames = EditionConfig.isFullEdition && modoOficialAtivo
+    val isSearching = searchQuery.isNotBlank()
 
     // Accordion State for browse mode
     // Map of Category Type -> Expanded
@@ -238,6 +238,13 @@ fun EquipamentoSection(
         title    = "Equipamento",
         icon     = Icons.Default.ShoppingCart
     ) {
+        val containerModifier = if (isSearching) {
+            Modifier
+        } else {
+            Modifier.verticalScroll(rememberScrollState())
+        }
+
+        Column(modifier = containerModifier) {
         // 1. Prepare Data
         val esconderSupers = superequipCategorias.isEmpty()
         val allCategorias = (categorias + superequipCategorias)
@@ -573,8 +580,6 @@ fun EquipamentoSection(
         }
 
         // 6. List Content
-        val isSearching = searchQuery.isNotBlank()
-
         if (isSearching) {
             // Flat List View
             // Collect all items first
@@ -651,24 +656,20 @@ fun EquipamentoSection(
                         val catsBySubtype = filteredCats.groupBy { it.subtipo }
                         val subtypeEntries = catsBySubtype.entries.sortedBy { it.key }
 
-                        LazyColumn(
+                        Column(
                             modifier = Modifier
                                 .padding(start = 8.dp)
-                                .fillMaxWidth()
-                                .heightIn(min = 200.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp),
-                            contentPadding = PaddingValues(bottom = 8.dp)
+                                .fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             subtypeEntries.forEach { (subtype, subtypeCats) ->
-                                item(key = "header_$subtype") {
-                                    Text(
-                                        text = subtype,
-                                        style = MaterialTheme.typography.titleSmall,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
-                                    )
-                                }
+                                Text(
+                                    text = subtype,
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+                                )
 
                                 val subtypeItems = subtypeCats.flatMap { it.itens }.filter { eq ->
                                      if (filter.somenteAcessiveis) {
@@ -679,11 +680,9 @@ fun EquipamentoSection(
                                 }
 
                                 if (subtypeItems.isEmpty()) {
-                                    item(key = "empty_$subtype") {
-                                        Text("- Nenhum item -", style = MaterialTheme.typography.bodySmall)
-                                    }
+                                    Text("- Nenhum item -", style = MaterialTheme.typography.bodySmall)
                                 } else {
-                                    items(subtypeItems, key = { item -> item.nome + item.hashCode() }) { item ->
+                                    subtypeItems.forEach { item ->
                                         StandardEquipamentoItem(
                                             equipamento = item,
                                             onClick = { onEquipamentoDoubleClick(item) },
@@ -694,7 +693,7 @@ fun EquipamentoSection(
                                     }
                                 }
 
-                                item(key = "spacer_$subtype") { Spacer(Modifier.height(8.dp)) }
+                                Spacer(Modifier.height(8.dp))
                             }
                         }
                     }
@@ -738,6 +737,7 @@ fun EquipamentoSection(
                     TextButton(onClick = { showMoneyDialog = false }) { Text("Cancelar") }
                 }
             )
+        }
         }
     }
 }
