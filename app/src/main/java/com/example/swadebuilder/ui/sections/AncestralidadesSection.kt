@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -60,8 +60,6 @@ private const val ASSET_ANCESTRALIDADES = "listaancestralidade.json"
 fun AncestralidadesSection(
     state: CriadorState,
     currentAncestralidade: String,
-    expanded: Boolean,
-    onToggle: () -> Unit,
     supersLocked: Boolean,
     ancestralidadeEmFoco: String?,
     onSelectAncestralidade: (String) -> Unit,
@@ -191,10 +189,7 @@ fun AncestralidadesSection(
 
     SectionCard(
         title = "Ancestralidades",
-        expanded = expanded,
-        onToggle = onToggle,
-        icon = Icons.AutoMirrored.Filled.MenuBook,
-        onToggleFeedback = onUserFeedback
+        icon = Icons.AutoMirrored.Filled.MenuBook
     ) {
         val centerLabel = if (supersLocked) {
             "Ancestralidade: $selectedDisplayName (travado na fase Supers)"
@@ -215,7 +210,6 @@ fun AncestralidadesSection(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(max = 260.dp)
                 .alpha(if (supersLocked) 0.3f else 1f)
         ) {
             Text(
@@ -229,7 +223,7 @@ fun AncestralidadesSection(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 240.dp),
+                    .fillMaxHeight(),
                 verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)
             ) {
                 items(listaOrdenada) { item ->

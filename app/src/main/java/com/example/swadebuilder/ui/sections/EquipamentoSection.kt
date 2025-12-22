@@ -186,8 +186,6 @@ fun EquipamentoSection(
     recursosPcUsados: Int,
     emProgresso: Boolean,
     modoProgressaoAtivo: Boolean,
-    expanded: Boolean,
-    onToggle: () -> Unit,
     onUsarPontosBonusEmRecursos: () -> Unit,
     onDesfazerPontosBonusEmRecursos: () -> Unit,
     onEquipamentoDoubleClick: (EquipamentoItem) -> Unit,
@@ -238,13 +236,8 @@ fun EquipamentoSection(
 
     SectionCard(
         title    = "Equipamento",
-        expanded = expanded,
-        onToggle = onToggle,
-        icon     = Icons.Default.ShoppingCart,
-        onToggleFeedback = onUserFeedback
+        icon     = Icons.Default.ShoppingCart
     ) {
-        if (!expanded) return@SectionCard
-
         // 1. Prepare Data
         val esconderSupers = superequipCategorias.isEmpty()
         val allCategorias = (categorias + superequipCategorias)
@@ -610,7 +603,6 @@ fun EquipamentoSection(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 400.dp)
                     .padding(horizontal = 8.dp)
             ) {
                  if (finalFlatList.isEmpty()) {
@@ -663,7 +655,7 @@ fun EquipamentoSection(
                             modifier = Modifier
                                 .padding(start = 8.dp)
                                 .fillMaxWidth()
-                                .heightIn(min = 200.dp, max = 520.dp),
+                                .heightIn(min = 200.dp),
                             verticalArrangement = Arrangement.spacedBy(6.dp),
                             contentPadding = PaddingValues(bottom = 8.dp)
                         ) {

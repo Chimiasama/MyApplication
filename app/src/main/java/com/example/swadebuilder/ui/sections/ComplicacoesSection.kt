@@ -15,9 +15,9 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.width
@@ -67,8 +67,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun ComplicacoesSection(
     state: CriadorState,
-    expanded: Boolean,
-    onToggle: () -> Unit,
     feedbackMessages: MutableList<String>,
     onUserFeedback: () -> Unit
 ) {
@@ -108,10 +106,7 @@ fun ComplicacoesSection(
 
     SectionCard(
         title    = "Complicações",
-        expanded = expanded,
-        onToggle = onToggle,
-        icon     = Icons.Default.Warning,
-        onToggleFeedback = onUserFeedback
+        icon     = Icons.Default.Warning
     ) {
         val totalPc = state.pontosComplicacao
         val usadosPc = state.pontosComplicacaoGastos
@@ -308,7 +303,6 @@ fun ComplicacoesSection(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 260.dp)
             ) {
                 Text(
                     "Lista de complicações disponíveis:",
@@ -328,7 +322,7 @@ fun ComplicacoesSection(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(max = 240.dp),
+                        .fillMaxHeight(),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     items(listaParaMostrar) { comp ->

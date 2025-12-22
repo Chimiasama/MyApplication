@@ -32,13 +32,9 @@ import com.example.swadebuilder.ui.components.SectionCard
 fun CrystalHeartSection(
     state: CriadorState,
     viewModel: CriadorViewModel,
-    expanded: Boolean,
-    onToggle: () -> Unit
 ) {
     SectionCard(
         title = "Coração de Cristal",
-        expanded = expanded,
-        onToggle = onToggle,
         icon = Icons.Default.Favorite
     ) {
         val temAgenteSyn = state.vantagensSelecionadas.any { it.id == "aa_agente_syn" }

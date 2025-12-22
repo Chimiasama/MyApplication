@@ -32,6 +32,8 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
@@ -83,6 +85,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -133,6 +136,37 @@ private inline fun <reified T> AssetManager.readJsonList(fileName: String): List
     open(fileName).bufferedReader().use { reader -> json.decodeFromString(reader.readText()) }
 
 private const val MULTIPLOS_AA_HABILITADOS: Boolean = false
+
+private fun buildUsageInstructions(state: CriadorState): String {
+    val activeBooks = buildList {
+        add("Básico (sempre ativo)")
+        if (state.compendioFantasiaAtivo) add("Compêndio Fantasia")
+        if (state.compendioHorrorAtivo) add("Compêndio Horror")
+        if (state.compendioSciFiAtivo) add("Compêndio Sci-Fi")
+        if (state.compendioBuscatrilhaAtivo) add("Compêndio Buscatrilha")
+        if (state.compendioDeadlandsAtivo) add("Compêndio Deadlands")
+        if (state.compendioArteDaGuerraAtivo) add("Arte da Guerra")
+        if (state.compendioCidadeSolVaporAtivo) add("Cidade Sol V'apor")
+        if (state.compendioWiseguysAtivo) add("Wiseguys")
+        if (state.compendioCrystalHeartAtivo) add("Crystal Heart")
+        if (state.modoSupers) add("Supers")
+        if (state.modoMonstroAtivo) add("Monstros")
+    }
+
+    val booksText = activeBooks.joinToString(separator = "\n") { "• $it" }
+
+    return buildString {
+        append("Use as abas no topo para navegar entre as seções do personagem.")
+        append("\n\n")
+        append("Resumo: visão geral, anotações e retrato do personagem.")
+        append("\nAtributos/Perícias/Vantagens/Complicações: ajuste os valores conforme as regras.")
+        append("\nEquipamentos: adicione e remova itens do inventário.")
+        append("\nXP: use os progressos quando estiver na fase de avanço.")
+        append("\n\n")
+        append("Livros ativos neste personagem:\n")
+        append(booksText)
+    }
+}
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -281,6 +315,7 @@ class MainActivity : ComponentActivity() {
             }
 
             var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
+            var showHelpDialog by rememberSaveable { mutableStateOf(false) }
             var showThemeSelectionDialog by rememberSaveable { mutableStateOf(false) }
 
             var showSaveDialog by rememberSaveable { mutableStateOf(false) }
@@ -404,6 +439,28 @@ class MainActivity : ComponentActivity() {
                     confirmButton = {
                         TextButton(onClick = { showSettingsDialog = false }) {
                             Text("Fechar")
+                        }
+                    }
+                )
+            }
+
+            if (showHelpDialog) {
+                AlertDialog(
+                    onDismissRequest = { showHelpDialog = false },
+                    title = { Text("Como usar o app") },
+                    text = {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 360.dp)
+                                .verticalScroll(rememberScrollState())
+                        ) {
+                            Text(buildUsageInstructions(state))
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { showHelpDialog = false }) {
+                            Text("Entendi")
                         }
                     }
                 )
@@ -672,7 +729,16 @@ class MainActivity : ComponentActivity() {
                                                 modifier = Modifier.fillMaxWidth(),
                                                 contentAlignment = Alignment.Center
                                             ) {
-                                                // Titulo de ajuda removido
+                                                TextButton(onClick = {
+                                                    triggerFeedback()
+                                                    showHelpDialog = true
+                                                }) {
+                                                    Text(
+                                                        text = "Como usar",
+                                                        style = MaterialTheme.typography.titleMedium,
+                                                        textAlign = TextAlign.Center
+                                                    )
+                                                }
                                             }
                                         },
                                         navigationIcon = {
@@ -739,7 +805,6 @@ class MainActivity : ComponentActivity() {
                                             superequipCategorias  = superequipCategorias,
                                             listaSuperPoderes     = listaSuperPoderes,
                                             modoOficialAtivo      = state.modoOficialAtivo,
-                                            onImportRequested     = { showLoadDialog = true },
                                             onShowMessage         = { message ->
                                                 scope.launch {
                                                     snackHost.showSnackbar(message)

@@ -34,8 +34,6 @@ import com.example.swadebuilder.ui.components.SectionCard
 @Composable
 fun TroposSection(
     state: CriadorState,
-    expanded: Boolean,
-    onToggle: () -> Unit,
     onUserFeedback: () -> Unit
 ) {
     if (!state.compendioArteDaGuerraAtivo) return
@@ -51,10 +49,7 @@ fun TroposSection(
 
     SectionCard(
         title = "Tropos",
-        expanded = expanded,
-        onToggle = onToggle,
-        icon = Icons.Default.AutoAwesome,
-        onToggleFeedback = onUserFeedback
+        icon = Icons.Default.AutoAwesome
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
