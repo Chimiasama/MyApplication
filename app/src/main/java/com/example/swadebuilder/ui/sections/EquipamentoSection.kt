@@ -109,7 +109,12 @@ fun EquipFilterDialog(
                         onCheckedChange = {
                             onChange(current.copy(somenteAcessiveis = it))
                         }
-                    )
+)
+
+private data class EquipamentoListEntry(
+    val item: EquipamentoItem,
+    val origemLabel: String
+)
                     Spacer(Modifier.size(4.dp))
                     Text("Somente acessíveis")
                 }
@@ -603,6 +608,9 @@ fun EquipamentoSection(
                          val n = item.nome.semAcentos().lowercase()
                          n.contains(q)
                      } else true
+                 }.map { item ->
+                     val origem = item.origem?.ifBlank { cat.origem ?: "BASICO" } ?: (cat.origem ?: "BASICO")
+                     EquipamentoListEntry(item, origem.uppercase())
                  }
              }
 
@@ -614,10 +622,11 @@ fun EquipamentoSection(
                  if (finalFlatList.isEmpty()) {
                      item { Text("Nenhum equipamento encontrado.", modifier = Modifier.padding(8.dp)) }
                  } else {
-                     items(finalFlatList, key = { it.nome + it.hashCode() }) { item ->
+                     items(finalFlatList, key = { it.item.nome + it.hashCode() }) { entry ->
                          StandardEquipamentoItem(
-                             equipamento = item,
-                             onClick = { onEquipamentoDoubleClick(item) },
+                             equipamento = entry.item,
+                             origemLabel = entry.origemLabel,
+                             onClick = { onEquipamentoDoubleClick(entry.item) },
                              allowLongTexts = allowLongTexts,
                              showOriginalName = showOfficialNames,
                              showTensao = compendioSciFiAtivo
@@ -672,9 +681,16 @@ fun EquipamentoSection(
                                     modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
                                 )
 
-                                val subtypeItems = subtypeCats.flatMap { it.itens }.filter { eq ->
+                                val subtypeItems = subtypeCats.flatMap { cat ->
+                                    cat.itens.map { item ->
+                                        val origem = item.origem?.ifBlank { cat.origem ?: "BASICO" }
+                                            ?: (cat.origem ?: "BASICO")
+                                        EquipamentoListEntry(item, origem.uppercase())
+                                    }
+                                }.filter { entry ->
                                      if (filter.somenteAcessiveis) {
-                                         val c = (eq.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
+                                         val c = (entry.item.custo as? JsonPrimitive)?.content?.toIntOrNull()
+                                             ?: Int.MAX_VALUE
                                          if (!usaRiqueza && c > dinheiro) return@filter false
                                      }
                                      true
@@ -683,10 +699,11 @@ fun EquipamentoSection(
                                 if (subtypeItems.isEmpty()) {
                                     Text("- Nenhum item -", style = MaterialTheme.typography.bodySmall)
                                 } else {
-                                    subtypeItems.forEach { item ->
+                                    subtypeItems.forEach { entry ->
                                         StandardEquipamentoItem(
-                                            equipamento = item,
-                                            onClick = { onEquipamentoDoubleClick(item) },
+                                            equipamento = entry.item,
+                                            origemLabel = entry.origemLabel,
+                                            onClick = { onEquipamentoDoubleClick(entry.item) },
                                             allowLongTexts = allowLongTexts,
                                             showOriginalName = showOfficialNames,
                                             showTensao = compendioSciFiAtivo

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +32,7 @@ fun StandardEquipamentoItem(
     equipamento: EquipamentoItem,
     onClick: () -> Unit,
     allowLongTexts: Boolean,
+    origemLabel: String? = null,
     showOriginalName: Boolean = false,
     showTensao: Boolean = false
 ) {
@@ -53,11 +55,21 @@ fun StandardEquipamentoItem(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(Modifier.weight(1f)) {
-                    Text(
-                        if (showOriginalName && !equipamento.originalName.isNullOrBlank()) equipamento.originalName else equipamento.nome,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            if (showOriginalName && !equipamento.originalName.isNullOrBlank()) equipamento.originalName else equipamento.nome,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        origemLabel?.takeIf { it.isNotBlank() }?.let { origem ->
+                            Spacer(Modifier.width(6.dp))
+                            Text(
+                                text = origem,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
                 }
 
                 resumo.custo?.let {
