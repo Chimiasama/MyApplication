@@ -83,6 +83,11 @@ data class EquipFilter(
     fun isEmpty() = totalSelections() == 0
 }
 
+private data class EquipamentoListEntry(
+    val item: EquipamentoItem,
+    val origemLabel: String
+)
+
 @Composable
 fun EquipFilterDialog(
     allOrigens: List<String>,
@@ -109,12 +114,7 @@ fun EquipFilterDialog(
                         onCheckedChange = {
                             onChange(current.copy(somenteAcessiveis = it))
                         }
-)
-
-private data class EquipamentoListEntry(
-    val item: EquipamentoItem,
-    val origemLabel: String
-)
+                    )
                     Spacer(Modifier.size(4.dp))
                     Text("Somente acessíveis")
                 }
