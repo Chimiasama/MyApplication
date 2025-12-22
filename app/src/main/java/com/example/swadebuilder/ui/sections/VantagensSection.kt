@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -287,7 +286,18 @@ fun VantagensContent(
     val pcLivres = (pcTotal - pcGastos).coerceAtLeast(0)
     val pvUsados = state.cpPvStack.size
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    val isSearching = searchQuery.isNotBlank()
+    val isFilteringCategories = selectedCategories.isNotEmpty()
+    val browsingMode = !isSearching && !isFilteringCategories
+    val containerModifier = if (browsingMode) {
+        Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    } else {
+        Modifier.fillMaxWidth()
+    }
+
+    Column(modifier = containerModifier) {
         SectionHeader(
             onHelpClick = null,
             centerText = "Pontos de Vantagem: ${state.pontosVantagem}",
@@ -525,9 +535,6 @@ fun VantagensContent(
 
         // --- List Content ---
         // Logic: If search OR category selection is active, use Flat List. Otherwise, usage Accordions (Browse Mode).
-        val isSearching = searchQuery.isNotBlank()
-        val isFilteringCategories = selectedCategories.isNotEmpty()
-
         if (isSearching || isFilteringCategories) {
             // Flat List View
             val flatList = listaVantagensAtivas.filter { vant ->
@@ -694,25 +701,12 @@ fun VantagensContent(
                             true
                         }
 
-                    val listState = rememberLazyListState()
-
-                    LaunchedEffect(vantagemEmFoco, expanded, listaFiltrada) {
-                        if (expanded && !vantagemEmFoco.isNullOrBlank()) {
-                            val targetIndex = listaFiltrada.indexOfFirst { it.nome == vantagemEmFoco }
-                            if (targetIndex >= 0) {
-                                listState.animateScrollToItem(targetIndex)
-                            }
-                        }
-                    }
-
-                    LazyColumn(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .fillMaxHeight()
-                            .padding(start = 8.dp, bottom = 8.dp),
-                        state = listState
+                            .padding(start = 8.dp, bottom = 8.dp)
                     ) {
-                        items(listaFiltrada, key = { it.id }) { vant ->
+                        listaFiltrada.forEach { vant ->
                             VantagemItem(
                                 vant = vant,
                                 state = state,

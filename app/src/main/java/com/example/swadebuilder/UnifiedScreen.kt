@@ -140,15 +140,22 @@ fun UnifiedScreen(
     }
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }.collect { page ->
+    LaunchedEffect(pagerState, availableSections) {
+        snapshotFlow {
+            val page = if (pagerState.isScrollInProgress) {
+                pagerState.targetPage
+            } else {
+                pagerState.currentPage
+            }
+            page
+        }.collect { page ->
             availableSections.getOrNull(page)?.let { activeSection = it }
         }
     }
 
-    LaunchedEffect(activeSection, availableSections) {
+    LaunchedEffect(activeSection, availableSections, pagerState.isScrollInProgress) {
         val targetIndex = activeSectionIndex(availableSections, activeSection)
-        if (targetIndex != pagerState.currentPage) {
+        if (!pagerState.isScrollInProgress && targetIndex != pagerState.currentPage) {
             coroutineScope.launch {
                 pagerState.animateScrollToPage(targetIndex)
             }
@@ -852,12 +859,14 @@ private fun SummaryTabContent(
             onSelectImage = { portraitLauncher.launch("image/*") }
         )
         Spacer(Modifier.height(12.dp))
-        GlobalActionButtons(
-            state = state,
-            viewModel = viewModel,
-            onClearRequested = onClearRequested,
-            onShowMessage = onShowMessage
-        )
+        if (!state.modoProgressaoAtivo) {
+            GlobalActionButtons(
+                state = state,
+                viewModel = viewModel,
+                onClearRequested = onClearRequested,
+                onShowMessage = onShowMessage
+            )
+        }
     }
 }
 
