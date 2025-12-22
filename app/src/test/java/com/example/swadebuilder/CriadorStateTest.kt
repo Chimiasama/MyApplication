@@ -142,6 +142,27 @@ class CriadorStateTest {
     }
 
     @Test
+    fun `snapshot restaura pontos de atributo`() {
+        val state = CriadorState()
+
+        state.paCostStackPorAtributo.getValue("VIGOR").addAll(listOf(1, 1, 1))
+        state.valoresAtributos["VIGOR"]!!.intValue = 10
+        state.pontosAtributo = 2
+
+        val snapshot = state.toSnapshot()
+
+        state.paCostStackPorAtributo.getValue("VIGOR").clear()
+        state.valoresAtributos["VIGOR"]!!.intValue = 4
+        state.pontosAtributo = 5
+
+        state.restoreFromSnapshot(snapshot, mutableListOf())
+
+        assertEquals(2, state.pontosAtributo)
+        assertEquals(listOf(1, 1, 1), state.paCostStackPorAtributo.getValue("VIGOR").toList())
+        assertEquals(10, state.valoresAtributos["VIGOR"]!!.intValue)
+    }
+
+    @Test
     fun `brutamontes vincula atletismo a forca e aumenta custo quando forca menor`() {
         val atletismo = Pericia("Atletismo", "AGILIDADE", basica = true)
 

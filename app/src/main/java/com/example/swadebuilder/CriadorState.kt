@@ -2308,7 +2308,7 @@ class CriadorState {
             val base = racialAttrMinMap[snapshot.atributos.ancestralidade]?.get(attr) ?: 4
             valoresAtributos[attr]!!.intValue = applySuperStepsFrom(base, stack.size)
         }
-        pontosAtributo = calcularPontosAtributoRestantes()
+        pontosAtributo = snapshot.recursos.pontosAtributo
 
         especializacoesPorPericia.clear()
         ensureIdiomaSlotsFromSnapshot(snapshot.pericias.baseIncsPorPericia.keys)
@@ -2442,7 +2442,7 @@ class CriadorState {
             coracaoCrystalSelecionado = listaCoracoesCrystal.find { it.id == cid }
         }
 
-        recalcularPontosAtributo(feedbackMessages)
+        trimAttributeStacks(feedbackMessages)
         rebuildAllPericiaStacks(feedbackMessages)
         updateEmProgressoFlag()
         syncPoderesSelecionadosFromSlots()
