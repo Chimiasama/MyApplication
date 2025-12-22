@@ -114,6 +114,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.decodeFromStream
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.text.DateFormat
@@ -135,7 +136,7 @@ private val json = Json {
 }
 
 private inline fun <reified T> AssetManager.readJsonList(fileName: String): List<T> =
-    open(fileName).bufferedReader().use { reader -> json.decodeFromString(reader.readText()) }
+    open(fileName).use { input -> json.decodeFromStream(input) }
 
 private const val MULTIPLOS_AA_HABILITADOS: Boolean = false
 
@@ -193,24 +194,18 @@ class MainActivity : ComponentActivity() {
             cat.origem?.equals("super", ignoreCase = true) ?: false
         }
 
-        val crystalHeartsJson = try {
+        listaCoracoesCrystal = runCatching<List<CrystalHeart>> {
             assets.open("coracoes_crystal.json")
-                .bufferedReader()
-                .use { it.readText() }
-        } catch (_: Exception) { "[]" }
-        listaCoracoesCrystal = json.decodeFromString(crystalHeartsJson)
+                .use { input -> json.decodeFromStream<List<CrystalHeart>>(input) }
+        }.getOrElse { emptyList() }
 
-        val superPoderesJson = assets
-            .open("superpoderes.json")
-            .bufferedReader()
-            .use { it.readText() }
         val listaSuperPoderes: List<SuperPoder> =
-            json.decodeFromString(superPoderesJson)
+            assets.open("superpoderes.json")
+                .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
 
-        val arcanoJson = assets.open("arcano_info.json")
-            .bufferedReader().use { it.readText() }
         val arcanoList: List<ArcanoInfo> =
-            json.decodeFromString(arcanoJson)
+            assets.open("arcano_info.json")
+                .use { input -> json.decodeFromStream<List<ArcanoInfo>>(input) }
         arcanoInfo = arcanoList.associate {
             it.key
                 .uppercase()
@@ -262,11 +257,9 @@ class MainActivity : ComponentActivity() {
 
         listaAncestralidadesJson = assets.readJsonList("listaancestralidade.json")
 
-        val monstrosJson = assets
+        listaMonstroTemplates = assets
             .open("monstros.json")
-            .bufferedReader()
-            .use { it.readText() }
-        listaMonstroTemplates = json.decodeFromString(monstrosJson)
+            .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
 
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
             val m = rm.atributos
