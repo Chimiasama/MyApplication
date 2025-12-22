@@ -20,7 +20,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Build
@@ -34,7 +34,7 @@ import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.filled.SportsMma
+import androidx.compose.material.icons.filled.SportsMartialArts
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -195,7 +195,7 @@ fun TelaInicial(
         ModuleItemData(
             "Arte da Guerra: Nova Era".toEditionDisplayName(),
             "Ativa Chi, Tropos e equipamentos orientais.",
-            Icons.Default.SportsMma,
+            Icons.Filled.SportsMartialArts,
             optCompendioArteDaGuerra
         ) { optCompendioArteDaGuerra = !optCompendioArteDaGuerra },
         ModuleItemData(
@@ -216,7 +216,7 @@ fun TelaInicial(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("SWADE Builder", fontWeight = FontWeight.Bold) },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface,
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
@@ -263,7 +263,7 @@ fun TelaInicial(
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
                     viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
                 },
-                icon = { Icon(Icons.Default.ArrowForward, contentDescription = null) },
+                icon = { Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null) },
                 text = { Text("CRIAR PERSONAGEM") },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
