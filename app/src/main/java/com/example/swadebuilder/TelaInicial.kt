@@ -37,7 +37,7 @@ import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.filled.SportsMma
+import androidx.compose.material.icons.filled.SportsMartialArts
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -147,10 +147,9 @@ fun TelaInicial(
     var expandedHorrorRules by rememberSaveable { mutableStateOf(false) }
     var expandedSupersRules by rememberSaveable { mutableStateOf(false) }
 
-    val hasBasicBookSelected = optLivroSwade || optLivroPathfinder
+    val hasBasicBookSelected = optLivroSwade
     val activeModulesCount = listOf(
         optLivroSwade,
-        optLivroPathfinder,
         optCompendioFantasia,
         optCompendioSciFi,
         optCompendioHorror,
@@ -205,20 +204,11 @@ fun TelaInicial(
     val basicModules = listOf(
         ModuleItemData(
             "SWADE",
-            "Livro básico com regras padrão.",
+            "Rápido! Furioso! Divertido!",
             Icons.AutoMirrored.Filled.MenuBook,
             optLivroSwade
         ) {
             optLivroSwade = !optLivroSwade
-            persistEditionSettings()
-        },
-        ModuleItemData(
-            "Pathfinder",
-            "Livro básico com ambientação fantástica.",
-            Icons.AutoMirrored.Filled.MenuBook,
-            optLivroPathfinder
-        ) {
-            optLivroPathfinder = !optLivroPathfinder
             persistEditionSettings()
         }
     )
@@ -293,7 +283,7 @@ fun TelaInicial(
         ModuleItemData(
             "Arte da Guerra: Nova Era".toEditionDisplayName(),
             "Ativa Chi, Tropos e equipamentos orientais.",
-            Icons.Default.SportsMma,
+            Icons.Default.SportsMartialArts,
             optCompendioArteDaGuerra
         ) {
             optCompendioArteDaGuerra = !optCompendioArteDaGuerra
