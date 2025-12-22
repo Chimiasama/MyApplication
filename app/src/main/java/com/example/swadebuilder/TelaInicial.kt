@@ -480,7 +480,7 @@ fun ModuleGroupCard(
     description: String,
     expanded: Boolean,
     onToggle: () -> Unit,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable FlowRowScope.() -> Unit
 ) {
     Card(
         modifier = Modifier
