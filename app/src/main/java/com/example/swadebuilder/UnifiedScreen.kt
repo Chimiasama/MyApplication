@@ -175,6 +175,7 @@ fun UnifiedScreen(
             selectedSection = activeSection,
             onSelectSection = {
                 onUserFeedback()
+                activeSection = it
                 val targetIndex = activeSectionIndex(availableSections, it)
                 if (targetIndex != pagerState.currentPage) {
                     coroutineScope.launch {
@@ -857,12 +858,14 @@ private fun SummaryTabContent(
             onSelectImage = { portraitLauncher.launch("image/*") }
         )
         Spacer(Modifier.height(12.dp))
-        GlobalActionButtons(
-            state = state,
-            viewModel = viewModel,
-            onClearRequested = onClearRequested,
-            onShowMessage = onShowMessage
-        )
+        if (!state.modoProgressaoAtivo) {
+            GlobalActionButtons(
+                state = state,
+                viewModel = viewModel,
+                onClearRequested = onClearRequested,
+                onShowMessage = onShowMessage
+            )
+        }
     }
 }
 
