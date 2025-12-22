@@ -30,7 +30,8 @@ fun TipoMonstroSection(
 
     SectionCard(
         title = "Tipo de Monstro",
-        icon = Icons.Default.BugReport
+        icon = Icons.Default.BugReport,
+        showHeader = false
     ) {
         Column(
             modifier = Modifier

@@ -26,34 +26,37 @@ import androidx.compose.ui.unit.sp
 fun SectionCard(
     title: String,
     icon: ImageVector,
+    showHeader: Boolean = true,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val headerColor = MaterialTheme.colorScheme.onBackground
     val cardColor   = MaterialTheme.colorScheme.surfaceVariant
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = title,
-                modifier = Modifier
-                    .size(32.dp)
-                    .padding(end = 12.dp),
-                tint = headerColor
-            )
-            Text(
-                text       = title,
-                style      = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp
-                ),
-                color      = headerColor
-            )
+        if (showHeader) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp, horizontal = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = title,
+                    modifier = Modifier
+                        .size(32.dp)
+                        .padding(end = 12.dp),
+                    tint = headerColor
+                )
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp
+                    ),
+                    color = headerColor
+                )
+            }
         }
 
         Card(

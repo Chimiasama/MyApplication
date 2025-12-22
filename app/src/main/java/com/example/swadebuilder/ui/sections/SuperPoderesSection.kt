@@ -1166,7 +1166,8 @@ fun SuperPoderesContent(
 ) {
     SectionCard(
         title = "Superpoderes",
-        icon = Icons.Filled.FlashOn
+        icon = Icons.Filled.FlashOn,
+        showHeader = false
     ) {
         SectionHeader(
             onHelpClick = null,

@@ -252,7 +252,8 @@ fun AncestralidadesSection(
 
     SectionCard(
         title = "Ancestralidades",
-        icon = Icons.AutoMirrored.Filled.MenuBook
+        icon = Icons.AutoMirrored.Filled.MenuBook,
+        showHeader = false
     ) {
         val centerLabel = if (supersLocked) {
             "Ancestralidade: $selectedDisplayName (travado na fase Supers)"

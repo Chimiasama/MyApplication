@@ -47,7 +47,8 @@ fun XpSection(
 ) {
     SectionCard(
         title = "XP",
-        icon = Icons.Default.Star
+        icon = Icons.Default.Star,
+        showHeader = false
     ) {
         LaunchedEffect(
             state.progresso,

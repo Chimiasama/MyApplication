@@ -54,7 +54,8 @@ fun InformacoesSection(
 
     SectionCard(
         title = "Informações",
-        icon = Icons.Default.Person
+        icon = Icons.Default.Person,
+        showHeader = false
     ) {
         Column(Modifier.padding(8.dp)) {
 
