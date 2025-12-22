@@ -10,7 +10,7 @@ fun Vantagem.toArcanoKey(): String? {
     if (!subtipoArcano.isNullOrBlank()) return subtipoArcano.normAAKey()
     if (!choice.isNullOrBlank()) return choice!!.normAAKey()
     val n = nome.normAAKey()
-    return when {
+    val known = when {
         "(DOM" in n -> "DOM"
         "(MAGIA" in n -> "MAGIA"
         "(MILAGRES" in n -> "MILAGRES"
@@ -23,4 +23,11 @@ fun Vantagem.toArcanoKey(): String? {
         "XAMA" in n -> "XAMA"
         else -> null
     }
+    if (known != null) return known
+
+    // Fallback para ABs desconhecidos ou genéricos
+    if (n.startsWith("ANTECEDENTE ARCANO") || n.startsWith("AA_")) {
+        return n
+    }
+    return null
 }
