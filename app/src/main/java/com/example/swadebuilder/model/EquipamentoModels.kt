@@ -1,5 +1,7 @@
 package com.example.swadebuilder.model
 
+import com.example.swadebuilder.EditionConfig
+import com.example.swadebuilder.util.GenericNameMapper
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
@@ -33,7 +35,14 @@ data class EquipamentoItem(
     val malfuncionamento: JsonElement? = null,
     val tensao: Int? = null,
     val mods_slots: Int? = null
-)
+) {
+    val nomeExibicao: String
+        get() = if (EditionConfig.isFullEdition) {
+            nome
+        } else {
+            GenericNameMapper.map(nome)
+        }
+}
 
 @Serializable
 data class EquipamentoCategoria(
