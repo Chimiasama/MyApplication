@@ -862,39 +862,34 @@ private fun filterVantagens(
     return list.filter { vant ->
         // Basic Checks
         if (state.modoSupers) {
-             if (vant.id == "antecedente_arcano" || vant.requisitos.vantagensPrevias.contains("antecedente_arcano")) return false
-             if (vant.id == "superpoderes") return false
-        } else {
-             // If not supers, we keep everything?
-             // Original logic:
-             // if (!state.modoSupers) true else { ... }
-             // which means we don't filter out anything special here
+             if (vant.id == "antecedente_arcano" || vant.requisitos.vantagensPrevias.contains("antecedente_arcano")) return@filter false
+             if (vant.id == "superpoderes") return@filter false
         }
 
         // Category check
         if (category != null) {
-             if (vant.categoria != category) return false
+             if (vant.categoria != category) return@filter false
              // Special Professional check
-             if (vant.id == "especialista" && !state.vantagensSelecionadas.any { it.id == "profissional" }) return false
+             if (vant.id == "especialista" && !state.vantagensSelecionadas.any { it.id == "profissional" }) return@filter false
         } else {
              // Flat List logic (Search)
-             if (vant.id == "especialista" && !state.vantagensSelecionadas.any { it.id == "profissional" }) return false
+             if (vant.id == "especialista" && !state.vantagensSelecionadas.any { it.id == "profissional" }) return@filter false
 
              // Category Filter (for chips)
-             if (selectedCategories.isNotEmpty() && vant.categoria !in selectedCategories) return false
+             if (selectedCategories.isNotEmpty() && vant.categoria !in selectedCategories) return@filter false
         }
 
         // Filters
         val vantOrigem = vant.origem.ifBlank { "BASICO" }.uppercase()
-        if (filter.origens.isNotEmpty() && vantOrigem !in filter.origens) return false
-        if (filter.estagios.isNotEmpty() && vant.requisitos.estagio !in filter.estagios) return false
-        if (filter.atributos.isNotEmpty() && filter.atributos.intersect(vant.requisitos.atributoMin.keys).isEmpty()) return false
+        if (filter.origens.isNotEmpty() && vantOrigem !in filter.origens) return@filter false
+        if (filter.estagios.isNotEmpty() && vant.requisitos.estagio !in filter.estagios) return@filter false
+        if (filter.atributos.isNotEmpty() && filter.atributos.intersect(vant.requisitos.atributoMin.keys).isEmpty()) return@filter false
 
         if (filter.pericias.isNotEmpty()) {
             val reqMin = vant.requisitos.periciaMin.keys
             val reqOpt = vant.requisitos.periciaMinOpcional.keys
             val vinc = if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
-            if (filter.pericias.intersect(reqMin + reqOpt + vinc).isEmpty()) return false
+            if (filter.pericias.intersect(reqMin + reqOpt + vinc).isEmpty()) return@filter false
         }
 
         // Search (if applicable)
@@ -902,7 +897,7 @@ private fun filterVantagens(
              val q = searchQuery.semAcentos().lowercase()
              val n = vant.nome.semAcentos().lowercase()
              val d = vant.descricao.semAcentos().lowercase()
-             if (!n.contains(q) && !d.contains(q)) return false
+             if (!n.contains(q) && !d.contains(q)) return@filter false
         }
 
         true
