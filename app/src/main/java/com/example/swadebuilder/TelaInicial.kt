@@ -34,7 +34,8 @@ import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.SentimentVeryDissatisfied
+import androidx.compose.material.icons.filled.SportsMartialArts
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -231,7 +232,7 @@ fun TelaInicial(
                 ModuleCard(
                     title = "Compêndio de Horror",
                     description = "Climas sombrios e criaturas aterrorizantes.",
-                    icon = Icons.Default.Warning,
+                    icon = Icons.Default.SentimentVeryDissatisfied,
                     selected = state.compendioHorrorAtivo,
                     onClick = { state.compendioHorrorAtivo = !state.compendioHorrorAtivo }
                 )
@@ -273,7 +274,11 @@ fun TelaInicial(
             item {
                 ModuleCard(
                     title = "Crystal Heart".toEditionDisplayName(),
-                    description = "Troque seu coração por um cristal mágico.",
+                    description = if (isFullEdition) {
+                        "Troque seu coração por um cristal mágico."
+                    } else {
+                        "Troque seu coração por uma pedra mágica."
+                    },
                     icon = Icons.Default.Favorite,
                     selected = state.compendioCrystalHeartAtivo,
                     onClick = { state.compendioCrystalHeartAtivo = !state.compendioCrystalHeartAtivo }
@@ -283,7 +288,7 @@ fun TelaInicial(
                 ModuleCard(
                     title = "Arte da Guerra: Nova Era".toEditionDisplayName(),
                     description = "Ativa Chi, Tropos e equipamentos orientais.",
-                    icon = Icons.Default.Info,
+                    icon = Icons.Default.SportsMartialArts,
                     selected = state.compendioArteDaGuerraAtivo,
                     onClick = { state.compendioArteDaGuerraAtivo = !state.compendioArteDaGuerraAtivo }
                 )
