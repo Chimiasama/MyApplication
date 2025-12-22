@@ -29,4 +29,14 @@ class ActiveSectionResolverTest {
 
         assertEquals(MainSection.RESUMO, resolved)
     }
+
+    @Test
+    fun fallsBackToFirstAvailableWhenResumoMissing() {
+        val available = listOf(MainSection.PERICIAS, MainSection.VANTAGENS)
+
+        val resolved = resolveActiveSection(MainSection.RESUMO, available)
+
+        // When RESUMO is not in the available sections, fallback should be the first available entry.
+        assertEquals(MainSection.PERICIAS, resolved)
+    }
 }
