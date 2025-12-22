@@ -2,6 +2,7 @@
 package com.example.swadebuilder.model
 
 import android.content.Context
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateListOf
@@ -13,6 +14,7 @@ import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
+import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
 
@@ -133,6 +135,7 @@ class CriadorViewModel : ViewModel() {
     }
 
     fun salvarPersonagem(context: Context, nomePersonalizado: String? = null): CharacterStorage.SaveEntry {
+        val previousSnapshot = state.idAtual?.let { CharacterStorage.load(context, it) }
         val desiredName = (nomePersonalizado?.takeIf { it.isNotBlank() } ?: state.nomePersonagem)
             .ifBlank { DEFAULT_CHARACTER_NAME }
 
@@ -152,6 +155,11 @@ class CriadorViewModel : ViewModel() {
         val snapshot = state.toSnapshot().copy(nome = finalName)
         val entry = CharacterStorage.save(context, snapshot)
         state.idAtual = entry.id
+        val previousPortrait = previousSnapshot?.selecoes?.retratoFileName
+        val currentPortrait = snapshot.selecoes.retratoFileName
+        if (previousPortrait != null && previousPortrait != currentPortrait) {
+            CharacterPortraitStorage.deleteIfUnused(context, previousPortrait)
+        }
         logFeedback("Personagem salvo: ${entry.nome}")
         return entry
     }
@@ -251,6 +259,7 @@ class CriadorViewModel : ViewModel() {
         state.idAtual = null
         state.nomePersonagem = DEFAULT_CHARACTER_NAME
         state.anotacoes = ""
+        state.portraitFileName = null
 
         state.coracaoCrystalSelecionado = null
 
@@ -382,6 +391,18 @@ class CriadorViewModel : ViewModel() {
         // Points logic has changed; handled in applying ancestry/reset
         state.pontosVantagem =
             if (state.vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" }) 1 else 0
+    }
+
+    fun atualizarRetrato(context: Context, sourceUri: Uri?) {
+        if (sourceUri == null) {
+            state.portraitFileName = null
+            return
+        }
+
+        val fileName = CharacterPortraitStorage.savePortrait(context, sourceUri)
+        if (fileName != null) {
+            state.portraitFileName = fileName
+        }
     }
 
     fun perPowerLimit(poderId: String): Int {
