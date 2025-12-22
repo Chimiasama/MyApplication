@@ -733,11 +733,6 @@ class MainActivity : ComponentActivity() {
                                                     triggerFeedback()
                                                     showHelpDialog = true
                                                 }) {
-                                                    Icon(
-                                                        imageVector = Icons.AutoMirrored.Filled.MenuBook,
-                                                        contentDescription = null
-                                                    )
-                                                    Spacer(Modifier.width(8.dp))
                                                     Text(
                                                         text = "Como usar",
                                                         style = MaterialTheme.typography.titleMedium,

@@ -11,8 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.snapshotFlow
+import kotlinx.coroutines.launch
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
@@ -39,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -130,6 +135,26 @@ fun UnifiedScreen(
         forcedSection?.let { activeSection = it }
     }
 
+    val pagerState = rememberPagerState(initialPage = activeSectionIndex(availableSections, activeSection)) {
+        availableSections.size
+    }
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            availableSections.getOrNull(page)?.let { activeSection = it }
+        }
+    }
+
+    LaunchedEffect(activeSection, availableSections) {
+        val targetIndex = activeSectionIndex(availableSections, activeSection)
+        if (targetIndex != pagerState.currentPage) {
+            coroutineScope.launch {
+                pagerState.animateScrollToPage(targetIndex)
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -154,40 +179,46 @@ fun UnifiedScreen(
             }
         )
 
-        SectionDetailPane(
-            modifier = Modifier.fillMaxSize(),
-            state = state,
-            viewModel = viewModel,
-            selectedSection = activeSection,
-            listaSuperPoderes = listaSuperPoderes,
-            equipamentoCategorias = equipamentoCategorias,
-            superequipCategorias = superequipCategorias,
-            onClearRequested = {
-                onUserFeedback()
-                showClearDialog = true
-            },
-            onShowMessage = onShowMessage,
-            onSelectAncestralidade = { nome ->
-                val key = nome.uppercase().semAcentos()
-                if (key != state.ancestralidade) {
-                    if (key == "MEIO-ELFOS") {
-                        pendingMeioElfoKey = key
-                        showMeioElfoDialog = true
-                    } else {
-                        pendingMeioElfoKey = null
-                        state.aplicarAncestralidade(
-                            key,
-                            viewModel.feedbackMessages as MutableList<String>
-                        )
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxSize()
+        ) { page ->
+            val section = availableSections.getOrNull(page) ?: return@HorizontalPager
+            SectionDetailPane(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
+                viewModel = viewModel,
+                selectedSection = section,
+                listaSuperPoderes = listaSuperPoderes,
+                equipamentoCategorias = equipamentoCategorias,
+                superequipCategorias = superequipCategorias,
+                onClearRequested = {
+                    onUserFeedback()
+                    showClearDialog = true
+                },
+                onShowMessage = onShowMessage,
+                onSelectAncestralidade = { nome ->
+                    val key = nome.uppercase().semAcentos()
+                    if (key != state.ancestralidade) {
+                        if (key == "MEIO-ELFOS") {
+                            pendingMeioElfoKey = key
+                            showMeioElfoDialog = true
+                        } else {
+                            pendingMeioElfoKey = null
+                            state.aplicarAncestralidade(
+                                key,
+                                viewModel.feedbackMessages as MutableList<String>
+                            )
+                        }
                     }
-                }
-            },
-            onUseProgress = { index ->
-                currentSlotIndex = index
-                showAllocDialog = true
-            },
-            onUserFeedback = onUserFeedback
-        )
+                },
+                onUseProgress = { index ->
+                    currentSlotIndex = index
+                    showAllocDialog = true
+                },
+                onUserFeedback = onUserFeedback
+            )
+        }
     }
 
     if (showClearDialog) {
@@ -435,6 +466,14 @@ private fun MainSection.tabLabel(): String = when (this) {
     MainSection.XP -> "XP"
     MainSection.MONSTRO -> "Monstro"
     MainSection.CRYSTAL_HEART -> "Crystal Heart"
+}
+
+private fun activeSectionIndex(
+    sections: List<MainSection>,
+    activeSection: MainSection
+): Int {
+    val index = sections.indexOf(activeSection)
+    return if (index >= 0) index else 0
 }
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
