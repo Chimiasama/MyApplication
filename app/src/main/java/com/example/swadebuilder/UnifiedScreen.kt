@@ -498,6 +498,7 @@ private fun MainSection.tabLabel(): String = when (this) {
     MainSection.PODERES -> "Poderes"
     MainSection.XP -> "XP"
     MainSection.MONSTRO -> "Monstro"
+        MainSection.SUPER_PODERES -> "Superpoderes"
     MainSection.CRYSTAL_HEART -> "Crystal Heart".toEditionDisplayName()
 }
 
@@ -850,8 +851,9 @@ private fun CreationDetailContent(
         MainSection.PODERES -> {
             if (!state.compendioCrystalHeartAtivo) {
                 PoderesSection(state = state)
-                Spacer(Modifier.height(8.dp))
             }
+        }
+        MainSection.SUPER_PODERES -> {
             SuperPoderesSection(
                 state = state,
                 listaSuperPoderes = listaSuperPoderes

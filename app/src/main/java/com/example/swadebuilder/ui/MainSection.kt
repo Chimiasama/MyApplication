@@ -10,6 +10,7 @@ enum class MainSection {
     EQUIPAMENTOS,
     RESUMO,
     PODERES,
+    SUPER_PODERES,
     XP,
     MONSTRO,
     CRYSTAL_HEART
