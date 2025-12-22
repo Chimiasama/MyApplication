@@ -1,16 +1,12 @@
 package com.example.swadebuilder
 
 import android.content.Context
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,9 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
@@ -32,7 +29,6 @@ import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Map
@@ -50,7 +46,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -62,13 +57,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.ui.components.ModuleCard
 import com.example.swadebuilder.util.toEditionDisplayName
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -101,6 +96,7 @@ fun TelaInicial(
     viewModel: CriadorViewModel
 ) {
     val isFullEdition = EditionConfig.isFullEdition
+    val state = viewModel.state
 
     // --- State Variables (matching original logic) ---
 
@@ -115,33 +111,16 @@ fun TelaInicial(
     var optSemPontosPoder by rememberSaveable { mutableStateOf(false) }
 
     // Supers
-    var optSuperPoderes by rememberSaveable { mutableStateOf(false) }
     // Superequipamentos e supercomplicações usam esta flag única
     var optGrandesResponsabilidades by rememberSaveable { mutableStateOf(false) }
 
     // Horror
-    var optCompendioHorror by rememberSaveable { mutableStateOf(false) }
     var optModoMonstro by rememberSaveable { mutableStateOf(false) }
-
-    // Fantasy
-    var optCompendioFantasia by rememberSaveable { mutableStateOf(false) }
-    var optCompendioBuscatrilha by rememberSaveable { mutableStateOf(false) }
-    var optCompendioDeadlands by rememberSaveable { mutableStateOf(false) }
-    var optCompendioCrystalHeart by rememberSaveable { mutableStateOf(false) }
-    var optCompendioArteDaGuerra by rememberSaveable { mutableStateOf(false) }
-    var optCompendioCidadeSolVapor by rememberSaveable { mutableStateOf(false) }
-    var optCompendioWiseguys by rememberSaveable { mutableStateOf(false) }
-
-    // SciFi
-    var optCompendioSciFi by rememberSaveable { mutableStateOf(false) }
 
     // Dialog States
     var showCreditsDialog by remember { mutableStateOf(false) }
-    var showHelpAppDialog by rememberSaveable { mutableStateOf(false) }
 
     // UI Expansion States
-    var expandedBasicModules by rememberSaveable { mutableStateOf(true) }
-    var expandedOtherModules by rememberSaveable { mutableStateOf(false) }
     var expandedBasicRules by rememberSaveable { mutableStateOf(false) }
     var expandedHorrorRules by rememberSaveable { mutableStateOf(false) }
     var expandedSupersRules by rememberSaveable { mutableStateOf(false) }
@@ -172,16 +151,16 @@ fun TelaInicial(
                     onCriarNovo(
                         optCartaSelvagem,
                         optMaisPontosPericias,
-                        optSuperPoderes,
-                        optCompendioFantasia,
-                        optCompendioHorror,
-                        optCompendioSciFi,
-                        optCompendioBuscatrilha,
-                        optCompendioDeadlands,
-                        optCompendioCrystalHeart,
-                        optCompendioArteDaGuerra,
-                        optCompendioCidadeSolVapor,
-                        optCompendioWiseguys,
+                        state.modoSupers,
+                        state.compendioFantasiaAtivo,
+                        state.compendioHorrorAtivo,
+                        state.compendioSciFiAtivo,
+                        state.compendioBuscatrilhaAtivo,
+                        state.compendioDeadlandsAtivo,
+                        state.compendioCrystalHeartAtivo,
+                        state.compendioArteDaGuerraAtivo,
+                        state.compendioCidadeSolVaporAtivo,
+                        state.compendioWiseguysAtivo,
                         optModoMonstro,
                         optNasceUmHeroi,
                         optHeroiSemArmadura,
@@ -191,13 +170,6 @@ fun TelaInicial(
                         optGrandesResponsabilidades
                         // true // showHelpMessages removido
                     )
-                    // Set ViewModel states that are handled outside the creation lambda
-                    viewModel.state.compendioBuscatrilhaAtivo = optCompendioBuscatrilha
-                    viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
-                    viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
-                    viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
-                    viewModel.state.compendioCidadeSolVaporAtivo = optCompendioCidadeSolVapor
-                    viewModel.state.compendioWiseguysAtivo = optCompendioWiseguys
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
                     viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
                 },
@@ -208,16 +180,18 @@ fun TelaInicial(
             )
         }
     ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = innerPadding,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+        LazyVerticalGrid(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            columns = GridCells.Fixed(2),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item {
+            item(span = { GridItemSpan(2) }) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -233,116 +207,116 @@ fun TelaInicial(
                 }
             }
 
-            // --- Compêndios Section ---
-            item { SectionHeader("Compêndios & Cenários") }
+            item(span = { GridItemSpan(2) }) { SectionHeader("Livros de Regras") }
 
             item {
-                Column(Modifier.padding(horizontal = 16.dp)) {
-                    ModuleGroupCard(
-                        title = "Básico",
-                        description = "Opções essenciais para a maioria das mesas.",
-                        expanded = expandedBasicModules,
-                        onToggle = { expandedBasicModules = !expandedBasicModules }
-                    ) {
-                        ModuleToggle(
-                            title = "Compêndio de Fantasia",
-                            description = "Raças, itens mágicos e regras de fantasia.",
-                            icon = Icons.Default.AutoAwesome,
-                            checked = optCompendioFantasia,
-                            onCheckedChange = { optCompendioFantasia = it }
-                        )
-                        ModuleToggle(
-                            title = "Compêndio de Ficção",
-                            description = "Tecnologia avançada, naves e cibernéticos.",
-                            icon = Icons.Default.RocketLaunch,
-                            checked = optCompendioSciFi,
-                            onCheckedChange = { optCompendioSciFi = it }
-                        )
-                        ModuleToggle(
-                            title = "Compêndio de Horror",
-                            description = "Climas sombrios e criaturas aterrorizantes.",
-                            icon = Icons.Default.Warning,
-                            checked = optCompendioHorror,
-                            onCheckedChange = { optCompendioHorror = it }
-                        )
-                        ModuleToggle(
-                            title = "Superpoderes",
-                            description = "Ativa Compêndio de Superpoderes (SPC).",
-                            icon = Icons.Default.Bolt,
-                            checked = optSuperPoderes,
-                            onCheckedChange = { optSuperPoderes = it }
-                        )
-                    }
-
-                    Spacer(Modifier.height(12.dp))
-
-                    ModuleGroupCard(
-                        title = "Outros Cenários",
-                        description = "Para livros e ambientações adicionais.",
-                        expanded = expandedOtherModules,
-                        onToggle = { expandedOtherModules = !expandedOtherModules }
-                    ) {
-                        ModuleToggle(
-                            title = if (isFullEdition) "Alta Fantasia" else "Buscatrilha",
-                            description = if (isFullEdition) {
-                                "Conteúdo oficial de Mundo Ancestral (Classes, Raças)."
-                            } else {
-                                "Cenário Buscatrilha e material temático."
-                            },
-                            icon = Icons.Default.Map,
-                            checked = optCompendioBuscatrilha,
-                            onCheckedChange = { optCompendioBuscatrilha = it }
-                        )
-                        ModuleToggle(
-                            title = "Faroeste Assombrado".toEditionDisplayName(),
-                            description = "Pistoleiros, revividos e o horror do Oeste.",
-                            icon = Icons.Default.Shield,
-                            checked = optCompendioDeadlands,
-                            onCheckedChange = { optCompendioDeadlands = it }
-                        )
-                        ModuleToggle(
-                            title = "Crystal Heart".toEditionDisplayName(),
-                            description = "Troque seu coração por um cristal mágico.",
-                            icon = Icons.Default.Favorite,
-                            checked = optCompendioCrystalHeart,
-                            onCheckedChange = { optCompendioCrystalHeart = it }
-                        )
-                        ModuleToggle(
-                            title = "Arte da Guerra: Nova Era".toEditionDisplayName(),
-                            description = "Ativa Chi, Tropos e equipamentos orientais.",
-                            icon = Icons.Default.Info,
-                            checked = optCompendioArteDaGuerra,
-                            onCheckedChange = { optCompendioArteDaGuerra = it }
-                        )
-                        ModuleToggle(
-                            title = "A Cidade do Sol a Vapor".toEditionDisplayName(),
-                            description = "Estímulos vitorianos, vapor e tecnomagia.",
-                            icon = Icons.Default.Build,
-                            checked = optCompendioCidadeSolVapor,
-                            onCheckedChange = { optCompendioCidadeSolVapor = it }
-                        )
-                        ModuleToggle(
-                            title = "Malandros".toEditionDisplayName(),
-                            description = "Crime organizado moderno, conexões e esquemas.",
-                            icon = Icons.Default.Groups,
-                            checked = optCompendioWiseguys,
-                            onCheckedChange = { optCompendioWiseguys = it }
-                        )
-                    }
-                }
+                ModuleCard(
+                    title = "Compêndio de Fantasia",
+                    description = "Raças, itens mágicos e regras de fantasia.",
+                    icon = Icons.Default.AutoAwesome,
+                    selected = state.compendioFantasiaAtivo,
+                    onClick = { state.compendioFantasiaAtivo = !state.compendioFantasiaAtivo }
+                )
+            }
+            item {
+                ModuleCard(
+                    title = "Compêndio de Ficção",
+                    description = "Tecnologia avançada, naves e cibernéticos.",
+                    icon = Icons.Default.RocketLaunch,
+                    selected = state.compendioSciFiAtivo,
+                    onClick = { state.compendioSciFiAtivo = !state.compendioSciFiAtivo }
+                )
+            }
+            item {
+                ModuleCard(
+                    title = "Compêndio de Horror",
+                    description = "Climas sombrios e criaturas aterrorizantes.",
+                    icon = Icons.Default.Warning,
+                    selected = state.compendioHorrorAtivo,
+                    onClick = { state.compendioHorrorAtivo = !state.compendioHorrorAtivo }
+                )
+            }
+            item {
+                ModuleCard(
+                    title = "Superpoderes",
+                    description = "Ativa Compêndio de Superpoderes (SPC).",
+                    icon = Icons.Default.Bolt,
+                    selected = state.modoSupers,
+                    onClick = { state.modoSupers = !state.modoSupers }
+                )
             }
 
-            // --- Regras da Mesa (Collapsible Sections) ---
-            item { SectionHeader("Regras de Criação") }
+            item(span = { GridItemSpan(2) }) { SectionHeader("Compêndios Oficiais") }
 
             item {
+                ModuleCard(
+                    title = if (isFullEdition) "Alta Fantasia" else "Buscatrilha",
+                    description = if (isFullEdition) {
+                        "Conteúdo oficial de Mundo Ancestral (Classes, Raças)."
+                    } else {
+                        "Cenário Buscatrilha e material temático."
+                    },
+                    icon = Icons.Default.Map,
+                    selected = state.compendioBuscatrilhaAtivo,
+                    onClick = { state.compendioBuscatrilhaAtivo = !state.compendioBuscatrilhaAtivo }
+                )
+            }
+            item {
+                ModuleCard(
+                    title = "Faroeste Assombrado".toEditionDisplayName(),
+                    description = "Pistoleiros, revividos e o horror do Oeste.",
+                    icon = Icons.Default.Shield,
+                    selected = state.compendioDeadlandsAtivo,
+                    onClick = { state.compendioDeadlandsAtivo = !state.compendioDeadlandsAtivo }
+                )
+            }
+            item {
+                ModuleCard(
+                    title = "Crystal Heart".toEditionDisplayName(),
+                    description = "Troque seu coração por um cristal mágico.",
+                    icon = Icons.Default.Favorite,
+                    selected = state.compendioCrystalHeartAtivo,
+                    onClick = { state.compendioCrystalHeartAtivo = !state.compendioCrystalHeartAtivo }
+                )
+            }
+            item {
+                ModuleCard(
+                    title = "Arte da Guerra: Nova Era".toEditionDisplayName(),
+                    description = "Ativa Chi, Tropos e equipamentos orientais.",
+                    icon = Icons.Default.Info,
+                    selected = state.compendioArteDaGuerraAtivo,
+                    onClick = { state.compendioArteDaGuerraAtivo = !state.compendioArteDaGuerraAtivo }
+                )
+            }
+
+            item(span = { GridItemSpan(2) }) { SectionHeader("Cenários de Campanha") }
+
+            item {
+                ModuleCard(
+                    title = "A Cidade do Sol a Vapor".toEditionDisplayName(),
+                    description = "Estímulos vitorianos, vapor e tecnomagia.",
+                    icon = Icons.Default.Build,
+                    selected = state.compendioCidadeSolVaporAtivo,
+                    onClick = { state.compendioCidadeSolVaporAtivo = !state.compendioCidadeSolVaporAtivo }
+                )
+            }
+            item {
+                ModuleCard(
+                    title = "Malandros".toEditionDisplayName(),
+                    description = "Crime organizado moderno, conexões e esquemas.",
+                    icon = Icons.Default.Groups,
+                    selected = state.compendioWiseguysAtivo,
+                    onClick = { state.compendioWiseguysAtivo = !state.compendioWiseguysAtivo }
+                )
+            }
+
+            item(span = { GridItemSpan(2) }) { SectionHeader("Regras de Criação") }
+
+            item(span = { GridItemSpan(2) }) {
                 Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                    Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // Livro Básico
                     RuleGroupCard(
                         title = "Regras: Livro Básico",
                         expanded = expandedBasicRules,
@@ -358,8 +332,7 @@ fun TelaInicial(
                         SimpleCheckRow("Sem Pontos de Poder", "Conjuradores não usam PP.", optSemPontosPoder) { optSemPontosPoder = it }
                     }
 
-                    // Regras Horror
-                    if (optCompendioHorror) {
+                    if (state.compendioHorrorAtivo) {
                         RuleGroupCard(
                             title = "Regras: Horror",
                             expanded = expandedHorrorRules,
@@ -374,8 +347,7 @@ fun TelaInicial(
                         }
                     }
 
-                    // Regras Supers
-                    if (optSuperPoderes) {
+                    if (state.modoSupers) {
                         RuleGroupCard(
                             title = "Regras: Superpoderes",
                             expanded = expandedSupersRules,
@@ -387,14 +359,12 @@ fun TelaInicial(
                                 checked = optGrandesResponsabilidades,
                                 onCheckedChange = { optGrandesResponsabilidades = it }
                             )
-                            // Superequipamentos and Supercomplicacoes are now implied by the module itself
                         }
                     }
                 }
             }
 
-            // Spacer for FAB
-            item { Spacer(Modifier.height(80.dp)) }
+            item(span = { GridItemSpan(2) }) { Spacer(Modifier.height(80.dp)) }
         }
     }
 
@@ -484,103 +454,6 @@ fun SectionHeader(title: String) {
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp)
     )
-}
-
-@Composable
-fun ModuleGroupCard(
-    title: String,
-    description: String,
-    expanded: Boolean,
-    onToggle: () -> Unit,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
-        )
-    ) {
-        Column(Modifier.padding(12.dp)) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onToggle() },
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(Modifier.weight(1f)) {
-                    Text(title, fontWeight = FontWeight.SemiBold)
-                    Text(
-                        description,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Icon(
-                    imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                    contentDescription = null
-                )
-            }
-
-            AnimatedVisibility(visible = expanded) {
-                Column(Modifier.padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    content()
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ModuleToggle(
-    title: String,
-    description: String,
-    icon: ImageVector,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 8.dp)
-            .clickable { onCheckedChange(!checked) },
-        colors = CardDefaults.cardColors(
-            containerColor = if (checked) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
-            contentColor = if (checked) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
-        ),
-        border = if (checked) null else androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-    ) {
-        Row(
-            modifier = Modifier.padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                modifier = Modifier.size(32.dp),
-                tint = if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(Modifier.width(16.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (checked) MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha=0.8f) else MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            Switch(
-                checked = checked,
-                onCheckedChange = null // Handled by Card click
-            )
-        }
-    }
 }
 
 @Composable
