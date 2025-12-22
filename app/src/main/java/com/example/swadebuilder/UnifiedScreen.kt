@@ -153,7 +153,11 @@ fun UnifiedScreen(
             }
             page
         }.collect { page ->
-            availableSections.getOrNull(page)?.let { activeSection = it }
+            availableSections.getOrNull(page)?.let {
+                activeSection = it
+                // Auto-save ao mudar de aba
+                viewModel.autoSave(context)
+            }
         }
     }
 

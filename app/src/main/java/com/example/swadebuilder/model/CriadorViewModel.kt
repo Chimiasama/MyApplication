@@ -134,20 +134,40 @@ class CriadorViewModel : ViewModel() {
         return candidate
     }
 
-    fun salvarPersonagem(context: Context, nomePersonalizado: String? = null): CharacterStorage.SaveEntry {
-        val previousSnapshot = state.idAtual?.let { CharacterStorage.load(context, it) }
+    suspend fun autoSave(context: Context) {
+        if (state.idAtual != null) {
+            try {
+                // Auto-save usa o nome atual sem gerar sequencial novo para evitar renomear sem querer
+                // apenas salvamos o estado atual no ID atual.
+                val snapshot = state.toSnapshot()
+                CharacterStorage.save(context, snapshot)
+            } catch (e: Exception) {
+                // Silently fail or log for auto-save
+                android.util.Log.e("CriadorViewModel", "Falha no auto-save", e)
+            }
+        }
+    }
+
+    suspend fun salvarPersonagem(context: Context, nomePersonalizado: String? = null): CharacterStorage.SaveEntry {
+        // Carrega snapshot anterior para comparar retratos, se necessário
+        val previousSnapshot = state.idAtual?.let {
+            try { CharacterStorage.load(context, it) } catch(e: Exception) { null }
+        }
+
+        val savedEntries = listarPersonagensSalvos(context)
         val desiredName = (nomePersonalizado?.takeIf { it.isNotBlank() } ?: state.nomePersonagem)
             .ifBlank { DEFAULT_CHARACTER_NAME }
 
-        val savedEntries = listarPersonagensSalvos(context)
         val otherNames = savedEntries
             .filter { it.id != state.idAtual }
             .map { it.nome }
 
+        // Se o nome não mudou em relação ao estado atual, não precisamos gerar sequencial novo
+        // a menos que conflite com OUTRO arquivo.
         val finalName = if (desiredName.equals(DEFAULT_CHARACTER_NAME, ignoreCase = true)) {
             gerarNomeSequencial(DEFAULT_CHARACTER_NAME, otherNames, usarParenteses = false)
         } else {
-            gerarNomeSequencial(desiredName, otherNames, usarParenteses = true)
+             gerarNomeSequencial(desiredName, otherNames, usarParenteses = true)
         }
 
         state.nomePersonagem = finalName
@@ -155,6 +175,7 @@ class CriadorViewModel : ViewModel() {
         val snapshot = state.toSnapshot().copy(nome = finalName)
         val entry = CharacterStorage.save(context, snapshot)
         state.idAtual = entry.id
+
         val previousPortrait = previousSnapshot?.selecoes?.retratoFileName
         val currentPortrait = snapshot.selecoes.retratoFileName
         if (previousPortrait != null && previousPortrait != currentPortrait) {
@@ -164,35 +185,43 @@ class CriadorViewModel : ViewModel() {
         return entry
     }
 
-    fun listarPersonagensSalvos(context: Context): List<CharacterStorage.SaveEntry> {
+    suspend fun listarPersonagensSalvos(context: Context): List<CharacterStorage.SaveEntry> {
         return CharacterStorage.listSaves(context)
     }
 
-    fun carregarPersonagem(context: Context, saveId: String): Boolean {
-        val snapshot = CharacterStorage.load(context, saveId) ?: return false
-        clearFeedbackMessages()
-        val flags = snapshot.flags
-        resetStateParaNovoPersonagem(
-            cartaSelvagem = flags.cartaSelvagem,
-            maisPontosPericias = flags.maisPontosPericias,
-            modoSupers = flags.modoSupers,
-            compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
-            compendioHorrorAtivo = flags.compendioHorrorAtivo,
-            compendioSciFiAtivo = flags.compendioSciFiAtivo,
-            compendioBuscatrilhaAtivo = flags.compendioBuscatrilhaAtivo,
-            compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo,
-            compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo,
-            compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo,
-            compendioCidadeSolVaporAtivo = flags.compendioCidadeSolVaporAtivo,
-            compendioWiseguysAtivo = flags.compendioWiseguysAtivo,
-            modoMonstroAtivo = flags.modoMonstroAtivo,
-            usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia,
-            grandesResponsabilidades = flags.grandesResponsabilidades
-            // showHelpMessages removido
-        )
-        state.restoreFromSnapshot(snapshot, mutableListOf())
-        state.idAtual = saveId
-        return true
+    suspend fun carregarPersonagem(context: Context, saveId: String): Boolean {
+        try {
+            val snapshot = CharacterStorage.load(context, saveId) ?: return false
+            clearFeedbackMessages()
+            val flags = snapshot.flags
+            resetStateParaNovoPersonagem(
+                cartaSelvagem = flags.cartaSelvagem,
+                maisPontosPericias = flags.maisPontosPericias,
+                modoSupers = flags.modoSupers,
+                compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
+                compendioHorrorAtivo = flags.compendioHorrorAtivo,
+                compendioSciFiAtivo = flags.compendioSciFiAtivo,
+                compendioBuscatrilhaAtivo = flags.compendioBuscatrilhaAtivo,
+                compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo,
+                compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo,
+                compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo,
+                compendioCidadeSolVaporAtivo = flags.compendioCidadeSolVaporAtivo,
+                compendioWiseguysAtivo = flags.compendioWiseguysAtivo,
+                modoMonstroAtivo = flags.modoMonstroAtivo,
+                usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia,
+                grandesResponsabilidades = flags.grandesResponsabilidades
+                // showHelpMessages removido
+            )
+            state.restoreFromSnapshot(snapshot, mutableListOf())
+            state.idAtual = saveId
+            return true
+        } catch (e: kotlinx.serialization.SerializationException) {
+            _feedbackMessages.add("Erro: Arquivo de personagem corrompido ou inválido.")
+            return false
+        } catch (e: Exception) {
+            _feedbackMessages.add("Erro ao carregar: ${e.message}")
+            return false
+        }
     }
 
     private fun mapChoiceToArcanoId(choice: String?): String? {

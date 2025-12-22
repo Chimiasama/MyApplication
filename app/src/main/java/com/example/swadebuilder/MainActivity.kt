@@ -552,21 +552,22 @@ class MainActivity : ComponentActivity() {
                     text = { Text("Deseja apagar \"${entryToDelete?.nome}\"?") },
                     confirmButton = {
                         TextButton(onClick = {
-                            entryToDelete?.let { entry ->
-                                val snapshotToDelete = CharacterStorage.load(context, entry.id)
-                                CharacterStorage.delete(context, entry.id)
-                                savedEntries.removeAll { it.id == entry.id }
-                                if (state.idAtual == entry.id) {
-                                    state.idAtual = null
-                                }
-                                snapshotToDelete?.selecoes?.retratoFileName?.let { fileName ->
-                                    CharacterPortraitStorage.deleteIfUnused(context, fileName)
-                                }
-                                scope.launch {
+                            scope.launch {
+                                entryToDelete?.let { entry ->
+                                    // Use runCatching since load is now suspend and might throw or return null
+                                    val snapshotToDelete = runCatching { CharacterStorage.load(context, entry.id) }.getOrNull()
+                                    CharacterStorage.delete(context, entry.id)
+                                    savedEntries.removeAll { it.id == entry.id }
+                                    if (state.idAtual == entry.id) {
+                                        state.idAtual = null
+                                    }
+                                    snapshotToDelete?.selecoes?.retratoFileName?.let { fileName ->
+                                        CharacterPortraitStorage.deleteIfUnused(context, fileName)
+                                    }
                                     snackHost.showSnackbar("Personagem removido")
                                 }
+                                entryToDelete = null
                             }
-                            entryToDelete = null
                         }) {
                             Text("Apagar")
                         }
@@ -597,12 +598,12 @@ class MainActivity : ComponentActivity() {
                     confirmButton = {
                         TextButton(onClick = {
                             triggerFeedback()
-                            val entry = criadorViewModel.salvarPersonagem(
-                                context,
-                                saveName.ifBlank { state.nomePersonagem }
-                            )
-                            showSaveDialog = false
                             scope.launch {
+                                val entry = criadorViewModel.salvarPersonagem(
+                                    context,
+                                    saveName.ifBlank { state.nomePersonagem }
+                                )
+                                showSaveDialog = false
                                 snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
                             }
                         }) {
@@ -638,16 +639,16 @@ class MainActivity : ComponentActivity() {
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             TextButton(onClick = {
                                 triggerFeedback()
-                                val entry = criadorViewModel.salvarPersonagem(
-                                    context,
-                                    state.nomePersonagem
-                                )
-                                showSaveBeforeNavigateDialog = false
-                                pendingNavigationAction = null
                                 scope.launch {
+                                    val entry = criadorViewModel.salvarPersonagem(
+                                        context,
+                                        state.nomePersonagem
+                                    )
+                                    showSaveBeforeNavigateDialog = false
+                                    pendingNavigationAction = null
                                     snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
+                                    executePendingNavigation(action)
                                 }
-                                executePendingNavigation(action)
                             }) {
                                 Text("Salvar")
                             }
@@ -703,17 +704,20 @@ class MainActivity : ComponentActivity() {
                                             }
                                             TextButton(onClick = {
                                                 triggerFeedback()
-                                                val loaded = criadorViewModel.carregarPersonagem(context, entry.id)
-                                                if (loaded) {
-                                                    creationSession++
-                                                    mostrouTelaInicial = false
-                                                    showLoadDialog = false
-                                                    scope.launch {
+                                                scope.launch {
+                                                    val loaded = criadorViewModel.carregarPersonagem(context, entry.id)
+                                                    if (loaded) {
+                                                        creationSession++
+                                                        mostrouTelaInicial = false
+                                                        showLoadDialog = false
                                                         snackHost.showSnackbar("Carregado: ${entry.nome}")
-                                                    }
-                                                } else {
-                                                    scope.launch {
-                                                        snackHost.showSnackbar("Falha ao carregar o personagem")
+                                                    } else {
+                                                        // Mensagens de erro já estão em feedbackMessages, mas snackbar genérica ajuda
+                                                        if (criadorViewModel.feedbackMessages.isNotEmpty()) {
+                                                            snackHost.showSnackbar(criadorViewModel.feedbackMessages.last())
+                                                        } else {
+                                                            snackHost.showSnackbar("Falha ao carregar o personagem")
+                                                        }
                                                     }
                                                 }
                                             }) {
