@@ -41,6 +41,12 @@ import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.normAAKey
 
 class CriadorState {
+    init {
+        listaVantagens = deduplicateVantagens(listaVantagens)
+        listaComplicacoes = deduplicateComplicacoes(listaComplicacoes)
+        // listaEquipamentos logic omitted: global list not available in this context
+    }
+
     var appTheme by mutableStateOf(AppTheme.DEFAULT)
     var hapticStrength by mutableIntStateOf(DEFAULT_HAPTIC_STRENGTH)
     var soundVolume by mutableIntStateOf(DEFAULT_SOUND_VOLUME)
@@ -2253,6 +2259,61 @@ class CriadorState {
                 superPontosDisponiveisFlag = superPontosDisponiveis > 0
             )
         )
+    }
+
+    private fun deduplicateVantagens(list: List<Vantagem>): List<Vantagem> {
+        val deduped = list.groupBy { it.nome.keyify() }
+            .flatMap { (_, group) ->
+                resolveDuplicates(group, { it.origem }, { v1, v2 -> areVantagensEqual(v1, v2) })
+            }
+        val result = mutableStateListOf<Vantagem>()
+        result.addAll(deduped)
+        return result
+    }
+
+    private fun deduplicateComplicacoes(list: List<Complicacao>): List<Complicacao> {
+        val deduped = list.groupBy { it.name.keyify() }
+            .flatMap { (_, group) ->
+                resolveDuplicates(group, { it.origem }, { c1, c2 -> areComplicacoesEqual(c1, c2) })
+            }
+        val result = mutableStateListOf<Complicacao>()
+        result.addAll(deduped)
+        return result
+    }
+
+    private fun <T> resolveDuplicates(
+        group: List<T>,
+        origemSelector: (T) -> String,
+        isContentEqual: (T, T) -> Boolean
+    ): List<T> {
+        if (group.size <= 1) return group
+
+        val basic = group.find { origemSelector(it).equals("BASICO", ignoreCase = true) }
+        val others = group.filter { !origemSelector(it).equals("BASICO", ignoreCase = true) }
+
+        if (basic == null) return listOf(group.first())
+
+        val diff = others.firstOrNull { !isContentEqual(it, basic) }
+        return if (diff != null) {
+            listOf(diff)
+        } else {
+            listOf(basic)
+        }
+    }
+
+    private fun areVantagensEqual(v1: Vantagem, v2: Vantagem): Boolean {
+        return v1.requisitos == v2.requisitos &&
+                v1.categoria == v2.categoria &&
+                v1.limiteCompra == v2.limiteCompra &&
+                v1.vinculadoPericia == v2.vinculadoPericia &&
+                v1.ganhaAoComprar == v2.ganhaAoComprar &&
+                v1.choiceOptions == v2.choiceOptions &&
+                v1.maxSelections == v2.maxSelections
+    }
+
+    private fun areComplicacoesEqual(c1: Complicacao, c2: Complicacao): Boolean {
+        return c1.severity == c2.severity &&
+                c1.vantagensPrevias == c2.vantagensPrevias
     }
 
     fun restoreFromSnapshot(snapshot: PersonagemSnapshot, feedbackMessages: MutableList<String>) {
