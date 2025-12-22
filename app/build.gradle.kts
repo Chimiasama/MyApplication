@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     // Plugin de serialization
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.21"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.0"
 }
 
 // 🔹 Exclui globalmente a versão duplicada da JetBrains IntelliJ Annotations
@@ -105,10 +105,6 @@ android {
         buildConfig = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.get()
-    }
-
     // ------------------------------------------------------------
 // 🔹 Kotlin e Java
 // ------------------------------------------------------------
@@ -149,12 +145,10 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.animation)
     implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.material)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.foundation)
-    implementation(libs.androidx.foundation)
     androidTestImplementation(libs.androidx.core.testing)
     debugImplementation(libs.androidx.compose.ui.tooling.v170)
 
@@ -192,7 +186,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core.v351)
-    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation(libs.androidx.core.testing)
 }
 
 // ------------------------------------------------------------
