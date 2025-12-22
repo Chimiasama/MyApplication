@@ -34,6 +34,7 @@ fun SectionCard(
     val headerColor = MaterialTheme.colorScheme.onBackground
     val cardColor   = MaterialTheme.colorScheme.surfaceVariant
 
+    // Apply passed modifier to root Column
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
             Modifier

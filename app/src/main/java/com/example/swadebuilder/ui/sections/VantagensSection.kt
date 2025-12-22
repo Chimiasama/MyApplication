@@ -520,51 +520,20 @@ fun VantagensContent(
         // --- List Content ---
         if (isSearching || isFilteringCategories) {
             // Flat List View
-            val flatList = listaVantagensAtivas.filter { vant ->
-                // Basic Filter Logic
-                 if (!state.modoSupers) {
-                    true
-                } else {
-                    vant.id != "antecedente_arcano" &&
-                            !vant.requisitos.vantagensPrevias.contains("antecedente_arcano")
-                }
-            }.filter { vant ->
-                if (state.modoSupers) vant.id != "superpoderes" else true
-            }.filter { vant ->
-                 vant.id != "especialista" || state.vantagensSelecionadas.any { it.id == "profissional" }
-            }.filter { vant ->
-                // Category Filter
-                if (selectedCategories.isNotEmpty() && vant.categoria !in selectedCategories) return@filter false
-
-                // Search Query
-                if (isSearching) {
-                    val q = searchQuery.semAcentos().lowercase()
-                    val n = vant.nome.semAcentos().lowercase()
-                    val d = vant.descricao.semAcentos().lowercase()
-                    if (!n.contains(q) && !d.contains(q)) return@filter false
-                }
-
-                // Advanced Filters
-                val vantOrigem = vant.origem.ifBlank { "BASICO" }.uppercase()
-                if (filter.origens.isNotEmpty() && vantOrigem !in filter.origens) return@filter false
-
-                if (filter.estagios.isNotEmpty() && vant.requisitos.estagio !in filter.estagios) return@filter false
-
-                if (filter.atributos.isNotEmpty() && filter.atributos.intersect(vant.requisitos.atributoMin.keys).isEmpty()) return@filter false
-
-                if (filter.pericias.isNotEmpty()) {
-                    val reqMin = vant.requisitos.periciaMin.keys
-                    val reqOpt = vant.requisitos.periciaMinOpcional.keys
-                    val vinc = if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
-                    if (filter.pericias.intersect(reqMin + reqOpt + vinc).isEmpty()) return@filter false
-                }
-                true
-            }
+            // Use Helper function to avoid composable ambiguity in items lambda context
+            val flatList = filterVantagens(
+                list = listaVantagensAtivas,
+                state = state,
+                filter = filter,
+                category = null,
+                searchQuery = searchQuery,
+                selectedCategories = selectedCategories
+            )
 
             if (flatList.isEmpty()) {
                 item { Text("Nenhuma vantagem encontrada.", modifier = Modifier.padding(8.dp)) }
             } else {
-                items(flatList, key = { it.id }) { vant ->
+                items(items = flatList, key = { it.id }) { vant ->
                     VantagemItemWrapper(
                         vant = vant,
                         state = state,
@@ -623,50 +592,17 @@ fun VantagensContent(
                         }
 
                         if (expanded) {
-                            val listaFiltrada = lista
-                                .filter { vant ->
-                                    if (!state.modoSupers) {
-                                        true
-                                    } else {
-                                        vant.id != "antecedente_arcano" &&
-                                                !vant.requisitos.vantagensPrevias.contains("antecedente_arcano")
-                                    }
-                                }
-                                .filter { vant ->
-                                    if (state.modoSupers) vant.id != "superpoderes" else true
-                                }
-                                .filter { vant ->
-                                    vant.categoria == cat &&
-                                            (vant.id != "especialista" ||
-                                                    state.vantagensSelecionadas.any { it.id == "profissional" })
-                                }
-                                .filter { vant ->
-                                    val vantOrigem = vant.origem.ifBlank { "BASICO" }.uppercase()
-                                    if (filter.origens.isNotEmpty() &&
-                                        vantOrigem !in filter.origens
-                                    ) return@filter false
+                            // Use Helper function
+                            val listaFiltrada = filterVantagens(
+                                list = lista,
+                                state = state,
+                                filter = filter,
+                                category = cat,
+                                searchQuery = "",
+                                selectedCategories = emptyList()
+                            )
 
-                                    if (filter.estagios.isNotEmpty() &&
-                                        vant.requisitos.estagio !in filter.estagios
-                                    ) return@filter false
-
-                                    if (filter.atributos.isNotEmpty() &&
-                                        filter.atributos.intersect(vant.requisitos.atributoMin.keys)
-                                            .isEmpty()
-                                    ) return@filter false
-
-                                    if (filter.pericias.isNotEmpty()) {
-                                        val reqMin = vant.requisitos.periciaMin.keys
-                                        val reqOpt = vant.requisitos.periciaMinOpcional.keys
-                                        val vinc =
-                                            if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
-                                        if (filter.pericias.intersect(reqMin + reqOpt + vinc).isEmpty())
-                                            return@filter false
-                                    }
-                                    true
-                                }
-
-                            items(listaFiltrada, key = { it.id }) { vant ->
+                            items(items = listaFiltrada, key = { it.id }) { vant ->
                                 VantagemItemWrapper(
                                     vant = vant,
                                     state = state,
@@ -912,6 +848,64 @@ fun VantagensContent(
                 )
             }
         }
+    }
+}
+
+private fun filterVantagens(
+    list: List<Vantagem>,
+    state: CriadorState,
+    filter: VantFilter,
+    category: Categoria?,
+    searchQuery: String,
+    selectedCategories: List<Categoria>
+): List<Vantagem> {
+    return list.filter { vant ->
+        // Basic Checks
+        if (state.modoSupers) {
+             if (vant.id == "antecedente_arcano" || vant.requisitos.vantagensPrevias.contains("antecedente_arcano")) return false
+             if (vant.id == "superpoderes") return false
+        } else {
+             // If not supers, we keep everything?
+             // Original logic:
+             // if (!state.modoSupers) true else { ... }
+             // which means we don't filter out anything special here
+        }
+
+        // Category check
+        if (category != null) {
+             if (vant.categoria != category) return false
+             // Special Professional check
+             if (vant.id == "especialista" && !state.vantagensSelecionadas.any { it.id == "profissional" }) return false
+        } else {
+             // Flat List logic (Search)
+             if (vant.id == "especialista" && !state.vantagensSelecionadas.any { it.id == "profissional" }) return false
+
+             // Category Filter (for chips)
+             if (selectedCategories.isNotEmpty() && vant.categoria !in selectedCategories) return false
+        }
+
+        // Filters
+        val vantOrigem = vant.origem.ifBlank { "BASICO" }.uppercase()
+        if (filter.origens.isNotEmpty() && vantOrigem !in filter.origens) return false
+        if (filter.estagios.isNotEmpty() && vant.requisitos.estagio !in filter.estagios) return false
+        if (filter.atributos.isNotEmpty() && filter.atributos.intersect(vant.requisitos.atributoMin.keys).isEmpty()) return false
+
+        if (filter.pericias.isNotEmpty()) {
+            val reqMin = vant.requisitos.periciaMin.keys
+            val reqOpt = vant.requisitos.periciaMinOpcional.keys
+            val vinc = if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
+            if (filter.pericias.intersect(reqMin + reqOpt + vinc).isEmpty()) return false
+        }
+
+        // Search (if applicable)
+        if (searchQuery.isNotBlank()) {
+             val q = searchQuery.semAcentos().lowercase()
+             val n = vant.nome.semAcentos().lowercase()
+             val d = vant.descricao.semAcentos().lowercase()
+             if (!n.contains(q) && !d.contains(q)) return false
+        }
+
+        true
     }
 }
 
