@@ -30,8 +30,6 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.CheckBox
-import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FolderOpen
@@ -40,9 +38,10 @@ import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.SportsMartialArts
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -261,7 +260,7 @@ fun TelaInicial(
                         )
                         ModuleToggle(
                             title = "Compêndio de Horror",
-                            icon = Icons.Default.Warning,
+                            icon = Icons.Default.Pets,
                             checked = optCompendioHorror,
                             onCheckedChange = { optCompendioHorror = it }
                         )
@@ -301,7 +300,7 @@ fun TelaInicial(
                         )
                         ModuleToggle(
                             title = "Arte da Guerra: Nova Era".toEditionDisplayName(),
-                            icon = Icons.Default.Info,
+                            icon = Icons.Default.SportsMartialArts,
                             checked = optCompendioArteDaGuerra,
                             onCheckedChange = { optCompendioArteDaGuerra = it }
                         )
@@ -536,7 +535,7 @@ fun ModuleToggle(
 ) {
     Card(
         modifier = Modifier
-            .size(160.dp)
+            .size(128.dp)
             .clickable { onCheckedChange(!checked) },
         colors = CardDefaults.cardColors(
             containerColor = if (checked) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
@@ -546,27 +545,23 @@ fun ModuleToggle(
     ) {
         Column(
             modifier = Modifier
-                .padding(12.dp)
+                .padding(10.dp)
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                modifier = Modifier.size(28.dp),
+                modifier = Modifier.size(24.dp),
                 tint = if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
             )
+            Spacer(Modifier.height(10.dp))
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyMedium,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-            Icon(
-                imageVector = if (checked) Icons.Default.CheckBox else Icons.Default.CheckBoxOutlineBlank,
-                contentDescription = null,
-                modifier = Modifier.size(22.dp),
-                tint = if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center
             )
         }
     }
