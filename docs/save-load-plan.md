@@ -42,5 +42,5 @@ Permitir que o jogador pause a construção do personagem e retome depois **com 
 
 ## Próximos passos práticos
 - Criar os DTOs de snapshot cobrindo todos os campos listados.
-- Implementar funções `toSnapshot()` e `restoreFromSnapshot()` no `CriadorViewModel` (ou helper), seguindo a ordem de hidratação acima.
-- Expor na UI ações de salvar e carregar que chamem essas funções e atualizem o estado Compose atual.
+- **Usar as funções já existentes `toSnapshot()` e `restoreFromSnapshot()` no `CriadorState`**, que concentram a serialização/hidratação; o `CriadorViewModel` apenas orquestra a chamada, guarda o arquivo e repassa mensagens de feedback conforme necessário.
+- Expor na UI ações de salvar e carregar que chamem o fluxo do `CriadorViewModel`, que por sua vez delega para o `CriadorState` e atualiza o estado Compose atual.
