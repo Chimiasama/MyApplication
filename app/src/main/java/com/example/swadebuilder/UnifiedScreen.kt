@@ -108,10 +108,6 @@ fun UnifiedScreen(
     onUserFeedback: () -> Unit,
     onRequestProgression: () -> Unit
 ) {
-    if (state.modoSupers) {
-        Log.d("DEBUG", "modoSupers é ${state.modoSupers}")
-    }
-
     var showAllocDialog by rememberSaveable { mutableStateOf(false) }
     var currentSlotIndex by rememberSaveable { mutableIntStateOf(-1) }
     var showClearDialog by rememberSaveable { mutableStateOf(false) }

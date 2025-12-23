@@ -3,6 +3,7 @@ package com.example.swadebuilder.util
 import android.content.Context
 import android.net.Uri
 import java.io.File
+import java.io.IOException
 import java.util.Locale
 import java.util.UUID
 import com.example.swadebuilder.util.CharacterStorage
@@ -11,6 +12,7 @@ import kotlinx.coroutines.withContext
 
 object CharacterPortraitStorage {
     private const val PORTRAIT_DIR = "portraits"
+    private const val MAX_PORTRAIT_SIZE_BYTES = 5 * 1024 * 1024L // 5 MB
 
     private fun portraitsDirectory(context: Context): File {
         return File(context.filesDir, PORTRAIT_DIR).apply { mkdirs() }
@@ -34,7 +36,17 @@ object CharacterPortraitStorage {
 
             context.contentResolver.openInputStream(sourceUri)?.use { input ->
                 destination.outputStream().use { output ->
-                    input.copyTo(output)
+                    var bytesCopied: Long = 0
+                    val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                    var bytes = input.read(buffer)
+                    while (bytes >= 0) {
+                        output.write(buffer, 0, bytes)
+                        bytesCopied += bytes
+                        if (bytesCopied > MAX_PORTRAIT_SIZE_BYTES) {
+                            throw IOException("Imagem excede o limite de tamanho de 5MB.")
+                        }
+                        bytes = input.read(buffer)
+                    }
                 }
             } ?: return@withContext null
 
