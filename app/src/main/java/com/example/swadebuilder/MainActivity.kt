@@ -577,8 +577,11 @@ class MainActivity : ComponentActivity() {
                                     )
                                     showSaveBeforeNavigateDialog = false
                                     pendingNavigationAction = null
-                                    snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
                                     executePendingNavigation(action)
+
+                                    launch {
+                                        snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
+                                    }
                                 }
                             }) {
                                 Text("Salvar")
