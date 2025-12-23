@@ -26,7 +26,9 @@ val DefaultThemeData = AppThemeData(
         onBackground = OldSchoolInk,
         surface = OldSchoolPaper,
         onSurface = OldSchoolInk,
-        surfaceVariant = OldSchoolPaper
+        surfaceVariant = OldSchoolPaper,
+        errorContainer = Color(0xFFD32F2F).copy(alpha = 0.1f), // Reddish fade
+        onErrorContainer = OldSchoolInk
     ),
     darkColors = darkColorScheme(
         primary = OldSchoolRed,
@@ -36,7 +38,9 @@ val DefaultThemeData = AppThemeData(
         background = OldSchoolInk,
         onBackground = OldSchoolPaper,
         surface = OldSchoolInk,
-        onSurface = OldSchoolPaper
+        onSurface = OldSchoolPaper,
+        errorContainer = Color(0xFFD32F2F).copy(alpha = 0.2f),
+        onErrorContainer = OldSchoolPaper
     ),
     typography = DefaultTypography
 )
@@ -51,7 +55,9 @@ val MedievalThemeData = AppThemeData(
         surface = MedPaper,
         onSurface = MedInk,
         surfaceVariant = Color(0xFFF5EEDC),
-        onSurfaceVariant = MedInk
+        onSurfaceVariant = MedInk,
+        errorContainer = MedPaper.copy(alpha = 0.9f), // Keep it paper-like but distinct? Or perhaps a faded red ink
+        onErrorContainer = MedInk
     ),
     darkColors = darkColorScheme(
         primary = MedGold,
@@ -61,7 +67,9 @@ val MedievalThemeData = AppThemeData(
         surface = MedInk,
         onSurface = MedPaper,
         surfaceVariant = Color(0xFFF5EEDC),
-        onSurfaceVariant = MedInk
+        onSurfaceVariant = MedInk,
+        errorContainer = MedInk,
+        onErrorContainer = MedPaper
     ),
     typography = MedievalTypography
 )
@@ -81,7 +89,9 @@ val CyberpunkThemeData = AppThemeData(
         surface = CyberMatrixBg, // Preto (sem cinza)
         onSurface = Color.White, // HOTFIX: Texto branco
         surfaceVariant = Color(0xFF121212), // HOTFIX 2: Cards must be black to match white text
-        onSurfaceVariant = Color(0xFF00E5FF) // HOTFIX: Ciano para labels
+        onSurfaceVariant = Color(0xFF00E5FF), // HOTFIX: Ciano para labels
+        errorContainer = Color(0xFF2C0000), // Dark red matrix
+        onErrorContainer = Color(0xFFFF0000)
     ),
     darkColors = darkColorScheme(
         primary = CyberMatrixGreen,
@@ -93,7 +103,9 @@ val CyberpunkThemeData = AppThemeData(
         surface = Color(0xFF050505), // Quase preto
         onSurface = Color.White, // Texto branco
         surfaceVariant = Color(0xFF121212), // Header escuro
-        onSurfaceVariant = Color(0xFF00E5FF) // Ciano para brilhar
+        onSurfaceVariant = Color(0xFF00E5FF), // Ciano para brilhar
+        errorContainer = Color(0xFF2C0000), // Dark red matrix
+        onErrorContainer = Color(0xFFFF0000)
     ),
     typography = CyberpunkTypography,
     cardBorderColor = CyberMatrixGreen // Efeito Wireframe
@@ -108,7 +120,9 @@ val SciFiThemeData = AppThemeData(
         surface = SciFiBlueDeep,
         onBackground = SciFiSilver,
         onSurface = SciFiSilver,
-        onSurfaceVariant = Color(0xFFB0BEC5)
+        onSurfaceVariant = Color(0xFFB0BEC5),
+        errorContainer = SciFiBlueDeep.copy(alpha = 0.8f),
+        onErrorContainer = Color(0xFFFF5252)
     ),
     darkColors = darkColorScheme(
         primary = SciFiHolo,
@@ -118,7 +132,9 @@ val SciFiThemeData = AppThemeData(
         onBackground = Color.White,
         onSurface = Color.White,
         surfaceVariant = Color(0xFF1F1F1F), // Header cinza chumbo
-        onSurfaceVariant = Color(0xFFB0B0B0) // Cinza claro
+        onSurfaceVariant = Color(0xFFB0B0B0), // Cinza claro
+        errorContainer = Color(0xFF1A0000),
+        onErrorContainer = Color(0xFFFF5252)
     ),
     typography = SciFiTypography,
     cardBorderColor = SciFiHolo.copy(alpha = 0.5f)
@@ -135,7 +151,9 @@ val HorrorThemeData = AppThemeData(
         surface = HorrorBg,
         onSurface = HorrorBone,
         surfaceVariant = Color(0xFF1C1010),
-        onSurfaceVariant = Color(0xFFEBEBD3)
+        onSurfaceVariant = Color(0xFFEBEBD3),
+        errorContainer = Color(0xFF2C0E0E), // Dried blood dark
+        onErrorContainer = HorrorBone
     ),
     darkColors = darkColorScheme(
         primary = HorrorBlood,
@@ -145,7 +163,9 @@ val HorrorThemeData = AppThemeData(
         surface = Color(0xFF0A0A0A), // Card ligeiramente mais claro
         onSurface = Color(0xFFEBEBD3), // Osso
         surfaceVariant = Color(0xFF1F1F1F), // Header escuro
-        onSurfaceVariant = Color(0xFFAAAAAA) // Cinza claro
+        onSurfaceVariant = Color(0xFFAAAAAA), // Cinza claro
+        errorContainer = Color(0xFF2C0E0E),
+        onErrorContainer = HorrorBone
     ),
     typography = HorrorTypography
 )
@@ -160,7 +180,9 @@ val WW2ThemeData = AppThemeData(
         onSurface = Color.Black,
         onBackground = Color.Black,
         surfaceVariant = WW2Khaki,
-        onSurfaceVariant = Color.Black
+        onSurfaceVariant = Color.Black,
+        errorContainer = WW2Olive.copy(alpha = 0.3f),
+        onErrorContainer = Color.Black
     ),
     darkColors = darkColorScheme(
         primary = WW2Stamp,
@@ -170,7 +192,9 @@ val WW2ThemeData = AppThemeData(
         onSurface = WW2Khaki,
         onBackground = WW2Khaki,
         surfaceVariant = WW2Khaki,
-        onSurfaceVariant = Color.Black
+        onSurfaceVariant = Color.Black,
+        errorContainer = Color(0xFF1F1F00),
+        onErrorContainer = WW2Khaki
     ),
     typography = WW2Typography
 )
@@ -184,7 +208,9 @@ val HalloweenThemeData = AppThemeData(
         background = HalloBlack,
         onBackground = HalloOrange,
         surface = HalloBlack,
-        onSurface = HalloOrange
+        onSurface = HalloOrange,
+        errorContainer = Color(0xFF220000),
+        onErrorContainer = HalloOrange
     ),
     darkColors = darkColorScheme(
         primary = HalloOrange,
@@ -195,7 +221,9 @@ val HalloweenThemeData = AppThemeData(
         surface = Color(0xFF050505),
         onSurface = Color.White,
         surfaceVariant = Color(0xFF1F1F1F),
-        onSurfaceVariant = Color(0xFFB0B0B0)
+        onSurfaceVariant = Color(0xFFB0B0B0),
+        errorContainer = Color(0xFF220000),
+        onErrorContainer = HalloOrange
     ),
     typography = HorrorTypography
 )
@@ -211,7 +239,9 @@ val PrideThemeData = AppThemeData(
         surface = Color.White,
         surfaceVariant = PrideYellow.copy(alpha = 0.2f),
         onBackground = Color.Black,
-        onSurface = Color.Black
+        onSurface = Color.Black,
+        errorContainer = PrideRed.copy(alpha = 0.1f),
+        onErrorContainer = Color.Black
     ),
     darkColors = darkColorScheme(
         primary = PrideOrange,
@@ -221,7 +251,9 @@ val PrideThemeData = AppThemeData(
         background = PrideDarkBg,
         surface = PrideDarkBg,
         onSurface = Color.White,
-        onBackground = Color.White
+        onBackground = Color.White,
+        errorContainer = PrideRed.copy(alpha = 0.2f),
+        onErrorContainer = Color.White
     ),
     typography = PrideTypography
 )
