@@ -21,6 +21,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
@@ -39,44 +41,13 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaAtributos
-import com.example.swadebuilder.loadRawText
 import com.example.swadebuilder.mapaAtributosDisplay
+import com.example.swadebuilder.mapaAtributosDescricao
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
-
-data class AtributoDesc(
-    val nome: String,
-    val descricao: String
-)
-
-fun parseAtributos(rawText: String): List<AtributoDesc> {
-    val result = mutableListOf<AtributoDesc>()
-    val lines = rawText.lines()
-    var currentName = ""
-    val currentDesc = StringBuilder()
-
-    for (line in lines) {
-        val trimmed = line.trim()
-        if (trimmed.endsWith(":")) {
-            if (currentName.isNotEmpty()) {
-                result.add(AtributoDesc(currentName, currentDesc.toString().trim()))
-                currentDesc.clear()
-            }
-            currentName = trimmed.removeSuffix(":")
-        } else {
-            if (currentName.isNotEmpty()) {
-                currentDesc.append(line).append("\n")
-            }
-        }
-    }
-    if (currentName.isNotEmpty()) {
-        result.add(AtributoDesc(currentName, currentDesc.toString().trim()))
-    }
-    return result
-}
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -89,16 +60,7 @@ fun AtributosContent(
     val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
-    val descricaoPorAtributo = remember(allowLongTexts) {
-        if (!allowLongTexts) {
-            emptyMap()
-        } else {
-            parseAtributos(loadRawText(context, R.raw.atributos))
-                .associate { atributo ->
-                    atributo.nome.uppercase().semAcentos() to atributo.descricao
-                }
-        }
-    }
+    val listaDeAtributos = com.example.swadebuilder.listaAtributos
 
     val locked = state.criacaoBasicaCongelada && !state.attributeAdvancementInProgress
 
@@ -175,6 +137,32 @@ fun AtributosContent(
             Spacer(Modifier.height(8.dp))
         }
 
+        val geralDesc = mapaAtributosDescricao["USANDO ATRIBUTOS"] ?: ""
+        if (allowLongTexts && geralDesc.isNotBlank()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                )
+            ) {
+                Column(Modifier.padding(12.dp)) {
+                    Text(
+                        text = "USANDO ATRIBUTOS",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = geralDesc,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
+            }
+            Spacer(Modifier.height(8.dp))
+        }
+
         listaAtributos.forEach { nome ->
             val baseRaw = state.valoresAtributos[nome]!!.intValue
 
@@ -213,7 +201,7 @@ fun AtributosContent(
 
             val displayName = mapaAtributosDisplay[nome] ?: nome
             val descKey = displayName.uppercase().semAcentos()
-            val descricao = descricaoPorAtributo[descKey].orEmpty()
+            val descricao = mapaAtributosDescricao[descKey].orEmpty()
 
             Column(
                 modifier = Modifier

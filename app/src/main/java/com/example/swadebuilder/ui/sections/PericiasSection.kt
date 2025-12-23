@@ -57,8 +57,8 @@ import com.example.swadebuilder.R
 import com.example.swadebuilder.calcularPericiaRules
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.mapaAtributosDisplay
+import com.example.swadebuilder.mapaPericiasDescricao
 import com.example.swadebuilder.model.EspecializacoesDto
-import com.example.swadebuilder.model.loadPericiasDescriptions
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
@@ -75,9 +75,7 @@ fun PericiasContent(
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
-    val descricoes = remember(allowLongTexts) {
-        if (!allowLongTexts) emptyMap() else loadPericiasDescriptions(context, R.raw.pericias)
-    }
+    val descricoes = if (!allowLongTexts) emptyMap() else mapaPericiasDescricao
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val locked = state.criacaoBasicaCongelada && !state.skillAdvancementInProgress

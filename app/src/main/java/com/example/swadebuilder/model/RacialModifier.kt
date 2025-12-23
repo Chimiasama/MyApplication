@@ -13,6 +13,7 @@ data class RacialModifier(
     val nome: String,
     val originalName: String? = null,
     val originalDescription: String? = null,
+    val descricao: String? = null,
     val atributos: Map<String, Int>,
     val pericias: Map<String, Int>,
     val vantagensGratis: List<String> = emptyList(),

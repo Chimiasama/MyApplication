@@ -17,6 +17,8 @@ import com.example.swadebuilder.listaTropos
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.mapaPericias
+import com.example.swadebuilder.mapaPericiasDescricao
+import com.example.swadebuilder.mapaAtributosDescricao
 import com.example.swadebuilder.racialAttrMinMap
 import com.example.swadebuilder.racialSkillStartMap
 import com.example.swadebuilder.util.keyify
@@ -96,6 +98,22 @@ object DataLoader {
             )
         }
         mapaPericias = listaPericias.associateBy { it.nome.keyify() }
+
+        // Carrega descrições de perícias (novo arquivo JSON, ex-txt)
+        val periciasDescList = runCatching {
+            assets.open("pericias_desc.json").use { input ->
+                json.decodeFromStream<List<PericiaDescricaoJson>>(input)
+            }
+        }.getOrElse { emptyList() }
+        mapaPericiasDescricao = periciasDescList.associate { it.nome.keyify() to it.descricao }
+
+        // Carrega descrições de atributos (novo arquivo JSON, ex-txt)
+        val atributosDescList = runCatching {
+            assets.open("atributos_desc.json").use { input ->
+                json.decodeFromStream<List<PericiaDescricaoJson>>(input) // Reutiliza DTO pois estrutura é igual
+            }
+        }.getOrElse { emptyList() }
+        mapaAtributosDescricao = atributosDescList.associate { it.nome.keyify() to it.descricao }
 
         // 7. Vantagens
         val todasVantagens: List<Vantagem> = loadJsonAsset(context, "Vantagens.json")

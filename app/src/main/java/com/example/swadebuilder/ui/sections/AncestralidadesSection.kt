@@ -52,6 +52,7 @@ data class RacialModifierLite(
     val nome: String,
     val displayName: String,
     val originalName: String? = null,
+    val descricao: String? = null,
     val aliases: Set<String> = emptySet()
 )
 
@@ -116,14 +117,6 @@ fun AncestralidadesSection(
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
-
-    val descricaoPorAncestralidade = remember(allowLongTexts) {
-        if (!allowLongTexts) {
-            emptyMap()
-        } else {
-            parseAncestralidadeDescriptions(loadRawText(context, R.raw.ancestralidades))
-        }
-    }
 
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
 
@@ -200,6 +193,7 @@ fun AncestralidadesSection(
                     nome = adjustedName,
                     displayName = displayName.toEditionDisplayName(),
                     originalName = originalName,
+                    descricao = representative.descricao,
                     aliases = aliasKeys
                 )
             }
@@ -294,7 +288,7 @@ fun AncestralidadesSection(
                 items(listaOrdenada) { item ->
                     val itemKey = item.nome.uppercase().semAcentos()
                     val isSelected = itemKey == selectedKey.value
-                    val descricao = descricaoPorAncestralidade[itemKey].orEmpty()
+                    val descricao = item.descricao.orEmpty()
 
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
@@ -373,27 +367,6 @@ fun AncestralidadesSection(
     }
 }
 
-private fun parseAncestralidadeDescriptions(texto: String): Map<String, String> {
-    val linhas = texto.lines()
-    val mapa = mutableMapOf<String, StringBuilder>()
-
-    var tituloAtual = ""
-
-    for (linha in linhas) {
-        val limpa = linha.trim()
-        if (limpa.isBlank()) continue
-
-        val isTitulo = limpa.all { it.isUpperCase() || it == '-' || it == ':' || it.isWhitespace() }
-        if (isTitulo) {
-            tituloAtual = limpa.removeSuffix(":").uppercase().semAcentos()
-            mapa.putIfAbsent(tituloAtual, StringBuilder())
-        } else if (tituloAtual.isNotBlank()) {
-            mapa.getValue(tituloAtual).appendLine(limpa)
-        }
-    }
-
-    return mapa.mapValues { it.value.toString().trim() }
-}
 
 @Composable
 fun TransparentOutlinedReadOnlyField(

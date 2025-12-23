@@ -880,6 +880,8 @@ lateinit var mapaAtributosDisplay: Map<String, String>
 
 lateinit var listaPericias: List<Pericia>
 lateinit var mapaPericias: Map<String, Pericia>
+lateinit var mapaPericiasDescricao: Map<String, String>
+lateinit var mapaAtributosDescricao: Map<String, String>
 
 fun periciaStartRaw(anc: String, per: Pericia): Int {
     val ancKey = anc.keyify()
