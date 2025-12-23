@@ -197,7 +197,7 @@ val HorrorThemeData = AppThemeData(
         primaryContainer = HorrorDark,
         onPrimaryContainer = Color.White
     ),
-    typography = DefaultTypography
+    typography = HorrorTypography
 )
 
 // ─── Sci-Fi Theme ────────────────────────────────────────────────────────────
@@ -232,7 +232,7 @@ val SciFiThemeData = AppThemeData(
         primaryContainer = SciFiDark,
         onPrimaryContainer = SciFiAccent
     ),
-    typography = DefaultTypography
+    typography = SciFiTypography
 )
 
 // ─── Pride Theme ─────────────────────────────────────────────────────────────
