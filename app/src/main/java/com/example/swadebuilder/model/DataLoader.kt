@@ -1,0 +1,203 @@
+package com.example.swadebuilder.model
+
+import android.content.Context
+import android.content.res.AssetManager
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.example.swadebuilder.AppData
+import com.example.swadebuilder.ArcanoInfo
+import com.example.swadebuilder.arcanoInfo
+import com.example.swadebuilder.listaAncestralidadesJson
+import com.example.swadebuilder.listaAtributos
+import com.example.swadebuilder.listaComplicacoes
+import com.example.swadebuilder.listaCoracoesCrystal
+import com.example.swadebuilder.listaMonstroTemplates
+import com.example.swadebuilder.listaPericias
+import com.example.swadebuilder.listaTropos
+import com.example.swadebuilder.listaVantagens
+import com.example.swadebuilder.mapaAtributosDisplay
+import com.example.swadebuilder.mapaPericias
+import com.example.swadebuilder.racialAttrMinMap
+import com.example.swadebuilder.racialSkillStartMap
+import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.SuperPoder
+import com.example.swadebuilder.Pericia
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
+
+/**
+ * Loads all JSON game data from assets into global variables.
+ * This refactors the logic previously found in MainActivity.onCreate.
+ */
+object DataLoader {
+
+    private val json = Json {
+        ignoreUnknownKeys = true
+    }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    private inline fun <reified T> AssetManager.readJsonList(fileName: String): List<T> =
+        open(fileName).use { input -> json.decodeFromStream(input) }
+
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    fun load(context: Context): MainActivityData {
+        val assets = context.assets
+
+        // 1. Equipamentos
+        val equipamentoCategorias = deduplicarEquipamentoCategorias(
+            assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
+                cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
+            }
+        )
+        val superequipCategorias = deduplicarEquipamentoCategorias(
+            assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
+                cat.origem?.equals("super", ignoreCase = true) ?: false
+            }
+        )
+
+        // 2. Crystal Hearts
+        listaCoracoesCrystal = runCatching {
+            assets.open("coracoes_crystal.json")
+                .use { input -> json.decodeFromStream<List<CrystalHeart>>(input) }
+        }.getOrElse { emptyList() }
+
+        // 3. Super Poderes
+        val listaSuperPoderes: List<SuperPoder> =
+            assets.open("superpoderes.json")
+                .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
+
+        // 4. Arcano Info
+        val arcanoList: List<ArcanoInfo> =
+            assets.open("arcano_info.json")
+                .use { input -> json.decodeFromStream<List<ArcanoInfo>>(input) }
+        arcanoInfo = arcanoList.associate {
+            it.key
+                .uppercase()
+                .semAcentos()
+                .trim() to Triple(it.slots, it.pp, it.foco)
+        }
+
+        // 5. Atributos
+        val atributosData = loadJsonAsset<AtributoList>(context, "atributos.json")
+        listaAtributos = atributosData.atributos
+            .map { it.nome.keyify() }
+        mapaAtributosDisplay = atributosData.atributos
+            .associate { it.nome.keyify() to it.nome }
+
+        // 6. Pericias
+        val periciasData = loadJsonAsset<PericiaList>(context, "pericias.json")
+        listaPericias = periciasData.pericias.map { pj ->
+            Pericia(
+                nome     = pj.nome,
+                atributo = pj.atributo.uppercase().semAcentos(),
+                basica   = pj.basica
+            )
+        }
+        mapaPericias = listaPericias.associateBy { it.nome.keyify() }
+
+        // 7. Vantagens
+        val todasVantagens: List<Vantagem> = loadJsonAsset(context, "Vantagens.json")
+
+        AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
+        AppData.superVantagens = todasVantagens.filter {
+            it.origem.equals("SUPER", ignoreCase = true)
+        }
+        AppData.horrorVantagens = todasVantagens.filter {
+            it.origem.equals("HORROR", ignoreCase = true)
+        }
+        AppData.buscatrilhaVantagens = todasVantagens.filter {
+            it.origem.equals("BUSCATRILHA", ignoreCase = true) ||
+                    it.origem.equals("FANTASIABUSCATRILHA", ignoreCase = true)
+        }
+
+        listaVantagens = todasVantagens
+        AppData.superVantagensParaDetalhe = AppData.superVantagens
+
+        // 8. Tropos e Complicações
+        listaTropos = loadJsonAsset(context, "tropos_adg.json")
+        val todasComplicacoes = loadJsonAsset<List<Complicacao>>(context, "complicacoes.json")
+        listaComplicacoes = todasComplicacoes
+
+        // 9. Ancestralidades
+        listaAncestralidadesJson = assets.readJsonList("listaancestralidade.json")
+
+        // 10. Monstros
+        listaMonstroTemplates = assets
+            .open("monstros.json")
+            .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
+
+        // 11. Mapas Raciais
+        racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
+            val m = rm.atributos
+                .mapKeys   { it.key.keyify() }
+                .mapValues { 4 + it.value }
+            rm.nome.keyify() to m
+        }
+
+        racialSkillStartMap = listaAncestralidadesJson.associate { rm ->
+            val m = rm.pericias
+                .mapKeys   { it.key.keyify() }
+                .mapValues { 4 + it.value }
+            rm.nome.keyify() to m
+        }
+
+        return MainActivityData(equipamentoCategorias, superequipCategorias, listaSuperPoderes)
+    }
+
+    private fun deduplicarEquipamentoCategorias(
+        categorias: List<EquipamentoCategoria>
+    ): List<EquipamentoCategoria> {
+        return categorias.map { categoria ->
+            val itensDeduplicados = categoria.itens.distinctBy { equipamentoKey(it) }
+            if (itensDeduplicados.size == categoria.itens.size) {
+                categoria
+            } else {
+                categoria.copy(itens = itensDeduplicados)
+            }
+        }
+    }
+
+    private fun equipamentoKey(item: EquipamentoItem): String = listOfNotNull(
+        item.nome.keyify(),
+        item.custo?.toString(),
+        item.peso?.toString(),
+        item.origem?.keyify(),
+        item.subtipo?.keyify(),
+        item.subsubtipo?.keyify(),
+        item.forcaMin?.toString(),
+        item.armadura?.toString(),
+        item.aparar?.toString(),
+        item.observacoes?.toString(),
+        item.dano?.toString(),
+        item.pa?.toString(),
+        item.cdt?.toString(),
+        item.distancia?.toString(),
+        item.tiros?.toString(),
+        item.tamanho?.toString(),
+        item.manobrabilidade?.toString(),
+        item.velMaxima?.toString(),
+        item.resistencia?.toString(),
+        item.tripulacao?.toString(),
+        item.pmf?.toString(),
+        item.malfuncionamento?.toString(),
+        item.tensao?.toString(),
+        item.mods_slots?.toString()
+    ).joinToString("|")
+}
+
+// Helper data classes for loading context
+data class MainActivityData(
+    val equipamentoCategorias: List<EquipamentoCategoria>,
+    val superequipCategorias: List<EquipamentoCategoria>,
+    val listaSuperPoderes: List<com.example.swadebuilder.SuperPoder>
+)
+
+@OptIn(ExperimentalSerializationApi::class)
+private inline fun <reified T> loadJsonAsset(context: Context, fileName: String): T {
+    val json = Json { ignoreUnknownKeys = true }
+    return context.assets.open(fileName).use { input ->
+        json.decodeFromStream(input)
+    }
+}

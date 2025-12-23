@@ -2410,8 +2410,9 @@ class CriadorState {
         vantagensSelecionadas.clear()
         snapshot.selecoes.vantagens.forEach { snap ->
             listaVantagens.firstOrNull { it.id == snap.id }?.let { vant ->
-                vant.choice = snap.choice
-                vantagensSelecionadas.add(vant)
+                val newVant = vant.copy()
+                newVant.choice = snap.choice
+                vantagensSelecionadas.add(newVant)
             }
         }
 
