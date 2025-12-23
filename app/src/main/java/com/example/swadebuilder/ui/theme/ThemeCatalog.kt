@@ -49,7 +49,9 @@ val MedievalThemeData = AppThemeData(
         background = MedPaper,
         onBackground = MedInk,
         surface = MedPaper,
-        onSurface = MedInk
+        onSurface = MedInk,
+        surfaceVariant = Color(0xFFF5EEDC),
+        onSurfaceVariant = MedInk
     ),
     darkColors = darkColorScheme(
         primary = MedGold,
@@ -57,7 +59,9 @@ val MedievalThemeData = AppThemeData(
         background = MedInk,
         onBackground = MedPaper,
         surface = MedInk,
-        onSurface = MedPaper
+        onSurface = MedPaper,
+        surfaceVariant = Color(0xFFF5EEDC),
+        onSurfaceVariant = MedInk
     ),
     typography = MedievalTypography
 )
@@ -76,7 +80,7 @@ val CyberpunkThemeData = AppThemeData(
         onBackground = Color.White, // HOTFIX: Texto branco
         surface = CyberMatrixBg, // Preto (sem cinza)
         onSurface = Color.White, // HOTFIX: Texto branco
-        surfaceVariant = CyberMatrixBg, // HOTFIX 2: Cards must be black to match white text
+        surfaceVariant = Color(0xFF1A1A1A), // HOTFIX 2: Cards must be black to match white text
         onSurfaceVariant = Color(0xFFCCCCCC) // HOTFIX: Cinza claro
     ),
     darkColors = darkColorScheme(
@@ -88,7 +92,7 @@ val CyberpunkThemeData = AppThemeData(
         onBackground = Color.White, // HOTFIX: Texto branco
         surface = CyberMatrixBg,
         onSurface = Color.White, // HOTFIX: Texto branco
-        surfaceVariant = CyberMatrixBg, // HOTFIX 2: Cards must be black to match white text
+        surfaceVariant = Color(0xFF1A1A1A), // HOTFIX 2: Cards must be black to match white text
         onSurfaceVariant = Color(0xFFCCCCCC) // HOTFIX: Cinza claro
     ),
     typography = CyberpunkTypography,
@@ -126,7 +130,8 @@ val HorrorThemeData = AppThemeData(
         background = HorrorBg,
         onBackground = HorrorBone, // Branco sujo para texto
         surface = HorrorBg,
-        onSurface = HorrorBone
+        onSurface = HorrorBone,
+        surfaceVariant = Color(0xFF1C1010)
     ),
     darkColors = darkColorScheme(
         primary = HorrorBlood,
@@ -134,7 +139,8 @@ val HorrorThemeData = AppThemeData(
         background = HorrorBg,
         onBackground = HorrorBone,
         surface = HorrorBg,
-        onSurface = HorrorBone
+        onSurface = HorrorBone,
+        surfaceVariant = Color(0xFF1C1010)
     ),
     typography = HorrorTypography
 )
@@ -147,7 +153,9 @@ val WW2ThemeData = AppThemeData(
         background = WW2Paper,
         surface = WW2Khaki,
         onSurface = Color.Black,
-        onBackground = Color.Black
+        onBackground = Color.Black,
+        surfaceVariant = WW2Khaki,
+        onSurfaceVariant = Color.Black
     ),
     darkColors = darkColorScheme(
         primary = WW2Stamp,
@@ -155,7 +163,9 @@ val WW2ThemeData = AppThemeData(
         background = WW2Olive,
         surface = Color.Black,
         onSurface = WW2Khaki,
-        onBackground = WW2Khaki
+        onBackground = WW2Khaki,
+        surfaceVariant = WW2Khaki,
+        onSurfaceVariant = Color.Black
     ),
     typography = WW2Typography
 )
