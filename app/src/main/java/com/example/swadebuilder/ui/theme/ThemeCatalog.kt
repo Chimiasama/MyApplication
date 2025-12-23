@@ -14,19 +14,29 @@ data class AppThemeData(
     @DrawableRes val backgroundDrawable: Int? = null
 )
 
-// ─── Default Theme ───────────────────────────────────────────────────────────
+// ─── Default Theme (Old School Paper) ────────────────────────────────────────
 val DefaultThemeData = AppThemeData(
     lightColors = lightColorScheme(
-        primary = PurpleGrey40,
-        secondary = PurpleGrey40,
-        tertiary = Pink40
+        primary = OldSchoolRed,
+        onPrimary = Color.White,
+        secondary = OldSchoolInk,
+        tertiary = OldSchoolRed,
+        background = OldSchoolPaper,
+        onBackground = OldSchoolInk,
+        surface = OldSchoolPaper,
+        onSurface = OldSchoolInk
     ),
     darkColors = darkColorScheme(
-        primary = PurpleGrey80,
-        secondary = PurpleGrey80,
-        tertiary = Pink80
+        primary = OldSchoolRed,
+        onPrimary = Color.White,
+        secondary = OldSchoolPaper,
+        tertiary = OldSchoolRed,
+        background = OldSchoolInk,
+        onBackground = OldSchoolPaper,
+        surface = OldSchoolInk,
+        onSurface = OldSchoolPaper
     ),
-    typography = DefaultTypography
+    typography = DefaultTypography // Keep clean Sans for default readability
 )
 
 // ─── Medieval Theme ──────────────────────────────────────────────────────────
@@ -50,23 +60,29 @@ val MedievalThemeData = AppThemeData(
     typography = MedievalTypography
 )
 
-// ─── Cyberpunk Theme ─────────────────────────────────────────────────────────
+// ─── Cyberpunk Theme (Matrix Style) ──────────────────────────────────────────
 val CyberpunkThemeData = AppThemeData(
+    // Matrix style is inherently dark. We map Light to a high-contrast version or same.
+    // Let's make "Light" mode just a slightly higher contrast dark mode or keep it dark.
     lightColors = lightColorScheme(
-        primary = CyberPink,
-        secondary = CyberCyan,
-        tertiary = CyberPink,
-        background = CyberBg,
-        surface = CyberSurface,
-        onSurface = Color.White // or lighter Cyan if needed, but White provides good contrast
+        primary = CyberMatrixGreen,
+        onPrimary = Color.Black,
+        secondary = CyberMatrixDark,
+        tertiary = CyberMatrixGreen,
+        background = CyberMatrixBg,
+        onBackground = CyberMatrixText,
+        surface = CyberMatrixBg,
+        onSurface = CyberMatrixText
     ),
     darkColors = darkColorScheme(
-        primary = CyberPink,
-        secondary = CyberCyan,
-        tertiary = CyberPink,
-        background = CyberBg,
-        surface = CyberSurface,
-        onSurface = Color.White
+        primary = CyberMatrixGreen,
+        onPrimary = Color.Black,
+        secondary = CyberMatrixDark,
+        tertiary = CyberMatrixGreen,
+        background = CyberMatrixBg,
+        onBackground = CyberMatrixText,
+        surface = CyberMatrixBg,
+        onSurface = CyberMatrixText
     ),
     typography = CyberpunkTypography
 )
@@ -75,13 +91,15 @@ val CyberpunkThemeData = AppThemeData(
 val SciFiThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = SciFiHolo,
+        onPrimary = Color.Black,
         background = SciFiBlueDeep,
-        surface = SciFiBlueDeep, // Assuming consistent clean look
+        surface = SciFiBlueDeep,
         onBackground = SciFiSilver,
         onSurface = SciFiSilver
     ),
     darkColors = darkColorScheme(
         primary = SciFiHolo,
+        onPrimary = Color.Black,
         background = SciFiBlueDeep,
         surface = SciFiBlueDeep,
         onBackground = SciFiSilver,
@@ -94,6 +112,7 @@ val SciFiThemeData = AppThemeData(
 val HorrorThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = HorrorBlood,
+        onPrimary = Color.White,
         background = HorrorBg,
         onBackground = HorrorBone,
         surface = HorrorBg,
@@ -101,6 +120,7 @@ val HorrorThemeData = AppThemeData(
     ),
     darkColors = darkColorScheme(
         primary = HorrorBlood,
+        onPrimary = Color.White,
         background = HorrorBg,
         onBackground = HorrorBone,
         surface = HorrorBg,
@@ -113,6 +133,7 @@ val HorrorThemeData = AppThemeData(
 val WW2ThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = WW2Stamp,
+        onPrimary = Color.White,
         background = WW2Paper,
         surface = WW2Khaki,
         onSurface = Color.Black,
@@ -120,6 +141,7 @@ val WW2ThemeData = AppThemeData(
     ),
     darkColors = darkColorScheme(
         primary = WW2Stamp,
+        onPrimary = Color.White,
         background = WW2Olive,
         surface = Color.Black,
         onSurface = WW2Khaki,
@@ -132,27 +154,30 @@ val WW2ThemeData = AppThemeData(
 val HalloweenThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = HalloOrange,
-        secondary = HalloPurple,
-        background = HalloBlack,
-        onBackground = HalloOrange, // High contrast
-        surface = HalloBlack,
-        onSurface = HalloOrange
-    ),
-    darkColors = darkColorScheme(
-        primary = HalloOrange,
+        onPrimary = Color.Black,
         secondary = HalloPurple,
         background = HalloBlack,
         onBackground = HalloOrange,
         surface = HalloBlack,
         onSurface = HalloOrange
     ),
-    typography = HorrorTypography // Using HorrorTypography as requested in Step 2 for Halloween
+    darkColors = darkColorScheme(
+        primary = HalloOrange,
+        onPrimary = Color.Black,
+        secondary = HalloPurple,
+        background = HalloBlack,
+        onBackground = HalloOrange,
+        surface = HalloBlack,
+        onSurface = HalloOrange
+    ),
+    typography = HorrorTypography
 )
 
 // ─── Pride Theme ─────────────────────────────────────────────────────────────
 val PrideThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = PrideViolet,
+        onPrimary = Color.White,
         secondary = PrideRed,
         tertiary = PrideGreen,
         background = Color.White,
@@ -163,6 +188,7 @@ val PrideThemeData = AppThemeData(
     ),
     darkColors = darkColorScheme(
         primary = PrideOrange,
+        onPrimary = Color.Black,
         secondary = PrideBlue,
         tertiary = PrideGreen,
         background = PrideDarkBg,

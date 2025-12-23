@@ -8,16 +8,21 @@ val Pink80       = Color(0xFFEFB8C8)
 val PurpleGrey40 = Color(0xFF625B71)
 val Pink40       = Color(0xFF7D5260)
 
+// OLD SCHOOL (Papel & Vermelho) - Novo Default
+val OldSchoolPaper = Color(0xFFFFF8E1) // Amarelo envelhecido suave
+val OldSchoolRed   = Color(0xFFB71C1C) // Vermelho sangue escuro
+val OldSchoolInk   = Color(0xFF212121) // Preto suave
+
 // MEDIEVAL (Pergaminho & Nanquim)
 val MedPaper      = Color(0xFFF5EEDC) // Fundo Creme
 val MedInk        = Color(0xFF3E2723) // Marrom Café Escuro
 val MedGold       = Color(0xFF8D6E63) // Bronze/Ouro Velho
 
-// CYBERPUNK (Neon & Asfalto)
-val CyberBg       = Color(0xFF090909) // Preto quase absoluto
-val CyberPink     = Color(0xFFFF0055) // Neon Pink vibrante
-val CyberCyan     = Color(0xFF00F0FF) // Ciano elétrico
-val CyberSurface  = Color(0xFF1A1A1A) // Cinza chumbo
+// CYBERPUNK (Matrix Green) - Novo Cyberpunk
+val CyberMatrixBg    = Color(0xFF000000) // Preto absoluto
+val CyberMatrixGreen = Color(0xFF00FF41) // Verde Terminal Brilhante
+val CyberMatrixDark  = Color(0xFF003B00) // Verde Escuro fundo
+val CyberMatrixText  = Color(0xFFE0F7FA) // Texto claro (quase branco) para leitura
 
 // SCI-FI (Espaço Limpo)
 val SciFiBlueDeep = Color(0xFF050B14) // Azul sideral
