@@ -9,9 +9,10 @@ val PurpleGrey40 = Color(0xFF625B71)
 val Pink40       = Color(0xFF7D5260)
 
 // OLD SCHOOL (Papel & Vermelho) - Novo Default
-val OldSchoolPaper = Color(0xFFFFF8E1) // Amarelo envelhecido suave
-val OldSchoolRed   = Color(0xFFB71C1C) // Vermelho sangue escuro
-val OldSchoolInk   = Color(0xFF212121) // Preto suave
+// Updated to match reference images: darker, warmer beige
+val OldSchoolPaper = Color(0xFFEFE6D5) // Beige/Parchment
+val OldSchoolRed   = Color(0xFFB71C1C) // Deep Red (matches "Voltar", Tab selections)
+val OldSchoolInk   = Color(0xFF212121) // Dark Grey/Black (Body text)
 
 // MEDIEVAL (Pergaminho & Nanquim)
 val MedPaper      = Color(0xFFF5EEDC) // Fundo Creme

@@ -15,6 +15,7 @@ data class AppThemeData(
 )
 
 // ─── Default Theme (Old School Paper) ────────────────────────────────────────
+// Refined to match user screenshots: Beige background, Deep Red primary, Dark text.
 val DefaultThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = OldSchoolRed,
@@ -23,10 +24,14 @@ val DefaultThemeData = AppThemeData(
         tertiary = OldSchoolRed,
         background = OldSchoolPaper,
         onBackground = OldSchoolInk,
-        surface = OldSchoolPaper,
-        onSurface = OldSchoolInk
+        surface = OldSchoolPaper, // Cards share the background color (visually separated by borders/shadows)
+        onSurface = OldSchoolInk,
+        surfaceVariant = OldSchoolPaper // Ensure variants also respect the beige tone unless specifically overridden
     ),
     darkColors = darkColorScheme(
+        // In Dark Mode for this theme, we might just invert or keep it "Paper" style but dimmer?
+        // User screenshots are Light mode. For Dark mode consistency with "Old School",
+        // let's use the inverted Ink/Paper logic established previously.
         primary = OldSchoolRed,
         onPrimary = Color.White,
         secondary = OldSchoolPaper,
@@ -36,7 +41,7 @@ val DefaultThemeData = AppThemeData(
         surface = OldSchoolInk,
         onSurface = OldSchoolPaper
     ),
-    typography = DefaultTypography // Keep clean Sans for default readability
+    typography = DefaultTypography // Standard Sans-Serif as seen in screenshots
 )
 
 // ─── Medieval Theme ──────────────────────────────────────────────────────────
@@ -63,7 +68,6 @@ val MedievalThemeData = AppThemeData(
 // ─── Cyberpunk Theme (Matrix Style) ──────────────────────────────────────────
 val CyberpunkThemeData = AppThemeData(
     // Matrix style is inherently dark. We map Light to a high-contrast version or same.
-    // Let's make "Light" mode just a slightly higher contrast dark mode or keep it dark.
     lightColors = lightColorScheme(
         primary = CyberMatrixGreen,
         onPrimary = Color.Black,
@@ -157,7 +161,7 @@ val HalloweenThemeData = AppThemeData(
         onPrimary = Color.Black,
         secondary = HalloPurple,
         background = HalloBlack,
-        onBackground = HalloOrange,
+        onBackground = HalloOrange, // High contrast
         surface = HalloBlack,
         onSurface = HalloOrange
     ),
@@ -170,7 +174,7 @@ val HalloweenThemeData = AppThemeData(
         surface = HalloBlack,
         onSurface = HalloOrange
     ),
-    typography = HorrorTypography
+    typography = HorrorTypography // Using HorrorTypography as requested in Step 2 for Halloween
 )
 
 // ─── Pride Theme ─────────────────────────────────────────────────────────────
