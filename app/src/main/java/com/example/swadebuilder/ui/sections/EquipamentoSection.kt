@@ -350,7 +350,7 @@ fun EquipamentoSection(
             contentPadding = PaddingValues(horizontal = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            item {
+            item(key = "advanced_filters", contentType = "filter_chip") {
                 FilterChip(
                     selected = !filter.isEmpty(),
                     onClick = { showFilterDialog = true },
@@ -360,7 +360,7 @@ fun EquipamentoSection(
 
             // --- Origin Mini Cards (Chips) ---
             if (compendioFantasiaAtivo) {
-                item {
+                item(key = "origin_fantasia", contentType = "filter_chip") {
                     val label = "Medievais"
                     val key = "FANTASIA"
                     FilterChip(
@@ -375,7 +375,7 @@ fun EquipamentoSection(
             }
 
             if (compendioSciFiAtivo) {
-                item {
+                item(key = "origin_scifi", contentType = "filter_chip") {
                     val label = "Futuristas"
                     val key = "SCI_FI"
                     FilterChip(
@@ -391,7 +391,7 @@ fun EquipamentoSection(
 
             // Add "Modernas" (Basic) if any other compendium is active to allow filtering it out
             if (compendioFantasiaAtivo || compendioSciFiAtivo || compendioHorrorAtivo || compendioDeadlandsAtivo) {
-                item {
+                item(key = "origin_basic", contentType = "filter_chip") {
                     val label = "Modernas"
                     val key = "BASICO"
                     FilterChip(
@@ -405,7 +405,7 @@ fun EquipamentoSection(
                 }
             }
 
-            items(availableTypes) { type ->
+            items(availableTypes, key = { it }, contentType = { "type_chip" }) { type ->
                 FilterChip(
                     selected = type in selectedTypes,
                     onClick = {
@@ -662,29 +662,34 @@ fun EquipamentoSection(
         if (isSearching) {
             // Flat List View
             // Collect all items first
-             val finalFlatList = allCategorias.filter { cat ->
-                 val catOrigem = cat.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
-                 if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@filter false
-                 if (filter.tipos.isNotEmpty() && cat.tipo !in filter.tipos) return@filter false
-                 if (filter.subtipos.isNotEmpty() && cat.subtipo !in filter.subtipos) return@filter false
-                 true
-             }.flatMap { cat ->
-                 cat.itens.filter { item ->
-                     if (filter.somenteAcessiveis) {
-                        val c = (item.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
-                        if (!usaRiqueza && c > dinheiro) return@filter false
-                     }
-                     if (selectedTypes.isNotEmpty() && cat.tipo !in selectedTypes) return@filter false
+             val finalFlatList = remember(allCategorias, filter, selectedTypes, searchQuery, dinheiro, usaRiqueza) {
+                 allCategorias.filter { cat ->
+                     val catOrigem = cat.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
+                     if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@filter false
+                     if (filter.tipos.isNotEmpty() && cat.tipo !in filter.tipos) return@filter false
+                     if (filter.subtipos.isNotEmpty() && cat.subtipo !in filter.subtipos) return@filter false
+                     true
+                 }.flatMap { cat ->
+                     cat.itens.filter { item ->
+                         if (filter.somenteAcessiveis) {
+                             val c = (item.custo as? JsonPrimitive)?.content?.toIntOrNull()
+                                 ?: Int.MAX_VALUE
+                             if (!usaRiqueza && c > dinheiro) return@filter false
+                         }
+                         if (selectedTypes.isNotEmpty() && cat.tipo !in selectedTypes) return@filter false
 
-                     if (isSearching) {
-                         val q = searchQuery.semAcentos().lowercase()
-                         val n = item.nomeExibicao.semAcentos().lowercase()
-                         val original = item.nome.semAcentos().lowercase()
-                         n.contains(q) || original.contains(q)
-                     } else true
-                 }.map { item ->
-                     val origem = item.origem?.ifBlank { cat.origem ?: "BASICO" } ?: (cat.origem ?: "BASICO")
-                     EquipamentoListEntry(item, origem.uppercase())
+                         if (isSearching) {
+                             val q = searchQuery.semAcentos().lowercase()
+                             val n = item.nomeExibicao.semAcentos().lowercase()
+                             val original = item.nome.semAcentos().lowercase()
+                             n.contains(q) || original.contains(q)
+                         } else true
+                     }.map { item ->
+                         val origem =
+                             item.origem?.ifBlank { cat.origem ?: "BASICO" } ?: (cat.origem
+                                 ?: "BASICO")
+                         EquipamentoListEntry(item, origem.uppercase())
+                     }
                  }
              }
 
@@ -694,9 +699,9 @@ fun EquipamentoSection(
                     .padding(horizontal = 8.dp)
             ) {
                  if (finalFlatList.isEmpty()) {
-                     item { Text("Nenhum equipamento encontrado.", modifier = Modifier.padding(8.dp)) }
+                     item(key = "empty_list", contentType = "message") { Text("Nenhum equipamento encontrado.", modifier = Modifier.padding(8.dp)) }
                  } else {
-                     items(finalFlatList, key = { it.item.nome + it.hashCode() }) { entry ->
+                     items(finalFlatList, key = { it.item.nome + it.hashCode() }, contentType = { "equip_item" }) { entry ->
                          StandardEquipamentoItem(
                              equipamento = entry.item,
                              origemLabel = entry.origemLabel,
@@ -712,7 +717,7 @@ fun EquipamentoSection(
         } else {
             // Browse Mode (Accordions)
             // Group by Type
-            val categoriesByType = allCategorias.groupBy { it.tipo }
+            val categoriesByType = remember(allCategorias) { allCategorias.groupBy { it.tipo } }
 
             Column(Modifier.padding(horizontal = 4.dp)) {
                 categoriesByType.keys.sorted().forEach { type ->
@@ -730,11 +735,14 @@ fun EquipamentoSection(
                          val cats = categoriesByType[type] ?: emptyList()
 
                          // Apply filters to categories here too!
-                         val filteredCats = cats.filter { cat ->
-                             val catOrigem = cat.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
-                             if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@filter false
-                             if (filter.subtipos.isNotEmpty() && cat.subtipo !in filter.subtipos) return@filter false
-                             true
+                         val filteredCats = remember(cats, filter) {
+                             cats.filter { cat ->
+                                 val catOrigem =
+                                     cat.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
+                                 if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@filter false
+                                 if (filter.subtipos.isNotEmpty() && cat.subtipo !in filter.subtipos) return@filter false
+                                 true
+                             }
                          }
 
                         val catsBySubtype = filteredCats.groupBy { it.subtipo }

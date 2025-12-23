@@ -113,6 +113,23 @@ fun PericiasContent(
 
     val valorColWidthDp = 80.dp
 
+    val periciasVisiveis = remember(
+        state.periciasComIdiomas(),
+        state.compendioArteDaGuerraAtivo,
+        state.compendioFantasiaAtivo,
+        state.compendioHorrorAtivo
+    ) {
+        state.periciasComIdiomas().filter { per ->
+            if (per.nome.equals("Jutsu", ignoreCase = true)) {
+                state.compendioArteDaGuerraAtivo
+            } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
+                state.compendioFantasiaAtivo || state.compendioHorrorAtivo
+            } else {
+                true
+            }
+        }
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -185,15 +202,9 @@ fun PericiasContent(
         }
 
         items(
-            state.periciasComIdiomas().filter { per ->
-                if (per.nome.equals("Jutsu", ignoreCase = true)) {
-                    state.compendioArteDaGuerraAtivo
-                } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
-                    state.compendioFantasiaAtivo || state.compendioHorrorAtivo
-                } else {
-                    true
-                }
-            }
+            items = periciasVisiveis,
+            key = { it.nome },
+            contentType = { "pericia_item" }
         ) { per ->
             val regra: PericiaRuleSnapshot = state.calcularPericiaRules(
                 pericia = per,

@@ -357,7 +357,7 @@ fun VantagensContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // Advanced Filters Chip
-             item {
+             item(key = "advanced_filters", contentType = "filter_chip") {
                  FilterChip(
                      selected = !filter.isEmpty(),
                      onClick = { showFilterDialog = true },
@@ -366,7 +366,11 @@ fun VantagensContent(
              }
 
             // Category Chips
-            items(Categoria.entries.toTypedArray()) { cat ->
+            items(
+                items = Categoria.entries.toTypedArray(),
+                key = { it.name },
+                contentType = { "category_chip" }
+            ) { cat ->
                 if (state.modoSupers && cat == Categoria.PODER) return@items
 
                 // --- NEW FILTERING LOGIC ---
@@ -539,46 +543,48 @@ fun VantagensContent(
         // Logic: If search OR category selection is active, use Flat List. Otherwise, usage Accordions (Browse Mode).
         if (isSearching || isFilteringCategories) {
             // Flat List View
-            val flatList = listaVantagensAtivas.filter { vant ->
-                // Basic Filter Logic
-                 if (!state.modoSupers) {
+            val flatList = remember(listaVantagensAtivas, state.modoSupers, state.vantagensSelecionadas, selectedCategories, searchQuery, filter) {
+                listaVantagensAtivas.filter { vant ->
+                    // Basic Filter Logic
+                    if (!state.modoSupers) {
+                        true
+                    } else {
+                        vant.id != "antecedente_arcano" &&
+                                !vant.requisitos.vantagensPrevias.contains("antecedente_arcano")
+                    }
+                }.filter { vant ->
+                    if (state.modoSupers) vant.id != "superpoderes" else true
+                }.filter { vant ->
+                    vant.id != "especialista" || state.vantagensSelecionadas.any { it.id == "profissional" }
+                }.filter { vant ->
+                    // Category Filter
+                    if (selectedCategories.isNotEmpty() && vant.categoria !in selectedCategories) return@filter false
+
+                    // Search Query
+                    if (isSearching) {
+                        val q = searchQuery.semAcentos().lowercase()
+                        val n = vant.nomeExibicao.semAcentos().lowercase()
+                        val d = vant.descricao.semAcentos().lowercase()
+                        val original = vant.nome.semAcentos().lowercase()
+                        if (!n.contains(q) && !d.contains(q) && !original.contains(q)) return@filter false
+                    }
+
+                    // Advanced Filters
+                    val vantOrigem = vant.origem.ifBlank { "BASICO" }.uppercase()
+                    if (filter.origens.isNotEmpty() && vantOrigem !in filter.origens) return@filter false
+
+                    if (filter.estagios.isNotEmpty() && vant.requisitos.estagio !in filter.estagios) return@filter false
+
+                    if (filter.atributos.isNotEmpty() && filter.atributos.intersect(vant.requisitos.atributoMin.keys).isEmpty()) return@filter false
+
+                    if (filter.pericias.isNotEmpty()) {
+                        val reqMin = vant.requisitos.periciaMin.keys
+                        val reqOpt = vant.requisitos.periciaMinOpcional.keys
+                        val vinc = if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
+                        if (filter.pericias.intersect(reqMin + reqOpt + vinc).isEmpty()) return@filter false
+                    }
                     true
-                } else {
-                    vant.id != "antecedente_arcano" &&
-                            !vant.requisitos.vantagensPrevias.contains("antecedente_arcano")
                 }
-            }.filter { vant ->
-                if (state.modoSupers) vant.id != "superpoderes" else true
-            }.filter { vant ->
-                 vant.id != "especialista" || state.vantagensSelecionadas.any { it.id == "profissional" }
-            }.filter { vant ->
-                // Category Filter
-                if (selectedCategories.isNotEmpty() && vant.categoria !in selectedCategories) return@filter false
-
-                // Search Query
-                if (isSearching) {
-                    val q = searchQuery.semAcentos().lowercase()
-                    val n = vant.nomeExibicao.semAcentos().lowercase()
-                    val d = vant.descricao.semAcentos().lowercase()
-                    val original = vant.nome.semAcentos().lowercase()
-                    if (!n.contains(q) && !d.contains(q) && !original.contains(q)) return@filter false
-                }
-
-                // Advanced Filters
-                val vantOrigem = vant.origem.ifBlank { "BASICO" }.uppercase()
-                if (filter.origens.isNotEmpty() && vantOrigem !in filter.origens) return@filter false
-
-                if (filter.estagios.isNotEmpty() && vant.requisitos.estagio !in filter.estagios) return@filter false
-
-                if (filter.atributos.isNotEmpty() && filter.atributos.intersect(vant.requisitos.atributoMin.keys).isEmpty()) return@filter false
-
-                if (filter.pericias.isNotEmpty()) {
-                    val reqMin = vant.requisitos.periciaMin.keys
-                    val reqOpt = vant.requisitos.periciaMinOpcional.keys
-                    val vinc = if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
-                    if (filter.pericias.intersect(reqMin + reqOpt + vinc).isEmpty()) return@filter false
-                }
-                true
             }
 
             LazyColumn(
@@ -588,9 +594,9 @@ fun VantagensContent(
                     .padding(horizontal = 8.dp, vertical = 8.dp)
             ) {
                  if (flatList.isEmpty()) {
-                     item { Text("Nenhuma vantagem encontrada.", modifier = Modifier.padding(8.dp)) }
+                     item(key = "empty_list", contentType = "message") { Text("Nenhuma vantagem encontrada.", modifier = Modifier.padding(8.dp)) }
                  } else {
-                     items(flatList, key = { it.id }) { vant ->
+                     items(flatList, key = { it.id }, contentType = { "vantagem_item" }) { vant ->
                          VantagemItem(
                              vant = vant,
                              state = state,
@@ -661,48 +667,50 @@ fun VantagensContent(
                     onToggle = { expandedMap[cat] = !expanded },
                     onToggleFeedback = onUserFeedback
                 ) {
-                    val listaFiltrada = lista
-                        .filter { vant ->
-                            if (!state.modoSupers) {
+                    val listaFiltrada = remember(lista, state.modoSupers, state.vantagensSelecionadas, filter) {
+                        lista
+                            .filter { vant ->
+                                if (!state.modoSupers) {
+                                    true
+                                } else {
+                                    vant.id != "antecedente_arcano" &&
+                                            !vant.requisitos.vantagensPrevias.contains("antecedente_arcano")
+                                }
+                            }
+                            .filter { vant ->
+                                if (state.modoSupers) vant.id != "superpoderes" else true
+                            }
+                            .filter { vant ->
+                                vant.categoria == cat &&
+                                        (vant.id != "especialista" ||
+                                                state.vantagensSelecionadas.any { it.id == "profissional" })
+                            }
+                            .filter { vant ->
+                                val vantOrigem = vant.origem.ifBlank { "BASICO" }.uppercase()
+                                if (filter.origens.isNotEmpty() &&
+                                    vantOrigem !in filter.origens
+                                ) return@filter false
+
+                                if (filter.estagios.isNotEmpty() &&
+                                    vant.requisitos.estagio !in filter.estagios
+                                ) return@filter false
+
+                                if (filter.atributos.isNotEmpty() &&
+                                    filter.atributos.intersect(vant.requisitos.atributoMin.keys)
+                                        .isEmpty()
+                                ) return@filter false
+
+                                if (filter.pericias.isNotEmpty()) {
+                                    val reqMin = vant.requisitos.periciaMin.keys
+                                    val reqOpt = vant.requisitos.periciaMinOpcional.keys
+                                    val vinc =
+                                        if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
+                                    if (filter.pericias.intersect(reqMin + reqOpt + vinc).isEmpty())
+                                        return@filter false
+                                }
                                 true
-                            } else {
-                                vant.id != "antecedente_arcano" &&
-                                        !vant.requisitos.vantagensPrevias.contains("antecedente_arcano")
                             }
-                        }
-                        .filter { vant ->
-                            if (state.modoSupers) vant.id != "superpoderes" else true
-                        }
-                        .filter { vant ->
-                            vant.categoria == cat &&
-                                    (vant.id != "especialista" ||
-                                            state.vantagensSelecionadas.any { it.id == "profissional" })
-                        }
-                        .filter { vant ->
-                            val vantOrigem = vant.origem.ifBlank { "BASICO" }.uppercase()
-                            if (filter.origens.isNotEmpty() &&
-                                vantOrigem !in filter.origens
-                            ) return@filter false
-
-                            if (filter.estagios.isNotEmpty() &&
-                                vant.requisitos.estagio !in filter.estagios
-                            ) return@filter false
-
-                            if (filter.atributos.isNotEmpty() &&
-                                filter.atributos.intersect(vant.requisitos.atributoMin.keys)
-                                    .isEmpty()
-                            ) return@filter false
-
-                            if (filter.pericias.isNotEmpty()) {
-                                val reqMin = vant.requisitos.periciaMin.keys
-                                val reqOpt = vant.requisitos.periciaMinOpcional.keys
-                                val vinc =
-                                    if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
-                                if (filter.pericias.intersect(reqMin + reqOpt + vinc).isEmpty())
-                                    return@filter false
-                            }
-                            true
-                        }
+                    }
 
                     Column(
                         modifier = Modifier
