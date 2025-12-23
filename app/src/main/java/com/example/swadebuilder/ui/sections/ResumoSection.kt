@@ -54,7 +54,7 @@ import com.example.swadebuilder.Pericia
 @Composable
 fun SummaryContent(state: CriadorState) {
 
-    val context = LocalContext.current
+    LocalContext.current
 
     val flagsTemplate = remember(state) {
         listOfNotNull(

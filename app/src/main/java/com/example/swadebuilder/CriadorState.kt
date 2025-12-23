@@ -372,7 +372,7 @@ class CriadorState {
         // Agora usa o Engine para somar armadura de equipamentos (filtrando Mechas)
         // A variável 'armadura' permanece como fallback ou armadura base manual se houver
         val armorFromEquipment = ModifierEngine.sum(this, ModifierTarget.ARMOR)
-        val melhorExterna = kotlin.math.max(armorFromPower, armorFromEquipment)
+        kotlin.math.max(armorFromPower, armorFromEquipment)
         // 'armadura' variável de estado ainda pode ser usada se setada manualmente por raças (ex: Saurios)
         // Mas Saurios setam naturalArmorFromRace = 2 e armadura = 0 no código atual.
         // Se houver algum caso de uso para 'armadura' (variável), ela deveria ser somada?
@@ -2341,7 +2341,7 @@ class CriadorState {
         idAtual = snapshot.id
         nomePersonagem = snapshot.nome
         anotacoes = snapshot.anotacoes
-        appTheme = com.example.swadebuilder.ui.theme.AppTheme.valueOf(snapshot.appTheme)
+        appTheme = AppTheme.valueOf(snapshot.appTheme)
         portraitFileName = snapshot.selecoes.retratoFileName
 
         // Flags adicionais
@@ -2389,11 +2389,11 @@ class CriadorState {
             compIncsPorPericia[per] = snapshot.pericias.compIncsPorPericia[per.nome] ?: 0
 
             spCostStackPorPericia.getValue(per).apply {
-                clear();
+                clear()
                 addAll(snapshot.pericias.spCostStackPorPericia[per.nome].orEmpty())
             }
             compCostStackPorPericia.getValue(per)?.apply {
-                clear();
+                clear()
                 addAll(snapshot.pericias.compCostStackPorPericia[per.nome].orEmpty())
             }
 

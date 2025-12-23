@@ -112,7 +112,7 @@ fun InformacoesSection(
                 .filter { it.id == "antecedente_arcano" }
                 .mapNotNull { it.choice?.keyify() }
 
-            val poderesOk = if (arcanoVersions.isEmpty()) {
+            if (arcanoVersions.isEmpty()) {
                 true
             } else {
                 arcanoVersions.all { ver ->

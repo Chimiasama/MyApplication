@@ -56,7 +56,7 @@ class CriadorViewModel : ViewModel() {
                 val spec = state.especializacoesPorPericia[per.nome]
                 if (spec?.principal == null) {
                     val currentList = spec?.lista ?: emptyList()
-                    val novo = com.example.swadebuilder.model.EspecializacoesDto(
+                    val novo = EspecializacoesDto(
                         principal = "Especialização 1",
                         lista = currentList
                     )
@@ -182,8 +182,7 @@ class CriadorViewModel : ViewModel() {
     )
 
     suspend fun carregarPersonagem(context: Context, saveId: String): LoadOutcome {
-        val result = CharacterStorage.load(context, saveId)
-        val snapshot = when (result) {
+        val snapshot = when (val result = CharacterStorage.load(context, saveId)) {
             is CharacterStorage.LoadResult.Success -> result.snapshot
             is CharacterStorage.LoadResult.Failure -> return LoadOutcome(
                 success = false,

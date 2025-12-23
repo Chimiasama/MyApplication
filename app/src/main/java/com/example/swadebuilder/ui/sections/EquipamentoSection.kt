@@ -232,7 +232,7 @@ fun EquipamentoSection(
 
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
-    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
+    remember { mutableStateMapOf<String, Boolean>() }
     val showOfficialNames = EditionConfig.isFullEdition && modoOficialAtivo
     val isSearching = searchQuery.isNotBlank()
 

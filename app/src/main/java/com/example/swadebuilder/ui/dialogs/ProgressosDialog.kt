@@ -81,11 +81,7 @@ fun ProgressosDialog(
     fun showSnack(msg: String) = scope.launch { snackHost.showSnackbar(message = msg) }
 
     var escolheu by rememberSaveable { mutableStateOf<String?>(null) }
-    var perAltaExp by rememberSaveable { mutableStateOf(false) }
-    var perAltaSelected by rememberSaveable { mutableStateOf<Pericia?>(null) }
-    var perBaixaExp1 by rememberSaveable { mutableStateOf(false) }
     var perBaixa1 by rememberSaveable { mutableStateOf<Pericia?>(null) }
-    var perBaixaExp2 by rememberSaveable { mutableStateOf(false) }
     var perBaixa2 by rememberSaveable { mutableStateOf<Pericia?>(null) }
     var compAction by rememberSaveable { mutableStateOf<String?>(null) }
     var compReserveExp by rememberSaveable { mutableStateOf(false) }
@@ -104,8 +100,6 @@ fun ProgressosDialog(
     // Slots: perícia OU especialização (quando a regra estiver ON)
     var slot1IsSpec by rememberSaveable { mutableStateOf(false) }
     var slot2IsSpec by rememberSaveable { mutableStateOf(false) }
-    var slot1SpecPerExp by rememberSaveable { mutableStateOf(false) }
-    var slot2SpecPerExp by rememberSaveable { mutableStateOf(false) }
     var slot1SpecPer by rememberSaveable { mutableStateOf<Pericia?>(null) }
     var slot2SpecPer by rememberSaveable { mutableStateOf<Pericia?>(null) }
     var slot1SpecName by rememberSaveable { mutableStateOf("") }
