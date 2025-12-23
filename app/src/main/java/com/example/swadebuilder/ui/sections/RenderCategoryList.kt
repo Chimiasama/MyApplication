@@ -13,8 +13,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.model.EquipamentoCategoria
+import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.ui.components.StandardEquipamentoItem
 import kotlinx.serialization.json.JsonPrimitive
