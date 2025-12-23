@@ -14,48 +14,17 @@ data class AppThemeData(
     @DrawableRes val backgroundDrawable: Int? = null
 )
 
-// ─── Cores base ──────────────────────────────────────────────────────────────
-private val PaperSurface = Color(0xFFF0E1C8)          // pergaminho (tema claro)
-private val PaperSurfaceAlt = Color(0xFFE6D5B4)
-private val AccentRed = Color(0xFFB71C1C)
-
-// Paleta dark
-private val DarkBackground = Color(0xFF101015)
-private val DarkSurface = Color(0xFF18171C)
-private val DarkSurfaceVariant = Color(0xFF26252B)
-private val DarkOn = Color(0xFFEDE0D0)
-
 // ─── Default Theme ───────────────────────────────────────────────────────────
 val DefaultThemeData = AppThemeData(
     lightColors = lightColorScheme(
-        primary = AccentRed,
+        primary = PurpleGrey40,
         secondary = PurpleGrey40,
-        tertiary = Pink40,
-        background = PaperSurface,
-        surface = PaperSurface,
-        surfaceVariant = PaperSurfaceAlt,
-        onPrimary = Color.White,
-        onSecondary = Color.White,
-        onTertiary = Color.White,
-        onBackground = Color.Black,
-        onSurface = Color.Black,
-        primaryContainer = PaperSurfaceAlt,
-        onPrimaryContainer = Color.Black
+        tertiary = Pink40
     ),
     darkColors = darkColorScheme(
-        primary = AccentRed,
+        primary = PurpleGrey80,
         secondary = PurpleGrey80,
-        tertiary = Pink80,
-        background = DarkBackground,
-        surface = DarkSurface,
-        surfaceVariant = DarkSurfaceVariant,
-        onPrimary = Color.White,
-        onSecondary = Color.White,
-        onTertiary = Color.White,
-        onBackground = DarkOn,
-        onSurface = DarkOn,
-        primaryContainer = DarkSurfaceVariant,
-        onPrimaryContainer = DarkOn
+        tertiary = Pink80
     ),
     typography = DefaultTypography
 )
@@ -63,252 +32,145 @@ val DefaultThemeData = AppThemeData(
 // ─── Medieval Theme ──────────────────────────────────────────────────────────
 val MedievalThemeData = AppThemeData(
     lightColors = lightColorScheme(
-        primary = MedievalBrown,
-        secondary = MedievalAccent,
-        tertiary = Pink40,
-        background = MedievalParchment,
-        surface = MedievalParchment,
-        surfaceVariant = Color(0xFFE0D9D3),
+        primary = MedGold,
         onPrimary = Color.White,
-        onSecondary = Color.White,
-        onTertiary = Color.White,
-        onBackground = MedievalBrown,
-        onSurface = MedievalBrown,
-        primaryContainer = MedievalAccent,
-        onPrimaryContainer = MedievalParchment
+        background = MedPaper,
+        onBackground = MedInk,
+        surface = MedPaper,
+        onSurface = MedInk
     ),
     darkColors = darkColorScheme(
-        primary = MedievalAccent,
-        secondary = MedievalParchment,
-        tertiary = Pink80,
-        background = MedievalDark,
-        surface = MedievalBrown,
-        surfaceVariant = Color(0xFF3A2A26),
-        onPrimary = Color.Black,
-        onSecondary = Color.Black,
-        onTertiary = Color.Black,
-        onBackground = MedievalParchment,
-        onSurface = MedievalParchment,
-        primaryContainer = MedievalBrown,
-        onPrimaryContainer = MedievalParchment
+        primary = MedGold,
+        onPrimary = Color.White,
+        background = MedInk,
+        onBackground = MedPaper,
+        surface = MedInk,
+        onSurface = MedPaper
     ),
     typography = MedievalTypography
 )
 
-// ─── Cyberpunk (Matrix) Theme ────────────────────────────────────────────────
+// ─── Cyberpunk Theme ─────────────────────────────────────────────────────────
 val CyberpunkThemeData = AppThemeData(
     lightColors = lightColorScheme(
-        primary = MatrixGreen,
-        secondary = Color.Gray,
-        tertiary = MatrixGreen,
-        background = MatrixBlack,
-        surface = Color(0xFF0A0A0A),
-        surfaceVariant = Color(0xFF1A1A1A),
-        onPrimary = MatrixBlack,
-        onSecondary = MatrixBlack,
-        onTertiary = MatrixBlack,
-        onBackground = MatrixGreen,
-        onSurface = MatrixGreen,
-        primaryContainer = Color(0xFF003B07),
-        onPrimaryContainer = MatrixGreen,
-        tertiaryContainer = Color(0xFF003B07), // Dark Green for selected items
-        onTertiaryContainer = MatrixGreen,
-        onSurfaceVariant = MatrixGreen // Green text on surfaceVariant cards
+        primary = CyberPink,
+        secondary = CyberCyan,
+        tertiary = CyberPink,
+        background = CyberBg,
+        surface = CyberSurface,
+        onSurface = Color.White // or lighter Cyan if needed, but White provides good contrast
     ),
     darkColors = darkColorScheme(
-        primary = MatrixGreen,
-        secondary = Color.DarkGray,
-        tertiary = MatrixGreen,
-        background = MatrixBlack,
-        surface = Color(0xFF0A0A0A),
-        surfaceVariant = Color(0xFF1A1A1A),
-        onPrimary = MatrixBlack,
-        onSecondary = MatrixBlack,
-        onTertiary = MatrixBlack,
-        onBackground = MatrixGreen,
-        onSurface = MatrixGreen,
-        primaryContainer = Color(0xFF003B07),
-        onPrimaryContainer = MatrixGreen,
-        tertiaryContainer = Color(0xFF003B07), // Dark Green for selected items
-        onTertiaryContainer = MatrixGreen,
-        onSurfaceVariant = MatrixGreen // Green text on surfaceVariant cards
+        primary = CyberPink,
+        secondary = CyberCyan,
+        tertiary = CyberPink,
+        background = CyberBg,
+        surface = CyberSurface,
+        onSurface = Color.White
     ),
-    typography = MatrixTypography
-)
-
-// ─── WW2 Theme ───────────────────────────────────────────────────────────────
-val WW2ThemeData = AppThemeData(
-    lightColors = lightColorScheme(
-        primary = WW2Olive,
-        secondary = WW2Gray,
-        tertiary = Pink40,
-        background = WW2Khaki,
-        surface = Color(0xFFE6DDB5),
-        surfaceVariant = Color(0xFFD9CEA1),
-        onPrimary = Color.White,
-        onSecondary = Color.White,
-        onTertiary = Color.White,
-        onBackground = Color.Black,
-        onSurface = Color.Black,
-        primaryContainer = WW2Olive,
-        onPrimaryContainer = WW2Khaki
-    ),
-    darkColors = darkColorScheme(
-        primary = WW2Khaki,
-        secondary = WW2Gray,
-        tertiary = Pink80,
-        background = WW2Dark,
-        surface = Color(0xFF424242),
-        surfaceVariant = Color(0xFF535353),
-        onPrimary = Color.Black,
-        onSecondary = Color.Black,
-        onTertiary = Color.Black,
-        onBackground = WW2Khaki,
-        onSurface = WW2Khaki,
-        primaryContainer = WW2Dark,
-        onPrimaryContainer = WW2Khaki
-    ),
-    typography = DefaultTypography
-)
-
-// ─── Horror Theme ────────────────────────────────────────────────────────────
-val HorrorThemeData = AppThemeData(
-    lightColors = lightColorScheme(
-        primary = HorrorRed,
-        secondary = HorrorGray,
-        tertiary = Pink40,
-        background = Color.White,
-        surface = Color(0xFFFAFAFA),
-        surfaceVariant = Color(0xFFF0F0F0),
-        onPrimary = Color.White,
-        onSecondary = Color.White,
-        onTertiary = Color.White,
-        onBackground = HorrorBlack,
-        onSurface = HorrorBlack,
-        primaryContainer = HorrorRed,
-        onPrimaryContainer = Color.White
-    ),
-    darkColors = darkColorScheme(
-        primary = HorrorRed,
-        secondary = HorrorGray,
-        tertiary = Pink80,
-        background = HorrorBlack,
-        surface = HorrorDark,
-        surfaceVariant = HorrorGray,
-        onPrimary = Color.White,
-        onSecondary = Color.White,
-        onTertiary = Color.White,
-        onBackground = Color.White,
-        onSurface = Color.White,
-        primaryContainer = HorrorDark,
-        onPrimaryContainer = Color.White
-    ),
-    typography = HorrorTypography
+    typography = CyberpunkTypography
 )
 
 // ─── Sci-Fi Theme ────────────────────────────────────────────────────────────
 val SciFiThemeData = AppThemeData(
     lightColors = lightColorScheme(
-        primary = SciFiBlue,
-        secondary = SciFiAccent,
-        tertiary = Pink40,
-        background = SciFiSilver,
-        surface = Color.White,
-        surfaceVariant = Color(0xFFF5F5F5),
-        onPrimary = Color.White,
-        onSecondary = Color.Black,
-        onTertiary = Color.Black,
-        onBackground = Color.Black,
-        onSurface = Color.Black,
-        primaryContainer = SciFiBlue,
-        onPrimaryContainer = Color.White
+        primary = SciFiHolo,
+        background = SciFiBlueDeep,
+        surface = SciFiBlueDeep, // Assuming consistent clean look
+        onBackground = SciFiSilver,
+        onSurface = SciFiSilver
     ),
     darkColors = darkColorScheme(
-        primary = SciFiAccent,
-        secondary = SciFiBlue,
-        tertiary = Pink80,
-        background = SciFiDark,
-        surface = Color(0xFF1A1A3A),
-        surfaceVariant = Color(0xFF2A2A4A),
-        onPrimary = Color.Black,
-        onSecondary = Color.White,
-        onTertiary = Color.Black,
+        primary = SciFiHolo,
+        background = SciFiBlueDeep,
+        surface = SciFiBlueDeep,
         onBackground = SciFiSilver,
-        onSurface = SciFiSilver,
-        primaryContainer = SciFiDark,
-        onPrimaryContainer = SciFiAccent
+        onSurface = SciFiSilver
     ),
     typography = SciFiTypography
+)
+
+// ─── Horror Theme ────────────────────────────────────────────────────────────
+val HorrorThemeData = AppThemeData(
+    lightColors = lightColorScheme(
+        primary = HorrorBlood,
+        background = HorrorBg,
+        onBackground = HorrorBone,
+        surface = HorrorBg,
+        onSurface = HorrorBone
+    ),
+    darkColors = darkColorScheme(
+        primary = HorrorBlood,
+        background = HorrorBg,
+        onBackground = HorrorBone,
+        surface = HorrorBg,
+        onSurface = HorrorBone
+    ),
+    typography = HorrorTypography
+)
+
+// ─── WW2 Theme ───────────────────────────────────────────────────────────────
+val WW2ThemeData = AppThemeData(
+    lightColors = lightColorScheme(
+        primary = WW2Stamp,
+        background = WW2Paper,
+        surface = WW2Khaki,
+        onSurface = Color.Black,
+        onBackground = Color.Black
+    ),
+    darkColors = darkColorScheme(
+        primary = WW2Stamp,
+        background = WW2Olive,
+        surface = Color.Black,
+        onSurface = WW2Khaki,
+        onBackground = WW2Khaki
+    ),
+    typography = WW2Typography
+)
+
+// ─── Halloween Theme ─────────────────────────────────────────────────────────
+val HalloweenThemeData = AppThemeData(
+    lightColors = lightColorScheme(
+        primary = HalloOrange,
+        secondary = HalloPurple,
+        background = HalloBlack,
+        onBackground = HalloOrange, // High contrast
+        surface = HalloBlack,
+        onSurface = HalloOrange
+    ),
+    darkColors = darkColorScheme(
+        primary = HalloOrange,
+        secondary = HalloPurple,
+        background = HalloBlack,
+        onBackground = HalloOrange,
+        surface = HalloBlack,
+        onSurface = HalloOrange
+    ),
+    typography = HorrorTypography // Using HorrorTypography as requested in Step 2 for Halloween
 )
 
 // ─── Pride Theme ─────────────────────────────────────────────────────────────
 val PrideThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = PrideViolet,
-        secondary = PrideBlue,
+        secondary = PrideRed,
         tertiary = PrideGreen,
         background = Color.White,
         surface = Color.White,
-        surfaceVariant = PrideYellow,
-        onPrimary = Color.White,
-        onSecondary = Color.White,
-        onTertiary = Color.White,
+        surfaceVariant = PrideYellow.copy(alpha = 0.2f),
         onBackground = Color.Black,
-        onSurface = Color.Black,
-        primaryContainer = PrideOrange,
-        onPrimaryContainer = Color.Black
+        onSurface = Color.Black
     ),
     darkColors = darkColorScheme(
-        primary = PrideYellow,
-        secondary = PrideOrange,
-        tertiary = PrideRed,
-        background = Color.Black,
-        surface = Color(0xFF121212),
-        surfaceVariant = PrideViolet,
-        onPrimary = Color.Black,
-        onSecondary = Color.Black,
-        onTertiary = Color.Black,
-        onBackground = Color.White,
+        primary = PrideOrange,
+        secondary = PrideBlue,
+        tertiary = PrideGreen,
+        background = PrideDarkBg,
+        surface = PrideDarkBg,
         onSurface = Color.White,
-        primaryContainer = PrideBlue,
-        onPrimaryContainer = Color.White
+        onBackground = Color.White
     ),
     typography = PrideTypography
-)
-
-// ─── Halloween Theme ─────────────────────────────────────────────────────────
-val HalloweenThemeData = AppThemeData(
-    lightColors = lightColorScheme(
-        primary = HalloweenOrange,
-        secondary = HalloweenPurple,
-        tertiary = Color.Yellow,
-        background = HalloweenBlack,
-        surface = Color(0xFF1E1E1E),
-        surfaceVariant = Color(0xFF333333),
-        onPrimary = Color.Black,
-        onSecondary = Color.White,
-        onTertiary = Color.Black,
-        onBackground = HalloweenOrange,
-        onSurface = Color.White,
-        primaryContainer = HalloweenPurple,
-        onPrimaryContainer = Color.White
-    ),
-    darkColors = darkColorScheme(
-        primary = HalloweenOrange,
-        secondary = HalloweenPurple,
-        tertiary = Color.Yellow,
-        background = HalloweenBlack,
-        surface = Color(0xFF1E1E1E),
-        surfaceVariant = Color(0xFF333333),
-        onPrimary = Color.Black,
-        onSecondary = Color.White,
-        onTertiary = Color.Black,
-        onBackground = HalloweenOrange,
-        onSurface = Color.White,
-        primaryContainer = HalloweenPurple,
-        onPrimaryContainer = Color.White
-    ),
-    typography = DefaultTypography
 )
 
 val AllThemes = mapOf(

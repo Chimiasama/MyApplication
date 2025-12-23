@@ -8,7 +8,54 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.R
 
-// Set of Material typography styles to start with
+// Font Families
+val OrbitronFamily = FontFamily(
+    Font(R.font.orbitron_regular, FontWeight.Normal),
+    Font(R.font.orbitron_medium, FontWeight.Medium),
+    Font(R.font.orbitron_semi_bold, FontWeight.SemiBold),
+    Font(R.font.orbitron_bold, FontWeight.Bold)
+)
+
+val MedievalFamily = FontFamily(
+    Font(R.font.medieval_font)
+)
+
+val HorrorFamily = FontFamily(
+    Font(R.font.horror_font)
+)
+
+val MatrixFamily = FontFamily(
+    Font(R.font.matrix_font)
+)
+
+val StencilFamily = FontFamily.Monospace
+
+// Helper to create Typography based on base settings
+private fun createTypography(
+    fontFamily: FontFamily,
+    letterSpacingAdd: Double = 0.0,
+    lineHeightAdd: Double = 0.0
+): Typography {
+    val default = Typography()
+    return Typography(
+        displayLarge = default.displayLarge.copy(fontFamily = fontFamily, letterSpacing = default.displayLarge.letterSpacing.value.plus(letterSpacingAdd).sp, lineHeight = default.displayLarge.lineHeight.value.plus(lineHeightAdd).sp),
+        displayMedium = default.displayMedium.copy(fontFamily = fontFamily, letterSpacing = default.displayMedium.letterSpacing.value.plus(letterSpacingAdd).sp, lineHeight = default.displayMedium.lineHeight.value.plus(lineHeightAdd).sp),
+        displaySmall = default.displaySmall.copy(fontFamily = fontFamily, letterSpacing = default.displaySmall.letterSpacing.value.plus(letterSpacingAdd).sp, lineHeight = default.displaySmall.lineHeight.value.plus(lineHeightAdd).sp),
+        headlineLarge = default.headlineLarge.copy(fontFamily = fontFamily, letterSpacing = default.headlineLarge.letterSpacing.value.plus(letterSpacingAdd).sp, lineHeight = default.headlineLarge.lineHeight.value.plus(lineHeightAdd).sp),
+        headlineMedium = default.headlineMedium.copy(fontFamily = fontFamily, letterSpacing = default.headlineMedium.letterSpacing.value.plus(letterSpacingAdd).sp, lineHeight = default.headlineMedium.lineHeight.value.plus(lineHeightAdd).sp),
+        headlineSmall = default.headlineSmall.copy(fontFamily = fontFamily, letterSpacing = default.headlineSmall.letterSpacing.value.plus(letterSpacingAdd).sp, lineHeight = default.headlineSmall.lineHeight.value.plus(lineHeightAdd).sp),
+        titleLarge = default.titleLarge.copy(fontFamily = fontFamily, letterSpacing = default.titleLarge.letterSpacing.value.plus(letterSpacingAdd).sp, lineHeight = default.titleLarge.lineHeight.value.plus(lineHeightAdd).sp),
+        titleMedium = default.titleMedium.copy(fontFamily = fontFamily, letterSpacing = default.titleMedium.letterSpacing.value.plus(letterSpacingAdd).sp, lineHeight = default.titleMedium.lineHeight.value.plus(lineHeightAdd).sp),
+        titleSmall = default.titleSmall.copy(fontFamily = fontFamily, letterSpacing = default.titleSmall.letterSpacing.value.plus(letterSpacingAdd).sp, lineHeight = default.titleSmall.lineHeight.value.plus(lineHeightAdd).sp),
+        bodyLarge = default.bodyLarge.copy(fontFamily = fontFamily, letterSpacing = default.bodyLarge.letterSpacing.value.plus(letterSpacingAdd).sp, lineHeight = default.bodyLarge.lineHeight.value.plus(lineHeightAdd).sp),
+        bodyMedium = default.bodyMedium.copy(fontFamily = fontFamily, letterSpacing = default.bodyMedium.letterSpacing.value.plus(letterSpacingAdd).sp, lineHeight = default.bodyMedium.lineHeight.value.plus(lineHeightAdd).sp),
+        bodySmall = default.bodySmall.copy(fontFamily = fontFamily, letterSpacing = default.bodySmall.letterSpacing.value.plus(letterSpacingAdd).sp, lineHeight = default.bodySmall.lineHeight.value.plus(lineHeightAdd).sp),
+        labelLarge = default.labelLarge.copy(fontFamily = fontFamily, letterSpacing = default.labelLarge.letterSpacing.value.plus(letterSpacingAdd).sp, lineHeight = default.labelLarge.lineHeight.value.plus(lineHeightAdd).sp),
+        labelMedium = default.labelMedium.copy(fontFamily = fontFamily, letterSpacing = default.labelMedium.letterSpacing.value.plus(letterSpacingAdd).sp, lineHeight = default.labelMedium.lineHeight.value.plus(lineHeightAdd).sp),
+        labelSmall = default.labelSmall.copy(fontFamily = fontFamily, letterSpacing = default.labelSmall.letterSpacing.value.plus(letterSpacingAdd).sp, lineHeight = default.labelSmall.lineHeight.value.plus(lineHeightAdd).sp)
+    )
+}
+
 val DefaultTypography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
@@ -19,173 +66,29 @@ val DefaultTypography = Typography(
     )
 )
 
-val OrbitronFontFamily = FontFamily(
-    Font(R.font.orbitron_regular, FontWeight.Normal),
-    Font(R.font.orbitron_medium, FontWeight.Medium),
-    Font(R.font.orbitron_semi_bold, FontWeight.SemiBold),
-    Font(R.font.orbitron_bold, FontWeight.Bold)
+val SciFiTypography = createTypography(OrbitronFamily, letterSpacingAdd = 0.1)
+val CyberpunkTypography = createTypography(OrbitronFamily, letterSpacingAdd = 0.1)
+
+val MedievalTypography = createTypography(MedievalFamily, lineHeightAdd = 2.0)
+
+val HorrorTypography = createTypography(HorrorFamily, letterSpacingAdd = 0.2)
+
+val WW2Typography = createTypography(StencilFamily)
+
+val PrideTypography = Typography(
+    displayLarge = DefaultTypography.displayLarge.copy(fontWeight = FontWeight.Medium),
+    displayMedium = DefaultTypography.displayMedium.copy(fontWeight = FontWeight.Medium),
+    displaySmall = DefaultTypography.displaySmall.copy(fontWeight = FontWeight.Medium),
+    headlineLarge = DefaultTypography.headlineLarge.copy(fontWeight = FontWeight.Medium),
+    headlineMedium = DefaultTypography.headlineMedium.copy(fontWeight = FontWeight.Medium),
+    headlineSmall = DefaultTypography.headlineSmall.copy(fontWeight = FontWeight.Medium),
+    titleLarge = DefaultTypography.titleLarge.copy(fontWeight = FontWeight.Medium),
+    titleMedium = DefaultTypography.titleMedium.copy(fontWeight = FontWeight.Medium),
+    titleSmall = DefaultTypography.titleSmall.copy(fontWeight = FontWeight.Medium),
+    bodyLarge = DefaultTypography.bodyLarge.copy(fontWeight = FontWeight.Medium),
+    bodyMedium = DefaultTypography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+    bodySmall = DefaultTypography.bodySmall.copy(fontWeight = FontWeight.Medium),
+    labelLarge = DefaultTypography.labelLarge.copy(fontWeight = FontWeight.Medium),
+    labelMedium = DefaultTypography.labelMedium.copy(fontWeight = FontWeight.Medium),
+    labelSmall = DefaultTypography.labelSmall.copy(fontWeight = FontWeight.Medium)
 )
-
-val MedievalFontFamily = FontFamily(
-    Font(R.font.medieval_font)
-)
-
-val HorrorFontFamily = FontFamily(
-    Font(R.font.horror_font)
-)
-
-val MatrixFontFamily = FontFamily(
-    Font(R.font.matrix_font)
-)
-
-fun createTypography(
-    fontFamily: FontFamily,
-    lineHeightFactor: Float = 0f, // Additive now
-    letterSpacingFactor: Float = 0f, // Additive now
-    isHacker: Boolean = false,
-    isCyberpunkTitle: Boolean = false
-): Typography {
-    val default = DefaultTypography
-
-    // Helper to conditionally apply styles
-    fun fontWeight(original: FontWeight): FontWeight {
-        return if (isHacker) FontWeight.Normal
-               else if (isCyberpunkTitle && original >= FontWeight.Medium) FontWeight.ExtraBold
-               else original
-    }
-
-    // Specific logic for titleLarge in Cyberpunk
-    fun fontWeightTitleLarge(original: FontWeight): FontWeight {
-        return if (isHacker) FontWeight.Normal
-               else if (isCyberpunkTitle) FontWeight.ExtraBold
-               else original
-    }
-
-    fun letterSpacing(original: Double): Double {
-        return if (isHacker) 0.0 else original + letterSpacingFactor.toDouble()
-    }
-
-    fun lineHeight(original: Double): Double {
-        return original + lineHeightFactor.toDouble()
-    }
-
-    return Typography(
-        displayLarge = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = fontWeight(FontWeight.Normal),
-            fontSize = 57.sp,
-            lineHeight = lineHeight(64.0).sp,
-            letterSpacing = letterSpacing(-0.25).sp
-        ),
-        displayMedium = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = fontWeight(FontWeight.Normal),
-            fontSize = 45.sp,
-            lineHeight = lineHeight(52.0).sp,
-            letterSpacing = letterSpacing(0.0).sp
-        ),
-        displaySmall = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = fontWeight(FontWeight.Normal),
-            fontSize = 36.sp,
-            lineHeight = lineHeight(44.0).sp,
-            letterSpacing = letterSpacing(0.0).sp
-        ),
-        headlineLarge = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = fontWeight(FontWeight.Normal),
-            fontSize = 32.sp,
-            lineHeight = lineHeight(40.0).sp,
-            letterSpacing = letterSpacing(0.0).sp
-        ),
-        headlineMedium = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = fontWeight(FontWeight.Normal),
-            fontSize = 28.sp,
-            lineHeight = lineHeight(36.0).sp,
-            letterSpacing = letterSpacing(0.0).sp
-        ),
-        headlineSmall = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = fontWeight(FontWeight.Normal),
-            fontSize = 24.sp,
-            lineHeight = lineHeight(32.0).sp,
-            letterSpacing = letterSpacing(0.0).sp
-        ),
-        titleLarge = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = fontWeightTitleLarge(FontWeight.Normal),
-            fontSize = 22.sp,
-            lineHeight = lineHeight(28.0).sp,
-            letterSpacing = letterSpacing(0.0).sp
-        ),
-        titleMedium = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = fontWeight(FontWeight.Medium),
-            fontSize = 16.sp,
-            lineHeight = lineHeight(24.0).sp,
-            letterSpacing = letterSpacing(0.15).sp
-        ),
-        titleSmall = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = fontWeight(FontWeight.Medium),
-            fontSize = 14.sp,
-            lineHeight = lineHeight(20.0).sp,
-            letterSpacing = letterSpacing(0.1).sp
-        ),
-        bodyLarge = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = fontWeight(FontWeight.Normal),
-            fontSize = 16.sp,
-            lineHeight = lineHeight(24.0).sp,
-            letterSpacing = letterSpacing(0.5).sp
-        ),
-        bodyMedium = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = fontWeight(FontWeight.Normal),
-            fontSize = 14.sp,
-            lineHeight = lineHeight(20.0).sp,
-            letterSpacing = letterSpacing(0.25).sp
-        ),
-        bodySmall = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = fontWeight(FontWeight.Normal),
-            fontSize = 12.sp,
-            lineHeight = lineHeight(16.0).sp,
-            letterSpacing = letterSpacing(0.4).sp
-        ),
-        labelLarge = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = fontWeight(FontWeight.Medium),
-            fontSize = 14.sp,
-            lineHeight = lineHeight(20.0).sp,
-            letterSpacing = letterSpacing(0.1).sp
-        ),
-        labelMedium = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = fontWeight(FontWeight.Medium),
-            fontSize = 12.sp,
-            lineHeight = lineHeight(16.0).sp,
-            letterSpacing = letterSpacing(0.5).sp
-        ),
-        labelSmall = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = fontWeight(FontWeight.Medium),
-            fontSize = 11.sp,
-            lineHeight = lineHeight(16.0).sp,
-            letterSpacing = letterSpacing(0.5).sp
-        )
-    )
-}
-
-val SciFiTypography = createTypography(OrbitronFontFamily)
-
-val CyberpunkTypography = createTypography(OrbitronFontFamily, isCyberpunkTitle = true)
-
-val MedievalTypography = createTypography(MedievalFontFamily, lineHeightFactor = 2.0f) // +2sp
-
-val HorrorTypography = createTypography(HorrorFontFamily, letterSpacingFactor = 0.2f) // +0.2sp
-
-val MatrixTypography = createTypography(MatrixFontFamily, isHacker = true)
-
-val PrideTypography = DefaultTypography
