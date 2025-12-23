@@ -110,7 +110,10 @@ val CyberpunkThemeData = AppThemeData(
         onBackground = MatrixGreen,
         onSurface = MatrixGreen,
         primaryContainer = Color(0xFF003B07),
-        onPrimaryContainer = MatrixGreen
+        onPrimaryContainer = MatrixGreen,
+        tertiaryContainer = Color(0xFF003B07), // Dark Green for selected items
+        onTertiaryContainer = MatrixGreen,
+        onSurfaceVariant = MatrixGreen // Green text on surfaceVariant cards
     ),
     darkColors = darkColorScheme(
         primary = MatrixGreen,
@@ -125,7 +128,10 @@ val CyberpunkThemeData = AppThemeData(
         onBackground = MatrixGreen,
         onSurface = MatrixGreen,
         primaryContainer = Color(0xFF003B07),
-        onPrimaryContainer = MatrixGreen
+        onPrimaryContainer = MatrixGreen,
+        tertiaryContainer = Color(0xFF003B07), // Dark Green for selected items
+        onTertiaryContainer = MatrixGreen,
+        onSurfaceVariant = MatrixGreen // Green text on surfaceVariant cards
     ),
     typography = MatrixTypography
 )
@@ -197,7 +203,7 @@ val HorrorThemeData = AppThemeData(
         primaryContainer = HorrorDark,
         onPrimaryContainer = Color.White
     ),
-    typography = DefaultTypography
+    typography = HorrorTypography
 )
 
 // ─── Sci-Fi Theme ────────────────────────────────────────────────────────────
@@ -232,7 +238,7 @@ val SciFiThemeData = AppThemeData(
         primaryContainer = SciFiDark,
         onPrimaryContainer = SciFiAccent
     ),
-    typography = DefaultTypography
+    typography = SciFiTypography
 )
 
 // ─── Pride Theme ─────────────────────────────────────────────────────────────

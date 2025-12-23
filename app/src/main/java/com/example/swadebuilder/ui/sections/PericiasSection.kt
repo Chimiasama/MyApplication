@@ -272,6 +272,7 @@ fun PericiasContent(
                                 }
                             },
                             style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -359,6 +360,7 @@ fun PericiasContent(
                         },
                         modifier = Modifier.width(valorColWidthDp),
                         style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Center
                     )
 
