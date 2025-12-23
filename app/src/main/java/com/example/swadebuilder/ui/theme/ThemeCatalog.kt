@@ -11,11 +11,11 @@ data class AppThemeData(
     val lightColors: ColorScheme,
     val darkColors: ColorScheme,
     val typography: Typography,
-    @DrawableRes val backgroundDrawable: Int? = null
+    @DrawableRes val backgroundDrawable: Int? = null,
+    val cardBorderColor: Color? = null // PASSO 2: Borda para efeito Wireframe
 )
 
 // ─── Default Theme (Old School Paper) ────────────────────────────────────────
-// Refined to match user screenshots: Beige background, Deep Red primary, Dark text.
 val DefaultThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = OldSchoolRed,
@@ -24,14 +24,11 @@ val DefaultThemeData = AppThemeData(
         tertiary = OldSchoolRed,
         background = OldSchoolPaper,
         onBackground = OldSchoolInk,
-        surface = OldSchoolPaper, // Cards share the background color (visually separated by borders/shadows)
+        surface = OldSchoolPaper,
         onSurface = OldSchoolInk,
-        surfaceVariant = OldSchoolPaper // Ensure variants also respect the beige tone unless specifically overridden
+        surfaceVariant = OldSchoolPaper
     ),
     darkColors = darkColorScheme(
-        // In Dark Mode for this theme, we might just invert or keep it "Paper" style but dimmer?
-        // User screenshots are Light mode. For Dark mode consistency with "Old School",
-        // let's use the inverted Ink/Paper logic established previously.
         primary = OldSchoolRed,
         onPrimary = Color.White,
         secondary = OldSchoolPaper,
@@ -41,7 +38,7 @@ val DefaultThemeData = AppThemeData(
         surface = OldSchoolInk,
         onSurface = OldSchoolPaper
     ),
-    typography = DefaultTypography // Standard Sans-Serif as seen in screenshots
+    typography = DefaultTypography
 )
 
 // ─── Medieval Theme ──────────────────────────────────────────────────────────
@@ -66,17 +63,21 @@ val MedievalThemeData = AppThemeData(
 )
 
 // ─── Cyberpunk Theme (Matrix Style) ──────────────────────────────────────────
+// PASSO 2: Fundo preto e Borda Wireframe
+// HOTFIX: Texto branco forçado para legibilidade contra fundo preto
+// HOTFIX 2: surfaceVariant set to Black to fix card background contrast with white text
 val CyberpunkThemeData = AppThemeData(
-    // Matrix style is inherently dark. We map Light to a high-contrast version or same.
     lightColors = lightColorScheme(
         primary = CyberMatrixGreen,
         onPrimary = Color.Black,
         secondary = CyberMatrixDark,
         tertiary = CyberMatrixGreen,
-        background = CyberMatrixBg,
-        onBackground = CyberMatrixText,
-        surface = CyberMatrixBg,
-        onSurface = CyberMatrixText
+        background = CyberMatrixBg, // Preto
+        onBackground = Color.White, // HOTFIX: Texto branco
+        surface = CyberMatrixBg, // Preto (sem cinza)
+        onSurface = Color.White, // HOTFIX: Texto branco
+        surfaceVariant = CyberMatrixBg, // HOTFIX 2: Cards must be black to match white text
+        onSurfaceVariant = Color(0xFFCCCCCC) // HOTFIX: Cinza claro
     ),
     darkColors = darkColorScheme(
         primary = CyberMatrixGreen,
@@ -84,11 +85,14 @@ val CyberpunkThemeData = AppThemeData(
         secondary = CyberMatrixDark,
         tertiary = CyberMatrixGreen,
         background = CyberMatrixBg,
-        onBackground = CyberMatrixText,
+        onBackground = Color.White, // HOTFIX: Texto branco
         surface = CyberMatrixBg,
-        onSurface = CyberMatrixText
+        onSurface = Color.White, // HOTFIX: Texto branco
+        surfaceVariant = CyberMatrixBg, // HOTFIX 2: Cards must be black to match white text
+        onSurfaceVariant = Color(0xFFCCCCCC) // HOTFIX: Cinza claro
     ),
-    typography = CyberpunkTypography
+    typography = CyberpunkTypography,
+    cardBorderColor = CyberMatrixGreen // Efeito Wireframe
 )
 
 // ─── Sci-Fi Theme ────────────────────────────────────────────────────────────
@@ -109,16 +113,18 @@ val SciFiThemeData = AppThemeData(
         onBackground = SciFiSilver,
         onSurface = SciFiSilver
     ),
-    typography = SciFiTypography
+    typography = SciFiTypography,
+    cardBorderColor = SciFiHolo.copy(alpha = 0.5f)
 )
 
 // ─── Horror Theme ────────────────────────────────────────────────────────────
+// PASSO 4: Ajuste de contraste
 val HorrorThemeData = AppThemeData(
     lightColors = lightColorScheme(
-        primary = HorrorBlood,
+        primary = HorrorBlood, // Vermelho apenas para destaques
         onPrimary = Color.White,
         background = HorrorBg,
-        onBackground = HorrorBone,
+        onBackground = HorrorBone, // Branco sujo para texto
         surface = HorrorBg,
         onSurface = HorrorBone
     ),
@@ -161,7 +167,7 @@ val HalloweenThemeData = AppThemeData(
         onPrimary = Color.Black,
         secondary = HalloPurple,
         background = HalloBlack,
-        onBackground = HalloOrange, // High contrast
+        onBackground = HalloOrange,
         surface = HalloBlack,
         onSurface = HalloOrange
     ),
@@ -174,7 +180,7 @@ val HalloweenThemeData = AppThemeData(
         surface = HalloBlack,
         onSurface = HalloOrange
     ),
-    typography = HorrorTypography // Using HorrorTypography as requested in Step 2 for Halloween
+    typography = HorrorTypography
 )
 
 // ─── Pride Theme ─────────────────────────────────────────────────────────────
