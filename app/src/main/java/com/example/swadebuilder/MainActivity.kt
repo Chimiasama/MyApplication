@@ -1047,8 +1047,8 @@ fun SelecaoCard(
             .padding(vertical = 6.dp, horizontal = 12.dp)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, Color.Black),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF2E3C6)),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
@@ -1059,7 +1059,7 @@ fun SelecaoCard(
                 imageVector = icon,
                 contentDescription = title,
                 modifier = Modifier.size(40.dp),
-                tint = Color.Black
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.width(16.dp))
 
@@ -1067,13 +1067,13 @@ fun SelecaoCard(
                 Text(
                     text = title,
                     fontSize = 20.sp,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
                     text = subtitle,
                     fontSize = 14.sp,
-                    color = Color.DarkGray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -1081,7 +1081,7 @@ fun SelecaoCard(
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.MenuBook,
                 contentDescription = "",
-                tint = Color.Black
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
