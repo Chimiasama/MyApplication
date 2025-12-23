@@ -54,8 +54,8 @@ import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp

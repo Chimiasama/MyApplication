@@ -994,35 +994,6 @@ private fun equipamentoKey(item: EquipamentoItem): String = listOfNotNull(
 
 
 
-@Composable
-fun CollapsibleSection(
-    title: String,
-    expanded: Boolean,
-    onToggle: () -> Unit,
-    onToggleFeedback: (() -> Unit)? = null,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    Column {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .clickable(onClick = {
-                    onToggleFeedback?.invoke()
-                    onToggle()
-                })
-                .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(title, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-            Icon(
-                imageVector = if (expanded) Icons.Default.Remove else Icons.Default.Add,
-                contentDescription = stringResource(id = if (expanded) R.string.cd_collapse else R.string.cd_expand)
-            )
-        }
-        if (expanded) content()
-    }
-}
 
 
 

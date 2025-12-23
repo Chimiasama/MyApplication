@@ -50,8 +50,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.swadebuilder.CollapsibleSection
 import com.example.swadebuilder.R
+import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
