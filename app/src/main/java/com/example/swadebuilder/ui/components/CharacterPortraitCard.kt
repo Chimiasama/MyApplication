@@ -40,6 +40,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.math.max
 
+private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+    val (height: Int, width: Int) = options.run { outHeight to outWidth }
+    var inSampleSize = 1
+
+    if (height > reqHeight || width > reqWidth) {
+        val halfHeight: Int = height / 2
+        val halfWidth: Int = width / 2
+
+        while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+            inSampleSize *= 2
+        }
+    }
+    return inSampleSize
+}
+
 @Composable
 fun CharacterPortraitCard(
     modifier: Modifier = Modifier,
@@ -57,19 +72,35 @@ fun CharacterPortraitCard(
         } else {
             withContext(Dispatchers.IO) {
                 runCatching {
+                    val maxSide = 1024
+                    // 1. Decode bounds only
+                    val options = BitmapFactory.Options().apply {
+                        inJustDecodeBounds = true
+                    }
                     context.contentResolver.openInputStream(imageUri)?.use { stream ->
-                        val original = BitmapFactory.decodeStream(stream) ?: return@runCatching null
-                        val maxSide = 1024
-                        val currentMax = max(original.width, original.height)
-                        val scaled = if (currentMax > maxSide) {
-                            val ratio = maxSide.toFloat() / currentMax.toFloat()
-                            val targetWidth = (original.width * ratio).toInt().coerceAtLeast(1)
-                            val targetHeight = (original.height * ratio).toInt().coerceAtLeast(1)
-                            Bitmap.createScaledBitmap(original, targetWidth, targetHeight, true)
+                        BitmapFactory.decodeStream(stream, null, options)
+                    }
+
+                    // 2. Calculate inSampleSize
+                    options.inSampleSize = calculateInSampleSize(options, maxSide, maxSide)
+                    options.inJustDecodeBounds = false
+
+                    // 3. Decode actual bitmap with sample size
+                    context.contentResolver.openInputStream(imageUri)?.use { stream ->
+                        val sampled = BitmapFactory.decodeStream(stream, null, options)
+                            ?: return@runCatching null
+
+                        // 4. Optionally scale down further if needed (inSampleSize is power of 2)
+                        val currentMax = max(sampled.width, sampled.height)
+                        val finalBitmap = if (currentMax > maxSide) {
+                             val ratio = maxSide.toFloat() / currentMax.toFloat()
+                             val targetWidth = (sampled.width * ratio).toInt().coerceAtLeast(1)
+                             val targetHeight = (sampled.height * ratio).toInt().coerceAtLeast(1)
+                             Bitmap.createScaledBitmap(sampled, targetWidth, targetHeight, true)
                         } else {
-                            original
+                             sampled
                         }
-                        scaled.asImageBitmap()
+                        finalBitmap.asImageBitmap()
                     }
                 }.getOrNull()
             }

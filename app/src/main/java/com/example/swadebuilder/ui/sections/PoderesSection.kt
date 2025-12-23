@@ -74,11 +74,12 @@ fun PoderesSection(
     }
     if (arcanosAtivos.isEmpty()) return
 
-    val allPoderes: List<Poder> = remember {
+    val allPoderes: List<Poder> by androidx.compose.runtime.produceState(initialValue = emptyList()) {
         val poderesBase = runCatching { context.loadJsonAsset<List<Poder>>("poderes.json") }.getOrElse { emptyList() }
         val tecnicasChi = runCatching { context.loadJsonAsset<List<Poder>>("tecnicas_chi.json") }.getOrElse { emptyList() }
-        poderesBase + tecnicasChi
+        value = poderesBase + tecnicasChi
     }
+
     val poderesElegiveis = remember(allPoderes) { allPoderes }
 
     if (!state.permiteMultiAntecedenteArcano) {
