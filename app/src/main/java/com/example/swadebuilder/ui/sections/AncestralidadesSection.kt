@@ -137,7 +137,8 @@ fun AncestralidadesSection(
     val compendioSciFiAtivo = state.compendioSciFiAtivo
     val compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
 
-    val ancestralidadesState = remember(
+    val ancestralidadesState = androidx.compose.runtime.produceState(
+        initialValue = emptyList<RacialModifierLite>(),
         compendioFantasiaAtivo,
         compendioBuscatrilhaAtivo,
         compendioDeadlandsAtivo,
@@ -203,7 +204,7 @@ fun AncestralidadesSection(
                 )
             }
 
-        mutableStateOf(deduped)
+        value = deduped
     }
 
     val selectedKey = rememberSaveable { mutableStateOf("") }

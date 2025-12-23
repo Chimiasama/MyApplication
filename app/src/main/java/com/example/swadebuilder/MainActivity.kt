@@ -90,7 +90,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.collectAsState
 import com.example.swadebuilder.model.AtributoList
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
@@ -102,15 +105,16 @@ import com.example.swadebuilder.model.PericiaList
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.AppPreferences
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -182,6 +186,16 @@ private fun buildUsageInstructions(state: CriadorState): String {
 
 @ExperimentalSerializationApi
 class MainActivity : ComponentActivity() {
+
+    private val isDataLoaded = MutableStateFlow(false)
+    private lateinit var mainActivityData: MainActivityData
+
+    data class MainActivityData(
+        val equipamentoCategorias: List<EquipamentoCategoria>,
+        val superequipCategorias: List<EquipamentoCategoria>,
+        val listaSuperPoderes: List<SuperPoder>
+    )
+
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     @OptIn(ExperimentalMaterial3Api::class)
 
@@ -191,99 +205,115 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val equipamentoCategorias = deduplicarEquipamentoCategorias(
-            assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
-                cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
-            }
-        )
-        val superequipCategorias = deduplicarEquipamentoCategorias(
-            assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
-                cat.origem?.equals("super", ignoreCase = true) ?: false
-            }
-        )
-
-        listaCoracoesCrystal = runCatching<List<CrystalHeart>> {
-            assets.open("coracoes_crystal.json")
-                .use { input -> json.decodeFromStream<List<CrystalHeart>>(input) }
-        }.getOrElse { emptyList() }
-
-        val listaSuperPoderes: List<SuperPoder> =
-            assets.open("superpoderes.json")
-                .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
-
-        val arcanoList: List<ArcanoInfo> =
-            assets.open("arcano_info.json")
-                .use { input -> json.decodeFromStream<List<ArcanoInfo>>(input) }
-        arcanoInfo = arcanoList.associate {
-            it.key
-                .uppercase()
-                .semAcentos()
-                .trim() to Triple(it.slots, it.pp, it.foco)
-        }
-
-        val atributosData = this.loadJsonAsset<AtributoList>("atributos.json")
-        listaAtributos = atributosData.atributos
-            .map { it.nome.keyify() }
-        mapaAtributosDisplay = atributosData.atributos
-            .associate { it.nome.keyify() to it.nome }
-
-        val periciasData = this.loadJsonAsset<PericiaList>("pericias.json")
-        listaPericias = periciasData.pericias.map { pj ->
-            Pericia(
-                nome     = pj.nome,
-                atributo = pj.atributo.uppercase().semAcentos(),
-                basica   = pj.basica
+        lifecycleScope.launch(Dispatchers.IO) {
+            val equipamentoCategorias = deduplicarEquipamentoCategorias(
+                assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
+                    cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
+                }
             )
-        }
-        mapaPericias = listaPericias.associateBy { it.nome.keyify() }
+            val superequipCategorias = deduplicarEquipamentoCategorias(
+                assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
+                    cat.origem?.equals("super", ignoreCase = true) ?: false
+                }
+            )
 
-        val todasVantagens: List<Vantagem> = this.loadJsonAsset("Vantagens.json")
+            listaCoracoesCrystal = runCatching<List<CrystalHeart>> {
+                assets.open("coracoes_crystal.json")
+                    .use { input -> json.decodeFromStream<List<CrystalHeart>>(input) }
+            }.getOrElse { emptyList() }
+
+            val listaSuperPoderes: List<SuperPoder> =
+                assets.open("superpoderes.json")
+                    .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
+
+            val arcanoList: List<ArcanoInfo> =
+                assets.open("arcano_info.json")
+                    .use { input -> json.decodeFromStream<List<ArcanoInfo>>(input) }
+            arcanoInfo = arcanoList.associate {
+                it.key
+                    .uppercase()
+                    .semAcentos()
+                    .trim() to Triple(it.slots, it.pp, it.foco)
+            }
+
+            val atributosData = loadJsonAsset<AtributoList>("atributos.json")
+            listaAtributos = atributosData.atributos
+                .map { it.nome.keyify() }
+            mapaAtributosDisplay = atributosData.atributos
+                .associate { it.nome.keyify() to it.nome }
+
+            val periciasData = loadJsonAsset<PericiaList>("pericias.json")
+            listaPericias = periciasData.pericias.map { pj ->
+                Pericia(
+                    nome     = pj.nome,
+                    atributo = pj.atributo.uppercase().semAcentos(),
+                    basica   = pj.basica
+                )
+            }
+            mapaPericias = listaPericias.associateBy { it.nome.keyify() }
+
+            val todasVantagens: List<Vantagem> = loadJsonAsset("Vantagens.json")
 
 
-        AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
-        AppData.superVantagens = todasVantagens.filter {
-            it.origem.equals("SUPER", ignoreCase = true)
-        }
+            AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
+            AppData.superVantagens = todasVantagens.filter {
+                it.origem.equals("SUPER", ignoreCase = true)
+            }
 
-        AppData.horrorVantagens = todasVantagens.filter {
-            it.origem.equals("HORROR", ignoreCase = true)
-        }
-        AppData.buscatrilhaVantagens = todasVantagens.filter {
-            it.origem.equals("BUSCATRILHA", ignoreCase = true)
-        }
+            AppData.horrorVantagens = todasVantagens.filter {
+                it.origem.equals("HORROR", ignoreCase = true)
+            }
+            AppData.buscatrilhaVantagens = todasVantagens.filter {
+                it.origem.equals("BUSCATRILHA", ignoreCase = true)
+            }
 
-        listaVantagens = todasVantagens
+            listaVantagens = todasVantagens
 
-        AppData.superVantagensParaDetalhe = AppData.superVantagens
+            AppData.superVantagensParaDetalhe = AppData.superVantagens
 
-        listaTropos = this.loadJsonAsset("tropos_adg.json")
+            listaTropos = loadJsonAsset("tropos_adg.json")
 
 
-        val todasComplicacoes = this.loadJsonAsset<List<Complicacao>>("complicacoes.json")
+            val todasComplicacoes = loadJsonAsset<List<Complicacao>>("complicacoes.json")
 
-        listaComplicacoes = todasComplicacoes
+            listaComplicacoes = todasComplicacoes
 
-        listaAncestralidadesJson = assets.readJsonList("listaancestralidade.json")
+            listaAncestralidadesJson = assets.readJsonList("listaancestralidade.json")
 
-        listaMonstroTemplates = assets
-            .open("monstros.json")
-            .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
+            listaMonstroTemplates = assets
+                .open("monstros.json")
+                .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
 
-        racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
-            val m = rm.atributos
-                .mapKeys   { it.key.keyify() }
-                .mapValues { 4 + it.value }
-            rm.nome.keyify() to m
-        }
+            racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
+                val m = rm.atributos
+                    .mapKeys   { it.key.keyify() }
+                    .mapValues { 4 + it.value }
+                rm.nome.keyify() to m
+            }
 
-        racialSkillStartMap = listaAncestralidadesJson.associate { rm ->
-            val m = rm.pericias
-                .mapKeys   { it.key.keyify() }
-                .mapValues { 4 + it.value }
-            rm.nome.keyify() to m
+            racialSkillStartMap = listaAncestralidadesJson.associate { rm ->
+                val m = rm.pericias
+                    .mapKeys   { it.key.keyify() }
+                    .mapValues { 4 + it.value }
+                rm.nome.keyify() to m
+            }
+
+            mainActivityData = MainActivityData(equipamentoCategorias, superequipCategorias, listaSuperPoderes)
+            isDataLoaded.value = true
         }
 
         setContent {
+            val dataLoaded by isDataLoaded.collectAsState()
+
+            if (!dataLoaded) {
+                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                      CircularProgressIndicator()
+                 }
+            } else {
+                val equipamentoCategorias = mainActivityData.equipamentoCategorias
+                val superequipCategorias = mainActivityData.superequipCategorias
+                val listaSuperPoderes = mainActivityData.listaSuperPoderes
+
             val criadorViewModel: CriadorViewModel = viewModel()
             criadorViewModel.setMultiplosAAHabilitados(MULTIPLOS_AA_HABILITADOS)
             val state = criadorViewModel.state
@@ -933,6 +963,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+            } // Close else block
         }
     }
 }
