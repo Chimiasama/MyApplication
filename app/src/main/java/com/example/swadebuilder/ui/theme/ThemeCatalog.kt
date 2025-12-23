@@ -65,6 +65,7 @@ val MedievalThemeData = AppThemeData(
 // ─── Cyberpunk Theme (Matrix Style) ──────────────────────────────────────────
 // PASSO 2: Fundo preto e Borda Wireframe
 // HOTFIX: Texto branco forçado para legibilidade contra fundo preto
+// HOTFIX 2: surfaceVariant set to Black to fix card background contrast with white text
 val CyberpunkThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = CyberMatrixGreen,
@@ -75,6 +76,7 @@ val CyberpunkThemeData = AppThemeData(
         onBackground = Color.White, // HOTFIX: Texto branco
         surface = CyberMatrixBg, // Preto (sem cinza)
         onSurface = Color.White, // HOTFIX: Texto branco
+        surfaceVariant = CyberMatrixBg, // HOTFIX 2: Cards must be black to match white text
         onSurfaceVariant = Color(0xFFCCCCCC) // HOTFIX: Cinza claro
     ),
     darkColors = darkColorScheme(
@@ -86,6 +88,7 @@ val CyberpunkThemeData = AppThemeData(
         onBackground = Color.White, // HOTFIX: Texto branco
         surface = CyberMatrixBg,
         onSurface = Color.White, // HOTFIX: Texto branco
+        surfaceVariant = CyberMatrixBg, // HOTFIX 2: Cards must be black to match white text
         onSurfaceVariant = Color(0xFFCCCCCC) // HOTFIX: Cinza claro
     ),
     typography = CyberpunkTypography,
