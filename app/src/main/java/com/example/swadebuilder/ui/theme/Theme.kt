@@ -7,10 +7,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+
+val LocalAppThemeData = staticCompositionLocalOf { DefaultThemeData }
 
 @Composable
 fun SWADEbuilderTheme(
@@ -21,29 +25,31 @@ fun SWADEbuilderTheme(
     val themeData = AllThemes[appTheme] ?: DefaultThemeData
     val colorScheme = if (darkTheme) themeData.darkColors else themeData.lightColors
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = themeData.typography
-    ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = colorScheme.background
+    CompositionLocalProvider(LocalAppThemeData provides themeData) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = themeData.typography
         ) {
-            val backgroundModifier = if (themeData.backgroundDrawable != null) {
-                Modifier.paint(
-                    painter = painterResource(id = themeData.backgroundDrawable),
-                    contentScale = ContentScale.Crop
-                )
-            } else {
-                Modifier.background(colorScheme.background)
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .then(backgroundModifier)
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = colorScheme.background
             ) {
-                content()
+                val backgroundModifier = if (themeData.backgroundDrawable != null) {
+                    Modifier.paint(
+                        painter = painterResource(id = themeData.backgroundDrawable),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Modifier.background(colorScheme.background)
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .then(backgroundModifier)
+                ) {
+                    content()
+                }
             }
         }
     }

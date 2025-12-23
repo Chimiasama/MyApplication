@@ -1,6 +1,7 @@
 package com.example.swadebuilder.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.ui.sections.toResumo
+import com.example.swadebuilder.ui.theme.LocalAppThemeData
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
@@ -37,6 +39,7 @@ fun StandardEquipamentoItem(
     showTensao: Boolean = false
 ) {
     val resumo = equipamento.toResumo()
+    val themeData = LocalAppThemeData.current
 
     Card(
         modifier = Modifier
@@ -46,7 +49,8 @@ fun StandardEquipamentoItem(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        border = themeData.cardBorderColor?.let { BorderStroke(1.dp, it) }
     ) {
         Column(Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
             Row(
@@ -55,20 +59,19 @@ fun StandardEquipamentoItem(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(Modifier.weight(1f)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            if (showOriginalName && !equipamento.originalName.isNullOrBlank()) equipamento.originalName else equipamento.nomeExibicao,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                    Text(
+                        if (showOriginalName && !equipamento.originalName.isNullOrBlank()) equipamento.originalName else equipamento.nomeExibicao,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    // PASSO 3: Origem em linha secundária, apenas se != BASICO
+                    if (origemLabel != null && origemLabel != "BASICO" && origemLabel.isNotBlank()) {
+                         Text(
+                            text = origemLabel,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        origemLabel?.takeIf { it.isNotBlank() }?.let { origem ->
-                            Spacer(Modifier.width(6.dp))
-                            Text(
-                                text = origem,
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
                     }
                 }
 

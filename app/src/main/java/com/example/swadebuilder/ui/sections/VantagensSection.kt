@@ -75,6 +75,7 @@ import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SearchTextField
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
+import com.example.swadebuilder.ui.theme.LocalAppThemeData
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
@@ -934,6 +935,8 @@ private fun VantagemItem(
     onSelect: () -> Unit,
     onError: (String) -> Unit
 ) {
+    val themeData = LocalAppThemeData.current
+
     val reqList = buildList {
         listaDeEstagios.firstOrNull {
             it.nome.equals(vant.requisitos.estagio, true)
@@ -1014,18 +1017,30 @@ private fun VantagemItem(
                 requisitosOk && bloqueioClasse == null -> MaterialTheme.colorScheme.surfaceVariant
                 else -> MaterialTheme.colorScheme.errorContainer
             }
-        )
+        ),
+        border = themeData.cardBorderColor?.let { androidx.compose.foundation.BorderStroke(1.dp, it) }
     ) {
         Column(Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
             Row(
                 Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nomeExibicao,
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.weight(1f)
-                )
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nomeExibicao,
+                        style = MaterialTheme.typography.titleSmall
+                    )
+
+                    // PASSO 3: Origem em linha secundária se != BASICO
+                    val origemLabel = vant.origem
+                    if (origemLabel.isNotBlank() && origemLabel != "BASICO") {
+                         Text(
+                             text = origemLabel.toEditionDisplayName(),
+                             style = MaterialTheme.typography.labelSmall,
+                             color = MaterialTheme.colorScheme.onSurfaceVariant
+                         )
+                    }
+                }
 
                 Text(
                     statusText,

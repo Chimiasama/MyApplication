@@ -20,10 +20,11 @@ val MedInk        = Color(0xFF3E2723) // Marrom Café Escuro
 val MedGold       = Color(0xFF8D6E63) // Bronze/Ouro Velho
 
 // CYBERPUNK (Matrix Green) - Novo Cyberpunk
+// PASSO 2: Background Preto Absoluto e Texto Claro Terminal
 val CyberMatrixBg    = Color(0xFF000000) // Preto absoluto
 val CyberMatrixGreen = Color(0xFF00FF41) // Verde Terminal Brilhante
-val CyberMatrixDark  = Color(0xFF003B00) // Verde Escuro fundo
-val CyberMatrixText  = Color(0xFFE0F7FA) // Texto claro (quase branco) para leitura
+val CyberMatrixDark  = Color(0xFF003B00) // Verde Escuro fundo (para variantes se precisar)
+val CyberMatrixText  = Color(0xFFE0E0E0) // Branco/Cinza claro (Terminal) para leitura
 
 // SCI-FI (Espaço Limpo)
 val SciFiBlueDeep = Color(0xFF050B14) // Azul sideral
@@ -33,7 +34,7 @@ val SciFiSilver   = Color(0xFFCFD8DC) // Metal
 // HORROR (Sangue Seco & Escuridão)
 val HorrorBg      = Color(0xFF0A0A0A)
 val HorrorBlood   = Color(0xFF8A0B0B) // Vermelho sangue oxidado
-val HorrorBone    = Color(0xFFCDC6B9) // Branco sujo/osso
+val HorrorBone    = Color(0xFFCDC6B9) // Branco sujo/osso (Usado em onBackground)
 
 // WW2 (Militar & Utilitário)
 val WW2Olive      = Color(0xFF4B5320) // Verde Oliva Clássico
