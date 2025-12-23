@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material.icons.filled.RocketLaunch
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.SportsMartialArts
 import androidx.compose.material3.AlertDialog
@@ -92,6 +93,7 @@ fun TelaInicial(
         // showHelpMessages removido
     ) -> Unit,
     onCarregarPersonagem: () -> Unit,
+    onOpenSettings: () -> Unit,
     context: Context,
     viewModel: CriadorViewModel
 ) {
@@ -223,6 +225,9 @@ fun TelaInicial(
                 actions = {
                     IconButton(onClick = onCarregarPersonagem) {
                         Icon(Icons.Default.FolderOpen, contentDescription = "Carregar Personagem")
+                    }
+                    IconButton(onClick = onOpenSettings) {
+                        Icon(Icons.Default.Settings, contentDescription = "Configurações")
                     }
                     IconButton(onClick = { showCreditsDialog = true }) {
                         Icon(Icons.Default.Info, contentDescription = "Créditos")

@@ -738,6 +738,7 @@ class MainActivity : ComponentActivity() {
                                     mostrouTelaInicial = false
                                 },
                                 onCarregarPersonagem = { showLoadDialog = true },
+                                onOpenSettings = { showSettingsDialog = true },
                                 context   = context,
                                 viewModel = criadorViewModel
                             )
