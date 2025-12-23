@@ -184,7 +184,12 @@ fun PericiasContent(
             }
         }
 
-        items(
+        val periciasVisiveis = remember(
+            state.periciasComIdiomas(),
+            state.compendioArteDaGuerraAtivo,
+            state.compendioFantasiaAtivo,
+            state.compendioHorrorAtivo
+        ) {
             state.periciasComIdiomas().filter { per ->
                 if (per.nome.equals("Jutsu", ignoreCase = true)) {
                     state.compendioArteDaGuerraAtivo
@@ -194,6 +199,12 @@ fun PericiasContent(
                     true
                 }
             }
+        }
+
+        items(
+            items = periciasVisiveis,
+            key = { it.nome },
+            contentType = { "pericia_item" }
         ) { per ->
             val regra: PericiaRuleSnapshot = state.calcularPericiaRules(
                 pericia = per,
