@@ -107,7 +107,8 @@ val SciFiThemeData = AppThemeData(
         background = SciFiBlueDeep,
         surface = SciFiBlueDeep,
         onBackground = SciFiSilver,
-        onSurface = SciFiSilver
+        onSurface = SciFiSilver,
+        onSurfaceVariant = Color(0xFFB0BEC5)
     ),
     darkColors = darkColorScheme(
         primary = SciFiHolo,
@@ -115,7 +116,8 @@ val SciFiThemeData = AppThemeData(
         background = SciFiBlueDeep,
         surface = SciFiBlueDeep,
         onBackground = SciFiSilver,
-        onSurface = SciFiSilver
+        onSurface = SciFiSilver,
+        onSurfaceVariant = Color(0xFFB0BEC5)
     ),
     typography = SciFiTypography,
     cardBorderColor = SciFiHolo.copy(alpha = 0.5f)
@@ -131,7 +133,8 @@ val HorrorThemeData = AppThemeData(
         onBackground = HorrorBone, // Branco sujo para texto
         surface = HorrorBg,
         onSurface = HorrorBone,
-        surfaceVariant = Color(0xFF1C1010)
+        surfaceVariant = Color(0xFF1C1010),
+        onSurfaceVariant = Color(0xFFEBEBD3)
     ),
     darkColors = darkColorScheme(
         primary = HorrorBlood,
@@ -140,7 +143,8 @@ val HorrorThemeData = AppThemeData(
         onBackground = HorrorBone,
         surface = HorrorBg,
         onSurface = HorrorBone,
-        surfaceVariant = Color(0xFF1C1010)
+        surfaceVariant = Color(0xFF1C1010),
+        onSurfaceVariant = Color(0xFFEBEBD3)
     ),
     typography = HorrorTypography
 )
