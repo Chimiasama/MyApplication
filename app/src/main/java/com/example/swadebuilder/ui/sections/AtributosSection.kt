@@ -103,6 +103,7 @@ fun AtributosContent(
     val locked = state.criacaoBasicaCongelada && !state.attributeAdvancementInProgress
 
     val pergaminho = MaterialTheme.colorScheme.surfaceVariant
+    val onSurface = MaterialTheme.colorScheme.onSurface
 
     val pcTotal  = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
@@ -232,6 +233,7 @@ fun AtributosContent(
                         text = displayName,
                         modifier = Modifier.weight(1f),
                         style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                        color = onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -261,6 +263,7 @@ fun AtributosContent(
                     text = efetivoRaw.toDiceString(),
                     modifier = Modifier.width(valorColWidthDp),
                     style = MaterialTheme.typography.bodyLarge,
+                    color = onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Clip,
                     textAlign = TextAlign.Center
