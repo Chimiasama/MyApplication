@@ -54,6 +54,7 @@ import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.titleCase
 
 private fun custoParaPenalidadeTexto(custo: String): String {
     val clean = custo.trim()
@@ -247,7 +248,7 @@ fun PoderesSection(
                             Spacer(Modifier.height(4.dp))
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 slots.forEachIndexed { idx, poderId ->
-                                    val label = poderId ?: "— vazio —"
+                                    val label = poderId?.titleCase() ?: "— vazio —"
                                     val isSlotLocked = locked || idx < lockedCount
                                     AssistChip(
                                         onClick = {
@@ -310,7 +311,7 @@ fun PoderesSection(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(poder.nome, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
+                                Text(poder.nome.titleCase(), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
                                 Text("PP: ${poder.pontosDePoder}", style = MaterialTheme.typography.bodySmall)
                             }
 

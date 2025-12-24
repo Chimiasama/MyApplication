@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.titleCase
 import java.io.File
 import java.io.FileOutputStream
 
@@ -142,11 +143,11 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val ancestralidadeNomeObj = listaAncestralidadesJson
         .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
 
-    val ancestralidadeNome: String = if (showOfficialNames && ancestralidadeNomeObj?.originalName != null) {
+    val ancestralidadeNome: String = (if (showOfficialNames && ancestralidadeNomeObj?.originalName != null) {
         ancestralidadeNomeObj.originalName
     } else {
         ancestralidadeNomeObj?.nome ?: personagem.ancestralidade
-    }
+    }).titleCase()
 
     val monstroNome = if (personagem.modoMonstroAtivo) {
         val tipoNome = listaMonstroTemplates.find { it.id == personagem.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
@@ -573,7 +574,7 @@ fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
 
     canvas.drawText(title, marginLeft, y, titlePaint)
     y += titleHeight + 6f
-    canvas.drawText("Ancestralidade: ${personagem.ancestralidade}$monstroTxt", marginLeft, y, subtitlePaint)
+    canvas.drawText("Ancestralidade: ${personagem.ancestralidade.titleCase()}$monstroTxt", marginLeft, y, subtitlePaint)
     y += subtitleHeight + 12f
 
     val lines = buildSummaryLines(personagem)
