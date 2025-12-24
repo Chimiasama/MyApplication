@@ -6,15 +6,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -60,7 +64,7 @@ private fun custoParaPenalidadeTexto(custo: String): String {
     return "—"
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PoderesSection(
     state: CriadorState
@@ -83,12 +87,20 @@ fun PoderesSection(
 
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
+    var selectedRank by rememberSaveable { mutableStateOf("Todos") }
 
-    val poderesElegiveis = remember(allPoderes, searchQuery) {
-        if (searchQuery.isBlank()) allPoderes
-        else allPoderes.filter {
-            it.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
-            it.descricao.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true)
+    val poderesElegiveis = remember(allPoderes, searchQuery, selectedRank) {
+        allPoderes.filter { power ->
+            val matchSearch = if (searchQuery.isBlank()) true else {
+                power.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
+                power.descricao.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true)
+            }
+
+            val matchRank = if (selectedRank == "Todos") true else {
+                power.estagio.semAcentos().equals(selectedRank.semAcentos(), ignoreCase = true)
+            }
+
+            matchSearch && matchRank
         }
     }
 
@@ -99,6 +111,28 @@ fun PoderesSection(
         onExpandedChange = { isSearchExpanded = it },
         placeholder = "Pesquisar Poderes..."
     )
+
+    // Rank Filter
+    Spacer(Modifier.height(8.dp))
+    LazyRow(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        item {
+            FilterChip(
+                selected = selectedRank == "Todos",
+                onClick = { selectedRank = "Todos" },
+                label = { Text("Todos") }
+            )
+        }
+        items(listOf("Novato", "Experiente", "Veterano", "Heroico", "Lendario")) { rank ->
+            FilterChip(
+                selected = selectedRank == rank,
+                onClick = { selectedRank = rank },
+                label = { Text(rank) }
+            )
+        }
+    }
 
     if (!state.permiteMultiAntecedenteArcano) {
         var selectedArcanoKey by rememberSaveable(arcanosAtivos) { mutableStateOf(arcanosAtivos.first()) }
