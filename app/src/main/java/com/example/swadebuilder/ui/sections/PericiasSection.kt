@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -61,6 +62,7 @@ import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
+import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
 
@@ -127,389 +129,391 @@ fun PericiasContent(
         }
     }
 
-    Column(
-        modifier = Modifier.fillMaxSize()
+    SectionCard(
+        title = "Perícias",
+        icon = Icons.Default.School,
+        showHeader = false
     ) {
-        // --- HEADER SECTION (Fixed) ---
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
+            modifier = Modifier.fillMaxSize()
         ) {
-            SectionHeader(
-                onHelpClick          = null,
-                centerText           = "Pontos de Perícia: ${state.pontosPericia}",
-                onListaCompletaClick = null,
-                listaCompletaText    = ""
-            )
-
-            Spacer(Modifier.height(4.dp))
-
-            if (!state.emProgresso) {
-                if (usePbWalletRedesign) {
-                    PbWalletBanner(
-                        pcTotal = pcTotal,
-                        pcLivres = pcLivres,
-                        spendLabel = "Usar PB em Perícias",
-                        refundLabel = "Desfazer uso de PB",
-                        spendEnabled = !locked && pcLivres > 0,
-                        refundEnabled = !locked && spUsados > 0,
-                        onSpend = {
-                            state.cpSpStack.add(Unit)
-                            state.pontosComplicacaoGastos += 1
-                        },
-                        onRefund = {
-                            state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
-                            state.pontosComplicacaoGastos =
-                                (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                            state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                        }
-                    )
-                } else {
-                    PbLegacyActions(
-                        spendLabel = "Usar PB em Perícias",
-                        refundLabel = "Desfazer uso de PB",
-                        spendEnabled = !locked && pcLivres > 0,
-                        refundEnabled = !locked && spUsados > 0,
-                        onSpend = {
-                            state.cpSpStack.add(Unit)
-                            state.pontosComplicacaoGastos += 1
-                        },
-                        onRefund = {
-                            state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
-                            state.pontosComplicacaoGastos =
-                                (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                            state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                        }
-                    )
-                }
-            }
-        }
-
-        // --- LIST SECTION (Scrollable) ---
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            contentPadding = PaddingValues(vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            items(
-                items = periciasVisiveis,
-                key = { it.nome },
-                contentType = { "pericia_item" }
-            ) { per ->
-                val regra: PericiaRuleSnapshot = state.calcularPericiaRules(
-                    pericia = per,
-                    idosoActive = idosoActive,
-                    locked = locked
+            // --- HEADER SECTION (Fixed) ---
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                SectionHeader(
+                    onHelpClick          = null,
+                    centerText           = "Pontos de Perícia: ${state.pontosPericia}",
+                    onListaCompletaClick = null,
+                    listaCompletaText    = ""
                 )
 
-                val isIdioma = state.isIdiomaPericia(per)
-                val rawName = if (isIdioma) "Idiomas" else per.nome.removePrefix("*").trim()
-                val descKey = "$rawName (${per.atributo})".uppercase().semAcentos()
+                Spacer(Modifier.height(4.dp))
 
-                val descricao = if (per.nome.equals("Alquimia", ignoreCase = true)) {
-                    val fantasiaAtivo = state.compendioFantasiaAtivo
-                    val horrorAtivo = state.compendioHorrorAtivo
-                    val txtFantasia = "Esta é a perícia arcana para alquimistas (veja a página 102), mas também pode ser usada para criar itens alquímicos (página 68). Pode ser usada no lugar de Ciências ao examinar reações químicas, estudar reagentes e outros tópicos relacionados."
-                    val txtHorror = "Esta é a perícia arcana para alquimistas (veja p. 70) e também pode ser usada para criar itens alquímicos (p. 117) ou ser usada no lugar de Ciências ao examinar reações químicas, estudar reagentes ou assuntos relacionados."
-
-                    when {
-                        fantasiaAtivo && horrorAtivo ->
-                            "[FANTASIA] $txtFantasia\n\n[HORROR] $txtHorror"
-                        fantasiaAtivo -> txtFantasia
-                        horrorAtivo -> txtHorror
-                        else -> ""
+                if (!state.emProgresso) {
+                    if (usePbWalletRedesign) {
+                        PbWalletBanner(
+                            pcTotal = pcTotal,
+                            pcLivres = pcLivres,
+                            spendLabel = "Usar PB em Perícias",
+                            refundLabel = "Desfazer uso de PB",
+                            spendEnabled = !locked && pcLivres > 0,
+                            refundEnabled = !locked && spUsados > 0,
+                            onSpend = {
+                                state.cpSpStack.add(Unit)
+                                state.pontosComplicacaoGastos += 1
+                            },
+                            onRefund = {
+                                state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
+                                state.pontosComplicacaoGastos =
+                                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                                state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
+                            }
+                        )
+                    } else {
+                        PbLegacyActions(
+                            spendLabel = "Usar PB em Perícias",
+                            refundLabel = "Desfazer uso de PB",
+                            spendEnabled = !locked && pcLivres > 0,
+                            refundEnabled = !locked && spUsados > 0,
+                            onSpend = {
+                                state.cpSpStack.add(Unit)
+                                state.pontosComplicacaoGastos += 1
+                            },
+                            onRefund = {
+                                state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
+                                state.pontosComplicacaoGastos =
+                                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                                state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
+                            }
+                        )
                     }
-                } else {
-                    descricoes[descKey].orEmpty()
                 }
+            }
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            color = MaterialTheme.colorScheme.surfaceVariant,
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                        .padding(horizontal = 10.dp, vertical = 4.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
+            // --- LIST SECTION (Scrollable) ---
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                contentPadding = PaddingValues(vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                items(
+                    items = periciasVisiveis,
+                    key = { it.nome },
+                    contentType = { "pericia_item" }
+                ) { per ->
+                    val regra: PericiaRuleSnapshot = state.calcularPericiaRules(
+                        pericia = per,
+                        idosoActive = idosoActive,
+                        locked = locked
+                    )
+
+                    val isIdioma = state.isIdiomaPericia(per)
+                    val rawName = if (isIdioma) "Idiomas" else per.nome.removePrefix("*").trim()
+                    val descKey = "$rawName (${per.atributo})".uppercase().semAcentos()
+
+                    val descricao = if (per.nome.equals("Alquimia", ignoreCase = true)) {
+                        val fantasiaAtivo = state.compendioFantasiaAtivo
+                        val horrorAtivo = state.compendioHorrorAtivo
+                        val txtFantasia = "Esta é a perícia arcana para alquimistas (veja a página 102), mas também pode ser usada para criar itens alquímicos (página 68). Pode ser usada no lugar de Ciências ao examinar reações químicas, estudar reagentes e outros tópicos relacionados."
+                        val txtHorror = "Esta é a perícia arcana para alquimistas (veja p. 70) e também pode ser usada para criar itens alquímicos (p. 117) ou ser usada no lugar de Ciências ao examinar reações químicas, estudar reagentes ou assuntos relacionados."
+
+                        when {
+                            fantasiaAtivo && horrorAtivo ->
+                                "[FANTASIA] $txtFantasia\n\n[HORROR] $txtHorror"
+                            fantasiaAtivo -> txtFantasia
+                            horrorAtivo -> txtHorror
+                            else -> ""
+                        }
+                    } else {
+                        descricoes[descKey].orEmpty()
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp, vertical = 4.dp)
                     ) {
-                        val defaultSize = MaterialTheme.typography.bodyLarge.fontSize
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            val defaultSize = MaterialTheme.typography.bodyLarge.fontSize
 
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = buildAnnotatedString {
-                                    val displayName = if (isIdioma) "Idiomas" else per.nome
-                                    if (per.basica) {
-                                        withStyle(
-                                            SpanStyle(
-                                                color = Color.Red,
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                        ) {
-                                            append("✯ $displayName")
-                                        }
-                                    } else {
-                                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                                            append(displayName)
-                                        }
-                                    }
-                                    withStyle(SpanStyle(fontSize = defaultSize / 2)) {
-                                        val displayAtr = mapaAtributosDisplay[regra.attrKey] ?: regra.attrKey
-                                        append(" ($displayAtr)")
-                                    }
-                                },
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            // PROMPT 5: Display Skill Note
-                            val note = state.notasPericia[per.nome]
-                            if (!note.isNullOrBlank()) {
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = "($note)",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.tertiary
+                                    text = buildAnnotatedString {
+                                        val displayName = if (isIdioma) "Idiomas" else per.nome
+                                        if (per.basica) {
+                                            withStyle(
+                                                SpanStyle(
+                                                    color = Color.Red,
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                            ) {
+                                                append("✯ $displayName")
+                                            }
+                                        } else {
+                                            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                                                append(displayName)
+                                            }
+                                        }
+                                        withStyle(SpanStyle(fontSize = defaultSize / 2)) {
+                                            val displayAtr = mapaAtributosDisplay[regra.attrKey] ?: regra.attrKey
+                                            append(" ($displayAtr)")
+                                        }
+                                    },
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
+                                // PROMPT 5: Display Skill Note
+                                val note = state.notasPericia[per.nome]
+                                if (!note.isNullOrBlank()) {
+                                    Text(
+                                        text = "($note)",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.tertiary
+                                    )
+                                }
                             }
-                        }
 
-                        // PROMPT 5: Edit Note Button
-                        // Correction: Show edit button ONLY if optional rule is active
-                        if (isIdioma && regra.displayRaw > 0) {
+                            // PROMPT 5: Edit Note Button
+                            // Correction: Show edit button ONLY if optional rule is active
+                            if (isIdioma && regra.displayRaw > 0) {
+                                IconButton(
+                                    onClick = {
+                                        idiomaTarget = per
+                                        idiomaText = state.notasPericia[per.nome] ?: ""
+                                        idiomaEditMode = true
+                                        showIdiomaDialog = true
+                                    },
+                                    modifier = Modifier
+                                        .size(32.dp)
+                                        .padding(4.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.Edit,
+                                        contentDescription = "Editar idioma",
+                                        modifier = Modifier.size(16.dp),
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            } else if (regra.displayRaw > 0 && state.usarEspecializacoesDePericia) {
+                                IconButton(
+                                    onClick = {
+                                        noteTarget = per
+                                        noteText = state.notasPericia[per.nome] ?: ""
+                                        showNoteDialog = true
+                                    },
+                                    modifier = Modifier
+                                        .size(32.dp)
+                                        .padding(4.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.Edit,
+                                        contentDescription = "Editar nota",
+                                        modifier = Modifier.size(16.dp),
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+
                             IconButton(
                                 onClick = {
-                                    idiomaTarget = per
-                                    idiomaText = state.notasPericia[per.nome] ?: ""
-                                    idiomaEditMode = true
-                                    showIdiomaDialog = true
-                                },
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .padding(4.dp)
-                            ) {
-                                Icon(
-                                    Icons.Default.Edit,
-                                    contentDescription = "Editar idioma",
-                                    modifier = Modifier.size(16.dp),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        } else if (regra.displayRaw > 0 && state.usarEspecializacoesDePericia) {
-                            IconButton(
-                                onClick = {
-                                    noteTarget = per
-                                    noteText = state.notasPericia[per.nome] ?: ""
-                                    showNoteDialog = true
-                                },
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .padding(4.dp)
-                            ) {
-                                Icon(
-                                    Icons.Default.Edit,
-                                    contentDescription = "Editar nota",
-                                    modifier = Modifier.size(16.dp),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
-
-                        IconButton(
-                            onClick = {
-                                state.decreasePericia(per)
-                                if (state.rawTotal(per) == 0) {
-                                    state.especializacoesPorPericia.remove(per.nome)
-                                    state.notasPericia.remove(per.nome) // Clear note if skill is removed
-                                }
-                                if (isIdioma) {
-                                    state.syncIdiomaSlots()
-                                }
-                                onUserFeedback()
-                            },
-                            enabled = regra.canDecrease,
-                            modifier = Modifier
-                                .size(32.dp)
-                                .padding(4.dp)
-                        ) {
-                            Icon(
-                                Icons.Default.Remove,
-                                contentDescription = "Diminuir ${per.nome}",
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-
-                        Text(
-                            text = when {
-                                regra.displayRaw == 0 && per.basica -> "d4"
-                                regra.displayRaw == 0 -> "-"
-                                else -> regra.displayRaw.toDiceString()
-                            },
-                            modifier = Modifier.width(valorColWidthDp),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            textAlign = TextAlign.Center
-                        )
-
-                        IconButton(
-                            onClick = {
-                                val regrasAtuais = state.calcularPericiaRules(
-                                    pericia = per,
-                                    idosoActive = idosoActive,
-                                    locked = locked
-                                )
-
-                                if (!regrasAtuais.canIncrease) {
-                                    return@IconButton
-                                }
-
-                                if (isIdioma && state.rawTotal(per) == 0) {
-                                    idiomaTarget = per
-                                    idiomaText = ""
-                                    idiomaPendingCost = regrasAtuais.cost
-                                    idiomaEditMode = false
-                                    showIdiomaDialog = true
-                                    return@IconButton
-                                }
-
-                                state.increasePericiaFromAdvancement(per, regrasAtuais.cost)
-                                if (isIdioma) {
-                                    state.syncIdiomaSlots()
-                                }
-                                onUserFeedback()
-
-                                if (!isIdioma && state.usarEspecializacoesDePericia) {
-                                    val esp = state.especializacoesPorPericia[per.nome]
-                                    if (esp?.principal == null) {
-                                        specTarget = per
-                                        specText = ""
-                                        buyingExtraSpec = false
-                                        showSpecDialog = true
+                                    state.decreasePericia(per)
+                                    if (state.rawTotal(per) == 0) {
+                                        state.especializacoesPorPericia.remove(per.nome)
+                                        state.notasPericia.remove(per.nome) // Clear note if skill is removed
                                     }
-                                }
-                            },
-                            enabled = regra.canIncrease,
-                            modifier = Modifier
-                                .size(32.dp)
-                                .padding(4.dp)
-                        ) {
-                            Icon(
-                                Icons.Default.Add,
-                                contentDescription = "Aumentar ${per.nome}",
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-
-                        val jaTemPrincipal =
-                            state.especializacoesPorPericia[per.nome]?.principal != null
-                        if (!isIdioma && state.usarEspecializacoesDePericia && jaTemPrincipal) {
-                            TextButton(
-                                onClick = {
-                                    specTarget = per
-                                    specText = ""
-                                    buyingExtraSpec = true
-                                    showSpecDialog = true
+                                    if (isIdioma) {
+                                        state.syncIdiomaSlots()
+                                    }
                                     onUserFeedback()
                                 },
-                                enabled = !locked && state.pontosPericia >= 1
+                                enabled = regra.canDecrease,
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .padding(4.dp)
                             ) {
-                                Text("Esp+")
+                                Icon(
+                                    Icons.Default.Remove,
+                                    contentDescription = "Diminuir ${per.nome}",
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+
+                            Text(
+                                text = when {
+                                    regra.displayRaw == 0 && per.basica -> "d4"
+                                    regra.displayRaw == 0 -> "-"
+                                    else -> regra.displayRaw.toDiceString()
+                                },
+                                modifier = Modifier.width(valorColWidthDp),
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                textAlign = TextAlign.Center
+                            )
+
+                            IconButton(
+                                onClick = {
+                                    val regrasAtuais = state.calcularPericiaRules(
+                                        pericia = per,
+                                        idosoActive = idosoActive,
+                                        locked = locked
+                                    )
+
+                                    if (!regrasAtuais.canIncrease) {
+                                        return@IconButton
+                                    }
+
+                                    if (isIdioma && state.rawTotal(per) == 0) {
+                                        idiomaTarget = per
+                                        idiomaText = ""
+                                        idiomaPendingCost = regrasAtuais.cost
+                                        idiomaEditMode = false
+                                        showIdiomaDialog = true
+                                        return@IconButton
+                                    }
+
+                                    state.increasePericiaFromAdvancement(per, regrasAtuais.cost)
+                                    if (isIdioma) {
+                                        state.syncIdiomaSlots()
+                                    }
+                                    onUserFeedback()
+
+                                    if (!isIdioma && state.usarEspecializacoesDePericia) {
+                                        val esp = state.especializacoesPorPericia[per.nome]
+                                        if (esp?.principal == null) {
+                                            specTarget = per
+                                            specText = ""
+                                            buyingExtraSpec = false
+                                            showSpecDialog = true
+                                        }
+                                    }
+                                },
+                                enabled = regra.canIncrease,
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .padding(4.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.Add,
+                                    contentDescription = "Aumentar ${per.nome}",
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+
+                            val jaTemPrincipal =
+                                state.especializacoesPorPericia[per.nome]?.principal != null
+                            if (!isIdioma && state.usarEspecializacoesDePericia && jaTemPrincipal) {
+                                TextButton(
+                                    onClick = {
+                                        specTarget = per
+                                        specText = ""
+                                        buyingExtraSpec = true
+                                        showSpecDialog = true
+                                        onUserFeedback()
+                                    },
+                                    enabled = !locked && state.pontosPericia >= 1
+                                ) {
+                                    Text("Esp+")
+                                }
                             }
                         }
-                    }
 
-                    if (allowLongTexts && descricao.isNotBlank()) {
-                        Spacer(Modifier.height(2.dp))
-                        TextButton(
-                            onClick = {
-                                val current = detalhesExpandidos[descKey] ?: false
-                                detalhesExpandidos[descKey] = !current
-                            },
-                            colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.primary),
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
-                        ) {
-                            Text(
-                                if (detalhesExpandidos[descKey] == true) "Ocultar detalhes" else "Ver detalhes",
-                                style = MaterialTheme.typography.labelMedium
-                            )
-                        }
-
-                        AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
-                            Text(
-                                text = descricao,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-
-                    if (!isIdioma) {
-                        val espDto: EspecializacoesDto? = state.especializacoesPorPericia[per.nome]
-                        val principal = espDto?.principal
-                        val extras: List<String> = when {
-                            espDto == null -> emptyList()
-                            else -> espDto.lista
-                                .filter { it.isNotBlank() }
-                                .distinct()
-                                .filter { it != principal }
-                        }
-
-                        val canRemoveSpecs = !locked
-
-                        if (principal != null || extras.isNotEmpty()) {
-                            Spacer(Modifier.width(8.dp))
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 4.dp),
-                                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                        if (allowLongTexts && descricao.isNotBlank()) {
+                            Spacer(Modifier.height(2.dp))
+                            TextButton(
+                                onClick = {
+                                    val current = detalhesExpandidos[descKey] ?: false
+                                    detalhesExpandidos[descKey] = !current
+                                },
+                                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.primary),
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
                             ) {
-                                if (principal != null) {
-                                    SpecChip(
-                                        label = principal,
-                                        isPrincipal = true,
-                                        onEdit = {
-                                            editIsPrincipal = true
-                                            editPerTarget = per
-                                            editOldName = principal
-                                            editNewName = principal
-                                            showEditDialog = true
-                                        },
-                                        onRemove = null
-                                    )
-                                }
+                                Text(
+                                    if (detalhesExpandidos[descKey] == true) "Ocultar detalhes" else "Ver detalhes",
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                            }
 
-                                extras.forEach { extra ->
-                                    SpecChip(
-                                        label = extra,
-                                        isPrincipal = false,
-                                        onEdit = {
-                                            editIsPrincipal = false
-                                            editPerTarget = per
-                                            editOldName = extra
-                                            editNewName = extra
-                                            showEditDialog = true
-                                        },
-                                        onRemove =
-                                        if (canRemoveSpecs) {
-                                            {
-                                                val atual =
-                                                    state.especializacoesPorPericia[per.nome]
-                                                        ?: EspecializacoesDto()
-                                                val novaLista =
-                                                    atual.lista.filter { it != extra }
-                                                state.especializacoesPorPericia[per.nome] =
-                                                    atual.copy(lista = novaLista)
-                                            }
-                                        } else null
-                                    )
+                            AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
+                                Text(
+                                    text = descricao,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+
+                        if (!isIdioma) {
+                            val espDto: EspecializacoesDto? = state.especializacoesPorPericia[per.nome]
+                            val principal = espDto?.principal
+                            val extras: List<String> = when {
+                                espDto == null -> emptyList()
+                                else -> espDto.lista
+                                    .filter { it.isNotBlank() }
+                                    .distinct()
+                                    .filter { it != principal }
+                            }
+
+                            val canRemoveSpecs = !locked
+
+                            if (principal != null || extras.isNotEmpty()) {
+                                Spacer(Modifier.width(8.dp))
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 4.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    if (principal != null) {
+                                        SpecChip(
+                                            label = principal,
+                                            isPrincipal = true,
+                                            onEdit = {
+                                                editIsPrincipal = true
+                                                editPerTarget = per
+                                                editOldName = principal
+                                                editNewName = principal
+                                                showEditDialog = true
+                                            },
+                                            onRemove = null
+                                        )
+                                    }
+
+                                    extras.forEach { extra ->
+                                        SpecChip(
+                                            label = extra,
+                                            isPrincipal = false,
+                                            onEdit = {
+                                                editIsPrincipal = false
+                                                editPerTarget = per
+                                                editOldName = extra
+                                                editNewName = extra
+                                                showEditDialog = true
+                                            },
+                                            onRemove =
+                                            if (canRemoveSpecs) {
+                                                {
+                                                    val atual =
+                                                        state.especializacoesPorPericia[per.nome]
+                                                            ?: EspecializacoesDto()
+                                                    val novaLista =
+                                                        atual.lista.filter { it != extra }
+                                                    state.especializacoesPorPericia[per.nome] =
+                                                        atual.copy(lista = novaLista)
+                                                }
+                                            } else null
+                                        )
+                                    }
                                 }
                             }
                         }

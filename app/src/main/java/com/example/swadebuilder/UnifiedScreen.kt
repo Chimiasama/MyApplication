@@ -678,17 +678,11 @@ private fun ProgressionDetailContent(
             }
         }
         MainSection.PERICIAS -> {
-            SectionCard(
-                title    = "Perícias",
-                icon     = Icons.Default.School,
-                showHeader = false
-            ) {
-                PericiasContent(
-                    state = state,
-                    feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
-                    onUserFeedback = onUserFeedback
-                )
-            }
+            PericiasContent(
+                state = state,
+                feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
+                onUserFeedback = onUserFeedback
+            )
 
             Spacer(Modifier.height(16.dp))
             HorizontalDivider(thickness = 3.dp)
@@ -819,17 +813,11 @@ private fun CreationDetailContent(
         ) {
             AtributosContent(state, onUserFeedback)
         }
-        MainSection.PERICIAS -> SectionCard(
-            title    = "Perícias",
-            icon     = Icons.Default.School,
-            showHeader = false
-        ) {
-            PericiasContent(
-                state = state,
-                feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
-                onUserFeedback = onUserFeedback
-            )
-        }
+        MainSection.PERICIAS -> PericiasContent(
+            state = state,
+            feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
+            onUserFeedback = onUserFeedback
+        )
         MainSection.VANTAGENS -> SectionCard(
             title    = "Vantagens",
             icon     = Icons.Default.Star,
