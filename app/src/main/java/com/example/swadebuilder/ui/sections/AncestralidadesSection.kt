@@ -18,18 +18,20 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -49,6 +51,7 @@ import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.titleCase
 import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.serialization.Serializable
 
@@ -237,7 +240,7 @@ fun AncestralidadesSection(
     val selectedDisplayName =
         ancestralidadesState.value.firstOrNull { item ->
             item.nome.uppercase().semAcentos() == selectedKey.value
-        }?.displayName(showOfficialNames) ?: "HUMANOS"
+        }?.displayName(showOfficialNames)?.titleCase() ?: "Humanos"
 
     val focoKey = ancestralidadeEmFoco
         ?.uppercase()
@@ -370,51 +373,52 @@ fun AncestralidadesSection(
                     val isSelected = itemKey == selectedKey.value
                     val descricao = item.descricao.orEmpty()
 
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        tonalElevation = if (isSelected) 4.dp else 0.dp,
-                        color = if (isSelected) {
-                            MaterialTheme.colorScheme.primaryContainer
-                        } else {
-                            MaterialTheme.colorScheme.surfaceVariant
-                        }
-                    ) {
-                        Column(
+                    Card(
                         modifier = Modifier
+                            .fillMaxWidth()
                             .clickable(enabled = !supersLocked) {
                                 if (supersLocked) return@clickable
                                 onUserFeedback()
                                 selectedKey.value = itemKey
                                 onSelectAncestralidade(item.nome)
+                            },
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (isSelected) {
+                                MaterialTheme.colorScheme.primaryContainer
+                            } else {
+                                MaterialTheme.colorScheme.surfaceVariant
                             }
-                                .padding(horizontal = 12.dp, vertical = 10.dp)
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(horizontal = 12.dp, vertical = 8.dp)
                         ) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                RadioButton(
-                                    selected = isSelected,
-                                    onClick = null,
-                                    enabled = !supersLocked
-                                )
-
-                                Spacer(Modifier.padding(start = 8.dp))
-
                                 Column(Modifier.weight(1f)) {
-                                    val displayName = item.displayName(showOfficialNames)
+                                    val displayName = item.displayName(showOfficialNames).titleCase()
 
                                     Text(
                                         text = displayName,
-                                        style = MaterialTheme.typography.bodyLarge,
+                                        style = MaterialTheme.typography.bodyMedium, // Smaller font
                                         color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+
+                                if (isSelected) {
+                                    Icon(
+                                        imageVector = Icons.Default.Check,
+                                        contentDescription = "Selecionado",
+                                        tint = MaterialTheme.colorScheme.primary
                                     )
                                 }
                             }
 
                             if (allowLongTexts && descricao.isNotBlank()) {
-                                Spacer(Modifier.height(6.dp))
+                                Spacer(Modifier.height(4.dp))
                                 TextButton(
                                     onClick = {
                                         val current = detalhesExpandidos[itemKey] ?: false
@@ -427,14 +431,14 @@ fun AncestralidadesSection(
                                 ) {
                                     Text(
                                         if (detalhesExpandidos[itemKey] == true) "Ocultar detalhes" else "Ver detalhes",
-                                        style = MaterialTheme.typography.labelMedium
+                                        style = MaterialTheme.typography.labelSmall // Smaller font for button
                                     )
                                 }
 
                                 AnimatedVisibility(visible = detalhesExpandidos[itemKey] == true) {
                                     Text(
                                         text = descricao,
-                                        style = MaterialTheme.typography.bodyMedium,
+                                        style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }

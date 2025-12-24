@@ -170,58 +170,74 @@ fun ComplicacoesSection(
             isExpanded = isSearchExpanded,
             onExpandedChange = { isSearchExpanded = it },
             placeholder = "Pesquisar Complicações..."
-        )
+        ) {
+            // Filters UI inside search expansion
+            if (!locked) {
+                Spacer(Modifier.height(8.dp))
 
-        // Filters UI
-        if (!locked) {
-            Spacer(Modifier.height(8.dp))
-
-            // Severity Filter
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                listOf("Todos", "Menor", "Maior").forEach { type ->
-                    FilterChip(
-                        selected = selectedSeverity == type,
-                        onClick = { selectedSeverity = type },
-                        label = { Text(type) }
-                    )
-                }
-            }
-
-            // Origin Filter (if multiple active)
-            if (origensAtivas.size > 1) {
-                Spacer(Modifier.height(4.dp))
-                LazyRow(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    item {
-                        FilterChip(
-                            selected = selectedOrigin == "Todos",
-                            onClick = { selectedOrigin = "Todos" },
-                            label = { Text("Todas Origens") }
-                        )
-                    }
-                    items(origensAtivas.toList().sorted()) { origin ->
-                        val label = when(origin) {
-                            "BASICO" -> "Básico"
-                            "SUPER" -> "Supers"
-                            "FANTASIA" -> "Fantasia"
-                            "HORROR" -> "Horror"
-                            "FANTASIABUSCATRILHA" -> "Buscatrilha"
-                            "OESTE_ESTRANHO" -> "Deadlands"
-                            "ARTE_DA_GUERRA" -> "Arte da Guerra"
-                            "CIDADE_SOL_VAPOR" -> "Sol/Vapor"
-                            "WISEGUYS" -> "Wiseguys"
-                            else -> origin
+                Column {
+                    // Severity Filter
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        item {
+                            Text(
+                                "Gravidade:",
+                                style = MaterialTheme.typography.labelMedium,
+                                modifier = Modifier.padding(end = 4.dp).align(Alignment.CenterVertically)
+                            )
                         }
-                        FilterChip(
-                            selected = selectedOrigin == origin,
-                            onClick = { selectedOrigin = origin },
-                            label = { Text(label) }
-                        )
+                        items(listOf("Todos", "Menor", "Maior")) { type ->
+                            FilterChip(
+                                selected = selectedSeverity == type,
+                                onClick = { selectedSeverity = type },
+                                label = { Text(type) }
+                            )
+                        }
+                    }
+
+                    // Origin Filter (if multiple active)
+                    if (origensAtivas.size > 1) {
+                        Spacer(Modifier.height(4.dp))
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            item {
+                                Text(
+                                    "Livro:",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    modifier = Modifier.padding(end = 4.dp).align(Alignment.CenterVertically)
+                                )
+                            }
+                            item {
+                                FilterChip(
+                                    selected = selectedOrigin == "Todos",
+                                    onClick = { selectedOrigin = "Todos" },
+                                    label = { Text("Todos") }
+                                )
+                            }
+                            items(origensAtivas.toList().sorted()) { origin ->
+                                val label = when(origin) {
+                                    "BASICO" -> "Básico"
+                                    "SUPER" -> "Supers"
+                                    "FANTASIA" -> "Fantasia"
+                                    "HORROR" -> "Horror"
+                                    "FANTASIABUSCATRILHA" -> "Buscatrilha"
+                                    "OESTE_ESTRANHO" -> "Deadlands"
+                                    "ARTE_DA_GUERRA" -> "Arte da Guerra"
+                                    "CIDADE_SOL_VAPOR" -> "Sol/Vapor"
+                                    "WISEGUYS" -> "Wiseguys"
+                                    else -> origin
+                                }
+                                FilterChip(
+                                    selected = selectedOrigin == origin,
+                                    onClick = { selectedOrigin = origin },
+                                    label = { Text(label) }
+                                )
+                            }
+                        }
                     }
                 }
             }
