@@ -179,13 +179,14 @@ fun ComplicacoesSection(
                     // Severity Filter
                     LazyRow(
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         item {
                             Text(
                                 "Gravidade:",
                                 style = MaterialTheme.typography.labelMedium,
-                                modifier = Modifier.padding(end = 4.dp).align(Alignment.CenterVertically)
+                                modifier = Modifier.padding(end = 4.dp)
                             )
                         }
                         items(listOf("Todos", "Menor", "Maior")) { type ->
@@ -202,13 +203,14 @@ fun ComplicacoesSection(
                         Spacer(Modifier.height(4.dp))
                         LazyRow(
                             modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             item {
                                 Text(
                                     "Livro:",
                                     style = MaterialTheme.typography.labelMedium,
-                                    modifier = Modifier.padding(end = 4.dp).align(Alignment.CenterVertically)
+                                    modifier = Modifier.padding(end = 4.dp)
                                 )
                             }
                             item {
