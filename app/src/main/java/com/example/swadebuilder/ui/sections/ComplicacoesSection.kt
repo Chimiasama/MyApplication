@@ -54,6 +54,8 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaComplicacoes
+import com.example.swadebuilder.model.Complicacao
+import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
@@ -98,9 +100,23 @@ fun ComplicacoesSection(
         if (state.compendioWiseguysAtivo) add("WISEGUYS")
     }
 
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
+
     val complicacoesFiltradas = listaComplicacoes.filter { comp ->
         val origemSafe = if (comp.origem.isBlank()) "BASICO" else comp.origem
-        origemSafe.uppercase().semAcentos().trim() in origensAtivas
+        val matchesOrigin = origemSafe.uppercase().semAcentos().trim() in origensAtivas
+
+        if (!matchesOrigin) return@filter false
+
+        if (searchQuery.isNotBlank()) {
+            val q = searchQuery.semAcentos().lowercase()
+            val n = comp.name.semAcentos().lowercase()
+            val d = comp.description.semAcentos().lowercase()
+            n.contains(q) || d.contains(q)
+        } else {
+            true
+        }
     }
 
     SectionCard(
@@ -128,6 +144,16 @@ fun ComplicacoesSection(
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
+
+        Spacer(Modifier.height(4.dp))
+
+        ExpandableSearchFilter(
+            query = searchQuery,
+            onQueryChange = { searchQuery = it },
+            isExpanded = isSearchExpanded,
+            onExpandedChange = { isSearchExpanded = it },
+            placeholder = "Pesquisar Complicações..."
+        )
 
         Spacer(Modifier.height(4.dp))
 

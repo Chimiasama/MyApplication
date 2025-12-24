@@ -41,9 +41,11 @@ import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.loadJsonAsset
+import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.util.semAcentos
 
 private fun custoParaPenalidadeTexto(custo: String): String {
     val clean = custo.trim()
@@ -79,7 +81,24 @@ fun PoderesSection(
         value = poderesBase + tecnicasChi
     }
 
-    val poderesElegiveis = remember(allPoderes) { allPoderes }
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
+
+    val poderesElegiveis = remember(allPoderes, searchQuery) {
+        if (searchQuery.isBlank()) allPoderes
+        else allPoderes.filter {
+            it.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
+            it.descricao.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true)
+        }
+    }
+
+    ExpandableSearchFilter(
+        query = searchQuery,
+        onQueryChange = { searchQuery = it },
+        isExpanded = isSearchExpanded,
+        onExpandedChange = { isSearchExpanded = it },
+        placeholder = "Pesquisar Poderes..."
+    )
 
     if (!state.permiteMultiAntecedenteArcano) {
         var selectedArcanoKey by rememberSaveable(arcanosAtivos) { mutableStateOf(arcanosAtivos.first()) }

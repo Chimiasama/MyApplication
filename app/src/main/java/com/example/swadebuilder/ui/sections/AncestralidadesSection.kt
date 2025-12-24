@@ -26,9 +26,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -40,6 +42,7 @@ import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.loadJsonAsset
+import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
@@ -234,15 +237,29 @@ fun AncestralidadesSection(
         ?.semAcentos()
         ?.takeIf { it.isNotBlank() }
 
-    val listaOrdenada =
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
+
+    val listaBase = ancestralidadesState.value
+
+    val listaFiltrada = remember(listaBase, searchQuery) {
+        if (searchQuery.isBlank()) listaBase
+        else listaBase.filter {
+            it.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
+            (it.descricao?.semAcentos()?.contains(searchQuery.semAcentos(), ignoreCase = true) == true)
+        }
+    }
+
+    val listaOrdenada = remember(listaFiltrada, focoKey) {
         if (focoKey != null) {
-            val (foco, resto) = ancestralidadesState.value.partition {
+            val (foco, resto) = listaFiltrada.partition {
                 it.nome.uppercase().semAcentos() == focoKey
             }
             foco + resto
         } else {
-            ancestralidadesState.value
+            listaFiltrada
         }
+    }
 
     SectionCard(
         title = "Ancestralidades",
@@ -261,6 +278,14 @@ fun AncestralidadesSection(
             onCenterClick = null,
             onListaCompletaClick = null,
             listaCompletaText = ""
+        )
+
+        ExpandableSearchFilter(
+            query = searchQuery,
+            onQueryChange = { searchQuery = it },
+            isExpanded = isSearchExpanded,
+            onExpandedChange = { isSearchExpanded = it },
+            placeholder = "Pesquisar Ancestralidades..."
         )
 
         Spacer(Modifier.height(8.dp))

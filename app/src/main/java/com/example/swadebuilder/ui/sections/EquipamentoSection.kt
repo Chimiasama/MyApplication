@@ -55,6 +55,7 @@ import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
+import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.SearchTextField
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -319,15 +320,6 @@ fun EquipamentoSection(
         }
 
         // 3. Search & Filter UI
-        SearchTextField(
-            query = searchQuery,
-            onQueryChange = { searchQuery = it },
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
-
-        Spacer(Modifier.size(8.dp))
-
-        // Dynamic Categories for Chips
         val availableTypes = remember(allCategorias) {
             allCategorias.map { it.tipo }.distinct().sorted()
         }
@@ -337,139 +329,133 @@ fun EquipamentoSection(
             }
         }
 
-        LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
+
+        ExpandableSearchFilter(
+            query = searchQuery,
+            onQueryChange = { searchQuery = it },
+            isExpanded = isSearchExpanded,
+            onExpandedChange = { isSearchExpanded = it },
+            placeholder = "Pesquisar Equipamentos..."
         ) {
-            item(key = "advanced_filters", contentType = "filter_chip") {
-                FilterChip(
-                    selected = !filter.isEmpty(),
-                    onClick = { showFilterDialog = true },
-                    label = { Text("Filtros Avançados${if(!filter.isEmpty()) " (!)" else ""}") }
-                )
-            }
-
-            // --- Origin Mini Cards (Chips) ---
-            if (compendioFantasiaAtivo) {
-                item(key = "origin_fantasia", contentType = "filter_chip") {
-                    val label = "Medievais"
-                    val key = "FANTASIA"
-                    FilterChip(
-                        selected = key in filter.origens,
-                        onClick = {
-                            val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
-                            filter = filter.copy(origens = newSet)
-                        },
-                        label = { Text(label) }
-                    )
-                }
-            }
-
-            if (compendioSciFiAtivo) {
-                item(key = "origin_scifi", contentType = "filter_chip") {
-                    val label = "Futuristas"
-                    val key = "SCI_FI"
-                    FilterChip(
-                        selected = key in filter.origens,
-                        onClick = {
-                            val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
-                            filter = filter.copy(origens = newSet)
-                        },
-                        label = { Text(label) }
-                    )
-                }
-            }
-
-            // Add "Modernas" (Basic) if any other compendium is active to allow filtering it out
-            if (compendioFantasiaAtivo || compendioSciFiAtivo || compendioHorrorAtivo || compendioDeadlandsAtivo) {
-                item(key = "origin_basic", contentType = "filter_chip") {
-                    val label = "Modernas"
-                    val key = "BASICO"
-                    FilterChip(
-                        selected = key in filter.origens,
-                        onClick = {
-                            val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
-                            filter = filter.copy(origens = newSet)
-                        },
-                        label = { Text(label) }
-                    )
-                }
-            }
-
-            items(availableTypes, key = { it }, contentType = { "type_chip" }) { type ->
-                FilterChip(
-                    selected = type in selectedTypes,
-                    onClick = {
-                        if (type in selectedTypes) selectedTypes.remove(type)
-                        else selectedTypes.add(type)
-
-                        if (filter.subtipos.isNotEmpty()) {
-                            filter = filter.copy(subtipos = emptySet())
-                        }
-                    },
-                    label = { Text(type) }
-                )
-            }
-        }
-
-        if (selectedTypes.isNotEmpty() || filter.subtipos.isNotEmpty()) {
             Spacer(Modifier.size(8.dp))
-            val subtypesForSelection = if (selectedTypes.isNotEmpty()) {
-                selectedTypes
-                    .flatMap { type -> availableSubtypesByType[type].orEmpty() }
-            } else {
-                allCategorias.map { it.subtipo }
-            }
-                .distinct()
-                .sorted()
 
-            if (subtypesForSelection.isNotEmpty()) {
-                Text(
-                    "Filtrar subcategorias:",
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                    style = MaterialTheme.typography.labelLarge
-                )
-                FlowRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    subtypesForSelection.forEach { subtype ->
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                item(key = "advanced_filters", contentType = "filter_chip") {
+                    FilterChip(
+                        selected = !filter.isEmpty(),
+                        onClick = { showFilterDialog = true },
+                        label = { Text("Filtros Avançados${if(!filter.isEmpty()) " (!)" else ""}") }
+                    )
+                }
+
+                // --- Origin Mini Cards (Chips) ---
+                if (compendioFantasiaAtivo) {
+                    item(key = "origin_fantasia", contentType = "filter_chip") {
+                        val label = "Medievais"
+                        val key = "FANTASIA"
                         FilterChip(
-                            selected = subtype in filter.subtipos,
+                            selected = key in filter.origens,
                             onClick = {
-                                val newSet = filter.subtipos.toMutableSet()
-                                if (subtype in newSet) newSet.remove(subtype) else newSet.add(subtype)
-                                filter = filter.copy(subtipos = newSet)
+                                val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
+                                filter = filter.copy(origens = newSet)
                             },
-                            modifier = Modifier.heightIn(min = 30.dp),
-                            label = { Text(subtype, style = MaterialTheme.typography.labelMedium) }
+                            label = { Text(label) }
                         )
                     }
                 }
-                Spacer(Modifier.size(8.dp))
+
+                if (compendioSciFiAtivo) {
+                    item(key = "origin_scifi", contentType = "filter_chip") {
+                        val label = "Futuristas"
+                        val key = "SCI_FI"
+                        FilterChip(
+                            selected = key in filter.origens,
+                            onClick = {
+                                val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
+                                filter = filter.copy(origens = newSet)
+                            },
+                            label = { Text(label) }
+                        )
+                    }
+                }
+
+                // Add "Modernas" (Basic) if any other compendium is active to allow filtering it out
+                if (compendioFantasiaAtivo || compendioSciFiAtivo || compendioHorrorAtivo || compendioDeadlandsAtivo) {
+                    item(key = "origin_basic", contentType = "filter_chip") {
+                        val label = "Modernas"
+                        val key = "BASICO"
+                        FilterChip(
+                            selected = key in filter.origens,
+                            onClick = {
+                                val newSet = if (key in filter.origens) filter.origens - key else filter.origens + key
+                                filter = filter.copy(origens = newSet)
+                            },
+                            label = { Text(label) }
+                        )
+                    }
+                }
+
+                items(availableTypes, key = { it }, contentType = { "type_chip" }) { type ->
+                    FilterChip(
+                        selected = type in selectedTypes,
+                        onClick = {
+                            if (type in selectedTypes) selectedTypes.remove(type)
+                            else selectedTypes.add(type)
+
+                            if (filter.subtipos.isNotEmpty()) {
+                                filter = filter.copy(subtipos = emptySet())
+                            }
+                        },
+                        label = { Text(type) }
+                    )
+                }
             }
-        }
 
-        if (showFilterDialog) {
-            val allTipos = allCategorias.map { it.tipo }.distinct()
-            val allSubtipos = allCategorias.map { it.subtipo }.distinct()
-            val allOrigens = allCategorias
-                .map { it.origem?.ifBlank { "BASICO" } ?: "BASICO" }
-                .map { it.uppercase() }
-                .distinct()
+            if (selectedTypes.isNotEmpty() || filter.subtipos.isNotEmpty()) {
+                Spacer(Modifier.size(8.dp))
+                val subtypesForSelection = if (selectedTypes.isNotEmpty()) {
+                    selectedTypes
+                        .flatMap { type -> availableSubtypesByType[type].orEmpty() }
+                } else {
+                    allCategorias.map { it.subtipo }
+                }
+                    .distinct()
+                    .sorted()
 
-            EquipFilterDialog(
-                allOrigens = allOrigens,
-                allTipos = allTipos,
-                allSubtipos = allSubtipos,
-                current = filter,
-                onChange = { filter = it },
-                onDismiss = { showFilterDialog = false }
-            )
+                if (subtypesForSelection.isNotEmpty()) {
+                    Text(
+                        "Filtrar subcategorias:",
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                    FlowRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        subtypesForSelection.forEach { subtype ->
+                            FilterChip(
+                                selected = subtype in filter.subtipos,
+                                onClick = {
+                                    val newSet = filter.subtipos.toMutableSet()
+                                    if (subtype in newSet) newSet.remove(subtype) else newSet.add(subtype)
+                                    filter = filter.copy(subtipos = newSet)
+                                },
+                                modifier = Modifier.heightIn(min = 30.dp),
+                                label = { Text(subtype, style = MaterialTheme.typography.labelMedium) }
+                            )
+                        }
+                    }
+                    Spacer(Modifier.size(8.dp))
+                }
+            }
         }
 
         Spacer(Modifier.padding(vertical = 4.dp))

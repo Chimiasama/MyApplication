@@ -68,7 +68,7 @@ import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
-import com.example.swadebuilder.ui.components.SearchTextField
+import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
@@ -340,54 +340,58 @@ fun VantagensContent(
         }
 
         // --- Search and Filters ---
-        SearchTextField(
+        var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
+
+        ExpandableSearchFilter(
             query = searchQuery,
             onQueryChange = { searchQuery = it },
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
-
-        Spacer(Modifier.size(8.dp))
-
-        LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            isExpanded = isSearchExpanded,
+            onExpandedChange = { isSearchExpanded = it },
+            placeholder = "Pesquisar Vantagens..."
         ) {
-            // Advanced Filters Chip
-             item(key = "advanced_filters", contentType = "filter_chip") {
-                 FilterChip(
-                     selected = !filter.isEmpty(),
-                     onClick = { showFilterDialog = true },
-                     label = { Text("Filtros Avançados${if(!filter.isEmpty()) " (!)" else ""}") }
-                 )
-             }
+            Spacer(Modifier.size(8.dp))
 
-            // Category Chips
-            items(
-                items = Categoria.entries.toTypedArray(),
-                key = { it.name },
-                contentType = { "category_chip" }
-            ) { cat ->
-                if (state.modoSupers && cat == Categoria.PODER) return@items
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // Advanced Filters Chip
+                item(key = "advanced_filters", contentType = "filter_chip") {
+                    FilterChip(
+                        selected = !filter.isEmpty(),
+                        onClick = { showFilterDialog = true },
+                        label = { Text("Filtros Avançados${if(!filter.isEmpty()) " (!)" else ""}") }
+                    )
+                }
 
-                // --- NEW FILTERING LOGIC ---
-                // Hide specific categories if their compendium is not active
-                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioBuscatrilhaAtivo) return@items
-                if (cat == Categoria.ESTRANHAS && !state.compendioDeadlandsAtivo) return@items
-                if (cat == Categoria.RESSUSCITADO && !state.compendioDeadlandsAtivo) return@items
-                if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@items
-                if (cat == Categoria.SUPER && !state.modoSupers) return@items
-                if (cat == Categoria.MONSTRUOSAS && !state.compendioHorrorAtivo) return@items
-                if (cat == Categoria.CHI && !state.compendioArteDaGuerraAtivo) return@items
+                // Category Chips
+                items(
+                    items = Categoria.entries.toTypedArray(),
+                    key = { it.name },
+                    contentType = { "category_chip" }
+                ) { cat ->
+                    if (state.modoSupers && cat == Categoria.PODER) return@items
 
-                FilterChip(
-                    selected = cat in selectedCategories,
-                    onClick = {
-                        if (cat in selectedCategories) selectedCategories.remove(cat)
-                        else selectedCategories.add(cat)
-                    },
-                    label = { Text(cat.name) }
-                )
+                    // --- NEW FILTERING LOGIC ---
+                    // Hide specific categories if their compendium is not active
+                    if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioBuscatrilhaAtivo) return@items
+                    if (cat == Categoria.ESTRANHAS && !state.compendioDeadlandsAtivo) return@items
+                    if (cat == Categoria.RESSUSCITADO && !state.compendioDeadlandsAtivo) return@items
+                    if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@items
+                    if (cat == Categoria.SUPER && !state.modoSupers) return@items
+                    if (cat == Categoria.MONSTRUOSAS && !state.compendioHorrorAtivo) return@items
+                    if (cat == Categoria.CHI && !state.compendioArteDaGuerraAtivo) return@items
+
+                    FilterChip(
+                        selected = cat in selectedCategories,
+                        onClick = {
+                            if (cat in selectedCategories) selectedCategories.remove(cat)
+                            else selectedCategories.add(cat)
+                        },
+                        label = { Text(cat.name) }
+                    )
+                }
             }
         }
 
