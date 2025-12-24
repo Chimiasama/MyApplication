@@ -90,7 +90,9 @@ import com.example.swadebuilder.model.DataLoader
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MainActivityData
 import com.example.swadebuilder.model.MonstroTemplate
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
@@ -853,21 +855,9 @@ class MainActivity : ComponentActivity() {
 fun Int.toDiceString(): String =
     if (this <= 12) "d$this" else "d12+${(this - 12)}"
 
-data class Pericia(val nome: String, val atributo: String, val basica: Boolean)
-
 var listaComplicacoes: List<Complicacao> = emptyList()
 
 var listaCoracoesCrystal: List<CrystalHeart> = emptyList()
-
-@Serializable
-data class SuperPoder(
-    val nome: String,
-    val estagio: String = "iniciante",
-    val custoBase: String? = null,
-    val modificadores: List<String>? = null,
-    val descricao: String? = null,
-    val manifestacoes: JsonElement? = null
-)
 
 lateinit var listaAncestralidadesJson: List<RacialModifier>
 lateinit var listaMonstroTemplates: List<MonstroTemplate>
