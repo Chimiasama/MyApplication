@@ -23,3 +23,13 @@ fun String.titleCase(): String {
         word.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
     }
 }
+
+/**
+ * Transforma texto para "Sentence case": primeira letra maiúscula, restante minúsculo.
+ * Ex: "UM BRAÇO SÓ" -> "Um braço só".
+ */
+fun String.toSentenceCase(): String {
+    if (this.isBlank()) return this
+    val lowered = this.trim().lowercase()
+    return lowered.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+}

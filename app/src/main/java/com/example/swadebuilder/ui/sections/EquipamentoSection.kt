@@ -61,6 +61,7 @@ import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.components.StandardEquipamentoItem
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.serialization.json.JsonPrimitive
 
 data class EquipFilter(
@@ -590,7 +591,7 @@ fun EquipamentoSection(
                     ciberItems.forEach { eq ->
                         AssistChip(
                             onClick = { onRemoveEquipamentoClick(eq) },
-                            label = { Text("${eq.nome} (${eq.tensao} T)") },
+                            label = { Text("${eq.nome.toSentenceCase()} (${eq.tensao} T)") },
                             leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover") }
                         )
                     }
@@ -607,7 +608,7 @@ fun EquipamentoSection(
                     mechaItems.forEach { eq ->
                         AssistChip(
                             onClick = { onRemoveEquipamentoClick(eq) },
-                            label = { Text("${eq.nome} (${eq.mods_slots} Slots)") },
+                            label = { Text("${eq.nome.toSentenceCase()} (${eq.mods_slots} Slots)") },
                             leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover") }
                         )
                     }
@@ -626,7 +627,7 @@ fun EquipamentoSection(
                     otherItems.forEach { eq ->
                         AssistChip(
                             onClick = { onRemoveEquipamentoClick(eq) },
-                            label = { Text(eq.nome) },
+                            label = { Text(eq.nome.toSentenceCase()) },
                             leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover") }
                         )
                     }

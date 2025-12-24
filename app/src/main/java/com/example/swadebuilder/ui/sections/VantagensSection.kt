@@ -75,6 +75,7 @@ import com.example.swadebuilder.ui.theme.LocalAppThemeData
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
+import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -239,7 +240,7 @@ fun VantagensContent(
     }
 
     val idParaNome = remember(listaVantagens) {
-        listaVantagens.associate { it.id to it.nomeExibicao }
+        listaVantagens.associate { it.id to it.nomeExibicao.toSentenceCase() }
     }
 
     // --- Search & Filter State ---
@@ -959,7 +960,7 @@ private fun VantagemItem(
 
         vant.requisitos.vantagensPrevias.forEach { prevId ->
             val legivel = idParaNome[prevId]
-                ?: prevId.replace('_', ' ').uppercase()
+                ?: prevId.replace('_', ' ').replace('-', ' ').toSentenceCase()
             add("Pré-requisito: $legivel")
         }
 
@@ -1027,7 +1028,7 @@ private fun VantagemItem(
             ) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nomeExibicao,
+                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toSentenceCase() else vant.nomeExibicao.toSentenceCase(),
                         style = MaterialTheme.typography.titleSmall
                     )
 
