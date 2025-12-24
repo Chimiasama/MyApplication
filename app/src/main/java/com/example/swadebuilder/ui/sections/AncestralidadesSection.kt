@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.R
 import com.example.swadebuilder.loadRawText
 import com.example.swadebuilder.model.loadJsonAsset
+import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -235,15 +236,29 @@ fun AncestralidadesSection(
         ?.semAcentos()
         ?.takeIf { it.isNotBlank() }
 
-    val listaOrdenada =
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
+
+    val listaBase = ancestralidadesState.value
+
+    val listaFiltrada = remember(listaBase, searchQuery) {
+        if (searchQuery.isBlank()) listaBase
+        else listaBase.filter {
+            it.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
+            (it.descricao?.semAcentos()?.contains(searchQuery.semAcentos(), ignoreCase = true) == true)
+        }
+    }
+
+    val listaOrdenada = remember(listaFiltrada, focoKey) {
         if (focoKey != null) {
-            val (foco, resto) = ancestralidadesState.value.partition {
+            val (foco, resto) = listaFiltrada.partition {
                 it.nome.uppercase().semAcentos() == focoKey
             }
             foco + resto
         } else {
-            ancestralidadesState.value
+            listaFiltrada
         }
+    }
 
     SectionCard(
         title = "Ancestralidades",
@@ -262,6 +277,14 @@ fun AncestralidadesSection(
             onCenterClick = null,
             onListaCompletaClick = null,
             listaCompletaText = ""
+        )
+
+        ExpandableSearchFilter(
+            query = searchQuery,
+            onQueryChange = { searchQuery = it },
+            isExpanded = isSearchExpanded,
+            onExpandedChange = { isSearchExpanded = it },
+            placeholder = "Pesquisar Ancestralidades..."
         )
 
         Spacer(Modifier.height(8.dp))

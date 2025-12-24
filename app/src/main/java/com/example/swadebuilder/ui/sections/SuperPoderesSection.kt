@@ -74,9 +74,11 @@ import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.SuperAtributosPickerDialog
+import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.dialogs.SuperPericiasPickerDialog
 import com.example.swadebuilder.ui.dialogs.SuperVantagensPickerDialog
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
@@ -538,6 +540,26 @@ fun SuperPoderesSection(
 
         Spacer(Modifier.height(8.dp))
 
+        var searchQuery by rememberSaveable { mutableStateOf("") }
+        var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
+
+        val filteredList = remember(listaSuperPoderes, searchQuery) {
+            if (searchQuery.isBlank()) listaSuperPoderes
+            else listaSuperPoderes.filter {
+                it.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
+                        (it.descricao?.semAcentos()?.contains(searchQuery.semAcentos(), ignoreCase = true) == true)
+            }
+        }
+
+        ExpandableSearchFilter(
+            query = searchQuery,
+            onQueryChange = { searchQuery = it },
+            isExpanded = isSearchExpanded,
+            onExpandedChange = { isSearchExpanded = it },
+            placeholder = "Pesquisar Superpoderes..."
+        )
+
+        Spacer(Modifier.height(4.dp))
 
         val allowLongTexts = booleanResource(R.bool.enable_long_texts)
         val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
@@ -548,7 +570,7 @@ fun SuperPoderesSection(
                 .fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
         ) {
-            items(listaSuperPoderes, key = { it.nome }) { poder ->
+            items(filteredList, key = { it.nome }) { poder ->
                 val manifestacoesList = remember(poder.nome, poder.manifestacoes) {
                     when (val m = poder.manifestacoes) {
                         is JsonArray -> m.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
