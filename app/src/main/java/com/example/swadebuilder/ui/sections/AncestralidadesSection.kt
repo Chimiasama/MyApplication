@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,11 +14,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
@@ -55,7 +58,8 @@ data class RacialModifierLite(
     val displayName: String,
     val originalName: String? = null,
     val descricao: String? = null,
-    val aliases: Set<String> = emptySet()
+    val aliases: Set<String> = emptySet(),
+    val origens: Set<String> = emptySet()
 )
 
 private const val ASSET_ANCESTRALIDADES = "listaancestralidade.json"
@@ -166,7 +170,6 @@ fun AncestralidadesSection(
 
         val filtered = all.filter {
             val origin = it.origem?.uppercase() ?: "BASICO"
-
             origin in allowedOrigins
         }
 
@@ -175,7 +178,9 @@ fun AncestralidadesSection(
             .values
             .map { group ->
                 val representative = group.first()
-                val hasMultipleOrigins = group.map { (it.origem ?: "BASICO").uppercase() }.toSet().size > 1
+                val originsInGroup = group.map { (it.origem ?: "BASICO").uppercase() }.toSet()
+                val hasMultipleOrigins = originsInGroup.size > 1
+
                 val baseDisplayName = if (hasMultipleOrigins) {
                     stripScenarioSuffix(representative.nome)
                 } else {
@@ -191,12 +196,14 @@ fun AncestralidadesSection(
                 val aliasKeys = group
                     .map { adjustBuscatrilhaName(it.nome).uppercase().semAcentos() }
                     .toSet()
+
                 RacialModifierLite(
                     nome = adjustedName,
                     displayName = displayName.toEditionDisplayName(),
                     originalName = originalName,
                     descricao = representative.descricao,
-                    aliases = aliasKeys
+                    aliases = aliasKeys,
+                    origens = originsInGroup
                 )
             }
 
@@ -239,14 +246,22 @@ fun AncestralidadesSection(
 
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
+    var selectedFilterOrigin by rememberSaveable { mutableStateOf("Todos") }
 
     val listaBase = ancestralidadesState.value
 
-    val listaFiltrada = remember(listaBase, searchQuery) {
-        if (searchQuery.isBlank()) listaBase
-        else listaBase.filter {
-            it.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
-            (it.descricao?.semAcentos()?.contains(searchQuery.semAcentos(), ignoreCase = true) == true)
+    val listaFiltrada = remember(listaBase, searchQuery, selectedFilterOrigin) {
+        listaBase.filter { item ->
+            val matchSearch = if (searchQuery.isBlank()) true else {
+                item.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
+                (item.descricao?.semAcentos()?.contains(searchQuery.semAcentos(), ignoreCase = true) == true)
+            }
+
+            val matchOrigin = if (selectedFilterOrigin == "Todos") true else {
+                item.origens.contains(selectedFilterOrigin)
+            }
+
+            matchSearch && matchOrigin
         }
     }
 
@@ -259,6 +274,11 @@ fun AncestralidadesSection(
         } else {
             listaFiltrada
         }
+    }
+
+    // Calculate active origins available for filtering based on loaded data
+    val availableOriginsForFilter = remember(listaBase) {
+        listaBase.flatMap { it.origens }.toSet().sorted()
     }
 
     SectionCard(
@@ -289,6 +309,42 @@ fun AncestralidadesSection(
         )
 
         Spacer(Modifier.height(8.dp))
+
+        // Origin Filter UI
+        if (availableOriginsForFilter.size > 1 && !supersLocked) {
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                item {
+                    FilterChip(
+                        selected = selectedFilterOrigin == "Todos",
+                        onClick = { selectedFilterOrigin = "Todos" },
+                        label = { Text("Todas Origens") }
+                    )
+                }
+                items(availableOriginsForFilter) { origin ->
+                    val label = when(origin) {
+                        "BASICO" -> "Básico"
+                        "SUPER" -> "Supers"
+                        "FANTASIA" -> "Fantasia"
+                        "HORROR" -> "Horror"
+                        "FANTASIABUSCATRILHA" -> "Buscatrilha"
+                        "OESTE_ESTRANHO" -> "Deadlands"
+                        "ARTE_DA_GUERRA" -> "Arte da Guerra"
+                        "CIDADE_SOL_VAPOR" -> "Sol/Vapor"
+                        "WISEGUYS" -> "Wiseguys"
+                        else -> origin
+                    }
+                    FilterChip(
+                        selected = selectedFilterOrigin == origin,
+                        onClick = { selectedFilterOrigin = origin },
+                        label = { Text(label) }
+                    )
+                }
+            }
+            Spacer(Modifier.height(8.dp))
+        }
 
         Column(
             modifier = Modifier

@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
@@ -31,6 +32,7 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -100,14 +102,29 @@ fun ComplicacoesSection(
         if (state.compendioWiseguysAtivo) add("WISEGUYS")
     }
 
+    // Filter states
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
+    var selectedSeverity by rememberSaveable { mutableStateOf("Todos") }
+    var selectedOrigin by rememberSaveable { mutableStateOf("Todos") }
 
     val complicacoesFiltradas = listaComplicacoes.filter { comp ->
-        val origemSafe = if (comp.origem.isBlank()) "BASICO" else comp.origem
-        val matchesOrigin = origemSafe.uppercase().semAcentos().trim() in origensAtivas
+        val origemSafe = if (comp.origem.isBlank()) "BASICO" else comp.origem.uppercase().semAcentos().trim()
+        val matchesActiveOrigin = origemSafe in origensAtivas
 
-        if (!matchesOrigin) return@filter false
+        if (!matchesActiveOrigin) return@filter false
+
+        // Filter Logic
+        val matchesSeverity = when (selectedSeverity) {
+            "Todos" -> true
+            "Menor" -> comp.severity.lowercase().contains("menor")
+            "Maior" -> comp.severity.lowercase().contains("maior")
+            else -> true
+        }
+
+        val matchesOriginFilter = if (selectedOrigin == "Todos") true else origemSafe == selectedOrigin
+
+        if (!matchesSeverity || !matchesOriginFilter) return@filter false
 
         if (searchQuery.isNotBlank()) {
             val q = searchQuery.semAcentos().lowercase()
@@ -154,6 +171,61 @@ fun ComplicacoesSection(
             onExpandedChange = { isSearchExpanded = it },
             placeholder = "Pesquisar Complicações..."
         )
+
+        // Filters UI
+        if (!locked) {
+            Spacer(Modifier.height(8.dp))
+
+            // Severity Filter
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                listOf("Todos", "Menor", "Maior").forEach { type ->
+                    FilterChip(
+                        selected = selectedSeverity == type,
+                        onClick = { selectedSeverity = type },
+                        label = { Text(type) }
+                    )
+                }
+            }
+
+            // Origin Filter (if multiple active)
+            if (origensAtivas.size > 1) {
+                Spacer(Modifier.height(4.dp))
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    item {
+                        FilterChip(
+                            selected = selectedOrigin == "Todos",
+                            onClick = { selectedOrigin = "Todos" },
+                            label = { Text("Todas Origens") }
+                        )
+                    }
+                    items(origensAtivas.toList().sorted()) { origin ->
+                        val label = when(origin) {
+                            "BASICO" -> "Básico"
+                            "SUPER" -> "Supers"
+                            "FANTASIA" -> "Fantasia"
+                            "HORROR" -> "Horror"
+                            "FANTASIABUSCATRILHA" -> "Buscatrilha"
+                            "OESTE_ESTRANHO" -> "Deadlands"
+                            "ARTE_DA_GUERRA" -> "Arte da Guerra"
+                            "CIDADE_SOL_VAPOR" -> "Sol/Vapor"
+                            "WISEGUYS" -> "Wiseguys"
+                            else -> origin
+                        }
+                        FilterChip(
+                            selected = selectedOrigin == origin,
+                            onClick = { selectedOrigin = origin },
+                            label = { Text(label) }
+                        )
+                    }
+                }
+            }
+        }
 
         Spacer(Modifier.height(4.dp))
 
@@ -216,8 +288,10 @@ fun ComplicacoesSection(
                                         state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
                                     }
                                     "jovem" -> {
-                                        val pequComp = complicacoesFiltradas.first { it.id == "pequeno" }
-                                        state.removeYoung(pequComp)
+                                        val pequComp = complicacoesFiltradas.firstOrNull { it.id == "pequeno" }
+                                        if (pequComp != null) {
+                                            state.removeYoung(pequComp)
+                                        }
                                         state.complicacoesSelecionadas.remove(comp)
                                     }
                                     "pobreza" -> {
