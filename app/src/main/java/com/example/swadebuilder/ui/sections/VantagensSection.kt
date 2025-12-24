@@ -669,7 +669,7 @@ fun VantagensContent(
                 val expanded = expandedMap[cat] ?: false
 
                 CollapsibleSection(
-                    title = cat.name,
+                    title = cat.name.toSentenceCase(),
                     expanded = expanded,
                     onToggle = { expandedMap[cat] = !expanded },
                     onToggleFeedback = onUserFeedback

@@ -705,7 +705,7 @@ fun EquipamentoSection(
                     val isExpanded = expandedTypeMap[type] ?: false
 
                     CollapsibleSection(
-                        title = type,
+                        title = type.toSentenceCase(),
                         expanded = isExpanded,
                         onToggle = { expandedTypeMap[type] = !isExpanded },
                         onToggleFeedback = onUserFeedback
@@ -735,7 +735,7 @@ fun EquipamentoSection(
                         ) {
                             subtypeEntries.forEach { (subtype, subtypeCats) ->
                                 Text(
-                                    text = subtype,
+                                    text = subtype.toSentenceCase(),
                                     style = MaterialTheme.typography.titleSmall,
                                     color = MaterialTheme.colorScheme.primary,
                                     fontWeight = FontWeight.Bold,
