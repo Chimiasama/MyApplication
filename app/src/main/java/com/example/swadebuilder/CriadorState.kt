@@ -1,7 +1,6 @@
 package com.example.swadebuilder
 
 import android.os.Build
-import java.util.UUID
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -18,6 +17,8 @@ import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.model.ModifierEngine
+import com.example.swadebuilder.model.ModifierTarget
 import com.example.swadebuilder.model.PersonagemSnapshot
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.SnapshotAtributos
@@ -31,15 +32,11 @@ import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.classeExclusivaBloqueada
-import com.example.swadebuilder.model.ModifierEngine
-import com.example.swadebuilder.model.ModifierTarget
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
-import com.example.swadebuilder.arcanoInfo
-import com.example.swadebuilder.mapaPericias
-import com.example.swadebuilder.normAAKey
+import java.util.UUID
 
 class CriadorState {
     var appTheme by mutableStateOf(AppTheme.DEFAULT)

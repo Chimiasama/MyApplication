@@ -1,13 +1,12 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.model.Constants
-import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.mapaPericias
-import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.nivelParaEstagio
+import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.semAcentos
 
 /**
  * Validates prerequisites for selecting Advantages (Edges).

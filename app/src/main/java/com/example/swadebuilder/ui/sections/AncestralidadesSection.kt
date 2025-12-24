@@ -35,17 +35,16 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
-import com.example.swadebuilder.loadRawText
+import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.ui.components.SectionCard
-import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.ui.components.SectionHeader
-import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.serialization.Serializable
-import com.example.swadebuilder.model.RacialModifier
-import com.example.swadebuilder.CriadorState
 
 @Serializable
 data class RacialModifierLite(

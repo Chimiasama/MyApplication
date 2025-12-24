@@ -2,12 +2,11 @@ package com.example.swadebuilder.util
 
 import android.content.Context
 import android.net.Uri
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.Locale
 import java.util.UUID
-import com.example.swadebuilder.util.CharacterStorage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 object CharacterPortraitStorage {
     private const val PORTRAIT_DIR = "portraits"

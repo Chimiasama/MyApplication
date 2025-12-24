@@ -16,13 +16,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
@@ -41,8 +41,8 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaAtributos
-import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.mapaAtributosDescricao
+import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
