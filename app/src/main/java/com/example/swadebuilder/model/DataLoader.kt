@@ -6,6 +6,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.swadebuilder.AppData
 import com.example.swadebuilder.ArcanoInfo
+import com.example.swadebuilder.Pericia
+import com.example.swadebuilder.SuperPoder
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.listaAncestralidadesJson
 import com.example.swadebuilder.listaAtributos
@@ -15,16 +17,14 @@ import com.example.swadebuilder.listaMonstroTemplates
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaTropos
 import com.example.swadebuilder.listaVantagens
+import com.example.swadebuilder.mapaAtributosDescricao
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.mapaPericiasDescricao
-import com.example.swadebuilder.mapaAtributosDescricao
 import com.example.swadebuilder.racialAttrMinMap
 import com.example.swadebuilder.racialSkillStartMap
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
-import com.example.swadebuilder.SuperPoder
-import com.example.swadebuilder.Pericia
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream

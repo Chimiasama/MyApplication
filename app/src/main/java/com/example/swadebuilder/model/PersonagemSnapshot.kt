@@ -1,7 +1,5 @@
 package com.example.swadebuilder.model
 
-import com.example.swadebuilder.model.AdvancementAction
-import com.example.swadebuilder.model.SuperInvestment
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
 

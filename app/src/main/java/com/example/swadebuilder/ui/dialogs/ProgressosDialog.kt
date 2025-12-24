@@ -44,12 +44,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
-import com.example.swadebuilder.ui.components.RadioButtonRow
+import com.example.swadebuilder.dynamicStageCaps
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
-import com.example.swadebuilder.dynamicStageCaps
 import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.HindranceChangeType
@@ -59,6 +58,7 @@ import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.periciaStartRaw
 import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.stageIndexForSlot
+import com.example.swadebuilder.ui.components.RadioButtonRow
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.coroutines.delay

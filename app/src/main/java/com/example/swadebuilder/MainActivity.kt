@@ -5,16 +5,13 @@
 
 package com.example.swadebuilder
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
-import androidx.annotation.RawRes
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -39,8 +35,6 @@ import androidx.compose.material.icons.filled.Print
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -57,7 +51,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -72,7 +65,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -87,7 +79,6 @@ import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.model.DataLoader
-import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MainActivityData
 import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.RacialModifier
@@ -105,8 +96,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.text.DateFormat
 import kotlin.math.roundToInt
 
@@ -893,12 +882,6 @@ fun periciaStartRaw(anc: String, per: Pericia): Int {
 var listaVantagens:    List<Vantagem>   = emptyList()
 lateinit var listaTropos: List<Tropo>
 
-fun loadRawText(context: Context, @RawRes resId: Int): String {
-    val inputStream = context.resources.openRawResource(resId)
-    val reader = BufferedReader(InputStreamReader(inputStream))
-    return reader.readText()
-}
-
 data class Estagio(
     val nome: String,
     val minProgress: Int,
@@ -941,29 +924,3 @@ val dynamicStageCaps = listaDeEstagios.mapIndexed { idx, st ->
         (TOTAL_PROGRESS_LIMIT - prevMax).coerceAtLeast(0)
 }
 
-private fun equipamentoKey(item: EquipamentoItem): String = listOfNotNull(
-    item.nome.keyify(),
-    item.custo?.toString(),
-    item.peso?.toString(),
-    item.origem?.keyify(),
-    item.subtipo?.keyify(),
-    item.subsubtipo?.keyify(),
-    item.forcaMin?.toString(),
-    item.armadura?.toString(),
-    item.aparar?.toString(),
-    item.observacoes?.toString(),
-    item.dano?.toString(),
-    item.pa?.toString(),
-    item.cdt?.toString(),
-    item.distancia?.toString(),
-    item.tiros?.toString(),
-    item.tamanho?.toString(),
-    item.manobrabilidade?.toString(),
-    item.velMaxima?.toString(),
-    item.resistencia?.toString(),
-    item.tripulacao?.toString(),
-    item.pmf?.toString(),
-    item.malfuncionamento?.toString(),
-    item.tensao?.toString(),
-    item.mods_slots?.toString()
-).joinToString("|")
