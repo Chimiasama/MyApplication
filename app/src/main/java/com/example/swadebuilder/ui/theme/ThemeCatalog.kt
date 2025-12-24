@@ -72,8 +72,8 @@ val MedievalThemeData = AppThemeData(
         onBackground = MedPaper,
         surface = MedInk,
         onSurface = MedPaper,
-        surfaceVariant = Color(0xFFF5EEDC),
-        onSurfaceVariant = MedInk,
+        surfaceVariant = Color(0xFF5D4037), // Dark Brown (contrasts with MedPaper text)
+        onSurfaceVariant = MedPaper,
         errorContainer = MedInk,
         onErrorContainer = MedPaper
     ),
@@ -197,8 +197,8 @@ val WW2ThemeData = AppThemeData(
         surface = Color.Black,
         onSurface = WW2Khaki,
         onBackground = WW2Khaki,
-        surfaceVariant = WW2Khaki,
-        onSurfaceVariant = Color.Black,
+        surfaceVariant = WW2Stamp, // Dark Cyan/Slate (contrasts with WW2Khaki text)
+        onSurfaceVariant = WW2Khaki,
         errorContainer = Color(0xFF1F1F00),
         onErrorContainer = WW2Khaki
     ),

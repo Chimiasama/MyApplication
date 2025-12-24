@@ -262,6 +262,8 @@ class CriadorViewModel : ViewModel() {
         // showHelpMessages removido
     ) {
 
+        state.appTheme = com.example.swadebuilder.ui.theme.AppTheme.DEFAULT
+
         // state.showHelpMessages = showHelpMessages (Removido)
         state.modoSupers = modoSupers
         state.compendioFantasiaAtivo = compendioFantasiaAtivo
