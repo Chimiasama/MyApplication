@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.ui.sections.toResumo
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
+import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
@@ -56,7 +57,11 @@ fun StandardEquipamentoItem(
             ) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        if (showOriginalName && !equipamento.originalName.isNullOrBlank()) equipamento.originalName else equipamento.nomeExibicao,
+                        text = if (showOriginalName && !equipamento.originalName.isNullOrBlank()) {
+                            equipamento.originalName.toSentenceCase()
+                        } else {
+                            equipamento.nomeExibicao.toSentenceCase()
+                        },
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )

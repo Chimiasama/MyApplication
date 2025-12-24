@@ -23,3 +23,16 @@ fun String.titleCase(): String {
         word.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
     }
 }
+
+/**
+ * Transforma texto para "Sentence case": primeira letra maiúscula, restante minúsculo.
+ * Substitui underscores por espaços.
+ * Ex: "UM BRAÇO SÓ" -> "Um braço só".
+ * Ex: "armadura_energizada" -> "Armadura energizada".
+ */
+fun String.toSentenceCase(): String {
+    if (this.isBlank()) return this
+    // Replace underscores with spaces, then normalize
+    val cleaned = this.replace('_', ' ').trim().lowercase()
+    return cleaned.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+}

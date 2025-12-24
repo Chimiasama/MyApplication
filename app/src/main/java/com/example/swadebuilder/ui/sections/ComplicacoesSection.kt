@@ -63,6 +63,7 @@ import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -398,12 +399,12 @@ fun ComplicacoesSection(
         if (showAddTranstornoDialog) {
             val available = complicacoesFiltradas.filter {
                 !state.complicacoesSelecionadas.containsKey(it) && !state.transtornos.contains(it)
-            }.map { it.name }.sorted()
+            }.map { it.name.toSentenceCase() }.sorted()
 
             ChoiceDialog(
                 options = available,
                 onConfirm = { choice ->
-                    val selected = complicacoesFiltradas.firstOrNull { it.name == choice }
+                    val selected = complicacoesFiltradas.firstOrNull { it.name.toSentenceCase() == choice }
                     if (selected != null) {
                         state.transtornos.add(selected)
                         onUserFeedback()
@@ -463,7 +464,7 @@ fun ComplicacoesSection(
                                     modifier = Modifier.weight(1f)
                                 ) {
                                     Text(
-                                        text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName else comp.name,
+                                        text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName.toSentenceCase() else comp.name.toSentenceCase(),
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
