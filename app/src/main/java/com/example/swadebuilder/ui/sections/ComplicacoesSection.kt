@@ -137,6 +137,16 @@ fun ComplicacoesSection(
         }
     }
 
+    val groupedComplications = remember(complicacoesFiltradas) {
+        complicacoesFiltradas.groupBy { it.name.trim().lowercase().semAcentos() }
+    }
+
+    val uniqueComplications = remember(groupedComplications) {
+        groupedComplications.values.mapNotNull { group ->
+            group.sortedBy { if (it.origem == "BASICO") 0 else 1 }.firstOrNull()
+        }.sortedBy { it.name }
+    }
+
     SectionCard(
         title    = "Complicações",
         icon     = Icons.Default.Warning,
@@ -397,14 +407,14 @@ fun ComplicacoesSection(
 
         // PROMPT 3: Add Disorder Dialog
         if (showAddTranstornoDialog) {
-            val available = complicacoesFiltradas.filter {
+            val available = uniqueComplications.filter {
                 !state.complicacoesSelecionadas.containsKey(it) && !state.transtornos.contains(it)
             }.map { it.name.toSentenceCase() }.sorted()
 
             ChoiceDialog(
                 options = available,
                 onConfirm = { choice ->
-                    val selected = complicacoesFiltradas.firstOrNull { it.name.toSentenceCase() == choice }
+                    val selected = uniqueComplications.firstOrNull { it.name.toSentenceCase() == choice }
                     if (selected != null) {
                         state.transtornos.add(selected)
                         onUserFeedback()
@@ -431,9 +441,9 @@ fun ComplicacoesSection(
 
                 Spacer(Modifier.height(4.dp))
 
-                val pequComp = complicacoesFiltradas.firstOrNull { it.id == "pequeno" }
+                val pequComp = uniqueComplications.firstOrNull { it.id == "pequeno" }
 
-                val listaParaMostrar = complicacoesFiltradas
+                val listaParaMostrar = uniqueComplications
                     .filter { comp ->
                         comp.id.keyify() !in autoBaseKeys
                     }
@@ -445,6 +455,42 @@ fun ComplicacoesSection(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     items(listaParaMostrar) { comp ->
+                        // MERGED DESCRIPTION LOGIC
+                        val mergedDescription = remember(comp, groupedComplications, allowLongTexts) {
+                            if (allowLongTexts) {
+                                val group = groupedComplications[comp.name.trim().lowercase().semAcentos()] ?: listOf(comp)
+                                val showMerged = group.size > 1 && EditionConfig.isFullEdition
+
+                                if (showMerged) {
+                                     group.sortedBy { if (it.origem == "BASICO") 0 else 1 }
+                                          .joinToString("\n\n") { v ->
+                                              val tag = when(v.origem) {
+                                                  "BASICO" -> "BÁSICO"
+                                                  "SUPER" -> "SUPERS"
+                                                  "FANTASIA" -> "FANTASIA"
+                                                  "HORROR" -> "HORROR"
+                                                  "FANTASIABUSCATRILHA" -> "BUSCATRILHA"
+                                                  "OESTE_ESTRANHO" -> "DEADLANDS"
+                                                  "ARTE_DA_GUERRA" -> "ARTE DA GUERRA"
+                                                  "CIDADE_SOL_VAPOR" -> "SOL/VAPOR"
+                                                  "WISEGUYS" -> "WISEGUYS"
+                                                  else -> v.origem.uppercase()
+                                              }
+                                              val txt = if (showOfficialNames && !v.originalDescription.isNullOrBlank())
+                                                  v.originalDescription.trim()
+                                              else
+                                                  v.description.trim()
+                                              "[$tag] $txt"
+                                          }
+                                } else {
+                                     if (showOfficialNames && !comp.originalDescription.isNullOrBlank())
+                                         comp.originalDescription.trim()
+                                     else
+                                         comp.description.trim()
+                                }
+                            } else ""
+                        }
+
                         val cur    = state.complicacoesSelecionadas[comp]
                         val sevRaw = comp.severity.lowercase().trim()
                         val menorOnly = sevRaw.contains("menor") && !sevRaw.contains("maior")
@@ -562,7 +608,7 @@ fun ComplicacoesSection(
                                 }
                             }
 
-                            if (allowLongTexts && comp.description.isNotBlank()) {
+                            if (allowLongTexts && mergedDescription.isNotBlank()) {
                                 TextButton(
                                     onClick = {
                                         onUserFeedback()
@@ -580,7 +626,7 @@ fun ComplicacoesSection(
 
                                 AnimatedVisibility(visible = detalhesExpandidos[comp.id] == true) {
                                     Text(
-                                        text = if (showOfficialNames && !comp.originalDescription.isNullOrBlank()) comp.originalDescription.trim() else comp.description.trim(),
+                                        text = mergedDescription,
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.padding(top = 4.dp)
