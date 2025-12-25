@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
@@ -56,13 +57,20 @@ import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.serialization.Serializable
 
 @Serializable
+data class RacialAbilityLite(
+    val nome: String,
+    val descricao: String
+)
+
+@Serializable
 data class RacialModifierLite(
     val nome: String,
     val displayName: String,
     val originalName: String? = null,
     val descricao: String? = null,
     val aliases: Set<String> = emptySet(),
-    val origens: Set<String> = emptySet()
+    val origens: Set<String> = emptySet(),
+    val habilidades: List<RacialAbilityLite> = emptyList()
 )
 
 private const val ASSET_ANCESTRALIDADES = "listaancestralidade.json"
@@ -200,13 +208,18 @@ fun AncestralidadesSection(
                     .map { adjustBuscatrilhaName(it.nome).uppercase().semAcentos() }
                     .toSet()
 
+                val habilidadesLite = representative.habilidades.map {
+                    RacialAbilityLite(it.nome, it.descricao)
+                }
+
                 RacialModifierLite(
                     nome = adjustedName,
                     displayName = displayName.toEditionDisplayName(),
                     originalName = originalName,
                     descricao = representative.descricao,
                     aliases = aliasKeys,
-                    origens = originsInGroup
+                    origens = originsInGroup,
+                    habilidades = habilidadesLite
                 )
             }
 
@@ -372,6 +385,7 @@ fun AncestralidadesSection(
                     val itemKey = item.nome.uppercase().semAcentos()
                     val isSelected = itemKey == selectedKey.value
                     val descricao = item.descricao.orEmpty()
+                    val hasDescription = descricao.isNotBlank() || item.habilidades.isNotEmpty()
 
                     Card(
                         modifier = Modifier
@@ -417,7 +431,7 @@ fun AncestralidadesSection(
                                 }
                             }
 
-                            if (allowLongTexts && descricao.isNotBlank()) {
+                            if (allowLongTexts && hasDescription) {
                                 Spacer(Modifier.height(4.dp))
                                 TextButton(
                                     onClick = {
@@ -437,11 +451,35 @@ fun AncestralidadesSection(
                                 }
 
                                 AnimatedVisibility(visible = detalhesExpandidos[itemKey] == true) {
-                                    Text(
-                                        text = descricao,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
+                                    Column {
+                                        if (descricao.isNotBlank()) {
+                                            Text(
+                                                text = descricao,
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                            if (item.habilidades.isNotEmpty()) {
+                                                Spacer(Modifier.height(8.dp))
+                                            }
+                                        }
+
+                                        if (item.habilidades.isNotEmpty()) {
+                                            item.habilidades.forEach { ability ->
+                                                Column(modifier = Modifier.padding(bottom = 4.dp)) {
+                                                    Text(
+                                                        text = ability.nome,
+                                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                                        color = MaterialTheme.colorScheme.primary
+                                                    )
+                                                    Text(
+                                                        text = ability.descricao,
+                                                        style = MaterialTheme.typography.bodySmall,
+                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
