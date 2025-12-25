@@ -183,7 +183,7 @@ fun TelaInicial(
             optCompendioBuscatrilha
         ) { optCompendioBuscatrilha = !optCompendioBuscatrilha },
         ModuleItemData(
-            "Faroeste Assombrado".toEditionDisplayName(),
+            "Deadlands".toEditionDisplayName(),
             "Pistoleiros, revividos e o horror do Oeste.",
             Icons.Default.Shield,
             optCompendioDeadlands
@@ -207,7 +207,7 @@ fun TelaInicial(
             optCompendioCidadeSolVapor
         ) { optCompendioCidadeSolVapor = !optCompendioCidadeSolVapor },
         ModuleItemData(
-            "Malandros".toEditionDisplayName(),
+            "Wiseguys".toEditionDisplayName(),
             "Crime organizado moderno, conexões e esquemas.",
             Icons.Default.Groups,
             optCompendioWiseguys

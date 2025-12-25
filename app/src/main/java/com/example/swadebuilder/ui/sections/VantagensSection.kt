@@ -228,6 +228,7 @@ fun VantagensContent(
             val isAdg = origemNorm == "ARTE_DA_GUERRA"
             val isCidadeSolVapor = origemNorm == "CIDADE_SOL_VAPOR"
             val isWiseguys = origemNorm == "WISEGUYS"
+            val isCrystalHeart = origemNorm == "CRYSTAL_HEART"
 
             if (state.compendioCrystalHeartAtivo) {
                 if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
@@ -235,7 +236,7 @@ fun VantagensContent(
                 }
             }
 
-            isBasico || (isAdg && state.compendioArteDaGuerraAtivo) || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isBuscatrilha && state.compendioBuscatrilhaAtivo) || (isDeadlands && state.compendioDeadlandsAtivo) || (isCidadeSolVapor && state.compendioCidadeSolVaporAtivo) || (isWiseguys && state.compendioWiseguysAtivo)
+            isBasico || (isAdg && state.compendioArteDaGuerraAtivo) || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isBuscatrilha && state.compendioBuscatrilhaAtivo) || (isDeadlands && state.compendioDeadlandsAtivo) || (isCidadeSolVapor && state.compendioCidadeSolVaporAtivo) || (isWiseguys && state.compendioWiseguysAtivo) || (isCrystalHeart && state.compendioCrystalHeartAtivo)
         }
     }
 
