@@ -220,7 +220,7 @@ fun VantagensContent(
             }
 
             isBasico || (isAdg && state.compendioArteDaGuerraAtivo) || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isBuscatrilha && state.compendioBuscatrilhaAtivo) || (isDeadlands && state.compendioDeadlandsAtivo) || (isCidadeSolVapor && state.compendioCidadeSolVaporAtivo) || (isWiseguys && state.compendioWiseguysAtivo) || (isCrystalHeart && state.compendioCrystalHeartAtivo)
-        }
+        }.sortedWith(compareBy({ it.categoria }, { it.nomeExibicao }))
     }
 
     val idParaNome = remember(listaVantagens) {
