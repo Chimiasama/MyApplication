@@ -341,7 +341,8 @@ fun PoderesSection(
                                     Text(
                                         if (expanded) "Ocultar detalhes" else "Ver detalhes",
                                         fontWeight = FontWeight.Medium,
-                                        style = MaterialTheme.typography.labelSmall
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
 

@@ -191,8 +191,8 @@ val WW2ThemeData = AppThemeData(
         onErrorContainer = Color.Black
     ),
     darkColors = darkColorScheme(
-        primary = WW2Stamp,
-        onPrimary = Color.White,
+        primary = WW2Paper,
+        onPrimary = Color.Black,
         background = WW2Olive,
         surface = Color.Black,
         onSurface = WW2Khaki,

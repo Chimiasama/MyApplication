@@ -431,7 +431,8 @@ fun AncestralidadesSection(
                                 ) {
                                     Text(
                                         if (detalhesExpandidos[itemKey] == true) "Ocultar detalhes" else "Ver detalhes",
-                                        style = MaterialTheme.typography.labelSmall // Smaller font for button
+                                        style = MaterialTheme.typography.labelSmall, // Smaller font for button
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
 
