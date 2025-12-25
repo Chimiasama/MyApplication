@@ -65,7 +65,7 @@ import kotlinx.serialization.json.JsonPrimitive
 
 // --- Data Structures for Refactoring ---
 
-private enum class EquipSuperType(val label: String, val order: Int) {
+enum class EquipSuperType(val label: String, val order: Int) {
     ARMAS("Armas", 1),
     ARMADURAS("Armaduras e Proteção", 2),
     VEICULOS("Veículos e Montarias", 3),
