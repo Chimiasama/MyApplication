@@ -912,9 +912,9 @@ class CriadorViewModel : ViewModel() {
                 // 1. Try choice if set
                 val choiceKey = advantageArcaneKey(vantagemCopia)
                 // 2. If not, try to find the first existing arcane background
-                val arcKey = choiceKey ?: state.vantagensSelecionadas
-                    .mapNotNull { it.toArcanoKey()?.normAAKey() }
-                    .firstOrNull()
+                val arcKey = choiceKey ?: state.vantagensSelecionadas.firstNotNullOfOrNull {
+                    it.toArcanoKey()?.normAAKey()
+                }
 
                 if (arcKey != null) {
                     state.iniciarCompraArcanoViaXp(arcKey)
