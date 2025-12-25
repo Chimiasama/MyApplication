@@ -99,7 +99,6 @@ import kotlinx.serialization.json.JsonElement
 import java.text.DateFormat
 import kotlin.math.roundToInt
 
-
 @Serializable
 data class ArcanoInfo(
     val key: String,

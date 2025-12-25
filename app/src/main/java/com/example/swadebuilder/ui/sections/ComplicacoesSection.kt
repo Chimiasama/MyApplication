@@ -86,7 +86,7 @@ fun ComplicacoesSection(
         .map { it.uppercase().semAcentos().substringBefore("(").trim() }
         .toSet()
 
-    val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
+    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
     val scope = rememberCoroutineScope()

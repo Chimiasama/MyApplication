@@ -55,12 +55,12 @@ fun AtributosContent(
     state: CriadorState,
     onUserFeedback: () -> Unit
 ) {
-    val context = LocalContext.current
+    LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
-    val listaDeAtributos = com.example.swadebuilder.listaAtributos
+    listaAtributos
 
     val locked = state.criacaoBasicaCongelada && !state.attributeAdvancementInProgress
 

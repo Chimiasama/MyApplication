@@ -73,7 +73,7 @@ fun PericiasContent(
     feedbackMessages: MutableList<String>,
     onUserFeedback: () -> Unit
 ) {
-    val context = LocalContext.current
+    LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
     val descricoes = if (!allowLongTexts) emptyMap() else mapaPericiasDescricao

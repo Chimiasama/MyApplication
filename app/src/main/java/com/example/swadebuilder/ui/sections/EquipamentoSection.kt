@@ -535,7 +535,7 @@ fun EquipamentoSection(
 
             if (compendioSciFiAtivo && tensaoExcedida) {
                 // ... Error Text ...
-                 val excess = tensaoTotal - tensaoLimite
+                tensaoTotal - tensaoLimite
                 Text(
                     "Sobrecarga Cibernética: Personagem recebe o estado Fatigado (ou Exausto se X > Y+2).",
                     color = MaterialTheme.colorScheme.error,

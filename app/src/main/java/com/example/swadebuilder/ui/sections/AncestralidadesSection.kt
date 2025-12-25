@@ -378,7 +378,7 @@ fun AncestralidadesSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(),
-                verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 items(listaOrdenada) { item ->
                     val itemKey = item.nome.uppercase().semAcentos()

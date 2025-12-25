@@ -209,7 +209,7 @@ object DataLoader {
 data class MainActivityData(
     val equipamentoCategorias: List<EquipamentoCategoria>,
     val superequipCategorias: List<EquipamentoCategoria>,
-    val listaSuperPoderes: List<com.example.swadebuilder.SuperPoder>
+    val listaSuperPoderes: List<SuperPoder>
 )
 
 @OptIn(ExperimentalSerializationApi::class)
