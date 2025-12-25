@@ -60,6 +60,7 @@ import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.components.StandardEquipamentoItem
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.serialization.json.JsonPrimitive
 
@@ -230,7 +231,7 @@ fun EquipFilterDialog(
                             }
                         )
                         Spacer(Modifier.size(4.dp))
-                        Text(o.toSentenceCase())
+                        Text(o.toEditionDisplayName())
                     }
                 }
                 Spacer(Modifier.size(8.dp))
@@ -584,7 +585,7 @@ fun EquipamentoSection(
                             n.contains(q) || original.contains(q)
                         }.map { item ->
                             val origem = item.origem?.ifBlank { mapped.original.origem ?: "BASICO" } ?: (mapped.original.origem ?: "BASICO")
-                            EquipamentoListEntry(item, origem.toSentenceCase())
+                            EquipamentoListEntry(item, origem.toEditionDisplayName())
                         }
                     }
                 }
@@ -692,7 +693,7 @@ fun EquipamentoSection(
                                              cat.original.itens.map { item ->
                                                 val origem = item.origem?.ifBlank { cat.original.origem ?: "BASICO" }
                                                     ?: (cat.original.origem ?: "BASICO")
-                                                EquipamentoListEntry(item, origem.toSentenceCase())
+                                                EquipamentoListEntry(item, origem.toEditionDisplayName())
                                              }
                                          }.filter { entry ->
                                              // Apply filters
