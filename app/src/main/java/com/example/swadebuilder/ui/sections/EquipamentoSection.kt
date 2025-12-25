@@ -230,7 +230,7 @@ fun EquipFilterDialog(
                             }
                         )
                         Spacer(Modifier.size(4.dp))
-                        Text(o)
+                        Text(o.toSentenceCase())
                     }
                 }
                 Spacer(Modifier.size(8.dp))
@@ -584,7 +584,7 @@ fun EquipamentoSection(
                             n.contains(q) || original.contains(q)
                         }.map { item ->
                             val origem = item.origem?.ifBlank { mapped.original.origem ?: "BASICO" } ?: (mapped.original.origem ?: "BASICO")
-                            EquipamentoListEntry(item, origem.uppercase())
+                            EquipamentoListEntry(item, origem.toSentenceCase())
                         }
                     }
                 }
@@ -692,7 +692,7 @@ fun EquipamentoSection(
                                              cat.original.itens.map { item ->
                                                 val origem = item.origem?.ifBlank { cat.original.origem ?: "BASICO" }
                                                     ?: (cat.original.origem ?: "BASICO")
-                                                EquipamentoListEntry(item, origem.uppercase())
+                                                EquipamentoListEntry(item, origem.toSentenceCase())
                                              }
                                          }.filter { entry ->
                                              // Apply filters

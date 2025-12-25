@@ -102,6 +102,7 @@ fun ComplicacoesSection(
         if (state.compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
         if (state.compendioCidadeSolVaporAtivo) add("CIDADE_SOL_VAPOR")
         if (state.compendioWiseguysAtivo) add("WISEGUYS")
+        if (state.compendioCrystalHeartAtivo) add("CRYSTAL_HEART")
     }
 
     // Filter states
@@ -243,7 +244,7 @@ fun ComplicacoesSection(
                                     "ARTE_DA_GUERRA" -> "Arte da Guerra"
                                     "CIDADE_SOL_VAPOR" -> "Sol/Vapor"
                                     "WISEGUYS" -> "Wiseguys"
-                                    else -> origin
+                                    else -> origin.toSentenceCase()
                                 }
                                 FilterChip(
                                     selected = selectedOrigin == origin,
