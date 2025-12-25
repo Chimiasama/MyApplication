@@ -201,7 +201,7 @@ fun VantagensContent(
 
     val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioBuscatrilhaAtivo, state.compendioDeadlandsAtivo, state.compendioCrystalHeartAtivo, state.compendioArteDaGuerraAtivo, state.compendioCidadeSolVaporAtivo, state.compendioWiseguysAtivo, multiplosAAHabilitados) {
         listaVantagens.filter { vant ->
-            val origemNorm = (vant.origem.ifBlank { "BASICO" }).trim().uppercase()
+            val origemNorm = (vant.origem.ifBlank { "BASICO" }).trim().uppercase(java.util.Locale.ROOT)
             val isBasico = origemNorm == "BASICO"
             val isSuper = origemNorm == "SUPER"
             val isFantasia = origemNorm == "FANTASIA"
@@ -219,7 +219,10 @@ fun VantagensContent(
                 }
             }
 
-            isBasico || (isAdg && state.compendioArteDaGuerraAtivo) || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isBuscatrilha && state.compendioBuscatrilhaAtivo) || (isDeadlands && state.compendioDeadlandsAtivo) || (isCidadeSolVapor && state.compendioCidadeSolVaporAtivo) || (isWiseguys && state.compendioWiseguysAtivo) || (isCrystalHeart && state.compendioCrystalHeartAtivo)
+            // Pathfinder relies on Fantasy content (e.g. Arcane Backgrounds), so we allow Fantasy items if Pathfinder is active
+            val fantasyActive = state.compendioFantasiaAtivo || state.compendioBuscatrilhaAtivo
+
+            isBasico || (isAdg && state.compendioArteDaGuerraAtivo) || (isSuper && state.modoSupers) || (isFantasia && fantasyActive) || (isHorror && state.compendioHorrorAtivo) || (isBuscatrilha && state.compendioBuscatrilhaAtivo) || (isDeadlands && state.compendioDeadlandsAtivo) || (isCidadeSolVapor && state.compendioCidadeSolVaporAtivo) || (isWiseguys && state.compendioWiseguysAtivo) || (isCrystalHeart && state.compendioCrystalHeartAtivo)
         }
     }
 
