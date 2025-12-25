@@ -78,6 +78,16 @@ class CriadorViewModel : ViewModel() {
         state.appTheme = theme
     }
 
+    private fun resetUiState() {
+        state.vantSearchQuery = ""
+        state.vantSelectedCategories.clear()
+        state.vantFilter = VantFilter()
+        state.equipSearchQuery = ""
+        state.equipSelectedSuperTypes.clear()
+        state.equipFilter = EquipFilter()
+        state.equipExpandedTypes.clear()
+    }
+
     fun resetToEmptyState() {
         resetStateParaNovoPersonagem(
             cartaSelvagem = true,
@@ -193,6 +203,7 @@ class CriadorViewModel : ViewModel() {
                 message = "Arquivo de personagem não encontrado."
             )
         }
+        resetUiState()
         clearFeedbackMessages()
         val flags = snapshot.flags
         resetStateParaNovoPersonagem(
@@ -402,6 +413,7 @@ class CriadorViewModel : ViewModel() {
         state.mostrandoVantagensProgresso = false
         state.mostrandoPericiasProgresso = false
         state.frozenSkillIncrements.clear()
+        resetUiState()
 
         state.valoresAtributos.forEach { (_, holder) -> holder.intValue = 4 }
         state.recalcularPontosAtributo(mutableListOf())
@@ -778,6 +790,7 @@ class CriadorViewModel : ViewModel() {
 
     fun startSkillAdvancement(slotIndex: Int, stageName: String) {
         if (state.progressosDisponiveis >= 1) {
+            resetUiState()
             state.progresso++
             state.spendProgressAtStage(stageName, 1)
             state.stageNameForCurrentAdvancement = stageName
@@ -818,6 +831,7 @@ class CriadorViewModel : ViewModel() {
 
     fun startAdvantageAdvancement(slotIndex: Int, est: String) {
         if (state.progressosDisponiveis >= 1) {
+            resetUiState()
             state.progresso++
             state.spendProgressAtStage(est, 1)
             state.stageNameForCurrentAdvancement = est
@@ -927,6 +941,7 @@ class CriadorViewModel : ViewModel() {
         consumesLegendaryReservation: Boolean
     ) {
         if (state.progressosDisponiveis >= 1) {
+            resetUiState()
             state.progresso++
             state.spendProgressAtStage(stageName, 1)
             state.stageNameForCurrentAdvancement = stageName

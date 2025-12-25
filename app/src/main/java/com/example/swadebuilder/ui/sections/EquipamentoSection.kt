@@ -50,6 +50,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
+import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.model.EquipFilter
+import com.example.swadebuilder.model.EquipSuperType
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.ui.components.CollapsibleSection
@@ -65,14 +68,6 @@ import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.serialization.json.JsonPrimitive
 
 // --- Data Structures for Refactoring ---
-
-enum class EquipSuperType(val label: String, val order: Int) {
-    ARMAS("Armas", 1),
-    ARMADURAS("Armaduras e Proteção", 2),
-    VEICULOS("Veículos e Montarias", 3),
-    CIBERNETICO("Cibernéticos e Robótica", 4),
-    GERAL("Equipamentos e Itens", 5)
-}
 
 private data class MappedCategory(
     val original: EquipamentoCategoria,
@@ -172,18 +167,6 @@ private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
 }
 
 
-data class EquipFilter(
-    val somenteAcessiveis: Boolean = false,
-    val origens: Set<String> = emptySet(),
-    val superTipos: Set<EquipSuperType> = emptySet()
-) {
-    fun totalSelections() =
-        (if (somenteAcessiveis) 1 else 0) +
-                origens.size + superTipos.size
-
-    fun isEmpty() = totalSelections() == 0
-}
-
 private data class EquipamentoListEntry(
     val item: EquipamentoItem,
     val origemLabel: String
@@ -264,6 +247,7 @@ fun EquipFilterDialog(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun EquipamentoSection(
+    state: CriadorState, // Changed signature to include state
     dinheiro: Int,
     usaRiqueza: Boolean,
     dadoRiqueza: Int,
@@ -305,13 +289,14 @@ fun EquipamentoSection(
     var showMoneyDialog by rememberSaveable { mutableStateOf(false) }
     var dinheiroInput by rememberSaveable { mutableStateOf(dinheiro.toString()) }
 
-    var filter by remember { mutableStateOf(EquipFilter()) }
+    // Replaced local state with CriadorState properties
+    val filter = state.equipFilter
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
 
     // UI State for Search & Filters
-    var searchQuery by remember { mutableStateOf("") }
+    val searchQuery = state.equipSearchQuery
     // We now filter by SuperType primarily in the horizontal scroll
-    var selectedSuperTypes = remember { mutableStateListOf<EquipSuperType>() }
+    val selectedSuperTypes = state.equipSelectedSuperTypes
 
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
@@ -319,7 +304,7 @@ fun EquipamentoSection(
     val isSearching = searchQuery.isNotBlank()
 
     // Accordion State for browse mode (keyed by SuperType label)
-    val expandedTypeMap = remember { mutableStateMapOf<String, Boolean>() }
+    val expandedTypeMap = state.equipExpandedTypes
 
     SectionCard(
         title    = "Equipamento",
@@ -427,7 +412,7 @@ fun EquipamentoSection(
 
             ExpandableSearchFilter(
                 query = searchQuery,
-                onQueryChange = { searchQuery = it },
+                onQueryChange = { state.equipSearchQuery = it },
                 isExpanded = isSearchExpanded,
                 onExpandedChange = { isSearchExpanded = it },
                 placeholder = "Pesquisar Equipamentos..."
@@ -768,7 +753,7 @@ fun EquipamentoSection(
                 EquipFilterDialog(
                     allOrigens = allOrigens,
                     current = filter,
-                    onChange = { filter = it },
+                    onChange = { state.equipFilter = it },
                     onDismiss = { showFilterDialog = false }
                 )
             }

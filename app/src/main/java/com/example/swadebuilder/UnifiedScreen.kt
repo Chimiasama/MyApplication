@@ -957,6 +957,7 @@ private fun EquipamentoSection(
     }
 
     EquipamentoSection(
+        state = state,
         dinheiro = state.dinheiro,
         usaRiqueza = state.usaRiqueza,
         dadoRiqueza = state.dadoRiqueza,

@@ -63,6 +63,7 @@ import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.ui.components.CollapsibleSection
@@ -79,19 +80,6 @@ import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
-
-data class VantFilter(
-    val origens: Set<String> = emptySet(),
-    val estagios: Set<String> = emptySet(),
-    val atributos: Set<String> = emptySet(),
-    val pericias: Set<String> = emptySet()
-) {
-    fun isEmpty() =
-        origens.isEmpty() && estagios.isEmpty() && atributos.isEmpty() && pericias.isEmpty()
-
-    fun totalSelections() =
-        origens.size + estagios.size + atributos.size + pericias.size
-}
 
 @Composable
 fun VantFilterDialog(
@@ -245,9 +233,9 @@ fun VantagensContent(
     }
 
     // --- Search & Filter State ---
-    var searchQuery by remember { mutableStateOf("") }
-    var selectedCategories = remember { mutableStateListOf<Categoria>() }
-    var filter by remember { mutableStateOf(VantFilter()) }
+    val searchQuery = state.vantSearchQuery
+    val selectedCategories = state.vantSelectedCategories
+    val filter = state.vantFilter
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
 
     // --- Interaction State ---
@@ -346,7 +334,7 @@ fun VantagensContent(
 
         ExpandableSearchFilter(
             query = searchQuery,
-            onQueryChange = { searchQuery = it },
+            onQueryChange = { state.vantSearchQuery = it },
             isExpanded = isSearchExpanded,
             onExpandedChange = { isSearchExpanded = it },
             placeholder = "Pesquisar Vantagens..."
@@ -416,7 +404,7 @@ fun VantagensContent(
                 allAtributos = allAtributos,
                 allPericias = allPericias,
                 current = filter,
-                onChange = { filter = it },
+                onChange = { state.vantFilter = it },
                 onDismiss = { showFilterDialog = false }
             )
         }
