@@ -54,6 +54,7 @@ import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
+import com.example.swadebuilder.R
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.model.Complicacao
@@ -237,7 +238,7 @@ fun ComplicacoesSection(
                                     "SUPER" -> "Supers"
                                     "FANTASIA" -> "Fantasia"
                                     "HORROR" -> "Horror"
-                                    "FANTASIABUSCATRILHA" -> "Buscatrilha"
+                                    "FANTASIABUSCATRILHA" -> androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label)
                                     "OESTE_ESTRANHO" -> "Deadlands"
                                     "ARTE_DA_GUERRA" -> "Arte da Guerra"
                                     "CIDADE_SOL_VAPOR" -> "Sol/Vapor"

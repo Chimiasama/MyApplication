@@ -118,13 +118,13 @@ enum class PendingNavigationAction {
     StartProgression
 }
 
-private fun buildUsageInstructions(state: CriadorState): String {
+private fun buildUsageInstructions(state: CriadorState, pathfinderLabel: String): String {
     val activeBooks = buildList {
         add("Básico (sempre ativo)")
         if (state.compendioFantasiaAtivo) add("Compêndio Fantasia")
         if (state.compendioHorrorAtivo) add("Compêndio Horror")
         if (state.compendioSciFiAtivo) add("Compêndio Sci-Fi")
-        if (state.compendioBuscatrilhaAtivo) add("Compêndio Buscatrilha")
+        if (state.compendioBuscatrilhaAtivo) add("Compêndio $pathfinderLabel")
         if (state.compendioDeadlandsAtivo) add("Compêndio Faroeste Assombrado".toEditionDisplayName())
         if (state.compendioArteDaGuerraAtivo) add("Arte da Guerra".toEditionDisplayName())
         if (state.compendioCidadeSolVaporAtivo) add("Cidade Sol V'apor".toEditionDisplayName())
@@ -384,6 +384,7 @@ class MainActivity : ComponentActivity() {
             }
 
             if (showHelpDialog) {
+                val pathfinderLabel = stringResource(R.string.sw_pathfinder_label)
                 AlertDialog(
                     onDismissRequest = { showHelpDialog = false },
                     title = { Text("Como usar o app") },
@@ -394,7 +395,7 @@ class MainActivity : ComponentActivity() {
                                 .heightIn(max = 360.dp)
                                 .verticalScroll(rememberScrollState())
                         ) {
-                            Text(buildUsageInstructions(state))
+                            Text(buildUsageInstructions(state, pathfinderLabel))
                         }
                     },
                     confirmButton = {

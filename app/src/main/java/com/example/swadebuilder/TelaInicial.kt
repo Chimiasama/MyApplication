@@ -177,8 +177,8 @@ fun TelaInicial(
 
     val settingModules = listOf(
         ModuleItemData(
-            if (isFullEdition) "Alta Fantasia" else "Buscatrilha",
-            if (isFullEdition) "Conteúdo oficial de Mundo Ancestral (Classes, Raças)." else "Cenário Buscatrilha e material temático.",
+            androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label),
+            if (isFullEdition) "Conteúdo oficial de Mundo Ancestral (Classes, Raças)." else "Cenário ${androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label)} e material temático.",
             Icons.Default.Map,
             optCompendioBuscatrilha
         ) { optCompendioBuscatrilha = !optCompendioBuscatrilha },
