@@ -64,6 +64,7 @@ import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -240,11 +241,7 @@ fun ComplicacoesSection(
                                     "FANTASIA" -> "Fantasia"
                                     "HORROR" -> "Horror"
                                     "FANTASIABUSCATRILHA" -> androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label)
-                                    "OESTE_ESTRANHO" -> "Deadlands"
-                                    "ARTE_DA_GUERRA" -> "Arte da Guerra"
-                                    "CIDADE_SOL_VAPOR" -> "Sol/Vapor"
-                                    "WISEGUYS" -> "Wiseguys"
-                                    else -> origin.toSentenceCase()
+                                    else -> origin.toEditionDisplayName()
                                 }
                                 FilterChip(
                                     selected = selectedOrigin == origin,
@@ -472,11 +469,7 @@ fun ComplicacoesSection(
                                                   "FANTASIA" -> "FANTASIA"
                                                   "HORROR" -> "HORROR"
                                                   "FANTASIABUSCATRILHA" -> "BUSCATRILHA"
-                                                  "OESTE_ESTRANHO" -> "DEADLANDS"
-                                                  "ARTE_DA_GUERRA" -> "ARTE DA GUERRA"
-                                                  "CIDADE_SOL_VAPOR" -> "SOL/VAPOR"
-                                                  "WISEGUYS" -> "WISEGUYS"
-                                                  else -> v.origem.uppercase()
+                                                  else -> v.origem.toEditionDisplayName().uppercase()
                                               }
                                               val txt = if (showOfficialNames && !v.originalDescription.isNullOrBlank())
                                                   v.originalDescription.trim()

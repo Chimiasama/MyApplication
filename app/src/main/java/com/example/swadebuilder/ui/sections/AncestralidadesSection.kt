@@ -349,11 +349,7 @@ fun AncestralidadesSection(
                         "FANTASIA" -> "Fantasia"
                         "HORROR" -> "Horror"
                         "FANTASIABUSCATRILHA" -> androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label)
-                        "OESTE_ESTRANHO" -> "Deadlands"
-                        "ARTE_DA_GUERRA" -> "Arte da Guerra"
-                        "CIDADE_SOL_VAPOR" -> "Sol/Vapor"
-                        "WISEGUYS" -> "Wiseguys"
-                        else -> origin
+                        else -> origin.toEditionDisplayName()
                     }
                     FilterChip(
                         selected = selectedFilterOrigin == origin,
