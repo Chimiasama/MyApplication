@@ -1,27 +1,152 @@
 [
-  { "key": "DOM", "slots": 1, "pp": 15, "foco": "Foco" },
-  { "key": "MAGIA", "slots": 3, "pp": 10, "foco": "Conjurar" },
-  { "key": "MILAGRES", "slots": 3, "pp": 10, "foco": "Fé" },
-  { "key": "PSIÔNICOS", "slots": 3, "pp": 10, "foco": "Psiônicos" },
-  { "key": "CIÊNCIA ESTRANHA", "slots": 2, "pp": 15, "foco": "Ciência Estranha" },
-  { "key": "ABENCOADO", "slots": 3, "pp": 15, "foco": "Fé" },
-  { "key": "CIENTISTA LOUCO", "slots": 2, "pp": 15, "foco": "Ciência Estranha" },
-  { "key": "MESTRE DO CHI", "slots": 3, "pp": 15, "foco": "Foco" },
-  { "key": "VIGARISTA", "slots": 3, "pp": 10, "foco": "Conjurar" },
-  { "key": "XAMA", "slots": 3, "pp": 15, "foco": "Fé" },
-  { "key": "AGENTE DA SYN", "slots": 1, "pp": 0, "foco": "Ocultismo" },
-  { "key": "ALQUIMIA", "slots": 3, "pp": 10, "foco": "Ciência Estranha" },
-  { "key": "BARDO", "slots": 3, "pp": 10, "foco": "Performance" },
-  { "key": "BRUXO", "slots": 3, "pp": 10, "foco": "Conjurar" },
-  { "key": "CLERIGO", "slots": 3, "pp": 10, "foco": "Fé" },
-  { "key": "DIABOLISTA", "slots": 3, "pp": 10, "foco": "Conjurar" },
-  { "key": "DRUIDA", "slots": 3, "pp": 10, "foco": "Fé" },
-  { "key": "ELEMENTALISTA", "slots": 3, "pp": 10, "foco": "Conjurar" },
-  { "key": "FEITICEIRO", "slots": 3, "pp": 10, "foco": "Conjurar" },
-  { "key": "MAGO", "slots": 3, "pp": 10, "foco": "Conjurar" },
-  { "key": "NECROMANTE", "slots": 3, "pp": 10, "foco": "Conjurar" },
-  { "key": "RITUALISTA", "slots": 2, "pp": 15, "foco": "Ocultismo" },
-  { "key": "INVOCADOR DE DEMONIOS", "slots": 3, "pp": 10, "foco": "Conjurar" },
-  { "key": "VIDENTE", "slots": 3, "pp": 10, "foco": "Ocultismo" },
-  { "key": "MISTICO", "slots": 3, "pp": 10, "foco": "Fé" }
+  {
+    "key": "DOM",
+    "slots": 1,
+    "pp": 15,
+    "foco": "Foco"
+  },
+  {
+    "key": "MAGIA",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "MILAGRES",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Fé"
+  },
+  {
+    "key": "PSIÔNICOS",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Psiônicos"
+  },
+  {
+    "key": "CIÊNCIA ESTRANHA",
+    "slots": 2,
+    "pp": 15,
+    "foco": "Ciência Estranha"
+  },
+  {
+    "key": "ABENCOADO",
+    "slots": 3,
+    "pp": 15,
+    "foco": "Fé"
+  },
+  {
+    "key": "CIENTISTA LOUCO",
+    "slots": 2,
+    "pp": 15,
+    "foco": "Ciência Estranha"
+  },
+  {
+    "key": "MESTRE DO CHI",
+    "slots": 3,
+    "pp": 15,
+    "foco": "Foco"
+  },
+  {
+    "key": "VIGARISTA",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "XAMA",
+    "slots": 3,
+    "pp": 15,
+    "foco": "Fé"
+  },
+  {
+    "key": "AGENTE DA SYN",
+    "slots": 1,
+    "pp": 0,
+    "foco": "Ocultismo"
+  },
+  {
+    "key": "ALQUIMIA",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Ciência Estranha"
+  },
+  {
+    "key": "BARDO",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Performance"
+  },
+  {
+    "key": "BRUXO",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "CLERIGO",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Fé"
+  },
+  {
+    "key": "DIABOLISTA",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "DRUIDA",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Fé"
+  },
+  {
+    "key": "ELEMENTALISTA",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "FEITICEIRO",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "MAGO",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "NECROMANTE",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "RITUALISTA",
+    "slots": 2,
+    "pp": 15,
+    "foco": "Ocultismo"
+  },
+  {
+    "key": "INVOCADOR DE DEMONIOS",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "VIDENTE",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Ocultismo"
+  },
+  {
+    "key": "MISTICO",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Fé"
+  }
 ]

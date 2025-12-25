@@ -6461,7 +6461,9 @@
         "Fé": 6
       }
     },
-    "descricao": "Usa Fé. 15 PP. Milagres divinos. Se violar conduta, perde poderes. Acesso a poderes de proteção e cura."
+    "descricao": "Usa Fé. 15 PP. Milagres divinos. Se violar conduta, perde poderes. Acesso a poderes de proteção e cura.",
+    "subtipoArcano": "ABENCOADO",
+    "grupoId": "antecedente_arcano"
   },
   {
     "id": "aa_cientista_louco",
@@ -6477,7 +6479,9 @@
         "Ciência Estranha": 6
       }
     },
-    "descricao": "Usa Ciência Estranha. 15 PP. Cria dispositivos infernais. Falha Crítica causa Malfuncionamento (explosão, defeito, etc)."
+    "descricao": "Usa Ciência Estranha. 15 PP. Cria dispositivos infernais. Falha Crítica causa Malfuncionamento (explosão, defeito, etc).",
+    "subtipoArcano": "CIENTISTA LOUCO",
+    "grupoId": "antecedente_arcano"
   },
   {
     "id": "aa_huckster",
@@ -6494,7 +6498,9 @@
         "Conjurar": 6
       }
     },
-    "descricao": "Usa Conjurar (com baralho de poker para efeitos extras). 10 PP. Magia através de jogos com espíritos obscuros."
+    "descricao": "Usa Conjurar (com baralho de poker para efeitos extras). 10 PP. Magia através de jogos com espíritos obscuros.",
+    "subtipoArcano": "VIGARISTA",
+    "grupoId": "antecedente_arcano"
   },
   {
     "id": "aa_mestre_chi",
@@ -6511,7 +6517,9 @@
         "Foco": 6
       }
     },
-    "descricao": "Usa Foco. 15 PP. Artes marciais sobrenaturais. Poderes afetam principalmente a si mesmo."
+    "descricao": "Usa Foco. 15 PP. Artes marciais sobrenaturais. Poderes afetam principalmente a si mesmo.",
+    "subtipoArcano": "MESTRE DO CHI",
+    "grupoId": "antecedente_arcano"
   },
   {
     "id": "aa_xama",
@@ -6527,7 +6535,9 @@
         "Fé": 6
       }
     },
-    "descricao": "Usa Fé (Tribal). 15 PP. Contata espíritos. Rituais podem recuperar PP mais rápido."
+    "descricao": "Usa Fé (Tribal). 15 PP. Contata espíritos. Rituais podem recuperar PP mais rápido.",
+    "subtipoArcano": "XAMA",
+    "grupoId": "antecedente_arcano"
   },
   {
     "id": "pistoleiro",
@@ -6729,7 +6739,9 @@
         "Espírito": 6
       }
     },
-    "descricao": "Permite equipar e usar Corações de Cristal. Perícia Arcana: Canalizar (Espírito). Se o cristal for removido, perde acesso aos poderes. Começa com um Coração Inicial."
+    "descricao": "Permite equipar e usar Corações de Cristal. Perícia Arcana: Canalizar (Espírito). Se o cristal for removido, perde acesso aos poderes. Começa com um Coração Inicial.",
+    "subtipoArcano": "AGENTE DA SYN",
+    "grupoId": "antecedente_arcano"
   },
   {
     "id": "sintonizacao_cristal",
@@ -6794,7 +6806,9 @@
         "Tecnomagia": 6
       }
     },
-    "descricao": "Usa aparelhos (bateria, unidade, emissor) para conjurar. 10 PP iniciais (na bateria). Requer equipamento."
+    "descricao": "Usa aparelhos (bateria, unidade, emissor) para conjurar. 10 PP iniciais (na bateria). Requer equipamento.",
+    "subtipoArcano": "TECNOMAGIA",
+    "grupoId": "antecedente_arcano"
   },
   {
     "id": "aa_magia_negra",
@@ -6807,7 +6821,9 @@
         "Ocultismo": 6
       }
     },
-    "descricao": "Magia através de sacrifício de sangue. Não recupera PP naturalmente (precisa sacrificar)."
+    "descricao": "Magia através de sacrifício de sangue. Não recupera PP naturalmente (precisa sacrificar).",
+    "subtipoArcano": "MAGIA NEGRA",
+    "grupoId": "antecedente_arcano"
   },
   {
     "id": "mecanico_cego",
