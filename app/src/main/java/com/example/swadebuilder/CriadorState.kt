@@ -16,11 +16,14 @@ import com.example.swadebuilder.model.AdvantageSnapshot
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
+import com.example.swadebuilder.model.EquipFilter
+import com.example.swadebuilder.model.EquipSuperType
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.ModifierEngine
 import com.example.swadebuilder.model.ModifierTarget
 import com.example.swadebuilder.model.PersonagemSnapshot
 import com.example.swadebuilder.model.PowerEffect
+import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.SnapshotAtributos
 import com.example.swadebuilder.model.SnapshotFlags
 import com.example.swadebuilder.model.SnapshotPericias
@@ -77,6 +80,16 @@ class CriadorState {
     private val _maxedTraits = mutableStateListOf<String>()
     val maxedTraits: List<String> get() = _maxedTraits
     var idAtual by mutableStateOf<String?>(null)
+
+    // UI State Persistence
+    var vantSearchQuery by mutableStateOf("")
+    val vantSelectedCategories = mutableStateListOf<Categoria>()
+    var vantFilter by mutableStateOf(VantFilter())
+
+    var equipSearchQuery by mutableStateOf("")
+    val equipSelectedSuperTypes = mutableStateListOf<EquipSuperType>()
+    var equipFilter by mutableStateOf(EquipFilter())
+    val equipExpandedTypes = mutableStateMapOf<String, Boolean>()
 
     var anotacoes by mutableStateOf("")
     var portraitFileName by mutableStateOf<String?>(null)
