@@ -199,9 +199,9 @@ fun VantagensContent(
         }
     }
 
-    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioBuscatrilhaAtivo, state.compendioDeadlandsAtivo, state.compendioCrystalHeartAtivo, state.compendioArteDaGuerraAtivo, state.compendioCidadeSolVaporAtivo, state.compendioWiseguysAtivo) {
+    val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioBuscatrilhaAtivo, state.compendioDeadlandsAtivo, state.compendioCrystalHeartAtivo, state.compendioArteDaGuerraAtivo, state.compendioCidadeSolVaporAtivo, state.compendioWiseguysAtivo, multiplosAAHabilitados) {
         listaVantagens.filter { vant ->
-            val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase()
+            val origemNorm = (vant.origem.ifBlank { "BASICO" }).trim().uppercase()
             val isBasico = origemNorm == "BASICO"
             val isSuper = origemNorm == "SUPER"
             val isFantasia = origemNorm == "FANTASIA"
@@ -213,7 +213,7 @@ fun VantagensContent(
             val isWiseguys = origemNorm == "WISEGUYS"
             val isCrystalHeart = origemNorm == "CRYSTAL_HEART"
 
-            if (state.compendioCrystalHeartAtivo) {
+            if (state.compendioCrystalHeartAtivo && !multiplosAAHabilitados) {
                 if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
                      return@filter false
                 }
