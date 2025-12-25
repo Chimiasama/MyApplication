@@ -292,7 +292,8 @@ fun AtributosContent(
                 ) {
                     Text(
                         if (detalhesExpandidos[descKey] == true) "Ocultar detalhes" else "Ver detalhes",
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
 

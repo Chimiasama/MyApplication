@@ -650,7 +650,10 @@ fun SuperPoderesSection(
                     if (showDetails) {
                         Spacer(Modifier.height(4.dp))
                         TextButton(onClick = { detalhesExpandidos[poder.nome] = !expanded }) {
-                            Text(if (expanded) "Ocultar detalhes" else "Ver detalhes")
+                            Text(
+                                if (expanded) "Ocultar detalhes" else "Ver detalhes",
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
                         }
 
                         AnimatedVisibility(visible = expanded) {

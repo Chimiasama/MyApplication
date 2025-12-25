@@ -1096,7 +1096,8 @@ private fun VantagemItem(
                 ) {
                     Text(
                         if (detalhesExpandidos[vant.id] == true) "Ocultar detalhes" else "Ver detalhes",
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
