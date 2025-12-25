@@ -390,14 +390,14 @@ fun VantagensContent(
                             if (cat in selectedCategories) selectedCategories.remove(cat)
                             else selectedCategories.add(cat)
                         },
-                        label = { Text(cat.name) }
+                        label = { Text(cat.name.toSentenceCase()) }
                     )
                 }
             }
         }
 
         if (showFilterDialog) {
-            val allOrigens = listaVantagensAtivas.map { it.origem.ifBlank { "BASICO" }.uppercase() }.distinct()
+            val allOrigens = listaVantagensAtivas.map { it.origem.ifBlank { "BASICO" }.uppercase() }.distinct().sorted()
             val allEstagios = listaDeEstagios.map { it.nome }
             val allAtributos = mapaAtributosDisplay.values.toList()
             val requiredPericias = listaVantagensAtivas.flatMap { vant ->

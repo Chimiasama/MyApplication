@@ -121,6 +121,10 @@ fun PoderesSection(
     // Using remember instead of rememberSaveable to avoid crash with Map serialization.
     val sectionStates = remember { mutableStateMapOf<String, Boolean>() }
 
+    val idToName = remember(allPoderes) {
+        allPoderes.associate { it.id to it.nome.toSentenceCase() }
+    }
+
     val poderesElegiveis = remember(allPoderes, searchQuery, selectedRank) {
         allPoderes.filter { power ->
             val matchSearch = if (searchQuery.isBlank()) true else {
@@ -249,7 +253,7 @@ fun PoderesSection(
                             Spacer(Modifier.height(4.dp))
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 slots.forEachIndexed { idx, poderId ->
-                                    val label = poderId?.toSentenceCase() ?: "— vazio —"
+                                    val label = if (poderId == null) "— vazio —" else (idToName[poderId] ?: poderId.toSentenceCase())
                                     val isSlotLocked = locked || idx < lockedCount
                                     AssistChip(
                                         onClick = {
