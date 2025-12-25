@@ -689,7 +689,7 @@ fun EquipamentoSection(
                                              }
                                              if (filter.origens.isNotEmpty() && entry.origemLabel !in filter.origens) return@filter false
                                              true
-                                         }
+                                         }.sortedBy { it.item.nome }
 
                                          if (itemsInSub.isNotEmpty()) {
                                              itemsInSub.forEach { entry ->

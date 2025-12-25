@@ -224,7 +224,7 @@ fun AncestralidadesSection(
                     origens = originsInGroup,
                     habilidades = habilidadesLite
                 )
-            }
+            }.sortedBy { it.nome }
 
         value = deduped
     }

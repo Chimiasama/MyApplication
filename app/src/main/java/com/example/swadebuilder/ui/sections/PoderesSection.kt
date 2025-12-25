@@ -137,7 +137,7 @@ fun PoderesSection(
             }
 
             matchSearch && matchRank
-        }
+        }.sortedBy { it.nome }
     }
 
     // Determine which ABs to display
