@@ -1407,5 +1407,45 @@
         "descricao": "Começa automaticamente com a Vantagem Conexões (Máfia) e a Complicação Obrigação (Maior - Servir à Família)."
       }
     ]
+  },
+  {
+    "id": "anc_nezumi",
+    "nome": "Nezumi (Homem-Rato)",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Pequenos, ágeis e furtivos. Vivem nos esgotos ou florestas densas. Imunes a doenças.",
+    "atributos": { "Agilidade": 1 },
+    "pericias": { "Furtividade": 1 },
+    "vantagensGratis": [],
+    "desvantagens": ["Pequeno (Tamanho -1)"],
+    "habilidades": [
+      { "nome": "Imunidade a Doenças", "descricao": "+4 para resistir a doenças." },
+      { "nome": "Visão no Escuro", "descricao": "Ignora penalidades de iluminação." }
+    ]
+  },
+  {
+    "id": "anc_basabasa",
+    "nome": "Basabasa (Tengu)",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Humanoides pássaro orgulhosos. Possuem asas funcionais.",
+    "atributos": { "Agilidade": 1 },
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": ["Ossos Fracos (-1 Resistência)"],
+    "habilidades": [
+      { "nome": "Voo", "descricao": "Movimentação 12 com asas. Não podem voar se sobrecarregados." }
+    ]
+  },
+  {
+    "id": "anc_onigem_kuis",
+    "nome": "Onigem (Kui's Diary)",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Descendentes de espíritos ou construídos magicamente. Aparência exótica (chifres, pele colorida).",
+    "atributos": { "Espirito": 1 },
+    "pericias": {},
+    "vantagensGratis": ["Arcano (Chi)"],
+    "desvantagens": ["Forasteiro (Menor)"],
+    "habilidades": [
+      { "nome": "Toque Espiritual", "descricao": "Podem interagir fisicamente com espíritos incorpóreos." }
+    ]
   }
 ]
