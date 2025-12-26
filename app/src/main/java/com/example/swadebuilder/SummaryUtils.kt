@@ -1,0 +1,341 @@
+package com.example.swadebuilder
+
+import com.example.swadebuilder.model.Categoria
+import com.example.swadebuilder.model.MeuPersonagem
+import com.example.swadebuilder.model.PowerEffect
+import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.titleCase
+import kotlin.math.max
+
+// =================================================================================================
+// SHARED SUMMARY BUILDER (Used by ResumoSection.kt)
+// =================================================================================================
+
+fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
+    val lines = mutableListOf<String>()
+
+    val showOfficialNames = personagem.modoOficialAtivo
+
+    val ancestralidadeNomeObj = listaAncestralidadesJson
+        .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
+
+    val ancestralidadeNome: String = (if (showOfficialNames && ancestralidadeNomeObj?.originalName != null) {
+        ancestralidadeNomeObj.originalName
+    } else {
+        ancestralidadeNomeObj?.nome ?: personagem.ancestralidade
+    }).titleCase()
+
+    val monstroNome = if (personagem.modoMonstroAtivo) {
+        val tipoNome = listaMonstroTemplates.find { it.id == personagem.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
+        " (Monstro: $tipoNome)"
+    } else ""
+
+    val vantagensNomeKey: List<String> = listaVantagens
+        .filter { it.id in personagem.vantagens }
+        .map { it.nome.keyify() }
+    val complicacoesNomeadas: List<String> = complicationDisplayNames(personagem.complicacoes, showOfficialNames)
+    val transtornosNomeados: List<String> = complicationDisplayNames(personagem.transtornos, showOfficialNames)
+    val complicacoesNomeKeyset = listaComplicacoes
+        .flatMap { comp -> listOfNotNull(comp.name, comp.originalName) }
+        .map { it.keyify() }
+        .toSet()
+
+    val vantagemChoices: MutableMap<String, MutableList<String>> = personagem.advantageChoices
+        .mapValues { it.value.toMutableList() }
+        .toMutableMap()
+
+    val allComplicationsKeys: List<String> =
+        personagem.complicacoes + personagem.desvantagensRaciais + personagem.transtornos
+
+    fun temComp(key: String): Boolean =
+        allComplicationsKeys.any { it.keyify() == key }
+
+    fun calcMovimento(): Int {
+        val base = 6
+
+        val racialPenalty =
+            listaAncestralidadesJson
+                .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
+                ?.desvantagens
+                ?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
+                .takeIf { it == true }
+                ?.let { 1 }
+                ?: 0
+
+        val lentoPenalty = if (temComp("LENTO")) 1 else 0
+        val idosoPenalty = if (temComp("IDOSO")) 1 else 0
+        val obesoPenalty = if (temComp("OBESO")) 1 else 0
+        val ligeiroBonus =
+            if (vantagensNomeKey.any { it == "LIGEIRO" }) 2 else 0
+
+        return (
+                base
+                        - racialPenalty
+                        - lentoPenalty
+                        - idosoPenalty
+                        - obesoPenalty
+                        + ligeiroBonus
+                        + personagem.bonusMovimentacaoFromPower
+                ).coerceAtLeast(0)
+    }
+
+    fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
+        var raw = rawStart
+        var remaining = steps.coerceAtLeast(0)
+
+        if (raw <= 0 && remaining > 0) {
+            raw = 4
+            remaining -= 1
+        }
+
+        repeat(remaining) {
+            raw += if (raw < 12) 2 else 1
+        }
+
+        return raw
+    }
+
+    fun calcAparar(): Int {
+        val lutarRawBase = personagem.pericias["Lutar"] ?: 0
+        val jutsuRawBase = personagem.pericias["Jutsu"] ?: 0
+        val lutarStepsFromSupers = personagem.superInvestments
+            .mapNotNull { it.effect as? PowerEffect.SuperPericia }
+            .filter { it.periciaKey.equals("Lutar", ignoreCase = true) }
+            .sumOf { it.steps }
+        val lutarComSupers = applySuperStepsFrom(lutarRawBase, lutarStepsFromSupers)
+        val jutsuComSupers = jutsuRawBase
+
+        val base = 2 + (max(lutarComSupers, jutsuComSupers) / 2)
+
+        val bloquearBonus =
+            if (vantagensNomeKey.any { it == "BLOQUEAR" }) 1 else 0
+        val bloquearAprimoradoBonus =
+            if (vantagensNomeKey.any { it == "BLOQUEAR APRIMORADO" }) 1 else 0
+
+        return base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusApararFromPower
+    }
+
+    fun calcChi(): Int {
+        personagem.reservaChi?.let { return it }
+
+        val espRaw = personagem.atributos["ESPIRITO"] ?: 0
+        val racialPenalty = if (personagem.ancestralidade.keyify() == "TERRACOTA") 1 else 0
+        val chiBonus = listaVantagens
+            .filter { it.id in personagem.vantagens }
+            .count { it.categoria == Categoria.CHI }
+
+        return (espRaw / 2 - racialPenalty + chiBonus).coerceAtLeast(0)
+    }
+
+    val aparar = calcAparar()
+    val resFinal = personagem.resistencia
+    val tamanho = personagem.tamanho
+    val mov = calcMovimento()
+    val armadura = (max(personagem.armorFromPower, personagem.armorBase) + personagem.naturalArmorFromRace).coerceAtLeast(0)
+    val temArmaduraDeEquip = personagem.equipamentos.any { it.armadura != null }
+    val bonusSemArmadura =
+        if (personagem.heroisSemArmadura && !temArmaduraDeEquip) 2 else 0
+    val chi = calcChi()
+    val resistenciaTotal = resFinal + armadura + bonusSemArmadura
+    val resistenciaTexto =
+        if ((armadura + bonusSemArmadura) > 0) "${resFinal}(${resistenciaTotal})" else resFinal.toString()
+
+    lines += "Identidade"
+    lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"
+    lines += "Ancestralidade: $ancestralidadeNome$monstroNome"
+    if (personagem.coracaoCrystalSelecionado != null) {
+        lines += "Coração de Cristal: ${personagem.coracaoCrystalSelecionado.nome}"
+    }
+    lines += ""
+
+    lines += "Atributos derivados"
+    lines += "Aparar: $aparar"
+    lines += "Resistência: $resistenciaTexto"
+    if (personagem.compendioArteDaGuerraAtivo) {
+        lines += "Reserva de Chi: $chi"
+    }
+    if (personagem.dominio != null) {
+        lines += "Domínio: ${personagem.dominio}"
+    }
+    lines += "Tamanho: $tamanho"
+    lines += "Movimento: $mov"
+    lines += ""
+
+    lines += "Atributos"
+    listaAtributos.forEach { attrKey ->
+        val label = mapaAtributosDisplay[attrKey] ?: attrKey
+        val valor = personagem.atributos[attrKey] ?: 4
+        lines += "$label: d$valor"
+    }
+    lines += ""
+
+    val idiomaRegex = Regex("^Idiomas\\s+(\\d+)$", RegexOption.IGNORE_CASE)
+    val idiomaBase = listaPericias.firstOrNull { it.nome.equals("Idiomas", ignoreCase = true) }
+    val idiomaExtras = personagem.pericias.keys
+        .filter { idiomaRegex.matches(it) }
+        .sortedBy { idiomaRegex.find(it)?.groupValues?.getOrNull(1)?.toIntOrNull() ?: Int.MAX_VALUE }
+    val periciasOrdenadas = buildList {
+        listaPericias.forEach { per ->
+            add(per.nome)
+            if (per.nome.equals("Idiomas", ignoreCase = true)) {
+                addAll(idiomaExtras)
+            }
+        }
+    }
+    val periciasParaMostrar = periciasOrdenadas.mapNotNull { nome ->
+        val basePericia = listaPericias.firstOrNull { it.nome == nome }
+            ?: idiomaBase?.takeIf { idiomaRegex.matches(nome) }
+        val raw = personagem.pericias[nome] ?: 0
+        if (basePericia == null) return@mapNotNull null
+        val shouldShow = basePericia.basica || raw > periciaStartRaw(personagem.ancestralidade, basePericia)
+        if (shouldShow) nome to raw else null
+    }
+
+    lines += "Perícias"
+    if (periciasParaMostrar.isEmpty()) {
+        lines += "– Nenhuma"
+    } else {
+        periciasParaMostrar.forEach { (nome, raw) ->
+            val note = personagem.notasPericia[nome]
+            val noteStr = if (!note.isNullOrBlank()) " ($note)" else ""
+            val displayNome = if (idiomaRegex.matches(nome)) "Idiomas" else nome
+            lines += "$displayNome: d$raw$noteStr"
+        }
+    }
+    lines += ""
+
+    lines += "Recursos & Equipamentos"
+    if (personagem.dadoRiqueza != null) {
+        lines += "Riqueza: d${personagem.dadoRiqueza}"
+    } else {
+        lines += "Dinheiro restante: ${personagem.dinheiro}"
+    }
+    if (personagem.equipamentos.isEmpty()) {
+        lines += "Equipamentos: – Nenhum"
+    } else {
+        lines += "Equipamentos:"
+        personagem.equipamentos.forEach { eq ->
+            val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nome
+            lines += "• $nomeEq"
+        }
+    }
+    lines += ""
+
+    lines += "Vantagens"
+    if (personagem.vantagens.isEmpty()) {
+        lines += "– Nenhuma"
+    } else {
+        val nomesVantagens = listaVantagens
+            .filter { it.id in personagem.vantagens }
+            .map { vant ->
+                val escolha = vantagemChoices[vant.id]?.removeFirstOrNull()
+                    ?.takeIf { it.isNotBlank() }
+                val rawName = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome
+
+                val baseNome = if (vant.id == "antecedente_arcano_milagres" && personagem.celestialAAMilagresDesabilitado) {
+                    "$rawName (DESABILITADO)"
+                } else {
+                    rawName
+                }
+                if (escolha != null) "$baseNome (${escolha.trim()})" else baseNome
+            }
+        lines += nomesVantagens.joinToString(", ")
+    }
+    if (personagem.vantagensRaciais.isNotEmpty()) {
+        lines += "Vantagens Raciais: ${personagem.vantagensRaciais.joinToString(", ")}"
+    }
+    lines += ""
+
+    val desvantagensRaciaisComplicacoes = personagem.desvantagensRaciais.filter { desvantagem ->
+        desvantagem.substringBefore("(").trim().keyify() in complicacoesNomeKeyset
+    }
+    val desvantagensRaciaisAnotacoes = personagem.desvantagensRaciais.filterNot { desvantagem ->
+        desvantagem.substringBefore("(").trim().keyify() in complicacoesNomeKeyset
+    }
+
+    lines += "Complicações"
+    val complicationKeys = complicacoesNomeadas.map { it.keyify() }.toMutableSet()
+    val allComplicationsList = buildList {
+        addAll(complicacoesNomeadas)
+        addAll(transtornosNomeados.map { "$it (Transtorno)" })
+        desvantagensRaciaisComplicacoes.forEach { comp ->
+            val compKey = comp.substringBefore("(").trim().keyify()
+            if (compKey !in complicationKeys) {
+                add(comp)
+                complicationKeys.add(compKey)
+            }
+        }
+    }
+    val complicacoesText = allComplicationsList
+        .joinToString(", ")
+        .ifBlank { "– Nenhuma" }
+    lines += complicacoesText
+    if (desvantagensRaciaisAnotacoes.isNotEmpty()) {
+        lines += "Anotações Raciais: ${desvantagensRaciaisAnotacoes.joinToString(", ")}"
+    }
+    lines += ""
+
+    if (personagem.poderes.isNotEmpty()) {
+        lines += "Poderes arcanos"
+        personagem.poderes.forEach { (arcanoKey, lista) ->
+            val label = arcanoKey
+                .lowercase()
+                .replace('_', ' ')
+                .replaceFirstChar { it.titlecase() }
+
+            lines += if (lista.isEmpty()) {
+                "• $label: – nenhum poder escolhido"
+            } else {
+                val poderesComManifestacao = lista.map { poderId ->
+                    val manifestacao = personagem.manifestacoesPoderes[poderId]
+                        ?.trim()
+                        ?.takeIf { it.isNotBlank() }
+                    if (manifestacao != null) "$poderId (${manifestacao})" else poderId
+                }
+                "• $label: ${poderesComManifestacao.joinToString(", ")}"
+            }
+        }
+        lines += ""
+    }
+
+    if (personagem.modoSupers &&
+        (personagem.superPontosTotais > 0 || personagem.gastosPorPoder.isNotEmpty())
+    ) {
+        lines += "Superpoderes"
+
+        if (personagem.gastosPorPoder.isEmpty()) {
+            lines += "– Nenhum superpoder registrado"
+        } else {
+            personagem.gastosPorPoder.forEach { (poderId, custo) ->
+                lines += "• $poderId: $custo SP"
+            }
+        }
+
+        lines += "Superpontos: ${personagem.superPontosTotais} (disponíveis: ${personagem.superPontosDisponiveis})"
+        lines += "Limite por poder: ${personagem.limitePorPoderPadrao}"
+        lines += ""
+    }
+
+    if (personagem.anotacoes.isNotBlank()) {
+        lines += "Anotações"
+        personagem.anotacoes.lines().forEach { linha -> lines += linha }
+    }
+
+    return lines
+}
+
+private fun complicationDisplayNames(rawIds: List<String>, modoOficialAtivo: Boolean): List<String> {
+    val mapPorId = listaComplicacoes.associateBy { it.id.keyify() }
+    return rawIds.map { compId ->
+        val comp = mapPorId[compId.keyify()]
+        if (comp != null) {
+            if (modoOficialAtivo && !comp.originalName.isNullOrBlank()) {
+                comp.originalName
+            } else {
+                comp.name
+            }
+        } else {
+            compId.replace('_', ' ').titleCase()
+        }
+    }
+}
