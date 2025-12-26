@@ -360,6 +360,23 @@ class MainActivity : ComponentActivity() {
 
                             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
+                            // Retrato: Expandir
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text("Expandir retrato no resumo")
+                                androidx.compose.material3.Switch(
+                                    checked = state.expandirRetrato,
+                                    onCheckedChange = { state.expandirRetrato = it }
+                                )
+                            }
+
+                            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
                             // Theme Selection Button
                             TextButton(
                                 onClick = {

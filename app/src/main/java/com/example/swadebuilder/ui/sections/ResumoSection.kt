@@ -274,7 +274,7 @@ fun SummaryContent(
                         Image(
                             bitmap = imageBitmap,
                             contentDescription = "Retrato",
-                            contentScale = ContentScale.Crop,
+                            contentScale = if (state.expandirRetrato) ContentScale.Crop else ContentScale.Fit,
                             modifier = Modifier.fillMaxSize()
                         )
                     } else {
