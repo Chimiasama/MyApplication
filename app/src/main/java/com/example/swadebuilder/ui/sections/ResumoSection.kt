@@ -1,13 +1,21 @@
 package com.example.swadebuilder.ui.sections
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,6 +23,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,12 +38,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -50,11 +63,34 @@ import com.example.swadebuilder.buildSummaryLines
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.toMeuPersonagem
 import com.example.swadebuilder.util.keyify
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlin.math.max
 
+private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+    val (height: Int, width: Int) = options.run { outHeight to outWidth }
+    var inSampleSize = 1
+
+    if (height > reqHeight || width > reqWidth) {
+        val halfHeight: Int = height / 2
+        val halfWidth: Int = width / 2
+
+        while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+            inSampleSize *= 2
+        }
+    }
+    return inSampleSize
+}
+
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun SummaryContent(state: CriadorState) {
+fun SummaryContent(
+    state: CriadorState,
+    imageUri: Uri? = null,
+    onSelectImage: () -> Unit = {}
+) {
 
-    LocalContext.current
+    val context = LocalContext.current
 
     val flagsTemplate = remember(state) {
         listOfNotNull(
@@ -171,23 +207,116 @@ fun SummaryContent(state: CriadorState) {
             Spacer(Modifier.height(12.dp))
         }
 
-        if (attributesSection != null || skillsSection != null) {
+        // Layout: Attributes + Image Placeholder in a Row, then Skills below
+        attributesSection?.let { attrSection ->
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                attributesSection?.let {
-                    SummarySectionCard(
-                        section = it,
-                        modifier = Modifier.weight(0.42f),
-                        textStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp)
-                    )
+                SummarySectionCard(
+                    section = attrSection,
+                    modifier = Modifier.weight(1f),
+                    textStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp)
+                )
+
+                // Image Placeholder
+                val imageBitmapState = produceState<ImageBitmap?>(initialValue = null, imageUri) {
+                    value = if (imageUri == null) {
+                        null
+                    } else {
+                        withContext(Dispatchers.IO) {
+                            runCatching {
+                                val maxSide = 1024
+                                val options = BitmapFactory.Options().apply {
+                                    inJustDecodeBounds = true
+                                }
+                                context.contentResolver.openInputStream(imageUri)?.use { stream ->
+                                    BitmapFactory.decodeStream(stream, null, options)
+                                }
+
+                                options.inSampleSize = calculateInSampleSize(options, maxSide, maxSide)
+                                options.inJustDecodeBounds = false
+
+                                context.contentResolver.openInputStream(imageUri)?.use { stream ->
+                                    val sampled = BitmapFactory.decodeStream(stream, null, options)
+                                        ?: return@runCatching null
+
+                                    val currentMax = max(sampled.width, sampled.height)
+                                    val finalBitmap = if (currentMax > maxSide) {
+                                         val ratio = maxSide.toFloat() / currentMax.toFloat()
+                                         val targetWidth = (sampled.width * ratio).toInt().coerceAtLeast(1)
+                                         val targetHeight = (sampled.height * ratio).toInt().coerceAtLeast(1)
+                                         Bitmap.createScaledBitmap(sampled, targetWidth, targetHeight, true)
+                                    } else {
+                                         sampled
+                                    }
+                                    finalBitmap.asImageBitmap()
+                                }
+                            }.getOrNull()
+                        }
+                    }
                 }
-                skillsSection?.let {
-                    SummarySectionCard(
-                        section = it,
-                        modifier = Modifier.weight(0.58f)
+
+                Card(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clickable(onClick = onSelectImage),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                ) {
+                    val imageBitmap = imageBitmapState.value
+                    if (imageBitmap != null) {
+                        Image(
+                            bitmap = imageBitmap,
+                            contentDescription = "Retrato",
+                            contentScale = if (state.expandirRetrato) ContentScale.Crop else ContentScale.Fit,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "Retrato",
+                                modifier = Modifier.size(48.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            )
+                        }
+                    }
+                }
+            }
+            Spacer(Modifier.height(12.dp))
+        }
+
+        // Skills Section (Horizontal / Flow)
+        skillsSection?.let { skillSection ->
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Column(Modifier.padding(12.dp)) {
+                    Text(
+                        text = skillSection.title,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold
                     )
+                    Spacer(Modifier.height(8.dp))
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        skillSection.items.forEach { item ->
+                            SkillChip(item)
+                        }
+                    }
                 }
             }
             Spacer(Modifier.height(12.dp))
@@ -814,4 +943,12 @@ private fun SpecializationsSummaryCard(
             }
         )
     }
+}
+
+@Composable
+private fun SkillChip(text: String) {
+    LabelValueRow(
+        raw = text,
+        textStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp)
+    )
 }

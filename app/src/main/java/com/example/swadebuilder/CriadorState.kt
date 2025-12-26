@@ -93,6 +93,7 @@ class CriadorState {
 
     var anotacoes by mutableStateOf("")
     var portraitFileName by mutableStateOf<String?>(null)
+    var expandirRetrato by mutableStateOf(false)
 
     var coracaoCrystalSelecionado by mutableStateOf<com.example.swadebuilder.model.CrystalHeart?>(null)
 
@@ -2275,7 +2276,8 @@ class CriadorState {
                 tropoSelecionadoId = tropoSelecionado?.id,
                 vantagensTropoAutomaticas = vantagensAutomaticasDoTropo.toList(),
                 tecnicasIniciaisTropo = tecnicasIniciaisFromTropo,
-                retratoFileName = portraitFileName
+                retratoFileName = portraitFileName,
+                expandirRetrato = expandirRetrato
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -2353,6 +2355,7 @@ class CriadorState {
         anotacoes = snapshot.anotacoes
         appTheme = AppTheme.valueOf(snapshot.appTheme)
         portraitFileName = snapshot.selecoes.retratoFileName
+        expandirRetrato = snapshot.selecoes.expandirRetrato
 
         // Flags adicionais
         heroisSemArmadura = flags.heroisSemArmadura

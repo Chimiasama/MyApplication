@@ -123,7 +123,8 @@ data class SnapshotSelecoes(
     val tropoSelecionadoId: String? = null,
     val vantagensTropoAutomaticas: List<String> = emptyList(),
     val tecnicasIniciaisTropo: Int = 0,
-    val retratoFileName: String? = null
+    val retratoFileName: String? = null,
+    val expandirRetrato: Boolean = false
 )
 
 @Serializable
