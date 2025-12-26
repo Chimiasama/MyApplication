@@ -48,8 +48,14 @@ object DataLoader {
         val assets = context.assets
 
         // 1. Equipamentos
+        val baseEquip = assets.readJsonList<EquipamentoCategoria>("equipamentos.json")
+        val crystalEquip = runCatching {
+            assets.readJsonList<EquipamentoCategoria>("equipamentos_crystal.json")
+        }.getOrElse { emptyList() }
+        val allEquip = baseEquip + crystalEquip
+
         val equipamentoCategorias = deduplicarEquipamentoCategorias(
-            assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
+            allEquip.filter { cat ->
                 cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
             }
         )
@@ -116,7 +122,11 @@ object DataLoader {
         mapaAtributosDescricao = atributosDescList.associate { it.nome.keyify() to it.descricao }
 
         // 7. Vantagens
-        val todasVantagens: List<Vantagem> = loadJsonAsset(context, "Vantagens.json")
+        val mainVantagens: List<Vantagem> = loadJsonAsset(context, "Vantagens.json")
+        val crystalVantagens: List<Vantagem> = runCatching {
+            loadItems<Vantagem>(context, "vantagens_crystal.json")
+        }.getOrElse { emptyList() }
+        val todasVantagens = mainVantagens + crystalVantagens
 
         AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
         AppData.superVantagens = todasVantagens.filter {
@@ -134,7 +144,14 @@ object DataLoader {
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
         // 8. Tropos e Complicações
-        listaTropos = loadJsonAsset(context, "tropos_adg.json")
+        val adgTropos = runCatching {
+            loadJsonAsset<List<Tropo>>(context, "tropos_adg.json")
+        }.getOrElse { emptyList() }
+        val chTropos = runCatching {
+            loadJsonAsset<List<Tropo>>(context, "tropos_ch.json")
+        }.getOrElse { emptyList() }
+
+        listaTropos = adgTropos + chTropos
         val todasComplicacoes = loadJsonAsset<List<Complicacao>>(context, "complicacoes.json")
         listaComplicacoes = todasComplicacoes
 

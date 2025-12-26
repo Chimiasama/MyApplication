@@ -1,0 +1,42 @@
+[
+  {
+    "id": "treino_schultz",
+    "nome": "Discípulo de Schultz (O Trabalhador)",
+    "categoria": "TROPO",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Focado em trabalho duro, reparos e combate direto. 'Se algo pode ser feito, faça você mesmo'.",
+    "tecnicas_iniciais": 0,
+    "ganha_ao_comprar": ["consertar", "brutamontes"],
+    "atributos_bonus": { "Vigor": 1 }
+  },
+  {
+    "id": "treino_mira",
+    "nome": "Discípulo de Mira (A Sutil)",
+    "categoria": "TROPO",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Especialista em interação social, subterfúgio e manipulação. A causa justifica os meios.",
+    "tecnicas_iniciais": 0,
+    "ganha_ao_comprar": ["carismatico", "ladrao"],
+    "atributos_bonus": { "Espirito": 1 }
+  },
+  {
+    "id": "treino_yara",
+    "nome": "Discípulo de Yara (A Caçadora)",
+    "categoria": "TROPO",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Focado em sobrevivência, rastreio e operações de campo. Nunca mostre quem você realmente é.",
+    "tecnicas_iniciais": 0,
+    "ganha_ao_comprar": ["mateiro", "atento"],
+    "atributos_bonus": { "Agilidade": 1 }
+  },
+  {
+    "id": "treino_leighmya",
+    "nome": "Discípulo de Leighmya (A Analista)",
+    "categoria": "TROPO",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Focado em conhecimento, ocultismo e análise de cristais. Busca preencher os vazios do mapa.",
+    "tecnicas_iniciais": 0,
+    "ganha_ao_comprar": ["erudito", "investigador"],
+    "atributos_bonus": { "Astucia": 1 }
+  }
+]
