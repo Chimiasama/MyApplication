@@ -1,5 +1,6 @@
 package com.example.swadebuilder
 
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -8,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,17 +21,27 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
@@ -47,7 +59,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
@@ -177,70 +192,140 @@ fun UnifiedScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        if (state.modoProgressaoAtivo) {
-            Text(
-                text = "MODO DE PROGRESSÃO",
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center
-            )
-            HorizontalDivider()
-        }
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-        CreatorTabRow(
-            sections = availableSections,
-            selectedSection = activeSection,
-            onSelectSection = {
-                onUserFeedback()
-                activeSection = it
-            }
-        )
-
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier.fillMaxSize()
-        ) { page ->
-            val section = availableSections.getOrNull(page) ?: return@HorizontalPager
-            SectionDetailPane(
-                modifier = Modifier.fillMaxSize(),
-                state = state,
-                viewModel = viewModel,
-                selectedSection = section,
-                listaSuperPoderes = listaSuperPoderes,
-                equipamentoCategorias = equipamentoCategorias,
-                superequipCategorias = superequipCategorias,
-                onClearRequested = {
+    if (isLandscape) {
+        Row(Modifier.fillMaxSize()) {
+            CreatorNavigationRail(
+                sections = availableSections,
+                selectedSection = activeSection,
+                onSelectSection = {
                     onUserFeedback()
-                    showClearDialog = true
-                },
-                onShowMessage = onShowMessage,
-                onRequestProgression = onRequestProgression,
-                onSelectAncestralidade = { nome ->
-                    val key = nome.uppercase().semAcentos()
-                    if (key != state.ancestralidade) {
-                        if (key == "MEIO-ELFOS") {
-                            pendingMeioElfoKey = key
-                            showMeioElfoDialog = true
-                        } else {
-                            pendingMeioElfoKey = null
-                            state.aplicarAncestralidade(
-                                key,
-                                viewModel.feedbackMessages as MutableList<String>
-                            )
-                        }
-                    }
-                },
-                onUseProgress = { index ->
-                    currentSlotIndex = index
-                    showAllocDialog = true
-                },
-                onUserFeedback = onUserFeedback
+                    activeSection = it
+                }
             )
+            Column(Modifier.weight(1f)) {
+                if (state.modoProgressaoAtivo) {
+                    Text(
+                        text = "MODO DE PROGRESSÃO",
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                    HorizontalDivider()
+                }
+
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.fillMaxSize()
+                ) { page ->
+                    val section = availableSections.getOrNull(page) ?: return@HorizontalPager
+                    SectionDetailPane(
+                        modifier = Modifier.fillMaxSize(),
+                        state = state,
+                        viewModel = viewModel,
+                        selectedSection = section,
+                        listaSuperPoderes = listaSuperPoderes,
+                        equipamentoCategorias = equipamentoCategorias,
+                        superequipCategorias = superequipCategorias,
+                        onClearRequested = {
+                            onUserFeedback()
+                            showClearDialog = true
+                        },
+                        onShowMessage = onShowMessage,
+                        onRequestProgression = onRequestProgression,
+                        onSelectAncestralidade = { nome ->
+                            val key = nome.uppercase().semAcentos()
+                            if (key != state.ancestralidade) {
+                                if (key == "MEIO-ELFOS") {
+                                    pendingMeioElfoKey = key
+                                    showMeioElfoDialog = true
+                                } else {
+                                    pendingMeioElfoKey = null
+                                    state.aplicarAncestralidade(
+                                        key,
+                                        viewModel.feedbackMessages as MutableList<String>
+                                    )
+                                }
+                            }
+                        },
+                        onUseProgress = { index ->
+                            currentSlotIndex = index
+                            showAllocDialog = true
+                        },
+                        onUserFeedback = onUserFeedback
+                    )
+                }
+            }
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            if (state.modoProgressaoAtivo) {
+                Text(
+                    text = "MODO DE PROGRESSÃO",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+                HorizontalDivider()
+            }
+
+            CreatorTabRow(
+                sections = availableSections,
+                selectedSection = activeSection,
+                onSelectSection = {
+                    onUserFeedback()
+                    activeSection = it
+                }
+            )
+
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize()
+            ) { page ->
+                val section = availableSections.getOrNull(page) ?: return@HorizontalPager
+                SectionDetailPane(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                    viewModel = viewModel,
+                    selectedSection = section,
+                    listaSuperPoderes = listaSuperPoderes,
+                    equipamentoCategorias = equipamentoCategorias,
+                    superequipCategorias = superequipCategorias,
+                    onClearRequested = {
+                        onUserFeedback()
+                        showClearDialog = true
+                    },
+                    onShowMessage = onShowMessage,
+                    onRequestProgression = onRequestProgression,
+                    onSelectAncestralidade = { nome ->
+                        val key = nome.uppercase().semAcentos()
+                        if (key != state.ancestralidade) {
+                            if (key == "MEIO-ELFOS") {
+                                pendingMeioElfoKey = key
+                                showMeioElfoDialog = true
+                            } else {
+                                pendingMeioElfoKey = null
+                                state.aplicarAncestralidade(
+                                    key,
+                                    viewModel.feedbackMessages as MutableList<String>
+                                )
+                            }
+                        }
+                    },
+                    onUseProgress = { index ->
+                        currentSlotIndex = index
+                        showAllocDialog = true
+                    },
+                    onUserFeedback = onUserFeedback
+                )
+            }
         }
     }
 
@@ -482,6 +567,45 @@ private fun CreatorTabRow(
             )
         }
     }
+}
+
+@Composable
+private fun CreatorNavigationRail(
+    sections: List<MainSection>,
+    selectedSection: MainSection,
+    onSelectSection: (MainSection) -> Unit
+) {
+    NavigationRail {
+        Column(
+            modifier = Modifier
+                .width(80.dp) // Ensure explicit width if needed, or rely on intrinsic
+                .verticalScroll(rememberScrollState())
+        ) {
+            sections.forEach { section ->
+                NavigationRailItem(
+                    selected = section == selectedSection,
+                    onClick = { onSelectSection(section) },
+                    icon = { Icon(section.icon(), contentDescription = null) },
+                    label = { Text(section.tabLabel(), maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                )
+            }
+        }
+    }
+}
+
+private fun MainSection.icon(): ImageVector = when (this) {
+    MainSection.RESUMO -> Icons.Default.Description
+    MainSection.ANCESTRALIDADES -> Icons.Default.Face
+    MainSection.TROPOS -> Icons.Default.AccountBox
+    MainSection.MONSTRO -> Icons.Default.BugReport
+    MainSection.COMPLICACOES -> Icons.Default.Warning
+    MainSection.ATRIBUTOS -> Icons.Default.FitnessCenter
+    MainSection.PERICIAS -> Icons.Default.School
+    MainSection.VANTAGENS -> Icons.Default.Star
+    MainSection.EQUIPAMENTOS -> Icons.Default.ShoppingCart
+    MainSection.PODERES -> Icons.Default.FlashOn
+    MainSection.XP -> Icons.Default.ArrowUpward
+    MainSection.CRYSTAL_HEART -> Icons.Default.Favorite
 }
 
 private fun MainSection.tabLabel(): String = when (this) {
