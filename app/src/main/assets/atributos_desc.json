@@ -18,9 +18,5 @@
   {
     "nome": "VIGOR",
     "descricao": "Representa a tolerância, resistência à doenças, veneno ou toxinas de um indivíduo e quanto dano físico ele pode suportar antes de tombar. É usado com mais frequência para resistir aos efeitos de Fadiga e como base para a estatística derivada Resistência."
-  },
-  {
-    "nome": "USANDO ATRIBUTOS",
-    "descricao": "Atributos são usados para:\n• Determinar o quão rapidamente as perícias aumentam durante o Progresso (pág. 61).\n• Limitar o acesso a Vantagens (pág. 41).\n• Calcular estatísticas secundárias como Resistência ou dano corpo a corpo.\n• Resistir a efeitos como Agarrar ou contrafeitiços, poderes ou ataques sociais como Provocar ou Intimidar."
   }
 ]
