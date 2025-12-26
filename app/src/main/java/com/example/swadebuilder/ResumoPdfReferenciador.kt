@@ -552,7 +552,7 @@ fun drawPowers(canvas: Canvas, x: Float, y: Float, width: Float, p: MeuPersonage
 }
 
 fun drawWeaponsTable(canvas: Canvas, x: Float, y: Float, width: Float, p: MeuPersonagem, theme: PdfTheme): Float {
-    val weapons = p.equipamentos.filter { it.tipo.equals("arma", ignoreCase = true) || it.dano != null }
+    val weapons = p.equipamentos.filter { it.dano != null }
     if (weapons.isEmpty()) return y
 
     val titlePaint = TextPaint().apply { color = theme.primaryColor; textSize = 14f; typeface = theme.typefaceTitle; isFakeBoldText = true }
@@ -589,11 +589,11 @@ fun drawWeaponsTable(canvas: Canvas, x: Float, y: Float, width: Float, p: MeuPer
         cx = x
         val data = listOf(
             w.nome,
-            w.distancia ?: "-",
-            w.dano ?: "-",
-            w.pa?.toString() ?: "0",
-            w.cdt?.toString() ?: "1",
-            w.peso?.toString() ?: "-"
+            w.distancia?.toString()?.replace("\"", "") ?: "-",
+            w.dano?.toString()?.replace("\"", "") ?: "-",
+            w.pa?.toString()?.replace("\"", "") ?: "0",
+            w.cdt?.toString()?.replace("\"", "") ?: "1",
+            w.peso?.toString()?.replace("\"", "") ?: "-"
         )
 
         data.forEachIndexed { i, txt ->
@@ -618,7 +618,7 @@ fun drawWeaponsTable(canvas: Canvas, x: Float, y: Float, width: Float, p: MeuPer
 }
 
 fun drawEquipmentList(canvas: Canvas, x: Float, y: Float, width: Float, p: MeuPersonagem, theme: PdfTheme): Float {
-    val others = p.equipamentos.filterNot { it.tipo.equals("arma", ignoreCase = true) || it.dano != null }
+    val others = p.equipamentos.filterNot { it.dano != null }
     if (others.isEmpty()) return y
 
     val titlePaint = TextPaint().apply { color = theme.primaryColor; textSize = 14f; typeface = theme.typefaceTitle; isFakeBoldText = true }
@@ -704,16 +704,6 @@ fun calcResistencia(personagem: MeuPersonagem): String {
 
     return if ((armadura + bonusSemArmadura) > 0) "${resFinal}(${resistenciaTotal})" else resFinal.toString()
 }
-
-// Re-using simple list fetchers
-val listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR")
-val mapaAtributosDisplay = mapOf(
-    "AGILIDADE" to "Agilidade",
-    "ASTUCIA" to "Astúcia",
-    "ESPIRITO" to "Espírito",
-    "FORCA" to "Força",
-    "VIGOR" to "Vigor"
-)
 
 private fun complicationDisplayNames(rawIds: List<String>, modoOficialAtivo: Boolean): List<String> {
     val mapPorId = listaComplicacoes.associateBy { it.id.keyify() }
