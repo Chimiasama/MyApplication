@@ -48,13 +48,13 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
+import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.loadJsonAsset
-import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
+import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.util.semAcentos
-import com.example.swadebuilder.util.titleCase
 import com.example.swadebuilder.util.toSentenceCase
 
 private fun custoParaPenalidadeTexto(custo: String): String {
@@ -125,26 +125,46 @@ fun PoderesSection(
         allPoderes.associate { it.id to it.nome.toSentenceCase() }
     }
 
-    val poderesElegiveis = remember(allPoderes, searchQuery, selectedRank) {
-        allPoderes.filter { power ->
-            val matchSearch = if (searchQuery.isBlank()) true else {
-                power.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
-                power.descricao.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true)
-            }
-
-            val matchRank = if (selectedRank == "Todos") true else {
-                power.estagio.semAcentos().equals(selectedRank.semAcentos(), ignoreCase = true)
-            }
-
-            matchSearch && matchRank
-        }.sortedBy { it.nome }
-    }
-
     // Determine which ABs to display
     val displayKeys = if (!state.permiteMultiAntecedenteArcano) {
         listOf(arcanosAtivos.first())
     } else {
         arcanosAtivos
+    }
+
+    // Pre-calculate powers for each displayed key to avoid doing it inside LazyColumn (and avoid @Composable error)
+    val powersByArcKey = remember(allPoderes, searchQuery, selectedRank, displayKeys) {
+        displayKeys.associateWith { arcKeyRaw ->
+            val arcKey = arcKeyRaw.normAAKey()
+            val permittedSet = ArcaneConfig.getPermittedPowers(arcKey)
+            val blockedSet = ArcaneConfig.getBlockedPowers(arcKey)
+
+            allPoderes.filter { power ->
+                // 1. Check permissions/blocks
+                val isAllowed = if (permittedSet != null) {
+                    power.id in permittedSet
+                } else if (blockedSet.isNotEmpty()) {
+                    power.id !in blockedSet
+                } else {
+                    true // No restriction
+                }
+
+                if (!isAllowed) return@filter false
+
+                // 2. Check Search
+                val matchSearch = if (searchQuery.isBlank()) true else {
+                    power.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
+                    power.descricao.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true)
+                }
+
+                // 3. Check Rank
+                val matchRank = if (selectedRank == "Todos") true else {
+                    power.estagio.semAcentos().equals(selectedRank.semAcentos(), ignoreCase = true)
+                }
+
+                matchSearch && matchRank
+            }.sortedBy { it.nome }
+        }
     }
 
     LazyColumn(
@@ -202,6 +222,8 @@ fun PoderesSection(
 
             // Treat null as true (default expanded)
             val isExpanded = sectionStates[arcKey] ?: true
+
+            val poderesParaEsteArcano = powersByArcKey[arcKeyRaw] ?: emptyList()
 
             // HEADER (Custom Collapsible)
             item(key = "header_$arcKey") {
@@ -273,130 +295,141 @@ fun PoderesSection(
                 }
 
                 // POWERS LIST
-                items(
-                    items = poderesElegiveis,
-                    key = { "${arcKey}_${it.id}" } // Unique key per AB + Power
-                ) { poder ->
-                    val slots = state.poderSlotsPorArcano[arcKey] ?: remember { mutableStateListOf() }
-                    val selecionado = slots.any { it?.equals(poder.id, ignoreCase = true) == true }
-                    val lockedCount = if (state.mostrandoPoderesProgresso && state.arcanoEmCompraViaXpKey == arcKey)
-                        state.arcanoSnapshotAntesDaCompra?.size ?: 0
-                    else 0
+                if (poderesParaEsteArcano.isEmpty()) {
+                    item {
+                        Text(
+                            "Nenhum poder disponível para os filtros selecionados.",
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                    }
+                } else {
+                    items(
+                        items = poderesParaEsteArcano,
+                        key = { "${arcKey}_${it.id}" } // Unique key per AB + Power
+                    ) { poder ->
+                        val slots = state.poderSlotsPorArcano[arcKey] ?: remember { mutableStateListOf() }
+                        val selecionado = slots.any { it?.equals(poder.id, ignoreCase = true) == true }
+                        val lockedCount = if (state.mostrandoPoderesProgresso && state.arcanoEmCompraViaXpKey == arcKey)
+                            state.arcanoSnapshotAntesDaCompra?.size ?: 0
+                        else 0
 
-                    var expanded by remember { mutableStateOf(false) }
+                        var expanded by remember { mutableStateOf(false) }
 
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 2.dp) // Reduced padding
-                            .alpha(if (selecionado) 0.6f else 1f) // Increased opacity for selected for better visibility
-                            .clickable(enabled = !locked) {
-                                if (selecionado) {
-                                    val idx = slots.indexOfFirst { it?.equals(poder.id, ignoreCase = true) == true }
-                                    if (idx >= 0 && idx >= lockedCount) {
-                                        slots[idx] = null
-                                        state.syncPoderesSelecionadosFromSlots()
-                                        state.manifestacoesPoderes.remove(poder.id)
-                                    }
-                                } else {
-                                    val firstEmpty = slots.indexOfFirst { it == null }
-                                    if (firstEmpty >= 0 && firstEmpty >= lockedCount) {
-                                        slots[firstEmpty] = poder.id
-                                        state.syncPoderesSelecionadosFromSlots()
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceVariant
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 2.dp) // Reduced padding
+                                .alpha(if (selecionado) 0.6f else 1f) // Increased opacity for selected for better visibility
+                                .clickable(enabled = !locked) {
+                                    if (selecionado) {
+                                        val idx = slots.indexOfFirst { it?.equals(poder.id, ignoreCase = true) == true }
+                                        if (idx >= 0 && idx >= lockedCount) {
+                                            slots[idx] = null
+                                            state.syncPoderesSelecionadosFromSlots()
+                                            state.manifestacoesPoderes.remove(poder.id)
+                                        }
+                                    } else {
+                                        val firstEmpty = slots.indexOfFirst { it == null }
+                                        if (firstEmpty >= 0 && firstEmpty >= lockedCount) {
+                                            slots[firstEmpty] = poder.id
+                                            state.syncPoderesSelecionadosFromSlots()
+                                        }
                                     }
                                 }
-                            }
-                    ) {
-                        Column(Modifier.padding(8.dp)) { // Compact internal padding
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(poder.nome.toSentenceCase(), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
-                                Text("PP: ${poder.pontosDePoder}", style = MaterialTheme.typography.bodySmall)
-                            }
-
-                            if (state.usarSemPontosDePoder) {
-                                Text("Penalidade base: ${custoParaPenalidadeTexto(poder.pontosDePoder)}", style = MaterialTheme.typography.bodySmall)
-                            }
-
-                            val manifestacoesDisponiveis = poder.manifestacoes.filter { it.isNotBlank() }
-                            val modificadoresDisponiveis = poder.modificadores.filter { mod ->
-                                mod.nome.isNotBlank() || mod.descricao.isNotBlank()
-                            }
-
-                            val detalhesDisponiveis = allowLongTexts && (
-                                poder.descricao.isNotBlank() ||
-                                    manifestacoesDisponiveis.isNotEmpty() ||
-                                    modificadoresDisponiveis.isNotEmpty()
-                            )
-
-                            if (detalhesDisponiveis) {
-                                Spacer(Modifier.height(4.dp))
-                                TextButton(
-                                    onClick = { expanded = !expanded },
-                                    modifier = Modifier.height(24.dp), // Reduce button height
-                                    contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp)
+                        ) {
+                            Column(Modifier.padding(8.dp)) { // Compact internal padding
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Text(
-                                        if (expanded) "Ocultar detalhes" else "Ver detalhes",
-                                        fontWeight = FontWeight.Medium,
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.onSurface
+                                    Text(poder.nome.toSentenceCase(), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
+                                    Text("PP: ${poder.pontosDePoder}", style = MaterialTheme.typography.bodySmall)
+                                }
+
+                                if (state.usarSemPontosDePoder) {
+                                    Text("Penalidade base: ${custoParaPenalidadeTexto(poder.pontosDePoder)}", style = MaterialTheme.typography.bodySmall)
+                                }
+
+                                val manifestacoesDisponiveis = poder.manifestacoes.filter { it.isNotBlank() }
+                                val modificadoresDisponiveis = poder.modificadores.filter { mod ->
+                                    mod.nome.isNotBlank() || mod.descricao.isNotBlank()
+                                }
+
+                                val detalhesDisponiveis = allowLongTexts && (
+                                    poder.descricao.isNotBlank() ||
+                                        manifestacoesDisponiveis.isNotEmpty() ||
+                                        modificadoresDisponiveis.isNotEmpty()
+                                )
+
+                                if (detalhesDisponiveis) {
+                                    Spacer(Modifier.height(4.dp))
+                                    TextButton(
+                                        onClick = { expanded = !expanded },
+                                        modifier = Modifier.height(24.dp), // Reduce button height
+                                        contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp)
+                                    ) {
+                                        Text(
+                                            if (expanded) "Ocultar detalhes" else "Ver detalhes",
+                                            fontWeight = FontWeight.Medium,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
+
+                                    AnimatedVisibility(visible = expanded) {
+                                        Column(Modifier.padding(top = 4.dp)) {
+                                            if (poder.descricao.isNotBlank()) {
+                                                Text(poder.descricao, style = MaterialTheme.typography.bodySmall)
+                                                Spacer(Modifier.height(4.dp))
+                                            }
+
+                                            Text("Distância: ${poder.distancia}", style = MaterialTheme.typography.labelSmall)
+                                            Text("Duração: ${poder.duracao}", style = MaterialTheme.typography.labelSmall)
+
+                                            if (manifestacoesDisponiveis.isNotEmpty()) {
+                                                Spacer(Modifier.height(4.dp))
+                                                Text("Manifestações:", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.labelSmall)
+                                                manifestacoesDisponiveis.forEach { man ->
+                                                    Text("• $man", style = MaterialTheme.typography.bodySmall)
+                                                }
+                                            }
+
+                                            if (modificadoresDisponiveis.isNotEmpty()) {
+                                                Spacer(Modifier.height(4.dp))
+                                                Text("Modificadores:", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.labelSmall)
+                                                modificadoresDisponiveis.forEach { mod ->
+                                                    Text(
+                                                        "${mod.nome} (${mod.custo}): ${mod.descricao}",
+                                                        style = MaterialTheme.typography.bodySmall
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (selecionado) {
+                                    Spacer(Modifier.height(4.dp))
+                                    OutlinedTextField(
+                                        value = state.manifestacoesPoderes[poder.id].orEmpty(),
+                                        onValueChange = { value ->
+                                            if (value.isBlank()) {
+                                                state.manifestacoesPoderes.remove(poder.id)
+                                            } else {
+                                                state.manifestacoesPoderes[poder.id] = value
+                                            }
+                                        },
+                                        label = { Text("Manifestação/Aparência", style = MaterialTheme.typography.labelSmall) },
+                                        modifier = Modifier.fillMaxWidth(),
+                                        textStyle = MaterialTheme.typography.bodySmall
                                     )
                                 }
-
-                                AnimatedVisibility(visible = expanded) {
-                                    Column(Modifier.padding(top = 4.dp)) {
-                                        if (poder.descricao.isNotBlank()) {
-                                            Text(poder.descricao, style = MaterialTheme.typography.bodySmall)
-                                            Spacer(Modifier.height(4.dp))
-                                        }
-
-                                        Text("Distância: ${poder.distancia}", style = MaterialTheme.typography.labelSmall)
-                                        Text("Duração: ${poder.duracao}", style = MaterialTheme.typography.labelSmall)
-
-                                        if (manifestacoesDisponiveis.isNotEmpty()) {
-                                            Spacer(Modifier.height(4.dp))
-                                            Text("Manifestações:", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.labelSmall)
-                                            manifestacoesDisponiveis.forEach { man ->
-                                                Text("• $man", style = MaterialTheme.typography.bodySmall)
-                                            }
-                                        }
-
-                                        if (modificadoresDisponiveis.isNotEmpty()) {
-                                            Spacer(Modifier.height(4.dp))
-                                            Text("Modificadores:", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.labelSmall)
-                                            modificadoresDisponiveis.forEach { mod ->
-                                                Text(
-                                                    "${mod.nome} (${mod.custo}): ${mod.descricao}",
-                                                    style = MaterialTheme.typography.bodySmall
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (selecionado) {
-                                Spacer(Modifier.height(4.dp))
-                                OutlinedTextField(
-                                    value = state.manifestacoesPoderes[poder.id].orEmpty(),
-                                    onValueChange = { value ->
-                                        if (value.isBlank()) {
-                                            state.manifestacoesPoderes.remove(poder.id)
-                                        } else {
-                                            state.manifestacoesPoderes[poder.id] = value
-                                        }
-                                    },
-                                    label = { Text("Manifestação/Aparência", style = MaterialTheme.typography.labelSmall) },
-                                    modifier = Modifier.fillMaxWidth(),
-                                    textStyle = MaterialTheme.typography.bodySmall
-                                )
                             }
                         }
                     }
