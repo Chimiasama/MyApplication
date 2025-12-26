@@ -187,7 +187,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
             ?: idiomaBase?.takeIf { idiomaRegex.matches(nome) }
         val raw = personagem.pericias[nome] ?: 0
         if (basePericia == null) return@mapNotNull null
-        val shouldShow = basePericia.basica || raw > periciaStartRaw(personagem.ancestralidade, basePericia)
+        val shouldShow = raw > 0
         if (shouldShow) nome to raw else null
     }
 
