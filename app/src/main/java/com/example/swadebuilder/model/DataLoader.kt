@@ -124,7 +124,7 @@ object DataLoader {
         // 7. Vantagens
         val mainVantagens: List<Vantagem> = loadJsonAsset(context, "Vantagens.json")
         val crystalVantagens: List<Vantagem> = runCatching {
-            loadItems<Vantagem>(context, "vantagens_crystal.json")
+            loadJsonAsset<List<Vantagem>>(context, "vantagens_crystal.json")
         }.getOrElse { emptyList() }
         val todasVantagens = mainVantagens + crystalVantagens
 
