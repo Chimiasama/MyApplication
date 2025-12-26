@@ -369,14 +369,6 @@ fun AncestralidadesSection(
                 .fillMaxWidth()
                 .alpha(if (supersLocked) 0.3f else 1f)
         ) {
-            Text(
-                "Lista de ancestralidades disponíveis:",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Spacer(Modifier.height(4.dp))
-
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()

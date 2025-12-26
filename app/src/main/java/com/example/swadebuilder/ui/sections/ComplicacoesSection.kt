@@ -432,14 +432,6 @@ fun ComplicacoesSection(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                Text(
-                    "Lista de complicações disponíveis:",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                Spacer(Modifier.height(4.dp))
-
                 val pequComp = uniqueComplications.firstOrNull { it.id == "pequeno" }
 
                 val listaParaMostrar = uniqueComplications
