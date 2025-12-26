@@ -137,32 +137,6 @@ fun AtributosContent(
             Spacer(Modifier.height(8.dp))
         }
 
-        val geralDesc = mapaAtributosDescricao["USANDO ATRIBUTOS"] ?: ""
-        if (allowLongTexts && geralDesc.isNotBlank()) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-                )
-            ) {
-                Column(Modifier.padding(12.dp)) {
-                    Text(
-                        text = "USANDO ATRIBUTOS",
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        text = geralDesc,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                }
-            }
-            Spacer(Modifier.height(8.dp))
-        }
-
         listaAtributos.forEach { nome ->
             val baseRaw = state.valoresAtributos[nome]!!.intValue
 
