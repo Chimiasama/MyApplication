@@ -79,5 +79,6 @@ data class MeuPersonagem(
 
     // ENGINE
     val tamanho: Int = 0,
-    val resistencia: Int = 0
+    val resistencia: Int = 0,
+    val appTheme: String = "DEFAULT"
 )
