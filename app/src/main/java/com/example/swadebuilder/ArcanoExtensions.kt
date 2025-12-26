@@ -19,12 +19,13 @@ fun Vantagem.toArcanoKey(): String? {
         "ABENCOADO" in n -> "ABENCOADO"
         "CIENTISTA LOUCO" in n -> "CIENTISTA LOUCO"
         "MESTRE DO CHI" in n -> "MESTRE DO CHI"
-        "VIGARISTA" in n -> "VIGARISTA"
+        "MASCATE" in n || "HUCKSTER" in n || "VIGARISTA" in n -> "MASCATE"
         "XAMA" in n -> "XAMA"
         "AGENTE DA SYN" in n -> "AGENTE DA SYN"
         "ALQUIMIA" in n -> "ALQUIMIA"
         "BARDO" in n -> "BARDO"
         "BRUXO" in n -> "BRUXO"
+        "BRUXA" in n -> "BRUXA"
         "CLERIGO" in n -> "CLERIGO"
         "DIABOLISTA" in n -> "DIABOLISTA"
         "DRUIDA" in n -> "DRUIDA"
@@ -36,6 +37,7 @@ fun Vantagem.toArcanoKey(): String? {
         "INVOCADOR DE DEMONIOS" in n -> "INVOCADOR DE DEMONIOS"
         "VIDENTE" in n -> "VIDENTE"
         "MISTICO" in n -> "MISTICO"
+        "VODUISTA" in n -> "VODUISTA"
         else -> null
     }
 }

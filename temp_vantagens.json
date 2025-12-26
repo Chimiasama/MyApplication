@@ -1,0 +1,161 @@
+// Temporary file for new advantages
+[
+  {
+    "id": "atormentado",
+    "nome": "ATORMENTADO (HARROWED)",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "observacoes": "Deve ter morrido e retornado com um Manitou."
+    },
+    "descricao": "+2 em Intimidar, +1 Resistência (Morto-Vivo), precisa comer carne crua, dorme como cadáver. Abre acesso a Vantagens de Atormentado."
+  },
+  {
+    "id": "garras_gato_deadlands",
+    "nome": "GARRAS DE GATO",
+    "categoria": "RESSUSCITADO",
+    "origem": "DEADLANDS_COMPENDIUM",
+    "requisitos": {
+      "estagio": "Novato",
+      "vantagens_previas": [
+        "atormentado"
+      ]
+    },
+    "descricao": "O herói pode estender garras retráteis como ação livre. Elas causam For+d4 de dano e concedem +2 em testes de Atletismo para escalar (se não tiver a vantagem Aranha)."
+  },
+  {
+    "id": "veterano_oeste",
+    "nome": "VETERANO DO OESTE ESTRANHO",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato"
+    },
+    "descricao": "Começa com Posto Experiente (ou mais XP), mas deve comprar uma carta do Baralho de Ação para determinar um defeito trágico ou bônus. (Verificar Tabela no Livro)."
+  },
+  {
+    "id": "duelista",
+    "nome": "DUELISTA",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "pericias": {
+        "Atirar": 6
+      }
+    },
+    "descricao": "Recebe bônus em duelos formais e saque rápido. +2 em testes de Atletismo para sacar."
+  },
+  {
+    "id": "agente",
+    "nome": "AGENTE",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Astúcia": 8
+      },
+      "pericias": {
+        "Lutar": 6,
+        "Atirar": 6,
+        "Investigar": 6
+      }
+    },
+    "descricao": "Pertence à Agência ou aos Rangers. Acesso a equipamentos, autoridade legal e Dever."
+  },
+  {
+    "id": "aranha",
+    "nome": "ARANHA",
+    "categoria": "RESSUSCITADO",
+    "origem": "DEADLANDS_COMPENDIUM",
+    "requisitos": {
+      "estagio": "Novato",
+      "vantagens_previas": [
+        "atormentado"
+      ],
+      "observacoes": "Requer Atormentado."
+    },
+    "descricao": "O personagem pode escalar superfícies verticais e andar em tetos com sua Movimentação total, sem precisar de testes de Atletismo. Pequenos ganchos ou secreções surgem de suas mãos e pés."
+  },
+  {
+    "id": "implacavel",
+    "nome": "IMPLACÁVEL",
+    "categoria": "RESSUSCITADO",
+    "origem": "DEADLANDS_COMPENDIUM",
+    "requisitos": {
+      "estagio": "Novato",
+      "vantagens_previas": [
+        "atormentado"
+      ]
+    },
+    "descricao": "O manitou mantém o corpo se movendo. O herói ignora 1 ponto de penalidade de Ferimentos e Fadiga. Se tiver Antecedente Arcano, recupera 1 PP extra por hora."
+  },
+  {
+    "id": "costura",
+    "nome": "COSTURA (STITCHIN')",
+    "categoria": "RESSUSCITADO",
+    "origem": "DEADLANDS_COMPENDIUM",
+    "requisitos": {
+      "estagio": "Novato",
+      "vantagens_previas": [
+        "atormentado"
+      ],
+      "atributos": {
+        "Astúcia": 6
+      }
+    },
+    "descricao": "O herói pode se consertar magicamente. Ele faz um teste de cura natural a cada dia (em vez de a cada 5 dias) e pode rolar Vigor para curar ferimentos mesmo sem a 'Hora de Ouro'."
+  },
+  {
+    "id": "mago_metal",
+    "nome": "MAGO DO METAL",
+    "categoria": "PODER",
+    "origem": "DEADLANDS_COMPENDIUM",
+    "requisitos": {
+      "estagio": "Novato",
+      "vantagens_previas": [
+        "antecedente_arcano_ciencia_estranha"
+      ],
+      "pericias": {
+        "Ciência Estranha": 8,
+        "Ocultismo": 6
+      }
+    },
+    "descricao": "Combina alquimia com rituais sombrios. O Cientista Louco pode usar Ocultismo para 'Lidar com o Diabo' (como um Mascate) para recarregar Pontos de Poder ou melhorar suas engenhocas. Permite acesso a alguns poderes de Mascate (veja lista de permissão)."
+  },
+  {
+    "id": "pistoleiro_hex",
+    "nome": "PISTOLEIRO DE HEXES (HEXSLINGER)",
+    "categoria": "PODER",
+    "origem": "DEADLANDS_COMPENDIUM",
+    "requisitos": {
+      "estagio": "Novato",
+      "vantagens_previas": [
+        "antecedente_arcano_mascate"
+      ],
+      "pericias": {
+        "Atirar": 8,
+        "Jogar": 6
+      }
+    },
+    "descricao": "Um Mascate focado em armas. Pode gravar runas em balas como ação livre. Permite usar o poder 'Recarga' e 'Tiro Certo' (Smite/Aim) com alcance pessoal em suas armas de fogo."
+  },
+  {
+    "id": "criador_amuletos",
+    "nome": "CRIADOR DE AMULETOS",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS_COMPENDIUM",
+    "requisitos": {
+      "estagio": "Novato",
+      "vantagens_previas": [
+        "antecedente_arcano_voduista"
+      ],
+      "pericias": {
+        "Fé": 6
+      }
+    },
+    "descricao": "O Voduísta pode criar gris-gris temporários para outros personagens. Gasta 1 hora e materiais. O amuleto concede +1 em rolagens de absorção ou resistência a medo por uma sessão."
+  }
+]

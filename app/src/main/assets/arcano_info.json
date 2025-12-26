@@ -1,33 +1,98 @@
 [
   {
     "key": "DOM",
-    "slots": 1,
-    "pp": 15,
-    "foco": "Foco"
+    "slots": 3,
+    "pp": 15
   },
   {
     "key": "MAGIA",
     "slots": 3,
-    "pp": 10,
-    "foco": "Conjurar"
+    "pp": 10
   },
   {
     "key": "MILAGRES",
     "slots": 3,
-    "pp": 10,
-    "foco": "Fé"
+    "pp": 10
   },
   {
-    "key": "PSIÔNICOS",
+    "key": "PSIONICOS",
     "slots": 3,
-    "pp": 10,
-    "foco": "Psiônicos"
+    "pp": 10
   },
   {
-    "key": "CIÊNCIA ESTRANHA",
-    "slots": 2,
-    "pp": 15,
-    "foco": "Ciência Estranha"
+    "key": "CIENCIA ESTRANHA",
+    "slots": 1,
+    "pp": 15
+  },
+  {
+    "key": "ALQUIMIA",
+    "slots": 3,
+    "pp": 10
+  },
+  {
+    "key": "BARDO",
+    "slots": 3,
+    "pp": 10
+  },
+  {
+    "key": "BRUXO",
+    "slots": 3,
+    "pp": 10
+  },
+  {
+    "key": "CLERIGO",
+    "slots": 3,
+    "pp": 10
+  },
+  {
+    "key": "DIABOLISTA",
+    "slots": 3,
+    "pp": 10
+  },
+  {
+    "key": "DRUIDA",
+    "slots": 3,
+    "pp": 10
+  },
+  {
+    "key": "ELEMENTALISTA",
+    "slots": 3,
+    "pp": 10
+  },
+  {
+    "key": "FEITICEIRO",
+    "slots": 3,
+    "pp": 10
+  },
+  {
+    "key": "MAGO",
+    "slots": 3,
+    "pp": 10
+  },
+  {
+    "key": "NECROMANTE",
+    "slots": 3,
+    "pp": 10
+  },
+  {
+    "key": "RITUALISTA",
+    "slots": 3,
+    "pp": 10
+  },
+  {
+    "key": "INVOCADOR DE DEMONIOS",
+    "slots": 3,
+    "pp": 10
+  },
+  {
+    "key": "VIDENTE",
+    "slots": 3,
+    "pp": 10
+  },
+  {
+    "key": "MISTICO",
+    "slots": 3,
+    "pp": 10
   },
   {
     "key": "ABENCOADO",
@@ -38,20 +103,20 @@
   {
     "key": "CIENTISTA LOUCO",
     "slots": 2,
-    "pp": 15,
+    "pp": 20,
     "foco": "Ciência Estranha"
   },
   {
     "key": "MESTRE DO CHI",
     "slots": 3,
-    "pp": 15,
+    "pp": 20,
     "foco": "Foco"
   },
   {
     "key": "VIGARISTA",
     "slots": 3,
     "pp": 10,
-    "foco": "Conjurar"
+    "foco": "Jogar"
   },
   {
     "key": "XAMA",
@@ -62,91 +127,25 @@
   {
     "key": "AGENTE DA SYN",
     "slots": 1,
-    "pp": 0,
-    "foco": "Ocultismo"
+    "pp": 15,
+    "foco": "Sintonia (Esp)"
   },
   {
-    "key": "ALQUIMIA",
+    "key": "MASCATE",
     "slots": 3,
     "pp": 10,
-    "foco": "Ciência Estranha"
+    "foco": "Jogar"
   },
   {
-    "key": "BARDO",
-    "slots": 3,
-    "pp": 10,
-    "foco": "Performance"
-  },
-  {
-    "key": "BRUXO",
-    "slots": 3,
-    "pp": 10,
-    "foco": "Conjurar"
-  },
-  {
-    "key": "CLERIGO",
-    "slots": 3,
-    "pp": 10,
-    "foco": "Fé"
-  },
-  {
-    "key": "DIABOLISTA",
-    "slots": 3,
-    "pp": 10,
-    "foco": "Conjurar"
-  },
-  {
-    "key": "DRUIDA",
-    "slots": 3,
-    "pp": 10,
-    "foco": "Fé"
-  },
-  {
-    "key": "ELEMENTALISTA",
-    "slots": 3,
-    "pp": 10,
-    "foco": "Conjurar"
-  },
-  {
-    "key": "FEITICEIRO",
-    "slots": 3,
-    "pp": 10,
-    "foco": "Conjurar"
-  },
-  {
-    "key": "MAGO",
-    "slots": 3,
-    "pp": 10,
-    "foco": "Conjurar"
-  },
-  {
-    "key": "NECROMANTE",
-    "slots": 3,
-    "pp": 10,
-    "foco": "Conjurar"
-  },
-  {
-    "key": "RITUALISTA",
+    "key": "VODUISTA",
     "slots": 2,
     "pp": 15,
-    "foco": "Ocultismo"
+    "foco": "Fé"
   },
   {
-    "key": "INVOCADOR DE DEMONIOS",
+    "key": "BRUXA",
     "slots": 3,
     "pp": 10,
     "foco": "Conjurar"
-  },
-  {
-    "key": "VIDENTE",
-    "slots": 3,
-    "pp": 10,
-    "foco": "Ocultismo"
-  },
-  {
-    "key": "MISTICO",
-    "slots": 3,
-    "pp": 10,
-    "foco": "Fé"
   }
 ]

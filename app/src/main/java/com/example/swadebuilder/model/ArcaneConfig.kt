@@ -9,7 +9,8 @@ object ArcaneConfig {
         "consagrar", "curar", "deflexao", "detectar_ocultar_arcano", "devastacao",
         "dissipar", "empatia", "falar_idioma", "golpear", "guerreiro", "iluminar",
         "intimidar", "manipular_elementos", "protecao", "protecao_ambiental",
-        "protecao_arcana", "ressurreicao", "simbolo_sagrado", "socorro", "vendaval"
+        "protecao_arcana", "ressurreicao", "simbolo_sagrado", "socorro", "vendaval",
+        "busca_visao", "caminhar_ermos"
     )
 
     val DEADLANDS_XAMA = setOf(
@@ -17,7 +18,8 @@ object ArcaneConfig {
         "busca_visao", "caminhar_ermos", "cavar", "consagrar", "curar", "dissipar",
         "enredar", "falar_idioma", "golpear", "guerreiro", "intimidar",
         "manipular_elementos", "metamorfose", "mirar", "protecao", "protecao_ambiental",
-        "rapidez", "socorro", "teleporte", "velocidade", "vendaval"
+        "rapidez", "socorro", "teleporte", "velocidade", "vendaval",
+        "simbolo_sagrado"
     )
 
     val DEADLANDS_HUCKSTER = setOf(
@@ -84,15 +86,18 @@ object ArcaneConfig {
     val HORROR_VODUISTA = setOf(
         "adivinhacao", "alivio", "amigo_feras", "atordoar", "aumentar_reduzir_caracteristica",
         "barreira", "confusao", "convocar_aliado", "curar", "detectar_ocultar_arcano",
-        "dissipar", "drenar_pontos_poder", "empatia", "falar_idioma", "golpear", "maldicao",
-        "marionete", "medo", "protecao", "ressurreicao", "santuario", "sono", "zumbi"
+        "dissipar", "drenar_pontos_poder", "empatia", "entidade", "falar_idioma", "golpear",
+        "maldicao", "marionete", "medo", "protecao", "ressurreicao", "santuario", "sentir_cadaver",
+        "sono", "zumbi"
     )
+
+    val DEADLANDS_BRUXA = HORROR_VODUISTA
 
     fun getPermittedPowers(arcaneKey: String): Set<String>? {
         return when (arcaneKey) {
             "aa_abencoado" -> DEADLANDS_ABENCOADO
             "aa_xama" -> DEADLANDS_XAMA
-            "aa_vigarista" -> DEADLANDS_HUCKSTER // "Mascate/Huckster" usually 'vigarista' in translation
+            "aa_vigarista", "aa_mascate" -> DEADLANDS_HUCKSTER
             "aa_mestre_chi" -> DEADLANDS_MESTRE_CHI
             "aa_alquimista" -> FANTASIA_ALQUIMISTA
             "aa_bardo" -> FANTASIA_BARDO
@@ -100,6 +105,7 @@ object ArcaneConfig {
             "aa_necromante" -> FANTASIA_NECROMANTE
             "aa_demonologista" -> HORROR_DEMONOLOGISTA
             "aa_voduista" -> HORROR_VODUISTA
+            "aa_bruxa" -> DEADLANDS_BRUXA
             // Mad Scientist is special, returning null here to signify "check blocked" or handle differently
             else -> null
         }
