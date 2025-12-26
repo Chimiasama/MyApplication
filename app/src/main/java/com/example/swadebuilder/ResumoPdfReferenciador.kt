@@ -2,27 +2,33 @@ package com.example.swadebuilder
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.RectF
+import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import android.net.Uri
+import android.text.StaticLayout
+import android.text.TextPaint
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.example.swadebuilder.model.MeuPersonagem
+import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
 import java.io.File
 import java.io.FileOutputStream
+import kotlin.math.max
 
-/**
- * Fonte única para Resumo e PDF.
- * - Snapshot do state -> MeuPersonagem
- * - buildSummaryLines() -> usado por UI e PDF
- * - gerarFichaEmPdf() / produzirEExibirFichaPdf()
- */
+// =================================================================================================
+// 1. DATA SNAPSHOT EXTENSION
+// =================================================================================================
 
-// ✅ 1) Snapshot único do state
 fun CriadorState.toMeuPersonagem(): MeuPersonagem {
     return MeuPersonagem(
         nome = this.nomePersonagem,
@@ -43,7 +49,6 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
             .filterValues { it != null }
             .keys
             .map { it.id },
-        // PROMPT 3: Include Transtornos in PDF snapshot
         transtornos = this.transtornos.map { it.id },
         equipamentos = this.equipamentosComprados.toList(),
         poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
@@ -53,8 +58,6 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         pontosRestantes = this.pontosVantagem,
         naturalArmorFromRace = this.naturalArmorFromRace,
         armorBase = this.armadura,
-
-        // supers
         modoSupers = this.modoSupers,
         modoMonstroAtivo = this.modoMonstroAtivo,
         tipoMonstroSelecionado = this.tipoMonstroSelecionado,
@@ -71,7 +74,6 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         vantagensDePoder = this.vantagensDePoder.toSet(),
         gastosPorPoder = this.gastosPorPoder.toMap(),
         limiteDePoderDaCampanha = this.limiteDePoderDaCampanha,
-
         anotacoes = this.anotacoes,
         soldadoCargaAtivo = this.soldadoCargaAtivo,
         modoOficialAtivo = this.modoOficialAtivo,
@@ -83,38 +85,30 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         coracaoCrystalSelecionado = this.coracaoCrystalSelecionado,
         tecnicasIniciaisTropo = this.tecnicasIniciaisFromTropo,
         reservaChi = if (this.compendioArteDaGuerraAtivo) this.reservaChi else null,
-        // PROMPT 5: Include Skill Notes in PDF snapshot
         notasPericia = this.notasPericia.toMap(),
         tamanho = this.tamanhoExibido(),
-        resistencia = this.resistenciaBase()
+        resistencia = this.resistenciaBase(),
+        appTheme = this.appTheme.name,
+        portraitFileName = this.portraitFileName
     )
 }
 
-private fun complicationDisplayNames(rawIds: List<String>, modoOficialAtivo: Boolean): List<String> {
-    val showOfficialNames = EditionConfig.isFullEdition && modoOficialAtivo
-    val mapPorId = listaComplicacoes.associateBy { it.id.keyify() }
+// =================================================================================================
+// 2. ENTRY POINT FOR PDF GENERATION
+// =================================================================================================
 
-    return rawIds.map { compId ->
-        val comp = mapPorId[compId.keyify()]
-        if (comp != null) {
-            if (showOfficialNames && !comp.originalName.isNullOrBlank()) {
-                comp.originalName
-            } else {
-                comp.name
-            }
-        } else {
-            compId.replace('_', ' ')
-                .lowercase()
-                .replaceFirstChar { it.titlecase() }
-        }
-    }
-}
-
-// ✅ 2) Abrir/compartilhar PDF
 fun produzirEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
     val pdfFile = File(context.getExternalFilesDir(null), "ficha_preenchida.pdf")
 
-    gerarFichaEmPdf(pdfFile, dadosDoPersonagem)
+    var portrait: Bitmap? = null
+    dadosDoPersonagem.portraitFileName?.let { fileName ->
+        val file = File(context.filesDir, "portraits/$fileName")
+        if (file.exists()) {
+            portrait = BitmapFactory.decodeFile(file.absolutePath)
+        }
+    }
+
+    gerarFichaEmPdf(pdfFile, dadosDoPersonagem, portrait)
 
     val uri: Uri = FileProvider.getUriForFile(
         context,
@@ -134,491 +128,686 @@ fun produzirEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) 
     }
 }
 
-// ✅ 3) Texto-base do resumo (UI e PDF)
-fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
-    val lines = mutableListOf<String>()
+// =================================================================================================
+// 3. PDF BLOCK INFRASTRUCTURE
+// =================================================================================================
 
-    val showOfficialNames = EditionConfig.isFullEdition && personagem.modoOficialAtivo
-
-    val ancestralidadeNomeObj = listaAncestralidadesJson
-        .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
-
-    val ancestralidadeNome: String = (if (showOfficialNames && ancestralidadeNomeObj?.originalName != null) {
-        ancestralidadeNomeObj.originalName
-    } else {
-        ancestralidadeNomeObj?.nome ?: personagem.ancestralidade
-    }).titleCase()
-
-    val monstroNome = if (personagem.modoMonstroAtivo) {
-        val tipoNome = listaMonstroTemplates.find { it.id == personagem.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
-        " (Monstro: $tipoNome)"
-    } else ""
-
-    val vantagensNomeKey: List<String> = listaVantagens
-        .filter { it.id in personagem.vantagens }
-        .map { it.nome.keyify() }
-    val complicacoesNomeadas: List<String> = complicationDisplayNames(personagem.complicacoes, showOfficialNames)
-    // PROMPT 3: Display Transtornos names
-    val transtornosNomeados: List<String> = complicationDisplayNames(personagem.transtornos, showOfficialNames)
-    val complicacoesNomeKeyset = listaComplicacoes
-        .flatMap { comp -> listOfNotNull(comp.name, comp.originalName) }
-        .map { it.keyify() }
-        .toSet()
-
-    val vantagemChoices: MutableMap<String, MutableList<String>> = personagem.advantageChoices
-        .mapValues { it.value.toMutableList() }
-        .toMutableMap()
-
-    val allComplicationsKeys: List<String> =
-        personagem.complicacoes + personagem.desvantagensRaciais + personagem.transtornos
-
-    fun temComp(key: String): Boolean =
-        allComplicationsKeys.any { it.keyify() == key }
-
-    fun calcMovimento(): Int {
-        val base = 6
-
-        val racialPenalty =
-            listaAncestralidadesJson
-                .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
-                ?.desvantagens
-                ?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
-                .takeIf { it == true }
-                ?.let { 1 }
-                ?: 0
-
-        val lentoPenalty = if (temComp("LENTO")) 1 else 0
-        val idosoPenalty = if (temComp("IDOSO")) 1 else 0
-        val obesoPenalty = if (temComp("OBESO")) 1 else 0
-        val ligeiroBonus =
-            if (vantagensNomeKey.any { it == "LIGEIRO" }) 2 else 0
-
-        return (
-                base
-                        - racialPenalty
-                        - lentoPenalty
-                        - idosoPenalty
-                        - obesoPenalty
-                        + ligeiroBonus
-                        + personagem.bonusMovimentacaoFromPower
-                ).coerceAtLeast(0)
-    }
-
-    fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
-        var raw = rawStart
-        var remaining = steps.coerceAtLeast(0)
-
-        if (raw <= 0 && remaining > 0) {
-            raw = 4
-            remaining -= 1
-        }
-
-        repeat(remaining) {
-            raw += if (raw < 12) 2 else 1
-        }
-
-        return raw
-    }
-
-    fun calcAparar(): Int {
-        val lutarRawBase = personagem.pericias["Lutar"] ?: 0
-        val jutsuRawBase = personagem.pericias["Jutsu"] ?: 0
-        val lutarStepsFromSupers = personagem.superInvestments
-            .mapNotNull { it.effect as? com.example.swadebuilder.model.PowerEffect.SuperPericia }
-            .filter { it.periciaKey.equals("Lutar", ignoreCase = true) }
-            .sumOf { it.steps }
-        val lutarComSupers = applySuperStepsFrom(lutarRawBase, lutarStepsFromSupers)
-        val jutsuComSupers = jutsuRawBase
-
-        val base = 2 + (maxOf(lutarComSupers, jutsuComSupers) / 2)
-
-        val bloquearBonus =
-            if (vantagensNomeKey.any { it == "BLOQUEAR" }) 1 else 0
-        val bloquearAprimoradoBonus =
-            if (vantagensNomeKey.any { it == "BLOQUEAR APRIMORADO" }) 1 else 0
-
-        return base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusApararFromPower
-    }
-
-    fun calcArmaduraEfetiva(): Int {
-        val melhorExterna = personagem.armorFromPower.coerceAtLeast(personagem.armorBase)
-        return (melhorExterna + personagem.naturalArmorFromRace).coerceAtLeast(0)
-    }
-
-    fun calcChi(): Int {
-        personagem.reservaChi?.let { return it }
-
-        val espRaw = personagem.atributos["ESPIRITO"] ?: 0
-        val racialPenalty = if (personagem.ancestralidade.keyify() == "TERRACOTA") 1 else 0
-        val chiBonus = listaVantagens
-            .filter { it.id in personagem.vantagens }
-            .count { it.categoria == com.example.swadebuilder.model.Categoria.CHI }
-
-        return (espRaw / 2 - racialPenalty + chiBonus).coerceAtLeast(0)
-    }
-
-    val aparar = calcAparar()
-    val resFinal = personagem.resistencia
-    val tamanho = personagem.tamanho
-    val mov = calcMovimento()
-    val armadura = calcArmaduraEfetiva()
-    val temArmaduraDeEquip = personagem.equipamentos.any { it.armadura != null }
-    val bonusSemArmadura =
-        if (personagem.heroisSemArmadura && !temArmaduraDeEquip) 2 else 0
-    val chi = calcChi()
-    val resistenciaTotal = resFinal + armadura + bonusSemArmadura
-    val resistenciaTexto =
-        if ((armadura + bonusSemArmadura) > 0) "${resFinal}(${resistenciaTotal})" else resFinal.toString()
-
-    lines += "Identidade"
-    lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"
-    lines += "Ancestralidade: $ancestralidadeNome$monstroNome"
-    if (personagem.coracaoCrystalSelecionado != null) {
-        lines += "Coração de Cristal: ${personagem.coracaoCrystalSelecionado.nome}"
-    }
-    lines += ""
-
-    lines += "Atributos derivados"
-    lines += "Aparar: $aparar"
-    lines += "Resistência: $resistenciaTexto"
-    if (personagem.compendioArteDaGuerraAtivo) {
-        lines += "Reserva de Chi: $chi"
-    }
-    if (personagem.dominio != null) {
-        lines += "Domínio: ${personagem.dominio}"
-    }
-    lines += "Tamanho: $tamanho"
-    lines += "Movimento: $mov"
-    lines += ""
-
-    lines += "Atributos"
-    listaAtributos.forEach { attrKey ->
-        val label = mapaAtributosDisplay[attrKey] ?: attrKey
-        val valor = personagem.atributos[attrKey] ?: 4
-        lines += "$label d$valor"
-    }
-    lines += ""
-
-    val idiomaRegex = Regex("^Idiomas\\s+(\\d+)$", RegexOption.IGNORE_CASE)
-    val idiomaBase = listaPericias.firstOrNull { it.nome.equals("Idiomas", ignoreCase = true) }
-    val idiomaExtras = personagem.pericias.keys
-        .filter { idiomaRegex.matches(it) }
-        .sortedBy { idiomaRegex.find(it)?.groupValues?.getOrNull(1)?.toIntOrNull() ?: Int.MAX_VALUE }
-    val periciasOrdenadas = buildList {
-        listaPericias.forEach { per ->
-            add(per.nome)
-            if (per.nome.equals("Idiomas", ignoreCase = true)) {
-                addAll(idiomaExtras)
-            }
-        }
-    }
-    val periciasParaMostrar = periciasOrdenadas.mapNotNull { nome ->
-        val basePericia = listaPericias.firstOrNull { it.nome == nome }
-            ?: idiomaBase?.takeIf { idiomaRegex.matches(nome) }
-        val raw = personagem.pericias[nome] ?: 0
-        if (basePericia == null) return@mapNotNull null
-        val shouldShow = basePericia.basica || raw > periciaStartRaw(personagem.ancestralidade, basePericia)
-        if (shouldShow) nome to raw else null
-    }
-
-    lines += "Perícias"
-    if (periciasParaMostrar.isEmpty()) {
-        lines += "– Nenhuma"
-    } else {
-        periciasParaMostrar.forEach { (nome, raw) ->
-            // PROMPT 5: Include skill notes in output
-            val note = personagem.notasPericia[nome]
-            val noteStr = if (!note.isNullOrBlank()) " ($note)" else ""
-            val displayNome = if (idiomaRegex.matches(nome)) "Idiomas" else nome
-            lines += "$displayNome d$raw$noteStr"
-        }
-    }
-    lines += ""
-
-    lines += "Recursos & Equipamentos"
-    if (personagem.dadoRiqueza != null) {
-        lines += "Riqueza: d${personagem.dadoRiqueza}"
-    } else {
-        lines += "Dinheiro restante: ${personagem.dinheiro}"
-    }
-    if (personagem.equipamentos.isEmpty()) {
-        lines += "Equipamentos: – Nenhum"
-    } else {
-        lines += "Equipamentos:"
-        personagem.equipamentos.forEach { eq ->
-            val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nome
-            lines += "• $nomeEq"
-        }
-    }
-    lines += ""
-
-    lines += "Vantagens"
-    if (personagem.vantagens.isEmpty()) {
-        lines += "– Nenhuma"
-    } else {
-        val nomesVantagens = listaVantagens
-            .filter { it.id in personagem.vantagens }
-            .map { vant ->
-                val escolha = vantagemChoices[vant.id]?.removeFirstOrNull()
-                    ?.takeIf { it.isNotBlank() }
-                val rawName = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome
-
-                val baseNome = if (vant.id == "antecedente_arcano_milagres" && personagem.celestialAAMilagresDesabilitado) {
-                    "$rawName (DESABILITADO)"
-                } else {
-                    rawName
-                }
-                if (escolha != null) "$baseNome (${escolha.trim()})" else baseNome
-            }
-        lines += nomesVantagens.joinToString(", ")
-    }
-    if (personagem.vantagensRaciais.isNotEmpty()) {
-        lines += "Vantagens Raciais: ${personagem.vantagensRaciais.joinToString(", ")}"
-    }
-    lines += ""
-
-    val desvantagensRaciaisComplicacoes = personagem.desvantagensRaciais.filter { desvantagem ->
-        desvantagem.substringBefore("(").trim().keyify() in complicacoesNomeKeyset
-    }
-    val desvantagensRaciaisAnotacoes = personagem.desvantagensRaciais.filterNot { desvantagem ->
-        desvantagem.substringBefore("(").trim().keyify() in complicacoesNomeKeyset
-    }
-
-    lines += "Complicações"
-    val complicationKeys = complicacoesNomeadas.map { it.keyify() }.toMutableSet()
-    val allComplicationsList = buildList {
-        addAll(complicacoesNomeadas)
-        addAll(transtornosNomeados.map { "$it (Transtorno)" })
-        desvantagensRaciaisComplicacoes.forEach { comp ->
-            val compKey = comp.substringBefore("(").trim().keyify()
-            if (compKey !in complicationKeys) {
-                add(comp)
-                complicationKeys.add(compKey)
-            }
-        }
-    }
-    val complicacoesText = allComplicationsList
-        .joinToString(", ")
-        .ifBlank { "– Nenhuma" }
-    lines += complicacoesText
-    if (desvantagensRaciaisAnotacoes.isNotEmpty()) {
-        lines += "Anotações Raciais: ${desvantagensRaciaisAnotacoes.joinToString(", ")}"
-    }
-    lines += ""
-
-    if (personagem.poderes.isNotEmpty()) {
-        lines += "Poderes arcanos"
-        personagem.poderes.forEach { (arcanoKey, lista) ->
-            val label = arcanoKey
-                .lowercase()
-                .replace('_', ' ')
-                .replaceFirstChar { it.titlecase() }
-
-            lines += if (lista.isEmpty()) {
-                "• $label: – nenhum poder escolhido"
-            } else {
-                val poderesComManifestacao = lista.map { poderId ->
-                    val manifestacao = personagem.manifestacoesPoderes[poderId]
-                        ?.trim()
-                        ?.takeIf { it.isNotBlank() }
-                    if (manifestacao != null) "$poderId (${manifestacao})" else poderId
-                }
-                "• $label: ${poderesComManifestacao.joinToString(", ")}"
-            }
-        }
-        lines += ""
-    }
-
-    if (personagem.modoSupers &&
-        (personagem.superPontosTotais > 0 || personagem.gastosPorPoder.isNotEmpty())
-    ) {
-        lines += "Superpoderes"
-
-        if (personagem.gastosPorPoder.isEmpty()) {
-            lines += "– Nenhum superpoder registrado"
-        } else {
-            personagem.gastosPorPoder.forEach { (poderId, custo) ->
-                lines += "• $poderId: $custo SP"
-            }
-        }
-
-        lines += "Superpontos: ${personagem.superPontosTotais} (disponíveis: ${personagem.superPontosDisponiveis})"
-        lines += "Limite por poder: ${personagem.limitePorPoderPadrao}"
-        lines += ""
-    }
-
-    if (personagem.anotacoes.isNotBlank()) {
-        lines += "Anotações"
-        personagem.anotacoes.lines().forEach { linha -> lines += linha }
-    }
-
-    return lines
+interface PdfBlock {
+    fun measure(width: Float, theme: PdfTheme): Float
+    fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme)
+    /**
+     * Splits this block into two.
+     * @param availableHeight The height available on the current page.
+     * @return Pair(Head, Tail). Head is what fits, Tail is what remains.
+     * If Head is null, nothing fits. If Tail is null, everything fits.
+     */
+    fun split(availableHeight: Float, width: Float, theme: PdfTheme): Pair<PdfBlock?, PdfBlock?>
 }
 
-// ✅ 4) Montagem do PDF (usa buildSummaryLines)
-fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem) {
+abstract class TextListBlock(private val title: String, private val items: List<String>) : PdfBlock {
+    override fun measure(width: Float, theme: PdfTheme): Float {
+        if (items.isEmpty()) return 0f
+        val paint = TextPaint().apply {
+            textSize = 11f; typeface = theme.typefaceBody
+        }
+        val titleH = 20f
+        var totalH = titleH
+        items.forEach { item ->
+            val sl = StaticLayout.Builder.obtain(item, 0, item.length, paint, width.toInt())
+                .setAlignment(android.text.Layout.Alignment.ALIGN_NORMAL)
+                .setLineSpacing(0f, 1f)
+                .setIncludePad(true)
+                .build()
+            totalH += sl.height + 5f // 5f padding
+        }
+        return totalH
+    }
+
+    override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
+        if (items.isEmpty()) return
+        val titlePaint = TextPaint().apply {
+            color = theme.primaryColor; textSize = 14f; typeface = theme.typefaceTitle; isFakeBoldText = true
+        }
+        canvas.drawText(title, x, y + 14f, titlePaint) // Title baseline approx
+
+        val bodyPaint = TextPaint().apply {
+            color = theme.textColor; textSize = 11f; typeface = theme.typefaceBody
+        }
+
+        var currY = y + 20f
+        items.forEach { item ->
+            val sl = StaticLayout.Builder.obtain(item, 0, item.length, bodyPaint, width.toInt())
+                .build()
+            canvas.save()
+            canvas.translate(x, currY)
+            sl.draw(canvas)
+            canvas.restore()
+            currY += sl.height + 5f
+        }
+    }
+
+    override fun split(availableHeight: Float, width: Float, theme: PdfTheme): Pair<PdfBlock?, PdfBlock?> {
+        val fullHeight = measure(width, theme)
+        if (fullHeight <= availableHeight) return this to null
+
+        // Calculate how many items fit
+        val paint = TextPaint().apply { textSize = 11f; typeface = theme.typefaceBody }
+        val titleH = 20f
+        var currentH = titleH
+
+        if (availableHeight < titleH) return null to this // Can't even fit title
+
+        val headItems = mutableListOf<String>()
+        val tailItems = mutableListOf<String>()
+
+        var inTail = false
+        items.forEach { item ->
+            if (!inTail) {
+                val sl = StaticLayout.Builder.obtain(item, 0, item.length, paint, width.toInt()).build()
+                val itemH = sl.height + 5f
+                if (currentH + itemH <= availableHeight) {
+                    headItems.add(item)
+                    currentH += itemH
+                } else {
+                    inTail = true
+                    tailItems.add(item)
+                }
+            } else {
+                tailItems.add(item)
+            }
+        }
+
+        val head = if (headItems.isEmpty() && availableHeight < titleH + 15f) null
+                   else object : TextListBlock(title, headItems) {}
+
+        // Tail doesn't need title repeated usually, but for context maybe?
+        // Let's assume continuation doesn't repeat title to save space, or user can infer.
+        // Actually, clearer if we don't repeat title.
+        val tail = if (tailItems.isEmpty()) null
+                   else object : TextListBlock("", tailItems) {
+                       override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
+                           // Override to skip title logic/space if empty title
+                           if (items.isEmpty()) return
+                           val bPaint = TextPaint().apply { color = theme.textColor; textSize = 11f; typeface = theme.typefaceBody }
+                           var cy = y
+                           items.forEach { it ->
+                                val sl = StaticLayout.Builder.obtain(it, 0, it.length, bPaint, width.toInt()).build()
+                                canvas.save()
+                                canvas.translate(x, cy)
+                                sl.draw(canvas)
+                                canvas.restore()
+                                cy += sl.height + 5f
+                           }
+                       }
+                       override fun measure(width: Float, theme: PdfTheme): Float {
+                           if (items.isEmpty()) return 0f
+                           val bPaint = TextPaint().apply { textSize = 11f; typeface = theme.typefaceBody }
+                           var h = 0f
+                           items.forEach {
+                               val sl = StaticLayout.Builder.obtain(it, 0, it.length, bPaint, width.toInt()).build()
+                               h += sl.height + 5f
+                           }
+                           return h
+                       }
+                   }
+
+        return head to tail
+    }
+}
+
+class AttributeBlock(private val p: MeuPersonagem) : PdfBlock {
+    override fun measure(width: Float, theme: PdfTheme): Float {
+        // Fixed height: Title + 5 attributes * 50f
+        return 30f + (5 * 50f)
+    }
+
+    override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
+        val titlePaint = TextPaint().apply { color = theme.primaryColor; textSize = 14f; typeface = theme.typefaceTitle; isFakeBoldText = true }
+        canvas.drawText("Atributos", x, y + 14f, titlePaint)
+
+        var currY = y + 30f
+        com.example.swadebuilder.listaAtributos.forEach { attr ->
+            val value = p.atributos[attr] ?: 4
+            val display = com.example.swadebuilder.mapaAtributosDisplay[attr] ?: attr
+            drawAttributeShape(canvas, x + 25f, currY + 20f, "d$value", theme)
+            val namePaint = TextPaint().apply { color = theme.textColor; textSize = 12f; typeface = theme.typefaceBody; isFakeBoldText = true }
+            canvas.drawText(display, x + 60f, currY + 25f, namePaint)
+            currY += 50f
+        }
+    }
+
+    override fun split(availableHeight: Float, width: Float, theme: PdfTheme): Pair<PdfBlock?, PdfBlock?> {
+        // Attributes are atomic for simplicity. If they don't fit, push to next page.
+        if (measure(width, theme) <= availableHeight) return this to null
+        return null to this
+    }
+}
+
+class SkillListBlock(private val p: MeuPersonagem) : PdfBlock {
+    private val skills = p.pericias.entries
+        .filter { it.value > 0 } // Fix: Filter out d0 (value <= 0)
+        .sortedByDescending { it.value }
+        .map { entry ->
+            val name = entry.key
+            val value = entry.value
+            val note = p.notasPericia[name]
+            val noteStr = if (!note.isNullOrBlank()) " ($note)" else ""
+            "$name d$value$noteStr"
+        }
+
+    override fun measure(width: Float, theme: PdfTheme): Float {
+        if (skills.isEmpty()) return 34f // Title + "None"
+        val rowHeight = 14f
+        val count = skills.size
+        val rows = if (count <= 12) count else (count + 1) / 2
+        return 20f + (rows * rowHeight)
+    }
+
+    override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
+        val titlePaint = TextPaint().apply { color = theme.primaryColor; textSize = 14f; typeface = theme.typefaceTitle; isFakeBoldText = true }
+        canvas.drawText("Perícias", x, y + 14f, titlePaint)
+
+        var currY = y + 20f
+        val bodyPaint = TextPaint().apply { color = theme.textColor; textSize = 11f; typeface = theme.typefaceBody }
+
+        if (skills.isEmpty()) {
+            canvas.drawText("– Nenhuma", x, currY + 11f, bodyPaint)
+            return
+        }
+
+        val rowHeight = 14f
+        val count = skills.size
+
+        if (count <= 12) {
+            skills.forEach { txt ->
+                canvas.drawText(txt, x, currY + 11f, bodyPaint)
+                currY += rowHeight
+            }
+        } else {
+            val mid = (count + 1) / 2
+            val col1 = skills.take(mid)
+            val col2 = skills.drop(mid)
+            val colWidth = width / 2
+            val x2 = x + colWidth
+
+            val startY = currY
+            col1.forEachIndexed { i, txt ->
+                // Truncate
+                val safeTxt = truncate(txt, bodyPaint, colWidth - 5f)
+                canvas.drawText(safeTxt, x, startY + (i * rowHeight) + 11f, bodyPaint)
+            }
+            col2.forEachIndexed { i, txt ->
+                val safeTxt = truncate(txt, bodyPaint, colWidth - 5f)
+                canvas.drawText(safeTxt, x2, startY + (i * rowHeight) + 11f, bodyPaint)
+            }
+        }
+    }
+
+    override fun split(availableHeight: Float, width: Float, theme: PdfTheme): Pair<PdfBlock?, PdfBlock?> {
+        if (measure(width, theme) <= availableHeight) return this to null
+        // If split needed, revert to simple 1-col list logic?
+        // Or just move whole block. Moving whole block is safer/easier for layout.
+        return null to this
+    }
+}
+
+class WeaponTableBlock(private val p: MeuPersonagem) : PdfBlock {
+    private val weapons = p.equipamentos.filter { it.dano != null }
+
+    override fun measure(width: Float, theme: PdfTheme): Float {
+        if (weapons.isEmpty()) return 0f
+        val rowHeight = 20f
+        // Header + rows + borders
+        return 20f + 20f + (weapons.size * rowHeight) + 5f
+    }
+
+    override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
+        if (weapons.isEmpty()) return
+        val titlePaint = TextPaint().apply { color = theme.primaryColor; textSize = 14f; typeface = theme.typefaceTitle; isFakeBoldText = true }
+        canvas.drawText("Armas", x, y + 14f, titlePaint)
+
+        var currY = y + 20f
+        val rowHeight = 20f
+
+        val cols = listOf("Arma", "Dist", "Dano", "PA", "CdT", "Peso")
+        val colWeights = listOf(3f, 1f, 1.5f, 0.5f, 0.5f, 0.8f)
+        val totalWeight = colWeights.sum()
+        val unitW = width / totalWeight
+        val colWidths = colWeights.map { it * unitW }
+
+        // Header
+        val headerPaint = Paint().apply { color = theme.gridLineColor; style = Paint.Style.FILL }
+        canvas.drawRect(x, currY, x + width, currY + rowHeight, headerPaint)
+
+        val headerTextPaint = TextPaint().apply { color = Color.WHITE; textSize = 10f; typeface = theme.typefaceBody; isFakeBoldText = true }
+        var cx = x
+        cols.forEachIndexed { i, t ->
+            canvas.drawText(t, cx + 2f, currY + 14f, headerTextPaint)
+            cx += colWidths[i]
+        }
+        currY += rowHeight
+
+        val rowPaint = TextPaint().apply { color = theme.textColor; textSize = 10f; typeface = theme.typefaceBody }
+        val linePaint = Paint().apply { color = theme.gridLineColor; strokeWidth = 1f }
+
+        weapons.forEach { w ->
+            cx = x
+            val data = listOf(
+                w.nome,
+                w.distancia?.toString()?.replace("\"", "") ?: "-",
+                w.dano?.toString()?.replace("\"", "") ?: "-",
+                w.pa?.toString()?.replace("\"", "") ?: "0",
+                w.cdt?.toString()?.replace("\"", "") ?: "1",
+                w.peso?.toString()?.replace("\"", "") ?: "-"
+            )
+            data.forEachIndexed { i, txt ->
+                val safe = truncate(txt, rowPaint, colWidths[i] - 2f)
+                canvas.drawText(safe, cx + 2f, currY + 14f, rowPaint)
+                cx += colWidths[i]
+                canvas.drawLine(cx, currY, cx, currY + rowHeight, linePaint)
+            }
+            canvas.drawLine(x, currY + rowHeight, x + width, currY + rowHeight, linePaint)
+            currY += rowHeight
+        }
+        canvas.drawLine(x, y + 20f, x, currY, linePaint)
+        canvas.drawLine(x + width, y + 20f, x + width, currY, linePaint)
+    }
+
+    override fun split(availableHeight: Float, width: Float, theme: PdfTheme): Pair<PdfBlock?, PdfBlock?> {
+        val h = measure(width, theme)
+        if (h <= availableHeight) return this to null
+        // Atomic table for now
+        return null to this
+    }
+}
+
+// Helper
+fun truncate(txt: String, paint: Paint, width: Float): String {
+    if (paint.measureText(txt) <= width) return txt
+    val c = paint.breakText(txt, true, width, null)
+    return if (c > 0) txt.substring(0, c) else ""
+}
+
+// =================================================================================================
+// 4. MAIN GENERATION LOGIC
+// =================================================================================================
+
+fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem, portrait: Bitmap? = null) {
     val doc = PdfDocument()
     val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
+    val theme = getPdfTheme(personagem.appTheme)
 
-    val marginLeft = 32f
-    val marginRight = 32f
-    val marginTop = 40f
-    val marginBottom = 36f
+    // Queues
+    val leftQueue = ArrayDeque<PdfBlock>()
+    leftQueue.add(AttributeBlock(personagem))
+    leftQueue.add(SkillListBlock(personagem))
 
-    val bodyPaint = Paint().apply { textSize = 12f }
-    val bodyFm = bodyPaint.fontMetrics
-    val bodyLineHeight = bodyFm.descent - bodyFm.ascent + bodyFm.leading
-
-    val sectionTitlePaint = Paint(bodyPaint).apply {
-        textSize = 13.5f
-        isFakeBoldText = true
-    }
-    val titlePaint = Paint(bodyPaint).apply {
-        textSize = 18f
-        isFakeBoldText = true
-    }
-    val subtitlePaint = Paint(bodyPaint).apply {
-        textSize = 12.5f
-        isFakeBoldText = true
-        color = Color.DKGRAY
-    }
-
-    val boxStroke = Paint().apply {
-        style = Paint.Style.STROKE
-        color = Color.rgb(92, 64, 51)
-        strokeWidth = 2f
-    }
-    val boxFill = Paint().apply {
-        style = Paint.Style.FILL
-        color = Color.rgb(248, 244, 235)
-    }
-    val headerFill = Paint().apply {
-        style = Paint.Style.FILL
-        color = Color.rgb(229, 214, 200)
-    }
-
-    var page = doc.startPage(pageInfo)
-    var canvas = page.canvas
-    var y = marginTop
-
-    fun newPage() {
-        doc.finishPage(page)
-        page = doc.startPage(pageInfo)
-        canvas = page.canvas
-        y = marginTop
-    }
-
-    fun wrapLine(text: String, paint: Paint, maxWidth: Float): List<String> {
-        if (text.isEmpty()) return listOf("")
-
-        val wrapped = mutableListOf<String>()
-        var start = 0
-        while (start < text.length) {
-            val count = paint.breakText(text, start, text.length, true, maxWidth, null)
-            wrapped += text.substring(start, start + count)
-            start += count
-        }
-        return wrapped
-    }
-
-    fun drawSection(title: String, contentLines: List<String>) {
-        val maxWidth = pageInfo.pageWidth - marginLeft - marginRight
-        val padding = 12f
-        val headerHeight = sectionTitlePaint.fontMetrics.let { it.descent - it.ascent } + padding
-
-        val normalizedContent = contentLines.map { line ->
-            if (line.startsWith("•") || line.startsWith("–") || line.contains(":")) line else "• $line"
-        }
-
-        val wrappedLines = normalizedContent.flatMap { wrapLine(it, bodyPaint, maxWidth - (padding * 2)) }
-        val contentHeight = (wrappedLines.size * bodyLineHeight) + padding
-        val totalHeight = headerHeight + contentHeight + padding
-
-        if (y + totalHeight > pageInfo.pageHeight - marginBottom) {
-            newPage()
-        }
-
-        val rect = RectF(
-            marginLeft,
-            y,
-            pageInfo.pageWidth - marginRight,
-            y + totalHeight
-        )
-
-        val headerRect = RectF(rect.left, rect.top, rect.right, rect.top + headerHeight)
-
-        canvas.drawRoundRect(rect, 18f, 18f, boxFill)
-        canvas.drawRoundRect(headerRect, 18f, 18f, headerFill)
-        canvas.drawRoundRect(rect, 18f, 18f, boxStroke)
-
-        val headerBaseline = headerRect.top + padding - sectionTitlePaint.fontMetrics.ascent
-        canvas.drawText(title, rect.left + padding, headerBaseline, sectionTitlePaint)
-
-        var contentY = headerRect.bottom + padding - bodyFm.ascent
-        wrappedLines.forEach { line ->
-            canvas.drawText(line, rect.left + padding, contentY, bodyPaint)
-            contentY += bodyLineHeight
-        }
-
-        y = rect.bottom + 10f
-    }
-
-    val title = "Ficha de ${personagem.nome.ifBlank { "(sem nome)" }}"
-    val titleHeight = titlePaint.fontMetrics.let { it.descent - it.ascent }
-    val subtitleHeight = subtitlePaint.fontMetrics.let { it.descent - it.ascent }
-
-    val monstroTxt = if (personagem.modoMonstroAtivo) {
-        val tipoNome = listaMonstroTemplates.find { it.id == personagem.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
-        " - Monstro: $tipoNome"
-    } else ""
-
-    canvas.drawText(title, marginLeft, y, titlePaint)
-    y += titleHeight + 6f
-    canvas.drawText("Ancestralidade: ${personagem.ancestralidade.titleCase()}$monstroTxt", marginLeft, y, subtitlePaint)
-    y += subtitleHeight + 12f
-
-    val lines = buildSummaryLines(personagem)
-    val sectionTitles = setOf(
-        "Identidade",
-        "Atributos derivados",
-        "Atributos",
-        "Perícias",
-        "Recursos & Equipamentos",
-        "Vantagens",
-        "Complicações",
-        "Poderes arcanos",
-        "Superpoderes",
-        "Anotações"
-    )
-
-    val sections = mutableListOf<Pair<String, MutableList<String>>>()
-    var currentTitle = "Resumo"
-    var buffer = mutableListOf<String>()
-
-    fun flushSection() {
-        if (buffer.isNotEmpty()) {
-            sections += currentTitle to buffer
-            buffer = mutableListOf()
+    val hindranceNames = mutableListOf<String>()
+    val mapPorId = com.example.swadebuilder.listaComplicacoes.associateBy { it.id.keyify() }
+    personagem.complicacoes.forEach { id ->
+        val comp = mapPorId[id.keyify()]
+        if (comp != null) {
+            val name = if (personagem.modoOficialAtivo && !comp.originalName.isNullOrBlank()) comp.originalName else comp.name
+            hindranceNames.add(name)
+        } else {
+            hindranceNames.add(id.replace('_', ' ').titleCase())
         }
     }
+    leftQueue.add(object : TextListBlock("Complicações", hindranceNames) {})
 
-    lines.forEach { linha ->
-        when {
-            linha in sectionTitles -> {
-                flushSection()
-                currentTitle = linha
+    val rightQueue = ArrayDeque<PdfBlock>()
+
+    // Edges
+    val edgeNames = personagem.vantagens.map { id ->
+        try {
+            com.example.swadebuilder.listaVantagens.firstOrNull { it.id == id }?.nome ?: id
+        } catch(e: Exception) { id }
+    }
+    rightQueue.add(object : TextListBlock("Vantagens", edgeNames) {})
+
+    // Powers
+    if (personagem.poderes.isNotEmpty()) {
+        val powerLines = mutableListOf<String>()
+        personagem.poderes.forEach { (arc, list) ->
+            powerLines.add("Arcano: $arc")
+            powerLines.add(list.joinToString(", "))
+        }
+        rightQueue.add(object : TextListBlock("Poderes", powerLines) {})
+    }
+
+    // Weapons
+    rightQueue.add(WeaponTableBlock(personagem))
+
+    // Gear
+    val gear = personagem.equipamentos.filterNot { it.dano != null }.map { it.nome }
+    if (gear.isNotEmpty()) {
+        rightQueue.add(object : TextListBlock("Outros Equipamentos", gear) {})
+    }
+
+    // Notes
+    if (personagem.anotacoes.isNotBlank()) {
+        rightQueue.add(object : TextListBlock("Anotações", listOf(personagem.anotacoes)) {})
+    }
+
+    var pageIndex = 0
+
+    while (leftQueue.isNotEmpty() || rightQueue.isNotEmpty()) {
+        pageIndex++
+        val page = doc.startPage(pageInfo)
+        val canvas = page.canvas
+        canvas.drawColor(theme.backgroundColor)
+
+        // Borders
+        val margin = 30f
+        val w = pageInfo.pageWidth.toFloat()
+        val h = pageInfo.pageHeight.toFloat()
+        val borderPaint = Paint().apply { color = theme.primaryColor; style = Paint.Style.STROKE; strokeWidth = 1f }
+        canvas.drawRect(margin/2, margin/2, w - margin/2, h - margin/2, borderPaint)
+
+        var contentTop = margin
+
+        // Header on Page 1
+        if (pageIndex == 1) {
+            val headerH = 140f
+            val derivedH = 60f
+            val headerRect = RectF(margin, margin, w - margin, margin + headerH)
+            drawHeader(canvas, headerRect, personagem, theme, portrait)
+
+            val derivedRect = RectF(margin, headerRect.bottom + 10f, w - margin, headerRect.bottom + 10f + derivedH)
+            drawDerivedStats(canvas, derivedRect, personagem, theme)
+
+            contentTop = derivedRect.bottom + 20f
+        } else {
+            contentTop = margin + 20f // Small margin on subsequent pages
+        }
+
+        val columnGap = 20f
+        val contentW = w - (margin * 2)
+        val leftW = (contentW - columnGap) * 0.35f
+        val rightW = (contentW - columnGap) * 0.65f
+        val rightX = margin + leftW + columnGap
+        val bottomLimit = h - margin
+
+        // Fill Left
+        var currY = contentTop
+        while (leftQueue.isNotEmpty()) {
+            val block = leftQueue.first()
+            val available = bottomLimit - currY
+            val (head, tail) = block.split(available, leftW, theme)
+
+            if (head != null) {
+                head.draw(canvas, margin, currY, leftW, theme)
+                currY += head.measure(leftW, theme) + 10f
             }
-            linha.isBlank() -> flushSection()
-            else -> buffer += linha
+
+            if (tail != null) {
+                leftQueue.removeFirst()
+                leftQueue.addFirst(tail)
+                break // Page full
+            } else {
+                leftQueue.removeFirst() // Fully drawn
+            }
+
+            if (currY >= bottomLimit) break
         }
-    }
-    flushSection()
 
-    sections.forEach { (titleSecao, conteudo) ->
-        drawSection(titleSecao, conteudo)
+        // Fill Right
+        currY = contentTop
+        while (rightQueue.isNotEmpty()) {
+            val block = rightQueue.first()
+            val available = bottomLimit - currY
+            val (head, tail) = block.split(available, rightW, theme)
+
+            if (head != null) {
+                head.draw(canvas, rightX, currY, rightW, theme)
+                currY += head.measure(rightW, theme) + 10f
+            }
+
+            if (tail != null) {
+                rightQueue.removeFirst()
+                rightQueue.addFirst(tail)
+                break
+            } else {
+                rightQueue.removeFirst()
+            }
+
+            if (currY >= bottomLimit) break
+        }
+
+        doc.finishPage(page)
     }
 
-    doc.finishPage(page)
     FileOutputStream(destino).use { out -> doc.writeTo(out) }
     doc.close()
+}
+
+// =================================================================================================
+// 5. SHARED THEME & HELPERS
+// =================================================================================================
+
+data class PdfTheme(
+    val backgroundColor: Int,
+    val primaryColor: Int,
+    val accentColor: Int,
+    val textColor: Int,
+    val gridLineColor: Int,
+    val headerBackground: Int,
+    val typefaceTitle: Typeface,
+    val typefaceBody: Typeface,
+    val shapeType: ShapeType = ShapeType.CIRCLE
+)
+
+enum class ShapeType { CIRCLE, HEXAGON }
+
+fun getPdfTheme(themeName: String): PdfTheme {
+    val theme = try { AppTheme.valueOf(themeName) } catch (e: Exception) { AppTheme.DEFAULT }
+    // Same theme logic as before...
+    return when (theme) {
+        AppTheme.MEDIEVAL, AppTheme.DEFAULT -> PdfTheme(
+            backgroundColor = Color.rgb(248, 244, 235),
+            primaryColor = Color.rgb(92, 64, 51),
+            accentColor = Color.rgb(184, 134, 11),
+            textColor = Color.BLACK,
+            gridLineColor = Color.rgb(160, 82, 45),
+            headerBackground = Color.rgb(229, 214, 200),
+            typefaceTitle = Typeface.create(Typeface.SERIF, Typeface.BOLD),
+            typefaceBody = Typeface.create(Typeface.SERIF, Typeface.NORMAL),
+            shapeType = ShapeType.HEXAGON
+        )
+        AppTheme.CYBERPUNK, AppTheme.SCIFI -> PdfTheme(
+            backgroundColor = Color.BLACK,
+            primaryColor = Color.rgb(0, 255, 65),
+            accentColor = Color.rgb(0, 229, 255),
+            textColor = Color.WHITE,
+            gridLineColor = Color.rgb(0, 100, 0),
+            headerBackground = Color.rgb(20, 20, 20),
+            typefaceTitle = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD),
+            typefaceBody = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL),
+            shapeType = ShapeType.HEXAGON
+        )
+        AppTheme.HORROR, AppTheme.HALLOWEEN -> PdfTheme(
+            backgroundColor = Color.rgb(20, 5, 5),
+            primaryColor = Color.rgb(180, 20, 20),
+            accentColor = Color.rgb(100, 100, 100),
+            textColor = Color.rgb(240, 240, 230),
+            gridLineColor = Color.rgb(80, 0, 0),
+            headerBackground = Color.rgb(40, 10, 10),
+            typefaceTitle = Typeface.create(Typeface.SERIF, Typeface.BOLD_ITALIC),
+            typefaceBody = Typeface.create(Typeface.SERIF, Typeface.NORMAL),
+            shapeType = ShapeType.CIRCLE
+        )
+        else -> PdfTheme(
+            backgroundColor = Color.WHITE,
+            primaryColor = Color.BLACK,
+            accentColor = Color.DKGRAY,
+            textColor = Color.BLACK,
+            gridLineColor = Color.LTGRAY,
+            headerBackground = Color.LTGRAY,
+            typefaceTitle = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD),
+            typefaceBody = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL),
+            shapeType = ShapeType.CIRCLE
+        )
+    }
+}
+
+// Helpers reused from previous implementation
+fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, portrait: Bitmap?) {
+    // ... (Same logic as before)
+    val paint = Paint().apply {
+        color = theme.headerBackground
+        style = Paint.Style.FILL
+    }
+    canvas.drawRect(rect, paint)
+    paint.style = Paint.Style.STROKE
+    paint.color = theme.primaryColor
+    paint.strokeWidth = 2f
+    canvas.drawRect(rect, paint)
+
+    val portraitW = 100f
+    val portraitH = 120f
+    val portraitX = rect.right - portraitW - 10f
+    val portraitY = rect.top + 10f
+    val portraitRect = RectF(portraitX, portraitY, portraitX + portraitW, portraitY + portraitH)
+
+    if (portrait != null) {
+        val path = Path().apply {
+            if (theme.shapeType == ShapeType.CIRCLE) {
+                addRoundRect(portraitRect, 10f, 10f, Path.Direction.CW)
+            } else {
+                addRect(portraitRect, Path.Direction.CW)
+            }
+        }
+        canvas.save()
+        canvas.clipPath(path)
+        val scale = Math.max(portraitW / portrait.width, portraitH / portrait.height)
+        val scaledW = portrait.width * scale
+        val scaledH = portrait.height * scale
+        val dx = portraitX + (portraitW - scaledW) / 2
+        val dy = portraitY + (portraitH - scaledH) / 2
+        val matrix = Matrix().apply {
+            postScale(scale, scale)
+            postTranslate(dx, dy)
+        }
+        canvas.drawBitmap(portrait, matrix, null)
+        canvas.restore()
+        canvas.drawPath(path, paint)
+    } else {
+        val placePaint = Paint().apply {
+            color = Color.LTGRAY
+            style = Paint.Style.STROKE
+            strokeWidth = 1f
+            pathEffect = android.graphics.DashPathEffect(floatArrayOf(10f, 10f), 0f)
+        }
+        canvas.drawRect(portraitRect, placePaint)
+        val textPaint = TextPaint().apply {
+            color = Color.GRAY; textSize = 10f; textAlign = Paint.Align.CENTER
+        }
+        canvas.drawText("Retrato", portraitRect.centerX(), portraitRect.centerY(), textPaint)
+    }
+
+    val titlePaint = TextPaint().apply {
+        color = theme.primaryColor; typeface = theme.typefaceTitle; textSize = 24f; isAntiAlias = true
+    }
+    val subtitlePaint = TextPaint().apply {
+        color = theme.textColor; typeface = theme.typefaceBody; textSize = 12f; isAntiAlias = true
+    }
+
+    val textAreaWidth = rect.width() - portraitW - 30f
+    var displayedName = p.nome.ifBlank { "Sem Nome" }
+    if (titlePaint.measureText(displayedName) > textAreaWidth) {
+        val c = titlePaint.breakText(displayedName, true, textAreaWidth, null)
+        displayedName = displayedName.substring(0, c) + "..."
+    }
+
+    canvas.drawText(displayedName, rect.left + 10f, rect.top + 30f, titlePaint)
+    canvas.drawText("${p.ancestralidade.titleCase()} - Novato", rect.left + 10f, rect.top + 50f, subtitlePaint)
+
+    val trackX = rect.left + 10f
+    val trackY = rect.top + 80f
+    drawTrack(canvas, trackX, trackY, "Ferimentos", 3, -1, theme)
+    drawTrack(canvas, trackX + 100f, trackY, "Fadiga", 2, -1, theme)
+}
+
+fun drawTrack(canvas: Canvas, x: Float, y: Float, label: String, boxes: Int, current: Int, theme: PdfTheme) {
+    val paint = Paint().apply { color = theme.textColor; typeface = theme.typefaceBody; textSize = 10f }
+    canvas.drawText(label, x, y, paint)
+    val boxSize = 12f; val gap = 5f; var currX = x; val trackY = y + 5f
+    val boxPaint = Paint().apply { style = Paint.Style.STROKE; color = theme.primaryColor; strokeWidth = 1.5f }
+    for (i in 1..boxes) {
+        val r = RectF(currX, trackY, currX + boxSize, trackY + boxSize)
+        canvas.drawRect(r, boxPaint)
+        val penPaint = TextPaint(paint).apply { textSize = 8f; textAlign = Paint.Align.CENTER }
+        canvas.drawText("-$i", r.centerX(), r.bottom + 8f, penPaint)
+        currX += boxSize + gap
+    }
+}
+
+fun drawDerivedStats(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme) {
+    val aparar = calcAparar(p)
+    val resistencia = calcResistencia(p)
+    val mov = calcMovimento(p)
+    val boxWidth = rect.width() / 3
+    val labels = listOf("Aparar", "Resistência", "Movimentação")
+    val values = listOf(aparar.toString(), resistencia, mov.toString())
+    for (i in 0..2) {
+        val bx = rect.left + (i * boxWidth)
+        val r = RectF(bx, rect.top, bx + boxWidth, rect.bottom)
+        val bgPaint = Paint().apply { color = if (i % 2 == 0) theme.headerBackground else theme.backgroundColor; style = Paint.Style.FILL }
+        canvas.drawRect(r, bgPaint)
+        val borderPaint = Paint().apply { color = theme.primaryColor; style = Paint.Style.STROKE; strokeWidth = 1f }
+        canvas.drawRect(r, borderPaint)
+        val labelPaint = TextPaint().apply { color = theme.textColor; textSize = 10f; textAlign = Paint.Align.CENTER; typeface = theme.typefaceBody }
+        val valPaint = TextPaint().apply { color = theme.primaryColor; textSize = 24f; textAlign = Paint.Align.CENTER; typeface = theme.typefaceTitle; isFakeBoldText = true }
+        canvas.drawText(labels[i], r.centerX(), r.top + 15f, labelPaint)
+        canvas.drawText(values[i], r.centerX(), r.bottom - 15f, valPaint)
+    }
+}
+
+fun drawAttributeShape(canvas: Canvas, cx: Float, cy: Float, text: String, theme: PdfTheme) {
+    val paint = Paint().apply { color = theme.primaryColor; style = Paint.Style.STROKE; strokeWidth = 2f; isAntiAlias = true }
+    if (theme.shapeType == ShapeType.HEXAGON) {
+        val path = Path()
+        val r = 20f
+        for (i in 0..5) {
+            val angle = Math.toRadians((60 * i).toDouble())
+            val px = cx + (r * Math.cos(angle)).toFloat()
+            val py = cy + (r * Math.sin(angle)).toFloat()
+            if (i == 0) path.moveTo(px, py) else path.lineTo(px, py)
+        }
+        path.close(); canvas.drawPath(path, paint)
+    } else {
+        canvas.drawCircle(cx, cy, 20f, paint)
+    }
+    val textPaint = TextPaint().apply { color = theme.textColor; textSize = 14f; textAlign = Paint.Align.CENTER; typeface = theme.typefaceTitle }
+    val metrics = textPaint.fontMetrics; val dy = (metrics.descent + metrics.ascent) / 2
+    canvas.drawText(text, cx, cy - dy, textPaint)
+}
+
+// Calculation Helpers
+fun calcMovimento(personagem: MeuPersonagem): Int {
+    val base = 6
+    val racialPenalty = com.example.swadebuilder.listaAncestralidadesJson.firstOrNull { it.nome.keyify() == personagem.ancestralidade }?.desvantagens?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) } == true
+    val lento = if (personagem.complicacoes.any { it.keyify().contains("LENTO") }) 1 else 0
+    val idoso = if (personagem.complicacoes.any { it.keyify().contains("IDOSO") }) 1 else 0
+    val obeso = if (personagem.complicacoes.any { it.keyify().contains("OBESO") }) 1 else 0
+    val ligeiro = if (personagem.vantagens.any { it.keyify() == "LIGEIRO" }) 2 else 0
+    return (base - (if(racialPenalty) 1 else 0) - lento - idoso - obeso + ligeiro + personagem.bonusMovimentacaoFromPower).coerceAtLeast(0)
+}
+
+fun calcAparar(personagem: MeuPersonagem): Int {
+    val lutar = personagem.pericias["Lutar"] ?: 0
+    val jutsu = personagem.pericias["Jutsu"] ?: 0
+    val base = 2 + (max(lutar, jutsu) / 2)
+    val bloq = if (personagem.vantagens.any { it.keyify() == "BLOQUEAR" }) 1 else 0
+    val bloqImp = if (personagem.vantagens.any { it.keyify() == "BLOQUEAR APRIMORADO" }) 1 else 0
+    return base + bloq + bloqImp + personagem.bonusApararFromPower
+}
+
+fun calcResistencia(personagem: MeuPersonagem): String {
+    val arm = (max(personagem.armorFromPower, personagem.armorBase) + personagem.naturalArmorFromRace).coerceAtLeast(0)
+    val equipArm = personagem.equipamentos.any { it.armadura != null }
+    val semArm = if (personagem.heroisSemArmadura && !equipArm) 2 else 0
+    val res = personagem.resistencia
+    val total = res + arm + semArm
+    return if ((arm + semArm) > 0) "$res($total)" else res.toString()
 }
