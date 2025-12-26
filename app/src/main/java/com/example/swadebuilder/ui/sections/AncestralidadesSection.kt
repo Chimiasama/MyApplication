@@ -70,7 +70,11 @@ data class RacialModifierLite(
     val descricao: String? = null,
     val aliases: Set<String> = emptySet(),
     val origens: Set<String> = emptySet(),
-    val habilidades: List<RacialAbilityLite> = emptyList()
+    val habilidades: List<RacialAbilityLite> = emptyList(),
+    val atributos: Map<String, Int> = emptyMap(),
+    val pericias: Map<String, Int> = emptyMap(),
+    val vantagensGratis: List<String> = emptyList(),
+    val desvantagens: List<String> = emptyList()
 )
 
 private const val ASSET_ANCESTRALIDADES = "listaancestralidade.json"
@@ -225,7 +229,11 @@ fun AncestralidadesSection(
                     descricao = representative.descricao,
                     aliases = aliasKeys,
                     origens = originsInGroup,
-                    habilidades = habilidadesLite
+                    habilidades = habilidadesLite,
+                    atributos = representative.atributos,
+                    pericias = representative.pericias,
+                    vantagensGratis = representative.vantagensGratis,
+                    desvantagens = representative.desvantagens
                 )
             }.sortedBy { it.nome }
 
@@ -369,14 +377,6 @@ fun AncestralidadesSection(
                 .fillMaxWidth()
                 .alpha(if (supersLocked) 0.3f else 1f)
         ) {
-            Text(
-                "Lista de ancestralidades disponíveis:",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Spacer(Modifier.height(4.dp))
-
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -453,19 +453,70 @@ fun AncestralidadesSection(
                                 }
 
                                 AnimatedVisibility(visible = detalhesExpandidos[itemKey] == true) {
-                                    Column {
+                                    Column(modifier = Modifier.padding(top = 4.dp)) {
+                                        // Description
                                         if (descricao.isNotBlank()) {
                                             Text(
                                                 text = descricao,
                                                 style = MaterialTheme.typography.bodySmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
-                                            if (item.habilidades.isNotEmpty()) {
-                                                Spacer(Modifier.height(8.dp))
-                                            }
+                                            Spacer(Modifier.height(8.dp))
                                         }
 
+                                        // Attributes
+                                        if (item.atributos.isNotEmpty()) {
+                                            val attrsText = item.atributos.entries.joinToString(", ") { (k, v) ->
+                                                val sign = if (v > 0) "+" else ""
+                                                "$k $sign$v"
+                                            }
+                                            Text(
+                                                text = "Atributos: $attrsText",
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurface
+                                            )
+                                            Spacer(Modifier.height(4.dp))
+                                        }
+
+                                        // Skills
+                                        if (item.pericias.isNotEmpty()) {
+                                            val skillsText = item.pericias.entries.joinToString(", ") { (k, v) ->
+                                                val die = if (v == 0) "d4-2" else "d${(4 + (v - 1) * 2).coerceAtMost(12)}"
+                                                "$k $die"
+                                            }
+                                            Text(
+                                                text = "Perícias: $skillsText",
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurface
+                                            )
+                                            Spacer(Modifier.height(4.dp))
+                                        }
+
+                                        // Free Advantages
+                                        if (item.vantagensGratis.isNotEmpty()) {
+                                            val advsText = item.vantagensGratis.joinToString(", ") { it.titleCase() }
+                                            Text(
+                                                text = "Vantagens: $advsText",
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurface
+                                            )
+                                            Spacer(Modifier.height(4.dp))
+                                        }
+
+                                        // Hindrances
+                                        if (item.desvantagens.isNotEmpty()) {
+                                            val hindsText = item.desvantagens.joinToString(", ") { it.titleCase() }
+                                            Text(
+                                                text = "Complicações: $hindsText",
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurface
+                                            )
+                                            Spacer(Modifier.height(4.dp))
+                                        }
+
+                                        // Abilities
                                         if (item.habilidades.isNotEmpty()) {
+                                            Spacer(Modifier.height(4.dp))
                                             item.habilidades.forEach { ability ->
                                                 Column(modifier = Modifier.padding(bottom = 4.dp)) {
                                                     Text(
