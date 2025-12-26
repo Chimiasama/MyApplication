@@ -52,7 +52,6 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.ui.MainSection
-import com.example.swadebuilder.ui.components.CharacterPortraitCard
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
@@ -870,6 +869,8 @@ private fun SummaryTabContent(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+
+    // Restore image selection logic
     val portraitLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
@@ -887,13 +888,16 @@ private fun SummaryTabContent(
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
-        SummaryContent(state)
-        Spacer(Modifier.height(12.dp))
-        CharacterPortraitCard(
+        // Pass image selection data to SummaryContent which now houses the placeholder
+        SummaryContent(
+            state = state,
             imageUri = portraitUri,
             onSelectImage = { portraitLauncher.launch("image/*") }
         )
         Spacer(Modifier.height(12.dp))
+
+        // Removed CharacterPortraitCard and Spacer
+
         if (!state.modoProgressaoAtivo) {
             GlobalActionButtons(
                 state = state,
