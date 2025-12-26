@@ -1035,12 +1035,18 @@
     "description": "Faz piadas em momentos tensos. Causa -2 em rolagens de Intimidar/Provocar de aliados."
   },
   {
-    "id": "comp_chamativo",
+    "id": "chamativo",
     "name": "CHAMATIVO",
-    "tipo": "MENOR",
     "origem": "WISEGUYS",
-    "severity": "menor",
-    "description": "Maneirismos ou aparência exagerada. -2 em Furtividade para se misturar. Facilmente identificado."
+    "severity": "Menor",
+    "description": "O personagem adora ostentar. Usa roupas caras, joias e carros vistosos. Sofre -2 em Furtividade e testes para se misturar à multidão. É facilmente lembrado por testemunhas."
+  },
+  {
+    "id": "segredo_wiseguys",
+    "name": "SEGREDO (CRIMINOSO/POLICIAL)",
+    "origem": "WISEGUYS",
+    "severity": "Maior",
+    "description": "Pode ser um Policial Infiltrado (Risco de morte se descoberto) ou um Informante. Se o segredo for revelado, ganha Inimigos (Maior) e perde todas as Vantagens Sociais da organização."
   },
   {
     "id": "comp_cidadao_integro",

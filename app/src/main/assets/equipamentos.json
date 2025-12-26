@@ -6296,5 +6296,78 @@
         "observacoes": "Armadura Pesada."
       }
     ]
+  },
+  {
+    "tipo": "Armas",
+    "subtipo": "Submetralhadoras",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Thompson 1928 (Tommy Gun)",
+        "dano": "2d6+1",
+        "pa": "1",
+        "distancia": "12/24/48",
+        "cdt": "3",
+        "tiros": "50",
+        "peso": "5",
+        "custo": 500,
+        "observacoes": "A clássica 'Máquina de Escrever'. Tambor de 50 tiros. Pode usar rajada curta."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas",
+    "subtipo": "Especiais",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Coquetel Molotov",
+        "dano": "2d6 a 3d6",
+        "distancia": "4/8/16",
+        "peso": "1",
+        "custo": 5,
+        "observacoes": "Dano de Fogo em Modelo Pequeno de Explosão. Alvos podem pegar fogo."
+      },
+      {
+        "nome": "Garrote",
+        "dano": "For",
+        "peso": "0.1",
+        "custo": 2,
+        "observacoes": "Requer ataque surpresa ou Agarrar. Se mantido, causa Fadiga/Dano automático por sufocamento. Silencioso."
+      },
+      {
+        "nome": "Canivete Automático (Switchblade)",
+        "dano": "For+d4",
+        "peso": "0.5",
+        "custo": 25,
+        "observacoes": "Ação livre para sacar. +1 em Furtividade para esconder no corpo."
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Terrestres",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Caminhão Blindado",
+        "tamanho": 6,
+        "resistencia": "16(4)",
+        "armadura": 4,
+        "velMaxima": 90,
+        "tripulacao": "2+4",
+        "custo": 60000,
+        "observacoes": "Usado para transporte de valores. Janelas à prova de balas."
+      },
+      {
+        "nome": "Limusine",
+        "tamanho": 6,
+        "resistencia": "14(2)",
+        "velMaxima": 100,
+        "tripulacao": "1+6",
+        "custo": 80000,
+        "observacoes": "Conforto luxuoso. Divisória de vidro."
+      }
+    ]
   }
 ]

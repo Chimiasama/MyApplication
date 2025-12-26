@@ -6975,20 +6975,22 @@
   {
     "id": "notorio",
     "nome": "NOTÓRIO",
-    "categoria": "ANTECEDENTE",
+    "categoria": "SOCIAIS",
     "origem": "WISEGUYS",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
-      "pericias": {},
+      "pericias": {
+        "Intimidar": 8
+      },
       "vantagens_previas": [],
-      "observacoes": "Carta Selvagem",
+      "observacoes": "",
       "choiceOptions": []
     },
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rerrolagem gratuita em Intimidar contra criminosos. Dobra ganhos de trambiques."
+    "descricao": "Sua fama de violento o precede. +2 em Intimidar. Inimigos tendem a focar em você ou fugir (teste de Moral ao vê-lo)."
   },
   {
     "id": "artista_gunfu",
@@ -7019,19 +7021,19 @@
     "categoria": "COMBATE",
     "origem": "WISEGUYS",
     "requisitos": {
-      "estagio": "Novato",
+      "estagio": "Veterano",
       "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "atraente"
-      ],
+      "pericias": {
+        "Lutar": 8
+      },
+      "vantagens_previas": [],
       "observacoes": "",
       "choiceOptions": []
     },
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Imune a veneno. Aplica Veneno Leve com toque ou surpresa."
+    "descricao": "Um ataque corpo a corpo bem sucedido na cabeça causa +4 de dano extra em vez de +2 (totalizando +8 se for um Ataque Localizado na cabeça)."
   },
   {
     "id": "guarda_costas",
@@ -7339,9 +7341,7 @@
     "origem": "WISEGUYS",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {
-        "Astúcia": 6
-      },
+      "atributos": {},
       "pericias": {
         "Dirigir": 8
       },
@@ -7352,7 +7352,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Tenta fugir de perseguição com uma carta a menos de distância."
+    "descricao": "Ignora penalidades de terreno difícil e instável ao dirigir. Em perseguições, recebe +2 nas rolagens de Dirigir para manobras evasivas."
   },
   {
     "id": "trambiqueiro",
@@ -7469,5 +7469,21 @@
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Imune a processos criminais. Até federais precisam de casos incontestáveis."
+  },
+  {
+    "id": "limpadora",
+    "nome": "LIMPADORA (CLEANER)",
+    "categoria": "PROFISSIONAL",
+    "origem": "WISEGUYS",
+    "requisitos": { "estagio": "Novato", "pericias": { "Furtividade": 8, "Ciência": 6 } },
+    "descricao": "Especialista em se livrar de corpos e evidências. +2 em testes para ocultar provas ou limpar cenas de crime. Pode fazer um teste de Astúcia para saber exatamente o que a polícia vai procurar."
+  },
+  {
+    "id": "feito",
+    "nome": "FEITO (MADE MAN)",
+    "categoria": "SOCIAIS",
+    "origem": "WISEGUYS",
+    "requisitos": { "estagio": "Experiente", "vantagens_previas": ["conexao_mafia"], "observacoes": "Deve ser homem e de descendência italiana (na Cosa Nostra)." },
+    "descricao": "Membro oficial da Família. Intocável por membros de baixo escalão. +2 em Intimidar contra outros criminosos. Ganha +2 de Riqueza inicial ou renda."
   }
 ]
