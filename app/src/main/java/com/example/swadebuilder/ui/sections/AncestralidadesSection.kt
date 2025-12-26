@@ -178,7 +178,10 @@ fun AncestralidadesSection(
 
         val allowedOrigins = when (activeOrigins.size) {
             0 -> setOf("BASICO")
-            1 -> setOf(activeOrigins.first())
+            1 -> {
+                val origin = activeOrigins.first()
+                if (origin == "FANTASIA") setOf(origin, "BASICO") else setOf(origin)
+            }
             else -> (activeOrigins + "BASICO").toSet()
         }
 
