@@ -6,8 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -23,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -51,6 +56,7 @@ import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.toMeuPersonagem
 import com.example.swadebuilder.util.keyify
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SummaryContent(state: CriadorState) {
 
@@ -171,23 +177,68 @@ fun SummaryContent(state: CriadorState) {
             Spacer(Modifier.height(12.dp))
         }
 
-        if (attributesSection != null || skillsSection != null) {
+        // Layout: Attributes + Image Placeholder in a Row, then Skills below
+        attributesSection?.let { attrSection ->
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                attributesSection?.let {
-                    SummarySectionCard(
-                        section = it,
-                        modifier = Modifier.weight(0.42f),
-                        textStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp)
-                    )
+                SummarySectionCard(
+                    section = attrSection,
+                    modifier = Modifier.weight(1f),
+                    textStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp)
+                )
+
+                // Image Placeholder
+                Card(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Retrato",
+                            modifier = Modifier.size(48.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                        )
+                    }
                 }
-                skillsSection?.let {
-                    SummarySectionCard(
-                        section = it,
-                        modifier = Modifier.weight(0.58f)
+            }
+            Spacer(Modifier.height(12.dp))
+        }
+
+        // Skills Section (Horizontal / Flow)
+        skillsSection?.let { skillSection ->
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Column(Modifier.padding(12.dp)) {
+                    Text(
+                        text = skillSection.title,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold
                     )
+                    Spacer(Modifier.height(8.dp))
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        skillSection.items.forEach { item ->
+                            SkillChip(item)
+                        }
+                    }
                 }
             }
             Spacer(Modifier.height(12.dp))
@@ -812,6 +863,21 @@ private fun SpecializationsSummaryCard(
             dismissButton = {
                 TextButton(onClick = { showEditDialog = false }) { Text("Cancelar") }
             }
+        )
+    }
+}
+
+@Composable
+private fun SkillChip(text: String) {
+    Surface(
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        shape = MaterialTheme.shapes.small
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            color = MaterialTheme.colorScheme.onSecondaryContainer
         )
     }
 }
