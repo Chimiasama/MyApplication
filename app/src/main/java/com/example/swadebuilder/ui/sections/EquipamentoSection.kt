@@ -169,6 +169,7 @@ private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
 
 private data class EquipamentoListEntry(
     val item: EquipamentoItem,
+    val origemKey: String,
     val origemLabel: String
 )
 
@@ -351,7 +352,7 @@ fun EquipamentoSection(
             }
             // Available Origins for Filter Dialog
             val allOrigens = remember(rawCategories) {
-                rawCategories.map { it.origem?.ifBlank { "BASICO" } ?: "BASICO" }.distinct().sorted()
+                rawCategories.map { (it.origem?.ifBlank { "BASICO" } ?: "BASICO").uppercase() }.distinct().sorted()
             }
 
 
@@ -569,9 +570,13 @@ fun EquipamentoSection(
                             val original = item.nome.semAcentos().lowercase()
                             n.contains(q) || original.contains(q)
                         }.map { item ->
-                            val origem = item.origem?.ifBlank { mapped.original.origem ?: "BASICO" } ?: (mapped.original.origem ?: "BASICO")
-                            EquipamentoListEntry(item, origem.toEditionDisplayName())
+                            val origemKey = (item.origem?.ifBlank { mapped.original.origem ?: "BASICO" } ?: (mapped.original.origem ?: "BASICO")).uppercase()
+                            EquipamentoListEntry(item, origemKey, origemKey.toEditionDisplayName())
                         }
+                    }.filter { entry ->
+                        // Item-level origin filter (for cases where item origin differs from category origin)
+                        if (filter.origens.isNotEmpty() && entry.origemKey !in filter.origens) return@filter false
+                        true
                     }
                 }
 
@@ -676,9 +681,9 @@ fun EquipamentoSection(
                                          // Render Items
                                          val itemsInSub = catsInSub.flatMap { cat ->
                                              cat.original.itens.map { item ->
-                                                val origem = item.origem?.ifBlank { cat.original.origem ?: "BASICO" }
-                                                    ?: (cat.original.origem ?: "BASICO")
-                                                EquipamentoListEntry(item, origem.toEditionDisplayName())
+                                                 val origemKey = (item.origem?.ifBlank { cat.original.origem ?: "BASICO" }
+                                                     ?: (cat.original.origem ?: "BASICO")).uppercase()
+                                                EquipamentoListEntry(item, origemKey, origemKey.toEditionDisplayName())
                                              }
                                          }.filter { entry ->
                                              // Apply filters
@@ -687,7 +692,7 @@ fun EquipamentoSection(
                                                      ?: Int.MAX_VALUE
                                                  if (!usaRiqueza && c > dinheiro) return@filter false
                                              }
-                                             if (filter.origens.isNotEmpty() && entry.origemLabel !in filter.origens) return@filter false
+                                             if (filter.origens.isNotEmpty() && entry.origemKey !in filter.origens) return@filter false
                                              true
                                          }.sortedBy { it.item.nome }
 
