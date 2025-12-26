@@ -49,6 +49,7 @@ import com.example.swadebuilder.R
 import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.model.Poder
+import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.normAAKey
@@ -125,21 +126,6 @@ fun PoderesSection(
         allPoderes.associate { it.id to it.nome.toSentenceCase() }
     }
 
-    val poderesElegiveis = remember(allPoderes, searchQuery, selectedRank) {
-        allPoderes.filter { power ->
-            val matchSearch = if (searchQuery.isBlank()) true else {
-                power.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
-                power.descricao.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true)
-            }
-
-            val matchRank = if (selectedRank == "Todos") true else {
-                power.estagio.semAcentos().equals(selectedRank.semAcentos(), ignoreCase = true)
-            }
-
-            matchSearch && matchRank
-        }.sortedBy { it.nome }
-    }
-
     // Determine which ABs to display
     val displayKeys = if (!state.permiteMultiAntecedenteArcano) {
         listOf(arcanosAtivos.first())
@@ -202,6 +188,38 @@ fun PoderesSection(
 
             // Treat null as true (default expanded)
             val isExpanded = sectionStates[arcKey] ?: true
+
+            // Compute permitted powers for this specific Arcane Background
+            val permittedSet = ArcaneConfig.getPermittedPowers(arcKey)
+            val blockedSet = ArcaneConfig.getBlockedPowers(arcKey)
+
+            val poderesParaEsteArcano = remember(allPoderes, searchQuery, selectedRank, arcKey) {
+                allPoderes.filter { power ->
+                    // 1. Check permissions/blocks
+                    val isAllowed = if (permittedSet != null) {
+                        power.id in permittedSet
+                    } else if (blockedSet.isNotEmpty()) {
+                        power.id !in blockedSet
+                    } else {
+                        true // No restriction
+                    }
+
+                    if (!isAllowed) return@filter false
+
+                    // 2. Check Search
+                    val matchSearch = if (searchQuery.isBlank()) true else {
+                        power.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
+                        power.descricao.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true)
+                    }
+
+                    // 3. Check Rank
+                    val matchRank = if (selectedRank == "Todos") true else {
+                        power.estagio.semAcentos().equals(selectedRank.semAcentos(), ignoreCase = true)
+                    }
+
+                    matchSearch && matchRank
+                }.sortedBy { it.nome }
+            }
 
             // HEADER (Custom Collapsible)
             item(key = "header_$arcKey") {
@@ -273,10 +291,20 @@ fun PoderesSection(
                 }
 
                 // POWERS LIST
-                items(
-                    items = poderesElegiveis,
-                    key = { "${arcKey}_${it.id}" } // Unique key per AB + Power
-                ) { poder ->
+                if (poderesParaEsteArcano.isEmpty()) {
+                    item {
+                        Text(
+                            "Nenhum poder disponível para os filtros selecionados.",
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                    }
+                } else {
+                    items(
+                        items = poderesParaEsteArcano,
+                        key = { "${arcKey}_${it.id}" } // Unique key per AB + Power
+                    ) { poder ->
                     val slots = state.poderSlotsPorArcano[arcKey] ?: remember { mutableStateListOf() }
                     val selecionado = slots.any { it?.equals(poder.id, ignoreCase = true) == true }
                     val lockedCount = if (state.mostrandoPoderesProgresso && state.arcanoEmCompraViaXpKey == arcKey)

@@ -54,6 +54,21 @@
     ]
   },
   {
+    "id": "alivio",
+    "origem": "BASICO",
+    "nome": "ALIVIO",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para alivio",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
     "id": "amigo_das_feras",
     "origem": "BASICO",
     "nome": "AMIGO DAS FERAS",
@@ -80,6 +95,47 @@
     ]
   },
   {
+    "id": "amigo_feras",
+    "origem": "BASICO",
+    "nome": "AMIGO DAS FERAS",
+    "estagio": "Novato",
+    "pontosDePoder": "Especial",
+    "distancia": "Astúcia",
+    "duracao": "10 minutos",
+    "manifestacoes": [
+      "A personagem conjuradora se concentra e gesticula com as mãos"
+    ],
+    "descricao": "Este feitiço permite que um indivíduo fale e guie as ações de feras da natureza. O custo para conjurar é igual à soma dos seus Tamanhos (mínimo 1 por criatura; veja as criaturas no Capítulo Seis para exemplos). Controlar cinco lobos (Tamanho -1) custa 5 pontos (lembre-se do custo mínimo de 1), por exemplo. Controlar um rinoceronte (Tamanho 5) custa 5 pontos.\nSucesso significa que a criatura obedece comandos simples, como um cão bem treinado. Ela ataca inimigos e coloca sua vida em risco por quem a controla. Uma ampliação na rolagem da perícia arcana significa que a fera é mais obediente. Ela segue naturalmente para seguir suas ordens.\nBandos também podem ser controlados. Bandos Pequenos custam 1 ponto, Bandos Médios custam 2 e Bandos Grandes 3.\nAmigo das Feras funciona apenas em criaturas naturais com inteligência animal, não em humanoides e não tem efeito em animais conjurados, mágicos ou “sobrenaturais”.",
+    "modificadores": [
+      {
+        "nome": "Passageiro da mente",
+        "custo": "+1",
+        "descricao": "Permite se comunicar e sentir através de qualquer uma das feras com as quais fez amizade."
+      }
+    ],
+    "tags": [
+      "stage:novato",
+      "tipo:controle",
+      "animais",
+      "companheiro"
+    ]
+  },
+  {
+    "id": "amortecer",
+    "origem": "BASICO",
+    "nome": "AMORTECER",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para amortecer",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
     "id": "andar_nas_paredes",
     "origem": "BASICO",
     "nome": "ANDAR NAS PAREDES",
@@ -103,6 +159,47 @@
       "stage:novato",
       "tipo:mobilidade",
       "movimento vertical"
+    ]
+  },
+  {
+    "id": "andar_paredes",
+    "origem": "BASICO",
+    "nome": "ANDAR NAS PAREDES",
+    "estagio": "Novato",
+    "pontosDePoder": 2,
+    "distancia": "Astúcia",
+    "duracao": "5",
+    "manifestacoes": [
+      "Traços ou feição de aranha",
+      "pelos espinhosos nas mãos e nos pés"
+    ],
+    "descricao": "Andar nas paredes permite deslocar-se em superfícies verticais ou horizontais. Com sucesso, a pessoa irá se mover com a metade da sua Movimentação normal. Com uma ampliação, pode se mover com toda sua Movimentação e até mesmo correr.\nSe fizer uma rolagem de Atletismo para escalar ou se agarrar a uma superfície, adiciona +4 ao total.",
+    "modificadores": [
+      {
+        "nome": "Receptores adicionais",
+        "custo": "+1",
+        "descricao": "É possível afetar outras pessoas a um custo de 1 Ponto de Poder cada."
+      }
+    ],
+    "tags": [
+      "stage:novato",
+      "tipo:mobilidade",
+      "movimento vertical"
+    ]
+  },
+  {
+    "id": "animacao",
+    "origem": "BASICO",
+    "nome": "ANIMACAO",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para animacao",
+    "modificadores": [],
+    "tags": [
+      "novo"
     ]
   },
   {
@@ -249,6 +346,66 @@
       "tipo:defesa",
       "construção",
       "campo de força"
+    ]
+  },
+  {
+    "id": "bolso_dimensional",
+    "origem": "BASICO",
+    "nome": "BOLSO DIMENSIONAL",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para bolso_dimensional",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
+    "id": "bugigangas",
+    "origem": "BASICO",
+    "nome": "BUGIGANGAS",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para bugigangas",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
+    "id": "busca_visao",
+    "origem": "BASICO",
+    "nome": "BUSCA VISAO",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para busca_visao",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
+    "id": "caminhar_ermos",
+    "origem": "BASICO",
+    "nome": "CAMINHAR ERMOS",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para caminhar_ermos",
+    "modificadores": [],
+    "tags": [
+      "novo"
     ]
   },
   {
@@ -408,6 +565,73 @@
     ]
   },
   {
+    "id": "consagrar",
+    "origem": "BASICO",
+    "nome": "CONSAGRAR",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para consagrar",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
+    "id": "convocar_aliado",
+    "origem": "BASICO",
+    "nome": "CONJURAR ALIADO",
+    "estagio": "Novato",
+    "pontosDePoder": "2+",
+    "distancia": "Astúcia",
+    "duracao": "5",
+    "manifestacoes": [
+      "Figura de barro que cresce e vira um servo",
+      "tatuagem que ganha vida"
+    ],
+    "descricao": "Este poder permite conjurar do nada alguém para lhe auxiliar. O aliado normalmente assume a forma de um humanoide básico do Tamanho apropriado, mas pode ter aparência diferente baseado nas manifestações de quem conjura. Se materializa em qualquer lugar dentro da Distância e, com uma ampliação na rolagem da perícia arcana, será Resiliente (ver pág. 214).\nO ser age na Carta de Ação de quem a conjurou e segue seus comandos da melhor maneira possível. A conjuração não tem personalidade, criatividade ou emoções.\nQuando o poder acaba ou se receber Incapacitado, desaparece em um vazio, não deixando vestígios para trás.\nO tipo de serviçal que se pode conjurar depende do Estágio. Com a aprovação do Mestre, é possível trocar habilidades. Se quem conjura quiser que a criação tenha a forma de lobo, por exemplo, deve trocar a perícia Atirar por Sobrevivência para que o “animal” possa rastrear.",
+    "modificadores": [
+      {
+        "nome": "Mordida/Garra",
+        "custo": "+1",
+        "descricao": "A criação pode usar uma mordida ou garra com For + d6."
+      },
+      {
+        "nome": "Passageiro da mente",
+        "custo": "+1",
+        "descricao": "Quem conjurou pode se comunicar e sentir através do ser."
+      },
+      {
+        "nome": "Voo",
+        "custo": "+2",
+        "descricao": "A criação pode voar com uma Movimentação 12."
+      }
+    ],
+    "tags": [
+      "stage:novato",
+      "tipo:convocação",
+      "companheiro",
+      "suporte"
+    ]
+  },
+  {
+    "id": "cova",
+    "origem": "BASICO",
+    "nome": "COVA",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para cova",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
     "id": "crescimento_encolhimento",
     "origem": "BASICO",
     "nome": "CRESCIMENTO/ENCOLHIMENTO",
@@ -494,6 +718,33 @@
       "tipo:buff",
       "vantagens",
       "suporte"
+    ]
+  },
+  {
+    "id": "dano_campo",
+    "origem": "BASICO",
+    "nome": "CAMPO DE DANO",
+    "estagio": "Experiente",
+    "pontosDePoder": 4,
+    "distancia": "Astúcia",
+    "duracao": "5",
+    "manifestacoes": [
+      "Aura flamejante",
+      "espinhos",
+      "campo elétrico"
+    ],
+    "descricao": "Campo de dano cria uma aura perigosa ao redor de quem o recebe, ferindo qualquer personagem que seja imprudente o suficiente para se aproximar. No fim do turno da pessoa afetada, todos os indivíduos adjacentes (incluindo aliados!) sofrem automaticamente 2d4 de dano.",
+    "modificadores": [
+      {
+        "nome": "Dano",
+        "custo": "+2",
+        "descricao": "O campo causa 2d6 de dano."
+      }
+    ],
+    "tags": [
+      "stage:experiente",
+      "tipo:danos",
+      "área de efeito"
     ]
   },
   {
@@ -771,6 +1022,51 @@
     ]
   },
   {
+    "id": "enterrar",
+    "origem": "BASICO",
+    "nome": "ENTERRAR",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para enterrar",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
+    "id": "entidade",
+    "origem": "BASICO",
+    "nome": "ENTIDADE",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para entidade",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
+    "id": "escuridao",
+    "origem": "BASICO",
+    "nome": "ESCURIDAO",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para escuridao",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
     "id": "explosao",
     "origem": "BASICO",
     "nome": "EXPLOSÃO",
@@ -893,6 +1189,36 @@
     ]
   },
   {
+    "id": "fogo_infernal",
+    "origem": "BASICO",
+    "nome": "FOGO INFERNAL",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para fogo_infernal",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
+    "id": "furia",
+    "origem": "BASICO",
+    "nome": "FURIA",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para furia",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
     "id": "golpear",
     "origem": "BASICO",
     "nome": "GOLPEAR",
@@ -906,6 +1232,35 @@
     "tags": [
       "referência",
       "devastação"
+    ]
+  },
+  {
+    "id": "guerreiro",
+    "origem": "BASICO",
+    "nome": "DÁDIVA DO GUERREIRO",
+    "estagio": "Experiente",
+    "pontosDePoder": 4,
+    "distancia": "Astúcia",
+    "duracao": "5",
+    "manifestacoes": [
+      "Gestos",
+      "prece",
+      "palavras sussurradas",
+      "concentração"
+    ],
+    "descricao": "Com uma rolagem bem-sucedida da perícia arcana, a personagem receptora ganha os benefícios de uma única Vantagem de Combate escolhida por quem conjura. A personagem conjuradora (não a receptora) deve ter o mesmo Estágio ou maior que os requisitos da Vantagem. Com uma ampliação, concede a versão Aprimorada da Vantagem (se houver e mesmo que não cumpra o requisito de Estágio).",
+    "modificadores": [
+      {
+        "nome": "Receptores adicionais",
+        "custo": "+1",
+        "descricao": "O poder afeta um novo alvo para cada Ponto de Poder adicional."
+      }
+    ],
+    "tags": [
+      "stage:experiente",
+      "tipo:buff",
+      "vantagens",
+      "suporte"
     ]
   },
   {
@@ -1021,6 +1376,36 @@
     ]
   },
   {
+    "id": "invocar_demonio",
+    "origem": "BASICO",
+    "nome": "INVOCAR DEMONIO",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para invocar_demonio",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
+    "id": "jogatina",
+    "origem": "BASICO",
+    "nome": "JOGATINA",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para jogatina",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
     "id": "leitura_de_objeto",
     "origem": "BASICO",
     "nome": "LEITURA DE OBJETO",
@@ -1063,6 +1448,43 @@
     ]
   },
   {
+    "id": "leitura_mentes",
+    "origem": "BASICO",
+    "nome": "LEITURA MENTAL",
+    "estagio": "Novato",
+    "pontosDePoder": 2,
+    "distancia": "Astúcia",
+    "duracao": "Instantâneo",
+    "manifestacoes": [
+      "Invasão psiônica",
+      "visão da alma"
+    ],
+    "descricao": "Leitura mental é uma rolagem resistida contra a Astúcia do alvo. Sucesso permite conseguir uma resposta verdadeira do alvo. O alvo fica ciente da invasão mental a menos que a pessoa fazendo a leitura consiga uma ampliação. Mestres podem aplicar modificadores com base nas Complicações mentais do indivíduo ou no atual estado emocional.",
+    "modificadores": [],
+    "tags": [
+      "stage:novato",
+      "tipo:telepatia",
+      "contagem mental",
+      "utilitário"
+    ]
+  },
+  {
+    "id": "lentidao_velocidade_referencia",
+    "origem": "BASICO",
+    "nome": "LENTIDÃO/VELOCIDADE",
+    "estagio": "—",
+    "pontosDePoder": "—",
+    "distancia": "—",
+    "duracao": "—",
+    "manifestacoes": [],
+    "descricao": "Veja Morosidade/Velocidade.",
+    "modificadores": [],
+    "tags": [
+      "referência",
+      "movimento"
+    ]
+  },
+  {
     "id": "limpeza_mental",
     "origem": "BASICO",
     "nome": "LIMPEZA MENTAL",
@@ -1096,19 +1518,47 @@
     ]
   },
   {
-    "id": "lentidao_velocidade_referencia",
+    "id": "luz_escuridao",
     "origem": "BASICO",
-    "nome": "LENTIDÃO/VELOCIDADE",
-    "estagio": "—",
-    "pontosDePoder": "—",
-    "distancia": "—",
-    "duracao": "—",
+    "nome": "ILUMINAR/OBSCURECER",
+    "estagio": "Novato",
+    "pontosDePoder": 2,
+    "distancia": "Astúcia",
+    "duracao": "10 minutos",
+    "manifestacoes": [
+      "Tocha ilusória",
+      "luz solar",
+      "escuridão",
+      "névoa espessa"
+    ],
+    "descricao": "Iluminar cria uma iluminação intensa em um Modelo Grande de Explosão. Com uma ampliação, a luz também pode ser focada em um feixe de 5 quadros (10 metros). Obscurecer bloqueia iluminação em uma área do tamanho de um Modelo Grande de Explosão, tornando a área Escura ou Escura como um Breu com uma ampliação (veja Iluminação na pág. 124). Se iluminar e obscurecer se sobrepuserem, eles criam uma faixa de Penumbra (–2).",
+    "modificadores": [
+      {
+        "nome": "Móvel",
+        "custo": "+1",
+        "descricao": "Uma vez conjurada a área de efeito pode ser movida um número de quadros igual ao dado de perícia arcana de quem conjurou. Ou, no momento em que se conjurar a magia, se pode optar por associar a área de efeito a um objeto inanimado."
+      }
+    ],
+    "tags": [
+      "stage:novato",
+      "tipo:iluminação",
+      "utilitário",
+      "campo de efeito"
+    ]
+  },
+  {
+    "id": "maldicao",
+    "origem": "BASICO",
+    "nome": "MALDICAO",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
     "manifestacoes": [],
-    "descricao": "Veja Morosidade/Velocidade.",
+    "descricao": "Descrição pendente para maldicao",
     "modificadores": [],
     "tags": [
-      "referência",
-      "movimento"
+      "novo"
     ]
   },
   {
@@ -1129,6 +1579,54 @@
       "tipo:elemental",
       "controle",
       "versatilidade"
+    ]
+  },
+  {
+    "id": "manipular_elementos",
+    "origem": "BASICO",
+    "nome": "MANIPULAÇÃO ELEMENTAL",
+    "estagio": "Novato",
+    "pontosDePoder": 1,
+    "distancia": "Astúcia",
+    "duracao": "5",
+    "manifestacoes": [
+      "Alguns gestos simples"
+    ],
+    "descricao": "Este poder concede controle básico sobre os quatro elementos tradicionais: ar, terra, fogo e água (os elementos podem variar dependendo do cenário). O poder age como se tivesse Força d6, ou d8 com uma ampliação. Ao ativar, personagens conjuradoras podem escolher um dos seguintes efeitos:\n1) ATACAR: É possível usar sua rolagem de ativação como uma rolagem de ataque, provocando 2d4 de dano a um alvo (3d4 com uma ampliação) dentro da Distância.\n2) EFEITOS ESPECIAIS: É possível usar os elementos para criar um efeito adicional com aprovação do Mestre. Alguns exemplos incluem usar ar para apagar uma tocha, ventilar uma chama ou refrescar alguém (rerrolar uma rolagem de Fadiga em um calor escaldante). Quem conjura pode usar terra para cobrir rastros, consertar rachaduras em paredes de pedra ou terra, usar fogo para conjurar uma chama do tamanho de uma tocha ou espalhar uma chama existente. Pode conjurar 1 litro de água (não “dentro” de pessoas) ou purificar 4 litros por conjuração.\n3) EMPURRAR: O elemento empurra e move o alvo. Quem conjura usa sua rolagem de ativação no lugar de sua Força para Empurrar (pág. 120).\n4) MOVER: Quem conjura pode mover cerca de 30 litros de ar, terra (metade disso se for pedra) fogo ou água a uma distância igual a Astúcia do conjurador como ação limitada. Após a ativação, cada uso adicional dos efeitos acima é uma ação. Faça uma nova rolagem de perícia arcana para Atacar ou Empurrar (essas rolagens não sofrem Choque de Retorno em Falhas Críticas já que não são rolagens de ativação).",
+    "modificadores": [],
+    "tags": [
+      "stage:novato",
+      "tipo:elemental",
+      "controle",
+      "versatilidade"
+    ]
+  },
+  {
+    "id": "marionete",
+    "origem": "BASICO",
+    "nome": "FANTOCHE",
+    "estagio": "Veterano",
+    "pontosDePoder": 3,
+    "distancia": "Astúcia",
+    "duracao": "5",
+    "manifestacoes": [
+      "Olhos brilhantes",
+      "estado similar ao transe",
+      "um relógio de bolso balançando",
+      "bonecos de vodu"
+    ],
+    "descricao": "Fantoche é uma rolagem resistida de perícia arcana contra o Espírito do alvo. Com um sucesso, a vítima automaticamente obedece comandos que não firam a si mesma e pessoas com quem ela se importa. Com uma ampliação, o alvo irá ferir a si mesmo ou outros (inclusive por inação). Qualquer que seja o caso, toda vez que a vítima for ordenada a ferir a si mesma ou alguém com quem se importe, inclusive por inação, ela recebe uma rolagem de Espírito como uma ação livre. Se bem-sucedida, não cumpre esse comando em particular, mas permanece como fantoche. Com uma ampliação, escapa do domínio e o poder se encerra. Comandos são gerais como “ataque aquela pessoa” ou “abra aquela porta”. Não é possível ditar quantas ações a vítima usa em um turno, se usa ou não a Vantagem Varredura, etc.",
+    "modificadores": [
+      {
+        "nome": "Receptores adicionais",
+        "custo": "+2",
+        "descricao": "É possível afetar outras pessoas ao custo de 2 Pontos de Poder para cada alvo adicional."
+      }
+    ],
+    "tags": [
+      "stage:veterano",
+      "tipo:controle mental",
+      "manipulação"
     ]
   },
   {
@@ -1157,6 +1655,43 @@
       "tipo:controle mental",
       "status",
       "medo"
+    ]
+  },
+  {
+    "id": "metamorfose",
+    "origem": "BASICO",
+    "nome": "MUDANÇA DE FORMA",
+    "estagio": "Novato",
+    "pontosDePoder": "Especial",
+    "distancia": "Pessoal",
+    "duracao": "5",
+    "manifestacoes": [
+      "“Morfar”",
+      "talismãs",
+      "tatuagens"
+    ],
+    "descricao": "Este poder permite a quem conjura assumir a forma de outra criatura viva. Só é possível assumir a forma básica, não uma versão mais forte ou alternativa (então um orc é permitido, mas um orc chefe tribal não). Com uma ampliação é possível aumentar a Força e Vigor da criatura em um tipo de dado. O Tamanho da nova forma é limitada pelo Estágio de quem conjura:\n\nESTÁGIO    CUSTO  TAMANHO\nNovato     3      Tamanho –4 a –1\nExperiente 5      Tamanho 0\nVeterano   8      Tamanho 1 a 2\nHeroico    11     Tamanho 3 a 4\nLendário   15     Tamanho 5 a 10\n\nArmas e outros itens pessoais se fundem na nova forma e reaparecem quando o poder acaba. Quem sofre a transformação mantém suas Vantagens e Complicações, sua Astúcia e Espírito e perícias liadas, assim como quaisquer poderes comuns a aquela criatura (sopro de fogo para dragões, voo para pegasus etc.). Não se ganha os Pontos de Poder do alvo, se possuir – mantém os seus próprios. Não é possível usar dispositivos e a comunicação é limitada às daquela forma – goblins podem falar e conjurar magias, mas ursos e tigres não. Quem conjura pode manter poderes conjurados antes da mudança de forma.\nEfeitos de Ferimentos: Quem conjura não pode se beneficiar de habilidades de Ferimentos adicionais ou redução de Ferimentos de uma criatura como Resiliente, Muito Resiliente, Imparável ou Ferimentos extras de criaturas de Escala Grande ou Enorme.",
+    "modificadores": [],
+    "tags": [
+      "stage:novato",
+      "tipo:transformação",
+      "metamorfose",
+      "utilitário"
+    ]
+  },
+  {
+    "id": "mirar",
+    "origem": "BASICO",
+    "nome": "MIRAR",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para mirar",
+    "modificadores": [],
+    "tags": [
+      "novo"
     ]
   },
   {
@@ -1222,6 +1757,21 @@
       "tipo:transformação",
       "metamorfose",
       "utilitário"
+    ]
+  },
+  {
+    "id": "peregrino",
+    "origem": "BASICO",
+    "nome": "PEREGRINO",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para peregrino",
+    "modificadores": [],
+    "tags": [
+      "novo"
     ]
   },
   {
@@ -1369,6 +1919,49 @@
     ]
   },
   {
+    "id": "rapidez",
+    "origem": "BASICO",
+    "nome": "MOROSIDADE/VELOCIDADE",
+    "estagio": "Experiente",
+    "pontosDePoder": 2,
+    "distancia": "Astúcia",
+    "duracao": "Instantâneo (morosidade); 5 (velocidade)",
+    "manifestacoes": [
+      "Desacelerar o tempo",
+      "movimento borrado",
+      "uma faixa escorregadia de óleo ou gelo"
+    ],
+    "descricao": "Morosidade diminui a celeridade e coordenação, enquanto velocidade as aumenta. Morosidade diminui à metade o movimento total do alvo em cada rodada (arredondado para cima). Com uma ampliação, o movimento também é uma ação. O alvo automaticamente tenta se livrar dos efeitos de morosidade no fim cada um dos seus turnos seguintes fazendo uma rolagem de Espírito. Sucesso com velocidade dobra o movimento do alvo (Movimentação padrão e corrida). Com uma ampliação, a personagem também ignora a penalidade de corrida de –2.",
+    "modificadores": [
+      {
+        "nome": "Área (morosidade)",
+        "custo": "+2/+3",
+        "descricao": "Por +2 pontos o poder afeta a todos dentro de um Modelo Médio de Explosão. Por +3 pontos a área de efeito é aumentada para um Modelo Grande de Explosão."
+      },
+      {
+        "nome": "Forte (morosidade)",
+        "custo": "+1",
+        "descricao": "A rolagem de Espírito para se livrar do efeito de morosidade é feita com –2."
+      },
+      {
+        "nome": "Rapidez (velocidade)",
+        "custo": "+2",
+        "descricao": "A penalidade total por Ações Múltiplas em cada turno é reduzida em 2 (pode realizar duas ações sem penalidades ou três ações com –2 em cada)."
+      },
+      {
+        "nome": "Receptores adicionais (velocidade)",
+        "custo": "+1",
+        "descricao": "O poder afeta um novo alvo para cada Ponto de Poder adicional."
+      }
+    ],
+    "tags": [
+      "stage:experiente",
+      "tipo:movimento",
+      "buff",
+      "debuff"
+    ]
+  },
+  {
     "id": "rapidez_referencia",
     "origem": "BASICO",
     "nome": "RAPIDEZ",
@@ -1414,6 +2007,36 @@
     ]
   },
   {
+    "id": "santuario",
+    "origem": "BASICO",
+    "nome": "SANTUARIO",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para santuario",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
+    "id": "simbolo_sagrado",
+    "origem": "BASICO",
+    "nome": "SIMBOLO SAGRADO",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para simbolo_sagrado",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
     "id": "socorro_referencia",
     "origem": "BASICO",
     "nome": "SOCORRO",
@@ -1427,6 +2050,39 @@
     "tags": [
       "referência",
       "ajuda"
+    ]
+  },
+  {
+    "id": "som",
+    "origem": "BASICO",
+    "nome": "SOM/SILÊNCIO",
+    "estagio": "Novato",
+    "pontosDePoder": 1,
+    "distancia": "Astúcia ×5 (som); Astúcia (silêncio)",
+    "duracao": "Instantâneo (som); 5 (silêncio)",
+    "manifestacoes": [
+      "Efeitos mágicos",
+      "uma ondulação no ar",
+      "um sino ou campainha que começa ou para de tocar"
+    ],
+    "descricao": "Som imita qualquer som ou voz conhecidos, emanando de um ponto de origem dentro da Distância e com um volume até o de um grito alto. Se usado como um Desafio, a rolagem de conjuração é resistida com Astúcia. Silêncio faz o contrário, silenciando todos os sons até a altura de um grito alto em um Modelo Grande de Explosão. Isso subtrai 4 de rolagens de Perceber feitas por aqueles na área, bem como para qualquer um tentando ouvir sons vindos de dentro dela. Uma ampliação silencia completamente todo som dentro do modelo, de modo que todas as rolagens de Perceber falham automaticamente.",
+    "modificadores": [
+      {
+        "nome": "Móvel",
+        "custo": "+1",
+        "descricao": "Uma vez conjurada, a área de efeito pode ser movida toda rodada por um número de quadros igual ao dado de perícia arcana da personagem conjuradora."
+      },
+      {
+        "nome": "Mirado",
+        "custo": "+0",
+        "descricao": "Em vez de conjurar silêncio em uma área, é possível mirar em indivíduos dentro da Distância por 1 Ponto de Poder cada. Alvos relutantes resistem com Espírito (–2 em uma ampliação da conjuração)."
+      }
+    ],
+    "tags": [
+      "stage:novato",
+      "tipo:ilusão",
+      "áudio",
+      "utilitário"
     ]
   },
   {
@@ -1545,6 +2201,64 @@
     ]
   },
   {
+    "id": "velocidade",
+    "origem": "BASICO",
+    "nome": "MOROSIDADE/VELOCIDADE",
+    "estagio": "Experiente",
+    "pontosDePoder": 2,
+    "distancia": "Astúcia",
+    "duracao": "Instantâneo (morosidade); 5 (velocidade)",
+    "manifestacoes": [
+      "Desacelerar o tempo",
+      "movimento borrado",
+      "uma faixa escorregadia de óleo ou gelo"
+    ],
+    "descricao": "Morosidade diminui a celeridade e coordenação, enquanto velocidade as aumenta. Morosidade diminui à metade o movimento total do alvo em cada rodada (arredondado para cima). Com uma ampliação, o movimento também é uma ação. O alvo automaticamente tenta se livrar dos efeitos de morosidade no fim cada um dos seus turnos seguintes fazendo uma rolagem de Espírito. Sucesso com velocidade dobra o movimento do alvo (Movimentação padrão e corrida). Com uma ampliação, a personagem também ignora a penalidade de corrida de –2.",
+    "modificadores": [
+      {
+        "nome": "Área (morosidade)",
+        "custo": "+2/+3",
+        "descricao": "Por +2 pontos o poder afeta a todos dentro de um Modelo Médio de Explosão. Por +3 pontos a área de efeito é aumentada para um Modelo Grande de Explosão."
+      },
+      {
+        "nome": "Forte (morosidade)",
+        "custo": "+1",
+        "descricao": "A rolagem de Espírito para se livrar do efeito de morosidade é feita com –2."
+      },
+      {
+        "nome": "Rapidez (velocidade)",
+        "custo": "+2",
+        "descricao": "A penalidade total por Ações Múltiplas em cada turno é reduzida em 2 (pode realizar duas ações sem penalidades ou três ações com –2 em cada)."
+      },
+      {
+        "nome": "Receptores adicionais (velocidade)",
+        "custo": "+1",
+        "descricao": "O poder afeta um novo alvo para cada Ponto de Poder adicional."
+      }
+    ],
+    "tags": [
+      "stage:experiente",
+      "tipo:movimento",
+      "buff",
+      "debuff"
+    ]
+  },
+  {
+    "id": "vendaval",
+    "origem": "BASICO",
+    "nome": "VENDAVAL",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "TBD",
+    "duracao": "TBD",
+    "manifestacoes": [],
+    "descricao": "Descrição pendente para vendaval",
+    "modificadores": [],
+    "tags": [
+      "novo"
+    ]
+  },
+  {
     "id": "visao_distante",
     "origem": "BASICO",
     "nome": "VISÃO DISTANTE",
@@ -1570,6 +2284,34 @@
       "tipo:utilitário",
       "percepção",
       "exploração"
+    ]
+  },
+  {
+    "id": "visao_no_escuro",
+    "origem": "BASICO",
+    "nome": "VISÃO SOMBRIA",
+    "estagio": "Novato",
+    "pontosDePoder": 1,
+    "distancia": "Astúcia",
+    "duracao": "Uma hora",
+    "manifestacoes": [
+      "Olhos brilhantes",
+      "pupilas dilatadas",
+      "sonar"
+    ],
+    "descricao": "Visão Sombria permite que uma pessoa enxergue no escuro. Com um sucesso, ignora até 4 pontos de penalidades por iluminação. Com uma ampliação, ignora até seis pontos e pode enxergar quando escuro como breu.",
+    "modificadores": [
+      {
+        "nome": "Receptores adicionais",
+        "custo": "+1",
+        "descricao": "O poder afeta um novo alvo para cada Ponto de Poder adicional."
+      }
+    ],
+    "tags": [
+      "stage:novato",
+      "tipo:utilitário",
+      "percepção",
+      "visão"
     ]
   },
   {
