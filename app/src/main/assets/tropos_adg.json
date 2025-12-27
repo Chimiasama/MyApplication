@@ -55,11 +55,11 @@
   },
   {
     "id": "tropo_mon",
-    "nome": "Mon (Domador)",
+    "nome": "Mon (Treinador)",
     "categoria": "TROPO",
     "origem": "ARTE_DA_GUERRA",
-    "tecnicas_iniciais": 0,
-    "descricao": "Vinculado a um animal especial (Mon). Ganha Técnica Forma Bestial (apenas do Mon). Mon é Carta Selvagem. Sentidos compartilhados.",
-    "ganha_ao_comprar": ["senhor_das_feras"]
+    "tecnicas_iniciais": 1,
+    "descricao": "Especialista em capturar e treinar espíritos da natureza (Mons). Começa com um companheiro Mon Novato.",
+    "ganha_ao_comprar": ["treinamento_mon", "vinculo_mon"]
   }
 ]

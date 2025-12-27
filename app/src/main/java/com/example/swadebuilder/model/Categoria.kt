@@ -11,6 +11,7 @@ import kotlinx.serialization.Serializable
 enum class Categoria {
     @SerialName("ANTECEDENTE")   ANTECEDENTE,
     @SerialName("COMBATE")       COMBATE,
+    @SerialName("ESTILO_MARCIAL") ESTILO_MARCIAL,
     @SerialName("LIDERANCA")     LIDERANCA,
     @SerialName("PODER")         PODER,
     @SerialName("PROFISSIONAL")  PROFISSIONAL,

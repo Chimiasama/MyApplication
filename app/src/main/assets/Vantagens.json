@@ -7485,5 +7485,74 @@
     "origem": "WISEGUYS",
     "requisitos": { "estagio": "Experiente", "vantagens_previas": ["conexao_mafia"], "observacoes": "Deve ser homem e de descendência italiana (na Cosa Nostra)." },
     "descricao": "Membro oficial da Família. Intocável por membros de baixo escalão. +2 em Intimidar contra outros criminosos. Ganha +2 de Riqueza inicial ou renda."
+  },
+  {
+    "id": "estilo_bebado",
+    "nome": "ESTILO DO BÊBADO",
+    "categoria": "ESTILO_MARCIAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "vantagens_previas": ["artista_marcial"],
+      "pericias": { "Lutar": 8 }
+    },
+    "descricao": "O lutador balança e trança as pernas. Recebe +1 em Aparar. Se o oponente falhar em um ataque corpo a corpo, o lutador ganha +2 no próximo ataque contra ele."
+  },
+  {
+    "id": "estilo_tigre",
+    "nome": "ESTILO DO TIGRE",
+    "categoria": "ESTILO_MARCIAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "vantagens_previas": ["artista_marcial"],
+      "atributos": { "Força": 8 }
+    },
+    "descricao": "Ataques agressivos e poderosos. +2 de Dano em ataques desarmados se o lutador se moveu pelo menos 2 quadros em direção ao alvo antes de atacar."
+  },
+  {
+    "id": "estilo_garca",
+    "nome": "ESTILO DA GARÇA BRANCA",
+    "categoria": "ESTILO_MARCIAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "vantagens_previas": ["artista_marcial"],
+      "pericias": { "Lutar": 8 }
+    },
+    "descricao": "Foco em defesa e contra-ataque. Ignora até 2 pontos de penalidade por Ações Múltiplas se uma delas for Defender ou usar a manobra Defesa Total."
+  },
+  {
+    "id": "estilo_mantis",
+    "nome": "ESTILO DO LOUVA-A-DEUS",
+    "categoria": "ESTILO_MARCIAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "vantagens_previas": ["artista_marcial"]
+    },
+    "descricao": "+2 em testes de Agarrar. Se mantiver um oponente agarrado, causa For+d6 de dano automático no início do turno dele."
+  },
+  {
+    "id": "treinamento_mon",
+    "nome": "TREINAMENTO DE MON",
+    "categoria": "PROFISSIONAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": { "Espirito": 6 }
+    },
+    "descricao": "Concede um companheiro animal/espírito (Extra) que evolui com o herói. Se o Mon morrer, o herói sofre Fadiga até conseguir outro."
+  },
+  {
+    "id": "vinculo_mon",
+    "nome": "VÍNCULO MON",
+    "categoria": "PODER",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "vantagens_previas": ["treinamento_mon"]
+    },
+    "descricao": "O herói pode gastar seus próprios Benes nas rolagens do Mon. Podem se comunicar telepaticamente em curto alcance."
   }
 ]

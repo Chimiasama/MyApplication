@@ -6369,5 +6369,24 @@
         "observacoes": "Conforto luxuoso. Divisória de vidro."
       }
     ]
+  },
+  {
+    "tipo": "Arsenal Oriental",
+    "subtipo": "Lâminas",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      { "nome": "Katana", "dano": "For+d6+1", "pa": "1", "peso": "3", "custo": 300, "forcaMin": 6, "observacoes": "Duas Mãos. Perfurante." },
+      { "nome": "Wakizashi", "dano": "For+d6", "pa": "1", "peso": "2", "custo": 200, "observacoes": "Pode ser usada com Katana (Daisho)." },
+      { "nome": "Naginata", "dano": "For+d8", "pa": "1", "peso": "6", "custo": 400, "forcaMin": 6, "observacoes": "Alcance 1. Duas Mãos. Aparar +1." }
+    ]
+  },
+  {
+    "tipo": "Arsenal Oriental",
+    "subtipo": "Distância",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      { "nome": "Shuriken (3)", "dano": "For+d3", "distancia": "3/6/12", "peso": "0.5", "custo": 10, "observacoes": "CdT 1. Não acumula penalidade de saque rápido." },
+      { "nome": "Yumi (Arco Longo)", "dano": "2d6", "distancia": "15/30/60", "peso": "3", "custo": 250, "forcaMin": 8, "observacoes": "Requer Força d8 para puxar." }
+    ]
   }
 ]
