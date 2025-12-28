@@ -33,6 +33,7 @@ import com.example.swadebuilder.model.SnapshotSelecoes
 import com.example.swadebuilder.model.SnapshotSupers
 import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Tropo
+import com.example.swadebuilder.model.GlobalData
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.ui.MainSection
@@ -2030,9 +2031,11 @@ class CriadorState {
         }
 
         novoTropo.ganhaEquipamentos.forEach { eqNome ->
-            val item = com.example.swadebuilder.model.GlobalData.listaEquipamentos.firstOrNull {
-                it.nome.equals(eqNome, ignoreCase = true)
-            }
+            // Busca o item em todas as categorias de equipamentos
+            val item = GlobalData.listaEquipamentos
+                .flatMap { it.itens }
+                .firstOrNull { it.nome.equals(eqNome, ignoreCase = true) }
+
             if (item != null) {
                 equipamentosComprados.add(item)
             }
