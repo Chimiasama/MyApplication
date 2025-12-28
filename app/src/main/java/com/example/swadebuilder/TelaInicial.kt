@@ -363,7 +363,13 @@ fun TelaInicial(
                         onToggle = { expandedBasicRules = !expandedBasicRules }
                     ) {
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
-                        SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
+                        if (!optCompendioArteDaGuerra) {
+                            SimpleCheckRow(
+                                "Mais Pontos de Perícia",
+                                "Customização avançada (Regra da Casa).",
+                                optMaisPontosPericias
+                            ) { optMaisPontosPericias = it }
+                        }
                         if (!optSuperPoderes) {
                             SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) { optMultiAntecedenteArcano = it }
                         }

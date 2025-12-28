@@ -1171,7 +1171,11 @@ class CriadorState {
 
     private val totalSpPool: Int
         get() {
-            val base = if (maisPontosPericias) BASE_SP_POOL else BASE_SP_POOL - 3
+            val base = if (compendioArteDaGuerraAtivo) {
+                12 + if (ancestralidade.keyify() == "HUMANOS") 3 else 0
+            } else {
+                if (maisPontosPericias) BASE_SP_POOL else BASE_SP_POOL - 3
+            }
             return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp)
                 .coerceAtLeast(0)
         }
@@ -1192,7 +1196,7 @@ class CriadorState {
         val bonusFromChiEdges = vantagensSelecionadas.count { it.categoria == Categoria.CHI }
         val bonusFromTropo = if (compendioArteDaGuerraAtivo) tecnicasIniciaisFromTropo else 0
 
-        (espiritoRaw / 2 - racialPenalty + bonusFromChiEdges + bonusFromTropo).coerceAtLeast(0)
+        (2 + espiritoRaw / 2 - racialPenalty + bonusFromChiEdges + bonusFromTropo).coerceAtLeast(0)
     }
 
     var nomePersonagem by mutableStateOf("")
@@ -1631,6 +1635,8 @@ class CriadorState {
     }
 
     fun periciaCapRaw(per: Pericia): Int {
+        if (compendioArteDaGuerraAtivo) return 20
+
         val startRaw = periciaStartRaw(ancestralidade, per)
 
         val baseCap = if (startRaw >= 6) 13 else 12
@@ -2020,6 +2026,15 @@ class CriadorState {
             if (vantagensSelecionadas.none { it.id == vant.id }) {
                 vantagensSelecionadas += vant
                 vantagensAutomaticasDoTropo += vant.id
+            }
+        }
+
+        novoTropo.ganhaEquipamentos.forEach { eqNome ->
+            val item = com.example.swadebuilder.model.GlobalData.listaEquipamentos.firstOrNull {
+                it.nome.equals(eqNome, ignoreCase = true)
+            }
+            if (item != null) {
+                equipamentosComprados.add(item)
             }
         }
 

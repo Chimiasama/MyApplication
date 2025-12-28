@@ -13,5 +13,7 @@ data class Tropo(
     val tecnicasIniciais: Int = 0,
     val descricao: String = "",
     @SerialName("ganha_ao_comprar")
-    val ganhaAoComprar: List<String> = emptyList()
+    val ganhaAoComprar: List<String> = emptyList(),
+    @SerialName("ganha_equipamentos")
+    val ganhaEquipamentos: List<String> = emptyList()
 )
