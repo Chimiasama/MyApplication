@@ -213,7 +213,12 @@ fun PericiasContent(
                     )
 
                     val isIdioma = state.isIdiomaPericia(per)
-                    val rawName = if (isIdioma) "Idiomas" else per.nome.removePrefix("*").trim()
+                    val isJutsu = state.isJutsuPericia(per)
+                    val rawName = when {
+                        isIdioma -> "Idiomas"
+                        isJutsu -> "Lutar"
+                        else -> per.nome.removePrefix("*").trim()
+                    }
                     val descKey = "$rawName (${per.atributo})".uppercase().semAcentos()
 
                     val descricao = if (per.nome.equals("Alquimia", ignoreCase = true)) {
@@ -247,7 +252,11 @@ fun PericiasContent(
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = buildAnnotatedString {
-                                        val displayName = if (isIdioma) "Idiomas" else per.nome
+                                        val displayName = when {
+                                            isIdioma -> "Idiomas"
+                                            isJutsu -> "Jutsu"
+                                            else -> per.nome
+                                        }
                                         if (per.basica) {
                                             withStyle(
                                                 SpanStyle(
@@ -285,7 +294,7 @@ fun PericiasContent(
 
                             // PROMPT 5: Edit Note Button
                             // Correction: Show edit button ONLY if optional rule is active
-                            if (isIdioma && regra.displayRaw > 0) {
+                            if ((isIdioma || isJutsu) && regra.displayRaw > 0) {
                                 IconButton(
                                     onClick = {
                                         idiomaTarget = per
@@ -299,7 +308,7 @@ fun PericiasContent(
                                 ) {
                                     Icon(
                                         Icons.Default.Edit,
-                                        contentDescription = "Editar idioma",
+                                        contentDescription = if (isJutsu) "Editar Jutsu" else "Editar idioma",
                                         modifier = Modifier.size(16.dp),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -333,6 +342,9 @@ fun PericiasContent(
                                     }
                                     if (isIdioma) {
                                         state.syncIdiomaSlots()
+                                    }
+                                    if (isJutsu) {
+                                        state.syncJutsuSlots()
                                     }
                                     onUserFeedback()
                                 },
@@ -372,7 +384,7 @@ fun PericiasContent(
                                         return@IconButton
                                     }
 
-                                    if (isIdioma && state.rawTotal(per) == 0) {
+                                    if ((isIdioma || isJutsu) && state.rawTotal(per) == 0) {
                                         idiomaTarget = per
                                         idiomaText = ""
                                         idiomaPendingCost = regrasAtuais.cost
@@ -385,9 +397,12 @@ fun PericiasContent(
                                     if (isIdioma) {
                                         state.syncIdiomaSlots()
                                     }
+                                    if (isJutsu) {
+                                        state.syncJutsuSlots()
+                                    }
                                     onUserFeedback()
 
-                                    if (!isIdioma && state.usarEspecializacoesDePericia) {
+                                    if (!isIdioma && !isJutsu && state.usarEspecializacoesDePericia) {
                                         val esp = state.especializacoesPorPericia[per.nome]
                                         if (esp?.principal == null) {
                                             specTarget = per
@@ -411,7 +426,7 @@ fun PericiasContent(
 
                             val jaTemPrincipal =
                                 state.especializacoesPorPericia[per.nome]?.principal != null
-                            if (!isIdioma && state.usarEspecializacoesDePericia && jaTemPrincipal) {
+                            if (!isIdioma && !isJutsu && state.usarEspecializacoesDePericia && jaTemPrincipal) {
                                 TextButton(
                                     onClick = {
                                         specTarget = per
@@ -453,7 +468,7 @@ fun PericiasContent(
                             }
                         }
 
-                        if (!isIdioma) {
+                        if (!isIdioma && !isJutsu) {
                             val espDto: EspecializacoesDto? = state.especializacoesPorPericia[per.nome]
                             val principal = espDto?.principal
                             val extras: List<String> = when {
@@ -531,15 +546,20 @@ fun PericiasContent(
                 idiomaEditMode = false
                 idiomaTarget = null
             },
-            title = { Text(if (idiomaEditMode) "Editar idioma" else "Selecionar idioma") },
+            title = {
+                val isJutsu = idiomaTarget?.let { state.isJutsuPericia(it) } == true
+                val label = if (isJutsu) "Jutsu" else "idioma"
+                Text(if (idiomaEditMode) "Editar $label" else "Selecionar $label")
+            },
             text = {
+                val isJutsu = idiomaTarget?.let { state.isJutsuPericia(it) } == true
                 Column {
-                    Text("Perícia: Idiomas")
+                    Text("Perícia: ${if (isJutsu) "Jutsu" else "Idiomas"}")
                     Spacer(Modifier.width(8.dp))
                     OutlinedTextField(
                         value = idiomaText,
                         onValueChange = { idiomaText = it },
-                        label = { Text("Ex: Espanhol, Língua de Sinais, etc.") },
+                        label = { Text(if (isJutsu) "Ex: Tigre, Dragão, etc." else "Ex: Espanhol, Língua de Sinais, etc.") },
                         singleLine = true
                     )
                 }
@@ -548,11 +568,13 @@ fun PericiasContent(
                 TextButton(
                     onClick = {
                         val per = idiomaTarget!!
-                        val label = idiomaText.trim().ifBlank { state.idiomaDefaultLabel(per) }
+                        val isJutsu = state.isJutsuPericia(per)
+                        val defaultLabel = if (isJutsu) state.jutsuDefaultLabel(per) else state.idiomaDefaultLabel(per)
+                        val label = idiomaText.trim().ifBlank { defaultLabel }
                         state.notasPericia[per.nome] = label
                         if (!idiomaEditMode) {
                             state.increasePericiaFromAdvancement(per, idiomaPendingCost)
-                            state.syncIdiomaSlots()
+                            if (isJutsu) state.syncJutsuSlots() else state.syncIdiomaSlots()
                             onUserFeedback()
                         }
                         showIdiomaDialog = false
