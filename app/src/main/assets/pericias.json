@@ -23,7 +23,6 @@
     { "nome": "Jogar",              "atributo": "Astúcia",   "basica": false },
     { "nome": "Ladinagem",          "atributo": "Agilidade", "basica": false },
     { "nome": "Lutar",              "atributo": "Agilidade", "basica": false },
-    { "nome": "Jutsu",              "atributo": "Agilidade", "basica": false },
     { "nome": "Navegar",            "atributo": "Agilidade", "basica": false },
     { "nome": "Ocultismo",          "atributo": "Astúcia",   "basica": false },
     { "nome": "Perceber",           "atributo": "Astúcia",   "basica": true  },
