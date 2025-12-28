@@ -145,33 +145,42 @@ fun TelaInicial(
         val description: String,
         val icon: ImageVector,
         val isSelected: Boolean,
+        val enabled: Boolean,
         val onToggle: () -> Unit
     )
+
+    val isAnyBookSelected = optCompendioFantasia || optCompendioSciFi || optCompendioHorror || optSuperPoderes ||
+            optCompendioBuscatrilha || optCompendioDeadlands || optCompendioCrystalHeart ||
+            optCompendioArteDaGuerra || optCompendioCidadeSolVapor || optCompendioWiseguys
 
     val officialModules = listOf(
         ModuleItemData(
             "Compêndio de Fantasia",
             "Raças, itens mágicos e regras de fantasia.",
             Icons.Default.AutoAwesome,
-            optCompendioFantasia
+            optCompendioFantasia,
+            !isAnyBookSelected || optCompendioFantasia
         ) { optCompendioFantasia = !optCompendioFantasia },
         ModuleItemData(
             "Compêndio de Ficção",
             "Tecnologia avançada, naves e cibernéticos.",
             Icons.Default.RocketLaunch,
-            optCompendioSciFi
+            optCompendioSciFi,
+            !isAnyBookSelected || optCompendioSciFi
         ) { optCompendioSciFi = !optCompendioSciFi },
         ModuleItemData(
             "Compêndio de Horror",
             "Climas sombrios e criaturas aterrorizantes.",
             Icons.Default.MoodBad,
-            optCompendioHorror
+            optCompendioHorror,
+            !isAnyBookSelected || optCompendioHorror
         ) { optCompendioHorror = !optCompendioHorror },
         ModuleItemData(
             "Superpoderes",
             "Seja um superherói dos quadrinhos!",
             Icons.Default.Bolt,
-            optSuperPoderes
+            optSuperPoderes,
+            !isAnyBookSelected || optSuperPoderes
         ) { optSuperPoderes = !optSuperPoderes }
     )
 
@@ -180,37 +189,43 @@ fun TelaInicial(
             androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label),
             if (isFullEdition) "Conteúdo oficial de Mundo Ancestral (Classes, Raças)." else "Cenário ${androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label)} e material temático.",
             Icons.Default.Map,
-            optCompendioBuscatrilha
+            optCompendioBuscatrilha,
+            !isAnyBookSelected || optCompendioBuscatrilha
         ) { optCompendioBuscatrilha = !optCompendioBuscatrilha },
         ModuleItemData(
             "Deadlands".toEditionDisplayName(),
             "Pistoleiros, revividos e o horror do Oeste.",
             Icons.Default.Shield,
-            optCompendioDeadlands
+            optCompendioDeadlands,
+            !isAnyBookSelected || optCompendioDeadlands
         ) { optCompendioDeadlands = !optCompendioDeadlands },
         ModuleItemData(
             "Crystal Heart".toEditionDisplayName(),
             if (isFullEdition) "Troque seu coração por um cristal mágico." else "Troque seu coração por uma pedra mágica.",
             Icons.Default.Favorite,
-            optCompendioCrystalHeart
+            optCompendioCrystalHeart,
+            !isAnyBookSelected || optCompendioCrystalHeart
         ) { optCompendioCrystalHeart = !optCompendioCrystalHeart },
         ModuleItemData(
             "Arte da Guerra: Nova Era".toEditionDisplayName(),
             "Ativa Chi, Tropos e equipamentos orientais.",
             Icons.Filled.SportsMartialArts,
-            optCompendioArteDaGuerra
+            optCompendioArteDaGuerra,
+            !isAnyBookSelected || optCompendioArteDaGuerra
         ) { optCompendioArteDaGuerra = !optCompendioArteDaGuerra },
         ModuleItemData(
             "A Cidade do Sol a Vapor".toEditionDisplayName(),
             "Estímulos vitorianos, vapor e tecnomagia.",
             Icons.Default.Build,
-            optCompendioCidadeSolVapor
+            optCompendioCidadeSolVapor,
+            !isAnyBookSelected || optCompendioCidadeSolVapor
         ) { optCompendioCidadeSolVapor = !optCompendioCidadeSolVapor },
         ModuleItemData(
             "Wiseguys".toEditionDisplayName(),
             "Crime organizado moderno, conexões e esquemas.",
             Icons.Default.Groups,
-            optCompendioWiseguys
+            optCompendioWiseguys,
+            !isAnyBookSelected || optCompendioWiseguys
         ) { optCompendioWiseguys = !optCompendioWiseguys }
     )
 
@@ -314,6 +329,7 @@ fun TelaInicial(
                     description = module.description,
                     icon = module.icon,
                     isSelected = module.isSelected,
+                    enabled = module.enabled,
                     onToggle = module.onToggle
                 )
             }
@@ -327,6 +343,7 @@ fun TelaInicial(
                     description = module.description,
                     icon = module.icon,
                     isSelected = module.isSelected,
+                    enabled = module.enabled,
                     onToggle = module.onToggle
                 )
             }
@@ -347,12 +364,16 @@ fun TelaInicial(
                     ) {
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
                         SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
-                        SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) { optMultiAntecedenteArcano = it }
+                        if (!optSuperPoderes) {
+                            SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) { optMultiAntecedenteArcano = it }
+                        }
                         SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
                         SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
                         SimpleCheckRow("Múltiplos Idiomas", "Personagem inicia poliglota.", optMultiplosIdiomas) { optMultiplosIdiomas = it }
                         SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
-                        SimpleCheckRow("Sem Pontos de Poder", "Conjuradores não usam PP.", optSemPontosPoder) { optSemPontosPoder = it }
+                        if (!optSuperPoderes) {
+                            SimpleCheckRow("Sem Pontos de Poder", "Conjuradores não usam PP.", optSemPontosPoder) { optSemPontosPoder = it }
+                        }
                     }
 
                     // Regras Horror

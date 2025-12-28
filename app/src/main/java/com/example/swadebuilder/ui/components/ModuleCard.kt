@@ -35,19 +35,23 @@ fun ModuleCard(
     description: String,
     icon: ImageVector,
     isSelected: Boolean,
+    enabled: Boolean = true,
     onToggle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val scale by animateFloatAsState(targetValue = if (isSelected) 1.05f else 1.0f, label = "scale")
-    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
+    val scale by animateFloatAsState(targetValue = if (isSelected) 1.05f else if (enabled) 1.0f else 0.95f, label = "scale")
+    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else if (enabled) MaterialTheme.colorScheme.outlineVariant else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
     val borderWidth = if (isSelected) 2.dp else 1.dp
     val containerColor = if (isSelected)
         MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f)
-    else
+    else if (enabled)
         MaterialTheme.colorScheme.surface
+    else
+        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
 
     OutlinedCard(
         onClick = onToggle,
+        enabled = enabled,
         modifier = modifier
             .scale(scale)
             .fillMaxWidth()
@@ -66,14 +70,14 @@ fun ModuleCard(
                     imageVector = icon,
                     contentDescription = null,
                     modifier = Modifier.size(40.dp),
-                    tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = if (isSelected) MaterialTheme.colorScheme.primary else if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Center
@@ -82,7 +86,7 @@ fun ModuleCard(
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Center
