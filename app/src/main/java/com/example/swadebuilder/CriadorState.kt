@@ -560,14 +560,104 @@ class CriadorState {
     private val idiomaSlotRegex = Regex("^Idiomas\\s+(\\d+)$", RegexOption.IGNORE_CASE)
     private val idiomasExtras = mutableStateListOf<Pericia>()
 
+    // --- LOGICA PARA JUTSU (Arte da Guerra) ---
+    private val jutsuSlotRegex = Regex("^Lutar\\s+(\\d+)$", RegexOption.IGNORE_CASE)
+    private val jutsuExtras = mutableStateListOf<Pericia>()
+
+    fun isJutsuPericia(per: Pericia): Boolean {
+        if (!compendioArteDaGuerraAtivo) return false
+        val key = per.nome.keyify()
+        return key == "LUTAR" || jutsuSlotRegex.matches(per.nome)
+    }
+
+    private fun jutsuSlotIndex(per: Pericia): Int? {
+        return if (per.nome.equals("Lutar", ignoreCase = true)) {
+            1
+        } else {
+            jutsuSlotRegex.find(per.nome)?.groupValues?.getOrNull(1)?.toIntOrNull()
+        }
+    }
+
+    private fun jutsuSlotIndexFromName(name: String): Int? {
+        return if (name.equals("Lutar", ignoreCase = true)) {
+            1
+        } else {
+            jutsuSlotRegex.find(name)?.groupValues?.getOrNull(1)?.toIntOrNull()
+        }
+    }
+
+    fun jutsuDefaultLabel(per: Pericia): String {
+        val idx = jutsuSlotIndex(per) ?: 1
+        return "Jutsu $idx"
+    }
+
+    private fun jutsuSlotName(index: Int): String = "Lutar $index"
+
+    private fun jutsuBasePericia(): Pericia? =
+        listaPericias.firstOrNull { it.nome.keyify() == "LUTAR" }
+
+    private fun jutsuSlotsOrdenados(): List<Pericia> {
+        val base = jutsuBasePericia() ?: return emptyList()
+        return listOf(base) + jutsuExtras.sortedBy { jutsuSlotIndex(it) ?: Int.MAX_VALUE }
+    }
+
+    private fun ensureJutsuSlotCount(totalSlots: Int) {
+        val base = jutsuBasePericia() ?: return
+        val desired = totalSlots.coerceAtLeast(1)
+        while (jutsuExtras.size < desired - 1) {
+            val nextIndex = (jutsuExtras.mapNotNull { jutsuSlotIndex(it) }.maxOrNull() ?: 1) + 1
+            val novo = Pericia(nome = jutsuSlotName(nextIndex), atributo = base.atributo, basica = base.basica)
+            jutsuExtras.add(novo)
+            ensurePericiaEntry(novo)
+        }
+    }
+
+    private fun trimJutsuSlots(desiredSlots: Int) {
+        val desired = desiredSlots.coerceAtLeast(1)
+        while (jutsuExtras.size > desired - 1) {
+            val ultimo = jutsuExtras.maxByOrNull { jutsuSlotIndex(it) ?: 0 } ?: break
+            if (rawTotal(ultimo) > 0 || compIncsPorPericia.getValue(ultimo) > 0) break
+            jutsuExtras.remove(ultimo)
+            baseIncsPorPericia.remove(ultimo)
+            compIncsPorPericia.remove(ultimo)
+            compCostStackPorPericia.remove(ultimo)
+            spCostStackPorPericia.remove(ultimo)
+            notasPericia.remove(ultimo.nome)
+        }
+    }
+
+    private fun ensureJutsuSlotsFromSnapshot(keys: Set<String>) {
+        val maxIndex = keys.mapNotNull { jutsuSlotIndexFromName(it) }.maxOrNull() ?: 1
+        if (maxIndex > 1) {
+            ensureJutsuSlotCount(maxIndex)
+        }
+    }
+
+    fun syncJutsuSlots() {
+        if (!compendioArteDaGuerraAtivo) return
+        val base = jutsuBasePericia() ?: return
+        ensurePericiaEntry(base)
+        val jutsusComprados = jutsuSlotsOrdenados().count { rawTotal(it) > 0 }
+        val desiredSlots = if (jutsusComprados > 0) jutsusComprados + 1 else 1
+        ensureJutsuSlotCount(desiredSlots)
+        trimJutsuSlots(desiredSlots)
+    }
+
     fun periciasComIdiomas(): List<Pericia> {
         val idiomaBase = idiomaBasePericia() ?: return listaPericias
         val extrasOrdenados = idiomasExtras.sortedBy { idiomaSlotIndex(it) ?: Int.MAX_VALUE }
+
+        val jutsuBase = jutsuBasePericia()
+        val jutsuExtrasOrdenados = jutsuExtras.sortedBy { jutsuSlotIndex(it) ?: Int.MAX_VALUE }
+
         return buildList {
             listaPericias.forEach { per ->
                 add(per)
                 if (per == idiomaBase) {
                     addAll(extrasOrdenados)
+                }
+                if (compendioArteDaGuerraAtivo && per == jutsuBase) {
+                    addAll(jutsuExtrasOrdenados)
                 }
             }
         }
@@ -1503,6 +1593,9 @@ class CriadorState {
         if (isIdiomaPericia(per)) {
             syncIdiomaSlots()
         }
+        if (isJutsuPericia(per)) {
+            syncJutsuSlots()
+        }
     }
 
     private fun atributoBaseRacial(a: String): Int {
@@ -2044,6 +2137,12 @@ class CriadorState {
             }
             syncIdiomaSlots()
         }
+        if (isJutsuPericia(per)) {
+            if (notasPericia[per.nome].isNullOrBlank()) {
+                notasPericia[per.nome] = jutsuDefaultLabel(per)
+            }
+            syncJutsuSlots()
+        }
     }
 
     fun baseCreationComplete(): Boolean = pontosAtributo == 0 &&
@@ -2408,6 +2507,9 @@ class CriadorState {
 
         especializacoesPorPericia.clear()
         ensureIdiomaSlotsFromSnapshot(snapshot.pericias.baseIncsPorPericia.keys)
+        if (snapshot.flags.compendioArteDaGuerraAtivo) {
+            ensureJutsuSlotsFromSnapshot(snapshot.pericias.baseIncsPorPericia.keys)
+        }
         periciasComIdiomas().forEach { per ->
             baseIncsPorPericia[per] = snapshot.pericias.baseIncsPorPericia[per.nome] ?: 0
             compIncsPorPericia[per] = snapshot.pericias.compIncsPorPericia[per.nome] ?: 0
@@ -2429,6 +2531,7 @@ class CriadorState {
         notasPericia.clear()
         notasPericia.putAll(snapshot.pericias.notasPericia ?: emptyMap())
         syncIdiomaSlots()
+        syncJutsuSlots()
 
 
         vantagensSelecionadas.clear()
