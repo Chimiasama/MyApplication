@@ -13,6 +13,7 @@ import com.example.swadebuilder.listaAncestralidadesJson
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.listaCoracoesCrystal
+import com.example.swadebuilder.listaEquipamentos
 import com.example.swadebuilder.listaMonstroTemplates
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaTropos
@@ -53,6 +54,8 @@ object DataLoader {
             assets.readJsonList<EquipamentoCategoria>("equipamentos_crystal.json")
         }.getOrElse { emptyList() }
         val allEquip = baseEquip + crystalEquip
+
+        listaEquipamentos = allEquip.flatMap { it.itens }
 
         val equipamentoCategorias = deduplicarEquipamentoCategorias(
             allEquip.filter { cat ->
