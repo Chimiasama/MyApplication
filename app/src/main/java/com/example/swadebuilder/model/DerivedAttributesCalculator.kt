@@ -10,12 +10,24 @@ import com.example.swadebuilder.util.keyify
 object DerivedAttributesCalculator {
 
     fun valorAparar(state: CriadorState): Int {
-        val perLutar = com.example.swadebuilder.mapaPericias[Constants.SKILL_FIGHTING]
-        val perJutsu = com.example.swadebuilder.mapaPericias[Constants.SKILL_JUTSU]
-        val lutarRaw = perLutar?.let { state.rawTotalComSupers(it) } ?: 0
-        val jutsuRaw = perJutsu?.let { state.rawTotalComSupers(it) } ?: 0
-        val melhorLuta = maxOf(lutarRaw, jutsuRaw)
-        val base     = 2 + (melhorLuta / 2)
+        // PROMPT 5: Jutsu logic
+        // Find max Fighting value among all "Lutar" variants (Base + Jutsu extras)
+        // If Arte da Guerra is active, isJutsuPericia covers Lutar + Jutsu X.
+        // If not, it just finds Lutar.
+
+        // Use periciasExpandidas (periciasComIdiomas) to iterate over all skills including dynamic ones
+        // But periciasComIdiomas returns a List<Pericia>. We just need to check all of them.
+
+        // Wait, periciasComIdiomas constructs the list dynamically.
+        // state.periciasComIdiomas() will contain "Lutar", "Jutsu 2", etc. if active.
+
+        val fightingSkills = state.periciasComIdiomas().filter {
+            state.isJutsuPericia(it) || it.nome.keyify() == Constants.SKILL_FIGHTING
+        }
+
+        val maxFightingRaw = fightingSkills.maxOfOrNull { state.rawTotalComSupers(it) } ?: 0
+
+        val base = 2 + (maxFightingRaw / 2)
 
         val bloquearBonus =
             if (state.vantagensSelecionadas.any { it.nome.keyify() == Constants.EDGE_BLOCK.keyify() }) 1 else 0

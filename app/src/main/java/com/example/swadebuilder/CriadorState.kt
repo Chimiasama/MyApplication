@@ -560,14 +560,59 @@ class CriadorState {
     private val idiomaSlotRegex = Regex("^Idiomas\\s+(\\d+)$", RegexOption.IGNORE_CASE)
     private val idiomasExtras = mutableStateListOf<Pericia>()
 
+    // PROMPT 5: Jutsu Skill Logic (Arte da Guerra)
+    // Jutsu works like Idiomas: "Lutar" is the base skill, but displayed as "Jutsu".
+    // We allow multiple "Jutsu" slots (e.g. "Jutsu 2", "Jutsu 3") which map to "Lutar" attribute.
+    private val jutsuSlotRegex = Regex("^Jutsu\\s+(\\d+)$", RegexOption.IGNORE_CASE)
+    private val jutsuExtras = mutableStateListOf<Pericia>()
+
     fun periciasComIdiomas(): List<Pericia> {
-        val idiomaBase = idiomaBasePericia() ?: return listaPericias
+        val idiomaBase = idiomaBasePericia() ?: return periciasComJutsu() // fallback if no idioms
         val extrasOrdenados = idiomasExtras.sortedBy { idiomaSlotIndex(it) ?: Int.MAX_VALUE }
-        return buildList {
+
+        // Combine base list + idioms first
+        val listWithIdioms = buildList {
             listaPericias.forEach { per ->
                 add(per)
                 if (per == idiomaBase) {
                     addAll(extrasOrdenados)
+                }
+            }
+        }
+
+        // Then inject Jutsu extras
+        // Base skill is "Lutar". If Arte da Guerra is active, we treat "Lutar" as "Jutsu".
+        // The extras should appear after "Lutar".
+        val lutarBase = listWithIdioms.firstOrNull { it.nome.equals("LUTAR", ignoreCase = true) }
+
+        return if (lutarBase != null && compendioArteDaGuerraAtivo) {
+            val jutsuExtrasOrdenados = jutsuExtras.sortedBy { jutsuSlotIndex(it) ?: Int.MAX_VALUE }
+            buildList {
+                listWithIdioms.forEach { per ->
+                    add(per)
+                    if (per == lutarBase) {
+                        addAll(jutsuExtrasOrdenados)
+                    }
+                }
+            }
+        } else {
+            listWithIdioms
+        }
+    }
+
+    // Helper used above if Idiomas base is missing (unlikely but safe)
+    private fun periciasComJutsu(): List<Pericia> {
+        val lutarBase = listaPericias.firstOrNull { it.nome.equals("LUTAR", ignoreCase = true) }
+            ?: return listaPericias
+
+        if (!compendioArteDaGuerraAtivo) return listaPericias
+
+        val jutsuExtrasOrdenados = jutsuExtras.sortedBy { jutsuSlotIndex(it) ?: Int.MAX_VALUE }
+        return buildList {
+            listaPericias.forEach { per ->
+                add(per)
+                if (per == lutarBase) {
+                    addAll(jutsuExtrasOrdenados)
                 }
             }
         }
@@ -591,6 +636,90 @@ class CriadorState {
             idiomaSlotRegex.find(name)?.groupValues?.getOrNull(1)?.toIntOrNull()
         }
     }
+
+    // Jutsu Logic Implementation
+    fun isJutsuPericia(per: Pericia): Boolean {
+        if (!compendioArteDaGuerraAtivo) return false
+        return per.nome.equals("LUTAR", ignoreCase = true) || jutsuSlotRegex.matches(per.nome)
+    }
+
+    fun jutsuSlotIndex(per: Pericia): Int? {
+        return if (per.nome.equals("LUTAR", ignoreCase = true)) {
+            1
+        } else {
+            jutsuSlotRegex.find(per.nome)?.groupValues?.getOrNull(1)?.toIntOrNull()
+        }
+    }
+
+    private fun jutsuSlotIndexFromName(name: String): Int? {
+        return if (name.equals("LUTAR", ignoreCase = true)) {
+            1
+        } else {
+            jutsuSlotRegex.find(name)?.groupValues?.getOrNull(1)?.toIntOrNull()
+        }
+    }
+
+    private fun jutsuSlotName(index: Int): String = "Jutsu $index"
+
+    private fun ensureJutsuSlotCount(totalSlots: Int) {
+        val base = listaPericias.firstOrNull { it.nome.equals("LUTAR", ignoreCase = true) } ?: return
+        val desired = totalSlots.coerceAtLeast(1)
+        while (jutsuExtras.size < desired - 1) {
+             val nextIndex = (jutsuExtras.mapNotNull { jutsuSlotIndex(it) }.maxOrNull() ?: 1) + 1
+             val novo = Pericia(nome = jutsuSlotName(nextIndex), atributo = base.atributo, basica = false) // Extras aren't basic
+             jutsuExtras.add(novo)
+             ensurePericiaEntry(novo)
+        }
+    }
+
+    private fun trimJutsuSlots(desiredSlots: Int) {
+        val desired = desiredSlots.coerceAtLeast(1)
+        while (jutsuExtras.size > desired - 1) {
+            val ultimo = jutsuExtras.maxByOrNull { jutsuSlotIndex(it) ?: 0 } ?: break
+            if (rawTotal(ultimo) > 0 || compIncsPorPericia.getValue(ultimo) > 0) break
+            jutsuExtras.remove(ultimo)
+            baseIncsPorPericia.remove(ultimo)
+            compIncsPorPericia.remove(ultimo)
+            compCostStackPorPericia.remove(ultimo)
+            spCostStackPorPericia.remove(ultimo)
+            notasPericia.remove(ultimo.nome)
+        }
+    }
+
+    fun syncJutsuSlots() {
+        if (!compendioArteDaGuerraAtivo) {
+            // If inactive, maybe clear extras? For now, leave them or clear.
+            // Safer to just return. If user toggles off, they lose access but data remains until cleaned.
+            return
+        }
+        val lutarBase = listaPericias.firstOrNull { it.nome.equals("LUTAR", ignoreCase = true) } ?: return
+        ensurePericiaEntry(lutarBase)
+
+        // Identify all Jutsu skills (Base + Extras)
+        val allJutsu = listOf(lutarBase) + jutsuExtras
+        val jutsusComprados = allJutsu.count { rawTotal(it) > 0 }
+
+        // Similar to Idiomas, we want at least one empty slot if user is filling them up.
+        // Or if base is taken, open Jutsu 2.
+        val desiredSlots = if (jutsusComprados > 0) jutsusComprados + 1 else 1
+
+        // But logic is: Base (Lutar) is slot 1.
+        // If Base is taken (rawTotal > 0), we want Slot 2 available.
+        // If Base + Slot 2 taken, we want Slot 3 available.
+        // jutsusComprados counts how many have points.
+        // desired = jutsusComprados + 1.
+
+        ensureJutsuSlotCount(desiredSlots)
+        trimJutsuSlots(desiredSlots)
+    }
+
+    private fun ensureJutsuSlotsFromSnapshot(keys: Set<String>) {
+        val maxIndex = keys.mapNotNull { jutsuSlotIndexFromName(it) }.maxOrNull() ?: 1
+        if (maxIndex > 1) {
+            ensureJutsuSlotCount(maxIndex)
+        }
+    }
+
 
     fun idiomaDefaultLabel(per: Pericia): String {
         val idx = idiomaSlotIndex(per) ?: 1
@@ -1503,6 +1632,10 @@ class CriadorState {
         if (isIdiomaPericia(per)) {
             syncIdiomaSlots()
         }
+        // Sync Jutsu too
+        if (isJutsuPericia(per)) {
+            syncJutsuSlots()
+        }
     }
 
     private fun atributoBaseRacial(a: String): Int {
@@ -2044,6 +2177,13 @@ class CriadorState {
             }
             syncIdiomaSlots()
         }
+        if (isJutsuPericia(per)) {
+            if (notasPericia[per.nome].isNullOrBlank()) {
+                // Should we set a default note? Maybe, but usually user sets name.
+                // The dialog in UI sets note to name.
+            }
+            syncJutsuSlots()
+        }
     }
 
     fun baseCreationComplete(): Boolean = pontosAtributo == 0 &&
@@ -2112,6 +2252,7 @@ class CriadorState {
         if (modoProgressaoAtivo) return
 
         syncLinguistaIdiomas()
+        syncJutsuSlots()
 
         var cumulativeCost = 0
         val pool = totalSpPool
@@ -2425,10 +2566,34 @@ class CriadorState {
                 especializacoesPorPericia[per.nome] = dto
             }
         }
+
+        // Restore Jutsu Slots
+        ensureJutsuSlotsFromSnapshot(snapshot.pericias.baseIncsPorPericia.keys)
+
+        // Re-apply loop to handle potential Jutsu extras that were just added
+        periciasComIdiomas().forEach { per ->
+            // Only update if not already processed (Jutsu extras might have been skipped in first pass)
+            if (!baseIncsPorPericia.containsKey(per)) {
+                baseIncsPorPericia[per] = snapshot.pericias.baseIncsPorPericia[per.nome] ?: 0
+                compIncsPorPericia[per] = snapshot.pericias.compIncsPorPericia[per.nome] ?: 0
+
+                ensurePericiaEntry(per)
+                spCostStackPorPericia.getValue(per).apply {
+                    clear()
+                    addAll(snapshot.pericias.spCostStackPorPericia[per.nome].orEmpty())
+                }
+                compCostStackPorPericia.getValue(per)?.apply {
+                    clear()
+                    addAll(snapshot.pericias.compCostStackPorPericia[per.nome].orEmpty())
+                }
+            }
+        }
+
         // PROMPT 5: Restore Skill Notes
         notasPericia.clear()
         notasPericia.putAll(snapshot.pericias.notasPericia ?: emptyMap())
         syncIdiomaSlots()
+        syncJutsuSlots()
 
 
         vantagensSelecionadas.clear()
