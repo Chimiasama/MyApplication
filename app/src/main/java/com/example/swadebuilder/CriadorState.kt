@@ -2064,12 +2064,14 @@ class CriadorState {
         // ID trope example: tropo_samurai -> clean: samurai -> kit_samurai
         if (compendioArteDaGuerraAtivo) {
             val suffix = novoTropo.id.removePrefix("tropo_")
-            val kitId = "kit_$suffix"
 
             // Remove previous kits?
             // Better to assume user manages inventory, but if switching tropes repeatedly it might clutter.
             // For now, just add.
-            val kitItem = listaEquipamentos.firstOrNull { it.id == kitId }
+            val kitItem = listaEquipamentos.firstOrNull {
+                val key = it.nome.keyify()
+                key == "kit_$suffix" || key == "kit_de_$suffix"
+            }
             if (kitItem != null) {
                 equipamentosComprados.add(kitItem)
             }
