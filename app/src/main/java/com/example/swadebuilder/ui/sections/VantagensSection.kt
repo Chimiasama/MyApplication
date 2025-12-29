@@ -219,6 +219,18 @@ fun VantagensContent(
                 }
             }
 
+            if (state.compendioArteDaGuerraAtivo) {
+                if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
+                    return@filter false
+                }
+                if (vant.categoria == Categoria.PODER) {
+                    return@filter false
+                }
+                if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") {
+                    return@filter false
+                }
+            }
+
             isBasico || (isAdg && state.compendioArteDaGuerraAtivo) || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isBuscatrilha && state.compendioBuscatrilhaAtivo) || (isDeadlands && state.compendioDeadlandsAtivo) || (isCidadeSolVapor && state.compendioCidadeSolVaporAtivo) || (isWiseguys && state.compendioWiseguysAtivo) || (isCrystalHeart && state.compendioCrystalHeartAtivo)
         }.sortedWith(compareBy({ it.categoria }, { it.nomeExibicao }))
     }
