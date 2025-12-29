@@ -2171,6 +2171,15 @@ class CriadorState {
              }
         }
 
+        // Garante que atributos estão acima do novo mínimo racial
+        listaAtributos.forEach { attr ->
+            val minRacial = atributoBaseRacial(attr)
+            val current = valoresAtributos[attr]?.intValue ?: 4
+            if (current < minRacial) {
+                valoresAtributos[attr]?.intValue = minRacial
+            }
+        }
+
         // Recalcular atributos e perícias
         recalcularPontosAtributo()
     }

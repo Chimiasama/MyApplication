@@ -464,7 +464,7 @@ fun AncestralidadesSection(
 
                                 if (state.signoAdgSelecionado != null) {
                                     val desc = CriadorState.mapaDescricoesSignos[state.signoAdgSelecionado]
-                                    if (!desc.isNullOrBlank()) {
+                                    if (!desc.isNullOrBlank() && booleanResource(R.bool.show_full_descriptions)) {
                                         Spacer(Modifier.height(4.dp))
                                         Text(
                                             text = desc,

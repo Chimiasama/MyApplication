@@ -289,7 +289,6 @@ fun UnifiedScreen(
 
             HorizontalPager(
                 state = pagerState,
-                userScrollEnabled = !state.isAdgLockedMode,
                 modifier = Modifier.fillMaxSize()
             ) { page ->
                 val section = availableSections.getOrNull(page) ?: return@HorizontalPager
@@ -662,7 +661,17 @@ private fun SectionDetailPane(
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        if (state.modoProgressaoAtivo) {
+        val isLocked = !state.isSectionEnabled(selectedSection)
+        if (isLocked) {
+            SectionCard(title = "Bloqueado", icon = Icons.Default.Warning, showHeader = false) {
+                Text(
+                    text = "Selecione um Tropo para desbloquear esta seção.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        } else if (state.modoProgressaoAtivo) {
             ProgressionDetailContent(
                 state = state,
                 viewModel = viewModel,
