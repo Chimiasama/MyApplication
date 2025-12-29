@@ -22,6 +22,7 @@ import com.example.swadebuilder.mapaAtributosDescricao
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.mapaPericiasDescricao
+import com.example.swadebuilder.mapaPericiasDescricaoAdg
 import com.example.swadebuilder.racialAttrMinMap
 import com.example.swadebuilder.racialSkillStartMap
 import com.example.swadebuilder.util.keyify
