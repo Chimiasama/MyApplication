@@ -465,7 +465,7 @@ fun AncestralidadesSection(
                                 if (selectedSign != null) {
                                     Spacer(Modifier.height(4.dp))
                                     val signDesc = CriadorState.SIGNOS_ADG_DESC[selectedSign]
-                                    if (signDesc != null) {
+                                    if (signDesc != null && EditionConfig.isFullEdition) {
                                         Text(
                                             text = signDesc,
                                             style = MaterialTheme.typography.bodySmall,

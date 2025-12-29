@@ -59,6 +59,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -289,7 +290,7 @@ fun UnifiedScreen(
 
             HorizontalPager(
                 state = pagerState,
-                userScrollEnabled = !state.isAdgLockedMode,
+                userScrollEnabled = true, // Navigation controlled by enabled/disabled sections instead
                 modifier = Modifier.fillMaxSize()
             ) { page ->
                 val section = availableSections.getOrNull(page) ?: return@HorizontalPager
@@ -569,7 +570,8 @@ private fun CreatorTabRow(
                 selected = tab.section == selectedSection,
                 enabled = enabled,
                 onClick = { if (enabled) onSelectSection(tab.section) },
-                text = { Text(tab.label) }
+                text = { Text(tab.label) },
+                modifier = Modifier.alpha(if (enabled) 1f else 0.5f)
             )
         }
     }

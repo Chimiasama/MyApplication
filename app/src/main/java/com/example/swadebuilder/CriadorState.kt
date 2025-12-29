@@ -2193,6 +2193,15 @@ class CriadorState {
 
     fun recalcularPontosAtributo(feedbackMessages: MutableList<String> = mutableListOf()) {
 
+        // Ensure current values meet the new racial base (e.g. if Sign increased base from d4 to d6)
+        listaAtributos.forEach { attrKey ->
+            val min = atributoBaseRacial(attrKey)
+            val state = valoresAtributos[attrKey]
+            if (state != null && state.intValue < min) {
+                state.intValue = min
+            }
+        }
+
         pontosAtributo = calcularPontosAtributoRestantes()
 
         trimAttributeStacks(feedbackMessages)
