@@ -1203,7 +1203,9 @@ class CriadorState {
                 // Humans: 15 points
                 // Others: 12 points
                 // Ignore "maisPontosPericias" checkbox
-                val base = if (ancestralidade.equals("HUMANOS", ignoreCase = true)) 15 else 12
+                val isHuman = ancestralidade.equals("HUMANOS", ignoreCase = true) ||
+                        ancestralidade.equals("Humano (Império do Sol)", ignoreCase = true)
+                val base = if (isHuman) 15 else 12
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
                 // Standard Logic
@@ -1709,8 +1711,12 @@ class CriadorState {
 
     fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>) {
         val prevAnc = ancestralidade
-        val wasHumano = (prevAnc == "HUMANOS")
-        val vaiSerHumano = (anc == "HUMANOS")
+
+        val prevAncDef = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == prevAnc.keyify() }
+        val wasHumano = (prevAnc == "HUMANOS" || prevAncDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true)
+
+        val ancDef = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == anc.keyify() }
+        val vaiSerHumano = (anc == "HUMANOS" || ancDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true)
 
         val paAntes = pontosAtributo
         val spAntes = pontosPericia

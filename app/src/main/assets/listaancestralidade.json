@@ -592,7 +592,9 @@
     "origem": "ARTE_DA_GUERRA",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
+    "vantagensGratis": [
+      "ADAPTÁVEL"
+    ],
     "desvantagens": [],
     "habilidades": [
       {
