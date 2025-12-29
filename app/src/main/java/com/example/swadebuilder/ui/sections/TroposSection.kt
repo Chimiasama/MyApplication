@@ -65,6 +65,37 @@ fun TroposSection(
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
+            // Option "None" to unlock race change
+            val noneSelected = state.tropoSelecionado == null
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
+                    .clickable {
+                        state.selecionarTropo(null)
+                        onUserFeedback()
+                    },
+                colors = CardDefaults.cardColors(
+                    containerColor = if (noneSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
+                )
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    RadioButtonRow(
+                        selected = noneSelected,
+                        label = "Nenhum (Permite alterar Ancestralidade)",
+                        onSelect = {
+                            state.selecionarTropo(null)
+                            onUserFeedback()
+                        }
+                    )
+                    Text(
+                        text = "Selecione esta opção se deseja alterar sua Ancestralidade. Enquanto um Tropo estiver ativo, a Ancestralidade fica bloqueada.",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                    )
+                }
+            }
+
             tropos.forEach { tropo ->
                 val selecionado = state.tropoSelecionado?.id == tropo.id
                 val vantagensNomeadas = tropo.ganhaAoComprar.map { idParaNome[it] ?: it }

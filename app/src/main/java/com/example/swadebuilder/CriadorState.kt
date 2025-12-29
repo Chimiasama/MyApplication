@@ -60,6 +60,7 @@ class CriadorState {
     var modoMonstroAtivo by mutableStateOf(false)
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
     var grandesResponsabilidades by mutableStateOf(false)
+    var signoAdgSelecionado by mutableStateOf<String?>(null)
 
     init {
         listaVantagens = deduplicarVantagens(listaVantagens)
@@ -69,6 +70,10 @@ class CriadorState {
         const val BASE_SP_POOL = 15
         const val DEFAULT_HAPTIC_STRENGTH = 70
         const val DEFAULT_SOUND_VOLUME = 70
+        val SIGNOS_ADG = listOf(
+            "Rato", "Boi", "Tigre", "Coelho", "Dragão", "Serpente",
+            "Cavalo", "Cabra", "Macaco", "Galo", "Cão", "Porco", "Gato"
+        )
     }
     var maisPontosPericias by mutableStateOf(true)
     var cartaSelvagem       by mutableStateOf(true)
@@ -1203,7 +1208,9 @@ class CriadorState {
                 // Humans: 15 points
                 // Others: 12 points
                 // Ignore "maisPontosPericias" checkbox
-                val base = if (ancestralidade.equals("HUMANOS", ignoreCase = true)) 15 else 12
+                val isHuman = ancestralidade.equals("HUMANOS", ignoreCase = true) ||
+                        ancestralidade.equals("Humano (Império do Sol)", ignoreCase = true)
+                val base = if (isHuman) 15 else 12
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
                 // Standard Logic
@@ -1709,8 +1716,12 @@ class CriadorState {
 
     fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>) {
         val prevAnc = ancestralidade
-        val wasHumano = (prevAnc == "HUMANOS")
-        val vaiSerHumano = (anc == "HUMANOS")
+
+        val prevAncDef = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == prevAnc.keyify() }
+        val wasHumano = (prevAnc == "HUMANOS" || prevAncDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true)
+
+        val ancDef = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == anc.keyify() }
+        val vaiSerHumano = (anc == "HUMANOS" || ancDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true)
 
         val paAntes = pontosAtributo
         val spAntes = pontosPericia
@@ -2006,6 +2017,33 @@ class CriadorState {
         }
     }
 
+    val isAdgLockedMode: Boolean
+        get() = compendioArteDaGuerraAtivo && tropoSelecionado == null
+
+    fun isSectionEnabled(section: MainSection): Boolean {
+        if (modoProgressaoAtivo) return true
+        if (!compendioArteDaGuerraAtivo) return true
+
+        return if (tropoSelecionado == null) {
+            // "Locked Mode" (No Trope selected yet):
+            // Can see Summary, Ancestry, and Trope selection.
+            // Other tabs are disabled.
+            when (section) {
+                MainSection.RESUMO, MainSection.ANCESTRALIDADES, MainSection.TROPOS -> true
+                else -> false
+            }
+        } else {
+            // "Unlocked Mode" (Trope selected):
+            // Ancestry is now LOCKED (disabled).
+            // Trope is ENABLED (to change back to 'None').
+            // All other tabs are ENABLED.
+            when (section) {
+                MainSection.ANCESTRALIDADES -> false
+                else -> true
+            }
+        }
+    }
+
     // PROMPT 1: Explicit calculation: (Current Step - Racial Base Step)
     private fun calcularPontosAtributoRestantes(): Int {
         var usados = 0
@@ -2041,8 +2079,8 @@ class CriadorState {
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    fun selecionarTropo(novoTropo: Tropo) {
-        if (tropoSelecionado?.id == novoTropo.id) return
+    fun selecionarTropo(novoTropo: Tropo?) {
+        if (tropoSelecionado?.id == novoTropo?.id) return
 
         if (vantagensAutomaticasDoTropo.isNotEmpty()) {
             vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoTropo }
@@ -2051,29 +2089,31 @@ class CriadorState {
 
         tropoSelecionado = novoTropo
 
-        novoTropo.ganhaAoComprar.forEach { vantId ->
-            val vant = listaVantagens.firstOrNull { it.id == vantId } ?: return@forEach
-            if (vantagensSelecionadas.none { it.id == vant.id }) {
-                vantagensSelecionadas += vant
-                vantagensAutomaticasDoTropo += vant.id
+        if (novoTropo != null) {
+            novoTropo.ganhaAoComprar.forEach { vantId ->
+                val vant = listaVantagens.firstOrNull { it.id == vantId } ?: return@forEach
+                if (vantagensSelecionadas.none { it.id == vant.id }) {
+                    vantagensSelecionadas += vant
+                    vantagensAutomaticasDoTropo += vant.id
+                }
             }
-        }
 
-        // PROMPT: Equipamentos de Tropo
-        // Se encontrar equipamento com ID "kit_[nome_tropo_limpo]", adiciona.
-        // ID trope example: tropo_samurai -> clean: samurai -> kit_samurai
-        if (compendioArteDaGuerraAtivo) {
-            val suffix = novoTropo.id.removePrefix("tropo_")
+            // PROMPT: Equipamentos de Tropo
+            // Se encontrar equipamento com ID "kit_[nome_tropo_limpo]", adiciona.
+            // ID trope example: tropo_samurai -> clean: samurai -> kit_samurai
+            if (compendioArteDaGuerraAtivo) {
+                val suffix = novoTropo.id.removePrefix("tropo_")
 
-            // Remove previous kits?
-            // Better to assume user manages inventory, but if switching tropes repeatedly it might clutter.
-            // For now, just add.
-            val kitItem = listaEquipamentos.firstOrNull {
-                val key = it.nome.keyify()
-                key == "kit_$suffix" || key == "kit_de_$suffix"
-            }
-            if (kitItem != null) {
-                equipamentosComprados.add(kitItem)
+                // Remove previous kits?
+                // Better to assume user manages inventory, but if switching tropes repeatedly it might clutter.
+                // For now, just add.
+                val kitItem = listaEquipamentos.firstOrNull {
+                    val key = it.nome.keyify()
+                    key == "kit_$suffix" || key == "kit_de_$suffix"
+                }
+                if (kitItem != null) {
+                    equipamentosComprados.add(kitItem)
+                }
             }
         }
 
@@ -2439,7 +2479,8 @@ class CriadorState {
                 vantagensTropoAutomaticas = vantagensAutomaticasDoTropo.toList(),
                 tecnicasIniciaisTropo = tecnicasIniciaisFromTropo,
                 retratoFileName = portraitFileName,
-                expandirRetrato = expandirRetrato
+                expandirRetrato = expandirRetrato,
+                signoAdgSelecionado = signoAdgSelecionado
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -2534,6 +2575,7 @@ class CriadorState {
         obesoMalusMov = flags.obesoMalusMov
         bonusPoderExtra = flags.bonusPoderExtra
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
+        signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
 
         dinheiro = snapshot.recursos.dinheiro
         pontosVantagem = snapshot.recursos.pontosVantagem

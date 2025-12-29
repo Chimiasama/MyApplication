@@ -200,6 +200,7 @@ fun UnifiedScreen(
             CreatorNavigationRail(
                 sections = availableSections,
                 selectedSection = activeSection,
+                enabledSections = { state.isSectionEnabled(it) },
                 onSelectSection = {
                     onUserFeedback()
                     activeSection = it
@@ -279,6 +280,7 @@ fun UnifiedScreen(
             CreatorTabRow(
                 sections = availableSections,
                 selectedSection = activeSection,
+                enabledSections = { state.isSectionEnabled(it) },
                 onSelectSection = {
                     onUserFeedback()
                     activeSection = it
@@ -287,6 +289,7 @@ fun UnifiedScreen(
 
             HorizontalPager(
                 state = pagerState,
+                userScrollEnabled = !state.isAdgLockedMode,
                 modifier = Modifier.fillMaxSize()
             ) { page ->
                 val section = availableSections.getOrNull(page) ?: return@HorizontalPager
@@ -542,6 +545,7 @@ private data class SectionTab(
 private fun CreatorTabRow(
     sections: List<MainSection>,
     selectedSection: MainSection,
+    enabledSections: (MainSection) -> Boolean,
     onSelectSection: (MainSection) -> Unit
 ) {
     val tabs = remember(sections) { sections.map { SectionTab(it, it.tabLabel()) } }
@@ -560,9 +564,11 @@ private fun CreatorTabRow(
         }
     ) {
         tabs.forEach { tab ->
+            val enabled = enabledSections(tab.section)
             Tab(
                 selected = tab.section == selectedSection,
-                onClick = { onSelectSection(tab.section) },
+                enabled = enabled,
+                onClick = { if (enabled) onSelectSection(tab.section) },
                 text = { Text(tab.label) }
             )
         }
@@ -573,6 +579,7 @@ private fun CreatorTabRow(
 private fun CreatorNavigationRail(
     sections: List<MainSection>,
     selectedSection: MainSection,
+    enabledSections: (MainSection) -> Boolean,
     onSelectSection: (MainSection) -> Unit
 ) {
     NavigationRail {
@@ -582,9 +589,11 @@ private fun CreatorNavigationRail(
                 .verticalScroll(rememberScrollState())
         ) {
             sections.forEach { section ->
+                val enabled = enabledSections(section)
                 NavigationRailItem(
                     selected = section == selectedSection,
-                    onClick = { onSelectSection(section) },
+                    enabled = enabled,
+                    onClick = { if (enabled) onSelectSection(section) },
                     icon = { Icon(section.icon(), contentDescription = null) },
                     label = { Text(section.tabLabel(), maxLines = 1, overflow = TextOverflow.Ellipsis) }
                 )
@@ -911,7 +920,7 @@ private fun CreationDetailContent(
         MainSection.ANCESTRALIDADES -> AncestralidadesSection(
             state = state,
             currentAncestralidade = state.ancestralidade,
-            supersLocked = creationLocked,
+            supersLocked = creationLocked || !state.isSectionEnabled(MainSection.ANCESTRALIDADES),
             ancestralidadeEmFoco = state.ancestralidadeEmFoco,
             onSelectAncestralidade = onSelectAncestralidade,
             onUserFeedback = onUserFeedback
