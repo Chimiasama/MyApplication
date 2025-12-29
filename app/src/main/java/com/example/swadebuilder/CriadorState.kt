@@ -2017,6 +2017,18 @@ class CriadorState {
         }
     }
 
+    val isAdgLockedMode: Boolean
+        get() = compendioArteDaGuerraAtivo && tropoSelecionado == null
+
+    fun isSectionEnabled(section: MainSection): Boolean {
+        if (modoProgressaoAtivo) return true
+        if (!isAdgLockedMode) return true
+        return when (section) {
+            MainSection.RESUMO, MainSection.ANCESTRALIDADES, MainSection.TROPOS -> true
+            else -> false
+        }
+    }
+
     // PROMPT 1: Explicit calculation: (Current Step - Racial Base Step)
     private fun calcularPontosAtributoRestantes(): Int {
         var usados = 0
@@ -2052,8 +2064,8 @@ class CriadorState {
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    fun selecionarTropo(novoTropo: Tropo) {
-        if (tropoSelecionado?.id == novoTropo.id) return
+    fun selecionarTropo(novoTropo: Tropo?) {
+        if (tropoSelecionado?.id == novoTropo?.id) return
 
         if (vantagensAutomaticasDoTropo.isNotEmpty()) {
             vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoTropo }
@@ -2062,29 +2074,31 @@ class CriadorState {
 
         tropoSelecionado = novoTropo
 
-        novoTropo.ganhaAoComprar.forEach { vantId ->
-            val vant = listaVantagens.firstOrNull { it.id == vantId } ?: return@forEach
-            if (vantagensSelecionadas.none { it.id == vant.id }) {
-                vantagensSelecionadas += vant
-                vantagensAutomaticasDoTropo += vant.id
+        if (novoTropo != null) {
+            novoTropo.ganhaAoComprar.forEach { vantId ->
+                val vant = listaVantagens.firstOrNull { it.id == vantId } ?: return@forEach
+                if (vantagensSelecionadas.none { it.id == vant.id }) {
+                    vantagensSelecionadas += vant
+                    vantagensAutomaticasDoTropo += vant.id
+                }
             }
-        }
 
-        // PROMPT: Equipamentos de Tropo
-        // Se encontrar equipamento com ID "kit_[nome_tropo_limpo]", adiciona.
-        // ID trope example: tropo_samurai -> clean: samurai -> kit_samurai
-        if (compendioArteDaGuerraAtivo) {
-            val suffix = novoTropo.id.removePrefix("tropo_")
+            // PROMPT: Equipamentos de Tropo
+            // Se encontrar equipamento com ID "kit_[nome_tropo_limpo]", adiciona.
+            // ID trope example: tropo_samurai -> clean: samurai -> kit_samurai
+            if (compendioArteDaGuerraAtivo) {
+                val suffix = novoTropo.id.removePrefix("tropo_")
 
-            // Remove previous kits?
-            // Better to assume user manages inventory, but if switching tropes repeatedly it might clutter.
-            // For now, just add.
-            val kitItem = listaEquipamentos.firstOrNull {
-                val key = it.nome.keyify()
-                key == "kit_$suffix" || key == "kit_de_$suffix"
-            }
-            if (kitItem != null) {
-                equipamentosComprados.add(kitItem)
+                // Remove previous kits?
+                // Better to assume user manages inventory, but if switching tropes repeatedly it might clutter.
+                // For now, just add.
+                val kitItem = listaEquipamentos.firstOrNull {
+                    val key = it.nome.keyify()
+                    key == "kit_$suffix" || key == "kit_de_$suffix"
+                }
+                if (kitItem != null) {
+                    equipamentosComprados.add(kitItem)
+                }
             }
         }
 
