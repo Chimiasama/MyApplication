@@ -11,7 +11,9 @@ data class Tropo(
     val origem: String,
     @SerialName("tecnicas_iniciais")
     val tecnicasIniciais: Int = 0,
-    val descricao: String = "",
+    val descricao: String,
     @SerialName("ganha_ao_comprar")
-    val ganhaAoComprar: List<String> = emptyList()
+    val ganhaAoComprar: List<String> = emptyList(),
+    @SerialName("pericias_gratuitas")
+    val periciasGratuitas: Map<String, Int> = emptyMap()
 )

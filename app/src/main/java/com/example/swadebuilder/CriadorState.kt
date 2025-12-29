@@ -660,6 +660,20 @@ class CriadorState {
             }
         }
 
+        // Arte da Guerra - Tropos
+        if (compendioArteDaGuerraAtivo) {
+            tropoSelecionado?.let { tropo ->
+                val bonusMap = tropo.periciasGratuitas.mapKeys {
+                    val k = it.key.keyify()
+                    if (k == "JUTSU") "LUTAR" else k
+                }
+                val bonus = bonusMap[perKey]
+                if (bonus != null) {
+                    modifiedBase = maxOf(modifiedBase, bonus)
+                }
+            }
+        }
+
         return modifiedBase
     }
 
