@@ -860,7 +860,12 @@ class MainActivity : ComponentActivity() {
 fun Int.toDiceString(): String =
     if (this <= 12) "d$this" else "d12+${(this - 12)}"
 
-data class Pericia(val nome: String, val atributo: String, val basica: Boolean)
+data class Pericia(
+    val nome: String,
+    val atributo: String,
+    val basica: Boolean,
+    val origem: String? = null
+)
 
 var listaComplicacoes: List<Complicacao> = emptyList()
 
@@ -888,6 +893,7 @@ lateinit var mapaAtributosDisplay: Map<String, String>
 lateinit var listaPericias: List<Pericia>
 lateinit var mapaPericias: Map<String, Pericia>
 lateinit var mapaPericiasDescricao: Map<String, String>
+lateinit var mapaPericiasDescricaoAdg: Map<String, String>
 lateinit var mapaAtributosDescricao: Map<String, String>
 
 fun periciaStartRaw(anc: String, per: Pericia): Int {

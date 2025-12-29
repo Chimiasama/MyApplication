@@ -569,13 +569,54 @@ class CriadorState {
     private val jutsuSlotRegex = Regex("^Jutsu\\s+(\\d+)$", RegexOption.IGNORE_CASE)
     private val jutsuExtras = mutableStateListOf<Pericia>()
 
+    // Computed property for basic filtering before injecting dynamic slots (Idioms, Jutsu)
+    val periciasFiltradasPorCompendio: List<Pericia>
+        get() {
+            return if (compendioArteDaGuerraAtivo) {
+                // If AdG active:
+                // 1. Remove standard skills that don't exist in AdG
+                val forbiddenIds = setOf(
+                    "HACKEAR", "FE", "ELETRONICA", "CIENCIA ESTRANHA", "PSIONICOS", "CONJURAR", "CIENCIA_ESTRANHA"
+                )
+
+                listaPericias.filter { per ->
+                    val key = per.nome.keyify()
+
+                    // Exclude specific forbidden skills
+                    if (key in forbiddenIds) return@filter false
+
+                    // Special case for FOCO:
+                    // If we have an AdG version (origem="ARTE_DA_GUERRA"), use that.
+                    // If it's the standard Foco (no origem or BASICO), exclude it IF we have an AdG replacement.
+                    // Actually, simpler: if per.nome is FOCO, only keep if it is the AdG version.
+                    if (key == "FOCO") {
+                        per.origem == "ARTE_DA_GUERRA"
+                    } else {
+                        // Keep other AdG skills
+                        if (per.origem == "ARTE_DA_GUERRA") return@filter true
+                        // Keep standard skills (unless forbidden above or handled by replacement)
+                        true
+                    }
+                }
+            } else {
+                // If AdG NOT active:
+                // Hide any skill marked with ARTE_DA_GUERRA
+                listaPericias.filter { per ->
+                    per.origem != "ARTE_DA_GUERRA"
+                }
+            }
+        }
+
     fun periciasComIdiomas(): List<Pericia> {
-        val idiomaBase = idiomaBasePericia() ?: return periciasComJutsu() // fallback if no idioms
+        // Use the filtered list as base instead of raw global listaPericias
+        val baseList = periciasFiltradasPorCompendio
+
+        val idiomaBase = idiomaBasePericia() ?: return periciasComJutsu(baseList) // fallback if no idioms
         val extrasOrdenados = idiomasExtras.sortedBy { idiomaSlotIndex(it) ?: Int.MAX_VALUE }
 
         // Combine base list + idioms first
         val listWithIdioms = buildList {
-            listaPericias.forEach { per ->
+            baseList.forEach { per ->
                 add(per)
                 if (per == idiomaBase) {
                     addAll(extrasOrdenados)
@@ -604,15 +645,15 @@ class CriadorState {
     }
 
     // Helper used above if Idiomas base is missing (unlikely but safe)
-    private fun periciasComJutsu(): List<Pericia> {
-        val lutarBase = listaPericias.firstOrNull { it.nome.equals("LUTAR", ignoreCase = true) }
-            ?: return listaPericias
+    private fun periciasComJutsu(baseList: List<Pericia> = periciasFiltradasPorCompendio): List<Pericia> {
+        val lutarBase = baseList.firstOrNull { it.nome.equals("LUTAR", ignoreCase = true) }
+            ?: return baseList
 
-        if (!compendioArteDaGuerraAtivo) return listaPericias
+        if (!compendioArteDaGuerraAtivo) return baseList
 
         val jutsuExtrasOrdenados = jutsuExtras.sortedBy { jutsuSlotIndex(it) ?: Int.MAX_VALUE }
         return buildList {
-            listaPericias.forEach { per ->
+            baseList.forEach { per ->
                 add(per)
                 if (per == lutarBase) {
                     addAll(jutsuExtrasOrdenados)

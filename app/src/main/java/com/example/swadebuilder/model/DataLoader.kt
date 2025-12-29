@@ -99,11 +99,18 @@ object DataLoader {
 
         // 6. Pericias
         val periciasData = loadJsonAsset<PericiaList>(context, "pericias.json")
-        listaPericias = periciasData.pericias.map { pj ->
+        val periciasAdgData = runCatching {
+            loadJsonAsset<PericiaList>(context, "pericias_adg.json")
+        }.getOrElse { PericiaList(emptyList()) }
+
+        val todasPericiasJson = periciasData.pericias + periciasAdgData.pericias
+
+        listaPericias = todasPericiasJson.map { pj ->
             Pericia(
                 nome     = pj.nome,
                 atributo = pj.atributo.uppercase().semAcentos(),
-                basica   = pj.basica
+                basica   = pj.basica,
+                origem   = pj.origem
             )
         }
         mapaPericias = listaPericias.associateBy { it.nome.keyify() }
@@ -114,7 +121,15 @@ object DataLoader {
                 json.decodeFromStream<List<PericiaDescricaoJson>>(input)
             }
         }.getOrElse { emptyList() }
+
+        val periciasDescAdgList = runCatching {
+            assets.open("pericias_desc_adg.json").use { input ->
+                json.decodeFromStream<List<PericiaDescricaoJson>>(input)
+            }
+        }.getOrElse { emptyList() }
+
         mapaPericiasDescricao = periciasDescList.associate { it.nome.keyify() to it.descricao }
+        mapaPericiasDescricaoAdg = periciasDescAdgList.associate { it.nome.keyify() to it.descricao }
 
         // Carrega descrições de atributos (novo arquivo JSON, ex-txt)
         val atributosDescList = runCatching {

@@ -77,6 +77,7 @@ fun PericiasContent(
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
     val descricoes = if (!allowLongTexts) emptyMap() else mapaPericiasDescricao
+    val descricoesAdg = if (!allowLongTexts) emptyMap() else com.example.swadebuilder.mapaPericiasDescricaoAdg
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val locked = state.criacaoBasicaCongelada && !state.skillAdvancementInProgress
@@ -242,7 +243,12 @@ fun PericiasContent(
                             else -> ""
                         }
                     } else {
-                        descricoes[descKey].orEmpty()
+                        // Priority: AdG description (if active) > Standard description
+                        if (state.compendioArteDaGuerraAtivo && descricoesAdg.containsKey(descKey)) {
+                            descricoesAdg[descKey].orEmpty()
+                        } else {
+                            descricoes[descKey].orEmpty()
+                        }
                     }
 
                     Column(
