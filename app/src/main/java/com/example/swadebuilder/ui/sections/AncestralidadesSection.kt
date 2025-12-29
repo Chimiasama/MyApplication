@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -53,6 +54,7 @@ import com.example.swadebuilder.R
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
+import com.example.swadebuilder.ui.components.RadioButtonRow
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
@@ -452,11 +454,47 @@ fun AncestralidadesSection(
                                             DropdownMenuItem(
                                                 text = { Text(signo) },
                                                 onClick = {
-                                                    state.signoAdgSelecionado = signo
+                                                    state.selecionarSigno(signo)
                                                     expanded = false
                                                 }
                                             )
                                         }
+                                    }
+                                }
+
+                                if (state.signoAdgSelecionado != null) {
+                                    val desc = CriadorState.mapaDescricoesSignos[state.signoAdgSelecionado]
+                                    if (!desc.isNullOrBlank()) {
+                                        Spacer(Modifier.height(4.dp))
+                                        Text(
+                                            text = desc,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+
+                                    if (state.signoAdgSelecionado == "Serpente") {
+                                         Spacer(Modifier.height(8.dp))
+                                         Text("Perícia Inicial (d6):", style = MaterialTheme.typography.labelSmall)
+                                         Row {
+                                             RadioButtonRow(
+                                                 label = "Jogar",
+                                                 selected = state.signoSerpentePericiaEscolhida == "Jogar",
+                                                 onSelect = {
+                                                     state.signoSerpentePericiaEscolhida = "Jogar"
+                                                     state.rebuildAllPericiaStacks()
+                                                 }
+                                             )
+                                             Spacer(Modifier.width(16.dp))
+                                             RadioButtonRow(
+                                                 label = "Performance",
+                                                 selected = state.signoSerpentePericiaEscolhida == "Performance",
+                                                 onSelect = {
+                                                     state.signoSerpentePericiaEscolhida = "Performance"
+                                                     state.rebuildAllPericiaStacks()
+                                                 }
+                                             )
+                                         }
                                     }
                                 }
                             }

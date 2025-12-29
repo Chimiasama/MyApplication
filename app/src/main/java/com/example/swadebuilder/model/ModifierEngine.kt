@@ -136,6 +136,11 @@ object ModifierEngine {
             modifiers.add(Modifier("power_bonus_res", SourceType.OUTRO, "Poderes", ModifierTarget.TOUGHNESS_FLAT, state.bonusResFromPower))
         }
 
+        // 6. Signos (Arte da Guerra)
+        if (state.signoAdgSelecionado == "Tartaruga") {
+            modifiers.add(Modifier("signo_tartaruga", SourceType.ANCESTRALIDADE, "Signo Tartaruga", ModifierTarget.TOUGHNESS_FLAT, 1))
+        }
+
         return modifiers
     }
 
