@@ -14,5 +14,9 @@
   {
     "nome": "FOCO (ESPÍRITO)",
     "descricao": "Foco é a perícia que representa a calmaria mental e a capacidade de se sintonizar com o fluxo de energia que percorre o mundo. Foco é a perícia utilizada para ativar Técnicas Chi e para recuperar Pontos de Chi. O Foco também pode ser usado como uma ação para superar Medo em vez de usar o atributo Espírito."
+  },
+  {
+    "nome": "TRANSIÇÃO (VIGOR)",
+    "descricao": "A Transição é o que filósofos e afins chamam de Chi externo. Transição utiliza a energia dos arredores para conjurar os elementos. Esta perícia é exclusiva para Elementalistas e é como eles ativam Técnicas Chi, em contraste com outros Tropos que usam Foco. No entanto, Transição não substitui o Foco para outros usos, apenas para ativar habilidades elementais (Manobras e Técnicas).  Como uma perícia, Transição é utilizada para ativar Manobras e é considerada uma Ação. Manter continuamente uma Manobra requer uma rolagem de Transição a cada turno como uma Ação Livre, muito parecido com uma Técnica Chi. Ao usar uma habilidade de Maestria em Transição, isso é considerado uma Ação Livre."
   }
 ]

@@ -591,6 +591,9 @@ class CriadorState {
                     // Actually, simpler: if per.nome is FOCO, only keep if it is the AdG version.
                     if (key == "FOCO") {
                         per.origem == "ARTE_DA_GUERRA"
+                    } else if (key == "TRANSICAO") {
+                        // Transição is exclusive to Elementalista trope
+                        tropoSelecionado?.id == "tropo_elementalista"
                     } else {
                         // Keep other AdG skills
                         if (per.origem == "ARTE_DA_GUERRA") return@filter true
