@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,10 +23,13 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -430,6 +434,30 @@ fun AncestralidadesSection(
                                         contentDescription = "Selecionado",
                                         tint = MaterialTheme.colorScheme.primary
                                     )
+                                }
+                            }
+
+                            if (isSelected && item.origens.contains("ARTE_DA_GUERRA") && item.nome.contains("Humano", ignoreCase = true)) {
+                                Spacer(Modifier.height(8.dp))
+                                Text("Signo de Nascença:", style = MaterialTheme.typography.labelMedium)
+
+                                var expanded by remember { mutableStateOf(false) }
+
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.signoAdgSelecionado ?: "Selecionar Signo")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        CriadorState.SIGNOS_ADG.forEach { signo ->
+                                            DropdownMenuItem(
+                                                text = { Text(signo) },
+                                                onClick = {
+                                                    state.signoAdgSelecionado = signo
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                    }
                                 }
                             }
 

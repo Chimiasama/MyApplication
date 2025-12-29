@@ -60,6 +60,7 @@ class CriadorState {
     var modoMonstroAtivo by mutableStateOf(false)
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
     var grandesResponsabilidades by mutableStateOf(false)
+    var signoAdgSelecionado by mutableStateOf<String?>(null)
 
     init {
         listaVantagens = deduplicarVantagens(listaVantagens)
@@ -69,6 +70,10 @@ class CriadorState {
         const val BASE_SP_POOL = 15
         const val DEFAULT_HAPTIC_STRENGTH = 70
         const val DEFAULT_SOUND_VOLUME = 70
+        val SIGNOS_ADG = listOf(
+            "Rato", "Boi", "Tigre", "Coelho", "Dragão", "Serpente",
+            "Cavalo", "Cabra", "Macaco", "Galo", "Cão", "Porco", "Gato"
+        )
     }
     var maisPontosPericias by mutableStateOf(true)
     var cartaSelvagem       by mutableStateOf(true)
@@ -2445,7 +2450,8 @@ class CriadorState {
                 vantagensTropoAutomaticas = vantagensAutomaticasDoTropo.toList(),
                 tecnicasIniciaisTropo = tecnicasIniciaisFromTropo,
                 retratoFileName = portraitFileName,
-                expandirRetrato = expandirRetrato
+                expandirRetrato = expandirRetrato,
+                signoAdgSelecionado = signoAdgSelecionado
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -2540,6 +2546,7 @@ class CriadorState {
         obesoMalusMov = flags.obesoMalusMov
         bonusPoderExtra = flags.bonusPoderExtra
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
+        signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
 
         dinheiro = snapshot.recursos.dinheiro
         pontosVantagem = snapshot.recursos.pontosVantagem
