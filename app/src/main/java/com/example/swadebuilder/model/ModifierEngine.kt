@@ -136,6 +136,16 @@ object ModifierEngine {
             modifiers.add(Modifier("power_bonus_res", SourceType.OUTRO, "Poderes", ModifierTarget.TOUGHNESS_FLAT, state.bonusResFromPower))
         }
 
+        // 6. Signos (Arte da Guerra)
+        if (state.compendioArteDaGuerraAtivo && state.ancestralidade.keyify().contains("HUMANO")) {
+            val sign = state.signoAdgSelecionado
+            if (sign != null) {
+                if (sign.equals("Tartaruga", ignoreCase = true)) {
+                    modifiers.add(Modifier("sign_tartaruga_tough", SourceType.OUTRO, "Signo Tartaruga", ModifierTarget.TOUGHNESS_FLAT, 1))
+                }
+            }
+        }
+
         return modifiers
     }
 
