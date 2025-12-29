@@ -79,6 +79,7 @@ import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.model.DataLoader
+import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MainActivityData
 import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.RacialModifier
@@ -898,6 +899,7 @@ fun periciaStartRaw(anc: String, per: Pericia): Int {
 
 var listaVantagens:    List<Vantagem>   = emptyList()
 lateinit var listaTropos: List<Tropo>
+var listaEquipamentos: List<EquipamentoItem> = emptyList()
 
 data class Estagio(
     val nome: String,
@@ -940,4 +942,3 @@ val dynamicStageCaps = listaDeEstagios.mapIndexed { idx, st ->
     else
         (TOTAL_PROGRESS_LIMIT - prevMax).coerceAtLeast(0)
 }
-

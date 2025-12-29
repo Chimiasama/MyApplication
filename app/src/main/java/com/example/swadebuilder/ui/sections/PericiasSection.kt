@@ -112,6 +112,11 @@ fun PericiasContent(
 
     val valorColWidthDp = 80.dp
 
+    // Jutsu description provided by user
+    val jutsuDesc = """
+        Jutsu representa o treinamento em uma categoria de instrumentos de combate corpo a corpo. Jutsu segue todas as regras da perícia Lutar, mas utiliza a regra Especialização de Perícia exclusivamente para esta perícia. Quando um personagem usa uma arma que não está coberta por uma perícia Jutsu conhecida, ele sofre uma penalidade de -2. Ao contrário da Especialização de Perícia, cada vez que um herói deseja aprender uma nova categoria através de um Progresso, isso é contado como aprender uma nova perícia. Isso significa que cada grupo de Jutsu é uma perícia separada. As seguintes categorias são exemplos, mas não abrangem a ampla gama de opções de combate corpo a corpo disponíveis. Jogadores e Narradores devem estar abertos a discutir a adição, remoção, agrupamento ou até mesmo a criação de novas categorias conforme necessário para se adequar à campanha. Jutsu (Concussão): Esta categoria de perícia foca no uso de objetos sólidos sem gumes cortantes. Desde o uso do bastão defensivo de 3 partes até as tonfas de madeira, a proficiência neste grupo também inclui nunchaku e chuis. Proficiência: bastões de 3 partes, chui (maça), pá do monge, nunchaku, tetsubo, tonfa, martelo de guerra. Jutsu (Corrente): Está incluído neste grupo armas únicas que exigem uma habilidade especial e oferecem alcance letal. Elas são consideradas não-convencionais (desonrosas). São usadas principalmente por diversos grupos de youxia e shinobi. Proficiência: dardo com corda, kusarigama, kyoketsu-shogi, manriki kusari, martelo meteoro, cabelo. Jutsu (Leve): A categoria de armas leves abrange uma mistura de habilidades variadas. Envolve desde as facas mais comuns até o leque de guerra do Daimiô; esses objetos atuam como complementos para espadas e armas primárias. Proficiência: faca, kama, tessen, jette, sai, espada borboleta, nunchaku, escova de ferro, tekko kagi. Jutsu (Massivo): Armas Massivas são usadas com destreza e grande facilidade. Aqueles familiarizados com itens Massivos não sofrem penalidades ao empunhá-los. Jutsu (Passivo): Instrumentos usados por aqueles que evitam o caminho da agressão. Proficiência: bastão-bo, escova de ferro, jitte, nunchaku, sai, tessen. Jutsu (Haste): Armas cortantes anexadas a longos bastões de madeira ou metal, armas desta categoria são vistas entre os camponeses e soldados voluntários. O treinamento abrange a prática no uso do yari no campo de batalha à frente, até lanças usadas pela cavalaria. Proficiência: bastão-bo, alabarda, lança, machado longo, naginata, yari. Jutsu (Samurai): Esta categoria é ensinada especificamente àqueles que frequentaram uma Academia de Guerra ou que foram aprendizes de um Samurai. Proficiência: katana, naginata, nodachi, tanto, tessen, wakizashi. Jutsu (Espada): O caminho da espada é o tipo de arma mais comum encontrado nas mãos de heróis em todo o reino. Em duelos, a esgrima é considerada a habilidade mais honrosa a ser utilizada pelos campeões. Proficiência: dao, jian, katana, nodachi, shang gou, wakizashi. Jutsu (Desarmado): O Caminho do Punho Vazio vem em formas variadas e é ensinado em muitos estilos diferentes. Esta é a perícia para o artista marcial desarmado que gosta de se envolver em combate desarmado. Proficiência: punho, pé, cabeçada, ombros, pernas, cotovelos, joelhos, dedos.
+    """.trimIndent()
+
     val periciasVisiveis = remember(
         state.periciasComIdiomas(),
         state.compendioArteDaGuerraAtivo,
@@ -120,7 +125,11 @@ fun PericiasContent(
     ) {
         state.periciasComIdiomas().filter { per ->
             if (per.nome.equals("Jutsu", ignoreCase = true)) {
-                state.compendioArteDaGuerraAtivo
+                // Remove original "Jutsu" if present, we handle it via Lutar logic now,
+                // but if it's in the list it might be from the old json if not removed.
+                // The user removed it from json.
+                // But just in case:
+                false
             } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
                 state.compendioFantasiaAtivo || state.compendioHorrorAtivo
             } else {
@@ -213,14 +222,17 @@ fun PericiasContent(
                     )
 
                     val isIdioma = state.isIdiomaPericia(per)
-                    val rawName = if (isIdioma) "Idiomas" else per.nome.removePrefix("*").trim()
+                    val isJutsu = state.isJutsuPericia(per)
+                    val rawName = if (isIdioma) "Idiomas" else if (isJutsu) "Jutsu" else per.nome.removePrefix("*").trim()
                     val descKey = "$rawName (${per.atributo})".uppercase().semAcentos()
 
-                    val descricao = if (per.nome.equals("Alquimia", ignoreCase = true)) {
+                    val descricao = if (isJutsu) {
+                        jutsuDesc
+                    } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
                         val fantasiaAtivo = state.compendioFantasiaAtivo
                         val horrorAtivo = state.compendioHorrorAtivo
                         val txtFantasia = "Esta é a perícia arcana para alquimistas (veja a página 102), mas também pode ser usada para criar itens alquímicos (página 68). Pode ser usada no lugar de Ciências ao examinar reações químicas, estudar reagentes e outros tópicos relacionados."
-                        val txtHorror = "Esta é a perícia arcana para alquimistas (veja p. 70) e também pode ser usada para criar itens alquímicos (p. 117) ou ser usada no lugar de Ciências ao examinar reações químicas, estudar reagentes ou assuntos relacionados."
+                        val txtHorror = "Esta é a perícia arcana para alquimistas (veja a página 70) e também pode ser usada para criar itens alquímicos (página 117) ou ser usada no lugar de Ciências ao examinar reações químicas, estudar reagentes ou assuntos relacionados."
 
                         when {
                             fantasiaAtivo && horrorAtivo ->
@@ -247,7 +259,7 @@ fun PericiasContent(
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = buildAnnotatedString {
-                                        val displayName = if (isIdioma) "Idiomas" else per.nome
+                                        val displayName = if (isIdioma) "Idiomas" else if (isJutsu) "Jutsu" else per.nome
                                         if (per.basica) {
                                             withStyle(
                                                 SpanStyle(
@@ -284,8 +296,8 @@ fun PericiasContent(
                             }
 
                             // PROMPT 5: Edit Note Button
-                            // Correction: Show edit button ONLY if optional rule is active
-                            if (isIdioma && regra.displayRaw > 0) {
+                            // Correction: Show edit button ONLY if optional rule is active OR it's Idioma/Jutsu
+                            if ((isIdioma || isJutsu) && regra.displayRaw > 0) {
                                 IconButton(
                                     onClick = {
                                         idiomaTarget = per
@@ -299,7 +311,7 @@ fun PericiasContent(
                                 ) {
                                     Icon(
                                         Icons.Default.Edit,
-                                        contentDescription = "Editar idioma",
+                                        contentDescription = "Editar",
                                         modifier = Modifier.size(16.dp),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -333,6 +345,9 @@ fun PericiasContent(
                                     }
                                     if (isIdioma) {
                                         state.syncIdiomaSlots()
+                                    }
+                                    if (isJutsu) {
+                                        state.syncJutsuSlots()
                                     }
                                     onUserFeedback()
                                 },
@@ -372,7 +387,7 @@ fun PericiasContent(
                                         return@IconButton
                                     }
 
-                                    if (isIdioma && state.rawTotal(per) == 0) {
+                                    if ((isIdioma || isJutsu) && state.rawTotal(per) == 0) {
                                         idiomaTarget = per
                                         idiomaText = ""
                                         idiomaPendingCost = regrasAtuais.cost
@@ -385,9 +400,12 @@ fun PericiasContent(
                                     if (isIdioma) {
                                         state.syncIdiomaSlots()
                                     }
+                                    if (isJutsu) {
+                                        state.syncJutsuSlots()
+                                    }
                                     onUserFeedback()
 
-                                    if (!isIdioma && state.usarEspecializacoesDePericia) {
+                                    if (!isIdioma && !isJutsu && state.usarEspecializacoesDePericia) {
                                         val esp = state.especializacoesPorPericia[per.nome]
                                         if (esp?.principal == null) {
                                             specTarget = per
@@ -411,7 +429,7 @@ fun PericiasContent(
 
                             val jaTemPrincipal =
                                 state.especializacoesPorPericia[per.nome]?.principal != null
-                            if (!isIdioma && state.usarEspecializacoesDePericia && jaTemPrincipal) {
+                            if (!isIdioma && !isJutsu && state.usarEspecializacoesDePericia && jaTemPrincipal) {
                                 TextButton(
                                     onClick = {
                                         specTarget = per
@@ -453,7 +471,7 @@ fun PericiasContent(
                             }
                         }
 
-                        if (!isIdioma) {
+                        if (!isIdioma && !isJutsu) {
                             val espDto: EspecializacoesDto? = state.especializacoesPorPericia[per.nome]
                             val principal = espDto?.principal
                             val extras: List<String> = when {
@@ -525,21 +543,26 @@ fun PericiasContent(
     }
 
     if (showIdiomaDialog && idiomaTarget != null) {
+        val isJutsuTarget = state.isJutsuPericia(idiomaTarget!!)
         AlertDialog(
             onDismissRequest = {
                 showIdiomaDialog = false
                 idiomaEditMode = false
                 idiomaTarget = null
             },
-            title = { Text(if (idiomaEditMode) "Editar idioma" else "Selecionar idioma") },
+            title = {
+                val action = if (idiomaEditMode) "Editar" else "Novo"
+                val subj = if (isJutsuTarget) "Jutsu" else "Idioma"
+                Text("$action $subj")
+            },
             text = {
                 Column {
-                    Text("Perícia: Idiomas")
+                    Text("Perícia: ${if (isJutsuTarget) "Jutsu" else "Idiomas"}")
                     Spacer(Modifier.width(8.dp))
                     OutlinedTextField(
                         value = idiomaText,
                         onValueChange = { idiomaText = it },
-                        label = { Text("Ex: Espanhol, Língua de Sinais, etc.") },
+                        label = { Text(if (isJutsuTarget) "Ex: Dragão, Tigre, Garça..." else "Ex: Espanhol, Língua de Sinais...") },
                         singleLine = true
                     )
                 }
@@ -548,11 +571,14 @@ fun PericiasContent(
                 TextButton(
                     onClick = {
                         val per = idiomaTarget!!
-                        val label = idiomaText.trim().ifBlank { state.idiomaDefaultLabel(per) }
+                        val isJutsu = state.isJutsuPericia(per)
+                        val label = idiomaText.trim().ifBlank {
+                            if (isJutsu) "Jutsu Desconhecido" else state.idiomaDefaultLabel(per)
+                        }
                         state.notasPericia[per.nome] = label
                         if (!idiomaEditMode) {
                             state.increasePericiaFromAdvancement(per, idiomaPendingCost)
-                            state.syncIdiomaSlots()
+                            if (isJutsu) state.syncJutsuSlots() else state.syncIdiomaSlots()
                             onUserFeedback()
                         }
                         showIdiomaDialog = false
