@@ -2022,10 +2022,25 @@ class CriadorState {
 
     fun isSectionEnabled(section: MainSection): Boolean {
         if (modoProgressaoAtivo) return true
-        if (!isAdgLockedMode) return true
-        return when (section) {
-            MainSection.RESUMO, MainSection.ANCESTRALIDADES, MainSection.TROPOS -> true
-            else -> false
+        if (!compendioArteDaGuerraAtivo) return true
+
+        return if (tropoSelecionado == null) {
+            // "Locked Mode" (No Trope selected yet):
+            // Can see Summary, Ancestry, and Trope selection.
+            // Other tabs are disabled.
+            when (section) {
+                MainSection.RESUMO, MainSection.ANCESTRALIDADES, MainSection.TROPOS -> true
+                else -> false
+            }
+        } else {
+            // "Unlocked Mode" (Trope selected):
+            // Ancestry is now LOCKED (disabled).
+            // Trope is ENABLED (to change back to 'None').
+            // All other tabs are ENABLED.
+            when (section) {
+                MainSection.ANCESTRALIDADES -> false
+                else -> true
+            }
         }
     }
 

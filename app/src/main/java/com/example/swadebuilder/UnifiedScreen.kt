@@ -920,7 +920,7 @@ private fun CreationDetailContent(
         MainSection.ANCESTRALIDADES -> AncestralidadesSection(
             state = state,
             currentAncestralidade = state.ancestralidade,
-            supersLocked = creationLocked,
+            supersLocked = creationLocked || !state.isSectionEnabled(MainSection.ANCESTRALIDADES),
             ancestralidadeEmFoco = state.ancestralidadeEmFoco,
             onSelectAncestralidade = onSelectAncestralidade,
             onUserFeedback = onUserFeedback
