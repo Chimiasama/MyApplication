@@ -10,7 +10,8 @@ import kotlinx.serialization.json.Json
 data class PericiaJson(
     val nome: String,
     val atributo: String = "",
-    val basica: Boolean = false
+    val basica: Boolean = false,
+    val origem: String? = null
 )
 
 @Serializable

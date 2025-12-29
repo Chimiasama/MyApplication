@@ -61,6 +61,8 @@ class CriadorState {
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
     var grandesResponsabilidades by mutableStateOf(false)
     var signoAdgSelecionado by mutableStateOf<String?>(null)
+    var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
+    val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
 
     init {
         listaVantagens = deduplicarVantagens(listaVantagens)
@@ -71,8 +73,23 @@ class CriadorState {
         const val DEFAULT_HAPTIC_STRENGTH = 70
         const val DEFAULT_SOUND_VOLUME = 70
         val SIGNOS_ADG = listOf(
-            "Rato", "Boi", "Tigre", "Coelho", "Dragão", "Serpente",
-            "Cavalo", "Cabra", "Macaco", "Galo", "Cão", "Porco", "Gato"
+            "Basabasa", "Boi", "Tigre", "Lebre", "Garça", "Serpente",
+            "Dragão", "Kirin", "Macaco", "Raposa", "Lobo", "Tartaruga", "Urso"
+        )
+        val SIGNOS_ADG_DESC = mapOf(
+            "Basabasa" to "Aqueles que nasceram no primeiro mês sob o signo de Basabasa geralmente são indivíduos honestos e ambiciosos, conhecidos por uma beleza sobrenatural. Tal alinhamento celestial é ofuscado por uma oscilação de humores excêntricos. Começam as coisas com entusiasmo e logo perdem o interesse, tornando-se voláteis. Um Basabasa tem a Vantagem Atraente e escolhe na criação do personagem entre adicionar +1 às rolagens de Provocar ou Intimidar contra alvos que se sintam atraídos ou desprezem o Herói.",
+            "Boi" to "Aqueles que nasceram sob o signo do Boi são grandes e imponentes, conhecidos por serem diretos e persistentes. Falhas comuns incluem teimosia, franqueza excessiva e inabilidade em expressar emoções. Um Boi recebe +1 em rolagens em Atletismo quando utilizado em situações que podem exigir Força (como escalar ou nadar). Caso o personagem possua a Vantagem Brutamontes, esse benefício se aplica a todas as rolagens de Atletismo. Além disso, este benefício aumenta a Força em um tipo de dado e aumenta seu limite máximo no atributo em d12+1.",
+            "Tigre" to "A herança do signo do Tigre faz com que se tornem destemidos e precisos, realizando atos cavalheirescos dignos de respeito enquanto assumem a liderança. Tigres são naturalmente temperamentais. Em um papel de liderança ou posição de autoridade, tomarão decisões para obter o melhor resultado possível, sem considerar o efeito sobre os outros. Um Tigre tem um alcance de comando de +4 quadros, adiciona +1 nas rolagens de Medo e subtrai 1 dos resultados da Tabela de Medo (isso acumula com a Vantagem Corajoso).",
+            "Lebre" to "Heróis nascidos sob o signo da Lebre exibem qualidades gentis, amáveis e compassivas, com um toque de modéstia. Lebres podem demonstrar características comportamentais de sonhar acordado, escapismo, falta de perspectiva ou timidez em interações sociais. Uma Lebre tem um toque natural (Cura d6) e, com os suprimentos médicos adequados, pode gastar um Bene para tratar um Ferimento com horas ou dias (até 4 dias), como se estivesse sendo tratada dentro da Hora de Ouro. Um personagem pode se beneficiar desse tratamento uma única vez por aventura.",
+            "Garça" to "Nascidos com o signo da Garça, os indivíduos buscam uma vida de perfeito equilíbrio entre os altos e baixos que ela oferece. Uma Garça é agraciada com graça em seus movimentos e se destaca contra adversários em todas as formas. A Garça possui a fraqueza da insegurança e depende muito dos outros em momentos de dúvida. As garças recebem +1 em Aparar, d4 em Acrobacia e aumentam Atletismo em um tipo de dado.",
+            "Serpente" to "Muitos veem a serpente como astuta e sorrateira, no entanto, o signo da Serpente é um símbolo de sabedoria e mantém um alto nível de astúcia. Serpentes são consideradas sensíveis e emotivas, a maioria é talentosa nas artes. Com essa sensibilidade vem a hesitação e pequenos surtos de leve paranoia. Uma Serpente começa com Jogar d6 ou Performance d6. Usando Jogar, uma Serpente adiciona +1 ao total da diferença se vencer e -1 ao total da diferença se perder. Usando Performance para captação de recursos, altera a porcentagem para 30% e 40% com um sucesso.",
+            "Dragão" to "Nascidos sob o signo do Dragão, os indivíduos são respeitados por serem animados, pacientes e sábios em sua experiência. Muitos dos melhores estrategistas da história são do signo do Dragão. Os dragões tendem a odiar hipocrisia, fofocas e calúnias, e desprezam ser usados ou controlados pelos outros. O Dragão aumenta seu Espírito em um tipo de dado e aumenta seu máximo neste atributo para d12+1. Dragões se beneficiam de +1 em rolagens de Conhecimento Geral quando estão em situações desconhecidas.",
+            "Kirin" to "O nascimento de um Kirin coincide com o final da estação de verão à medida que se aproxima o outono, representando um tempo de coleta e colheita. Um Kirin é proativo e percebe a malícia dos outros por meio de ações independentes. No entanto, um Kirin tende a fazer o que é necessário por conta própria, desconfiando que os outros cumpram suas obrigações. Um Kirin precisa de um incentivo a mais para prosseguir, começando com +1 em sua Reserva de Chi e uma Bene adicional em cada sessão.",
+            "Macaco" to "O signo do Macaco está associado ao ser cheio de vida, de raciocínio rápido e versátil. Um Macaco é conhecido por tirar o máximo de qualquer situação, mas muitas vezes olha com menosprezo àqueles que não aprendem rapidamente. Muitas vezes, um temperamento impetuoso será a causa das ações de um Macaco. Com este signo de nascença, a Astúcia de um Macaco aumenta em um tipo de dado e seu máximo em aumenta d12+1. Um Macaco rola d4+1 nas perícias não treinadas baseadas em Astúcia, este bônus não se aplica ao dado selvagem.",
+            "Raposa" to "Dizem que a Raposa possui uma intuição incrível. Capaz de ler situações sociais e saber exatamente o que as outras pessoas precisam ouvir. Isso não quer dizer que a Raposa seja falsa, é uma demonstração de habilidade e grande cuidado em aspectos de \"Manter as Aparências\". Traição e confiança são preocupações comuns de uma Raposa, levando-a a questionar a lealdade e a amizade de outros. Uma Raposa começa com a Vantagem Elevar a Moral e recebe +1 em Persuadir e nas rolagens da Tabela de Reação.",
+            "Lobo" to "Um lobo é um animal social que se sente em casa quando pertence a uma matilha, assim como é verdadeiro para aqueles nascidos sob o signo do Lobo. Um Lobo exibe risos, alegria e comportamento solidário entre amigos, preferindo estar em companhia a sobreviver sozinho. Um Lobo pode sobreviver sozinho, mas prospera dentro de um grupo. Um Lobo começa com as Vantagens Elo Comum e adiciona +1 nas rolagens da Tabela de Reação para Reação Inicial..",
+            "Tartaruga" to "Uma Tartaruga de casca dura é vista como lenta e covarde pelos outros, no entanto, uma Tartaruga possui mais longevidade, paciência e consciência do que aqueles que estão à sua volta. Hesitações na hora de tomar decisões frequentemente fazem uma Tartaruga perder oportunidades. Nascer sob o signo da Tartaruga concede +1 à Resistência. Aqueles que tentarem realizar a manobra “Finalização” em uma Tartaruga recebem -1 nas rolagens de ataque e dano na tentativa.",
+            "Urso" to "Nascido no inverno, um Urso é considerado focado nas necessidades de sobrevivência. Na verdade, um Urso é centrado na família e focado na sobrevivência de cada membro. Isso pode significar que um Urso seja isolacionista e indiferente àqueles que não conhece. Por essa razão, o Vigor de um Urso aumenta em um tipo de dado e seu máximo aumenta para d12+1. Ursos reduzem a penalidade recebida de Exausto para -1 em vez de -2."
         )
     }
     var maisPontosPericias by mutableStateOf(true)
@@ -306,7 +323,9 @@ class CriadorState {
         val bloquearAprimoradoBonus =
             if (vantagensSelecionadas.any { it.nome.keyify() == "BLOQUEAR APRIMORADO" }) 1 else 0
 
-        return base + bloquearBonus + bloquearAprimoradoBonus + bonusApararFromPower
+        val signBonus = if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO") && signoAdgSelecionado?.equals("Garça", ignoreCase = true) == true) 1 else 0
+
+        return base + bloquearBonus + bloquearAprimoradoBonus + bonusApararFromPower + signBonus
     }
 
     // Engine Delegation
@@ -569,13 +588,91 @@ class CriadorState {
     private val jutsuSlotRegex = Regex("^Jutsu\\s+(\\d+)$", RegexOption.IGNORE_CASE)
     private val jutsuExtras = mutableStateListOf<Pericia>()
 
+    // Computed property for basic filtering before injecting dynamic slots (Idioms, Jutsu)
+    val periciasFiltradasPorCompendio: List<Pericia>
+        get() {
+            return if (compendioArteDaGuerraAtivo) {
+                // If AdG active:
+                // 1. Remove standard skills that don't exist in AdG
+                val forbiddenIds = setOf(
+                    "HACKEAR", "FE", "ELETRONICA", "CIENCIA ESTRANHA", "PSIONICOS", "CONJURAR", "CIENCIA_ESTRANHA"
+                )
+
+                listaPericias.filter { per ->
+                    val key = per.nome.keyify()
+
+                    // Exclude specific forbidden skills
+                    if (key in forbiddenIds) return@filter false
+
+                    // Special case for FOCO:
+                    // If we have an AdG version (origem="ARTE_DA_GUERRA"), use that.
+                    // If it's the standard Foco (no origem or BASICO), exclude it IF we have an AdG replacement.
+                    // Actually, simpler: if per.nome is FOCO, only keep if it is the AdG version.
+                    if (key == "FOCO") {
+                        per.origem == "ARTE_DA_GUERRA"
+                    } else if (key == "TRANSICAO") {
+                        // Transição is exclusive to Elementalista trope
+                        tropoSelecionado?.id == "tropo_elementalista"
+                    } else {
+                        // Keep other AdG skills
+                        if (per.origem == "ARTE_DA_GUERRA") return@filter true
+                        // Keep standard skills (unless forbidden above or handled by replacement)
+                        true
+                    }
+                }
+            } else {
+                // If AdG NOT active:
+                // Hide any skill marked with ARTE_DA_GUERRA
+                listaPericias.filter { per ->
+                    per.origem != "ARTE_DA_GUERRA"
+                }
+            }
+        }
+
+    fun periciaStartRaw(anc: String, per: Pericia): Int {
+        val ancKey = anc.keyify()
+        val perKey = per.nome.keyify()
+        val base = racialSkillStartMap[ancKey]?.get(perKey) ?: if (per.basica) 4 else 0
+
+        var modifiedBase = base
+
+        // Arte da Guerra - Signos (only for Humans)
+        if (compendioArteDaGuerraAtivo && ancKey.contains("HUMANO")) {
+            val sign = signoAdgSelecionado
+            if (sign != null) {
+                // Lebre: Cura d6
+                if (sign.equals("Lebre", ignoreCase = true) && perKey == "CURAR") {
+                    modifiedBase = maxOf(modifiedBase, 6)
+                }
+                // Garça: Acrobacia d4, Atletismo +1 die type (from base)
+                if (sign.equals("Garça", ignoreCase = true)) {
+                    if (perKey == "ACROBACIA") modifiedBase = maxOf(modifiedBase, 4)
+                    if (perKey == "ATLETISMO") modifiedBase = maxOf(modifiedBase, 6) // Base d4 -> d6
+                }
+                // Serpente: Jogar OR Performance d6
+                if (sign.equals("Serpente", ignoreCase = true)) {
+                    val chosen = signoSerpentePericiaEscolhida.keyify()
+                    if (perKey == chosen) {
+                        modifiedBase = maxOf(modifiedBase, 6)
+                    }
+                }
+                // Macaco: Unskilled d4+1 (Not represented in start raw)
+            }
+        }
+
+        return modifiedBase
+    }
+
     fun periciasComIdiomas(): List<Pericia> {
-        val idiomaBase = idiomaBasePericia() ?: return periciasComJutsu() // fallback if no idioms
+        // Use the filtered list as base instead of raw global listaPericias
+        val baseList = periciasFiltradasPorCompendio
+
+        val idiomaBase = idiomaBasePericia() ?: return periciasComJutsu(baseList) // fallback if no idioms
         val extrasOrdenados = idiomasExtras.sortedBy { idiomaSlotIndex(it) ?: Int.MAX_VALUE }
 
         // Combine base list + idioms first
         val listWithIdioms = buildList {
-            listaPericias.forEach { per ->
+            baseList.forEach { per ->
                 add(per)
                 if (per == idiomaBase) {
                     addAll(extrasOrdenados)
@@ -604,15 +701,15 @@ class CriadorState {
     }
 
     // Helper used above if Idiomas base is missing (unlikely but safe)
-    private fun periciasComJutsu(): List<Pericia> {
-        val lutarBase = listaPericias.firstOrNull { it.nome.equals("LUTAR", ignoreCase = true) }
-            ?: return listaPericias
+    private fun periciasComJutsu(baseList: List<Pericia> = periciasFiltradasPorCompendio): List<Pericia> {
+        val lutarBase = baseList.firstOrNull { it.nome.equals("LUTAR", ignoreCase = true) }
+            ?: return baseList
 
-        if (!compendioArteDaGuerraAtivo) return listaPericias
+        if (!compendioArteDaGuerraAtivo) return baseList
 
         val jutsuExtrasOrdenados = jutsuExtras.sortedBy { jutsuSlotIndex(it) ?: Int.MAX_VALUE }
         return buildList {
-            listaPericias.forEach { per ->
+            baseList.forEach { per ->
                 add(per)
                 if (per == lutarBase) {
                     addAll(jutsuExtrasOrdenados)
@@ -1236,11 +1333,12 @@ class CriadorState {
         val racialPenalty = if (ancestralidade.keyify() == "TERRACOTA") 1 else 0
         val bonusFromChiEdges = vantagensSelecionadas.count { it.categoria == Categoria.CHI }
         val bonusFromTropo = if (compendioArteDaGuerraAtivo) tecnicasIniciaisFromTropo else 0
+        val bonusFromSign = if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO") && signoAdgSelecionado?.equals("Kirin", ignoreCase = true) == true) 1 else 0
 
         // Base 2 added as requested
         val baseChi = if (compendioArteDaGuerraAtivo) 2 else 0
 
-        (baseChi + espiritoRaw / 2 - racialPenalty + bonusFromChiEdges + bonusFromTropo).coerceAtLeast(0)
+        (baseChi + espiritoRaw / 2 - racialPenalty + bonusFromChiEdges + bonusFromTropo + bonusFromSign).coerceAtLeast(0)
     }
 
     var nomePersonagem by mutableStateOf("")
@@ -1648,11 +1746,35 @@ class CriadorState {
 
     private fun atributoBaseRacial(a: String): Int {
         val base = racialAttrMinMap[ancestralidade]?.get(a) ?: 4
-        return if (a.keyify() == "AGILIDADE" && meioElfoAgil) {
-            maxOf(base, 6)
-        } else {
-            base
+
+        var modifiedBase = base
+
+        // Meio-Elfo Ágil
+        if (a.keyify() == "AGILIDADE" && meioElfoAgil) {
+            modifiedBase = maxOf(modifiedBase, 6)
         }
+
+        // Arte da Guerra - Signos (only for Humans)
+        if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO")) {
+            val sign = signoAdgSelecionado
+            val attrKey = a.keyify()
+            if (sign != null) {
+                if (sign.equals("Boi", ignoreCase = true) && attrKey == "FORCA") {
+                    modifiedBase = maxOf(modifiedBase, 6)
+                }
+                if (sign.equals("Dragão", ignoreCase = true) && attrKey == "ESPIRITO") {
+                    modifiedBase = maxOf(modifiedBase, 6)
+                }
+                if (sign.equals("Macaco", ignoreCase = true) && attrKey == "ASTUCIA") {
+                    modifiedBase = maxOf(modifiedBase, 6)
+                }
+                if (sign.equals("Urso", ignoreCase = true) && attrKey == "VIGOR") {
+                    modifiedBase = maxOf(modifiedBase, 6)
+                }
+            }
+        }
+
+        return modifiedBase
     }
 
     fun atributoMinRaw(a: String): Int =
@@ -2071,11 +2193,54 @@ class CriadorState {
 
     fun recalcularPontosAtributo(feedbackMessages: MutableList<String> = mutableListOf()) {
 
+        // Ensure current values meet the new racial base (e.g. if Sign increased base from d4 to d6)
+        listaAtributos.forEach { attrKey ->
+            val min = atributoBaseRacial(attrKey)
+            val state = valoresAtributos[attrKey]
+            if (state != null && state.intValue < min) {
+                state.intValue = min
+            }
+        }
+
         pontosAtributo = calcularPontosAtributoRestantes()
 
         trimAttributeStacks(feedbackMessages)
 
         rebuildAllPericiaStacks(feedbackMessages)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    fun selecionarSigno(novoSigno: String?) {
+        if (signoAdgSelecionado == novoSigno) return
+
+        // 1. Remove old edges from previous sign
+        if (vantagensAutomaticasDoSigno.isNotEmpty()) {
+            vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoSigno }
+            vantagensAutomaticasDoSigno.clear()
+        }
+
+        signoAdgSelecionado = novoSigno
+
+        // 2. Add new edges
+        if (novoSigno != null) {
+            val edgesToAdd = mutableListOf<String>()
+            when (novoSigno) {
+                "Basabasa" -> edgesToAdd.add("atraente")
+                "Raposa" -> edgesToAdd.add("elevar_a_moral")
+                "Lobo" -> edgesToAdd.add("elo_comum")
+            }
+
+            edgesToAdd.forEach { edgeId ->
+                val vant = listaVantagens.firstOrNull { it.id == edgeId }
+                if (vant != null && vantagensSelecionadas.none { it.id == vant.id }) {
+                    vantagensSelecionadas.add(vant)
+                    vantagensAutomaticasDoSigno.add(vant.id)
+                }
+            }
+        }
+
+        recalcularPontosAtributo()
+        rebuildAllPericiaStacks()
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)

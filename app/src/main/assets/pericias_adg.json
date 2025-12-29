@@ -1,0 +1,34 @@
+{
+  "pericias": [
+    {
+      "nome": "Acrobacia",
+      "atributo": "Agilidade",
+      "basica": false,
+      "origem": "ARTE_DA_GUERRA"
+    },
+    {
+      "nome": "Convenção",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "ARTE_DA_GUERRA"
+    },
+    {
+      "nome": "Ofício",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "ARTE_DA_GUERRA"
+    },
+    {
+      "nome": "Foco",
+      "atributo": "Espírito",
+      "basica": false,
+      "origem": "ARTE_DA_GUERRA"
+    },
+    {
+      "nome": "Transição",
+      "atributo": "Vigor",
+      "basica": false,
+      "origem": "ARTE_DA_GUERRA"
+    }
+  ]
+}

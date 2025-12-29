@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -452,8 +453,45 @@ fun AncestralidadesSection(
                                             DropdownMenuItem(
                                                 text = { Text(signo) },
                                                 onClick = {
-                                                    state.signoAdgSelecionado = signo
+                                                    state.selecionarSigno(signo)
                                                     expanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+
+                                val selectedSign = state.signoAdgSelecionado
+                                if (selectedSign != null) {
+                                    Spacer(Modifier.height(4.dp))
+                                    val signDesc = CriadorState.SIGNOS_ADG_DESC[selectedSign]
+                                    if (signDesc != null && EditionConfig.isFullEdition) {
+                                        Text(
+                                            text = signDesc,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+
+                                    if (selectedSign.equals("Serpente", ignoreCase = true)) {
+                                        Spacer(Modifier.height(8.dp))
+                                        Text("Perícia Bônus:", style = MaterialTheme.typography.labelMedium)
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            com.example.swadebuilder.ui.components.RadioButtonRow(
+                                                label = "Jogar",
+                                                selected = state.signoSerpentePericiaEscolhida == "Jogar",
+                                                onSelect = {
+                                                    state.signoSerpentePericiaEscolhida = "Jogar"
+                                                    state.rebuildAllPericiaStacks()
+                                                }
+                                            )
+                                            Spacer(Modifier.width(16.dp))
+                                            com.example.swadebuilder.ui.components.RadioButtonRow(
+                                                label = "Performance",
+                                                selected = state.signoSerpentePericiaEscolhida == "Performance",
+                                                onSelect = {
+                                                    state.signoSerpentePericiaEscolhida = "Performance"
+                                                    state.rebuildAllPericiaStacks()
                                                 }
                                             )
                                         }
