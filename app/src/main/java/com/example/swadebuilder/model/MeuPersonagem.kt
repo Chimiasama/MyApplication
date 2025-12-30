@@ -81,5 +81,7 @@ data class MeuPersonagem(
     val tamanho: Int = 0,
     val resistencia: Int = 0,
     val appTheme: String = "DEFAULT",
-    val portraitFileName: String? = null
+    val portraitFileName: String? = null,
+    val regraFamaAtiva: Boolean = false,
+    val fama: Int = 0
 )

@@ -703,7 +703,8 @@ class MainActivity : ComponentActivity() {
                             TelaInicial(
                                 onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioBuscatrilhaAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
-                                                semPontosDePoder, multiplosIdiomas, grandesResponsabilidades ->
+                                                semPontosDePoder, multiplosIdiomas, grandesResponsabilidades,
+                                                optRegraFama ->
 
                                     creationSession++
 
@@ -722,7 +723,8 @@ class MainActivity : ComponentActivity() {
                                         compendioWiseguysAtivo = compendioWiseguysAtivo,
                                         modoMonstroAtivo = modoMonstroAtivo,
                                         usarEspecializacoesDePericia = usarEspecializacaoPer,
-                                        regraMultiplosIdiomas = multiplosIdiomas
+                                        regraMultiplosIdiomas = multiplosIdiomas,
+                                        optRegraFama = optRegraFama
                                         // showHelpMessages removido
                                     )
                                     scope.launch {

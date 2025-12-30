@@ -89,7 +89,8 @@ fun TelaInicial(
         especializacaoPer: Boolean,
         semPontosDePoder: Boolean,
         multiplosIdiomas: Boolean,
-        grandesResponsabilidades: Boolean
+        grandesResponsabilidades: Boolean,
+        optRegraFama: Boolean
         // showHelpMessages removido
     ) -> Unit,
     onCarregarPersonagem: () -> Unit,
@@ -125,6 +126,7 @@ fun TelaInicial(
     var optCompendioDeadlands by rememberSaveable { mutableStateOf(false) }
     var optCompendioCrystalHeart by rememberSaveable { mutableStateOf(false) }
     var optCompendioArteDaGuerra by rememberSaveable { mutableStateOf(false) }
+    var optRegraFama by rememberSaveable { mutableStateOf(false) }
     var optCompendioCidadeSolVapor by rememberSaveable { mutableStateOf(false) }
     var optCompendioWiseguys by rememberSaveable { mutableStateOf(false) }
 
@@ -283,7 +285,8 @@ fun TelaInicial(
                         optEspecializacaoPer,
                         optSemPontosPoder,
                         optMultiplosIdiomas,
-                        optGrandesResponsabilidades
+                        optGrandesResponsabilidades,
+                        optRegraFama
                     )
                     viewModel.state.compendioBuscatrilhaAtivo = optCompendioBuscatrilha
                     viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
@@ -383,7 +386,12 @@ fun TelaInicial(
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
                         SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
                         SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
-                        SimpleCheckRow("Fama", "Sua reputação o precede (Placeholder).", true) { }
+                        SimpleCheckRow(
+                            title = "Regra de Fama",
+                            description = "Adiciona o atributo Fama (Arte da Guerra).",
+                            checked = optRegraFama,
+                            onCheckedChange = { optRegraFama = it }
+                        )
                     } else {
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
                         SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }

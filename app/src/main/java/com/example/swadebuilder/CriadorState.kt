@@ -56,6 +56,7 @@ class CriadorState {
     var compendioArteDaGuerraAtivo by mutableStateOf(false)
     var compendioCidadeSolVaporAtivo by mutableStateOf(false)
     var compendioWiseguysAtivo by mutableStateOf(false)
+    var optRegraFama by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
@@ -95,6 +96,7 @@ class CriadorState {
     var maisPontosPericias by mutableStateOf(true)
     var cartaSelvagem       by mutableStateOf(true)
     var dinheiro by mutableIntStateOf(500)
+    var famaManual by mutableIntStateOf(0)
     val poderesSelecionados = mutableStateListOf<String>()
     val manifestacoesPoderes = mutableStateMapOf<String, String>()
     val equipamentosComprados = mutableStateListOf<EquipamentoItem>()
@@ -424,6 +426,12 @@ class CriadorState {
     }
 
     fun valorTamanho(): Int = tamanhoExibido()
+
+    fun valorFama(): Int {
+        // Base 0 + Modifiers (Traits) + Manual
+        // TODO: Add traits logic if needed later
+        return famaManual
+    }
 
     // PROMPT 2: Brawny (Brutamontes) Carga calculation
     fun valorCargaMaxima(): Float {
@@ -2588,6 +2596,7 @@ class CriadorState {
                 compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
                 compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
                 compendioWiseguysAtivo = compendioWiseguysAtivo,
+                optRegraFama = optRegraFama,
                 modoOficialAtivo = modoOficialAtivo,
                 modoMonstroAtivo = modoMonstroAtivo,
                 tipoMonstroSelecionado = tipoMonstroSelecionado,
@@ -2612,6 +2621,7 @@ class CriadorState {
                 pontosVantagem = pontosVantagem,
                 pontosAtributo = pontosAtributo,
                 pontosComplicacaoGastos = pontosComplicacaoGastos,
+                famaManual = famaManual,
                 paFromProgress = paFromProgress,
                 spFromProgress = spFromProgress,
                 legendaryAttrReservations = legendaryAttrReservations,
@@ -2727,6 +2737,7 @@ class CriadorState {
         compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo
         compendioCidadeSolVaporAtivo = flags.compendioCidadeSolVaporAtivo
         compendioWiseguysAtivo = flags.compendioWiseguysAtivo
+        optRegraFama = flags.optRegraFama
         modoOficialAtivo = flags.modoOficialAtivo
         modoMonstroAtivo = flags.modoMonstroAtivo
         usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia
@@ -2757,6 +2768,7 @@ class CriadorState {
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
 
         dinheiro = snapshot.recursos.dinheiro
+        famaManual = snapshot.recursos.famaManual
         pontosVantagem = snapshot.recursos.pontosVantagem
         pontosComplicacaoGastos = snapshot.recursos.pontosComplicacaoGastos
         paFromProgress = snapshot.recursos.paFromProgress

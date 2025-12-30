@@ -22,8 +22,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -203,7 +205,12 @@ fun SummaryContent(
         Spacer(Modifier.height(12.dp))
 
         derivedSection?.let {
-            DerivedStatsRow(stats = it.toStats())
+            DerivedStatsRow(
+                stats = it.toStats(),
+                onFamaChange = if (state.modoProgressaoAtivo && state.optRegraFama) { delta ->
+                    state.famaManual += delta
+                } else null
+            )
             Spacer(Modifier.height(12.dp))
         }
 
@@ -649,7 +656,10 @@ private fun CombatRow(name: String, stats: String, notes: String) {
 
 @Composable
 @OptIn(ExperimentalLayoutApi::class)
-private fun DerivedStatsRow(stats: List<Pair<String, String>>) {
+private fun DerivedStatsRow(
+    stats: List<Pair<String, String>>,
+    onFamaChange: ((Int) -> Unit)? = null
+) {
     if (stats.isEmpty()) return
 
     FlowRow(
@@ -660,7 +670,67 @@ private fun DerivedStatsRow(stats: List<Pair<String, String>>) {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         stats.forEach { (label, value) ->
-            CircleStat(label = label, value = value)
+            if (label == "Fama" && onFamaChange != null) {
+                EditableCircleStat(label = label, value = value, onDelta = onFamaChange)
+            } else {
+                CircleStat(label = label, value = value)
+            }
+        }
+    }
+}
+
+@Composable
+fun EditableCircleStat(
+    label: String,
+    value: String,
+    onDelta: (Int) -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(4.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(68.dp)
+                .clip(CircleShape)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = CircleShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                ),
+                textAlign = TextAlign.Center
+            )
+        }
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodySmall,
+            textAlign = TextAlign.Center
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            IconButton(
+                onClick = { onDelta(-1) },
+                modifier = Modifier.size(24.dp)
+            ) {
+                Icon(Icons.Default.Remove, "Diminuir", modifier = Modifier.size(16.dp))
+            }
+            IconButton(
+                onClick = { onDelta(1) },
+                modifier = Modifier.size(24.dp)
+            ) {
+                Icon(Icons.Default.Add, "Aumentar", modifier = Modifier.size(16.dp))
+            }
         }
     }
 }
