@@ -712,7 +712,9 @@ private fun availableSectionsFor(state: CriadorState): List<MainSection> {
         return sections
     }
 
-    sections += MainSection.ANCESTRALIDADES
+    if (!state.compendioWiseguysAtivo) {
+        sections += MainSection.ANCESTRALIDADES
+    }
     if (state.compendioArteDaGuerraAtivo) {
         sections += MainSection.TROPOS
         if (state.isAdgLockedMode) {
