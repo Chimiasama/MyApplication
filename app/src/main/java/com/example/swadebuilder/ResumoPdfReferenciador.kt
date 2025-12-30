@@ -89,7 +89,9 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         tamanho = this.tamanhoExibido(),
         resistencia = this.resistenciaBase(),
         appTheme = this.appTheme.name,
-        portraitFileName = this.portraitFileName
+        portraitFileName = this.portraitFileName,
+        regraFamaAtiva = this.optRegraFama,
+        fama = this.valorFama()
     )
 }
 

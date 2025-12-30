@@ -105,7 +105,8 @@ class CriadorViewModel : ViewModel() {
             modoMonstroAtivo = false,
             usarEspecializacoesDePericia = false,
             grandesResponsabilidades = false,
-            regraMultiplosIdiomas = false
+            regraMultiplosIdiomas = false,
+            optRegraFama = false
         )
     }
 
@@ -221,7 +222,8 @@ class CriadorViewModel : ViewModel() {
             compendioWiseguysAtivo = flags.compendioWiseguysAtivo,
             modoMonstroAtivo = flags.modoMonstroAtivo,
             usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia,
-            grandesResponsabilidades = flags.grandesResponsabilidades
+            grandesResponsabilidades = flags.grandesResponsabilidades,
+            optRegraFama = flags.optRegraFama
             // showHelpMessages removido
         )
         state.restoreFromSnapshot(snapshot, mutableListOf())
@@ -270,6 +272,7 @@ class CriadorViewModel : ViewModel() {
         usarEspecializacoesDePericia: Boolean = false,
         grandesResponsabilidades: Boolean = false,
         regraMultiplosIdiomas: Boolean = false,
+        optRegraFama: Boolean = false,
         // showHelpMessages removido
     ) {
 
@@ -286,6 +289,8 @@ class CriadorViewModel : ViewModel() {
         state.compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo
         state.compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo
         state.compendioWiseguysAtivo = compendioWiseguysAtivo
+        state.optRegraFama = optRegraFama
+        state.famaManual = 0
         state.modoMonstroAtivo = modoMonstroAtivo
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
         state.grandesResponsabilidades = grandesResponsabilidades
