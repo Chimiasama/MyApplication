@@ -135,9 +135,7 @@ fun TelaInicial(
     var showCreditsDialog by remember { mutableStateOf(false) }
 
     // UI Expansion States
-    var expandedBasicRules by rememberSaveable { mutableStateOf(false) }
-    var expandedHorrorRules by rememberSaveable { mutableStateOf(false) }
-    var expandedSupersRules by rememberSaveable { mutableStateOf(false) }
+    var expandedSettingRules by rememberSaveable { mutableStateOf(false) }
 
     // Data for Grid
     data class ModuleItemData(
@@ -181,7 +179,13 @@ fun TelaInicial(
             Icons.Default.Bolt,
             optSuperPoderes,
             !isAnyBookSelected || optSuperPoderes
-        ) { optSuperPoderes = !optSuperPoderes }
+        ) {
+            optSuperPoderes = !optSuperPoderes
+            if (optSuperPoderes) {
+                optCartaSelvagem = true
+                optMaisPontosPericias = true
+            }
+        }
     )
 
     val settingModules = listOf(
@@ -349,66 +353,44 @@ fun TelaInicial(
             }
 
             // --- Regras de Criação ---
-            item(span = { GridItemSpan(2) }) { SectionHeader("Livros de Regras") }
-
             item(span = { GridItemSpan(2) }) {
-                Column(
-                    Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                RuleGroupCard(
+                    title = "Regras de Cenário",
+                    expanded = expandedSettingRules,
+                    onToggle = { expandedSettingRules = !expandedSettingRules }
                 ) {
-                    // Livro Básico
-                    RuleGroupCard(
-                        title = "Regras: Livro Básico",
-                        expanded = expandedBasicRules,
-                        onToggle = { expandedBasicRules = !expandedBasicRules }
-                    ) {
+                    if (optSuperPoderes) {
+                        SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
+                        SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
+                        SimpleCheckRow("Múltiplos Idiomas", "Personagem inicia poliglota.", optMultiplosIdiomas) { optMultiplosIdiomas = it }
+                        SimpleCheckRow(
+                            title = "Grandes Responsabilidades",
+                            description = "Débitos de Poder adicionais.",
+                            checked = optGrandesResponsabilidades,
+                            onCheckedChange = { optGrandesResponsabilidades = it }
+                        )
+                        SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
+                        SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
+                    } else {
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
 
-                        // PROMPT: Disable/Hide checkbox if AdG is active
                         if (!optCompendioArteDaGuerra) {
                             SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
                         }
 
-                        if (!optSuperPoderes) {
-                            SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) { optMultiAntecedenteArcano = it }
-                        }
+                        SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) { optMultiAntecedenteArcano = it }
                         SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
                         SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
                         SimpleCheckRow("Múltiplos Idiomas", "Personagem inicia poliglota.", optMultiplosIdiomas) { optMultiplosIdiomas = it }
                         SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
-                        if (!optSuperPoderes) {
-                            SimpleCheckRow("Sem Pontos de Poder", "Conjuradores não usam PP.", optSemPontosPoder) { optSemPontosPoder = it }
-                        }
-                    }
+                        SimpleCheckRow("Sem Pontos de Poder", "Conjuradores não usam PP.", optSemPontosPoder) { optSemPontosPoder = it }
 
-                    // Regras Horror
-                    if (optCompendioHorror) {
-                        RuleGroupCard(
-                            title = "Regras: Horror",
-                            expanded = expandedHorrorRules,
-                            onToggle = { expandedHorrorRules = !expandedHorrorRules }
-                        ) {
+                        if (optCompendioHorror) {
                             SimpleCheckRow(
                                 title = "Monstros Heróis",
                                 description = "Jogar como vampiro, lobisomem, etc.",
                                 checked = optModoMonstro,
                                 onCheckedChange = { optModoMonstro = it }
-                            )
-                        }
-                    }
-
-                    // Regras Supers
-                    if (optSuperPoderes) {
-                        RuleGroupCard(
-                            title = "Regras: Superpoderes",
-                            expanded = expandedSupersRules,
-                            onToggle = { expandedSupersRules = !expandedSupersRules }
-                        ) {
-                            SimpleCheckRow(
-                                title = "Grandes Responsabilidades",
-                                description = "Débitos de Poder adicionais.",
-                                checked = optGrandesResponsabilidades,
-                                onCheckedChange = { optGrandesResponsabilidades = it }
                             )
                         }
                     }
