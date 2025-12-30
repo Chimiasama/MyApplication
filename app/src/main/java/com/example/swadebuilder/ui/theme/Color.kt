@@ -52,3 +52,4 @@ val MinimalistBlack    = Color(0xFF000000)
 val MinimalistWhite    = Color(0xFFFFFFFF)
 val MinimalistGrayLight = Color(0xFFF5F5F5)
 val MinimalistGrayDark  = Color(0xFF121212)
+val MinimalistGrayMedium = Color(0xFFE0E0E0) // Lighter gray for containers
