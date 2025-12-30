@@ -47,9 +47,19 @@ val HalloOrange   = Color(0xFFFF6D00)
 val HalloPurple   = Color(0xFF6200EA)
 val HalloBlack    = Color(0xFF121212)
 
-// MINIMALIST (Preto, Branco e Cinza)
-val MinimalistBlack    = Color(0xFF000000)
-val MinimalistWhite    = Color(0xFFFFFFFF)
-val MinimalistGrayLight = Color(0xFFF5F5F5)
-val MinimalistGrayDark  = Color(0xFF121212)
-val MinimalistGrayMedium = Color(0xFFE0E0E0) // Lighter gray for containers
+// MINIMALIST (Tons pastéis e claros)
+// Light mode palette (High contrast, clean)
+val MinimalistLightBg       = Color(0xFFFFFFFF)
+val MinimalistLightSurface  = Color(0xFFF5F5F5) // Very light gray
+val MinimalistLightPrimary  = Color(0xFF000000)
+val MinimalistLightGreen    = Color(0xFFE8F5E9) // Pale green for active/ok elements
+val MinimalistLightYellow   = Color(0xFFFFF9C4) // Pale yellow for pending/warning elements
+val MinimalistLightText     = Color(0xFF000000)
+
+// Dark mode palette (High contrast, dark)
+val MinimalistDarkBg        = Color(0xFF121212)
+val MinimalistDarkSurface   = Color(0xFF1E1E1E)
+val MinimalistDarkPrimary   = Color(0xFFFFFFFF)
+val MinimalistDarkGreen     = Color(0xFF2E7D32) // Darker green for dark mode contrast
+val MinimalistDarkYellow    = Color(0xFFF9A825) // Darker yellow for dark mode contrast
+val MinimalistDarkText      = Color(0xFFE0E0E0)
