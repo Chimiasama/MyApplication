@@ -216,7 +216,14 @@ fun TelaInicial(
             Icons.Filled.SportsMartialArts,
             optCompendioArteDaGuerra,
             !isAnyBookSelected || optCompendioArteDaGuerra
-        ) { optCompendioArteDaGuerra = !optCompendioArteDaGuerra },
+        ) {
+            optCompendioArteDaGuerra = !optCompendioArteDaGuerra
+            if (optCompendioArteDaGuerra) {
+                optCartaSelvagem = true
+                optNasceUmHeroi = true
+                optHeroiSemArmadura = true
+            }
+        },
         ModuleItemData(
             "A Cidade do Sol a Vapor".toEditionDisplayName(),
             "Estímulos vitorianos, vapor e tecnomagia.",
@@ -371,13 +378,15 @@ fun TelaInicial(
                         )
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
                         SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
+                        SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
+                    } else if (optCompendioArteDaGuerra) {
+                        SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
+                        SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
+                        SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
+                        SimpleCheckRow("Fama", "Sua reputação o precede (Placeholder).", true) { }
                     } else {
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
-
-                        if (!optCompendioArteDaGuerra) {
-                            SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
-                        }
-
+                        SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
                         SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) { optMultiAntecedenteArcano = it }
                         SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
                         SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
