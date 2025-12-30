@@ -216,7 +216,16 @@ fun TelaInicial(
             Icons.Filled.SportsMartialArts,
             optCompendioArteDaGuerra,
             !isAnyBookSelected || optCompendioArteDaGuerra
-        ) { optCompendioArteDaGuerra = !optCompendioArteDaGuerra },
+        ) {
+            optCompendioArteDaGuerra = !optCompendioArteDaGuerra
+            if (optCompendioArteDaGuerra) {
+                // Configura regras padrão para Arte da Guerra
+                optCartaSelvagem = true
+                optNasceUmHeroi = true
+                optHeroiSemArmadura = true
+                // Fama é intrínseco ao módulo
+            }
+        },
         ModuleItemData(
             "A Cidade do Sol a Vapor".toEditionDisplayName(),
             "Estímulos vitorianos, vapor e tecnomagia.",
@@ -371,6 +380,7 @@ fun TelaInicial(
                         )
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
                         SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
+                        SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
                     } else {
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
 

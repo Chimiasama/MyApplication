@@ -193,6 +193,15 @@ fun SummaryContent(
         "\nTipo de Monstro: $tipoNome"
     } else ""
 
+    // Add custom derived stat for Fama if AdG is active
+    val extraDerivedStats = remember(state.compendioArteDaGuerraAtivo, state.famaManual, state.vantagensSelecionadas, state.complicacoesSelecionadas) {
+        if (state.compendioArteDaGuerraAtivo) {
+            listOf("Fama" to state.valorFama().toString())
+        } else {
+            emptyList()
+        }
+    }
+
     Column(Modifier.fillMaxWidth()) {
         IdentityCard(
             nome = nome,
@@ -203,7 +212,10 @@ fun SummaryContent(
         Spacer(Modifier.height(12.dp))
 
         derivedSection?.let {
-            DerivedStatsRow(stats = it.toStats())
+            DerivedStatsRow(
+                stats = it.toStats() + extraDerivedStats,
+                state = state
+            )
             Spacer(Modifier.height(12.dp))
         }
 
@@ -649,7 +661,10 @@ private fun CombatRow(name: String, stats: String, notes: String) {
 
 @Composable
 @OptIn(ExperimentalLayoutApi::class)
-private fun DerivedStatsRow(stats: List<Pair<String, String>>) {
+private fun DerivedStatsRow(
+    stats: List<Pair<String, String>>,
+    state: CriadorState? = null
+) {
     if (stats.isEmpty()) return
 
     FlowRow(
@@ -660,7 +675,55 @@ private fun DerivedStatsRow(stats: List<Pair<String, String>>) {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         stats.forEach { (label, value) ->
-            CircleStat(label = label, value = value)
+            if (label == "Fama" && state?.compendioArteDaGuerraAtivo == true && state.modoProgressaoAtivo) {
+                // Editable Fama
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(4.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(68.dp)
+                            .clip(CircleShape)
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = value,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
+                            ),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = label,
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.Center
+                    )
+
+                    // Edit Controls
+                    Row(
+                        modifier = Modifier.height(30.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(onClick = { state.famaManual -= 1 }) {
+                            Text("-", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                        }
+                        IconButton(onClick = { state.famaManual += 1 }) {
+                            Text("+", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                        }
+                    }
+                }
+            } else {
+                CircleStat(label = label, value = value)
+            }
         }
     }
 }
