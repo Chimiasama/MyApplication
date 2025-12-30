@@ -234,34 +234,37 @@ val HalloweenThemeData = AppThemeData(
     typography = HorrorTypography
 )
 
-// ─── Pride Theme ─────────────────────────────────────────────────────────────
-val PrideThemeData = AppThemeData(
+// ─── Minimalist Theme ────────────────────────────────────────────────────────
+val MinimalistThemeData = AppThemeData(
     lightColors = lightColorScheme(
-        primary = PrideViolet,
+        primary = MinimalistLightPrimary,
         onPrimary = Color.White,
-        secondary = PrideRed,
-        tertiary = PrideGreen,
-        background = Color.White,
-        surface = Color.White,
-        surfaceVariant = PrideYellow.copy(alpha = 0.2f),
-        onBackground = Color.Black,
-        onSurface = Color.Black,
-        errorContainer = PrideRed.copy(alpha = 0.1f),
-        onErrorContainer = Color.Black
+        secondary = MinimalistLightPrimary,
+        tertiary = MinimalistLightPrimary,
+        background = MinimalistLightBg,
+        surface = MinimalistLightSurface,
+        onBackground = MinimalistLightText,
+        onSurface = MinimalistLightText,
+        surfaceVariant = MinimalistLightGreen, // Active elements background
+        onSurfaceVariant = MinimalistLightText,
+        errorContainer = MinimalistLightYellow, // Pending elements background (was black)
+        onErrorContainer = MinimalistLightText // Text on pending elements (ensure readability)
     ),
     darkColors = darkColorScheme(
-        primary = PrideOrange,
+        primary = MinimalistDarkPrimary,
         onPrimary = Color.Black,
-        secondary = PrideBlue,
-        tertiary = PrideGreen,
-        background = PrideDarkBg,
-        surface = PrideDarkBg,
-        onSurface = Color.White,
-        onBackground = Color.White,
-        errorContainer = PrideRed.copy(alpha = 0.2f),
-        onErrorContainer = Color.White
+        secondary = MinimalistDarkPrimary,
+        tertiary = MinimalistDarkPrimary,
+        background = MinimalistDarkBg,
+        surface = MinimalistDarkSurface,
+        onBackground = MinimalistDarkText,
+        onSurface = MinimalistDarkText,
+        surfaceVariant = MinimalistDarkGreen,
+        onSurfaceVariant = MinimalistDarkText,
+        errorContainer = MinimalistDarkYellow,
+        onErrorContainer = Color.Black // Ensure text is readable on yellow
     ),
-    typography = PrideTypography
+    typography = MinimalistTypography
 )
 
 val AllThemes = mapOf(
@@ -271,6 +274,6 @@ val AllThemes = mapOf(
     AppTheme.WW2 to WW2ThemeData,
     AppTheme.HORROR to HorrorThemeData,
     AppTheme.SCIFI to SciFiThemeData,
-    AppTheme.PRIDE to PrideThemeData,
+    AppTheme.MINIMALIST to MinimalistThemeData,
     AppTheme.HALLOWEEN to HalloweenThemeData
 )

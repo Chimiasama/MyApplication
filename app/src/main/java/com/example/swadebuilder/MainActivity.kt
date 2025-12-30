@@ -433,7 +433,7 @@ class MainActivity : ComponentActivity() {
                         com.example.swadebuilder.ui.theme.AppTheme.WW2       to "Segunda Guerra",
                         com.example.swadebuilder.ui.theme.AppTheme.HORROR    to "Horror",
                         com.example.swadebuilder.ui.theme.AppTheme.SCIFI     to "Sci-Fi",
-                        com.example.swadebuilder.ui.theme.AppTheme.PRIDE     to "Pride",
+                        com.example.swadebuilder.ui.theme.AppTheme.MINIMALIST to "Minimalista",
                         com.example.swadebuilder.ui.theme.AppTheme.HALLOWEEN to "Halloween"
                     )
                 }

@@ -105,20 +105,5 @@ val WW2Typography = createTypography(
     bodyFontFamily = FontFamily.Default
 )
 
-val PrideTypography = Typography(
-    displayLarge = DefaultTypography.displayLarge.copy(fontWeight = FontWeight.Medium),
-    displayMedium = DefaultTypography.displayMedium.copy(fontWeight = FontWeight.Medium),
-    displaySmall = DefaultTypography.displaySmall.copy(fontWeight = FontWeight.Medium),
-    headlineLarge = DefaultTypography.headlineLarge.copy(fontWeight = FontWeight.Medium),
-    headlineMedium = DefaultTypography.headlineMedium.copy(fontWeight = FontWeight.Medium),
-    headlineSmall = DefaultTypography.headlineSmall.copy(fontWeight = FontWeight.Medium),
-    titleLarge = DefaultTypography.titleLarge.copy(fontWeight = FontWeight.Medium),
-    titleMedium = DefaultTypography.titleMedium.copy(fontWeight = FontWeight.Medium),
-    titleSmall = DefaultTypography.titleSmall.copy(fontWeight = FontWeight.Medium),
-    bodyLarge = DefaultTypography.bodyLarge.copy(fontWeight = FontWeight.Medium),
-    bodyMedium = DefaultTypography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-    bodySmall = DefaultTypography.bodySmall.copy(fontWeight = FontWeight.Medium),
-    labelLarge = DefaultTypography.labelLarge.copy(fontWeight = FontWeight.Medium),
-    labelMedium = DefaultTypography.labelMedium.copy(fontWeight = FontWeight.Medium),
-    labelSmall = DefaultTypography.labelSmall.copy(fontWeight = FontWeight.Medium)
-)
+// Minimalist Typography uses Default (SansSerif) but ensures a clean look
+val MinimalistTypography = DefaultTypography

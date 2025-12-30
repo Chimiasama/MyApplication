@@ -47,11 +47,19 @@ val HalloOrange   = Color(0xFFFF6D00)
 val HalloPurple   = Color(0xFF6200EA)
 val HalloBlack    = Color(0xFF121212)
 
-// PRIDE (Vibrante & Inclusivo)
-val PrideViolet   = Color(0xFF9400D3) // Cor principal
-val PrideRed      = Color(0xFFFF0018)
-val PrideOrange   = Color(0xFFFF8E00)
-val PrideYellow   = Color(0xFFFFE800)
-val PrideGreen    = Color(0xFF008026)
-val PrideBlue     = Color(0xFF0000FF)
-val PrideDarkBg   = Color(0xFF180A24) // Roxo muito escuro para modo noturno
+// MINIMALIST (Tons pastéis e claros)
+// Light mode palette (High contrast, clean)
+val MinimalistLightBg       = Color(0xFFFFFFFF)
+val MinimalistLightSurface  = Color(0xFFF5F5F5) // Very light gray
+val MinimalistLightPrimary  = Color(0xFF000000)
+val MinimalistLightGreen    = Color(0xFFE8F5E9) // Pale green for active/ok elements
+val MinimalistLightYellow   = Color(0xFFFFF9C4) // Pale yellow for pending/warning elements
+val MinimalistLightText     = Color(0xFF000000)
+
+// Dark mode palette (High contrast, dark)
+val MinimalistDarkBg        = Color(0xFF121212)
+val MinimalistDarkSurface   = Color(0xFF1E1E1E)
+val MinimalistDarkPrimary   = Color(0xFFFFFFFF)
+val MinimalistDarkGreen     = Color(0xFF2E7D32) // Darker green for dark mode contrast
+val MinimalistDarkYellow    = Color(0xFFF9A825) // Darker yellow for dark mode contrast
+val MinimalistDarkText      = Color(0xFFE0E0E0)

@@ -7,6 +7,6 @@ enum class AppTheme {
     WW2,
     HORROR,
     SCIFI,
-    PRIDE,
+    MINIMALIST,
     HALLOWEEN
 }
