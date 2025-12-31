@@ -560,8 +560,10 @@ fun VantagensContent(
             listaVantagensAtivas.filter { vant ->
                 // Supers Logic (Exclude specific advantages in Supers mode)
                 if (state.modoSupers) {
-                    if (vant.id == "antecedente_arcano" ||
-                        vant.requisitos.vantagensPrevias.contains("antecedente_arcano") ||
+                    if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) return@filter false
+                    if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") return@filter false
+                    if (vant.categoria == Categoria.PODER) return@filter false
+                    if (vant.requisitos.vantagensPrevias.contains("antecedente_arcano") ||
                         vant.id == "superpoderes") return@filter false
                 }
 
