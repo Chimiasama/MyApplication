@@ -207,7 +207,9 @@ class CriadorState {
             ?.uppercase()
 
     val usaRiqueza: Boolean
-        get() = optRegraRiqueza || origemPersonagem == "WISEGUYS"
+        get() = optRegraRiqueza || origemPersonagem == "WISEGUYS" || optRegraCosaNostra
+
+    var riquezaModifier by mutableIntStateOf(0)
 
     val dadoRiqueza: Int
         get() {
@@ -226,8 +228,46 @@ class CriadorState {
                 die = 4
             }
 
-            return die
+            val steps = listOf(4, 6, 8, 10, 12)
+            val baseIndex = steps.indexOf(die).takeIf { it >= 0 } ?: 1
+            val finalIndex = (baseIndex + riquezaModifier).coerceIn(0, steps.lastIndex)
+
+            return steps[finalIndex]
         }
+
+    fun aplicarRegrasWiseguys() {
+        if (!optRegraCosaNostra) return
+
+        // Conexões (Máfia)
+        val conexoes = listaVantagens.firstOrNull { it.id == "conexoes" }
+        if (conexoes != null) {
+            val v = conexoes.copy()
+            v.choice = "Máfia"
+            // Verifica se já não tem essa vantagem com essa escolha
+            val jaTem = vantagensSelecionadas.any { it.id == "conexoes" && it.choice.equals("Máfia", ignoreCase = true) }
+            if (!jaTem) {
+                vantagensSelecionadas.add(v)
+                // Marca como automática para não ser removível ou custar pontos
+                vantagensAutomaticas.add(v.nome)
+            }
+        }
+
+        // Obrigação (Maior) - Servir a Máfia
+        val obrigacao = listaComplicacoes.firstOrNull { it.id == "obrigacao" }
+        if (obrigacao != null) {
+            val jaTem = complicacoesSelecionadas.keys.any { it.id == "obrigacao" }
+            if (!jaTem) {
+                // Adiciona como Maior
+                complicacoesSelecionadas[obrigacao] = "Maior"
+                desvantagensAutomaticas.add(obrigacao.name)
+                // Nota: O texto "servir a Máfia" idealmente iria nas anotações ou como um custom field,
+                // mas a estrutura de Complicacao é rígida. Vamos assumir que o usuário entende pelo contexto Wiseguys.
+                if (!anotacoes.contains("Obrigação: Servir a Máfia")) {
+                    anotacoes += "\n• Obrigação: Servir a Máfia"
+                }
+            }
+        }
+    }
 
     fun valorMovimentacao(): Int {
         val base = 6

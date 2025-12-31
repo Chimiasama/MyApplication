@@ -205,11 +205,16 @@ fun SummaryContent(
         Spacer(Modifier.height(12.dp))
 
         derivedSection?.let {
+            val showWealthControl = state.modoProgressaoAtivo && state.usaRiqueza
             DerivedStatsRow(
                 stats = it.toStats(),
                 onFamaChange = if (state.modoProgressaoAtivo && state.optRegraFama) { delta ->
                     state.famaManual += delta
-                } else null
+                } else null,
+                onWealthChange = if (showWealthControl) { delta ->
+                    state.riquezaModifier += delta
+                } else null,
+                wealthDieValue = if (showWealthControl) "d${state.dadoRiqueza}" else null
             )
             Spacer(Modifier.height(12.dp))
         }
@@ -658,7 +663,9 @@ private fun CombatRow(name: String, stats: String, notes: String) {
 @OptIn(ExperimentalLayoutApi::class)
 private fun DerivedStatsRow(
     stats: List<Pair<String, String>>,
-    onFamaChange: ((Int) -> Unit)? = null
+    onFamaChange: ((Int) -> Unit)? = null,
+    onWealthChange: ((Int) -> Unit)? = null,
+    wealthDieValue: String? = null
 ) {
     if (stats.isEmpty()) return
 
@@ -675,6 +682,11 @@ private fun DerivedStatsRow(
             } else {
                 CircleStat(label = label, value = value)
             }
+        }
+
+        // Se a riqueza deve ser mostrada como dado editável (apenas em progresso + regra ativa)
+        if (wealthDieValue != null && onWealthChange != null) {
+             EditableCircleStat(label = "Riqueza", value = wealthDieValue, onDelta = onWealthChange)
         }
     }
 }
