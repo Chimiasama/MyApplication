@@ -17,6 +17,7 @@ import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.toDiceString
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -584,7 +585,7 @@ class CriadorViewModel : ViewModel() {
                     if (ocultismo != null) {
                         val raw = state.rawTotalComSupers(ocultismo)
                         if (raw < 10) {
-                            return InvestCheck(false, "Requer Ocultismo d10+ (atual: d${state.toDiceString(raw)}).")
+                            return InvestCheck(false, "Requer Ocultismo d10+ (atual: ${raw.toDiceString()}).")
                         }
                     }
                 } else if (nomeKey == "SUPERCIENCIA") {
@@ -592,7 +593,7 @@ class CriadorViewModel : ViewModel() {
                     if (ciencias != null) {
                         val raw = state.rawTotalComSupers(ciencias)
                         if (raw < 10) {
-                            return InvestCheck(false, "Requer Ciência d10+ (atual: d${state.toDiceString(raw)}).")
+                            return InvestCheck(false, "Requer Ciência d10+ (atual: ${raw.toDiceString()}).")
                         }
                     }
                 }
