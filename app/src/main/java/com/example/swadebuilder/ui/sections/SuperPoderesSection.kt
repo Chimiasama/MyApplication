@@ -852,9 +852,11 @@ fun SuperPoderesSection(
                 limitePorPoder = limiteParaDialog,
                 onConfirm = { baseCost, custoTotal, modifiers ->
                     val nome = poder.nome.trim().uppercase()
+                    var result: com.example.swadebuilder.model.InvestResult? = null
+
                     when {
                         nome == "APARAR" -> {
-                            viewModel.tentarInvestirSuper(
+                            result = viewModel.tentarInvestirSuper(
                                 SuperInvestment(
                                     powerId = "sp_aparar",
                                     displayName = "Aparar",
@@ -866,7 +868,7 @@ fun SuperPoderesSection(
                             )
                         }
                         nome == "MOVIMENTAÇÃO" || nome == "MOVIMENTACAO" -> {
-                            viewModel.tentarInvestirSuper(
+                            result = viewModel.tentarInvestirSuper(
                                 SuperInvestment(
                                     powerId = "sp_movimentacao",
                                     displayName = "Movimentação",
@@ -878,7 +880,7 @@ fun SuperPoderesSection(
                             )
                         }
                         nome == "ARMADURA" -> {
-                            viewModel.tentarInvestirSuper(
+                            result = viewModel.tentarInvestirSuper(
                                 SuperInvestment(
                                     powerId = "sp_armor",
                                     displayName = "Armadura",
@@ -890,7 +892,7 @@ fun SuperPoderesSection(
                             )
                         }
                         nome == "RESISTÊNCIA" || nome == "RESISTENCIA" -> {
-                            viewModel.tentarInvestirSuper(
+                            result = viewModel.tentarInvestirSuper(
                                 SuperInvestment(
                                     powerId = "sp_res",
                                     displayName = "Resistência",
@@ -930,7 +932,7 @@ fun SuperPoderesSection(
                             showBonusPericiaPicker = true
                         }
                         else -> {
-                            viewModel.tentarInvestirSuper(
+                            result = viewModel.tentarInvestirSuper(
                                 SuperInvestment(
                                     powerId = "sp_${poder.nome.keyify()}",
                                     displayName = poder.nome,
@@ -942,7 +944,17 @@ fun SuperPoderesSection(
                             )
                         }
                     }
-                    poderParaComprar = null
+
+                    if (result != null) {
+                        if (result.ok) {
+                            poderParaComprar = null
+                        } else {
+                            Toast.makeText(context2, result.mensagem, Toast.LENGTH_LONG).show()
+                        }
+                    } else {
+                        // Pickers opened or other non-invest actions
+                        poderParaComprar = null
+                    }
                 },
                 onDismiss = { poderParaComprar = null }
             )

@@ -2492,7 +2492,7 @@ class CriadorState {
     fun creationComplete(): Boolean {
         // "Ficha básica completa": todos os pontos iniciais foram distribuídos.
         // Em campanha supers, também exige ter zerado os Pontos de Super.
-        val supersProntos = !modoSupers || superPontosTotais <= 0 || superPontosDisponiveis == 0
+        val supersProntos = !modoSupers || (superPontosTotais > 0 && superPontosDisponiveis == 0)
 
         return baseCreationComplete() && supersProntos
     }
