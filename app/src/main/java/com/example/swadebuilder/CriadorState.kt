@@ -56,6 +56,8 @@ class CriadorState {
     var compendioArteDaGuerraAtivo by mutableStateOf(false)
     var compendioCidadeSolVaporAtivo by mutableStateOf(false)
     var compendioWiseguysAtivo by mutableStateOf(false)
+    var optRegraRiqueza by mutableStateOf(false)
+    var optRegraCosaNostra by mutableStateOf(false)
     var optRegraFama by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
@@ -205,7 +207,7 @@ class CriadorState {
             ?.uppercase()
 
     val usaRiqueza: Boolean
-        get() = origemPersonagem == "WISEGUYS"
+        get() = optRegraRiqueza || origemPersonagem == "WISEGUYS"
 
     val dadoRiqueza: Int
         get() {
@@ -628,8 +630,27 @@ class CriadorState {
                         true
                     }
                 }
+            } else if (compendioWiseguysAtivo) {
+                // If Wiseguys active:
+                // Filter out specific arcane skills
+                val forbiddenForWiseguys = setOf(
+                    "FE", "PSIONICOS", "CIENCIA ESTRANHA", "CONJURAR", "CIENCIA_ESTRANHA", "OCULTISMO", "FOCO"
+                )
+
+                val filtered = listaPericias.filter { per ->
+                    val key = per.nome.keyify()
+                    if (key in forbiddenForWiseguys) return@filter false
+                    // Also filter AdG skills if AdG is not active
+                    per.origem != "ARTE_DA_GUERRA"
+                }
+
+                val lei = Pericia("Lei", "ASTUCIA", false, "WISEGUYS")
+                if (!baseIncsPorPericia.containsKey(lei)) {
+                    ensurePericiaEntry(lei)
+                }
+                (filtered + lei).sortedBy { it.nome }
             } else {
-                // If AdG NOT active:
+                // If neither AdG nor Wiseguys specific filtering is active:
                 // Hide any skill marked with ARTE_DA_GUERRA
                 listaPericias.filter { per ->
                     per.origem != "ARTE_DA_GUERRA"
@@ -2614,7 +2635,9 @@ class CriadorState {
                 idosoBonusSp = idosoBonusSp,
                 obesoBonusSize = obesoBonusSize,
                 obesoMalusMov = obesoMalusMov,
-                bonusPoderExtra = bonusPoderExtra
+                bonusPoderExtra = bonusPoderExtra,
+                optRegraRiqueza = optRegraRiqueza,
+                optRegraCosaNostra = optRegraCosaNostra
             ),
             recursos = SnapshotRecursos(
                 dinheiro = dinheiro,
@@ -2738,6 +2761,8 @@ class CriadorState {
         compendioCidadeSolVaporAtivo = flags.compendioCidadeSolVaporAtivo
         compendioWiseguysAtivo = flags.compendioWiseguysAtivo
         optRegraFama = flags.optRegraFama
+        optRegraRiqueza = flags.optRegraRiqueza
+        optRegraCosaNostra = flags.optRegraCosaNostra
         modoOficialAtivo = flags.modoOficialAtivo
         modoMonstroAtivo = flags.modoMonstroAtivo
         usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia

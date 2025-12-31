@@ -90,7 +90,9 @@ fun TelaInicial(
         semPontosDePoder: Boolean,
         multiplosIdiomas: Boolean,
         grandesResponsabilidades: Boolean,
-        optRegraFama: Boolean
+        optRegraFama: Boolean,
+        optRegraRiqueza: Boolean,
+        optRegraCosaNostra: Boolean
         // showHelpMessages removido
     ) -> Unit,
     onCarregarPersonagem: () -> Unit,
@@ -129,6 +131,8 @@ fun TelaInicial(
     var optRegraFama by rememberSaveable { mutableStateOf(false) }
     var optCompendioCidadeSolVapor by rememberSaveable { mutableStateOf(false) }
     var optCompendioWiseguys by rememberSaveable { mutableStateOf(false) }
+    var optRegraRiqueza by rememberSaveable { mutableStateOf(false) }
+    var optRegraCosaNostra by rememberSaveable { mutableStateOf(false) }
 
     // SciFi
     var optCompendioSciFi by rememberSaveable { mutableStateOf(false) }
@@ -239,7 +243,21 @@ fun TelaInicial(
             Icons.Default.Groups,
             optCompendioWiseguys,
             !isAnyBookSelected || optCompendioWiseguys
-        ) { optCompendioWiseguys = !optCompendioWiseguys }
+        ) {
+            optCompendioWiseguys = !optCompendioWiseguys
+            if (optCompendioWiseguys) {
+                optCartaSelvagem = true
+                optMaisPontosPericias = true
+                optRegraRiqueza = true
+                optRegraCosaNostra = true
+                optMultiAntecedenteArcano = false
+                optEspecializacaoPer = false
+                optHeroiSemArmadura = false
+                optMultiplosIdiomas = false
+                optNasceUmHeroi = false
+                optSemPontosPoder = false
+            }
+        }
     )
 
     Scaffold(
@@ -286,7 +304,9 @@ fun TelaInicial(
                         optSemPontosPoder,
                         optMultiplosIdiomas,
                         optGrandesResponsabilidades,
-                        optRegraFama
+                        optRegraFama,
+                        optRegraRiqueza,
+                        optRegraCosaNostra
                     )
                     viewModel.state.compendioBuscatrilhaAtivo = optCompendioBuscatrilha
                     viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
@@ -294,6 +314,8 @@ fun TelaInicial(
                     viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
                     viewModel.state.compendioCidadeSolVaporAtivo = optCompendioCidadeSolVapor
                     viewModel.state.compendioWiseguysAtivo = optCompendioWiseguys
+                    viewModel.state.optRegraRiqueza = optRegraRiqueza
+                    viewModel.state.optRegraCosaNostra = optRegraCosaNostra
                     viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
                     viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
                 },
@@ -395,12 +417,31 @@ fun TelaInicial(
                     } else {
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
                         SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
-                        SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) { optMultiAntecedenteArcano = it }
-                        SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
-                        SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
-                        SimpleCheckRow("Múltiplos Idiomas", "Personagem inicia poliglota.", optMultiplosIdiomas) { optMultiplosIdiomas = it }
-                        SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
-                        SimpleCheckRow("Sem Pontos de Poder", "Conjuradores não usam PP.", optSemPontosPoder) { optSemPontosPoder = it }
+
+                        if (!optCompendioWiseguys) {
+                            SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) { optMultiAntecedenteArcano = it }
+                            SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
+                            SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
+                            SimpleCheckRow("Múltiplos Idiomas", "Personagem inicia poliglota.", optMultiplosIdiomas) { optMultiplosIdiomas = it }
+                            SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
+                            SimpleCheckRow("Sem Pontos de Poder", "Conjuradores não usam PP.", optSemPontosPoder) { optSemPontosPoder = it }
+                        }
+
+                        SimpleCheckRow(
+                            title = "Regra de Riqueza",
+                            description = "Substitui dinheiro por rolagens de Riqueza.",
+                            checked = optRegraRiqueza,
+                            onCheckedChange = { optRegraRiqueza = it }
+                        )
+
+                        if (optCompendioWiseguys) {
+                            SimpleCheckRow(
+                                title = "A Cosa Nostra",
+                                description = "Regra de ambientação (Wiseguys).",
+                                checked = optRegraCosaNostra,
+                                onCheckedChange = { optRegraCosaNostra = it }
+                            )
+                        }
 
                         if (optCompendioHorror) {
                             SimpleCheckRow(

@@ -56,7 +56,9 @@ data class SnapshotFlags(
     val idosoBonusSp: Int,
     val obesoBonusSize: Int,
     val obesoMalusMov: Int,
-    val bonusPoderExtra: Int
+    val bonusPoderExtra: Int,
+    val optRegraRiqueza: Boolean = false,
+    val optRegraCosaNostra: Boolean = false
 )
 
 @Serializable

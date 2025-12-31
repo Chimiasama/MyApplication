@@ -106,7 +106,9 @@ class CriadorViewModel : ViewModel() {
             usarEspecializacoesDePericia = false,
             grandesResponsabilidades = false,
             regraMultiplosIdiomas = false,
-            optRegraFama = false
+                optRegraFama = false,
+                optRegraRiqueza = false,
+                optRegraCosaNostra = false
         )
     }
 
@@ -223,7 +225,9 @@ class CriadorViewModel : ViewModel() {
             modoMonstroAtivo = flags.modoMonstroAtivo,
             usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia,
             grandesResponsabilidades = flags.grandesResponsabilidades,
-            optRegraFama = flags.optRegraFama
+            optRegraFama = flags.optRegraFama,
+            optRegraRiqueza = flags.optRegraRiqueza,
+            optRegraCosaNostra = flags.optRegraCosaNostra
             // showHelpMessages removido
         )
         state.restoreFromSnapshot(snapshot, mutableListOf())
@@ -273,6 +277,8 @@ class CriadorViewModel : ViewModel() {
         grandesResponsabilidades: Boolean = false,
         regraMultiplosIdiomas: Boolean = false,
         optRegraFama: Boolean = false,
+        optRegraRiqueza: Boolean = false,
+        optRegraCosaNostra: Boolean = false,
         // showHelpMessages removido
     ) {
 
@@ -289,6 +295,8 @@ class CriadorViewModel : ViewModel() {
         state.compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo
         state.compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo
         state.compendioWiseguysAtivo = compendioWiseguysAtivo
+        state.optRegraRiqueza = optRegraRiqueza
+        state.optRegraCosaNostra = optRegraCosaNostra
         state.optRegraFama = optRegraFama
         state.famaManual = 0
         state.modoMonstroAtivo = modoMonstroAtivo
