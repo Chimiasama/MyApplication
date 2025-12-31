@@ -577,7 +577,25 @@ class CriadorViewModel : ViewModel() {
                 }
             }
             is PowerEffect.Generico -> {
-                // Nenhuma validação extra necessária para poderes genéricos
+                // Validações específicas para Superfeitiçaria e Superciência
+                val nomeKey = efeito.nome.keyify()
+                if (nomeKey == "SUPERFEITICARIA") {
+                    val ocultismo = mapaPericias["OCULTISMO"]
+                    if (ocultismo != null) {
+                        val raw = state.rawTotalComSupers(ocultismo)
+                        if (raw < 10) {
+                            return InvestCheck(false, "Requer Ocultismo d10+ (atual: d${state.toDiceString(raw)}).")
+                        }
+                    }
+                } else if (nomeKey == "SUPERCIENCIA") {
+                    val ciencias = mapaPericias["CIENCIA"]
+                    if (ciencias != null) {
+                        val raw = state.rawTotalComSupers(ciencias)
+                        if (raw < 10) {
+                            return InvestCheck(false, "Requer Ciência d10+ (atual: d${state.toDiceString(raw)}).")
+                        }
+                    }
+                }
             }
         }
 
@@ -665,20 +683,6 @@ class CriadorViewModel : ViewModel() {
         return InvestResult(true, "Investimento aplicado.")
     }
 
-    // ===== NOVO: bloqueio de remoção de Superperícia ligada a superpoderes restritivos =====
-    private fun motivoBloqueioRemocaoSuperPericia(perKey: String, rawDepois: Int): String? {
-        val temFeiticaria = state.superInvestments.any { it.displayName.keyify() == "SUPERFEITICARIA" }
-        val temCiencia    = state.superInvestments.any { it.displayName.keyify() == "SUPERCIENCIA" }
-
-        if (temFeiticaria && perKey == "OCULTISMO" && rawDepois < 10) {
-            return "Primeiro remova o superpoder Superfeitiçaria."
-        }
-        if (temCiencia && perKey == "CIENCIAS" && rawDepois < 10) {
-            return "Primeiro remova o superpoder Superciência."
-        }
-        return null
-    }
-
     fun revertPowerInvestment(
         poderId: String,
         custo: Int,
@@ -718,9 +722,26 @@ class CriadorViewModel : ViewModel() {
                     val rawDepois = state.applySuperStepsFrom(baseRaw, incsDepois)
 
                     val perKey = perObj.nome.keyify()
-                    val bloqueio = motivoBloqueioRemocaoSuperPericia(perKey, rawDepois)
-                    if (bloqueio != null) {
-                        return InvestResult(false, bloqueio)
+                    // Auto-remove dependent powers instead of blocking
+                    if (perKey == "OCULTISMO" && rawDepois < 10) {
+                        val dep = state.superInvestments.firstOrNull { it.displayName.keyify() == "SUPERFEITICARIA" }
+                        if (dep != null) {
+                            val res = revertPowerInvestment(dep.powerId, dep.cost, dep.effect)
+                            if (res.ok) {
+                                state.removerSuperPoder(dep, desfazerNoLedger = false)
+                                logFeedback("Superfeitiçaria removida por falta de requisito (Ocultismo < d10).")
+                            }
+                        }
+                    }
+                    if (perKey == "CIENCIA" && rawDepois < 10) {
+                        val dep = state.superInvestments.firstOrNull { it.displayName.keyify() == "SUPERCIENCIA" }
+                        if (dep != null) {
+                            val res = revertPowerInvestment(dep.powerId, dep.cost, dep.effect)
+                            if (res.ok) {
+                                state.removerSuperPoder(dep, desfazerNoLedger = false)
+                                logFeedback("Superciência removida por falta de requisito (Ciência < d10).")
+                            }
+                        }
                     }
                 }
             }
