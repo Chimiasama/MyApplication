@@ -239,7 +239,14 @@ fun TelaInicial(
             Icons.Default.Groups,
             optCompendioWiseguys,
             !isAnyBookSelected || optCompendioWiseguys
-        ) { optCompendioWiseguys = !optCompendioWiseguys }
+        ) {
+            optCompendioWiseguys = !optCompendioWiseguys
+            if (optCompendioWiseguys) {
+                optCartaSelvagem = true
+                optNasceUmHeroi = true // Carta Selvagem na prompt interpreted as Born a Hero
+                // Mais pontos de pericia handled by pool logic
+            }
+        }
     )
 
     Scaffold(
@@ -410,7 +417,22 @@ fun TelaInicial(
                                 onCheckedChange = { optModoMonstro = it }
                             )
                         }
+                        if (optCompendioWiseguys) {
+                            SimpleCheckRow(
+                                title = "A Cosa Nostra",
+                                description = "Regra de Ambientação (Wiseguys).",
+                                checked = true,
+                                onCheckedChange = { /* Placeholder forced enabled */ }
+                            )
+                        }
                     }
+
+                    SimpleCheckRow(
+                        title = "Regra de Riqueza",
+                        description = "Gestão abstrata de recursos (Placeholder).",
+                        checked = optCompendioWiseguys,
+                        onCheckedChange = { }
+                    )
                 }
             }
 

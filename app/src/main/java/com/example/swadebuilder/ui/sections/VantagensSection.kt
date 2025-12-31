@@ -231,6 +231,16 @@ fun VantagensContent(
                 }
             }
 
+            if (state.compendioWiseguysAtivo) {
+                if (vant.categoria == Categoria.PODER) return@filter false
+                if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) return@filter false
+                val wiseguysBanList = setOf(
+                    "resistencia_arcana", "resistencia_arcana_aprimorada",
+                    "aristocrata", "chi", "campeao", "matador_de_gigantes", "corajoso"
+                )
+                if (vant.id in wiseguysBanList) return@filter false
+            }
+
             isBasico || (isAdg && state.compendioArteDaGuerraAtivo) || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isBuscatrilha && state.compendioBuscatrilhaAtivo) || (isDeadlands && state.compendioDeadlandsAtivo) || (isCidadeSolVapor && state.compendioCidadeSolVaporAtivo) || (isWiseguys && state.compendioWiseguysAtivo) || (isCrystalHeart && state.compendioCrystalHeartAtivo)
         }.sortedWith(compareBy({ it.categoria }, { it.nomeExibicao }))
     }

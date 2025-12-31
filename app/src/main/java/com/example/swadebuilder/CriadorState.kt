@@ -56,6 +56,8 @@ class CriadorState {
     var compendioArteDaGuerraAtivo by mutableStateOf(false)
     var compendioCidadeSolVaporAtivo by mutableStateOf(false)
     var compendioWiseguysAtivo by mutableStateOf(false)
+    var regraCosaNostra by mutableStateOf(false)
+    var regraRiqueza by mutableStateOf(false)
     var optRegraFama by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
@@ -1330,6 +1332,10 @@ class CriadorState {
                 val isHuman = ancestralidade.equals("HUMANOS", ignoreCase = true) ||
                         ancestralidade.equals("Humano (Império do Sol)", ignoreCase = true)
                 val base = if (isHuman) 15 else 12
+                return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
+            } else if (compendioWiseguysAtivo) {
+                // Wiseguys sempre usa 15 pontos (Carta Selvagem + Mais Pontos)
+                val base = 15
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
                 // Standard Logic

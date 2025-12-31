@@ -289,6 +289,8 @@ class CriadorViewModel : ViewModel() {
         state.compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo
         state.compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo
         state.compendioWiseguysAtivo = compendioWiseguysAtivo
+        state.regraCosaNostra = compendioWiseguysAtivo // Placeholder default true
+        state.regraRiqueza = compendioWiseguysAtivo // Placeholder default true if Wiseguys
         state.optRegraFama = optRegraFama
         state.famaManual = 0
         state.modoMonstroAtivo = modoMonstroAtivo
