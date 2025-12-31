@@ -273,6 +273,8 @@ class CriadorViewModel : ViewModel() {
         grandesResponsabilidades: Boolean = false,
         regraMultiplosIdiomas: Boolean = false,
         optRegraFama: Boolean = false,
+        optRegraRiqueza: Boolean = false,
+        optRegraCosaNostra: Boolean = false,
         // showHelpMessages removido
     ) {
 
@@ -289,6 +291,8 @@ class CriadorViewModel : ViewModel() {
         state.compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo
         state.compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo
         state.compendioWiseguysAtivo = compendioWiseguysAtivo
+        state.optRegraRiqueza = optRegraRiqueza
+        state.optRegraCosaNostra = optRegraCosaNostra
         state.optRegraFama = optRegraFama
         state.famaManual = 0
         state.modoMonstroAtivo = modoMonstroAtivo

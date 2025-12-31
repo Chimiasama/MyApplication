@@ -704,7 +704,7 @@ class MainActivity : ComponentActivity() {
                                 onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioBuscatrilhaAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, multiplosIdiomas, grandesResponsabilidades,
-                                                optRegraFama ->
+                                                optRegraFama, optRegraRiqueza, optRegraCosaNostra ->
 
                                     creationSession++
 
@@ -724,7 +724,9 @@ class MainActivity : ComponentActivity() {
                                         modoMonstroAtivo = modoMonstroAtivo,
                                         usarEspecializacoesDePericia = usarEspecializacaoPer,
                                         regraMultiplosIdiomas = multiplosIdiomas,
-                                        optRegraFama = optRegraFama
+                                        optRegraFama = optRegraFama,
+                                        optRegraRiqueza = optRegraRiqueza,
+                                        optRegraCosaNostra = optRegraCosaNostra
                                         // showHelpMessages removido
                                     )
                                     scope.launch {

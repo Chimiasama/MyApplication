@@ -213,6 +213,14 @@ fun VantagensContent(
             val isWiseguys = origemNorm == "WISEGUYS"
             val isCrystalHeart = origemNorm == "CRYSTAL_HEART"
 
+            if (state.compendioWiseguysAtivo) {
+                 if (vant.categoria == Categoria.PODER) return@filter false
+                 if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) return@filter false
+                 if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") return@filter false
+                 val forbiddenIds = setOf("aristocrata", "chi", "campeao", "matador_gigantes", "corajoso")
+                 if (vant.id in forbiddenIds) return@filter false
+            }
+
             if (state.compendioCrystalHeartAtivo) {
                 if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
                      return@filter false

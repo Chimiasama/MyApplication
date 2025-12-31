@@ -56,6 +56,8 @@ class CriadorState {
     var compendioArteDaGuerraAtivo by mutableStateOf(false)
     var compendioCidadeSolVaporAtivo by mutableStateOf(false)
     var compendioWiseguysAtivo by mutableStateOf(false)
+    var optRegraRiqueza by mutableStateOf(false)
+    var optRegraCosaNostra by mutableStateOf(false)
     var optRegraFama by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
@@ -205,7 +207,7 @@ class CriadorState {
             ?.uppercase()
 
     val usaRiqueza: Boolean
-        get() = origemPersonagem == "WISEGUYS"
+        get() = origemPersonagem == "WISEGUYS" || optRegraRiqueza
 
     val dadoRiqueza: Int
         get() {
@@ -599,6 +601,17 @@ class CriadorState {
     // Computed property for basic filtering before injecting dynamic slots (Idioms, Jutsu)
     val periciasFiltradasPorCompendio: List<Pericia>
         get() {
+            if (compendioWiseguysAtivo) {
+                // Wiseguys: Remove Arcane Skills
+                val forbiddenIds = setOf(
+                    "FE", "PSIONICOS", "CIENCIA ESTRANHA", "CONJURAR", "CIENCIA_ESTRANHA"
+                )
+                return listaPericias.filter { per ->
+                    val key = per.nome.keyify()
+                    key !in forbiddenIds
+                }
+            }
+
             return if (compendioArteDaGuerraAtivo) {
                 // If AdG active:
                 // 1. Remove standard skills that don't exist in AdG
