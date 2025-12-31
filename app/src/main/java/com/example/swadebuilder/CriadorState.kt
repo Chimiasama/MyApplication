@@ -634,15 +634,21 @@ class CriadorState {
                 // If Wiseguys active:
                 // Filter out specific arcane skills
                 val forbiddenForWiseguys = setOf(
-                    "FE", "PSIONICOS", "CIENCIA ESTRANHA", "CONJURAR", "CIENCIA_ESTRANHA"
+                    "FE", "PSIONICOS", "CIENCIA ESTRANHA", "CONJURAR", "CIENCIA_ESTRANHA", "OCULTISMO", "FOCO"
                 )
 
-                listaPericias.filter { per ->
+                val filtered = listaPericias.filter { per ->
                     val key = per.nome.keyify()
                     if (key in forbiddenForWiseguys) return@filter false
                     // Also filter AdG skills if AdG is not active
                     per.origem != "ARTE_DA_GUERRA"
                 }
+
+                val lei = Pericia("Lei", "ASTUCIA", false, "WISEGUYS")
+                if (!baseIncsPorPericia.containsKey(lei)) {
+                    ensurePericiaEntry(lei)
+                }
+                (filtered + lei).sortedBy { it.nome }
             } else {
                 // If neither AdG nor Wiseguys specific filtering is active:
                 // Hide any skill marked with ARTE_DA_GUERRA
