@@ -2691,7 +2691,8 @@ class CriadorState {
                 cpPaStack = cpPaStack.toList(),
                 cpSpStack = cpSpStack.map { 1 },
                 cpPvStack = cpPvStack.map { 1 },
-                cpRecursosStack = cpRecursosStack.map { 1 }
+                cpRecursosStack = cpRecursosStack.map { 1 },
+                riquezaModifier = riquezaModifier
             ),
             atributos = SnapshotAtributos(
                 ancestralidade = ancestralidade,
@@ -2844,6 +2845,7 @@ class CriadorState {
         cpSpStack.apply { clear(); repeat(snapshot.recursos.cpSpStack.size) { add(Unit) } }
         cpPvStack.apply { clear(); repeat(snapshot.recursos.cpPvStack.size) { add(Unit) } }
         cpRecursosStack.apply { clear(); repeat(snapshot.recursos.cpRecursosStack.size) { add(Unit) } }
+        riquezaModifier = snapshot.recursos.riquezaModifier
 
         aplicarAncestralidade(snapshot.atributos.ancestralidade, feedbackMessages)
 

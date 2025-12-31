@@ -74,7 +74,8 @@ data class SnapshotRecursos(
     val cpPaStack: List<String>,
     val cpSpStack: List<Int>,
     val cpPvStack: List<Int>,
-    val cpRecursosStack: List<Int>
+    val cpRecursosStack: List<Int>,
+    val riquezaModifier: Int = 0
 )
 
 @Serializable

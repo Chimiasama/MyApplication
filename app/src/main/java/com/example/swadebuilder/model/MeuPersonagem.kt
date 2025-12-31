@@ -83,5 +83,7 @@ data class MeuPersonagem(
     val appTheme: String = "DEFAULT",
     val portraitFileName: String? = null,
     val regraFamaAtiva: Boolean = false,
-    val fama: Int = 0
+    val fama: Int = 0,
+    val usaRiqueza: Boolean = false,
+    val modoProgressaoAtivo: Boolean = false
 )
