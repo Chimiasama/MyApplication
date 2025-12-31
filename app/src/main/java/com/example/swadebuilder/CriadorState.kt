@@ -602,9 +602,10 @@ class CriadorState {
     val periciasFiltradasPorCompendio: List<Pericia>
         get() {
             if (compendioWiseguysAtivo) {
-                // Wiseguys: Remove Arcane Skills
+                // Wiseguys: Remove Arcane Skills and other forbidden ones (e.g. Arte da Guerra specific)
                 val forbiddenIds = setOf(
-                    "FE", "PSIONICOS", "CIENCIA ESTRANHA", "CONJURAR", "CIENCIA_ESTRANHA"
+                    "FE", "PSIONICOS", "CIENCIA ESTRANHA", "CONJURAR", "CIENCIA_ESTRANHA",
+                    "ACROBACIA", "CONVENCAO", "OFICIO", "FOCO", "TRANSICAO", "OCULTISMO"
                 )
                 return listaPericias.filter { per ->
                     val key = per.nome.keyify()

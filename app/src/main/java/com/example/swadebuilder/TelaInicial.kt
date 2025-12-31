@@ -410,13 +410,6 @@ fun TelaInicial(
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
                         SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
 
-                        SimpleCheckRow(
-                            title = "Regra de Riqueza",
-                            description = "Utiliza dado de Riqueza (Wiseguys).",
-                            checked = optRegraRiqueza,
-                            onCheckedChange = { optRegraRiqueza = it }
-                        )
-
                         if (optCompendioWiseguys) {
                             SimpleCheckRow(
                                 title = "A Cosa Nostra",
@@ -427,6 +420,12 @@ fun TelaInicial(
                         }
 
                         if (!optCompendioWiseguys) {
+                            SimpleCheckRow(
+                                title = "Regra de Riqueza",
+                                description = "Utiliza dado de Riqueza (Wiseguys).",
+                                checked = optRegraRiqueza,
+                                onCheckedChange = { optRegraRiqueza = it }
+                            )
                             SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) { optMultiAntecedenteArcano = it }
                             SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
                             SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
