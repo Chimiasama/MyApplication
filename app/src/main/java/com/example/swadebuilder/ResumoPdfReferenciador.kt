@@ -91,7 +91,9 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         appTheme = this.appTheme.name,
         portraitFileName = this.portraitFileName,
         regraFamaAtiva = this.optRegraFama,
-        fama = this.valorFama()
+        fama = this.valorFama(),
+        usaRiqueza = this.usaRiqueza,
+        modoProgressaoAtivo = this.modoProgressaoAtivo
     )
 }
 

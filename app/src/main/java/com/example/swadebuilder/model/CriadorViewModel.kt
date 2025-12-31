@@ -441,6 +441,13 @@ class CriadorViewModel : ViewModel() {
         // Points logic has changed; handled in applying ancestry/reset
         state.pontosVantagem =
             if (state.vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" }) 1 else 0
+
+        if (state.optRegraCosaNostra) {
+            state.aplicarRegrasWiseguys()
+            state.recalcularPontosAtributo(mutableListOf()) // Garantir consistência se houver impacto
+        }
+
+        state.riquezaModifier = 0
     }
 
     suspend fun atualizarRetrato(context: Context, sourceUri: Uri?) {
