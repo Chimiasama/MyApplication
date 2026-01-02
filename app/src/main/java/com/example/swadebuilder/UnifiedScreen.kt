@@ -186,7 +186,7 @@ fun UnifiedScreen(
         lastAutoSaveSection = activeSection
         if (previousSection != null && previousSection != activeSection && state.idAtual != null) {
             try {
-                viewModel.salvarPersonagem(context, state.nomePersonagem)
+                viewModel.salvarPersonagem(context, state.nomePersonagem, silent = true)
             } catch (e: Exception) {
                 // Auto-save falhou silenciosamente para evitar interrupção do fluxo.
             }

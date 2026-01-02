@@ -150,7 +150,8 @@ class CriadorViewModel : ViewModel() {
 
     suspend fun salvarPersonagem(
         context: Context,
-        nomePersonalizado: String? = null
+        nomePersonalizado: String? = null,
+        silent: Boolean = false
     ): CharacterStorage.SaveEntry {
         val previousSnapshot = state.idAtual?.let { id ->
             when (val result = CharacterStorage.load(context, id)) {
@@ -182,7 +183,9 @@ class CriadorViewModel : ViewModel() {
         if (previousPortrait != null && previousPortrait != currentPortrait) {
             CharacterPortraitStorage.deleteIfUnused(context, previousPortrait)
         }
-        logFeedback("Personagem salvo: ${entry.nome}")
+        if (!silent) {
+            logFeedback("Personagem salvo: ${entry.nome}")
+        }
         return entry
     }
 
