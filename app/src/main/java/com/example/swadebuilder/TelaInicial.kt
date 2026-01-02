@@ -181,7 +181,7 @@ fun TelaInicial(
         ) { optCompendioHorror = !optCompendioHorror },
         ModuleItemData(
             "Superpoderes",
-            "Seja um superherói dos quadrinhos!",
+            "Seja um superherói!",
             Icons.Default.Bolt,
             optSuperPoderes,
             !isAnyBookSelected || optSuperPoderes
@@ -204,7 +204,7 @@ fun TelaInicial(
         ) { optCompendioBuscatrilha = !optCompendioBuscatrilha },
         ModuleItemData(
             "Deadlands".toEditionDisplayName(),
-            "Pistoleiros, revividos e o horror do Oeste.",
+            "Pistoleiros, atormentados e o horror do Oeste.",
             Icons.Default.Shield,
             optCompendioDeadlands,
             !isAnyBookSelected || optCompendioDeadlands

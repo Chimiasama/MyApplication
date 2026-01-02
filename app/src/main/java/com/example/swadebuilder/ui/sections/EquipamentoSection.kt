@@ -34,8 +34,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -48,9 +46,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
-import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.EquipFilter
 import com.example.swadebuilder.model.EquipSuperType
 import com.example.swadebuilder.model.EquipamentoCategoria
@@ -607,48 +605,71 @@ fun EquipamentoSection(
                     mappedCategories.groupBy { it.superType }
                 }
 
+                // --- SOLUÇÃO DEFINITIVA: Pré-calcular os dados filtrados ---
+                val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, dinheiro) {
+                    // Mapeia cada SuperType para seus dados filtrados
+                    groupsBySuperType.mapValues { (_, categoriesInSuper) ->
+                        // Verifica se o supertipo tem conteúdo visível com base nos filtros
+                        val hasVisibleContent = categoriesInSuper.any { mapped ->
+                            val catOrigem = mapped.original.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
+                            filter.origens.isEmpty() || catOrigem in filter.origens
+                        }
+
+                        if (!hasVisibleContent) {
+                            // Se não houver conteúdo, retorne nulo para pular este supertipo
+                            return@mapValues null
+                        }
+
+                        // Se houver conteúdo, processe os subgrupos e itens
+                        val groups = categoriesInSuper.groupBy { it.group }.mapValues { (_, catsInGroup) ->
+                            catsInGroup.groupBy { it.subGroup }.mapValues { (_, catsInSub) ->
+                                // Filtra os itens dentro do subgrupo
+                                catsInSub.flatMap { cat ->
+                                    cat.original.itens.map { item ->
+                                        val origemKey = (item.origem?.ifBlank { cat.original.origem ?: "BASICO" }
+                                            ?: (cat.original.origem ?: "BASICO")).uppercase()
+                                        EquipamentoListEntry(item, origemKey, origemKey.toEditionDisplayName())
+                                    }
+                                }.filter { entry ->
+                                    val isAcessivel = if (filter.somenteAcessiveis) {
+                                        val c = (entry.item.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
+                                        usaRiqueza || c <= dinheiro
+                                    } else {
+                                        true
+                                    }
+                                    val hasOrigemValida = filter.origens.isEmpty() || entry.origemKey in filter.origens
+                                    isAcessivel && hasOrigemValida
+                                }.sortedBy { it.item.nome }
+                            }.filter { it.value.isNotEmpty() } // Remove subgrupos vazios
+                        }.filter { it.value.isNotEmpty() } // Remove grupos vazios
+
+                        groups // Retorna os grupos e subgrupos processados
+                    }
+                }
+
                 Column(Modifier.padding(horizontal = 4.dp)) {
-                    // Iterate SuperTypes in defined order
+                    // Itera sobre os SuperTypes na ordem definida
                     EquipSuperType.entries.sortedBy { it.order }.forEach { superType ->
-                        // Filtering
+                        // Pula se o supertipo não estiver selecionado ou não tiver conteúdo visível
                         if (selectedSuperTypes.isNotEmpty() && superType !in selectedSuperTypes) return@forEach
                         if (filter.superTipos.isNotEmpty() && superType !in filter.superTipos) return@forEach
 
-                        val categoriesInSuper = groupsBySuperType[superType] ?: return@forEach
-
-                        // Check if any items pass filters inside this SuperType
-                        // This avoids showing empty SuperCategories if detailed filters remove all content
-                        val hasVisibleContent = remember(categoriesInSuper, filter) {
-                            categoriesInSuper.any { mapped ->
-                                val catOrigem = mapped.original.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
-                                if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@any false
-                                true
-                            }
-                        }
-                        if (!hasVisibleContent) return@forEach
+                        val groupData = visibleContentData[superType] ?: return@forEach
 
                         val isExpanded = expandedTypeMap[superType.label] ?: false
-
                         CollapsibleSection(
                             title = superType.label,
                             expanded = isExpanded,
                             onToggle = { expandedTypeMap[superType.label] = !isExpanded },
                             onToggleFeedback = onUserFeedback
                         ) {
-                            // Render Content
-                            // Group by "Group" (e.g. Ataque a Distancia)
-                            val groups = categoriesInSuper.groupBy { it.group }
-
                             Column(
-                                modifier = Modifier
-                                    .padding(start = 8.dp)
-                                    .fillMaxWidth(),
+                                modifier = Modifier.padding(start = 8.dp).fillMaxWidth(),
                                 verticalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
-                                groups.keys.sorted().forEach { groupName ->
-                                    val catsInGroup = groups[groupName] ?: emptyList()
-
-                                    // Header for the Group (e.g. "Ataque a Distância")
+                                // Itera sobre os dados pré-calculados
+                                groupData.keys.sorted().forEach { groupName ->
+                                    val subGroups = groupData[groupName]!!
                                     Text(
                                         text = groupName,
                                         style = MaterialTheme.typography.titleMedium,
@@ -657,59 +678,29 @@ fun EquipamentoSection(
                                         modifier = Modifier.padding(top = 8.dp, bottom = 2.dp)
                                     )
 
-                                    // Group by SubGroup
-                                    val subGroups = catsInGroup.groupBy { it.subGroup }
-
-                                    subGroups.entries.sortedBy { it.key }.forEach { (subGroupName, catsInSub) ->
-                                         // Show SubGroup Header ONLY if there are multiple subgroups or to disambiguate
-                                         // For "Corpo a Corpo", we have "Medievais", "Modernas". We want to see those headers.
-                                         // If the SubGroup name equals the Group name, skip it? No, usually distinct.
-                                         // If there is only one subgroup in this group, maybe skip?
-                                         // Example: Group "Implantes", Sub "Implantes".
-
-                                         if (subGroupName != groupName && subGroupName.isNotBlank()) {
-                                              Text(
+                                    subGroups.keys.sorted().forEach { subGroupName ->
+                                        if (subGroupName != groupName && subGroupName.isNotBlank()) {
+                                            Text(
                                                 text = subGroupName,
                                                 style = MaterialTheme.typography.labelLarge,
                                                 fontWeight = FontWeight.SemiBold,
                                                 color = MaterialTheme.colorScheme.secondary,
                                                 modifier = Modifier.padding(top = 4.dp, bottom = 2.dp, start = 4.dp)
                                             )
-                                         }
+                                        }
 
-                                         // Render Items
-                                         val itemsInSub = remember(catsInSub, filter, usaRiqueza, dinheiro) {
-                                             catsInSub.flatMap { cat ->
-                                                 cat.original.itens.map { item ->
-                                                     val origemKey = (item.origem?.ifBlank { cat.original.origem ?: "BASICO" }
-                                                         ?: (cat.original.origem ?: "BASICO")).uppercase()
-                                                     EquipamentoListEntry(item, origemKey, origemKey.toEditionDisplayName())
-                                                 }
-                                             }.filter { entry ->
-                                                 // Apply filters
-                                                 if (filter.somenteAcessiveis) {
-                                                     val c = (entry.item.custo as? JsonPrimitive)?.content?.toIntOrNull()
-                                                         ?: Int.MAX_VALUE
-                                                     if (!usaRiqueza && c > dinheiro) return@filter false
-                                                 }
-                                                 if (filter.origens.isNotEmpty() && entry.origemKey !in filter.origens) return@filter false
-                                                 true
-                                             }.sortedBy { it.item.nome }
-                                         }
-
-                                         if (itemsInSub.isNotEmpty()) {
-                                             itemsInSub.forEach { entry ->
-                                                StandardEquipamentoItem(
-                                                    equipamento = entry.item,
-                                                    origemLabel = entry.origemLabel,
-                                                    onClick = { onEquipamentoDoubleClick(entry.item) },
-                                                    allowLongTexts = allowLongTexts,
-                                                    showOriginalName = showOfficialNames,
-                                                    showTensao = compendioSciFiAtivo
-                                                )
-                                             }
-                                             Spacer(Modifier.height(4.dp))
-                                         }
+                                        val itemsInSub = subGroups[subGroupName]!!
+                                        itemsInSub.forEach { entry ->
+                                            StandardEquipamentoItem(
+                                                equipamento = entry.item,
+                                                origemLabel = entry.origemLabel,
+                                                onClick = { onEquipamentoDoubleClick(entry.item) },
+                                                allowLongTexts = allowLongTexts,
+                                                showOriginalName = showOfficialNames,
+                                                showTensao = compendioSciFiAtivo
+                                            )
+                                        }
+                                        Spacer(Modifier.height(4.dp))
                                     }
                                 }
                             }
