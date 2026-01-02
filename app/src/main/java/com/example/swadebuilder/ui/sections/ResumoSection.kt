@@ -274,7 +274,13 @@ fun SummaryContent(
                 Card(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxHeight()
+                        .then(
+                            if (state.expandirRetrato) {
+                                Modifier.aspectRatio(1f)
+                            } else {
+                                Modifier.fillMaxHeight()
+                            }
+                        )
                         .clickable(onClick = onSelectImage),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant
