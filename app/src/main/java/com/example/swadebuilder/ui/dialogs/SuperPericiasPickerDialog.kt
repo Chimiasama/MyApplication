@@ -47,10 +47,21 @@ fun SuperPericiasPickerDialog(
     onConfirmDistribuicao: (Map<String, Int>) -> Unit,
     onDismiss: () -> Unit
 ) {
+    // Filter and prepare skill list
+    val skillsParaExibir = remember(listaPericias) {
+        val blacklist = setOf(
+            "ALQUIMIA", "ACROBACIA", "LEI", "TRANSICAO", "CONVENCAO", "OFICIO"
+        )
+        listaPericias
+            .filter { it.nome.keyify() !in blacklist }
+            .distinctBy { it.nome.keyify() } // Deduplicate "Foco" and others
+            .sortedBy { it.nome }
+    }
+
     // Mapa local: periciaKey -> steps alocados
     val alocacoes = remember {
         mutableStateMapOf<String, Int>().apply {
-            listaPericias.forEach { per ->
+            skillsParaExibir.forEach { per ->
                 put(per.nome.keyify(), 0)
             }
         }
@@ -102,7 +113,7 @@ fun SuperPericiasPickerDialog(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        items(listaPericias, key = { it.nome }) { per ->
+                        items(skillsParaExibir, key = { it.nome }) { per ->
                             val key = per.nome.keyify()
                             val steps = alocacoes[key] ?: 0
 

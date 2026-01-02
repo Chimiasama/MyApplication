@@ -880,7 +880,8 @@ private fun ProgressionDetailContent(
             state = state,
             equipamentoCategorias = equipamentoCategorias,
             superequipCategorias = superequipCategorias,
-            onUserFeedback = onUserFeedback
+            onUserFeedback = onUserFeedback,
+            onLogFeedback = viewModel::logFeedback
         )
         MainSection.XP -> XpSection(
             state = state,
@@ -943,7 +944,8 @@ private fun CreationDetailContent(
         MainSection.COMPLICACOES -> ComplicacoesSection(
             state = state,
             feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
-            onUserFeedback = onUserFeedback
+            onUserFeedback = onUserFeedback,
+            onLogFeedback = viewModel::logFeedback
         )
         MainSection.ATRIBUTOS -> SectionCard(
             title    = "Atributos",
@@ -987,7 +989,8 @@ private fun CreationDetailContent(
             state = state,
             equipamentoCategorias = equipamentoCategorias,
             superequipCategorias = superequipCategorias,
-            onUserFeedback = onUserFeedback
+            onUserFeedback = onUserFeedback,
+            onLogFeedback = viewModel::logFeedback
         )
         else -> SummaryTabContent(
             state = state,
@@ -1089,7 +1092,8 @@ private fun EquipamentoSection(
     state: CriadorState,
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
-    onUserFeedback: () -> Unit
+    onUserFeedback: () -> Unit,
+    onLogFeedback: (String) -> Unit = {}
 ) {
     val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
     val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
@@ -1137,6 +1141,9 @@ private fun EquipamentoSection(
                 if (!state.usaRiqueza) {
                     state.dinheiro -= custo
                 }
+                onLogFeedback("Equipamento ${equipamento.nome} adicionado.")
+            } else {
+                onLogFeedback("Faltam recursos para obter o equipamento ${equipamento.nome}.")
             }
         },
         equipamentosComprados = state.equipamentosComprados,
@@ -1147,6 +1154,7 @@ private fun EquipamentoSection(
             if (!state.usaRiqueza) {
                 state.dinheiro += custo
             }
+            onLogFeedback("Equipamento ${equipamento.nome} removido.")
         },
         categorias = equipamentoCategorias,
         superequipCategorias =

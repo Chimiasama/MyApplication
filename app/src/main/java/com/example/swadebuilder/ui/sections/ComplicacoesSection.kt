@@ -76,7 +76,8 @@ import kotlinx.coroutines.launch
 fun ComplicacoesSection(
     state: CriadorState,
     feedbackMessages: MutableList<String>,
-    onUserFeedback: () -> Unit
+    onUserFeedback: () -> Unit,
+    onLogFeedback: (String) -> Unit = {}
 ) {
     val locked = state.criacaoBasicaCongelada
 
@@ -340,6 +341,7 @@ fun ComplicacoesSection(
                                         state.complicacoesSelecionadas.remove(comp)
                                     }
                                 }
+                                onLogFeedback("Complicação ${comp.name} removida.")
                             } else {
                                 showPcInUseDialog = true
                             }
@@ -422,6 +424,7 @@ fun ComplicacoesSection(
                     if (selected != null) {
                         state.transtornos.add(selected)
                         onUserFeedback()
+                        onLogFeedback("Transtorno ${selected.name} adicionado.")
                     }
                     showAddTranstornoDialog = false
                 },
@@ -543,6 +546,7 @@ fun ComplicacoesSection(
                                                             state.complicacoesSelecionadas[comp] = "Menor"
                                                         }
                                                     }
+                                                    onLogFeedback("Complicação ${comp.name} (Menor) adicionada.")
                                                 },
                                                 enabled = enabledMenor
                                             ) {
@@ -590,6 +594,7 @@ fun ComplicacoesSection(
                                                             state.complicacoesSelecionadas[comp] = "Maior"
                                                         }
                                                     }
+                                                    onLogFeedback("Complicação ${comp.name} (Maior) adicionada.")
                                                 },
                                                 enabled = enabledMaior
                                             ) {
