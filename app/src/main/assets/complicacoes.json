@@ -532,7 +532,7 @@
     "description": "Esta Complicação só pode ser adquirida por aqueles com Antecedente Arcano. Os poderes do conjurador consomem componentes materiais. Talvez um mago precise de um pouco de enxofre para lançar uma bola de fogo (explosão com manifestação de fogo) ou uma sacerdotisa precise de um pouco de água benta para sua deusa conceder ferir.\nPresume-se que tais itens estejam à mão — geralmente em um bolso ou bolsa para componentes. Se o conjurador for despojado de seus pertences e não conseguir os materiais de que precisa, ele subtrai 4 de todas as rolagens de perícias arcanas até que sejam restaurados (50 PO × o Estágio do conjurador em uma loja ou um dia de coleta ou forrageamento em um ambiente apropriado com uma rolagem de Sobrevivência por Estágio).\nConjuradores também ficam sem componentes materiais se obtiverem uma Falha Crítica. Podem se reabastecer como acima."
   },
   {
-    "id": "condenado",
+    "id": "condenado_fantasia",
     "name": "CONDENADO",
     "origem": "FANTASIA",
     "severity": "maior",
