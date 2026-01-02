@@ -862,7 +862,7 @@ class MainActivity : ComponentActivity() {
 }
 
 fun Int.toDiceString(): String =
-    if (this <= 12) "d$this" else "d12+${(this - 12)}"
+    if (this == 0) "-" else if (this <= 12) "d$this" else "d12+${(this - 12)}"
 
 data class Pericia(
     val nome: String,
