@@ -131,9 +131,10 @@ fun UnifiedScreen(
     var showClearDialog by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
 
-    // --- estados para o MEIO-ELFO ---
+    // --- estados para o MEIO-ELFO / MEIO-ORC ---
     var showMeioElfoDialog by rememberSaveable { mutableStateOf(false) }
-    var pendingMeioElfoKey by rememberSaveable { mutableStateOf<String?>(null) }
+    var showMeioOrcDialog by rememberSaveable { mutableStateOf(false) }
+    var pendingAncestryKey by rememberSaveable { mutableStateOf<String?>(null) }
     // --------------------------------
 
     val availableSections = availableSectionsFor(state)
@@ -242,10 +243,13 @@ fun UnifiedScreen(
                             val key = nome.uppercase().semAcentos()
                             if (key != state.ancestralidade) {
                                 if (key == "MEIO-ELFOS") {
-                                    pendingMeioElfoKey = key
+                                    pendingAncestryKey = key
                                     showMeioElfoDialog = true
+                                } else if (key == "MEIO-ORCS") {
+                                    pendingAncestryKey = key
+                                    showMeioOrcDialog = true
                                 } else {
-                                    pendingMeioElfoKey = null
+                                    pendingAncestryKey = null
                                     state.aplicarAncestralidade(
                                         key,
                                         viewModel.feedbackMessages as MutableList<String>
@@ -312,10 +316,13 @@ fun UnifiedScreen(
                         val key = nome.uppercase().semAcentos()
                         if (key != state.ancestralidade) {
                             if (key == "MEIO-ELFOS") {
-                                pendingMeioElfoKey = key
+                                pendingAncestryKey = key
                                 showMeioElfoDialog = true
+                            } else if (key == "MEIO-ORCS") {
+                                pendingAncestryKey = key
+                                showMeioOrcDialog = true
                             } else {
-                                pendingMeioElfoKey = null
+                                pendingAncestryKey = null
                                 state.aplicarAncestralidade(
                                     key,
                                     viewModel.feedbackMessages as MutableList<String>
@@ -399,10 +406,10 @@ fun UnifiedScreen(
         )
     }
 
-    if (showMeioElfoDialog && pendingMeioElfoKey != null) {
+    if (showMeioElfoDialog && pendingAncestryKey != null) {
         AlertDialog(
             onDismissRequest = {
-                pendingMeioElfoKey = null
+                pendingAncestryKey = null
                 showMeioElfoDialog = false
             },
             title = { Text("Meio-Elfo: escolha a herança") },
@@ -417,7 +424,7 @@ fun UnifiedScreen(
                 // Herança Élfica (Agilidade d6)
                 TextButton(
                     onClick = {
-                        val key = pendingMeioElfoKey ?: return@TextButton
+                        val key = pendingAncestryKey ?: return@TextButton
 
                         // Aplica a ancestralidade Meio-Elfo
                         state.aplicarAncestralidade(
@@ -433,7 +440,7 @@ fun UnifiedScreen(
 
                         state.meioElfoAgil = true
                         state.recalcularPontosAtributo(viewModel.feedbackMessages as MutableList<String>)
-                        pendingMeioElfoKey = null
+                        pendingAncestryKey = null
                         showMeioElfoDialog = false
                     }
                 ) {
@@ -444,7 +451,7 @@ fun UnifiedScreen(
                 // Herança Humana (+1 PV)
                 TextButton(
                     onClick = {
-                        val key = pendingMeioElfoKey ?: return@TextButton
+                        val key = pendingAncestryKey ?: return@TextButton
                         val hadMeioElfoAgil = state.meioElfoAgil
                         state.meioElfoAgil = false
 
@@ -465,11 +472,63 @@ fun UnifiedScreen(
                             }
                         }
 
-                        pendingMeioElfoKey = null
+                        pendingAncestryKey = null
                         showMeioElfoDialog = false
                     }
                 ) {
                     Text("Herança Humana (+1 PV)")
+                }
+            }
+        )
+    }
+
+    if (showMeioOrcDialog && pendingAncestryKey != null) {
+        AlertDialog(
+            onDismissRequest = {
+                pendingAncestryKey = null
+                showMeioOrcDialog = false
+            },
+            title = { Text("Meio-Orc: escolha o atributo inicial") },
+            text = {
+                Text(
+                    "Meio-Orcs herdam a força ou resistência de seus ancestrais. Escolha um atributo para começar em d6:"
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val key = pendingAncestryKey ?: return@TextButton
+                        // Vigor (Default state behavior)
+                        state.meioOrcForca = false
+                        state.aplicarAncestralidade(
+                            key,
+                            viewModel.feedbackMessages as MutableList<String>
+                        )
+                        pendingAncestryKey = null
+                        showMeioOrcDialog = false
+                    }
+                ) {
+                    Text("Vigor d6 (Resistência)")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        val key = pendingAncestryKey ?: return@TextButton
+                        // Força
+                        state.meioOrcForca = true
+                        state.aplicarAncestralidade(
+                            key,
+                            viewModel.feedbackMessages as MutableList<String>
+                        )
+                        // O JSON define Vigor 2 (d6) por padrão. O código `atributoBaseRacial` vai sobrescrever
+                        // para Força 6 / Vigor 4 se meioOrcForca=true.
+                        // Mas aplicarAncestralidade chama recalcularPontosAtributo, que deve pegar o novo base.
+                        pendingAncestryKey = null
+                        showMeioOrcDialog = false
+                    }
+                ) {
+                    Text("Força d6")
                 }
             }
         )

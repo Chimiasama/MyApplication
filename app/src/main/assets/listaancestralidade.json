@@ -17,7 +17,7 @@
   {
     "nome": "ANÕES",
     "origem": "BASICO",
-    "descricao": "Os anões são um povo de baixa estatura, robusto e resistente que vem de cavernas imensas nas altas fortalezas montanhosas. São orgulhosos e belicosos, normalmente devido ao contato constante com ancestralidades hostis como orcs e goblins. Anões geralmente vivem mais de 200 anos. São conhecidos por seu amor pela cerveja, conhecimento em trabalho com pedra e barbas impressionantes. Possuem Visão no Escuro, são Robustos (Vigor d6 inicial) e têm Movimentação Reduzida.",
+    "descricao": "Os anões são um povo de baixa estatura, robusto e resistente que vem de cavernas imensas nas altas fortalezas montanhosas. São orgulhosos e belicosos, normalmente devido ao contato constante com ancestralidades hostis como orcs e goblins. Anões geralmente vivem mais de 200 anos. São conhecidos por seu amor pela cerveja, conhecimento em trabalho com pedra e barbas impressionantes. Possuem Visão no Escuro, são Robustos (Vigor começa em d6) e têm Movimentação Reduzida.",
     "atributos": {
       "Vigor": 2
     },
@@ -149,7 +149,7 @@
     "vantagensGratis": [
       "ARMADURA +2",
       "MORDIDA",
-      "SENTIDOS AGUÇADOS"
+      "PRONTIDÃO"
     ],
     "desvantagens": [
       "FORASTEIRO (Menor)",
@@ -416,7 +416,7 @@
   {
     "nome": "MEIO-ORCS",
     "origem": "FANTASIA",
-    "descricao": "Descendentes de orcs e humanos. Herdam a força ou resistência dos orcs, mas muitas vezes são evitados pelas sociedades civilizadas.",
+    "descricao": "Descendentes de orcs e humanos. Herdam a força ou resistência dos orcs (começam com Vigor d6 ou Força d6, à escolha), mas muitas vezes são evitados pelas sociedades civilizadas.",
     "atributos": {
       "Vigor": 2
     },
