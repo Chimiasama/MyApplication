@@ -94,6 +94,29 @@ object ModifierEngine {
                 ))
             }
 
+            // Diminuto (Ancestralidade)
+            // Se tiver "DIMINUTO" nas desvantagens ou vantagens grátis, aplica Tamanho -4
+            val hasDiminuto = anc.desvantagens.any { it.keyify() == "DIMINUTO" } ||
+                              anc.vantagensGratis.any { it.keyify() == "DIMINUTO" }
+            if (hasDiminuto) {
+                 // Diminuto geralmente substitui o tamanho base ou soma?
+                 // Pelo prompt, Fadas são Diminuto. Se não tiver TAMANHO definido, aplica -4.
+                 modifiers.add(Modifier(
+                    id = "racial_diminuto",
+                    sourceType = SourceType.ANCESTRALIDADE,
+                    sourceName = "Diminuto",
+                    target = ModifierTarget.SIZE_DISPLAY,
+                    value = -4
+                ))
+                modifiers.add(Modifier(
+                    id = "racial_diminuto_tough",
+                    sourceType = SourceType.ANCESTRALIDADE,
+                    sourceName = "Diminuto",
+                    target = ModifierTarget.SIZE_TOUGHNESS,
+                    value = -4
+                ))
+            }
+
             // Resistência (Auto advantage or racial trait)
             if (state.desvantagensRaciais.any { it.keyify() == "FRAGIL" }) {
                 modifiers.add(Modifier("racial_fragil", SourceType.ANCESTRALIDADE, "Frágil", ModifierTarget.TOUGHNESS_FLAT, -1))

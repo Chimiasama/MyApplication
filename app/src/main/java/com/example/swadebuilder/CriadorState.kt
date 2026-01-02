@@ -1460,6 +1460,7 @@ class CriadorState {
     var ancestralidade by mutableStateOf("HUMANOS")
     var celestialAAMilagresDesabilitado by mutableStateOf(false)
     var meioElfoAgil by mutableStateOf(false)
+    var meioOrcForca by mutableStateOf(false)
 
     var tropoSelecionado by mutableStateOf<Tropo?>(null)
     val vantagensAutomaticasDoTropo = mutableStateListOf<String>()
@@ -1534,6 +1535,9 @@ class CriadorState {
 
     fun podeSelecionar(v: Vantagem): Boolean {
         val key = v.nome.keyify()
+
+        // Regra: "Mago" do básico oculto se Fantasia ativo
+        if (compendioFantasiaAtivo && v.id == "mago") return false
 
         // 0) Exclusividade de Classe/Prestígio (Buscatrilha)
         if (vantagensSelecionadas.classeExclusivaBloqueada(v)) return false
@@ -1838,6 +1842,16 @@ class CriadorState {
             modifiedBase = maxOf(modifiedBase, 6)
         }
 
+        // Meio-Orc: Escolha entre Vigor d6 ou Força d6
+        if (ancestralidade.equals("MEIO-ORCS", ignoreCase = true)) {
+            if (a.keyify() == "VIGOR") {
+                modifiedBase = if (meioOrcForca) 4 else 6
+            }
+            if (a.keyify() == "FORCA") {
+                modifiedBase = if (meioOrcForca) 6 else 4
+            }
+        }
+
         // Arte da Guerra - Signos (only for Humans)
         if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO")) {
             val sign = signoAdgSelecionado
@@ -1881,7 +1895,26 @@ class CriadorState {
             it.nome.keyify() == "ESPECIALISTA" && it.choice?.keyify() == chave
         }
 
-        return baseCap + (profCount + espCount) * 2
+        var finalCap = baseCap + (profCount + espCount) * 2
+
+        // Limite de Força por Tamanho (Diminutos/Pequenos)
+        // Se Tamanho <= -2 (Pequeno/Muito Pequeno): Força Máxima = d8.
+        // Se Tamanho <= -3 (Muito Pequeno/Minúsculo): Força Máxima = d6.
+        // Se Tamanho <= -4 (Minúsculo/Diminuto): Força Máxima = d4.
+        if (chave == "FORCA") {
+            val rawSize = ModifierEngine.sizeRawDisplay(this)
+            val sizeCap = when {
+                rawSize <= -4 -> 4 // d4
+                rawSize == -3 -> 6 // d6
+                rawSize == -2 -> 8 // d8
+                else -> 100 // Sem limite por tamanho
+            }
+            if (sizeCap < finalCap) {
+                finalCap = sizeCap
+            }
+        }
+
+        return finalCap
     }
 
     fun periciaCapRaw(per: Pericia): Int {
@@ -2043,6 +2076,9 @@ class CriadorState {
         if (anc != "MEIO-ELFOS") {
             meioElfoAgil = false
         }
+        if (anc != "MEIO-ORCS") {
+            meioOrcForca = false
+        }
 
         // --- Vantagens / desvantagens raciais ---
 
@@ -2068,19 +2104,33 @@ class CriadorState {
         naturalArmorFromRace = 0
         when (anc) {
             "SAURIOS" -> {
-                listaVantagens.firstOrNull { it.nome.equals("Sentidos Aguçados", ignoreCase = true) }
-                    ?.let { vantagensSelecionadas.add(it) }
+                // Removemos "Sentidos Aguçados" duplicado. "Prontidão" agora vem do JSON.
                 listaVantagens.firstOrNull { it.nome.equals("Prontidão", ignoreCase = true) }
-                    ?.let { vantagensSelecionadas.add(it) }
-                vantagensAutomaticas.add("Prontidão")
-                vantagensRaciais.add("Prontidão")
+                    ?.let {
+                        if (vantagensSelecionadas.none { sel -> sel.id == it.id }) {
+                            vantagensSelecionadas.add(it)
+                        }
+                    }
+                // Não adicionamos manualmente em vantagensAutomaticas/Raciais pois já está no JSON (como PRONTIDÃO)
                 naturalArmorFromRace = 2
                 armadura = 0
             }
             "PEQUENINOS" -> {
+                // "Sorte" vem do JSON. Apenas garantimos a Vantagem mecânica.
                 listaVantagens.firstOrNull { it.nome.equals("Sorte", ignoreCase = true) }
-                    ?.let { vantagensSelecionadas.add(it) }
-                vantagensAutomaticas.add("Sorte")
+                    ?.let {
+                        if (vantagensSelecionadas.none { sel -> sel.id == it.id }) {
+                            vantagensSelecionadas.add(it)
+                        }
+                    }
+                // "Sorte" já está em vantagensGratis do JSON, então não adicionamos strings duplicadas.
+                listaVantagens.firstOrNull { it.nome.equals("Espirituoso", ignoreCase = true) }
+                    ?.let {
+                        if (vantagensSelecionadas.none { sel -> sel.id == it.id }) {
+                            vantagensSelecionadas.add(it)
+                        }
+                    }
+
                 if (desvantagensRaciais.none { it.contains("Tamanho", ignoreCase = true) }) {
                     desvantagensRaciais.add("Tamanho -1")
                 }
@@ -2830,6 +2880,7 @@ class CriadorState {
         soldadoCargaAtivo = flags.soldadoCargaAtivo
         permiteMultiAntecedenteArcano = flags.permiteMultiAntecedenteArcano
         meioElfoAgil = flags.meioElfoAgil
+        meioOrcForca = flags.meioOrcForca
         celestialAAMilagresDesabilitado = flags.celestialAAMilagresDesabilitado
         jovemAutoPequeno = flags.jovemAutoPequeno
         jovemMalusPa = flags.jovemMalusPa
