@@ -45,6 +45,7 @@ class CriadorState {
     var appTheme by mutableStateOf(AppTheme.DEFAULT)
     var hapticStrength by mutableIntStateOf(DEFAULT_HAPTIC_STRENGTH)
     var soundVolume by mutableIntStateOf(DEFAULT_SOUND_VOLUME)
+    var showSystemMessages by mutableStateOf(true)
     // showHelpMessages removido
     var modoSupers by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)

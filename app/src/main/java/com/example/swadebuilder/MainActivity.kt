@@ -296,6 +296,17 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+            // Observe feedback messages and show snackbar
+            LaunchedEffect(criadorViewModel.feedbackMessages.size) {
+                if (criadorViewModel.feedbackMessages.isNotEmpty()) {
+                    val message = criadorViewModel.feedbackMessages.last()
+                    if (state.showSystemMessages) {
+                        snackHost.showSnackbar(message)
+                    }
+                    criadorViewModel.clearFeedbackMessages()
+                }
+            }
+
             // -- Settings Dialog --
             if (showSettingsDialog) {
                 AlertDialog(
@@ -373,6 +384,23 @@ class MainActivity : ComponentActivity() {
                                 androidx.compose.material3.Switch(
                                     checked = state.expandirRetrato,
                                     onCheckedChange = { state.expandirRetrato = it }
+                                )
+                            }
+
+                            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+                            // System Messages Toggle
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text("Mensagens do Sistema")
+                                androidx.compose.material3.Switch(
+                                    checked = state.showSystemMessages,
+                                    onCheckedChange = { state.showSystemMessages = it }
                                 )
                             }
 
