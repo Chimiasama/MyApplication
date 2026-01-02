@@ -37,8 +37,8 @@ class CriadorViewModel : ViewModel() {
     private val _feedbackMessages = mutableStateListOf<String>()
     val feedbackMessages: List<String> = _feedbackMessages
 
-    private fun logFeedback(message: String) {
-        // Ajuda desativada: mantemos o sink para compatibilidade sem exibir mensagens.
+    fun logFeedback(message: String) {
+        _feedbackMessages.add(message)
     }
 
     fun clearFeedbackMessages() {

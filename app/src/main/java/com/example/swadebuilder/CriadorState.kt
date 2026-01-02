@@ -45,6 +45,7 @@ class CriadorState {
     var appTheme by mutableStateOf(AppTheme.DEFAULT)
     var hapticStrength by mutableIntStateOf(DEFAULT_HAPTIC_STRENGTH)
     var soundVolume by mutableIntStateOf(DEFAULT_SOUND_VOLUME)
+    var showSystemMessages by mutableStateOf(true)
     // showHelpMessages removido
     var modoSupers by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
@@ -1972,9 +1973,16 @@ class CriadorState {
             // - não raciais
             // - não são pré-requisito de outra
             // - não são vantagens de PODER (superpoderes)
+            // - não são vantagens de cenário automáticas (Superpoderes, Agente da Syn, Conexões Máfia)
             val candidatos = vantagensSelecionadas.filter { v ->
+                val isScenarioEdge = v.id == "superpoderes" ||
+                        v.id == "agente_syn" ||
+                        v.id == "aa_agente_syn" ||
+                        (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true)
+
                 !isRacialFree(v) &&
                         !isUsedAsPrereq(v) &&
+                        !isScenarioEdge &&
                         !v.categoria.name.equals("PODER", ignoreCase = true)
             }
 

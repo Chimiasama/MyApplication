@@ -522,8 +522,6 @@ fun SuperPoderesSection(
         }
 
         Spacer(Modifier.height(4.dp))
-        Text("Pontos disponíveis: ${state.superPontosDisponiveis}")
-        Text("Limite de superpoderes: ${state.superLimite}")
 
         if (temOMelhorQueHa && nivelDefinido) {
             Spacer(Modifier.height(8.dp))

@@ -635,17 +635,20 @@ fun VantagensContent(
                                     if (state.advantageAdvancementInProgress) {
                                         viewModel.selectAdvantageForAdvancement(vant)
                                         onUserFeedback()
+                                        viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
                                     } else {
                                         val enforcePoolLimit = !vant.isBrutamontes()
                                         if (vant.nome.contains("Pontos de Poder", true) || vant.nomeExibicao.contains("Pontos de Poder", true)) {
                                             state.comprarPontoDePoder(vant)
                                             onUserFeedback()
+                                            viewModel.logFeedback("Vantagem ${vant.nome} (Pontos de Poder) adicionada.")
                                         } else {
                                             state.applyVantagemDinheiro(vant)
                                             state.vantagensSelecionadas += vant
                                             state.pontosVantagem--
                                             state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                                             onUserFeedback()
+                                            viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
                                         }
                                     }
                                 }
@@ -713,17 +716,20 @@ fun VantagensContent(
                                         if (state.advantageAdvancementInProgress) {
                                             viewModel.selectAdvantageForAdvancement(vant)
                                             onUserFeedback()
+                                        viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
                                         } else {
                                             val enforcePoolLimit = !vant.isBrutamontes()
                                             if (vant.nome.contains("Pontos de Poder", true) || vant.nomeExibicao.contains("Pontos de Poder", true)) {
                                                 state.comprarPontoDePoder(vant)
                                                 onUserFeedback()
+                                            viewModel.logFeedback("Vantagem ${vant.nome} (Pontos de Poder) adicionada.")
                                             } else {
                                                 state.applyVantagemDinheiro(vant)
                                                 state.vantagensSelecionadas += vant
                                                 state.pontosVantagem--
                                                 state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                                                 onUserFeedback()
+                                            viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
                                             }
                                         }
                                     }
