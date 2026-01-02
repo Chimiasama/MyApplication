@@ -536,7 +536,6 @@ fun EquipamentoSection(
 
             if (compendioSciFiAtivo && tensaoExcedida) {
                 // ... Error Text ...
-                tensaoTotal - tensaoLimite
                 Text(
                     "Sobrecarga Cibernética: Personagem recebe o estado Fatigado (ou Exausto se X > Y+2).",
                     color = MaterialTheme.colorScheme.error,
@@ -679,22 +678,24 @@ fun EquipamentoSection(
                                          }
 
                                          // Render Items
-                                         val itemsInSub = catsInSub.flatMap { cat ->
-                                             cat.original.itens.map { item ->
-                                                 val origemKey = (item.origem?.ifBlank { cat.original.origem ?: "BASICO" }
-                                                     ?: (cat.original.origem ?: "BASICO")).uppercase()
-                                                EquipamentoListEntry(item, origemKey, origemKey.toEditionDisplayName())
-                                             }
-                                         }.filter { entry ->
-                                             // Apply filters
-                                              if (filter.somenteAcessiveis) {
-                                                 val c = (entry.item.custo as? JsonPrimitive)?.content?.toIntOrNull()
-                                                     ?: Int.MAX_VALUE
-                                                 if (!usaRiqueza && c > dinheiro) return@filter false
-                                             }
-                                             if (filter.origens.isNotEmpty() && entry.origemKey !in filter.origens) return@filter false
-                                             true
-                                         }.sortedBy { it.item.nome }
+                                         val itemsInSub = remember(catsInSub, filter, usaRiqueza, dinheiro) {
+                                             catsInSub.flatMap { cat ->
+                                                 cat.original.itens.map { item ->
+                                                     val origemKey = (item.origem?.ifBlank { cat.original.origem ?: "BASICO" }
+                                                         ?: (cat.original.origem ?: "BASICO")).uppercase()
+                                                     EquipamentoListEntry(item, origemKey, origemKey.toEditionDisplayName())
+                                                 }
+                                             }.filter { entry ->
+                                                 // Apply filters
+                                                 if (filter.somenteAcessiveis) {
+                                                     val c = (entry.item.custo as? JsonPrimitive)?.content?.toIntOrNull()
+                                                         ?: Int.MAX_VALUE
+                                                     if (!usaRiqueza && c > dinheiro) return@filter false
+                                                 }
+                                                 if (filter.origens.isNotEmpty() && entry.origemKey !in filter.origens) return@filter false
+                                                 true
+                                             }.sortedBy { it.item.nome }
+                                         }
 
                                          if (itemsInSub.isNotEmpty()) {
                                              itemsInSub.forEach { entry ->
