@@ -49,6 +49,7 @@ data class SnapshotFlags(
     val soldadoCargaAtivo: Boolean,
     val permiteMultiAntecedenteArcano: Boolean,
     val meioElfoAgil: Boolean,
+    val meioOrcForca: Boolean = false,
     val celestialAAMilagresDesabilitado: Boolean,
     val jovemAutoPequeno: Boolean,
     val jovemMalusPa: Int,

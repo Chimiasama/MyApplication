@@ -2726,6 +2726,7 @@ class CriadorState {
                 soldadoCargaAtivo = soldadoCargaAtivo,
                 permiteMultiAntecedenteArcano = permiteMultiAntecedenteArcano,
                 meioElfoAgil = meioElfoAgil,
+                meioOrcForca = meioOrcForca,
                 celestialAAMilagresDesabilitado = celestialAAMilagresDesabilitado,
                 jovemAutoPequeno = jovemAutoPequeno,
                 jovemMalusPa = jovemMalusPa,
