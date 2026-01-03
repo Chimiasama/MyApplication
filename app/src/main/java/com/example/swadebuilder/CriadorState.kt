@@ -2132,16 +2132,23 @@ class CriadorState {
             }
 
         naturalArmorFromRace = 0
+
+        // Generic Logic for Edges listed in vantagesGratis strings
+        listaAncestralidadesJson
+            .firstOrNull { it.nome.keyify() == anc }
+            ?.vantagensGratis
+            ?.forEach { featString ->
+                val featKey = featString.keyify()
+                val edge = listaVantagens.firstOrNull { it.nome.keyify() == featKey }
+                if (edge != null && vantagensSelecionadas.none { it.id == edge.id }) {
+                    vantagensSelecionadas.add(edge)
+                }
+            }
+
         when (anc) {
             "SAURIOS" -> {
-                // Removemos "Sentidos Aguçados" duplicado. "Prontidão" agora vem do JSON.
-                listaVantagens.firstOrNull { it.nome.equals("Prontidão", ignoreCase = true) }
-                    ?.let {
-                        if (vantagensSelecionadas.none { sel -> sel.id == it.id }) {
-                            vantagensSelecionadas.add(it)
-                        }
-                    }
-                // Não adicionamos manualmente em vantagensAutomaticas/Raciais pois já está no JSON (como PRONTIDÃO)
+                // Prontidão is handled by the generic logic above now, but keeping this doesn't hurt (idempotent).
+                // "Sentidos Aguçados" removal is handled earlier.
                 naturalArmorFromRace = 2
                 armadura = 0
             }
