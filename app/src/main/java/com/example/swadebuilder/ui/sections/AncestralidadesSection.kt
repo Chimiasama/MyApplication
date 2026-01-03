@@ -56,6 +56,7 @@ import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.titleCase
 import com.example.swadebuilder.util.toEditionDisplayName
@@ -196,6 +197,19 @@ fun AncestralidadesSection(
 
         val filtered = all.filter {
             val origin = it.origem?.uppercase() ?: "BASICO"
+            val key = it.nome.keyify()
+
+            // Logic for Fantasy Compendium exclusions
+            if (compendioFantasiaAtivo) {
+                if (key == "ANDROIDES") return@filter false
+                if (origin == "BASICO" && (key == "CELESTIAIS" || key == "GUARDIOES")) return@filter false
+            }
+
+            // Logic for Lite Edition exclusions
+            if (!EditionConfig.isFullEdition && origin == "BASICO" && (key == "CELESTIAIS" || key == "GUARDIOES")) {
+                return@filter false
+            }
+
             origin in allowedOrigins
         }
 
@@ -448,6 +462,31 @@ fun AncestralidadesSection(
                                                 onSelect = {
                                                     state.signoSerpentePericiaEscolhida = "Performance"
                                                     state.rebuildAllPericiaStacks()
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (isSelected && item.nome.keyify() == "DESCENDENTE ELEMENTAL") {
+                                Spacer(Modifier.height(8.dp))
+                                Text("Herança Elemental:", style = MaterialTheme.typography.labelMedium)
+
+                                var expanded by remember { mutableStateOf(false) }
+                                val options = listOf("Ar", "Água", "Fogo", "Terra")
+
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.descendenteElementalSelecionado ?: "Selecionar Elemento")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        options.forEach { elem ->
+                                            DropdownMenuItem(
+                                                text = { Text(elem) },
+                                                onClick = {
+                                                    state.selecionarDescendenteElemental(elem)
+                                                    expanded = false
                                                 }
                                             )
                                         }
