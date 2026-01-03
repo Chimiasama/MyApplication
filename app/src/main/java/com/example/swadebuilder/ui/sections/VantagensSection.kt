@@ -219,6 +219,12 @@ fun VantagensContent(
                 }
             }
 
+            if (state.compendioFantasiaAtivo) {
+                if (vant.id == "mago") {
+                     return@filter false
+                }
+            }
+
             if (state.compendioArteDaGuerraAtivo) {
                 if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
                     return@filter false

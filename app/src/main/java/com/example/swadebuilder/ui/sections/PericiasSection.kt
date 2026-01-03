@@ -270,7 +270,7 @@ fun PericiasContent(
                                 Text(
                                     text = buildAnnotatedString {
                                         val displayName = if (isIdioma) "Idiomas" else if (isJutsu) "Jutsu" else per.nome
-                                        if (per.basica) {
+                                        if (state.isPericiaBasicaEfetiva(per)) {
                                             withStyle(
                                                 SpanStyle(
                                                     color = Color.Red,
