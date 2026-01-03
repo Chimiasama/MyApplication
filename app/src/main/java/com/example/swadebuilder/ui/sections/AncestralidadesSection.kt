@@ -197,11 +197,20 @@ fun AncestralidadesSection(
 
         val filtered = all.filter {
             val origin = it.origem?.uppercase() ?: "BASICO"
-            if (!EditionConfig.isFullEdition && origin == "BASICO" && (it.nome.keyify() == "CELESTIAIS" || it.nome.keyify() == "GUARDIOES")) {
-                false
-            } else {
-                origin in allowedOrigins
+            val key = it.nome.keyify()
+
+            // Logic for Fantasy Compendium exclusions
+            if (compendioFantasiaAtivo) {
+                if (key == "ANDROIDES") return@filter false
+                if (origin == "BASICO" && (key == "CELESTIAIS" || key == "GUARDIOES")) return@filter false
             }
+
+            // Logic for Lite Edition exclusions
+            if (!EditionConfig.isFullEdition && origin == "BASICO" && (key == "CELESTIAIS" || key == "GUARDIOES")) {
+                return@filter false
+            }
+
+            origin in allowedOrigins
         }
 
         val deduped = filtered
