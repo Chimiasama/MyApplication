@@ -1553,6 +1553,30 @@ class CriadorState {
     // guarda o nome da vantagem que está em foco (usada ao voltar da tela de detalhes)
     var vantagemEmFoco by mutableStateOf<String?>(null)
 
+    fun temAntecedenteArcano(): Boolean {
+        return vantagensSelecionadas.any { it.toArcanoKey() != null }
+    }
+
+    fun podeSelecionarComplicacao(complicacao: Complicacao): Pair<Boolean, String?> {
+        if (complicacao.id == "talisma" && !temAntecedenteArcano()) {
+            return false to "Talismã requer um Antecedente Arcano."
+        }
+        return true to null
+    }
+
+    fun podeRemoverVantagem(vantagem: Vantagem): Pair<Boolean, String?> {
+        if (vantagem.toArcanoKey() != null) {
+            val temOutro = vantagensSelecionadas.any { it != vantagem && it.toArcanoKey() != null }
+            if (!temOutro) {
+                val temTalisma = complicacoesSelecionadas.keys.any { it.id == "talisma" }
+                if (temTalisma) {
+                    return false to "Remova a complicação Talismã antes de remover o Antecedente Arcano."
+                }
+            }
+        }
+        return true to null
+    }
+
     fun podeSelecionar(v: Vantagem): Boolean {
         val key = v.nome.keyify()
 
