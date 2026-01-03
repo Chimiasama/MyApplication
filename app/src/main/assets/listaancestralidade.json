@@ -367,7 +367,9 @@
     "desvantagens": [
       "FORASTEIRO (Menor)",
       "FORMATO CORPORAL INCOMUM",
-      "MENTE DE COLMEIA"
+      "MENTE DE COLMEIA",
+      "GUIADO (Maior)",
+      "LEAL (Menor)"
     ]
   },
   {
@@ -505,6 +507,7 @@
       "VISÃO NO ESCURO"
     ],
     "desvantagens": [
+      "ALMOFADINHA (Menor)",
       "FOBIA – GATOS (Menor)",
       "FORASTEIRO (Maior)",
       "MOVIMENTAÇÃO REDUZIDA",
