@@ -324,6 +324,18 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         personagem.anotacoes.lines().forEach { linha -> lines += linha }
     }
 
+    // Auto-notes for specific advantages
+    val vantKeys = personagem.vantagens.map { it.keyify() }.toSet()
+    if ("HERANCA" in vantKeys) {
+        lines += "• Item de Herança: Escolha um item mundano ou mágico."
+    }
+    if ("CAVALEIRO" in vantKeys) {
+        lines += "• Cavaleiro: Recebe Cavalo de Guerra, Sela, Armadura e Armas iniciais."
+    }
+    if ("MONTARIA" in vantKeys) {
+        lines += "• Montaria: Recebe um cavalo leal."
+    }
+
     return lines
 }
 

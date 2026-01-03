@@ -17,10 +17,12 @@ import android.text.StaticLayout
 import android.text.TextPaint
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
+import kotlinx.serialization.json.JsonPrimitive
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.math.max
@@ -50,7 +52,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
             .keys
             .map { it.id },
         transtornos = this.transtornos.map { it.id },
-        equipamentos = this.equipamentosComprados.toList(),
+        equipamentos = this.equipamentosComprados.toList() + extractNaturalWeapons(this),
         poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
         manifestacoesPoderes = this.manifestacoesPoderes.toMap(),
         dinheiro = this.dinheiro,
@@ -95,6 +97,106 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         usaRiqueza = this.usaRiqueza,
         modoProgressaoAtivo = this.modoProgressaoAtivo
     )
+}
+
+private fun extractNaturalWeapons(state: CriadorState): List<EquipamentoItem> {
+    val weapons = mutableListOf<EquipamentoItem>()
+    val ancestralidadeObj = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == state.ancestralidade }
+        ?: return emptyList()
+
+    val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos")
+    val sources = ancestralidadeObj.vantagensGratis + ancestralidadeObj.habilidades.map { it.nome }
+
+    // Helper to find description for a keyword
+    fun findDesc(keyword: String): String {
+        // 1. Try Ability (Habilidade Racial)
+        val hab = ancestralidadeObj.habilidades.find { it.nome.contains(keyword, ignoreCase = true) }
+        if (hab != null) return hab.descricao
+
+        // 2. Try Free Edge (Vantagem Grátis)
+        // If the keyword is in vantagensGratis, we try to look up the edge definition in the global list
+        if (ancestralidadeObj.vantagensGratis.any { it.contains(keyword, ignoreCase = true) }) {
+            val edge = com.example.swadebuilder.listaVantagens.firstOrNull {
+                it.nome.contains(keyword, ignoreCase = true)
+            }
+            if (edge != null) return edge.descricao
+        }
+        return ""
+    }
+
+    // Check for Martial Artist / Brawler (used for upgrading damage)
+    // Note: vantagensSelecionadas is a List<Vantagem>, so 'any { it.id == ... }' is correct.
+    val hasMartialArtist = state.vantagensSelecionadas.any { it.id == "artista_marcial" }
+    val hasBrawler = state.vantagensSelecionadas.any { it.id == "brigao" }
+
+    // Helper to upgrade die type string (e.g. "For+d4" -> "For+d6")
+    fun upgradeDie(dmg: String): String {
+        val dieMap = listOf("d4", "d6", "d8", "d10", "d12")
+        val match = Regex("""d(\d+)""").find(dmg) ?: return dmg
+        val currentDie = match.value
+        val index = dieMap.indexOf(currentDie)
+        if (index != -1 && index < dieMap.lastIndex) {
+            return dmg.replace(currentDie, dieMap[index + 1])
+        }
+        if (index == -1 && !dmg.contains("+d")) {
+            // Handle plain "For" -> "For+d4" case if passed here, though usually handled explicitly
+            return "$dmg+d4"
+        }
+        return dmg
+    }
+
+    // Parse logic
+    keywords.forEach { key ->
+        if (sources.any { it.contains(key, ignoreCase = true) }) {
+            val desc = findDesc(key)
+            // Regex to find damage like "For+d4", "Str+d4", "For+d6", allowing for spaces
+            val dmgRegex = Regex("""(For|Str|Força|Strength)(\s*\+\s*)?d\d+""", RegexOption.IGNORE_CASE)
+            val paRegex = Regex("""PA\s*\d+""", RegexOption.IGNORE_CASE)
+
+            var dmgMatch = dmgRegex.find(desc)?.value?.replace(" ", "") ?: "For+d4"
+            val paMatch = paRegex.find(desc)?.value?.replace("PA", "", ignoreCase = true)?.trim()?.toIntOrNull() ?: 0
+
+            // Apply scaling to "Garras" if Martial Artist or Brawler is present
+            if (key.equals("Garras", ignoreCase = true)) {
+                if (hasMartialArtist || hasBrawler) {
+                    dmgMatch = upgradeDie(dmgMatch)
+                }
+                // If both present, maybe upgrade again? Rules imply stacking.
+                // "Se já tiver dano por Garras ou Brigão, aumente o dado em um tipo."
+                // Only one step usually unless explicitly stated otherwise, but safe to assume 1 step for now as minimal compliance.
+            }
+
+            weapons.add(
+                EquipamentoItem(
+                    nome = key,
+                    dano = JsonPrimitive(dmgMatch),
+                    pa = if (paMatch > 0) JsonPrimitive(paMatch) else null,
+                    distancia = JsonPrimitive("Toque"),
+                    peso = JsonPrimitive(0),
+                    custo = JsonPrimitive(0)
+                )
+            )
+        }
+    }
+
+    // Always add "Ataque Natural" (Unarmed)
+    val unarmedDmg = when {
+        hasMartialArtist && hasBrawler -> "For+d6"
+        hasMartialArtist || hasBrawler -> "For+d4"
+        else -> "For"
+    }
+
+    weapons.add(
+        EquipamentoItem(
+            nome = "Ataque Natural",
+            dano = JsonPrimitive(unarmedDmg),
+            distancia = JsonPrimitive("Toque"),
+            peso = JsonPrimitive(0),
+            custo = JsonPrimitive(0)
+        )
+    )
+
+    return weapons
 }
 
 // =================================================================================================
