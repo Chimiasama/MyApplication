@@ -2691,7 +2691,7 @@ class CriadorState {
 
             val desiredRaw = rawTotal(per)
             val cap       = periciaCapRaw(per)
-            val minRaw    = maxOf(if (per.basica) 4 else 0, linguistaMinRawFor(per))
+            val minRaw    = maxOf(if (isPericiaBasicaEfetiva(per)) 4 else 0, linguistaMinRawFor(per))
 
             var target = desiredRaw.coerceIn(minRaw, cap)
 
