@@ -196,7 +196,11 @@ fun AncestralidadesSection(
 
         val filtered = all.filter {
             val origin = it.origem?.uppercase() ?: "BASICO"
-            origin in allowedOrigins
+            if (!EditionConfig.isFullEdition && origin == "BASICO" && (it.nome.keyify() == "celestiais" || it.nome.keyify() == "guardioes")) {
+                false
+            } else {
+                origin in allowedOrigins
+            }
         }
 
         val deduped = filtered
@@ -448,6 +452,31 @@ fun AncestralidadesSection(
                                                 onSelect = {
                                                     state.signoSerpentePericiaEscolhida = "Performance"
                                                     state.rebuildAllPericiaStacks()
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (isSelected && item.nome.keyify() == "descendente_elemental") {
+                                Spacer(Modifier.height(8.dp))
+                                Text("Herança Elemental:", style = MaterialTheme.typography.labelMedium)
+
+                                var expanded by remember { mutableStateOf(false) }
+                                val options = listOf("Ar", "Água", "Fogo", "Terra")
+
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.descendenteElementalSelecionado ?: "Selecionar Elemento")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        options.forEach { elem ->
+                                            DropdownMenuItem(
+                                                text = { Text(elem) },
+                                                onClick = {
+                                                    state.selecionarDescendenteElemental(elem)
+                                                    expanded = false
                                                 }
                                             )
                                         }
