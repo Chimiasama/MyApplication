@@ -701,10 +701,28 @@ class CriadorState {
             }
         }
 
+    fun isPericiaBasicaEfetiva(per: Pericia): Boolean {
+        if (!per.basica) return false
+        if (ancestralidade.keyify() == "GOLENS") {
+            val key = per.nome.keyify()
+            if (key == "CONHECIMENTO GERAL" || key == "PERSUADIR" || key == "FURTIVIDADE") {
+                return false
+            }
+        }
+        return true
+    }
+
     fun periciaStartRaw(anc: String, per: Pericia): Int {
         val ancKey = anc.keyify()
         val perKey = per.nome.keyify()
-        val base = racialSkillStartMap[ancKey]?.get(perKey) ?: if (per.basica) 4 else 0
+
+        val defaultBase = if (per.basica) {
+            if (ancKey == "GOLENS" && (perKey == "CONHECIMENTO GERAL" || perKey == "PERSUADIR" || perKey == "FURTIVIDADE")) 0 else 4
+        } else {
+            0
+        }
+
+        val base = racialSkillStartMap[ancKey]?.get(perKey) ?: defaultBase
 
         var modifiedBase = base
 
