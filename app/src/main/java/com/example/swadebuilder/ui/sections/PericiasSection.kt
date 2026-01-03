@@ -375,7 +375,7 @@ fun PericiasContent(
 
                             Text(
                                 text = when {
-                                    regra.displayRaw == 0 && per.basica -> "d4"
+                                    regra.displayRaw == 0 && state.isPericiaBasicaEfetiva(per) -> "d4"
                                     regra.displayRaw == 0 -> "-"
                                     else -> regra.displayRaw.toDiceString()
                                 },

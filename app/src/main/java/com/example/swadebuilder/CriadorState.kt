@@ -703,7 +703,7 @@ class CriadorState {
 
     fun isPericiaBasicaEfetiva(per: Pericia): Boolean {
         if (!per.basica) return false
-        if (ancestralidade.keyify() == "GOLENS") {
+        if (compendioFantasiaAtivo && ancestralidade.keyify() == "GOLENS") {
             val key = per.nome.keyify()
             if (key == "CONHECIMENTO GERAL" || key == "PERSUADIR" || key == "FURTIVIDADE") {
                 return false
@@ -717,7 +717,7 @@ class CriadorState {
         val perKey = per.nome.keyify()
 
         val defaultBase = if (per.basica) {
-            if (ancKey == "GOLENS" && (perKey == "CONHECIMENTO GERAL" || perKey == "PERSUADIR" || perKey == "FURTIVIDADE")) 0 else 4
+            if (compendioFantasiaAtivo && ancKey == "GOLENS" && (perKey == "CONHECIMENTO GERAL" || perKey == "PERSUADIR" || perKey == "FURTIVIDADE")) 0 else 4
         } else {
             0
         }
