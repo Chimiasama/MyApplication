@@ -245,7 +245,14 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         lines += nomesVantagens.joinToString(", ")
     }
     if (personagem.vantagensRaciais.isNotEmpty()) {
-        lines += "Vantagens Raciais: ${personagem.vantagensRaciais.joinToString(", ")}"
+        val displayVantagensRaciais = if (personagem.ancestralidade.keyify() == "SAURIOS") {
+            personagem.vantagensRaciais.map {
+                if (it.keyify() == "PRONTIDAO") "Sentidos Aguçados" else it
+            }
+        } else {
+            personagem.vantagensRaciais
+        }
+        lines += "Vantagens Raciais: ${displayVantagensRaciais.joinToString(", ")}"
     }
     lines += ""
 
