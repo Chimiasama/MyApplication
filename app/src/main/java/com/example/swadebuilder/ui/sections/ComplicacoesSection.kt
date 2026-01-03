@@ -521,6 +521,17 @@ fun ComplicacoesSection(
                                             TextButton(
                                                 onClick = {
                                                     if (!enabledMenor) return@TextButton
+                                                    val (pode, msg) = state.podeSelecionarComplicacao(comp)
+                                                    if (!pode) {
+                                                        tempErrorMsg = msg ?: "Requisito não atendido."
+                                                        showTempError = true
+                                                        scope.launch {
+                                                            delay(2_000)
+                                                            showTempError = false
+                                                        }
+                                                        return@TextButton
+                                                    }
+
                                                     val conflitoMsg = state.mensagemConflitoParaComplicacao(comp)
                                                     if (conflitoMsg != null) {
                                                         tempErrorMsg = conflitoMsg
@@ -562,6 +573,17 @@ fun ComplicacoesSection(
                                             TextButton(
                                                 onClick = {
                                                     if (!enabledMaior) return@TextButton
+                                                    val (pode, msg) = state.podeSelecionarComplicacao(comp)
+                                                    if (!pode) {
+                                                        tempErrorMsg = msg ?: "Requisito não atendido."
+                                                        showTempError = true
+                                                        scope.launch {
+                                                            delay(2_000)
+                                                            showTempError = false
+                                                        }
+                                                        return@TextButton
+                                                    }
+
                                                     val conflitoMsg = state.mensagemConflitoParaComplicacao(comp)
                                                     if (conflitoMsg != null) {
                                                         tempErrorMsg = conflitoMsg

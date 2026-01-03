@@ -924,6 +924,12 @@ class CriadorViewModel : ViewModel() {
                 val currentAdvantageId = state.advantageForCurrentAdvancement!!
                 val currentAdvantage = state.vantagensSelecionadas.find { it.id == currentAdvantageId }
                 if (currentAdvantage != null) {
+                    val (pode, msg) = state.podeRemoverVantagem(currentAdvantage)
+                    if (!pode) {
+                        logFeedback(msg ?: "Não é possível remover a vantagem.")
+                        return
+                    }
+
                     val currentArcKey = currentAdvantage.toArcanoKey()?.normAAKey()
                     if (currentArcKey != null && currentArcKey == state.arcanoEmCompraViaXpKey) {
                         state.limparCompraArcanoViaXp(restaurarSnapshot = true)

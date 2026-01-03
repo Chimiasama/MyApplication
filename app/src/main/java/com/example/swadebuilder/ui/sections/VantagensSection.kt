@@ -502,6 +502,12 @@ fun VantagensContent(
                         onClick = {
                             if (!canRemove) return@AssistChip
 
+                            val (pode, msg) = state.podeRemoverVantagem(vant)
+                            if (!pode) {
+                                onError(msg ?: "Não é possível remover.")
+                                return@AssistChip
+                            }
+
                             val enforcePoolLimit = !vant.isBrutamontes()
 
                             if (vant.nome.contains("Pontos de Poder", true) || vant.nomeExibicao.contains("Pontos de Poder", true)) {
