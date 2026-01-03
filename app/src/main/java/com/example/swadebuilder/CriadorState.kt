@@ -65,8 +65,10 @@ class CriadorState {
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
     var grandesResponsabilidades by mutableStateOf(false)
     var signoAdgSelecionado by mutableStateOf<String?>(null)
+    var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
+    val vantagensAutomaticasDoElemento = mutableStateListOf<String>()
 
     init {
         listaVantagens = deduplicarVantagens(listaVantagens)
@@ -1852,6 +1854,13 @@ class CriadorState {
             }
         }
 
+        // Descendente Elemental (Terra)
+        if (ancestralidade.keyify() == "DESCENDENTE ELEMENTAL" || ancestralidade.keyify() == "DESC_ELEMENTAL") {
+            if (descendenteElementalSelecionado.equals("Terra", ignoreCase = true) && a.keyify() == "VIGOR") {
+                modifiedBase = maxOf(modifiedBase, 6)
+            }
+        }
+
         // Arte da Guerra - Signos (only for Humans)
         if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO")) {
             val sign = signoAdgSelecionado
@@ -2079,6 +2088,9 @@ class CriadorState {
         if (anc != "MEIO-ORCS") {
             meioOrcForca = false
         }
+        if (anc.keyify() != "DESCENDENTE ELEMENTAL" && anc.keyify() != "DESC_ELEMENTAL") {
+            selecionarDescendenteElemental(null)
+        }
 
         // --- Vantagens / desvantagens raciais ---
 
@@ -2156,6 +2168,17 @@ class CriadorState {
                 if (conexoesMafia != null && vantagensSelecionadas.none { it.nome.equals("Conexões (Máfia)", ignoreCase = true) }) {
                     vantagensSelecionadas.add(conexoesMafia)
                 }
+            }
+            "DESCENDENTE ELEMENTAL" -> {
+                if (descendenteElementalSelecionado == null) {
+                    selecionarDescendenteElemental("Água")
+                } else {
+                    // Re-apply to ensure consistency
+                    val current = descendenteElementalSelecionado
+                    descendenteElementalSelecionado = null
+                    selecionarDescendenteElemental(current)
+                }
+                armadura = 0
             }
             else -> {
                 armadura = 0
@@ -2384,7 +2407,40 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    fun selecionarDescendenteElemental(novoElemento: String?) {
+        if (descendenteElementalSelecionado == novoElemento) return
+
+        // 1. Remove old edges
+        if (vantagensAutomaticasDoElemento.isNotEmpty()) {
+            vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoElemento }
+            vantagensAutomaticasDoElemento.clear()
+        }
+
+        descendenteElementalSelecionado = novoElemento
+
+        // 2. Add new edges
+        if (novoElemento != null) {
+            val edgesToAdd = mutableListOf<String>()
+            when (novoElemento) {
+                "Ar" -> edgesToAdd.add("ar_interno")
+                "Água" -> edgesToAdd.add("aquatico")
+                "Fogo" -> edgesToAdd.add("rapido")
+                "Terra" -> edgesToAdd.add("solido_como_rocha")
+            }
+
+            edgesToAdd.forEach { edgeId ->
+                val vant = listaVantagens.firstOrNull { it.id == edgeId || it.nome.keyify() == edgeId.keyify() }
+                if (vant != null && vantagensSelecionadas.none { it.id == vant.id }) {
+                    vantagensSelecionadas.add(vant)
+                    vantagensAutomaticasDoElemento.add(vant.id)
+                }
+            }
+        }
+
+        recalcularPontosAtributo()
+        rebuildAllPericiaStacks()
+    }
+
     fun selecionarTropo(novoTropo: Tropo?) {
         if (tropoSelecionado?.id == novoTropo?.id) return
 

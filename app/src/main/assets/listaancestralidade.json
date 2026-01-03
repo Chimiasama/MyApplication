@@ -207,62 +207,41 @@
     ]
   },
   {
-    "nome": "DESCENDENTE ELEMENTAL (AR)",
+    "id": "desc_elemental",
+    "nome": "DESCENDENTE ELEMENTAL",
     "origem": "FANTASIA",
     "descricao": "Descendentes elementais estão de alguma forma conectados por nascimento a um dos quatro elementos: terra, fogo, água ou ar. Parecem humanos à primeira vista, mas podem ter sinais de sua herança, como cabelos que se agitam como vento, pele avermelhada ou pupilas de fogo. Eles possuem Resistência Ambiental ao seu elemento (+4 para resistir e redução de dano) e sofrem preconceito (Forasteiro Menor) por sua natureza estranha.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
-      "AR INTERNO",
       "RESISTÊNCIA AMBIENTAL"
     ],
     "desvantagens": [
       "FORASTEIRO (Menor)"
+    ],
+    "habilidades": [
+      {
+        "nome": "Herança Elemental",
+        "descricao": "Escolha um elemento (Ar, Água, Fogo, Terra). Terra concede Vigor d6. Água: Aquático. Ar: Ar Interno. Fogo: Rápido."
+      }
     ]
   },
   {
-    "nome": "DESCENDENTE ELEMENTAL (ÁGUA)",
+    "id": "celestiais_fantasia",
+    "nome": "CELESTIAIS (FANTASIA)",
     "origem": "FANTASIA",
-    "descricao": "Descendentes elementais estão de alguma forma conectados por nascimento a um dos quatro elementos: terra, fogo, água ou ar. Parecem humanos à primeira vista, mas podem ter sinais de sua herança, como cabelos que se agitam como vento, pele avermelhada ou pupilas de fogo. Eles possuem Resistência Ambiental ao seu elemento (+4 para resistir e redução de dano) e sofrem preconceito (Forasteiro Menor) por sua natureza estranha.",
+    "descricao": "Em muitos mundos, deuses e deusas têm um interesse ativo nos assuntos dos mortais, enviando anjos ao reino mortal para servirem como seus representantes. Celestiais têm muitas formas, mas sua característica mais notável é um par de asas brancas e emplumadas que brota de suas costas.\n\nIdeias Variantes: Nem todos os celestiais servem à luz. Avatares de poderes mais sombrios trocam Código de Honra por Complicações como Arrogante, Implacável ou algum Voto destrutivo. São frequentemente conhecidos por sua crueldade ou ódio para com os mortais. Como uma ironia cruel, podem manter suas asas angelicais ou elas podem se parecer com asas de morcego ou demônios.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
-      "AQUÁTICO",
-      "RESISTÊNCIA AMBIENTAL"
+      "ATRAENTE",
+      "VOO"
     ],
     "desvantagens": [
-      "FORASTEIRO (Menor)"
-    ]
-  },
-  {
-    "nome": "DESCENDENTE ELEMENTAL (FOGO)",
-    "origem": "FANTASIA",
-    "descricao": "Descendentes elementais estão de alguma forma conectados por nascimento a um dos quatro elementos: terra, fogo, água ou ar. Parecem humanos à primeira vista, mas podem ter sinais de sua herança, como cabelos que se agitam como vento, pele avermelhada ou pupilas de fogo. Eles possuem Resistência Ambiental ao seu elemento (+4 para resistir e redução de dano) e sofrem preconceito (Forasteiro Menor) por sua natureza estranha.",
-    "atributos": {},
-    "pericias": {},
-    "vantagensGratis": [
-      "RÁPIDO",
-      "RESISTÊNCIA AMBIENTAL"
+      "CÓDIGO DE HONRA",
+      "VOTO (Maior)"
     ],
-    "desvantagens": [
-      "FORASTEIRO (Menor)"
-    ]
-  },
-  {
-    "nome": "DESCENDENTE ELEMENTAL (TERRA)",
-    "origem": "FANTASIA",
-    "descricao": "Descendentes elementais estão de alguma forma conectados por nascimento a um dos quatro elementos: terra, fogo, água ou ar. Parecem humanos à primeira vista, mas podem ter sinais de sua herança, como cabelos que se agitam como vento, pele avermelhada ou pupilas de fogo. Eles possuem Resistência Ambiental ao seu elemento (+4 para resistir e redução de dano) e sofrem preconceito (Forasteiro Menor) por sua natureza estranha.",
-    "atributos": {
-      "Vigor": 2
-    },
-    "pericias": {},
-    "vantagensGratis": [
-      "SÓLIDO COMO ROCHA",
-      "RESISTÊNCIA AMBIENTAL"
-    ],
-    "desvantagens": [
-      "FORASTEIRO (Menor)"
-    ]
+    "originalName": "Celestiais"
   },
   {
     "nome": "DRACONIANOS",
