@@ -504,7 +504,12 @@ fun VantagensContent(
 
                             val (pode, msg) = state.podeRemoverVantagem(vant)
                             if (!pode) {
-                                onError(msg ?: "Não é possível remover.")
+                                tempErrorMsg = msg ?: "Não é possível remover."
+                                showTempError = true
+                                scope.launch {
+                                    delay(2_000)
+                                    showTempError = false
+                                }
                                 return@AssistChip
                             }
 
