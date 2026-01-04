@@ -565,6 +565,27 @@ class CriadorState {
         }
     }
 
+    fun removerVantagem(v: Vantagem) {
+        vantagensSelecionadas.remove(v)
+
+        if (v.id == "escolhido") {
+            val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
+            if (inimigo != null) {
+                // Remove apenas se estiver marcado como automático
+                if (desvantagensAutomaticas.contains(inimigo.name)) {
+                    complicacoesSelecionadas.remove(inimigo)
+                    desvantagensAutomaticas.remove(inimigo.name)
+
+                    // Remove a anotação se presente
+                    val note = "\n• Inimigo (Maior) adicionado automaticamente pela Vantagem Escolhido."
+                    if (anotacoes.contains(note)) {
+                        anotacoes = anotacoes.replace(note, "")
+                    }
+                }
+            }
+        }
+    }
+
     fun removerVantagemPorSuper(v: Vantagem) {
         vantagensSelecionadas.remove(v)
         vantagensDePoder.remove(v.id)
@@ -1147,7 +1168,7 @@ class CriadorState {
             ?: return false
 
         removeVantagemDinheiro(candidate)
-        vantagensSelecionadas.remove(candidate)
+        removerVantagem(candidate)
         if (candidate.id == "o_melhor_que_ha") {
             poderFavoritoId = null
         }

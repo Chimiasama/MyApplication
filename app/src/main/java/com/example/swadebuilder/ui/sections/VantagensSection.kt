@@ -521,7 +521,7 @@ fun VantagensContent(
                                 state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                             } else {
                                 state.removeVantagemDinheiro(vant)
-                                state.vantagensSelecionadas.remove(vant)
+                                state.removerVantagem(vant)
                                 state.pontosVantagem++
                                 state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                                 onUserFeedback()
