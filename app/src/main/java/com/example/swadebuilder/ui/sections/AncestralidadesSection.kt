@@ -528,8 +528,13 @@ fun AncestralidadesSection(
                                         // Attributes
                                         if (item.atributos.isNotEmpty()) {
                                             val attrsText = item.atributos.entries.joinToString(", ") { (k, v) ->
-                                                val sign = if (v > 0) "+" else ""
-                                                "$k $sign$v"
+                                                val dieVal = 4 + v
+                                                val dieStr = if (dieVal > 12) {
+                                                    "d12+${dieVal - 12}"
+                                                } else {
+                                                    "d$dieVal"
+                                                }
+                                                "$k $dieStr"
                                             }
                                             Text(
                                                 text = "Atributos: $attrsText",

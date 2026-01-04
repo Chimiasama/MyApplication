@@ -130,7 +130,8 @@
     },
     "pericias": {},
     "vantagensGratis": [
-      "MORDIDA/GARRAS",
+      "GARRAS",
+      "MORDIDA",
       "VISÃO NO ESCURO",
       "ÁGIL"
     ],
@@ -148,6 +149,7 @@
     "pericias": {},
     "vantagensGratis": [
       "ARMADURA +2",
+      "GARRAS",
       "MORDIDA",
       "PRONTIDÃO"
     ],
@@ -504,6 +506,7 @@
     "pericias": {},
     "vantagensGratis": [
       "DIMINUTO",
+      "MORDIDA",
       "VISÃO NO ESCURO"
     ],
     "desvantagens": [
@@ -984,6 +987,10 @@
         "descricao": "For+d4, PA 2."
       },
       {
+        "nome": "Mordida",
+        "descricao": "For+d4."
+      },
+      {
         "nome": "Sanguinário",
         "descricao": "Começam com a Complicação Sanguinário."
       },
@@ -1008,6 +1015,10 @@
       {
         "nome": "Sangue Frio",
         "descricao": "-4 para resistir a efeitos de frio. Sofre dano extra."
+      },
+      {
+        "nome": "Garras",
+        "descricao": "For+d4."
       },
       {
         "nome": "Mordida",
@@ -1403,6 +1414,7 @@
     "desvantagens": ["Pequeno (Tamanho -1)"],
     "habilidades": [
       { "nome": "Imunidade a Doenças", "descricao": "+4 para resistir a doenças." },
+      { "nome": "Mordida", "descricao": "For+d4." },
       { "nome": "Visão no Escuro", "descricao": "Ignora penalidades de iluminação." }
     ]
   },
