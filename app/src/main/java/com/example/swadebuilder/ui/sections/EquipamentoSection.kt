@@ -456,15 +456,27 @@ fun EquipamentoSection(
                         .padding(vertical = 8.dp)
                 ) {
                     equipamentosComprados.forEach { eq ->
+                        val isLocked = eq.origemGrant != null && !modoProgressaoAtivo
+                        val chipColors = if (isLocked) {
+                            androidx.compose.material3.AssistChipDefaults.assistChipColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                                labelColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            )
+                        } else {
+                            androidx.compose.material3.AssistChipDefaults.assistChipColors()
+                        }
+
                         AssistChip(
                             onClick = { onRemoveEquipamentoClick(eq) },
                             label = { Text(eq.nome) },
                             leadingIcon = {
                                 Icon(
-                                    Icons.Default.Close,
+                                    if (isLocked) Icons.Default.Close else Icons.Default.Close,
                                     contentDescription = "Remover"
                                 )
-                            }
+                            },
+                            colors = chipColors
                         )
                     }
                 }

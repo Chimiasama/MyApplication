@@ -279,11 +279,43 @@ class CriadorState {
     fun adicionarVantagemCavaleiro(vant: Vantagem, armorChoice: String) {
         adicionarVantagem(vant)
 
-        val itemsToAdd = mutableListOf("Cavalo de Guerra", "Lança de Cavalaria", "Espada Longa", "Escudo Médio")
-        itemsToAdd.add(armorChoice)
+        val targets = mutableListOf<String>()
+        targets.add("Cavalo de Guerra")
+        targets.add("Lança")
+        targets.add("Espada Longa")
+        targets.add("Escudo (Médio)")
 
-        itemsToAdd.forEach { name ->
-            val itemProto = listaEquipamentos.firstOrNull { it.nome.equals(name, ignoreCase = true) }
+        if (armorChoice.contains("Completa", true)) {
+            targets.add("Armadura de Placas")
+        } else {
+            targets.add("Cota de Malha")
+        }
+
+        fun findItem(target: String): EquipamentoItem? {
+            val tKey = target.keyify()
+            listaEquipamentos.firstOrNull { it.nome.keyify() == tKey }?.let { return it }
+
+            if (tKey.contains("CAVALO")) {
+                return listaEquipamentos.firstOrNull {
+                    val k = it.nome.keyify()
+                    k.contains("CAVALO") && k.contains("GUERRA")
+                }
+            }
+            if (tKey.contains("LANCA")) {
+                listaEquipamentos.firstOrNull { it.nome.equals("Lança", true) }?.let { return it }
+                return listaEquipamentos.firstOrNull { it.nome.keyify().contains("LANCA") }
+            }
+            if (tKey.contains("ESCUDO")) {
+                return listaEquipamentos.firstOrNull {
+                    val k = it.nome.keyify()
+                    k.contains("ESCUDO") && k.contains("MEDIO")
+                }
+            }
+            return null
+        }
+
+        targets.forEach { t ->
+            val itemProto = findItem(t)
             if (itemProto != null) {
                 val newItem = itemProto.copy(
                     custo = kotlinx.serialization.json.JsonPrimitive(0),
