@@ -661,7 +661,7 @@ fun VantagensContent(
                                             viewModel.logFeedback("Vantagem ${vant.nome} (Pontos de Poder) adicionada.")
                                         } else {
                                             state.applyVantagemDinheiro(vant)
-                                            state.vantagensSelecionadas += vant
+                                            state.adicionarVantagem(vant)
                                             state.pontosVantagem--
                                             state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                                             onUserFeedback()
@@ -742,7 +742,7 @@ fun VantagensContent(
                                             viewModel.logFeedback("Vantagem ${vant.nome} (Pontos de Poder) adicionada.")
                                             } else {
                                                 state.applyVantagemDinheiro(vant)
-                                                state.vantagensSelecionadas += vant
+                                                state.adicionarVantagem(vant)
                                                 state.pontosVantagem--
                                                 state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                                                 onUserFeedback()
@@ -811,7 +811,7 @@ fun VantagensContent(
                                 if (state.advantageAdvancementInProgress) {
                                     viewModel.selectAdvantageForAdvancement(novaVantagem)
                                 } else {
-                                    state.vantagensSelecionadas += novaVantagem
+                                    state.adicionarVantagem(novaVantagem)
                                     state.pontosVantagem--
                                     state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                                 }
@@ -942,7 +942,7 @@ fun VantagensContent(
                         options = validOptions,
                         onConfirm = { choice ->
                             val enforcePoolLimit = !vant.isBrutamontes()
-                            state.vantagensSelecionadas += vant.copy(choice = choice)
+                            state.adicionarVantagem(vant.copy(choice = choice))
                             state.pontosVantagem--
                             state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                             showChoiceDialog = false

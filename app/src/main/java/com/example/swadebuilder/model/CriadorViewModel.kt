@@ -952,7 +952,7 @@ class CriadorViewModel : ViewModel() {
                 state.comprarPontoDePoder(vantagemCopia)
             } else {
                 state.applyVantagemDinheiro(vantagemCopia)
-                state.vantagensSelecionadas.add(vantagemCopia)
+                state.adicionarVantagem(vantagemCopia)
             }
             state.pontosVantagem--
             state.advantageForCurrentAdvancement = vantagemCopia.id

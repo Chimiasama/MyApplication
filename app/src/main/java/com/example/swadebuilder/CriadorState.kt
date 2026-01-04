@@ -548,6 +548,23 @@ class CriadorState {
         return true
     }
 
+    fun adicionarVantagem(v: Vantagem) {
+        vantagensSelecionadas.add(v)
+
+        if (v.id == "escolhido") {
+            val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
+            if (inimigo != null) {
+                if (complicacoesSelecionadas.keys.none { it.id == "inimigo" }) {
+                    complicacoesSelecionadas[inimigo] = "Maior"
+                    desvantagensAutomaticas.add(inimigo.name)
+                    if (!anotacoes.contains("Inimigo (Maior) adicionado por Escolhido")) {
+                        anotacoes += "\n• Inimigo (Maior) adicionado automaticamente pela Vantagem Escolhido."
+                    }
+                }
+            }
+        }
+    }
+
     fun removerVantagemPorSuper(v: Vantagem) {
         vantagensSelecionadas.remove(v)
         vantagensDePoder.remove(v.id)
