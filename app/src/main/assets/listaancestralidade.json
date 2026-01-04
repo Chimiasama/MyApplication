@@ -1414,6 +1414,7 @@
     "desvantagens": ["Pequeno (Tamanho -1)"],
     "habilidades": [
       { "nome": "Imunidade a Doenças", "descricao": "+4 para resistir a doenças." },
+      { "nome": "Mordida", "descricao": "For+d4." },
       { "nome": "Visão no Escuro", "descricao": "Ignora penalidades de iluminação." }
     ]
   },
