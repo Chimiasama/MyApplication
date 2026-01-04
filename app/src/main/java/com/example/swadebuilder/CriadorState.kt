@@ -1296,7 +1296,9 @@ class CriadorState {
         "MUSCULOSO"  to setOf("OBESO"),
         "POBREZA"        to setOf("RICO", "PODRE DE RICO"),
         "RICO"           to setOf("POBREZA"),
-        "PODRE DE RICO"  to setOf("POBREZA")
+        "PODRE DE RICO"  to setOf("POBREZA"),
+        "ESCOLHIDO"      to setOf("INIMIGO"),
+        "INIMIGO"        to setOf("ESCOLHIDO")
     )
 
     fun mensagemConflitoParaVantagem(vantagem: Vantagem): String? {
