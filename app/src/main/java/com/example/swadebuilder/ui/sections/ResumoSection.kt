@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +28,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -224,8 +226,7 @@ fun SummaryContent(
         attributesSection?.let { attrSection ->
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 SummarySectionCard(
@@ -272,43 +273,78 @@ fun SummaryContent(
                     }
                 }
 
+                var showImageSettings by remember { mutableStateOf(false) }
+
                 Card(
                     modifier = Modifier
                         .weight(1f)
-                        .then(
-                            if (state.expandirRetrato) {
-                                Modifier.aspectRatio(1f)
-                            } else {
-                                Modifier.fillMaxHeight()
-                            }
-                        )
+                        .aspectRatio(0.8f) // Fixed aspect ratio
                         .clickable(onClick = onSelectImage),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant
                     ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
-                    val imageBitmap = imageBitmapState.value
-                    if (imageBitmap != null) {
-                        Image(
-                            bitmap = imageBitmap,
-                            contentDescription = "Retrato",
-                            contentScale = if (state.expandirRetrato) ContentScale.Crop else ContentScale.Fit,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    } else {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Person,
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        val imageBitmap = imageBitmapState.value
+                        if (imageBitmap != null) {
+                            val scale = if (state.portraitScaleType == "FIT") ContentScale.Fit else ContentScale.Crop
+                            val align = when (state.portraitAlignment) {
+                                "TOP" -> Alignment.TopCenter
+                                "BOTTOM" -> Alignment.BottomCenter
+                                else -> Alignment.Center
+                            }
+
+                            Image(
+                                bitmap = imageBitmap,
                                 contentDescription = "Retrato",
-                                modifier = Modifier.size(48.dp),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                                contentScale = scale,
+                                alignment = align,
+                                modifier = Modifier.fillMaxSize()
                             )
+                        } else {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Retrato",
+                                    modifier = Modifier.size(48.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                                )
+                            }
+                        }
+
+                        if (imageBitmap != null) {
+                            IconButton(
+                                onClick = { showImageSettings = true },
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(4.dp)
+                                    .size(32.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Settings,
+                                    contentDescription = "Ajustes da Foto",
+                                    tint = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                                    modifier = Modifier
+                                        .background(
+                                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+                                            CircleShape
+                                        )
+                                        .padding(4.dp)
+                                )
+                            }
                         }
                     }
+                }
+
+                if (showImageSettings) {
+                    ImageSettingsDialog(
+                        state = state,
+                        onDismiss = { showImageSettings = false }
+                    )
                 }
             }
             Spacer(Modifier.height(12.dp))
@@ -1047,5 +1083,77 @@ private fun SkillChip(text: String) {
     LabelValueRow(
         raw = text,
         textStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp)
+    )
+}
+
+@Composable
+private fun ImageSettingsDialog(
+    state: CriadorState,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Ajustes da Foto") },
+        text = {
+            Column {
+                Text("Modo de Exibição", style = MaterialTheme.typography.labelLarge)
+                Spacer(Modifier.height(8.dp))
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    androidx.compose.material3.RadioButton(
+                        selected = state.portraitScaleType == "CROP",
+                        onClick = { state.portraitScaleType = "CROP" }
+                    )
+                    Text(
+                        "Preencher (Corte)",
+                        modifier = Modifier.clickable { state.portraitScaleType = "CROP" },
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    androidx.compose.material3.RadioButton(
+                        selected = state.portraitScaleType == "FIT",
+                        onClick = { state.portraitScaleType = "FIT" }
+                    )
+                    Text(
+                        "Ajustar (Inteiro)",
+                        modifier = Modifier.clickable { state.portraitScaleType = "FIT" },
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                if (state.portraitScaleType == "CROP") {
+                    Spacer(Modifier.height(16.dp))
+                    Text("Alinhamento", style = MaterialTheme.typography.labelLarge)
+                    Spacer(Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        listOf("TOP" to "Topo", "CENTER" to "Centro", "BOTTOM" to "Baixo").forEach { (key, label) ->
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                androidx.compose.material3.RadioButton(
+                                    selected = state.portraitAlignment == key,
+                                    onClick = { state.portraitAlignment = key }
+                                )
+                                Text(
+                                    label,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    modifier = Modifier.clickable { state.portraitAlignment = key }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text("Concluir") }
+        }
     )
 }

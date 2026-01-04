@@ -123,7 +123,10 @@ class CriadorState {
 
     var anotacoes by mutableStateOf("")
     var portraitFileName by mutableStateOf<String?>(null)
+    // expandirRetrato mantido para compatibilidade, mas o UI deve usar portraitScaleType
     var expandirRetrato by mutableStateOf(false)
+    var portraitScaleType by mutableStateOf("CROP") // CROP, FIT
+    var portraitAlignment by mutableStateOf("CENTER") // TOP, CENTER, BOTTOM
 
     var coracaoCrystalSelecionado by mutableStateOf<com.example.swadebuilder.model.CrystalHeart?>(null)
 
@@ -3030,6 +3033,8 @@ class CriadorState {
                 tecnicasIniciaisTropo = tecnicasIniciaisFromTropo,
                 retratoFileName = portraitFileName,
                 expandirRetrato = expandirRetrato,
+                portraitScaleType = portraitScaleType,
+                portraitAlignment = portraitAlignment,
                 signoAdgSelecionado = signoAdgSelecionado
             ),
             progresso = SnapshotProgresso(
@@ -3112,6 +3117,8 @@ class CriadorState {
         appTheme = AppTheme.valueOf(snapshot.appTheme)
         portraitFileName = snapshot.selecoes.retratoFileName
         expandirRetrato = snapshot.selecoes.expandirRetrato
+        portraitScaleType = snapshot.selecoes.portraitScaleType
+        portraitAlignment = snapshot.selecoes.portraitAlignment
 
         // Flags adicionais
         heroisSemArmadura = flags.heroisSemArmadura
