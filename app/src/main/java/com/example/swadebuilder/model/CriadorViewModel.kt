@@ -939,7 +939,7 @@ class CriadorViewModel : ViewModel() {
                         state.removerPontosDePoder(currentAdvantage)
                     } else {
                         state.removeVantagemDinheiro(currentAdvantage)
-                        state.vantagensSelecionadas.remove(currentAdvantage)
+                        state.removerVantagem(currentAdvantage)
                     }
                     state.pontosVantagem++
                 }
@@ -952,7 +952,7 @@ class CriadorViewModel : ViewModel() {
                 state.comprarPontoDePoder(vantagemCopia)
             } else {
                 state.applyVantagemDinheiro(vantagemCopia)
-                state.vantagensSelecionadas.add(vantagemCopia)
+                state.adicionarVantagem(vantagemCopia)
             }
             state.pontosVantagem--
             state.advantageForCurrentAdvancement = vantagemCopia.id
@@ -1110,7 +1110,7 @@ class CriadorViewModel : ViewModel() {
                         state.removerPontosDePoder(vant)
                     } else {
                         state.removeVantagemDinheiro(vant)
-                        state.vantagensSelecionadas.remove(vant)
+                        state.removerVantagem(vant)
                     }
                     state.pontosVantagem++
                 }
@@ -1166,7 +1166,7 @@ class CriadorViewModel : ViewModel() {
                         state.removerPontosDePoder(advantage, estagioOverride = lastAction.stageName)
                     } else {
                         state.removeVantagemDinheiro(advantage)
-                        state.vantagensSelecionadas.remove(advantage)
+                        state.removerVantagem(advantage)
                     }
                 }
                 lastAction.arcanoKey?.let { arcKey ->

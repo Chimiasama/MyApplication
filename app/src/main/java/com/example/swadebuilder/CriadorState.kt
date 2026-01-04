@@ -548,6 +548,44 @@ class CriadorState {
         return true
     }
 
+    fun adicionarVantagem(v: Vantagem) {
+        vantagensSelecionadas.add(v)
+
+        if (v.id == "escolhido") {
+            val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
+            if (inimigo != null) {
+                if (complicacoesSelecionadas.keys.none { it.id == "inimigo" }) {
+                    complicacoesSelecionadas[inimigo] = "Maior"
+                    desvantagensAutomaticas.add(inimigo.name)
+                    if (!anotacoes.contains("Inimigo (Maior) adicionado por Escolhido")) {
+                        anotacoes += "\n• Inimigo (Maior) adicionado automaticamente pela Vantagem Escolhido."
+                    }
+                }
+            }
+        }
+    }
+
+    fun removerVantagem(v: Vantagem) {
+        vantagensSelecionadas.remove(v)
+
+        if (v.id == "escolhido") {
+            val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
+            if (inimigo != null) {
+                // Remove apenas se estiver marcado como automático
+                if (desvantagensAutomaticas.contains(inimigo.name)) {
+                    complicacoesSelecionadas.remove(inimigo)
+                    desvantagensAutomaticas.remove(inimigo.name)
+
+                    // Remove a anotação se presente
+                    val note = "\n• Inimigo (Maior) adicionado automaticamente pela Vantagem Escolhido."
+                    if (anotacoes.contains(note)) {
+                        anotacoes = anotacoes.replace(note, "")
+                    }
+                }
+            }
+        }
+    }
+
     fun removerVantagemPorSuper(v: Vantagem) {
         vantagensSelecionadas.remove(v)
         vantagensDePoder.remove(v.id)
@@ -1130,7 +1168,7 @@ class CriadorState {
             ?: return false
 
         removeVantagemDinheiro(candidate)
-        vantagensSelecionadas.remove(candidate)
+        removerVantagem(candidate)
         if (candidate.id == "o_melhor_que_ha") {
             poderFavoritoId = null
         }
@@ -1258,7 +1296,9 @@ class CriadorState {
         "MUSCULOSO"  to setOf("OBESO"),
         "POBREZA"        to setOf("RICO", "PODRE DE RICO"),
         "RICO"           to setOf("POBREZA"),
-        "PODRE DE RICO"  to setOf("POBREZA")
+        "PODRE DE RICO"  to setOf("POBREZA"),
+        "ESCOLHIDO"      to setOf("INIMIGO"),
+        "INIMIGO"        to setOf("ESCOLHIDO")
     )
 
     fun mensagemConflitoParaVantagem(vantagem: Vantagem): String? {
