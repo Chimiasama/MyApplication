@@ -137,14 +137,53 @@ private fun buildUsageInstructions(state: CriadorState, pathfinderLabel: String)
     val booksText = activeBooks.joinToString(separator = "\n") { "• $it" }
 
     return buildString {
-        append("Use as abas no topo para navegar entre as seções do personagem.")
+        append("Bem-vindo ao SWADE Builder! Este guia se adapta às regras que você ativou.")
         append("\n\n")
-        append("Resumo: visão geral, anotações e retrato do personagem.")
-        append("\nAtributos/Perícias/Vantagens/Complicações: ajuste os valores conforme as regras.")
-        append("\nEquipamentos: adicione e remova itens do inventário.")
-        append("\nXP: use os progressos quando estiver na fase de avanço.")
+
+        append("--- CRIAÇÃO DE PERSONAGEM ---\n")
+
+        // Ancestralidades (Regra Wiseguys vs Padrão)
+        if (state.compendioWiseguysAtivo) {
+            append("• Ancestralidades: Em Wiseguys, todos os personagens são Humanos. Esta seção fica oculta.\n")
+        } else {
+            append("• Ancestralidades: Escolha sua raça ou espécie inicial.\n")
+        }
+
+        // Seções específicas de Cenário
+        if (state.compendioArteDaGuerraAtivo) {
+            append("• Tropos: (Arte da Guerra) Escolha seu arquétipo para definir vantagens iniciais.\n")
+        }
+        if (state.modoMonstroAtivo) {
+            append("• Monstros: (Horror) Escolha o template base da sua criatura.\n")
+        }
+        if (state.compendioCrystalHeartAtivo) {
+            append("• Crystal Heart: Selecione seu Coração de Cristal e sua Origem (nacionalidade).\n")
+        }
+
+        append("• Atributos e Perícias: Distribua seus pontos. O app avisa se faltar ou exceder.\n")
+        append("• Complicações: Adicione complicações para ganhar pontos extras de criação.\n")
+        append("• Vantagens: Compre vantagens com pontos iniciais ou de complicações.\n")
+
+        // Lógica de Poderes
+        if (state.modoSupers) {
+            append("• Super Poderes: Gerencie seus poderes e pontos na aba dedicada.\n")
+        } else if (state.compendioCrystalHeartAtivo) {
+            append("• Poderes: Em Crystal Heart, seus poderes vêm do Coração ou de Técnicas.\n")
+        } else {
+            append("• Poderes: A aba 'Poderes' aparecerá automaticamente se você selecionar um Antecedente Arcano em 'Vantagens'.\n")
+        }
+
+        append("• Equipamentos: Gerencie seu inventário, carga e riqueza.\n")
+
+        append("\n--- PROGRESSÃO (XP) ---\n")
+        append("• Ao terminar a ficha, clique no botão 'Finalizar' (seta) na aba Resumo.\n")
+        append("• Isso trava a criação base e libera a aba 'XP' para gastar Avanços conforme sobe de Rank.\n")
+
+        append("\n--- MENU SUPERIOR ---\n")
+        append("• Ícones: Salvar, Carregar, Configurações (Tema/Sons) e Gerar PDF.\n")
+
         append("\n\n")
-        append("Livros ativos neste personagem:\n")
+        append("--- LIVROS ATIVOS NESTE PERSONAGEM ---\n")
         append(booksText)
     }
 }
