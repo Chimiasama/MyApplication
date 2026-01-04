@@ -948,7 +948,9 @@ class CriadorViewModel : ViewModel() {
             // Fix: Use copy() to avoid shared reference mutation
             val vantagemCopia = vantagem.copy()
 
-            if (vantagemCopia.nome.contains("Pontos de Poder", true)) {
+            if (vantagemCopia.nome.keyify() == "CAVALEIRO" && !vantagemCopia.choice.isNullOrBlank()) {
+                state.adicionarVantagemCavaleiro(vantagemCopia, vantagemCopia.choice!!)
+            } else if (vantagemCopia.nome.contains("Pontos de Poder", true)) {
                 state.comprarPontoDePoder(vantagemCopia)
             } else {
                 state.applyVantagemDinheiro(vantagemCopia)

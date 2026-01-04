@@ -302,49 +302,56 @@ fun ComplicacoesSection(
                     val isAuto = comp.id.keyify() in autoBaseKeys
                     val isYoungAuto = comp.id == "pequeno" && state.jovemAutoPequeno
                     val cost = if (tipo == "Maior") 2 else 1
-                    val canRemove = !locked &&
-                            !isAuto &&
-                            !isYoungAuto &&
-                            state.pontosComplicacaoGastos <= state.pontosComplicacao - cost
-
                     val isClickable = !locked && !isAuto && !isYoungAuto
 
                     AssistChip(
                         onClick = {
                             if (!isClickable) return@AssistChip
-                            onUserFeedback()
 
-                            if (canRemove) {
-                                when (comp.id) {
-                                    "idoso" -> {
-                                        state.complicacoesSelecionadas.remove(comp)
-                                        state.idosoBonusSp = 0
-                                        state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                                    }
-                                    "jovem" -> {
-                                        val pequComp = complicacoesFiltradas.firstOrNull { it.id == "pequeno" }
-                                        if (pequComp != null) {
-                                            state.removeYoung(pequComp)
-                                        }
-                                        state.complicacoesSelecionadas.remove(comp)
-                                    }
-                                    "pobreza" -> {
-                                        state.complicacoesSelecionadas.remove(comp)
-                                        state.dinheiro += 250
-                                    }
-                                    "obeso" -> {
-                                        state.complicacoesSelecionadas.remove(comp)
-                                        state.obesoBonusSize = 0
-                                        state.obesoMalusMov = 0
-                                    }
-                                    else -> {
-                                        state.complicacoesSelecionadas.remove(comp)
+                            val (pode, msg) = state.podeRemoverComplicacao(comp, tipo)
+                            if (!pode) {
+                                if (msg != null && msg.contains("Pontos em uso")) {
+                                    showPcInUseDialog = true
+                                } else {
+                                    tempErrorMsg = msg ?: "Ação bloqueada."
+                                    showTempError = true
+                                    scope.launch {
+                                        delay(3000)
+                                        showTempError = false
                                     }
                                 }
-                                onLogFeedback("Complicação ${comp.name} removida.")
-                            } else {
-                                showPcInUseDialog = true
+                                return@AssistChip
                             }
+
+                            onUserFeedback()
+
+                            when (comp.id) {
+                                "idoso" -> {
+                                    state.complicacoesSelecionadas.remove(comp)
+                                    state.idosoBonusSp = 0
+                                    state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
+                                }
+                                "jovem" -> {
+                                    val pequComp = complicacoesFiltradas.firstOrNull { it.id == "pequeno" }
+                                    if (pequComp != null) {
+                                        state.removeYoung(pequComp)
+                                    }
+                                    state.complicacoesSelecionadas.remove(comp)
+                                }
+                                "pobreza" -> {
+                                    state.complicacoesSelecionadas.remove(comp)
+                                    state.dinheiro += 250
+                                }
+                                "obeso" -> {
+                                    state.complicacoesSelecionadas.remove(comp)
+                                    state.obesoBonusSize = 0
+                                    state.obesoMalusMov = 0
+                                }
+                                else -> {
+                                    state.complicacoesSelecionadas.remove(comp)
+                                }
+                            }
+                            onLogFeedback("Complicação ${comp.name} removida.")
                         },
                         enabled     = isClickable,
                         label       = { Text("${comp.name} ($tipo)") },

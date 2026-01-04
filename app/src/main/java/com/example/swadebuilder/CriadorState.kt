@@ -276,6 +276,24 @@ class CriadorState {
         }
     }
 
+    fun adicionarVantagemCavaleiro(vant: Vantagem, armorChoice: String) {
+        adicionarVantagem(vant)
+
+        val itemsToAdd = mutableListOf("Cavalo de Guerra", "Lança de Cavalaria", "Espada Longa", "Escudo Médio")
+        itemsToAdd.add(armorChoice)
+
+        itemsToAdd.forEach { name ->
+            val itemProto = listaEquipamentos.firstOrNull { it.nome.equals(name, ignoreCase = true) }
+            if (itemProto != null) {
+                val newItem = itemProto.copy(
+                    custo = kotlinx.serialization.json.JsonPrimitive(0),
+                    origemGrant = "CAVALEIRO"
+                )
+                equipamentosComprados.add(newItem)
+            }
+        }
+    }
+
     fun valorMovimentacao(): Int {
         val base = 6
 
@@ -663,6 +681,10 @@ class CriadorState {
 
     fun removerVantagem(v: Vantagem) {
         vantagensSelecionadas.remove(v)
+
+        if (v.nome.keyify() == "CAVALEIRO") {
+            equipamentosComprados.removeAll { it.origemGrant == "CAVALEIRO" }
+        }
 
         if (v.id == "escolhido") {
             val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
@@ -1700,6 +1722,34 @@ class CriadorState {
         return true to null
     }
 
+    fun podeRemoverComplicacao(comp: Complicacao, tipo: String? = null): Pair<Boolean, String?> {
+        // Locked check
+        if (criacaoBasicaCongelada && !modoProgressaoAtivo) return false to "Criação finalizada."
+
+        // Automatic checks
+        val autoKeys = desvantagensAutomaticas.map { it.substringBefore("(").trim().keyify() }.toSet()
+        if (comp.id.keyify() in autoKeys) return false to "Complicação automática (Racial ou de Cenário)."
+
+        // Young check
+        if (comp.id == "pequeno" && jovemAutoPequeno) return false to "Adicionado automaticamente por Jovem (Maior)."
+
+        // Knight Check
+        val currentType = tipo ?: complicacoesSelecionadas[comp]
+        if (comp.id.keyify() == "OBRIGACAO" && currentType == "Maior") {
+             if (vantagensSelecionadas.any { it.nome.keyify() == "CAVALEIRO" }) {
+                 return false to "Remova a vantagem Cavaleiro para remover esta Obrigação."
+             }
+        }
+
+        // Points check
+        val cost = if (currentType == "Maior") 2 else 1
+        if (!modoProgressaoAtivo && pontosComplicacaoGastos > pontosComplicacao - cost) {
+             return false to "Pontos em uso. Desfaça compras para liberar."
+        }
+
+        return true to null
+    }
+
     fun podeRemoverVantagem(vantagem: Vantagem): Pair<Boolean, String?> {
         if (vantagem.toArcanoKey() != null) {
             val temOutro = vantagensSelecionadas.any { it != vantagem && it.toArcanoKey() != null }
@@ -1726,6 +1776,14 @@ class CriadorState {
         if (key == "o_melhor_que_ha") {
             if (emProgresso) return false
             if (superInvestments.isEmpty()) return false
+        }
+
+        // 1a) Regra especial: CAVALEIRO (Fantasia)
+        if (key == "CAVALEIRO") {
+            val hasObligation = complicacoesSelecionadas.entries.any { (k, v) ->
+                k.id.keyify() == "OBRIGACAO" && v == "Maior"
+            }
+            if (!hasObligation) return false
         }
 
         // 2) Pontos de Poder por estágio

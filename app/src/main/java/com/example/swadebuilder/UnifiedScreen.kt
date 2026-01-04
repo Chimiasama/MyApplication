@@ -1207,13 +1207,17 @@ private fun EquipamentoSection(
         },
         equipamentosComprados = state.equipamentosComprados,
         onRemoveEquipamentoClick = { equipamento ->
-            val custo = (equipamento.custo as? JsonPrimitive)
-                ?.content?.toIntOrNull() ?: 0
-            state.equipamentosComprados.remove(equipamento)
-            if (!state.usaRiqueza) {
-                state.dinheiro += custo
+            if (!state.modoProgressaoAtivo && equipamento.origemGrant != null) {
+                onLogFeedback("Item de vantagem (fixo na criação).")
+            } else {
+                val custo = (equipamento.custo as? JsonPrimitive)
+                    ?.content?.toIntOrNull() ?: 0
+                state.equipamentosComprados.remove(equipamento)
+                if (!state.usaRiqueza) {
+                    state.dinheiro += custo
+                }
+                onLogFeedback("Equipamento ${equipamento.nome} removido.")
             }
-            onLogFeedback("Equipamento ${equipamento.nome} removido.")
         },
         categorias = equipamentoCategorias,
         superequipCategorias =
