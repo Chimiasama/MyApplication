@@ -123,7 +123,10 @@ class CriadorState {
 
     var anotacoes by mutableStateOf("")
     var portraitFileName by mutableStateOf<String?>(null)
+    // expandirRetrato mantido para compatibilidade, mas o UI deve usar portraitScaleType
     var expandirRetrato by mutableStateOf(false)
+    var portraitScaleType by mutableStateOf("CROP") // CROP, FIT
+    var portraitAlignment by mutableStateOf("CENTER") // TOP, CENTER, BOTTOM
 
     var coracaoCrystalSelecionado by mutableStateOf<com.example.swadebuilder.model.CrystalHeart?>(null)
 
@@ -269,6 +272,56 @@ class CriadorState {
                 if (!anotacoes.contains("Obrigação: Servir a Máfia")) {
                     anotacoes += "\n• Obrigação: Servir a Máfia"
                 }
+            }
+        }
+    }
+
+    fun adicionarVantagemCavaleiro(vant: Vantagem, armorChoice: String) {
+        adicionarVantagem(vant)
+
+        val targets = mutableListOf<String>()
+        targets.add("Cavalo de Guerra")
+        targets.add("Lança")
+        targets.add("Espada Longa")
+        targets.add("Escudo (Médio)")
+
+        if (armorChoice.contains("Completa", true)) {
+            targets.add("Armadura de Placas")
+        } else {
+            targets.add("Cota de Malha")
+        }
+
+        fun findItem(target: String): EquipamentoItem? {
+            val tKey = target.keyify()
+            listaEquipamentos.firstOrNull { it.nome.keyify() == tKey }?.let { return it }
+
+            if (tKey.contains("CAVALO")) {
+                return listaEquipamentos.firstOrNull {
+                    val k = it.nome.keyify()
+                    k.contains("CAVALO") && k.contains("GUERRA")
+                }
+            }
+            if (tKey.contains("LANCA")) {
+                listaEquipamentos.firstOrNull { it.nome.equals("Lança", true) }?.let { return it }
+                return listaEquipamentos.firstOrNull { it.nome.keyify().contains("LANCA") }
+            }
+            if (tKey.contains("ESCUDO")) {
+                return listaEquipamentos.firstOrNull {
+                    val k = it.nome.keyify()
+                    k.contains("ESCUDO") && k.contains("MEDIO")
+                }
+            }
+            return null
+        }
+
+        targets.forEach { t ->
+            val itemProto = findItem(t)
+            if (itemProto != null) {
+                val newItem = itemProto.copy(
+                    custo = kotlinx.serialization.json.JsonPrimitive(0),
+                    origemGrant = "CAVALEIRO"
+                )
+                equipamentosComprados.add(newItem)
             }
         }
     }
@@ -660,6 +713,10 @@ class CriadorState {
 
     fun removerVantagem(v: Vantagem) {
         vantagensSelecionadas.remove(v)
+
+        if (v.nome.keyify() == "CAVALEIRO") {
+            equipamentosComprados.removeAll { it.origemGrant == "CAVALEIRO" }
+        }
 
         if (v.id == "escolhido") {
             val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
@@ -1697,6 +1754,34 @@ class CriadorState {
         return true to null
     }
 
+    fun podeRemoverComplicacao(comp: Complicacao, tipo: String? = null): Pair<Boolean, String?> {
+        // Locked check
+        if (criacaoBasicaCongelada && !modoProgressaoAtivo) return false to "Criação finalizada."
+
+        // Automatic checks
+        val autoKeys = desvantagensAutomaticas.map { it.substringBefore("(").trim().keyify() }.toSet()
+        if (comp.id.keyify() in autoKeys) return false to "Complicação automática (Racial ou de Cenário)."
+
+        // Young check
+        if (comp.id == "pequeno" && jovemAutoPequeno) return false to "Adicionado automaticamente por Jovem (Maior)."
+
+        // Knight Check
+        val currentType = tipo ?: complicacoesSelecionadas[comp]
+        if (comp.id.keyify() == "OBRIGACAO" && currentType == "Maior") {
+             if (vantagensSelecionadas.any { it.nome.keyify() == "CAVALEIRO" }) {
+                 return false to "Remova a vantagem Cavaleiro para remover esta Obrigação."
+             }
+        }
+
+        // Points check
+        val cost = if (currentType == "Maior") 2 else 1
+        if (!modoProgressaoAtivo && pontosComplicacaoGastos > pontosComplicacao - cost) {
+             return false to "Pontos em uso. Desfaça compras para liberar."
+        }
+
+        return true to null
+    }
+
     fun podeRemoverVantagem(vantagem: Vantagem): Pair<Boolean, String?> {
         if (vantagem.toArcanoKey() != null) {
             val temOutro = vantagensSelecionadas.any { it != vantagem && it.toArcanoKey() != null }
@@ -1723,6 +1808,14 @@ class CriadorState {
         if (key == "o_melhor_que_ha") {
             if (emProgresso) return false
             if (superInvestments.isEmpty()) return false
+        }
+
+        // 1a) Regra especial: CAVALEIRO (Fantasia)
+        if (key == "CAVALEIRO") {
+            val hasObligation = complicacoesSelecionadas.entries.any { (k, v) ->
+                k.id.keyify() == "OBRIGACAO" && v == "Maior"
+            }
+            if (!hasObligation) return false
         }
 
         // 2) Pontos de Poder por estágio
@@ -3030,6 +3123,8 @@ class CriadorState {
                 tecnicasIniciaisTropo = tecnicasIniciaisFromTropo,
                 retratoFileName = portraitFileName,
                 expandirRetrato = expandirRetrato,
+                portraitScaleType = portraitScaleType,
+                portraitAlignment = portraitAlignment,
                 signoAdgSelecionado = signoAdgSelecionado
             ),
             progresso = SnapshotProgresso(
@@ -3112,6 +3207,8 @@ class CriadorState {
         appTheme = AppTheme.valueOf(snapshot.appTheme)
         portraitFileName = snapshot.selecoes.retratoFileName
         expandirRetrato = snapshot.selecoes.expandirRetrato
+        portraitScaleType = snapshot.selecoes.portraitScaleType
+        portraitAlignment = snapshot.selecoes.portraitAlignment
 
         // Flags adicionais
         heroisSemArmadura = flags.heroisSemArmadura

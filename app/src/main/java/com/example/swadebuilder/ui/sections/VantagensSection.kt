@@ -273,6 +273,8 @@ fun VantagensContent(
     var pendingVantagem by remember { mutableStateOf<Vantagem?>(null) }
     var showChoiceDialog by rememberSaveable { mutableStateOf(false) }
     var dialogMostrandoAntecedente by remember { mutableStateOf<Vantagem?>(null) }
+    var dialogMostrandoCavaleiro by remember { mutableStateOf<Vantagem?>(null) }
+    var dialogMostrandoMontaria by remember { mutableStateOf<Vantagem?>(null) }
     var subOpcaoSelecionada by rememberSaveable { mutableStateOf<String?>(null) }
 
     val scope = rememberCoroutineScope()
@@ -648,6 +650,10 @@ fun VantagensContent(
                                     showChoiceDialog = true
                                 } else if (vant.id == "antecedente_arcano") {
                                     dialogMostrandoAntecedente = vant
+                                } else if (vant.nome.keyify() == "CAVALEIRO") {
+                                    dialogMostrandoCavaleiro = vant
+                                } else if (vant.nome.keyify() == "MONTARIA") {
+                                    dialogMostrandoMontaria = vant
                                 } else {
                                     if (state.advantageAdvancementInProgress) {
                                         viewModel.selectAdvantageForAdvancement(vant)
@@ -729,6 +735,10 @@ fun VantagensContent(
                                         showChoiceDialog = true
                                     } else if (vant.id == "antecedente_arcano") {
                                         dialogMostrandoAntecedente = vant
+                                    } else if (vant.nome.keyify() == "CAVALEIRO") {
+                                        dialogMostrandoCavaleiro = vant
+                                    } else if (vant.nome.keyify() == "MONTARIA") {
+                                        dialogMostrandoMontaria = vant
                                     } else {
                                         if (state.advantageAdvancementInProgress) {
                                             viewModel.selectAdvantageForAdvancement(vant)
@@ -826,6 +836,147 @@ fun VantagensContent(
                     TextButton(
                         onClick = {
                             dialogMostrandoAntecedente = null
+                            subOpcaoSelecionada = null
+                        }
+                    ) { Text("Cancelar") }
+                }
+            )
+        }
+
+        if (dialogMostrandoMontaria != null) {
+            val vantOriginal = dialogMostrandoMontaria!!
+            val charSize = state.valorTamanho()
+
+            val options = if (charSize < 0) {
+                listOf("Javali", "Grande Felino", "Lobo", "Lobo Atroz")
+            } else {
+                listOf("Cavalo de Montaria", "Cavalo Élfico")
+            }
+
+            AlertDialog(
+                onDismissRequest = {
+                    dialogMostrandoMontaria = null
+                    subOpcaoSelecionada = null
+                },
+                title = { Text("Montaria: Escolha seu Companheiro") },
+                text = {
+                    Column {
+                        Text("Com base no seu tamanho ($charSize), escolha uma montaria:")
+                        Spacer(Modifier.size(8.dp))
+                        options.forEach { opcao ->
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable { subOpcaoSelecionada = opcao }
+                                    .padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = (subOpcaoSelecionada == opcao),
+                                    onClick = { subOpcaoSelecionada = opcao }
+                                )
+                                Spacer(Modifier.size(8.dp))
+                                Text(opcao)
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(
+                        enabled = (subOpcaoSelecionada != null),
+                        onClick = {
+                            val choice = subOpcaoSelecionada!!
+                            if (state.podeSelecionar(vantOriginal)) {
+                                val vantToAdd = vantOriginal.copy(choice = choice)
+
+                                if (state.advantageAdvancementInProgress) {
+                                    viewModel.selectAdvantageForAdvancement(vantToAdd)
+                                } else {
+                                    state.applyVantagemDinheiro(vantToAdd)
+                                    state.adicionarVantagem(vantToAdd)
+                                    state.pontosVantagem--
+                                    state.rebuildAllPericiaStacks(enforcePoolLimit = true)
+                                }
+
+                                if (state.anotacoes.isNotBlank()) {
+                                    state.anotacoes += "\n"
+                                }
+                                state.anotacoes += "• Montaria: $choice"
+
+                                onUserFeedback()
+                            }
+                            dialogMostrandoMontaria = null
+                            subOpcaoSelecionada = null
+                        }
+                    ) { Text("OK") }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            dialogMostrandoMontaria = null
+                            subOpcaoSelecionada = null
+                        }
+                    ) { Text("Cancelar") }
+                }
+            )
+        }
+
+        if (dialogMostrandoCavaleiro != null) {
+            val vantOriginal = dialogMostrandoCavaleiro!!
+            AlertDialog(
+                onDismissRequest = {
+                    dialogMostrandoCavaleiro = null
+                    subOpcaoSelecionada = null
+                },
+                title = { Text("Cavaleiro: Escolha a Armadura") },
+                text = {
+                    Column {
+                        Text("Você ganha uma armadura gratuitamente. Escolha qual:")
+                        Spacer(Modifier.size(8.dp))
+                        listOf("Armadura Completa", "Armadura Média").forEach { opcao ->
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable { subOpcaoSelecionada = opcao }
+                                    .padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = (subOpcaoSelecionada == opcao),
+                                    onClick = { subOpcaoSelecionada = opcao }
+                                )
+                                Spacer(Modifier.size(8.dp))
+                                Text(opcao)
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(
+                        enabled = (subOpcaoSelecionada != null),
+                        onClick = {
+                            val armor = subOpcaoSelecionada!!
+                            if (state.podeSelecionar(vantOriginal)) {
+                                if (state.advantageAdvancementInProgress) {
+                                    // Pass choice to ViewModel
+                                    viewModel.selectAdvantageForAdvancement(vantOriginal.copy(choice = armor))
+                                    onUserFeedback()
+                                } else {
+                                    state.adicionarVantagemCavaleiro(vantOriginal, armor)
+                                    state.pontosVantagem--
+                                    state.rebuildAllPericiaStacks(enforcePoolLimit = true)
+                                    onUserFeedback()
+                                }
+                            }
+                            dialogMostrandoCavaleiro = null
+                            subOpcaoSelecionada = null
+                        }
+                    ) { Text("OK") }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            dialogMostrandoCavaleiro = null
                             subOpcaoSelecionada = null
                         }
                     ) { Text("Cancelar") }

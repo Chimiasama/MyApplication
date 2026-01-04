@@ -131,6 +131,8 @@ data class SnapshotSelecoes(
     val tecnicasIniciaisTropo: Int = 0,
     val retratoFileName: String? = null,
     val expandirRetrato: Boolean = false,
+    val portraitScaleType: String = "CROP",
+    val portraitAlignment: String = "CENTER",
     val signoAdgSelecionado: String? = null
 )
 
