@@ -935,12 +935,7 @@ class CriadorViewModel : ViewModel() {
                         state.limparCompraArcanoViaXp(restaurarSnapshot = true)
                     }
 
-                    if (currentAdvantage.nome.contains("Pontos de Poder", true)) {
-                        state.removerPontosDePoder(currentAdvantage)
-                    } else {
-                        state.removeVantagemDinheiro(currentAdvantage)
-                        state.vantagensSelecionadas.remove(currentAdvantage)
-                    }
+                    state.removerVantagem(currentAdvantage)
                     state.pontosVantagem++
                 }
             }
@@ -1106,12 +1101,7 @@ class CriadorViewModel : ViewModel() {
                         state.limparCompraArcanoViaXp(restaurarSnapshot = true)
                     }
 
-                    if (vant.nome.contains("Pontos de Poder", true)) {
-                        state.removerPontosDePoder(vant)
-                    } else {
-                        state.removeVantagemDinheiro(vant)
-                        state.vantagensSelecionadas.remove(vant)
-                    }
+                    state.removerVantagem(vant)
                     state.pontosVantagem++
                 }
             }
@@ -1162,12 +1152,7 @@ class CriadorViewModel : ViewModel() {
                 // Usa lastOrNull para pegar a instância mais recente (importante para Pontos de Poder que pode ter várias)
                 val advantage = state.vantagensSelecionadas.lastOrNull { it.id == lastAction.advantageId }
                 if (advantage != null) {
-                    if (advantage.nome.contains("Pontos de Poder", true)) {
-                        state.removerPontosDePoder(advantage, estagioOverride = lastAction.stageName)
-                    } else {
-                        state.removeVantagemDinheiro(advantage)
-                        state.vantagensSelecionadas.remove(advantage)
-                    }
+                    state.removerVantagem(advantage, estagioOverride = lastAction.stageName)
                 }
                 lastAction.arcanoKey?.let { arcKey ->
                     state.restoreArcanoSlots(arcKey, lastAction.previousArcanoSlots)

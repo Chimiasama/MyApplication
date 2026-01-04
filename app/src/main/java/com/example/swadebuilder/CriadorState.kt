@@ -553,6 +553,76 @@ class CriadorState {
         vantagensDePoder.remove(v.id)
     }
 
+    fun adicionarVantagem(v: Vantagem) {
+        vantagensSelecionadas.add(v)
+
+        // Lógica para Vantagem "Escolhido" (Fantasia) -> Ganha Inimigo (Maior) sem PB
+        if (v.id == "escolhido") {
+            val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
+            if (inimigo != null) {
+                // Adiciona à lista de automáticas para não contar pontos
+                if (desvantagensAutomaticas.none { it.keyify() == inimigo.id.keyify() }) {
+                    desvantagensAutomaticas.add(inimigo.name)
+                }
+
+                // Adiciona a complicação efetivamente
+                complicacoesSelecionadas[inimigo] = "Maior"
+
+                // Adiciona uma anotação automática para explicar a origem
+                if (!anotacoes.contains("Inimigo (Maior) ganho via Escolhido")) {
+                    anotacoes += "\n• Inimigo (Maior) ganho via Vantagem Escolhido (não concede PB)."
+                }
+            }
+        }
+    }
+
+    fun removerVantagem(v: Vantagem, estagioOverride: String? = null) {
+        // 1. Lógica para Vantagem "Escolhido" -> Remove Inimigo (Maior)
+        if (v.id == "escolhido") {
+            val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
+            if (inimigo != null) {
+                // Verifica se a complicação foi realmente adicionada automaticamente (está na lista)
+                // Se sim, removemos. Se não (o usuário comprou manualmente antes?), não removemos da lista de complicações para não roubar pontos.
+                // Mas a lógica do adicionarVantagem SEMPRE adiciona em desvantagensAutomaticas se não estiver lá.
+                // Então se o usuário tinha Inimigo pago, e pegou Escolhido, o Inimigo virou "automático" na lógica de adição?
+                // Vamos olhar adicionarVantagem:
+                // if (desvantagensAutomaticas.none { ... }) { desvantagensAutomaticas.add(...) }
+                // complicacoesSelecionadas[inimigo] = "Maior"
+                //
+                // Se o usuário já tinha Inimigo (pago), ele não estava em desvantagensAutomaticas.
+                // Ao pegar Escolhido, ele é adicionado em desvantagensAutomaticas.
+                // Isso efetivamente "reembolsa" os pontos do Inimigo original (já que ele para de contar no total).
+                // Isso é bom para o jogador (não paga duas vezes).
+                // Ao remover Escolhido, devemos remover de desvantagensAutomaticas.
+                // E se ele tinha pago antes? Ele deveria voltar a pagar?
+                // O sistema não rastreia "quem pagou o que" historicamente para complicações, apenas o estado atual.
+                // Se removermos de desvantagensAutomaticas, ele volta a contar pontos se continuar em complicacoesSelecionadas.
+                // Mas aqui estamos removendo de complicacoesSelecionadas também.
+                // O correto seria: se foi adicionado por Escolhido, removemos tudo.
+                // Se o usuário tinha antes, ele teria que adicionar de novo manualmente se quisesse manter.
+                // Dado que "Escolhido" força Inimigo, é seguro assumir que ao sair, o Inimigo forçado sai.
+
+                val estavaAutomatico = desvantagensAutomaticas.any { it.keyify() == inimigo.id.keyify() }
+
+                if (estavaAutomatico) {
+                    desvantagensAutomaticas.removeAll { it.keyify() == inimigo.id.keyify() }
+                    if (complicacoesSelecionadas[inimigo] == "Maior") {
+                        complicacoesSelecionadas.remove(inimigo)
+                    }
+                    anotacoes = anotacoes.replace("\n• Inimigo (Maior) ganho via Vantagem Escolhido (não concede PB).", "")
+                }
+            }
+        }
+
+        // 2. Lógica de remoção padrão (dinheiro/pontos) e lista
+        if (v.nome.contains("Pontos de Poder", true)) {
+            removerPontosDePoder(v, estagioOverride)
+        } else {
+            removeVantagemDinheiro(v)
+            vantagensSelecionadas.remove(v)
+        }
+    }
+
     fun adicionarVantagemPorSuper(v: Vantagem): Boolean {
         if (v.categoria == Categoria.LENDARIAS) return false
 
@@ -1166,6 +1236,31 @@ class CriadorState {
             if (current == maxAllowed) {
                 _maxedTraits.add(per.nome.keyify())
             }
+        }
+    }
+
+    fun removerVantagem(v: Vantagem, estagioOverride: String? = null) {
+        // 1. Lógica para Vantagem "Escolhido" -> Remove Inimigo (Maior)
+        if (v.id == "escolhido") {
+            val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
+            if (inimigo != null) {
+                // Remove da lista de automáticas
+                desvantagensAutomaticas.removeAll { it.keyify() == inimigo.id.keyify() }
+                // Remove a complicação efetivamente (se estiver como Maior)
+                if (complicacoesSelecionadas[inimigo] == "Maior") {
+                    complicacoesSelecionadas.remove(inimigo)
+                }
+                // Remove a anotação
+                anotacoes = anotacoes.replace("\n• Inimigo (Maior) ganho via Vantagem Escolhido (não concede PB).", "")
+            }
+        }
+
+        // 2. Lógica de remoção padrão (dinheiro/pontos) e lista
+        if (v.nome.contains("Pontos de Poder", true)) {
+            removerPontosDePoder(v, estagioOverride)
+        } else {
+            removeVantagemDinheiro(v)
+            vantagensSelecionadas.remove(v)
         }
     }
 

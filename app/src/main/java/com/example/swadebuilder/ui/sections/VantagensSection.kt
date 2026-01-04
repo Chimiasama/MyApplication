@@ -515,20 +515,13 @@ fun VantagensContent(
 
                             val enforcePoolLimit = !vant.isBrutamontes()
 
-                            if (vant.nome.contains("Pontos de Poder", true) || vant.nomeExibicao.contains("Pontos de Poder", true)) {
-                                state.removerPontosDePoder(vant)
-                                state.pontosVantagem++
-                                state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
-                            } else {
-                                state.removeVantagemDinheiro(vant)
-                                state.vantagensSelecionadas.remove(vant)
-                                state.pontosVantagem++
-                                state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
-                                onUserFeedback()
+                            state.removerVantagem(vant)
+                            state.pontosVantagem++
+                            state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
+                            onUserFeedback()
 
-                                if (vant.id == "o_melhor_que_ha") {
-                                    state.poderFavoritoId = null
-                                }
+                            if (vant.id == "o_melhor_que_ha") {
+                                state.poderFavoritoId = null
                             }
 
                             if (arcKey != null && arcKey == state.arcanoEmCompraViaXpKey) {
