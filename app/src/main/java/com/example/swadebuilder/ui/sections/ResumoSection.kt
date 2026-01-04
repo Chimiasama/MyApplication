@@ -599,8 +599,16 @@ private fun CombatAndEquipmentCard(
             Spacer(Modifier.height(4.dp))
 
             // Natural Attack
-            val (unarmedDmg, unarmedNotes) = state.calculaAtaqueDesarmado()
-            CombatRow(name = "Desarmado", stats = unarmedDmg, notes = unarmedNotes)
+            val naturalWeapons = state.extrairArmasNaturais()
+            naturalWeapons.forEach { w ->
+                val dmg = (w.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: "-"
+                // Extract notes/modifiers from observacoes
+                val notes = (w.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
+
+                // Map "Ataque Natural" -> "Desarmado" for better display
+                val displayName = if (w.nome == "Ataque Natural") "Desarmado" else w.nome
+                CombatRow(name = displayName, stats = dmg, notes = notes)
+            }
 
             // Weapons
             val weapons = state.equipamentosComprados.filter { it.dano != null }
