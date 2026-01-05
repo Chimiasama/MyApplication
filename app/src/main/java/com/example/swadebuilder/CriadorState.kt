@@ -832,7 +832,13 @@ class CriadorState {
     // Computed property for basic filtering before injecting dynamic slots (Idioms, Jutsu)
     val periciasFiltradasPorCompendio: List<Pericia>
         get() {
-            return if (compendioArteDaGuerraAtivo) {
+            return if (compendioBuscatrilhaAtivo) {
+                val forbiddenIds = setOf("ELETRONICA", "FOCO", "HACKEAR", "PSIONICOS")
+                listaPericias.filter { per ->
+                    val key = per.nome.keyify()
+                    key !in forbiddenIds
+                }
+            } else if (compendioArteDaGuerraAtivo) {
                 // If AdG active:
                 // 1. Remove standard skills that don't exist in AdG
                 val forbiddenIds = setOf(
@@ -1593,6 +1599,10 @@ class CriadorState {
 
     private val totalSpPool: Int
         get() {
+            if (compendioBuscatrilhaAtivo) {
+                return (12 + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
+            }
+
             // PROMPT: Arte da Guerra skill points adjustment
             if (compendioArteDaGuerraAtivo) {
                 // If AdG active:
@@ -2627,7 +2637,9 @@ class CriadorState {
             }
         }
 
-        return (5 + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
+        val basePoints = if (compendioBuscatrilhaAtivo && ancestralidade.keyify() == "HUMANOBUSCATRILHA") 6 else 5
+
+        return (basePoints + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
     }
 
     fun recalcularPontosAtributo(feedbackMessages: MutableList<String> = mutableListOf()) {
