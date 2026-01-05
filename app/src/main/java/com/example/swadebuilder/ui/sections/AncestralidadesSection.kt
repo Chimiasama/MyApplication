@@ -168,10 +168,18 @@ fun AncestralidadesSection(
         val all = context.loadJsonAsset<List<RacialModifier>>(ASSET_ANCESTRALIDADES)
         val pathfinderLabel = context.getString(R.string.sw_pathfinder_label)
 
-        fun adjustName(nome: String): String {
-            return nome.replace("Trilhador", pathfinderLabel)
-                .replace("Buscatrilha", pathfinderLabel)
-                .replace("Pathfinder", pathfinderLabel)
+        fun getDisplayName(nome: String, originalName: String?): String {
+            var display = if (showOfficialNames && !originalName.isNullOrBlank()) originalName else nome
+
+            if (compendioBuscatrilhaAtivo) {
+                // Strip suffix completely for Pathfinder mode
+                display = display.replace(Regex("\\s*\\((Buscatrilha|Pathfinder|Trilhador)\\)\\s*$", RegexOption.IGNORE_CASE), "")
+            } else {
+                display = display.replace("Buscatrilha", pathfinderLabel)
+                    .replace("Trilhador", pathfinderLabel)
+                    .replace("Pathfinder", pathfinderLabel)
+            }
+            return display.trim()
         }
 
         val activeOrigins = buildList {
@@ -226,15 +234,21 @@ fun AncestralidadesSection(
                 } else {
                     representative.nome
                 }
-                val adjustedName = adjustName(representative.nome)
-                val displayName = adjustName(baseDisplayName)
+
+                // Keep ID stable (matches JSON key)
+                val rawName = representative.nome
+
                 val originalName = if (EditionConfig.isFullEdition && !hasMultipleOrigins) {
                     representative.originalName
                 } else {
                     null
                 }
+
+                val uiDisplayName = getDisplayName(baseDisplayName, originalName)
+
+                // Aliases for search/lookup
                 val aliasKeys = group
-                    .map { adjustName(it.nome).uppercase().semAcentos() }
+                    .map { it.nome.uppercase().semAcentos() }
                     .toSet()
 
                 val habilidadesLite = representative.habilidades.map {
@@ -242,8 +256,8 @@ fun AncestralidadesSection(
                 }
 
                 RacialModifierLite(
-                    nome = adjustedName,
-                    displayName = displayName.toEditionDisplayName(),
+                    nome = rawName,
+                    displayName = uiDisplayName.toEditionDisplayName(),
                     originalName = originalName,
                     descricao = representative.descricao,
                     aliases = aliasKeys,
