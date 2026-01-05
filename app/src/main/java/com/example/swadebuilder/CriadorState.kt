@@ -832,7 +832,14 @@ class CriadorState {
     // Computed property for basic filtering before injecting dynamic slots (Idioms, Jutsu)
     val periciasFiltradasPorCompendio: List<Pericia>
         get() {
-            return if (compendioArteDaGuerraAtivo) {
+            return if (compendioBuscatrilhaAtivo) {
+                // If Pathfinder active:
+                val forbiddenIds = setOf("ELETRONICA", "FOCO", "HACKEAR", "PSIONICOS")
+                listaPericias.filter { per ->
+                    val key = per.nome.keyify()
+                    key !in forbiddenIds && per.origem != "ARTE_DA_GUERRA"
+                }
+            } else if (compendioArteDaGuerraAtivo) {
                 // If AdG active:
                 // 1. Remove standard skills that don't exist in AdG
                 val forbiddenIds = setOf(
@@ -1605,7 +1612,7 @@ class CriadorState {
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
                 // Standard Logic
-                val base = if (maisPontosPericias) BASE_SP_POOL else BASE_SP_POOL - 3
+                val base = if (compendioBuscatrilhaAtivo) 12 else if (maisPontosPericias) BASE_SP_POOL else BASE_SP_POOL - 3
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp)
                     .coerceAtLeast(0)
             }
@@ -2627,7 +2634,13 @@ class CriadorState {
             }
         }
 
-        return (5 + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
+        val isPathfinderHuman = compendioBuscatrilhaAtivo &&
+                (ancestralidade.equals("Humano (Buscatrilha)", ignoreCase = true) ||
+                        ancestralidade.equals("Humano (Pathfinder)", ignoreCase = true))
+
+        val basePoints = if (isPathfinderHuman) 6 else 5
+
+        return (basePoints + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
     }
 
     fun recalcularPontosAtributo(feedbackMessages: MutableList<String> = mutableListOf()) {

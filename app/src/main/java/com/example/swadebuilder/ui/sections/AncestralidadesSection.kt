@@ -169,6 +169,11 @@ fun AncestralidadesSection(
         val pathfinderLabel = context.getString(R.string.sw_pathfinder_label)
 
         fun adjustName(nome: String): String {
+            if (compendioBuscatrilhaAtivo) {
+                 return nome.replace(" (Trilhador)", "")
+                    .replace(" (Buscatrilha)", "")
+                    .replace(" (Pathfinder)", "")
+            }
             return nome.replace("Trilhador", pathfinderLabel)
                 .replace("Buscatrilha", pathfinderLabel)
                 .replace("Pathfinder", pathfinderLabel)
@@ -265,11 +270,16 @@ fun AncestralidadesSection(
         val available = ancestralidadesState.value
         val currentKey = currentAncestralidade.uppercase().semAcentos()
 
+        val humanSearch = if (compendioBuscatrilhaAtivo) "Humano (Buscatrilha)" else "Humanos"
+        val fallbackHuman = if (compendioBuscatrilhaAtivo) "Humanos" else null
+
         val preferredItem = when {
             currentKey.isNotBlank() -> available.firstOrNull { it.aliases.contains(currentKey) }
             else -> null
-        } ?: available.firstOrNull { it.nome.contains("Humano", ignoreCase = true) }
-            ?: available.firstOrNull()
+        } ?: available.firstOrNull { it.nome.equals(humanSearch, ignoreCase = true) }
+          ?: fallbackHuman?.let { fallback -> available.firstOrNull { it.nome.equals(fallback, ignoreCase = true) } }
+          ?: available.firstOrNull { it.nome.contains("Humano", ignoreCase = true) }
+          ?: available.firstOrNull()
 
         preferredItem?.let { item ->
             val key = item.nome.uppercase().semAcentos()
