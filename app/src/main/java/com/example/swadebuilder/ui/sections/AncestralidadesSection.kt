@@ -274,7 +274,9 @@ fun AncestralidadesSection(
         val fallbackHuman = if (compendioBuscatrilhaAtivo) "Humanos" else null
 
         val preferredItem = when {
-            currentKey.isNotBlank() -> available.firstOrNull { it.aliases.contains(currentKey) }
+            currentKey.isNotBlank() -> available.firstOrNull {
+                it.nome.keyify() == currentKey || it.aliases.contains(currentKey)
+            }
             else -> null
         } ?: available.firstOrNull { it.nome.equals(humanSearch, ignoreCase = true) }
           ?: fallbackHuman?.let { fallback -> available.firstOrNull { it.nome.equals(fallback, ignoreCase = true) } }

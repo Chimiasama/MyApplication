@@ -38,6 +38,7 @@ import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
 import java.util.UUID
