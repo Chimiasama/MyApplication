@@ -325,7 +325,7 @@ class CriadorViewModel : ViewModel() {
         state.usarEspecializacoesDePericia = usarEspecializacoesDePericia
         state.especializacoesPorPericia.clear()
 
-        state.ancestralidade = "HUMANOS"
+        state.ancestralidade = if (state.compendioBuscatrilhaAtivo) "Humano (Buscatrilha)" else "HUMANOS"
         state.vantagensSelecionadas.clear()
         state.complicacoesSelecionadas.clear()
         state.reservasComplicacaoMaior.clear()
@@ -340,7 +340,7 @@ class CriadorViewModel : ViewModel() {
         }
         state.sectionsExpanded[com.example.swadebuilder.ui.MainSection.RESUMO] = true
 
-        state.aplicarAncestralidade("HUMANOS", mutableListOf())
+        state.aplicarAncestralidade(state.ancestralidade, mutableListOf())
 
         if (state.modoSupers) {
             listaVantagens.firstOrNull { it.id == "superpoderes" }?.let { sp ->

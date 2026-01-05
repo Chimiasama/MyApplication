@@ -64,6 +64,7 @@ import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -135,6 +136,10 @@ fun PericiasContent(
                 false
             } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
                 state.compendioFantasiaAtivo || state.compendioHorrorAtivo
+            } else if (state.compendioBuscatrilhaAtivo) {
+                // Pathfinder exclusions
+                val n = per.nome.keyify()
+                n != "ELETRONICA" && n != "FOCO" && n != "HACKEAR" && n != "PSIONICOS"
             } else {
                 true
             }
