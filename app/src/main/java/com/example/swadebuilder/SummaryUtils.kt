@@ -19,11 +19,17 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val ancestralidadeNomeObj = listaAncestralidadesJson
         .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
 
-    val ancestralidadeNome: String = (if (showOfficialNames && ancestralidadeNomeObj?.originalName != null) {
+    val rawAncestralidadeNome = if (showOfficialNames && ancestralidadeNomeObj?.originalName != null) {
         ancestralidadeNomeObj.originalName
     } else {
         ancestralidadeNomeObj?.nome ?: personagem.ancestralidade
-    }).titleCase()
+    }
+
+    // Remove sufixos como (Buscatrilha), (Trilhador), etc.
+    val ancestralidadeNome: String = rawAncestralidadeNome
+        .replace(Regex("\\s*\\((Buscatrilha|Trilhador|Mundo Ancestral)\\)"), "")
+        .trim()
+        .titleCase()
 
     val monstroNome = if (personagem.modoMonstroAtivo) {
         val tipoNome = listaMonstroTemplates.find { it.id == personagem.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
