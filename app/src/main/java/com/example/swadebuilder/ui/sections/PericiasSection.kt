@@ -135,6 +135,10 @@ fun PericiasContent(
                 false
             } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
                 state.compendioFantasiaAtivo || state.compendioHorrorAtivo
+            } else if (state.compendioBuscatrilhaAtivo) {
+                // Pathfinder exclusions
+                val n = per.nome.keyify()
+                n != "ELETRONICA" && n != "FOCO" && n != "HACKEAR" && n != "PSIONICOS"
             } else {
                 true
             }

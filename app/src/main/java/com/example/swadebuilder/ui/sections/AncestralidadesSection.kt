@@ -247,7 +247,7 @@ fun AncestralidadesSection(
                 }
 
                 RacialModifierLite(
-                    nome = adjustedName,
+                    nome = representative.nome,
                     displayName = displayName.toEditionDisplayName(),
                     originalName = originalName,
                     descricao = representative.descricao,
@@ -312,7 +312,8 @@ fun AncestralidadesSection(
         listaBase.filter { item ->
             if (searchQuery.isBlank()) true else {
                 item.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
-                (item.descricao?.semAcentos()?.contains(searchQuery.semAcentos(), ignoreCase = true) == true)
+                        item.displayName.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
+                        (item.descricao?.semAcentos()?.contains(searchQuery.semAcentos(), ignoreCase = true) == true)
             }
         }
     }
