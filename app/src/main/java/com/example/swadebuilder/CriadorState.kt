@@ -69,6 +69,7 @@ class CriadorState {
     var signoAdgSelecionado by mutableStateOf<String?>(null)
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
+    var gnomoPericiaEscolhida by mutableStateOf("Conhecimento Geral")
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
     val vantagensAutomaticasDoElemento = mutableStateListOf<String>()
 
@@ -333,8 +334,11 @@ class CriadorState {
         val racialPenalty =
             listaAncestralidadesJson
                 .firstOrNull { it.nome.keyify() == ancestralidade }
-                ?.desvantagens
-                ?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
+                ?.let { anc ->
+                    val inDesvantagens = anc.desvantagens.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
+                    val inHabilidades = anc.habilidades.any { it.nome.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
+                    inDesvantagens || inHabilidades
+                }
                 .takeIf { it == true }
                 ?.let { 1 }
                 ?: 0
@@ -921,6 +925,19 @@ class CriadorState {
         val base = racialSkillStartMap[ancKey]?.get(perKey) ?: defaultBase
 
         var modifiedBase = base
+
+        // Pathfinder - Half-Orc (Meio-Orc)
+        // Intimidate starts at d4
+        if (compendioBuscatrilhaAtivo && ancKey == "MEIO-ORCS" && perKey == "INTIMIDAR") {
+             // If not basic (Intimidate is not basic), defaultBase is 0. We boost to 4 (d4).
+             modifiedBase = maxOf(modifiedBase, 4)
+        }
+
+        // Pathfinder - Gnome (Gnomo)
+        // One Smarts-based skill starts at d4
+        if (compendioBuscatrilhaAtivo && ancKey == "GNOMOS" && perKey == gnomoPericiaEscolhida.keyify()) {
+            modifiedBase = maxOf(modifiedBase, 4)
+        }
 
         // Arte da Guerra - Signos (only for Humans)
         if (compendioArteDaGuerraAtivo && ancKey.contains("HUMANO")) {
@@ -2208,7 +2225,14 @@ class CriadorState {
 
         val startRaw = periciaStartRaw(ancestralidade, per)
 
-        val baseCap = if (startRaw >= 6) 13 else 12
+        var baseCap = if (startRaw >= 6) 13 else 12
+
+        // Pathfinder Half-Orc Intimidate: Max d12+1
+        if (compendioBuscatrilhaAtivo &&
+            ancestralidade.keyify() == "MEIO-ORCS" &&
+            per.nome.keyify() == "INTIMIDAR") {
+            baseCap = 13 // d12+1
+        }
 
         val chave = per.nome.keyify()
         val profCount = vantagensSelecionadas.count {
@@ -2364,6 +2388,9 @@ class CriadorState {
         if (anc != "MEIO-ORCS") {
             meioOrcForca = false
         }
+        if (anc != "GNOMOS") {
+            gnomoPericiaEscolhida = "Conhecimento Geral"
+        }
         if (anc.keyify() != "DESCENDENTE ELEMENTAL" && anc.keyify() != "DESC_ELEMENTAL") {
             selecionarDescendenteElemental(null)
         }
@@ -2431,6 +2458,15 @@ class CriadorState {
                 }
                 if (desvantagensRaciais.none { it.contains("Movimentação Reduzida", ignoreCase = true) }) {
                     desvantagensRaciais.add("Movimentação Reduzida")
+                }
+                armadura = 0
+            }
+            "GNOMOS" -> {
+                if (compendioBuscatrilhaAtivo) {
+                    val note = "Poderes: Iluminar, Som, Telecinese, Amigo das Feras (1 PP)"
+                    if (!anotacoes.contains(note)) {
+                        anotacoes = if (anotacoes.isBlank()) note else "$anotacoes\n$note"
+                    }
                 }
                 armadura = 0
             }
@@ -2639,7 +2675,11 @@ class CriadorState {
                 (ancestralidade.equals("Humano (Buscatrilha)", ignoreCase = true) ||
                         ancestralidade.equals("Humano (Pathfinder)", ignoreCase = true))
 
-        val basePoints = if (isPathfinderHuman) 6 else 5
+        val isPathfinderHalfElf = compendioBuscatrilhaAtivo &&
+                (ancestralidade.equals("Meio-Elfo (Buscatrilha)", ignoreCase = true) ||
+                        ancestralidade.equals("Meio-Elfo (Pathfinder)", ignoreCase = true))
+
+        val basePoints = if (isPathfinderHuman || isPathfinderHalfElf) 6 else 5
 
         return (basePoints + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
     }
@@ -3139,7 +3179,8 @@ class CriadorState {
                 expandirRetrato = expandirRetrato,
                 portraitScaleType = portraitScaleType,
                 portraitAlignment = portraitAlignment,
-                signoAdgSelecionado = signoAdgSelecionado
+                signoAdgSelecionado = signoAdgSelecionado,
+                gnomoPericiaEscolhida = gnomoPericiaEscolhida
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -3241,6 +3282,7 @@ class CriadorState {
         bonusPoderExtra = flags.bonusPoderExtra
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
+        gnomoPericiaEscolhida = snapshot.selecoes.gnomoPericiaEscolhida ?: "Conhecimento Geral"
 
         dinheiro = snapshot.recursos.dinheiro
         famaManual = snapshot.recursos.famaManual

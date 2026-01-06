@@ -69,8 +69,11 @@ object ModifierEngine {
         val ancestral = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralName.keyify() }
 
         ancestral?.let { anc ->
-            // Size from Ancestry (Tamanho X)
+            // Size from Ancestry (Tamanho X in Desvantagens OR Habilidades)
+            // Prioritize explicitly listed "Tamanho X"
             val sizeDesc = anc.desvantagens.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
+                ?: anc.habilidades.map { it.nome }.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
+
             val racialSize = sizeDesc
                 ?.substringAfter("TAMANHO")
                 ?.trim()
@@ -118,11 +121,19 @@ object ModifierEngine {
             }
 
             // Resistência (Auto advantage or racial trait)
-            if (state.desvantagensRaciais.any { it.keyify() == "FRAGIL" }) {
-                modifiers.add(Modifier("racial_fragil", SourceType.ANCESTRALIDADE, "Frágil", ModifierTarget.TOUGHNESS_FLAT, -1))
+            // Check desvantagens, vantagensAutomaticas, and also habilidades (Pathfinder)
+            val hasFragil = state.desvantagensRaciais.any { it.keyify() == "FRAGIL" } ||
+                    anc.habilidades.any { it.nome.keyify() == "ESGUIOS" }
+
+            if (hasFragil) {
+                modifiers.add(Modifier("racial_fragil", SourceType.ANCESTRALIDADE, "Frágil/Esguios", ModifierTarget.TOUGHNESS_FLAT, -1))
             }
-            if (state.vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" }) {
-                modifiers.add(Modifier("racial_resistencia", SourceType.ANCESTRALIDADE, "Resistência", ModifierTarget.TOUGHNESS_FLAT, 1))
+
+            val hasResistencia = state.vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" } ||
+                    anc.habilidades.any { it.nome.keyify() == "FEROCIDADE ORC" }
+
+            if (hasResistencia) {
+                modifiers.add(Modifier("racial_resistencia", SourceType.ANCESTRALIDADE, "Resistência/Ferocidade", ModifierTarget.TOUGHNESS_FLAT, 1))
             }
         }
 

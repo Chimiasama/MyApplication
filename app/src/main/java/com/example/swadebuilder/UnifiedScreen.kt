@@ -131,9 +131,10 @@ fun UnifiedScreen(
     var showClearDialog by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
 
-    // --- estados para o MEIO-ELFO / MEIO-ORC ---
+    // --- estados para o MEIO-ELFO / MEIO-ORC / GNOMO ---
     var showMeioElfoDialog by rememberSaveable { mutableStateOf(false) }
     var showMeioOrcDialog by rememberSaveable { mutableStateOf(false) }
+    var showGnomoDialog by rememberSaveable { mutableStateOf(false) }
     var pendingAncestryKey by rememberSaveable { mutableStateOf<String?>(null) }
     // --------------------------------
 
@@ -248,6 +249,9 @@ fun UnifiedScreen(
                                 } else if (key == "MEIO-ORCS") {
                                     pendingAncestryKey = key
                                     showMeioOrcDialog = true
+                                } else if (key == "GNOMOS" && state.compendioBuscatrilhaAtivo) {
+                                    pendingAncestryKey = key
+                                    showGnomoDialog = true
                                 } else {
                                     pendingAncestryKey = null
                                     state.aplicarAncestralidade(
@@ -321,6 +325,9 @@ fun UnifiedScreen(
                             } else if (key == "MEIO-ORCS") {
                                 pendingAncestryKey = key
                                 showMeioOrcDialog = true
+                                } else if (key == "GNOMOS" && state.compendioBuscatrilhaAtivo) {
+                                    pendingAncestryKey = key
+                                    showGnomoDialog = true
                             } else {
                                 pendingAncestryKey = null
                                 state.aplicarAncestralidade(
@@ -402,6 +409,38 @@ fun UnifiedScreen(
                 TextButton(onClick = { showClearDialog = false }) {
                     Text("Cancelar")
                 }
+            }
+        )
+    }
+
+    if (showGnomoDialog && pendingAncestryKey != null) {
+        // Gnomos escolhem uma perícia de Astúcia para começar em d4.
+        // Filtra perícias de Astúcia permitidas no compêndio atual.
+        val opcoesPericias = remember(state.compendioBuscatrilhaAtivo) {
+            state.periciasFiltradasPorCompendio
+                .filter { it.atributo == "ASTUCIA" && it.isPericiaPermitida(state) }
+                .sortedBy { it.nome }
+        }
+        var selectedSkill by remember { mutableStateOf(opcoesPericias.firstOrNull()?.nome ?: "Conhecimento Geral") }
+
+        com.example.swadebuilder.ui.dialogs.ChoiceDialog(
+            title = "Gnomo: Escolha uma perícia",
+            message = "Gnomos são obsessivos e iniciam com d4 em uma perícia baseada em Astúcia à sua escolha.",
+            options = opcoesPericias.map { it.nome },
+            initialSelection = selectedSkill,
+            onConfirm = { escolha ->
+                val key = pendingAncestryKey ?: return@ChoiceDialog
+                state.gnomoPericiaEscolhida = escolha
+                state.aplicarAncestralidade(
+                    key,
+                    viewModel.feedbackMessages as MutableList<String>
+                )
+                pendingAncestryKey = null
+                showGnomoDialog = false
+            },
+            onDismiss = {
+                pendingAncestryKey = null
+                showGnomoDialog = false
             }
         )
     }
