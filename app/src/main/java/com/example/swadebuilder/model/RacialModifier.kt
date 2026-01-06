@@ -10,6 +10,7 @@ data class RacialAbility(
 
 @Serializable
 data class RacialModifier(
+    val id: String? = null,
     val nome: String,
     val originalName: String? = null,
     val originalDescription: String? = null,

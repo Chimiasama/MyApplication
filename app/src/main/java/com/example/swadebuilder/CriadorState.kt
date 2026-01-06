@@ -341,7 +341,14 @@ class CriadorState {
                 val k = h.nome.keyify()
                 k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
             }
-            if (inDesvantagens || inHabilidades) 1 else 0
+
+            // Garante redução para raças lentas do Pathfinder
+            val isPathfinderSlowRace = compendioBuscatrilhaAtivo &&
+                    (anc.id == "anc_anaobuscatrilha" ||
+                            anc.id == "anc_gnomobuscatrilha" ||
+                            anc.id == "anc_halflingbuscatrilha")
+
+            if (inDesvantagens || inHabilidades || isPathfinderSlowRace) 1 else 0
         } ?: 0
 
         val idosoPenalty =

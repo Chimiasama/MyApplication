@@ -62,11 +62,18 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         val racialPenalty =
             listaAncestralidadesJson
                 .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
-                ?.desvantagens
-                ?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
-                .takeIf { it == true }
-                ?.let { 1 }
-                ?: 0
+                ?.let { anc ->
+                    val hasTrait = anc.desvantagens.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) } ||
+                            anc.habilidades.any { it.nome.contains("Movimentação Reduzida", ignoreCase = true) }
+
+                    // Garante redução para raças lentas do Pathfinder
+                    val isPathfinderSlowRace = personagem.compendioBuscatrilhaAtivo &&
+                            (anc.id == "anc_anaobuscatrilha" ||
+                                    anc.id == "anc_gnomobuscatrilha" ||
+                                    anc.id == "anc_halflingbuscatrilha")
+
+                    if (hasTrait || isPathfinderSlowRace) 1 else 0
+                } ?: 0
 
         val lentoPenalty = if (temComp("LENTO")) 1 else 0
         val idosoPenalty = if (temComp("IDOSO")) 1 else 0
