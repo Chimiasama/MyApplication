@@ -331,7 +331,7 @@ class CriadorState {
     fun valorMovimentacao(): Int {
         val base = 6
 
-        val ancestralidadeObj = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade }
+        val ancestralidadeObj = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade.keyify() }
         val racialPenalty = ancestralidadeObj?.let {
             val inDesvantagens = it.desvantagens.any { d -> d.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
             val inHabilidades = it.habilidades.any { h -> h.nome.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }

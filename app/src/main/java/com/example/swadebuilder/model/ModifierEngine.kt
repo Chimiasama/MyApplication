@@ -70,12 +70,13 @@ object ModifierEngine {
 
         ancestral?.let { anc ->
             // Size from Ancestry (Tamanho X)
-            // Checks desvantagens AND habilidades
-            val sizeSource = anc.desvantagens.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
-                ?: anc.habilidades.map { it.nome }.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
+            // Checks desvantagens AND habilidades. Uses contains for robustness.
+            val sizeSource = anc.desvantagens.firstOrNull { it.contains("TAMANHO", ignoreCase = true) }
+                ?: anc.habilidades.map { it.nome }.firstOrNull { it.contains("TAMANHO", ignoreCase = true) }
 
             val racialSize = sizeSource
-                ?.substringAfter("TAMANHO")
+                ?.substringAfter("TAMANHO", "") // Try uppercase first
+                ?.ifBlank { sizeSource.substringAfter("Tamanho", "") } // Try title case
                 ?.trim()
                 ?.toIntOrNull()
                 ?: 0
@@ -125,7 +126,7 @@ object ModifierEngine {
             // Resistência (Auto advantage or racial trait)
             // Checks for FRAGIL/ESGUIOS (-1)
             val hasFragil = state.desvantagensRaciais.any { it.keyify() == "FRAGIL" }
-            val hasEsguios = anc.habilidades.any { it.nome.keyify().contains("ESGUIOS") }
+            val hasEsguios = anc.habilidades.any { it.nome.contains("Esguios", ignoreCase = true) }
 
             if (hasFragil) {
                 modifiers.add(Modifier("racial_fragil", SourceType.ANCESTRALIDADE, "Frágil", ModifierTarget.TOUGHNESS_FLAT, -1))
@@ -136,7 +137,7 @@ object ModifierEngine {
 
             // Checks for RESISTENCIA/FEROCIDADE (+1)
             val hasResistencia = state.vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" }
-            val hasFerocidade = anc.habilidades.any { it.nome.keyify().contains("FEROCIDADE") }
+            val hasFerocidade = anc.habilidades.any { it.nome.contains("Ferocidade", ignoreCase = true) }
 
             if (hasResistencia) {
                 modifiers.add(Modifier("racial_resistencia", SourceType.ANCESTRALIDADE, "Resistência", ModifierTarget.TOUGHNESS_FLAT, 1))
