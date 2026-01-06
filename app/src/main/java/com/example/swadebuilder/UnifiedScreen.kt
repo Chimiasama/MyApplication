@@ -418,16 +418,13 @@ fun UnifiedScreen(
         // Filtra perícias de Astúcia permitidas no compêndio atual.
         val opcoesPericias = remember(state.compendioBuscatrilhaAtivo) {
             state.periciasFiltradasPorCompendio
-                .filter { it.atributo == "ASTUCIA" && it.isPericiaPermitida(state) }
+                .filter { it.atributo == "ASTUCIA" }
                 .sortedBy { it.nome }
         }
-        var selectedSkill by remember { mutableStateOf(opcoesPericias.firstOrNull()?.nome ?: "Conhecimento Geral") }
 
         com.example.swadebuilder.ui.dialogs.ChoiceDialog(
-            title = "Gnomo: Escolha uma perícia",
-            message = "Gnomos são obsessivos e iniciam com d4 em uma perícia baseada em Astúcia à sua escolha.",
+            title = "Gnomo (Obsessivos): Escolha uma perícia de Astúcia",
             options = opcoesPericias.map { it.nome },
-            initialSelection = selectedSkill,
             onConfirm = { escolha ->
                 val key = pendingAncestryKey ?: return@ChoiceDialog
                 state.gnomoPericiaEscolhida = escolha
