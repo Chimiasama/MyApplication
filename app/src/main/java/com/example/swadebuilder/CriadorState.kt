@@ -332,9 +332,15 @@ class CriadorState {
         val base = 6
 
         val ancestralidadeObj = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade.keyify() }
-        val racialPenalty = ancestralidadeObj?.let {
-            val inDesvantagens = it.desvantagens.any { d -> d.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
-            val inHabilidades = it.habilidades.any { h -> h.nome.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
+        val racialPenalty = ancestralidadeObj?.let { anc ->
+            val inDesvantagens = anc.desvantagens.any { d ->
+                val k = d.keyify()
+                k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
+            }
+            val inHabilidades = anc.habilidades.any { h ->
+                val k = h.nome.keyify()
+                k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
+            }
             if (inDesvantagens || inHabilidades) 1 else 0
         } ?: 0
 
