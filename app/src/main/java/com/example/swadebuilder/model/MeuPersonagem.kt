@@ -68,6 +68,7 @@ data class MeuPersonagem(
     val soldadoCargaAtivo: Boolean = true,
     val modoOficialAtivo: Boolean = false,
     val compendioArteDaGuerraAtivo: Boolean = false,
+    val compendioBuscatrilhaAtivo: Boolean = false,
     val heroisSemArmadura: Boolean = false,
 
     // ===== NOVOS CAMPOS (PDF EXTENDIDO) =====
