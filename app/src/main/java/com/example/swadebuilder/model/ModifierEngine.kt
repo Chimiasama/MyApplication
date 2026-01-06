@@ -70,9 +70,13 @@ object ModifierEngine {
 
         ancestral?.let { anc ->
             // Size from Ancestry (Tamanho X)
-            val sizeDesc = anc.desvantagens.firstOrNull { it.startsWith("TAMANHO", ignoreCase = true) }
-            val racialSize = sizeDesc
-                ?.substringAfter("TAMANHO")
+            // Checks desvantagens AND habilidades. Uses contains for robustness.
+            val sizeSource = anc.desvantagens.firstOrNull { it.contains("TAMANHO", ignoreCase = true) }
+                ?: anc.habilidades.map { it.nome }.firstOrNull { it.contains("TAMANHO", ignoreCase = true) }
+
+            val racialSize = sizeSource
+                ?.substringAfter("TAMANHO", "") // Try uppercase first
+                ?.ifBlank { sizeSource.substringAfter("Tamanho", "") } // Try title case
                 ?.trim()
                 ?.toIntOrNull()
                 ?: 0
@@ -95,9 +99,11 @@ object ModifierEngine {
             }
 
             // Diminuto (Ancestralidade)
-            // Se tiver "DIMINUTO" nas desvantagens ou vantagens grátis, aplica Tamanho -4
+            // Se tiver "DIMINUTO" nas desvantagens, habilidades ou vantagens grátis, aplica Tamanho -4
             val hasDiminuto = anc.desvantagens.any { it.keyify() == "DIMINUTO" } ||
-                              anc.vantagensGratis.any { it.keyify() == "DIMINUTO" }
+                    anc.vantagensGratis.any { it.keyify() == "DIMINUTO" } ||
+                    anc.habilidades.any { it.nome.keyify() == "DIMINUTO" }
+
             if (hasDiminuto) {
                  // Diminuto geralmente substitui o tamanho base ou soma?
                  // Pelo prompt, Fadas são Diminuto. Se não tiver TAMANHO definido, aplica -4.
@@ -118,11 +124,26 @@ object ModifierEngine {
             }
 
             // Resistência (Auto advantage or racial trait)
-            if (state.desvantagensRaciais.any { it.keyify() == "FRAGIL" }) {
+            // Checks for FRAGIL/ESGUIOS (-1)
+            val hasFragil = state.desvantagensRaciais.any { it.keyify() == "FRAGIL" }
+            val hasEsguios = anc.habilidades.any { it.nome.contains("Esguios", ignoreCase = true) }
+
+            if (hasFragil) {
                 modifiers.add(Modifier("racial_fragil", SourceType.ANCESTRALIDADE, "Frágil", ModifierTarget.TOUGHNESS_FLAT, -1))
             }
-            if (state.vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" }) {
+            if (hasEsguios) {
+                modifiers.add(Modifier("racial_esguios", SourceType.ANCESTRALIDADE, "Esguios", ModifierTarget.TOUGHNESS_FLAT, -1))
+            }
+
+            // Checks for RESISTENCIA/FEROCIDADE (+1)
+            val hasResistencia = state.vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" }
+            val hasFerocidade = anc.habilidades.any { it.nome.contains("Ferocidade", ignoreCase = true) }
+
+            if (hasResistencia) {
                 modifiers.add(Modifier("racial_resistencia", SourceType.ANCESTRALIDADE, "Resistência", ModifierTarget.TOUGHNESS_FLAT, 1))
+            }
+            if (hasFerocidade) {
+                modifiers.add(Modifier("racial_ferocidade", SourceType.ANCESTRALIDADE, "Ferocidade Orc", ModifierTarget.TOUGHNESS_FLAT, 1))
             }
         }
 

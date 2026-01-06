@@ -461,6 +461,33 @@ fun AncestralidadesSection(
                                 }
                             }
 
+                            if (isSelected && item.nome.keyify().contains("GNOMO") && item.nome.keyify().contains("BUSCATRILHA")) {
+                                Spacer(Modifier.height(8.dp))
+                                Text("Perícia Obsessiva (Astúcia):", style = MaterialTheme.typography.labelMedium)
+
+                                var expanded by remember { mutableStateOf(false) }
+                                val smartsSkills = state.periciasFiltradasPorCompendio
+                                    .filter { it.atributo == "ASTUCIA" && !it.nome.keyify().contains("IDIOMAS") }
+                                    .sortedBy { it.nome }
+
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.gnomoPericiaEscolhida ?: "Selecionar Perícia")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        smartsSkills.forEach { skill ->
+                                            DropdownMenuItem(
+                                                text = { Text(skill.nome) },
+                                                onClick = {
+                                                    state.selecionarPericiaGnomo(skill.nome)
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
                             if (isSelected && item.nome.keyify() == "DESCENDENTE ELEMENTAL") {
                                 Spacer(Modifier.height(8.dp))
                                 Text("Herança Elemental:", style = MaterialTheme.typography.labelMedium)

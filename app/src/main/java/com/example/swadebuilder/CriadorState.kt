@@ -68,6 +68,7 @@ class CriadorState {
     var grandesResponsabilidades by mutableStateOf(false)
     var signoAdgSelecionado by mutableStateOf<String?>(null)
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
+    var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
     val vantagensAutomaticasDoElemento = mutableStateListOf<String>()
@@ -330,14 +331,18 @@ class CriadorState {
     fun valorMovimentacao(): Int {
         val base = 6
 
-        val racialPenalty =
-            listaAncestralidadesJson
-                .firstOrNull { it.nome.keyify() == ancestralidade }
-                ?.desvantagens
-                ?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }
-                .takeIf { it == true }
-                ?.let { 1 }
-                ?: 0
+        val ancestralidadeObj = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade.keyify() }
+        val racialPenalty = ancestralidadeObj?.let { anc ->
+            val inDesvantagens = anc.desvantagens.any { d ->
+                val k = d.keyify()
+                k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
+            }
+            val inHabilidades = anc.habilidades.any { h ->
+                val k = h.nome.keyify()
+                k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
+            }
+            if (inDesvantagens || inHabilidades) 1 else 0
+        } ?: 0
 
         val idosoPenalty =
             complicacoesSelecionadas
@@ -957,6 +962,14 @@ class CriadorState {
                 if (bonus != null) {
                     modifiedBase = maxOf(modifiedBase, bonus)
                 }
+            }
+        }
+
+        // Gnomo Buscatrilha - Obsessivos (d4 em perícia de Astúcia à escolha)
+        if (compendioBuscatrilhaAtivo && ancKey.contains("GNOMO") && ancKey.contains("BUSCATRILHA")) {
+            val chosen = gnomoPericiaEscolhida?.keyify()
+            if (chosen != null && perKey == chosen) {
+                modifiedBase = maxOf(modifiedBase, 4)
             }
         }
 
@@ -2208,7 +2221,13 @@ class CriadorState {
 
         val startRaw = periciaStartRaw(ancestralidade, per)
 
-        val baseCap = if (startRaw >= 6) 13 else 12
+        // Half-Orc Buscatrilha Intimidate Exception (starts d4 but gets cap increase)
+        val isHalfOrcIntimidate = compendioBuscatrilhaAtivo &&
+                ancestralidade.keyify().contains("MEIO-ORC") &&
+                ancestralidade.keyify().contains("BUSCATRILHA") &&
+                per.nome.keyify() == "INTIMIDAR"
+
+        val baseCap = if (startRaw >= 6 || isHalfOrcIntimidate) 13 else 12
 
         val chave = per.nome.keyify()
         val profCount = vantagensSelecionadas.count {
@@ -2366,6 +2385,9 @@ class CriadorState {
         }
         if (anc.keyify() != "DESCENDENTE ELEMENTAL" && anc.keyify() != "DESC_ELEMENTAL") {
             selecionarDescendenteElemental(null)
+        }
+        if (!anc.keyify().contains("GNOMO")) {
+            selecionarPericiaGnomo(null)
         }
 
         // --- Vantagens / desvantagens raciais ---
@@ -2638,8 +2660,10 @@ class CriadorState {
         val isPathfinderHuman = compendioBuscatrilhaAtivo &&
                 (ancestralidade.equals("Humano (Buscatrilha)", ignoreCase = true) ||
                         ancestralidade.equals("Humano (Pathfinder)", ignoreCase = true))
+        val isPathfinderHalfElf = compendioBuscatrilhaAtivo &&
+                (ancestralidade.keyify().contains("MEIO-ELFO") && ancestralidade.keyify().contains("BUSCATRILHA"))
 
-        val basePoints = if (isPathfinderHuman) 6 else 5
+        val basePoints = if (isPathfinderHuman || isPathfinderHalfElf) 6 else 5
 
         return (basePoints + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
     }
@@ -2693,6 +2717,12 @@ class CriadorState {
         }
 
         recalcularPontosAtributo()
+        rebuildAllPericiaStacks()
+    }
+
+    fun selecionarPericiaGnomo(pericia: String?) {
+        if (gnomoPericiaEscolhida == pericia) return
+        gnomoPericiaEscolhida = pericia
         rebuildAllPericiaStacks()
     }
 
@@ -3139,7 +3169,8 @@ class CriadorState {
                 expandirRetrato = expandirRetrato,
                 portraitScaleType = portraitScaleType,
                 portraitAlignment = portraitAlignment,
-                signoAdgSelecionado = signoAdgSelecionado
+                signoAdgSelecionado = signoAdgSelecionado,
+                gnomoPericiaEscolhida = gnomoPericiaEscolhida
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -3241,6 +3272,7 @@ class CriadorState {
         bonusPoderExtra = flags.bonusPoderExtra
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
+        gnomoPericiaEscolhida = snapshot.selecoes.gnomoPericiaEscolhida
 
         dinheiro = snapshot.recursos.dinheiro
         famaManual = snapshot.recursos.famaManual

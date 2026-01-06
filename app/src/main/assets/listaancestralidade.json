@@ -1138,7 +1138,8 @@
     "categoria": "ANCESTRALIDADE",
     "origem": "FANTASIABUSCATRILHA",
     "atributos": {
-      "Vigor": 2
+      "Vigor": 2,
+      "Astúcia": 2
     },
     "pericias": {},
     "vantagensGratis": [],
