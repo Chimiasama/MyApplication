@@ -12,7 +12,7 @@ private val rawIdToDisplayName = mapOf(
     "FANTASIA" to "Fantasia",
     "HORROR" to "Horror",
     "SCI_FI" to "Sci-Fi",
-    "FANTASIABUSCATRILHA" to "Savage Pathfinder",
+    "FANTASIABUSCATRILHA" to "Pathfinder",
     "BASICO" to "Básico"
 )
 
@@ -30,7 +30,8 @@ private val liteDisplayReplacements = listOf(
     "Kemonomimi (Espírito Animal)" to "Povo Animal Espiritual",
     "Humano (Império do Sol)" to "Humano (Império Oriental)",
     "Terracota" to "Povo de Barro",
-    "Onigem (Sangue de Oni)" to "Sangue de Demônio"
+    "Onigem (Sangue de Oni)" to "Sangue de Demônio",
+    "Pathfinder" to "Buscatrilha"
 )
 
 fun String.toEditionDisplayName(): String {
