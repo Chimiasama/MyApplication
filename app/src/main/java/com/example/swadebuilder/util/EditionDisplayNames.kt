@@ -12,11 +12,13 @@ private val rawIdToDisplayName = mapOf(
     "FANTASIA" to "Fantasia",
     "HORROR" to "Horror",
     "SCI_FI" to "Sci-Fi",
-    "FANTASIABUSCATRILHA" to "Savage Pathfinder",
+    "FANTASIABUSCATRILHA" to "Pathfinder",
     "BASICO" to "Básico"
 )
 
 private val liteDisplayReplacements = listOf(
+    "Pathfinder" to "Buscatrilha",
+    "Savage Pathfinder" to "Buscatrilha",
     "Deadlands: O Oeste Estranho" to "Faroeste Assombrado",
     "Arte da Guerra: Nova Era" to "Arte de Combate Novo Tempo",
     "Arte da Guerra Nova Era" to "Arte de Combate Novo Tempo",
