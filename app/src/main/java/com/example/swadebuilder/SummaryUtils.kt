@@ -19,11 +19,17 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val ancestralidadeNomeObj = listaAncestralidadesJson
         .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
 
-    val ancestralidadeNome: String = (if (showOfficialNames && ancestralidadeNomeObj?.originalName != null) {
+    val rawAncestralidadeNome = if (showOfficialNames && ancestralidadeNomeObj?.originalName != null) {
         ancestralidadeNomeObj.originalName
     } else {
         ancestralidadeNomeObj?.nome ?: personagem.ancestralidade
-    }).titleCase()
+    }
+
+    // Remove sufixos como (Buscatrilha), (Trilhador), etc.
+    val ancestralidadeNome: String = rawAncestralidadeNome
+        .replace(Regex("\\s*\\((Buscatrilha|Trilhador|Mundo Ancestral)\\)"), "")
+        .trim()
+        .titleCase()
 
     val monstroNome = if (personagem.modoMonstroAtivo) {
         val tipoNome = listaMonstroTemplates.find { it.id == personagem.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
@@ -244,13 +250,16 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
             }
         lines += nomesVantagens.joinToString(", ")
     }
-    if (personagem.vantagensRaciais.isNotEmpty()) {
+    val habilidadesRaciais = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
+    val allRacialTraits = (personagem.vantagensRaciais + habilidadesRaciais).distinct()
+
+    if (allRacialTraits.isNotEmpty()) {
         val displayVantagensRaciais = if (personagem.ancestralidade.keyify() == "SAURIOS") {
-            personagem.vantagensRaciais.map {
+            allRacialTraits.map {
                 if (it.keyify() == "PRONTIDAO") "Sentidos Aguçados" else it
             }
         } else {
-            personagem.vantagensRaciais
+            allRacialTraits
         }
         lines += "Vantagens Raciais: ${displayVantagensRaciais.joinToString(", ")}"
     }

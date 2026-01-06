@@ -305,29 +305,16 @@ fun AncestralidadesSection(
         ?.semAcentos()
         ?.takeIf { it.isNotBlank() }
 
-    var searchQuery by rememberSaveable { mutableStateOf("") }
-    var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
-
     val listaBase = ancestralidadesState.value
 
-    val listaFiltrada = remember(listaBase, searchQuery) {
-        listaBase.filter { item ->
-            if (searchQuery.isBlank()) true else {
-                item.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
-                        item.displayName.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
-                        (item.descricao?.semAcentos()?.contains(searchQuery.semAcentos(), ignoreCase = true) == true)
-            }
-        }
-    }
-
-    val listaOrdenada = remember(listaFiltrada, focoKey) {
+    val listaOrdenada = remember(listaBase, focoKey) {
         if (focoKey != null) {
-            val (foco, resto) = listaFiltrada.partition {
+            val (foco, resto) = listaBase.partition {
                 it.nome.uppercase().semAcentos() == focoKey
             }
             foco + resto
         } else {
-            listaFiltrada
+            listaBase
         }
     }
 
@@ -348,14 +335,6 @@ fun AncestralidadesSection(
             onCenterClick = null,
             onListaCompletaClick = null,
             listaCompletaText = ""
-        )
-
-        ExpandableSearchFilter(
-            query = searchQuery,
-            onQueryChange = { searchQuery = it },
-            isExpanded = isSearchExpanded,
-            onExpandedChange = { isSearchExpanded = it },
-            placeholder = "Pesquisar Ancestralidades..."
         )
 
         Spacer(Modifier.height(8.dp))

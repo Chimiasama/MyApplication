@@ -113,7 +113,6 @@ fun ComplicacoesSection(
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
     var selectedSeverity by rememberSaveable { mutableStateOf("Todos") }
-    var selectedOrigin by rememberSaveable { mutableStateOf("Todos") }
 
     val complicacoesFiltradas = listaComplicacoes.filter { comp ->
         val origemSafe = if (comp.origem.isBlank()) "BASICO" else comp.origem.uppercase().semAcentos().trim()
@@ -129,9 +128,7 @@ fun ComplicacoesSection(
             else -> true
         }
 
-        val matchesOriginFilter = if (selectedOrigin == "Todos") true else origemSafe == selectedOrigin
-
-        if (!matchesSeverity || !matchesOriginFilter) return@filter false
+        if (!matchesSeverity) return@filter false
 
         if (searchQuery.isNotBlank()) {
             val q = searchQuery.semAcentos().lowercase()
@@ -218,45 +215,6 @@ fun ComplicacoesSection(
                         }
                     }
 
-                    // Origin Filter (if multiple active)
-                    if (origensAtivas.size > 1) {
-                        Spacer(Modifier.height(4.dp))
-                        LazyRow(
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            item {
-                                Text(
-                                    "Livro:",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    modifier = Modifier.padding(end = 4.dp)
-                                )
-                            }
-                            item {
-                                FilterChip(
-                                    selected = selectedOrigin == "Todos",
-                                    onClick = { selectedOrigin = "Todos" },
-                                    label = { Text("Todos") }
-                                )
-                            }
-                            items(origensAtivas.toList().sorted()) { origin ->
-                                val label = when(origin) {
-                                    "BASICO" -> "Básico"
-                                    "SUPER" -> "Supers"
-                                    "FANTASIA" -> "Fantasia"
-                                    "HORROR" -> "Horror"
-                                    "FANTASIABUSCATRILHA" -> androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label)
-                                    else -> origin.toEditionDisplayName()
-                                }
-                                FilterChip(
-                                    selected = selectedOrigin == origin,
-                                    onClick = { selectedOrigin = origin },
-                                    label = { Text(label) }
-                                )
-                            }
-                        }
-                    }
                 }
             }
         }

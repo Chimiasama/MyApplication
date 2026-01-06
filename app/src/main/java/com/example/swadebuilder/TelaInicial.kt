@@ -204,7 +204,7 @@ fun TelaInicial(
         ) { optCompendioBuscatrilha = !optCompendioBuscatrilha },
         ModuleItemData(
             "Deadlands".toEditionDisplayName(),
-            "Pistoleiros, atormentados e o horror do Oeste.",
+            if (isFullEdition) "Pistoleiros, atormentados e o horror do Oeste." else "Pistoleiros, revividos e o horror do Oeste.",
             Icons.Default.Shield,
             optCompendioDeadlands,
             !isAnyBookSelected || optCompendioDeadlands
