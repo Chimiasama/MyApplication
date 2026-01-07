@@ -1922,6 +1922,16 @@ class CriadorState {
         // Regra: "Mago" do básico oculto se Fantasia ativo
         if (compendioFantasiaAtivo && v.id == "mago") return false
 
+        // Regra: Antecedentes Arcanos que não existem em Pathfinder (Ciência Estranha, Psiônicos, Dom)
+        if (compendioBuscatrilhaAtivo) {
+            val forbiddenIds = setOf(
+                "antecedente_arcano_ciencia_estranha",
+                "antecedente_arcano_psionicos",
+                "antecedente_arcano_dom"
+            )
+            if (v.id in forbiddenIds) return false
+        }
+
         // 0) Exclusividade de Classe/Prestígio (Buscatrilha)
         if (vantagensSelecionadas.classeExclusivaBloqueada(v)) return false
 
