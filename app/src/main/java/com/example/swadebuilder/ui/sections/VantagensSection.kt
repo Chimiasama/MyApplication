@@ -437,9 +437,24 @@ fun VantagensContent(
                         vant.requisitos.periciaMinOpcional.keys +
                         if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
             }.distinct()
+
+            // Filter available skills based on active compendiums (using PericiasContent logic)
+            val visibleSkills = state.periciasComIdiomas().filter { per ->
+                if (per.nome.equals("Jutsu", ignoreCase = true)) {
+                    false // Handled via Lutar
+                } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
+                    state.compendioFantasiaAtivo || state.compendioHorrorAtivo
+                } else if (state.compendioBuscatrilhaAtivo) {
+                    val n = per.nome.keyify()
+                    n != "FOCO" && n !in com.example.swadebuilder.model.SAVAGE_PATHFINDER_BLOCKED_SKILLS
+                } else {
+                    true
+                }
+            }.map { it.nome }
+
             val allPericias = listaPericias
                 .map { it.nome }
-                .filter { it in requiredPericias }
+                .filter { it in requiredPericias && it in visibleSkills }
 
             VantFilterDialog(
                 allEstagios = allEstagios,
