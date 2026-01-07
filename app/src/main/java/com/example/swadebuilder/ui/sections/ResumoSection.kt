@@ -103,13 +103,46 @@ fun SummaryContent(
             "Heróis Sem Armadura".takeIf { state.heroisSemArmadura },
             "Sem Pontos de Poder".takeIf { state.usarSemPontosDePoder },
             "Mais Pontos de Perícias".takeIf { state.maisPontosPericias },
-            "Especializações".takeIf { state.usarEspecializacoesDePericia }
+            "Especializações".takeIf { state.usarEspecializacoesDePericia },
+            if (state.compendioBuscatrilhaAtivo) {
+                val hasLinguista = state.vantagensSelecionadas.any { it.id == "linguista" }
+                "Idiomas: comum + ${if (hasLinguista) "Astúcia" else "1/2 Astúcia"}"
+            } else null
         )
     }
 
     LaunchedEffect(flagsTemplate) {
         if (state.anotacoes.isBlank() && flagsTemplate.isNotEmpty()) {
             state.anotacoes = flagsTemplate.joinToString("\n") { "• $it" }
+        }
+    }
+
+    // Dynamic update for Language note (Pathfinder)
+    val hasLinguista = state.vantagensSelecionadas.any { it.id == "linguista" }
+    var previousPathfinderState by remember { mutableStateOf(state.compendioBuscatrilhaAtivo) }
+
+    LaunchedEffect(hasLinguista, state.compendioBuscatrilhaAtivo) {
+        val newText = "• Idiomas: comum + ${if (hasLinguista) "Astúcia" else "1/2 Astúcia"}"
+
+        // Case 1: Just toggled Pathfinder ON? Append if missing.
+        // This handles existing characters that didn't have it initialized via flagsTemplate
+        if (!previousPathfinderState && state.compendioBuscatrilhaAtivo) {
+            if (!state.anotacoes.contains("Idiomas: comum")) {
+                state.anotacoes = if (state.anotacoes.isBlank()) newText else "${state.anotacoes}\n$newText"
+            }
+        }
+        previousPathfinderState = state.compendioBuscatrilhaAtivo
+
+        // Case 2: Already active, Linguist changed (or re-evaluating). Update if old version present.
+        if (state.compendioBuscatrilhaAtivo) {
+            val oldText1 = "• Idiomas: comum + 1/2 Astúcia"
+            val oldText2 = "• Idiomas: comum + Astúcia"
+
+            if (state.anotacoes.contains(oldText1)) {
+                state.anotacoes = state.anotacoes.replace(oldText1, newText)
+            } else if (state.anotacoes.contains(oldText2)) {
+                state.anotacoes = state.anotacoes.replace(oldText2, newText)
+            }
         }
     }
 
