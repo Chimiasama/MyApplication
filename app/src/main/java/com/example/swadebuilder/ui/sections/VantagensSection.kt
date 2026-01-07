@@ -200,6 +200,12 @@ fun VantagensContent(
     }
 
     val listaVantagensAtivas: List<Vantagem> = remember(listaVantagens, state.modoSupers, state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioBuscatrilhaAtivo, state.compendioDeadlandsAtivo, state.compendioCrystalHeartAtivo, state.compendioArteDaGuerraAtivo, state.compendioCidadeSolVaporAtivo, state.compendioWiseguysAtivo) {
+        val forbiddenPathfinderIds = if (state.compendioBuscatrilhaAtivo) {
+            setOf("antecedente_arcano_ciencia_estranha", "antecedente_arcano_psionicos", "antecedente_arcano_dom")
+        } else {
+            emptySet()
+        }
+
         listaVantagens.filter { vant ->
             val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase()
             val isBasico = origemNorm == "BASICO"
@@ -223,6 +229,10 @@ fun VantagensContent(
                 if (vant.id == "mago") {
                      return@filter false
                 }
+            }
+
+            if (state.compendioBuscatrilhaAtivo) {
+                if (vant.id in forbiddenPathfinderIds) return@filter false
             }
 
             if (state.compendioArteDaGuerraAtivo) {

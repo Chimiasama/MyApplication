@@ -940,7 +940,7 @@ class CriadorState {
         get() {
             return if (compendioBuscatrilhaAtivo) {
                 // If Pathfinder active:
-                val forbiddenIds = setOf("ELETRONICA", "FOCO", "HACKEAR", "PSIONICOS")
+                val forbiddenIds = setOf("ELETRONICA", "FOCO", "HACKEAR", "PSIONICOS", "CIENCIA ESTRANHA", "ALQUIMIA")
                 listaPericias.filter { per ->
                     val key = per.nome.keyify()
                     key !in forbiddenIds && per.origem != "ARTE_DA_GUERRA"
