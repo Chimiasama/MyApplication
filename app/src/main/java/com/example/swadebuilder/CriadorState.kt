@@ -69,6 +69,7 @@ class CriadorState {
     var signoAdgSelecionado by mutableStateOf<String?>(null)
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
+    var idVantagemBuscatrilhaGratuita by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
     val vantagensAutomaticasDoElemento = mutableStateListOf<String>()
@@ -725,6 +726,10 @@ class CriadorState {
     }
 
     fun removerVantagem(v: Vantagem) {
+        if (v.id == idVantagemBuscatrilhaGratuita) {
+            idVantagemBuscatrilhaGratuita = null
+        }
+
         vantagensSelecionadas.remove(v)
 
         if (v.nome.keyify() == "CAVALEIRO") {
@@ -1830,6 +1835,58 @@ class CriadorState {
         if (compendioFantasiaAtivo && v.id == "mago") return false
 
         // 0) Exclusividade de Classe/Prestígio (Buscatrilha)
+        if (compendioBuscatrilhaAtivo) {
+            val isClasse = v.categoria == Categoria.CLASSE || v.categoria == Categoria.PRESTIGIO
+            if (isClasse) {
+                // Determine current rank (stage)
+                val currentStage = if (emProgresso) {
+                    overrideStageForVantagem ?: estagioAtual().nome
+                } else {
+                    "Novato"
+                }
+
+                // Check if already has a class/prestige edge obtained IN THIS RANK
+                // This requires checking the advancement history if in progress, or just assuming Novato limit creation
+                // Ideally, we check if any EXISTING class/prestige edge was added in the current rank context.
+                // However, the rule is "Max 1 per Rank".
+                // During creation (Novato), idVantagemBuscatrilhaGratuita accounts for one.
+                // If they try to buy another one with points, it depends if the free one was Class.
+                // Let's simplify: Check total count vs Rank count? No, multicalssing allows more.
+                // Rule: "New Class Edge only once per Rank".
+                // We need to know which edges were taken at which rank.
+                // For simplicity in this method:
+                // If creation phase (!emProgresso):
+                //   Allow if it's the free slot choice.
+                //   If buying with points (Multiclass), allow only if they haven't taken a 2nd class edge this rank.
+                //   Actually, at creation (Novato), you get 1 free. Can you buy more with Hindrance points?
+                //   "Typically acquired at creation... If desired, you can acquire them later... once per Rank."
+                //   Usually implies 1 per rank TOTAL. So at creation, max 1 Class Edge (the free one).
+                //   If they took Background/Professional as free, can they buy Class with points? Yes, 1.
+                //   So count Class/Prestige edges taken. If >= 1, block.
+                //   Wait, if I have free Class Edge, count is 1. Can I buy Prestige? No (Prestige is Seasoned+ usually).
+                //   Can I buy another Class? "Once per Rank". So 1 total per rank.
+
+                val classEdgesCount = vantagensSelecionadas.count {
+                    it.categoria == Categoria.CLASSE || it.categoria == Categoria.PRESTIGIO
+                }
+
+                // If we are selecting a new one, and we already have one, we need to check if that one was taken THIS rank.
+                // During creation, ALL edges are "this rank" (Novato).
+                // So if (!emProgresso) and classEdgesCount >= 1 -> return false.
+                if (!emProgresso && classEdgesCount >= 1) return false
+
+                // If in progress, we rely on history? Or just simple heuristic:
+                // If user just bought one in this session (advancement), block.
+                // But `podeSelecionar` is stateless regarding "session".
+                // The provided rule says "Once per Rank".
+                // If we are at Seasoned, and we already have a Class Edge from Novice, we CAN take another.
+                // So we shouldn't block just based on total count.
+                // We'd need to know the rank of existing edges.
+                // For now, let's stick to the existing `classeExclusivaBloqueada` check if it covers it,
+                // or assume the user manages the "Once per Rank" mostly, but we enforce strict creation limit.
+            }
+        }
+
         if (vantagensSelecionadas.classeExclusivaBloqueada(v)) return false
 
         // 1) Regra especial: O MELHOR QUE HÁ
@@ -2047,6 +2104,33 @@ class CriadorState {
                 .any { it in compsConfl }
         ) return false
 
+        return true
+    }
+
+    fun tentarComprarVantagem(v: Vantagem): Boolean {
+        if (!podeSelecionar(v)) return false
+
+        // Lógica Buscatrilha: Slot Gratuito
+        if (compendioBuscatrilhaAtivo && idVantagemBuscatrilhaGratuita == null) {
+            val isElegivel = when (v.categoria) {
+                Categoria.CLASSE, Categoria.PROFISSIONAL, Categoria.ANTECEDENTE -> true
+                else -> false
+            }
+
+            if (isElegivel) {
+                idVantagemBuscatrilhaGratuita = v.id
+                // Adiciona sem cobrar ponto
+                adicionarVantagem(v)
+                // Não decrementa pontosVantagem
+                return true
+            }
+        }
+
+        // Fluxo normal
+        if (pontosVantagem <= 0) return false
+
+        adicionarVantagem(v)
+        pontosVantagem--
         return true
     }
 
@@ -3177,7 +3261,8 @@ class CriadorState {
                 portraitScaleType = portraitScaleType,
                 portraitAlignment = portraitAlignment,
                 signoAdgSelecionado = signoAdgSelecionado,
-                gnomoPericiaEscolhida = gnomoPericiaEscolhida
+                gnomoPericiaEscolhida = gnomoPericiaEscolhida,
+                idVantagemBuscatrilhaGratuita = idVantagemBuscatrilhaGratuita
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -3280,6 +3365,7 @@ class CriadorState {
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
         gnomoPericiaEscolhida = snapshot.selecoes.gnomoPericiaEscolhida
+        idVantagemBuscatrilhaGratuita = snapshot.selecoes.idVantagemBuscatrilhaGratuita
 
         dinheiro = snapshot.recursos.dinheiro
         famaManual = snapshot.recursos.famaManual
