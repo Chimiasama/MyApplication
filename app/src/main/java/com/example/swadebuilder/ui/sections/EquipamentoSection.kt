@@ -53,6 +53,7 @@ import com.example.swadebuilder.model.EquipFilter
 import com.example.swadebuilder.model.EquipSuperType
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.model.SAVAGE_PATHFINDER_ALLOWLIST
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.PbLegacyActions
@@ -60,6 +61,7 @@ import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.components.StandardEquipamentoItem
+import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.toSentenceCase
@@ -304,6 +306,15 @@ fun EquipamentoSection(
 
     // Accordion State for browse mode (keyed by SuperType label)
     val expandedTypeMap = state.equipExpandedTypes
+
+    // Pre-calculate allowed keys set for performance
+    val pathfinderAllowedKeys = remember(compendioBuscatrilhaAtivo) {
+        if (compendioBuscatrilhaAtivo) {
+            SAVAGE_PATHFINDER_ALLOWLIST.map { it.keyify() }.toSet()
+        } else {
+            emptySet()
+        }
+    }
 
     SectionCard(
         title    = "Equipamento",
@@ -556,10 +567,31 @@ fun EquipamentoSection(
 
             Spacer(Modifier.padding(vertical = 4.dp))
 
+            // Helper function for filtering logic
+            fun isItemAllowedByPathfinderRule(item: EquipamentoItem, origemKey: String): Boolean {
+                if (!compendioBuscatrilhaAtivo) return true
+                // If the item is explicitly from Pathfinder module, allow it
+                if (origemKey == "FANTASIABUSCATRILHA" || origemKey == "BUSCATRILHA") return true
+
+                // If item is from BASE, strictly enforce AllowList
+                if (origemKey == "BASICO") {
+                    // Check if name is in AllowList (normalized)
+                    val nameKey = item.nome.keyify()
+                    return nameKey in pathfinderAllowedKeys
+                }
+
+                // For other compendiums (e.g. SCI_FI), allow if the module is active
+                // This is handled by the upstream 'rawCategories' filter which already excludes inactive modules.
+                // However, strictly speaking, user said "hide anything outside list".
+                // But logically, if user ENABLED Sci-Fi + Pathfinder, they likely want cross-over.
+                // The main issue is BASICO leaking modern items.
+                return true
+            }
+
             // 5. List Content
             if (isSearching) {
                 // Flat List Mode
-                val finalFlatList = remember(mappedCategories, filter, selectedSuperTypes, searchQuery, dinheiro, usaRiqueza) {
+                val finalFlatList = remember(mappedCategories, filter, selectedSuperTypes, searchQuery, dinheiro, usaRiqueza, compendioBuscatrilhaAtivo) {
                     mappedCategories.filter { mapped ->
                         val catOrigem = mapped.original.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
                         // Filter Check
@@ -577,7 +609,7 @@ fun EquipamentoSection(
                             val q = searchQuery.semAcentos().lowercase()
                             val n = item.nomeExibicao.semAcentos().lowercase()
                             val original = item.nome.semAcentos().lowercase()
-                            n.contains(q) || original.contains(q)
+                            (n.contains(q) || original.contains(q))
                         }.map { item ->
                             val origemKey = (item.origem?.ifBlank { mapped.original.origem ?: "BASICO" } ?: (mapped.original.origem ?: "BASICO")).uppercase()
                             EquipamentoListEntry(item, origemKey, origemKey.toEditionDisplayName())
@@ -585,6 +617,10 @@ fun EquipamentoSection(
                     }.filter { entry ->
                         // Item-level origin filter (for cases where item origin differs from category origin)
                         if (filter.origens.isNotEmpty() && entry.origemKey !in filter.origens) return@filter false
+
+                        // Strict Pathfinder Filter
+                        if (!isItemAllowedByPathfinderRule(entry.item, entry.origemKey)) return@filter false
+
                         true
                     }
                 }
@@ -618,7 +654,7 @@ fun EquipamentoSection(
                 }
 
                 // --- SOLUÇÃO DEFINITIVA: Pré-calcular os dados filtrados ---
-                val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, dinheiro) {
+                val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, dinheiro, compendioBuscatrilhaAtivo) {
                     // Mapeia cada SuperType para seus dados filtrados
                     groupsBySuperType.mapValues { (_, categoriesInSuper) ->
                         // Verifica se o supertipo tem conteúdo visível com base nos filtros
@@ -650,7 +686,11 @@ fun EquipamentoSection(
                                         true
                                     }
                                     val hasOrigemValida = filter.origens.isEmpty() || entry.origemKey in filter.origens
-                                    isAcessivel && hasOrigemValida
+
+                                    // Strict Pathfinder Filter
+                                    val isAllowedByPathfinder = isItemAllowedByPathfinderRule(entry.item, entry.origemKey)
+
+                                    isAcessivel && hasOrigemValida && isAllowedByPathfinder
                                 }.sortedBy { it.item.nome }
                             }.filter { it.value.isNotEmpty() } // Remove subgrupos vazios
                         }.filter { it.value.isNotEmpty() } // Remove grupos vazios
@@ -667,6 +707,7 @@ fun EquipamentoSection(
                         if (filter.superTipos.isNotEmpty() && superType !in filter.superTipos) return@forEach
 
                         val groupData = visibleContentData[superType] ?: return@forEach
+                        if (groupData.isEmpty()) return@forEach // Double check empty groups
 
                         val isExpanded = expandedTypeMap[superType.label] ?: false
                         CollapsibleSection(

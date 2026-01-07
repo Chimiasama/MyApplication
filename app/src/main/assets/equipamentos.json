@@ -6388,5 +6388,152 @@
       { "nome": "Shuriken (3)", "dano": "For+d3", "distancia": "3/6/12", "peso": "0.5", "custo": 10, "observacoes": "CdT 1. Não acumula penalidade de saque rápido." },
       { "nome": "Yumi (Arco Longo)", "dano": "2d6", "distancia": "15/30/60", "peso": "3", "custo": 250, "forcaMin": 8, "observacoes": "Requer Força d8 para puxar." }
     ]
+  },
+  {
+    "tipo": "Materiais Especiais",
+    "subtipo": "Metais e Madeiras",
+    "origem": "FANTASIABUSCATRILHA",
+    "itens": [
+      { "nome": "Couro de Dragão", "custo": "Variável", "peso": "Metade", "observacoes": "Custa x2 (leve), x1.5 (média), x2 (pesada). Imune a dano de energia do tipo do dragão.", "originalName": "Dragonhide" },
+      { "nome": "Prata Alquímica", "custo": "Variável", "peso": "—", "observacoes": "Armas causam dano total em licantropos. -1 no dano. Custo: +20 (mun), +100 (leve), +300 (1 mão), +1500 (2 mãos).", "originalName": "Alchemical Silver" }
+    ]
+  },
+  {
+    "tipo": "Equipamento de Aventura",
+    "subtipo": "Vestuário e Acessórios",
+    "origem": "FANTASIABUSCATRILHA",
+    "itens": [
+      { "nome": "Traje de Artesão", "custo": 1, "peso": "2", "observacoes": "Avental reforçado, bolsos.", "originalName": "Artisan's Outfit" },
+      { "nome": "Traje Real", "custo": 200, "peso": "7.5", "observacoes": "Tecidos nobres, joias.", "originalName": "Royal Outfit" },
+      { "nome": "Símbolo Sagrado (prata)", "custo": 25, "peso": "0.5", "observacoes": "Símbolo religioso de prata.", "originalName": "Holy Symbol (Silver)" },
+      { "nome": "Manopla fechada", "custo": 5, "peso": "1", "observacoes": "Protege a mão. Dano letal com socos.", "originalName": "Gauntlet, Locked" }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Específicas",
+    "origem": "FANTASIABUSCATRILHA",
+    "itens": [
+      { "nome": "Armadura de Couro Batido", "custo": 25, "peso": "10", "armadura": "+2", "forcaMin": "d6", "observacoes": "Couro endurecido em água fervente.", "originalName": "Studded Leather" },
+      { "nome": "Gibão", "custo": 5, "peso": "4", "armadura": "+1", "forcaMin": "d4", "observacoes": "Acolchoado.", "originalName": "Padded Armor" },
+      { "nome": "Armadura de Espinhos", "custo": 50, "peso": "15", "armadura": "+2", "forcaMin": "d6", "observacoes": "Causa d4 de dano em quem agarra.", "originalName": "Spiked Armor" }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Exóticas",
+    "origem": "FANTASIABUSCATRILHA",
+    "itens": [
+      { "nome": "Corrente com Cravos", "dano": "For+d6", "peso": "5", "custo": 25, "forcaMin": "d6", "observacoes": "Ignora Escudos. Alcance 2. Duas Mãos.", "originalName": "Spiked Chain" },
+      { "nome": "Guisarme", "dano": "For+d8", "peso": "6", "custo": 9, "forcaMin": "d6", "observacoes": "Alcance 1. Duas Mãos. PA 1.", "originalName": "Guisarme" },
+      { "nome": "Ranseur", "dano": "For+d8", "peso": "6", "custo": 10, "forcaMin": "d6", "observacoes": "Alcance 1. Duas Mãos. PA 1. +2 Desarmar.", "originalName": "Ranseur" },
+      { "nome": "Sai", "dano": "For+d4", "peso": "0.5", "custo": 1, "observacoes": "Arremesso (3/6/12). +1 Desarmar.", "originalName": "Sai" },
+      { "nome": "Segadeira", "dano": "For+d8", "peso": "5", "custo": 18, "forcaMin": "d6", "observacoes": "Duas Mãos. PA 1.", "originalName": "Scythe" }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Terrestres e Aéreos",
+    "origem": "FANTASIABUSCATRILHA",
+    "itens": [
+      { "nome": "Aeronave", "tamanho": 8, "resistencia": 14, "tripulacao": "5+20", "custo": 50000, "velMaxima": 20, "observacoes": "Dirigível. Movimentação 4. Subida 0.", "originalName": "Airship" },
+      { "nome": "Dragão Alquímico", "tamanho": 6, "resistencia": 14, "tripulacao": "1+4", "custo": 100000, "velMaxima": 30, "observacoes": "Veículo aéreo alquímico. Voo. Requer combustível.", "originalName": "Alchemical Dragon" },
+      { "nome": "Planador", "tamanho": 2, "resistencia": 6, "tripulacao": "1", "custo": 500, "velMaxima": 40, "observacoes": "Requer local alto para decolar.", "originalName": "Glider" },
+      { "nome": "Carroça", "tamanho": 4, "resistencia": 10, "tripulacao": "1+4", "custo": 50, "velMaxima": 8, "observacoes": "Tração animal.", "originalName": "Cart" },
+      { "nome": "Trenó", "tamanho": 3, "resistencia": 8, "tripulacao": "1+2", "custo": 20, "velMaxima": 12, "observacoes": "Tração animal. Neve.", "originalName": "Sled" }
+    ]
+  },
+  {
+    "tipo": "Materiais Especiais",
+    "subtipo": "Metais e Madeiras",
+    "origem": "FANTASIABUSCATRILHA",
+    "itens": [
+      {
+        "nome": "Adamante",
+        "custo": 3000,
+        "peso": "—",
+        "observacoes": "Adiciona PA +1 a armas. Armaduras ignoram 2 pontos de PA. Aumenta dureza.",
+        "originalName": "Adamantine"
+      },
+      {
+        "nome": "Ferro Frio",
+        "custo": "Dobro do item",
+        "peso": "—",
+        "observacoes": "Útil contra fadas e demônios. Aumenta Dureza em 2.",
+        "originalName": "Cold Iron"
+      },
+      {
+        "nome": "Mithral",
+        "custo": "Variável",
+        "peso": "Metade do item",
+        "observacoes": "Reduz Força Mínima em um dado. Armas custam 100x, Armaduras 10x.",
+        "originalName": "Mithral"
+      },
+      {
+        "nome": "Madeira Negra",
+        "custo": "+10 po/kg",
+        "peso": "Metade do item",
+        "observacoes": "Aumenta Dureza em 2. Versão obra-prima.",
+        "originalName": "Darkwood"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Especiais",
+    "subtipo": "Exóticas",
+    "origem": "FANTASIABUSCATRILHA",
+    "itens": [
+      {
+        "nome": "Faca Estrela",
+        "dano": "For+d4",
+        "peso": "1,5",
+        "custo": 24,
+        "observacoes": "Alcance 3/6/12. Aparar +1. Pode ser usada corpo a corpo ou arremesso.",
+        "originalName": "Starknife"
+      },
+      {
+        "nome": "Espada do Templo",
+        "dano": "For+d6",
+        "peso": "1,5",
+        "custo": 30,
+        "observacoes": "Usada por monges. Aparar +1.",
+        "originalName": "Temple Sword"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento de Aventura",
+    "subtipo": "Específicos do Cenário",
+    "origem": "FANTASIABUSCATRILHA",
+    "itens": [
+      {
+        "nome": "Bússola de Guia",
+        "custo": 500,
+        "peso": "0,5",
+        "observacoes": "Concede +2 em Sobrevivência para navegação. Pode emitir luz (comando).",
+        "originalName": "Wayfinder"
+      },
+      {
+        "nome": "Pedra Trovão",
+        "custo": 30,
+        "peso": "0,5",
+        "observacoes": "Explode em MME. Vigor ou Abalado e Surdo.",
+        "originalName": "Thunderstone"
+      },
+      {
+        "nome": "Bastão Solar",
+        "custo": 2,
+        "peso": "0,5",
+        "observacoes": "Luz em 10m por 6 horas.",
+        "originalName": "Sunrod"
+      },
+      {
+        "nome": "Bolsa Enredapé",
+        "custo": 50,
+        "peso": "2",
+        "observacoes": "Cola alvo ao chão (Tamanho 3 ou menor). Distraído e preso (Atletismo para soltar).",
+        "originalName": "Tanglefoot Bag"
+      }
+    ]
   }
 ]
