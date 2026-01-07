@@ -69,6 +69,7 @@ class CriadorState {
     var signoAdgSelecionado by mutableStateOf<String?>(null)
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
+    var idVantagemBuscatrilhaGratuita by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
     val vantagensAutomaticasDoElemento = mutableStateListOf<String>()
@@ -726,6 +727,10 @@ class CriadorState {
 
     fun removerVantagem(v: Vantagem) {
         vantagensSelecionadas.remove(v)
+
+        if (v.id == idVantagemBuscatrilhaGratuita) {
+            idVantagemBuscatrilhaGratuita = null
+        }
 
         if (v.nome.keyify() == "CAVALEIRO") {
             equipamentosComprados.removeAll { it.origemGrant == "CAVALEIRO" }
@@ -1831,6 +1836,30 @@ class CriadorState {
 
         // 0) Exclusividade de Classe/Prestígio (Buscatrilha)
         if (vantagensSelecionadas.classeExclusivaBloqueada(v)) return false
+
+        // 0.1) Multiclasse: apenas uma nova vantagem de Classe/Prestígio por Estágio
+        if (compendioBuscatrilhaAtivo && (v.categoria == Categoria.CLASSE || v.categoria == Categoria.PRESTIGIO)) {
+            val stageCheck = if (emProgresso) estagioAtual().nome else "Novato"
+
+            // Conta quantas vantagens dessa categoria já foram pegas NO MESMO ESTÁGIO
+            val takenInThisStage = vantagensSelecionadas.count { sel ->
+                 if (sel.categoria != Categoria.CLASSE && sel.categoria != Categoria.PRESTIGIO) return@count false
+
+                 // Se foi pega via XP, verificamos o estágio da compra
+                 val fromXp = advancementHistory.filterIsInstance<com.example.swadebuilder.model.AdvancementAction.SpendOnAdvantage>()
+                     .find { it.advantageId == sel.id }
+
+                 val stageAcquired = fromXp?.stageName ?: "Novato"
+                 stageAcquired == stageCheck
+            }
+
+            // Se já pegou uma neste estágio, não pode pegar outra
+            if (takenInThisStage >= 1) {
+                // Exceção: se estamos desmarcando a própria vantagem que acabamos de selecionar (handled by removeVantagem usually)
+                // Mas aqui é "podeSelecionar", então assume que estamos querendo adicionar MAIS uma.
+                return false
+            }
+        }
 
         // 1) Regra especial: O MELHOR QUE HÁ
         if (key == "o_melhor_que_ha") {
@@ -3177,7 +3206,8 @@ class CriadorState {
                 portraitScaleType = portraitScaleType,
                 portraitAlignment = portraitAlignment,
                 signoAdgSelecionado = signoAdgSelecionado,
-                gnomoPericiaEscolhida = gnomoPericiaEscolhida
+                gnomoPericiaEscolhida = gnomoPericiaEscolhida,
+                idVantagemBuscatrilhaGratuita = idVantagemBuscatrilhaGratuita
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -3280,6 +3310,7 @@ class CriadorState {
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
         gnomoPericiaEscolhida = snapshot.selecoes.gnomoPericiaEscolhida
+        idVantagemBuscatrilhaGratuita = snapshot.selecoes.idVantagemBuscatrilhaGratuita
 
         dinheiro = snapshot.recursos.dinheiro
         famaManual = snapshot.recursos.famaManual
@@ -3466,5 +3497,36 @@ class CriadorState {
         rebuildAllPericiaStacks(feedbackMessages)
         updateEmProgressoFlag()
         syncPoderesSelecionadosFromSlots()
+    }
+
+    fun tentarComprarVantagem(
+        vant: Vantagem,
+        feedback: (String) -> Unit
+    ) {
+        // Verifica se é o slot grátis de Buscatrilha
+        if (compendioBuscatrilhaAtivo &&
+            idVantagemBuscatrilhaGratuita == null &&
+            (vant.categoria == Categoria.CLASSE || vant.categoria == Categoria.PROFISSIONAL || vant.categoria == Categoria.ANTECEDENTE)
+        ) {
+            idVantagemBuscatrilhaGratuita = vant.id
+            applyVantagemDinheiro(vant)
+            adicionarVantagem(vant)
+            rebuildAllPericiaStacks(enforcePoolLimit = !vant.isBrutamontes())
+            feedback("Vantagem ${vant.nome} selecionada como Bônus de Classe Pathfinder.")
+            return
+        }
+
+        // Fluxo normal
+        val enforcePoolLimit = !vant.isBrutamontes()
+        if (vant.nome.contains("Pontos de Poder", true) || vant.nomeExibicao.contains("Pontos de Poder", true)) {
+            comprarPontoDePoder(vant)
+            feedback("Vantagem ${vant.nome} (Pontos de Poder) adicionada.")
+        } else {
+            applyVantagemDinheiro(vant)
+            adicionarVantagem(vant)
+            pontosVantagem--
+            rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
+            feedback("Vantagem ${vant.nome} adicionada.")
+        }
     }
 }

@@ -660,18 +660,9 @@ fun VantagensContent(
                                         onUserFeedback()
                                         viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
                                     } else {
-                                        val enforcePoolLimit = !vant.isBrutamontes()
-                                        if (vant.nome.contains("Pontos de Poder", true) || vant.nomeExibicao.contains("Pontos de Poder", true)) {
-                                            state.comprarPontoDePoder(vant)
+                                        state.tentarComprarVantagem(vant) { msg ->
                                             onUserFeedback()
-                                            viewModel.logFeedback("Vantagem ${vant.nome} (Pontos de Poder) adicionada.")
-                                        } else {
-                                            state.applyVantagemDinheiro(vant)
-                                            state.adicionarVantagem(vant)
-                                            state.pontosVantagem--
-                                            state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
-                                            onUserFeedback()
-                                            viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
+                                            viewModel.logFeedback(msg)
                                         }
                                     }
                                 }
@@ -743,20 +734,11 @@ fun VantagensContent(
                                         if (state.advantageAdvancementInProgress) {
                                             viewModel.selectAdvantageForAdvancement(vant)
                                             onUserFeedback()
-                                        viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
-                                        } else {
-                                            val enforcePoolLimit = !vant.isBrutamontes()
-                                            if (vant.nome.contains("Pontos de Poder", true) || vant.nomeExibicao.contains("Pontos de Poder", true)) {
-                                                state.comprarPontoDePoder(vant)
-                                                onUserFeedback()
-                                            viewModel.logFeedback("Vantagem ${vant.nome} (Pontos de Poder) adicionada.")
-                                            } else {
-                                                state.applyVantagemDinheiro(vant)
-                                                state.adicionarVantagem(vant)
-                                                state.pontosVantagem--
-                                                state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
-                                                onUserFeedback()
                                             viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
+                                        } else {
+                                            state.tentarComprarVantagem(vant) { msg ->
+                                                onUserFeedback()
+                                                viewModel.logFeedback(msg)
                                             }
                                         }
                                     }
@@ -821,9 +803,9 @@ fun VantagensContent(
                                 if (state.advantageAdvancementInProgress) {
                                     viewModel.selectAdvantageForAdvancement(novaVantagem)
                                 } else {
-                                    state.adicionarVantagem(novaVantagem)
-                                    state.pontosVantagem--
-                                    state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
+                                    state.tentarComprarVantagem(novaVantagem) { msg ->
+                                        // Feedback handled by caller logic flow if needed, or ignored for dialogs
+                                    }
                                 }
                                 onUserFeedback()
                             }
@@ -892,10 +874,9 @@ fun VantagensContent(
                                 if (state.advantageAdvancementInProgress) {
                                     viewModel.selectAdvantageForAdvancement(vantToAdd)
                                 } else {
-                                    state.applyVantagemDinheiro(vantToAdd)
-                                    state.adicionarVantagem(vantToAdd)
-                                    state.pontosVantagem--
-                                    state.rebuildAllPericiaStacks(enforcePoolLimit = true)
+                                    state.tentarComprarVantagem(vantToAdd) { msg ->
+                                        // Feedback handled by caller
+                                    }
                                 }
 
                                 if (state.anotacoes.isNotBlank()) {
@@ -1019,10 +1000,9 @@ fun VantagensContent(
                         ChoiceDialog(
                             options = knowledgeOptions,
                             onConfirm = { choice ->
-                            val enforcePoolLimit = !vant.isBrutamontes()
-                            state.vantagensSelecionadas += vant.copy(choice = choice)
-                            state.pontosVantagem--
-                            state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
+                            state.tentarComprarVantagem(vant.copy(choice = choice)) { msg ->
+                                viewModel.logFeedback(msg)
+                            }
                             showChoiceDialog = false
                             pendingVantagem = null
                             onUserFeedback()
@@ -1092,10 +1072,9 @@ fun VantagensContent(
                     ChoiceDialog(
                         options = validOptions,
                         onConfirm = { choice ->
-                            val enforcePoolLimit = !vant.isBrutamontes()
-                            state.adicionarVantagem(vant.copy(choice = choice))
-                            state.pontosVantagem--
-                            state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
+                            state.tentarComprarVantagem(vant.copy(choice = choice)) { msg ->
+                                viewModel.logFeedback(msg)
+                            }
                             showChoiceDialog = false
                             pendingVantagem = null
                             onUserFeedback()
