@@ -82,7 +82,6 @@ import java.util.Locale
 
 @Composable
 fun VantFilterDialog(
-    allOrigens: List<String>,
     allEstagios: List<String>,
     allAtributos: List<String>,
     allPericias: List<String>,
@@ -101,23 +100,6 @@ fun VantFilterDialog(
                     .verticalScroll(rememberScrollState())
                     .padding(end = 8.dp)
             ) {
-                Text("Origem", fontWeight = FontWeight.Bold)
-                allOrigens.forEach { o ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
-                            checked = o in current.origens,
-                            onCheckedChange = {
-                                val s = current.origens.toMutableSet()
-                                if (it) s += o else s -= o
-                                onChange(current.copy(origens = s))
-                            }
-                        )
-                        Spacer(Modifier.size(4.dp))
-                        Text(o.toEditionDisplayName())
-                    }
-                }
-                Spacer(Modifier.size(8.dp))
-
                 Text("Estágio", fontWeight = FontWeight.Bold)
                 allEstagios.forEach { e ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -448,7 +430,6 @@ fun VantagensContent(
         }
 
         if (showFilterDialog) {
-            val allOrigens = listaVantagensAtivas.map { it.origem.ifBlank { "BASICO" }.uppercase() }.distinct().sorted()
             val allEstagios = listaDeEstagios.map { it.nome }
             val allAtributos = mapaAtributosDisplay.values.toList()
             val requiredPericias = listaVantagensAtivas.flatMap { vant ->
@@ -461,7 +442,6 @@ fun VantagensContent(
                 .filter { it in requiredPericias }
 
             VantFilterDialog(
-                allOrigens = allOrigens,
                 allEstagios = allEstagios,
                 allAtributos = allAtributos,
                 allPericias = allPericias,

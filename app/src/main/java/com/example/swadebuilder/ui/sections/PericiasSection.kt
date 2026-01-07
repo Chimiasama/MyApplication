@@ -59,6 +59,7 @@ import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.mapaPericiasDescricao
 import com.example.swadebuilder.model.EspecializacoesDto
+import com.example.swadebuilder.model.SAVAGE_PATHFINDER_BLOCKED_SKILLS
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
@@ -139,7 +140,7 @@ fun PericiasContent(
             } else if (state.compendioBuscatrilhaAtivo) {
                 // Pathfinder exclusions
                 val n = per.nome.keyify()
-                n != "ELETRONICA" && n != "FOCO" && n != "HACKEAR" && n != "PSIONICOS"
+                n != "FOCO" && n !in SAVAGE_PATHFINDER_BLOCKED_SKILLS
             } else {
                 true
             }

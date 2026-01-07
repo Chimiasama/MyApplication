@@ -268,3 +268,11 @@ val SAVAGE_PATHFINDER_ALLOWLIST = setOf(
     "Veleiro",
     "Carrinho (150 kg cap.)", "Carrinho de mão"
 )
+
+val SAVAGE_PATHFINDER_BLOCKED_SKILLS = setOf(
+    "PSIONICOS",
+    "ELETRONICA",
+    "HACKEAR",
+    "CIENCIA",
+    "PILOTAR"
+)
