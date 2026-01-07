@@ -467,7 +467,12 @@ fun AncestralidadesSection(
 
                                 var expanded by remember { mutableStateOf(false) }
                                 val smartsSkills = state.periciasFiltradasPorCompendio
-                                    .filter { it.atributo == "ASTUCIA" && !it.nome.keyify().contains("IDIOMAS") }
+                                    .filter {
+                                        val key = it.nome.keyify()
+                                        it.atributo == "ASTUCIA" &&
+                                        !key.contains("IDIOMAS") &&
+                                        (!compendioBuscatrilhaAtivo || (key != "ALQUIMIA" && key != "CIENCIA ESTRANHA"))
+                                    }
                                     .sortedBy { it.nome }
 
                                 Box {
