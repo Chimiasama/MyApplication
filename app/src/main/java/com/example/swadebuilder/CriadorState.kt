@@ -707,6 +707,99 @@ class CriadorState {
         return true
     }
 
+    fun isPathfinderEligible(v: Vantagem): Boolean {
+        if (!compendioBuscatrilhaAtivo) return false
+        return when (v.categoria) {
+            Categoria.CLASSE, Categoria.PROFISSIONAL, Categoria.ANTECEDENTE -> true
+            else -> false
+        }
+    }
+
+    val pathfinderSlotAvailable: Boolean by derivedStateOf {
+        if (!compendioBuscatrilhaAtivo) false
+        else vantagensSelecionadas.none { isPathfinderEligible(it) }
+    }
+
+    private fun Vantagem.isBrutamontes(): Boolean {
+        val idKey = id.keyify()
+        val nameKey = nome.keyify()
+        return idKey == "BRUTAMONTES" || idKey == "BRAWNY" || nameKey == "BRUTAMONTES" || nameKey == "BRAWNY"
+    }
+
+    fun comprarVantagem(v: Vantagem, onFeedback: (String) -> Unit = {}): Boolean {
+        // Special case: Power Points
+        val isPowerPoint = v.nome.contains("Pontos de Poder", true) || v.nomeExibicao.contains("Pontos de Poder", true)
+
+        if (isPowerPoint) {
+            if (!podeSelecionar(v)) return false
+            comprarPontoDePoder(v)
+            onFeedback("Vantagem ${v.nome} (Pontos de Poder) adicionada.")
+            return true
+        }
+
+        // Standard Advantage
+        val isFreePathfinder = pathfinderSlotAvailable && isPathfinderEligible(v)
+
+        if (!isFreePathfinder && pontosVantagem <= 0) return false // No points
+
+        applyVantagemDinheiro(v)
+        adicionarVantagem(v)
+
+        if (isFreePathfinder) {
+            onFeedback("Vantagem ${v.nome} adicionada (Slot de Classe Gratuito).")
+        } else {
+            pontosVantagem--
+            onFeedback("Vantagem ${v.nome} adicionada.")
+        }
+
+        val enforcePoolLimit = !v.isBrutamontes()
+        rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
+
+        return true
+    }
+
+    fun venderVantagem(v: Vantagem, onFeedback: (String) -> Unit = {}) {
+        val isPowerPoint = v.nome.contains("Pontos de Poder", true) || v.nomeExibicao.contains("Pontos de Poder", true)
+
+        if (isPowerPoint) {
+            removerPontosDePoder(v)
+            pontosVantagem++
+            rebuildAllPericiaStacks(enforcePoolLimit = true)
+            onFeedback("Vantagem ${v.nome} removida.")
+            return
+        }
+
+        // Standard Advantage
+        val wasEligible = isPathfinderEligible(v)
+
+        removeVantagemDinheiro(v)
+        removerVantagem(v)
+
+        var shouldRefund = true
+
+        if (wasEligible && compendioBuscatrilhaAtivo) {
+            // Count remaining eligible edges
+            val remainingEligible = vantagensSelecionadas.count { isPathfinderEligible(it) }
+            // If we have ZERO eligible edges left, then we removed the one that was occupying the free slot.
+            // No refund.
+            if (remainingEligible == 0) {
+                shouldRefund = false
+            }
+        }
+
+        if (shouldRefund) {
+            pontosVantagem++
+        }
+
+        if (v.id == "o_melhor_que_ha") {
+            poderFavoritoId = null
+        }
+
+        val enforcePoolLimit = !v.isBrutamontes()
+        rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
+        onFeedback(if (shouldRefund) "Vantagem removida (+1 PV)." else "Vantagem gratuita removida (Slot liberado).")
+    }
+
     fun adicionarVantagem(v: Vantagem) {
         vantagensSelecionadas.add(v)
 
