@@ -225,6 +225,15 @@ fun VantagensContent(
                 }
             }
 
+            if (state.compendioBuscatrilhaAtivo) {
+                val forbiddenIds = setOf(
+                    "antecedente_arcano_ciencia_estranha",
+                    "antecedente_arcano_psionicos",
+                    "antecedente_arcano_dom"
+                )
+                if (vant.id in forbiddenIds) return@filter false
+            }
+
             if (state.compendioArteDaGuerraAtivo) {
                 if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
                     return@filter false
