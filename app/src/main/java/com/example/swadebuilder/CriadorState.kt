@@ -209,6 +209,18 @@ class CriadorState {
     // PROMPT 5: Notas de Perícia (Sci-Fi / Wiseguys)
     val notasPericia: SnapshotStateMap<String, String> = mutableStateMapOf()
 
+    // PROMPT 6: Idiomas Pathfinder
+    val idiomasPathfinder = mutableStateListOf<String>()
+
+    val maxIdiomasPathfinder: Int
+        get() {
+            val astucia = valoresAtributos["ASTUCIA"]?.intValue ?: 4
+            // Regra: Comum + Metade do Dado de Astúcia
+            // d4 -> 2, d6 -> 3, d8 -> 4...
+            // Astúcia 4 (d4) / 2 = 2. 1 + 2 = 3.
+            return 1 + (astucia / 2)
+        }
+
     val origemPersonagem: String?
         get() = listaAncestralidadesJson
             .firstOrNull { it.nome.keyify() == ancestralidade }
@@ -940,7 +952,7 @@ class CriadorState {
         get() {
             return if (compendioBuscatrilhaAtivo) {
                 // If Pathfinder active:
-                val forbiddenIds = setOf("ELETRONICA", "FOCO", "HACKEAR", "PSIONICOS")
+                val forbiddenIds = setOf("ELETRONICA", "FOCO", "HACKEAR", "PSIONICOS", "IDIOMAS")
                 listaPericias.filter { per ->
                     val key = per.nome.keyify()
                     key !in forbiddenIds && per.origem != "ARTE_DA_GUERRA"
@@ -3250,7 +3262,8 @@ class CriadorState {
                 compCostStackPorPericia = compCostStackPorPericia.mapKeys { it.key.nome }.mapValues { it.value.toList() },
                 especializacoesPorPericia = especializacoesPorPericia.toMap(),
                 // PROMPT 5: Persist Skill Notes
-                notasPericia = notasPericia.toMap()
+                notasPericia = notasPericia.toMap(),
+                idiomasPathfinder = idiomasPathfinder.toList()
             ),
             selecoes = SnapshotSelecoes(
                 vantagens = vantagensSelecionadas.map { AdvantageSnapshot(it.id, it.choice) },
@@ -3453,6 +3466,10 @@ class CriadorState {
 
         notasPericia.clear()
         notasPericia.putAll(snapshot.pericias.notasPericia ?: emptyMap())
+
+        idiomasPathfinder.clear()
+        idiomasPathfinder.addAll(snapshot.pericias.idiomasPathfinder)
+
         syncIdiomaSlots()
         syncJutsuSlots()
 

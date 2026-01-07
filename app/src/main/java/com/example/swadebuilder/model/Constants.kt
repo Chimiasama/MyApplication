@@ -95,4 +95,27 @@ object Constants {
     // Powers
     const val POWER_SUPER_SORCERY = "SUPERFEITICARIA"
     const val POWER_SUPER_SCIENCE = "SUPERCIENCIA"
+
+    val IDIOMAS_GOLARION = listOf(
+        "Demoníaca",
+        "Aklo",
+        "Aquan",
+        "Auran",
+        "Celestial",
+        "Dracônico",
+        "Druidíco",
+        "Enânico",
+        "Élfico",
+        "Gigante",
+        "Gnomo",
+        "Goblin",
+        "Gnoll",
+        "Halfling",
+        "Ignan",
+        "Diabólica",
+        "Orc",
+        "Sylvan",
+        "Terran",
+        "Subterrâneo"
+    ).sorted()
 }

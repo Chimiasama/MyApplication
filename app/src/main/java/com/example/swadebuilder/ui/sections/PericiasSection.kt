@@ -58,6 +58,7 @@ import com.example.swadebuilder.calcularPericiaRules
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.mapaPericiasDescricao
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbLegacyActions
@@ -110,6 +111,9 @@ fun PericiasContent(
     var idiomaPendingCost by rememberSaveable { mutableStateOf(0) }
     var idiomaEditMode by rememberSaveable { mutableStateOf(false) }
 
+    // PROMPT 6: Pathfinder Languages
+    var showPathfinderLangDialog by rememberSaveable { mutableStateOf(false) }
+
     val idosoActive = state.idosoBonusSp > 0
 
     val valorColWidthDp = 80.dp
@@ -160,6 +164,77 @@ fun PericiasContent(
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
+                // PROMPT 6: Pathfinder Languages UI
+                if (state.compendioBuscatrilhaAtivo) {
+                    val maxLangs = state.maxIdiomasPathfinder
+                    // "Comum" is always 1. The list holds extras.
+                    // Capacity is for total languages (Common + extras).
+                    // So allowed extras = maxLangs - 1
+                    val extrasAllowed = (maxLangs - 1).coerceAtLeast(0)
+                    val currentExtras = state.idiomasPathfinder.size
+
+                    androidx.compose.material3.Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        colors = androidx.compose.material3.CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                        )
+                    ) {
+                        Column(modifier = Modifier.padding(8.dp)) {
+                            Text(
+                                text = "Idiomas (Pathfinder)",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = "Capacidade: ${1 + currentExtras} / $maxLangs (Baseado em Astúcia)",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Spacer(Modifier.height(4.dp))
+
+                            // Display Tags
+                            com.example.swadebuilder.ui.components.FlowRow(
+                                mainAxisSpacing = 4.dp,
+                                crossAxisSpacing = 4.dp
+                            ) {
+                                // Common Tag (Fixed)
+                                SpecChip(label = "Comum", isPrincipal = true, onEdit = null, onRemove = null)
+
+                                // Extras
+                                state.idiomasPathfinder.forEach { lang ->
+                                    SpecChip(
+                                        label = lang,
+                                        isPrincipal = false,
+                                        onEdit = null,
+                                        onRemove = {
+                                            state.idiomasPathfinder.remove(lang)
+                                            onUserFeedback()
+                                        }
+                                    )
+                                }
+
+                                // Add Button
+                                if (currentExtras < extrasAllowed) {
+                                    IconButton(
+                                        onClick = { showPathfinderLangDialog = true },
+                                        modifier = Modifier.size(32.dp).background(MaterialTheme.colorScheme.primary, RoundedCornerShape(16.dp))
+                                    ) {
+                                        Icon(
+                                            Icons.Default.Add,
+                                            contentDescription = "Adicionar Idioma",
+                                            tint = MaterialTheme.colorScheme.onPrimary,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 SectionHeader(
                     onHelpClick          = null,
                     centerText           = "Pontos de Perícia: ${state.pontosPericia}",
@@ -555,6 +630,37 @@ fun PericiasContent(
                 }
             }
         }
+    }
+
+    // PROMPT 6: Pathfinder Language Dialog
+    if (showPathfinderLangDialog) {
+        AlertDialog(
+            onDismissRequest = { showPathfinderLangDialog = false },
+            title = { Text("Selecionar Idioma") },
+            text = {
+                val available = Constants.IDIOMAS_GOLARION.filter { it !in state.idiomasPathfinder }
+                LazyColumn {
+                    items(available) { lang ->
+                        TextButton(
+                            onClick = {
+                                state.idiomasPathfinder.add(lang)
+                                onUserFeedback()
+                                showPathfinderLangDialog = false
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(lang, textAlign = TextAlign.Start, modifier = Modifier.fillMaxWidth())
+                        }
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showPathfinderLangDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 
     if (showIdiomaDialog && idiomaTarget != null) {

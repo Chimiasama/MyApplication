@@ -93,7 +93,8 @@ data class SnapshotPericias(
     val spCostStackPorPericia: Map<String, List<Int>>, 
     val compCostStackPorPericia: Map<String, List<Int>>, 
     val especializacoesPorPericia: Map<String, EspecializacoesDto>,
-    val notasPericia: Map<String, String>? = null
+    val notasPericia: Map<String, String>? = null,
+    val idiomasPathfinder: List<String> = emptyList()
 )
 
 @Serializable

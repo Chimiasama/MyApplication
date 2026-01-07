@@ -324,6 +324,8 @@ class CriadorViewModel : ViewModel() {
         state.maisPontosPericias = maisPontosPericias
         state.usarEspecializacoesDePericia = usarEspecializacoesDePericia
         state.especializacoesPorPericia.clear()
+        state.idiomasPathfinder.clear()
+        state.notasPericia.clear()
 
         // Fix: Force transition from empty string to ensure aplicarAncestralidade logic runs fully
         state.ancestralidade = ""
