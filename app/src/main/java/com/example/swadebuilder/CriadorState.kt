@@ -70,6 +70,7 @@ class CriadorState {
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
+    var idVantagemBuscatrilhaGratuita by mutableStateOf<String?>(null)
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
     val vantagensAutomaticasDoElemento = mutableStateListOf<String>()
 
@@ -3177,7 +3178,8 @@ class CriadorState {
                 portraitScaleType = portraitScaleType,
                 portraitAlignment = portraitAlignment,
                 signoAdgSelecionado = signoAdgSelecionado,
-                gnomoPericiaEscolhida = gnomoPericiaEscolhida
+                gnomoPericiaEscolhida = gnomoPericiaEscolhida,
+                idVantagemBuscatrilhaGratuita = idVantagemBuscatrilhaGratuita
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -3280,6 +3282,7 @@ class CriadorState {
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
         gnomoPericiaEscolhida = snapshot.selecoes.gnomoPericiaEscolhida
+        idVantagemBuscatrilhaGratuita = snapshot.selecoes.idVantagemBuscatrilhaGratuita
 
         dinheiro = snapshot.recursos.dinheiro
         famaManual = snapshot.recursos.famaManual

@@ -393,6 +393,7 @@ class CriadorViewModel : ViewModel() {
         state.arcanoSnapshotAntesDaCompra = null
         state.mostrandoPoderesProgresso = false
         state.mostrandoAtributosProgresso = false
+        state.idVantagemBuscatrilhaGratuita = null
 
         // ─────────────────────────────────────────────────────────────
         // RESET COMPLETO DE SUPERS – NÃO VAZAR ENTRE PERSONAGENS
@@ -443,8 +444,10 @@ class CriadorViewModel : ViewModel() {
         state.rebuildAllPericiaStacks(mutableListOf())
 
         // Points logic has changed; handled in applying ancestry/reset
-        state.pontosVantagem =
-            if (state.vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" }) 1 else 0
+        state.pontosVantagem = if (
+            state.vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" } ||
+            state.ancestralidade == "Humano (Buscatrilha)"
+        ) 1 else 0
 
         if (state.optRegraCosaNostra) {
             state.aplicarRegrasWiseguys()
@@ -941,12 +944,20 @@ class CriadorViewModel : ViewModel() {
                         state.removeVantagemDinheiro(currentAdvantage)
                         state.removerVantagem(currentAdvantage)
                     }
-                    state.pontosVantagem++
+
+                    // Se a vantagem sendo removida era a gratuita do Buscatrilha:
+                    // Limpa o ID e NÃO devolve pontos (pois não custou nada).
+                    if (currentAdvantage.id == state.idVantagemBuscatrilhaGratuita) {
+                        state.idVantagemBuscatrilhaGratuita = null
+                    } else {
+                        state.pontosVantagem++
+                    }
                 }
             }
 
             // Fix: Use copy() to avoid shared reference mutation
             val vantagemCopia = vantagem.copy()
+            val cat = vantagemCopia.categoria
 
             if (vantagemCopia.nome.keyify() == "CAVALEIRO" && !vantagemCopia.choice.isNullOrBlank()) {
                 state.adicionarVantagemCavaleiro(vantagemCopia, vantagemCopia.choice!!)
@@ -956,7 +967,20 @@ class CriadorViewModel : ViewModel() {
                 state.applyVantagemDinheiro(vantagemCopia)
                 state.adicionarVantagem(vantagemCopia)
             }
-            state.pontosVantagem--
+
+            // Verifica se deve ser gratuita no Buscatrilha
+            val isBuscatrilhaFreeSlot = state.compendioBuscatrilhaAtivo &&
+                    state.idVantagemBuscatrilhaGratuita == null &&
+                    (cat == Categoria.CLASSE ||
+                            cat == Categoria.PROFISSIONAL ||
+                            cat == Categoria.ANTECEDENTE)
+
+            if (isBuscatrilhaFreeSlot) {
+                state.idVantagemBuscatrilhaGratuita = vantagemCopia.id
+                // Não desconta ponto de vantagem
+            } else {
+                state.pontosVantagem--
+            }
             state.advantageForCurrentAdvancement = vantagemCopia.id
 
             // Check if it's "Novos Poderes" to trigger the flow
@@ -1114,7 +1138,12 @@ class CriadorViewModel : ViewModel() {
                         state.removeVantagemDinheiro(vant)
                         state.removerVantagem(vant)
                     }
-                    state.pontosVantagem++
+
+                    if (vant.id == state.idVantagemBuscatrilhaGratuita) {
+                        state.idVantagemBuscatrilhaGratuita = null
+                    } else {
+                        state.pontosVantagem++
+                    }
                 }
             }
             state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
@@ -1163,6 +1192,9 @@ class CriadorViewModel : ViewModel() {
                 // Reverte o gasto E a concessão do ponto de vantagem
                 // Usa lastOrNull para pegar a instância mais recente (importante para Pontos de Poder que pode ter várias)
                 val advantage = state.vantagensSelecionadas.lastOrNull { it.id == lastAction.advantageId }
+
+                val wasFree = advantage != null && advantage.id == state.idVantagemBuscatrilhaGratuita
+
                 if (advantage != null) {
                     if (advantage.nome.contains("Pontos de Poder", true)) {
                         state.removerPontosDePoder(advantage, estagioOverride = lastAction.stageName)
@@ -1170,11 +1202,18 @@ class CriadorViewModel : ViewModel() {
                         state.removeVantagemDinheiro(advantage)
                         state.removerVantagem(advantage)
                     }
+
+                    if (wasFree) {
+                        state.idVantagemBuscatrilhaGratuita = null
+                        // Se era gratuita, não gastamos o ponto na compra, então temos um ponto "sobrando" (do grant).
+                        // Precisamos remover esse ponto para voltar ao estado original.
+                        state.pontosVantagem = (state.pontosVantagem - 1).coerceAtLeast(0)
+                    }
                 }
                 lastAction.arcanoKey?.let { arcKey ->
                     state.restoreArcanoSlots(arcKey, lastAction.previousArcanoSlots)
                 }
-                // Não decrementamos pontosVantagem aqui porque:
+                // Não decrementamos pontosVantagem (se paga) aqui porque:
                 // 1) Ao remover a vantagem da lista, estamos "estornando" o gasto (o que incrementaria +1).
                 // 2) Ao desfazer o avanço, estamos removendo a concessão do ponto (o que decrementaria -1).
                 // Saldo líquido = 0. Então basta não mexer em pontosVantagem.
