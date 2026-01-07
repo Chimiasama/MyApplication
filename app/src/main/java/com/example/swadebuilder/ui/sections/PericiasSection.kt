@@ -6,6 +6,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -196,9 +197,9 @@ fun PericiasContent(
                             Spacer(Modifier.height(4.dp))
 
                             // Display Tags
-                            com.example.swadebuilder.ui.components.FlowRow(
-                                mainAxisSpacing = 4.dp,
-                                crossAxisSpacing = 4.dp
+                            FlowRow(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
                                 // Common Tag (Fixed)
                                 SpecChip(label = "Comum", isPrincipal = true, onEdit = null, onRemove = null)
