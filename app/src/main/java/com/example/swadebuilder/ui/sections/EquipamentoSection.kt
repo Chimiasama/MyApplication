@@ -53,6 +53,7 @@ import com.example.swadebuilder.model.EquipFilter
 import com.example.swadebuilder.model.EquipSuperType
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.model.SAVAGE_PATHFINDER_ALLOWLIST
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.PbLegacyActions
@@ -60,6 +61,7 @@ import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.components.StandardEquipamentoItem
+import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.toSentenceCase
@@ -173,7 +175,7 @@ private data class EquipamentoListEntry(
 
 @Composable
 fun EquipFilterDialog(
-    allOrigens: List<String>,
+    availableSuperTypes: List<EquipSuperType>,
     current: EquipFilter,
     onChange: (EquipFilter) -> Unit,
     onDismiss: () -> Unit
@@ -201,25 +203,8 @@ fun EquipFilterDialog(
                 }
                 Spacer(Modifier.size(8.dp))
 
-                Text("Origem", fontWeight = FontWeight.Bold)
-                allOrigens.forEach { o ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
-                            checked = o in current.origens,
-                            onCheckedChange = {
-                                val s = current.origens.toMutableSet()
-                                if (it) s += o else s -= o
-                                onChange(current.copy(origens = s))
-                            }
-                        )
-                        Spacer(Modifier.size(4.dp))
-                        Text(o.toEditionDisplayName())
-                    }
-                }
-                Spacer(Modifier.size(8.dp))
-
                 Text("Categoria", fontWeight = FontWeight.Bold)
-                EquipSuperType.entries.sortedBy { it.order }.forEach { t ->
+                availableSuperTypes.forEach { t ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = t in current.superTipos,
@@ -305,6 +290,15 @@ fun EquipamentoSection(
     // Accordion State for browse mode (keyed by SuperType label)
     val expandedTypeMap = state.equipExpandedTypes
 
+    // Pre-calculate allowed keys set for performance
+    val pathfinderAllowedKeys = remember(compendioBuscatrilhaAtivo) {
+        if (compendioBuscatrilhaAtivo) {
+            SAVAGE_PATHFINDER_ALLOWLIST.map { it.keyify() }.toSet()
+        } else {
+            emptySet()
+        }
+    }
+
     SectionCard(
         title    = "Equipamento",
         icon     = Icons.Default.ShoppingCart,
@@ -344,13 +338,38 @@ fun EquipamentoSection(
                 rawCategories.map { mapCategory(it) }
             }
 
-            // Available SuperTypes for Chips
-            val availableSuperTypes = remember(mappedCategories) {
-                mappedCategories.map { it.superType }.distinct().sortedBy { it.order }
+
+            // Helper function for filtering logic
+            fun isItemAllowedByPathfinderRule(item: EquipamentoItem, origemKey: String): Boolean {
+                if (!compendioBuscatrilhaAtivo) return true
+                // If the item is explicitly from Pathfinder module, allow it
+                if (origemKey == "FANTASIABUSCATRILHA" || origemKey == "BUSCATRILHA") return true
+
+                // If item is from BASE, strictly enforce AllowList
+                if (origemKey == "BASICO") {
+                    // Check if name is in AllowList (normalized)
+                    val nameKey = item.nome.keyify()
+                    return nameKey in pathfinderAllowedKeys
+                }
+
+                // Default DENY for everything else (Sci-Fi, Horror, WW2, etc.)
+                // This ensures strict mode really hides tanks, lasers, etc.
+                return false
             }
-            // Available Origins for Filter Dialog
-            val allOrigens = remember(rawCategories) {
-                rawCategories.map { (it.origem?.ifBlank { "BASICO" } ?: "BASICO").uppercase() }.distinct().sorted()
+
+            // Available SuperTypes for Chips (Filtered by Pathfinder rules if active)
+            val availableSuperTypes = remember(mappedCategories, compendioBuscatrilhaAtivo) {
+                mappedCategories
+                    .filter { mapped ->
+                        // Filter categories that contain at least one valid item for the current mode
+                        mapped.original.itens.any { item ->
+                             val origemKey = (item.origem?.ifBlank { mapped.original.origem ?: "BASICO" } ?: (mapped.original.origem ?: "BASICO")).uppercase()
+                             isItemAllowedByPathfinderRule(item, origemKey)
+                        }
+                    }
+                    .map { it.superType }
+                    .distinct()
+                    .sortedBy { it.order }
             }
 
 
@@ -559,11 +578,9 @@ fun EquipamentoSection(
             // 5. List Content
             if (isSearching) {
                 // Flat List Mode
-                val finalFlatList = remember(mappedCategories, filter, selectedSuperTypes, searchQuery, dinheiro, usaRiqueza) {
+                val finalFlatList = remember(mappedCategories, filter, selectedSuperTypes, searchQuery, dinheiro, usaRiqueza, compendioBuscatrilhaAtivo) {
                     mappedCategories.filter { mapped ->
-                        val catOrigem = mapped.original.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
-                        // Filter Check
-                        if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@filter false
+                        // Filter Check (removed Origin logic)
                         if (filter.superTipos.isNotEmpty() && mapped.superType !in filter.superTipos) return@filter false
                         if (selectedSuperTypes.isNotEmpty() && mapped.superType !in selectedSuperTypes) return@filter false
                         true
@@ -577,14 +594,14 @@ fun EquipamentoSection(
                             val q = searchQuery.semAcentos().lowercase()
                             val n = item.nomeExibicao.semAcentos().lowercase()
                             val original = item.nome.semAcentos().lowercase()
-                            n.contains(q) || original.contains(q)
+                            (n.contains(q) || original.contains(q))
                         }.map { item ->
                             val origemKey = (item.origem?.ifBlank { mapped.original.origem ?: "BASICO" } ?: (mapped.original.origem ?: "BASICO")).uppercase()
                             EquipamentoListEntry(item, origemKey, origemKey.toEditionDisplayName())
                         }
                     }.filter { entry ->
-                        // Item-level origin filter (for cases where item origin differs from category origin)
-                        if (filter.origens.isNotEmpty() && entry.origemKey !in filter.origens) return@filter false
+                        // Strict Pathfinder Filter
+                        if (!isItemAllowedByPathfinderRule(entry.item, entry.origemKey)) return@filter false
                         true
                     }
                 }
@@ -618,21 +635,10 @@ fun EquipamentoSection(
                 }
 
                 // --- SOLUÇÃO DEFINITIVA: Pré-calcular os dados filtrados ---
-                val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, dinheiro) {
+                val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, dinheiro, compendioBuscatrilhaAtivo) {
                     // Mapeia cada SuperType para seus dados filtrados
                     groupsBySuperType.mapValues { (_, categoriesInSuper) ->
-                        // Verifica se o supertipo tem conteúdo visível com base nos filtros
-                        val hasVisibleContent = categoriesInSuper.any { mapped ->
-                            val catOrigem = mapped.original.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
-                            filter.origens.isEmpty() || catOrigem in filter.origens
-                        }
-
-                        if (!hasVisibleContent) {
-                            // Se não houver conteúdo, retorne nulo para pular este supertipo
-                            return@mapValues null
-                        }
-
-                        // Se houver conteúdo, processe os subgrupos e itens
+                        // Process the subgroups directly to check for content
                         val groups = categoriesInSuper.groupBy { it.group }.mapValues { (_, catsInGroup) ->
                             catsInGroup.groupBy { it.subGroup }.mapValues { (_, catsInSub) ->
                                 // Filtra os itens dentro do subgrupo
@@ -649,13 +655,16 @@ fun EquipamentoSection(
                                     } else {
                                         true
                                     }
-                                    val hasOrigemValida = filter.origens.isEmpty() || entry.origemKey in filter.origens
-                                    isAcessivel && hasOrigemValida
+
+                                    // Strict Pathfinder Filter
+                                    val isAllowedByPathfinder = isItemAllowedByPathfinderRule(entry.item, entry.origemKey)
+
+                                    isAcessivel && isAllowedByPathfinder
                                 }.sortedBy { it.item.nome }
                             }.filter { it.value.isNotEmpty() } // Remove subgrupos vazios
                         }.filter { it.value.isNotEmpty() } // Remove grupos vazios
 
-                        groups // Retorna os grupos e subgrupos processados
+                        if (groups.isEmpty()) null else groups
                     }
                 }
 
@@ -667,6 +676,7 @@ fun EquipamentoSection(
                         if (filter.superTipos.isNotEmpty() && superType !in filter.superTipos) return@forEach
 
                         val groupData = visibleContentData[superType] ?: return@forEach
+                        if (groupData.isEmpty()) return@forEach // Double check empty groups
 
                         val isExpanded = expandedTypeMap[superType.label] ?: false
                         CollapsibleSection(
@@ -760,7 +770,7 @@ fun EquipamentoSection(
             }
             if (showFilterDialog) {
                 EquipFilterDialog(
-                    allOrigens = allOrigens,
+                    availableSuperTypes = availableSuperTypes,
                     current = filter,
                     onChange = { state.equipFilter = it },
                     onDismiss = { showFilterDialog = false }

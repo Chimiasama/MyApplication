@@ -82,7 +82,6 @@ import java.util.Locale
 
 @Composable
 fun VantFilterDialog(
-    allOrigens: List<String>,
     allEstagios: List<String>,
     allAtributos: List<String>,
     allPericias: List<String>,
@@ -101,23 +100,6 @@ fun VantFilterDialog(
                     .verticalScroll(rememberScrollState())
                     .padding(end = 8.dp)
             ) {
-                Text("Origem", fontWeight = FontWeight.Bold)
-                allOrigens.forEach { o ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
-                            checked = o in current.origens,
-                            onCheckedChange = {
-                                val s = current.origens.toMutableSet()
-                                if (it) s += o else s -= o
-                                onChange(current.copy(origens = s))
-                            }
-                        )
-                        Spacer(Modifier.size(4.dp))
-                        Text(o.toEditionDisplayName())
-                    }
-                }
-                Spacer(Modifier.size(8.dp))
-
                 Text("Estágio", fontWeight = FontWeight.Bold)
                 allEstagios.forEach { e ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -448,7 +430,6 @@ fun VantagensContent(
         }
 
         if (showFilterDialog) {
-            val allOrigens = listaVantagensAtivas.map { it.origem.ifBlank { "BASICO" }.uppercase() }.distinct().sorted()
             val allEstagios = listaDeEstagios.map { it.nome }
             val allAtributos = mapaAtributosDisplay.values.toList()
             val requiredPericias = listaVantagensAtivas.flatMap { vant ->
@@ -456,12 +437,26 @@ fun VantagensContent(
                         vant.requisitos.periciaMinOpcional.keys +
                         if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
             }.distinct()
+
+            // Filter available skills based on active compendiums (using PericiasContent logic)
+            val visibleSkills = state.periciasComIdiomas().filter { per ->
+                if (per.nome.equals("Jutsu", ignoreCase = true)) {
+                    false // Handled via Lutar
+                } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
+                    state.compendioFantasiaAtivo || state.compendioHorrorAtivo
+                } else if (state.compendioBuscatrilhaAtivo) {
+                    val n = per.nome.keyify()
+                    n != "FOCO" && n !in com.example.swadebuilder.model.SAVAGE_PATHFINDER_BLOCKED_SKILLS
+                } else {
+                    true
+                }
+            }.map { it.nome }
+
             val allPericias = listaPericias
                 .map { it.nome }
-                .filter { it in requiredPericias }
+                .filter { it in requiredPericias && it in visibleSkills }
 
             VantFilterDialog(
-                allOrigens = allOrigens,
                 allEstagios = allEstagios,
                 allAtributos = allAtributos,
                 allPericias = allPericias,
