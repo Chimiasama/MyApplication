@@ -327,6 +327,28 @@ fun VantagensContent(
         Spacer(Modifier.size(4.dp))
 
         if (!state.emProgresso) {
+            if (state.compendioBuscatrilhaAtivo) {
+                val slotAvailable = state.pathfinderSlotAvailable
+                val (color, text) = if (slotAvailable) {
+                    MaterialTheme.colorScheme.primaryContainer to "Vantagem de Classe Gratuita DISPONÍVEL"
+                } else {
+                    MaterialTheme.colorScheme.surfaceVariant to "Vantagem de Classe Gratuita UTILIZADA"
+                }
+
+                Card(
+                    colors = CardDefaults.cardColors(containerColor = color),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = text,
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+                Spacer(Modifier.size(8.dp))
+            }
+
             if (usePbWalletRedesign) {
                 PbWalletBanner(
                     pcTotal = pcTotal,
@@ -515,22 +537,9 @@ fun VantagensContent(
                                 return@AssistChip
                             }
 
-                            val enforcePoolLimit = !vant.isBrutamontes()
-
-                            if (vant.nome.contains("Pontos de Poder", true) || vant.nomeExibicao.contains("Pontos de Poder", true)) {
-                                state.removerPontosDePoder(vant)
-                                state.pontosVantagem++
-                                state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
-                            } else {
-                                state.removeVantagemDinheiro(vant)
-                                state.removerVantagem(vant)
-                                state.pontosVantagem++
-                                state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
+                            state.venderVantagem(vant) { msg ->
+                                viewModel.logFeedback(msg)
                                 onUserFeedback()
-
-                                if (vant.id == "o_melhor_que_ha") {
-                                    state.poderFavoritoId = null
-                                }
                             }
 
                             if (arcKey != null && arcKey == state.arcanoEmCompraViaXpKey) {
@@ -660,18 +669,9 @@ fun VantagensContent(
                                         onUserFeedback()
                                         viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
                                     } else {
-                                        val enforcePoolLimit = !vant.isBrutamontes()
-                                        if (vant.nome.contains("Pontos de Poder", true) || vant.nomeExibicao.contains("Pontos de Poder", true)) {
-                                            state.comprarPontoDePoder(vant)
+                                        state.comprarVantagem(vant) { msg ->
+                                            viewModel.logFeedback(msg)
                                             onUserFeedback()
-                                            viewModel.logFeedback("Vantagem ${vant.nome} (Pontos de Poder) adicionada.")
-                                        } else {
-                                            state.applyVantagemDinheiro(vant)
-                                            state.adicionarVantagem(vant)
-                                            state.pontosVantagem--
-                                            state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
-                                            onUserFeedback()
-                                            viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
                                         }
                                     }
                                 }
@@ -745,18 +745,9 @@ fun VantagensContent(
                                             onUserFeedback()
                                         viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
                                         } else {
-                                            val enforcePoolLimit = !vant.isBrutamontes()
-                                            if (vant.nome.contains("Pontos de Poder", true) || vant.nomeExibicao.contains("Pontos de Poder", true)) {
-                                                state.comprarPontoDePoder(vant)
+                                        state.comprarVantagem(vant) { msg ->
+                                            viewModel.logFeedback(msg)
                                                 onUserFeedback()
-                                            viewModel.logFeedback("Vantagem ${vant.nome} (Pontos de Poder) adicionada.")
-                                            } else {
-                                                state.applyVantagemDinheiro(vant)
-                                                state.adicionarVantagem(vant)
-                                                state.pontosVantagem--
-                                                state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
-                                                onUserFeedback()
-                                            viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
                                             }
                                         }
                                     }
@@ -816,14 +807,13 @@ fun VantagensContent(
                             )
 
                             if (state.podeSelecionar(novaVantagem)) {
-                                val enforcePoolLimit = !novaVantagem.isBrutamontes()
-
                                 if (state.advantageAdvancementInProgress) {
                                     viewModel.selectAdvantageForAdvancement(novaVantagem)
                                 } else {
-                                    state.adicionarVantagem(novaVantagem)
-                                    state.pontosVantagem--
-                                    state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
+                                    state.comprarVantagem(novaVantagem) { msg ->
+                                        viewModel.logFeedback(msg)
+                                        onUserFeedback()
+                                    }
                                 }
                                 onUserFeedback()
                             }
@@ -891,11 +881,12 @@ fun VantagensContent(
 
                                 if (state.advantageAdvancementInProgress) {
                                     viewModel.selectAdvantageForAdvancement(vantToAdd)
+                                    onUserFeedback()
                                 } else {
-                                    state.applyVantagemDinheiro(vantToAdd)
-                                    state.adicionarVantagem(vantToAdd)
-                                    state.pontosVantagem--
-                                    state.rebuildAllPericiaStacks(enforcePoolLimit = true)
+                                    state.comprarVantagem(vantToAdd) { msg ->
+                                        viewModel.logFeedback(msg)
+                                        onUserFeedback()
+                                    }
                                 }
 
                                 if (state.anotacoes.isNotBlank()) {
@@ -1019,13 +1010,12 @@ fun VantagensContent(
                         ChoiceDialog(
                             options = knowledgeOptions,
                             onConfirm = { choice ->
-                            val enforcePoolLimit = !vant.isBrutamontes()
-                            state.vantagensSelecionadas += vant.copy(choice = choice)
-                            state.pontosVantagem--
-                            state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
+                            state.comprarVantagem(vant.copy(choice = choice)) { msg ->
+                                viewModel.logFeedback(msg)
+                                onUserFeedback()
+                            }
                             showChoiceDialog = false
                             pendingVantagem = null
-                            onUserFeedback()
                         },
                         onDismiss = {
                             showChoiceDialog = false
@@ -1092,13 +1082,12 @@ fun VantagensContent(
                     ChoiceDialog(
                         options = validOptions,
                         onConfirm = { choice ->
-                            val enforcePoolLimit = !vant.isBrutamontes()
-                            state.adicionarVantagem(vant.copy(choice = choice))
-                            state.pontosVantagem--
-                            state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
+                            state.comprarVantagem(vant.copy(choice = choice)) { msg ->
+                                viewModel.logFeedback(msg)
+                                onUserFeedback()
+                            }
                             showChoiceDialog = false
                             pendingVantagem = null
-                            onUserFeedback()
                         },
                         onDismiss = {
                             showChoiceDialog = false
@@ -1190,8 +1179,11 @@ private fun VantagemItem(
             .clickable(enabled = !locked) {
                 if (!locked) {
                     val conflitoMsg = state.mensagemConflitoParaVantagem(vant)
+
+                    val isPathfinderFree = state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)
+
                     when {
-                        state.pontosVantagem <= 0 -> onError("Sem PV disponível")
+                        !isPathfinderFree && state.pontosVantagem <= 0 -> onError("Sem PV disponível")
                         // PROMPT 4: Check class blocking specifically for error message
                         state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
                         conflitoMsg != null -> onError(conflitoMsg)
