@@ -325,7 +325,10 @@ class CriadorViewModel : ViewModel() {
         state.usarEspecializacoesDePericia = usarEspecializacoesDePericia
         state.especializacoesPorPericia.clear()
 
-        state.ancestralidade = if (state.compendioBuscatrilhaAtivo) "Humano (Buscatrilha)" else "HUMANOS"
+        // Fix: Force transition from empty string to ensure aplicarAncestralidade logic runs fully
+        state.ancestralidade = ""
+        val targetAncestralidade = if (state.compendioBuscatrilhaAtivo) "Humano (Buscatrilha)" else "HUMANOS"
+
         state.vantagensSelecionadas.clear()
         state.complicacoesSelecionadas.clear()
         state.reservasComplicacaoMaior.clear()
@@ -340,7 +343,7 @@ class CriadorViewModel : ViewModel() {
         }
         state.sectionsExpanded[com.example.swadebuilder.ui.MainSection.RESUMO] = true
 
-        state.aplicarAncestralidade(state.ancestralidade, mutableListOf())
+        state.aplicarAncestralidade(targetAncestralidade, mutableListOf())
 
         if (state.modoSupers) {
             listaVantagens.firstOrNull { it.id == "superpoderes" }?.let { sp ->
@@ -442,9 +445,8 @@ class CriadorViewModel : ViewModel() {
         }
         state.rebuildAllPericiaStacks(mutableListOf())
 
-        // Points logic has changed; handled in applying ancestry/reset
-        state.pontosVantagem =
-            if (state.vantagensAutomaticas.any { it.keyify() == "ADAPTAVEL" }) 1 else 0
+        // Note: Points logic (ADAPTAVEL +1 PV) is now handled correctly by aplicarAncestralidade
+        // because we force a transition from "" to targetAncestralidade.
 
         if (state.optRegraCosaNostra) {
             state.aplicarRegrasWiseguys()
