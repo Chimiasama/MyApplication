@@ -175,7 +175,7 @@ private data class EquipamentoListEntry(
 
 @Composable
 fun EquipFilterDialog(
-    allOrigens: List<String>,
+    availableSuperTypes: List<EquipSuperType>,
     current: EquipFilter,
     onChange: (EquipFilter) -> Unit,
     onDismiss: () -> Unit
@@ -203,25 +203,8 @@ fun EquipFilterDialog(
                 }
                 Spacer(Modifier.size(8.dp))
 
-                Text("Origem", fontWeight = FontWeight.Bold)
-                allOrigens.forEach { o ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
-                            checked = o in current.origens,
-                            onCheckedChange = {
-                                val s = current.origens.toMutableSet()
-                                if (it) s += o else s -= o
-                                onChange(current.copy(origens = s))
-                            }
-                        )
-                        Spacer(Modifier.size(4.dp))
-                        Text(o.toEditionDisplayName())
-                    }
-                }
-                Spacer(Modifier.size(8.dp))
-
                 Text("Categoria", fontWeight = FontWeight.Bold)
-                EquipSuperType.entries.sortedBy { it.order }.forEach { t ->
+                availableSuperTypes.forEach { t ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = t in current.superTipos,
@@ -355,13 +338,38 @@ fun EquipamentoSection(
                 rawCategories.map { mapCategory(it) }
             }
 
-            // Available SuperTypes for Chips
-            val availableSuperTypes = remember(mappedCategories) {
-                mappedCategories.map { it.superType }.distinct().sortedBy { it.order }
+
+            // Helper function for filtering logic
+            fun isItemAllowedByPathfinderRule(item: EquipamentoItem, origemKey: String): Boolean {
+                if (!compendioBuscatrilhaAtivo) return true
+                // If the item is explicitly from Pathfinder module, allow it
+                if (origemKey == "FANTASIABUSCATRILHA" || origemKey == "BUSCATRILHA") return true
+
+                // If item is from BASE, strictly enforce AllowList
+                if (origemKey == "BASICO") {
+                    // Check if name is in AllowList (normalized)
+                    val nameKey = item.nome.keyify()
+                    return nameKey in pathfinderAllowedKeys
+                }
+
+                // Default DENY for everything else (Sci-Fi, Horror, WW2, etc.)
+                // This ensures strict mode really hides tanks, lasers, etc.
+                return false
             }
-            // Available Origins for Filter Dialog
-            val allOrigens = remember(rawCategories) {
-                rawCategories.map { (it.origem?.ifBlank { "BASICO" } ?: "BASICO").uppercase() }.distinct().sorted()
+
+            // Available SuperTypes for Chips (Filtered by Pathfinder rules if active)
+            val availableSuperTypes = remember(mappedCategories, compendioBuscatrilhaAtivo) {
+                mappedCategories
+                    .filter { mapped ->
+                        // Filter categories that contain at least one valid item for the current mode
+                        mapped.original.itens.any { item ->
+                             val origemKey = (item.origem?.ifBlank { mapped.original.origem ?: "BASICO" } ?: (mapped.original.origem ?: "BASICO")).uppercase()
+                             isItemAllowedByPathfinderRule(item, origemKey)
+                        }
+                    }
+                    .map { it.superType }
+                    .distinct()
+                    .sortedBy { it.order }
             }
 
 
@@ -567,35 +575,12 @@ fun EquipamentoSection(
 
             Spacer(Modifier.padding(vertical = 4.dp))
 
-            // Helper function for filtering logic
-            fun isItemAllowedByPathfinderRule(item: EquipamentoItem, origemKey: String): Boolean {
-                if (!compendioBuscatrilhaAtivo) return true
-                // If the item is explicitly from Pathfinder module, allow it
-                if (origemKey == "FANTASIABUSCATRILHA" || origemKey == "BUSCATRILHA") return true
-
-                // If item is from BASE, strictly enforce AllowList
-                if (origemKey == "BASICO") {
-                    // Check if name is in AllowList (normalized)
-                    val nameKey = item.nome.keyify()
-                    return nameKey in pathfinderAllowedKeys
-                }
-
-                // For other compendiums (e.g. SCI_FI), allow if the module is active
-                // This is handled by the upstream 'rawCategories' filter which already excludes inactive modules.
-                // However, strictly speaking, user said "hide anything outside list".
-                // But logically, if user ENABLED Sci-Fi + Pathfinder, they likely want cross-over.
-                // The main issue is BASICO leaking modern items.
-                return true
-            }
-
             // 5. List Content
             if (isSearching) {
                 // Flat List Mode
                 val finalFlatList = remember(mappedCategories, filter, selectedSuperTypes, searchQuery, dinheiro, usaRiqueza, compendioBuscatrilhaAtivo) {
                     mappedCategories.filter { mapped ->
-                        val catOrigem = mapped.original.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
-                        // Filter Check
-                        if (filter.origens.isNotEmpty() && catOrigem !in filter.origens) return@filter false
+                        // Filter Check (removed Origin logic)
                         if (filter.superTipos.isNotEmpty() && mapped.superType !in filter.superTipos) return@filter false
                         if (selectedSuperTypes.isNotEmpty() && mapped.superType !in selectedSuperTypes) return@filter false
                         true
@@ -615,12 +600,8 @@ fun EquipamentoSection(
                             EquipamentoListEntry(item, origemKey, origemKey.toEditionDisplayName())
                         }
                     }.filter { entry ->
-                        // Item-level origin filter (for cases where item origin differs from category origin)
-                        if (filter.origens.isNotEmpty() && entry.origemKey !in filter.origens) return@filter false
-
                         // Strict Pathfinder Filter
                         if (!isItemAllowedByPathfinderRule(entry.item, entry.origemKey)) return@filter false
-
                         true
                     }
                 }
@@ -657,18 +638,7 @@ fun EquipamentoSection(
                 val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, dinheiro, compendioBuscatrilhaAtivo) {
                     // Mapeia cada SuperType para seus dados filtrados
                     groupsBySuperType.mapValues { (_, categoriesInSuper) ->
-                        // Verifica se o supertipo tem conteúdo visível com base nos filtros
-                        val hasVisibleContent = categoriesInSuper.any { mapped ->
-                            val catOrigem = mapped.original.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
-                            filter.origens.isEmpty() || catOrigem in filter.origens
-                        }
-
-                        if (!hasVisibleContent) {
-                            // Se não houver conteúdo, retorne nulo para pular este supertipo
-                            return@mapValues null
-                        }
-
-                        // Se houver conteúdo, processe os subgrupos e itens
+                        // Process the subgroups directly to check for content
                         val groups = categoriesInSuper.groupBy { it.group }.mapValues { (_, catsInGroup) ->
                             catsInGroup.groupBy { it.subGroup }.mapValues { (_, catsInSub) ->
                                 // Filtra os itens dentro do subgrupo
@@ -685,17 +655,16 @@ fun EquipamentoSection(
                                     } else {
                                         true
                                     }
-                                    val hasOrigemValida = filter.origens.isEmpty() || entry.origemKey in filter.origens
 
                                     // Strict Pathfinder Filter
                                     val isAllowedByPathfinder = isItemAllowedByPathfinderRule(entry.item, entry.origemKey)
 
-                                    isAcessivel && hasOrigemValida && isAllowedByPathfinder
+                                    isAcessivel && isAllowedByPathfinder
                                 }.sortedBy { it.item.nome }
                             }.filter { it.value.isNotEmpty() } // Remove subgrupos vazios
                         }.filter { it.value.isNotEmpty() } // Remove grupos vazios
 
-                        groups // Retorna os grupos e subgrupos processados
+                        if (groups.isEmpty()) null else groups
                     }
                 }
 
@@ -801,7 +770,7 @@ fun EquipamentoSection(
             }
             if (showFilterDialog) {
                 EquipFilterDialog(
-                    allOrigens = allOrigens,
+                    availableSuperTypes = availableSuperTypes,
                     current = filter,
                     onChange = { state.equipFilter = it },
                     onDismiss = { showFilterDialog = false }
