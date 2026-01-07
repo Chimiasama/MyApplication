@@ -679,14 +679,19 @@ fun VantagensContent(
                                             onUserFeedback()
                                             viewModel.logFeedback("Vantagem ${vant.nome} (Pontos de Poder) adicionada.")
                                         } else {
-                                            state.applyVantagemDinheiro(vant)
                                             val success = state.tentarComprarVantagem(vant)
                                             if (success) {
+                                                state.applyVantagemDinheiro(vant)
                                                 state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                                                 onUserFeedback()
                                                 viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
                                             } else {
-                                                onError("Pontos insuficientes ou restrição.")
+                                                tempErrorMsg = "Pontos insuficientes ou restrição."
+                                                showTempError = true
+                                                scope.launch {
+                                                    delay(2_000)
+                                                    showTempError = false
+                                                }
                                             }
                                         }
                                     }
@@ -759,22 +764,27 @@ fun VantagensContent(
                                         if (state.advantageAdvancementInProgress) {
                                             viewModel.selectAdvantageForAdvancement(vant)
                                             onUserFeedback()
-                                            viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
+                                        viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
                                         } else {
                                             val enforcePoolLimit = !vant.isBrutamontes()
                                             if (vant.nome.contains("Pontos de Poder", true) || vant.nomeExibicao.contains("Pontos de Poder", true)) {
                                                 state.comprarPontoDePoder(vant)
                                                 onUserFeedback()
-                                                viewModel.logFeedback("Vantagem ${vant.nome} (Pontos de Poder) adicionada.")
+                                            viewModel.logFeedback("Vantagem ${vant.nome} (Pontos de Poder) adicionada.")
                                             } else {
-                                                state.applyVantagemDinheiro(vant)
                                                 val success = state.tentarComprarVantagem(vant)
                                                 if (success) {
+                                                state.applyVantagemDinheiro(vant)
                                                     state.rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
                                                     onUserFeedback()
                                                     viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
                                                 } else {
-                                                    onError("Pontos insuficientes ou restrição.")
+                                                    tempErrorMsg = "Pontos insuficientes ou restrição."
+                                                    showTempError = true
+                                                    scope.launch {
+                                                        delay(2_000)
+                                                        showTempError = false
+                                                    }
                                                 }
                                             }
                                         }
@@ -915,9 +925,9 @@ fun VantagensContent(
                                 if (state.advantageAdvancementInProgress) {
                                     viewModel.selectAdvantageForAdvancement(vantToAdd)
                                 } else {
-                                    state.applyVantagemDinheiro(vantToAdd)
                                     val success = state.tentarComprarVantagem(vantToAdd)
                                     if (success) {
+                                        state.applyVantagemDinheiro(vantToAdd)
                                         state.rebuildAllPericiaStacks(enforcePoolLimit = true)
                                     }
                                 }
