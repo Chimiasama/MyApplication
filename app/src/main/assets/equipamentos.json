@@ -5455,7 +5455,7 @@
   },
   {
     "tipo": "Armas Especiais",
-    "subtipo": "Exóticas",
+    "subtipo": "Medievais",
     "origem": "FANTASIABUSCATRILHA",
     "itens": [
       {
@@ -5465,14 +5465,6 @@
         "custo": 24,
         "observacoes": "Alcance 3/6/12. Aparar +1. Pode ser usada corpo a corpo ou arremesso.",
         "originalName": "Starknife"
-      },
-      {
-        "nome": "Espada do Templo",
-        "dano": "For+d6",
-        "peso": "1,5",
-        "custo": 30,
-        "observacoes": "Usada por monges. Aparar +1.",
-        "originalName": "Temple Sword"
       }
     ]
   },
@@ -6321,21 +6313,6 @@
     "origem": "WISEGUYS",
     "itens": [
       {
-        "nome": "Coquetel Molotov",
-        "dano": "2d6 a 3d6",
-        "distancia": "4/8/16",
-        "peso": "1",
-        "custo": 5,
-        "observacoes": "Dano de Fogo em Modelo Pequeno de Explosão. Alvos podem pegar fogo."
-      },
-      {
-        "nome": "Garrote",
-        "dano": "For",
-        "peso": "0.1",
-        "custo": 2,
-        "observacoes": "Requer ataque surpresa ou Agarrar. Se mantido, causa Fadiga/Dano automático por sufocamento. Silencioso."
-      },
-      {
         "nome": "Canivete Automático (Switchblade)",
         "dano": "For+d4",
         "peso": "0.5",
@@ -6349,16 +6326,6 @@
     "subtipo": "Terrestres",
     "origem": "WISEGUYS",
     "itens": [
-      {
-        "nome": "Caminhão Blindado",
-        "tamanho": 6,
-        "resistencia": "16(4)",
-        "armadura": 4,
-        "velMaxima": 90,
-        "tripulacao": "2+4",
-        "custo": 60000,
-        "observacoes": "Usado para transporte de valores. Janelas à prova de balas."
-      },
       {
         "nome": "Limusine",
         "tamanho": 6,
@@ -6441,99 +6408,6 @@
       { "nome": "Planador", "tamanho": 2, "resistencia": 6, "tripulacao": "1", "custo": 500, "velMaxima": 40, "observacoes": "Requer local alto para decolar.", "originalName": "Glider" },
       { "nome": "Carroça", "tamanho": 4, "resistencia": 10, "tripulacao": "1+4", "custo": 50, "velMaxima": 8, "observacoes": "Tração animal.", "originalName": "Cart" },
       { "nome": "Trenó", "tamanho": 3, "resistencia": 8, "tripulacao": "1+2", "custo": 20, "velMaxima": 12, "observacoes": "Tração animal. Neve.", "originalName": "Sled" }
-    ]
-  },
-  {
-    "tipo": "Materiais Especiais",
-    "subtipo": "Metais e Madeiras",
-    "origem": "FANTASIABUSCATRILHA",
-    "itens": [
-      {
-        "nome": "Adamante",
-        "custo": 3000,
-        "peso": "—",
-        "observacoes": "Adiciona PA +1 a armas. Armaduras ignoram 2 pontos de PA. Aumenta dureza.",
-        "originalName": "Adamantine"
-      },
-      {
-        "nome": "Ferro Frio",
-        "custo": "Dobro do item",
-        "peso": "—",
-        "observacoes": "Útil contra fadas e demônios. Aumenta Dureza em 2.",
-        "originalName": "Cold Iron"
-      },
-      {
-        "nome": "Mithral",
-        "custo": "Variável",
-        "peso": "Metade do item",
-        "observacoes": "Reduz Força Mínima em um dado. Armas custam 100x, Armaduras 10x.",
-        "originalName": "Mithral"
-      },
-      {
-        "nome": "Madeira Negra",
-        "custo": "+10 po/kg",
-        "peso": "Metade do item",
-        "observacoes": "Aumenta Dureza em 2. Versão obra-prima.",
-        "originalName": "Darkwood"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Especiais",
-    "subtipo": "Exóticas",
-    "origem": "FANTASIABUSCATRILHA",
-    "itens": [
-      {
-        "nome": "Faca Estrela",
-        "dano": "For+d4",
-        "peso": "1,5",
-        "custo": 24,
-        "observacoes": "Alcance 3/6/12. Aparar +1. Pode ser usada corpo a corpo ou arremesso.",
-        "originalName": "Starknife"
-      },
-      {
-        "nome": "Espada do Templo",
-        "dano": "For+d6",
-        "peso": "1,5",
-        "custo": 30,
-        "observacoes": "Usada por monges. Aparar +1.",
-        "originalName": "Temple Sword"
-      }
-    ]
-  },
-  {
-    "tipo": "Equipamento de Aventura",
-    "subtipo": "Específicos do Cenário",
-    "origem": "FANTASIABUSCATRILHA",
-    "itens": [
-      {
-        "nome": "Bússola de Guia",
-        "custo": 500,
-        "peso": "0,5",
-        "observacoes": "Concede +2 em Sobrevivência para navegação. Pode emitir luz (comando).",
-        "originalName": "Wayfinder"
-      },
-      {
-        "nome": "Pedra Trovão",
-        "custo": 30,
-        "peso": "0,5",
-        "observacoes": "Explode em MME. Vigor ou Abalado e Surdo.",
-        "originalName": "Thunderstone"
-      },
-      {
-        "nome": "Bastão Solar",
-        "custo": 2,
-        "peso": "0,5",
-        "observacoes": "Luz em 10m por 6 horas.",
-        "originalName": "Sunrod"
-      },
-      {
-        "nome": "Bolsa Enredapé",
-        "custo": 50,
-        "peso": "2",
-        "observacoes": "Cola alvo ao chão (Tamanho 3 ou menor). Distraído e preso (Atletismo para soltar).",
-        "originalName": "Tanglefoot Bag"
-      }
     ]
   }
 ]
