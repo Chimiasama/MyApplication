@@ -211,7 +211,9 @@ fun VantagensContent(
                 val forbiddenIds = setOf(
                     "antecedente_arcano_ciencia_estranha",
                     "antecedente_arcano_psionicos",
-                    "antecedente_arcano_dom"
+                    "antecedente_arcano_dom",
+                    "rico",
+                    "podre_de_rico"
                 )
                 if (vant.id in forbiddenIds) return@filter false
             }

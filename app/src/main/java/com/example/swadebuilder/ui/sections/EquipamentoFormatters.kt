@@ -71,3 +71,25 @@ private val EquipamentoItem.passageiros
 
 private val EquipamentoItem.blindagem
     get() = this.resistencia
+
+fun formatCurrency(amount: Int, isPathfinder: Boolean): String {
+    if (isPathfinder) {
+        if (amount == 0) return "0 pc"
+        var remaining = amount
+        val pl = remaining / 1000
+        remaining %= 1000
+        val po = remaining / 100
+        remaining %= 100
+        val pp = remaining / 10
+        val pc = remaining % 10
+
+        return listOfNotNull(
+            if (pl > 0) "$pl pl" else null,
+            if (po > 0) "$po po" else null,
+            if (pp > 0) "$pp pp" else null,
+            if (pc > 0) "$pc pc" else null
+        ).joinToString(", ").ifEmpty { "0 pc" }
+    } else {
+        return "$ $amount"
+    }
+}

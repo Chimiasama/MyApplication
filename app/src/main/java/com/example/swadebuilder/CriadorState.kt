@@ -665,6 +665,23 @@ class CriadorState {
         return baseLimit + bonusCapacity
     }
 
+    fun gastarPcParaRecursos(): Boolean {
+        if (pontosComplicacao - pontosComplicacaoGastos < 1) return false
+        pontosComplicacaoGastos += 1
+        cpRecursosStack.add(Unit)
+        dinheiro += if (compendioBuscatrilhaAtivo) 60000 else 500
+        return true
+    }
+
+    fun devolverPcDeRecursos() {
+        if (cpRecursosStack.isNotEmpty()) {
+            cpRecursosStack.removeLast()
+            pontosComplicacaoGastos -= 1
+            val amount = if (compendioBuscatrilhaAtivo) 60000 else 500
+            dinheiro = (dinheiro - amount).coerceAtLeast(0)
+        }
+    }
+
     fun gastarPcParaVantagem(): Boolean {
         // custo de 2 PC para 1 PV
         if (pontosComplicacao - pontosComplicacaoGastos < 2) return false

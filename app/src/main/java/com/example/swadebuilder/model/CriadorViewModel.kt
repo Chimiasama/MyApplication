@@ -421,7 +421,7 @@ class CriadorViewModel : ViewModel() {
         state.naturalArmorFromRace = 0
         // ─────────────────────────────────────────────────────────────
 
-        state.dinheiro = 500
+        state.dinheiro = if (compendioBuscatrilhaAtivo) 30000 else 500
         state.progresso = 0
         state.progressosDisponiveis = 0
         state.stageXpSpent.keys.forEach { state.stageXpSpent[it] = 0 }
@@ -833,6 +833,19 @@ class CriadorViewModel : ViewModel() {
             custo = investment.cost,
             efeito = investment.effect
         )
+    }
+
+    fun gastarPontoComplicacaoEmRecursos() {
+        if (state.gastarPcParaRecursos()) {
+            val amount = if (state.compendioBuscatrilhaAtivo) "600 de ouro" else "$500"
+            logFeedback("1 Ponto de Complicação gasto em +$amount.")
+        }
+    }
+
+    fun desfazerPontoComplicacaoEmRecursos() {
+        state.devolverPcDeRecursos()
+        val amount = if (state.compendioBuscatrilhaAtivo) "600 de ouro" else "$500"
+        logFeedback("Gasto em recursos desfeito (-$amount).")
     }
 
     fun startSkillAdvancement(slotIndex: Int, stageName: String) {
