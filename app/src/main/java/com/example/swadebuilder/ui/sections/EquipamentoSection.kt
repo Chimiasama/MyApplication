@@ -173,30 +173,38 @@ private data class EquipamentoListEntry(
     val origemLabel: String
 )
 
-// Helper to parse costs like "10 po", "5 pp", "100"
-fun parseCostToGold(costJson: kotlinx.serialization.json.JsonElement?): Double {
-    if (costJson == null) return Double.MAX_VALUE
-    val content = (costJson as? JsonPrimitive)?.content ?: return Double.MAX_VALUE
+// Helper to parse costs into a single integer base unit.
+// For Pathfinder (Buscatrilha), this is copper pieces (pc).
+// For standard SWADE, this is dollars.
+fun parseCostInBaseUnit(
+    costJson: kotlinx.serialization.json.JsonElement?,
+    isPathfinder: Boolean
+): Int {
+    if (costJson == null) return Int.MAX_VALUE
+    val content = (costJson as? JsonPrimitive)?.content?.trim() ?: return Int.MAX_VALUE
+    if (content == "-") return 0
 
-    // If it's a plain number
-    content.toDoubleOrNull()?.let { return it }
-
-    // If it's a string like "10 po", "5 pp"
-    val parts = content.trim().split(" ")
-    if (parts.size >= 1) {
-        val value = parts[0].replace(",", ".").toDoubleOrNull() ?: return Double.MAX_VALUE
-        if (parts.size >= 2) {
-            val unit = parts[1].lowercase()
-            return when (unit) {
-                "po" -> value
-                "pp" -> value * 0.1
-                "pc" -> value * 0.01
-                else -> value // Default assume gold if unit unknown but text present
+    if (isPathfinder) {
+        val parts = content.split(" ")
+        if (parts.isNotEmpty()) {
+            // Remove thousand separators before parsing
+            val value = parts[0].replace(".", "").toIntOrNull() ?: return Int.MAX_VALUE
+            if (parts.size > 1) {
+                return when (parts[1].lowercase()) {
+                    "pl" -> value * 1000
+                    "po" -> value * 100
+                    "pp" -> value * 10
+                    "pc" -> value
+                    else -> value * 100 // Assume gold (po -> pc) if unit is weird
+                }
             }
+            return value * 100 // Assume gold (po -> pc) if no unit, which seems common
         }
-        return value
+        return Int.MAX_VALUE
+    } else {
+        // Standard system just uses integers
+        return content.toIntOrNull() ?: Int.MAX_VALUE
     }
-    return Double.MAX_VALUE
 }
 
 @Composable
@@ -402,7 +410,7 @@ fun EquipamentoSection(
             // 2. Header (Money)
             SectionHeader(
                 onHelpClick = null,
-                centerText = if (usaRiqueza) "Riqueza: d$dadoRiqueza" else "Dinheiro: $dinheiro",
+                centerText = if (usaRiqueza) "Riqueza: d$dadoRiqueza" else "Dinheiro: ${formatCurrency(dinheiro, compendioBuscatrilhaAtivo)}",
                 onCenterClick = null,
                 onListaCompletaClick = null,
                 listaCompletaText = ""
@@ -613,8 +621,8 @@ fun EquipamentoSection(
                     }.flatMap { mapped ->
                         mapped.original.itens.filter { item ->
                             if (filter.somenteAcessiveis) {
-                                val c = parseCostToGold(item.custo)
-                                if (!usaRiqueza && c > dinheiro.toDouble()) return@filter false
+                                val c = parseCostInBaseUnit(item.custo, compendioBuscatrilhaAtivo)
+                                if (!usaRiqueza && c > dinheiro) return@filter false
                             }
                             val q = searchQuery.semAcentos().lowercase()
                             val n = item.nomeExibicao.semAcentos().lowercase()
@@ -675,8 +683,8 @@ fun EquipamentoSection(
                                     }
                                 }.filter { entry ->
                                     val isAcessivel = if (filter.somenteAcessiveis) {
-                                        val c = parseCostToGold(entry.item.custo)
-                                        usaRiqueza || c <= dinheiro.toDouble()
+                                        val c = parseCostInBaseUnit(entry.item.custo, compendioBuscatrilhaAtivo)
+                                        usaRiqueza || c <= dinheiro
                                     } else {
                                         true
                                     }
