@@ -99,7 +99,7 @@ private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
     when (superType) {
         EquipSuperType.ARMAS -> {
             when {
-                t == "ARMAS PESSOAIS" || t == "ARMAS CORPO A CORPO" -> {
+                t == "ARMAS PESSOAIS" || t == "ARMAS CORPO A CORPO" || t == "ARMAS MEDIEVAIS" -> {
                     group = "Corpo a Corpo"
                 }
                 t == "ARMAS DE COMBATE À DISTÂNCIA" -> {
@@ -172,6 +172,32 @@ private data class EquipamentoListEntry(
     val origemKey: String,
     val origemLabel: String
 )
+
+// Helper to parse costs like "10 po", "5 pp", "100"
+fun parseCostToGold(costJson: kotlinx.serialization.json.JsonElement?): Double {
+    if (costJson == null) return Double.MAX_VALUE
+    val content = (costJson as? JsonPrimitive)?.content ?: return Double.MAX_VALUE
+
+    // If it's a plain number
+    content.toDoubleOrNull()?.let { return it }
+
+    // If it's a string like "10 po", "5 pp"
+    val parts = content.trim().split(" ")
+    if (parts.size >= 1) {
+        val value = parts[0].replace(",", ".").toDoubleOrNull() ?: return Double.MAX_VALUE
+        if (parts.size >= 2) {
+            val unit = parts[1].lowercase()
+            return when (unit) {
+                "po" -> value
+                "pp" -> value * 0.1
+                "pc" -> value * 0.01
+                else -> value // Default assume gold if unit unknown but text present
+            }
+        }
+        return value
+    }
+    return Double.MAX_VALUE
+}
 
 @Composable
 fun EquipFilterDialog(
@@ -587,9 +613,8 @@ fun EquipamentoSection(
                     }.flatMap { mapped ->
                         mapped.original.itens.filter { item ->
                             if (filter.somenteAcessiveis) {
-                                val c = (item.custo as? JsonPrimitive)?.content?.toIntOrNull()
-                                    ?: Int.MAX_VALUE
-                                if (!usaRiqueza && c > dinheiro) return@filter false
+                                val c = parseCostToGold(item.custo)
+                                if (!usaRiqueza && c > dinheiro.toDouble()) return@filter false
                             }
                             val q = searchQuery.semAcentos().lowercase()
                             val n = item.nomeExibicao.semAcentos().lowercase()
@@ -650,8 +675,8 @@ fun EquipamentoSection(
                                     }
                                 }.filter { entry ->
                                     val isAcessivel = if (filter.somenteAcessiveis) {
-                                        val c = (entry.item.custo as? JsonPrimitive)?.content?.toIntOrNull() ?: Int.MAX_VALUE
-                                        usaRiqueza || c <= dinheiro
+                                        val c = parseCostToGold(entry.item.custo)
+                                        usaRiqueza || c <= dinheiro.toDouble()
                                     } else {
                                         true
                                     }
