@@ -835,6 +835,19 @@ class CriadorViewModel : ViewModel() {
         )
     }
 
+    fun gastarPontoComplicacaoEmRecursos() {
+        if (state.gastarPcParaRecursos()) {
+            val amount = if (state.compendioBuscatrilhaAtivo) "600 de ouro" else "$500"
+            logFeedback("1 Ponto de Complicação gasto em +$amount.")
+        }
+    }
+
+    fun desfazerPontoComplicacaoEmRecursos() {
+        state.devolverPcDeRecursos()
+        val amount = if (state.compendioBuscatrilhaAtivo) "600 de ouro" else "$500"
+        logFeedback("Gasto em recursos desfeito (-$amount).")
+    }
+
     fun startSkillAdvancement(slotIndex: Int, stageName: String) {
         if (state.progressosDisponiveis >= 1) {
             resetUiState()

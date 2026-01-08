@@ -298,7 +298,11 @@ fun ComplicacoesSection(
                                 }
                                 "pobreza" -> {
                                     state.complicacoesSelecionadas.remove(comp)
-                                    state.dinheiro += 250
+                                    if(state.compendioBuscatrilhaAtivo){
+                                        state.dinheiro += 15000
+                                    }else{
+                                        state.dinheiro += 250
+                                    }
                                 }
                                 "obeso" -> {
                                     state.complicacoesSelecionadas.remove(comp)
@@ -517,6 +521,14 @@ fun ComplicacoesSection(
                                                             state.complicacoesSelecionadas[comp] = "Menor"
                                                             state.obesoBonusSize = 1
                                                             state.obesoMalusMov = 1
+                                                        }
+                                                        "pobreza" -> {
+                                                            state.complicacoesSelecionadas[comp] = "Menor"
+                                                            if(state.compendioBuscatrilhaAtivo){
+                                                                state.dinheiro -= 15000
+                                                            }else{
+                                                                state.dinheiro -= 250
+                                                            }
                                                         }
                                                         else -> {
                                                             state.complicacoesSelecionadas[comp] = "Menor"
