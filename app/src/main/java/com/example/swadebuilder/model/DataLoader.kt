@@ -54,7 +54,10 @@ object DataLoader {
         val crystalEquip = runCatching {
             assets.readJsonList<EquipamentoCategoria>("equipamentos_crystal.json")
         }.getOrElse { emptyList() }
-        val allEquip = baseEquip + crystalEquip
+        val trilhadorEquip = runCatching {
+            assets.readJsonList<EquipamentoCategoria>("equipamentos_trilhador.json")
+        }.getOrElse { emptyList() }
+        val allEquip = baseEquip + crystalEquip + trilhadorEquip
 
         listaEquipamentos = allEquip.flatMap { it.itens }
 
