@@ -103,6 +103,106 @@
         "aparar": null,
         "observacoes": "",
         "origem": "BASICO"
+      },
+      {
+        "nome": "Aljava (guarda até 20 flechas/virotes)",
+        "custo": 25,
+        "peso": "1",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Cantil (odre)",
+        "custo": 5,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Corda, cânhamo (10 quadros/20 metros)",
+        "custo": 10,
+        "peso": "7,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Corda, nylon (10 quadros/20 metros)",
+        "custo": 10,
+        "peso": "1,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Lanterna (feixe de 10 quadros)",
+        "custo": 20,
+        "peso": "1,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Tocha (uma hora, 4 quadros de raio)",
+        "custo": 5,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Vela (uma hora, 2 quadros de raio)",
+        "custo": 1,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Corda de cânhamo (10 quadros/20m)",
+        "custo": 1,
+        "peso": "5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Suporta 150kg com segurança.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Mochila (vazia)",
+        "custo": 2,
+        "peso": "1",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Metade do peso efetivo do conteúdo.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Odre (vazio)",
+        "custo": 1,
+        "peso": "—",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "BASICO"
       }
     ]
   },

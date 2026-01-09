@@ -217,13 +217,6 @@
     "description": "Insano ou irracional. O jogador deve interpretar uma delusão específica. -2 em Persuadir com pessoas 'normais'."
   },
   {
-    "id": "comp_procurado_deadlands",
-    "name": "PROCURADO (Texas Rangers/Agência)",
-    "origem": "OESTE_ESTRANHO",
-    "severity": "maior",
-    "description": "Caçado por uma das grandes organizações da lei do Oeste. Recompensa alta pela cabeça."
-  },
-  {
     "id": "comp_sangramento_nasal",
     "name": "SANGRAMENTO NASAL",
     "origem": "ARTE_DA_GUERRA",
@@ -254,27 +247,6 @@
     "severity": "menor/maior",
     "description": "Existe um NPC idêntico que causa problemas e mancha sua reputação.",
     "observacoes": ""
-  },
-  {
-    "id": "comp_dessorna",
-    "name": "DESSORNA (Doença do Cristal)",
-    "origem": "CRYSTAL_HEART",
-    "severity": "maior",
-    "description": "Rejeição ao cristal. Deve fazer teste de Vigor diário ou sofre Fadiga. Falha crítica causa ferimento."
-  },
-  {
-    "id": "comp_sensibilidade_obsidiana",
-    "name": "SENSIBILIDADE À OBSIDIANA",
-    "origem": "CRYSTAL_HEART",
-    "severity": "menor",
-    "description": "A proximidade com Obsidiana causa -2 em todas as rolagens de Traço."
-  },
-  {
-    "id": "comp_inimigo_syn",
-    "name": "INIMIGO DA SYN",
-    "origem": "CRYSTAL_HEART",
-    "severity": "maior",
-    "description": "Caçado pela organização da Agência ou por grupos renegados que roubam cristais."
   },
   {
     "id": "comp_alma_penhorada",

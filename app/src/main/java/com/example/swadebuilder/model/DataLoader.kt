@@ -232,7 +232,10 @@ object DataLoader {
         val wiseguysComplicacoes = runCatching {
             loadJsonAsset<List<Complicacao>>(context, "wiseguys_complicacoes.json")
         }.getOrElse { emptyList() }
-        listaComplicacoes = coreComplicacoes + suppComplicacoes + fantasyComplicacoes + horrorComplicacoes + scifiComplicacoes + superComplicacoes + wiseguysComplicacoes
+        val crystalComplicacoes = runCatching {
+            loadJsonAsset<List<Complicacao>>(context, "complicacoes_crystal.json")
+        }.getOrElse { emptyList() }
+        listaComplicacoes = coreComplicacoes + suppComplicacoes + fantasyComplicacoes + horrorComplicacoes + scifiComplicacoes + superComplicacoes + wiseguysComplicacoes + crystalComplicacoes
 
         // 9. Ancestralidades
         val coreAncestries = assets.readJsonList<RacialModifier>("basico_listaancestralidade.json")
@@ -254,7 +257,10 @@ object DataLoader {
         val wiseguysAncestries = runCatching {
             assets.readJsonList<RacialModifier>("wiseguys_ancestralidades.json")
         }.getOrElse { emptyList() }
-        listaAncestralidadesJson = coreAncestries + suppAncestries + fantasyAncestries + horrorAncestries + scifiAncestries + superAncestries + wiseguysAncestries
+        val crystalAncestries = runCatching {
+            assets.readJsonList<RacialModifier>("ancestralidades_crystal.json")
+        }.getOrElse { emptyList() }
+        listaAncestralidadesJson = coreAncestries + suppAncestries + fantasyAncestries + horrorAncestries + scifiAncestries + superAncestries + wiseguysAncestries + crystalAncestries
 
         // 10. Monstros
         listaMonstroTemplates = assets
