@@ -155,6 +155,18 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "BASICO"
+    },
+    {
+      "nome": "Psiônicos",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Conjurar",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
     }
   ]
 }

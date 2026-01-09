@@ -66,26 +66,6 @@
     ]
   },
   {
-    "nome": "RAKASHANOS",
-    "origem": "SUPLEMENTO",
-    "descricao": "Humanoides de aparência felina. Podem ter as cores lustrosas dos tigres, a pele manchada dos leopardos ou a aparência exótica dos gatos siameses. Possuem garras e presas afiadas.",
-    "atributos": {
-      "Agilidade": 2
-    },
-    "pericias": {},
-    "vantagensGratis": [
-      "GARRAS",
-      "MORDIDA",
-      "VISÃO NO ESCURO",
-      "ÁGIL"
-    ],
-    "desvantagens": [
-      "INIMIGO RACIAL",
-      "NÃO SABE NADAR",
-      "SANGUINÁRIO"
-    ]
-  },
-  {
     "nome": "SÁURIOS",
     "origem": "SUPLEMENTO",
     "descricao": "Homens-lagarto normalmente vêm de selvas escaldantes, pântanos úmidos ou de desertos ermos, onde possuem civilizações ímpares desconhecidas por outras ancestralidades. Eles possuem uma pele escamosa que funciona como armadura natural (+2), mordidas poderosas e sentidos aprimorados (Prontidão), mas sofrem com o frio (Fraqueza Ambiental) e são vistos com desconfiança (Forasteiro Menor).",
@@ -100,36 +80,6 @@
     "desvantagens": [
       "FORASTEIRO (Menor)",
       "FRAQUEZA AMBIENTAL"
-    ]
-  },
-  {
-    "id": "anc_sauriano",
-    "nome": "Sauriano",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "SUPLEMENTO",
-    "atributos": {},
-    "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Armadura",
-        "descricao": "Pele escamosa +2."
-      },
-      {
-        "nome": "Sangue Frio",
-        "descricao": "-4 para resistir a efeitos de frio. Sofre dano extra."
-      },
-      {
-        "nome": "Garras",
-        "descricao": "For+d4."
-      },
-      {
-        "nome": "Mordida",
-        "descricao": "For+d4."
-      },
-      {
-        "nome": "Sentidos",
-        "descricao": "+2 em Perceber/Rastrear (olfato)."
-      }
     ]
   }
 ]

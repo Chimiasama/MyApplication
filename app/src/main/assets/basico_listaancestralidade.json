@@ -104,5 +104,55 @@
     "desvantagens": [
       "FORASTEIRO (Menor)"
     ]
+  },
+  {
+    "nome": "RAKASHANOS",
+    "origem": "BASICO",
+    "descricao": "Humanoides de aparência felina. Podem ter as cores lustrosas dos tigres, a pele manchada dos leopardos ou a aparência exótica dos gatos siameses. Possuem garras e presas afiadas.",
+    "atributos": {
+      "Agilidade": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "GARRAS",
+      "MORDIDA",
+      "VISÃO NO ESCURO",
+      "ÁGIL"
+    ],
+    "desvantagens": [
+      "INIMIGO RACIAL",
+      "NÃO SABE NADAR",
+      "SANGUINÁRIO"
+    ]
+  },
+  {
+    "id": "anc_sauriano",
+    "nome": "Sauriano",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "BASICO",
+    "atributos": {},
+    "pericias": {},
+    "habilidades": [
+      {
+        "nome": "Armadura",
+        "descricao": "Pele escamosa +2."
+      },
+      {
+        "nome": "Sangue Frio",
+        "descricao": "-4 para resistir a efeitos de frio. Sofre dano extra."
+      },
+      {
+        "nome": "Garras",
+        "descricao": "For+d4."
+      },
+      {
+        "nome": "Mordida",
+        "descricao": "For+d4."
+      },
+      {
+        "nome": "Sentidos",
+        "descricao": "+2 em Perceber/Rastrear (olfato)."
+      }
+    ]
   }
 ]

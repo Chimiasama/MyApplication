@@ -83,8 +83,6 @@ data class RacialModifierLite(
     val desvantagens: List<String> = emptyList()
 )
 
-private const val ASSET_ANCESTRALIDADES = "listaancestralidade.json"
-
 private fun RacialModifierLite.displayName(showOfficialNames: Boolean): String {
     return if (showOfficialNames && !originalName.isNullOrBlank()) {
         originalName
@@ -165,7 +163,7 @@ fun AncestralidadesSection(
         compendioSciFiAtivo,
         compendioCrystalHeartAtivo
     ) {
-        val all = context.loadJsonAsset<List<RacialModifier>>(ASSET_ANCESTRALIDADES)
+        val all = com.example.swadebuilder.listaAncestralidadesJson
         val pathfinderLabel = context.getString(R.string.sw_pathfinder_label)
 
         fun adjustName(nome: String): String {
