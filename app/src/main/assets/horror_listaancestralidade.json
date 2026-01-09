@@ -1,0 +1,23 @@
+[
+  {
+    "id": "anc_anjo_csv",
+    "nome": "Anjo",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "HORROR",
+    "atributos": {},
+    "pericias": {},
+    "desvantagens": [
+      "RECLUSO"
+    ],
+    "habilidades": [
+      {
+        "nome": "Asas de Anjo",
+        "descricao": "Voo (Movimentação 12). Pode retrair/estender as asas em 5 rodadas. Não pode nadar com asas. Limite de altura devido aos ventos do Limbo."
+      },
+      {
+        "nome": "Recluso",
+        "descricao": "-2 em todas as rolagens de Conhecimento Geral."
+      }
+    ]
+  }
+]

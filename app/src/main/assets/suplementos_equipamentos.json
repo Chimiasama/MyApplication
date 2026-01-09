@@ -5163,13 +5163,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Soro da Verdade",
-        "peso": "1",
-        "custo": 200,
-        "observacoes": "Vigor ou Distraído/Fatigado.",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Estojo de Instrumento (Arma)",
         "peso": "12",
         "custo": 50,

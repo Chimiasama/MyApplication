@@ -1,0 +1,1307 @@
+[
+  {
+    "id": "humor_acido",
+    "nome": "HUMOR ÁCIDO",
+    "categoria": "ANTECEDENTE",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Provocar": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Personagens com Humor Ácido podem usar sua perícia Provocar em vez de Espírito ao realizar testes de Medo (todos os modificadores se aplicam). Se conseguir uma ampliação, age como Suporte +1 para todos os aliados que realizem o mesmo teste de Medo[cite: 507, 508]."
+  },
+  {
+    "id": "implacavel",
+    "nome": "IMPLACÁVEL",
+    "categoria": "ANTECEDENTE",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Dedicada a derrotar o mal. Podem agir com uma única ação e uma penalidade de -2 quando em Estado Abalado[cite: 511]."
+  },
+  {
+    "id": "veterano_do_mundo_sombrio",
+    "nome": "VETERANO DO MUNDO SOMBRIO",
+    "categoria": "ANTECEDENTE",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Começam o jogo no Estágio Experiente (ou um Estágio maior que os demais), ganhando automaticamente quatro Progressos na criação. Deve rolar na tabela de Veterano do Mundo Sombrio para determinar um infortúnio passado[cite: 514, 515]."
+  },
+  {
+    "id": "bravura",
+    "nome": "BRAVURA",
+    "categoria": "LIDERANCA",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Persuadir": 8
+      },
+      "vantagens_previas": [
+        "comando"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Todos os aliados dentro do Raio de Comando ganham uma rerrolagem gratuita de um teste de Medo malsucedido[cite: 517]."
+  },
+  {
+    "id": "conjurador_silencioso_horror",
+    "nome": "CONJURADOR SILENCIOSO",
+    "categoria": "PODER",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Ocultismo": 8
+      },
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aprendeu a conjurar feitiços ou invocar milagres sem falar. Pode conjurar debaixo d’água, no vácuo, com mordaça ou sob efeito de silêncio[cite: 518, 519]."
+  },
+  {
+    "id": "poder_favorito_horror",
+    "nome": "PODER FAVORITO",
+    "categoria": "PODER",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": "AA (Corrompido, Ocultista, Bruxaria), Perícia Arcana d8+"
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Escolha um poder. Pode ignorar até 2 pontos de qualquer penalidade (Ações Múltiplas, Ferimentos, Fadiga etc.) ao ativar esse poder[cite: 520]."
+  },
+  {
+    "id": "cacador_de_monstros",
+    "nome": "CAÇADOR DE MONSTROS",
+    "categoria": "PROFISSIONAL",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Imune a testes de Medo de um tipo geral de criatura escolhido (fantasmas, lobisomens, etc.). Não anula testes do poder Medo. Pode ser adquirida várias vezes para tipos diferentes[cite: 521, 522]."
+  },
+  {
+    "id": "rainha_rei_do_grito",
+    "nome": "RAINHA/REI DO GRITO",
+    "categoria": "PROFISSIONAL",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Sempre que precisar rolar na tabela de Efeitos de Medo, pode rerrolar seu primeiro resultado, mas deve aceitar o segundo[cite: 524]."
+  },
+  {
+    "id": "poco_de_virtude",
+    "nome": "POÇO DE VIRTUDE",
+    "categoria": "SOCIAIS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": "Pessoa virtuosa"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Uma vez por combate, gasta um Bene (ação limitada) para ganhar cinco Marcadores de Inspiração. Pode dar a aliados na distância de Astúcia. Marcadores permitem rerrolar Característica ou dano[cite: 527, 528, 530]."
+  },
+  {
+    "id": "visao",
+    "nome": "VISÃO",
+    "categoria": "ESTRANHAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Uma vez por sessão de jogo, a personagem recebe uma visão (sonhos sombrios, flash repentino ou leitura de sorte). Use o sistema de Sinais e Presságios[cite: 535, 536, 537]."
+  },
+  {
+    "id": "dano_agravado",
+    "nome": "DANO AGRAVADO",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": []
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ataques naturais ferem qualquer criatura sobrenatural ignorando invulnerabilidades[cite: 15]. Inimigos com Regeneração sofrem -4 para curar esses ferimentos[cite: 15]."
+  },
+  {
+    "id": "medo_monstro",
+    "nome": "MEDO (-2)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": []
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "A criatura causa Medo com penalidade de -2[cite: 15]."
+  },
+  {
+    "id": "selvageria_monstro",
+    "nome": "SELVAGERIA",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Força": 10
+      },
+      "pericias": {},
+      "vantagens_previas": []
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ataques Selvagens causam +4 de dano em vez de +2[cite: 15]."
+  },
+  {
+    "id": "velho",
+    "nome": "VELHO",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": []
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Concede +2 em todas as rolagens de Astúcia e Conhecimento Geral devido à experiência acumulada[cite: 15]."
+  },
+  {
+    "id": "ataque_alado",
+    "nome": "ATAQUE ALADO",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "anjo"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Asas atacam (For+d6, Alcance 2). Causa +4 dano se voar 5 quadros antes. Asas estendidas dão +2 Resistência[cite: 17]."
+  },
+  {
+    "id": "imortalidade_anjo",
+    "nome": "IMORTALIDADE (Anjo)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Heroico",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "anjo"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Se morto, retorna em d4 dias em um novo corpo. Só morre permanentemente com armas infernais[cite: 17]."
+  },
+  {
+    "id": "lamina_divina",
+    "nome": "LÂMINA DIVINA",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "anjo"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Arma mágica que ignora Imortalidade e adiciona +d6 de dano[cite: 18]."
+  },
+  {
+    "id": "linguas",
+    "nome": "LÍNGUAS",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "anjo"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pode ler, escrever e falar qualquer idioma humano[cite: 18]."
+  },
+  {
+    "id": "luz_sagrada",
+    "nome": "LUZ SAGRADA",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "anjo"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Cria luz (Modelo Grande). Pode atacar em Cone (Fé, 2d4 dano)[cite: 18]."
+  },
+  {
+    "id": "rajada_abrasadora",
+    "nome": "RAJADA ABRASADORA",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "luz_sagrada"
+      ],
+      "template": "anjo"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Dano da Luz Sagrada aumenta para 2d6[cite: 18]."
+  },
+  {
+    "id": "resistencia_anjo",
+    "nome": "RESISTÊNCIA (Anjo)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "anjo"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aura divina garante +2 Resistência[cite: 18]."
+  },
+  {
+    "id": "resistencia_divina",
+    "nome": "RESISTÊNCIA DIVINA",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "resistencia_anjo"
+      ],
+      "template": "anjo"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Adiciona +2 Resistência (total +4)[cite: 18]."
+  },
+  {
+    "id": "sentido_sobrenatural",
+    "nome": "SENTIDO SOBRENATURAL",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": [
+        "anjo",
+        "demonio"
+      ]
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Sente seres sobrenaturais e magia a 10 quadros[cite: 18, 21]."
+  },
+  {
+    "id": "velocidade_voo",
+    "nome": "VELOCIDADE (Voo)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": [
+        "anjo",
+        "demonio"
+      ]
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Movimentação de voo aumenta para 24. Pode comprar 2x para 48[cite: 18, 20]."
+  },
+  {
+    "id": "poderes_misticos_anjo",
+    "nome": "PODERES MÍSTICOS (Anjo)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "anjo"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ganha 10 PP e poderes temáticos (Arauto ou Morte)[cite: 18]."
+  },
+  {
+    "id": "asas_demonio",
+    "nome": "ASAS (Demônio)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "demonio"
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ganha asas retráteis (Mov 12). Pode comprar mais vezes para aumentar velocidade[cite: 20]."
+  },
+  {
+    "id": "couro_blindado",
+    "nome": "COURO BLINDADO",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "demonio"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pele grossa concede +4 Armadura[cite: 20]."
+  },
+  {
+    "id": "demonio_verdadeiro",
+    "nome": "DEMÔNIO VERDADEIRO",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "demonio"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Recebe metade do dano de armas não mágicas (exceto ferro frio)[cite: 20]."
+  },
+  {
+    "id": "fogo_infernal",
+    "nome": "FOGO INFERNAL",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "demonio"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Cria fogo (1d6) em área ou cone (Atletismo, 2d4)[cite: 20]."
+  },
+  {
+    "id": "queimar_demonio",
+    "nome": "QUEIMAR (Demônio)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "fogo_infernal"
+      ],
+      "template": "demonio"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Dano do Fogo Infernal aumenta para 2d6. Cone à vontade[cite: 20]."
+  },
+  {
+    "id": "garras_demonio",
+    "nome": "GARRAS (Demônio)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "demonio"
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Garras (For+d4, +2 escalar). 2ª compra: For+d6, PA 2[cite: 21]."
+  },
+  {
+    "id": "imortalidade_demoniaca",
+    "nome": "IMORTALIDADE DEMONÍACA",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "demonio"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Retorna em d4 dias se morto. Morte permanente apenas com armas sagradas[cite: 21]."
+  },
+  {
+    "id": "incorporeo",
+    "nome": "INCORPÓREO",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "demonio"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Etéreo por padrão. Pode se manifestar por 1 rodada com teste de Espírito[cite: 21]."
+  },
+  {
+    "id": "mordida_demonio",
+    "nome": "MORDIDA (Demônio)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "demonio"
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Presas (For+d6). 2ª compra: For+d6, PA 2[cite: 21]."
+  },
+  {
+    "id": "poderes_misticos_demonio",
+    "nome": "PODERES MÍSTICOS (Demônio)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "demonio"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ganha 10 PP e poderes temáticos (Invocador, Possessor, Sedutor ou Trapaceiro)[cite: 21]."
+  },
+  {
+    "id": "invisibilidade_fantasma",
+    "nome": "INVISIBILIDADE (Fantasma)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "fantasma"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Torna-se invisível enquanto etéreo[cite: 22]."
+  },
+  {
+    "id": "poderes_misticos_fantasma",
+    "nome": "PODERES MÍSTICOS (Fantasma)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "fantasma"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ganha 10 PP e poderes temáticos (Aparição, Poltergeist ou Sombra)[cite: 22]."
+  },
+  {
+    "id": "rugir_fantasma",
+    "nome": "RUGIR (Fantasma)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": [
+        "fantasma",
+        "monstro_retalhos"
+      ]
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Desafio de Intimidar em Cone (ação limitada)[cite: 23, 26]."
+  },
+  {
+    "id": "toque_arrepiante",
+    "nome": "TOQUE ARREPIANTE",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "fantasma"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ataque de Toque corpóreo causa For+d4 que ignora armadura não mágica[cite: 23]."
+  },
+  {
+    "id": "travessia",
+    "nome": "TRAVESSIA",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "fantasma"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Funciona como Rede de Contatos com espíritos[cite: 23]."
+  },
+  {
+    "id": "alfa",
+    "nome": "ALFA",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "lobisomem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pode controlar caninos naturais com Intimidar vs Espírito[cite: 24]."
+  },
+  {
+    "id": "andar_nas_paredes_lobo",
+    "nome": "ANDAR NAS PAREDES (Lobo/Vampiro)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": [
+        "lobisomem",
+        "vampiro"
+      ]
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Rasteja em paredes (metade Movimentação)[cite: 24, 31]."
+  },
+  {
+    "id": "fala_lobisomem",
+    "nome": "FALA (Lobisomem)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "lobisomem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pode falar transformado, mas com dificuldade (-2 em rolagens sociais/arcanas verbais)[cite: 24]."
+  },
+  {
+    "id": "mordida_garras_aprimorada",
+    "nome": "MORDIDA E GARRAS APRIMORADAS",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "lobisomem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ataques aumentam para For+d8, PA 4[cite: 24]."
+  },
+  {
+    "id": "regeneracao_lenta_lobo",
+    "nome": "REGENERAÇÃO LENTA (Licantropo)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "lobisomem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Rolagem de Vigor (ação livre) para regenerar. Ampliação cura 2 ferimentos. Não funciona contra prata[cite: 24]."
+  },
+  {
+    "id": "resistencia_lobo",
+    "nome": "RESISTÊNCIA (Lobisomem)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "lobisomem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 Resistência[cite: 24]."
+  },
+  {
+    "id": "uivo",
+    "nome": "UIVO",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "lobisomem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Desafio de Intimidar em Cone (ação limitada)[cite: 24]."
+  },
+  {
+    "id": "descarga",
+    "nome": "DESCARGA",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "monstro_retalhos"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Gasta Fadiga para explodir eletricidade (Modelo Grande, 4d6 dano)[cite: 25]."
+  },
+  {
+    "id": "flashbacks",
+    "nome": "FLASHBACKS",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "monstro_retalhos"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Uma vez por encontro, aumenta perícia em um passo ou ganha d4 se não tiver[cite: 25]."
+  },
+  {
+    "id": "partes_destacaveis",
+    "nome": "PARTES DESTACÁVEIS",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": [
+        "monstro_retalhos",
+        "revivido"
+      ]
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pode destacar mão, olho ou orelha e controlar a distância[cite: 26, 28]."
+  },
+  {
+    "id": "robusto_monstro",
+    "nome": "ROBUSTO (Monstro)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "monstro_retalhos"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Não recebe ferimento ao ser Abalado duas vezes[cite: 26]."
+  },
+  {
+    "id": "cavar_mumia",
+    "nome": "CAVAR (Múmia)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "mumia"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Cava com metade da movimentação[cite: 26]."
+  },
+  {
+    "id": "invocar_bando",
+    "nome": "INVOCAR BANDO",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "mumia"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "1/dia, conjura bando de insetos (Modelo Médio)[cite: 27]."
+  },
+  {
+    "id": "invocar_bando_maior",
+    "nome": "INVOCAR BANDO MAIOR",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Heroico",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "invocar_bando"
+      ],
+      "template": "mumia"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Bando usa Modelo Grande[cite: 27]."
+  },
+  {
+    "id": "invocar_tempestade",
+    "nome": "INVOCAR TEMPESTADE",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "mumia"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "1/semana, cria tempestade de areia gigante[cite: 27]."
+  },
+  {
+    "id": "podridao_mumia",
+    "nome": "PODRIDÃO DA MÚMIA",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "mumia"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Toque causa doença (Vigor ou Ferimento). Morte cria nova múmia[cite: 27]."
+  },
+  {
+    "id": "poderes_misticos_mumia",
+    "nome": "PODERES MÍSTICOS (Múmia)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "mumia"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ganha 10 PP e poderes temáticos (Arquiteto ou Real)[cite: 27]."
+  },
+  {
+    "id": "regeneracao_lenta_mumia",
+    "nome": "REGENERAÇÃO LENTA (Múmia)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "mumia"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Rolagem de cura natural diária (exceto dano por fogo)[cite: 27]."
+  },
+  {
+    "id": "regeneracao_rapida_mumia",
+    "nome": "REGENERAÇÃO RÁPIDA (Múmia)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "regeneracao_lenta_mumia"
+      ],
+      "template": "mumia"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Rolagem de cura a cada rodada (exceto fogo/água benta)[cite: 27]."
+  },
+  {
+    "id": "devorador_memorias",
+    "nome": "DEVORADOR DE MEMÓRIAS",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "revivido"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Devorar cérebro concede vislumbres de memória[cite: 28]."
+  },
+  {
+    "id": "fedor",
+    "nome": "FEDOR",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "revivido"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Criaturas adjacentes ficam Distraídas[cite: 28]."
+  },
+  {
+    "id": "mestre_zumbis",
+    "nome": "MESTRE DOS ZUMBIS",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "revivido"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Controla mortos-vivos sem mente com Intimidar vs Espírito[cite: 28]."
+  },
+  {
+    "id": "rastreador_implacavel",
+    "nome": "RASTREADOR IMPLACÁVEL",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "revivido"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 Sobrevivência (rastrear) contra alvo de vingança. Recupera trilha automaticamente[cite: 29]."
+  },
+  {
+    "id": "toque_da_morte",
+    "nome": "TOQUE DA MORTE",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Heroico",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "revivido"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Toque causa For+d4. Contra alvo do Voto, causa For+2d6[cite: 29]."
+  },
+  {
+    "id": "andarilho_do_dia",
+    "nome": "ANDARILHO DO DIA",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "vampiro"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Não é ferido pela luz do sol[cite: 30]."
+  },
+  {
+    "id": "criancas_da_noite",
+    "nome": "CRIANÇAS DA NOITE",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "vampiro"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "1/noite convoca lobos, morcegos ou ratos[cite: 31]."
+  },
+  {
+    "id": "encantar_vampiro",
+    "nome": "ENCANTAR",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "vampiro"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Conjura Fantoche gastando Benny e Persuadir[cite: 31]."
+  },
+  {
+    "id": "forma_animal_vampiro",
+    "nome": "FORMA ANIMAL (Vampiro)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "vampiro"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Transforma-se em lobo ou morcego (ação limitada, Astúcia -2)[cite: 31]."
+  },
+  {
+    "id": "forma_nevoa",
+    "nome": "FORMA DE NÉVOA",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "vampiro"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "1/noite vira névoa (voo, intangível)[cite: 31]."
+  },
+  {
+    "id": "garras_vampiro",
+    "nome": "GARRAS (Vampiro)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "vampiro"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Garras (For+d6, +2 escalar)[cite: 31]."
+  },
+  {
+    "id": "saciar",
+    "nome": "SACIAR",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "vampiro"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Drenar humano até a morte aumenta Força e Vigor por 1 hora[cite: 31]."
+  },
+  {
+    "id": "senhor_vampiro",
+    "nome": "SENHOR",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "vampiro"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pode transformar mortais em vampiros (d4 horas)[cite: 32]."
+  },
+  {
+    "id": "servo",
+    "nome": "SERVO",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "vampiro"
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ganha um servo mortal leal (Extra)[cite: 32]."
+  },
+  {
+    "id": "regeneracao_rapida_vampiro",
+    "nome": "REGENERAÇÃO RÁPIDA (Vampiro)",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": "vampiro"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Rolagem de cura a cada ação livre (exceto fraquezas específicas)[cite: 32]."
+  }
+]
