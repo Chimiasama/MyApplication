@@ -98,59 +98,6 @@
     ]
   },
   {
-    "id": "anc_humano_csv",
-    "nome": "Humano (Teia)",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "CIDADE_SOL_VAPOR",
-    "atributos": {},
-    "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Adaptável",
-        "descricao": "Começa com uma Vantagem Novato extra de graça."
-      }
-    ]
-  },
-  {
-    "id": "anc_demonio_csv",
-    "nome": "Demônio (Abismo)",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "CIDADE_SOL_VAPOR",
-    "atributos": {},
-    "pericias": {},
-    "desvantagens": [
-      "FRÁGIL"
-    ],
-    "habilidades": [
-      {
-        "nome": "Antecedente Arcano (Demônio)",
-        "descricao": "Começa com AA (Demônio), Perícia Conjurar d4 e os poderes Disfarce Demoníaco + 3 outros. 10 PP."
-      },
-      {
-        "nome": "Frágil",
-        "descricao": "-2 na Resistência devido à degeneração física secular."
-      }
-    ]
-  },
-  {
-    "id": "anc_meio_demonio_csv",
-    "nome": "Meio-Demônio",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "CIDADE_SOL_VAPOR",
-    "atributos": {},
-    "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Herança Mista",
-        "descricao": "Recebe uma Vantagem Novato extra (como humanos)."
-      },
-      {
-        "nome": "Opção Mágica",
-        "descricao": "Pode escolher AA (Demônio) como uma Vantagem normal (requisito Novato). Se o fizer, Disfarce Demoníaco custa 2 PP e é de estágio Experiente."
-      }
-    ]
-  },
-  {
     "nome": "RAKASHANOS",
     "origem": "SUPLEMENTO",
     "descricao": "Humanoides de aparência felina. Podem ter as cores lustrosas dos tigres, a pele manchada dos leopardos ou a aparência exótica dos gatos siameses. Possuem garras e presas afiadas.",

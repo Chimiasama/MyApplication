@@ -217,41 +217,6 @@
     "description": "Insano ou irracional. O jogador deve interpretar uma delusão específica. -2 em Persuadir com pessoas 'normais'."
   },
   {
-    "id": "comp_alma_penhorada",
-    "name": "ALMA PENHORADA",
-    "severity": "menor",
-    "origem": "CIDADE_SOL_VAPOR",
-    "description": "Deve 5.000 sóis aos demônios. Recebe o dobro do dinheiro inicial. -2 em Conhecimento Geral até pagar. Incompatível com AA (Milagres)."
-  },
-  {
-    "id": "comp_alma_vendida",
-    "name": "ALMA VENDIDA",
-    "severity": "maior",
-    "origem": "CIDADE_SOL_VAPOR",
-    "description": "Sua alma pertence ao Abismo. No início da aventura, faça teste de Espírito (-2) ou sofra 1 nível de Fadiga permanente até o fim da aventura."
-  },
-  {
-    "id": "comp_maldicao_gremlin",
-    "name": "MALDIÇÃO DO GREMLIN",
-    "severity": "menor/maior",
-    "origem": "CIDADE_SOL_VAPOR",
-    "description": "Aumenta a Probabilidade de Mau Funcionamento (PMF) de itens em 1 (Menor) ou 2 (Maior). Afeta itens num raio de 5m (Maior)."
-  },
-  {
-    "id": "comp_tecnofobia",
-    "name": "TECNOFOBIA",
-    "severity": "maior",
-    "origem": "CIDADE_SOL_VAPOR",
-    "description": "Deve testar Espírito para usar dispositivos a vapor/tecnomágicos. Autômatos causam Medo."
-  },
-  {
-    "id": "comp_gosto_sofisticado",
-    "name": "GOSTO SOFISTICADO",
-    "severity": "maior",
-    "origem": "CIDADE_SOL_VAPOR",
-    "description": "Sofre Fadiga se comer comida de baixa qualidade (ratos/cogumelos comuns). Custo de vida diário +20 sóis."
-  },
-  {
     "id": "atrapalhado",
     "name": "ATRAPALHADO",
     "origem": "SUPLEMENTO",

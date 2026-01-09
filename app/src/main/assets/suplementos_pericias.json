@@ -30,6 +30,12 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "SUPLEMENTO"
+    },
+    {
+      "nome": "Conjurar",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "SUPLEMENTO"
     }
   ]
 }

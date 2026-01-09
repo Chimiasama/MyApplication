@@ -1,0 +1,140 @@
+[
+  {
+    "tipo": "Armas de Ar",
+    "subtipo": "Pistolas",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Pistola de Ar 'Brisa'",
+        "dano": "2d4",
+        "pmf": 2,
+        "peso": "1",
+        "custo": 150,
+        "observacoes": "Silenciosa. 30 tiros. Dist 6/12/24.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Pistola de Ar 'Siroco'",
+        "dano": "2d4+1",
+        "pmf": 1,
+        "peso": "1",
+        "custo": 350,
+        "observacoes": "Silenciosa. 25 tiros. Dist 10/20/40.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Pistola de Ar 'Pixie'",
+        "dano": "2d6",
+        "pmf": 2,
+        "peso": "2",
+        "custo": 300,
+        "observacoes": "Silenciosa. 20 tiros. CdT 2. Dist 10/20/40.",
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Ar",
+    "subtipo": "Rifles",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Rifle de Ar 'Chinook'",
+        "dano": "2d6-1",
+        "pmf": 2,
+        "peso": "4.5",
+        "custo": 300,
+        "observacoes": "Silenciosa. 10 tiros. Dist 20/40/80.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Rifle de Ar 'Garmsil'",
+        "dano": "2d6",
+        "pmf": 1,
+        "peso": "5",
+        "custo": 600,
+        "observacoes": "Silenciosa. PA 1. 20 tiros. Dist 20/40/80.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Rifle de Ar 'Pampeiro'",
+        "dano": "2d6+1",
+        "pmf": 2,
+        "peso": "4",
+        "custo": 1200,
+        "observacoes": "Silenciosa. PA 1. 22 tiros. Dist 24/48/96.",
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas a Vapor",
+    "subtipo": "Pesadas",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Rifle a Vapor",
+        "dano": "2d12",
+        "pmf": 2,
+        "peso": "20",
+        "custo": 12000,
+        "observacoes": "Tiro Rápido, Pesada, PA 4. Proibida.",
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Aço Vermelho",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Faca de Aço Vermelho",
+        "dano": "For+d4+2",
+        "peso": "0.25",
+        "custo": 50,
+        "observacoes": "PA 1.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Espada-Bengala de Aço Vermelho",
+        "dano": "For+d4+2",
+        "peso": "0.75",
+        "custo": 450,
+        "observacoes": "Aparar +1, PA 1, Porte Oculto.",
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Especiais",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Sobretudo de Lã Pesada",
+        "armadura": "+1",
+        "peso": "4",
+        "custo": 150,
+        "observacoes": "Cobre tronco, braços e pernas.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Peitoral de Aço Vermelho",
+        "armadura": "+4",
+        "peso": "8",
+        "custo": 5000,
+        "observacoes": "Cobre tronco.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Armadura a Vapor",
+        "armadura": "+6",
+        "peso": "90",
+        "custo": 20000,
+        "observacoes": "Corpo todo. For Min d10 se sem combustível. Aumenta Força em 2 passos.",
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  }
+]

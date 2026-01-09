@@ -153,11 +153,6 @@
     {
       "nome": "Ciência Estranha",
       "atributo": "Astúcia",
-      "basica": false
-    },
-    {
-      "nome": "Conjurar",
-      "atributo": "Astúcia",
       "basica": false,
       "origem": "BASICO"
     }
