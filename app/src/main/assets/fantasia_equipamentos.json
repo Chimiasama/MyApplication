@@ -1,0 +1,663 @@
+[
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Equipamento de Aventura",
+    "origem": "FANTASIA",
+    "itens": [
+      {
+        "nome": "Óleo (para lamparina: meio litro)",
+        "custo": 2,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Pedra de Amolar",
+        "custo": 5,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "FANTASIA"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Pessoais",
+    "subtipo": "Medievais",
+    "subsubtipo": "Combate corpo a corpo",
+    "origem": "FANTASIA",
+    "itens": [
+      {
+        "nome": "Alabarda",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": "3",
+        "custo": 250,
+        "observacoes": "Alcance 1, duas mãos",
+        "origem": "FANTASIA"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Especiais",
+    "subtipo": "Catapultas",
+    "origem": "FANTASIA",
+    "itens": [
+      {
+        "nome": "Catapulta",
+        "distancia": "24/48/96",
+        "dano": "3d6",
+        "pa": 4,
+        "cdt": null,
+        "forcaMin": null,
+        "peso": "—",
+        "custo": 10000,
+        "observacoes": "MME, Arma Pesada, Recarregar é a cada 5 minutos com uma equipe de 4",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Trabuco",
+        "distancia": "30/60/120",
+        "dano": "3d8",
+        "pa": 4,
+        "cdt": null,
+        "forcaMin": null,
+        "peso": "—",
+        "custo": 50000,
+        "observacoes": "MME, Arma Pesada, Recarregar é a cada 5 minutos com uma equipe de 4",
+        "origem": "FANTASIA"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Veículos Terrestres",
+    "origem": "FANTASIA",
+    "itens": [
+      {
+        "nome": "Carruagem",
+        "tamanho": 3,
+        "manobrabilidade": -2,
+        "velMaxima": 25,
+        "resistencia": 6,
+        "tripulacao": "1+3",
+        "custo": "1–3K",
+        "observacoes": "Puxada por um Cavalo, veja pág. 219. Movimentação 12 e pode correr",
+        "origem": "FANTASIA"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Embarcações",
+    "origem": "FANTASIA",
+    "itens": [
+      {
+        "nome": "Galé",
+        "tamanho": 13,
+        "manobrabilidade": -1,
+        "velMaxima": 30,
+        "resistencia": 20,
+        "tripulacao": "(20+100)",
+        "custo": "150K",
+        "observacoes": "Armadura Pesada. Tem remos e velas. Armas: Catapulta (Fixa na Frente)",
+        "origem": "FANTASIA"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Equipamento de Aventura",
+    "origem": "FANTASIA",
+    "itens": [
+      {
+        "nome": "Alforjes",
+        "custo": 4,
+        "peso": "4",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Ampulheta",
+        "custo": 25,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Arpéu",
+        "custo": 2,
+        "peso": "2",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Pode ser preso a uma corda. Distância 3/6/12. Suporta até 100kg.",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Baú (grande)",
+        "custo": 20,
+        "peso": "37,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Baú (pequeno)",
+        "custo": 2,
+        "peso": "12,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Estrepes",
+        "custo": 1,
+        "peso": "1",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Conta como Terreno Difícil; Rolagem de Atletismo ou Abalado.",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Ferramentas de ladrão",
+        "custo": 30,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Sem elas aplica -2 em Ladinagem.",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Giz (caixa com 12)",
+        "custo": 1,
+        "peso": "—",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Instrumento musical",
+        "custo": 5,
+        "peso": "1,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Kit de Curandeiro",
+        "custo": 50,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Cinco usos.",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Luneta",
+        "custo": 1000,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "+2 em Perceber ao ver objetos distantes.",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Óleo (meio litro)",
+        "custo": 0.25,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Combustível. Como arma: Distância 3/6/12, 1d10 dano, pode pegar fogo.",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Pedra de amolar",
+        "custo": 0.25,
+        "peso": "—",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Tenda (6 pessoas)",
+        "custo": 30,
+        "peso": "20",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "FANTASIA"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Veículos",
+    "origem": "FANTASIA",
+    "itens": [
+      {
+        "nome": "Carruagem",
+        "custo": 100,
+        "peso": "1000",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "FANTASIA"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Itens Alquímicos",
+    "origem": "FANTASIA",
+    "itens": [
+      {
+        "nome": "Água Benta",
+        "custo": 25,
+        "peso": "—",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "2d4 dano em mortos-vivos (MPE).",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Antitoxina",
+        "custo": 50,
+        "peso": "0,5/2",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "+4 para resistir a venenos por 1h.",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Bastão de Fumaça",
+        "custo": 20,
+        "peso": "0,5/10",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Escuridão (-4) em MME por 1 min.",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Bastão Solar",
+        "custo": 2,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Luz raio 10m por 6h. For+d4 se usado como arma.",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Frasco de Ácido",
+        "custo": 10,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "2d4 dano (MPE).",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Tocha Eterna",
+        "custo": 110,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Chama permanente que não emite calor.",
+        "origem": "FANTASIA"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Pessoais",
+    "subtipo": "Medievais",
+    "subsubtipo": "Combate corpo a corpo",
+    "origem": "FANTASIA",
+    "itens": [
+      {
+        "nome": "Alabarda",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": "6",
+        "custo": 10,
+        "observacoes": "PA 1, Alcance 1, Duas Mãos",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Alfange",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": "4",
+        "custo": 75,
+        "observacoes": "PA 1, Duas Mãos (+1 dano)",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Bisarma",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": "6",
+        "custo": 9,
+        "observacoes": "PA 1, Alcance 1, Duas Mãos",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Chakram",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": "0,5",
+        "custo": 1,
+        "observacoes": "Aparar +1",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Cimitarra",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": "2",
+        "custo": 15,
+        "observacoes": "—",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Corrente com Espinhos",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": "3",
+        "custo": 8,
+        "observacoes": "PA 1, Ignora escudo, Duas Mãos",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Espada Gancho",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": "2",
+        "custo": 20,
+        "observacoes": "+1 para Desarmar",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Gadanha",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": "5",
+        "custo": 18,
+        "observacoes": "Duas Mãos",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Glaive",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": "5",
+        "custo": 8,
+        "observacoes": "Alcance 1, Duas Mãos",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Maça Estrela",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": "3",
+        "custo": 8,
+        "observacoes": "—",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Mangual Pesado",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": "5",
+        "custo": 15,
+        "observacoes": "Ignora escudo, Duas Mãos",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Martelo Meteoro",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": "2,5",
+        "custo": 12,
+        "observacoes": "Alcance 2, ignora escudo, Duas Mãos",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Tridente",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": "2",
+        "custo": 15,
+        "observacoes": "Alcance 1",
+        "origem": "FANTASIA"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Combate à Distância",
+    "subtipo": "Medievais",
+    "origem": "FANTASIA",
+    "itens": [
+      {
+        "nome": "Besta de Mão",
+        "distancia": "5/10/20",
+        "dano": "2d4",
+        "pa": null,
+        "cdt": 1,
+        "forcaMin": "d4",
+        "peso": "1",
+        "custo": 20,
+        "observacoes": "Recarga 1.",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Chakram",
+        "distancia": "4/8/16",
+        "dano": "For+d4",
+        "pa": null,
+        "cdt": 1,
+        "forcaMin": "d4",
+        "peso": "0,5",
+        "custo": 1,
+        "observacoes": "",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Tridente",
+        "distancia": "3/6/12",
+        "dano": "For+d6",
+        "pa": null,
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": "2",
+        "custo": 15,
+        "observacoes": "",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Zarabatana",
+        "distancia": "3/6/12",
+        "dano": "d4-2",
+        "pa": null,
+        "cdt": 1,
+        "forcaMin": "d4",
+        "peso": "0,5",
+        "custo": 2,
+        "observacoes": "",
+        "origem": "FANTASIA"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Especiais",
+    "subtipo": "Armas de Cerco",
+    "origem": "FANTASIA",
+    "itens": [
+      {
+        "nome": "Aríete",
+        "distancia": null,
+        "dano": "3d6",
+        "pa": null,
+        "cdt": null,
+        "forcaMin": null,
+        "peso": "200",
+        "custo": 1000,
+        "observacoes": "Requer equipe 2-8.",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Balista",
+        "distancia": "15/30/60",
+        "dano": "3d6",
+        "pa": 4,
+        "cdt": 1,
+        "forcaMin": null,
+        "peso": "500",
+        "custo": 500,
+        "observacoes": "Arma Pesada. Recarga 5 min (1 op) ou 2 min (2 op).",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Catapulta",
+        "distancia": "24/48/96",
+        "dano": "3d6",
+        "pa": 4,
+        "cdt": 1,
+        "forcaMin": null,
+        "peso": "15K",
+        "custo": 800,
+        "observacoes": "MME. Arma Pesada. Recarga 5 min (4 op).",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Torre de Cerco",
+        "distancia": null,
+        "dano": null,
+        "pa": null,
+        "cdt": null,
+        "forcaMin": null,
+        "peso": "100K",
+        "custo": 2000,
+        "observacoes": "Torre móvel. Cobertura completa.",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Trabuco",
+        "distancia": "30/60/120",
+        "dano": "3d8",
+        "pa": 4,
+        "cdt": 1,
+        "forcaMin": null,
+        "peso": "20K",
+        "custo": 1000,
+        "observacoes": "MME. Arma Pesada. Recarga 5 min (4 op).",
+        "origem": "FANTASIA"
+      }
+    ]
+  },
+  {
+    "tipo": "Materiais Especiais",
+    "subtipo": "Metais e Madeiras",
+    "origem": "FANTASIA",
+    "itens": [
+      {
+        "nome": "Ferro Frio",
+        "custo": "Dobro do item",
+        "peso": "—",
+        "observacoes": "Útil contra fadas e demônios. Aumenta Dureza em 2.",
+        "originalName": null,
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Mithral",
+        "custo": "Variável",
+        "peso": "Metade do item",
+        "observacoes": "Reduz Força Mínima em um dado. Armas custam 100x, Armaduras 10x.",
+        "originalName": "Mithral",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Madeira Negra",
+        "custo": "+10 po/kg",
+        "peso": "Metade do item",
+        "observacoes": "Aumenta Dureza em 2. Versão obra-prima.",
+        "originalName": "Darkwood",
+        "origem": "FANTASIA"
+      }
+    ]
+  },
+  {
+    "tipo": "Materiais Especiais",
+    "subtipo": "Metais e Madeiras",
+    "origem": "FANTASIA",
+    "itens": [
+      {
+        "nome": "Couro de Dragão",
+        "custo": "Variável",
+        "peso": "Metade",
+        "observacoes": "Custa x2 (leve), x1.5 (média), x2 (pesada). Imune a dano de energia do tipo do dragão.",
+        "originalName": "Dragonhide",
+        "origem": "FANTASIA"
+      },
+      {
+        "nome": "Prata Alquímica",
+        "custo": "Variável",
+        "peso": "—",
+        "observacoes": "Armas causam dano total em licantropos. -1 no dano. Custo: +20 (mun), +100 (leve), +300 (1 mão), +1500 (2 mãos).",
+        "originalName": "Alchemical Silver",
+        "origem": "FANTASIA"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Terrestres e Aéreos",
+    "origem": "FANTASIA",
+    "itens": [
+      {
+        "nome": "Trenó",
+        "tamanho": 3,
+        "resistencia": 8,
+        "tripulacao": "1+2",
+        "custo": 20,
+        "velMaxima": 12,
+        "observacoes": "Tração animal. Neve.",
+        "originalName": "Sled",
+        "origem": "FANTASIA"
+      }
+    ]
+  }
+]

@@ -1,0 +1,158 @@
+[
+  {
+    "nome": "ANÕES",
+    "origem": "BASICO",
+    "descricao": "Os anões são um povo de baixa estatura, robusto e resistente que vem de cavernas imensas nas altas fortalezas montanhosas. São orgulhosos e belicosos, normalmente devido ao contato constante com ancestralidades hostis como orcs e goblins. Anões geralmente vivem mais de 200 anos. São conhecidos por seu amor pela cerveja, conhecimento em trabalho com pedra e barbas impressionantes. Possuem Visão no Escuro, são Robustos (Vigor começa em d6) e têm Movimentação Reduzida.",
+    "atributos": {
+      "Vigor": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "VISÃO NO ESCURO",
+      "RESISTENTE"
+    ],
+    "desvantagens": [
+      "MOVIMENTAÇÃO REDUZIDA"
+    ]
+  },
+  {
+    "nome": "AQUARIANOS",
+    "origem": "BASICO",
+    "descricao": "Povo aquático oriundo das profundezas esmagadoras do oceano. São fortes e resistentes debaixo das ondas, mas geralmente são vulneráveis ao ar livre ou ao calor abrasador da superfície.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "AQUÁTICO",
+      "VISÃO NO ESCURO",
+      "RESISTÊNCIA"
+    ],
+    "desvantagens": [
+      "DEPENDÊNCIA"
+    ]
+  },
+  {
+    "nome": "AVIANOS",
+    "origem": "BASICO",
+    "descricao": "São humanoides com asas. Tendem a ser bem leves devido a seus ossos ocos. Podem ter penas, pele coriácea ou até mesmo escamas.",
+    "atributos": {},
+    "pericias": {
+      "Perceber": 2
+    },
+    "vantagensGratis": [
+      "VOO",
+      "SENTIDOS AGUÇADOS"
+    ],
+    "desvantagens": [
+      "FRÁGIL",
+      "MOVIMENTAÇÃO REDUZIDA",
+      "NÃO SABE NADAR"
+    ]
+  },
+  {
+    "nome": "ELFOS",
+    "origem": "BASICO",
+    "descricao": "Possuem altura avantajada, almas gentis, orelhas pontudas e olhos profundos de cores variadas. Sejam habitantes de florestas ou vales ocultos, todos possuem delicadeza naturalmente maior que a dos humanos.",
+    "atributos": {
+      "Agilidade": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "VISÃO NO ESCURO",
+      "ÁGIL"
+    ],
+    "desvantagens": [
+      "DESASTRADO"
+    ]
+  },
+  {
+    "nome": "MEIO-ELFOS",
+    "origem": "BASICO",
+    "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante, a maioria é bem aceita, mas pode ocorrer rejeição por qualquer lado de sua família. Sua expectativa de vida se aproxima mais da sua descendência humana.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "VISÃO NO ESCURO",
+      "HERANÇA"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)"
+    ]
+  },
+  {
+    "nome": "HUMANOS",
+    "origem": "BASICO",
+    "descricao": "Em muitos cenários seres humanos recebem uma Vantagem gratuita à sua escolha. Esta opção reflete a sua versatilidade e adaptabilidade em comparação a outras ancestralidades.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ADAPTÁVEL"
+    ],
+    "desvantagens": []
+  },
+  {
+    "nome": "MEIO-ORCS",
+    "origem": "BASICO",
+    "descricao": "Descendentes de orcs e humanos. Herdam a força ou resistência dos orcs (começam com Vigor d6 ou Força d6, à escolha), mas muitas vezes são evitados pelas sociedades civilizadas.",
+    "atributos": {
+      "Vigor": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "ENDURECIDO",
+      "INFRAVISÃO"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)"
+    ]
+  },
+  {
+    "nome": "RAKASHANOS",
+    "origem": "BASICO",
+    "descricao": "Humanoides de aparência felina. Podem ter as cores lustrosas dos tigres, a pele manchada dos leopardos ou a aparência exótica dos gatos siameses. Possuem garras e presas afiadas.",
+    "atributos": {
+      "Agilidade": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "GARRAS",
+      "MORDIDA",
+      "VISÃO NO ESCURO",
+      "ÁGIL"
+    ],
+    "desvantagens": [
+      "INIMIGO RACIAL",
+      "NÃO SABE NADAR",
+      "SANGUINÁRIO"
+    ]
+  },
+  {
+    "id": "anc_sauriano",
+    "nome": "Sauriano",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "BASICO",
+    "atributos": {},
+    "pericias": {},
+    "habilidades": [
+      {
+        "nome": "Armadura",
+        "descricao": "Pele escamosa +2."
+      },
+      {
+        "nome": "Sangue Frio",
+        "descricao": "-4 para resistir a efeitos de frio. Sofre dano extra."
+      },
+      {
+        "nome": "Garras",
+        "descricao": "For+d4."
+      },
+      {
+        "nome": "Mordida",
+        "descricao": "For+d4."
+      },
+      {
+        "nome": "Sentidos",
+        "descricao": "+2 em Perceber/Rastrear (olfato)."
+      }
+    ]
+  }
+]

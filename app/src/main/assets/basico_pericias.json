@@ -1,0 +1,172 @@
+{
+  "pericias": [
+    {
+      "nome": "Atirar",
+      "atributo": "Agilidade",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Atletismo",
+      "atributo": "Agilidade",
+      "basica": true,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Ciência",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Conhecimento Acadêmico",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Consertar",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Curar",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Dirigir",
+      "atributo": "Agilidade",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Eletrônica",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Fé",
+      "atributo": "Espírito",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Foco",
+      "atributo": "Espírito",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Furtividade",
+      "atributo": "Agilidade",
+      "basica": true,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Idiomas",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Intimidar",
+      "atributo": "Espírito",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Jogar",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Ladinagem",
+      "atributo": "Agilidade",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Lutar",
+      "atributo": "Agilidade",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Navegar",
+      "atributo": "Agilidade",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Ocultismo",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Perceber",
+      "atributo": "Astúcia",
+      "basica": true,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Performance",
+      "atributo": "Espírito",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Persuadir",
+      "atributo": "Espírito",
+      "basica": true,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Pesquisar",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Pilotar",
+      "atributo": "Agilidade",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Provocar",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Sobrevivência",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Ciência Estranha",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Psiônicos",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
+    },
+    {
+      "nome": "Conjurar",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO"
+    }
+  ]
+}

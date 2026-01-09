@@ -1,0 +1,30 @@
+[
+  {
+    "id": "comp_servo_morte",
+    "name": "SERVO DA MORTE (Grim Servant)",
+    "origem": "DEADLANDS",
+    "severity": "maior",
+    "description": "+1 em rolagens de ataque/dano, mas Falhas Críticas atingem aliados automaticamente ou causam desastres graves."
+  },
+  {
+    "id": "comp_tome",
+    "name": "TOMÉ (Doubting Thomas)",
+    "origem": "DEADLANDS",
+    "severity": "menor",
+    "description": "Cético quanto ao sobrenatural. -2 em testes de Medo no início, mas racionaliza o horror rapidamente."
+  },
+  {
+    "id": "comp_loco",
+    "name": "LOCO",
+    "origem": "DEADLANDS",
+    "severity": "maior",
+    "description": "Insano ou irracional. O jogador deve interpretar uma delusão específica. -2 em Persuadir com pessoas 'normais'."
+  },
+  {
+    "id": "procurado",
+    "name": "PROCURADO",
+    "origem": "DEADLANDS",
+    "severity": "menor ou maior",
+    "description": "Personagens com Procurado cometeram algum crime e, se as autoridades descobrirem, acabarão na prisão. Isso pressupõe que o cenário possui leis e policiais para garantir o cumprimento delas. O nível da Complicação depende da gravidade do crime e o quão ativa é a perseguição. Inúmeras multas de estacionamento não pagas em um jogo onde precisa-se dirigir ocasionalmente gera uma Complicação Menor, assim como alguém Procurado por um crime mais grave longe da área principal da campanha. Uma acusação de assassinato é uma Complicação Maior em praticamente qualquer cenário se houver alguém em busca de justiça (ou vingança)."
+  }
+]

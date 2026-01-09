@@ -1,0 +1,212 @@
+[
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Equipamento de Aventura",
+    "origem": "SUPER",
+    "itens": [
+      {
+        "nome": "Algemas (grilhões)",
+        "custo": 15,
+        "peso": "1",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "SUPER"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Combate à Distância",
+    "subtipo": "Medievais",
+    "origem": "SUPER",
+    "itens": [
+      {
+        "nome": "Rede (com pesos)",
+        "distancia": "3/6/12",
+        "dano": null,
+        "pa": null,
+        "cdt": 1,
+        "forcaMin": "d4",
+        "peso": "4",
+        "custo": 50,
+        "observacoes": "Um ataque bem-sucedido significa Enredado; Dureza 10 e vulnerável a ataques cortantes",
+        "subsubtipo": "Redes",
+        "origem": "SUPER"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Especiais",
+    "subtipo": "Granadas",
+    "origem": "SUPER",
+    "itens": [
+      {
+        "nome": "Granada de Fumaça",
+        "distancia": "5/10/20",
+        "dano": null,
+        "pa": null,
+        "cdt": null,
+        "peso": "0,5",
+        "custo": 50,
+        "observacoes": "MGE, Cria uma área de fumaça em um MGE que obscurece a visão (-4)",
+        "origem": "SUPER"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Equipamento de Aventura",
+    "origem": "SUPER",
+    "itens": [
+      {
+        "nome": "Escudo Energético",
+        "custo": 10000,
+        "peso": "6",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Aparar +2, Movimentação –1, Cobertura –4; carrega rolagem gratuita de Absorção (Foco d10)",
+        "origem": "SUPER"
+      },
+      {
+        "nome": "Arpéu Automático",
+        "custo": 600,
+        "peso": "2.5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Alcance 50 m, suporta até 250 kg, garante poder Balançar",
+        "origem": "SUPER"
+      },
+      {
+        "nome": "Comunicadores",
+        "custo": 0,
+        "peso": null,
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Alcance 1,5 km ou conexão a redes de rádio/telefone",
+        "origem": "SUPER"
+      },
+      {
+        "nome": "Mochila a Jato",
+        "custo": 5000,
+        "peso": "6",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Voo Movimentação 90 (100 km/h), Desajeitado, –1 em ataques; 1 h de uso antes de recarga",
+        "origem": "SUPER"
+      },
+      {
+        "nome": "Granada de Fumaça",
+        "custo": 50,
+        "peso": "0.5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Modelo Grande de Explosão, obscurece visão (–4); distância 5/10/20",
+        "origem": "SUPER"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Vestuário",
+    "origem": "SUPER",
+    "itens": [
+      {
+        "nome": "Capa Curta",
+        "custo": 0,
+        "peso": null,
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Decorativa, sem efeito em jogo",
+        "origem": "SUPER"
+      },
+      {
+        "nome": "Capa Longa",
+        "custo": 50,
+        "peso": "2",
+        "forcaMin": "d4",
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Adiciona +1 em Intimidar ou Persuadir; permite Aparar +2 e Cobertura –2 quando usada como escudo",
+        "origem": "SUPER"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Pessoais",
+    "subtipo": "Armas Pessoais",
+    "subsubtipo": "Combate corpo a corpo",
+    "origem": "SUPER",
+    "itens": [
+      {
+        "nome": "Bastão Anulador",
+        "dano": "For+d4",
+        "peso": "4",
+        "custo": 10000,
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Alvo faz Vigor –2 ou perde todos os poderes; recuperação de poderes via Vigor no turno da vítima",
+        "origem": "SUPER"
+      },
+      {
+        "nome": "Garras de Punho",
+        "dano": "For+d6",
+        "peso": "1",
+        "custo": 150,
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": "+2",
+        "observacoes": "Três dentes de metal; PA 2",
+        "origem": "SUPER"
+      },
+      {
+        "nome": "Manoplas",
+        "dano": "For+d4",
+        "peso": "3",
+        "custo": 40,
+        "forcaMin": null,
+        "armadura": "+4",
+        "aparar": null,
+        "observacoes": "Luvas reforçadas; impede manipulação fina",
+        "origem": "SUPER"
+      },
+      {
+        "nome": "Rede (Balanceada)",
+        "dano": null,
+        "peso": "4",
+        "custo": 50,
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Enreda alvo em sucesso de Atletismo; Dureza 10; alcance 3/6/12",
+        "origem": "SUPER"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Combate à Distância",
+    "subtipo": "Medievais",
+    "origem": "SUPER",
+    "itens": [
+      {
+        "nome": "Rede (Balanceada)",
+        "distancia": "3/6/12",
+        "dano": null,
+        "pa": null,
+        "cdt": 1,
+        "forcaMin": "d4",
+        "peso": "4",
+        "custo": 20,
+        "observacoes": "Acerto = Enredado. Vulnerável a corte.",
+        "origem": "SUPER"
+      }
+    ]
+  }
+]

@@ -1,0 +1,135 @@
+[
+  {
+    "id": "fobia",
+    "name": "FOBIA",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Fobias são medos esmagadores e irracionais que afetam a psique da personagem. Sempre que qualquer personagem estiver na presença de sua fobia (a critério do Mestre, mas geralmente quando avistá-la) subtraia 1 de todos os testes de Característica no caso de uma Complicação Menor e 2 se for uma Maior. Fobias não devem ser muito óbvias – é bom senso temer criaturas inegavelmente perigosas, como, por exemplo, vampiros, portanto isso não é uma fobia. Ao invés disso, a fobia geralmente se concentra em algum elemento aleatório que a mente associa ao evento. Lembre, fobias são medos irracionais."
+  },
+  {
+    "id": "dependencia",
+    "name": "DEPENDÊNCIA",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Uma hora gasta se recuperando com a substância apropriada restaura todos os níveis de Fadiga ou perda de poderes causada por esta Complicação.\nObservação: Esta Complicação é a versão da Habilidade Racial Negativa presente no Savage Worlds Edição Aventura. Em uma campanha de supers, isso pode ser uma condição ou parte da história em vez de um traço hereditário da personagem.\nO super deve consumir ou ter contato com algum tipo relativamente comum de substância por uma hora a cada 24 horas. Caso contrário, não poderá usar seus poderes ou recebe um nível de Fadiga (decida qual quando a Complicação é comprada). Se escolher o segundo, recebe um nível adicional de Fadiga a cada 24 horas até que fique Incapacitado (isso pode causar morte)."
+  },
+  {
+    "id": "amaldicoado_horror",
+    "name": "AMALDIÇOADO (HORROR)",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "OBS.: Esta Complicação só pode ser adquirida em um cenário que permita a Vantagem Antecedente Arcano (Milagres).\nA morte está ansiosa por seu herói ou heroína. Talvez tenha fugido dela em algum momento da vida, ou voltado dos mortos e deixado uma dívida com o Barqueiro. Seja qual for o motivo, você subtrai 2 das rolagens de Absorção."
+  },
+  {
+    "id": "amoroso",
+    "name": "AMOROSO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Devido a luxúria ou a uma forma de verdadeira admiração, este indíviduo se apaixona facilmente. Personagens Amorosas sofrem uma penalidade de -2 para resistir a Desafios de qualquer personagem com as Vantagens Atraente ou Muito Atraente."
+  },
+  {
+    "id": "apetite_incomum",
+    "name": "APETITE INCOMUM",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Seu investigador ou investigadora come algo que a maioria acha perturbador, como papel, comida achada no lixo, insetos ou até mesmo comida podre.\nIsso reduz suas rolagens de Persuadir em -2 quando lida com aqueles que sabem de seus estranhos hábitos alimentares."
+  },
+  {
+    "id": "assustado",
+    "name": "ASSUSTADO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Qualquer coisinha deixa esta personagem nervosa e assustada. Sempre que houver um barulho, choque ou surpresa repentinos (a critério do mestre), personagens Assustados devem fazer um teste de Medo."
+  },
+  {
+    "id": "componentes_materiais_horror",
+    "name": "COMPONENTES MATERIAIS (HORROR)",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Esta Complicação só pode ser adquirida por aqueles com Antecedente Arcano. Os poderes do conjurador consomem componentes materiais. Talvez um mago precise de um pouco de enxofre para lançar uma bola de fogo (explosão com manifestação de fogo) ou uma sacerdotisa precise de um pouco de água benta para sua deusa conceder ferir.\nPresume-se que tais itens estejam à mão — geralmente em um bolso ou bolsa para componentes. Se o conjurador for despojado de seus pertences e não conseguir os materiais de que precisa, ele subtrai 4 de todas as rolagens de perícias arcanas até que sejam restaurados (50 PO × o Estágio do conjurador em uma loja ou um dia de coleta ou forrageamento em um ambiente apropriado com uma rolagem de Sobrevivência por Estágio).\nConjuradores também ficam sem componentes materiais se obtiverem uma Falha Crítica. Podem se reabastecer como acima."
+  },
+  {
+    "id": "condenado_horror",
+    "name": "CONDENADO (HORROR)",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "A morte está ansiosa por seu herói ou heroína. Talvez tenha fugido dela em algum momento da vida, ou voltado dos mortos e deixado uma dívida com o Barqueiro. Seja qual for o motivo, você subtrai 2 das rolagens de Absorção."
+  },
+  {
+    "id": "corrupcao_horror",
+    "name": "CORRUPÇÃO (HORROR)",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "OBS.: Esta Complicação só pode ser adquirida em um cenário que permita a Vantagem Antecedente Arcano (Milagres).\nEsta Complicação só pode ser adquirida por aqueles com Antecedente Arcano.\nA magia do conjurador recorre a alguma fonte abominável, maligna ou corrompida. Sempre que obtiver uma Falha Crítica em sua rolagem de perícia arcana, recebe uma nova Complicação Menor, ou troca/atualiza uma Complicação Menor obtida por Corrupção por uma Complicação Maior, que reflita a degradação da sua mente e corpo. Por exemplo, um mago pode receber Invejoso (Menor) ao perceber como é difícil aumentar seu poder. Então Sanguinário (Maior) quando sua raiva se transforma em pensamentos violentos.\nEssas Complicações duram até o próximo Progresso do conjurador, momento em que pode remover uma Complicação Menor, ou reduzir/trocar uma Complicação Maior por uma Complicação Menor. Isso é um acréscimo ao seu Progresso."
+  },
+  {
+    "id": "hemofilico",
+    "name": "HEMOFÍLICO",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Alguns indivíduos sangram mais do que outros. Talvez seja uma condição genética, ou a vítima seja apenas azarada e é atingida em uma veia ou artéria toda vez que cruza com algum psicopata com uma faca.\nSempre que sofrer um Ferimento que não leva à Incapacitação, começa a sangrar. Toda rodada após sofrer o Ferimento é necessário fazer uma rolagem de Vigor como ação livre ou sofre um nível de Fadiga que pode levar à morte. O sangramento pode ser interrompido com uma ampliação na rolagem de Vigor ou uma rolagem de Curar bem-sucedida."
+  },
+  {
+    "id": "histerico",
+    "name": "HISTÉRICO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Não importa o quanto este investigador ou investigadora tente impedir, medo e terror provocam um grito histérico. Sempre que falhar no teste de Medo, a personagem automaticamente emite um grito ensurdecedor.\nComo Complicação Maior, você continua gritando e fica em Estado Distraído até fazer uma rolagem de Astúcia como ação livre limitada. Aliados (que possam escutar) dentro de um Modelo Grande de Explosão centrado na personagem também ficam em Estado Distraído até que o grito se encerre ou se movam para fora do modelo."
+  },
+  {
+    "id": "ima_de_balas",
+    "name": "IMÃ DE BALAS",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Algumas pessoas sempre estão no lugar errado e na hora errada. Esta alma infeliz é atingida por disparos acidentais (usando as regras de Espectadores Inocentes) com 1–2 em armas de tiro único e 1–3 com escopetas e armas automáticas."
+  },
+  {
+    "id": "pessimista",
+    "name": "PESSIMISTA",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "A personagem é do tipo pessimista que acredita que a luz no fim do túnel é um trem com seu nome nele. Adiciona +2 aos resultados de testes de Medo mal-sucedidos (pág. 50 do compêndio de Horror)."
+  },
+  {
+    "id": "sono_pesado",
+    "name": "SONO PESADO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Uma tempestade do Inferno não acordaria este dorminhoco. Uma vez que apaga, é necessário uma rolagem de Perceber (-4) para acordar. Também sofre uma penalidade de -4 nas rolagens de Vigor para ficar acordado."
+  },
+  {
+    "id": "supersticioso",
+    "name": "SUPERSTICIOSO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "A personagem encontra algo que a ajuda a lidar com os terrores que enfrenta. Escolha uma rotina simples ou objeto que seja seu foco. Desde que o foco não seja perturbado, a personagem está bem. Se o foco for perdido ou perturbado todas as rolagens de Características são feitas com -1."
+  },
+  {
+    "id": "terrores_noturnos",
+    "name": "TERRORES NOTURNOS",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "A Terra de Nod é um constante pesadelo para esta personagem investigadora. Você passa a noite se mexendo e provavelmente mantém todos ao alcance de sua voz acordados com seu tormento noturno. O repetido tormento em sua mente resulta em uma determinação enfraquecida. Por isso, subtraia 1 de todas as suas rolagens de Espírito.\nQualquer pessoa que durma próximo de você tem uma longa noite pela frente (veja Sono em Savage Worlds para possíveis consequências)."
+  },
+  {
+    "id": "valentao",
+    "name": "VALENTÃO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Nada diverte mais este canalha do que tornar a vida dos outros miserável, especialmente se forem \"diferentes\". Em sua versão Menor personagens com a Complicação Valentão menosprezam aqueles que não gostam, que representem uma ameaça ou que pareçam deslocados. Em sua versão Maior, o Valentão está disposto e é capaz de confrontos físicos."
+  },
+  {
+    "id": "vitima",
+    "name": "VÍTIMA",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Todos já vimos os filmes. Alguns heróis ou heroínas solitários estão destinados a sobreviver enquanto seus amigos são mortos um a um. Sua personagem raramente sobrevive até o final da história.\nSempre que o Mestre decidir um alvo aleatoriamente, normalmente aquele coma Complicação Vítima deve ser escolhido. Qualquer adversário extra sem um alvo também deveria ir nesta personagem."
+  },
+  {
+    "id": "comp_pesadelos",
+    "name": "PESADELOS (Night Terrors)",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Deve fazer teste de Espírito ao dormir. Falha causa Fadiga no dia seguinte. Crítica causa a perda de um Bene."
+  }
+]

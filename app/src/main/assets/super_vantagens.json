@@ -1,0 +1,135 @@
+[
+  {
+    "id": "parceiro",
+    "nome": "PARCEIRO",
+    "categoria": "LENDARIAS",
+    "origem": "SUPER",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum."
+  },
+  {
+    "id": "superpoderes",
+    "nome": "SUPERPODERES",
+    "categoria": "ANTECEDENTE",
+    "origem": "SUPER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Esta Vantagem garante à personagem um número de \"Pontos de Superpoder\" que podem ser usados para comprar superpoderes listados no Capítulo Quatro. O número exato de Pontos de Superpoder que personagens de jogadores começam o jogo depende do Nível de Poder da Campanha, mostrados a seguir, escolhidos pelo Mestre.\nSe quem estiver mestrando quiser uma campanha de heróis e heroínas pulp ou desenvolver super adolescentes, pode ser usado o Nível de Poder I. Se quiser uma campanha cósmica, pode ir até o topo e escolher o Nível de Poder V.\nVeja os Níveis de Poder abaixo para mais detalhes.\nA Vantagem Superpoderes deve ser gratuita na maioria das campanhas de supers.\n\nNÍVEL DE PODER DA CAMPANHA\n\nNÍVEL DE PODER SUPER PONTOS DE PODER LIMITE DE PODER\nI               15                   5\nII              30                  10\nIII             45                  15\nIV              60                  20\nV               75                  25\n\nObservação: Pontos de Superpoder não são os mesmos pontos usados em Antecedentes Arcanos; Vantagens que afetam Pontos de Poder não têm efeito em Pontos de Superpoder a menos que se diga especificamente o contrário.\n\nLimites de Poder: Personagens de jogadores não podem gastar mais do que o Limite de Poder da campanha em um único poder. Isso mantém o estilo do cenário para que supers urbanos não corram na velocidade da luz.\nUse o custo total do poder depois de aplicar todos os modificadores. Por exemplo, uma personagem de Nível II começa com 30 Pontos de Superpoder e tem um limite de 10, então poderia comprar Velocidade Sônica por 13 pontos de poder se reduzir seu custo em 3 com modificadores negativos como Desajeitado (-2) e um Dispositivo usado na mão (-2).\nLimites de Poder nunca mudam, mesmo que a personagem consiga Pontos de Poder adicionais de alguma forma."
+  },
+  {
+    "id": "o_melhor_que_ha",
+    "nome": "O MELHOR QUE HÁ",
+    "categoria": "ANTECEDENTE",
+    "origem": "SUPER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O herói ou heroína tem um poder muito poderoso. Seu Limite de Poder é metade do máximo dos Pontos de Superpoder (arredondado para baixo) em vez de um terço (listado na tabela de Nível de Poder da Campanha).\nHeróis e heroínas em uma campanha de Nível II, por exemplo, têm 30 Pontos de Superpoder e podem usar até 10 pontos em um único poder. Com esta Vantagem, poderiam usar até 15 pontos em um único poder."
+  },
+  {
+    "id": "aguenta_o_tranco",
+    "nome": "AGUENTA O TRANCO",
+    "categoria": "COMBATE",
+    "origem": "SUPER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Vigor": 10
+      },
+      "pericias": {},
+      "vantagens_previas": [
+        "queixo_de_ferro"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Estas personagens porradeiras são boas com os punhos, têm sorte ou são apenas resistentes.\nGanham uma rerrolagem gratuita de Absorção feita para eliminar Ferimentos ou rolagens de Vigor feitas para resistir ao Golpe Nocauteador."
+  },
+  {
+    "id": "lider_de_equipe",
+    "nome": "LÍDER DE EQUIPE",
+    "categoria": "LIDERANCA",
+    "origem": "SUPER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "comando",
+        "elo_comum",
+        "lider_nato"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Líderes de Equipe são excelentes em fazer as pessoas trabalharem juntas como as engrenagens de uma máquina bem lubrificada. Com esta vantagem, todos os aliados em seu Raio de Comando (veja Vantagens de Liderança no Savage Worlds Edição Aventura) podem trocar seus Benes como se todos tivessem a Vantagem Elo Comum."
+  },
+  {
+    "id": "dupla_dinamica",
+    "nome": "DUPLA DINÂMICA",
+    "categoria": "SOCIAIS",
+    "origem": "SUPER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espirito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O herói ou heroína escolhe outra personagem específica. Ao ajudar este parceiro em um Ataque Combinado bem-sucedido, o bônus é adicionado tanto à rolagem da perícia quanto ao dano (veja Ataques Combinados na pág. 37). Esta Vantagem pode ser comprada várias vezes para ser aplicada a vários aliados.\nSe o parceiro morrer ou deixar a campanha, o herói ou heroína pode, com permissão do Mestre, escolher um novo membro da equipe para substituí-lo. Isso deve acontecer após a nova dupla treinar ou lutar junta em uma batalha ou duas."
+  },
+  {
+    "id": "parceiro",
+    "nome": "PARCEIRO",
+    "categoria": "SOCIAIS",
+    "origem": "SUPER",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {
+        "Espirito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)"
+  }
+]

@@ -191,7 +191,7 @@ private fun buildUsageInstructions(state: CriadorState, pathfinderLabel: String)
 @ExperimentalSerializationApi
 class MainActivity : ComponentActivity() {
 
-    private val isDataLoaded = MutableStateFlow(false)
+    private val isDataLoaded = MutableStateFlow<LoadingState>(LoadingState.Loading)
     private lateinit var mainActivityData: MainActivityData
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -204,23 +204,50 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         lifecycleScope.launch(Dispatchers.IO) {
-            mainActivityData = DataLoader.load(this@MainActivity)
-            isDataLoaded.value = true
+            try {
+                mainActivityData = DataLoader.load(this@MainActivity)
+                isDataLoaded.value = LoadingState.Success
+            } catch (e: Exception) {
+                e.printStackTrace()
+                isDataLoaded.value = LoadingState.Error(e.message ?: "Erro desconhecido")
+            }
         }
 
         setContent {
-            val dataLoaded by isDataLoaded.collectAsState()
+            val loadingState by isDataLoaded.collectAsState()
 
-            if (!dataLoaded) {
-                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                      CircularProgressIndicator()
-                 }
-            } else {
-                val equipamentoCategorias = mainActivityData.equipamentoCategorias
-                val superequipCategorias = mainActivityData.superequipCategorias
-                val listaSuperPoderes = mainActivityData.listaSuperPoderes
+            when (val currentState = loadingState) {
+                is LoadingState.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = Color.White)
+                    }
+                }
+                is LoadingState.Error -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Erro ao carregar dados:\n${currentState.message}",
+                            color = Color.Red,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+                is LoadingState.Success -> {
+                    val equipamentoCategorias = mainActivityData.equipamentoCategorias
+                    val superequipCategorias = mainActivityData.superequipCategorias
+                    val listaSuperPoderes = mainActivityData.listaSuperPoderes
 
-            val criadorViewModel: CriadorViewModel = viewModel()
+                    val criadorViewModel: CriadorViewModel = viewModel()
             criadorViewModel.setMultiplosAAHabilitados(MULTIPLOS_AA_HABILITADOS)
             val state = criadorViewModel.state
             val snackHost = remember { SnackbarHostState() }
@@ -923,9 +950,16 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-            } // Close else block
+            } // Close else block (actually close Success state block)
+            } // Close when
         }
     }
+}
+
+sealed class LoadingState {
+    object Loading : LoadingState()
+    object Success : LoadingState()
+    data class Error(val message: String) : LoadingState()
 }
 
 fun Int.toDiceString(): String =

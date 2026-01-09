@@ -50,14 +50,44 @@ object DataLoader {
         val assets = context.assets
 
         // 1. Equipamentos
-        val baseEquip = assets.readJsonList<EquipamentoCategoria>("equipamentos.json")
+        val baseEquip = assets.readJsonList<EquipamentoCategoria>("basico_equipamentos.json")
+        val suppEquip = runCatching {
+            assets.readJsonList<EquipamentoCategoria>("suplementos_equipamentos.json")
+        }.getOrElse { emptyList() }
+        val fantasyEquip = runCatching {
+            assets.readJsonList<EquipamentoCategoria>("fantasia_equipamentos.json")
+        }.getOrElse { emptyList() }
+        val horrorEquip = runCatching {
+            assets.readJsonList<EquipamentoCategoria>("horror_equipamentos.json")
+        }.getOrElse { emptyList() }
+        val scifiEquip = runCatching {
+            assets.readJsonList<EquipamentoCategoria>("scifi_equipamentos.json")
+        }.getOrElse { emptyList() }
         val crystalEquip = runCatching {
             assets.readJsonList<EquipamentoCategoria>("equipamentos_crystal.json")
         }.getOrElse { emptyList() }
         val trilhadorEquip = runCatching {
             assets.readJsonList<EquipamentoCategoria>("equipamentos_trilhador.json")
         }.getOrElse { emptyList() }
-        val allEquip = baseEquip + crystalEquip + trilhadorEquip
+        val buscatrilhaEquip = runCatching {
+            assets.readJsonList<EquipamentoCategoria>("buscatrilha_equipamentos.json")
+        }.getOrElse { emptyList() }
+        val superEquip = runCatching {
+            assets.readJsonList<EquipamentoCategoria>("super_equipamentos.json")
+        }.getOrElse { emptyList() }
+        val wiseguysEquip = runCatching {
+            assets.readJsonList<EquipamentoCategoria>("wiseguys_equipamentos.json")
+        }.getOrElse { emptyList() }
+        val adgEquip = runCatching {
+            assets.readJsonList<EquipamentoCategoria>("equipamentos_adg.json")
+        }.getOrElse { emptyList() }
+        val csvEquip = runCatching {
+            assets.readJsonList<EquipamentoCategoria>("equipamentos_sol_vapor.json")
+        }.getOrElse { emptyList() }
+        val deadlandsEquip = runCatching {
+            assets.readJsonList<EquipamentoCategoria>("equipamentos_deadlands.json")
+        }.getOrElse { emptyList() }
+        val allEquip = baseEquip + suppEquip + fantasyEquip + horrorEquip + scifiEquip + crystalEquip + trilhadorEquip + buscatrilhaEquip + superEquip + wiseguysEquip + adgEquip + csvEquip + deadlandsEquip
 
         listaEquipamentos = allEquip.flatMap { it.itens }
 
@@ -67,7 +97,7 @@ object DataLoader {
             }
         )
         val superequipCategorias = deduplicarEquipamentoCategorias(
-            assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
+            (baseEquip + suppEquip).filter { cat ->
                 cat.origem?.equals("super", ignoreCase = true) ?: false
             }
         )
@@ -102,12 +132,15 @@ object DataLoader {
             .associate { it.nome.keyify() to it.nome }
 
         // 6. Pericias
-        val periciasData = loadJsonAsset<PericiaList>(context, "pericias.json")
+        val periciasCoreData = loadJsonAsset<PericiaList>(context, "basico_pericias.json")
+        val periciasSuppData = runCatching {
+            loadJsonAsset<PericiaList>(context, "suplementos_pericias.json")
+        }.getOrElse { PericiaList(emptyList()) }
         val periciasAdgData = runCatching {
             loadJsonAsset<PericiaList>(context, "pericias_adg.json")
         }.getOrElse { PericiaList(emptyList()) }
 
-        val todasPericiasJson = periciasData.pericias + periciasAdgData.pericias
+        val todasPericiasJson = periciasCoreData.pericias + periciasSuppData.pericias + periciasAdgData.pericias
 
         listaPericias = todasPericiasJson.map { pj ->
             Pericia(
@@ -144,11 +177,41 @@ object DataLoader {
         mapaAtributosDescricao = atributosDescList.associate { it.nome.keyify() to it.descricao }
 
         // 7. Vantagens
-        val mainVantagens: List<Vantagem> = loadJsonAsset(context, "Vantagens.json")
+        val coreVantagens: List<Vantagem> = loadJsonAsset(context, "basico_vantagens.json")
+        val suppVantagens: List<Vantagem> = runCatching {
+            loadJsonAsset<List<Vantagem>>(context, "suplementos_vantagens.json")
+        }.getOrElse { emptyList() }
+        val fantasyVantagens: List<Vantagem> = runCatching {
+            loadJsonAsset<List<Vantagem>>(context, "fantasia_vantagens.json")
+        }.getOrElse { emptyList() }
+        val horrorVantagens: List<Vantagem> = runCatching {
+            loadJsonAsset<List<Vantagem>>(context, "horror_vantagens.json")
+        }.getOrElse { emptyList() }
+        val scifiVantagens: List<Vantagem> = runCatching {
+            loadJsonAsset<List<Vantagem>>(context, "scifi_vantagens.json")
+        }.getOrElse { emptyList() }
         val crystalVantagens: List<Vantagem> = runCatching {
             loadJsonAsset<List<Vantagem>>(context, "vantagens_crystal.json")
         }.getOrElse { emptyList() }
-        val todasVantagens = mainVantagens + crystalVantagens
+        val superVantagensList: List<Vantagem> = runCatching {
+            loadJsonAsset<List<Vantagem>>(context, "super_vantagens.json")
+        }.getOrElse { emptyList() }
+        val wiseguysVantagens: List<Vantagem> = runCatching {
+            loadJsonAsset<List<Vantagem>>(context, "wiseguys_vantagens.json")
+        }.getOrElse { emptyList() }
+        val adgVantagens: List<Vantagem> = runCatching {
+            loadJsonAsset<List<Vantagem>>(context, "vantagens_adg.json")
+        }.getOrElse { emptyList() }
+        val csvVantagens: List<Vantagem> = runCatching {
+            loadJsonAsset<List<Vantagem>>(context, "vantagens_sol_vapor.json")
+        }.getOrElse { emptyList() }
+        val deadlandsVantagens: List<Vantagem> = runCatching {
+            loadJsonAsset<List<Vantagem>>(context, "vantagens_deadlands.json")
+        }.getOrElse { emptyList() }
+        val buscatrilhaVantagens: List<Vantagem> = runCatching {
+            loadJsonAsset<List<Vantagem>>(context, "buscatrilha_vantagens.json")
+        }.getOrElse { emptyList() }
+        val todasVantagens = coreVantagens + suppVantagens + fantasyVantagens + horrorVantagens + scifiVantagens + crystalVantagens + superVantagensList + wiseguysVantagens + adgVantagens + csvVantagens + deadlandsVantagens + buscatrilhaVantagens
 
         AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
         AppData.superVantagens = todasVantagens.filter {
@@ -159,7 +222,8 @@ object DataLoader {
         }
         AppData.buscatrilhaVantagens = todasVantagens.filter {
             it.origem.equals("BUSCATRILHA", ignoreCase = true) ||
-                    it.origem.equals("FANTASIABUSCATRILHA", ignoreCase = true)
+                    it.origem.equals("FANTASIABUSCATRILHA", ignoreCase = true) ||
+                    it.origem.equals("FANTASIA_TRILHADOR", ignoreCase = true)
         }
 
         listaVantagens = todasVantagens
@@ -174,11 +238,78 @@ object DataLoader {
         }.getOrElse { emptyList() }
 
         listaTropos = adgTropos + chTropos
-        val todasComplicacoes = loadJsonAsset<List<Complicacao>>(context, "complicacoes.json")
-        listaComplicacoes = todasComplicacoes
+        val coreComplicacoes = loadJsonAsset<List<Complicacao>>(context, "basico_complicacoes.json")
+        val suppComplicacoes = runCatching {
+            loadJsonAsset<List<Complicacao>>(context, "suplementos_complicacoes.json")
+        }.getOrElse { emptyList() }
+        val fantasyComplicacoes = runCatching {
+            loadJsonAsset<List<Complicacao>>(context, "fantasia_complicacoes.json")
+        }.getOrElse { emptyList() }
+        val horrorComplicacoes = runCatching {
+            loadJsonAsset<List<Complicacao>>(context, "horror_complicacoes.json")
+        }.getOrElse { emptyList() }
+        val scifiComplicacoes = runCatching {
+            loadJsonAsset<List<Complicacao>>(context, "scifi_complicacoes.json")
+        }.getOrElse { emptyList() }
+        val superComplicacoes = runCatching {
+            loadJsonAsset<List<Complicacao>>(context, "super_complicacoes.json")
+        }.getOrElse { emptyList() }
+        val wiseguysComplicacoes = runCatching {
+            loadJsonAsset<List<Complicacao>>(context, "wiseguys_complicacoes.json")
+        }.getOrElse { emptyList() }
+        val crystalComplicacoes = runCatching {
+            loadJsonAsset<List<Complicacao>>(context, "complicacoes_crystal.json")
+        }.getOrElse { emptyList() }
+        val adgComplicacoes = runCatching {
+            loadJsonAsset<List<Complicacao>>(context, "complicacoes_adg.json")
+        }.getOrElse { emptyList() }
+        val csvComplicacoes = runCatching {
+            loadJsonAsset<List<Complicacao>>(context, "complicacoes_sol_vapor.json")
+        }.getOrElse { emptyList() }
+        val deadlandsComplicacoes = runCatching {
+            loadJsonAsset<List<Complicacao>>(context, "complicacoes_deadlands.json")
+        }.getOrElse { emptyList() }
+        val buscatrilhaComplicacoes = runCatching {
+            loadJsonAsset<List<Complicacao>>(context, "buscatrilha_complicacoes.json")
+        }.getOrElse { emptyList() }
+        listaComplicacoes = coreComplicacoes + suppComplicacoes + fantasyComplicacoes + horrorComplicacoes + scifiComplicacoes + superComplicacoes + wiseguysComplicacoes + crystalComplicacoes + adgComplicacoes + csvComplicacoes + deadlandsComplicacoes + buscatrilhaComplicacoes
 
         // 9. Ancestralidades
-        listaAncestralidadesJson = assets.readJsonList("listaancestralidade.json")
+        val coreAncestries = assets.readJsonList<RacialModifier>("basico_listaancestralidade.json")
+        val suppAncestries = runCatching {
+            assets.readJsonList<RacialModifier>("suplementos_listaancestralidade.json")
+        }.getOrElse { emptyList() }
+        val fantasyAncestries = runCatching {
+            assets.readJsonList<RacialModifier>("fantasia_listaancestralidade.json")
+        }.getOrElse { emptyList() }
+        val horrorAncestries = runCatching {
+            assets.readJsonList<RacialModifier>("horror_listaancestralidade.json")
+        }.getOrElse { emptyList() }
+        val scifiAncestries = runCatching {
+            assets.readJsonList<RacialModifier>("scifi_listaancestralidade.json")
+        }.getOrElse { emptyList() }
+        val superAncestries = runCatching {
+            assets.readJsonList<RacialModifier>("super_listaancestralidade.json")
+        }.getOrElse { emptyList() }
+        val wiseguysAncestries = runCatching {
+            assets.readJsonList<RacialModifier>("wiseguys_ancestralidades.json")
+        }.getOrElse { emptyList() }
+        val crystalAncestries = runCatching {
+            assets.readJsonList<RacialModifier>("ancestralidades_crystal.json")
+        }.getOrElse { emptyList() }
+        val adgAncestries = runCatching {
+            assets.readJsonList<RacialModifier>("ancestralidades_adg.json")
+        }.getOrElse { emptyList() }
+        val csvAncestries = runCatching {
+            assets.readJsonList<RacialModifier>("ancestralidades_sol_vapor.json")
+        }.getOrElse { emptyList() }
+        val deadlandsAncestries = runCatching {
+            assets.readJsonList<RacialModifier>("ancestralidades_deadlands.json")
+        }.getOrElse { emptyList() }
+        val buscatrilhaAncestries = runCatching {
+            assets.readJsonList<RacialModifier>("buscatrilha_listaancestralidade.json")
+        }.getOrElse { emptyList() }
+        listaAncestralidadesJson = coreAncestries + suppAncestries + fantasyAncestries + horrorAncestries + scifiAncestries + superAncestries + wiseguysAncestries + crystalAncestries + adgAncestries + csvAncestries + deadlandsAncestries + buscatrilhaAncestries
 
         // 10. Monstros
         listaMonstroTemplates = assets

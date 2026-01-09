@@ -1,0 +1,285 @@
+[
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Animais e Arreios",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Cavalo",
+        "custo": 300,
+        "peso": "—",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Cavalo de Guerra",
+        "custo": 750,
+        "peso": "—",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Antigas e Medievais",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Barda de Bronze (cavalo)",
+        "custo": 1500,
+        "peso": "25",
+        "forcaMin": "d10",
+        "armadura": "+3",
+        "aparar": null,
+        "observacoes": "",
+        "subsubtipo": "Armadura de Bronze (Cenários Pré-Idade do Ferro)",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Barda de Placas (cavalo)",
+        "custo": 1500,
+        "peso": "25",
+        "forcaMin": "d10",
+        "armadura": "+4",
+        "aparar": null,
+        "observacoes": "",
+        "subsubtipo": "Malha de Placas",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Combate à Distância",
+    "subtipo": "Revólveres",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Colt Peacemaker (.45)",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 1,
+        "forcaMin": "6",
+        "peso": "2",
+        "custo": 200,
+        "observacoes": "—",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Smith & Wesson (.357)",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 1,
+        "forcaMin": "6",
+        "peso": "2,5",
+        "custo": 250,
+        "observacoes": "—",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Combate à Distância",
+    "subtipo": "Rifles com ação por alavanca e ferrolho",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Carabina Spencer (.52)",
+        "distancia": "20/40/80",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "forcaMin": "7",
+        "peso": "4",
+        "custo": 250,
+        "observacoes": "—",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Sharps Big 50 (.50)",
+        "distancia": "30/60/120",
+        "dano": "2d10",
+        "pa": 2,
+        "cdt": 1,
+        "forcaMin": "1",
+        "peso": "5,5",
+        "custo": 400,
+        "observacoes": "Tiro Rápido",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Winchester ‘73 (.44-40)",
+        "distancia": "24/48/96",
+        "dano": "2d8-1",
+        "pa": 2,
+        "cdt": 1,
+        "forcaMin": "15",
+        "peso": "5",
+        "custo": 300,
+        "observacoes": "—",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Animais e Arreios",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Cavalo de guerra",
+        "custo": 350,
+        "peso": "—",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Cavalo de montaria",
+        "custo": 75,
+        "peso": "—",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Mula/burro",
+        "custo": 8,
+        "peso": "—",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Pessoais",
+    "subtipo": "Medievais",
+    "subsubtipo": "Combate corpo a corpo",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Chicote",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": "1",
+        "custo": 5,
+        "observacoes": "Aparar -1, Alcance 2, Ampliação = Enredado",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Revólveres",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Colt Peacemaker (.45)",
+        "dano": "2d6+1",
+        "pa": 1,
+        "peso": "1",
+        "custo": 15,
+        "observacoes": "Ação Simples. Cadência 1. 6 Tiros.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Colt Army (.44)",
+        "dano": "2d6+1",
+        "pa": 0,
+        "peso": "1",
+        "custo": 12,
+        "observacoes": "Ação Simples. Cadência 1. 6 Tiros.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "LeMat Grapeshot",
+        "dano": "2d6",
+        "pa": 0,
+        "peso": "2",
+        "custo": 25,
+        "observacoes": "9 Tiros (.42) + 1 Cano de Escopeta (20g) sob o cano principal.",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Rifles e Escopetas",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Winchester '73 (.44-40)",
+        "dano": "2d8",
+        "pa": 2,
+        "peso": "4",
+        "custo": 25,
+        "observacoes": "15 Tiros. Ação por Alavanca.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Sharps Big 50 (.50)",
+        "dano": "2d10",
+        "pa": 2,
+        "peso": "5",
+        "custo": 50,
+        "observacoes": "1 Tiro. Alcance longo (50/100/200).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Escopeta Cano Duplo (Scattergun)",
+        "dano": "1-3d6",
+        "peso": "3",
+        "custo": 35,
+        "observacoes": "2 Tiros. +2 para acertar a curta distância.",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Munição",
+    "subtipo": "Especial",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Cartuchos de Pedra Fantasma (50)",
+        "custo": 50,
+        "peso": "1",
+        "observacoes": "Adiciona +1 de Dano a armas de fogo. Queima com chama verde.",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Terrestres e Aéreos",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Carroça",
+        "tamanho": 4,
+        "resistencia": 10,
+        "tripulacao": "1+4",
+        "custo": 50,
+        "velMaxima": 8,
+        "observacoes": "Tração animal.",
+        "originalName": "Cart",
+        "origem": "DEADLANDS"
+      }
+    ]
+  }
+]

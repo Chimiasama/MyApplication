@@ -1,0 +1,30 @@
+[
+  {
+    "id": "comp_procurado_deadlands",
+    "name": "PROCURADO (Texas Rangers/Agência)",
+    "origem": "CRYSTAL_HEART",
+    "severity": "maior",
+    "description": "Caçado por uma das grandes organizações da lei do Oeste. Recompensa alta pela cabeça."
+  },
+  {
+    "id": "comp_dessorna",
+    "name": "DESSORNA (Doença do Cristal)",
+    "origem": "CRYSTAL_HEART",
+    "severity": "maior",
+    "description": "Rejeição ao cristal. Deve fazer teste de Vigor diário ou sofre Fadiga. Falha crítica causa ferimento."
+  },
+  {
+    "id": "comp_sensibilidade_obsidiana",
+    "name": "SENSIBILIDADE À OBSIDIANA",
+    "origem": "CRYSTAL_HEART",
+    "severity": "menor",
+    "description": "A proximidade com Obsidiana causa -2 em todas as rolagens de Traço."
+  },
+  {
+    "id": "comp_inimigo_syn",
+    "name": "INIMIGO DA SYN",
+    "origem": "CRYSTAL_HEART",
+    "severity": "maior",
+    "description": "Caçado pela organização da Agência ou por grupos renegados que roubam cristais."
+  }
+]
