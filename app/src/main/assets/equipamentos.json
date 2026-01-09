@@ -5418,42 +5418,7 @@
       }
     ]
   },
-  {
-    "tipo": "Equipamento de Aventura",
-    "subtipo": "Específicos do Cenário",
-    "origem": "FANTASIABUSCATRILHA",
-    "itens": [
-      {
-        "nome": "Bússola de Guia",
-        "custo": 500,
-        "peso": "0,5",
-        "observacoes": "Concede +2 em Sobrevivência para navegação. Pode emitir luz (comando).",
-        "originalName": "Wayfinder (Bússola de Desbravador)"
-      },
-      {
-        "nome": "Pedra Trovão",
-        "custo": 30,
-        "peso": "0,5",
-        "observacoes": "Explode em MME. Vigor ou Abalado e Surdo.",
-        "originalName": null
-      },
-      {
-        "nome": "Bolsa Enredapé",
-        "custo": 50,
-        "peso": "2",
-        "observacoes": "Cola alvo ao chão (Tamanho 3 ou menor). Distraído e preso (Atletismo para soltar).",
-        "originalName": "Tanglefoot Bag"
-      },
-      {
-        "nome": "Bastão Solar",
-        "custo": 2,
-        "peso": "0,5",
-        "observacoes": "Luz em 10m por 6 horas. Aumenta iluminação em +1 nível além disso.",
-        "originalName": "Sunrod"
-      }
-    ]
-  },
-  {
+    {
     "tipo": "Armas Especiais",
     "subtipo": "Medievais",
     "origem": "FANTASIABUSCATRILHA",
@@ -6159,6 +6124,14 @@
         "peso": "0.5",
         "custo": 5,
         "observacoes": "Distância 3/6/12."
+      },
+      {
+        "nome": "Sai",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": "2",
+        "custo": 20,
+        "observacoes": "Aparar +1, +1 para manobra de Desarmar; tipicamente comprado e usado em pares"
       }
     ]
   },
@@ -6342,7 +6315,6 @@
     "subtipo": "Lâminas",
     "origem": "ARTE_DA_GUERRA",
     "itens": [
-      { "nome": "Katana", "dano": "For+d6+1", "pa": "1", "peso": "3", "custo": 300, "forcaMin": 6, "observacoes": "Duas Mãos. Perfurante." },
       { "nome": "Wakizashi", "dano": "For+d6", "pa": "1", "peso": "2", "custo": 200, "observacoes": "Pode ser usada com Katana (Daisho)." },
       { "nome": "Naginata", "dano": "For+d8", "pa": "1", "peso": "6", "custo": 400, "forcaMin": 6, "observacoes": "Alcance 1. Duas Mãos. Aparar +1." }
     ]
@@ -6352,7 +6324,7 @@
     "subtipo": "Distância",
     "origem": "ARTE_DA_GUERRA",
     "itens": [
-      { "nome": "Shuriken (3)", "dano": "For+d3", "distancia": "3/6/12", "peso": "0.5", "custo": 10, "observacoes": "CdT 1. Não acumula penalidade de saque rápido." },
+      { "nome": "Shuriken", "dano": "For+d4", "distancia": "4/8/16", "peso": "0.5", "custo": 5, "observacoes": "CdT 2. Não acumula penalidade de saque rápido." },
       { "nome": "Yumi (Arco Longo)", "dano": "2d6", "distancia": "15/30/60", "peso": "3", "custo": 250, "forcaMin": 8, "observacoes": "Requer Força d8 para puxar." }
     ]
   },
