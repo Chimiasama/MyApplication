@@ -1,0 +1,577 @@
+[
+  {
+    "tipo": "Armas Pessoais",
+    "subtipo": "Futuristas",
+    "subsubtipo": "Combate corpo a corpo",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Espada Molecular",
+        "dano": "For+d8+2",
+        "forcaMin": "d6",
+        "peso": "1",
+        "custo": 500,
+        "observacoes": "PA 4",
+        "subsubtipo": "Espadas",
+        "origem": "SCI_FI"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Combate à Distância",
+    "subtipo": "Lasers Futuristas",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Gatling Laser",
+        "distancia": "50/100/200",
+        "dano": "3d6+4",
+        "pa": 2,
+        "cdt": 4,
+        "forcaMin": "800",
+        "peso": "10",
+        "custo": 1000,
+        "observacoes": "—",
+        "origem": "SCI_FI"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Especiais",
+    "subtipo": "Armas Veiculares",
+    "subsubtipo": "Futuristas",
+    "itens": [
+      {
+        "nome": "Laser Pesado",
+        "distancia": "150/300/600",
+        "municaoPa": "4d10, AP 30",
+        "municaoAe": null,
+        "cdt": 1,
+        "custo": 1000000,
+        "origem": "SCI_FI"
+      },
+      {
+        "nome": "Gatling Laser",
+        "distancia": "50/100/200",
+        "municaoPa": "3d6+4, PA 4",
+        "municaoAe": null,
+        "cdt": 4,
+        "custo": 1000,
+        "origem": "SCI_FI"
+      }
+    ],
+    "origem": "SCI_FI"
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Veículos Militares Futuristas",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "APC Flutuador",
+        "tamanho": 7,
+        "manobrabilidade": 0,
+        "velMaxima": 120,
+        "resistencia": 26,
+        "tripulacao": "(10)",
+        "custo": "75K",
+        "observacoes": "Armadura Pesada, Flutuador. Armas: Gatling Laser (Fixa na Frente, Tiro de Reação)",
+        "origem": "SCI_FI"
+      },
+      {
+        "nome": "Tanque Flutuador",
+        "tamanho": 7,
+        "manobrabilidade": 0,
+        "velMaxima": 72,
+        "resistencia": 38,
+        "tripulacao": "(22)",
+        "custo": "1.2M",
+        "observacoes": "Armadura Pesada, Flutuador, Visão Noturna. Armas: Laser Pesado (Torreta, Estabilizador Aprimorado), Gatling Laser (Fixa na Frente, Tiro de Reação)",
+        "origem": "SCI_FI"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Supers",
+    "subtipo": "Veículos",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Moto Chieftain",
+        "tamanho": 1,
+        "manobrabilidade": "+1",
+        "velMaxima": 160,
+        "resistencia": 11,
+        "tripulacao": "1+1",
+        "custo": 8000,
+        "observacoes": "50% de chance de tiros atingirem piloto/passageiro em vez da moto",
+        "origem": "SCI_FI"
+      },
+      {
+        "nome": "Jato Peregrine Jump",
+        "tamanho": 8,
+        "manobrabilidade": "+1",
+        "velMaxima": 800,
+        "resistencia": 18,
+        "tripulacao": "1+5",
+        "custo": 5000000,
+        "observacoes": "VTOL; opcional Gatlings ou mísseis Sidewinder",
+        "origem": "SCI_FI"
+      },
+      {
+        "nome": "Juggernaut VBTP",
+        "tamanho": 7,
+        "manobrabilidade": "-1",
+        "velMaxima": 50,
+        "resistencia": 24,
+        "tripulacao": "2+12",
+        "custo": 400000,
+        "observacoes": "Anfíbio, Armadura Pesada, pode equipar 2×Gatling de Pulso",
+        "origem": "SCI_FI"
+      },
+      {
+        "nome": "Submarino de Ataque Mako",
+        "tamanho": 9,
+        "manobrabilidade": "-1",
+        "velMaxima": 30,
+        "resistencia": 27,
+        "tripulacao": "1+11",
+        "custo": 800000,
+        "observacoes": "Submersível; 2×Torpedos + 2×Gatling de Pulso (superfície)",
+        "origem": "SCI_FI"
+      },
+      {
+        "nome": "Tanque de Batalha Grizzly",
+        "tamanho": 9,
+        "manobrabilidade": "-1",
+        "velMaxima": 50,
+        "resistencia": 50,
+        "tripulacao": "4",
+        "custo": 5000000,
+        "observacoes": "Esteira, Armadura Pesada, Canhão 120 mm + 2×Gatling de Pulso",
+        "origem": "SCI_FI"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Energia",
+    "subtipo": "Lasers",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Pistola Laser",
+        "dano": "2d6",
+        "pa": 2,
+        "peso": "1",
+        "custo": 300,
+        "observacoes": "Sem recuo. Cargas: 50.",
+        "origem": "SCI_FI"
+      },
+      {
+        "nome": "Rifle Laser",
+        "dano": "3d6",
+        "pa": 2,
+        "peso": "4",
+        "custo": 700,
+        "observacoes": "Sem recuo. Cargas: 100. Automático (CdT 3).",
+        "origem": "SCI_FI"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Energia",
+    "subtipo": "Plasma",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Pistola de Plasma",
+        "dano": "2d10+2",
+        "pa": 0,
+        "peso": "2",
+        "custo": 500,
+        "observacoes": "Pode sobreaquecer.",
+        "origem": "SCI_FI"
+      },
+      {
+        "nome": "Rifle de Plasma",
+        "dano": "3d10+2",
+        "pa": 0,
+        "peso": "6",
+        "custo": 2000,
+        "observacoes": "Pode sobreaquecer. Arma Pesada.",
+        "origem": "SCI_FI"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Energia",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Vibro-Faca",
+        "dano": "For+d6",
+        "pa": 4,
+        "peso": "1",
+        "custo": 200,
+        "observacoes": "Lâmina vibratória.",
+        "origem": "SCI_FI"
+      },
+      {
+        "nome": "Vibro-Espada",
+        "dano": "For+d8+2",
+        "pa": 6,
+        "peso": "2",
+        "custo": 500,
+        "observacoes": "Lâmina vibratória.",
+        "origem": "SCI_FI"
+      },
+      {
+        "nome": "Espada de Energia",
+        "dano": "For+d8+4",
+        "pa": 8,
+        "peso": "1",
+        "custo": 1000,
+        "observacoes": "Ignora armaduras não seladas/energizadas.",
+        "origem": "SCI_FI"
+      }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Trajes",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Traje de Voo",
+        "armadura": "+2",
+        "peso": "3",
+        "custo": 200,
+        "observacoes": "Cobre tronco, braços e pernas.",
+        "origem": "SCI_FI"
+      },
+      {
+        "nome": "Armadura de Infantaria",
+        "armadura": "+6",
+        "peso": "10",
+        "custo": 800,
+        "observacoes": "Corpo todo. Reduz dano balístico em 2.",
+        "origem": "SCI_FI"
+      },
+      {
+        "nome": "Traje de Batalha (Energizado)",
+        "armadura": "+8",
+        "peso": "20",
+        "custo": 5000,
+        "observacoes": "Aumenta Força em um dado. Requer bateria.",
+        "origem": "SCI_FI"
+      }
+    ]
+  },
+  {
+    "tipo": "CIBERNETICO",
+    "subtipo": "Implantes",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Olhos Biônicos",
+        "custo": 2000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Ignora penalidades de iluminação (Visão Noturna). Zoom 10x (+2 em Perceber visual)."
+      },
+      {
+        "nome": "Braço Cibernético",
+        "custo": 5000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Aumenta Força do braço em um dado. Dano desarmado For+d4. Não sente dor no membro."
+      },
+      {
+        "nome": "Pernas Cibernéticas",
+        "custo": 6000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Aumenta Movimentação em +2 e Salto."
+      },
+      {
+        "nome": "Blindagem Dérmica (Nível 1)",
+        "custo": 3000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Concede +2 de Armadura natural."
+      },
+      {
+        "nome": "Interface de Dados",
+        "custo": 1000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Permite conexão direta com computadores (+2 em Hacking/Eletrônica)."
+      },
+      {
+        "nome": "Reflexos Ampliados",
+        "custo": 10000,
+        "tensao": 3,
+        "origem": "SCI_FI",
+        "observacoes": "Requer Agilidade d8. Concede a vantagem Rápido ou Nível 1 de Rapidez."
+      }
+    ]
+  },
+  {
+    "tipo": "MECHA",
+    "subtipo": "Chassis",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Chassis Leve (Batedor)",
+        "tamanho": 4,
+        "resistencia": 12,
+        "armadura": 4,
+        "movimentacao": 14,
+        "custo": 50000,
+        "mods_slots": 5,
+        "origem": "SCI_FI",
+        "observacoes": "Mecha rápido para reconhecimento."
+      },
+      {
+        "nome": "Chassis Médio (Linha de Frente)",
+        "tamanho": 6,
+        "resistencia": 16,
+        "armadura": 6,
+        "movimentacao": 10,
+        "custo": 100000,
+        "mods_slots": 10,
+        "origem": "SCI_FI",
+        "observacoes": "Equilíbrio entre proteção e poder de fogo."
+      },
+      {
+        "nome": "Chassis Pesado (Assalto)",
+        "tamanho": 8,
+        "resistencia": 20,
+        "armadura": 8,
+        "movimentacao": 6,
+        "custo": 250000,
+        "mods_slots": 15,
+        "origem": "SCI_FI",
+        "observacoes": "Plataforma de armas móvel."
+      }
+    ]
+  },
+  {
+    "tipo": "ARMADURA_ENERGIZADA",
+    "subtipo": "Chassis",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Traje Leve (Infiltração)",
+        "tamanho": 1,
+        "resistencia": 8,
+        "armadura": 4,
+        "movimentacao": 8,
+        "custo": 10000,
+        "mods_slots": 3,
+        "origem": "SCI_FI",
+        "observacoes": "Traje amplificado para batedores."
+      },
+      {
+        "nome": "Traje Pesado (Tanque)",
+        "tamanho": 2,
+        "resistencia": 12,
+        "armadura": 8,
+        "movimentacao": 6,
+        "custo": 30000,
+        "mods_slots": 6,
+        "origem": "SCI_FI",
+        "observacoes": "Armadura de batalha completa."
+      }
+    ]
+  },
+  {
+    "tipo": "ROBO",
+    "subtipo": "Chassis",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Drone de Reparo",
+        "tamanho": -1,
+        "resistencia": 6,
+        "armadura": 2,
+        "movimentacao": 6,
+        "custo": 2000,
+        "mods_slots": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Robô utilitário."
+      },
+      {
+        "nome": "Sentinela de Combate",
+        "tamanho": -1,
+        "resistencia": 10,
+        "armadura": 4,
+        "movimentacao": 12,
+        "custo": 5000,
+        "mods_slots": 4,
+        "origem": "SCI_FI",
+        "observacoes": "Voo: Movimentação 12. Tamanho -1 (Pequeno).",
+        "descricao": "Pequenas plataformas aéreas projetadas para auxiliar soldados em escaramuças, flanquear inimigos ou realizar reconhecimento. Possuem corpo reforçado (Armadura +4), sensores avançados que ignoram iluminação e são destemidos. Vulneráveis a PEM e bloqueio de sinal (falha de controle remoto)."
+      },
+      {
+        "nome": "Drone de Batalha",
+        "origem": "SCI_FI",
+        "mods_slots": 0,
+        "resistencia": 10,
+        "descricao": "Drones de médio porte capazes de transportar munições pesadas. Podem pairar sobre uma área e liberar poder de fogo devastador com precisão mortal. Armadura pesada (+4) e sensores táticos.",
+        "observacoes": "Voo: Movimentação 24. Tamanho 1 (Normal).",
+        "tamanho": 1,
+        "movimentacao": 24,
+        "armadura": 4
+      }
+    ]
+  },
+  {
+    "tipo": "CIBERNETICO",
+    "subtipo": "Implantes",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Olhos Biônicos",
+        "custo": 2000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Ignora penalidades de iluminação (Visão Noturna). Zoom 10x (+2 em Perceber visual)."
+      },
+      {
+        "nome": "Braço Cibernético",
+        "custo": 5000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Aumenta Força do braço em um dado. Dano desarmado For+d4. Não sente dor no membro."
+      },
+      {
+        "nome": "Pernas Cibernéticas",
+        "custo": 6000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Aumenta Movimentação em +2 e Salto."
+      },
+      {
+        "nome": "Blindagem Dérmica (Nível 1)",
+        "custo": 3000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Concede +2 de Armadura natural."
+      },
+      {
+        "nome": "Interface de Dados",
+        "custo": 1000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Permite conexão direta com computadores (+2 em Hacking/Eletrônica)."
+      },
+      {
+        "nome": "Reflexos Ampliados",
+        "custo": 10000,
+        "tensao": 3,
+        "origem": "SCI_FI",
+        "observacoes": "Requer Agilidade d8. Concede a vantagem Rápido ou Nível 1 de Rapidez."
+      }
+    ]
+  },
+  {
+    "tipo": "MECHA",
+    "subtipo": "Chassis",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Chassis Leve (Batedor)",
+        "tamanho": 4,
+        "resistencia": 12,
+        "armadura": 4,
+        "movimentacao": 14,
+        "custo": 50000,
+        "mods_slots": 5,
+        "origem": "SCI_FI",
+        "observacoes": "Mecha rápido para reconhecimento."
+      },
+      {
+        "nome": "Chassis Médio (Linha de Frente)",
+        "tamanho": 6,
+        "resistencia": 16,
+        "armadura": 6,
+        "movimentacao": 10,
+        "custo": 100000,
+        "mods_slots": 10,
+        "origem": "SCI_FI",
+        "observacoes": "Equilíbrio entre proteção e poder de fogo."
+      },
+      {
+        "nome": "Chassis Pesado (Assalto)",
+        "tamanho": 8,
+        "resistencia": 20,
+        "armadura": 8,
+        "movimentacao": 6,
+        "custo": 250000,
+        "mods_slots": 15,
+        "origem": "SCI_FI",
+        "observacoes": "Plataforma de armas móvel."
+      }
+    ]
+  },
+  {
+    "tipo": "ARMADURA_ENERGIZADA",
+    "subtipo": "Chassis",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Traje Leve (Infiltração)",
+        "tamanho": 1,
+        "resistencia": 8,
+        "armadura": 4,
+        "movimentacao": 8,
+        "custo": 10000,
+        "mods_slots": 3,
+        "origem": "SCI_FI",
+        "observacoes": "Traje amplificado para batedores."
+      },
+      {
+        "nome": "Traje Pesado (Tanque)",
+        "tamanho": 2,
+        "resistencia": 12,
+        "armadura": 8,
+        "movimentacao": 6,
+        "custo": 30000,
+        "mods_slots": 6,
+        "origem": "SCI_FI",
+        "observacoes": "Armadura de batalha completa."
+      }
+    ]
+  },
+  {
+    "tipo": "ROBO",
+    "subtipo": "Chassis",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Drone de Reparo",
+        "tamanho": -1,
+        "resistencia": 6,
+        "armadura": 2,
+        "movimentacao": 6,
+        "custo": 2000,
+        "mods_slots": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Robô utilitário."
+      },
+      {
+        "nome": "Sentinela de Combate",
+        "tamanho": 0,
+        "resistencia": 10,
+        "armadura": 4,
+        "movimentacao": 6,
+        "custo": 5000,
+        "mods_slots": 4,
+        "origem": "SCI_FI",
+        "observacoes": "Robô soldado padrão."
+      }
+    ]
+  }
+]

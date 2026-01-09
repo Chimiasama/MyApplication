@@ -1,0 +1,202 @@
+[
+  {
+    "id": "anc_aurax",
+    "nome": "Povo-Búfalo",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "SCI_FI",
+    "atributos": {
+      "Vigor": 2
+    },
+    "pericias": {},
+    "habilidades": [
+      {
+        "nome": "Resistente",
+        "descricao": "Começam com Vigor d6. Máximo d12+1."
+      },
+      {
+        "nome": "Mundo de Baixa Gravidade",
+        "descricao": "Deduzem 1 de Força e Vigor em gravidade normal. Fatigam-se rapidamente em gravidade alta."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignoram penalidades de iluminação até 10 quadros."
+      }
+    ]
+  },
+  {
+    "id": "anc_avion",
+    "nome": "Povo-Alado",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "SCI_FI",
+    "atributos": {
+      "Agilidade": 2
+    },
+    "pericias": {},
+    "habilidades": [
+      {
+        "nome": "Voo",
+        "descricao": "Voam com Movimentação 12 em gravidade normal."
+      },
+      {
+        "nome": "Ossos Frágeis",
+        "descricao": "-1 na Resistência."
+      },
+      {
+        "nome": "Agilidade",
+        "descricao": "Começam com Agilidade d6. Máximo d12+1."
+      }
+    ]
+  },
+  {
+    "id": "anc_constructo_scifi",
+    "nome": "Constructo (Sci-Fi)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "SCI_FI",
+    "atributos": {},
+    "pericias": {},
+    "habilidades": [
+      {
+        "nome": "Artificial",
+        "descricao": "+2 para recuperar Abalado. Não respira. Imune a doenças/venenos."
+      },
+      {
+        "nome": "Dependência",
+        "descricao": "Precisa recarregar energia diariamente ou sofre Fadiga."
+      },
+      {
+        "nome": "Modificações",
+        "descricao": "Pode instalar sistemas cibernéticos sem Tensão (ocupa slots de tamanho)."
+      },
+      {
+        "nome": "Forasteiro",
+        "descricao": "Muitas vezes tratados como propriedade. -2 em Persuadir."
+      }
+    ]
+  },
+  {
+    "id": "anc_floran",
+    "nome": "Floran",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "SCI_FI",
+    "atributos": {},
+    "pericias": {},
+    "habilidades": [
+      {
+        "nome": "Planta",
+        "descricao": "+2 para recuperar Abalado. Imune a venenos. Não sofrem dano extra de ataques localizados."
+      },
+      {
+        "nome": "Dependência",
+        "descricao": "Precisa de luz solar e água ou sofre Fadiga."
+      },
+      {
+        "nome": "Inflamável",
+        "descricao": "+2 de dano por ataques de fogo. -2 para resistir a fogo."
+      }
+    ]
+  },
+  {
+    "id": "anc_insectoide",
+    "nome": "Insectoide",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "SCI_FI",
+    "atributos": {},
+    "pericias": {},
+    "habilidades": [
+      {
+        "nome": "Armadura",
+        "descricao": "Carapaça fornece +2 de Armadura."
+      },
+      {
+        "nome": "Membros Extras",
+        "descricao": "Possui braços extras. Ignora 2 pontos de penalidade por Ações Múltiplas."
+      },
+      {
+        "nome": "Não Fala",
+        "descricao": "Não consegue falar idiomas humanoides (comunica-se por cliques/feromônios ou tradutor)."
+      }
+    ]
+  },
+  {
+    "id": "anc_kalian",
+    "nome": "Povo de Quatro Braços",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "SCI_FI",
+    "atributos": {},
+    "pericias": {},
+    "habilidades": [
+      {
+        "nome": "Quatro Braços",
+        "descricao": "Ignora 2 pontos de penalidade por Ações Múltiplas."
+      },
+      {
+        "nome": "Pacifista",
+        "descricao": "Começam com a Complicação Pacifista (Menor)."
+      },
+      {
+        "nome": "Forasteiro",
+        "descricao": "Aparência estranha. -2 em Persuadir."
+      }
+    ]
+  },
+  {
+    "id": "anc_rakashan",
+    "nome": "Felinídeo",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "SCI_FI",
+    "atributos": {
+      "Agilidade": 2
+    },
+    "pericias": {},
+    "habilidades": [
+      {
+        "nome": "Agilidade",
+        "descricao": "Começam com Agilidade d6. Máximo d12+1."
+      },
+      {
+        "nome": "Garras",
+        "descricao": "For+d4, PA 2."
+      },
+      {
+        "nome": "Mordida",
+        "descricao": "For+d4."
+      },
+      {
+        "nome": "Sanguinário",
+        "descricao": "Começam com a Complicação Sanguinário."
+      },
+      {
+        "nome": "Visão na Penumbra",
+        "descricao": "Ignoram penalidades por Penumbra e Escuridão."
+      }
+    ]
+  },
+  {
+    "id": "anc_yeti",
+    "nome": "Yeti",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "SCI_FI",
+    "atributos": {
+      "Força": 2
+    },
+    "pericias": {},
+    "habilidades": [
+      {
+        "nome": "Forte",
+        "descricao": "Começam com Força d6. Máximo d12+1."
+      },
+      {
+        "nome": "Tamanho +1",
+        "descricao": "São grandes e robustos."
+      },
+      {
+        "nome": "Resistência ao Frio",
+        "descricao": "+4 para resistir a frio."
+      },
+      {
+        "nome": "Suscetibilidade ao Calor",
+        "descricao": "-4 para resistir a calor."
+      }
+    ]
+  }
+]
