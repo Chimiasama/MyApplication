@@ -212,29 +212,9 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Óleo (para lamparina: meio litro)",
-        "custo": 2,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Pá",
         "custo": 5,
         "peso": "2,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Pedra de Amolar",
-        "custo": 5,
-        "peso": "0,5",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
@@ -1164,15 +1144,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Alabarda",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "3",
-        "custo": 250,
-        "observacoes": "Alcance 1, duas mãos",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Clava Leve",
         "dano": "For+d4",
         "forcaMin": "d4",
@@ -1188,15 +1159,6 @@
         "peso": "2,5",
         "custo": 50,
         "observacoes": "Uma marca de vulgaridade ou brutalidade",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Katana",
-        "dano": "For+d6+1",
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 1000,
-        "observacoes": "Duas mãos",
         "origem": "SUPLEMENTO"
       },
       {
@@ -1939,37 +1901,6 @@
   },
   {
     "tipo": "Armas Especiais",
-    "subtipo": "Catapultas",
-    "origem": "SUPLEMENTO",
-    "itens": [
-      {
-        "nome": "Catapulta",
-        "distancia": "24/48/96",
-        "dano": "3d6",
-        "pa": 4,
-        "cdt": null,
-        "forcaMin": null,
-        "peso": "—",
-        "custo": 10000,
-        "observacoes": "MME, Arma Pesada, Recarregar é a cada 5 minutos com uma equipe de 4",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Trabuco",
-        "distancia": "30/60/120",
-        "dano": "3d8",
-        "pa": 4,
-        "cdt": null,
-        "forcaMin": null,
-        "peso": "—",
-        "custo": 50000,
-        "observacoes": "MME, Arma Pesada, Recarregar é a cada 5 minutos com uma equipe de 4",
-        "origem": "SUPLEMENTO"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Especiais",
     "subtipo": "Lança-Chamas",
     "origem": "SUPLEMENTO",
     "itens": [
@@ -2414,17 +2345,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Carruagem",
-        "tamanho": 3,
-        "manobrabilidade": -2,
-        "velMaxima": 25,
-        "resistencia": 6,
-        "tripulacao": "1+3",
-        "custo": "1–3K",
-        "observacoes": "Puxada por um Cavalo, veja pág. 219. Movimentação 12 e pode correr",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Minivan",
         "tamanho": 4,
         "manobrabilidade": "0",
@@ -2760,17 +2680,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Galé",
-        "tamanho": 13,
-        "manobrabilidade": -1,
-        "velMaxima": 30,
-        "resistencia": 20,
-        "tripulacao": "(20+100)",
-        "custo": "150K",
-        "observacoes": "Armadura Pesada. Tem remos e velas. Armas: Catapulta (Fixa na Frente)",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Hidrofólio",
         "tamanho": 10,
         "manobrabilidade": 0,
@@ -3009,36 +2918,6 @@
     "origem": "SUPLEMENTO",
     "itens": [
       {
-        "nome": "Alforjes",
-        "custo": 4,
-        "peso": "4",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Ampulheta",
-        "custo": 25,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Arpéu",
-        "custo": 2,
-        "peso": "2",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Pode ser preso a uma corda. Distância 3/6/12. Suporta até 100kg.",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Bainha",
         "custo": 8,
         "peso": "1,5",
@@ -3059,26 +2938,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Baú (grande)",
-        "custo": 20,
-        "peso": "37,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Baú (pequeno)",
-        "custo": 2,
-        "peso": "12,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Bolsa",
         "custo": 1,
         "peso": "0,25",
@@ -3086,16 +2945,6 @@
         "armadura": null,
         "aparar": null,
         "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Bolsa de Alquimista",
-        "custo": 25,
-        "peso": "2,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Laboratório portátil.",
         "origem": "SUPLEMENTO"
       },
       {
@@ -3209,26 +3058,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Estrepes",
-        "custo": 1,
-        "peso": "1",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Conta como Terreno Difícil; Rolagem de Atletismo ou Abalado.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Ferramentas de ladrão",
-        "custo": 30,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Sem elas aplica -2 em Ladinagem.",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Frasco (metal)",
         "custo": 0.25,
         "peso": "0,5",
@@ -3249,16 +3078,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Giz (caixa com 12)",
-        "custo": 1,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Grimório em branco",
         "custo": 15,
         "peso": "1,5",
@@ -3272,16 +3091,6 @@
         "nome": "Haste (3,5 metros)",
         "custo": 0.25,
         "peso": "4",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Instrumento musical",
-        "custo": 5,
-        "peso": "1,5",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
@@ -3319,16 +3128,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Kit de Curandeiro",
-        "custo": 50,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Cinco usos.",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Livro",
         "custo": 50,
         "peso": "2,5",
@@ -3336,16 +3135,6 @@
         "armadura": null,
         "aparar": null,
         "observacoes": "Permite rolagens de Perceber para informações específicas.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Luneta",
-        "custo": 1000,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "+2 em Perceber ao ver objetos distantes.",
         "origem": "SUPLEMENTO"
       },
       {
@@ -3389,16 +3178,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Óleo (meio litro)",
-        "custo": 0.25,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Combustível. Como arma: Distância 3/6/12, 1d10 dano, pode pegar fogo.",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Pá pequena",
         "custo": 2,
         "peso": "2",
@@ -3412,16 +3191,6 @@
         "nome": "Panela (ferro)",
         "custo": 0.5,
         "peso": "2",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Pedra de amolar",
-        "custo": 0.25,
-        "peso": "—",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
@@ -3489,36 +3258,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Símbolo sagrado (madeira)",
-        "custo": 1,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Símbolo sagrado (prata)",
-        "custo": 25,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Símbolo sagrado (ouro)",
-        "custo": 100,
-        "peso": "2,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Sino",
         "custo": 1,
         "peso": "1",
@@ -3532,16 +3271,6 @@
         "nome": "Tela (m²)",
         "custo": 1,
         "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Tenda (6 pessoas)",
-        "custo": 30,
-        "peso": "20",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
@@ -3992,16 +3721,6 @@
         "aparar": null,
         "observacoes": "",
         "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Carruagem",
-        "custo": 100,
-        "peso": "1000",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
       }
     ]
   },
@@ -4010,66 +3729,6 @@
     "subtipo": "Itens Alquímicos",
     "origem": "SUPLEMENTO",
     "itens": [
-      {
-        "nome": "Água Benta",
-        "custo": 25,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "2d4 dano em mortos-vivos (MPE).",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Antitoxina",
-        "custo": 50,
-        "peso": "0,5/2",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "+4 para resistir a venenos por 1h.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Bastão de Fumaça",
-        "custo": 20,
-        "peso": "0,5/10",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Escuridão (-4) em MME por 1 min.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Bastão Solar",
-        "custo": 2,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Luz raio 10m por 6h. For+d4 se usado como arma.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Bolsa Enredapé",
-        "custo": 50,
-        "peso": "2",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Causa Distraído e pode Enredar.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Fogo Alquímico",
-        "custo": 20,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "2d4 dano (MPE), pode incendiar.",
-        "origem": "SUPLEMENTO"
-      },
       {
         "nome": "Fósforos",
         "custo": 1,
@@ -4081,16 +3740,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Frasco de Ácido",
-        "custo": 10,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "2d4 dano (MPE).",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Pedra-Trovão",
         "custo": 30,
         "peso": "0,5",
@@ -4098,16 +3747,6 @@
         "armadura": null,
         "aparar": null,
         "observacoes": "Vigor ou Abalado e Surdo (MME).",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Tocha Eterna",
-        "custo": 110,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Chama permanente que não emite calor.",
         "origem": "SUPLEMENTO"
       }
     ]
@@ -4421,24 +4060,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Alabarda",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "6",
-        "custo": 10,
-        "observacoes": "PA 1, Alcance 1, Duas Mãos",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Alfange",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "4",
-        "custo": 75,
-        "observacoes": "PA 1, Duas Mãos (+1 dano)",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Bastão/Cajado",
         "dano": "For+d4",
         "forcaMin": "d4",
@@ -4448,39 +4069,12 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Bisarma",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "6",
-        "custo": 9,
-        "observacoes": "PA 1, Alcance 1, Duas Mãos",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Chakram",
-        "dano": "For+d4",
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 1,
-        "observacoes": "Aparar +1",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Chicote",
         "dano": "For+d4",
         "forcaMin": "d4",
         "peso": "1",
         "custo": 5,
         "observacoes": "Aparar -1, Alcance 2, Ampliação = Enredado",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Cimitarra",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "2",
-        "custo": 15,
-        "observacoes": "—",
         "origem": "SUPLEMENTO"
       },
       {
@@ -4502,15 +4096,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Corrente com Espinhos",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "3",
-        "custo": 8,
-        "observacoes": "PA 1, Ignora escudo, Duas Mãos",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Derrubador",
         "dano": "For+d4",
         "forcaMin": "d6",
@@ -4520,48 +4105,12 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Espada Gancho",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "2",
-        "custo": 20,
-        "observacoes": "+1 para Desarmar",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Foice",
         "dano": "For+d4",
         "forcaMin": "d4",
         "peso": "1",
         "custo": 3,
         "observacoes": "—",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Gadanha",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "5",
-        "custo": 18,
-        "observacoes": "Duas Mãos",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Glaive",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "5",
-        "custo": 8,
-        "observacoes": "Alcance 1, Duas Mãos",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Katana",
-        "dano": "For+d6+1",
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 50,
-        "observacoes": "Duas Mãos",
         "origem": "SUPLEMENTO"
       },
       {
@@ -4580,15 +4129,6 @@
         "peso": "5",
         "custo": 10,
         "observacoes": "PA 2 em investida, Alcance 2, Apenas montado",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Maça Estrela",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "3",
-        "custo": 8,
-        "observacoes": "—",
         "origem": "SUPLEMENTO"
       },
       {
@@ -4619,15 +4159,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Mangual Pesado",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "5",
-        "custo": 15,
-        "observacoes": "Ignora escudo, Duas Mãos",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Manopla com Espinhos",
         "dano": "For+d4",
         "forcaMin": "d6",
@@ -4637,39 +4168,12 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Martelo Meteoro",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "2,5",
-        "custo": 12,
-        "observacoes": "Alcance 2, ignora escudo, Duas Mãos",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Podão de Guerra",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "6",
-        "custo": 10,
-        "observacoes": "PA 1, Alcance 1",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Sabre de Abordagem",
         "dano": "For+d6",
         "forcaMin": "d4",
         "peso": "2",
         "custo": 15,
         "observacoes": "—",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Tridente",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "2",
-        "custo": 15,
-        "observacoes": "Alcance 1",
         "origem": "SUPLEMENTO"
       }
     ]
@@ -4689,18 +4193,6 @@
         "peso": "0,5",
         "custo": 2,
         "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Besta de Mão",
-        "distancia": "5/10/20",
-        "dano": "2d4",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "1",
-        "custo": 20,
-        "observacoes": "Recarga 1.",
         "origem": "SUPLEMENTO"
       },
       {
@@ -4740,30 +4232,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Boleadeira",
-        "distancia": "3/6/12",
-        "dano": "For+d4",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "1",
-        "custo": 5,
-        "observacoes": "Ampliação = Enredado.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Chakram",
-        "distancia": "4/8/16",
-        "dano": "For+d4",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 1,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Lança/Azaguaia",
         "distancia": "4/8/16",
         "dano": "For+d6",
@@ -4785,42 +4253,6 @@
         "peso": "4",
         "custo": 20,
         "observacoes": "Acerto = Enredado. Vulnerável a corte.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Shuriken",
-        "distancia": "3/6/12",
-        "dano": "For+d4",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "—",
-        "custo": 1,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Tridente",
-        "distancia": "3/6/12",
-        "dano": "For+d6",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d6",
-        "peso": "2",
-        "custo": 15,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Zarabatana",
-        "distancia": "3/6/12",
-        "dano": "d4-2",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 2,
-        "observacoes": "",
         "origem": "SUPLEMENTO"
       }
     ]
@@ -4874,66 +4306,6 @@
     "origem": "SUPLEMENTO",
     "itens": [
       {
-        "nome": "Aríete",
-        "distancia": null,
-        "dano": "3d6",
-        "pa": null,
-        "cdt": null,
-        "forcaMin": null,
-        "peso": "200",
-        "custo": 1000,
-        "observacoes": "Requer equipe 2-8.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Balista",
-        "distancia": "15/30/60",
-        "dano": "3d6",
-        "pa": 4,
-        "cdt": 1,
-        "forcaMin": null,
-        "peso": "500",
-        "custo": 500,
-        "observacoes": "Arma Pesada. Recarga 5 min (1 op) ou 2 min (2 op).",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Catapulta",
-        "distancia": "24/48/96",
-        "dano": "3d6",
-        "pa": 4,
-        "cdt": 1,
-        "forcaMin": null,
-        "peso": "15K",
-        "custo": 800,
-        "observacoes": "MME. Arma Pesada. Recarga 5 min (4 op).",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Torre de Cerco",
-        "distancia": null,
-        "dano": null,
-        "pa": null,
-        "cdt": null,
-        "forcaMin": null,
-        "peso": "100K",
-        "custo": 2000,
-        "observacoes": "Torre móvel. Cobertura completa.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Trabuco",
-        "distancia": "30/60/120",
-        "dano": "3d8",
-        "pa": 4,
-        "cdt": 1,
-        "forcaMin": null,
-        "peso": "20K",
-        "custo": 1000,
-        "observacoes": "MME. Arma Pesada. Recarga 5 min (4 op).",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Canhão (6 kg)",
         "distancia": "50/100/200",
         "dano": "3d6+1",
@@ -4943,45 +4315,6 @@
         "peso": "600",
         "custo": "10K",
         "observacoes": "Arma Pesada. Recarga 8. Tipos: Bala Sólida, Estilhaços, Metralha.",
-        "origem": "SUPLEMENTO"
-      }
-    ]
-  },
-  {
-    "tipo": "Materiais Especiais",
-    "subtipo": "Metais e Madeiras",
-    "origem": "SUPLEMENTO",
-    "itens": [
-      {
-        "nome": "Adamante",
-        "custo": 3000,
-        "peso": "—",
-        "observacoes": "Adiciona PA +1 a armas. Armaduras ignoram 2 pontos de PA. Aumenta dureza.",
-        "originalName": "Adamantina",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Ferro Frio",
-        "custo": "Dobro do item",
-        "peso": "—",
-        "observacoes": "Útil contra fadas e demônios. Aumenta Dureza em 2.",
-        "originalName": null,
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Mithral",
-        "custo": "Variável",
-        "peso": "Metade do item",
-        "observacoes": "Reduz Força Mínima em um dado. Armas custam 100x, Armaduras 10x.",
-        "originalName": "Mithral",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Madeira Negra",
-        "custo": "+10 po/kg",
-        "peso": "Metade do item",
-        "observacoes": "Aumenta Dureza em 2. Versão obra-prima.",
-        "originalName": "Darkwood",
         "origem": "SUPLEMENTO"
       }
     ]
@@ -5398,16 +4731,6 @@
     "origem": "SUPLEMENTO",
     "itens": [
       {
-        "nome": "Katana",
-        "dano": "For+d6+1",
-        "pa": 1,
-        "peso": "1,5",
-        "custo": 500,
-        "observacoes": "Jutsu (Espada). Duas mãos: d8 dano.",
-        "jutsu_grupo": "Espada",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Nodachi",
         "dano": "For+d8",
         "pa": 2,
@@ -5739,15 +5062,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Shuriken",
-        "dano": "For+1",
-        "forcaMin": "d4",
-        "peso": "0.5",
-        "custo": 5,
-        "observacoes": "Distância 3/6/12.",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Sai",
         "dano": "For+d4",
         "forcaMin": "d4",
@@ -5964,16 +5278,6 @@
         "custo": 200,
         "observacoes": "Pode ser usada com Katana (Daisho).",
         "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Naginata",
-        "dano": "For+d8",
-        "pa": "1",
-        "peso": "6",
-        "custo": 400,
-        "forcaMin": 6,
-        "observacoes": "Alcance 1. Duas Mãos. Aparar +1.",
-        "origem": "SUPLEMENTO"
       }
     ]
   },
@@ -5983,15 +5287,6 @@
     "origem": "SUPLEMENTO",
     "itens": [
       {
-        "nome": "Shuriken",
-        "dano": "For+d4",
-        "distancia": "4/8/16",
-        "peso": "0.5",
-        "custo": 5,
-        "observacoes": "CdT 2. Não acumula penalidade de saque rápido.",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Yumi (Arco Longo)",
         "dano": "2d6",
         "distancia": "15/30/60",
@@ -5999,29 +5294,6 @@
         "custo": 250,
         "forcaMin": 8,
         "observacoes": "Requer Força d8 para puxar.",
-        "origem": "SUPLEMENTO"
-      }
-    ]
-  },
-  {
-    "tipo": "Materiais Especiais",
-    "subtipo": "Metais e Madeiras",
-    "origem": "SUPLEMENTO",
-    "itens": [
-      {
-        "nome": "Couro de Dragão",
-        "custo": "Variável",
-        "peso": "Metade",
-        "observacoes": "Custa x2 (leve), x1.5 (média), x2 (pesada). Imune a dano de energia do tipo do dragão.",
-        "originalName": "Dragonhide",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Prata Alquímica",
-        "custo": "Variável",
-        "peso": "—",
-        "observacoes": "Armas causam dano total em licantropos. -1 no dano. Custo: +20 (mun), +100 (leve), +300 (1 mão), +1500 (2 mãos).",
-        "originalName": "Alchemical Silver",
         "origem": "SUPLEMENTO"
       }
     ]
@@ -6045,14 +5317,6 @@
         "peso": "7.5",
         "observacoes": "Tecidos nobres, joias.",
         "originalName": "Royal Outfit",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Símbolo Sagrado (prata)",
-        "custo": 25,
-        "peso": "0.5",
-        "observacoes": "Símbolo religioso de prata.",
-        "originalName": "Holy Symbol (Silver)",
         "origem": "SUPLEMENTO"
       },
       {
@@ -6205,17 +5469,6 @@
         "velMaxima": 8,
         "observacoes": "Tração animal.",
         "originalName": "Cart",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Trenó",
-        "tamanho": 3,
-        "resistencia": 8,
-        "tripulacao": "1+2",
-        "custo": 20,
-        "velMaxima": 12,
-        "observacoes": "Tração animal. Neve.",
-        "originalName": "Sled",
         "origem": "SUPLEMENTO"
       }
     ]

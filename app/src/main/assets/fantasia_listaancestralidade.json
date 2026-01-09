@@ -1,0 +1,612 @@
+[
+  {
+    "nome": "CENTAUROS",
+    "origem": "FANTASIA",
+    "descricao": "Centauros têm a parte inferior do corpo de um cavalo e a parte superior do corpo de um humano. São corredores rápidos e orgulhosos.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "CASCOS",
+      "MOVIMENTAÇÃO +4",
+      "TAMANHO +1"
+    ],
+    "desvantagens": [
+      "DEPENDÊNCIA",
+      "FORMA INCOMUM"
+    ]
+  },
+  {
+    "id": "desc_elemental",
+    "nome": "DESCENDENTE ELEMENTAL",
+    "origem": "FANTASIA",
+    "descricao": "Descendentes elementais estão de alguma forma conectados por nascimento a um dos quatro elementos: terra, fogo, água ou ar. Parecem humanos à primeira vista, mas podem ter sinais de sua herança, como cabelos que se agitam como vento, pele avermelhada ou pupilas de fogo. Eles possuem Resistência Ambiental ao seu elemento (+4 para resistir e redução de dano) e sofrem preconceito (Forasteiro Menor) por sua natureza estranha.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "RESISTÊNCIA AMBIENTAL"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)"
+    ],
+    "habilidades": [
+      {
+        "nome": "Herança Elemental",
+        "descricao": "Escolha um elemento (Ar, Água, Fogo, Terra). Terra concede Vigor d6. Água: Aquático. Ar: Ar Interno. Fogo: Rápido."
+      }
+    ]
+  },
+  {
+    "id": "celestiais_fantasia",
+    "nome": "CELESTIAIS",
+    "origem": "FANTASIA",
+    "descricao": "Em muitos mundos, deuses e deusas têm um interesse ativo nos assuntos dos mortais, enviando anjos ao reino mortal para servirem como seus representantes. Celestiais têm muitas formas, mas sua característica mais notável é um par de asas brancas e emplumadas que brota de suas costas.\n\nIdeias Variantes: Nem todos os celestiais servem à luz. Avatares de poderes mais sombrios trocam Código de Honra por Complicações como Arrogante, Implacável ou algum Voto destrutivo. São frequentemente conhecidos por sua crueldade ou ódio para com os mortais. Como uma ironia cruel, podem manter suas asas angelicais ou elas podem se parecer com asas de morcego ou demônios.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ATRAENTE",
+      "VOO"
+    ],
+    "desvantagens": [
+      "CÓDIGO DE HONRA",
+      "VOTO (Maior)"
+    ],
+    "originalName": "Celestiais"
+  },
+  {
+    "nome": "DRACONIANOS",
+    "origem": "FANTASIA",
+    "descricao": "Draconianos humanoides vêm de desertos escaldantes ou cavernas vulcânicas. Têm a capacidade de cuspir fogo como os próprios dragões e pele escamosa.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ARMA DE SOPRO",
+      "ARMADURA +2",
+      "MORDIDA/GARRAS",
+      "RESISTÊNCIA AMBIENTAL (Calor)"
+    ],
+    "desvantagens": [
+      "FRAQUEZA AMBIENTAL (Frio)",
+      "MAL-HUMORADO",
+      "SANGUE FRIO"
+    ]
+  },
+  {
+    "nome": "FADAS",
+    "origem": "FANTASIA",
+    "descricao": "Criaturas aladas pequenas e muitas vezes impetuosas. Possuem asas de inseto e uma curiosidade natural sobre o mundo.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "VOO"
+    ],
+    "desvantagens": [
+      "BOCA GRANDE",
+      "CURIOSO",
+      "DESASTRADO",
+      "DIMINUTO",
+      "IMPULSIVO"
+    ]
+  },
+  {
+    "nome": "GNOMOS",
+    "origem": "FANTASIA",
+    "descricao": "Pequenos humanoides de florestas profundas ou cavernas. São frequentemente confundidos com pequeninos, mas são mais proporcionais e astutos.",
+    "atributos": {
+      "Astúcia": 2
+    },
+    "pericias": {
+      "Perceber": 2
+    },
+    "vantagensGratis": [
+      "SENTIDOS APRIMORADOS",
+      "VISÃO NO ESCURO"
+    ],
+    "desvantagens": [
+      "MOVIMENTAÇÃO REDUZIDA",
+      "TAMANHO -1"
+    ]
+  },
+  {
+    "nome": "GOBLINS",
+    "origem": "FANTASIA",
+    "descricao": "Seres briguentos que muitas vezes servem orcs ou ogros. Desenvolveram táticas de sobrevivência e furtividade para sobreviver em ambientes violentos.",
+    "atributos": {},
+    "pericias": {
+      "Furtividade": 2
+    },
+    "vantagensGratis": [
+      "INFRAVISÃO",
+      "SOBREVIVENTE",
+      "SORRATEIRO"
+    ],
+    "desvantagens": [
+      "DESAGRADÁVEL",
+      "TAMANHO -1"
+    ]
+  },
+  {
+    "nome": "GOLENS",
+    "origem": "FANTASIA",
+    "descricao": "Golens geralmente são autômatos irracionais criados por um feiticeiro ou inventor para proteger seus covis. Alguns são dotados de senciência ou a alcançam devido a acidentes misteriosos, feitiços poderosos, bênçãos de divindades benevolentes ou outros meios pouco ortodoxos. Golens são feitos de materiais como pedra, metal ou carne. Eles não respiram, não comem, são imunes a doenças e veneno, não ficam Sangrando e curam seus Ferimentos com Consertar. São grandes (Tamanho +2), fortes e resistentes, mas desajeitados e sem as habilidades sociais básicas.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ARMADURA +2",
+      "CONSTRUTO",
+      "TAMANHO +2"
+    ],
+    "desvantagens": [
+      "DESAJEITADO",
+      "GRANDE",
+      "MOVIMENTAÇÃO REDUZIDA",
+      "PERÍCIAS BÁSICAS REDUZIDAS",
+      "SEM NOÇÃO",
+      "SEM ÓRGÃOS VITAIS"
+    ]
+  },
+  {
+    "nome": "INFERNAIS",
+    "origem": "FANTASIA",
+    "descricao": "Têm sangue demoníaco ou diabólico em sua linhagem. Possuem pele avermelhada, chifres e cauda, além de resistência ao calor.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "CHIFRES",
+      "NATUREZA DIABÓLICA",
+      "RESISTÊNCIA AMBIENTAL (Calor)",
+      "VISÃO TOTAL NO ESCURO"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)",
+      "FRAQUEZA AMBIENTAL (Frio)"
+    ]
+  },
+  {
+    "nome": "INSETOIDES",
+    "origem": "FANTASIA",
+    "descricao": "Povo inseto com exoesqueletos e múltiplos membros. Vêm de sociedades altamente organizadas e obedientes.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ANDAR NAS PAREDES",
+      "ARMADURA +2",
+      "AÇÕES ADICIONAIS",
+      "MORDIDA OU GARRA"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)",
+      "FORMATO CORPORAL INCOMUM",
+      "MENTE DE COLMEIA",
+      "GUIADO (Maior)",
+      "LEAL (Menor)"
+    ]
+  },
+  {
+    "nome": "MEIO-GIGANTES",
+    "origem": "FANTASIA",
+    "descricao": "Párias encontrados em colinas distantes e montanhas. São imensos, fortes e imparáveis, adequados para ambientes selvagens.",
+    "atributos": {
+      "Força": 4,
+      "Vigor": 4
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "MUITO FORTE",
+      "MUITO RESISTENTE",
+      "TAMANHO +3"
+    ],
+    "desvantagens": [
+      "ANALFABETO",
+      "CABEÇAS-DURAS",
+      "FORASTEIRO (Maior)",
+      "GRANDE",
+      "SEM NOÇÃO"
+    ]
+  },
+  {
+    "nome": "MINOTAUROS",
+    "origem": "FANTASIA",
+    "descricao": "Possuem corpo humano e cabeça e musculatura de touro. Conhecidos por sua força física, mau humor e chifres perversos.",
+    "atributos": {
+      "Força": 4
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "CHIFRES",
+      "DURÃO",
+      "MUITO FORTE",
+      "TAMANHO +1"
+    ],
+    "desvantagens": [
+      "DESAGRADÁVEL",
+      "GRANDE",
+      "SEM INSTRUÇÃO",
+      "SENSÍVEL"
+    ]
+  },
+  {
+    "nome": "OGROS",
+    "origem": "FANTASIA",
+    "descricao": "Orgulhosos e malignos, ogros são grandes e corpulentos. Se orgulham de sua força e resistência, vivendo em tribos selvagens.",
+    "atributos": {
+      "Força": 4,
+      "Vigor": 4
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "MUITO FORTE",
+      "MUITO RESISTENTE",
+      "ROBUSTO",
+      "TAMANHO +1"
+    ],
+    "desvantagens": [
+      "ARROGANTE",
+      "DESAJEITADO",
+      "FORASTEIRO (Menor)",
+      "GRANDE",
+      "SEM NOÇÃO"
+    ]
+  },
+  {
+    "nome": "ORCS",
+    "origem": "FANTASIA",
+    "descricao": "Têm reputação de serem selvagens e brutais. Suas tribos são governadas pelos mais fortes. Possuem força e resistência naturais.",
+    "atributos": {
+      "Força": 2,
+      "Vigor": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "FORTE",
+      "INFRAVISÃO",
+      "RESISTENTE",
+      "TAMANHO +1"
+    ],
+    "desvantagens": [
+      "BRUTAL",
+      "FORASTEIRO (Maior)"
+    ]
+  },
+  {
+    "nome": "POVO RATAZANA",
+    "origem": "FANTASIA",
+    "descricao": "Humanoides peludos com corpos curvados e rostos de rato. São sobreviventes natos, vivendo em esgotos e favelas, e obcecados por tesouros.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "GARRAS",
+      "MORDIDA",
+      "RESISTÊNCIA NATURAL",
+      "SUCATEIRO",
+      "VISÃO NO ESCURO"
+    ],
+    "desvantagens": [
+      "COVARDE",
+      "FORASTEIRO (Maior)",
+      "GANANCIOSO (Menor)",
+      "TAMANHO -1"
+    ]
+  },
+  {
+    "nome": "POVO RATO",
+    "origem": "FANTASIA",
+    "descricao": "Criaturas minúsculas e bípedes que se assemelham a ratos comuns. São tímidos e furtivos, vivendo nas sombras.",
+    "atributos": {
+      "Força": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "DIMINUTO",
+      "MORDIDA",
+      "VISÃO NO ESCURO"
+    ],
+    "desvantagens": [
+      "ALMOFADINHA (Menor)",
+      "FOBIA – GATOS (Menor)",
+      "FORASTEIRO (Maior)",
+      "MOVIMENTAÇÃO REDUZIDA",
+      "POUCO IMPONENTE"
+    ]
+  },
+  {
+    "nome": "POVO SERPENTE",
+    "origem": "FANTASIA",
+    "descricao": "Humanoides com cabeças ofídicas. Variam de constritores a víboras. São rápidos e possuem mordidas venenosas.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "INFRAVISÃO",
+      "MORDIDA",
+      "MORDIDA VENENOSA",
+      "MOVIMENTAÇÃO"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)",
+      "FRAQUEZA AMBIENTAL",
+      "SANGUE FRIO"
+    ]
+  },
+  {
+    "nome": "RENASCIDOS",
+    "origem": "FANTASIA",
+    "descricao": "Filhos de um ser vivo e um vampiro. Têm pele pálida e uma conexão inata com os mortos. São fortes e resistentes ao frio.",
+    "atributos": {
+      "Força": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "BEBEDOR DE SANGUE",
+      "FORÇA SOBRENATURAL",
+      "MORDIDA",
+      "RESISTÊNCIA AO FRIO",
+      "VISÃO NO ESCURO"
+    ],
+    "desvantagens": [
+      "AVERSÃO ANIMAL",
+      "FORASTEIRO (Maior)",
+      "SENSIBILIDADE À LUZ SOLAR"
+    ]
+  },
+  {
+    "nome": "TRANSMORFOS",
+    "origem": "FANTASIA",
+    "descricao": "Estas criaturas peculiares e geralmente malvistas conseguem mudar sua aparência para se parecer com outra pessoa. São camaleões sociais, que se movem furtivamente pela sociedade. Alguns transmorfos inescrupulosos usam essa habilidade para se tornarem vigaristas, ladrões ou até mesmo assassinos, enquanto outros a usam em apresentações para melhorar suas performances. Sua forma verdadeira é perturbadora de ver — um humanoide sem expressão, com pele cinza e olhos sem pupilas. Mudar de Forma: Transmorfos têm Antecedente Arcano (Dom). Como ação livre limitada, podem mudar sua aparência física da mesma forma que o poder disfarce com a Limitação Pessoal.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "CARISMÁTICO",
+      "MUDAR DE FORMA"
+    ],
+    "desvantagens": [
+      "SEGREDO (Maior)"
+    ]
+  },
+  {
+    "id": "anc_anaobuscatrilha",
+    "nome": "Anão (Buscatrilha)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "FANTASIA",
+    "atributos": {
+      "Vigor": 2,
+      "Astúcia": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Aptidão com Pedras",
+        "descricao": "Perceber +2 (ação livre) para encontrar armadilhas e portas de pedra a 3m."
+      },
+      {
+        "nome": "Constituição de Ferro",
+        "descricao": "+1 para resistir a venenos e se recuperar de poderes."
+      },
+      {
+        "nome": "Movimentação Reduzida",
+        "descricao": "Movimentação -1 e dado de corrida reduzido em um tipo."
+      },
+      {
+        "nome": "Resistente",
+        "descricao": "Começa com Vigor d6. Vigor máximo d12+1. Força conta um dado maior para Sobrecarga e Força Mínima de armaduras."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignora penalidades de iluminação até 10 quadros."
+      }
+    ],
+    "originalName": "Anão (Mundo Ancestral)"
+  },
+  {
+    "id": "anc_elfobuscatrilha",
+    "nome": "Elfo (Buscatrilha)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "FANTASIA",
+    "atributos": {
+      "Agilidade": 2,
+      "Astúcia": 2
+    },
+    "pericias": {
+      "Perceber": 2
+    },
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Ágil",
+        "descricao": "Começa com Agilidade d6. Máximo d12+1."
+      },
+      {
+        "nome": "Esguios",
+        "descricao": "-1 na Resistência e -1 nas rolagens de Vigor."
+      },
+      {
+        "nome": "Inteligência",
+        "descricao": "Começa com Astúcia d6. Máximo d12+1."
+      },
+      {
+        "nome": "Magia Élfica",
+        "descricao": "Rerrolagem para resistir a poderes oponentes."
+      },
+      {
+        "nome": "Sentidos Apurados",
+        "descricao": "Começa com Perceber d6. Máximo d12+1."
+      },
+      {
+        "nome": "Visão na Penumbra",
+        "descricao": "Ignora penalidades por Penumbra e Escuridão."
+      }
+    ],
+    "originalName": "Elfo (Mundo Ancestral)"
+  },
+  {
+    "id": "anc_gnomobuscatrilha",
+    "nome": "Gnomo (Buscatrilha)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "FANTASIA",
+    "atributos": {
+      "Vigor": 2
+    },
+    "pericias": {
+      "Perceber": 2
+    },
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Magia Gnômica",
+        "descricao": "Pode conjurar Truques (iluminar, som, telecinese, amigo das feras) com 1 PP próprio."
+      },
+      {
+        "nome": "Movimentação Reduzida",
+        "descricao": "Movimentação -1 e dado de corrida reduzido em um tipo."
+      },
+      {
+        "nome": "Obsessivos",
+        "descricao": "Começam com d4 em uma Perícia baseada em Astúcia à escolha."
+      },
+      {
+        "nome": "Resistente",
+        "descricao": "Começam com Vigor d6. Máximo d12+1."
+      },
+      {
+        "nome": "Sentidos Apurados",
+        "descricao": "Começam com Perceber d6. Máximo d12+1."
+      },
+      {
+        "nome": "Tamanho -1",
+        "descricao": "Reduz Tamanho e Resistência em 1."
+      },
+      {
+        "nome": "Visão na Penumbra",
+        "descricao": "Ignora penalidades por Penumbra e Escuridão."
+      }
+    ],
+    "originalName": "Gnomo (Mundo Ancestral)"
+  },
+  {
+    "id": "anc_halflingbuscatrilha",
+    "nome": "Halfling (Buscatrilha)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "FANTASIA",
+    "atributos": {
+      "Agilidade": 2
+    },
+    "pericias": {
+      "Atletismo": 2,
+      "Perceber": 2
+    },
+    "vantagensGratis": [
+      "Sorte"
+    ],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Ágil",
+        "descricao": "Começa com Agilidade d6. Máximo d12+1."
+      },
+      {
+        "nome": "Movimentação Reduzida",
+        "descricao": "Movimentação -1 e dado de corrida reduzido em um tipo."
+      },
+      {
+        "nome": "Pés-Firmes",
+        "descricao": "Começa com Atletismo d6. Máximo d12+1."
+      },
+      {
+        "nome": "Sentidos Aguçados",
+        "descricao": "Começa com Perceber d6. Máximo d12+1."
+      },
+      {
+        "nome": "Sorte",
+        "descricao": "Começa com a Vantagem Sorte."
+      },
+      {
+        "nome": "Tamanho -1",
+        "descricao": "Reduz Tamanho e Resistência em 1."
+      }
+    ],
+    "originalName": "Halfling (Mundo Ancestral)"
+  },
+  {
+    "id": "anc_humanobuscatrilha",
+    "nome": "Humano (Buscatrilha)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "FANTASIA",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ADAPTÁVEL"
+    ],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Adaptável",
+        "descricao": "Começa com uma Vantagem Novato extra e um d6 em um Atributo à escolha (em vez de d4)."
+      }
+    ],
+    "originalName": "Humano (Mundo Ancestral)"
+  },
+  {
+    "id": "anc_meio_elfobuscatrilha",
+    "nome": "Meio-Elfo (Buscatrilha)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "FANTASIA",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Flexibilidade",
+        "descricao": "Começam com um d6 em um Atributo à escolha em vez de d4."
+      },
+      {
+        "nome": "Magia Élfica",
+        "descricao": "Rerrolagem para resistir a poderes oponentes."
+      },
+      {
+        "nome": "Visão na Penumbra",
+        "descricao": "Ignora penalidades por Penumbra e Escuridão."
+      }
+    ],
+    "originalName": "Meio-Elfo (Mundo Ancestral)"
+  },
+  {
+    "id": "anc_meio_orcbuscatrilha",
+    "nome": "Meio-Orc (Buscatrilha)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "FANTASIA",
+    "atributos": {
+      "Força": 2
+    },
+    "pericias": {
+      "Intimidar": 0
+    },
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Ferocidade Orc",
+        "descricao": "Recebem Resistência +1."
+      },
+      {
+        "nome": "Forasteiro (Menor)",
+        "descricao": "-2 em Persuadir e desconfiança social."
+      },
+      {
+        "nome": "Forte",
+        "descricao": "Começam com Força d6. Máximo d12+1."
+      },
+      {
+        "nome": "Intimidante",
+        "descricao": "Começam com Intimidar d4. Máximo d12+1."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignora penalidades de iluminação até 10 quadros."
+      }
+    ],
+    "originalName": "Meio-Orc (Mundo Ancestral)"
+  }
+]
