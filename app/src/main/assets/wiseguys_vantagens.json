@@ -1,0 +1,586 @@
+[
+  {
+    "id": "assassino_impiedoso",
+    "nome": "ASSASSINO IMPIEDOSO",
+    "categoria": "ANTECEDENTE",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [
+        "sem escrúpulos (maior)"
+      ],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Imune a testes de Medo por Náusea/Cenas horríveis. Polígrafos não funcionam."
+  },
+  {
+    "id": "bom_companheiro",
+    "nome": "BOM COMPANHEIRO (Made Man)",
+    "categoria": "ANTECEDENTE",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": "Homem, descendência italiana",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Membro oficial. Ganha Manha gratuitamente. Intocável por outros membros sem permissão. Paga menos tributo (25%). Ganha Voto Maior (Omertà)."
+  },
+  {
+    "id": "nascido_ruas",
+    "nome": "NASCIDO NAS RUAS",
+    "categoria": "ANTECEDENTE",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ignora até 2 pontos de penalidade ao lidar com segurança/crime."
+  },
+  {
+    "id": "notorio",
+    "nome": "NOTÓRIO",
+    "categoria": "SOCIAIS",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Intimidar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Sua fama de violento o precede. +2 em Intimidar. Inimigos tendem a focar em você ou fugir (teste de Moral ao vê-lo)."
+  },
+  {
+    "id": "artista_gunfu",
+    "nome": "ARTISTA GUN-FU",
+    "categoria": "COMBATE",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Atirar": 8,
+        "Lutar": 8
+      },
+      "vantagens_previas": [
+        "artista_marcial"
+      ],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Usa armas de fogo em combate corpo a corpo. O número alvo é o menor entre 4 ou Aparar do alvo."
+  },
+  {
+    "id": "beijo_morte",
+    "nome": "BEIJO DA MORTE",
+    "categoria": "COMBATE",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {
+        "Lutar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Um ataque corpo a corpo bem sucedido na cabeça causa +4 de dano extra em vez de +2 (totalizando +8 se for um Ataque Localizado na cabeça)."
+  },
+  {
+    "id": "guarda_costas",
+    "nome": "GUARDA-COSTAS",
+    "categoria": "COMBATE",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Perceber": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pode estender benefícios da manobra Defender ou Cobertura para aliado adjacente."
+  },
+  {
+    "id": "fanfarrao",
+    "nome": "FANFARRÃO",
+    "categoria": "COMBATE",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Astúcia": 8
+      },
+      "pericias": {
+        "Consertar": 6,
+        "Ladinagem": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "1/cena gasta Bene para criar armadilha (Ladinagem). Alvos rolam Evasão ou ficam Distraídos/Vulneráveis."
+  },
+  {
+    "id": "lutadora_patins",
+    "nome": "LUTADORA DE PATINS",
+    "categoria": "COMBATE",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Atletismo": 6,
+        "Lutar": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Não sofre Plataforma Instável em patins. Patins são armas indesarmáveis."
+  },
+  {
+    "id": "manobrar_atirar",
+    "nome": "MANOBRAR E ATIRAR",
+    "categoria": "COMBATE",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Atirar": 6,
+        "Dirigir": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Reduz em 2 penalidades de Ação Múltipla ao dirigir e atirar."
+  },
+  {
+    "id": "sequestrador",
+    "nome": "SEQUESTRADOR",
+    "categoria": "COMBATE",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Intimidar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Usa refém como escudo humano (regra Espectadores Inocentes). Pode gastar Bene para repassar dano ao refém."
+  },
+  {
+    "id": "telecatch",
+    "nome": "TELECATCH",
+    "categoria": "COMBATE",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Lutar": 8,
+        "Provocar": 6
+      },
+      "vantagens_previas": [
+        "artista_marcial"
+      ],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Sucesso em Desafio permite Desarmar/Empurrar livre. Ampliação permite Ataque ou Agarrar livre."
+  },
+  {
+    "id": "lider_time",
+    "nome": "LÍDER DE TIME",
+    "categoria": "LIDERANCA",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {
+        "Intimidar": 6
+      },
+      "vantagens_previas": [
+        "comando"
+      ],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pode compartilhar Benes com equipe mesmo sem comunicação direta."
+  },
+  {
+    "id": "cozinheiro",
+    "nome": "COZINHEIRO",
+    "categoria": "PROFISSIONAL",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Ciência": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Fabrica drogas/álcool. Dobra dinheiro arrecadado em trambiques dessa natureza."
+  },
+  {
+    "id": "especialista_explosivos",
+    "nome": "ESPECIALISTA EM EXPLOSIVOS",
+    "categoria": "PROFISSIONAL",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Consertar": 8,
+        "Ciência": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Consertar/Perceber explosivos. Ampliações permitem modificar bombas (Dano, PA, Área, Ocultação)."
+  },
+  {
+    "id": "falsificador",
+    "nome": "FALSIFICADOR",
+    "categoria": "PROFISSIONAL",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 8
+      },
+      "pericias": {
+        "Ladinagem": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Rerrolagem gratuita em Ladinagem para falsificar itens."
+  },
+  {
+    "id": "limpador",
+    "nome": "LIMPADOR",
+    "categoria": "PROFISSIONAL",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Curar": 8,
+        "Perceber": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Curar para limpar cenas de crime. Usa Curar para investigação forense."
+  },
+  {
+    "id": "mestre_fuga",
+    "nome": "MESTRE DA FUGA",
+    "categoria": "PROFISSIONAL",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Atletismo": 6,
+        "Ladinagem": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Atletismo para fugir/espaços apertados. +2 Ladinagem para escapar de amarras."
+  },
+  {
+    "id": "mestre_disfarce",
+    "nome": "MESTRE DO DISFARCE",
+    "categoria": "PROFISSIONAL",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Furtividade": 6,
+        "Performance": 6,
+        "Persuadir": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Rerrolagem gratuita em Performance ao usar disfarces."
+  },
+  {
+    "id": "motorista_agressivo",
+    "nome": "MOTORISTA AGRESSIVO",
+    "categoria": "PROFISSIONAL",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Dirigir": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pode realizar manobras Forçar e Abalroar a uma carta de distância."
+  },
+  {
+    "id": "motorista_fuga",
+    "nome": "MOTORISTA DE FUGA",
+    "categoria": "PROFISSIONAL",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Dirigir": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ignora penalidades de terreno difícil e instável ao dirigir. Em perseguições, recebe +2 nas rolagens de Dirigir para manobras evasivas."
+  },
+  {
+    "id": "trambiqueiro",
+    "nome": "TRAMBIQUEIRO",
+    "categoria": "PROFISSIONAL",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "manha"
+      ],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+1 em Conhecimento Geral para esquemas de ganhar dinheiro."
+  },
+  {
+    "id": "trapaceiro",
+    "nome": "TRAPACEIRO",
+    "categoria": "PROFISSIONAL",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 8
+      },
+      "pericias": {
+        "Jogar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+4 em Jogar ao trapacear. Usa Jogar para truques de mão."
+  },
+  {
+    "id": "capanga",
+    "nome": "CAPANGA",
+    "categoria": "SOCIAIS",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ganha um Seguidor leal por estágio. Pode promovê-los a Tenente/Resiliente."
+  },
+  {
+    "id": "acima_da_lei",
+    "nome": "ACIMA DA LEI",
+    "categoria": "SOCIAIS",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Heroico",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Polícia local não pode prendê-lo. Federais têm jurisdição limitada."
+  },
+  {
+    "id": "dama_sorte",
+    "nome": "DAMA DA SORTE",
+    "categoria": "ESTRANHAS",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ganha 1 Bene especial para Jogar por sessão. Pode compartilhar Benes em Jogar. Ganha joia valiosa (+1 Persuadir)."
+  },
+  {
+    "id": "intocavel",
+    "nome": "INTOCÁVEL",
+    "categoria": "LENDARIAS",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "acima_da_lei"
+      ],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Imune a processos criminais. Até federais precisam de casos incontestáveis."
+  },
+  {
+    "id": "limpadora",
+    "nome": "LIMPADORA (CLEANER)",
+    "categoria": "PROFISSIONAL",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Novato",
+      "pericias": {
+        "Furtividade": 8,
+        "Ciência": 6
+      }
+    },
+    "descricao": "Especialista em se livrar de corpos e evidências. +2 em testes para ocultar provas ou limpar cenas de crime. Pode fazer um teste de Astúcia para saber exatamente o que a polícia vai procurar."
+  },
+  {
+    "id": "feito",
+    "nome": "FEITO (MADE MAN)",
+    "categoria": "SOCIAIS",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "vantagens_previas": [
+        "conexao_mafia"
+      ],
+      "observacoes": "Deve ser homem e de descendência italiana (na Cosa Nostra)."
+    },
+    "descricao": "Membro oficial da Família. Intocável por membros de baixo escalão. +2 em Intimidar contra outros criminosos. Ganha +2 de Riqueza inicial ou renda."
+  }
+]

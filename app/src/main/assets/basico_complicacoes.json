@@ -14,20 +14,6 @@
     "description": "Personagens arrogantes não se acham melhores, sabem que são. Seja no que for – esgrima, kung fu, pintura – aproveitam cada oportunidade para ostentar que quase ninguém se compara às suas habilidades. Só vencer não é o bastante, é preciso dominar completamente quem se opuser e provar sua superioridade. É o tipo de pessoa que desarma oponentes em um duelo só para poder pegar a sua espada e devolvê-la com um sorriso desdenhoso. Personagens arrogantes sempre procuram pela maior ameaça em batalha, atacando rivais menores apenas se ficarem em seu caminho."
   },
   {
-    "id": "atrapalhado",
-    "name": "ATRAPALHADO",
-    "origem": "BASICO",
-    "severity": "maior",
-    "description": "São personagens sem coordenação motora, capazes de tropeçar nas próprias pernas e sem habilidade para esportes. Subtraem 2 em rolagens de Atletismo e Furtividade."
-  },
-  {
-    "id": "boca_grande",
-    "name": "BOCA GRANDE",
-    "origem": "BASICO",
-    "severity": "menor",
-    "description": "Como diz o ditado, quem fala demais dá bom dia a cavalo. Personagens Boca Grande poderiam cumprimentar uma cavalaria inteira. Acham difícil guardar segredos e acabam revelando planos secretos. Isso geralmente ocorre nos piores momentos possíveis."
-  },
-  {
     "id": "cego",
     "name": "CEGO",
     "origem": "BASICO",
@@ -47,13 +33,6 @@
     "origem": "BASICO",
     "severity": "maior",
     "description": "A curiosidade matou o gato e também pode matar seu herói ou heroína. Personagens curiosas checam tudo e sempre querem saber o que há por trás de um mistério ou segredo em potencial."
-  },
-  {
-    "id": "deficiente_auditivo",
-    "name": "DEFICIENTE AUDITIVO",
-    "origem": "BASICO",
-    "severity": "menor ou maior",
-    "description": "Personagens que perderam parte ou toda a sua audição têm esta desvantagem. Como uma Complicação Menor, ela subtrai 4 de todas as rolagens de Perceber feitas para ouvir, incluindo acordar devido a ruídos altos. Uma Complicação maior significa ausência total do sentido de audição, levando à falha automática em todas as rolagens de Perceber dependentes da audição. Aparelhos auditivos reduzem a penalidade para 2, mas precisam de baterias e têm 50% de chance de caírem caso a personagem sofra um nível de Ferimento, queda ou algum outro tipo de trauma."
   },
   {
     "id": "delirante",
@@ -82,13 +61,6 @@
     "origem": "BASICO",
     "severity": "menor ou maior",
     "description": "Personagens com essa complicação agem com avareza, medindo valor em bens comerciais ou riqueza. Como uma Complicação Menor, argumentam amargamente querendo mais do que sua parte em qualquer despojo adquirido durante o jogo. Se for uma Complicação Maior, lutam por qualquer coisa que considerem injusta e podem até mesmo matar ao se sentirem alvo de menosprezo ou cobiçarem algo que não possam ter."
-  },
-  {
-    "id": "habito",
-    "name": "HÁBITO",
-    "origem": "BASICO",
-    "severity": "menor ou maior",
-    "description": "Essa personagem possui um hábito irritante e constante de algum tipo. Um Hábito menor irrita aqueles a seu redor, mas não é perigoso como cutucar o nariz, não conseguir parar de mexer no telefone, dizer “cê sabe” no meio de cada frase ou frequentemente mascar chiclete de forma barulhenta. Mesmo pessoas próximas evitarão a personagem se possível. Um Hábito maior é algum tipo de dependência física ou mental, debilitante ou possivelmente mortal como usar drogas, alcoolismo ou até mesmo um vício em realidade virtual em um cenário de alta tecnologia. Personagens com Vício que não recebam sua dose precisam fazer um teste de Vigor a cada 24 horas ou recebem um nível de Fadiga (veja pág. 122). A cada 24 horas, uma rolagem de Curar com algum tipo de medicamento apropriado remove um nível de Fadiga por quatro horas. Depois disso, a Fadiga retorna e só pode ser recuperada com a substância viciante."
   },
   {
     "id": "impulsivo",
@@ -147,27 +119,6 @@
     "description": "Existe alguma fraqueza menor, normalmente engraçada, mas que ocasionalmente lhe causa problemas. Um espadachim pode sempre tentar primeiro cortar suas iniciais em seus inimigos, um anão pode se vangloriar constantemente a respeito da sua cultura ou uma debutante esnobe pode não comer, beber ou socializar com as classes mais baixas, por exemplo."
   },
   {
-    "id": "pequeno",
-    "name": "PEQUENO",
-    "origem": "BASICO",
-    "severity": "menor",
-    "description": "Personagens Pequenos têm pouco peso, altura ou ambos. Seu Tamanho (veja pág. 127) é reduzido em 1, o que também reduz sua Resistência. Tamanho não pode ser reduzido abaixo de -1, mas a penalidade na Resistência permanece. Um pequenino com esta complicação, por exemplo, continua com Tamanho -1 e perde um ponto em sua Resistência."
-  },
-  {
-    "id": "pobreza",
-    "name": "POBREZA",
-    "origem": "BASICO",
-    "severity": "menor",
-    "description": "Dizem que um tolo e seu dinheiro logo se separam, sua personagem é uma dessas pessoas. Elas começam com metade do dinheiro normal para o cenário e parecem não conseguir poupar os recursos adquiridos depois que o jogo começa. No geral, reduz à metade os seus recursos totais a cada semana de jogo."
-  },
-  {
-    "id": "procurado",
-    "name": "PROCURADO",
-    "origem": "BASICO",
-    "severity": "menor ou maior",
-    "description": "Personagens com Procurado cometeram algum crime e, se as autoridades descobrirem, acabarão na prisão. Isso pressupõe que o cenário possui leis e policiais para garantir o cumprimento delas. O nível da Complicação depende da gravidade do crime e o quão ativa é a perseguição. Inúmeras multas de estacionamento não pagas em um jogo onde precisa-se dirigir ocasionalmente gera uma Complicação Menor, assim como alguém Procurado por um crime mais grave longe da área principal da campanha. Uma acusação de assassinato é uma Complicação Maior em praticamente qualquer cenário se houver alguém em busca de justiça (ou vingança)."
-  },
-  {
     "id": "sanguinario",
     "name": "SANGUINÁRIO",
     "origem": "BASICO",
@@ -187,13 +138,6 @@
     "origem": "BASICO",
     "severity": "menor ou maior",
     "description": "Vingança é... bem... é má notícia para alguém, e personagens com esta complicação irão obtê-la. Como uma Complicação Menor, geralmente buscam a vingança legalmente. O método varia de acordo com a situação. Algumas tramam ou conduzem esquemas por meses, enquanto outras exigem resultados mais imediatos. Personagens com a versão Maior desta Complicação não deixam que nada impeça sua busca pelo acerto de contas. Isso não significa que recorram imediatamente à violência, mas suas ações sempre se intensificam até que uma satisfação total e completa seja alcançada."
-  },
-  {
-    "id": "voto",
-    "name": "VOTO",
-    "origem": "BASICO",
-    "severity": "menor ou maior",
-    "description": "Esta pessoa fez um voto para alguém ou algo em que acredita. O risco em cumprir o Voto e sua frequência determina o nível da Complicação. Um Voto Menor pode ser servir a uma ordem com mandamentos que raramente entram em conflito com os objetivos do grupo. Um Voto Maior faz com que as demandas sejam de longo prazo, frequentes e resultem em um grande risco à sua vida."
   },
   {
     "id": "dependente",
@@ -216,14 +160,6 @@
     "severity": "maior",
     "origem": "BASICO",
     "description": "Sempre procura a maior ameaça em batalha. Deve provar superioridade.",
-    "originalName": null
-  },
-  {
-    "id": "complicacao_atrapalhado",
-    "name": "ATRAPALHADO",
-    "severity": "maior",
-    "origem": "BASICO",
-    "description": "-2 em rolagens de Atletismo e Furtividade.",
     "originalName": null
   },
   {
@@ -256,14 +192,6 @@
     "severity": "menor ou maior",
     "origem": "BASICO",
     "description": "Menor: Mov -1, Corrida reduzida. Maior: Mov -2, Corrida reduzida, -2 em Atletismo.",
-    "originalName": null
-  },
-  {
-    "id": "complicacao_voto",
-    "name": "VOTO",
-    "severity": "menor ou maior",
-    "origem": "BASICO",
-    "description": "Menor: compromisso frequente. Maior: Risco de vida ou dedicação total (ex: Clérigos/Paladinos).",
     "originalName": null
   }
 ]

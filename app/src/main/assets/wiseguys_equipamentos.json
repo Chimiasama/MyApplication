@@ -1,0 +1,266 @@
+[
+  {
+    "tipo": "Armas de Combate à Distância",
+    "subtipo": "Submetralhadoras",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Tommy Gun (.45)",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 3,
+        "forcaMin": "20",
+        "peso": "6,5",
+        "custo": 350,
+        "observacoes": "Tambor 50 balas adiciona 1kg e custa $50",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Armas de Rua",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Garrote",
+        "dano": "Especial",
+        "forcaMin": "d4",
+        "peso": "1",
+        "observacoes": "Requer Surpresa e Agarrar. +2 em Força para sufocar.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Facão",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": "2",
+        "custo": 25,
+        "observacoes": "PA 1.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Nunchaku",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": "4",
+        "custo": 50,
+        "observacoes": "Ignora escudos. Requer Agilidade d8.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Sai",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": "2",
+        "custo": 20,
+        "observacoes": "Aparar +1. +1 Desarmar.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Sai",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": "2",
+        "custo": 20,
+        "observacoes": "Aparar +1, +1 para manobra de Desarmar; tipicamente comprado e usado em pares",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Especiais",
+    "subtipo": "Explosivos e Incendiários",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Coquetel Molotov",
+        "dano": "2d10",
+        "peso": "2",
+        "custo": 10,
+        "observacoes": "MPE. Pode incendiar. Falha crítica incendeia usuário.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Explosivos Improvisados",
+        "dano": "4d6",
+        "peso": "10",
+        "custo": 50,
+        "observacoes": "MME. Arma Pesada.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Acessórios",
+    "subtipo": "Trapaça",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Dados Adulterados",
+        "custo": 20,
+        "observacoes": "+2 em Jogar (dados). Concede bônus em testes de 'Jogar' (Gambling) ou 'Ladinagem' (Thievery) para fins de trapaça.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Dispositivo Óptico",
+        "custo": 200,
+        "peso": "1",
+        "observacoes": "Engana caça-níqueis. +2 em Ladinagem/Jogar. Concede bônus em testes de 'Jogar' (Gambling) ou 'Ladinagem' (Thievery) para fins de trapaça.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Patas de Macaco",
+        "custo": 50,
+        "peso": "1",
+        "observacoes": "Manipula alavancas de caça-níqueis. +2 Ladinagem. Concede bônus em testes de 'Jogar' (Gambling) ou 'Ladinagem' (Thievery) para fins de trapaça.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Mundano",
+    "subtipo": "Ferramentas do Crime",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Máscara Balaclava",
+        "custo": 10,
+        "observacoes": "Esconde identidade.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Kit de Limpeza",
+        "peso": "15",
+        "custo": 100,
+        "observacoes": "Remove evidências.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Kit de Arrombamento de Cofres",
+        "peso": "20",
+        "custo": 2500,
+        "observacoes": "Brocas, C-4, etc.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Supressor",
+        "peso": "2",
+        "custo": 100,
+        "observacoes": "-2 para Perceber tiros.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Estojo de Instrumento (Arma)",
+        "peso": "12",
+        "custo": 50,
+        "observacoes": "-2 para perceber arma dentro.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Carros",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Carro Luxuoso",
+        "tamanho": 5,
+        "resistencia": "12(3)",
+        "velMaxima": 140,
+        "custo": 40000,
+        "observacoes": "Cadillac/Lincoln.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Muscle Car",
+        "tamanho": 4,
+        "resistencia": "11(3)",
+        "velMaxima": 160,
+        "manobrabilidade": 2,
+        "custo": 20000,
+        "observacoes": "GTO, Mustang.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Caminhão Blindado",
+        "tamanho": 5,
+        "resistencia": "18(6)",
+        "velMaxima": 90,
+        "manobrabilidade": -2,
+        "custo": 50000,
+        "observacoes": "Armadura Pesada.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas",
+    "subtipo": "Submetralhadoras",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Thompson 1928 (Tommy Gun)",
+        "dano": "2d6+1",
+        "pa": "1",
+        "distancia": "12/24/48",
+        "cdt": "3",
+        "tiros": "50",
+        "peso": "5",
+        "custo": 500,
+        "observacoes": "A clássica 'Máquina de Escrever'. Tambor de 50 tiros. Pode usar rajada curta.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas",
+    "subtipo": "Especiais",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Canivete Automático (Switchblade)",
+        "dano": "For+d4",
+        "peso": "0.5",
+        "custo": 25,
+        "observacoes": "Ação livre para sacar. +1 em Furtividade para esconder no corpo.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Terrestres",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Limusine",
+        "tamanho": 6,
+        "resistencia": "14(2)",
+        "velMaxima": 100,
+        "tripulacao": "1+6",
+        "custo": 80000,
+        "observacoes": "Conforto luxuoso. Divisória de vidro.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Exóticas",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Sai",
+        "dano": "For+d4",
+        "peso": "0.5",
+        "custo": 1,
+        "observacoes": "Arremesso (3/6/12). +1 Desarmar.",
+        "originalName": "Sai",
+        "origem": "WISEGUYS"
+      }
+    ]
+  }
+]

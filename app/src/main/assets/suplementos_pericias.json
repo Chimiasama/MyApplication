@@ -29,6 +29,18 @@
       "nome": "Hackear",
       "atributo": "Astúcia",
       "basica": false
+    },
+    {
+      "nome": "Conjurar",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "SUPLEMENTO"
+    },
+    {
+      "nome": "Psiônicos",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "SUPLEMENTO"
     }
   ]
 }

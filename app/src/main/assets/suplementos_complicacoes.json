@@ -312,129 +312,75 @@
     "description": "Sofre Fadiga se comer comida de baixa qualidade (ratos/cogumelos comuns). Custo de vida diário +20 sóis."
   },
   {
-    "id": "comp_arauto_morte",
-    "name": "ARAUTO DA MORTE",
-    "tipo": "MENOR",
-    "origem": "WISEGUYS",
-    "severity": "menor",
-    "description": "Pessoas próximas tendem a morrer. Extras aliados sofrem -2 em testes de Vigor para sobreviver."
-  },
-  {
-    "id": "comp_brincalhao",
-    "name": "BRINCALHÃO",
-    "tipo": "MENOR",
-    "origem": "WISEGUYS",
-    "severity": "menor",
-    "description": "Faz piadas em momentos tensos. Causa -2 em rolagens de Intimidar/Provocar de aliados."
-  },
-  {
-    "id": "chamativo",
-    "name": "CHAMATIVO",
-    "origem": "WISEGUYS",
-    "severity": "Menor",
-    "description": "O personagem adora ostentar. Usa roupas caras, joias e carros vistosos. Sofre -2 em Furtividade e testes para se misturar à multidão. É facilmente lembrado por testemunhas."
-  },
-  {
-    "id": "segredo_wiseguys",
-    "name": "SEGREDO (CRIMINOSO/POLICIAL)",
-    "origem": "WISEGUYS",
-    "severity": "Maior",
-    "description": "Pode ser um Policial Infiltrado (Risco de morte se descoberto) ou um Informante. Se o segredo for revelado, ganha Inimigos (Maior) e perde todas as Vantagens Sociais da organização."
-  },
-  {
-    "id": "comp_cidadao_integro",
-    "name": "CIDADÃO ÍNTEGRO",
-    "tipo": "MAIOR",
-    "origem": "WISEGUYS",
+    "id": "atrapalhado",
+    "name": "ATRAPALHADO",
+    "origem": "SUPLEMENTO",
     "severity": "maior",
-    "description": "Não serve para o crime. Sofre -2 em qualquer traço enquanto comete um crime."
+    "description": "São personagens sem coordenação motora, capazes de tropeçar nas próprias pernas e sem habilidade para esportes. Subtraem 2 em rolagens de Atletismo e Furtividade."
   },
   {
-    "id": "comp_cugine",
-    "name": "CUGINE",
-    "tipo": "MENOR",
-    "origem": "WISEGUYS",
+    "id": "boca_grande",
+    "name": "BOCA GRANDE",
+    "origem": "SUPLEMENTO",
     "severity": "menor",
-    "description": "Novato do grupo. Encarregado de tarefas humilhantes e alvo de piadas."
+    "description": "Como diz o ditado, quem fala demais dá bom dia a cavalo. Personagens Boca Grande poderiam cumprimentar uma cavalaria inteira. Acham difícil guardar segredos e acabam revelando planos secretos. Isso geralmente ocorre nos piores momentos possíveis."
   },
   {
-    "id": "comp_divida",
-    "name": "DÍVIDA",
-    "tipo": "MENOR_MAIOR",
-    "origem": "WISEGUYS",
-    "severity": "menor/maior",
-    "description": "Deve favores ou dinheiro. Menor: Culpa/Incômodo. Maior: Chantagem/Risco de Vida."
+    "id": "deficiente_auditivo",
+    "name": "DEFICIENTE AUDITIVO",
+    "origem": "SUPLEMENTO",
+    "severity": "menor ou maior",
+    "description": "Personagens que perderam parte ou toda a sua audição têm esta desvantagem. Como uma Complicação Menor, ela subtrai 4 de todas as rolagens de Perceber feitas para ouvir, incluindo acordar devido a ruídos altos. Uma Complicação maior significa ausência total do sentido de audição, levando à falha automática em todas as rolagens de Perceber dependentes da audição. Aparelhos auditivos reduzem a penalidade para 2, mas precisam de baterias e têm 50% de chance de caírem caso a personagem sofra um nível de Ferimento, queda ou algum outro tipo de trauma."
   },
   {
-    "id": "comp_dedo_leve",
-    "name": "DEDO LEVE",
-    "tipo": "MENOR",
-    "origem": "WISEGUYS",
+    "id": "habito",
+    "name": "HÁBITO",
+    "origem": "SUPLEMENTO",
+    "severity": "menor ou maior",
+    "description": "Essa personagem possui um hábito irritante e constante de algum tipo. Um Hábito menor irrita aqueles a seu redor, mas não é perigoso como cutucar o nariz, não conseguir parar de mexer no telefone, dizer “cê sabe” no meio de cada frase ou frequentemente mascar chiclete de forma barulhenta. Mesmo pessoas próximas evitarão a personagem se possível. Um Hábito maior é algum tipo de dependência física ou mental, debilitante ou possivelmente mortal como usar drogas, alcoolismo ou até mesmo um vício em realidade virtual em um cenário de alta tecnologia. Personagens com Vício que não recebam sua dose precisam fazer um teste de Vigor a cada 24 horas ou recebem um nível de Fadiga (veja pág. 122). A cada 24 horas, uma rolagem de Curar com algum tipo de medicamento apropriado remove um nível de Fadiga por quatro horas. Depois disso, a Fadiga retorna e só pode ser recuperada com a substância viciante."
+  },
+  {
+    "id": "pequeno",
+    "name": "PEQUENO",
+    "origem": "SUPLEMENTO",
     "severity": "menor",
-    "description": "-1 em Persuadir (exceto ameaças). Em falha crítica de Intimidar com arma, a arma dispara acidentalmente."
+    "description": "Personagens Pequenos têm pouco peso, altura ou ambos. Seu Tamanho (veja pág. 127) é reduzido em 1, o que também reduz sua Resistência. Tamanho não pode ser reduzido abaixo de -1, mas a penalidade na Resistência permanece. Um pequenino com esta complicação, por exemplo, continua com Tamanho -1 e perde um ponto em sua Resistência."
   },
   {
-    "id": "comp_condicional",
-    "name": "EM CONDICIONAL",
-    "tipo": "MAIOR",
-    "origem": "WISEGUYS",
+    "id": "pobreza",
+    "name": "POBREZA",
+    "origem": "SUPLEMENTO",
+    "severity": "menor",
+    "description": "Dizem que um tolo e seu dinheiro logo se separam, sua personagem é uma dessas pessoas. Elas começam com metade do dinheiro normal para o cenário e parecem não conseguir poupar os recursos adquiridos depois que o jogo começa. No geral, reduz à metade os seus recursos totais a cada semana de jogo."
+  },
+  {
+    "id": "procurado",
+    "name": "PROCURADO",
+    "origem": "SUPLEMENTO",
+    "severity": "menor ou maior",
+    "description": "Personagens com Procurado cometeram algum crime e, se as autoridades descobrirem, acabarão na prisão. Isso pressupõe que o cenário possui leis e policiais para garantir o cumprimento delas. O nível da Complicação depende da gravidade do crime e o quão ativa é a perseguição. Inúmeras multas de estacionamento não pagas em um jogo onde precisa-se dirigir ocasionalmente gera uma Complicação Menor, assim como alguém Procurado por um crime mais grave longe da área principal da campanha. Uma acusação de assassinato é uma Complicação Maior em praticamente qualquer cenário se houver alguém em busca de justiça (ou vingança)."
+  },
+  {
+    "id": "voto",
+    "name": "VOTO",
+    "origem": "SUPLEMENTO",
+    "severity": "menor ou maior",
+    "description": "Esta pessoa fez um voto para alguém ou algo em que acredita. O risco em cumprir o Voto e sua frequência determina o nível da Complicação. Um Voto Menor pode ser servir a uma ordem com mandamentos que raramente entram em conflito com os objetivos do grupo. Um Voto Maior faz com que as demandas sejam de longo prazo, frequentes e resultem em um grande risco à sua vida."
+  },
+  {
+    "id": "complicacao_atrapalhado",
+    "name": "ATRAPALHADO",
     "severity": "maior",
-    "description": "Se sacar um Curinga no início da sessão, violou a condicional e será preso ao fim da sessão."
+    "origem": "SUPLEMENTO",
+    "description": "-2 em rolagens de Atletismo e Furtividade.",
+    "originalName": null
   },
   {
-    "id": "comp_fardo",
-    "name": "FARDO",
-    "tipo": "MENOR_MAIOR",
-    "origem": "WISEGUYS",
-    "severity": "menor/maior",
-    "description": "Atrai a ira do chefe. Cartas de face no início da sessão trazem punições ou tentativas de assassinato (se Maior)."
-  },
-  {
-    "id": "comp_ma_reputacao",
-    "name": "MÁ REPUTAÇÃO",
-    "tipo": "MENOR",
-    "origem": "WISEGUYS",
-    "severity": "menor",
-    "description": "Conhecido como criminoso. -2 em Persuadir com não-criminosos."
-  },
-  {
-    "id": "comp_lista_negra",
-    "name": "NA LISTA NEGRA",
-    "tipo": "MENOR",
-    "origem": "WISEGUYS",
-    "severity": "menor",
-    "description": "Banido de cassinos. Escoltado para fora se identificado pela segurança."
-  },
-  {
-    "id": "comp_suspeito",
-    "name": "O SUSPEITO",
-    "tipo": "MAIOR",
-    "origem": "WISEGUYS",
-    "severity": "maior",
-    "description": "Primeiro a ser interrogado pela polícia quando algo acontece. Vigilância constante."
-  },
-  {
-    "id": "comp_pe_frio",
-    "name": "PÉ-FRIO",
-    "tipo": "MENOR",
-    "origem": "WISEGUYS",
-    "severity": "menor",
-    "description": "Traz azar. Ninguém perto pode gastar Benes em rolagens de Jogar."
-  },
-  {
-    "id": "comp_peso_consciencia",
-    "name": "PESO NA CONSCIÊNCIA",
-    "tipo": "MENOR_MAIOR",
-    "origem": "WISEGUYS",
-    "severity": "menor/maior",
-    "description": "Sente culpa. Maior: O Don ganha um Bene para usar contra você após atos hediondos."
-  },
-  {
-    "id": "comp_relacao_disfuncional",
-    "name": "RELAÇÃO DISFUNCIONAL",
-    "tipo": "MENOR_MAIOR",
-    "origem": "WISEGUYS",
-    "severity": "menor/maior",
-    "description": "Parente ou amigo problemático que causa inconveniência (Menor) ou perigo real (Maior)."
+    "id": "complicacao_voto",
+    "name": "VOTO",
+    "severity": "menor ou maior",
+    "origem": "SUPLEMENTO",
+    "description": "Menor: compromisso frequente. Maior: Risco de vida ou dedicação total (ex: Clérigos/Paladinos).",
+    "originalName": null
   }
 ]

@@ -254,63 +254,6 @@
     "descricao": "Concede 2 Benes adicionais no início de cada sessão."
   },
   {
-    "id": "artista_marcial",
-    "nome": "ARTISTA MARCIAL",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
-        "Lutar": 6
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Alguém com essa Vantagem tem treinamento básico em artes marciais. Sempre está com armas, causa dano com punhos e pés (Armas Naturais, pág. 114). Soma +1 quando golpeia com eles e causa Força + d4 de dano. Se já tiver dano por Garras ou Brigão, aumente o dado em um tipo. Não soma com outras Armas Naturais."
-  },
-  {
-    "id": "atacar_primeiro",
-    "nome": "ATACAR PRIMEIRO",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Agilidade": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Uma vez por rodada, se não estiver Abalado ou Atordoado, ganha um ataque livre de Lutar contra adversário que entrar em seu Alcance (veja Ataques Livres, pág. 116)."
-  },
-  {
-    "id": "atacar_primeiro_aprimorado",
-    "nome": "ATACAR PRIMEIRO APRIMORADO",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Heroico",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "atacar_primeiro"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Como acima, mas permite atacar até três oponentes por turno."
-  },
-  {
     "id": "atirador",
     "nome": "ATIRADOR",
     "categoria": "COMBATE",
@@ -368,25 +311,6 @@
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Aparar +2 e redução de Agrupar contra ela em 2."
-  },
-  {
-    "id": "calculista",
-    "nome": "CALCULISTA",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Astúcia": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Estuda ações do oponente e ganha vantagem. Quando Carta de Ação ≤ 5, ignore até 2 pontos de penalidades em uma ação daquele turno."
   },
   {
     "id": "contra_ataque",
@@ -503,23 +427,6 @@
     "descricao": "Adiciona um terceiro dado de Lutar como ataque extra na ação de Frenesi."
   },
   {
-    "id": "impiedoso",
-    "nome": "IMPIEDOSO",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Ao gastar Bene para rerrolar dano, adicione +2 ao total."
-  },
-  {
     "id": "lutar_com_duas_armas",
     "nome": "LUTAR COM DUAS ARMAS",
     "categoria": "COMBATE",
@@ -537,23 +444,6 @@
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Segundo ataque não sofre penalidade por Ação Múltipla; Mão Inábil ainda vale a menos que seja Ambidestro."
-  },
-  {
-    "id": "matador_de_gigantes",
-    "nome": "MATADOR DE GIGANTES",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "+1d6 de dano ao atacar criaturas de Tamanho ≥ 3 maiores (veja pág. 215–216)."
   },
   {
     "id": "nervos_de_aco",
@@ -592,44 +482,6 @@
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Ignore 2 pontos de penalidades por Ferimento."
-  },
-  {
-    "id": "retirada",
-    "nome": "RETIRADA",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Agilidade": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Oponente adjacente não recebe ataque livre ao se retirar de corpo a corpo."
-  },
-  {
-    "id": "retirada_aprimorada",
-    "nome": "RETIRADA APRIMORADA",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "retirada"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Até três adversários não recebem ataques livres ao retirar-se corpo a corpo."
   },
   {
     "id": "varredura",
@@ -750,48 +602,6 @@
     "descricao": "Uma vez por turno, role Conhecimento Batalha para dar Suporte em Característica escolhida a todos os Extras no Raio de Comando."
   },
   {
-    "id": "lider_nato",
-    "nome": "LÍDER NATO",
-    "categoria": "LIDERANCA",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {
-        "Espírito": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [
-        "comando"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Vantagens de Liderança aplicáveis a Extras também valem para Cartas Selvagens."
-  },
-  {
-    "id": "mantenham_a_formacao",
-    "nome": "MANTENHAM A FORMAÇÃO!",
-    "categoria": "LIDERANCA",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {
-        "Astúcia": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [
-        "comando"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Extras no Raio de Comando +1 em Resistência."
-  },
-  {
     "id": "artifice",
     "nome": "ARTÍFICE",
     "categoria": "PODER",
@@ -809,44 +619,6 @@
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Permite criar Dispositivos Arcanos (veja pág. 184)."
-  },
-  {
-    "id": "canalizacao",
-    "nome": "CANALIZAÇÃO",
-    "categoria": "PODER",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "antecedente_arcano"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Reduz custo de PP em 1 ao obter ampliação em rolagem arcana."
-  },
-  {
-    "id": "novos_poderes",
-    "nome": "NOVOS PODERES",
-    "categoria": "PODER",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "antecedente_arcano"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "infinito",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Ganha 2 novos poderes de seu Estágio ou menor; pode repetir."
   },
   {
     "id": "pontos_de_poder",
@@ -925,25 +697,6 @@
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Ignora −2 em Navegar, Dirigir ou Pilotar e pode gastar Benes para Absorver dano em veículos que controla."
-  },
-  {
-    "id": "erudito",
-    "nome": "ERUDITO",
-    "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
-        "Pesquisar": 8
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "infinito",
-    "vinculado_pericia": true,
-    "ganha_ao_comprar": [],
-    "descricao": "Escolha Conhecimento Acadêmico, Batalha, Ocultismo, Ciência ou outra “Conhecimento” baseada em Astúcia. +2 nessas perícias (repetível para diferentes perícias)."
   },
   {
     "id": "investigador",
@@ -1088,45 +841,6 @@
     "descricao": "Rerrolagem gratuita em Desafios de Provocar."
   },
   {
-    "id": "obstinado",
-    "nome": "OBSTINADO",
-    "categoria": "SOCIAIS",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Espírito": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "+2 ao resistir a Desafios com Astúcia ou Espírito."
-  },
-  {
-    "id": "vontade_de_ferro",
-    "nome": "VONTADE DE FERRO",
-    "categoria": "SOCIAIS",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "corajoso",
-        "obstinado"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Adiciona bônus de Obstinado para resistir a poderes e negar seus efeitos (não cumulativo com Corajoso)."
-  },
-  {
     "id": "provocador",
     "nome": "PROVOCADOR",
     "categoria": "SOCIAIS",
@@ -1163,61 +877,6 @@
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "+2 em todas as rolagens de Curar, natural ou mágica."
-  },
-  {
-    "id": "nocao_do_perigo",
-    "nome": "NOÇÃO DO PERIGO",
-    "categoria": "ESTRANHAS",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": true,
-    "ganha_ao_comprar": [],
-    "descricao": "+2 em Perceber em testes de Surpresa (pág. 127); ampliação permite agir em Aguardar. Em outras situações, rolagem de Perceber com −2 (ou +2 se permitido) para detectar perigo; impede Finalização."
-  },
-  {
-    "id": "duro_na_queda",
-    "nome": "DURO NA QUEDA",
-    "categoria": "LENDARIAS",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Lendário",
-      "atributos": {
-        "Vigor": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Recebe até 4 Ferimentos antes de Incapacitar (penalidade máxima −3)."
-  },
-  {
-    "id": "muito_duro_na_queda",
-    "nome": "MUITO DURO NA QUEDA",
-    "categoria": "LENDARIAS",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Lendário",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "duro_na_queda"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Até 5 Ferimentos antes de Incapacitar (penalidade máxima −3)."
   },
   {
     "id": "artifice",

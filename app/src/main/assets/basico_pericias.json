@@ -25,12 +25,6 @@
       "origem": "BASICO"
     },
     {
-      "nome": "Conjurar",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "BASICO"
-    },
-    {
       "nome": "Consertar",
       "atributo": "Astúcia",
       "basica": false,
@@ -146,12 +140,6 @@
     },
     {
       "nome": "Provocar",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "BASICO"
-    },
-    {
-      "nome": "Psiônicos",
       "atributo": "Astúcia",
       "basica": false,
       "origem": "BASICO"

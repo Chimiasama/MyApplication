@@ -1,0 +1,26 @@
+[
+  {
+    "id": "anc_humano_wiseguys",
+    "nome": "Humano (Malandros)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "WISEGUYS",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "CONEXÕES (MÁFIA)"
+    ],
+    "desvantagens": [
+      "OBRIGAÇÃO (Maior - Servir à Família)"
+    ],
+    "habilidades": [
+      {
+        "nome": "Adaptável",
+        "descricao": "Começa com uma Vantagem Novato extra de graça."
+      },
+      {
+        "nome": "A Cosa Nostra",
+        "descricao": "Começa automaticamente com a Vantagem Conexões (Máfia) e a Complicação Obrigação (Maior - Servir à Família)."
+      }
+    ]
+  }
+]
