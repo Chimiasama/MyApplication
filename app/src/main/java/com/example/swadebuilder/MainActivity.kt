@@ -969,7 +969,8 @@ data class Pericia(
     val nome: String,
     val atributo: String,
     val basica: Boolean,
-    val origem: String? = null
+    val origem: String? = null,
+    val descricao: String? = null
 )
 
 var listaComplicacoes: List<Complicacao> = emptyList()
