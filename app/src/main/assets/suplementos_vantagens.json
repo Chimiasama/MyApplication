@@ -3,7 +3,7 @@
     "id": "ambidestro",
     "nome": "AMBIDESTRO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -19,134 +19,10 @@
     "descricao": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade Mão Inábil (veja pág. 115) é ignorada. Se estiverem empunhando uma arma em cada mão, personagens com esta Vantagem podem acumular os bônus de Aparar de ambas as armas (se houverem bônus)."
   },
   {
-    "id": "antecedente_arcano",
-    "nome": "ANTECEDENTE ARCANO",
-    "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "choiceOptions": [
-      "Dom",
-      "Magia",
-      "Milagres",
-      "Psiônicos",
-      "Ciência Estranha"
-    ],
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Exposição a energias estranhas, estudos em uma escola mágica ou dons de entidades divinas ou espirituais às vezes concedem às personagens seus próprios poderes e habilidades. Tais eventos levam à Vantagem Antecedente Arcano e ao desenvolvimento de habilidades sobrenaturais. Veja o Capítulo Cinco para ter uma descrição completa dos Antecedentes Arcanos, poderes e como usá-los."
-  },
-  {
-    "id": "antecedente_arcano_dom",
-    "nome": "ANTECEDENTE ARCANO (Dom)",
-    "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "grupoId": "antecedente_arcano",
-    "subtipoArcano": "DOM",
-    "isGrupoSelector": false,
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Versão específica do Antecedente Arcano: Dom."
-  },
-  {
-    "id": "antecedente_arcano_magia",
-    "nome": "ANTECEDENTE ARCANO (Magia)",
-    "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "grupoId": "antecedente_arcano",
-    "subtipoArcano": "MAGIA",
-    "isGrupoSelector": false,
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Versão específica do Antecedente Arcano: Magia."
-  },
-  {
-    "id": "antecedente_arcano_milagres",
-    "nome": "ANTECEDENTE ARCANO (Milagres)",
-    "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "grupoId": "antecedente_arcano",
-    "subtipoArcano": "MILAGRES",
-    "isGrupoSelector": false,
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Versão específica do Antecedente Arcano: Milagres."
-  },
-  {
-    "id": "antecedente_arcano_psionicos",
-    "nome": "ANTECEDENTE ARCANO (Psiônicos)",
-    "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "grupoId": "antecedente_arcano",
-    "subtipoArcano": "PSIÔNICOS",
-    "isGrupoSelector": false,
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Versão específica do Antecedente Arcano: Psiônicos."
-  },
-  {
-    "id": "antecedente_arcano_ciencia_estranha",
-    "nome": "ANTECEDENTE ARCANO (Ciência Estranha)",
-    "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "grupoId": "antecedente_arcano",
-    "subtipoArcano": "CIÊNCIA ESTRANHA",
-    "isGrupoSelector": false,
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Versão específica do Antecedente Arcano: Ciência Estranha."
-  },
-  {
     "id": "aristocrata",
     "nome": "ARISTOCRATA",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -160,48 +36,10 @@
     "descricao": "Este indivíduo nasceu com privilégios ou os adquiriu ao longo da vida. Pode ter dinheiro ou não (Vantagem Rico ou Podre de Rico), mas ainda anda no círculo social da elite dentro do cenário. Aristocratas adicionam +2 em Persuadir quando em uma Rede de Contatos (veja pág. 160) com a elite local, industriais, nobres ou demais aristocratas.\n\nTambém adicionam +2 em rolagens de Conhecimento Geral feitas para conhecer a etiqueta da elite, reconhecer ramos familiares e heráldica ou rumores envolvendo outros de sua posição."
   },
   {
-    "id": "atraente",
-    "nome": "ATRAENTE",
-    "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Vigor": 6
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Não é segredo que as pessoas ficam mais dispostas a ajudar quem consideram fisicamente atraentes.\n\nAdicione +1 em rolagens de Performance e Persuadir se o alvo estiver atraído pelo seu tipo em geral (gênero, sexo, espécie etc.)."
-  },
-  {
-    "id": "muito_atraente",
-    "nome": "MUITO ATRAENTE",
-    "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "atraente"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Sua personagem é linda de morrer. Seu bônus em Performance e Persuadir aumenta para +2."
-  },
-  {
     "id": "brutamontes",
     "nome": "BRUTAMONTES",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -218,29 +56,10 @@
     "descricao": "Brutamontes se focam em força e capacidade física no lugar de coordenação e flexibilidade. Tratam Atletismo como se ela estivesse ligada a Força no lugar de Agilidade para propósitos de Progresso. Também podem resistir a Desafios de Atletismo com força, se desejarem. Por fim, Brutamontes aumentam em +1 a Curta Distância de qualquer item arremessado. Dobre isso para a Média Distância ajustada e dobre novamente para a Longa Distância.\n\nSe a Distância de um item arremessado for 3/6/12, por exemplo, a Distância para o Brutamontes é 4/8/16."
   },
   {
-    "id": "carismatico",
-    "nome": "CARISMÁTICO",
-    "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Espírito": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Confere simpatia por alguma razão. Pode ser confiável, agir com bondade ou apenas transparecer confiança e boa vontade. Você tem uma rerrolagem gratuita em rolagens de Persuadir."
-  },
-  {
     "id": "corajoso",
     "nome": "CORAJOSO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -259,7 +78,7 @@
     "id": "cura_rapida",
     "nome": "CURA RÁPIDA",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -278,7 +97,7 @@
     "id": "famoso",
     "nome": "FAMOSO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -295,7 +114,7 @@
     "id": "muito_famoso",
     "nome": "MUITO FAMOSO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -314,7 +133,7 @@
     "id": "furioso",
     "nome": "FURIOSO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -331,7 +150,7 @@
     "id": "impulso",
     "nome": "IMPULSO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -350,7 +169,7 @@
     "id": "ligeiro",
     "nome": "LIGEIRO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -369,7 +188,7 @@
     "id": "linguista",
     "nome": "LINGUISTA",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -385,47 +204,10 @@
     "descricao": "Esta pessoa viaja o mundo e tem um ouvido apurado. Começa o jogo conhecendo um número de Idiomas igual à metade do seu dado de Astúcia, cada um em d6 (veja perícia Idiomas, pág. 35)."
   },
   {
-    "id": "musculoso",
-    "nome": "MUSCULOSO",
-    "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Força": 6,
-        "Vigor": 6
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Esta pessoa é muito forte ou está em ótima forma. Seu Tamanho aumenta em +1 (e a Resistência em 1), e a Força conta como dado maior para Sobrecarga (pág. 77) e Força Mínima para usar equipamentos sem penalidade (pág. 76). Não pode elevar Tamanho acima de +3."
-  },
-  {
-    "id": "prontidao",
-    "nome": "PRONTIDÃO",
-    "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Nada escapa a personagens com Prontidão. Adicionam +2 em Perceber para ouvir, ver ou sentir o mundo ao redor."
-  },
-  {
     "id": "rapido",
     "nome": "RÁPIDO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -444,7 +226,7 @@
     "id": "resistencia_arcana",
     "nome": "RESISTÊNCIA ARCANA",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -463,7 +245,7 @@
     "id": "resistencia_arcana_aprimorada",
     "nome": "RESISTÊNCIA ARCANA APRIMORADA",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -482,7 +264,7 @@
     "id": "rico",
     "nome": "RICO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -499,7 +281,7 @@
     "id": "podre_de_rico",
     "nome": "PODRE DE RICO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -515,46 +297,10 @@
     "descricao": "5× recursos iniciais e renda anual líquida ≈ US$ 500 000."
   },
   {
-    "id": "sorte",
-    "nome": "SORTE",
-    "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Parece abençoado pelo destino. Recebe 1 Bene adicional no início de cada sessão."
-  },
-  {
-    "id": "sorte_grande",
-    "nome": "SORTE GRANDE",
-    "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "sorte"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Concede 2 Benes adicionais no início de cada sessão."
-  },
-  {
     "id": "arma_predileta",
     "nome": "ARMA PREDILETA",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -576,7 +322,7 @@
     "id": "arma_predileta_aprimorada",
     "nome": "ARMA PREDILETA APRIMORADA",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -592,29 +338,10 @@
     "descricao": "Como acima, mas bônus ao usar a arma aumentam para +2."
   },
   {
-    "id": "artista_marcial",
-    "nome": "ARTISTA MARCIAL",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
-        "Lutar": 6
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Alguém com essa Vantagem tem treinamento básico em artes marciais. Sempre está com armas, causa dano com punhos e pés (Armas Naturais, pág. 114). Soma +1 quando golpeia com eles e causa Força + d4 de dano. Se já tiver dano por Garras ou Brigão, aumente o dado em um tipo. Não soma com outras Armas Naturais."
-  },
-  {
     "id": "guerreiro_marcial",
     "nome": "GUERREIRO MARCIAL",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -630,69 +357,10 @@
     "descricao": "Aumente bônus de Lutar para +2 e dado de dano em um tipo adicional."
   },
   {
-    "id": "atacar_primeiro",
-    "nome": "ATACAR PRIMEIRO",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Agilidade": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Uma vez por rodada, se não estiver Abalado ou Atordoado, ganha um ataque livre de Lutar contra adversário que entrar em seu Alcance (veja Ataques Livres, pág. 116)."
-  },
-  {
-    "id": "atacar_primeiro_aprimorado",
-    "nome": "ATACAR PRIMEIRO APRIMORADO",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Heroico",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "atacar_primeiro"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Como acima, mas permite atacar até três oponentes por turno."
-  },
-  {
-    "id": "atirador",
-    "nome": "ATIRADOR",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {},
-      "periciaMinOpcional": {
-        "Atletismo": 8,
-        "Atirar": 8
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Talento nato com armas de combate à distância. Se não se mover e não disparar acima de Cadência de Tiro 1 na primeira ação, pode adicionar +1 em uma rolagem de Atletismo ou Atirar, ou ignorar até 2 pontos em penalidades por localização, cobertura, distância, escala ou velocidade. Não se acumula com Mirar e não vale para ataques extras."
-  },
-  {
     "id": "atirar_com_duas_armas",
     "nome": "ATIRAR COM DUAS ARMAS",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -708,48 +376,10 @@
     "descricao": "Funciona como Lutar com Duas Armas, mas para armas à distância. Permite disparo de cada mão em duas ações sem penalidade por Ação Múltipla. Se tiver Lutar com Duas Armas, segunda ação pode ser corpo a corpo."
   },
   {
-    "id": "bloquear",
-    "nome": "BLOQUEAR",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
-        "Lutar": 8
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Aprendeu a se defender em combates corpo a corpo. Aparar +1 e bônus de Agrupar de oponentes contra ela é reduzido em 1."
-  },
-  {
-    "id": "bloquear_aprimorado",
-    "nome": "BLOQUEAR APRIMORADO",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "bloquear"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Aparar +2 e redução de Agrupar contra ela em 2."
-  },
-  {
     "id": "brigao",
     "nome": "BRIGÃO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -769,7 +399,7 @@
     "id": "pugilista",
     "nome": "PUGILISTA",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -785,67 +415,10 @@
     "descricao": "Resistência +1 adicional e dano por punhos/garras em mais um tipo de dado."
   },
   {
-    "id": "calculista",
-    "nome": "CALCULISTA",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Astúcia": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Estuda ações do oponente e ganha vantagem. Quando Carta de Ação ≤ 5, ignore até 2 pontos de penalidades em uma ação daquele turno."
-  },
-  {
-    "id": "contra_ataque",
-    "nome": "CONTRA-ATAQUE",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
-        "Lutar": 8
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Uma vez por rodada (se não Abalado ou Atordoado), ganha um ataque livre contra quem falhar em ataque de Lutar direcionado a si."
-  },
-  {
-    "id": "contra_ataque_aprimorado",
-    "nome": "CONTRA-ATAQUE APRIMORADO",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "contra_ataque"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Como acima, mas contra até três adversários que falharem em ataques contrários por rodada."
-  },
-  {
     "id": "corredor",
     "nome": "CORREDOR",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -866,7 +439,7 @@
     "id": "disparo_duplo",
     "nome": "DISPARO DUPLO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -885,7 +458,7 @@
     "id": "disparo_rapido",
     "nome": "DISPARO RÁPIDO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -904,7 +477,7 @@
     "id": "disparo_rapido_aprimorado",
     "nome": "DISPARO RÁPIDO APRIMORADO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {},
@@ -923,7 +496,7 @@
     "id": "duro_de_matar",
     "nome": "DURO DE MATAR",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -942,7 +515,7 @@
     "id": "muito_duro_de_matar",
     "nome": "MUITO DURO DE MATAR",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {},
@@ -958,48 +531,10 @@
     "descricao": "Se “morrer”, role um dado: ímpar = morte; par = Estado Incapacitado mas sobrevive."
   },
   {
-    "id": "esquiva",
-    "nome": "ESQUIVA",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {
-        "Agilidade": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Subtrai 2 de todos os ataques à distância feitos contra a personagem, não cumulativo com cobertura."
-  },
-  {
-    "id": "esquiva_aprimorada",
-    "nome": "ESQUIVA APRIMORADA",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "esquiva"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Sub +2 quando Evadindo de ataques em área (veja pág. 122)."
-  },
-  {
     "id": "finta",
     "nome": "FINTA",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1018,7 +553,7 @@
     "id": "focado",
     "nome": "FOCADO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1037,7 +572,7 @@
     "id": "extremamente_focado",
     "nome": "EXTREMAMENTE FOCADO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1053,48 +588,10 @@
     "descricao": "Saca duas cartas adicionais e escolhe qual usar."
   },
   {
-    "id": "frenesi",
-    "nome": "FRENESI",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
-        "Lutar": 8
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Como ação limitada, role um segundo dado de Lutar em ataque corpo a corpo no turno."
-  },
-  {
-    "id": "frenesi_aprimorado",
-    "nome": "FRENESI APRIMORADO",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "frenesi"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Adiciona um terceiro dado de Lutar como ataque extra na ação de Frenesi."
-  },
-  {
     "id": "golpe_poderoso",
     "nome": "GOLPE PODEROSO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1110,27 +607,10 @@
     "descricao": "Se Carta de Ação for Curinga, dobre dano do primeiro ataque bem-sucedido com Lutar no turno."
   },
   {
-    "id": "impiedoso",
-    "nome": "IMPIEDOSO",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Ao gastar Bene para rerrolar dano, adicione +2 ao total."
-  },
-  {
     "id": "instinto_assassino",
     "nome": "INSTINTO ASSASSINO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1147,7 +627,7 @@
     "id": "lutador_improvisador",
     "nome": "LUTADOR IMPROVISADOR",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1163,29 +643,10 @@
     "descricao": "Ignora penalidade −2 ao usar armas improvisadas (veja pág. 114)."
   },
   {
-    "id": "lutar_com_duas_armas",
-    "nome": "LUTAR COM DUAS ARMAS",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Agilidade": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Segundo ataque não sofre penalidade por Ação Múltipla; Mão Inábil ainda vale a menos que seja Ambidestro."
-  },
-  {
     "id": "maos_firmes",
     "nome": "MÃOS FIRMES",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1201,65 +662,10 @@
     "descricao": "Ignore penalidade por Plataforma Instável (veja pág. 124) e penalidade de corrida reduzida a −1."
   },
   {
-    "id": "matador_de_gigantes",
-    "nome": "MATADOR DE GIGANTES",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "+1d6 de dano ao atacar criaturas de Tamanho ≥ 3 maiores (veja pág. 215–216)."
-  },
-  {
-    "id": "nervos_de_aco",
-    "nome": "NERVOS DE AÇO",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Vigor": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Ignore 1 ponto de penalidades por Ferimento."
-  },
-  {
-    "id": "nervos_de_aco_aprimorados",
-    "nome": "NERVOS DE AÇO APRIMORADOS",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "nervos_de_aco"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Ignore 2 pontos de penalidades por Ferimento."
-  },
-  {
     "id": "queixo_de_ferro",
     "nome": "QUEIXO DE FERRO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1278,7 +684,7 @@
     "id": "reflexos_de_combate",
     "nome": "REFLEXOS BASICO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1292,48 +698,10 @@
     "descricao": "+2 ao rolar para recuperar de Estado Abalado ou Atordoado."
   },
   {
-    "id": "retirada",
-    "nome": "RETIRADA",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Agilidade": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Oponente adjacente não recebe ataque livre ao se retirar de corpo a corpo."
-  },
-  {
-    "id": "retirada_aprimorada",
-    "nome": "RETIRADA APRIMORADA",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "retirada"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Até três adversários não recebem ataques livres ao retirar-se corpo a corpo."
-  },
-  {
     "id": "rock_and_roll",
     "nome": "ROCK AND ROLL!",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1352,7 +720,7 @@
     "id": "tiro_mortal",
     "nome": "TIRO MORTAL",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1370,88 +738,10 @@
     "descricao": "Se Carta de Ação for Curinga, dobre dano da primeira rolagem bem-sucedida de Atletismo ou Atirar."
   },
   {
-    "id": "varredura",
-    "nome": "VARREDURA",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Força": 8
-      },
-      "pericias": {
-        "Lutar": 8
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Ataque com arma de duas mãos a todos os alvos no Alcance; se sem arma de duas mãos, penalidade −2."
-  },
-  {
-    "id": "varredura_aprimorada",
-    "nome": "VARREDURA APRIMORADA",
-    "categoria": "COMBATE",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "varredura"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Como acima, mas pode evitar atingir aliados."
-  },
-  {
-    "id": "comando",
-    "nome": "COMANDO",
-    "categoria": "LIDERANCA",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
-        "Astúcia": 6
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Extras no Raio de Comando +1 em Espírito para recuperar de Abalado e Vigor para Atordoado."
-  },
-  {
-    "id": "presenca_de_comando",
-    "nome": "PRESENÇA DE COMANDO",
-    "categoria": "LIDERANCA",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "comando"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Raio de Comando passa a 10 quadros (20 m)."
-  },
-  {
     "id": "estrategista",
     "nome": "ESTRATEGISTA",
     "categoria": "LIDERANCA",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {
@@ -1474,7 +764,7 @@
     "id": "mestre_estrategista",
     "nome": "MESTRE ESTRATEGISTA",
     "categoria": "LIDERANCA",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {},
@@ -1490,130 +780,10 @@
     "descricao": "Duas Cartas de Ação extras por rodada para distribuir."
   },
   {
-    "id": "fervor",
-    "nome": "FERVOR",
-    "categoria": "LIDERANCA",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espírito": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [
-        "comando"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Extras no Raio de Comando +1 em dano de Lutar."
-  },
-  {
-    "id": "inspirar",
-    "nome": "INSPIRAR",
-    "categoria": "LIDERANCA",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "comando"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Uma vez por turno, role Conhecimento Batalha para dar Suporte em Característica escolhida a todos os Extras no Raio de Comando."
-  },
-  {
-    "id": "lider_nato",
-    "nome": "LÍDER NATO",
-    "categoria": "LIDERANCA",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {
-        "Espírito": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [
-        "comando"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Vantagens de Liderança aplicáveis a Extras também valem para Cartas Selvagens."
-  },
-  {
-    "id": "mantenham_a_formacao",
-    "nome": "MANTENHAM A FORMAÇÃO!",
-    "categoria": "LIDERANCA",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {
-        "Astúcia": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [
-        "comando"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Extras no Raio de Comando +1 em Resistência."
-  },
-  {
-    "id": "artifice",
-    "nome": "ARTÍFICE",
-    "categoria": "PODER",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "antecedente_arcano"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Permite criar Dispositivos Arcanos (veja pág. 184)."
-  },
-  {
-    "id": "canalizacao",
-    "nome": "CANALIZAÇÃO",
-    "categoria": "PODER",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "antecedente_arcano"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Reduz custo de PP em 1 ao obter ampliação em rolagem arcana."
-  },
-  {
     "id": "concentracao",
     "nome": "CONCENTRAÇÃO",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1632,7 +802,7 @@
     "id": "drenar_a_alma",
     "nome": "DRENAR A ALMA",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1653,7 +823,7 @@
     "id": "engenhoqueiro",
     "nome": "ENGENHOQUEIRO",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1674,7 +844,7 @@
     "id": "esforco_extra",
     "nome": "ESFORÇO EXTRA",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1695,7 +865,7 @@
     "id": "guerreiro_sagrado_profano",
     "nome": "GUERREIRO SAGRADO/PROFANO",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1716,7 +886,7 @@
     "id": "mago",
     "nome": "MAGO",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1737,7 +907,7 @@
     "id": "mentalista",
     "nome": "MENTALISTA",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1755,88 +925,10 @@
     "descricao": "+2 em testes resistidos de Psiônicos."
   },
   {
-    "id": "novos_poderes",
-    "nome": "NOVOS PODERES",
-    "categoria": "PODER",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "antecedente_arcano"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "infinito",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Ganha 2 novos poderes de seu Estágio ou menor; pode repetir."
-  },
-  {
-    "id": "pontos_de_poder",
-    "nome": "PONTOS DE PODER",
-    "categoria": "PODER",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "antecedente_arcano"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez_por_estagio",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "+5 PP adicionais (1 vez por Estágio, 2 pontos no Lendário)."
-  },
-  {
-    "id": "recarga_rapida",
-    "nome": "RECARGA RÁPIDA",
-    "categoria": "PODER",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {
-        "Espírito": 6
-      },
-      "pericias": {},
-      "vantagens_previas": [
-        "antecedente_arcano"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Recupera 10 PP por hora de descanso."
-  },
-  {
-    "id": "recarga_rapida_aprimorado",
-    "nome": "RECARGA RÁPIDA APRIMORADO",
-    "categoria": "PODER",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "recarga_rapida"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Recupera 20 PP por hora."
-  },
-  {
     "id": "surto_de_poder",
     "nome": "SURTO DE PODER",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1857,7 +949,7 @@
     "id": "acrobata",
     "nome": "ACROBATA",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1878,7 +970,7 @@
     "id": "combatente_acrobata",
     "nome": "COMBATENTE ACROBATA",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1894,29 +986,10 @@
     "descricao": "Ataques contra ele têm −1, desde que não sofra penalidades por Sobrecarga ou Força Mínima."
   },
   {
-    "id": "as",
-    "nome": "ÁS",
-    "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Agilidade": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Ignora −2 em Navegar, Dirigir ou Pilotar e pode gastar Benes para Absorver dano em veículos que controla."
-  },
-  {
     "id": "assassino",
     "nome": "ASSASSINO",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1935,115 +1008,10 @@
     "descricao": "+2 em dano contra vulneráveis ou em Finalizações."
   },
   {
-    "id": "erudito",
-    "nome": "ERUDITO",
-    "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
-        "Pesquisar": 8
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "infinito",
-    "vinculado_pericia": true,
-    "ganha_ao_comprar": [],
-    "descricao": "Escolha Conhecimento Acadêmico, Batalha, Ocultismo, Ciência ou outra “Conhecimento” baseada em Astúcia. +2 nessas perícias (repetível para diferentes perícias)."
-  },
-  {
-    "id": "investigador",
-    "nome": "INVESTIGADOR",
-    "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Astúcia": 8
-      },
-      "pericias": {
-        "Pesquisar": 8
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "+2 em Pesquisar e Perceber ao buscar documentos, pistas ou itens escondidos."
-  },
-  {
-    "id": "ladrao",
-    "nome": "LADRÃO",
-    "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Agilidade": 8
-      },
-      "pericias": {
-        "Furtividade": 6,
-        "Ladinagem": 6
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "+1 em Atletismo para escalar em áreas urbanas, +1 em Furtividade urbana e +1 em Ladinagem."
-  },
-  {
-    "id": "mateiro",
-    "nome": "MATEIRO",
-    "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Espírito": 6
-      },
-      "pericias": {
-        "Sobrevivência": 8
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "+2 em Sobrevivência e Furtividade na natureza."
-  },
-  {
-    "id": "mcgyver",
-    "nome": "MCGYVER",
-    "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Astúcia": 6
-      },
-      "pericias": {
-        "Perceber": 8,
-        "Consertar": 6
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Durante um turno, rola Consertar para criar dispositivo improvisado; sucesso/ampliação definem qualidade."
-  },
-  {
     "id": "pau_pra_toda_obra",
     "nome": "PAU PRA TODA OBRA",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2062,7 +1030,7 @@
     "id": "senhor_conserta_tudo",
     "nome": "SENHOR CONSERTA TUDO",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2078,30 +1046,10 @@
     "descricao": "+2 em Consertar; ampliação reduz tempo de conserto pela metade (um quarto do tempo normal)."
   },
   {
-    "id": "soldado",
-    "nome": "SOLDADO",
-    "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Força": 6,
-        "Vigor": 6
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Força conta como dado maior para Sobrecarga e Força Mínima (acumula com Musculoso). Rerrolagem gratuita em Vigor para evitar perigos ambientais."
-  },
-  {
     "id": "ameacador",
     "nome": "AMEAÇADOR",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2123,7 +1071,7 @@
     "id": "agitador",
     "nome": "AGITADOR",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {
@@ -2142,7 +1090,7 @@
     "id": "cativar_o_ambiente",
     "nome": "CATIVAR O AMBIENTE",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2161,7 +1109,7 @@
     "id": "cativar_a_multidao",
     "nome": "CATIVAR A MULTIDÃO",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -2177,27 +1125,10 @@
     "descricao": "Como acima, mas dá terceiro dado de Suporte e pode beneficiar um aliado adicional."
   },
   {
-    "id": "conexoes",
-    "nome": "CONEXÕES",
-    "categoria": "SOCIAIS",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez_por_sessao",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Até uma vez por sessão, peça favor a uma facção ou contato; benefício a critério do Mestre."
-  },
-  {
     "id": "confiavel",
     "nome": "CONFIÁVEL",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2216,7 +1147,7 @@
     "id": "elevar_o_moral",
     "nome": "ELEVAR O MORAL",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2235,7 +1166,7 @@
     "id": "elo_comum",
     "nome": "ELO COMUM",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2251,29 +1182,10 @@
     "descricao": "Pode dar Benes livremente a qualquer pessoa que possa se comunicar."
   },
   {
-    "id": "humilhar",
-    "nome": "HUMILHAR",
-    "categoria": "SOCIAIS",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
-        "Provocar": 8
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": true,
-    "ganha_ao_comprar": [],
-    "descricao": "Rerrolagem gratuita em Desafios de Provocar."
-  },
-  {
     "id": "manha",
     "nome": "MANHA",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2289,68 +1201,10 @@
     "descricao": "+2 em Intimidar e Persuadir em Redes de Contatos criminosos; +2 em Conhecimento Geral sobre atividades ilícitas."
   },
   {
-    "id": "obstinado",
-    "nome": "OBSTINADO",
-    "categoria": "SOCIAIS",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Espírito": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "+2 ao resistir a Desafios com Astúcia ou Espírito."
-  },
-  {
-    "id": "vontade_de_ferro",
-    "nome": "VONTADE DE FERRO",
-    "categoria": "SOCIAIS",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "corajoso",
-        "obstinado"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Adiciona bônus de Obstinado para resistir a poderes e negar seus efeitos (não cumulativo com Corajoso)."
-  },
-  {
-    "id": "provocador",
-    "nome": "PROVOCADOR",
-    "categoria": "SOCIAIS",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
-        "Provocar": 6
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": true,
-    "ganha_ao_comprar": [],
-    "descricao": "Ao obter ampliação em Desafio de Provocar, penaliza demais alvos em −2 até cartão novo, outro provocar ou fim do encontro."
-  },
-  {
     "id": "replica",
     "nome": "RÉPLICA",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2369,7 +1223,7 @@
     "id": "campeao",
     "nome": "CAMPEÃO",
     "categoria": "ESTRANHAS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2390,7 +1244,7 @@
     "id": "chi",
     "nome": "CHI",
     "categoria": "ESTRANHAS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {},
@@ -2409,7 +1263,7 @@
     "id": "coragem_liquida",
     "nome": "CORAGEM LÍQUIDA",
     "categoria": "ESTRANHAS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2425,29 +1279,10 @@
     "descricao": "Após beber destilado, +1 tipo de dado em Vigor (e Resistência) e ignore 1 penalidade por Ferimento. Astúcia, Agilidade e perícias sofrem −1. Dura 1 hora, depois 1 Fadiga por 4 h."
   },
   {
-    "id": "curandeiro",
-    "nome": "CURANDEIRO",
-    "categoria": "ESTRANHAS",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Espírito": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "+2 em todas as rolagens de Curar, natural ou mágica."
-  },
-  {
     "id": "elo_animal",
     "nome": "ELO ANIMAL",
     "categoria": "ESTRANHAS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2461,27 +1296,10 @@
     "descricao": "Pode gastar seus Benes em quaisquer animais sob controle (montarias, pets, familiares)."
   },
   {
-    "id": "nocao_do_perigo",
-    "nome": "NOÇÃO DO PERIGO",
-    "categoria": "ESTRANHAS",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": true,
-    "ganha_ao_comprar": [],
-    "descricao": "+2 em Perceber em testes de Surpresa (pág. 127); ampliação permite agir em Aguardar. Em outras situações, rolagem de Perceber com −2 (ou +2 se permitido) para detectar perigo; impede Finalização."
-  },
-  {
     "id": "senhor_das_feras",
     "nome": "SENHOR DAS FERAS",
     "categoria": "ESTRANHAS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2500,7 +1318,7 @@
     "id": "sucateiro",
     "nome": "SUCATEIRO",
     "categoria": "ESTRANHAS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2519,7 +1337,7 @@
     "id": "seguidores",
     "nome": "SEGUIDORES",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {},
@@ -2538,7 +1356,7 @@
     "id": "profissional",
     "nome": "PROFISSIONAL",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {},
@@ -2555,7 +1373,7 @@
     "id": "especialista",
     "nome": "ESPECIALISTA",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {},
@@ -2574,7 +1392,7 @@
     "id": "mestre",
     "nome": "MESTRE",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {},
@@ -2594,7 +1412,7 @@
     "id": "parceiro",
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {},
@@ -2610,48 +1428,10 @@
     "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum."
   },
   {
-    "id": "duro_na_queda",
-    "nome": "DURO NA QUEDA",
-    "categoria": "LENDARIAS",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Lendário",
-      "atributos": {
-        "Vigor": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Recebe até 4 Ferimentos antes de Incapacitar (penalidade máxima −3)."
-  },
-  {
-    "id": "muito_duro_na_queda",
-    "nome": "MUITO DURO NA QUEDA",
-    "categoria": "LENDARIAS",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Lendário",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "duro_na_queda"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Até 5 Ferimentos antes de Incapacitar (penalidade máxima −3)."
-  },
-  {
     "id": "mestre_de_arma",
     "nome": "MESTRE DE ARMA",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {},
@@ -2670,7 +1450,7 @@
     "id": "mestre_das_armas",
     "nome": "MESTRE DAS ARMAS",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "SUPLEMENTO",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {},
@@ -3383,25 +2163,6 @@
     "descricao": "Ignora -2 de Agilidade ao Evadir. Pode Evadir ataques de área que normalmente não permitem (com -2)."
   },
   {
-    "id": "artifice",
-    "nome": "ARTÍFICE",
-    "categoria": "PODER",
-    "origem": "FANTASIA",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "antecedente_arcano"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Pode criar Dispositivos Arcanos temporários e itens mágicos permanentes."
-  },
-  {
     "id": "artifice_mestre",
     "nome": "ARTÍFICE MESTRE",
     "categoria": "PODER",
@@ -3590,25 +2351,6 @@
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
     "descricao": "Recebe rolagem grátis de Perceber +2 para detectar armadilhas/portas em pedra a até 3m."
-  },
-  {
-    "id": "batedor",
-    "nome": "BATEDOR",
-    "categoria": "PROFISSIONAL",
-    "origem": "FANTASIA",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
-        "sobrevivencia": 6
-      },
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Pode fazer Perceber -2 para detectar encontros de viagem primeiro. Sempre alerta contra Furtividade. +2 Conhecimento Geral sobre rotas conhecidas."
   },
   {
     "id": "cacador_de_tesouros",
@@ -7475,7 +6217,13 @@
     "nome": "LIMPADORA (CLEANER)",
     "categoria": "PROFISSIONAL",
     "origem": "WISEGUYS",
-    "requisitos": { "estagio": "Novato", "pericias": { "Furtividade": 8, "Ciência": 6 } },
+    "requisitos": {
+      "estagio": "Novato",
+      "pericias": {
+        "Furtividade": 8,
+        "Ciência": 6
+      }
+    },
     "descricao": "Especialista em se livrar de corpos e evidências. +2 em testes para ocultar provas ou limpar cenas de crime. Pode fazer um teste de Astúcia para saber exatamente o que a polícia vai procurar."
   },
   {
@@ -7483,7 +6231,13 @@
     "nome": "FEITO (MADE MAN)",
     "categoria": "SOCIAIS",
     "origem": "WISEGUYS",
-    "requisitos": { "estagio": "Experiente", "vantagens_previas": ["conexao_mafia"], "observacoes": "Deve ser homem e de descendência italiana (na Cosa Nostra)." },
+    "requisitos": {
+      "estagio": "Experiente",
+      "vantagens_previas": [
+        "conexao_mafia"
+      ],
+      "observacoes": "Deve ser homem e de descendência italiana (na Cosa Nostra)."
+    },
     "descricao": "Membro oficial da Família. Intocável por membros de baixo escalão. +2 em Intimidar contra outros criminosos. Ganha +2 de Riqueza inicial ou renda."
   },
   {
@@ -7493,8 +6247,12 @@
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
       "estagio": "Novato",
-      "vantagens_previas": ["artista_marcial"],
-      "pericias": { "Lutar": 8 }
+      "vantagens_previas": [
+        "artista_marcial"
+      ],
+      "pericias": {
+        "Lutar": 8
+      }
     },
     "descricao": "O lutador balança e trança as pernas. Recebe +1 em Aparar. Se o oponente falhar em um ataque corpo a corpo, o lutador ganha +2 no próximo ataque contra ele."
   },
@@ -7505,8 +6263,12 @@
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
       "estagio": "Novato",
-      "vantagens_previas": ["artista_marcial"],
-      "atributos": { "Força": 8 }
+      "vantagens_previas": [
+        "artista_marcial"
+      ],
+      "atributos": {
+        "Força": 8
+      }
     },
     "descricao": "Ataques agressivos e poderosos. +2 de Dano em ataques desarmados se o lutador se moveu pelo menos 2 quadros em direção ao alvo antes de atacar."
   },
@@ -7517,8 +6279,12 @@
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens_previas": ["artista_marcial"],
-      "pericias": { "Lutar": 8 }
+      "vantagens_previas": [
+        "artista_marcial"
+      ],
+      "pericias": {
+        "Lutar": 8
+      }
     },
     "descricao": "Foco em defesa e contra-ataque. Ignora até 2 pontos de penalidade por Ações Múltiplas se uma delas for Defender ou usar a manobra Defesa Total."
   },
@@ -7529,7 +6295,9 @@
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
       "estagio": "Novato",
-      "vantagens_previas": ["artista_marcial"]
+      "vantagens_previas": [
+        "artista_marcial"
+      ]
     },
     "descricao": "+2 em testes de Agarrar. Se mantiver um oponente agarrado, causa For+d6 de dano automático no início do turno dele."
   },
@@ -7540,7 +6308,9 @@
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": { "Espirito": 6 }
+      "atributos": {
+        "Espirito": 6
+      }
     },
     "descricao": "Concede um companheiro animal/espírito (Extra) que evolui com o herói. Se o Mon morrer, o herói sofre Fadiga até conseguir outro."
   },
@@ -7551,7 +6321,9 @@
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
       "estagio": "Novato",
-      "vantagens_previas": ["treinamento_mon"]
+      "vantagens_previas": [
+        "treinamento_mon"
+      ]
     },
     "descricao": "O herói pode gastar seus próprios Benes nas rolagens do Mon. Podem se comunicar telepaticamente em curto alcance."
   }

@@ -50,14 +50,17 @@ object DataLoader {
         val assets = context.assets
 
         // 1. Equipamentos
-        val baseEquip = assets.readJsonList<EquipamentoCategoria>("equipamentos.json")
+        val baseEquip = assets.readJsonList<EquipamentoCategoria>("basico_equipamentos.json")
+        val suppEquip = runCatching {
+            assets.readJsonList<EquipamentoCategoria>("suplementos_equipamentos.json")
+        }.getOrElse { emptyList() }
         val crystalEquip = runCatching {
             assets.readJsonList<EquipamentoCategoria>("equipamentos_crystal.json")
         }.getOrElse { emptyList() }
         val trilhadorEquip = runCatching {
             assets.readJsonList<EquipamentoCategoria>("equipamentos_trilhador.json")
         }.getOrElse { emptyList() }
-        val allEquip = baseEquip + crystalEquip + trilhadorEquip
+        val allEquip = baseEquip + suppEquip + crystalEquip + trilhadorEquip
 
         listaEquipamentos = allEquip.flatMap { it.itens }
 
@@ -67,7 +70,7 @@ object DataLoader {
             }
         )
         val superequipCategorias = deduplicarEquipamentoCategorias(
-            assets.readJsonList<EquipamentoCategoria>("equipamentos.json").filter { cat ->
+            (baseEquip + suppEquip).filter { cat ->
                 cat.origem?.equals("super", ignoreCase = true) ?: false
             }
         )
@@ -102,12 +105,15 @@ object DataLoader {
             .associate { it.nome.keyify() to it.nome }
 
         // 6. Pericias
-        val periciasData = loadJsonAsset<PericiaList>(context, "pericias.json")
+        val periciasCoreData = loadJsonAsset<PericiaList>(context, "basico_pericias.json")
+        val periciasSuppData = runCatching {
+            loadJsonAsset<PericiaList>(context, "suplementos_pericias.json")
+        }.getOrElse { PericiaList(emptyList()) }
         val periciasAdgData = runCatching {
             loadJsonAsset<PericiaList>(context, "pericias_adg.json")
         }.getOrElse { PericiaList(emptyList()) }
 
-        val todasPericiasJson = periciasData.pericias + periciasAdgData.pericias
+        val todasPericiasJson = periciasCoreData.pericias + periciasSuppData.pericias + periciasAdgData.pericias
 
         listaPericias = todasPericiasJson.map { pj ->
             Pericia(
@@ -144,11 +150,14 @@ object DataLoader {
         mapaAtributosDescricao = atributosDescList.associate { it.nome.keyify() to it.descricao }
 
         // 7. Vantagens
-        val mainVantagens: List<Vantagem> = loadJsonAsset(context, "Vantagens.json")
+        val coreVantagens: List<Vantagem> = loadJsonAsset(context, "basico_vantagens.json")
+        val suppVantagens: List<Vantagem> = runCatching {
+            loadJsonAsset<List<Vantagem>>(context, "suplementos_vantagens.json")
+        }.getOrElse { emptyList() }
         val crystalVantagens: List<Vantagem> = runCatching {
             loadJsonAsset<List<Vantagem>>(context, "vantagens_crystal.json")
         }.getOrElse { emptyList() }
-        val todasVantagens = mainVantagens + crystalVantagens
+        val todasVantagens = coreVantagens + suppVantagens + crystalVantagens
 
         AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
         AppData.superVantagens = todasVantagens.filter {
@@ -174,11 +183,18 @@ object DataLoader {
         }.getOrElse { emptyList() }
 
         listaTropos = adgTropos + chTropos
-        val todasComplicacoes = loadJsonAsset<List<Complicacao>>(context, "complicacoes.json")
-        listaComplicacoes = todasComplicacoes
+        val coreComplicacoes = loadJsonAsset<List<Complicacao>>(context, "basico_complicacoes.json")
+        val suppComplicacoes = runCatching {
+            loadJsonAsset<List<Complicacao>>(context, "suplementos_complicacoes.json")
+        }.getOrElse { emptyList() }
+        listaComplicacoes = coreComplicacoes + suppComplicacoes
 
         // 9. Ancestralidades
-        listaAncestralidadesJson = assets.readJsonList("listaancestralidade.json")
+        val coreAncestries = assets.readJsonList<RacialModifier>("basico_listaancestralidade.json")
+        val suppAncestries = runCatching {
+            assets.readJsonList<RacialModifier>("suplementos_listaancestralidade.json")
+        }.getOrElse { emptyList() }
+        listaAncestralidadesJson = coreAncestries + suppAncestries
 
         // 10. Monstros
         listaMonstroTemplates = assets
