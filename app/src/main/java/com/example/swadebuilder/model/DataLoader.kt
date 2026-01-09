@@ -69,7 +69,10 @@ object DataLoader {
         val trilhadorEquip = runCatching {
             assets.readJsonList<EquipamentoCategoria>("equipamentos_trilhador.json")
         }.getOrElse { emptyList() }
-        val allEquip = baseEquip + suppEquip + fantasyEquip + horrorEquip + scifiEquip + crystalEquip + trilhadorEquip
+        val superEquip = runCatching {
+            assets.readJsonList<EquipamentoCategoria>("super_equipamentos.json")
+        }.getOrElse { emptyList() }
+        val allEquip = baseEquip + suppEquip + fantasyEquip + horrorEquip + scifiEquip + crystalEquip + trilhadorEquip + superEquip
 
         listaEquipamentos = allEquip.flatMap { it.itens }
 
@@ -175,7 +178,10 @@ object DataLoader {
         val crystalVantagens: List<Vantagem> = runCatching {
             loadJsonAsset<List<Vantagem>>(context, "vantagens_crystal.json")
         }.getOrElse { emptyList() }
-        val todasVantagens = coreVantagens + suppVantagens + fantasyVantagens + horrorVantagens + scifiVantagens + crystalVantagens
+        val superVantagensList: List<Vantagem> = runCatching {
+            loadJsonAsset<List<Vantagem>>(context, "super_vantagens.json")
+        }.getOrElse { emptyList() }
+        val todasVantagens = coreVantagens + suppVantagens + fantasyVantagens + horrorVantagens + scifiVantagens + crystalVantagens + superVantagensList
 
         AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
         AppData.superVantagens = todasVantagens.filter {
@@ -214,7 +220,10 @@ object DataLoader {
         val scifiComplicacoes = runCatching {
             loadJsonAsset<List<Complicacao>>(context, "scifi_complicacoes.json")
         }.getOrElse { emptyList() }
-        listaComplicacoes = coreComplicacoes + suppComplicacoes + fantasyComplicacoes + horrorComplicacoes + scifiComplicacoes
+        val superComplicacoes = runCatching {
+            loadJsonAsset<List<Complicacao>>(context, "super_complicacoes.json")
+        }.getOrElse { emptyList() }
+        listaComplicacoes = coreComplicacoes + suppComplicacoes + fantasyComplicacoes + horrorComplicacoes + scifiComplicacoes + superComplicacoes
 
         // 9. Ancestralidades
         val coreAncestries = assets.readJsonList<RacialModifier>("basico_listaancestralidade.json")
@@ -230,7 +239,10 @@ object DataLoader {
         val scifiAncestries = runCatching {
             assets.readJsonList<RacialModifier>("scifi_listaancestralidade.json")
         }.getOrElse { emptyList() }
-        listaAncestralidadesJson = coreAncestries + suppAncestries + fantasyAncestries + horrorAncestries + scifiAncestries
+        val superAncestries = runCatching {
+            assets.readJsonList<RacialModifier>("super_listaancestralidade.json")
+        }.getOrElse { emptyList() }
+        listaAncestralidadesJson = coreAncestries + suppAncestries + fantasyAncestries + horrorAncestries + scifiAncestries + superAncestries
 
         // 10. Monstros
         listaMonstroTemplates = assets
