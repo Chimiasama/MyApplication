@@ -196,27 +196,6 @@
     "description": "Os olhos desse herói ou heroína não enxergam mais como antes. Personagens com Visão Ruim sofrem uma penalidade de -1 em qualquer rolagem de Característica dependente de visão (como ataques à distância e rolagens de Perceber) ou -2 como uma Complicação Maior. Em cenários onde óculos estão disponíveis eles negam a penalidade quando são usados. Se perdidos ou quebrados durante um combate (geralmente há uma chance de 50% quando a personagem ficar Ferido, cair ou sofrer algum outro trauma), ficará em Estado Distraído (e Vulnerável se for uma Complicação Maior) até o fim do próximo turno da personagem."
   },
   {
-    "id": "comp_servo_morte",
-    "name": "SERVO DA MORTE (Grim Servant)",
-    "origem": "OESTE_ESTRANHO",
-    "severity": "maior",
-    "description": "+1 em rolagens de ataque/dano, mas Falhas Críticas atingem aliados automaticamente ou causam desastres graves."
-  },
-  {
-    "id": "comp_tome",
-    "name": "TOMÉ (Doubting Thomas)",
-    "origem": "OESTE_ESTRANHO",
-    "severity": "menor",
-    "description": "Cético quanto ao sobrenatural. -2 em testes de Medo no início, mas racionaliza o horror rapidamente."
-  },
-  {
-    "id": "comp_loco",
-    "name": "LOCO",
-    "origem": "OESTE_ESTRANHO",
-    "severity": "maior",
-    "description": "Insano ou irracional. O jogador deve interpretar uma delusão específica. -2 em Persuadir com pessoas 'normais'."
-  },
-  {
     "id": "atrapalhado",
     "name": "ATRAPALHADO",
     "origem": "SUPLEMENTO",
@@ -243,13 +222,6 @@
     "origem": "SUPLEMENTO",
     "severity": "menor",
     "description": "Dizem que um tolo e seu dinheiro logo se separam, sua personagem é uma dessas pessoas. Elas começam com metade do dinheiro normal para o cenário e parecem não conseguir poupar os recursos adquiridos depois que o jogo começa. No geral, reduz à metade os seus recursos totais a cada semana de jogo."
-  },
-  {
-    "id": "procurado",
-    "name": "PROCURADO",
-    "origem": "SUPLEMENTO",
-    "severity": "menor ou maior",
-    "description": "Personagens com Procurado cometeram algum crime e, se as autoridades descobrirem, acabarão na prisão. Isso pressupõe que o cenário possui leis e policiais para garantir o cumprimento delas. O nível da Complicação depende da gravidade do crime e o quão ativa é a perseguição. Inúmeras multas de estacionamento não pagas em um jogo onde precisa-se dirigir ocasionalmente gera uma Complicação Menor, assim como alguém Procurado por um crime mais grave longe da área principal da campanha. Uma acusação de assassinato é uma Complicação Maior em praticamente qualquer cenário se houver alguém em busca de justiça (ou vingança)."
   },
   {
     "id": "complicacao_atrapalhado",

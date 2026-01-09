@@ -66,38 +66,6 @@
     ]
   },
   {
-    "id": "anc_humano_deadlands",
-    "nome": "Humano (Faroeste Assombrado)",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "OESTE_ESTRANHO",
-    "atributos": {},
-    "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Adaptável",
-        "descricao": "Começa com uma Vantagem Novato extra de graça (deve atender aos requisitos)."
-      }
-    ]
-  },
-  {
-    "id": "anc_territorial",
-    "nome": "Nativo dos Territórios",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "OESTE_ESTRANHO",
-    "atributos": {},
-    "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Conhecimento do Terreno",
-        "descricao": "Começa com d6 em Sobrevivência e Conhecimento Geral sobre a região."
-      },
-      {
-        "nome": "Espírito do Oeste",
-        "descricao": "Começa com um Bene extra por sessão."
-      }
-    ]
-  },
-  {
     "nome": "RAKASHANOS",
     "origem": "SUPLEMENTO",
     "descricao": "Humanoides de aparência felina. Podem ter as cores lustrosas dos tigres, a pele manchada dos leopardos ou a aparência exótica dos gatos siameses. Possuem garras e presas afiadas.",
