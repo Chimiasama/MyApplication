@@ -1,6 +1,7 @@
 package com.example.swadebuilder.util
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.net.Uri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -36,6 +37,15 @@ object CharacterPortraitStorage {
                     input.copyTo(output)
                 }
             } ?: return@withContext null
+
+            // Validate that the file is actually an image
+            val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            BitmapFactory.decodeFile(destination.absolutePath, options)
+
+            if (options.outWidth == -1 || options.outHeight == -1) {
+                if (destination.exists()) destination.delete()
+                return@withContext null
+            }
 
             fileName
         }.getOrNull()
