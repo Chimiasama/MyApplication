@@ -320,16 +320,6 @@
         "origem": "FANTASIA"
       },
       {
-        "nome": "Fogo Alquímico",
-        "custo": 20,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "2d4 dano (MPE), pode incendiar.",
-        "origem": "FANTASIA"
-      },
-      {
         "nome": "Frasco de Ácido",
         "custo": 10,
         "peso": "0,5",
@@ -603,14 +593,6 @@
     "subtipo": "Metais e Madeiras",
     "origem": "FANTASIA",
     "itens": [
-      {
-        "nome": "Adamante",
-        "custo": 3000,
-        "peso": "—",
-        "observacoes": "Adiciona PA +1 a armas. Armaduras ignoram 2 pontos de PA. Aumenta dureza.",
-        "originalName": "Adamantina",
-        "origem": "FANTASIA"
-      },
       {
         "nome": "Ferro Frio",
         "custo": "Dobro do item",

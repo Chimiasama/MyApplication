@@ -1,0 +1,250 @@
+[
+  {
+    "id": "anc_anaobuscatrilha",
+    "nome": "Anão (Buscatrilha)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "FANTASIA_TRILHADOR",
+    "atributos": {
+      "Vigor": 2,
+      "Astúcia": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Aptidão com Pedras",
+        "descricao": "Perceber +2 (ação livre) para encontrar armadilhas e portas de pedra a 3m."
+      },
+      {
+        "nome": "Constituição de Ferro",
+        "descricao": "+1 para resistir a venenos e se recuperar de poderes."
+      },
+      {
+        "nome": "Movimentação Reduzida",
+        "descricao": "Movimentação -1 e dado de corrida reduzido em um tipo."
+      },
+      {
+        "nome": "Resistente",
+        "descricao": "Começa com Vigor d6. Vigor máximo d12+1. Força conta um dado maior para Sobrecarga e Força Mínima de armaduras."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignora penalidades de iluminação até 10 quadros."
+      }
+    ],
+    "originalName": "Anão (Mundo Ancestral)"
+  },
+  {
+    "id": "anc_elfobuscatrilha",
+    "nome": "Elfo (Buscatrilha)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "FANTASIA_TRILHADOR",
+    "atributos": {
+      "Agilidade": 2,
+      "Astúcia": 2
+    },
+    "pericias": {
+      "Perceber": 2
+    },
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Ágil",
+        "descricao": "Começa com Agilidade d6. Máximo d12+1."
+      },
+      {
+        "nome": "Esguios",
+        "descricao": "-1 na Resistência e -1 nas rolagens de Vigor."
+      },
+      {
+        "nome": "Inteligência",
+        "descricao": "Começa com Astúcia d6. Máximo d12+1."
+      },
+      {
+        "nome": "Magia Élfica",
+        "descricao": "Rerrolagem para resistir a poderes oponentes."
+      },
+      {
+        "nome": "Sentidos Apurados",
+        "descricao": "Começa com Perceber d6. Máximo d12+1."
+      },
+      {
+        "nome": "Visão na Penumbra",
+        "descricao": "Ignora penalidades por Penumbra e Escuridão."
+      }
+    ],
+    "originalName": "Elfo (Mundo Ancestral)"
+  },
+  {
+    "id": "anc_gnomobuscatrilha",
+    "nome": "Gnomo (Buscatrilha)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "FANTASIA_TRILHADOR",
+    "atributos": {
+      "Vigor": 2
+    },
+    "pericias": {
+      "Perceber": 2
+    },
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Magia Gnômica",
+        "descricao": "Pode conjurar Truques (iluminar, som, telecinese, amigo das feras) com 1 PP próprio."
+      },
+      {
+        "nome": "Movimentação Reduzida",
+        "descricao": "Movimentação -1 e dado de corrida reduzido em um tipo."
+      },
+      {
+        "nome": "Obsessivos",
+        "descricao": "Começam com d4 em uma Perícia baseada em Astúcia à escolha."
+      },
+      {
+        "nome": "Resistente",
+        "descricao": "Começam com Vigor d6. Máximo d12+1."
+      },
+      {
+        "nome": "Sentidos Apurados",
+        "descricao": "Começam com Perceber d6. Máximo d12+1."
+      },
+      {
+        "nome": "Tamanho -1",
+        "descricao": "Reduz Tamanho e Resistência em 1."
+      },
+      {
+        "nome": "Visão na Penumbra",
+        "descricao": "Ignora penalidades por Penumbra e Escuridão."
+      }
+    ],
+    "originalName": "Gnomo (Mundo Ancestral)"
+  },
+  {
+    "id": "anc_halflingbuscatrilha",
+    "nome": "Halfling (Buscatrilha)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "FANTASIA_TRILHADOR",
+    "atributos": {
+      "Agilidade": 2
+    },
+    "pericias": {
+      "Atletismo": 2,
+      "Perceber": 2
+    },
+    "vantagensGratis": [
+      "Sorte"
+    ],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Ágil",
+        "descricao": "Começa com Agilidade d6. Máximo d12+1."
+      },
+      {
+        "nome": "Movimentação Reduzida",
+        "descricao": "Movimentação -1 e dado de corrida reduzido em um tipo."
+      },
+      {
+        "nome": "Pés-Firmes",
+        "descricao": "Começa com Atletismo d6. Máximo d12+1."
+      },
+      {
+        "nome": "Sentidos Aguçados",
+        "descricao": "Começa com Perceber d6. Máximo d12+1."
+      },
+      {
+        "nome": "Sorte",
+        "descricao": "Começa com a Vantagem Sorte."
+      },
+      {
+        "nome": "Tamanho -1",
+        "descricao": "Reduz Tamanho e Resistência em 1."
+      }
+    ],
+    "originalName": "Halfling (Mundo Ancestral)"
+  },
+  {
+    "id": "anc_humanobuscatrilha",
+    "nome": "Humano (Buscatrilha)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "FANTASIA_TRILHADOR",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ADAPTÁVEL"
+    ],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Adaptável",
+        "descricao": "Começa com uma Vantagem Novato extra e um d6 em um Atributo à escolha (em vez de d4)."
+      }
+    ],
+    "originalName": "Humano (Mundo Ancestral)"
+  },
+  {
+    "id": "anc_meio_elfobuscatrilha",
+    "nome": "Meio-Elfo (Buscatrilha)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "FANTASIA_TRILHADOR",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Flexibilidade",
+        "descricao": "Começam com um d6 em um Atributo à escolha em vez de d4."
+      },
+      {
+        "nome": "Magia Élfica",
+        "descricao": "Rerrolagem para resistir a poderes oponentes."
+      },
+      {
+        "nome": "Visão na Penumbra",
+        "descricao": "Ignora penalidades por Penumbra e Escuridão."
+      }
+    ],
+    "originalName": "Meio-Elfo (Mundo Ancestral)"
+  },
+  {
+    "id": "anc_meio_orcbuscatrilha",
+    "nome": "Meio-Orc (Buscatrilha)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "FANTASIA_TRILHADOR",
+    "atributos": {
+      "Força": 2
+    },
+    "pericias": {
+      "Intimidar": 0
+    },
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Ferocidade Orc",
+        "descricao": "Recebem Resistência +1."
+      },
+      {
+        "nome": "Forasteiro (Menor)",
+        "descricao": "-2 em Persuadir e desconfiança social."
+      },
+      {
+        "nome": "Forte",
+        "descricao": "Começam com Força d6. Máximo d12+1."
+      },
+      {
+        "nome": "Intimidante",
+        "descricao": "Começam com Intimidar d4. Máximo d12+1."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignora penalidades de iluminação até 10 quadros."
+      }
+    ],
+    "originalName": "Meio-Orc (Mundo Ancestral)"
+  }
+]

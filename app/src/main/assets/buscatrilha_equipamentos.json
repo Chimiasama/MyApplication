@@ -1,0 +1,34 @@
+[
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Itens Alquímicos",
+    "origem": "BUSCATRILHA",
+    "itens": [
+      {
+        "nome": "Fogo Alquímico",
+        "custo": 20,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "2d4 dano (MPE), pode incendiar.",
+        "origem": "BUSCATRILHA"
+      }
+    ]
+  },
+  {
+    "tipo": "Materiais Especiais",
+    "subtipo": "Metais e Madeiras",
+    "origem": "BUSCATRILHA",
+    "itens": [
+      {
+        "nome": "Adamante",
+        "custo": 3000,
+        "peso": "—",
+        "observacoes": "Adiciona PA +1 a armas. Armaduras ignoram 2 pontos de PA. Aumenta dureza.",
+        "originalName": "Adamantina",
+        "origem": "BUSCATRILHA"
+      }
+    ]
+  }
+]
