@@ -193,5 +193,34 @@
     "origem": "BASICO",
     "description": "Menor: Mov -1, Corrida reduzida. Maior: Mov -2, Corrida reduzida, -2 em Atletismo.",
     "originalName": null
+  },
+  {
+    "id": "boca_grande",
+    "name": "BOCA GRANDE",
+    "origem": "BASICO",
+    "severity": "menor",
+    "description": "Como diz o ditado, quem fala demais dá bom dia a cavalo. Personagens Boca Grande poderiam cumprimentar uma cavalaria inteira. Acham difícil guardar segredos e acabam revelando planos secretos. Isso geralmente ocorre nos piores momentos possíveis."
+  },
+  {
+    "id": "deficiente_auditivo",
+    "name": "DEFICIENTE AUDITIVO",
+    "origem": "BASICO",
+    "severity": "menor ou maior",
+    "description": "Personagens que perderam parte ou toda a sua audição têm esta desvantagem. Como uma Complicação Menor, ela subtrai 4 de todas as rolagens de Perceber feitas para ouvir, incluindo acordar devido a ruídos altos. Uma Complicação maior significa ausência total do sentido de audição, levando à falha automática em todas as rolagens de Perceber dependentes da audição. Aparelhos auditivos reduzem a penalidade para 2, mas precisam de baterias e têm 50% de chance de caírem caso a personagem sofra um nível de Ferimento, queda ou algum outro tipo de trauma."
+  },
+  {
+    "id": "voto",
+    "name": "VOTO",
+    "origem": "BASICO",
+    "severity": "menor ou maior",
+    "description": "Esta pessoa fez um voto para alguém ou algo em que acredita. O risco em cumprir o Voto e sua frequência determina o nível da Complicação. Um Voto Menor pode ser servir a uma ordem com mandamentos que raramente entram em conflito com os objetivos do grupo. Um Voto Maior faz com que as demandas sejam de longo prazo, frequentes e resultem em um grande risco à sua vida."
+  },
+  {
+    "id": "complicacao_voto",
+    "name": "VOTO",
+    "severity": "menor ou maior",
+    "origem": "BASICO",
+    "description": "Menor: compromisso frequente. Maior: Risco de vida ou dedicação total (ex: Clérigos/Paladinos).",
+    "originalName": null
   }
 ]

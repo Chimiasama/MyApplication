@@ -40,15 +40,6 @@
         "custo": 250,
         "observacoes": "Alcance 1, duas mãos",
         "origem": "FANTASIA"
-      },
-      {
-        "nome": "Katana",
-        "dano": "For+d6+1",
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 1000,
-        "observacoes": "Duas mãos",
-        "origem": "FANTASIA"
       }
     ]
   },
@@ -175,16 +166,6 @@
         "origem": "FANTASIA"
       },
       {
-        "nome": "Bolsa de Alquimista",
-        "custo": 25,
-        "peso": "2,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Laboratório portátil.",
-        "origem": "FANTASIA"
-      },
-      {
         "nome": "Estrepes",
         "custo": 1,
         "peso": "1",
@@ -265,36 +246,6 @@
         "origem": "FANTASIA"
       },
       {
-        "nome": "Símbolo sagrado (madeira)",
-        "custo": 1,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Símbolo sagrado (prata)",
-        "custo": 25,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Símbolo sagrado (ouro)",
-        "custo": 100,
-        "peso": "2,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      },
-      {
         "nome": "Tenda (6 pessoas)",
         "custo": 30,
         "peso": "20",
@@ -366,16 +317,6 @@
         "armadura": null,
         "aparar": null,
         "observacoes": "Luz raio 10m por 6h. For+d4 se usado como arma.",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Bolsa Enredapé",
-        "custo": 50,
-        "peso": "2",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Causa Distraído e pode Enredar.",
         "origem": "FANTASIA"
       },
       {
@@ -498,15 +439,6 @@
         "origem": "FANTASIA"
       },
       {
-        "nome": "Katana",
-        "dano": "For+d6+1",
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 50,
-        "observacoes": "Duas Mãos",
-        "origem": "FANTASIA"
-      },
-      {
         "nome": "Maça Estrela",
         "dano": "For+d6",
         "forcaMin": "d6",
@@ -531,15 +463,6 @@
         "peso": "2,5",
         "custo": 12,
         "observacoes": "Alcance 2, ignora escudo, Duas Mãos",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Podão de Guerra",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "6",
-        "custo": 10,
-        "observacoes": "PA 1, Alcance 1",
         "origem": "FANTASIA"
       },
       {
@@ -571,18 +494,6 @@
         "origem": "FANTASIA"
       },
       {
-        "nome": "Boleadeira",
-        "distancia": "3/6/12",
-        "dano": "For+d4",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "1",
-        "custo": 5,
-        "observacoes": "Ampliação = Enredado.",
-        "origem": "FANTASIA"
-      },
-      {
         "nome": "Chakram",
         "distancia": "4/8/16",
         "dano": "For+d4",
@@ -590,18 +501,6 @@
         "cdt": 1,
         "forcaMin": "d4",
         "peso": "0,5",
-        "custo": 1,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Shuriken",
-        "distancia": "3/6/12",
-        "dano": "For+d4",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "—",
         "custo": 1,
         "observacoes": "",
         "origem": "FANTASIA"
@@ -739,72 +638,6 @@
     ]
   },
   {
-    "tipo": "Armas Corpo a Corpo",
-    "subtipo": "Orientais",
-    "origem": "FANTASIA",
-    "itens": [
-      {
-        "nome": "Katana",
-        "dano": "For+d6+1",
-        "pa": 1,
-        "peso": "1,5",
-        "custo": 500,
-        "observacoes": "Jutsu (Espada). Duas mãos: d8 dano.",
-        "jutsu_grupo": "Espada",
-        "origem": "FANTASIA"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Corpo a Corpo",
-    "subtipo": "Armas de Rua",
-    "origem": "FANTASIA",
-    "itens": [
-      {
-        "nome": "Shuriken",
-        "dano": "For+1",
-        "forcaMin": "d4",
-        "peso": "0.5",
-        "custo": 5,
-        "observacoes": "Distância 3/6/12.",
-        "origem": "FANTASIA"
-      }
-    ]
-  },
-  {
-    "tipo": "Arsenal Oriental",
-    "subtipo": "Lâminas",
-    "origem": "FANTASIA",
-    "itens": [
-      {
-        "nome": "Naginata",
-        "dano": "For+d8",
-        "pa": "1",
-        "peso": "6",
-        "custo": 400,
-        "forcaMin": 6,
-        "observacoes": "Alcance 1. Duas Mãos. Aparar +1.",
-        "origem": "FANTASIA"
-      }
-    ]
-  },
-  {
-    "tipo": "Arsenal Oriental",
-    "subtipo": "Distância",
-    "origem": "FANTASIA",
-    "itens": [
-      {
-        "nome": "Shuriken",
-        "dano": "For+d4",
-        "distancia": "4/8/16",
-        "peso": "0.5",
-        "custo": 5,
-        "observacoes": "CdT 2. Não acumula penalidade de saque rápido.",
-        "origem": "FANTASIA"
-      }
-    ]
-  },
-  {
     "tipo": "Materiais Especiais",
     "subtipo": "Metais e Madeiras",
     "origem": "FANTASIA",
@@ -823,21 +656,6 @@
         "peso": "—",
         "observacoes": "Armas causam dano total em licantropos. -1 no dano. Custo: +20 (mun), +100 (leve), +300 (1 mão), +1500 (2 mãos).",
         "originalName": "Alchemical Silver",
-        "origem": "FANTASIA"
-      }
-    ]
-  },
-  {
-    "tipo": "Equipamento de Aventura",
-    "subtipo": "Vestuário e Acessórios",
-    "origem": "FANTASIA",
-    "itens": [
-      {
-        "nome": "Símbolo Sagrado (prata)",
-        "custo": 25,
-        "peso": "0.5",
-        "observacoes": "Símbolo religioso de prata.",
-        "originalName": "Holy Symbol (Silver)",
         "origem": "FANTASIA"
       }
     ]

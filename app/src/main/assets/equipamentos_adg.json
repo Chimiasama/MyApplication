@@ -1,0 +1,493 @@
+[
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Animais e Arreios",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Sela Elaborada",
+        "custo": 50,
+        "peso": "5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Vestuário",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Botas de Inverno",
+        "custo": 100,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "ARTE_DA_GUERRA"
+      },
+      {
+        "nome": "Botas, Caminhada",
+        "custo": 100,
+        "peso": "1",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Comida",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Boa Refeição (restaurante)",
+        "custo": "15+",
+        "peso": "—",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Vigilância",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Botão Câmera",
+        "custo": 50,
+        "peso": "—",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "12 horas de uso contínuo.",
+        "origem": "ARTE_DA_GUERRA"
+      },
+      {
+        "nome": "Microfone Parabólico",
+        "custo": 750,
+        "peso": "2",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Ouve sussurros a até 200 metros de distância.",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Armaduras Modernas",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Traje Antibombas (corpo inteiro)",
+        "custo": 25000,
+        "peso": "40",
+        "forcaMin": "d12",
+        "armadura": "+10",
+        "aparar": null,
+        "observacoes": "Agilidade e perícias relacionadas que requerem mais do que apenas destreza manual não podem ultrapassar d6 enquanto se usa o traje, Movimentação - 2.",
+        "subsubtipo": "Armadura Corporal",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Equipamento de Aventura",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Bolsa",
+        "custo": 1,
+        "peso": "0,25",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Kits de Classe",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Kit de clérigo",
+        "custo": 100,
+        "peso": "6",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Símbolo sagrado, kit de curandeiro e suprimentos.",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Vestuário",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Botas pesadas",
+        "custo": 2,
+        "peso": "1",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Pessoais",
+    "subtipo": "Medievais",
+    "subsubtipo": "Combate corpo a corpo",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Sabre de Abordagem",
+        "dano": "For+d6",
+        "forcaMin": "d4",
+        "peso": "2",
+        "custo": 15,
+        "observacoes": "—",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Orientais",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Nodachi",
+        "dano": "For+d8",
+        "pa": 2,
+        "peso": "6",
+        "custo": 500,
+        "observacoes": "Jutsu (Espada). Duas mãos. Aparar -1.",
+        "jutsu_grupo": "Espada",
+        "origem": "ARTE_DA_GUERRA"
+      },
+      {
+        "nome": "Kusarigama",
+        "dano": "For+d6/d4",
+        "peso": "2",
+        "custo": 200,
+        "observacoes": "Jutsu (Corrente). Alcance 2, Duas mãos, Desarmar, Enredar.",
+        "jutsu_grupo": "Corrente",
+        "origem": "ARTE_DA_GUERRA"
+      },
+      {
+        "nome": "Tetsubo",
+        "dano": "For+d10",
+        "peso": "7,5",
+        "custo": 300,
+        "observacoes": "Jutsu (Concussão). Duas mãos. Arma Pesada se tiver For d10+.",
+        "jutsu_grupo": "Concussão",
+        "origem": "ARTE_DA_GUERRA"
+      },
+      {
+        "nome": "Kunai",
+        "dano": "For+d4",
+        "peso": "0,5",
+        "custo": 35,
+        "observacoes": "Jutsu (Leve). Pode ser arremessada.",
+        "jutsu_grupo": "Leve",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Itens Especiais",
+    "subtipo": "Talismãs",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Talismã Explosivo",
+        "custo": 75,
+        "peso": "-",
+        "observacoes": "Papel adesivo. Causa 2d4 de dano em MPE ao ser rasgado.",
+        "origem": "ARTE_DA_GUERRA"
+      },
+      {
+        "nome": "Talismã de Papel Protetor",
+        "custo": 50,
+        "peso": "-",
+        "observacoes": "Cria santuário (MGE). Inimigos sofrem -4 para entrar ou atacar quem está dentro.",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Arsenal Oriental",
+    "subtipo": "Lâminas",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Wakizashi",
+        "dano": "For+d6",
+        "pa": "1",
+        "peso": "2",
+        "custo": 200,
+        "observacoes": "Pode ser usada com Katana (Daisho).",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Arsenal Oriental",
+    "subtipo": "Distância",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Yumi (Arco Longo)",
+        "dano": "2d6",
+        "distancia": "15/30/60",
+        "peso": "3",
+        "custo": 250,
+        "forcaMin": 8,
+        "observacoes": "Requer Força d8 para puxar.",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Pessoais",
+    "subtipo": "Medievais",
+    "subsubtipo": "Combate corpo a corpo",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Katana",
+        "dano": "For+d6+1",
+        "forcaMin": "d6",
+        "peso": "1,5",
+        "custo": 1000,
+        "observacoes": "Duas mãos",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Equipamento de Aventura",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Bolsa de Alquimista",
+        "custo": 25,
+        "peso": "2,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Laboratório portátil.",
+        "origem": "ARTE_DA_GUERRA"
+      },
+      {
+        "nome": "Símbolo sagrado (madeira)",
+        "custo": 1,
+        "peso": "—",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "ARTE_DA_GUERRA"
+      },
+      {
+        "nome": "Símbolo sagrado (prata)",
+        "custo": 25,
+        "peso": "0,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "ARTE_DA_GUERRA"
+      },
+      {
+        "nome": "Símbolo sagrado (ouro)",
+        "custo": 100,
+        "peso": "2,5",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Comum",
+    "subtipo": "Itens Alquímicos",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Bolsa Enredapé",
+        "custo": 50,
+        "peso": "2",
+        "forcaMin": null,
+        "armadura": null,
+        "aparar": null,
+        "observacoes": "Causa Distraído e pode Enredar.",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Pessoais",
+    "subtipo": "Medievais",
+    "subsubtipo": "Combate corpo a corpo",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Katana",
+        "dano": "For+d6+1",
+        "forcaMin": "d6",
+        "peso": "1,5",
+        "custo": 50,
+        "observacoes": "Duas Mãos",
+        "origem": "ARTE_DA_GUERRA"
+      },
+      {
+        "nome": "Podão de Guerra",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": "6",
+        "custo": 10,
+        "observacoes": "PA 1, Alcance 1",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Combate à Distância",
+    "subtipo": "Medievais",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Boleadeira",
+        "distancia": "3/6/12",
+        "dano": "For+d4",
+        "pa": null,
+        "cdt": 1,
+        "forcaMin": "d4",
+        "peso": "1",
+        "custo": 5,
+        "observacoes": "Ampliação = Enredado.",
+        "origem": "ARTE_DA_GUERRA"
+      },
+      {
+        "nome": "Shuriken",
+        "distancia": "3/6/12",
+        "dano": "For+d4",
+        "pa": null,
+        "cdt": 1,
+        "forcaMin": "d4",
+        "peso": "—",
+        "custo": 1,
+        "observacoes": "",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Orientais",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Katana",
+        "dano": "For+d6+1",
+        "pa": 1,
+        "peso": "1,5",
+        "custo": 500,
+        "observacoes": "Jutsu (Espada). Duas mãos: d8 dano.",
+        "jutsu_grupo": "Espada",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Armas de Rua",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Shuriken",
+        "dano": "For+1",
+        "forcaMin": "d4",
+        "peso": "0.5",
+        "custo": 5,
+        "observacoes": "Distância 3/6/12.",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Arsenal Oriental",
+    "subtipo": "Lâminas",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Naginata",
+        "dano": "For+d8",
+        "pa": "1",
+        "peso": "6",
+        "custo": 400,
+        "forcaMin": 6,
+        "observacoes": "Alcance 1. Duas Mãos. Aparar +1.",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Arsenal Oriental",
+    "subtipo": "Distância",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Shuriken",
+        "dano": "For+d4",
+        "distancia": "4/8/16",
+        "peso": "0.5",
+        "custo": 5,
+        "observacoes": "CdT 2. Não acumula penalidade de saque rápido.",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento de Aventura",
+    "subtipo": "Vestuário e Acessórios",
+    "origem": "ARTE_DA_GUERRA",
+    "itens": [
+      {
+        "nome": "Símbolo Sagrado (prata)",
+        "custo": 25,
+        "peso": "0.5",
+        "observacoes": "Símbolo religioso de prata.",
+        "originalName": "Holy Symbol (Silver)",
+        "origem": "ARTE_DA_GUERRA"
+      }
+    ]
+  }
+]

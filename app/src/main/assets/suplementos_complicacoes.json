@@ -217,38 +217,6 @@
     "description": "Insano ou irracional. O jogador deve interpretar uma delusão específica. -2 em Persuadir com pessoas 'normais'."
   },
   {
-    "id": "comp_sangramento_nasal",
-    "name": "SANGRAMENTO NASAL",
-    "origem": "ARTE_DA_GUERRA",
-    "severity": "menor/maior",
-    "description": "Fica Distraído (Menor) ou Atordoado (Maior) ao ver cenas levemente eróticas ou românticas (tropo de anime).",
-    "observacoes": ""
-  },
-  {
-    "id": "comp_roupas_rasgadas",
-    "name": "ROUPAS RASGADAS",
-    "origem": "ARTE_DA_GUERRA",
-    "severity": "menor",
-    "description": "Ao gastar Chi ou sofrer dano, rola dado de roupa. Se falhar, roupas rasgam (cosmético, mas embaraçoso).",
-    "observacoes": ""
-  },
-  {
-    "id": "comp_prisioneiro_espiritual",
-    "name": "PRISIONEIRO ESPIRITUAL",
-    "origem": "ARTE_DA_GUERRA",
-    "severity": "menor/maior",
-    "description": "Deve favores a um espírito/kami. Se não cumprir, sofre penalidades ou bloqueio de Chi.",
-    "observacoes": ""
-  },
-  {
-    "id": "comp_gemeo_maligno",
-    "name": "GÊMEO MALIGNO",
-    "origem": "ARTE_DA_GUERRA",
-    "severity": "menor/maior",
-    "description": "Existe um NPC idêntico que causa problemas e mancha sua reputação.",
-    "observacoes": ""
-  },
-  {
     "id": "comp_alma_penhorada",
     "name": "ALMA PENHORADA",
     "severity": "menor",
@@ -291,20 +259,6 @@
     "description": "São personagens sem coordenação motora, capazes de tropeçar nas próprias pernas e sem habilidade para esportes. Subtraem 2 em rolagens de Atletismo e Furtividade."
   },
   {
-    "id": "boca_grande",
-    "name": "BOCA GRANDE",
-    "origem": "SUPLEMENTO",
-    "severity": "menor",
-    "description": "Como diz o ditado, quem fala demais dá bom dia a cavalo. Personagens Boca Grande poderiam cumprimentar uma cavalaria inteira. Acham difícil guardar segredos e acabam revelando planos secretos. Isso geralmente ocorre nos piores momentos possíveis."
-  },
-  {
-    "id": "deficiente_auditivo",
-    "name": "DEFICIENTE AUDITIVO",
-    "origem": "SUPLEMENTO",
-    "severity": "menor ou maior",
-    "description": "Personagens que perderam parte ou toda a sua audição têm esta desvantagem. Como uma Complicação Menor, ela subtrai 4 de todas as rolagens de Perceber feitas para ouvir, incluindo acordar devido a ruídos altos. Uma Complicação maior significa ausência total do sentido de audição, levando à falha automática em todas as rolagens de Perceber dependentes da audição. Aparelhos auditivos reduzem a penalidade para 2, mas precisam de baterias e têm 50% de chance de caírem caso a personagem sofra um nível de Ferimento, queda ou algum outro tipo de trauma."
-  },
-  {
     "id": "habito",
     "name": "HÁBITO",
     "origem": "SUPLEMENTO",
@@ -333,26 +287,11 @@
     "description": "Personagens com Procurado cometeram algum crime e, se as autoridades descobrirem, acabarão na prisão. Isso pressupõe que o cenário possui leis e policiais para garantir o cumprimento delas. O nível da Complicação depende da gravidade do crime e o quão ativa é a perseguição. Inúmeras multas de estacionamento não pagas em um jogo onde precisa-se dirigir ocasionalmente gera uma Complicação Menor, assim como alguém Procurado por um crime mais grave longe da área principal da campanha. Uma acusação de assassinato é uma Complicação Maior em praticamente qualquer cenário se houver alguém em busca de justiça (ou vingança)."
   },
   {
-    "id": "voto",
-    "name": "VOTO",
-    "origem": "SUPLEMENTO",
-    "severity": "menor ou maior",
-    "description": "Esta pessoa fez um voto para alguém ou algo em que acredita. O risco em cumprir o Voto e sua frequência determina o nível da Complicação. Um Voto Menor pode ser servir a uma ordem com mandamentos que raramente entram em conflito com os objetivos do grupo. Um Voto Maior faz com que as demandas sejam de longo prazo, frequentes e resultem em um grande risco à sua vida."
-  },
-  {
     "id": "complicacao_atrapalhado",
     "name": "ATRAPALHADO",
     "severity": "maior",
     "origem": "SUPLEMENTO",
     "description": "-2 em rolagens de Atletismo e Furtividade.",
-    "originalName": null
-  },
-  {
-    "id": "complicacao_voto",
-    "name": "VOTO",
-    "severity": "menor ou maior",
-    "origem": "SUPLEMENTO",
-    "description": "Menor: compromisso frequente. Maior: Risco de vida ou dedicação total (ex: Clérigos/Paladinos).",
     "originalName": null
   }
 ]

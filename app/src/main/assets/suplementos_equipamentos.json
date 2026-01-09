@@ -33,16 +33,6 @@
         "aparar": null,
         "observacoes": "",
         "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Sela Elaborada",
-        "custo": 50,
-        "peso": "5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
       }
     ]
   },
@@ -178,26 +168,6 @@
     "subtipo": "Vestuário",
     "origem": "SUPLEMENTO",
     "itens": [
-      {
-        "nome": "Botas de Inverno",
-        "custo": 100,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Botas, Caminhada",
-        "custo": 100,
-        "peso": "1",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
       {
         "nome": "Equipamento de Inverno (capa/jaqueta)",
         "custo": 200,
@@ -340,16 +310,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Boa Refeição (restaurante)",
-        "custo": "15+",
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "RPC (Refeição Pronta para Comer)",
         "custo": 10,
         "peso": "0,5",
@@ -404,16 +364,6 @@
     "origem": "SUPLEMENTO",
     "itens": [
       {
-        "nome": "Botão Câmera",
-        "custo": 50,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "12 horas de uso contínuo.",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Detector de Transmissão",
         "custo": 525,
         "peso": "0,5",
@@ -461,16 +411,6 @@
         "armadura": null,
         "aparar": null,
         "observacoes": "Rolagem de Consertar para conectar em uma linha telefônica.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Microfone Parabólico",
-        "custo": 750,
-        "peso": "2",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Ouve sussurros a até 200 metros de distância.",
         "origem": "SUPLEMENTO"
       },
       {
@@ -551,16 +491,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Baterias de Lasers Gatling",
-        "custo": 50,
-        "peso": "2",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Um carregador cheio para a arma listada.",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Escopeta 25 Cartuchos",
         "custo": 15,
         "peso": "0,7",
@@ -588,16 +518,6 @@
         "armadura": null,
         "aparar": null,
         "observacoes": "Flechas para arcos, virotes para bestas.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Pedras de funda",
-        "custo": 0.1,
-        "peso": "0,025",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
         "origem": "SUPLEMENTO"
       }
     ]
@@ -729,17 +649,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Corselete de Bronze (tronco)",
-        "custo": 80,
-        "peso": "6,5",
-        "forcaMin": "d8",
-        "armadura": "+3",
-        "aparar": null,
-        "observacoes": "",
-        "subsubtipo": "Armadura de Bronze (Cenários Pré-Idade do Ferro)",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Braçadeiras de Bronze (braços)",
         "custo": 40,
         "peso": "2,5",
@@ -784,29 +693,7 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Corselete de Placas (tronco)",
-        "custo": 500,
-        "peso": "15",
-        "forcaMin": "d10",
-        "armadura": "+4",
-        "aparar": null,
-        "observacoes": "",
-        "subsubtipo": "Malha de Placas",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Braçadeiras de Placas (braços)",
-        "custo": 200,
-        "peso": "5",
-        "forcaMin": "d10",
-        "armadura": "+4",
-        "aparar": null,
-        "observacoes": "",
-        "subsubtipo": "Malha de Placas",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Grevas de Placas (pernas)",
         "custo": 200,
         "peso": "5",
         "forcaMin": "d10",
@@ -846,17 +733,6 @@
     "origem": "SUPLEMENTO",
     "itens": [
       {
-        "nome": "Casaco Grosso, Jaqueta de Couro (tronco, braços)",
-        "custo": 100,
-        "peso": "2,5",
-        "forcaMin": "d4",
-        "armadura": "+1",
-        "aparar": null,
-        "observacoes": "",
-        "subsubtipo": "Tecido/Couro",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Calções de Couro para Cavalgar (pernas)",
         "custo": 70,
         "peso": "2,5",
@@ -882,17 +758,6 @@
         "nome": "Calças de Motociclista de Kevlar (pernas)",
         "custo": 175,
         "peso": "2",
-        "forcaMin": "d4",
-        "armadura": "+2",
-        "aparar": null,
-        "observacoes": "",
-        "subsubtipo": "Tecido/Couro",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Capacete de Bicicleta (cabeça)",
-        "custo": 50,
-        "peso": "0,5",
         "forcaMin": "d4",
         "armadura": "+2",
         "aparar": null,
@@ -952,17 +817,6 @@
         "armadura": "+4*",
         "aparar": null,
         "observacoes": "",
-        "subsubtipo": "Armadura Corporal",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Traje Antibombas (corpo inteiro)",
-        "custo": 25000,
-        "peso": "40",
-        "forcaMin": "d12",
-        "armadura": "+10",
-        "aparar": null,
-        "observacoes": "Agilidade e perícias relacionadas que requerem mais do que apenas destreza manual não podem ultrapassar d6 enquanto se usa o traje, Movimentação - 2.",
         "subsubtipo": "Armadura Corporal",
         "origem": "SUPLEMENTO"
       }
@@ -1053,44 +907,7 @@
     "subtipo": "Medievais",
     "subsubtipo": "Combate corpo a corpo",
     "origem": "SUPLEMENTO",
-    "itens": [
-      {
-        "nome": "Adaga/Faca",
-        "dano": "For+d4",
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 25,
-        "observacoes": "—",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Clava Leve",
-        "dano": "For+d4",
-        "forcaMin": "d4",
-        "peso": "1",
-        "custo": 25,
-        "observacoes": "Uma marca de vulgaridade ou brutalidade",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Clava Pesada",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "2,5",
-        "custo": 50,
-        "observacoes": "Uma marca de vulgaridade ou brutalidade",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Lança de Cavalaria",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "3",
-        "custo": 300,
-        "observacoes": "PA 2 em investidas, Alcance 2, só pode ser usada em combate montado",
-        "origem": "SUPLEMENTO"
-      }
-    ]
+    "itens": []
   },
   {
     "tipo": "Armas Pessoais",
@@ -1099,16 +916,6 @@
     "origem": "SUPLEMENTO",
     "itens": [
       {
-        "nome": "Bastão de Disparo",
-        "dano": "3d6",
-        "forcaMin": "d6",
-        "peso": "1",
-        "custo": 5,
-        "observacoes": "Um cartucho de escopeta em um bastão usado em corpo a corpo; precisa ser recarregado (uma ação).",
-        "subsubtipo": "Bastões",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Canivete",
         "dano": "For+d4",
         "forcaMin": "d4",
@@ -1116,16 +923,6 @@
         "custo": 10,
         "observacoes": "-2 em Perceber se escondido",
         "subsubtipo": "Facas",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Cassetete/Porrete",
-        "dano": "For+d4",
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 10,
-        "observacoes": "Geralmente portados pelas forças da lei",
-        "subsubtipo": "Porretes e Socos",
         "origem": "SUPLEMENTO"
       },
       {
@@ -1174,19 +971,6 @@
     "origem": "SUPLEMENTO",
     "itens": [
       {
-        "nome": "Adaga/Faca",
-        "distancia": "3/6/12",
-        "dano": "For+d4",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 25,
-        "observacoes": "—",
-        "subsubtipo": "Arremesso",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Besta, Pesada",
         "distancia": "15/30/60",
         "dano": "2d8",
@@ -1197,19 +981,6 @@
         "custo": 400,
         "observacoes": "Requer um molinete para carregar. Recarregar 2",
         "subsubtipo": "Bestas",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Lança/Dardo",
-        "distancia": "3/6/12",
-        "dano": "For+d6",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 100,
-        "observacoes": "—",
-        "subsubtipo": "Arremesso",
         "origem": "SUPLEMENTO"
       },
       {
@@ -1331,18 +1102,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Derringer (.41)",
-        "distancia": "3/6/12",
-        "dano": "2d4",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "2",
-        "peso": "0,5",
-        "custo": 100,
-        "observacoes": "-2 em Perceber se escondido",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Revólver Policial (.38)",
         "distancia": "10/20/40",
         "dano": "2d6",
@@ -1427,32 +1186,7 @@
     "tipo": "Armas de Combate à Distância",
     "subtipo": "Submetralhadoras",
     "origem": "SUPLEMENTO",
-    "itens": [
-      {
-        "nome": "H&K MP5 (9mm)",
-        "distancia": "12/24/48",
-        "dano": "2d6",
-        "pa": 1,
-        "cdt": 3,
-        "forcaMin": "30",
-        "peso": "5",
-        "custo": 300,
-        "observacoes": "—",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Uzi (9mm)",
-        "distancia": "12/24/48",
-        "dano": "2d6",
-        "pa": 1,
-        "cdt": 3,
-        "forcaMin": "32",
-        "peso": "4,5",
-        "custo": 300,
-        "observacoes": "—",
-        "origem": "SUPLEMENTO"
-      }
-    ]
+    "itens": []
   },
   {
     "tipo": "Armas de Combate à Distância",
@@ -1479,18 +1213,6 @@
     "origem": "SUPLEMENTO",
     "itens": [
       {
-        "nome": "Barrett (.50)",
-        "distancia": "50/100/200",
-        "dano": "2d10",
-        "pa": 4,
-        "cdt": 1,
-        "forcaMin": "10",
-        "peso": "17,5",
-        "custo": 750,
-        "observacoes": "Arma Pesada, Tiro Rápido; carregador 10 tiros pesa 1kg; geralmente vem com luneta",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Carabina Spencer (.52)",
         "distancia": "20/40/80",
         "dano": "2d8",
@@ -1500,18 +1222,6 @@
         "peso": "4",
         "custo": 250,
         "observacoes": "—",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "M1 Garand (.30-06)",
-        "distancia": "24/48/96",
-        "dano": "2d8",
-        "pa": 2,
-        "cdt": 1,
-        "forcaMin": "8",
-        "peso": "5",
-        "custo": 300,
-        "observacoes": "Rifle padrão da infantaria EUA Segunda Guerra Mundial",
         "origem": "SUPLEMENTO"
       },
       {
@@ -1558,18 +1268,6 @@
     "origem": "SUPLEMENTO",
     "itens": [
       {
-        "nome": "AK47 (7.62mm)",
-        "distancia": "24/48/96",
-        "dano": "2d8+1",
-        "pa": 2,
-        "cdt": 3,
-        "forcaMin": "30",
-        "peso": "5",
-        "custo": 450,
-        "observacoes": "—",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "M-16 (5.56mm)",
         "distancia": "24/48/96",
         "dano": "2d8",
@@ -1601,30 +1299,6 @@
     "origem": "SUPLEMENTO",
     "itens": [
       {
-        "nome": "Browning (BAR) (.30-06)",
-        "distancia": "20/40/60",
-        "dano": "2d8",
-        "pa": 2,
-        "cdt": 3,
-        "forcaMin": "20",
-        "peso": "8,5",
-        "custo": 300,
-        "observacoes": "Cadência de tiro 1–3; recarregar uma ação em vez de duas",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Gatling (.45)",
-        "distancia": "24/48/96",
-        "dano": "2d8",
-        "pa": 2,
-        "cdt": 3,
-        "forcaMin": "100",
-        "peso": "85",
-        "custo": 500,
-        "observacoes": "—",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Minigun (7.62mm)",
         "distancia": "30/60/120",
         "dano": "2d8+1",
@@ -1645,30 +1319,6 @@
         "forcaMin": "200",
         "peso": "13",
         "custo": 750,
-        "observacoes": "—",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "M2 Browning (.50)",
-        "distancia": "50/100/200",
-        "dano": "2d10",
-        "pa": 4,
-        "cdt": 3,
-        "forcaMin": "200",
-        "peso": "42,5",
-        "custo": 1500,
-        "observacoes": "Arma Pesada",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "M60 (7.62mm)",
-        "distancia": "30/60/120",
-        "dano": "2d8+1",
-        "pa": 2,
-        "cdt": 3,
-        "forcaMin": "100",
-        "peso": "16,5",
-        "custo": 6000,
         "observacoes": "—",
         "origem": "SUPLEMENTO"
       },
@@ -1776,21 +1426,7 @@
     "tipo": "Armas Especiais",
     "subtipo": "Lança-Chamas",
     "origem": "SUPLEMENTO",
-    "itens": [
-      {
-        "nome": "Lança-Chamas",
-        "distancia": null,
-        "dano": "3d6",
-        "pa": null,
-        "cdt": 1,
-        "tiros": 10,
-        "forcaMin": "d8",
-        "peso": "35",
-        "custo": 300,
-        "observacoes": "Modelo de Cone",
-        "origem": "SUPLEMENTO"
-      }
-    ]
+    "itens": []
   },
   {
     "tipo": "Armas Especiais",
@@ -2133,15 +1769,6 @@
         "municaoAe": "3d8, PA 2, MME",
         "cdt": 4,
         "custo": 200000,
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Lança-Chamas Pesado",
-        "distancia": "Cone ou MME",
-        "municaoPa": null,
-        "municaoAe": "3d8",
-        "cdt": 1,
-        "custo": 1000,
         "origem": "SUPLEMENTO"
       },
       {
@@ -2515,19 +2142,7 @@
     "subtipo": "Armas Pessoais",
     "subsubtipo": "Combate corpo a corpo",
     "origem": "SUPLEMENTO",
-    "itens": [
-      {
-        "nome": "Malho de Duas Mãos",
-        "dano": "For+d8",
-        "peso": "3.5",
-        "custo": 60,
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": "-1",
-        "observacoes": "Requer duas mãos",
-        "origem": "SUPLEMENTO"
-      }
-    ]
+    "itens": []
   },
   {
     "tipo": "Equipamento Comum",
@@ -2548,16 +2163,6 @@
         "nome": "Barril",
         "custo": 2,
         "peso": "15",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Bolsa",
-        "custo": 1,
-        "peso": "0,25",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
@@ -2805,16 +2410,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Picareta de mineração",
-        "custo": 5,
-        "peso": "2,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Arma desequilibrada (-1 Aparar/Lutar), Dano For+d6.",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Saco de dormir",
         "custo": 0.25,
         "peso": "2,5",
@@ -2929,16 +2524,6 @@
         "armadura": null,
         "aparar": null,
         "observacoes": "Itens básicos de exploração.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Kit de clérigo",
-        "custo": 100,
-        "peso": "6",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Símbolo sagrado, kit de curandeiro e suprimentos.",
         "origem": "SUPLEMENTO"
       },
       {
@@ -3223,16 +2808,6 @@
     "origem": "SUPLEMENTO",
     "itens": [
       {
-        "nome": "Botas pesadas",
-        "custo": 2,
-        "peso": "1",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Manto leve com capuz",
         "custo": 2,
         "peso": "1,5",
@@ -3388,28 +2963,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Túnica ou Jaqueta de Couro (tronco, braços)",
-        "custo": 20,
-        "peso": "5,5",
-        "forcaMin": "d6",
-        "armadura": "+2",
-        "aparar": null,
-        "observacoes": "",
-        "subsubtipo": "Leve",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Calças de Couro (pernas)",
-        "custo": 20,
-        "peso": "4",
-        "forcaMin": "d6",
-        "armadura": "+2",
-        "aparar": null,
-        "observacoes": "",
-        "subsubtipo": "Leve",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Capuz de Couro (cabeça)",
         "custo": 10,
         "peso": "0,5",
@@ -3457,17 +3010,6 @@
         "nome": "Capuz de Cota ou Elmo (cabeça)",
         "custo": 50,
         "peso": "1,5",
-        "forcaMin": "d8",
-        "armadura": "+3",
-        "aparar": null,
-        "observacoes": "",
-        "subsubtipo": "Média",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Corselete de Bronze (tronco)",
-        "custo": 200,
-        "peso": "6,5",
         "forcaMin": "d8",
         "armadura": "+3",
         "aparar": null,
@@ -3638,48 +3180,12 @@
     "origem": "SUPLEMENTO",
     "itens": [
       {
-        "nome": "Adaga/Faca",
-        "dano": "For+d4",
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 2,
-        "observacoes": "—",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Bastão/Cajado",
-        "dano": "For+d4",
-        "forcaMin": "d4",
-        "peso": "2",
-        "custo": "—",
-        "observacoes": "Aparar +1, Alcance 1, Duas Mãos",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Chicote",
         "dano": "For+d4",
         "forcaMin": "d4",
         "peso": "1",
         "custo": 5,
         "observacoes": "Aparar -1, Alcance 2, Ampliação = Enredado",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Clava Leve",
-        "dano": "For+d4",
-        "forcaMin": "d4",
-        "peso": "1",
-        "custo": 1,
-        "observacoes": "—",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Clava Pesada",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "2,5",
-        "custo": 2,
-        "observacoes": "—",
         "origem": "SUPLEMENTO"
       },
       {
@@ -3701,42 +3207,6 @@
         "origem": "SUPLEMENTO"
       },
       {
-        "nome": "Lança Curta",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 1,
-        "observacoes": "Uma Mão",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Lança de Cavalaria",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "5",
-        "custo": 10,
-        "observacoes": "PA 2 em investida, Alcance 2, Apenas montado",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Maça Leve",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "2",
-        "custo": 5,
-        "observacoes": "—",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Maça Pesada",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "4",
-        "custo": 12,
-        "observacoes": "PA 1",
-        "origem": "SUPLEMENTO"
-      },
-      {
         "nome": "Machado de Guerra",
         "dano": "For+d8",
         "forcaMin": "d8",
@@ -3753,15 +3223,6 @@
         "custo": 5,
         "observacoes": "+1 Força contra Desarmar",
         "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Sabre de Abordagem",
-        "dano": "For+d6",
-        "forcaMin": "d4",
-        "peso": "2",
-        "custo": 15,
-        "observacoes": "—",
-        "origem": "SUPLEMENTO"
       }
     ]
   },
@@ -3770,18 +3231,6 @@
     "subtipo": "Medievais",
     "origem": "SUPLEMENTO",
     "itens": [
-      {
-        "nome": "Adaga/Faca",
-        "distancia": "3/6/12",
-        "dano": "For+d4",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 2,
-        "observacoes": "",
-        "origem": "SUPLEMENTO"
-      },
       {
         "nome": "Besta de Mão de Repetição",
         "distancia": "5/10/20",
@@ -3792,42 +3241,6 @@
         "peso": "1,5",
         "custo": 160,
         "observacoes": "Recarga 1. Recuo.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Besta Leve de Repetição",
-        "distancia": "10/20/40",
-        "dano": "2d6",
-        "pa": 2,
-        "cdt": 1,
-        "forcaMin": "d6",
-        "peso": "4",
-        "custo": 250,
-        "observacoes": "Recarga 1. Recuo.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Besta Pesada de Repetição",
-        "distancia": "15/30/60",
-        "dano": "2d8",
-        "pa": 2,
-        "cdt": 1,
-        "forcaMin": "d8",
-        "peso": "6",
-        "custo": 400,
-        "observacoes": "Recarga 2.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Lança/Azaguaia",
-        "distancia": "4/8/16",
-        "dano": "For+d6",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 1,
-        "observacoes": "",
         "origem": "SUPLEMENTO"
       }
     ]
@@ -3914,17 +3327,7 @@
     "tipo": "Armas de Energia",
     "subtipo": "Lasers",
     "origem": "SUPLEMENTO",
-    "itens": [
-      {
-        "nome": "Canhão Laser (Gatling)",
-        "dano": "3d6+4",
-        "pa": 2,
-        "peso": "10",
-        "custo": 2000,
-        "observacoes": "Arma Pesada. CdT 4. Requer Força d8.",
-        "origem": "SUPLEMENTO"
-      }
-    ]
+    "itens": []
   },
   {
     "tipo": "Armas de Fogo",
@@ -3997,27 +3400,7 @@
     "tipo": "Armas Especiais",
     "subtipo": "Dispositivos Infernais",
     "origem": "SUPLEMENTO",
-    "itens": [
-      {
-        "nome": "Lança-Chamas (Cientista Louco)",
-        "dano": "3d6",
-        "peso": "10",
-        "custo": 2000,
-        "observacoes": "Modelo de Cone. Ignora Armadura. Pode incendiar.",
-        "malfuncionamento": "Explode em um Modelo Médio. 3d6 dano em quem usa e adjacentes.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Gatling Pistol",
-        "dano": "2d6+1",
-        "pa": 1,
-        "peso": "3",
-        "custo": 800,
-        "observacoes": "Cadência 2. 12 Tiros. Pode usar munição de Pedra Fantasma.",
-        "malfuncionamento": "Emperra e gasta toda a munição restante.",
-        "origem": "SUPLEMENTO"
-      }
-    ]
+    "itens": []
   },
   {
     "tipo": "Munição",
@@ -4034,68 +3417,10 @@
     ]
   },
   {
-    "tipo": "Armas Corpo a Corpo",
-    "subtipo": "Orientais",
-    "origem": "SUPLEMENTO",
-    "itens": [
-      {
-        "nome": "Nodachi",
-        "dano": "For+d8",
-        "pa": 2,
-        "peso": "6",
-        "custo": 500,
-        "observacoes": "Jutsu (Espada). Duas mãos. Aparar -1.",
-        "jutsu_grupo": "Espada",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Kusarigama",
-        "dano": "For+d6/d4",
-        "peso": "2",
-        "custo": 200,
-        "observacoes": "Jutsu (Corrente). Alcance 2, Duas mãos, Desarmar, Enredar.",
-        "jutsu_grupo": "Corrente",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Tetsubo",
-        "dano": "For+d10",
-        "peso": "7,5",
-        "custo": 300,
-        "observacoes": "Jutsu (Concussão). Duas mãos. Arma Pesada se tiver For d10+.",
-        "jutsu_grupo": "Concussão",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Kunai",
-        "dano": "For+d4",
-        "peso": "0,5",
-        "custo": 35,
-        "observacoes": "Jutsu (Leve). Pode ser arremessada.",
-        "jutsu_grupo": "Leve",
-        "origem": "SUPLEMENTO"
-      }
-    ]
-  },
-  {
     "tipo": "Itens Especiais",
     "subtipo": "Talismãs",
     "origem": "SUPLEMENTO",
     "itens": [
-      {
-        "nome": "Talismã Explosivo",
-        "custo": 75,
-        "peso": "-",
-        "observacoes": "Papel adesivo. Causa 2d4 de dano em MPE ao ser rasgado.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Talismã de Papel Protetor",
-        "custo": 50,
-        "peso": "-",
-        "observacoes": "Cria santuário (MGE). Inimigos sofrem -4 para entrar ou atacar quem está dentro.",
-        "origem": "SUPLEMENTO"
-      },
       {
         "nome": "Talismã de Ilusão",
         "custo": 75,
@@ -4186,15 +3511,6 @@
         "custo": 12000,
         "observacoes": "Tiro Rápido, Pesada, PA 4. Proibida.",
         "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Lança-Vapores",
-        "dano": "2d8",
-        "pmf": 2,
-        "peso": "25",
-        "custo": 10000,
-        "observacoes": "Cone. Tiro Rápido, PA 2. Proibida.",
-        "origem": "SUPLEMENTO"
       }
     ]
   },
@@ -4209,14 +3525,6 @@
         "peso": "0.25",
         "custo": 50,
         "observacoes": "PA 1.",
-        "origem": "SUPLEMENTO"
-      },
-      {
-        "nome": "Sabre de Aço Vermelho",
-        "dano": "For+d6+2",
-        "peso": "1.5",
-        "custo": 400,
-        "observacoes": "PA 2.",
         "origem": "SUPLEMENTO"
       },
       {
@@ -4271,39 +3579,6 @@
         "peso": "7",
         "custo": 1500,
         "observacoes": "MGE. Arma Pesada. +1d6 por carga extra.",
-        "origem": "SUPLEMENTO"
-      }
-    ]
-  },
-  {
-    "tipo": "Arsenal Oriental",
-    "subtipo": "Lâminas",
-    "origem": "SUPLEMENTO",
-    "itens": [
-      {
-        "nome": "Wakizashi",
-        "dano": "For+d6",
-        "pa": "1",
-        "peso": "2",
-        "custo": 200,
-        "observacoes": "Pode ser usada com Katana (Daisho).",
-        "origem": "SUPLEMENTO"
-      }
-    ]
-  },
-  {
-    "tipo": "Arsenal Oriental",
-    "subtipo": "Distância",
-    "origem": "SUPLEMENTO",
-    "itens": [
-      {
-        "nome": "Yumi (Arco Longo)",
-        "dano": "2d6",
-        "distancia": "15/30/60",
-        "peso": "3",
-        "custo": 250,
-        "forcaMin": 8,
-        "observacoes": "Requer Força d8 para puxar.",
         "origem": "SUPLEMENTO"
       }
     ]

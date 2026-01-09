@@ -11,11 +11,6 @@
       "basica": false
     },
     {
-      "nome": "Ciência Estranha",
-      "atributo": "Astúcia",
-      "basica": false
-    },
-    {
       "nome": "Conhecimento Batalha",
       "atributo": "Astúcia",
       "basica": false
@@ -29,12 +24,6 @@
       "nome": "Hackear",
       "atributo": "Astúcia",
       "basica": false
-    },
-    {
-      "nome": "Conjurar",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "SUPLEMENTO"
     },
     {
       "nome": "Psiônicos",
