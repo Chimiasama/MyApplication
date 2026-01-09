@@ -2,136 +2,217 @@
   {
     "nome": "ANÕES",
     "origem": "BASICO",
-    "descricao": "Os anões são um povo de baixa estatura, robusto e resistente que vem de cavernas imensas nas altas fortalezas montanhosas. São orgulhosos e belicosos, normalmente devido ao contato constante com ancestralidades hostis como orcs e goblins. Anões geralmente vivem mais de 200 anos. São conhecidos por seu amor pela cerveja, conhecimento em trabalho com pedra e barbas impressionantes. Possuem Visão no Escuro, são Robustos (Vigor começa em d6) e têm Movimentação Reduzida.",
+    "descricao": "Os anões são um povo de baixa estatura, robusto e resistente que vem de cavernas imensas nas altas fortalezas montanhosas.",
     "atributos": {
-      "Vigor": 2
+      "Vigor": 1
     },
     "pericias": {},
-    "vantagensGratis": [
-      "VISÃO NO ESCURO",
-      "RESISTENTE"
-    ],
-    "desvantagens": [
-      "MOVIMENTAÇÃO REDUZIDA"
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Anões ignoram penalidades por Penumbra e Escuridão."
+      },
+      {
+        "nome": "Movimentação Reduzida",
+        "descricao": "Anões têm Movimentação 5 e seu dado de corrida é d4."
+      },
+      {
+        "nome": "Resistente",
+        "descricao": "Anões começam com Vigor d6. Aumentam o máximo para d12+1."
+      }
     ]
   },
   {
     "nome": "AQUARIANOS",
     "origem": "BASICO",
-    "descricao": "Povo aquático oriundo das profundezas esmagadoras do oceano. São fortes e resistentes debaixo das ondas, mas geralmente são vulneráveis ao ar livre ou ao calor abrasador da superfície.",
-    "atributos": {},
-    "pericias": {},
-    "vantagensGratis": [
-      "AQUÁTICO",
-      "VISÃO NO ESCURO",
-      "RESISTÊNCIA"
-    ],
-    "desvantagens": [
-      "DEPENDÊNCIA"
+    "descricao": "Povo aquático oriundo das profundezas esmagadoras do oceano.",
+    "atributos": {
+      "Vigor": 1
+    },
+    "pericias": {
+      "Atletismo": 1
+    },
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Aquático",
+        "descricao": "Não podem se afogar na água. Movem-se com sua Movimentação total nadando."
+      },
+      {
+        "nome": "Dependência (Água)",
+        "descricao": "Devem mergulhar em água uma hora a cada 24h ou sofrem Fadiga."
+      },
+      {
+        "nome": "Resistência",
+        "descricao": "+1 de Resistência devido à pele coriácea."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignoram penalidades por Penumbra e Escuridão."
+      }
     ]
   },
   {
     "nome": "AVIANOS",
     "origem": "BASICO",
-    "descricao": "São humanoides com asas. Tendem a ser bem leves devido a seus ossos ocos. Podem ter penas, pele coriácea ou até mesmo escamas.",
-    "atributos": {},
-    "pericias": {
-      "Perceber": 2
+    "descricao": "Humanoides com asas e ossos ocos.",
+    "atributos": {
+      "Agilidade": 1
     },
-    "vantagensGratis": [
-      "VOO",
-      "SENTIDOS AGUÇADOS"
-    ],
-    "desvantagens": [
-      "FRÁGIL",
-      "MOVIMENTAÇÃO REDUZIDA",
-      "NÃO SABE NADAR"
+    "pericias": {
+      "Atletismo": 1
+    },
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Voo",
+        "descricao": "Movimentação 12 (6 na terra)."
+      },
+      {
+        "nome": "Frágil",
+        "descricao": "-1 de Resistência devido aos ossos ocos."
+      },
+      {
+        "nome": "Sentidos Aguçados",
+        "descricao": "+2 em testes de Perceber usando a visão."
+      }
     ]
   },
   {
     "nome": "ELFOS",
     "origem": "BASICO",
-    "descricao": "Possuem altura avantajada, almas gentis, orelhas pontudas e olhos profundos de cores variadas. Sejam habitantes de florestas ou vales ocultos, todos possuem delicadeza naturalmente maior que a dos humanos.",
+    "descricao": "Possuem altura avantajada, almas gentis, orelhas pontudas e olhos profundos.",
     "atributos": {
-      "Agilidade": 2
+      "Agilidade": 1,
+      "Astúcia": 1
     },
     "pericias": {},
-    "vantagensGratis": [
-      "VISÃO NO ESCURO",
-      "ÁGIL"
-    ],
-    "desvantagens": [
-      "DESASTRADO"
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignoram penalidades por Penumbra e Escuridão."
+      },
+      {
+        "nome": "Ágil",
+        "descricao": "Começam com Agilidade d6. Máximo d12+1."
+      },
+      {
+        "nome": "Todas as Coisas",
+        "descricao": "Elfos começam com uma Vantagem Novato gratuita."
+      },
+      {
+        "nome": "Forasteiro",
+        "descricao": "Muitas raças desconfiam dos Elfos (menos humanos). -1 em Persuadir."
+      }
     ]
   },
   {
     "nome": "MEIO-ELFOS",
     "origem": "BASICO",
-    "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante, a maioria é bem aceita, mas pode ocorrer rejeição por qualquer lado de sua família. Sua expectativa de vida se aproxima mais da sua descendência humana.",
+    "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [
-      "VISÃO NO ESCURO",
-      "HERANÇA"
-    ],
-    "desvantagens": [
-      "FORASTEIRO (Menor)"
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Herança",
+        "descricao": "Começam com uma Vantagem Novato gratuita (humano) OU Visão no Escuro e Agilidade d6 (Elfo)."
+      },
+      {
+        "nome": "Forasteiro",
+        "descricao": "-2 em Persuadir devido à desconfiança de ambos os lados."
+      }
     ]
   },
   {
     "nome": "HUMANOS",
     "origem": "BASICO",
-    "descricao": "Em muitos cenários seres humanos recebem uma Vantagem gratuita à sua escolha. Esta opção reflete a sua versatilidade e adaptabilidade em comparação a outras ancestralidades.",
+    "descricao": "Versáteis e adaptáveis.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
       "ADAPTÁVEL"
     ],
-    "desvantagens": []
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Adaptável",
+        "descricao": "Começam com uma Vantagem Novato gratuita de sua escolha."
+      }
+    ]
   },
   {
     "nome": "MEIO-ORCS",
     "origem": "BASICO",
-    "descricao": "Descendentes de orcs e humanos. Herdam a força ou resistência dos orcs (começam com Vigor d6 ou Força d6, à escolha), mas muitas vezes são evitados pelas sociedades civilizadas.",
+    "descricao": "Descendentes de orcs e humanos.",
     "atributos": {
-      "Vigor": 2
+      "Vigor": 1,
+      "Força": 1
     },
     "pericias": {},
-    "vantagensGratis": [
-      "ENDURECIDO",
-      "INFRAVISÃO"
-    ],
-    "desvantagens": [
-      "FORASTEIRO (Menor)"
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Infravisão",
+        "descricao": "Enxergam calor. Reduz penalidades de escuridão pela metade."
+      },
+      {
+        "nome": "Resistente",
+        "descricao": "Começam com Vigor d6 OU Força d6. Máximo d12+1."
+      },
+      {
+        "nome": "Forasteiro",
+        "descricao": "-2 em Persuadir devido à aparência assustadora."
+      }
     ]
   },
   {
     "nome": "RAKASHANOS",
     "origem": "BASICO",
-    "descricao": "Humanoides de aparência felina. Podem ter as cores lustrosas dos tigres, a pele manchada dos leopardos ou a aparência exótica dos gatos siameses. Possuem garras e presas afiadas.",
+    "descricao": "Humanoides de aparência felina.",
     "atributos": {
-      "Agilidade": 2
+      "Agilidade": 1
     },
     "pericias": {},
-    "vantagensGratis": [
-      "GARRAS",
-      "MORDIDA",
-      "VISÃO NO ESCURO",
-      "ÁGIL"
-    ],
-    "desvantagens": [
-      "INIMIGO RACIAL",
-      "NÃO SABE NADAR",
-      "SANGUINÁRIO"
+    "vantagensGratis": [],
+    "desvantagens": [],
+    "habilidades": [
+      {
+        "nome": "Ágil",
+        "descricao": "Começam com Agilidade d6. Máximo d12+1."
+      },
+      {
+        "nome": "Garras/Mordida",
+        "descricao": "For+d4 de dano."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignoram penalidades por Penumbra e Escuridão."
+      },
+      {
+        "nome": "Sanguinário",
+        "descricao": "-4 em Persuadir. Devem fazer teste de Espírito para não matar inimigos rendidos."
+      }
     ]
   },
   {
     "id": "anc_sauriano",
-    "nome": "Sauriano",
+    "nome": "SAURIANOS",
     "categoria": "ANCESTRALIDADE",
     "origem": "BASICO",
+    "descricao": "Homens-lagarto de pântanos e selvas.",
     "atributos": {},
     "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Armadura",
@@ -142,16 +223,12 @@
         "descricao": "-4 para resistir a efeitos de frio. Sofre dano extra."
       },
       {
-        "nome": "Garras",
-        "descricao": "For+d4."
-      },
-      {
-        "nome": "Mordida",
+        "nome": "Garras/Mordida",
         "descricao": "For+d4."
       },
       {
         "nome": "Sentidos",
-        "descricao": "+2 em Perceber/Rastrear (olfato)."
+        "descricao": "+2 em Perceber e rastreamento olfativo."
       }
     ]
   }

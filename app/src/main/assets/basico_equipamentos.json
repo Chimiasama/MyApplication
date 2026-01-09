@@ -1,5 +1,1179 @@
 [
   {
+    "tipo": "Armas Pessoais",
+    "subtipo": "Armas de Fogo Modernas",
+    "subsubtipo": "Pistolas",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Pistola .22",
+        "distancia": "10/20/40",
+        "dano": "2d4",
+        "pa": null,
+        "cdt": 1,
+        "tiros": 10,
+        "forcaMin": null,
+        "peso": "1",
+        "custo": 50,
+        "observacoes": "Leve (+1cm).",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Pistola Derringer .41",
+        "distancia": "3/6/12",
+        "dano": "2d6",
+        "pa": null,
+        "cdt": 1,
+        "tiros": 2,
+        "forcaMin": null,
+        "peso": "0.5",
+        "custo": 100,
+        "observacoes": "Leve (+1cm).",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Pistola 9mm",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "pa": null,
+        "cdt": 1,
+        "tiros": 17,
+        "forcaMin": null,
+        "peso": "1",
+        "custo": 200,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Pistola .40",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": 15,
+        "forcaMin": null,
+        "peso": "1.5",
+        "custo": 300,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Pistola .45",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": 7,
+        "forcaMin": null,
+        "peso": "2",
+        "custo": 300,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Pistola Desert Eagle (.50)",
+        "distancia": "15/30/60",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": 7,
+        "forcaMin": "d8",
+        "peso": "4",
+        "custo": 300,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Revólver .38",
+        "distancia": "10/20/40",
+        "dano": "2d6",
+        "pa": null,
+        "cdt": 1,
+        "tiros": 6,
+        "forcaMin": null,
+        "peso": "1",
+        "custo": 150,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Revólver .357",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": 6,
+        "forcaMin": null,
+        "peso": "2",
+        "custo": 250,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Revólver .44/.45",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": 6,
+        "forcaMin": "d6",
+        "peso": "2.5",
+        "custo": 250,
+        "observacoes": "",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Pessoais",
+    "subtipo": "Armas de Fogo Modernas",
+    "subsubtipo": "Submetralhadoras",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Submetralhadora H&K MP5 (9mm)",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "pa": null,
+        "cdt": 3,
+        "tiros": 30,
+        "forcaMin": "d6",
+        "peso": "3.5",
+        "custo": 300,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Submetralhadora Uzi (9mm)",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "pa": null,
+        "cdt": 3,
+        "tiros": 32,
+        "forcaMin": "d6",
+        "peso": "4.5",
+        "custo": 300,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Submetralhadora Tommy Gun (.45)",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 3,
+        "tiros": "20/50",
+        "forcaMin": "d6",
+        "peso": "5.5",
+        "custo": 350,
+        "observacoes": "",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Pessoais",
+    "subtipo": "Armas de Fogo Modernas",
+    "subsubtipo": "Fuzis",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Carabina de Caça (.308)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": 5,
+        "forcaMin": "d6",
+        "peso": "4",
+        "custo": 300,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Rifle Sharps Big 50 (.50)",
+        "distancia": "30/60/120",
+        "dano": "2d10",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": 1,
+        "forcaMin": "d8",
+        "peso": "5.5",
+        "custo": 400,
+        "observacoes": "Recarga 2.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Rifle Spencer (.52)",
+        "distancia": "20/40/80",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": 7,
+        "forcaMin": "d6",
+        "peso": "4",
+        "custo": 350,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Rifle Winchester 76 (.45-75)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": 15,
+        "forcaMin": "d6",
+        "peso": "5",
+        "custo": 400,
+        "observacoes": "PA 2",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Fuzil de Assalto AK47 (7.62mm)",
+        "distancia": "24/48/96",
+        "dano": "2d8+1",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": 30,
+        "forcaMin": "d6",
+        "peso": "4",
+        "custo": 450,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Fuzil de Assalto M16 (5.56mm)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": "20/30",
+        "forcaMin": "d6",
+        "peso": "4",
+        "custo": 400,
+        "observacoes": "Fuzil de Assalto, Rajada de 3 Tiros",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Fuzil de Assalto Steyr AUG (5.56mm)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": 30,
+        "forcaMin": "d6",
+        "peso": "4",
+        "custo": 400,
+        "observacoes": "Fuzil de Assalto, Rajada de 3 Tiros, Mira Integrada (anula 2 pts de penalidade de dist/escuridão se não se mover)",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Fuzil de Precisão Barrett (.50)",
+        "distancia": "50/100/200",
+        "dano": "2d10",
+        "pa": 4,
+        "cdt": 1,
+        "tiros": 10,
+        "forcaMin": "d8",
+        "peso": "15",
+        "custo": 750,
+        "observacoes": "Arma Pesada, Mão Pesada, Mira (anula 2 pts de penalidade de dist/escuridão se não se mover)",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Fuzil de Precisão M40 (7.62mm)",
+        "distancia": "30/60/120",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": 10,
+        "forcaMin": "d6",
+        "peso": "5",
+        "custo": 450,
+        "observacoes": "Mira (anula 2 pts de penalidade de dist/escuridão se não se mover)",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Pessoais",
+    "subtipo": "Armas de Fogo Modernas",
+    "subsubtipo": "Metralhadoras",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Metralhadora Gatling (.45)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": 100,
+        "forcaMin": null,
+        "peso": "85",
+        "custo": 500,
+        "observacoes": "Não pode se mover, requer tripulação de 2.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Metralhadora M2 Browning (.50)",
+        "distancia": "50/100/200",
+        "dano": "2d10",
+        "pa": 4,
+        "cdt": 3,
+        "tiros": 200,
+        "forcaMin": "d8",
+        "peso": "42",
+        "custo": 1500,
+        "observacoes": "Arma Pesada, Mão Pesada, requer tripulação de 2.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Metralhadora M1919 (.30)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": 250,
+        "forcaMin": "d8",
+        "peso": "16",
+        "custo": 750,
+        "observacoes": "Mão Pesada, requer tripulação de 2.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Metralhadora M60 (7.62mm)",
+        "distancia": "30/60/120",
+        "dano": "2d8+1",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": 250,
+        "forcaMin": "d8",
+        "peso": "15",
+        "custo": 3000,
+        "observacoes": "Mão Pesada, requer tripulação de 2.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Metralhadora SAQ (5.56mm)",
+        "distancia": "30/60/120",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 4,
+        "tiros": 200,
+        "forcaMin": "d8",
+        "peso": "8.5",
+        "custo": 1000,
+        "observacoes": "Mão Pesada.",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Combate à Distância",
+    "subtipo": "Escopetas",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Cano Duplo",
+        "distancia": "12/24/48",
+        "dano": "1–3d6",
+        "pa": null,
+        "cdt": 1,
+        "tiros": 2,
+        "forcaMin": "d6",
+        "peso": "5.5",
+        "custo": 150,
+        "observacoes": "+2 em rolagens de Atirar",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Pump Action",
+        "distancia": "12/24/48",
+        "dano": "1–3d6",
+        "pa": null,
+        "cdt": 1,
+        "tiros": 6,
+        "forcaMin": "d6",
+        "peso": "4",
+        "custo": 150,
+        "observacoes": "+2 em rolagens de Atirar",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Serrada (Cano Duplo)",
+        "distancia": "5/10/20",
+        "dano": "1–3d6",
+        "pa": null,
+        "cdt": 1,
+        "tiros": 2,
+        "forcaMin": "d4",
+        "peso": "3",
+        "custo": 150,
+        "observacoes": "+2 em rolagens de Atirar",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Espingarda de Assalto",
+        "distancia": "12/24/48",
+        "dano": "1–3d6",
+        "pa": null,
+        "cdt": 3,
+        "tiros": 10,
+        "forcaMin": "d8",
+        "peso": "5",
+        "custo": 450,
+        "observacoes": "+2 em rolagens de Atirar",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Combate à Distância",
+    "subtipo": "Armas Especiais",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Lança-Chamas",
+        "distancia": "Cone",
+        "dano": "3d6",
+        "pa": null,
+        "cdt": 1,
+        "tiros": 10,
+        "forcaMin": "d8",
+        "peso": "35",
+        "custo": 300,
+        "observacoes": "Ignora Armadura, pode incendiar o alvo.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Lança-Foguetes (AT-4)",
+        "distancia": "24/48/96",
+        "dano": "4d8",
+        "pa": 9,
+        "cdt": 1,
+        "tiros": 1,
+        "forcaMin": "d6",
+        "peso": "4",
+        "custo": 500,
+        "observacoes": "Arma Pesada, Modelo Médio de Explosão, Mão Pesada, Tiro Único.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Arma de Energia (Pistola)",
+        "distancia": "15/30/60",
+        "dano": "2d6",
+        "pa": 4,
+        "cdt": 1,
+        "tiros": 50,
+        "forcaMin": null,
+        "peso": "1",
+        "custo": 250,
+        "observacoes": "Sem recuo.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Arma de Energia (Rifle)",
+        "distancia": "30/60/120",
+        "dano": "3d6",
+        "pa": 4,
+        "cdt": 3,
+        "tiros": 100,
+        "forcaMin": "d6",
+        "peso": "4",
+        "custo": 700,
+        "observacoes": "Sem recuo.",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Munição",
+    "subtipo": "Geral",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Flechas/Virotes (1)",
+        "custo": 0.5,
+        "peso": "0.1",
+        "observacoes": "Para Arcos e Bestas.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Balas, Pequenas (50)",
+        "custo": 10,
+        "peso": "1.5",
+        "observacoes": "Calibres .22 a .38, 9mm.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Balas, Médias (50)",
+        "custo": 25,
+        "peso": "2.5",
+        "observacoes": "Calibres .357 a .45, .44, 5.56mm.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Balas, Grandes (50)",
+        "custo": 50,
+        "peso": "4",
+        "observacoes": "Calibres .50, 7.62mm, escopeta.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Carga de Pó Negro (10)",
+        "custo": 5,
+        "peso": "0.5",
+        "observacoes": "Para mosquetes e armas antigas.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Bateria Laser (Pistola)",
+        "custo": 20,
+        "peso": "0.25",
+        "observacoes": "Recarrega pistolas laser.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Bateria Laser (Rifle/Gatling)",
+        "custo": 50,
+        "peso": "0.5",
+        "observacoes": "Recarrega rifles laser.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Granada (Fragmentação)",
+        "distancia": "5/10/20",
+        "dano": "3d6",
+        "custo": 50,
+        "peso": "0.25",
+        "observacoes": "Modelo Grande de Explosão.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Granada (Fumaça)",
+        "distancia": "5/10/20",
+        "custo": 25,
+        "peso": "0.25",
+        "observacoes": "Cria nuvem de fumaça (Modelo Grande de Explosão).",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Granada (Atordoamento)",
+        "distancia": "5/10/20",
+        "custo": 25,
+        "peso": "0.25",
+        "observacoes": "Modelo Grande de Explosão. Alvos devem fazer teste de Vigor (com -2 se acertar com ampliação) ou ficam Atordoados.",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Veículos Terrestres Civis",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Bicicleta",
+        "tamanho": -1,
+        "manobrabilidade": 1,
+        "velMaxima": 12,
+        "resistencia": 4,
+        "tripulacao": 1,
+        "custo": 250,
+        "observacoes": "50% de chance de atingir o ciclista. Dobra a Movimentação e o resultado do dado de corrida.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Moto de Rua",
+        "tamanho": 1,
+        "manobrabilidade": 1,
+        "velMaxima": 64,
+        "resistencia": 8,
+        "tripulacao": "1+1",
+        "custo": 3000,
+        "observacoes": "50% de chance de atingir o piloto.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Moto Off-Road (Dirt Bike)",
+        "tamanho": 0,
+        "manobrabilidade": 1,
+        "velMaxima": 42,
+        "resistencia": 7,
+        "tripulacao": 1,
+        "custo": 2000,
+        "observacoes": "Tração nas 4 rodas (ignora penalidades de terreno acidentado). 50% de chance de atingir o piloto.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Carro Compacto",
+        "tamanho": 4,
+        "manobrabilidade": 1,
+        "velMaxima": 64,
+        "resistencia": 10,
+        "tripulacao": "1+3",
+        "custo": 14000,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Carro Médio/Sedan",
+        "tamanho": 4,
+        "manobrabilidade": 0,
+        "velMaxima": 64,
+        "resistencia": 11,
+        "tripulacao": "1+4",
+        "custo": 25000,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Carro Esportivo",
+        "tamanho": 4,
+        "manobrabilidade": 2,
+        "velMaxima": 85,
+        "resistencia": 10,
+        "tripulacao": "1+1",
+        "custo": 60000,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "SUV",
+        "tamanho": 5,
+        "manobrabilidade": 0,
+        "velMaxima": 53,
+        "resistencia": 14,
+        "tripulacao": "1+7",
+        "custo": 40000,
+        "observacoes": "Tração nas 4 rodas.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Caminhonete",
+        "tamanho": 6,
+        "manobrabilidade": 0,
+        "velMaxima": 53,
+        "resistencia": 15,
+        "tripulacao": "1+2",
+        "custo": 30000,
+        "observacoes": "Tração nas 4 rodas. Carroceria aberta.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Caminhão (Semi)",
+        "tamanho": 8,
+        "manobrabilidade": -1,
+        "velMaxima": 40,
+        "resistencia": 16,
+        "tripulacao": "1+1",
+        "custo": 150000,
+        "observacoes": "Pode puxar reboques.",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Veículos Militares",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Jipe Militar",
+        "tamanho": 4,
+        "manobrabilidade": 1,
+        "velMaxima": 45,
+        "resistencia": 12,
+        "tripulacao": "1+3",
+        "custo": 10000,
+        "observacoes": "Tração nas 4 rodas.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Humvee",
+        "tamanho": 5,
+        "manobrabilidade": 1,
+        "velMaxima": 45,
+        "resistencia": 16,
+        "tripulacao": "1+3",
+        "custo": 55000,
+        "armadura": 4,
+        "observacoes": "Tração nas 4 rodas, Armadura 4. Suporte para arma no teto.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "APC (Transporte Blindado)",
+        "tamanho": 6,
+        "manobrabilidade": -1,
+        "velMaxima": 25,
+        "resistencia": 30,
+        "tripulacao": "2+12",
+        "custo": 250000,
+        "armadura": 14,
+        "observacoes": "Armadura 14 (Armadura Pesada). Anfíbio. Armamento: Metralhadora Calibre .50 ou Lança-Granadas.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Tanque M1 Abrams",
+        "tamanho": 8,
+        "manobrabilidade": -1,
+        "velMaxima": 25,
+        "resistencia": 57,
+        "tripulacao": "4",
+        "custo": 6000000,
+        "armadura": 41,
+        "observacoes": "Armadura 41 (Armadura Pesada). Esteiras. Canhão 120mm, 2x Metralhadoras 7.62mm, 1x Metralhadora .50.",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Embarcações",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Bote/Canoa",
+        "tamanho": 1,
+        "manobrabilidade": -1,
+        "velMaxima": 6,
+        "resistencia": 6,
+        "tripulacao": "1+3",
+        "custo": 500,
+        "observacoes": "Movido a remos.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Lancha Rápida",
+        "tamanho": 4,
+        "manobrabilidade": 2,
+        "velMaxima": 50,
+        "resistencia": 11,
+        "tripulacao": "1+3",
+        "custo": 25000,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Iate Pequeno",
+        "tamanho": 8,
+        "manobrabilidade": -1,
+        "velMaxima": 15,
+        "resistencia": 16,
+        "tripulacao": "1+9",
+        "custo": 400000,
+        "observacoes": "Inclui acomodações para dormir.",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Aeronaves",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Helicóptero Civil",
+        "tamanho": 6,
+        "manobrabilidade": 1,
+        "velMaxima": 60,
+        "resistencia": 12,
+        "tripulacao": "1+3",
+        "custo": 250000,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Helicóptero de Ataque (Apache)",
+        "tamanho": 7,
+        "manobrabilidade": 1,
+        "velMaxima": 100,
+        "resistencia": 18,
+        "tripulacao": "2",
+        "custo": 15000000,
+        "armadura": 4,
+        "observacoes": "Armadura 4. Canhão 30mm, Foguetes Hydra (x4), Mísseis Hellfire (x8).",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Avião Monomotor (Cessna)",
+        "tamanho": 5,
+        "manobrabilidade": 0,
+        "velMaxima": 75,
+        "resistencia": 12,
+        "tripulacao": "1+3",
+        "custo": 150000,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Caça a Jato (F-15)",
+        "tamanho": 9,
+        "manobrabilidade": 2,
+        "velMaxima": 600,
+        "resistencia": 20,
+        "tripulacao": "1",
+        "custo": 30000000,
+        "armadura": 4,
+        "observacoes": "Armadura 4 (Armadura Pesada). Canhão 20mm, Mísseis Sidewinder (x4), Mísseis Sparrow (x4). Velocidade Supersônica.",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Medievais",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Jaqueta/Veste/Túnica",
+        "custo": 20,
+        "peso": "2.5",
+        "forcaMin": "d4",
+        "armadura": "+1",
+        "aparar": null,
+        "observacoes": "Torso, Braços e Pernas.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Couro",
+        "custo": 50,
+        "peso": "7.5",
+        "forcaMin": "d6",
+        "armadura": "+2",
+        "aparar": null,
+        "observacoes": "Torso, Braços e Pernas.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Cota de Malha (Camisa)",
+        "custo": 300,
+        "peso": "12.5",
+        "forcaMin": "d8",
+        "armadura": "+3",
+        "aparar": null,
+        "observacoes": "Torso, Braços.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Cota de Malha (Completa)",
+        "custo": 400,
+        "peso": "21",
+        "forcaMin": "d10",
+        "armadura": "+3",
+        "aparar": null,
+        "observacoes": "Torso, Braços, Pernas e Cabeça (Capuz).",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Brunea",
+        "custo": 450,
+        "peso": "15",
+        "forcaMin": "d10",
+        "armadura": "+4",
+        "aparar": null,
+        "observacoes": "Torso, Braços, Pernas.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Peitoral (Placas)",
+        "custo": 500,
+        "peso": "15",
+        "forcaMin": "d10",
+        "armadura": "+4",
+        "aparar": null,
+        "observacoes": "Apenas Torso.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Placas (Completa)",
+        "custo": 1500,
+        "peso": "25",
+        "forcaMin": "d12",
+        "armadura": "+4",
+        "aparar": null,
+        "observacoes": "Corpo todo.",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Modernas",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Jaqueta de Couro",
+        "custo": 50,
+        "peso": "2.5",
+        "forcaMin": null,
+        "armadura": "+1",
+        "aparar": null,
+        "observacoes": "Torso, Braços.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Colete Kevlar",
+        "custo": 200,
+        "peso": "2.5",
+        "forcaMin": null,
+        "armadura": "+2",
+        "aparar": null,
+        "observacoes": "Torso. +4 contra balas.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Colete Tático",
+        "custo": 500,
+        "peso": "8.5",
+        "forcaMin": "d6",
+        "armadura": "+4",
+        "aparar": null,
+        "observacoes": "Torso.",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Barda (Animal)",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Barda de Couro",
+        "custo": 300,
+        "peso": "25",
+        "forcaMin": "d8",
+        "armadura": "+2",
+        "aparar": null,
+        "observacoes": "Para montarias tamanho 2.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Barda de Placas",
+        "custo": 5000,
+        "peso": "75",
+        "forcaMin": "d12",
+        "armadura": "+4",
+        "aparar": null,
+        "observacoes": "Para montarias tamanho 2.",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Escudos",
+    "subtipo": "Medievais",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Escudo Pequeno",
+        "custo": 25,
+        "peso": "2",
+        "forcaMin": "d4",
+        "armadura": null,
+        "aparar": "+1",
+        "observacoes": "Não protege contra ataques a distância.",
+        "subsubtipo": "Medievais",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Escudo Médio",
+        "custo": 50,
+        "peso": "4",
+        "forcaMin": "d6",
+        "armadura": null,
+        "aparar": "+2",
+        "observacoes": "Cobertura -2.",
+        "subsubtipo": "Medievais",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Escudo Grande",
+        "custo": 200,
+        "peso": "6",
+        "forcaMin": "d8",
+        "armadura": null,
+        "aparar": "+3",
+        "observacoes": "Cobertura -4.",
+        "subsubtipo": "Medievais",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Escudos",
+    "subtipo": "Modernos",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Escudo Anti Tumulto",
+        "custo": 80,
+        "peso": "2.5",
+        "forcaMin": "d4",
+        "armadura": null,
+        "aparar": "+3",
+        "observacoes": "Material policarbonato.",
+        "subsubtipo": "Modernas",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Escudo Balístico",
+        "custo": 250,
+        "peso": "4.5",
+        "forcaMin": "d6",
+        "armadura": "+4",
+        "aparar": "+3",
+        "observacoes": "+4 de Armadura contra armas de fogo.",
+        "subsubtipo": "Modernas",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Pessoais",
+    "subtipo": "Medievais",
+    "subsubtipo": "Combate corpo a corpo",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Adaga/Faca",
+        "dano": "For+d4",
+        "forcaMin": null,
+        "peso": "0.5",
+        "custo": 25,
+        "observacoes": "Pode ser arremessada.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Bastão",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": "2",
+        "custo": 10,
+        "observacoes": "Aparar +1, Alcance 1, Duas Mãos.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Espada Curta",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": "1",
+        "custo": 100,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Espada Longa",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": "1.5",
+        "custo": 300,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Espada Grande",
+        "dano": "For+d10",
+        "forcaMin": "d10",
+        "peso": "3",
+        "custo": 400,
+        "observacoes": "Duas Mãos.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Machado de Batalha",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": "2",
+        "custo": 300,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Machado Grande",
+        "dano": "For+d10",
+        "forcaMin": "d10",
+        "peso": "3.5",
+        "custo": 400,
+        "observacoes": "PA 2, Aparar -1, Duas Mãos.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Maça",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": "2",
+        "custo": 100,
+        "observacoes": "",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Martelo de Guerra",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": "1",
+        "custo": 250,
+        "observacoes": "PA 1.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Lança",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": "1.5",
+        "custo": 100,
+        "observacoes": "Alcance 1. Aparar +1 se usada com duas mãos.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Rapieira",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": "1",
+        "custo": 150,
+        "observacoes": "Aparar +1.",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Pessoais",
+    "subtipo": "Modernas",
+    "subsubtipo": "Combate corpo a corpo",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Cassetete",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": "0.5",
+        "custo": 10,
+        "observacoes": "Dano não letal.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Faca de Sobrevivência",
+        "dano": "For+d4",
+        "forcaMin": null,
+        "peso": "0.5",
+        "custo": 50,
+        "observacoes": "Contém kit básico no cabo (anzol, linha, fósforos).",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Motosserra",
+        "dano": "2d6+4",
+        "forcaMin": "d6",
+        "peso": "10",
+        "custo": 200,
+        "observacoes": "Falha Crítica atinge o usuário (1d6).",
+        "origem": "BASICO"
+      }
+    ]
+  },
+    {
     "tipo": "Equipamento Comum",
     "subtipo": "Equipamento de Aventura",
     "origem": "BASICO",
@@ -27,7 +1201,7 @@
       {
         "nome": "Gazuas",
         "custo": 200,
-        "peso": "0,5",
+        "peso": "0.5",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
@@ -37,7 +1211,7 @@
       {
         "nome": "Kit de Ferramentas",
         "custo": 200,
-        "peso": "2,5",
+        "peso": "2.5",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
@@ -47,7 +1221,7 @@
       {
         "nome": "Kit de Primeiros Socorros",
         "custo": 10,
-        "peso": "0,5",
+        "peso": "0.5",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
@@ -61,7 +1235,7 @@
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
-        "observacoes": "Cinco usos, +1 em rolagens da perícia\nCurar; $25 para reabastecer.",
+        "observacoes": "Cinco usos, +1 em rolagens da perícia Curar; $25 para reabastecer.",
         "origem": "BASICO"
       },
       {
@@ -87,7 +1261,7 @@
       {
         "nome": "Pederneira e Aço",
         "custo": 3,
-        "peso": "0,5",
+        "peso": "0.5",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
@@ -97,7 +1271,7 @@
       {
         "nome": "Sabão",
         "custo": 1,
-        "peso": "0,1",
+        "peso": "0.1",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
@@ -117,7 +1291,7 @@
       {
         "nome": "Cantil (odre)",
         "custo": 5,
-        "peso": "0,5",
+        "peso": "0.5",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
@@ -127,37 +1301,37 @@
       {
         "nome": "Corda, cânhamo (10 quadros/20 metros)",
         "custo": 10,
-        "peso": "7,5",
+        "peso": "7.5",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
-        "observacoes": "",
+        "observacoes": "Suporta 150kg.",
         "origem": "BASICO"
       },
       {
         "nome": "Corda, nylon (10 quadros/20 metros)",
         "custo": 10,
-        "peso": "1,5",
+        "peso": "1.5",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
-        "observacoes": "",
+        "observacoes": "Suporta 500kg.",
         "origem": "BASICO"
       },
       {
         "nome": "Lanterna (feixe de 10 quadros)",
         "custo": 20,
-        "peso": "1,5",
+        "peso": "1.5",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
-        "observacoes": "",
+        "observacoes": "Bateria dura 10 horas.",
         "origem": "BASICO"
       },
       {
         "nome": "Tocha (uma hora, 4 quadros de raio)",
         "custo": 5,
-        "peso": "0,5",
+        "peso": "0.5",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
@@ -167,1017 +1341,10 @@
       {
         "nome": "Vela (uma hora, 2 quadros de raio)",
         "custo": 1,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Corda de cânhamo (10 quadros/20m)",
-        "custo": 1,
-        "peso": "5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Suporta 150kg com segurança.",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Mochila (vazia)",
-        "custo": 2,
-        "peso": "1",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Metade do peso efetivo do conteúdo.",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Odre (vazio)",
-        "custo": 1,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Escudos",
-    "subtipo": "Medievais",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Medieval Pequeno",
-        "custo": 50,
-        "peso": "2",
-        "forcaMin": "d4",
-        "armadura": null,
-        "aparar": "+1",
-        "observacoes": "",
-        "subsubtipo": "Antigos e Medievais",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Medieval Médio",
-        "custo": 100,
-        "peso": "4",
-        "forcaMin": "d6",
-        "armadura": null,
-        "aparar": "+2",
-        "observacoes": "",
-        "subsubtipo": "Antigos e Medievais",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Medieval Grande",
-        "custo": 200,
-        "peso": "6",
-        "forcaMin": "d8",
-        "armadura": null,
-        "aparar": "+3",
-        "observacoes": "",
-        "subsubtipo": "Antigos e Medievais",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Escudos",
-    "subtipo": "Modernos",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Escudo Anti Tumulto",
-        "custo": 80,
-        "peso": "2,5",
-        "forcaMin": "d4",
-        "armadura": null,
-        "aparar": "+3",
-        "observacoes": "",
-        "subsubtipo": "Modernas",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Escudo Balístico",
-        "custo": 250,
-        "peso": "4,5",
-        "forcaMin": "d6",
-        "armadura": null,
-        "aparar": "+3",
-        "observacoes": "",
-        "subsubtipo": "Modernas",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Pessoais",
-    "subtipo": "Medievais",
-    "subsubtipo": "Combate corpo a corpo",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Bastão",
-        "dano": "For+d4",
-        "forcaMin": "d4",
-        "peso": "2",
-        "custo": 10,
-        "observacoes": "Aparar +1, Alcance 1, duas mãos",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Espada Curta",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "1",
-        "custo": 100,
-        "observacoes": "Inclui sabres de cavalaria",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Espada Grande",
-        "dano": "For+d10",
-        "forcaMin": "d10",
-        "peso": "3",
-        "custo": 400,
-        "observacoes": "Duas mãos",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Espada Longa",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "1,5",
-        "custo": 300,
-        "observacoes": "Espadas básicas e cimitarras",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Lança",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 100,
-        "observacoes": "Alcance 1, Aparar +1 se usada com as duas mãos",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Maça",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "2",
-        "custo": 100,
-        "observacoes": "—",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Machado de Batalha",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "2",
-        "custo": 300,
-        "observacoes": "—",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Machado de Mão",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "1",
-        "custo": 100,
-        "observacoes": "—",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Machado Grande",
-        "dano": "For+d10",
-        "forcaMin": "d10",
-        "peso": "3,5",
-        "custo": 400,
-        "observacoes": "PA 2, Aparar -1, duas mãos",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Malho",
-        "dano": "For+d10",
-        "forcaMin": "d10",
-        "peso": "5",
-        "custo": 400,
-        "observacoes": "Duas mãos, +2 de dano para quebrar objetos (pág. 125)",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Mangual",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 200,
-        "observacoes": "Ignora o bônus por escudo",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Martelo de Guerra",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "1",
-        "custo": 250,
-        "observacoes": "Espinho, PA 1",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Pique",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "9",
-        "custo": 400,
-        "observacoes": "Alcance 2, duas mãos",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Rapieira",
-        "dano": "For+d4",
-        "forcaMin": "d4",
-        "peso": "1",
-        "custo": 150,
-        "observacoes": "Aparar +1",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Pessoais",
-    "subtipo": "Modernas",
-    "subsubtipo": "Combate corpo a corpo",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Baioneta",
-        "dano": "For+d4",
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 25,
-        "observacoes": "For+d6 e Aparar +1 fixada em um rifle, Alcance 1, duas mãos",
-        "subsubtipo": "Baionetas",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Motosserra",
-        "dano": "2d6+4",
-        "forcaMin": "d6",
-        "peso": "10",
-        "custo": 200,
-        "observacoes": "Falha Crítica atinge o usuário",
-        "subsubtipo": "Motosserras",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Soqueiras",
-        "dano": "For+d4",
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 20,
-        "observacoes": "Não conta como arma para Defensor Desarmado (pág. 119).",
-        "subsubtipo": "Armas de Soco",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas de Combate à Distância",
-    "subtipo": "Medievais",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Arco",
-        "distancia": "12/24/48",
-        "dano": "2d6",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 250,
-        "observacoes": "—",
-        "subsubtipo": "Arcos",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Arco Longo",
-        "distancia": "15/30/60",
-        "dano": "2d6",
-        "pa": 1,
-        "cdt": 1,
-        "forcaMin": "d8",
-        "peso": "1,5",
-        "custo": 300,
-        "observacoes": "—",
-        "subsubtipo": "Arcos",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Besta",
-        "distancia": "10/20/40",
-        "dano": "2d6",
-        "pa": 2,
-        "cdt": 1,
-        "forcaMin": "d6",
-        "peso": "2,5",
-        "custo": 250,
-        "observacoes": "Engatilhada manualmente",
-        "subsubtipo": "Bestas",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Funda",
-        "distancia": "4/8/16",
-        "dano": "For+d4",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 10,
-        "observacoes": "Usa perícia Atletismo (arremessar)",
-        "subsubtipo": "Fundas",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas de Combate à Distância",
-    "subtipo": "Modernas",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Arco Composto",
-        "distancia": "12/24/48",
-        "dano": "For+d6",
-        "pa": 1,
-        "cdt": 1,
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 200,
-        "observacoes": "—",
-        "subsubtipo": "Arcos",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas de Combate à Distância",
-    "subtipo": "Escopetas",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Cano Duplo",
-        "distancia": "12/24/48",
-        "dano": "1–3d6",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "2",
-        "peso": "5,5",
-        "custo": 150,
-        "observacoes": "—",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Pump Action",
-        "distancia": "12/24/48",
-        "dano": "1–3d6",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "6",
-        "peso": "4",
-        "custo": 150,
-        "observacoes": "—",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Espingarda de Assalto",
-        "distancia": "12/24/48",
-        "dano": "1–3d6",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "12",
-        "peso": "5",
-        "custo": 450,
-        "observacoes": "—",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas de Combate à Distância",
-    "subtipo": "Lasers Futuristas",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Rifle",
-        "distancia": "30/60/120",
-        "dano": "3d6",
-        "pa": 2,
-        "cdt": 3,
-        "forcaMin": "100",
-        "peso": "4",
-        "custo": 700,
-        "observacoes": "—",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Veículos",
-    "subtipo": "Veículos Terrestres",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Bicicleta",
-        "tamanho": -1,
-        "manobrabilidade": "+1",
-        "velMaxima": 25,
-        "resistencia": 4,
-        "tripulacao": 1,
-        "custo": 250,
-        "observacoes": "50% de chance de atingir o ciclista. Dobra a Movimentação e o resultado do dado de corrida",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Caminhão",
-        "tamanho": 9,
-        "manobrabilidade": "0*",
-        "velMaxima": 120,
-        "resistencia": 14,
-        "tripulacao": "(2)",
-        "custo": "200K",
-        "observacoes": "Carroceria tem Tamanho 7 (Grande), Resistência 14 (2). *Manobrabilidade com a carroceria atrelada é -2",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Carro Compacto",
-        "tamanho": 4,
-        "manobrabilidade": "+1",
-        "velMaxima": 192,
-        "resistencia": 10,
-        "tripulacao": "(2)",
-        "custo": "5–14K",
-        "observacoes": "Honda Civic ou veículo similar",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Carro Médio",
-        "tamanho": 4,
-        "manobrabilidade": "0",
-        "velMaxima": 192,
-        "resistencia": 11,
-        "tripulacao": "(2)",
-        "custo": "30K",
-        "observacoes": "Air bags, itens de luxo",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Carro Esportivo",
-        "tamanho": 4,
-        "manobrabilidade": "+2",
-        "velMaxima": 256,
-        "resistencia": 10,
-        "tripulacao": "(2)",
-        "custo": "15–300K",
-        "observacoes": "Mustang ou carros esportivos similares",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Motocicleta de Rua",
-        "tamanho": 1,
-        "manobrabilidade": "+1",
-        "velMaxima": 192,
-        "resistencia": 8,
-        "tripulacao": "1+1",
-        "custo": 3000,
-        "observacoes": "50% de chance de um tiro não localizado atingir o personagem em vez da moto",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Motocicleta de Motocross",
-        "tamanho": 0,
-        "manobrabilidade": "+1",
-        "velMaxima": 128,
-        "resistencia": 7,
-        "tripulacao": 1,
-        "custo": 2000,
-        "observacoes": "Off-road (trate como T4R). 50% de chance de um tiro não localizado atingir o personagem em vez da moto",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Veículos",
-    "subtipo": "Veículos Militares da Segunda Guerra Mundial",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Jipe",
-        "tamanho": 4,
-        "manobrabilidade": "+1",
-        "velMaxima": 104,
-        "resistencia": 10,
-        "tripulacao": "(2)",
-        "custo": "1+3K",
-        "observacoes": "Tração nas Quatro Rodas. Armas: Metralhadora Pesada (Montada na Frente com Pino)",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "M4 Sherman",
-        "tamanho": 8,
-        "manobrabilidade": -1,
-        "velMaxima": 48,
-        "resistencia": 24,
-        "tripulacao": "(8)",
-        "custo": "45K",
-        "observacoes": "Armadura Pesada, Esteira. Armas: Canhão de 75mm (Torreta, Estabilizador), Metralhadora Média (Fixa na Frente), Metralhadora Pesada (Montada na Frente com Pino)",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Veículos",
-    "subtipo": "Aeronaves",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Cessna Skyhawk",
-        "tamanho": 5,
-        "manobrabilidade": "+1",
-        "velMaxima": 224,
-        "resistencia": 12,
-        "tripulacao": "(2)",
-        "custo": "150K+",
-        "observacoes": "—",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Helicóptero",
-        "tamanho": 7,
-        "manobrabilidade": 0,
-        "velMaxima": 208,
-        "resistencia": 12,
-        "tripulacao": "(2)",
-        "custo": "500K+",
-        "observacoes": "—",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Learjet",
-        "tamanho": 8,
-        "manobrabilidade": "+2",
-        "velMaxima": 864,
-        "resistencia": 16,
-        "tripulacao": "(2)",
-        "custo": "20M+",
-        "observacoes": "—",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Veículos",
-    "subtipo": "Aeronaves Militares Modernas",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "AH-64 Apache",
-        "tamanho": 8,
-        "manobrabilidade": 0,
-        "velMaxima": 360,
-        "resistencia": 20,
-        "tripulacao": "(4)",
-        "custo": "35M",
-        "observacoes": "Helicóptero, Visão Noturna. Armas: Canhão de 30mm (Fixo na Frente), 16x Mísseis Hellfire",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Veículos",
-    "subtipo": "Embarcações",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Barco a Remo",
-        "tamanho": 0,
-        "manobrabilidade": -2,
-        "velMaxima": 8,
-        "resistencia": 8,
-        "tripulacao": "(1)",
-        "custo": "500",
-        "observacoes": "—",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Galeão",
-        "tamanho": 14,
-        "manobrabilidade": -2,
-        "velMaxima": 15,
-        "resistencia": 20,
-        "tripulacao": "(20+80)",
-        "custo": "300K+",
-        "observacoes": "Armadura Pesada. Armas: 16x a 46x Canhões (Fixos na Esquerda e Direita)",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Lancha",
-        "tamanho": 4,
-        "manobrabilidade": "+1",
-        "velMaxima": 144,
-        "resistencia": 10,
-        "tripulacao": "(1+3)",
-        "custo": "60K+",
-        "observacoes": "—",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Equipamento Comum",
-    "subtipo": "Equipamento de Aventura",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Binóculos",
-        "custo": 1000,
         "peso": "0.5",
         "forcaMin": null,
         "armadura": null,
         "aparar": null,
-        "observacoes": "Amplificação de luz; elimina até 4 pontos de penalidade por distância ou escuridão em Perceber",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Equipamento Comum",
-    "subtipo": "Equipamento de Aventura",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Algemas",
-        "custo": 15,
-        "peso": "1",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Lanterna",
-        "custo": 12,
-        "peso": "1,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Raio de 4 quadros por 3h/litro. Versão olho-de-boi projeta Cone.",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Pé de Cabra",
-        "custo": 2,
-        "peso": "2,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Pederneira e Aço",
-        "custo": 0.25,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Sabão",
-        "custo": 0.25,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Tocha",
-        "custo": 0.25,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Luz raio 4 quadros por 1 hora.",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Vela",
-        "custo": 0.25,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Luz raio 2 quadros por 2 horas.",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Equipamento Comum",
-    "subtipo": "Veículos",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Barco a remo",
-        "custo": 50,
-        "peso": "50",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Armaduras",
-    "subtipo": "Barda (Animal)",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Couro",
-        "custo": 300,
-        "peso": "25",
-        "forcaMin": "d8",
-        "armadura": "+2",
-        "aparar": null,
-        "observacoes": "Para tamanho 2.",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Placas",
-        "custo": 5000,
-        "peso": "75",
-        "forcaMin": "d12",
-        "armadura": "+4",
-        "aparar": null,
-        "observacoes": "Para tamanho 2.",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Escudos",
-    "subtipo": "Medievais",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Médio",
-        "custo": 9,
-        "peso": "4",
-        "forcaMin": "d8",
-        "armadura": null,
-        "aparar": "+2",
-        "observacoes": "Cobertura -2",
-        "subsubtipo": "Escudos",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Pessoais",
-    "subtipo": "Medievais",
-    "subsubtipo": "Combate corpo a corpo",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Espada Bastarda",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "3",
-        "custo": 35,
-        "observacoes": "PA 1, Duas Mãos (+1 dano)",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Espada Curta",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "1",
-        "custo": 10,
-        "observacoes": "—",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Espada Grande",
-        "dano": "For+d10",
-        "forcaMin": "d10",
-        "peso": "4",
-        "custo": 50,
-        "observacoes": "PA 2, Duas Mãos",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Espada Longa",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "2",
-        "custo": 15,
-        "observacoes": "—",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Lança",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "3",
-        "custo": 2,
-        "observacoes": "Alcance 1. Aparar +1 se Duas Mãos",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Machado de Mão",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 6,
-        "observacoes": "—",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Machado Grande",
-        "dano": "For+d10",
-        "forcaMin": "d10",
-        "peso": "6",
-        "custo": 20,
-        "observacoes": "PA 3, Aparar -1, Duas Mãos",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Malho",
-        "dano": "For+d10",
-        "forcaMin": "d10",
-        "peso": "5",
-        "custo": 12,
-        "observacoes": "PA 2, Duas mãos, +2 dano quebrar objetos",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Mangual",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "2,5",
-        "custo": 8,
-        "observacoes": "Ignora escudo",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Martelo de Guerra",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "2,5",
-        "custo": 12,
-        "observacoes": "PA 1",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Pique",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "9",
-        "custo": 20,
-        "observacoes": "PA 1 pronto, Alcance 2, Duas Mãos",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Porrete",
-        "dano": "For+d4",
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 2,
-        "observacoes": "Dano Não Letal",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Rapieira",
-        "dano": "For+d4",
-        "forcaMin": "d4",
-        "peso": "1",
-        "custo": 20,
-        "observacoes": "Aparar +1",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas de Combate à Distância",
-    "subtipo": "Medievais",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Arco Composto",
-        "distancia": "12/24/48",
-        "dano": "For+d6",
-        "pa": 1,
-        "cdt": 1,
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 100,
-        "observacoes": "",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Arco Curto",
-        "distancia": "12/24/48",
-        "dano": "2d6",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d6",
-        "peso": "1",
-        "custo": 30,
-        "observacoes": "",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Arco Longo",
-        "distancia": "15/30/60",
-        "dano": "2d6",
-        "pa": 1,
-        "cdt": 1,
-        "forcaMin": "d8",
-        "peso": "1,5",
-        "custo": 75,
-        "observacoes": "",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Besta Leve",
-        "distancia": "10/20/40",
-        "dano": "2d6",
-        "pa": 2,
-        "cdt": 1,
-        "forcaMin": "d6",
-        "peso": "2,5",
-        "custo": 35,
-        "observacoes": "Recarga 1.",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Besta Pesada",
-        "distancia": "15/30/60",
-        "dano": "2d8",
-        "pa": 2,
-        "cdt": 1,
-        "forcaMin": "d6",
-        "peso": "4",
-        "custo": 50,
-        "observacoes": "Recarga 2. Requer molinete.",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Funda",
-        "distancia": "4/8/16",
-        "dano": "For+d4",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 0,
-        "observacoes": "Atletismo (Arremessar).",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Lança",
-        "distancia": "3/6/12",
-        "dano": "For+d6",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d6",
-        "peso": "3",
-        "custo": 2,
-        "observacoes": "",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Machado de Mão",
-        "distancia": "3/6/12",
-        "dano": "For+d6",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d6",
-        "peso": "1,5",
-        "custo": 6,
         "observacoes": "",
         "origem": "BASICO"
       }

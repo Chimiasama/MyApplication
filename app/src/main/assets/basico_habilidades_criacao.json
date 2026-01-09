@@ -1,0 +1,182 @@
+{
+  "tabela_criacao": {
+    "pontos_iniciais": 2,
+    "habilidades": [
+      {
+        "nome": "Adaptável",
+        "custo": 2,
+        "descricao": "A raça começa com uma Vantagem Novato gratuita (deve atender aos requisitos)."
+      },
+      {
+        "nome": "Aparar Extra",
+        "custo": 1,
+        "descricao": "+1 em Aparar."
+      },
+      {
+        "nome": "Aquático",
+        "custo": 2,
+        "descricao": "Respira debaixo d'água e tem Movimentação normal nadando."
+      },
+      {
+        "nome": "Arma Natural",
+        "custo": 1,
+        "descricao": "Ataque natural (Garras, Chifres) que causa For+d4 de dano."
+      },
+      {
+        "nome": "Armadura",
+        "custo": 1,
+        "descricao": "+2 de Armadura (pele grossa, escamas). Pode ser anulada por PA."
+      },
+      {
+        "nome": "Atributo Adicional",
+        "custo": 2,
+        "descricao": "Começa com d6 em um atributo específico. O máximo aumenta para d12+1."
+      },
+      {
+        "nome": "Borda Adicional",
+        "custo": 2,
+        "descricao": "Ver Adaptável."
+      },
+      {
+        "nome": "Construto",
+        "custo": 8,
+        "descricao": "+2 para se recuperar de Abalado, não respira, imune a doenças e venenos, ignora 1 nível de penalidade de ferimento. Precisa de reparos em vez de cura (perícia Consertar)."
+      },
+      {
+        "nome": "Escalar",
+        "custo": 2,
+        "descricao": "Movimentação em superfícies verticais igual à Movimentação normal. +2 em testes de Atletismo (escalar)."
+      },
+      {
+        "nome": "Morder",
+        "custo": 1,
+        "descricao": "Mordida causa For+d4 de dano. Pode morder alvo agarrado."
+      },
+      {
+        "nome": "Movimentação Aumentada",
+        "custo": 1,
+        "descricao": "Movimentação +2 e dado de corrida +1 nível."
+      },
+      {
+        "nome": "Não-Morto",
+        "custo": 8,
+        "descricao": "+2 Resistência, +2 para recuperar Abalado, não respira, imune a doenças/venenos, ignora 1 ponto de penalidade de ferimento."
+      },
+      {
+        "nome": "Perícia Inicial",
+        "custo": 1,
+        "descricao": "Começa com d4 em uma perícia específica."
+      },
+      {
+        "nome": "Poder Arcano",
+        "custo": 1,
+        "descricao": "Ganha uma Vantagem de Antecedente Arcano específica. (Custo reduzido pois exige Complicações)."
+      },
+      {
+        "nome": "Regeneração",
+        "custo": 2,
+        "descricao": "Faz teste de Vigor para curar a cada dia."
+      },
+      {
+        "nome": "Resistência",
+        "custo": 2,
+        "descricao": "+1 em Resistência."
+      },
+      {
+        "nome": "Resistente",
+        "custo": 1,
+        "descricao": "+2 em testes de Vigor contra perigos ambientais (frio, calor, veneno, doenças)."
+      },
+      {
+        "nome": "Robusto",
+        "custo": 3,
+        "descricao": "Um segundo resultado Abalado não causa um Ferimento."
+      },
+      {
+        "nome": "Sem Necessidades Vitais",
+        "custo": 1,
+        "descricao": "Não precisa comer, beber ou dormir."
+      },
+      {
+        "nome": "Sentidos Aguçados",
+        "custo": 1,
+        "descricao": "+2 em testes de Perceber ou para um sentido específico."
+      },
+      {
+        "nome": "Tamanho +1",
+        "custo": 1,
+        "descricao": "Aumenta a Resistência em +1. Máximo Tamanho +3."
+      },
+      {
+        "nome": "Veneno",
+        "custo": 2,
+        "descricao": "Vítimas de ataque natural devem fazer teste de Vigor ou ficam Atordoadas."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "custo": 1,
+        "descricao": "Ignora penalidades de iluminação por Penumbra e Escuridão."
+      },
+      {
+        "nome": "Voo",
+        "custo": 2,
+        "descricao": "Voa com Movimentação igual à terrestre."
+      },
+      {
+        "nome": "Anêmico",
+        "custo": -1,
+        "descricao": "-2 em testes de Vigor para resistir a fadiga e venenos."
+      },
+      {
+        "nome": "Atributo Reduzido",
+        "custo": -2,
+        "descricao": "Máximo do atributo é d4."
+      },
+      {
+        "nome": "Dependência",
+        "custo": -2,
+        "descricao": "Deve consumir/contatar substância específica diariamente ou sofre Fadiga."
+      },
+      {
+        "nome": "Desastrado",
+        "custo": -1,
+        "descricao": "-2 em testes de Atletismo e Furtividade."
+      },
+      {
+        "nome": "Forasteiro",
+        "custo": -1,
+        "descricao": "-2 em Persuadir com outras raças."
+      },
+      {
+        "nome": "Frágil",
+        "custo": -1,
+        "descricao": "-1 em Resistência."
+      },
+      {
+        "nome": "Inimigo Racial",
+        "custo": -1,
+        "descricao": "-4 em Persuadir ao lidar com raça inimiga. Ataca à primeira vista."
+      },
+      {
+        "nome": "Lento",
+        "custo": -1,
+        "descricao": "Movimentação -2, dado de corrida d4."
+      },
+      {
+        "nome": "Má Reputação",
+        "custo": -1,
+        "descricao": "-2 em Persuadir (não cumulativo com Forasteiro)."
+      },
+      {
+        "nome": "Pequeno",
+        "custo": -2,
+        "descricao": "Tamanho -1. Resistência -1."
+      },
+      {
+        "nome": "Sanguinário",
+        "custo": -2,
+        "descricao": "Nunca faz prisioneiros. -4 em Persuadir."
+      }
+    ]
+  }
+}

@@ -168,6 +168,13 @@ object DataLoader {
         mapaPericiasDescricao = periciasDescList.associate { it.nome.keyify() to it.descricao }
         mapaPericiasDescricaoAdg = periciasDescAdgList.associate { it.nome.keyify() to it.descricao }
 
+        // Atualizar listaPericias para incluir a descrição
+        // Prioridade: Descrição do JSON principal > Descrição do arquivo pericias_desc.json
+        listaPericias = listaPericias.map { pericia ->
+            val desc = pericia.descricao ?: mapaPericiasDescricao[pericia.nome.keyify()]
+            pericia.copy(descricao = desc)
+        }
+
         // Carrega descrições de atributos (novo arquivo JSON, ex-txt)
         val atributosDescList = runCatching {
             assets.open("atributos_desc.json").use { input ->
@@ -331,7 +338,12 @@ object DataLoader {
             rm.nome.keyify() to m
         }
 
-        return MainActivityData(equipamentoCategorias, superequipCategorias, listaSuperPoderes)
+        // 12. Regras de Criação de Raça
+        val regrasCriacaoRaca = runCatching {
+            loadJsonAsset<RegrasCriacaoRacaJson>(context, "basico_habilidades_criacao.json").tabela_criacao
+        }.getOrNull()
+
+        return MainActivityData(equipamentoCategorias, superequipCategorias, listaSuperPoderes, regrasCriacaoRaca)
     }
 
     private fun deduplicarEquipamentoCategorias(
@@ -379,7 +391,8 @@ object DataLoader {
 data class MainActivityData(
     val equipamentoCategorias: List<EquipamentoCategoria>,
     val superequipCategorias: List<EquipamentoCategoria>,
-    val listaSuperPoderes: List<SuperPoder>
+    val listaSuperPoderes: List<SuperPoder>,
+    val regrasCriacaoRaca: TabelaCriacaoRaca? = null
 )
 
 @OptIn(ExperimentalSerializationApi::class)

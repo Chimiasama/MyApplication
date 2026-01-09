@@ -4,169 +4,211 @@
       "nome": "Atirar",
       "atributo": "Agilidade",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Cobre todas as armas de projéteis, de arcos a lança-foguetes.\n\nMODIFICADORES:\n• Distância: Curta: 0, Média: -2, Longa: -4, Extrema: -8.\n• Cobertura: Leve: -2, Média: -4, Pesada: -6, Total: -8.\n• Escuridão: Penumbra: -2, Escuro: -4, Breu: -6.\n• Cadência de Tiro: Penalidade igual à CdT (exceto se tiver vantagem Rock and Roll).\n• Em Movimento: -2 se correr."
     },
     {
       "nome": "Atletismo",
       "atributo": "Agilidade",
       "basica": true,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Usada para escalar, saltar, nadar, arremessar e lutar agarrado.\n\nMODIFICADORES DE ESCALADA:\n• Equipamento: Corda: +2.\n• Dificuldade: Fácil: +2, Difícil: -2.\n\nARREMESSAR:\n• Distância: Curta: 0, Média: -2, Longa: -4."
     },
     {
       "nome": "Ciência",
       "atributo": "Astúcia",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Conhecimento científico geral (biologia, química, física).\nEspecializações comuns: Astrofísica, Bioquímica, Engenharia, Geologia."
     },
     {
       "nome": "Conhecimento Acadêmico",
       "atributo": "Astúcia",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Conhecimento de humanidades, história, arte e leis.\nEspecializações comuns: Arqueologia, História, Literatura, Política."
     },
     {
       "nome": "Consertar",
       "atributo": "Astúcia",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Reparo de dispositivos mecânicos e eletrônicos.\n\nMODIFICADORES:\n• Ferramentas: Sem ferramentas: -2 a -4.\n• Complexidade: Simples: +2, Complexo: -2 a -4."
     },
     {
       "nome": "Curar",
       "atributo": "Astúcia",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Usada para tratar ferimentos e doenças.\n\nREGRA DA HORA DE OURO:\nDeve ser usada dentro de 1 hora após o ferimento.\n\nMODIFICADORES:\n• Ferimentos: Penalidade igual ao nível de ferimentos do paciente.\n• Kit Médico: Sem kit: -2 (pode ser maior dependendo da situação)."
     },
     {
       "nome": "Dirigir",
       "atributo": "Agilidade",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Controle de veículos terrestres.\n\nMODIFICADORES:\n• Velocidade: Alta velocidade impõe penalidades (-2 a -4).\n• Terreno: Terreno difícil: -2 a -4."
     },
     {
       "nome": "Eletrônica",
       "atributo": "Astúcia",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Uso e reparo de dispositivos eletrônicos avançados, computadores e sensores."
     },
     {
       "nome": "Fé",
       "atributo": "Espírito",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Perícia arcana para Antecedente Arcano (Milagres). Permite conjurar poderes divinos."
     },
     {
       "nome": "Foco",
       "atributo": "Espírito",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Perícia arcana para Antecedente Arcano (Dotado). Permite usar poderes inatos."
     },
     {
       "nome": "Furtividade",
       "atributo": "Agilidade",
       "basica": true,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Mover-se silenciosamente e esconder-se.\n\nDISPUTA:\nTeste resistido por Perceber (se o guarda estiver ativo) ou dificuldade 4 (se passivo).\n\nMODIFICADORES:\n• Movimento: Correr: -2.\n• Terreno: Folhas secas/barulhento: -2."
     },
     {
       "nome": "Idiomas",
       "atributo": "Astúcia",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Conhecimento e fluência em outras línguas.\nPersonagens começam com sua língua nativa gratuitamente."
     },
     {
       "nome": "Intimidar",
       "atributo": "Espírito",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Usar medo ou ameaças para coagir outros. Pode ser usada como Teste de Vontade em combate.\n\nMODIFICADORES:\n• Vantagem numérica: +2."
     },
     {
       "nome": "Jogar",
       "atributo": "Astúcia",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Habilidade em jogos de azar e trapaça."
     },
     {
       "nome": "Ladinagem",
       "atributo": "Agilidade",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Abrir fechaduras, desarmar armadilhas, bater carteiras e prestidigitação.\n\nMODIFICADORES:\n• Ferramentas: Sem gazuas: -2 a -4."
     },
     {
       "nome": "Lutar",
       "atributo": "Agilidade",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Combate corpo a corpo armado ou desarmado. Determina seu Aparar (2 + metade de Lutar).\n\nMODIFICADORES:\n• Vantagem Numérica (Gang Up): +1 por aliado adjacente (máx +4).\n• Ataque Selvagem: +2 no ataque e dano, mas fica Vulnerável."
     },
     {
       "nome": "Navegar",
       "atributo": "Agilidade",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Operar barcos e navios. Inclui orientação e conhecimento de rotas."
     },
     {
       "nome": "Ocultismo",
       "atributo": "Astúcia",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Conhecimento sobre o sobrenatural, monstros, magia e lendas."
     },
     {
       "nome": "Perceber",
       "atributo": "Astúcia",
       "basica": true,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Detectar pistas, emboscadas e detalhes escondidos.\n\nMODIFICADORES:\n• Distância/Visibilidade: Aplicam-se penalidades de iluminação."
     },
     {
       "nome": "Performance",
       "atributo": "Espírito",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Atuar, cantar, dançar ou entreter. Pode ser usada para disfarces."
     },
     {
       "nome": "Persuadir",
       "atributo": "Espírito",
       "basica": true,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Convencer outros através de lógica, charme ou diplomacia.\n\nREAÇÃO INICIAL:\n• Hostil: -4\n• Neutro: 0\n• Amistoso: +2"
     },
     {
       "nome": "Pesquisar",
       "atributo": "Astúcia",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Encontrar informações em bibliotecas, bancos de dados ou registros."
     },
     {
       "nome": "Pilotar",
       "atributo": "Agilidade",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Operar aeronaves (aviões, helicópteros, naves espaciais)."
     },
     {
       "nome": "Provocar",
       "atributo": "Astúcia",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Insultar ou distrair um oponente. Usada como Teste de Vontade em combate."
     },
     {
       "nome": "Sobrevivência",
       "atributo": "Astúcia",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Encontrar comida, água e abrigo em ambientes selvagens. Rastrear presas."
     },
     {
       "nome": "Ciência Estranha",
       "atributo": "Astúcia",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Perícia arcana para Antecedente Arcano (Ciência Estranha). Permite criar e usar dispositivos de poder."
     },
     {
       "nome": "Psiônicos",
       "atributo": "Astúcia",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Perícia arcana para Antecedente Arcano (Psiônicos). Permite usar poderes mentais."
     },
     {
       "nome": "Conjurar",
       "atributo": "Astúcia",
       "basica": false,
-      "origem": "BASICO"
+      "origem": "BASICO",
+      "descricao": "Perícia arcana para Antecedente Arcano (Magia). Permite lançar feitiços."
+    },
+    {
+      "nome": "Hackear",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO",
+      "descricao": "Invadir sistemas de computador, programar e contra-medidas eletrônicas.\n\nMODIFICADORES:\n• Defesa do Sistema: Penalidade baseada na segurança do alvo (-2 a -6)."
+    },
+    {
+      "nome": "Batalha",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO",
+      "descricao": "Estratégia, tática e comando militar. Usada para Testes de Conhecimento em Combate em Massa."
     }
   ]
 }
