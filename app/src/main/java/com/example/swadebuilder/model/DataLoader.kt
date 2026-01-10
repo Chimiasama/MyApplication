@@ -147,7 +147,8 @@ object DataLoader {
                 nome     = pj.nome,
                 atributo = pj.atributo.uppercase().semAcentos(),
                 basica   = pj.basica,
-                origem   = pj.origem
+                origem   = pj.origem,
+                descricao = pj.descricao
             )
         }
         mapaPericias = listaPericias.associateBy { it.nome.keyify() }
