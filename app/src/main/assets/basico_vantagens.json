@@ -2503,7 +2503,7 @@
   {
     "id": "seguidores",
     "nome": "SEGUIDORES",
-    "categoria": "LENDARIA",
+    "categoria": "LENDARIAS",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Lendário",
@@ -2522,7 +2522,7 @@
   {
     "id": "profissional",
     "nome": "PROFISSIONAL",
-    "categoria": "LENDARIA",
+    "categoria": "LENDARIAS",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Lendário",
@@ -2539,7 +2539,7 @@
   {
     "id": "especialista",
     "nome": "ESPECIALISTA",
-    "categoria": "LENDARIA",
+    "categoria": "LENDARIAS",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Lendário",
@@ -2558,7 +2558,7 @@
   {
     "id": "mestre",
     "nome": "MESTRE",
-    "categoria": "LENDARIA",
+    "categoria": "LENDARIAS",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Lendário",
@@ -2578,7 +2578,7 @@
   {
     "id": "parceiro",
     "nome": "PARCEIRO",
-    "categoria": "LENDARIA",
+    "categoria": "LENDARIAS",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Veterano",
@@ -2597,7 +2597,7 @@
   {
     "id": "duro_na_queda",
     "nome": "DURO NA QUEDA",
-    "categoria": "LENDARIA",
+    "categoria": "LENDARIAS",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Lendário",
@@ -2616,7 +2616,7 @@
   {
     "id": "muito_duro_na_queda",
     "nome": "MUITO DURO NA QUEDA",
-    "categoria": "LENDARIA",
+    "categoria": "LENDARIAS",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Lendário",
@@ -2635,7 +2635,7 @@
   {
     "id": "mestre_de_arma",
     "nome": "MESTRE DE ARMA",
-    "categoria": "LENDARIA",
+    "categoria": "LENDARIAS",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Lendário",
@@ -2654,7 +2654,7 @@
   {
     "id": "mestre_das_armas",
     "nome": "MESTRE DAS ARMAS",
-    "categoria": "LENDARIA",
+    "categoria": "LENDARIAS",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Lendário",
