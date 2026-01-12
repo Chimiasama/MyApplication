@@ -189,13 +189,10 @@ fun AncestralidadesSection(
             if (compendioCrystalHeartAtivo) add("CRYSTAL_HEART")
         }
 
-        val allowedOrigins = when (activeOrigins.size) {
-            0 -> setOf("BASICO")
-            1 -> {
-                val origin = activeOrigins.first()
-                if (origin == "FANTASIA") setOf(origin, "BASICO") else setOf(origin)
-            }
-            else -> (activeOrigins + "BASICO").toSet()
+        val allowedOrigins = if (activeOrigins.isNotEmpty()) {
+            activeOrigins.toSet()
+        } else {
+            setOf("BASICO")
         }
 
         val filtered = all.filter {
