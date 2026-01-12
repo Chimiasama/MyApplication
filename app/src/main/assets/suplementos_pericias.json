@@ -4,26 +4,6 @@
       "nome": "Alquimia",
       "atributo": "Astúcia",
       "basica": false
-    },
-    {
-      "nome": "Cavalgar",
-      "atributo": "Agilidade",
-      "basica": false
-    },
-    {
-      "nome": "Conhecimento Batalha",
-      "atributo": "Astúcia",
-      "basica": false
-    },
-    {
-      "nome": "Conhecimento Geral",
-      "atributo": "Astúcia",
-      "basica": true
-    },
-    {
-      "nome": "Hackear",
-      "atributo": "Astúcia",
-      "basica": false
     }
   ]
 }

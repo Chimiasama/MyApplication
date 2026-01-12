@@ -22,3 +22,21 @@ data class RacialModifier(
     val habilidades: List<RacialAbility> = emptyList(),
     val origem: String = "BASICO"
 )
+
+@Serializable
+data class HabilidadeCriacao(
+    val nome: String,
+    val custo: Int,
+    val descricao: String
+)
+
+@Serializable
+data class TabelaCriacaoRaca(
+    val pontos_iniciais: Int,
+    val habilidades: List<HabilidadeCriacao>
+)
+
+@Serializable
+data class RegrasCriacaoRacaJson(
+    val tabela_criacao: TabelaCriacaoRaca
+)
