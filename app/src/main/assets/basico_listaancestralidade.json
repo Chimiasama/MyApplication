@@ -1,53 +1,41 @@
 [
   {
+    "nome": "ANDROIDES",
+    "origem": "BASICO",
+    "descricao": "Criaturas semi-orgânicas criadas por tecnologia avançada, capazes de simular humanos com personalidades e emoções completas.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [
+      "FORASTEIRO (Maior)",
+      "PACIFISTA (Maior)",
+      "VOTO (Maior)"
+    ],
+    "habilidades": [
+      {
+        "nome": "Construto",
+        "descricao": "+2 para se recuperar do Estado Abalado, não respiram, ignoram um nível de penalidades por Ferimentos e são imunes a venenos e doenças. Não se curam naturalmente; Consertar é necessário."
+      }
+    ]
+  },
+  {
     "nome": "ANÕES",
     "origem": "BASICO",
-    "descricao": "Os anões são um povo de baixa estatura, robusto e resistente que vem de cavernas imensas nas altas fortalezas montanhosas.",
+    "descricao": "Povo baixo, robusto e resistente, oriundo de cavernas imensas ou altas montanhas.",
     "atributos": {
-      "Vigor": 1
+      "Vigor": 2
     },
     "pericias": {},
     "vantagensGratis": [],
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "Visão no Escuro",
-        "descricao": "Anões ignoram penalidades por Penumbra e Escuridão."
-      },
-      {
         "nome": "Movimentação Reduzida",
-        "descricao": "Anões têm Movimentação 5 e seu dado de corrida é d4."
+        "descricao": "Reduza a Movimentação em 1 e o dado de corrida em um tipo."
       },
       {
         "nome": "Resistente",
-        "descricao": "Anões começam com Vigor d6. Aumentam o máximo para d12+1."
-      }
-    ]
-  },
-  {
-    "nome": "AQUARIANOS",
-    "origem": "BASICO",
-    "descricao": "Povo aquático oriundo das profundezas esmagadoras do oceano.",
-    "atributos": {
-      "Vigor": 1
-    },
-    "pericias": {
-      "Atletismo": 1
-    },
-    "vantagensGratis": [],
-    "desvantagens": [],
-    "habilidades": [
-      {
-        "nome": "Aquático",
-        "descricao": "Não podem se afogar na água. Movem-se com sua Movimentação total nadando."
-      },
-      {
-        "nome": "Dependência (Água)",
-        "descricao": "Devem mergulhar em água uma hora a cada 24h ou sofrem Fadiga."
-      },
-      {
-        "nome": "Resistência",
-        "descricao": "+1 de Resistência devido à pele coriácea."
+        "descricao": "Começam com Vigor d6. O máximo aumenta para d12+1."
       },
       {
         "nome": "Visão no Escuro",
@@ -58,83 +46,109 @@
   {
     "nome": "AVIANOS",
     "origem": "BASICO",
-    "descricao": "Humanoides com asas e ossos ocos.",
-    "atributos": {
-      "Agilidade": 1
-    },
+    "descricao": "Humanoides alados com ossos ocos, penas ou pele coriácea.",
+    "atributos": {},
     "pericias": {
-      "Atletismo": 1
+      "Perceber": 2
     },
     "vantagensGratis": [],
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "Voo",
-        "descricao": "Movimentação 12 (6 na terra)."
-      },
-      {
         "nome": "Frágil",
         "descricao": "-1 de Resistência devido aos ossos ocos."
       },
       {
+        "nome": "Movimentação Reduzida",
+        "descricao": "Reduza a Movimentação em 1 e o dado de corrida em um tipo."
+      },
+      {
+        "nome": "Não Sabe Nadar",
+        "descricao": "-2 em Atletismo (natação) e cada quadro na água custa 3 de Movimentação."
+      },
+      {
         "nome": "Sentidos Aguçados",
-        "descricao": "+2 em testes de Perceber usando a visão."
+        "descricao": "Começam com Perceber d6. Pode ser aumentado até d12+1."
+      },
+      {
+        "nome": "Voo",
+        "descricao": "Voam com Movimentação 12. Usam Atletismo para manobras."
+      }
+    ]
+  },
+  {
+    "nome": "AQUARIANOS",
+    "origem": "BASICO",
+    "descricao": "Povo aquático oriundo das profundezas esmagadoras do oceano.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": [
+      "DEPENDÊNCIA"
+    ],
+    "habilidades": [
+      {
+        "nome": "Aquático",
+        "descricao": "Não se afogam e usam Movimentação total ao nadar."
+      },
+      {
+        "nome": "Resistência",
+        "descricao": "+1 à Resistência devido à pele endurecida."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignoram penalidades por Penumbra e Escuridão."
       }
     ]
   },
   {
     "nome": "ELFOS",
     "origem": "BASICO",
-    "descricao": "Possuem altura avantajada, almas gentis, orelhas pontudas e olhos profundos.",
+    "descricao": "Seres altos e graciosos de orelhas pontudas e sentidos aguçados.",
     "atributos": {
-      "Agilidade": 1,
-      "Astúcia": 1
+      "Agilidade": 2
     },
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": [],
+    "desvantagens": [
+      "DESASTRADO"
+    ],
     "habilidades": [
-      {
-        "nome": "Visão no Escuro",
-        "descricao": "Ignoram penalidades por Penumbra e Escuridão."
-      },
       {
         "nome": "Ágil",
         "descricao": "Começam com Agilidade d6. Máximo d12+1."
       },
       {
-        "nome": "Todas as Coisas",
-        "descricao": "Elfos começam com uma Vantagem Novato gratuita."
-      },
-      {
-        "nome": "Forasteiro",
-        "descricao": "Muitas raças desconfiam dos Elfos (menos humanos). -1 em Persuadir."
+        "nome": "Visão no Escuro",
+        "descricao": "Ignoram penalidades por Penumbra e Escuridão."
       }
     ]
   },
   {
     "nome": "MEIO-ELFOS",
     "origem": "BASICO",
-    "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante.",
+    "descricao": "Descendentes de humanos e elfos, equilibrando graça e adaptabilidade.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": [],
+    "desvantagens": [
+      "FORASTEIRO (Menor)"
+    ],
     "habilidades": [
       {
         "nome": "Herança",
-        "descricao": "Começam com uma Vantagem Novato gratuita (humano) OU Visão no Escuro e Agilidade d6 (Elfo)."
+        "descricao": "Escolha entre uma Vantagem Novato gratuita OU Agilidade d6 (máximo d12+1)."
       },
       {
-        "nome": "Forasteiro",
-        "descricao": "-2 em Persuadir devido à desconfiança de ambos os lados."
+        "nome": "Visão no Escuro",
+        "descricao": "Ignoram penalidades por Penumbra e Escuridão."
       }
     ]
   },
   {
     "nome": "HUMANOS",
     "origem": "BASICO",
-    "descricao": "Versáteis e adaptáveis.",
+    "descricao": "Versáteis e adaptáveis, encontrados em quase todos os cenários.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
@@ -144,91 +158,115 @@
     "habilidades": [
       {
         "nome": "Adaptável",
-        "descricao": "Começam com uma Vantagem Novato gratuita de sua escolha."
-      }
-    ]
-  },
-  {
-    "nome": "MEIO-ORCS",
-    "origem": "BASICO",
-    "descricao": "Descendentes de orcs e humanos.",
-    "atributos": {
-      "Vigor": 1,
-      "Força": 1
-    },
-    "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
-    "habilidades": [
-      {
-        "nome": "Infravisão",
-        "descricao": "Enxergam calor. Reduz penalidades de escuridão pela metade."
-      },
-      {
-        "nome": "Resistente",
-        "descricao": "Começam com Vigor d6 OU Força d6. Máximo d12+1."
-      },
-      {
-        "nome": "Forasteiro",
-        "descricao": "-2 em Persuadir devido à aparência assustadora."
+        "descricao": "Começam com uma Vantagem de nível Novato à escolha."
       }
     ]
   },
   {
     "nome": "RAKASHANOS",
     "origem": "BASICO",
-    "descricao": "Humanoides de aparência felina.",
+    "descricao": "Humanoides felinos com garras, presas e natureza predatória.",
     "atributos": {
-      "Agilidade": 1
+      "Agilidade": 2
     },
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": [],
+    "desvantagens": [
+      "INIMIGO RACIAL"
+    ],
     "habilidades": [
       {
         "nome": "Ágil",
         "descricao": "Começam com Agilidade d6. Máximo d12+1."
       },
       {
-        "nome": "Garras/Mordida",
-        "descricao": "For+d4 de dano."
+        "nome": "Mordida/Garras",
+        "descricao": "Armas Naturais causando Força + d4."
+      },
+      {
+        "nome": "Sanguinário",
+        "descricao": "Tendem à crueldade e raramente capturam inimigos."
+      },
+      {
+        "nome": "Não Sabe Nadar",
+        "descricao": "-2 em Atletismo (natação); cada quadro na água custa 3 de Movimentação."
       },
       {
         "nome": "Visão no Escuro",
         "descricao": "Ignoram penalidades por Penumbra e Escuridão."
-      },
-      {
-        "nome": "Sanguinário",
-        "descricao": "-4 em Persuadir. Devem fazer teste de Espírito para não matar inimigos rendidos."
       }
     ]
   },
   {
-    "id": "anc_sauriano",
-    "nome": "SAURIANOS",
-    "categoria": "ANCESTRALIDADE",
+    "nome": "SÁURIOS",
     "origem": "BASICO",
-    "descricao": "Homens-lagarto de pântanos e selvas.",
+    "descricao": "Lagartos humanoides oriundos de selvas escaldantes ou desertos.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
+    "vantagensGratis": [
+      "PRONTIDÃO"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)",
+      "FRAQUEZA AMBIENTAL (Frio)"
+    ],
     "habilidades": [
       {
-        "nome": "Armadura",
-        "descricao": "Pele escamosa +2."
+        "nome": "Armadura +2",
+        "descricao": "Pele escamosa funciona como armadura de couro."
       },
       {
-        "nome": "Sangue Frio",
-        "descricao": "-4 para resistir a efeitos de frio. Sofre dano extra."
+        "nome": "Mordida",
+        "descricao": "Arma Natural causando Força + d4."
+      }
+    ]
+  },
+  {
+    "nome": "CELESTIAIS",
+    "origem": "BASICO",
+    "descricao": "Anjos e servos do Coro Celestial.",
+    "atributos": {},
+    "pericias": {
+      "Fé": 2
+    },
+    "vantagensGratis": [
+      "ANTECEDENTE ARCANO (Milagres)"
+    ],
+    "desvantagens": [
+      "DESASTRADO",
+      "INIMIGO RACIAL (Demônios e Diabos)",
+      "VOTO (Maior: Proteger a Humanidade)"
+    ],
+    "habilidades": [
+      {
+        "nome": "Fé",
+        "descricao": "Começam com Fé d6. Máximo d12+1."
       },
       {
-        "nome": "Garras/Mordida",
-        "descricao": "For+d4."
-      },
+        "nome": "Voo",
+        "descricao": "Movimentação de voo 12."
+      }
+    ]
+  },
+  {
+    "nome": "GUARDIÕES",
+    "origem": "BASICO",
+    "descricao": "Humanos escolhidos para servir ao Coro Celestial.",
+    "atributos": {
+      "Vigor": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "ADAPTÁVEL",
+      "CAMPEÃO"
+    ],
+    "desvantagens": [
+      "VOTO (Maior: Proteger a Humanidade)"
+    ],
+    "habilidades": [
       {
-        "nome": "Sentidos",
-        "descricao": "+2 em Perceber e rastreamento olfativo."
+        "nome": "Vigoroso",
+        "descricao": "Começam com Vigor d6. Máximo d12+1."
       }
     ]
   }

@@ -1,202 +1,465 @@
 [
   {
-    "id": "anc_aurax",
-    "nome": "Povo-Búfalo",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "SCI_FI",
+    "nome": "ANÕES (S.F.)",
+    "origem": "FC",
+    "descricao": "Nesta ambientação, o amor dos anões por artesanato se traduz em afinidade tecnológica. Muitos utilizam aprimoramentos cibernéticos para melhorar sua eficiência em mineração e engenharia espacial.",
     "atributos": {
       "Vigor": 2
     },
     "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Resistente",
-        "descricao": "Começam com Vigor d6. Máximo d12+1."
-      },
-      {
-        "nome": "Mundo de Baixa Gravidade",
-        "descricao": "Deduzem 1 de Força e Vigor em gravidade normal. Fatigam-se rapidamente em gravidade alta."
-      },
-      {
-        "nome": "Visão no Escuro",
-        "descricao": "Ignoram penalidades de iluminação até 10 quadros."
-      }
+    "vantagensGratis": [
+      "CIBERTOLERÂNCIA",
+      "RESISTENTE",
+      "VISÃO NO ESCURO"
+    ],
+    "desvantagens": [
+      "MOVIMENTAÇÃO REDUZIDA",
+      "2 PONTOS DE DESVANTAGENS (Sugerido: Ganancioso ou Teimoso)"
     ]
   },
   {
-    "id": "anc_avion",
-    "nome": "Povo-Alado",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "SCI_FI",
+    "nome": "AQUARIANOS (S.F.)",
+    "origem": "FC",
+    "descricao": "Diferente dos atlantes clássicos, esta variante evoluiu de seres semelhantes a ouriços-do-mar em planetas oceânicos.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "SEMIAQUÁTICO",
+      "TOQUE VENENOSO",
+      "VISÃO NO ESCURO"
+    ],
+    "desvantagens": [
+      "DEPENDÊNCIA (Água)"
+    ]
+  },
+  {
+    "nome": "AVIANOS (S.F.)",
+    "origem": "FC",
+    "descricao": "Mais próximos de aves de rapina alienígenas, possuem cabeças avícolas e muitas vezes asas no lugar dos braços, adaptados para mundos de baixa gravidade.",
+    "atributos": {},
+    "pericias": {
+      "Perceber": 2
+    },
+    "vantagensGratis": [
+      "SENTIDOS AGUÇADOS (Olhos de Águia)",
+      "VOO"
+    ],
+    "desvantagens": [
+      "HABITANTE DE GRAVIDADE BAIXA",
+      "FORMA ALIENÍGENA",
+      "MOVIMENTAÇÃO REDUZIDA"
+    ]
+  },
+  {
+    "nome": "ELFOS (S.F.)",
+    "origem": "FC",
+    "descricao": "Um povo enigmático e moribundo. Os poucos restantes têm milênios de idade e vivem em 'mundos de criação' tentando curar a infertilidade de sua espécie enquanto pilham rotas espaciais.",
     "atributos": {
       "Agilidade": 2
     },
     "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Voo",
-        "descricao": "Voam com Movimentação 12 em gravidade normal."
-      },
-      {
-        "nome": "Ossos Frágeis",
-        "descricao": "-1 na Resistência."
-      },
-      {
-        "nome": "Agilidade",
-        "descricao": "Começam com Agilidade d6. Máximo d12+1."
-      }
+    "vantagensGratis": [
+      "ÁGIL",
+      "COMUNITÁRIO",
+      "VISÃO NO ESCURO"
+    ],
+    "desvantagens": [
+      "TRANSTORNO DE SEPARAÇÃO"
     ]
   },
   {
-    "id": "anc_constructo_scifi",
-    "nome": "Constructo (Sci-Fi)",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "SCI_FI",
+    "nome": "HUMANOS (S.F.)",
+    "origem": "FC",
+    "descricao": "Versáteis por natureza, humanos no futuro se adaptam cultural e biologicamente aos seus lares planetários ou estações espaciais.",
     "atributos": {},
     "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Artificial",
-        "descricao": "+2 para recuperar Abalado. Não respira. Imune a doenças/venenos."
-      },
-      {
-        "nome": "Dependência",
-        "descricao": "Precisa recarregar energia diariamente ou sofre Fadiga."
-      },
-      {
-        "nome": "Modificações",
-        "descricao": "Pode instalar sistemas cibernéticos sem Tensão (ocupa slots de tamanho)."
-      },
-      {
-        "nome": "Forasteiro",
-        "descricao": "Muitas vezes tratados como propriedade. -2 em Persuadir."
-      }
-    ]
+    "vantagensGratis": [
+      "ADAPTÁVEL (Vantagem Novato)"
+    ],
+    "desvantagens": [],
+    "variantes": "Estação Espacial (Habitante de Gravidade Baixa + Agilidade d6); Planeta de Mineração (Dependência Atmosférica Maior + Força ou Vigor d6)."
   },
   {
-    "id": "anc_floran",
-    "nome": "Floran",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "SCI_FI",
-    "atributos": {},
-    "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Planta",
-        "descricao": "+2 para recuperar Abalado. Imune a venenos. Não sofrem dano extra de ataques localizados."
-      },
-      {
-        "nome": "Dependência",
-        "descricao": "Precisa de luz solar e água ou sofre Fadiga."
-      },
-      {
-        "nome": "Inflamável",
-        "descricao": "+2 de dano por ataques de fogo. -2 para resistir a fogo."
-      }
-    ]
-  },
-  {
-    "id": "anc_insectoide",
-    "nome": "Insectoide",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "SCI_FI",
-    "atributos": {},
-    "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Armadura",
-        "descricao": "Carapaça fornece +2 de Armadura."
-      },
-      {
-        "nome": "Membros Extras",
-        "descricao": "Possui braços extras. Ignora 2 pontos de penalidade por Ações Múltiplas."
-      },
-      {
-        "nome": "Não Fala",
-        "descricao": "Não consegue falar idiomas humanoides (comunica-se por cliques/feromônios ou tradutor)."
-      }
-    ]
-  },
-  {
-    "id": "anc_kalian",
-    "nome": "Povo de Quatro Braços",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "SCI_FI",
-    "atributos": {},
-    "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Quatro Braços",
-        "descricao": "Ignora 2 pontos de penalidade por Ações Múltiplas."
-      },
-      {
-        "nome": "Pacifista",
-        "descricao": "Começam com a Complicação Pacifista (Menor)."
-      },
-      {
-        "nome": "Forasteiro",
-        "descricao": "Aparência estranha. -2 em Persuadir."
-      }
-    ]
-  },
-  {
-    "id": "anc_rakashan",
-    "nome": "Felinídeo",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "SCI_FI",
+    "nome": "RAKASHANOS (S.F.)",
+    "origem": "FC",
+    "descricao": "Variante mais brincalhona e curiosa dos humanoides felinos, menos focada na crueldade predatória e mais na exploração.",
     "atributos": {
       "Agilidade": 2
     },
     "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Agilidade",
-        "descricao": "Começam com Agilidade d6. Máximo d12+1."
-      },
-      {
-        "nome": "Garras",
-        "descricao": "For+d4, PA 2."
-      },
-      {
-        "nome": "Mordida",
-        "descricao": "For+d4."
-      },
-      {
-        "nome": "Sanguinário",
-        "descricao": "Começam com a Complicação Sanguinário."
-      },
-      {
-        "nome": "Visão na Penumbra",
-        "descricao": "Ignoram penalidades por Penumbra e Escuridão."
-      }
+    "vantagensGratis": [
+      "ÁGIL",
+      "CURIOSO",
+      "MORDIDA/GARRAS",
+      "VISÃO NO ESCURO"
+    ],
+    "desvantagens": [
+      "INIMIGO RACIAL",
+      "NÃO SABE NADAR"
     ]
   },
   {
-    "id": "anc_yeti",
-    "nome": "Yeti",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "SCI_FI",
+    "nome": "SAÚRIOS (S.F.)",
+    "origem": "FC",
+    "descricao": "Uma linhagem de reptilianos que desenvolveu capacidades defensivas químicas em vez de força na mandíbula.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ARMADURA +2",
+      "TOQUE VENENOSO (Opção de cuspir)"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)",
+      "FRAQUEZA AMBIENTAL (Frio)"
+    ]
+  },
+  {
+    "nome": "CENTAUX",
+    "origem": "FC",
+    "descricao": "Combinam a parte inferior de um animal quadrúpede com a superior humanoide. São rápidos e estáveis, mas chamativos.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ESTÁVEL (Ignora Terreno Difícil)",
+      "MOVIMENTAÇÃO +2",
+      "TAMANHO +2"
+    ],
+    "desvantagens": [
+      "GRANDE",
+      "ÓBVIO (-1 Furtividade)"
+    ],
+    "variantes": "Gazela (Tamanho 0, Movimentação +4, Corrida d10)."
+  },
+  {
+    "nome": "DRAKENS",
+    "origem": "FC",
+    "descricao": "Seres intimidadores que lembram dragões ou basiliscos, com pele dura e temperamento rude.",
     "atributos": {
       "Força": 2
     },
     "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Forte",
-        "descricao": "Começam com Força d6. Máximo d12+1."
-      },
-      {
-        "nome": "Tamanho +1",
-        "descricao": "São grandes e robustos."
-      },
-      {
-        "nome": "Resistência ao Frio",
-        "descricao": "+4 para resistir a frio."
-      },
-      {
-        "nome": "Suscetibilidade ao Calor",
-        "descricao": "-4 para resistir a calor."
-      }
+    "vantagensGratis": [
+      "CABEÇA DURA (Chifres For+d4)",
+      "FORTE (Inicia d6)",
+      "RESISTÊNCIA +2"
+    ],
+    "desvantagens": [
+      "LENTO (Mov. 5, Corrida d4)",
+      "RUDE (-2 Persuadir)"
+    ]
+  },
+  {
+    "nome": "ELEMENTAIS (PEDRA)",
+    "origem": "FC",
+    "descricao": "Seres baseados em minerais com raciocínio metódico e força bruta excepcional.",
+    "atributos": {
+      "Força": 4
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "FORTE (Inicia d8)",
+      "RESISTÊNCIA +2",
+      "TAMANHO +1"
+    ],
+    "desvantagens": [
+      "CABEÇA-DURAS (-1 Astúcia)",
+      "GRANDE",
+      "MOVIMENTAÇÃO REDUZIDA"
+    ]
+  },
+  {
+    "nome": "FERAIS",
+    "origem": "FC",
+    "descricao": "Pequenos mamíferos (como guaxinins ou texugos) conhecidos pela tenacidade e pelo uso de tecnologia avançada para compensar o tamanho.",
+    "atributos": {
+      "Espírito": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "ESPIRITUOSO (Inicia d6)"
+    ],
+    "desvantagens": [
+      "INIMIGO ANCESTRAL (Insetoide)",
+      "DIMINUTO (Tamanho -3)",
+      "ALTA TECNOLOGIA (Maior: -4 em eletrônica de outras culturas)",
+      "MOVIMENTAÇÃO REDUZIDA"
+    ]
+  },
+  {
+    "nome": "FLORANS",
+    "origem": "FC",
+    "descricao": "Povo planta que evoluiu de vegetais. Possuem sistemas vasculares estranhos e não possuem órgãos vitais centralizados.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "REDUÇÃO DE SONO (Metade)",
+      "ROBUSTO",
+      "SEM SANGUE (Estabiliza auto)",
+      "SEM ÓRGÃOS VITAIS"
+    ],
+    "desvantagens": [
+      "DEPENDÊNCIA (Luz Solar)",
+      "FRAQUEZA AMBIENTAL (Calor/Fogo)"
+    ]
+  },
+  {
+    "nome": "GELATINOIDES",
+    "origem": "FC",
+    "descricao": "Formas de vida amórficas e translúcidas que absorvem nutrientes pela membrana e se comunicam por feromônios.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "GELATINOSO (Corpo amorfo, atravessa frestas)",
+      "REGENERAÇÃO (Cura diária)"
+    ],
+    "desvantagens": [
+      "CIBER-RESISTÊNCIA",
+      "FRACO (-1 Força/Dano corpo a corpo)"
+    ]
+  },
+  {
+    "nome": "INSETOIDES (S.F.)",
+    "origem": "FC",
+    "descricao": "Seres baseados em formigas e louva-a-deus com mentes coletivas e visão panorâmica.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ARMADURA +2",
+      "COMUNITÁRIO",
+      "GARRAS (For+d4, PA 2)",
+      "VISÃO DE 360°"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)",
+      "INCAPAZ DE FALAR (Vocalmente)",
+      "TRANSTORNO DE SEPARAÇÃO"
+    ]
+  },
+  {
+    "nome": "MÍMICOS",
+    "origem": "FC",
+    "descricao": "Espécie capaz de alterar sua forma física para duplicar outros seres ou animais, frequentemente usados como bodes expiatórios.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "MUDANÇA DE FORMA (Inclui memórias e voz com ampliação)",
+      "SEM ÓRGÃOS VITAIS"
+    ],
+    "desvantagens": [
+      "CIBER-RESISTÊNCIA",
+      "FORASTEIRO (Menor)"
+    ]
+  },
+  {
+    "nome": "MINERADORES GENÉTICOS",
+    "origem": "FC",
+    "descricao": "Humanos geneticamente modificados para o trabalho pesado em ambientes de gravidade extrema ou atmosferas tóxicas.",
+    "atributos": {
+      "Força": 2,
+      "Vigor": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "EM FORMA (Inicia d6)",
+      "FORTE (Inicia d6)"
+    ],
+    "desvantagens": [
+      "DEPENDÊNCIA ATMOSFÉRICA (Específica)"
+    ]
+  },
+  {
+    "nome": "ORÁCULOS",
+    "origem": "FC",
+    "descricao": "Espécies com mentes sintonizadas com o sobrenatural ou espiritual, geralmente fisicamente frágeis.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "NOÇÃO DO PERIGO",
+      "TELEPATIA (24 metros)"
+    ],
+    "desvantagens": [
+      "FRÁGIL (-1 Resistência)"
+    ]
+  },
+  {
+    "nome": "POSSESSORES",
+    "origem": "FC",
+    "descricao": "Parasitas ou seres de energia que habitam 'cascas' orgânicas. Frequentemente usam hospedeiros reavivados tecnologicamente.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "CASCA (Pode trocar de corpo)",
+      "COMUNITÁRIO"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)",
+      "DELAY MOTOR (Sugerido: -1 Agilidade)"
+    ]
+  },
+  {
+    "nome": "QUADROIDES",
+    "origem": "FC",
+    "descricao": "Humanoides com quatro braços, extremamente eficientes em combate e multitarefa, mas com temperamento difícil.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "AÇÃO ADICIONAL (MAP -2)",
+      "MEMBROS EXTRAS (+1 Agrupar/Atletismo)"
+    ],
+    "desvantagens": [
+      "FRÁGIL (-1 Resistência)",
+      "INIMIGO ANCESTRAL",
+      "SENSÍVEL (-4 vs Provocar)"
+    ]
+  },
+  {
+    "nome": "ROBÔS",
+    "origem": "FC",
+    "descricao": "Máquinas inteligentes projetadas para serviço. Possuem restrições éticas de programação e hardware especializado.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ROBÔ (Construto, Imunidades, Modificações)"
+    ],
+    "desvantagens": [
+      "CIRCUITOS DE ASIMOV (Pacifista Maior)",
+      "PROGRAMADO (Maior)"
+    ]
+  },
+  {
+    "nome": "SERES SINTÉTICOS",
+    "origem": "FC",
+    "descricao": "Humanoides de matéria quase biológica, criados para tarefas perigosas. Possuem consciência, mas são limitados por diretrizes.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ESPACIAL (Não respira, ignora vácuo/rad)",
+      "IMUNE A DOENÇAS E VENENOS"
+    ],
+    "desvantagens": [
+      "NÃO PODE CURAR NATURALMENTE",
+      "PROGRAMADO"
+    ]
+  },
+  {
+    "nome": "SOLDADOS GENÉTICOS",
+    "origem": "FC",
+    "descricao": "Máquinas de matar orgânicas com nervos bloqueados e reflexos programados para eficiência máxima.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "NERVOS DE AÇO",
+      "REFLEXOS DE COMBATE (+2 p/ Recuperar Abalado)",
+      "RESISTÊNCIA +1"
+    ],
+    "desvantagens": [
+      "SEM ESCRÚPULOS (Maior)",
+      "TREINADOS PARA A GUERRA (-4 Conhecimento Geral)"
+    ]
+  },
+  {
+    "nome": "VAZIOS",
+    "origem": "FC",
+    "descricao": "Criaturas de energia escura que evoluíram no vácuo espacial. Curiosos sobre seres orgânicos, mas incapazes de fala verbal.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ESPACIAL",
+      "FORMA DE ENERGIA (Imune a armas físicas/quedas)",
+      "SEM SANGUE"
+    ],
+    "desvantagens": [
+      "CURIOSO",
+      "FORASTEIRO (Menor)",
+      "INCAPAZ DE FALAR",
+      "TRANSTORNO DE SEPARAÇÃO"
+    ]
+  },
+  {
+    "nome": "YETIS",
+    "origem": "FC",
+    "descricao": "Gigantes mamíferos cobertos de pelos, ferozes quando ameaçados e adaptados para frio extremo.",
+    "atributos": {
+      "Força": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "FORTE (Inicia d6)",
+      "RESISTÊNCIA AMBIENTAL (Frio)",
+      "TAMANHO +2"
+    ],
+    "desvantagens": [
+      "FRAQUEZA AMBIENTAL (Calor)",
+      "GRANDE"
+    ]
+  },
+  {
+    "nome": "AURAX",
+    "origem": "FC",
+    "descricao": "Centaux primitivos de pele cinza que lembram pequenos hipopótamos na parte inferior.",
+    "atributos": {
+      "Força": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "FORTE (Inicia d6)",
+      "ESTÁVEL",
+      "MOVIMENTAÇÃO +2",
+      "TAMANHO +2"
+    ],
+    "desvantagens": [
+      "BAIXA TECNOLOGIA (Maior)",
+      "GRANDE",
+      "ÓBVIO"
+    ]
+  },
+  {
+    "nome": "DEADERS (PARASTEEN)",
+    "origem": "FC",
+    "descricao": "Parasitas em forma de lesma que animam cadáveres preservados em trajes especiais.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "CALCULISTA (Ignora penalidades)",
+      "MORTO-VIVO (Resistência +2, Construto-like)"
+    ],
+    "desvantagens": [
+      "APARAR BAIXO (-2)",
+      "DESAJEITADO (-1 Agilidade)",
+      "FORASTEIRO (Menor)",
+      "FRACO (-1 Força)",
+      "LENTO (Mov. 5, Corrida d4)"
+    ]
+  },
+  {
+    "nome": "KALIANOS",
+    "origem": "FC",
+    "descricao": "Quadroides ágeis conhecidos por sua pontaria, esgrima e inteligência afiada.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "AÇÃO ADICIONAL",
+      "MEMBROS EXTRAS",
+      "ÁGIL (Sugerido)"
+    ],
+    "desvantagens": [
+      "SENSÍVEL",
+      "FRÁGIL",
+      "INIMIGO ANCESTRAL"
+    ]
+  },
+  {
+    "nome": "SERRANOS",
+    "origem": "FC",
+    "descricao": "Seres frágeis com percepção extrassensorial que os torna excelentes espiões e navegadores.",
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "APARAR +2",
+      "NOÇÃO DE PERIGO"
+    ],
+    "desvantagens": [
+      "FRACO (-1 Força)"
     ]
   }
 ]
