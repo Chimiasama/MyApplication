@@ -15,6 +15,20 @@
       "descricao": "Usada para escalar, saltar, nadar, arremessar e lutar agarrado.\n\nMODIFICADORES DE ESCALADA:\n• Equipamento: Corda: +2.\n• Dificuldade: Fácil: +2, Difícil: -2.\n\nARREMESSAR:\n• Distância: Curta: 0, Média: -2, Longa: -4."
     },
     {
+      "nome": "Batalha",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO",
+      "descricao": "Estratégia, tática e comando militar. Usada para Testes de Conhecimento em Combate em Massa."
+    },
+    {
+      "nome": "Cavalgar",
+      "atributo": "Agilidade",
+      "basica": false,
+      "origem": "BASICO",
+      "descricao": "Montar, controlar e cuidar de animais de montaria. Permite lutar montado sem penalidades (se treinado)."
+    },
+    {
       "nome": "Ciência",
       "atributo": "Astúcia",
       "basica": false,
@@ -22,11 +36,32 @@
       "descricao": "Conhecimento científico geral (biologia, química, física).\nEspecializações comuns: Astrofísica, Bioquímica, Engenharia, Geologia."
     },
     {
+      "nome": "Ciência Estranha",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO",
+      "descricao": "Perícia arcana para Antecedente Arcano (Ciência Estranha). Permite criar e usar dispositivos de poder."
+    },
+    {
       "nome": "Conhecimento Acadêmico",
       "atributo": "Astúcia",
       "basica": false,
       "origem": "BASICO",
       "descricao": "Conhecimento de humanidades, história, arte e leis.\nEspecializações comuns: Arqueologia, História, Literatura, Política."
+    },
+    {
+      "nome": "Conhecimento Geral",
+      "atributo": "Astúcia",
+      "basica": true,
+      "origem": "BASICO",
+      "descricao": "Conhecimento básico do mundo, cultura, geografia, costumes e eventos atuais."
+    },
+    {
+      "nome": "Conjurar",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO",
+      "descricao": "Perícia arcana para Antecedente Arcano (Magia). Permite lançar feitiços."
     },
     {
       "nome": "Consertar",
@@ -76,6 +111,13 @@
       "basica": true,
       "origem": "BASICO",
       "descricao": "Mover-se silenciosamente e esconder-se.\n\nDISPUTA:\nTeste resistido por Perceber (se o guarda estiver ativo) ou dificuldade 4 (se passivo).\n\nMODIFICADORES:\n• Movimento: Correr: -2.\n• Terreno: Folhas secas/barulhento: -2."
+    },
+    {
+      "nome": "Hackear",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO",
+      "descricao": "Invadir sistemas de computador, programar e contra-medidas eletrônicas.\n\nMODIFICADORES:\n• Defesa do Sistema: Penalidade baseada na segurança do alvo (-2 a -6)."
     },
     {
       "nome": "Idiomas",
@@ -169,20 +211,6 @@
       "descricao": "Insultar ou distrair um oponente. Usada como Teste de Vontade em combate."
     },
     {
-      "nome": "Sobrevivência",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "BASICO",
-      "descricao": "Encontrar comida, água e abrigo em ambientes selvagens. Rastrear presas."
-    },
-    {
-      "nome": "Ciência Estranha",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "BASICO",
-      "descricao": "Perícia arcana para Antecedente Arcano (Ciência Estranha). Permite criar e usar dispositivos de poder."
-    },
-    {
       "nome": "Psiônicos",
       "atributo": "Astúcia",
       "basica": false,
@@ -190,25 +218,11 @@
       "descricao": "Perícia arcana para Antecedente Arcano (Psiônicos). Permite usar poderes mentais."
     },
     {
-      "nome": "Conjurar",
+      "nome": "Sobrevivência",
       "atributo": "Astúcia",
       "basica": false,
       "origem": "BASICO",
-      "descricao": "Perícia arcana para Antecedente Arcano (Magia). Permite lançar feitiços."
-    },
-    {
-      "nome": "Hackear",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "BASICO",
-      "descricao": "Invadir sistemas de computador, programar e contra-medidas eletrônicas.\n\nMODIFICADORES:\n• Defesa do Sistema: Penalidade baseada na segurança do alvo (-2 a -6)."
-    },
-    {
-      "nome": "Batalha",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "BASICO",
-      "descricao": "Estratégia, tática e comando militar. Usada para Testes de Conhecimento em Combate em Massa."
+      "descricao": "Encontrar comida, água e abrigo em ambientes selvagens. Rastrear presas."
     }
   ]
 }
