@@ -15,7 +15,7 @@
       "descricao": "Usada para escalar, saltar, nadar, arremessar e lutar agarrado.\n\nMODIFICADORES DE ESCALADA:\n• Equipamento: Corda: +2.\n• Dificuldade: Fácil: +2, Difícil: -2.\n\nARREMESSAR:\n• Distância: Curta: 0, Média: -2, Longa: -4."
     },
     {
-      "nome": "Batalha",
+      "nome": "Conhecimento de Batalha",
       "atributo": "Astúcia",
       "basica": false,
       "origem": "BASICO",
