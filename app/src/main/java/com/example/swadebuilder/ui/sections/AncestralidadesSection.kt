@@ -180,12 +180,12 @@ fun AncestralidadesSection(
         val activeOrigins = buildList {
             if (compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
             if (compendioFantasiaAtivo) add("FANTASIA")
-            if (compendioBuscatrilhaAtivo) add("FANTASIABUSCATRILHA")
-            if (compendioDeadlandsAtivo) add("OESTE_ESTRANHO")
+            if (compendioBuscatrilhaAtivo) add("FANTASIA_TRILHADOR")
+            if (compendioDeadlandsAtivo) add("DEADLANDS")
             if (compendioCidadeSolVaporAtivo) add("CIDADE_SOL_VAPOR")
             if (compendioWiseguysAtivo) add("WISEGUYS")
             if (compendioHorrorAtivo) add("HORROR")
-            if (compendioSciFiAtivo) add("SCI_FI")
+            if (compendioSciFiAtivo) add("FC")
             if (compendioCrystalHeartAtivo) add("CRYSTAL_HEART")
         }
 
