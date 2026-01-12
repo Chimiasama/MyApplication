@@ -19,11 +19,6 @@
       "nome": "Conhecimento Geral",
       "atributo": "Astúcia",
       "basica": true
-    },
-    {
-      "nome": "Hackear",
-      "atributo": "Astúcia",
-      "basica": false
     }
   ]
 }
