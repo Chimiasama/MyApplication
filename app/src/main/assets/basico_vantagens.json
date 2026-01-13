@@ -1693,8 +1693,8 @@
     "descricao": "+1 Foco por 1 PP ou +2 por 3 PP em rolagens (não em Falha Crítica)."
   },
   {
-    "id": "guerreiro_sagrado",
-    "nome": "GUERREIRO SAGRADO",
+    "id": "guerreiro_sagrado_profano",
+    "nome": "GUERREIRO SAGRADO/PROFANO",
     "categoria": "PODER",
     "origem": "BASICO",
     "requisitos": {
@@ -1711,28 +1711,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1 Absorção por PP gasto, até +4."
-  },
-  {
-    "id": "guerreiro_profano",
-    "nome": "GUERREIRO PROFANO",
-    "categoria": "PODER",
-    "origem": "BASICO",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
-        "Fé": 6
-      },
-      "vantagens_previas": [
-        "antecedente_arcano"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "+1 Absorção por PP gasto, até +4."
+    "descricao": "Fiéis enfrentam grandes perigos à serviço de suas divindades. Para sobreviverem a tais provações, as forças do bem (ou do mal) concedem milagres e a habilidade de transformar seu favor em proteção sobrenatural.\nAdicione +1 ao total do valor final de uma rolagem de Absorção para cada Ponto de Poder gasto, até um máximo de +4."
   },
   {
     "id": "mago",
