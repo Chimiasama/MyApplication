@@ -97,9 +97,12 @@ fun ComplicacoesSection(
     var showTempError by remember { mutableStateOf(false) }
 
     val origensAtivas: Set<String> = buildSet {
-        add("BASICO")
+        if (state.compendioFantasiaAtivo) {
+            add("FANTASIA")
+        } else {
+            add("BASICO")
+        }
         if (state.modoSupers) add("SUPER")
-        if (state.compendioFantasiaAtivo) add("FANTASIA")
         if (state.compendioHorrorAtivo) add("HORROR")
         if (state.compendioBuscatrilhaAtivo) add("FANTASIABUSCATRILHA")
         if (state.compendioDeadlandsAtivo) add("OESTE_ESTRANHO")
