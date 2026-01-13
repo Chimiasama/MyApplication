@@ -515,6 +515,43 @@
     "descricao": "5× recursos iniciais e renda anual líquida ≈ US$ 500 000."
   },
   {
+    "id": "sorte",
+    "nome": "SORTE",
+    "categoria": "ANTECEDENTE",
+    "origem": "BASICO",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Quem tem Sorte parece ser abençoado pelo destino, deuses ou qualquer força externa na qual acredite (ou que acredite nesta figura!).\nReceba um Bene adicional no início de cada sessão de jogo, de modo a ser frequentemente mais bem-sucedido que a maioria em tarefas importantes e para sobreviver a perigos incríveis."
+  },
+  {
+    "id": "sorte_grande",
+    "nome": "SORTE GRANDE",
+    "categoria": "ANTECEDENTE",
+    "origem": "BASICO",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "sorte"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Concede dois Benes adicionais no início de cada sessão em vez de um."
+  },
+  {
     "id": "arma_predileta",
     "nome": "ARMA PREDILETA",
     "categoria": "COMBATE",
