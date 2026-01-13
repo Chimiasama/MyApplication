@@ -300,7 +300,9 @@ fun ComplicacoesSection(
                                     state.complicacoesSelecionadas.remove(comp)
                                     if(state.compendioBuscatrilhaAtivo){
                                         state.dinheiro += 15000
-                                    }else{
+                                    } else if (state.compendioFantasiaAtivo) {
+                                        state.dinheiro += 150
+                                    } else {
                                         state.dinheiro += 250
                                     }
                                 }
@@ -526,7 +528,9 @@ fun ComplicacoesSection(
                                                             state.complicacoesSelecionadas[comp] = "Menor"
                                                             if(state.compendioBuscatrilhaAtivo){
                                                                 state.dinheiro -= 15000
-                                                            }else{
+                                                            } else if (state.compendioFantasiaAtivo) {
+                                                                state.dinheiro -= 150
+                                                            } else {
                                                                 state.dinheiro -= 250
                                                             }
                                                         }

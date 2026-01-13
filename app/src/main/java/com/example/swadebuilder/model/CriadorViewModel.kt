@@ -421,7 +421,13 @@ class CriadorViewModel : ViewModel() {
         state.naturalArmorFromRace = 0
         // ─────────────────────────────────────────────────────────────
 
-        state.dinheiro = if (compendioBuscatrilhaAtivo) 30000 else 500
+        state.dinheiro = if (compendioBuscatrilhaAtivo) {
+            30000
+        } else if (compendioFantasiaAtivo) {
+            300
+        } else {
+            500
+        }
         state.progresso = 0
         state.progressosDisponiveis = 0
         state.stageXpSpent.keys.forEach { state.stageXpSpent[it] = 0 }
