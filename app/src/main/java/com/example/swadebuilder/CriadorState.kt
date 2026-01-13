@@ -23,7 +23,6 @@ import com.example.swadebuilder.model.ModifierEngine
 import com.example.swadebuilder.model.ModifierTarget
 import com.example.swadebuilder.model.PersonagemSnapshot
 import com.example.swadebuilder.model.PowerEffect
-import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.SnapshotAtributos
 import com.example.swadebuilder.model.SnapshotFlags
 import com.example.swadebuilder.model.SnapshotPericias
@@ -33,11 +32,11 @@ import com.example.swadebuilder.model.SnapshotSelecoes
 import com.example.swadebuilder.model.SnapshotSupers
 import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Tropo
+import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
-import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
@@ -673,6 +672,7 @@ class CriadorState {
         return true
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun devolverPcDeRecursos() {
         if (cpRecursosStack.isNotEmpty()) {
             cpRecursosStack.removeLast()
@@ -2887,6 +2887,7 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun selecionarTropo(novoTropo: Tropo?) {
         if (tropoSelecionado?.id == novoTropo?.id) return
 
@@ -2957,7 +2958,7 @@ class CriadorState {
             val novo = if (atual > 12) atual - 1 else atual - 2
             valoresAtributos[nomeAttr]!!.intValue = novo.coerceAtLeast(base)
 
-            feedbackMessages?.add("Atributo $nomeAttr reduzido para d${novo.coerceAtLeast(base)} para compensar pontos.")
+            feedbackMessages.add("Atributo $nomeAttr reduzido para d${novo.coerceAtLeast(base)} para compensar pontos.")
 
             pontosAtributo = calcularPontosAtributoRestantes()
         }
@@ -3153,7 +3154,7 @@ class CriadorState {
             var cost = costFor(target)
 
             if (enforcePoolLimit && cost > 0 && cumulativeCost + cost > pool) {
-                feedbackMessages?.add("Perícia ${per.nome} reduzida para d$target para compensar pontos.")
+                feedbackMessages.add("Perícia ${per.nome} reduzida para d$target para compensar pontos.")
             }
             while (enforcePoolLimit && cumulativeCost + cost > pool) {
                 target = (target - 2).coerceAtLeast(minRaw)
@@ -3437,7 +3438,7 @@ class CriadorState {
                 clear()
                 addAll(snapshot.pericias.spCostStackPorPericia[per.nome].orEmpty())
             }
-            compCostStackPorPericia.getValue(per)?.apply {
+            compCostStackPorPericia.getValue(per).apply {
                 clear()
                 addAll(snapshot.pericias.compCostStackPorPericia[per.nome].orEmpty())
             }
@@ -3461,7 +3462,7 @@ class CriadorState {
                     clear()
                     addAll(snapshot.pericias.spCostStackPorPericia[per.nome].orEmpty())
                 }
-                compCostStackPorPericia.getValue(per)?.apply {
+                compCostStackPorPericia.getValue(per).apply {
                     clear()
                     addAll(snapshot.pericias.compCostStackPorPericia[per.nome].orEmpty())
                 }
