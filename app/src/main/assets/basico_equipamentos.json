@@ -34,13 +34,112 @@
   },
   {
     "tipo": "Equipamento Geral",
+    "subtipo": "Acessórios para armas de fogo",
+    "origem": "BASICO",
+    "itens": [
+      {
+        "nome": "Bipé/Tripé",
+        "custo": 100,
+        "peso": 1,
+        "observacoes": "Requer ação para posicionar. Nega Recuo e Força Mínima.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Luneta de Rifle",
+        "custo": 100,
+        "peso": 1,
+        "observacoes": "Cancela 2 pontos de penalidade ao Mirar.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Mira Laser/Red Dot",
+        "custo": 150,
+        "peso": 0.5,
+        "observacoes": "+1 em Atirar em Distância Curta e Média.",
+        "origem": "BASICO"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Geral",
     "subtipo": "Equipamento de Aventura",
     "origem": "BASICO",
     "itens": [
+
       {
         "nome": "Algemas (grilhões)",
         "custo": 15,
         "peso": 1,
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Mochila",
+        "custo": 50,
+        "peso": 1,
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Óculos",
+        "custo": 20,
+        "peso": 0.5,
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Óleo (meio litro)",
+        "custo": 2,
+        "peso": 0.5,
+        "observacoes": "Para lamparina.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Pá",
+        "custo": 5,
+        "peso": 2.5,
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Pé de Cabra",
+        "custo": 10,
+        "peso": 1,
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Pederneira e Aço",
+        "custo": 3,
+        "peso": 0.5,
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Pedra de Amolar",
+        "custo": 5,
+        "peso": 0.5,
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Sabão",
+        "custo": 1,
+        "peso": 0.1,
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Saco de dormir",
+        "custo": 25,
+        "peso": 2,
+        "observacoes": "Preparado para o inverno.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Tocha",
+        "custo": 5,
+        "peso": 0.5,
+        "observacoes": "Uma hora, 4 quadros de raio.",
+        "origem": "BASICO"
+      },
+      {
+        "nome": "Vela",
+        "custo": 1,
+        "peso": 0.5,
+        "observacoes": "Uma hora, 2 quadros de raio.",
         "origem": "BASICO"
       },
       {
@@ -174,83 +273,6 @@
   },
   {
     "tipo": "Equipamento Geral",
-    "subtipo": "Equipamento Comum",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Mochila",
-        "custo": 50,
-        "peso": 1,
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Óculos",
-        "custo": 20,
-        "peso": 0.5,
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Óleo (meio litro)",
-        "custo": 2,
-        "peso": 0.5,
-        "observacoes": "Para lamparina.",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Pá",
-        "custo": 5,
-        "peso": 2.5,
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Pé de Cabra",
-        "custo": 10,
-        "peso": 1,
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Pederneira e Aço",
-        "custo": 3,
-        "peso": 0.5,
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Pedra de Amolar",
-        "custo": 5,
-        "peso": 0.5,
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Sabão",
-        "custo": 1,
-        "peso": 0.1,
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Saco de dormir",
-        "custo": 25,
-        "peso": 2,
-        "observacoes": "Preparado para o inverno.",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Tocha",
-        "custo": 5,
-        "peso": 0.5,
-        "observacoes": "Uma hora, 4 quadros de raio.",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Vela",
-        "custo": 1,
-        "peso": 0.5,
-        "observacoes": "Uma hora, 2 quadros de raio.",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Equipamento Geral",
     "subtipo": "Vestuário",
     "origem": "BASICO",
     "itens": [
@@ -373,34 +395,6 @@
         "custo": 500,
         "peso": 1.5,
         "observacoes": "Sem penalidades por Penumbra/Escuridão.",
-        "origem": "BASICO"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Pessoais",
-    "subtipo": "Acessórios",
-    "origem": "BASICO",
-    "itens": [
-      {
-        "nome": "Bipé/Tripé",
-        "custo": 100,
-        "peso": 1,
-        "observacoes": "Requer ação para posicionar. Nega Recuo e Força Mínima.",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Luneta de Rifle",
-        "custo": 100,
-        "peso": 1,
-        "observacoes": "Cancela 2 pontos de penalidade ao Mirar.",
-        "origem": "BASICO"
-      },
-      {
-        "nome": "Mira Laser/Red Dot",
-        "custo": 150,
-        "peso": 0.5,
-        "observacoes": "+1 em Atirar em Distância Curta e Média.",
         "origem": "BASICO"
       }
     ]

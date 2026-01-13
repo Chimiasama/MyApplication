@@ -364,8 +364,8 @@ fun EquipamentoSection(
                             (origem != "FANTASIA" || compendioFantasiaAtivo) &&
                             (origem != "HORROR" || compendioHorrorAtivo) &&
                             (origem != "SCI_FI" || compendioSciFiAtivo) &&
-                            (origem != "FANTASIABUSCATRILHA" || compendioBuscatrilhaAtivo) &&
-                            (origem != "OESTE_ESTRANHO" || compendioDeadlandsAtivo)
+                            ((origem != "FANTASIABUSCATRILHA" && origem != "BUSCATRILHA") || compendioBuscatrilhaAtivo) &&
+                            ((origem != "OESTE_ESTRANHO" && origem != "DEADLANDS") || compendioDeadlandsAtivo)
                 }
 
             // Mapped Data
