@@ -1,663 +1,331 @@
 [
   {
-    "tipo": "Equipamento Comum",
-    "subtipo": "Equipamento de Aventura",
+    "tipo": "Equipamento Geral",
+    "subtipo": "Aventura e Utilidades",
     "origem": "FANTASIA",
     "itens": [
-      {
-        "nome": "Óleo (para lamparina: meio litro)",
-        "custo": 2,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Pedra de Amolar",
-        "custo": 5,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      }
+      { "nome": "Carrinho de mão", "peso": "10", "custo": 10, "observacoes": "" },
+      { "nome": "Carroça (150 kg cap.)", "peso": "40", "custo": 15, "observacoes": "" },
+      { "nome": "Carruagem", "peso": "1.000", "custo": 100, "observacoes": "" },
+      { "nome": "Cartucheira", "peso": "1", "custo": 0.5, "observacoes": "" },
+      { "nome": "Cera para lacre (barra)", "peso": "0,5", "custo": 1, "observacoes": "" },
+      { "nome": "Cesta", "peso": "0,5", "custo": 0.5, "observacoes": "" },
+      { "nome": "Corda de cânhamo (20m)", "peso": "5", "custo": 1, "observacoes": "Suporta 150kg. Role 1d6/min para peso extra." },
+      { "nome": "Corrente (10m)", "peso": "1", "custo": 30, "observacoes": "" },
+      { "nome": "Diário em branco", "peso": "0,5", "custo": 5, "observacoes": "" },
+      { "nome": "Equipamento de cavalgar", "peso": "12,5", "custo": 15, "observacoes": "Inclui sela, freio, etc. -2 Cavalgar sem ele." },
+      { "nome": "Espelho pequeno (aço)", "peso": "0,25", "custo": 10, "observacoes": "" },
+      { "nome": "Espinhos/pitão (10)", "peso": "2,5", "custo": 1, "observacoes": "" },
+      { "nome": "Estojo de mapa/pergaminho", "peso": "0,25", "custo": 1, "observacoes": "" },
+      { "nome": "Estrepes", "peso": "1", "custo": 1, "observacoes": "Terreno Difícil; Atletismo ou Abalado. Falha Crítica causa Ferimento nos pés." },
+      { "nome": "Ferramentas de ladrão", "peso": "0,5", "custo": 30, "observacoes": "-2 em Ladinagem sem elas." },
+      { "nome": "Frasco (metal)", "peso": "0,5", "custo": 0.25, "observacoes": "" },
+      { "nome": "Garrafa", "peso": "0,5", "custo": 2, "observacoes": "" },
+      { "nome": "Giz (caixa com 12)", "peso": "—", "custo": 1, "observacoes": "" },
+      { "nome": "Grimório em branco", "peso": "1,5", "custo": 15, "observacoes": "" },
+      { "nome": "Haste (3,5m)", "peso": "4", "custo": 0.25, "observacoes": "" },
+      { "nome": "Instrumento musical", "peso": "1,5", "custo": 5, "observacoes": "" },
+      { "nome": "Kit de armadilhas", "peso": "5", "custo": 150, "observacoes": "-2 em Consertar (armadilhas) sem ele." },
+      { "nome": "Kit de Artífice", "peso": "2,5", "custo": 100, "observacoes": "Para encantar dispositivos arcanos." },
+      { "nome": "Kit de costura", "peso": "0,5", "custo": 5, "observacoes": "" },
+      { "nome": "Kit de Curandeiro", "peso": "0,5", "custo": 50, "observacoes": "Cinco usos." },
+      { "nome": "Lanterna", "peso": "1,5", "custo": 12, "observacoes": "Raio 4 quadros. 3h/litro de óleo." },
+      { "nome": "Livro", "peso": "2,5", "custo": 50, "observacoes": "Permite rolagens de Perceber para info." },
+      { "nome": "Luneta", "peso": "0,5", "custo": 1000, "observacoes": "+2 em Perceber ao longe." },
+      { "nome": "Lupa", "peso": "—", "custo": 100, "observacoes": "" },
+      { "nome": "Martelo", "peso": "1", "custo": 0.5, "observacoes": "" },
+      { "nome": "Mochila (vazia)", "peso": "1", "custo": 2, "observacoes": "Metade do peso efetivo do conteúdo." },
+      { "nome": "Odre (vazio)", "peso": "—", "custo": 1, "observacoes": "" },
+      { "nome": "Óleo (meio litro)", "peso": "0,5", "custo": 0.25, "observacoes": "10 min em lanterna. Como arma: 1d10 dano, Dist 3/6/12." },
+      { "nome": "Pá pequena", "peso": "2", "custo": 2, "observacoes": "" },
+      { "nome": "Panela (ferro)", "peso": "2", "custo": 0.5, "observacoes": "" },
+      { "nome": "Pé de Cabra", "peso": "2,5", "custo": 2, "observacoes": "" },
+      { "nome": "Pederneira e Aço", "peso": "—", "custo": 0.25, "observacoes": "" },
+      { "nome": "Pedra de amolar", "peso": "—", "custo": 0.25, "observacoes": "" },
+      { "nome": "Pena", "peso": "—", "custo": 0.25, "observacoes": "" },
+      { "nome": "Pergaminho (folha)", "peso": "—", "custo": 0.25, "observacoes": "" },
+      { "nome": "Picareta de mineração", "peso": "2,5", "custo": 5, "observacoes": "Arma desequilibrada (-1 Aparar/Lutar). Dano For+d6." },
+      { "nome": "Sabão", "peso": "0,5", "custo": 0.25, "observacoes": "" },
+      { "nome": "Saco de dormir", "peso": "2,5", "custo": 0.25, "observacoes": "" },
+      { "nome": "Saco grande", "peso": "0,5", "custo": 1, "observacoes": "" },
+      { "nome": "Saco pequeno", "peso": "—", "custo": 0.25, "observacoes": "" },
+      { "nome": "Símbolo sagrado (madeira)", "peso": "—", "custo": 1, "observacoes": "" },
+      { "nome": "Símbolo sagrado (prata)", "peso": "0,5", "custo": 25, "observacoes": "" },
+      { "nome": "Símbolo sagrado (ouro)", "peso": "2,5", "custo": 100, "observacoes": "" },
+      { "nome": "Sino", "peso": "1", "custo": 1, "observacoes": "" },
+      { "nome": "Tela (m²)", "peso": "0,5", "custo": 1, "observacoes": "" },
+      { "nome": "Tenda (2 pessoas)", "peso": "10", "custo": 10, "observacoes": "" },
+      { "nome": "Tenda (6 pessoas)", "peso": "20", "custo": 30, "observacoes": "" },
+      { "nome": "Tenda pavilhão (15 pessoas)", "peso": "25", "custo": 100, "observacoes": "" },
+      { "nome": "Tinta (frasco)", "peso": "0,5", "custo": 1, "observacoes": "" },
+      { "nome": "Tocha", "peso": "0,5", "custo": 0.25, "observacoes": "Luz 4 quadros, 1 hora." },
+      { "nome": "Vela", "peso": "—", "custo": 0.25, "observacoes": "Luz 2 quadros, 2 horas." }
     ]
   },
   {
-    "tipo": "Armas Pessoais",
-    "subtipo": "Medievais",
-    "subsubtipo": "Combate corpo a corpo",
+    "tipo": "Animais",
+    "subtipo": "Montarias e Bestas",
     "origem": "FANTASIA",
     "itens": [
-      {
-        "nome": "Alabarda",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "3",
-        "custo": 250,
-        "observacoes": "Alcance 1, duas mãos",
-        "origem": "FANTASIA"
-      }
+      { "nome": "Camelo", "peso": "—", "custo": 150, "observacoes": "" },
+      { "nome": "Cão de Guarda", "peso": "—", "custo": 25, "observacoes": "" },
+      { "nome": "Cavalo de guerra", "peso": "—", "custo": 350, "observacoes": "" },
+      { "nome": "Cavalo de montaria", "peso": "—", "custo": 75, "observacoes": "" },
+      { "nome": "Elefante", "peso": "—", "custo": 1000, "observacoes": "" },
+      { "nome": "Gavião/falcão", "peso": "—", "custo": 50, "observacoes": "" },
+      { "nome": "Mula/burro", "peso": "—", "custo": 8, "observacoes": "" },
+      { "nome": "Pônei", "peso": "—", "custo": 30, "observacoes": "" }
+    ]
+  },
+  {
+    "tipo": "Vestuário",
+    "subtipo": "Roupas",
+    "origem": "FANTASIA",
+    "itens": [
+      { "nome": "Botas pesadas", "peso": "1", "custo": 2, "observacoes": "" },
+      { "nome": "Manto leve com capuz", "peso": "1,5", "custo": 2, "observacoes": "" },
+      { "nome": "Roupas comuns", "peso": "1", "custo": 1, "observacoes": "" },
+      { "nome": "Roupas de frio", "peso": "1,5", "custo": 8, "observacoes": "" },
+      { "nome": "Roupas finas", "peso": "2,5", "custo": 100, "observacoes": "+1 Persuadir (status)." },
+      { "nome": "Roupas formais", "peso": "2,5", "custo": 75, "observacoes": "" }
+    ]
+  },
+  {
+    "tipo": "Consumíveis",
+    "subtipo": "Comida e Bebida",
+    "origem": "FANTASIA",
+    "itens": [
+      { "nome": "Água (1 dia)", "peso": "1", "custo": 0.25, "observacoes": "" },
+      { "nome": "Alimentação animal (1 dia)", "peso": "1,5", "custo": 2, "observacoes": "" },
+      { "nome": "Banquete (por pessoa)", "peso": "—", "custo": 10, "observacoes": "" },
+      { "nome": "Cerveja (3,5 litros)", "peso": "4", "custo": 2, "observacoes": "" },
+      { "nome": "Cerveja (caneca)", "peso": "0,5", "custo": 0.25, "observacoes": "" },
+      { "nome": "Rações (1 dia)", "peso": "0,5", "custo": 0.5, "observacoes": "" },
+      { "nome": "Rações de luxo (1 dia)", "peso": "0,5", "custo": 1, "observacoes": "" },
+      { "nome": "Refeição barata", "peso": "—", "custo": 0.25, "observacoes": "" },
+      { "nome": "Refeição fina", "peso": "—", "custo": 1, "observacoes": "" },
+      { "nome": "Refeição média", "peso": "—", "custo": 0.5, "observacoes": "" },
+      { "nome": "Vinho (taça)", "peso": "0,5", "custo": 0.5, "observacoes": "" },
+      { "nome": "Vinho (garrafa)", "peso": "1", "custo": 5, "observacoes": "" }
+    ]
+  },
+  {
+    "tipo": "Kits",
+    "subtipo": "Kits de Classe",
+    "origem": "FANTASIA",
+    "itens": [
+      { "nome": "Kit de alquimista", "peso": "15,5", "custo": 50, "observacoes": "Bolsa, mochila, óleo, etc." },
+      { "nome": "Kit de artista", "peso": "8", "custo": 120, "observacoes": "Instrumento, roupa formal, vinho, etc." },
+      { "nome": "Kit de aventureiro", "peso": "11,5", "custo": 45, "observacoes": "Mochila, corda, lanterna, etc." },
+      { "nome": "Kit de clérigo", "peso": "6", "custo": 100, "observacoes": "Símbolo sagrado, kit curandeiro, etc." },
+      { "nome": "Kit de explorador", "peso": "12", "custo": 36, "observacoes": "Tenda, roupas frio, pá, etc." },
+      { "nome": "Kit de explorador de masmorras", "peso": "15,5", "custo": 50, "observacoes": "Corda, arpéu, martelo, espinhos, etc." },
+      { "nome": "Kit de ladrão", "peso": "9,5", "custo": 65, "observacoes": "Ferramentas ladrão, estrepes, óleo, etc." },
+      { "nome": "Kit de mago", "peso": "8", "custo": 80, "observacoes": "Grimório, lanterna, tinta, etc." },
+      { "nome": "Kit de mercenário", "peso": "12", "custo": 45, "observacoes": "Estrepes, cerveja, algemas, etc." }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Medievais",
+    "origem": "FANTASIA",
+    "itens": [
+      { "nome": "Adaga/Faca", "dano": "For+d4", "forcaMin": "d4", "peso": "0,5", "custo": 2, "observacoes": "" },
+      { "nome": "Alabarda", "dano": "For+d8", "forcaMin": "d8", "peso": "6", "custo": 10, "observacoes": "PA 1, Alcance 1, Duas Mãos" },
+      { "nome": "Alfange", "dano": "For+d8", "forcaMin": "d8", "peso": "4", "custo": 75, "observacoes": "PA 1, Duas Mãos (+1 dano)" },
+      { "nome": "Bastão/Cajado", "dano": "For+d4", "forcaMin": "d4", "peso": "2", "custo": 0, "observacoes": "Aparar +1, Alcance 1, Duas Mãos" },
+      { "nome": "Bisarma", "dano": "For+d6", "forcaMin": "d6", "peso": "6", "custo": 9, "observacoes": "PA 1, Alcance 1, Duas Mãos" },
+      { "nome": "Chakram", "dano": "For+d4", "forcaMin": "d4", "peso": "0,5", "custo": 1, "observacoes": "Aparar +1" },
+      { "nome": "Chicote", "dano": "For+d4", "forcaMin": "d4", "peso": "1", "custo": 5, "observacoes": "Aparar -1, Alcance 2, Enredar na ampliação" },
+      { "nome": "Cimitarra", "dano": "For+d6", "forcaMin": "d6", "peso": "2", "custo": 15, "observacoes": "" },
+      { "nome": "Clava Leve", "dano": "For+d4", "forcaMin": "d4", "peso": "1", "custo": 1, "observacoes": "" },
+      { "nome": "Clava Pesada", "dano": "For+d6", "forcaMin": "d6", "peso": "2,5", "custo": 2, "observacoes": "" },
+      { "nome": "Corrente com Espinhos", "dano": "For+d6", "forcaMin": "d6", "peso": "3", "custo": 8, "observacoes": "PA 1, Ignora escudo, Duas Mãos" },
+      { "nome": "Derrubador", "dano": "For+d4", "forcaMin": "d6", "peso": "5", "custo": 15, "observacoes": "Alcance 2, Duas Mãos, Presa na ampliação" },
+      { "nome": "Espada Bastarda", "dano": "For+d8", "forcaMin": "d8", "peso": "3", "custo": 35, "observacoes": "PA 1, Duas Mãos (+1 dano)" },
+      { "nome": "Espada Curta", "dano": "For+d6", "forcaMin": "d6", "peso": "1", "custo": 10, "observacoes": "" },
+      { "nome": "Espada Gancho", "dano": "For+d6", "forcaMin": "d6", "peso": "2", "custo": 20, "observacoes": "+1 para Desarmar" },
+      { "nome": "Espada Grande", "dano": "For+d10", "forcaMin": "d10", "peso": "4", "custo": 50, "observacoes": "PA 2, Duas Mãos" },
+      { "nome": "Espada Longa", "dano": "For+d8", "forcaMin": "d8", "peso": "2", "custo": 15, "observacoes": "" },
+      { "nome": "Foice", "dano": "For+d4", "forcaMin": "d4", "peso": "1", "custo": 3, "observacoes": "" },
+      { "nome": "Gadanha", "dano": "For+d6", "forcaMin": "d6", "peso": "5", "custo": 18, "observacoes": "Duas Mãos" },
+      { "nome": "Glaive", "dano": "For+d8", "forcaMin": "d8", "peso": "5", "custo": 8, "observacoes": "Alcance 1, Duas Mãos" },
+      { "nome": "Katana", "dano": "For+d6+1", "forcaMin": "d6", "peso": "1,5", "custo": 50, "observacoes": "Duas Mãos" },
+      { "nome": "Lança", "dano": "For+d6", "forcaMin": "d6", "peso": "3", "custo": 2, "observacoes": "Alcance 1. Aparar +1 se duas mãos" },
+      { "nome": "Lança Curta", "dano": "For+d6", "forcaMin": "d6", "peso": "1,5", "custo": 1, "observacoes": "Uma Mão" },
+      { "nome": "Lança de Cavalaria", "dano": "For+d8", "forcaMin": "d8", "peso": "5", "custo": 10, "observacoes": "PA 2 (investida), Alcance 2, Apenas montado" },
+      { "nome": "Maça Estrela", "dano": "For+d6", "forcaMin": "d6", "peso": "3", "custo": 8, "observacoes": "" },
+      { "nome": "Maça Leve", "dano": "For+d6", "forcaMin": "d6", "peso": "2", "custo": 5, "observacoes": "" },
+      { "nome": "Maça Pesada", "dano": "For+d8", "forcaMin": "d8", "peso": "4", "custo": 12, "observacoes": "PA 1" },
+      { "nome": "Machado de Guerra", "dano": "For+d8", "forcaMin": "d8", "peso": "3", "custo": 10, "observacoes": "" },
+      { "nome": "Machado de Mão", "dano": "For+d6", "forcaMin": "d6", "peso": "1,5", "custo": 6, "observacoes": "" },
+      { "nome": "Machado Grande", "dano": "For+d10", "forcaMin": "d10", "peso": "6", "custo": 20, "observacoes": "PA 3, Aparar -1, Duas Mãos" },
+      { "nome": "Malho", "dano": "For+d10", "forcaMin": "d10", "peso": "5", "custo": 12, "observacoes": "PA 2, Duas Mãos, +2 dano quebrar objetos" },
+      { "nome": "Mangual", "dano": "For+d6", "forcaMin": "d6", "peso": "2,5", "custo": 8, "observacoes": "Ignora escudo" },
+      { "nome": "Mangual Pesado", "dano": "For+d8", "forcaMin": "d8", "peso": "5", "custo": 15, "observacoes": "Ignora escudo, Duas Mãos" },
+      { "nome": "Manopla com Espinhos", "dano": "For+d4", "forcaMin": "d6", "peso": "0,5", "custo": 5, "observacoes": "+1 Força contra Desarmar" },
+      { "nome": "Martelo de Guerra", "dano": "For+d6", "forcaMin": "d6", "peso": "2,5", "custo": 12, "observacoes": "PA 1" },
+      { "nome": "Martelo Meteoro", "dano": "For+d6", "forcaMin": "d6", "peso": "2,5", "custo": 12, "observacoes": "Alcance 2, Ignora escudo, Duas Mãos" },
+      { "nome": "Pique", "dano": "For+d8", "forcaMin": "d8", "peso": "9", "custo": 20, "observacoes": "PA 1 (pronto), Alcance 2, Duas Mãos" },
+      { "nome": "Podão de Guerra", "dano": "For+d6", "forcaMin": "d6", "peso": "6", "custo": 10, "observacoes": "PA 1, Alcance 1" },
+      { "nome": "Porrete", "dano": "For+d4", "forcaMin": "d4", "peso": "0,5", "custo": 2, "observacoes": "Dano Não Letal" },
+      { "nome": "Rapieira", "dano": "For+d4", "forcaMin": "d4", "peso": "1", "custo": 20, "observacoes": "Aparar +1" },
+      { "nome": "Sabre de Abordagem", "dano": "For+d6", "forcaMin": "d4", "peso": "2", "custo": 15, "observacoes": "" },
+      { "nome": "Tridente", "dano": "For+d6", "forcaMin": "d6", "peso": "2", "custo": 15, "observacoes": "Alcance 1" }
+    ]
+  },
+  {
+    "tipo": "Armas à Distância",
+    "subtipo": "Medievais",
+    "origem": "FANTASIA",
+    "itens": [
+      { "nome": "Adaga/Faca", "distancia": "3/6/12", "dano": "For+d4", "pa": null, "cdt": 1, "forcaMin": "d4", "peso": "0,5", "custo": 2, "observacoes": "" },
+      { "nome": "Arco Composto", "distancia": "12/24/48", "dano": "For+d6", "pa": 1, "cdt": 1, "forcaMin": "d6", "peso": "1,5", "custo": 100, "observacoes": "" },
+      { "nome": "Arco Curto", "distancia": "12/24/48", "dano": "2d6", "pa": null, "cdt": 1, "forcaMin": "d6", "peso": "1", "custo": 30, "observacoes": "" },
+      { "nome": "Arco Longo", "distancia": "15/30/60", "dano": "2d6", "pa": 1, "cdt": 1, "forcaMin": "d8", "peso": "1,5", "custo": 75, "observacoes": "" },
+      { "nome": "Besta de Mão", "distancia": "5/10/20", "dano": "2d4", "pa": null, "cdt": 1, "forcaMin": "d4", "peso": "1", "custo": 20, "observacoes": "Recarga 1" },
+      { "nome": "Besta de Mão de Repetição", "distancia": "5/10/20", "dano": "2d4", "pa": null, "cdt": 2, "forcaMin": "d4", "peso": "1,5", "custo": 160, "observacoes": "Recuo. Recarga 1 (estojo 5) ou 1 (único)" },
+      { "nome": "Besta Leve", "distancia": "10/20/40", "dano": "2d6", "pa": 2, "cdt": 1, "forcaMin": "d6", "peso": "2,5", "custo": 35, "observacoes": "Recarga 1" },
+      { "nome": "Besta Leve de Repetição", "distancia": "10/20/40", "dano": "2d6", "pa": 2, "cdt": 2, "forcaMin": "d6", "peso": "4", "custo": 250, "observacoes": "Recuo. Recarga 1 (estojo 5) ou 1 (único)" },
+      { "nome": "Besta Pesada", "distancia": "15/30/60", "dano": "2d8", "pa": 2, "cdt": 1, "forcaMin": "d6", "peso": "4", "custo": 50, "observacoes": "Recarga 2" },
+      { "nome": "Besta Pesada de Repetição", "distancia": "15/30/60", "dano": "2d8", "pa": 2, "cdt": 1, "forcaMin": "d8", "peso": "6", "custo": 400, "observacoes": "Recarga 2 (estojo 5) ou 2 (único)" },
+      { "nome": "Boleadeira", "distancia": "3/6/12", "dano": "For+d4", "pa": null, "cdt": 1, "forcaMin": "d4", "peso": "1", "custo": 5, "observacoes": "Enredado na ampliação" },
+      { "nome": "Chakram", "distancia": "4/8/16", "dano": "For+d4", "pa": null, "cdt": 1, "forcaMin": "d4", "peso": "0,5", "custo": 1, "observacoes": "" },
+      { "nome": "Funda", "distancia": "4/8/16", "dano": "For+d4", "pa": null, "cdt": 1, "forcaMin": "d4", "peso": "0,5", "custo": 0, "observacoes": "" },
+      { "nome": "Lança (Arremesso)", "distancia": "3/6/12", "dano": "For+d6", "pa": null, "cdt": 1, "forcaMin": "d6", "peso": "3", "custo": 2, "observacoes": "" },
+      { "nome": "Lança/Azaguaia", "distancia": "4/8/16", "dano": "For+d6", "pa": null, "cdt": 1, "forcaMin": "d6", "peso": "1,5", "custo": 1, "observacoes": "" },
+      { "nome": "Machado de Mão (Arremesso)", "distancia": "3/6/12", "dano": "For+d6", "pa": null, "cdt": 1, "forcaMin": "d6", "peso": "1,5", "custo": 6, "observacoes": "" },
+      { "nome": "Rede (Balanceada)", "distancia": "3/6/12", "dano": "—", "pa": null, "cdt": 1, "forcaMin": "d4", "peso": "4", "custo": 20, "observacoes": "Sucesso = Enredado" },
+      { "nome": "Shuriken", "distancia": "3/6/12", "dano": "For+d4", "pa": null, "cdt": 1, "forcaMin": "d4", "peso": "—", "custo": 1, "observacoes": "" },
+      { "nome": "Tridente (Arremesso)", "distancia": "3/6/12", "dano": "For+d6", "pa": null, "cdt": 1, "forcaMin": "d6", "peso": "2", "custo": 15, "observacoes": "" },
+      { "nome": "Zarabatana", "distancia": "3/6/12", "dano": "d4-2", "pa": null, "cdt": 1, "forcaMin": "d4", "peso": "0,5", "custo": 2, "observacoes": "" }
+    ]
+  },
+  {
+    "tipo": "Armas de Pólvora",
+    "subtipo": "Pólvora Negra",
+    "origem": "FANTASIA",
+    "itens": [
+      { "nome": "Bacamarte", "distancia": "10/20/40", "dano": "1–3d6", "pa": null, "cdt": 1, "forcaMin": "d6", "peso": "6", "custo": 300, "observacoes": "Recarga 2. Regras de Espingarda." },
+      { "nome": "Mosquete", "distancia": "10/20/40", "dano": "2d8", "pa": null, "cdt": 1, "forcaMin": "d6", "peso": "7,5", "custo": 300, "observacoes": "Recarga 2." },
+      { "nome": "Pistola Flintlock", "distancia": "5/10/20", "dano": "2d6+1", "pa": null, "cdt": 1, "forcaMin": "d4", "peso": "1,5", "custo": 150, "observacoes": "Recarga 2." }
     ]
   },
   {
     "tipo": "Armas Especiais",
-    "subtipo": "Catapultas",
+    "subtipo": "Armas de Cerco e Canhões",
     "origem": "FANTASIA",
     "itens": [
-      {
-        "nome": "Catapulta",
-        "distancia": "24/48/96",
-        "dano": "3d6",
-        "pa": 4,
-        "cdt": null,
-        "forcaMin": null,
-        "peso": "—",
-        "custo": 10000,
-        "observacoes": "MME, Arma Pesada, Recarregar é a cada 5 minutos com uma equipe de 4",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Trabuco",
-        "distancia": "30/60/120",
-        "dano": "3d8",
-        "pa": 4,
-        "cdt": null,
-        "forcaMin": null,
-        "peso": "—",
-        "custo": 50000,
-        "observacoes": "MME, Arma Pesada, Recarregar é a cada 5 minutos com uma equipe de 4",
-        "origem": "FANTASIA"
-      }
+      { "nome": "Aríete", "distancia": "—", "dano": "3d6", "pa": null, "cdt": null, "forcaMin": null, "peso": "200", "custo": 1000, "observacoes": "Equipe 2-8." },
+      { "nome": "Balista", "distancia": "15/30/60", "dano": "3d6", "pa": 4, "cdt": 1, "forcaMin": null, "peso": "500", "custo": 500, "observacoes": "Arma Pesada. Recarga 5 min (1 op)." },
+      { "nome": "Catapulta", "distancia": "24/48/96", "dano": "3d6", "pa": 4, "cdt": 1, "forcaMin": null, "peso": "15K", "custo": 800, "observacoes": "MME, Arma Pesada, Recarga 5 min (4 op)." },
+      { "nome": "Torre de Cerco", "distancia": "—", "dano": "—", "pa": null, "cdt": null, "forcaMin": null, "peso": "100K", "custo": 2000, "observacoes": "Escalar muralhas. Cobertura completa." },
+      { "nome": "Trabuco", "distancia": "30/60/120", "dano": "3d8", "pa": 4, "cdt": 1, "forcaMin": null, "peso": "20K", "custo": 1000, "observacoes": "MME, Arma Pesada, Recarga 5 min (4 op)." },
+      { "nome": "Canhão (Bala Sólida)", "distancia": "50/100/200", "dano": "3d6+1", "pa": 4, "cdt": 1, "forcaMin": null, "peso": "10K", "custo": 600, "observacoes": "Arma Pesada. Atravessa fileiras." },
+      { "nome": "Canhão (Estilhaços)", "distancia": "50/100/200", "dano": "3d6", "pa": null, "cdt": 1, "forcaMin": null, "peso": "10K", "custo": 600, "observacoes": "MME. Arma Pesada." },
+      { "nome": "Canhão (Metralha)", "distancia": "24 quadros", "dano": "2d6", "pa": null, "cdt": 1, "forcaMin": null, "peso": "10K", "custo": 600, "observacoes": "Linha Reta / Cone de escopeta. Arma Pesada." }
     ]
   },
   {
-    "tipo": "Veículos",
-    "subtipo": "Veículos Terrestres",
+    "tipo": "Munição",
+    "subtipo": "Projéteis",
     "origem": "FANTASIA",
     "itens": [
-      {
-        "nome": "Carruagem",
-        "tamanho": 3,
-        "manobrabilidade": -2,
-        "velMaxima": 25,
-        "resistencia": 6,
-        "tripulacao": "1+3",
-        "custo": "1–3K",
-        "observacoes": "Puxada por um Cavalo, veja pág. 219. Movimentação 12 e pode correr",
-        "origem": "FANTASIA"
-      }
+      { "nome": "Flechas (20)", "peso": "0,75", "custo": 1, "observacoes": "" },
+      { "nome": "Virotes (10)", "peso": "0,25", "custo": 1, "observacoes": "" },
+      { "nome": "Dardos (20)", "peso": "—", "custo": 1, "observacoes": "Zarabatana" },
+      { "nome": "Flechas/Virotes Inflamáveis", "peso": "0,75", "custo": 1, "observacoes": "Custo por unidade. Metade da Dist, +1d6 dano." },
+      { "nome": "Balas (10)", "peso": "0,125", "custo": 1, "observacoes": "Pólvora Negra" },
+      { "nome": "Pedras de funda (20)", "peso": "0,25", "custo": 1, "observacoes": "Preço para 50 pedras." },
+      { "nome": "Munição Canhão (Sólida)", "peso": "—", "custo": 50, "observacoes": "" },
+      { "nome": "Munição Canhão (Estilhaços)", "peso": "—", "custo": 50, "observacoes": "" },
+      { "nome": "Munição Canhão (Metralha)", "peso": "—", "custo": 50, "observacoes": "" }
     ]
   },
   {
-    "tipo": "Veículos",
-    "subtipo": "Embarcações",
+    "tipo": "Armadura",
+    "subtipo": "Proteção e Escudos",
     "origem": "FANTASIA",
     "itens": [
-      {
-        "nome": "Galé",
-        "tamanho": 13,
-        "manobrabilidade": -1,
-        "velMaxima": 30,
-        "resistencia": 20,
-        "tripulacao": "(20+100)",
-        "custo": "150K",
-        "observacoes": "Armadura Pesada. Tem remos e velas. Armas: Catapulta (Fixa na Frente)",
-        "origem": "FANTASIA"
-      }
+      { "nome": "Manto com capuz", "armadura": "+1", "forcaMin": "d4", "peso": "2,5", "custo": 5, "observacoes": "Tronco, cabeça" },
+      { "nome": "Perneiras acolchoadas", "armadura": "+1", "forcaMin": "d4", "peso": "2,5", "custo": 5, "observacoes": "Pernas" },
+      { "nome": "Túnica acolchoada", "armadura": "+1", "forcaMin": "d4", "peso": "2,5", "custo": 10, "observacoes": "Tronco, braços" },
+      { "nome": "Robe com capuz", "armadura": "+1", "forcaMin": "d4", "peso": "4", "custo": 10, "observacoes": "Tronco, braços, cabeça" },
+      { "nome": "Túnica/Jaqueta de Couro", "armadura": "+2", "forcaMin": "d6", "peso": "5,5", "custo": 20, "observacoes": "Tronco, braços" },
+      { "nome": "Calças de Couro", "armadura": "+2", "forcaMin": "d6", "peso": "4", "custo": 20, "observacoes": "Pernas" },
+      { "nome": "Capuz de Couro", "armadura": "+2", "forcaMin": "d6", "peso": "0,5", "custo": 10, "observacoes": "Cabeça" },
+      { "nome": "Camisão de Couro", "armadura": "+2", "forcaMin": "d6", "peso": "5", "custo": 20, "observacoes": "Tronco, braços" },
+      { "nome": "Camisão de Cota (Malha)", "armadura": "+3", "forcaMin": "d8", "peso": "11", "custo": 100, "observacoes": "Tronco, braços" },
+      { "nome": "Calças de Cota (Malha)", "armadura": "+3", "forcaMin": "d8", "peso": "5", "custo": 100, "observacoes": "Pernas" },
+      { "nome": "Capuz de Cota/Elmo", "armadura": "+3", "forcaMin": "d8", "peso": "1,5", "custo": 50, "observacoes": "Cabeça" },
+      { "nome": "Corselete de Bronze", "armadura": "+3", "forcaMin": "d8", "peso": "6,5", "custo": 200, "observacoes": "Tronco" },
+      { "nome": "Grevas de Bronze", "armadura": "+3", "forcaMin": "d8", "peso": "3", "custo": 200, "observacoes": "Pernas" },
+      { "nome": "Braçadeiras de Bronze", "armadura": "+3", "forcaMin": "d8", "peso": "2,5", "custo": 100, "observacoes": "Braços" },
+      { "nome": "Elmo de Bronze", "armadura": "+3", "forcaMin": "d8", "peso": "3", "custo": 120, "observacoes": "Cabeça" },
+      { "nome": "Placa de Peito", "armadura": "+4", "forcaMin": "d10", "peso": "15", "custo": 500, "observacoes": "Tronco" },
+      { "nome": "Grevas (Placas)", "armadura": "+4", "forcaMin": "d10", "peso": "5", "custo": 500, "observacoes": "Pernas" },
+      { "nome": "Braçadeiras/Manoplas (Placas)", "armadura": "+4", "forcaMin": "d10", "peso": "5", "custo": 250, "observacoes": "Braços" },
+      { "nome": "Elmo Pesado", "armadura": "+4", "forcaMin": "d10", "peso": "2", "custo": 250, "observacoes": "Cabeça" },
+      { "nome": "Elmo Pesado Fechado", "armadura": "+4", "forcaMin": "d10", "peso": "4", "custo": 300, "observacoes": "Cabeça. -1 Perceber (visão)" },
+      { "nome": "Escudo Pequeno", "aparar": "+1", "forcaMin": "d6", "peso": "2", "custo": 5, "observacoes": "" },
+      { "nome": "Escudo Médio", "aparar": "+2", "cobertura": "-2", "forcaMin": "d8", "peso": "4", "custo": 9, "observacoes": "" },
+      { "nome": "Escudo Grande", "aparar": "+2", "cobertura": "-4", "forcaMin": "d10", "peso": "6", "custo": 20, "observacoes": "-1 Movimentação" },
+      { "nome": "Barda (Tecido Acolchoado)", "armadura": "+1", "forcaMin": "d6", "peso": "15", "custo": 100, "observacoes": "Para Montaria Tamanho 2" },
+      { "nome": "Barda (Couro)", "armadura": "+2", "forcaMin": "d8", "peso": "25", "custo": 300, "observacoes": "Para Montaria Tamanho 2" },
+      { "nome": "Barda (Cota de Escamas)", "armadura": "+3", "forcaMin": "d10", "peso": "55", "custo": 500, "observacoes": "Para Montaria Tamanho 2" },
+      { "nome": "Barda (Bronze)", "armadura": "+3", "forcaMin": "d10", "peso": "60", "custo": 1500, "observacoes": "Para Montaria Tamanho 2" },
+      { "nome": "Barda (Placas)", "armadura": "+4", "forcaMin": "d12", "peso": "75", "custo": 5000, "observacoes": "Para Montaria Tamanho 2" }
     ]
   },
   {
-    "tipo": "Equipamento Comum",
-    "subtipo": "Equipamento de Aventura",
+    "tipo": "Itens Especiais",
+    "subtipo": "Venenos",
     "origem": "FANTASIA",
     "itens": [
-      {
-        "nome": "Alforjes",
-        "custo": 4,
-        "peso": "4",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Ampulheta",
-        "custo": 25,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Arpéu",
-        "custo": 2,
-        "peso": "2",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Pode ser preso a uma corda. Distância 3/6/12. Suporta até 100kg.",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Baú (grande)",
-        "custo": 20,
-        "peso": "37,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Baú (pequeno)",
-        "custo": 2,
-        "peso": "12,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Estrepes",
-        "custo": 1,
-        "peso": "1",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Conta como Terreno Difícil; Rolagem de Atletismo ou Abalado.",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Ferramentas de ladrão",
-        "custo": 30,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Sem elas aplica -2 em Ladinagem.",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Giz (caixa com 12)",
-        "custo": 1,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Instrumento musical",
-        "custo": 5,
-        "peso": "1,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Kit de Curandeiro",
-        "custo": 50,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Cinco usos.",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Luneta",
-        "custo": 1000,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "+2 em Perceber ao ver objetos distantes.",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Óleo (meio litro)",
-        "custo": 0.25,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Combustível. Como arma: Distância 3/6/12, 1d10 dano, pode pegar fogo.",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Pedra de amolar",
-        "custo": 0.25,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Tenda (6 pessoas)",
-        "custo": 30,
-        "peso": "20",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      }
+      { "nome": "Cocção do Assassino", "tipo": "Letal", "aplicacao": "Ingerido", "custo": 250, "observacoes": "Perceber -2 para detectar." },
+      { "nome": "Esporos da Cripta", "tipo": "Moderado", "aplicacao": "Inalado", "custo": 75, "observacoes": "" },
+      { "nome": "Éter", "tipo": "Nocaute", "aplicacao": "Inalado", "custo": 300, "observacoes": "" },
+      { "nome": "Vinho Feérico", "tipo": "Debilitante (Astúcia)", "aplicacao": "Ingerido", "custo": 200, "observacoes": "" },
+      { "nome": "Veneno de Cobra Gigante", "tipo": "Letal", "aplicacao": "Ferimento", "custo": 400, "observacoes": "" },
+      { "nome": "Veneno Goblin", "tipo": "Debilitante (Agilidade)", "aplicacao": "Ferimento", "custo": 150, "observacoes": "Goblins imunes." },
+      { "nome": "Extrato de Limo Verde", "tipo": "Paralisante", "aplicacao": "Contato", "custo": 200, "observacoes": "Perceber +1 para detectar." },
+      { "nome": "Pó de Lótus", "tipo": "Debilitante (Força)", "aplicacao": "Inalado", "custo": 225, "observacoes": "Pode causar Hábito." },
+      { "nome": "Sangue de Medusa", "tipo": "Debilitante (Vigor)", "aplicacao": "Contato", "custo": 300, "observacoes": "" },
+      { "nome": "Gole da Lua", "tipo": "Debilitante (Espírito)", "aplicacao": "Ingerido", "custo": 75, "observacoes": "" },
+      { "nome": "Veneno de Wyvern", "tipo": "Paralisante", "aplicacao": "Ferimento", "custo": 100, "observacoes": "" }
     ]
   },
   {
-    "tipo": "Equipamento Comum",
-    "subtipo": "Veículos",
+    "tipo": "Itens Especiais",
+    "subtipo": "Alquimia",
     "origem": "FANTASIA",
     "itens": [
-      {
-        "nome": "Carruagem",
-        "custo": 100,
-        "peso": "1000",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      }
-    ]
-  },
-  {
-    "tipo": "Equipamento Comum",
-    "subtipo": "Itens Alquímicos",
-    "origem": "FANTASIA",
-    "itens": [
-      {
-        "nome": "Água Benta",
-        "custo": 25,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "2d4 dano em mortos-vivos (MPE).",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Antitoxina",
-        "custo": 50,
-        "peso": "0,5/2",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "+4 para resistir a venenos por 1h.",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Bastão de Fumaça",
-        "custo": 20,
-        "peso": "0,5/10",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Escuridão (-4) em MME por 1 min.",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Bastão Solar",
-        "custo": 2,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Luz raio 10m por 6h. For+d4 se usado como arma.",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Frasco de Ácido",
-        "custo": 10,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "2d4 dano (MPE).",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Tocha Eterna",
-        "custo": 110,
-        "peso": "0,5",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "Chama permanente que não emite calor.",
-        "origem": "FANTASIA"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Pessoais",
-    "subtipo": "Medievais",
-    "subsubtipo": "Combate corpo a corpo",
-    "origem": "FANTASIA",
-    "itens": [
-      {
-        "nome": "Alabarda",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "6",
-        "custo": 10,
-        "observacoes": "PA 1, Alcance 1, Duas Mãos",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Alfange",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "4",
-        "custo": 75,
-        "observacoes": "PA 1, Duas Mãos (+1 dano)",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Bisarma",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "6",
-        "custo": 9,
-        "observacoes": "PA 1, Alcance 1, Duas Mãos",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Chakram",
-        "dano": "For+d4",
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 1,
-        "observacoes": "Aparar +1",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Cimitarra",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "2",
-        "custo": 15,
-        "observacoes": "—",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Corrente com Espinhos",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "3",
-        "custo": 8,
-        "observacoes": "PA 1, Ignora escudo, Duas Mãos",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Espada Gancho",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "2",
-        "custo": 20,
-        "observacoes": "+1 para Desarmar",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Gadanha",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "5",
-        "custo": 18,
-        "observacoes": "Duas Mãos",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Glaive",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "5",
-        "custo": 8,
-        "observacoes": "Alcance 1, Duas Mãos",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Maça Estrela",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "3",
-        "custo": 8,
-        "observacoes": "—",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Mangual Pesado",
-        "dano": "For+d8",
-        "forcaMin": "d8",
-        "peso": "5",
-        "custo": 15,
-        "observacoes": "Ignora escudo, Duas Mãos",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Martelo Meteoro",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "2,5",
-        "custo": 12,
-        "observacoes": "Alcance 2, ignora escudo, Duas Mãos",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Tridente",
-        "dano": "For+d6",
-        "forcaMin": "d6",
-        "peso": "2",
-        "custo": 15,
-        "observacoes": "Alcance 1",
-        "origem": "FANTASIA"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas de Combate à Distância",
-    "subtipo": "Medievais",
-    "origem": "FANTASIA",
-    "itens": [
-      {
-        "nome": "Besta de Mão",
-        "distancia": "5/10/20",
-        "dano": "2d4",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "1",
-        "custo": 20,
-        "observacoes": "Recarga 1.",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Chakram",
-        "distancia": "4/8/16",
-        "dano": "For+d4",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 1,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Tridente",
-        "distancia": "3/6/12",
-        "dano": "For+d6",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d6",
-        "peso": "2",
-        "custo": 15,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Zarabatana",
-        "distancia": "3/6/12",
-        "dano": "d4-2",
-        "pa": null,
-        "cdt": 1,
-        "forcaMin": "d4",
-        "peso": "0,5",
-        "custo": 2,
-        "observacoes": "",
-        "origem": "FANTASIA"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Especiais",
-    "subtipo": "Armas de Cerco",
-    "origem": "FANTASIA",
-    "itens": [
-      {
-        "nome": "Aríete",
-        "distancia": null,
-        "dano": "3d6",
-        "pa": null,
-        "cdt": null,
-        "forcaMin": null,
-        "peso": "200",
-        "custo": 1000,
-        "observacoes": "Requer equipe 2-8.",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Balista",
-        "distancia": "15/30/60",
-        "dano": "3d6",
-        "pa": 4,
-        "cdt": 1,
-        "forcaMin": null,
-        "peso": "500",
-        "custo": 500,
-        "observacoes": "Arma Pesada. Recarga 5 min (1 op) ou 2 min (2 op).",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Catapulta",
-        "distancia": "24/48/96",
-        "dano": "3d6",
-        "pa": 4,
-        "cdt": 1,
-        "forcaMin": null,
-        "peso": "15K",
-        "custo": 800,
-        "observacoes": "MME. Arma Pesada. Recarga 5 min (4 op).",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Torre de Cerco",
-        "distancia": null,
-        "dano": null,
-        "pa": null,
-        "cdt": null,
-        "forcaMin": null,
-        "peso": "100K",
-        "custo": 2000,
-        "observacoes": "Torre móvel. Cobertura completa.",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Trabuco",
-        "distancia": "30/60/120",
-        "dano": "3d8",
-        "pa": 4,
-        "cdt": 1,
-        "forcaMin": null,
-        "peso": "20K",
-        "custo": 1000,
-        "observacoes": "MME. Arma Pesada. Recarga 5 min (4 op).",
-        "origem": "FANTASIA"
-      }
+      { "nome": "Água Benta", "distancia": "3/6/12", "dano": "2d4", "peso": "—", "custo": 25, "observacoes": "MPE. Dano em mortos-vivos." },
+      { "nome": "Antitoxina (frasco)", "distancia": "—", "dano": "—", "peso": "0,5/2", "custo": 50, "observacoes": "+4 resistir veneno por 1h." },
+      { "nome": "Bastão de Fumaça", "distancia": "3/6/12", "dano": "—", "peso": "0,5/10", "custo": 20, "observacoes": "MME de Escuridão (-4)." },
+      { "nome": "Bastão Solar", "distancia": "—", "dano": "—", "peso": "0,5", "custo": 2, "observacoes": "Luz 10m por 6h. For+d4 se usado como arma." },
+      { "nome": "Bolsa Enredapé", "distancia": "1/2/4", "dano": "—", "peso": "2", "custo": 50, "observacoes": "Distraído e possivelmente Enredado." },
+      { "nome": "Fogo Alquímico", "distancia": "3/6/12", "dano": "2d4", "peso": "0,5", "custo": 20, "observacoes": "MPE. Dano contínuo. Alvo pode pegar Fogo." },
+      { "nome": "Fósforos", "distancia": "—", "dano": "—", "peso": "0,5/10", "custo": 1, "observacoes": "Acende tochas com uma ação." },
+      { "nome": "Frasco de Ácido", "distancia": "3/6/12", "dano": "2d4", "peso": "0,5", "custo": 10, "observacoes": "MPE. Dano contínuo." },
+      { "nome": "Pedra-Trovão", "distancia": "3/6/12", "dano": "—", "peso": "0,5", "custo": 30, "observacoes": "MME. Vigor ou Abalado+Surdo." },
+      { "nome": "Tocha Eterna", "distancia": "—", "dano": "—", "peso": "0,5", "custo": 110, "observacoes": "Chama permanente fria." }
     ]
   },
   {
     "tipo": "Materiais Especiais",
-    "subtipo": "Metais e Madeiras",
+    "subtipo": "Modificadores de Material",
     "origem": "FANTASIA",
     "itens": [
-      {
-        "nome": "Ferro Frio",
-        "custo": "Dobro do item",
-        "peso": "—",
-        "observacoes": "Útil contra fadas e demônios. Aumenta Dureza em 2.",
-        "originalName": null,
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Mithral",
-        "custo": "Variável",
-        "peso": "Metade do item",
-        "observacoes": "Reduz Força Mínima em um dado. Armas custam 100x, Armaduras 10x.",
-        "originalName": "Mithral",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Madeira Negra",
-        "custo": "+10 po/kg",
-        "peso": "Metade do item",
-        "observacoes": "Aumenta Dureza em 2. Versão obra-prima.",
-        "originalName": "Darkwood",
-        "origem": "FANTASIA"
-      }
-    ]
-  },
-  {
-    "tipo": "Materiais Especiais",
-    "subtipo": "Metais e Madeiras",
-    "origem": "FANTASIA",
-    "itens": [
-      {
-        "nome": "Couro de Dragão",
-        "custo": "Variável",
-        "peso": "Metade",
-        "observacoes": "Custa x2 (leve), x1.5 (média), x2 (pesada). Imune a dano de energia do tipo do dragão.",
-        "originalName": "Dragonhide",
-        "origem": "FANTASIA"
-      },
-      {
-        "nome": "Prata Alquímica",
-        "custo": "Variável",
-        "peso": "—",
-        "observacoes": "Armas causam dano total em licantropos. -1 no dano. Custo: +20 (mun), +100 (leve), +300 (1 mão), +1500 (2 mãos).",
-        "originalName": "Alchemical Silver",
-        "origem": "FANTASIA"
-      }
-    ]
-  },
-  {
-    "tipo": "Veículos",
-    "subtipo": "Terrestres e Aéreos",
-    "origem": "FANTASIA",
-    "itens": [
-      {
-        "nome": "Trenó",
-        "tamanho": 3,
-        "resistencia": 8,
-        "tripulacao": "1+2",
-        "custo": 20,
-        "velMaxima": 12,
-        "observacoes": "Tração animal. Neve.",
-        "originalName": "Sled",
-        "origem": "FANTASIA"
-      }
+      { "nome": "Adamantina", "custo": "+3000", "peso": "—", "observacoes": "Armas: PA+1. Armadura: Ignora 2 PA. Itens: +4 Dureza." },
+      { "nome": "Bronze", "custo": "Variável", "peso": "—", "observacoes": "Armas são frágeis (Falha Crítica quebra)." },
+      { "nome": "Couro de Dragão", "custo": "+2500", "peso": "—", "observacoes": "Conta como Obra-prima. +4 Armadura contra elemento do dragão." },
+      { "nome": "Ferro Frio", "custo": "x2", "peso": "—", "observacoes": "Eficaz contra fadas/demônios. Quebra na Falha Crítica." },
+      { "nome": "Madeira Negra", "custo": "+10/kg", "peso": "Metade", "observacoes": "Dureza +2." },
+      { "nome": "Metal Sombrio", "custo": "x10", "peso": "—", "observacoes": "Maligno. Absorção sofre -2. +1 Armadura." },
+      { "nome": "Mithral", "custo": "x100 (arma) / x10 (armadura)", "peso": "Metade", "observacoes": "Reduz Força Mínima em um dado. Conta como prata." },
+      { "nome": "Obsidiana", "custo": "—", "peso": "—", "observacoes": "PA +1. Estilhaça na Falha Crítica." },
+      { "nome": "Prata Alquímica", "custo": "x10", "peso": "—", "observacoes": "Afeta licantropos." }
     ]
   }
 ]
