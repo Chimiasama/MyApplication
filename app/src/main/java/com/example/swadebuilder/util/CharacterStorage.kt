@@ -41,20 +41,7 @@ object CharacterStorage {
      * @throws SecurityException se o ID tentar sair do diretório de salvamento.
      */
     private fun getSafeFile(context: Context, id: String): File {
-        val dir = savesDirectory(context)
-        // Sanitização básica extra
-        if (id.contains(File.separator) || id.contains("/") || id.contains("\\")) {
-             throw IllegalArgumentException("ID de arquivo inválido: $id")
-        }
-
-        val file = File(dir, "$id.json")
-
-        // Verificação canônica robusta (Path Traversal Protection)
-        if (!file.canonicalPath.startsWith(dir.canonicalPath)) {
-            throw SecurityException("Tentativa de Path Traversal detectada: $id")
-        }
-
-        return file
+        return SecurityUtils.getSafeChildFile(savesDirectory(context), "$id.json")
     }
 
     private fun checksumFor(snapshot: PersonagemSnapshot): String {
