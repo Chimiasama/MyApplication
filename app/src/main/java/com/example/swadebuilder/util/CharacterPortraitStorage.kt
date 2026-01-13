@@ -69,9 +69,13 @@ object CharacterPortraitStorage {
 
         if (referenced) return@withContext
 
-        val file = File(portraitsDirectory(context), fileName)
-        if (file.exists()) {
-            file.delete()
+        try {
+            val file = SecurityUtils.getSafeChildFile(portraitsDirectory(context), fileName)
+            if (file.exists()) {
+                file.delete()
+            }
+        } catch (e: Exception) {
+            // Ignora se o arquivo for inválido ou tentar path traversal
         }
     }
 }
