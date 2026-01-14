@@ -341,8 +341,8 @@
     ]
   },
   {
-    "tipo": "Equipamento Geral",
-    "subtipo": "Transporte",
+    "tipo": "Veículos",
+    "subtipo": "Transporte terreste",
     "origem": "FANTASIA",
     "itens": [
       { "nome": "Carruagem", "peso": "1.000", "custo": 100, "observacoes": "Capacidade de carga e passageiros." }
@@ -350,7 +350,7 @@
   },
   {
     "tipo": "Veículos",
-    "subtipo": "Embarcações Extras",
+    "subtipo": "Embarcações",
     "origem": "BASICO",
     "itens": [
       { "nome": "Barco a Remo", "tamanho": "0", "manobrabilidade": -2, "velMaxima": 8, "resistencia": "8 (1)", "tripulacao": "1+3", "custo": 500, "observacoes": "" },
