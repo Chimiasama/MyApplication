@@ -72,10 +72,6 @@ class CriadorState {
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
     val vantagensAutomaticasDoElemento = mutableStateListOf<String>()
 
-    init {
-        listaVantagens = deduplicarVantagens(listaVantagens)
-        listaComplicacoes = deduplicarComplicacoes(listaComplicacoes)
-    }
     companion object {
         const val BASE_SP_POOL = 15
         const val DEFAULT_HAPTIC_STRENGTH = 70
@@ -165,43 +161,6 @@ class CriadorState {
     val gastosPorPoder     = mutableStateMapOf<String, Int>()
     var naturalArmorFromRace by mutableIntStateOf(0)
     var soldadoCargaAtivo by mutableStateOf(true)
-
-    private fun deduplicarVantagens(vantagens: List<Vantagem>): SnapshotStateList<Vantagem> {
-        val deduplicadas = vantagens
-            .groupBy { "${it.nome.keyify()}|${it.descricao.keyify()}" }
-            .values
-            .map { grupo -> selecionarVantagemPreferida(grupo) }
-            .distinctBy { it.nome.keyify() }
-        return mutableStateListOf<Vantagem>().apply { addAll(deduplicadas) }
-    }
-
-    private fun selecionarVantagemPreferida(grupo: List<Vantagem>): Vantagem {
-        val basico = grupo.firstOrNull { it.origem.equals("BASICO", true) } ?: return grupo.first()
-        val compendioAlterado = grupo.firstOrNull {
-            !it.origem.equals("BASICO", true) && possuiMudancaNumerica(basico, it)
-        }
-        return compendioAlterado ?: basico
-    }
-
-    private fun possuiMudancaNumerica(basico: Vantagem, compendio: Vantagem): Boolean {
-        return basico.requisitos.atributoMin != compendio.requisitos.atributoMin ||
-            basico.requisitos.periciaMin != compendio.requisitos.periciaMin ||
-            basico.requisitos.periciaMinOpcional != compendio.requisitos.periciaMinOpcional
-    }
-
-    private fun deduplicarComplicacoes(complicacoes: List<Complicacao>): SnapshotStateList<Complicacao> {
-        val deduplicadas = complicacoes
-            .groupBy { "${it.name.keyify()}|${it.description.keyify()}" }
-            .values
-            .map { grupo -> selecionarComplicacaoPreferida(grupo) }
-            .distinctBy { it.name.keyify() }
-        return mutableStateListOf<Complicacao>().apply { addAll(deduplicadas) }
-    }
-
-    private fun selecionarComplicacaoPreferida(grupo: List<Complicacao>): Complicacao {
-        val basico = grupo.firstOrNull { it.origem.equals("BASICO", true) }
-        return basico ?: grupo.first()
-    }
 
     // PROMPT 3: Transtornos Gratuitos (Horror Mode)
     val transtornos: SnapshotStateList<Complicacao> = mutableStateListOf()
