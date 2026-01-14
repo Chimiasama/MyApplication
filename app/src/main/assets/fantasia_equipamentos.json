@@ -6,7 +6,6 @@
     "itens": [
       { "nome": "Carrinho de mão", "peso": "10", "custo": 10, "observacoes": "" },
       { "nome": "Carroça (150 kg cap.)", "peso": "40", "custo": 15, "observacoes": "" },
-      { "nome": "Carruagem", "peso": "1.000", "custo": 100, "observacoes": "" },
       { "nome": "Cartucheira", "peso": "1", "custo": 0.5, "observacoes": "" },
       { "nome": "Cera para lacre (barra)", "peso": "0,5", "custo": 1, "observacoes": "" },
       { "nome": "Cesta", "peso": "0,5", "custo": 0.5, "observacoes": "" },

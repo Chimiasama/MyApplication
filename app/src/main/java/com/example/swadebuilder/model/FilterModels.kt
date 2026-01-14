@@ -3,7 +3,7 @@ package com.example.swadebuilder.model
 enum class EquipSuperType(val label: String, val order: Int) {
     ARMAS("Armas", 1),
     ARMADURAS("Armaduras e Proteção", 2),
-    VEICULOS("Veículos e Montarias", 3),
+    VEICULOS("Veículos", 3),
     CIBERNETICO("Cibernéticos e Robótica", 4),
     GERAL("Equipamentos e Itens", 5)
 }
