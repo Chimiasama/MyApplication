@@ -64,7 +64,7 @@
   {
     "tipo": "Equipamento Geral",
     "subtipo": "Extras do Básico (Coerentes)",
-    "origem": "BASICO",
+    "origem": "FANTASIA",
     "itens": [
       { "nome": "Algemas (grilhões)", "peso": "1", "custo": 15, "observacoes": "" },
       { "nome": "Apito", "peso": "—", "custo": 2, "observacoes": "" },
@@ -350,7 +350,7 @@
   {
     "tipo": "Veículos",
     "subtipo": "Embarcações",
-    "origem": "BASICO",
+    "origem": "FANTASIA",
     "itens": [
       { "nome": "Barco a Remo", "tamanho": "0", "manobrabilidade": -2, "velMaxima": 8, "resistencia": "8 (1)", "tripulacao": "1+3", "custo": 500, "observacoes": "" },
       { "nome": "Galeão", "tamanho": "14", "manobrabilidade": -2, "velMaxima": 15, "resistencia": "20 (4)", "tripulacao": "20+80", "custo": 300000, "observacoes": "Armadura Pesada." },
