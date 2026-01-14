@@ -171,7 +171,7 @@ fun VantagensContent(
 
     val listaVantagens: List<Vantagem> =
         remember(multiplosAAHabilitados, listaVantagensGlobal) {
-            listaVantagensGlobal.filterNot { it.id == "antecedente_arcano" }
+            listaVantagensGlobal
         }
 
     remember(state.modoSupers) {
@@ -208,12 +208,6 @@ fun VantagensContent(
 
             if (state.compendioCrystalHeartAtivo) {
                 if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
-                    return@filter false
-                }
-            }
-
-            if (state.compendioFantasiaAtivo) {
-                if (vant.id == "mago") {
                     return@filter false
                 }
             }
