@@ -841,7 +841,8 @@ private fun SpecChip(
             labelColor = contentColor,
             selectedContainerColor = containerColor,
             selectedLabelColor = contentColor,
-            trailingIconContentColor = contentColor
+            trailingIconColor = contentColor,
+            selectedTrailingIconColor = contentColor
         ),
         border = null,
         shape = RoundedCornerShape(16.dp)
