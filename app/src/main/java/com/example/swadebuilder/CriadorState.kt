@@ -955,10 +955,32 @@ class CriadorState {
     // Computed property for basic filtering before injecting dynamic slots (Idioms, Jutsu)
     val periciasFiltradasPorCompendio: List<Pericia>
         get() {
+            // Unify duplicates by Key, choosing the most relevant source
+            val unifiedList = listaPericias.groupBy { it.nome.keyify() }
+                .mapNotNull { (_, group) ->
+                    // FANTASIA PRIORITY
+                    if (compendioFantasiaAtivo) {
+                        val fantasy = group.find { it.origem.equals("FANTASIA", ignoreCase = true) }
+                        if (fantasy != null) return@mapNotNull fantasy
+                        // If Fantasy is active, block BASIC skills unless they are also in Fantasy (which means we found it above)
+                        // If strict replacement is desired:
+                        if (group.any { it.origem.equals("BASICO", ignoreCase = true) }) return@mapNotNull null
+                    }
+
+                    // ARTE DA GUERRA PRIORITY
+                    if (compendioArteDaGuerraAtivo) {
+                        val adg = group.find { it.origem.equals("ARTE_DA_GUERRA", ignoreCase = true) }
+                        if (adg != null) return@mapNotNull adg
+                    }
+
+                    // Default: Basic or First available
+                    group.find { it.origem.equals("BASICO", ignoreCase = true) } ?: group.firstOrNull()
+                }
+
             return if (compendioBuscatrilhaAtivo) {
                 // If Pathfinder active:
                 val forbiddenIds = setOf("ELETRONICA", "FOCO", "HACKEAR", "PSIONICOS", "IDIOMAS")
-                listaPericias.filter { per ->
+                unifiedList.filter { per ->
                     val key = per.nome.keyify()
                     key !in forbiddenIds && per.origem != "ARTE_DA_GUERRA"
                 }
@@ -969,7 +991,7 @@ class CriadorState {
                     "HACKEAR", "FE", "ELETRONICA", "CIENCIA ESTRANHA", "PSIONICOS", "CONJURAR", "CIENCIA_ESTRANHA"
                 )
 
-                listaPericias.filter { per ->
+                unifiedList.filter { per ->
                     val key = per.nome.keyify()
 
                     // Exclude specific forbidden skills
@@ -998,7 +1020,7 @@ class CriadorState {
                     "FE", "PSIONICOS", "CIENCIA ESTRANHA", "CONJURAR", "CIENCIA_ESTRANHA", "OCULTISMO", "FOCO"
                 )
 
-                val filtered = listaPericias.filter { per ->
+                val filtered = unifiedList.filter { per ->
                     val key = per.nome.keyify()
                     if (key in forbiddenForWiseguys) return@filter false
                     // Also filter AdG skills if AdG is not active
@@ -1013,7 +1035,7 @@ class CriadorState {
             } else {
                 // If neither AdG nor Wiseguys specific filtering is active:
                 // Hide any skill marked with ARTE_DA_GUERRA
-                listaPericias.filter { per ->
+                unifiedList.filter { per ->
                     per.origem != "ARTE_DA_GUERRA"
                 }
             }
