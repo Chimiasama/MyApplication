@@ -139,8 +139,11 @@ object DataLoader {
         val periciasAdgData = runCatching {
             loadJsonAsset<PericiaList>(context, "pericias_adg.json")
         }.getOrElse { PericiaList(emptyList()) }
+        val periciasFantasiaData = runCatching {
+            loadJsonAsset<PericiaList>(context, "fantasia_pericias.json")
+        }.getOrElse { PericiaList(emptyList()) }
 
-        val todasPericiasJson = periciasCoreData.pericias + periciasSuppData.pericias + periciasAdgData.pericias
+        val todasPericiasJson = periciasCoreData.pericias + periciasSuppData.pericias + periciasAdgData.pericias + periciasFantasiaData.pericias
 
         listaPericias = todasPericiasJson.map { pj ->
             Pericia(
