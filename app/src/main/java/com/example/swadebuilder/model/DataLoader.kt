@@ -194,6 +194,7 @@ object DataLoader {
         }.getOrElse { emptyList() }
         val fantasyVantagens: List<Vantagem> = runCatching {
             loadJsonAsset<List<Vantagem>>(context, "fantasia_vantagens.json")
+                .map { it.copy(origem = "FANTASIA") }
         }.getOrElse { emptyList() }
         val horrorVantagens: List<Vantagem> = runCatching {
             loadJsonAsset<List<Vantagem>>(context, "horror_vantagens.json")
