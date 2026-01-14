@@ -1,5 +1,6 @@
 package com.example.swadebuilder
 
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -126,6 +127,7 @@ fun produzirEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) 
     val intent = Intent(Intent.ACTION_VIEW).apply {
         setDataAndType(uri, "application/pdf")
         flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        clipData = ClipData.newRawUri(null, uri)
     }
 
     if (intent.resolveActivity(context.packageManager) != null) {

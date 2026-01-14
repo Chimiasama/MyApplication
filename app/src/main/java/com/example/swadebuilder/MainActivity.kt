@@ -201,6 +201,9 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
+        // Protect against Tapjacking (Overlay attacks)
+        window.decorView.filterTouchesWhenObscured = true
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         lifecycleScope.launch(Dispatchers.IO) {
