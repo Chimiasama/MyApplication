@@ -31,6 +31,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.InputChip
+import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -790,6 +793,7 @@ fun PericiasContent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SpecChip(
     label: String,
@@ -798,52 +802,48 @@ private fun SpecChip(
     onRemove: (() -> Unit)?
 ) {
     val colors = MaterialTheme.colorScheme
+    val containerColor = if (isPrincipal) colors.secondaryContainer else colors.surfaceVariant
+    val contentColor = if (isPrincipal) colors.onSecondaryContainer else colors.onSurfaceVariant
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .background(
-                color = if (isPrincipal)
-                    colors.secondaryContainer
-                else
-                    colors.surfaceVariant,
-                shape = RoundedCornerShape(16.dp)
+    InputChip(
+        selected = isPrincipal,
+        onClick = { onEdit?.invoke() },
+        label = {
+            Text(
+                text = if (isPrincipal) "$label (principal)" else label,
+                style = MaterialTheme.typography.labelMedium
             )
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-    ) {
-        Text(
-            text = if (isPrincipal) "$label (principal)" else label,
-            style = MaterialTheme.typography.labelMedium,
-            color = if (isPrincipal)
-                colors.onSecondaryContainer
-            else
-                colors.onSurfaceVariant
-        )
-        if (onEdit != null) {
-            Spacer(Modifier.width(2.dp))
-            IconButton(
-                onClick = onEdit,
-                modifier = Modifier.size(18.dp)
-            ) {
+        },
+        trailingIcon = {
+            if (onRemove != null) {
+                IconButton(
+                    onClick = onRemove,
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Remover $label",
+                        modifier = Modifier.size(16.dp),
+                        tint = contentColor.copy(alpha = 0.7f)
+                    )
+                }
+            } else if (onEdit != null) {
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = "Renomear $label",
-                    tint = colors.onSurfaceVariant.copy(alpha = 0.7f)
+                    modifier = Modifier.size(16.dp),
+                    tint = contentColor.copy(alpha = 0.7f)
                 )
             }
-        }
-        if (onRemove != null) {
-            Spacer(Modifier.width(2.dp))
-            IconButton(
-                onClick = onRemove,
-                modifier = Modifier.size(18.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Remover $label",
-                    tint = colors.onSurfaceVariant.copy(alpha = 0.7f)
-                )
-            }
-        }
-    }
+        },
+        colors = InputChipDefaults.inputChipColors(
+            containerColor = containerColor,
+            labelColor = contentColor,
+            selectedContainerColor = containerColor,
+            selectedLabelColor = contentColor,
+            trailingIconContentColor = contentColor
+        ),
+        border = null,
+        shape = RoundedCornerShape(16.dp)
+    )
 }
