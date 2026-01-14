@@ -1037,7 +1037,7 @@ class CriadorState {
                 // Hide any skill marked with ARTE_DA_GUERRA
                 unifiedList.filter { per ->
                     per.origem != "ARTE_DA_GUERRA"
-                }
+                }.sortedBy { it.nome }
             }
         }
 
