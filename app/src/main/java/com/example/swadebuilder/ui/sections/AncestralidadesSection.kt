@@ -178,6 +178,7 @@ fun AncestralidadesSection(
         }
 
         val activeOrigins = buildList {
+            if (!compendioFantasiaAtivo) add("BASICO")
             if (compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
             if (compendioFantasiaAtivo) add("FANTASIA")
             if (compendioBuscatrilhaAtivo) add("FANTASIA_TRILHADOR")
