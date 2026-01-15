@@ -21,6 +21,7 @@ import androidx.core.content.FileProvider
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.ui.theme.AppTheme
+import com.example.swadebuilder.util.SecurityUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
 import kotlinx.serialization.json.JsonPrimitive
@@ -110,9 +111,14 @@ fun produzirEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) 
 
     var portrait: Bitmap? = null
     dadosDoPersonagem.portraitFileName?.let { fileName ->
-        val file = File(context.filesDir, "portraits/$fileName")
-        if (file.exists()) {
-            portrait = BitmapFactory.decodeFile(file.absolutePath)
+        try {
+            val portraitsDir = File(context.filesDir, "portraits")
+            val file = SecurityUtils.getSafeChildFile(portraitsDir, fileName)
+            if (file.exists()) {
+                portrait = BitmapFactory.decodeFile(file.absolutePath)
+            }
+        } catch (e: Exception) {
+            // Path traversal attempt or invalid filename; ignore portrait
         }
     }
 
