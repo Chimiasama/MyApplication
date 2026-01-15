@@ -83,6 +83,7 @@ import com.example.swadebuilder.ui.sections.TipoMonstroSection
 import com.example.swadebuilder.ui.sections.TroposSection
 import com.example.swadebuilder.ui.sections.VantagensContent
 import com.example.swadebuilder.ui.sections.XpSection
+import com.example.swadebuilder.util.SecurityUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
@@ -1077,7 +1078,14 @@ private fun SummaryTabContent(
         }
     }
     val portraitFile = remember(state.portraitFileName, context) {
-        state.portraitFileName?.let { File(context.filesDir, "portraits/$it") }
+        state.portraitFileName?.let {
+            try {
+                val portraitsDir = File(context.filesDir, "portraits")
+                SecurityUtils.getSafeChildFile(portraitsDir, it)
+            } catch (e: Exception) {
+                null
+            }
+        }
     }
     val portraitUri = portraitFile?.takeIf { it.exists() }?.let(Uri::fromFile)
 
