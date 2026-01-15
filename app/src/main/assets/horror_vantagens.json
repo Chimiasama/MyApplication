@@ -658,7 +658,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Torna-se invisível enquanto etéreo."
+    "descricao": "A assombração pode se tornar invisível enquanto etérea. Não pode ser vista, embora alguém que saiba a posição geral possa atacar com -4. Ela também não pode ser alvo de feitiços a menos que o conjurador possa vê-la com detectar arcano ou algum outro meio."
   },
   {
     "id": "poderes_misticos_fantasma",
@@ -675,7 +675,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 10 PP e poderes temáticos (Aparição, Poltergeist ou Sombra)."
+    "descricao": "O fantasma pode manipular energia espiritual para conjurar feitiços. Escolha um dos pacotes a seguir e veja o quadro Poderes Místicos na p. 14 para mais detalhes.\n• APARIÇÃO: Atordoar, cegar, luz/escuridão, morosidade.\n• POLTERGEIST: Devastação, horrores ilusórios, som/silêncio, telecinese.\n• SOMBRA: Confusão, fantoche, manipulação elemental, medo."
   },
   {
     "id": "rugir_fantasma",
@@ -695,7 +695,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Desafio de Intimidar em Cone (ação limitada)."
+    "descricao": "O espírito emite um uivo fantasmagórico ou grito de banshee que arrepia a espinha daqueles que o escutam. Como ação limitada, a personagem pode fazer um Desafio de Intimidar em um Modelo de Cone. Todos os alvos dentro são afetados e devem resistir separadamente."
   },
   {
     "id": "toque_arrepiante",
@@ -714,7 +714,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ataque de Toque corpóreo causa For+d4 que ignora armadura não mágica."
+    "descricao": "O toque de um fantasma gela os ossos de um ser vivo da cabeça aos pés. Um Ataque de Toque bem-sucedido (em forma corpórea) contra um ser vivo causa For+d4 de dano que ignora tudo exceto armadura mágica."
   },
   {
     "id": "travessia",
@@ -731,7 +731,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Funciona como Rede de Contatos com espíritos."
+    "descricao": "Fantasmas são um tipo específico de espírito que habita o mundo físico. Porém, ao se concentrar, podem desaparecer de nossa realidade e retornar ao reino espiritual brevemente para falar com outras entidades espirituais.\nIsso funciona como Rede de Contatos (veja Savage Worlds Edição Aventura) com todos os espíritos, almas perdidas, fantasmas e outros seres do vazio. O espírito pode usar Persuadir ou Intimidar, mas não pode garantir favores (O Dinheiro Fala Mais Alto ou Arrebentando Cabeças) a menos que o cenário permita."
   },
   {
     "id": "alfa",
@@ -748,7 +748,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode controlar caninos naturais com Intimidar vs Espírito."
+    "descricao": "O lobisomem pode tentar controlar qualquer criatura canina com uma rolagem bem-sucedida de Intimidar resistida pelo Espiríto da criatura. Isso é uma ação e, se bem-sucedida, o controle dura pelo resto do encontro. Se o alvo da criatura é o alfa, o resto da matilha segue sua liderança.\nA fera segue comandos básicos de acordo com sua inteligência. Alfa só funciona em criaturas naturais, não funciona em cães infernais, demoníacos ou feras sobrenaturais."
   },
   {
     "id": "andar_nas_paredes_lobo",
@@ -768,7 +768,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rasteja em paredes (metade Movimentação)."
+    "descricao": "O lobisomem pode rastejar em superfícies verticais e invertidas com metade da Movimentação e pode correr."
   },
   {
     "id": "fala_lobisomem",
@@ -785,7 +785,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode falar transformado, mas com dificuldade (-2 em rolagens sociais/arcanas verbais)."
+    "descricao": "O monstro aprende a falar frases de forma irregular enquanto na forma de lobisomem. Subtraia 2 de qualquer rolagem de Característica que necessite de fala clara como rolagens de perícia arcana e a maioria das rolagens de Persuadir e Provocar."
   },
   {
     "id": "mordida_garras_aprimorada",
@@ -802,11 +802,11 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ataques aumentam para For+d8, PA 4."
+    "descricao": "Os ataques de Mordida e Garras aumentam para For+d8, PA 4."
   },
   {
     "id": "regeneracao_lenta_lobo",
-    "nome": "REGENERAÇÃO LENTA (Licantropo)",
+    "nome": "REGENERAÇÃO RÁPIDA (Licantropo)",
     "categoria": "MONSTRUOSAS",
     "origem": "HORROR",
     "requisitos": {
@@ -819,7 +819,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rolagem de Vigor (ação livre) para regenerar. Ampliação cura 2 ferimentos. Não funciona contra prata."
+    "descricao": "O licantropo faz uma rolagem de Vigor como ação livre limitada para se regenerar. Sucesso cura um Ferimento ou remove o Estado Incapacitado e uma ampliação cura dois Ferimentos. Não é possível regenerar Ferimentos causados por prata."
   },
   {
     "id": "resistencia_lobo",
@@ -836,7 +836,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 Resistência."
+    "descricao": "Pele grossa, couro resistente ou músculos fortes concedem +2 de Resistência."
   },
   {
     "id": "uivo",
@@ -853,7 +853,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Desafio de Intimidar em Cone (ação limitada)."
+    "descricao": "O lobisomem uiva no máximo de seus pulmões bestiais, aterrorizando aqueles que o escutam. Como ação limitada, a personagem pode fazer um Desafio de Intimidar em um Modelo de Cone. Todos os alvos dentro do Modelo são afetados e devem resistir separadamente."
   },
   {
     "id": "descarga",
@@ -870,7 +870,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Gasta Fadiga para explodir eletricidade (Modelo Grande, 4d6 dano)."
+    "descricao": "Raios e eletricidade deram VIDA a esta criação — e podem ser usados para tomá-la também. A criatura estoca energia em seu corpo.\nComo ação limitada, é possível receber um nível de Fadiga para liberar uma explosão de eletricidade em um Modelo Grande de Explosão centrado em si mesmo. Qualquer criatura dentro do Modelo recebe 4d6 de dano elétrico. Um monstro Incapacitado dessa forma desmaia, mas não morre."
   },
   {
     "id": "flashbacks",
@@ -887,7 +887,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por encontro, aumenta perícia em um passo ou ganha d4 se não tiver."
+    "descricao": "O monstro ocasionalmente tem vislumbres de memórias e conhecimento de uma das várias partes do corpo que o compõem.\nUma vez por encontro, pode aumentar qualquer perícia em um tipo de dado, desde que não exceda o atributo ao qual ela é ligada. Se não possuir a perícia, ele a ganha com d4, ignorando a penalidade usual de -2."
   },
   {
     "id": "partes_destacaveis",
@@ -907,7 +907,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode destacar mão, olho ou orelha e controlar a distância."
+    "descricao": "Este horror pode destacar várias partes de seu corpo e controlá-las à distância! A Distância máxima que a parte continua funcionando é um quilômetro e meio. Se a parte for destruída, é possível que outra cresça com o monstro se banqueteando com outra parte idêntica. Demora uma hora para que a parte cresça novamente. Pode destacar quantas partes destas descritas a seguir conforme desejar e alternar entre elas como uma ação:\n• MÃO: A mão se move com Movimentação 5 e tem a Força igual à de seu dono com dois tipos de dado menor. A Mão é Minúscula, então cabe ao Mestre e às circunstâncias definir se ela pode ou não atacar alvos de tamanho humano.\n• OLHO: O olho pode rolar por ai com Movimentação 3 e enxergar como um olho normal.\n• ORELHA: A orelha não pode se mover, mas escuta normalmente. Monstros podem deixá-la se quiserem bisbilhotar conversas de outros."
   },
   {
     "id": "robusto_monstro",
@@ -924,7 +924,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Não recebe ferimento ao ser Abalado duas vezes."
+    "descricao": "Monstros de retalhos com esta Vantagem não recebem Ferimentos ao serem Abalados duas vezes."
   },
   {
     "id": "cavar_mumia",
@@ -941,7 +941,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Cava com metade da movimentação."
+    "descricao": "A múmia pode cavar com metade de sua Movimentação, mas não por rocha sólida."
   },
   {
     "id": "invocar_bando",
@@ -958,7 +958,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "1/dia, conjura bando de insetos (Modelo Médio)."
+    "descricao": "Uma vez por dia, uma múmia com esta Vantagem pode conjurar um bando de insetos, pragas animais e outras infestações. Esse bando ocupa um Modelo Médio que não se divide e que pode receber ordens gerais mentalmente, tais como “Protejam aquela porta!” ou “Matem estes intrusos!”."
   },
   {
     "id": "invocar_bando_maior",
@@ -977,7 +977,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Bando usa Modelo Grande."
+    "descricao": "O bando usa um Modelo Grande e, quando, Incapacitado se torna dois de Modelo Médio."
   },
   {
     "id": "invocar_tempestade",
@@ -994,7 +994,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "1/semana, cria tempestade de areia gigante."
+    "descricao": "Esta habilidade normalmente está associada a múmias egípcias, mas as de outras regiões podem usar habilidades similares com Manifestações diferentes. Uma vez por semana de jogo, a múmia pode conjurar uma enorme tempestade de areia de vários quilômetros de diâmetro. A tempestade varre tudo à sua frente, causando Escuridão e provocando rolagens de Vigor a cada minuto passado fora de abrigo. Aqueles que falharem recebem Fadiga e isso pode causar morte por sufocamento."
   },
   {
     "id": "podridao_mumia",
@@ -1011,7 +1011,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Toque causa doença (Vigor ou Ferimento). Morte cria nova múmia."
+    "descricao": "Qualquer um tocado pela múmia, quer receba dano ou não, deve fazer uma rolagem de Vigor. Falha significa que recebe a \"Podridão da Múmia\" e sofre imediatamente um Ferimento. Vítimas que morram como resultado da \"Podridão da Múmia\" podem ser trazidas de volta como múmias através do poder zumbi."
   },
   {
     "id": "poderes_misticos_mumia",
@@ -1028,11 +1028,11 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 10 PP e poderes temáticos (Arquiteto ou Real)."
+    "descricao": "Algumas múmias podem recorrer a fontes místicas ou divinas para obter poderes mágicos. Escolha um dos pacotes a seguir e veja mais detalhes no quadro Poderes Místicos na p. 14 para mais detalhes.\n• ARQUITETO: Barreira, detectar/ocultar arcano, telecinese, trancar/destrancar.\n• RÉGIO: Explosão, rajada, rancor."
   },
   {
     "id": "regeneracao_lenta_mumia",
-    "nome": "REGENERAÇÃO LENTA (Múmia)",
+    "nome": "REGENERAÇÃO (LENTA)",
     "categoria": "MONSTRUOSAS",
     "origem": "HORROR",
     "requisitos": {
@@ -1045,11 +1045,11 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rolagem de cura natural diária (exceto dano por fogo)."
+    "descricao": "Múmias com esta Vantagem podem fazer uma rolagem de Vigor a cada dia para regenerar Ferimentos que não foram causados por fogo (para estes, aplica-se a cura natural normalmente)."
   },
   {
     "id": "regeneracao_rapida_mumia",
-    "nome": "REGENERAÇÃO RÁPIDA (Múmia)",
+    "nome": "REGENERAÇÃO (RÁPIDA)",
     "categoria": "MONSTRUOSAS",
     "origem": "HORROR",
     "requisitos": {
@@ -1064,7 +1064,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rolagem de cura a cada rodada (exceto fogo/água benta)."
+    "descricao": "Múmias com esta Vantagem podem fazer uma rolagem de Vigor a cada rodada para regenerar Ferimentos que não foram causados por fogo ou água benta (para estes, aplica-se a cura natural normalmente)."
   },
   {
     "id": "devorador_memorias",
@@ -1081,7 +1081,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Devorar cérebro concede vislumbres de memória."
+    "descricao": "Se um revivido com esta Vantagem devora um cérebro relativamente fresco e preservado de um ser senciente, é possível ter acesso a pedaços dispersos de suas memórias. O que exatamente o zumbi vê cabe ao Mestre, mas normalmente inclui eventos traumáticos, especialmente aqueles ligados à sua morte."
   },
   {
     "id": "fedor",
@@ -1098,7 +1098,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Criaturas adjacentes ficam Distraídas."
+    "descricao": "A carne do revivido está podre e fede, repelindo os seres vivos que se aproximem demais. Qualquer um adjacente à personagem e possua o sentido do olfato fica Distraído. Isso dura até que se afaste e seu turno termine."
   },
   {
     "id": "mestre_zumbis",
@@ -1115,7 +1115,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Controla mortos-vivos sem mente com Intimidar vs Espírito."
+    "descricao": "O revivido pode tentar controlar quaisquer zumbis ou esqueletos sem mente com uma rolagem de Intimidar bem-sucedida resistida pelo Espírito da criatura. Isso é uma ação e o controle dura pelo resto do encontro. A Vantagem normalmente não tem efeito em outros tipos de mortos-vivos (a critério do Mestre)."
   },
   {
     "id": "rastreador_implacavel",
@@ -1132,7 +1132,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 Sobrevivência (rastrear) contra alvo de vingança. Recupera trilha automaticamente."
+    "descricao": "Revividos são criaturas vingativas que perseguem suas presas de forma implacável. Revividos com esta Vantagem adicionam +2 nas rolagens de Sobrevivência (Rastrear) — acumula-se com outros bônus de rastrear — desde que estejam rastreando alguém que lhe fez mal de alguma forma (a critério do Mestre). Este é um sentido mágico que só é reforçado por evidências físicas da passagem da presa, então, mesmo que a trilha seja perdida, o revivido irá recuperá-la dentro de 2d6 horas (ou sempre que o Mestre achar que é possível).\nO revivido só pode usar esse sentido mágico em um único indivíduo por vez e, uma vez dispensado, não pode usar no mesmo alvo novamente (embora possa rastreá-lo normalmente)."
   },
   {
     "id": "toque_da_morte",
@@ -1149,7 +1149,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Toque causa For+d4. Contra alvo do Voto, causa For+2d6."
+    "descricao": "O poder mais temido dos revividos é seu toque mortal que causa For+d4 de dano contra os vivos (armadura protege normalmente). Contra aqueles que jurou vingança (o alvo de seu Voto), seu toque causa For+2d6 de dano."
   },
   {
     "id": "andarilho_do_dia",
@@ -1166,11 +1166,11 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Não é ferido pela luz do sol."
+    "descricao": "O vampiro é um dampyr e não é ferido pela luz do sol."
   },
   {
     "id": "criancas_da_noite",
-    "nome": "CRIANÇAS DA NOITE",
+    "nome": "PROLE DA NOITE",
     "categoria": "MONSTRUOSAS",
     "origem": "HORROR",
     "requisitos": {
@@ -1183,7 +1183,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "1/noite convoca lobos, morcegos ou ratos."
+    "descricao": "O vampiro possui a habilidade de invocar e controlar morcegos, ratos e lobos. Uma vez por noite, em um ambiente apropriado onde estas criaturas habitem (a critério do Mestre), o vampiro pode automaticamente convocar um único lobo atroz, 1d4+1 lobos ou um bando Médio de morcegos e ratos. O último se divide em dois bandos Pequenos quando dispersados."
   },
   {
     "id": "encantar_vampiro",
@@ -1200,11 +1200,11 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Conjura Fantoche gastando Benny e Persuadir."
+    "descricao": "Vampiros podem conjurar fantoche gastando um Bene e uma rolagem de Persuadir como perícia arcana. O alvo não pode ser Hostil, Antipático ou Não Cooperativo, então vale a pena ganhar a confiança de vítimas potenciais em primeiro lugar.\nA criatura maligna não pode usar nenhum Modificador de Poder com esta versão natural do poder, mas, se bem-sucedida, a Duração é 24 horas em vez de cinco rodadas, não pode ser mantido e vítimas que sucumbam não resistem ao ter seu sangue drenado."
   },
   {
     "id": "forma_animal_vampiro",
-    "nome": "FORMA ANIMAL (Vampiro)",
+    "nome": "FORMA ANIMAL",
     "categoria": "MONSTRUOSAS",
     "origem": "HORROR",
     "requisitos": {
@@ -1217,7 +1217,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Transforma-se em lobo ou morcego (ação limitada, Astúcia -2)."
+    "descricao": "Como ação limitada, vampiros podem se transformar em um lobo ou morcego, ou voltar para sua forma vampírica, com uma rolagem de Astúcia -2. Não é possível falar enquanto na forma de lobo ou morcego."
   },
   {
     "id": "forma_nevoa",
@@ -1234,7 +1234,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "1/noite vira névoa (voo, intangível)."
+    "descricao": "Uma vez por noite, o vampiro pode se transformar em uma névoa. Isso requer uma ação e uma rolagem de Astúcia -2. Se falhar, o vampiro recebe um nível de Fadiga, mas pode tentar novamente. Uma Falha Crítica significa que recebe um nível de Fadiga e não pode tentar novamente esta noite.\nVampiros em forma de névoa são visíveis, voam com Movimentação 6 e podem atravessar qualquer barreira que não seja selada. Não podem afetar o mundo físico ou usar outros poderes enquanto em forma de névoa. Podem retornar à forma normal como uma ação limitada (sem nenhuma rolagem)."
   },
   {
     "id": "garras_vampiro",
@@ -1251,7 +1251,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Garras (For+d6, +2 escalar)."
+    "descricao": "As garras do vampiro são retráteis e causam For+d6 de dano e adicionam +2 em rolagens de Atletismo (escalar)."
   },
   {
     "id": "saciar",
@@ -1268,7 +1268,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Drenar humano até a morte aumenta Força e Vigor por 1 hora."
+    "descricao": "Não mais do que uma vez por dia, um vampiro que drena um humano de tamanho normal até a morte aumenta sua Força e Vigor em um tipo de dado pela próxima hora."
   },
   {
     "id": "senhor_vampiro",
@@ -1285,7 +1285,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode transformar mortais em vampiros (d4 horas)."
+    "descricao": "O vampiro pode se tornar o \"senhor\" de outro vampiro deixando um mortal beber seu sangue. Leva d4 horas para completar a transformação. Durante este tempo, o indivíduo pode se liberar da maldição através do poder cura e o Modificador Neutralizar Doença.\nO novo \"filhote\" não fica necessariamente agradecido pela mudança. Ele possui seu livre arbítrio e pode buscar vingança caso se ressinta da maldição!"
   },
   {
     "id": "servo",
@@ -1302,11 +1302,11 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha um servo mortal leal (Extra)."
+    "descricao": "Certos tipos de mortais se deliciam com o miasma dos mortos-vivos, atraídos por seu magnetismo poderoso ou esperançosos de que um dia se tornarão seres eternos.\nVampiros com esta Vantagem ganham um servo mortal que é completamente leal a seu \"mestre\" O servo é um Extra um Estágio abaixo de seu senhor e ganha Progressos conforme seu senhor ganha.\nO servo mantém seu livre arbítrio, mas quer servir o vampiro qualquer que seja a razão e morreria antes de traí-lo.\nÉ possível adquirir esta Vantagem até cinco vezes. Se um morrer, o senhor pode substituí-lo quando a situação permitir."
   },
   {
     "id": "regeneracao_rapida_vampiro",
-    "nome": "REGENERAÇÃO RÁPIDA (Vampiro)",
+    "nome": "REGENERAÇÃO (RÁPIDA)",
     "categoria": "MONSTRUOSAS",
     "origem": "HORROR",
     "requisitos": {
@@ -1319,6 +1319,6 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rolagem de cura a cada ação livre (exceto fraquezas específicas)."
+    "descricao": "O vampiro se regenera ao fazer uma rolagem de Vigor como ação livre limitada. Um sucesso cura um Ferimento ou remove o Estado Incapacitado e uma ampliação remove dois Ferimentos. Não é possível regenerar Ferimentos causados por decapitação, água benta ou armas abençoadas, luz do sol ou estaca no coração."
   }
 ]
