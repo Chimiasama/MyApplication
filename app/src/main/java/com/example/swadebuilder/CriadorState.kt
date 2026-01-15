@@ -2775,7 +2775,10 @@ class CriadorState {
         return (basePoints + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
     }
 
-    fun recalcularPontosAtributo(feedbackMessages: MutableList<String> = mutableListOf()) {
+    fun recalcularPontosAtributo(
+        feedbackMessages: MutableList<String> = mutableListOf(),
+        enforcePoolLimit: Boolean = true
+    ) {
 
         // Ensure current values meet the new racial base (e.g. if Sign increased base from d4 to d6)
         listaAtributos.forEach { attrKey ->
@@ -2788,9 +2791,9 @@ class CriadorState {
 
         pontosAtributo = calcularPontosAtributoRestantes()
 
-        trimAttributeStacks(feedbackMessages)
+        trimAttributeStacks(feedbackMessages, enforcePoolLimit)
 
-        rebuildAllPericiaStacks(feedbackMessages)
+        rebuildAllPericiaStacks(feedbackMessages, enforcePoolLimit)
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -2918,7 +2921,11 @@ class CriadorState {
         }
     }
 
-    private fun trimAttributeStacks(feedbackMessages: MutableList<String> = mutableListOf()) {
+    private fun trimAttributeStacks(
+        feedbackMessages: MutableList<String> = mutableListOf(),
+        enforcePoolLimit: Boolean = true
+    ) {
+        if (!enforcePoolLimit) return
 
         while (pontosAtributo < 0) {
             val entry = paCostStackPorAtributo
@@ -2948,7 +2955,7 @@ class CriadorState {
         jovemAutoPequeno = false
         jovemMalusPa = 1
         jovemMalusSp = 2
-        recalcularPontosAtributo()
+        recalcularPontosAtributo(enforcePoolLimit = false)
     }
 
     fun applyYoungMajor(pequComp: Complicacao) {
@@ -2957,7 +2964,7 @@ class CriadorState {
         jovemMalusSp = 2
         desvantagensAutomaticas.add(pequComp.id.substringBefore("(").trim())
         complicacoesSelecionadas[pequComp] = "Menor"
-        recalcularPontosAtributo()
+        recalcularPontosAtributo(enforcePoolLimit = false)
     }
 
     fun removeYoung(pequComp: Complicacao) {
