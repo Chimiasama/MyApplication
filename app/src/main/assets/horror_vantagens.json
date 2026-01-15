@@ -16,7 +16,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Personagens com Humor Ácido podem usar sua perícia Provocar em vez de Espírito ao realizar testes de Medo (todos os modificadores se aplicam). Se conseguir uma ampliação, age como Suporte +1 para todos os aliados que realizem o mesmo teste de Medo[cite: 507, 508]."
+    "descricao": "Algumas pessoas usam o humor para lidar com circunstâncias terríveis ou talvez só sejam tão duronas que podem rir na cara da morte.\nPersonagens com Humor Ácido podem usar sua perícia Provocar em vez de Espírito ao realizar testes de Medo (todos os modificadores se aplicam normalmente). Se conseguir uma ampliação, o humor é tão efetivo que age como Suporte +1 para todos os aliados que realizem o mesmo teste de Medo."
   },
   {
     "id": "implacavel",
@@ -35,7 +35,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Dedicada a derrotar o mal. Podem agir com uma única ação e uma penalidade de -2 quando em Estado Abalado[cite: 511]."
+    "descricao": "Esta personagem é realmente dedicada a derrotar o mal. Investiga onde suspeita que esteja e não tolera interferências de quem tenta atrapalhá-la.\nEm troca dessa implacável determinação e inabalável dedicação, estas personagens ainda podem agir com uma única ação e uma penalidade de -2 quando em Estado Abalado."
   },
   {
     "id": "veterano_do_mundo_sombrio",
@@ -54,7 +54,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Começam o jogo no Estágio Experiente (ou um Estágio maior que os demais), ganhando automaticamente quatro Progressos na criação. Deve rolar na tabela de Veterano do Mundo Sombrio para determinar um infortúnio passado[cite: 514, 515]."
+    "descricao": "Sua heroína ou herói já está a mais tempo nessa luta do que o resto do grupo. Talvez seja a experiência da idade ou por ter enfrentado mais do que sua cota de abominações.\nVeteranos do Mundo Sombrio começam o jogo no Estágio Experiente (ou um Estágio maior do que as demais personagens da campanha), recebendo automaticamente quatro Progressos durante a criação da personagem. O preço desta experiência é a rolagem na tabela de Veterano do Mundo Sombrio acima para decidir que infortúnios estão no passado da personagem."
   },
   {
     "id": "bravura",
@@ -75,7 +75,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Todos os aliados dentro do Raio de Comando ganham uma rerrolagem gratuita de um teste de Medo malsucedido[cite: 517]."
+    "descricao": "Heroínas e heróis calmos e resolutos inspiram aqueles ao seu redor, mesmo enfrentando um horror esmagador. Todos os aliados dentro do Raio de Comando ganham uma rerrolagem gratuita de um teste de Medo malsucedido."
   },
   {
     "id": "conjurador_silencioso_horror",
@@ -96,7 +96,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Aprendeu a conjurar feitiços ou invocar milagres sem falar. Pode conjurar debaixo d’água, no vácuo, com mordaça ou sob efeito de silêncio[cite: 518, 519]."
+    "descricao": "A personagem aprendeu a conjurar feitiços ou invocar milagres sem falar. Pode conjurá-los debaixo d’água, no vácuo, com mordaça, sob efeito do poder silêncio etc."
   },
   {
     "id": "poder_favorito_horror",
@@ -115,7 +115,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Escolha um poder. Pode ignorar até 2 pontos de qualquer penalidade (Ações Múltiplas, Ferimentos, Fadiga etc.) ao ativar esse poder[cite: 520]."
+    "descricao": "Conjuradores que dedicaram seu tempo na maestria de um feitiço, milagre ou dispositivo de ciência estranha em particular.\nEscolha um dos poderes desta personagem. Pode ignorar até 2 pontos de qualquer penalidade (Ações Múltiplas, Ferimentos, Fadiga etc,) ao ativar esse poder."
   },
   {
     "id": "cacador_de_monstros",
@@ -134,7 +134,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Imune a testes de Medo de um tipo geral de criatura escolhido (fantasmas, lobisomens, etc.). Não anula testes do poder Medo. Pode ser adquirida várias vezes para tipos diferentes[cite: 521, 522]."
+    "descricao": "A personagem é completamente imune a testes de Medo de um tipo geral de criatura, como fantasmas, lobisomens, vampiros, zumbis ou construtos (a critério do Mestre). Não anula testes de Medo provenientes do poder medo.\nA Vantagem pode ser adquirida várias vezes, cada vez para um tipo diferente de criatura."
   },
   {
     "id": "rainha_rei_do_grito",
@@ -151,7 +151,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sempre que precisar rolar na tabela de Efeitos de Medo, pode rerrolar seu primeiro resultado, mas deve aceitar o segundo[cite: 524]."
+    "descricao": "Seu herói ou heroína já enfrentou tudo que a escuridão tem e sobreviveu. Superou monstros, loucura, caos e, o mais importante, medo.\nSempre que precisar rolar na tabela de Efeitos de Medo, pode rerrolar seu primeiro resultado, mas deve aceitar o segundo!"
   },
   {
     "id": "poco_de_virtude",
@@ -168,7 +168,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por combate, gasta um Bene (ação limitada) para ganhar cinco Marcadores de Inspiração. Pode dar a aliados na distância de Astúcia. Marcadores permitem rerrolar Característica ou dano[cite: 527, 528, 530]."
+    "descricao": "Sua personagem raramente se entrega a vícios e acredita no poder do bem e do amor verdadeiro. Apesar dos outros zombarem dela por ser \"boa demais\", secretamente admiram sua paz interior e força de caráter.\nUma vez durante um combate (a critério do Mestre), pode gastar um Bene para ganhar cinco Marcadores de Inspiração. Isso é uma ação limitada. Pelo resto do encontro, a heroína ou herói pode dar esses marcadores a qualquer um dentro da Distância de sua Astúcia — mas não a si mesma. Isso pode ser feito a qualquer momento desde que esteja consciente, mas o alvo deve usar o marcador imediatamente — não pode ser guardado.\nCada Marcador de Inspiração permite rerrolar uma rolagem de Característica ou dano. A rolagem só pode se beneficiar de um único Marcador de Inspiração, mesmo que existam várias pessoas com esta Vantagem. Outras rerrolagens requerem o gasto de um Bene ou habilidade especial.\nMarcadores de Inspiração não são Benes, não ativam Vantagens que usem Benes (Como Impulso) e não podem ser usados para outras funções, como sacar uma nova Carta de Ação ou Absorver Ferimentos."
   },
   {
     "id": "visao",
@@ -185,7 +185,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por sessão de jogo, a personagem recebe uma visão (sonhos sombrios, flash repentino ou leitura de sorte). Use o sistema de Sinais e Presságios[cite: 535, 536, 537]."
+    "descricao": "Sonhos sombrios de imagens rápidas de destruição e perdição preenchem a mente desta pessoa. Apesar das visões normalmente serem perturbadoras, elas também podem ser úteis.\nUma vez por sessão de jogo, a personagem recebe uma visão. Pode ser um flash repentino que pode ocorrer a qualquer momento, um pesadelo que só acontece quando dorme, ou pode ser um processo ativo como ler as folhas de chá ou cartas de tarô.\nQuando isso acontece, use o sistema de Sinais e Presságios descritos na p. 61."
   },
   {
     "id": "dano_agravado",
@@ -201,7 +201,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ataques naturais ferem qualquer criatura sobrenatural ignorando invulnerabilidades[cite: 15]. Inimigos com Regeneração sofrem -4 para curar esses ferimentos[cite: 15]."
+    "descricao": "Os ataques feitos pelas garras, mordida e outros poderes inatos da criatura como luz sagrada e fogo infernal podem ferir qualquer outra criatura sobrenatural, independentemente de suas invulnerabilidades ou Fraquezas. Inimigos com Regeneração (Lenta ou Rápida) regeneram esses Ferimentos com uma penalidade de -4."
   },
   {
     "id": "medo_monstro",
@@ -219,7 +219,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "A criatura causa Medo com penalidade de -2[cite: 15]."
+    "descricao": "Todos os monstros listados neste capítulo causam Medo em mortais na primeira vez em que são vistos — a menos que tais criaturas sejam comuns no cenário. Se esta Vantagem for adquirida, os testes de Medo são feitos com -2."
   },
   {
     "id": "selvageria_monstro",
@@ -237,7 +237,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ataques Selvagens causam +4 de dano em vez de +2[cite: 15]."
+    "descricao": "O monstro pode invocar sua selvageria bestial, garras afiadas ou entrar em fúria em momentos desesperados. Os Ataques Selvagens da criatura causam +4 de dano em vez de +2."
   },
   {
     "id": "velho",
@@ -253,7 +253,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Concede +2 em todas as rolagens de Astúcia e Conhecimento Geral devido à experiência acumulada[cite: 15]."
+    "descricao": "Alguns seres monstruosos podem ter visto Roma queimar, o discurso de Mark Twain ou até mesmo estado presentes quando Lúcifer caiu. Provavelmente tiveram muitas vidas, vários amores ou familiares e viveram em várias partes do mundo.\nSeus anos de experiência acumulada lhes dá +2 em todas as rolagens de Astúcia e Conhecimento Geral.\nObviamente, as outras perícias, Vantagens e habilidades que estes seres de longa vida normalmente teriam não são possíveis com as regras usuais de criação de personagem, então é necessário discutir com o Mestre para descobrir porque essas habilidades não estão presentes. Talvez tenham sido apagadas ou reprimidas por algum motivo, mas retornam conforme a criatura ganha Progressos e começa sua vida atual."
   },
   {
     "id": "ataque_alado",
@@ -270,7 +270,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Asas atacam (For+d6, Alcance 2). Causa +4 dano se voar 5 quadros antes. Asas estendidas dão +2 Resistência[cite: 17]."
+    "descricao": "Asas atacam (For+d6, Alcance 2). Causa +4 dano se voar 5 quadros antes. Asas estendidas dão +2 Resistência."
   },
   {
     "id": "imortalidade_anjo",
@@ -287,7 +287,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Se morto, retorna em d4 dias em um novo corpo. Só morre permanentemente com armas infernais[cite: 17]."
+    "descricao": "Se morto, retorna em d4 dias em um novo corpo. Só morre permanentemente com armas infernais."
   },
   {
     "id": "lamina_divina",
@@ -304,7 +304,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Arma mágica que ignora Imortalidade e adiciona +d6 de dano[cite: 18]."
+    "descricao": "Arma mágica que ignora Imortalidade e adiciona +d6 de dano."
   },
   {
     "id": "linguas",
@@ -321,7 +321,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode ler, escrever e falar qualquer idioma humano[cite: 18]."
+    "descricao": "Pode ler, escrever e falar qualquer idioma humano."
   },
   {
     "id": "luz_sagrada",
@@ -338,7 +338,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Cria luz (Modelo Grande). Pode atacar em Cone (Fé, 2d4 dano)[cite: 18]."
+    "descricao": "Cria luz (Modelo Grande). Pode atacar em Cone (Fé, 2d4 dano)."
   },
   {
     "id": "rajada_abrasadora",
@@ -357,7 +357,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Dano da Luz Sagrada aumenta para 2d6[cite: 18]."
+    "descricao": "Dano da Luz Sagrada aumenta para 2d6."
   },
   {
     "id": "resistencia_anjo",
@@ -374,7 +374,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Aura divina garante +2 Resistência[cite: 18]."
+    "descricao": "Aura divina garante +2 Resistência."
   },
   {
     "id": "resistencia_divina",
@@ -393,7 +393,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Adiciona +2 Resistência (total +4)[cite: 18]."
+    "descricao": "Adiciona +2 Resistência (total +4)."
   },
   {
     "id": "sentido_sobrenatural",
@@ -413,7 +413,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sente seres sobrenaturais e magia a 10 quadros[cite: 18, 21]."
+    "descricao": "Sente seres sobrenaturais e magia a 10 quadros."
   },
   {
     "id": "velocidade_voo",
@@ -433,7 +433,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Movimentação de voo aumenta para 24. Pode comprar 2x para 48[cite: 18, 20]."
+    "descricao": "Movimentação de voo aumenta para 24. Pode comprar 2x para 48."
   },
   {
     "id": "poderes_misticos_anjo",
@@ -450,7 +450,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 10 PP e poderes temáticos (Arauto ou Morte)[cite: 18]."
+    "descricao": "Ganha 10 PP e poderes temáticos (Arauto ou Morte)."
   },
   {
     "id": "asas_demonio",
@@ -467,7 +467,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha asas retráteis (Mov 12). Pode comprar mais vezes para aumentar velocidade[cite: 20]."
+    "descricao": "Ganha asas retráteis (Mov 12). Pode comprar mais vezes para aumentar velocidade."
   },
   {
     "id": "couro_blindado",
@@ -484,7 +484,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pele grossa concede +4 Armadura[cite: 20]."
+    "descricao": "Pele grossa concede +4 Armadura."
   },
   {
     "id": "demonio_verdadeiro",
@@ -501,7 +501,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe metade do dano de armas não mágicas (exceto ferro frio)[cite: 20]."
+    "descricao": "Recebe metade do dano de armas não mágicas (exceto ferro frio)."
   },
   {
     "id": "fogo_infernal",
@@ -518,7 +518,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Cria fogo (1d6) em área ou cone (Atletismo, 2d4)[cite: 20]."
+    "descricao": "Cria fogo (1d6) em área ou cone (Atletismo, 2d4)."
   },
   {
     "id": "queimar_demonio",
@@ -537,7 +537,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Dano do Fogo Infernal aumenta para 2d6. Cone à vontade[cite: 20]."
+    "descricao": "Dano do Fogo Infernal aumenta para 2d6. Cone à vontade."
   },
   {
     "id": "garras_demonio",
@@ -554,7 +554,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Garras (For+d4, +2 escalar). 2ª compra: For+d6, PA 2[cite: 21]."
+    "descricao": "Garras (For+d4, +2 escalar). 2ª compra: For+d6, PA 2."
   },
   {
     "id": "imortalidade_demoniaca",
@@ -571,7 +571,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Retorna em d4 dias se morto. Morte permanente apenas com armas sagradas[cite: 21]."
+    "descricao": "Retorna em d4 dias se morto. Morte permanente apenas com armas sagradas."
   },
   {
     "id": "incorporeo",
@@ -588,7 +588,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Etéreo por padrão. Pode se manifestar por 1 rodada com teste de Espírito[cite: 21]."
+    "descricao": "Etéreo por padrão. Pode se manifestar por 1 rodada com teste de Espírito."
   },
   {
     "id": "mordida_demonio",
@@ -605,7 +605,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Presas (For+d6). 2ª compra: For+d6, PA 2[cite: 21]."
+    "descricao": "Presas (For+d6). 2ª compra: For+d6, PA 2."
   },
   {
     "id": "poderes_misticos_demonio",
@@ -622,7 +622,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 10 PP e poderes temáticos (Invocador, Possessor, Sedutor ou Trapaceiro)[cite: 21]."
+    "descricao": "Ganha 10 PP e poderes temáticos (Invocador, Possessor, Sedutor ou Trapaceiro)."
   },
   {
     "id": "invisibilidade_fantasma",
@@ -641,7 +641,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Torna-se invisível enquanto etéreo[cite: 22]."
+    "descricao": "Torna-se invisível enquanto etéreo."
   },
   {
     "id": "poderes_misticos_fantasma",
@@ -658,7 +658,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 10 PP e poderes temáticos (Aparição, Poltergeist ou Sombra)[cite: 22]."
+    "descricao": "Ganha 10 PP e poderes temáticos (Aparição, Poltergeist ou Sombra)."
   },
   {
     "id": "rugir_fantasma",
@@ -678,7 +678,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Desafio de Intimidar em Cone (ação limitada)[cite: 23, 26]."
+    "descricao": "Desafio de Intimidar em Cone (ação limitada)."
   },
   {
     "id": "toque_arrepiante",
@@ -697,7 +697,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ataque de Toque corpóreo causa For+d4 que ignora armadura não mágica[cite: 23]."
+    "descricao": "Ataque de Toque corpóreo causa For+d4 que ignora armadura não mágica."
   },
   {
     "id": "travessia",
@@ -714,7 +714,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Funciona como Rede de Contatos com espíritos[cite: 23]."
+    "descricao": "Funciona como Rede de Contatos com espíritos."
   },
   {
     "id": "alfa",
@@ -731,7 +731,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode controlar caninos naturais com Intimidar vs Espírito[cite: 24]."
+    "descricao": "Pode controlar caninos naturais com Intimidar vs Espírito."
   },
   {
     "id": "andar_nas_paredes_lobo",
@@ -751,7 +751,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rasteja em paredes (metade Movimentação)[cite: 24, 31]."
+    "descricao": "Rasteja em paredes (metade Movimentação)."
   },
   {
     "id": "fala_lobisomem",
@@ -768,7 +768,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode falar transformado, mas com dificuldade (-2 em rolagens sociais/arcanas verbais)[cite: 24]."
+    "descricao": "Pode falar transformado, mas com dificuldade (-2 em rolagens sociais/arcanas verbais)."
   },
   {
     "id": "mordida_garras_aprimorada",
@@ -785,7 +785,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ataques aumentam para For+d8, PA 4[cite: 24]."
+    "descricao": "Ataques aumentam para For+d8, PA 4."
   },
   {
     "id": "regeneracao_lenta_lobo",
@@ -802,7 +802,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rolagem de Vigor (ação livre) para regenerar. Ampliação cura 2 ferimentos. Não funciona contra prata[cite: 24]."
+    "descricao": "Rolagem de Vigor (ação livre) para regenerar. Ampliação cura 2 ferimentos. Não funciona contra prata."
   },
   {
     "id": "resistencia_lobo",
@@ -819,7 +819,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 Resistência[cite: 24]."
+    "descricao": "+2 Resistência."
   },
   {
     "id": "uivo",
@@ -836,7 +836,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Desafio de Intimidar em Cone (ação limitada)[cite: 24]."
+    "descricao": "Desafio de Intimidar em Cone (ação limitada)."
   },
   {
     "id": "descarga",
@@ -853,7 +853,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Gasta Fadiga para explodir eletricidade (Modelo Grande, 4d6 dano)[cite: 25]."
+    "descricao": "Gasta Fadiga para explodir eletricidade (Modelo Grande, 4d6 dano)."
   },
   {
     "id": "flashbacks",
@@ -870,7 +870,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por encontro, aumenta perícia em um passo ou ganha d4 se não tiver[cite: 25]."
+    "descricao": "Uma vez por encontro, aumenta perícia em um passo ou ganha d4 se não tiver."
   },
   {
     "id": "partes_destacaveis",
@@ -890,7 +890,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode destacar mão, olho ou orelha e controlar a distância[cite: 26, 28]."
+    "descricao": "Pode destacar mão, olho ou orelha e controlar a distância."
   },
   {
     "id": "robusto_monstro",
@@ -907,7 +907,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Não recebe ferimento ao ser Abalado duas vezes[cite: 26]."
+    "descricao": "Não recebe ferimento ao ser Abalado duas vezes."
   },
   {
     "id": "cavar_mumia",
@@ -924,7 +924,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Cava com metade da movimentação[cite: 26]."
+    "descricao": "Cava com metade da movimentação."
   },
   {
     "id": "invocar_bando",
@@ -941,7 +941,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "1/dia, conjura bando de insetos (Modelo Médio)[cite: 27]."
+    "descricao": "1/dia, conjura bando de insetos (Modelo Médio)."
   },
   {
     "id": "invocar_bando_maior",
@@ -960,7 +960,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Bando usa Modelo Grande[cite: 27]."
+    "descricao": "Bando usa Modelo Grande."
   },
   {
     "id": "invocar_tempestade",
@@ -977,7 +977,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "1/semana, cria tempestade de areia gigante[cite: 27]."
+    "descricao": "1/semana, cria tempestade de areia gigante."
   },
   {
     "id": "podridao_mumia",
@@ -994,7 +994,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Toque causa doença (Vigor ou Ferimento). Morte cria nova múmia[cite: 27]."
+    "descricao": "Toque causa doença (Vigor ou Ferimento). Morte cria nova múmia."
   },
   {
     "id": "poderes_misticos_mumia",
@@ -1011,7 +1011,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 10 PP e poderes temáticos (Arquiteto ou Real)[cite: 27]."
+    "descricao": "Ganha 10 PP e poderes temáticos (Arquiteto ou Real)."
   },
   {
     "id": "regeneracao_lenta_mumia",
@@ -1028,7 +1028,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rolagem de cura natural diária (exceto dano por fogo)[cite: 27]."
+    "descricao": "Rolagem de cura natural diária (exceto dano por fogo)."
   },
   {
     "id": "regeneracao_rapida_mumia",
@@ -1047,7 +1047,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rolagem de cura a cada rodada (exceto fogo/água benta)[cite: 27]."
+    "descricao": "Rolagem de cura a cada rodada (exceto fogo/água benta)."
   },
   {
     "id": "devorador_memorias",
@@ -1064,7 +1064,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Devorar cérebro concede vislumbres de memória[cite: 28]."
+    "descricao": "Devorar cérebro concede vislumbres de memória."
   },
   {
     "id": "fedor",
@@ -1081,7 +1081,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Criaturas adjacentes ficam Distraídas[cite: 28]."
+    "descricao": "Criaturas adjacentes ficam Distraídas."
   },
   {
     "id": "mestre_zumbis",
@@ -1098,7 +1098,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Controla mortos-vivos sem mente com Intimidar vs Espírito[cite: 28]."
+    "descricao": "Controla mortos-vivos sem mente com Intimidar vs Espírito."
   },
   {
     "id": "rastreador_implacavel",
@@ -1115,7 +1115,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 Sobrevivência (rastrear) contra alvo de vingança. Recupera trilha automaticamente[cite: 29]."
+    "descricao": "+2 Sobrevivência (rastrear) contra alvo de vingança. Recupera trilha automaticamente."
   },
   {
     "id": "toque_da_morte",
@@ -1132,7 +1132,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Toque causa For+d4. Contra alvo do Voto, causa For+2d6[cite: 29]."
+    "descricao": "Toque causa For+d4. Contra alvo do Voto, causa For+2d6."
   },
   {
     "id": "andarilho_do_dia",
@@ -1149,7 +1149,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Não é ferido pela luz do sol[cite: 30]."
+    "descricao": "Não é ferido pela luz do sol."
   },
   {
     "id": "criancas_da_noite",
@@ -1166,7 +1166,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "1/noite convoca lobos, morcegos ou ratos[cite: 31]."
+    "descricao": "1/noite convoca lobos, morcegos ou ratos."
   },
   {
     "id": "encantar_vampiro",
@@ -1183,7 +1183,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Conjura Fantoche gastando Benny e Persuadir[cite: 31]."
+    "descricao": "Conjura Fantoche gastando Benny e Persuadir."
   },
   {
     "id": "forma_animal_vampiro",
@@ -1200,7 +1200,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Transforma-se em lobo ou morcego (ação limitada, Astúcia -2)[cite: 31]."
+    "descricao": "Transforma-se em lobo ou morcego (ação limitada, Astúcia -2)."
   },
   {
     "id": "forma_nevoa",
@@ -1217,7 +1217,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "1/noite vira névoa (voo, intangível)[cite: 31]."
+    "descricao": "1/noite vira névoa (voo, intangível)."
   },
   {
     "id": "garras_vampiro",
@@ -1234,7 +1234,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Garras (For+d6, +2 escalar)[cite: 31]."
+    "descricao": "Garras (For+d6, +2 escalar)."
   },
   {
     "id": "saciar",
@@ -1251,7 +1251,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Drenar humano até a morte aumenta Força e Vigor por 1 hora[cite: 31]."
+    "descricao": "Drenar humano até a morte aumenta Força e Vigor por 1 hora."
   },
   {
     "id": "senhor_vampiro",
@@ -1268,7 +1268,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode transformar mortais em vampiros (d4 horas)[cite: 32]."
+    "descricao": "Pode transformar mortais em vampiros (d4 horas)."
   },
   {
     "id": "servo",
@@ -1285,7 +1285,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha um servo mortal leal (Extra)[cite: 32]."
+    "descricao": "Ganha um servo mortal leal (Extra)."
   },
   {
     "id": "regeneracao_rapida_vampiro",
@@ -1302,6 +1302,6 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rolagem de cura a cada ação livre (exceto fraquezas específicas)[cite: 32]."
+    "descricao": "Rolagem de cura a cada ação livre (exceto fraquezas específicas)."
   }
 ]

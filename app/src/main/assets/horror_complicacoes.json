@@ -1,5 +1,404 @@
 [
   {
+    "id": "almofadinha",
+    "name": "ALMOFADINHA",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "São personagens que aparentam fragilidade e não parecem uma ameaça. Podem soar meio molengas, ter feições gentis ou uma voz suave. Seja qual for a razão, será difícil parecer hostil. Subtraia 2 quando fizer rolagens de Intimidar."
+  },
+  {
+    "id": "analfabeto",
+    "name": "ANALFABETO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Esta figura não sabe ler. Provavelmente pode assinar seu nome e sabe o significado de um sinal de PARE, mas não pode fazer muito mais que isso. Também não sabe muito sobre Matemática; deve ser capaz de efetuar 2+2=4, mas multiplicações e similares estão além da sua capacidade. Não será possível ler ou escrever nenhum idioma, mesmo que tenha fluência falada em vários."
+  },
+  {
+    "id": "anemico",
+    "name": "ANÊMICO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Anemia torna personagens particularmente suscetíveis a infecções, doenças, efeitos ambientais e fadiga. Deve subtrair 2 de todos os testes de Vigor feitos para resistir a Fadiga (veja Perigos, começando na pág. 142)."
+  },
+  {
+    "id": "arrogante",
+    "name": "ARROGANTE",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Personagens arrogantes não se acham melhores, sabem que são. Seja no que for – esgrima, kung fu, pintura – aproveitam cada oportunidade para ostentar que quase ninguém se compara às suas habilidades. Só vencer não é o bastante, é preciso dominar completamente quem se opuser e provar sua superioridade. É o tipo de pessoa que desarma oponentes em um duelo só para poder pegar a sua espada e devolvê-la com um sorriso desdenhoso. Personagens arrogantes sempre procuram pela maior ameaça em batalha, atacando rivais menores apenas se ficarem em seu caminho."
+  },
+  {
+    "id": "atrapalhado",
+    "name": "ATRAPALHADO",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "São personagens sem coordenação motora, capazes de tropeçar nas próprias pernas e sem habilidade para esportes. Subtraem 2 em rolagens de Atletismo e Furtividade."
+  },
+  {
+    "id": "boca_grande",
+    "name": "BOCA GRANDE",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Como diz o ditado, quem fala demais dá bom dia a cavalo. Personagens Boca Grande poderiam cumprimentar uma cavalaria inteira. Acham difícil guardar segredos e acabam revelando planos secretos. Isso geralmente ocorre nos piores momentos possíveis."
+  },
+  {
+    "id": "cauteloso",
+    "name": "CAUTELOSO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Personagens com Cautela personificam a moderação e a precaução, nunca tomam decisões precipitadas e gostam de planejar tudo em mínimos detalhes antes que qualquer ação seja tomada."
+  },
+  {
+    "id": "cego",
+    "name": "CEGO",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Por não ter visão, sofre -6 em todas as tarefas físicas dependentes deste sentido (a critério do Mestre). Por outro lado, personagens sem visão ganham uma Vantagem gratuita a sua escolha para compensar esta Complicação particularmente difícil."
+  },
+  {
+    "id": "codigo_de_honra",
+    "name": "CÓDIGO DE HONRA",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Honra é muito importante para tais personagens, que mantêm sua palavra, não matam ou abusam de prisioneiros e geralmente tentam operar dentro do comportamento adequado para um cavalheiro ou uma dama segundo as noções particulares de seu mundo."
+  },
+  {
+    "id": "covarde",
+    "name": "COVARDE",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Nem sempre protagonistas têm sangue frio. Covardes tremem quando veem sangue ou vísceras e ficam apavorados de se ferir. Subtraem 2 de testes de Medo e quando resistem à Intimidação."
+  },
+  {
+    "id": "curioso",
+    "name": "CURIOSO",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "A curiosidade matou o gato e também pode matar seu herói ou heroína. Personagens curiosas checam tudo e sempre querem saber o que há por trás de um mistério ou segredo em potencial."
+  },
+  {
+    "id": "deficiente_auditivo",
+    "name": "DEFICIENTE AUDITIVO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Personagens que perderam parte ou toda a sua audição têm esta desvantagem. Como uma Complicação Menor, ela subtrai 4 de todas as rolagens de Perceber feitas para ouvir, incluindo acordar devido a ruídos altos. Uma Complicação maior significa ausência total do sentido de audição, levando à falha automática em todas as rolagens de Perceber dependentes da audição. Aparelhos auditivos reduzem a penalidade para 2, mas precisam de baterias e têm 50% de chance de caírem caso a personagem sofra um nível de Ferimento, queda ou algum outro tipo de trauma."
+  },
+  {
+    "id": "delirante",
+    "name": "DELIRANTE",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Delirantes acreditam em algo considerado muito estranho pelo resto das pessoas. Delírios Menores são inofensivos ou a personagem normalmente os guarda para si mesma (o governo colocou sedativos em refrigerantes, cães podem falar, todos nós somos apenas personagens de algum jogo bizarro etc.). Com Delírios Maiores, ela frequentemente expressa seu ponto de vista sobre a situação e isso pode eventualmente levá-la ao perigo (o governo é comandado por alienígenas, os hospitais são mortais, eu sou alérgico a armaduras, zumbis são meus amigos)."
+  },
+  {
+    "id": "desagradavel",
+    "name": "DESAGRADÁVEL",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Personagens com esta complicação são desagradáveis, sempre estão de mau humor. Pessoas desagradáveis têm problemas para fazer qualquer tipo de ato caridoso a qualquer pessoa e acreditam que devem receber pagamento por seus esforços, mas não aceitam favores ou premiações graciosamente. Além das questões óbvias de interpretação, subtraem 1 das rolagens de Persuadir."
+  },
+  {
+    "id": "desastrado",
+    "name": "DESASTRADO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Devido a criação, falta de exposição ou puramente má sorte, alguns indivíduos são “desastrados” quando se trata de lidar com dispositivos mecânicos ou tecnológicos. Desastrado inflige uma penalidade de -2 quando se usa dispositivos elétricos ou mecânicos. Se a rolagem for uma Falha Crítica ao usar um dispositivo (e o mesmo não tenha uma consequência já definida para isso), ele quebra. Se o Mestre considerar apropriado, pode ser consertado com uma rolagem de Consertar e 1d6 horas."
+  },
+  {
+    "id": "desconfiado",
+    "name": "DESCONFIADO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Essa personagem desconfia de todo mundo. Como uma Complicação Menor sua paranoia cria frequentemente problemas de confiança, podendo exigir o pagamento integral antes de realizar uma tarefa, exigir que todos os acordos estejam por escrito ou mesmo acreditar estar sofrendo perseguição por parte das pessoas próximas. Como uma Complicação Maior, rolagens de Suporte para ajudar o indivíduo Desconfiado são feitas com -2."
+  },
+  {
+    "id": "desejo_de_morrer",
+    "name": "DESEJO DE MORRER",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Ter um desejo de morrer não significa ser suicida em potencial, mas pode levar personagens a acreditar que suas vidas valem menos do que um objetivo nobre, mas claramente mortífero. Quem tem Desejo de Morrer não jogará a vida fora por qualquer razão, mas quando houver uma chance de completar o seu objetivo, fará qualquer coisa – e aceitará qualquer risco – para alcançá-lo."
+  },
+  {
+    "id": "excesso_de_confianca",
+    "name": "EXCESSO DE CONFIANÇA",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Acreditam ser capazes de derrotar qualquer oponente e de fazer quase tudo. Personagens confiantes nunca querem fugir de um desafio. Não são suicidas, mas vão além do que dita o bom senso."
+  },
+  {
+    "id": "feio",
+    "name": "FEIO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Pessoas atraentes conseguem todo tipo de vantagem. Essa personagem desafortunada não é uma dessas pessoas. Subtraia 1 de suas rolagens de Persuadir ou 2 se escolher uma Complicação Maior."
+  },
+  {
+    "id": "fobia",
+    "name": "FOBIA",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Fobias são medos esmagadores e irracionais que afetam a psique da personagem. Sempre que qualquer personagem estiver na presença de sua fobia (a critério do Mestre, mas geralmente quando avistá-la) subtraia 1 de todos os testes de Característica no caso de uma Complicação Menor e 2 se for uma Maior. Fobias não devem ser muito óbvias – é bom senso temer criaturas inegavelmente perigosas, como, por exemplo, vampiros, portanto isso não é uma fobia. Ao invés disso, a fobia geralmente se concentra em algum elemento aleatório que a mente associa ao evento. Lembre, fobias são medos irracionais."
+  },
+  {
+    "id": "forasteiro",
+    "name": "FORASTEIRO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Em uma sociedade formada por apenas alguns tipos de pessoas, as personagens com essa Complicação não se encaixam. Um membro de um povo nativo americano em uma cidade do Velho Oeste, uma criatura alienígena em um jogo de ficção científica de fuzileiros humanos ou uma criatura meioorc em um grupo composto por grupos élficos, anãs e humanas são todos exemplos de Forasteiros. Habitantes locais são suscetíveis a aumentar os preços para estas figuras deslocadas, ignorar seus pedidos de socorro e geralmente tratam-nas como se fossem de uma classe mais baixa. Tais personagens subtraem 2 de rolagens de Persuadir feitas para influenciar quem não é do seu próprio povo. A versão Maior também significa ter poucos ou nenhum direito legal na região da campanha. Personagens com esta complicação podem ser de uma espécie diferente entre xenófobos, estar em uma civilização cruel e pouco esclarecida em relação a estranhos ou pode ser uma inteligência artificial cuja consciência não é reconhecida por lei."
+  },
+  {
+    "id": "ganancioso",
+    "name": "GANANCIOSO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Personagens com essa complicação agem com avareza, medindo valor em bens comerciais ou riqueza. Como uma Complicação Menor, argumentam amargamente querendo mais do que sua parte em qualquer despojo adquirido durante o jogo. Se for uma Complicação Maior, lutam por qualquer coisa que considerem injusta e podem até mesmo matar ao se sentirem alvo de menosprezo ou cobiçarem algo que não possam ter."
+  },
+  {
+    "id": "guiado",
+    "name": "GUIADO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Voto e Guiado são complicações diferentes. Personagens com Voto têm um compromisso com outrem, enquanto Guiados buscam algo para si. Pode ser proteger o reino, receber condecoração como oficial, vencer todas as lutas no Coliseu Romano ou ganhar reconhecimento entre pilotos na frota galática. A versão Menor define a personagem e dirige as suas decisões, mas acontece raramente ou é relativamente inofensivo. Como uma Complicação Maior a personagem tem um desejo que lhe é impreterível e aparece frequentemente ou causa perigo para a personagem ou às pessoas ao seu redor."
+  },
+  {
+    "id": "habito",
+    "name": "HÁBITO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Essa personagem possui um hábito irritante e constante de algum tipo. Um Hábito menor irrita aqueles a seu redor, mas não é perigoso como cutucar o nariz, não conseguir parar de mexer no telefone, dizer “cê sabe” no meio de cada frase ou frequentemente mascar chiclete de forma barulhenta. Mesmo pessoas próximas evitarão a personagem se possível. Um Hábito maior é algum tipo de dependência física ou mental, debilitante ou possivelmente mortal como usar drogas, alcoolismo ou até mesmo um vício em realidade virtual em um cenário de alta tecnologia. Personagens com Vício que não recebam sua dose precisam fazer um teste de Vigor a cada 24 horas ou recebem um nível de Fadiga (veja pág. 122). A cada 24 horas, uma rolagem de Curar com algum tipo de medicamento apropriado remove um nível de Fadiga por quatro horas. Depois disso, a Fadiga retorna e só pode ser recuperada com a substância viciante."
+  },
+  {
+    "id": "heroico",
+    "name": "HEROICO",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Esta nobre alma nunca diz não a uma pessoa necessitada. Não necessariamente a personagem fica feliz com isso, mas sempre virá em socorro daqueles que não podem ajudar a si mesmos. É a primeira pessoa a correr para dentro de um prédio em chamas, geralmente aceita caçar monstros por pouco ou nenhum pagamento e normalmente é alvo fácil para uma história triste."
+  },
+  {
+    "id": "hesitante",
+    "name": "HESITANTE",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Personagens hesitantes levam tempo para agir em situações estressantes. Saque duas Cartas de Ação em combate e aja na menor. Se você sacar um Curinga, use-o normalmente e ignore a Complicação na rodada (sendo esta uma Complicação Menor, na verdade ela aumenta suas chances de sacar um Curinga!). Personagens Hesitantes não podem escolher as Vantagens Rápido ou Focado."
+  },
+  {
+    "id": "idoso",
+    "name": "IDOSO",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Sua personagem está envelhecendo, mas não está totalmente pronta para o asilo. Sua Movimentação é reduzida em 1 quadro e subtrai 1 de rolagens de corrida (mínimo 1). Também sofre uma penalidade de -1 em rolagens de Agilidade, Força e Vigor, mas não em suas perícias associadas. Por outro lado, a sabedoria dos seus anos concede 5 pontos de perícia adicionais que podem ser usados em quaisquer perícias associadas à Astúcia."
+  },
+  {
+    "id": "impulsivo",
+    "name": "IMPULSIVO",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Personagens com esta complicação mergulham de cabeça nas situações e raramente pensam antes de agir."
+  },
+  {
+    "id": "incredulo",
+    "name": "INCRÉDULO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Algumas pessoas não acreditam no sobrenatural até estarem a meio caminho da garganta de alguma criatura. São pessoas céticas que se esforçam para racionalizar eventos sobrenaturais. Essas personagens se lançam diretamente em perigos que não acreditam e procuram explicações alternativas para qualquer evento sobrenatural. Mesmo que sofra um confronto direto com uma verdade inegável, sua mente eventualmente começa a duvidar do que viu, racionalizando ou atribuindo ao evento um caráter “único” enquanto continua a duvidar do próximo mistério."
+  },
+  {
+    "id": "inimigo",
+    "name": "INIMIGO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Alguém odeia essa figura, e quer sua ruína, prisão ou morte. O valor da Complicação depende do poder de seu oponente e de quantas vezes poderá aparecer. Inimigo Menor pode ser alguém buscando vingança com uma pistola ou uma irmandade traída que é mortal, mas só aparece raramente. Inimigo Maior pode representar autoridades poderosas, um bando de foras da lei ou um nêmesis poderoso e incansável. Se ocorrer vitória sobre seu Inimigo, o Mestre deve trabalhar gradualmente na introdução de novo Inimigo ou a Complicação pode ser paga com um progresso."
+  },
+  {
+    "id": "invejoso",
+    "name": "INVEJOSO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "A insegurança leva à inveja das conquistas alheias ou a ser excessivamente possessiva com o que essa alma descontente acredita que lhe pertence. Essa personagem geralmente reclama, choraminga, cobiça as posses ou feitos dos outros, reivindica crédito pelo trabalho alheio, desobedece comandos e causa problemas no geral. Como uma Complicação Menor, sua inveja se foca em um assunto em particular (como a sua perícia “inigualável” em pilotagem ou um interesse amoroso). Como uma Complicação Maior, a personagem sente inveja de todos que considera que lhe ofuscam. Sempre fala mal de rivais, tenta ter maior visibilidade ou conspira ativamente para desacreditar quem ameaça seu ego."
+  },
+  {
+    "id": "jovem",
+    "name": "JOVEM",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "A personagem tem entre 12-15 anos (em idade humana—ajuste para outras ancestralidades). Possui apenas 4 pontos para ajustar seus atributos em vez de 5, e 10 pontos de perícia em vez de 12. Também pode ter restrições legais dependendo do cenário (não pode dirigir, possuir uma arma de fogo e assim por diante). Pelo lado positivo, jovens têm um bocado de sorte. Sacam um Bene extra no início de cada sessão de jogo (isso se acumula com outras Vantagens como Sorte ou Sorte Grande). A maioria dentre personagens Jovens também deve adotar a Complicação Pequeno, mas não é obrigatório. Como uma Complicação Maior, a personagem é Muito Jovem (8 a 11 anos de idade). Tem apenas 3 pontos para atributos e 10 para perícias, além da Complicação Pequeno. Personagens muito Jovens sacam dois Benes extras no começo de cada sessão."
+  },
+  {
+    "id": "leal",
+    "name": "LEAL",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Personagens leais possuem grande coragem e arriscam sua vida sem hesitação pelas suas amizades. Podem até não agir dessa maneira, mas ajudam sem pensar quando as pessoas próximas são ameaçadas."
+  },
+  {
+    "id": "lento",
+    "name": "LENTO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Uma deficiência ou ferimento antigo dificulta a mobilidade dessa personagem. Como uma Complicação Menor, reduza sua Movimentação em 1 e seu dado de corrida em um tipo (caso já seja d4, reduza para d4-1). Como uma Complicação Maior, reduza o dado de corrida em um tipo, Movimentação em 2 quadros e subtraia 2 de rolagens de Atletismo e rolagens de resistência a Atletismo (como Desafios ou Agarrar). Personagens Lentos não podem ter a Vantagem Ligeiro. Próteses: Na versão Menor desta Complicação é possível ter uma prótese. Se a prótese se perder, passam a valer os efeitos da versão Maior. Cadeiras de rodas: Da era vitoriana em diante, personagens Lentos podem começar com uma cadeira de rodas manual sem custos. Na era moderna (1980 em diante) é possível escolher uma cadeira super leve ou uma motorizada. Todas as cadeiras de rodas requerem um solo razoavelmente plano para funcionarem (critério do Mestre). - MANUAL: Movimentação é metade do dado de Atletismo (máximo de 3) e não pode correr. - SUPER LEVE: Movimentação é metade do dado de Atletismo e pode correr com d4 (Menor) ou d4-1 (Maior). - MOTORIZADA: Movimentação 6 em solo plano, 3 em solo acidentado, não pode correr. A maioria das cadeiras motorizadas pode andar cerca de 15 quilômetros antes de precisar de uma recarga."
+  },
+  {
+    "id": "lingua_presa",
+    "name": "LÍNGUA PRESA",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Personagens com Língua Presa erram frases de efeito (ou pensam nelas só depois!), vão pela tangente quando estão tentando convencer alguém a fazer alguma coisa e no geral se expressam mal na maior parte do que tentam dizer. Sofrem uma penalidade de -1 em Intimidar, Performance e rolagens de Persuadir e Provocar que envolvam falar."
+  },
+  {
+    "id": "ma_sorte",
+    "name": "MÁ SORTE",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Personagens com má sorte têm mais azar que a maioria, recebendo um Bene a menos que o normal por sessão de jogo. Não é possível ter Má Sorte e a Vantagem Sorte simultaneamente."
+  },
+  {
+    "id": "mudo",
+    "name": "MUDO",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Em virtude de um trauma ou de nascença, sua personagem perdeu a capacidade de falar. Podem escrever mensagens quando necessário, usar língua de sinais ou alguma combinação de comunicação visual. Comunicação baseada em visão pode requerer um teste de Perceber para ser corretamente compreendida (penalidades por iluminação e similares se aplicam)."
+  },
+  {
+    "id": "nao_sabe_nadar",
+    "name": "NÃO SABE NADAR",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "A maioria das pessoas no século XXI consegue nadar graças à piscinas, a facilidade de se viajar até lagos e praias ou por esforços educacionais. Contudo, historicamente, quem não foi criado perto de uma grande massa d’água não conseguia. Personagens com esta Complicação sofrem uma penalidade de -2 na perícia Atletismo quando estão nadando e cada quadro que se movem na água custa 3 quadros de Movimentação. Veja Movimento (pág. 107) e Afogamento (pág. 142) para mais detalhes."
+  },
+  {
+    "id": "obeso",
+    "name": "OBESO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Personagens maiores que suportam bem o seu próprio peso têm a Vantagem Musculoso. Caso contrário, são Obesos. Não é possível ser Musculoso e Obeso simultaneamente e esta Complicação não pode aumentar seu Tamanho além de +3. O Tamanho (e por consequência a Resistência) de uma personagem com Obeso aumenta em +1. Sua Movimentação é reduzida em 1 quadro e seu dado de corrida em um tipo (mínimo d4). Força é considerada um tipo de dado menor (mínimo d4) para armaduras e equipamentos usados (mas não armas). Também terão dificuldades em encontrar armaduras ou roupas em que caibam ou em entrar em espaços pequenos."
+  },
+  {
+    "id": "obrigacao",
+    "name": "OBRIGAÇÃO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Existe uma responsabilidade que deve ser cumprida regularmente ou mesmo diariamente. Pode ser um emprego, trabalho voluntário, cuidar da família ou de pessoas do seu círculo de amizades, etc. A Obrigação consome cerca 20 horas na semana ou 40 ou mais na versão Maior. Exatamente o que isso acarreta deve ser discutido entre Mestre e jogador."
+  },
+  {
+    "id": "pacifista",
+    "name": "PACIFISTA",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Estas personagens desprezam a violência. Pacifismo Menor significa que lutam apenas se não for dada nenhuma outra opção e jamais permitem a matança de prisioneiros e outras vítimas indefesas. Pacifistas Maiores não irão combater criaturas vivas sob quaisquer circunstâncias. Podem se defender, mas não farão nada para ferir permanentemente criaturas vivas sencientes. Pacifistas Maiores também podem lutar com métodos não letais (veja pág. 119), mas apenas para autodefesa ou para defesa de terceiros. Criaturas inegavelmente malignas, mortos vivos, demônios e similares podem ser atacadas até mesmo pelos Pacifistas com a versão Maior desta complicação!"
+  },
+  {
+    "id": "peculiaridade",
+    "name": "PECULIARIDADE",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Existe alguma fraqueza menor, normalmente engraçada, mas que ocasionalmente lhe causa problemas. Um espadachim pode sempre tentar primeiro cortar suas iniciais em seus inimigos, um anão pode se vangloriar constantemente a respeito da sua cultura ou uma debutante esnobe pode não comer, beber ou socializar com as classes mais baixas, por exemplo."
+  },
+  {
+    "id": "pequeno",
+    "name": "PEQUENO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Personagens Pequenos têm pouco peso, altura ou ambos. Seu Tamanho (veja pág. 127) é reduzido em 1, o que também reduz sua Resistência. Tamanho não pode ser reduzido abaixo de -1, mas a penalidade na Resistência permanece. Um pequenino com esta complicação, por exemplo, continua com Tamanho -1 e perde um ponto em sua Resistência."
+  },
+  {
+    "id": "pobreza",
+    "name": "POBREZA",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Dizem que um tolo e seu dinheiro logo se separam, sua personagem é uma dessas pessoas. Elas começam com metade do dinheiro normal para o cenário e parecem não conseguir poupar os recursos adquiridos depois que o jogo começa. No geral, reduz à metade os seus recursos totais a cada semana de jogo."
+  },
+  {
+    "id": "procurado",
+    "name": "PROCURADO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Personagens com Procurado cometeram algum crime e, se as autoridades descobrirem, acabarão na prisão. Isso pressupõe que o cenário possui leis e policiais para garantir o cumprimento delas. O nível da Complicação depende da gravidade do crime e o quão ativa é a perseguição. Inúmeras multas de estacionamento não pagas em um jogo onde precisa-se dirigir ocasionalmente gera uma Complicação Menor, assim como alguém Procurado por um crime mais grave longe da área principal da campanha. Uma acusação de assassinato é uma Complicação Maior em praticamente qualquer cenário se houver alguém em busca de justiça (ou vingança)."
+  },
+  {
+    "id": "sanguinario",
+    "name": "SANGUINÁRIO",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Sanguinários nunca fazem prisioneiros, exceto sob a supervisão direta de alguém em posição superior. Sua brutalidade e sangue frio faz com que rivais respondam à altura, isso geralmente arruína a obtenção de informações importantes, cria contendas e inimizades constantemente e pode te colocar em maus lençóis com superiores ou as autoridades, dependendo do cenário."
+  },
+  {
+    "id": "segredo",
+    "name": "SEGREDO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Essas personagens têm um segredo que mantém para se proteger ou proteger os outros. Como uma Complicação Menor, o segredo é problemático, mas não representa risco de vida. Na versão Maior, o segredo pode causar um problema grave se descoberto. Caso se torne de conhecimento público, deve trocar por Inimigo, Vergonha, Procurado ou outra Complicação apropriada aprovada pelo Mestre."
+  },
+  {
+    "id": "sem_escrupulos",
+    "name": "SEM ESCRÚPULOS",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Personagens com esta complicação irão agir com fanatismo e farão quase tudo para completar seus propósitos. Como uma Complicação Maior, causam danos a todos que fiquem em seu caminho. Na versão Menor, param um pouco antes de causar danos reais, exceto aos que se opõem diretamente aos seus objetivos."
+  },
+  {
+    "id": "sem_nocao",
+    "name": "SEM-NOÇÃO",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Esta pessoa não presta muita atenção no mundo ao seu redor e não consegue achar um palheiro em uma pequena pilha de agulhas. A personagem sofre uma penalidade de -1 em rolagens de Conhecimento Geral e Perceber."
+  },
+  {
+    "id": "sensivel",
+    "name": "SENSÍVEL",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Ataques pessoais deixam este indivíduo especialmente irritado. Como uma Complicação Menor subtrai 2 quando resiste a Provocar. Como uma Maior, subtrai 4."
+  },
+  {
+    "id": "teimoso",
+    "name": "TEIMOSO",
+    "origem": "HORROR",
+    "severity": "menor",
+    "description": "Personagens Teimosos sempre querem as coisas do seu jeito e nunca admitem seus erros. Mesmo quando é dolorosamente óbvio que cometeram um erro, tentam justificá-lo com meias-verdades e racionalizações."
+  },
+  {
+    "id": "um_braco_so",
+    "name": "UM BRAÇO SÓ",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Pode ter nascido com apenas um braço ou tê-lo perdido em batalha. Por sorte, o seu outro é (agora) o braço “bom”. Tarefas que requerem duas mãos, como rolagens de Atletismo (critério do Mestre) ou usar uma arma de duas mãos, sofrem um modificador de -4."
+  },
+  {
+    "id": "um_olho_so",
+    "name": "UM OLHO SÓ",
+    "origem": "HORROR",
+    "severity": "maior",
+    "description": "Por ter perdido um olho, essa personagem tem problemas com percepção em profundidade. Subtraia 2 de qualquer rolagem de Característica dependente da visão de algo a mais de 5 quadros (10 metros) de distância."
+  },
+  {
+    "id": "vergonha",
+    "name": "VERGONHA",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Algo assombra essa personagem. Pode ser um voto feito que não foi mantido. Talvez tenha sido derrotada em uma luta honrosa e mesmo assim tenha ordenado a morte de seu inimigo por algum princípio maior. Pode não ser covarde, mas certa vez fugiu de uma batalha, deixando seus companheiros para morrer. Como uma Complicação Menor, as circunstâncias da vergonha não são de conhecimento geral, elas apenas assombram esta pessoa. Ela será capaz de um esforço absurdo, mesmo que irracional, para não repetir o seu erro ou pode ceder às circunstâncias e se odiar por isso. Como uma Complicação Maior, seu feito é de conhecimento público, ou, ao menos, de conhecimento entre pessoas próximas. As demais pessoas do grupo devem conhecer a história assim que possível (preferencialmente na criação de personagens). De outro modo, deve ser revelado por uma personagem do Mestre em algum momento e usado ocasionalmente contra a pessoa com a complicação."
+  },
+  {
+    "id": "vingativo",
+    "name": "VINGATIVO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Vingança é... bem... é má notícia para alguém, e personagens com esta complicação irão obtê-la. Como uma Complicação Menor, geralmente buscam a vingança legalmente. O método varia de acordo com a situação. Algumas tramam ou conduzem esquemas por meses, enquanto outras exigem resultados mais imediatos. Personagens com a versão Maior desta Complicação não deixam que nada impeça sua busca pelo acerto de contas. Isso não significa que recorram imediatamente à violência, mas suas ações sempre se intensificam até que uma satisfação total e completa seja alcançada."
+  },
+  {
+    "id": "visao_ruim",
+    "name": "VISÃO RUIM",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Os olhos desse herói ou heroína não enxergam mais como antes. Personagens com Visão Ruim sofrem uma penalidade de -1 em qualquer rolagem de Característica dependente de visão (como ataques à distância e rolagens de Perceber) ou -2 como uma Complicação Maior. Em cenários onde óculos estão disponíveis eles negam a penalidade quando são usados. Se perdidos ou quebrados durante um combate (geralmente há uma chance de 50% quando a personagem ficar Ferido, cair ou sofrer algum outro trauma), ficará em Estado Distraído (e Vulnerável se for uma Complicação Maior) até o fim do próximo turno da personagem."
+  },
+  {
+    "id": "voto",
+    "name": "VOTO",
+    "origem": "HORROR",
+    "severity": "menor ou maior",
+    "description": "Esta pessoa fez um voto para alguém ou algo em que acredita. O risco em cumprir o Voto e sua frequência determina o nível da Complicação. Um Voto Menor pode ser servir a uma ordem com mandamentos que raramente entram em conflito com os objetivos do grupo. Um Voto Maior faz com que as demandas sejam de longo prazo, frequentes e resultem em um grande risco à sua vida."
+  },
+  {
     "id": "fobia",
     "name": "FOBIA",
     "origem": "HORROR",
