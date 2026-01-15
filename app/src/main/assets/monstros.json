@@ -2,127 +2,276 @@
   {
     "id": "anjo",
     "nome": "Anjo",
-    "descricao": "Seres grandiosos e terríveis, vingadores divinos.",
+    "descricao": "Anjos não são monstros per se, mas são seres grandiosos e terríveis para mortais comuns. Possuem o poder de ferir os inimigos de seus criadores com vingança e fúria. Pastoreiam seus seguidores e servem como vingadores divinos que podem destruir cidades inteiras para expurgá-las de sua maldade.",
     "atributos_bonus": {
       "Fe": 1,
       "Forca": 2,
       "Vigor": 2
     },
     "habilidades": [
-      { "nome": "Embelezar", "descricao": "Ação livre limitada para criar efeitos menores de limpeza ou ordem." },
-      { "nome": "Imunidades", "descricao": "Imune a doenças e venenos. Não envelhece." },
-      { "nome": "Voo", "descricao": "Asas retráteis (ação limitada). Movimentação 12." }
+      {
+        "nome": "Embelezar",
+        "descricao": "Anjos podem criar um embelezamento menor como ação livre limitada (limpar roupa, eliminar pequenos cortes, fazer flores crescerem, etc)."
+      },
+      {
+        "nome": "Imune a Doenças e Venenos",
+        "descricao": "Anjos ignoram males mortais."
+      },
+      {
+        "nome": "Não Envelhece",
+        "descricao": "Anjos não envelhecem como os mortais."
+      },
+      {
+        "nome": "Voo",
+        "descricao": "Podem materializar ou fazer crescer grandes asas emplumadas como ação limitada. Movimentação 12. Retrair as asas também é uma ação limitada."
+      }
     ],
-    "complicacoes": ["Voto (Maior) - Servo do Paraíso"]
+    "complicacoes": [
+      "Servo do Paraíso: Anjos devem obedecer sua divindade e possuem a Complicação Voto (Maior)."
+    ]
   },
   {
     "id": "demonio",
     "nome": "Demônio",
-    "descricao": "Seres de linhagem infernal, cruéis e egoístas.",
+    "descricao": "Sua personagem é um demônio menor ou possui linhagem demoníaca. Ela não tem algumas das habilidades iniciais de personagens demoníacas não jogadoras, mas ainda é maligna para propósitos de mecânicas de jogo (como a Vantagem Campeão) e deveria adquirir Complicações que reflitam sua natureza geralmente cruel e egoísta.",
     "atributos_bonus": {
       "Vigor": 1,
       "Espirito": 1
     },
     "habilidades": [
-      { "nome": "Imunidades", "descricao": "Imune a doenças e venenos. Não envelhece. Não respira." },
-      { "nome": "Resistência Ambiental", "descricao": "+4 resistir/reduzir dano de Frio, Eletricidade e Calor." },
-      { "nome": "Visão Total no Escuro", "descricao": "Ignora penalidades de iluminação." },
-      { "nome": "Ruína", "descricao": "Cause pequenos efeitos malignos (plantas murcham, etc) ao redor." }
+      {
+        "nome": "Arruinar",
+        "descricao": "Podem causar pequenos efeitos malignos por onde passam (flores murcham, leite estraga, iluminação pisca). O efeito é limitado a alguns alvos e raramente tem efeito mecânico."
+      },
+      {
+        "nome": "Imune a Doenças e Venenos",
+        "descricao": "Demônios ignoram males mortais."
+      },
+      {
+        "nome": "Negociador",
+        "descricao": "Pode fazer um único 'Pacto' com uma alma mortal (Menor ou Maior) em troca de favores ou travessuras."
+      },
+      {
+        "nome": "Não Envelhece",
+        "descricao": "Demônios não envelhecem."
+      },
+      {
+        "nome": "Não Respira",
+        "descricao": "Demônios não precisam de oxigênio."
+      },
+      {
+        "nome": "Resistência Ambiental",
+        "descricao": "Recebem +4 para resistir a efeitos baseados em frio, eletricidade e calor, e reduzem o dano dessas fontes em 4."
+      },
+      {
+        "nome": "Visão Total no Escuro",
+        "descricao": "Ignoram penalidades por Iluminação e até 2 pontos de penalidades por invisibilidade ou poderes similares a até 10 quadros."
+      }
     ],
-    "complicacoes": ["Fraqueza (Ferro Frio) - +4 dano"]
+    "complicacoes": [
+      "Fraqueza (Ferro Frio): Recebem +4 de dano de armas de ferro frio."
+    ]
   },
   {
     "id": "fantasma",
     "nome": "Fantasma",
-    "descricao": "Espíritos visíveis que se recusaram a partir.",
+    "descricao": "Fantasmas são espíritos dos mortos que se recusaram a ir para o Grande Além por alguma razão. São seres visíveis — não são invisíveis como a maior parte dos espíritos. Eles podem ficar tangíveis ou intangíveis a vontade.",
     "atributos_bonus": {
       "Espirito": 1
     },
     "habilidades": [
-      { "nome": "Etéreo", "descricao": "Pode alternar entre corpóreo e incorpóreo (ação livre limitada). Intangível atravessa sólidos e imune a ataques mundanos." },
-      { "nome": "Imunidades", "descricao": "Imune a doenças e venenos. Não envelhece. Não respira." },
-      { "nome": "Visão Total no Escuro", "descricao": "Ignora penalidades de iluminação." },
-      { "nome": "Voo", "descricao": "Movimentação 12." }
+      {
+        "nome": "Etéreo",
+        "descricao": "Mudar de estado é uma ação livre limitada. Enquanto intangível, pode atravessar objetos sólidos e não é afetado por ataques normais, mas recebe dano de armas mágicas, poderes e habilidades."
+      },
+      {
+        "nome": "Imune a Doenças e Venenos",
+        "descricao": "Fantasmas não podem ficar doentes ou serem envenenados."
+      },
+      {
+        "nome": "Não Envelhece",
+        "descricao": "As mazelas do tempo não afetam fantasmas."
+      },
+      {
+        "nome": "Não Respira",
+        "descricao": "Fantasmas não precisam de oxigênio."
+      },
+      {
+        "nome": "Visão Total no Escuro",
+        "descricao": "Ignoram todas as penalidades por Iluminação e até 2 pontos de penalidades por invisibilidade ou poderes similares a até 10 quadros."
+      },
+      {
+        "nome": "Voo",
+        "descricao": "Fantasmas podem voar com Movimentação 12."
+      }
     ],
-    "complicacoes": ["Fraqueza (Sal) - Barreira e Abalado ao contato"]
+    "complicacoes": [
+      "Fraqueza (Sal): Não podem atravessar uma barreira de sal e ficam Abalados se forem forçados a ter contato. Podem Evadir de sal arremessado."
+    ]
   },
   {
     "id": "lobisomem",
     "nome": "Lobisomem",
-    "descricao": "Amaldiçoados com uma forma bestial e fúria selvagem.",
+    "descricao": "O herói ou heroína foi amaldiçoado a se transformar em uma criatura feroz com sentidos aprimorados, garras afiadas e fúria selvagem. Personagens jogadoras lobisomens podem controlar sua transformação — pelo menos até a lua cheia!",
     "atributos_bonus": {
       "Agilidade": 2,
       "Forca": 2,
       "Vigor": 2
     },
     "habilidades": [
-      { "nome": "Infravisão", "descricao": "Reduz penalidade de iluminação à metade contra alvos vivos." },
-      { "nome": "Armas Naturais", "descricao": "Mordida/Garras (For+d6, PA 2)." },
-      { "nome": "Regeneração (Lenta)", "descricao": "Rolagem de cura natural por dia." },
-      { "nome": "Transformação", "descricao": "Ação livre limitada. Obrigatória na lua cheia. Habilidades só funcionam transformado." },
-      { "nome": "Velocidade", "descricao": "Movimentação +2, dado de corrida +1 passo." }
+      {
+        "nome": "Infravisão",
+        "descricao": "Podem ver assinaturas de calor e reduzem penalidades por Iluminação à metade quando atacam alvos vivos."
+      },
+      {
+        "nome": "Mordida/Garras",
+        "descricao": "Causam For+d6, PA 2."
+      },
+      {
+        "nome": "Regeneração (Lenta)",
+        "descricao": "Podem tentar uma rolagem de cura natural a cada dia."
+      },
+      {
+        "nome": "Transformação",
+        "descricao": "Ação livre limitada. Obrigatória na lua cheia (do anoitecer ao nascer do sol). Habilidades só funcionam transformado. Retorna a humano se Incapacitado."
+      },
+      {
+        "nome": "Velocidade",
+        "descricao": "Movimentação +2 e o dado de corrida aumenta em um tipo."
+      }
     ],
-    "complicacoes": ["Fraqueza (Prata) - +4 dano", "Mudo (enquanto transformado)"]
+    "complicacoes": [
+      "Fraqueza (Prata): Armas de prata causam +4 de dano.",
+      "Não Pode Falar: Lobisomens não podem falar enquanto transformados (impede conjuração sem Vantagem específica)."
+    ]
   },
   {
     "id": "monstro_retalhos",
     "nome": "Monstro de Retalhos",
-    "descricao": "Costurado em laboratório com partes diversas.",
+    "descricao": "Esta personagem não nasceu, foi criada, costurada em um laboratório com partes diversas! É uma criatura de retalhos, parecida com o monstro apresentado em Frankenstein de Mary Shelley.",
     "atributos_bonus": {
       "Forca": 2,
       "Vigor": 2
     },
     "habilidades": [
-      { "nome": "Ciência!", "descricao": "Possui a Vantagem Resistência Arcana." },
-      { "nome": "Fúria", "descricao": "Possui a Vantagem Furioso." },
-      { "nome": "Morto-Vivo", "descricao": "+2 Resistência, +2 recuperar Abalado, sem dano extra local, ignora 1 ponto penalidade ferimento." },
-      { "nome": "Recosturar", "descricao": "Partes perdidas podem ser recosturadas (Curar -4 ou Ciência Estranha)." }
+      {
+        "nome": "Ciência!",
+        "descricao": "Criados por cientistas loucos, possuem a Vantagem Resistência Arcana."
+      },
+      {
+        "nome": "Fúria",
+        "descricao": "Todos os monstros de retalhos possuem a Vantagem Furioso."
+      },
+      {
+        "nome": "Morto-Vivo",
+        "descricao": "Resistência +2; +2 para recuperar Abalado; Ataques Localizados não causam dano extra; ignora 1 ponto de penalidade por Ferimentos; não respira; imune a doenças e venenos."
+      },
+      {
+        "nome": "Não Envelhece",
+        "descricao": "Monstros de retalhos não envelhecem."
+      },
+      {
+        "nome": "Partes (Recosturar)",
+        "descricao": "Partes perdidas podem ser recosturadas com linha e agulha, 10 minutos e rolagem de Curar -4 (ou Ciência Estranha)."
+      }
     ],
-    "complicacoes": ["Sem Noção", "Fobia (Fogo)", "Fraqueza (Fogo) - +4 dano"]
+    "complicacoes": [
+      "Confusão: Ganha a Complicação Sem Noção e a Astúcia só pode ser aumentada uma vez por meio de Progressos.",
+      "Fogo Mau!: Qualquer chama maior que uma tocha provoca os efeitos de Fobia (Maior).",
+      "Fraqueza (Fogo): Fogo (chamas) causa +4 de dano."
+    ]
   },
   {
     "id": "mumia",
     "nome": "Múmia",
-    "descricao": "Mortos-vivos preservados de tempos antigos.",
+    "descricao": "Múmias vêm de pirâmides egípcias, templos da América do Sul ou cavernas montanhosas. São mortos-vivos poderosos, preservados desde tempos antigos como governantes ou guardiões.",
     "atributos_bonus": {
       "Forca": 2,
       "Vigor": 2
     },
     "habilidades": [
-      { "nome": "Morto-Vivo", "descricao": "+2 Resistência, +2 recuperar Abalado, sem dano extra local, ignora 1 ponto penalidade ferimento." },
-      { "nome": "Não Envelhece", "descricao": "Imune ao tempo." }
+      {
+        "nome": "Morto-Vivo",
+        "descricao": "Resistência +2; +2 para recuperar Abalado; Ataques Localizados não causam dano extra; ignora 1 ponto de penalidade por Ferimentos; não respira; imune a doenças e venenos."
+      },
+      {
+        "nome": "Não Envelhece",
+        "descricao": "Múmias não envelhecem. A maioria tem várias centenas de anos."
+      }
     ],
-    "complicacoes": ["Fraqueza (Fogo) - +4 dano", "Lento (-1 Movimentação, Corrida d4)"]
+    "complicacoes": [
+      "Fraqueza (Fogo): Sofrem +4 de dano de fogo e ataques baseados em fogo (chamas expostas).",
+      "Lento: Movimentação reduzida em 1 e dado de corrida é d4."
+    ]
   },
   {
     "id": "revivido",
     "nome": "Revivido",
-    "descricao": "Retornou da morte como força de vingança.",
+    "descricao": "Este ser já caminhou entre os vivos, mas a morte o chamou e ele passou para a “terra dos pés juntos”, porém regressou de alguma forma. Agora é uma força morta-viva de vingança, que busca justiça contra seus inimigos.",
     "atributos_bonus": {
       "Espirito": 1,
       "Vigor": 1
     },
     "habilidades": [
-      { "nome": "Morto-Vivo", "descricao": "+2 Resistência, +2 recuperar Abalado, sem dano extra local, ignora 1 ponto penalidade ferimento." },
-      { "nome": "Regeneração (Lenta)", "descricao": "Cura natural 1/dia se consumir carne crua." },
-      { "nome": "Robusto", "descricao": "Segundo abalado não causa ferimento." }
+      {
+        "nome": "Morto-Vivo",
+        "descricao": "Resistência +2; +2 para recuperar Abalado; Ataques Localizados não causam dano extra; ignora 1 ponto de penalidade por Ferimentos; não respira; imune a doenças e venenos."
+      },
+      {
+        "nome": "Não Envelhece",
+        "descricao": "Revividos não envelhecem."
+      },
+      {
+        "nome": "Regeneração (Lenta)",
+        "descricao": "Podem tentar uma rolagem de cura natural a cada dia, desde que absorvam meio quilo de carne crua."
+      },
+      {
+        "nome": "Robusto",
+        "descricao": "Revividos não recebem Ferimentos por serem Abalados duas vezes."
+      }
     ],
-    "complicacoes": ["Voto (Maior) - Vingança"]
+    "complicacoes": [
+      "Vingança: Possuem Voto (Maior) para trazer vingança ou justiça sobre algum tipo de inimigo."
+    ]
   },
   {
     "id": "vampiro",
     "nome": "Vampiro",
-    "descricao": "Predadores da noite que se alimentam de sangue.",
+    "descricao": "Vampiros rastejam da sepultura, amaldiçoados pela própria terra que os rejeita. Qualquer que seja sua origem e história, vampiros são criaturas da noite que caçam para se alimentar do sangue de outros.",
     "atributos_bonus": {
       "Forca": 2,
       "Vigor": 2
     },
     "habilidades": [
-      { "nome": "Mordida", "descricao": "Presas (For+d4)." },
-      { "nome": "Morto-Vivo", "descricao": "+2 Resistência, +2 recuperar Abalado, sem dano extra local, ignora 1 ponto penalidade ferimento." },
-      { "nome": "Regeneração (Lenta)", "descricao": "Cura natural 1/dia se alimentado." },
-      { "nome": "Visão Total no Escuro", "descricao": "Ignora penalidades de iluminação." }
+      {
+        "nome": "Mordida",
+        "descricao": "Presas retráteis que causam For+d4 de dano."
+      },
+      {
+        "nome": "Morto-Vivo",
+        "descricao": "Resistência +2; +2 para recuperar Abalado; Ataques Localizados não causam dano extra; ignora 1 ponto de penalidade por Ferimentos; não respira; imune a doenças e venenos."
+      },
+      {
+        "nome": "Não Envelhece",
+        "descricao": "Vampiros não envelhecem."
+      },
+      {
+        "nome": "Regeneração (Lenta)",
+        "descricao": "Enquanto alimentados, podem tentar uma rolagem de cura natural por dia."
+      },
+      {
+        "nome": "Visão Total no Escuro",
+        "descricao": "Ignora penalidades por Iluminação e até 2 penalidades por invisibilidade ou poderes similares a até 10 quadros."
+      }
     ],
-    "complicacoes": ["Hábito Maior (Fome)", "Fraquezas (Luz Solar, Estaca, Convite, Símbolos Sagrados, Água Corrente)"]
+    "complicacoes": [
+      "Fome: Deve se alimentar de meio litro de sangue fresco/dia. Tratado como Hábito (Maior).",
+      "Fraqueza (Apenas se Convidado): Não entram em habitação privada sem convite.",
+      "Fraqueza (Estaca no Coração): Ataque Localizado no coração (-4) com madeira exige teste de Vigor ou desintegra.",
+      "Fraqueza (Luz Solar): Sofrem 2d4 de dano por rodada até virarem cinzas.",
+      "Fraqueza (Símbolo Sagrado): Agem como proteções.",
+      "Fraqueza (Água Benta): Borrifado recebe um nível de Fadiga.",
+      "Fraqueza (Água Corrente): Teste de Espírito -2 para cruzar. Falha impede travessia, Falha Crítica causa Ferimento."
+    ]
   }
 ]
