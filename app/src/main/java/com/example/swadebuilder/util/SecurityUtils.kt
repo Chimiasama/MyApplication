@@ -23,4 +23,27 @@ object SecurityUtils {
 
         return file
     }
+
+    private val INVALID_FILENAME_CHARS = Regex("[^a-zA-Z0-9._-]")
+
+    /**
+     * Sanitiza uma string para ser usada como nome de arquivo seguro.
+     * Remove caracteres especiais, limita o tamanho e garante que não seja vazio.
+     */
+    fun sanitizeFilename(name: String): String {
+        // Substitui caracteres inválidos por sublinhado
+        val safeName = name.replace(INVALID_FILENAME_CHARS, "_")
+        // Limita a 50 caracteres para evitar problemas em sistemas de arquivo
+        val truncated = safeName.take(50)
+        return truncated.ifBlank { "personagem_sem_nome" }
+    }
+
+    /**
+     * Verifica se o nome de arquivo fornecido é válido e seguro.
+     * Permite apenas letras, números, ponto, sublinhado e hífen.
+     */
+    fun isValidFilename(name: String): Boolean {
+        if (name.isBlank() || name.length > 50) return false
+        return !INVALID_FILENAME_CHARS.containsMatchIn(name)
+    }
 }

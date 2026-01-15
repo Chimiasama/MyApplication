@@ -614,8 +614,9 @@ private fun IdentityCard(
         Column(Modifier.padding(16.dp)) {
             OutlinedTextField(
                 value = nome,
-                onValueChange = onNomeChange,
+                onValueChange = { if (it.length <= 60) onNomeChange(it) },
                 label = { Text("Nome do Personagem") },
+                supportingText = { Text("${nome.length}/60") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
