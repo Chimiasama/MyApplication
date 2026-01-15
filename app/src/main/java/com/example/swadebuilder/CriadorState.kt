@@ -68,6 +68,34 @@ class CriadorState {
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
+
+    fun getMonstroSelecionado(): com.example.swadebuilder.model.MonstroTemplate? {
+        if (!modoMonstroAtivo || tipoMonstroSelecionado == null) return null
+        return listaMonstroTemplates.firstOrNull { it.id == tipoMonstroSelecionado }
+    }
+
+    fun aplicarTipoMonstro(novoId: String?) {
+        tipoMonstroSelecionado = novoId
+        recalcularPontosAtributo()
+        rebuildAllPericiaStacks()
+    }
+
+    fun isAttributeRankLimitReached(): Boolean {
+        val stageIndex = currentProgressStageIndex()
+        val lendarioIndex = listaDeEstagios.indexOfFirst { it.nome.equals("Lendário", ignoreCase = true) }
+            .takeIf { it >= 0 } ?: listaDeEstagios.lastIndex
+        val totalAttrPurchases = comprasAttrPorEstagio.values.sum()
+        val baseAllowance = (stageIndex + 1).coerceAtMost(lendarioIndex)
+        val remainingBaseAttrs = (baseAllowance - totalAttrPurchases).coerceAtLeast(0)
+        return remainingBaseAttrs <= 0
+    }
+
+    fun isAttributeFreeForMonster(attr: String): Boolean {
+        if (!modoMonstroAtivo) return false
+        val key = attr.keyify()
+        return key == "AGILIDADE" || key == "FORCA" || key == "VIGOR"
+    }
+
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
     val vantagensAutomaticasDoElemento = mutableStateListOf<String>()
 
@@ -507,6 +535,32 @@ class CriadorState {
                 return "$dmg+d4"
             }
             return dmg
+        }
+
+        // Monster Natural Weapons
+        getMonstroSelecionado()?.let { monstro ->
+            monstro.habilidades.forEach { hab ->
+                val nomeKey = hab.nome.keyify()
+                if (nomeKey.contains("GARRA") || nomeKey.contains("MORDIDA") || nomeKey.contains("CHIFRE") || nomeKey.contains("CASCO")) {
+                    val dmgRegex = Regex("""(For|Str|Força|Strength)(\s*\+\s*)?d\d+""", RegexOption.IGNORE_CASE)
+                    var dmgMatch = dmgRegex.find(hab.descricao)?.value?.replace(" ", "") ?: "For+d4"
+
+                    if (nomeKey.contains("GARRA") && (hasMartialArtist || hasBrawler)) {
+                        dmgMatch = upgradeDie(dmgMatch)
+                    }
+
+                    weapons.add(
+                        EquipamentoItem(
+                            nome = hab.nome,
+                            dano = JsonPrimitive(dmgMatch),
+                            distancia = JsonPrimitive("Toque"),
+                            peso = JsonPrimitive(0),
+                            custo = JsonPrimitive(0),
+                            observacoes = JsonPrimitive("Monstro")
+                        )
+                    )
+                }
+            }
         }
 
         // Parse logic
@@ -1023,6 +1077,27 @@ class CriadorState {
         val base = racialSkillStartMap[ancKey]?.get(perKey) ?: defaultBase
 
         var modifiedBase = base
+
+        // Monster Bonus
+        getMonstroSelecionado()?.let { monstro ->
+            val monsterKey = per.nome.keyify()
+            val bonusEntry = monstro.atributos_bonus.entries.firstOrNull {
+                it.key.keyify() == monsterKey
+            }
+            if (bonusEntry != null) {
+                // Mapping: 1 -> d4 (4), 2 -> d6 (6), 3 -> d8 (8), etc.
+                val steps = bonusEntry.value
+                val bonusRaw = when(steps) {
+                    1 -> 4
+                    2 -> 6
+                    3 -> 8
+                    4 -> 10
+                    5 -> 12
+                    else -> 4
+                }
+                modifiedBase = maxOf(modifiedBase, bonusRaw)
+            }
+        }
 
         // Arte da Guerra - Signos (only for Humans)
         if (compendioArteDaGuerraAtivo && ancKey.contains("HUMANO")) {
@@ -2234,6 +2309,23 @@ class CriadorState {
         val base = racialAttrMinMap[ancestralidade]?.get(a) ?: 4
 
         var modifiedBase = base
+
+        // Monster Bonus
+        getMonstroSelecionado()?.let { monstro ->
+            val attrKey = a.keyify()
+            val bonusEntry = monstro.atributos_bonus.entries.firstOrNull {
+                it.key.keyify() == attrKey
+            }
+            if (bonusEntry != null) {
+                // Steps: 1 -> d6, 2 -> d8. Base is d4 (4).
+                val steps = bonusEntry.value
+                var monsterBase = 4
+                repeat(steps) {
+                    monsterBase = if (monsterBase < 12) monsterBase + 2 else monsterBase + 1
+                }
+                modifiedBase = maxOf(modifiedBase, monsterBase)
+            }
+        }
 
         // Meio-Elfo Ágil
         if (a.keyify() == "AGILIDADE" && meioElfoAgil) {

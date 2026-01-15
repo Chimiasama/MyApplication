@@ -1062,8 +1062,10 @@ class CriadorViewModel : ViewModel() {
             increases.forEach { attr ->
                 val usedReservation = reservationAvailable
                 if (reservationAvailable) reservationAvailable = false
-                val prev = state.comprasAttrPorEstagio[stageName] ?: 0
-                state.comprasAttrPorEstagio[stageName] = prev + 1
+                if (!state.isAttributeFreeForMonster(attr)) {
+                    val prev = state.comprasAttrPorEstagio[stageName] ?: 0
+                    state.comprasAttrPorEstagio[stageName] = prev + 1
+                }
                 state.advancementHistory.add(
                     AdvancementAction.IncreaseAttribute(
                         attributeName = attr,
@@ -1207,10 +1209,14 @@ class CriadorViewModel : ViewModel() {
                     val current = state.valoresAtributos[lastAction.attributeName]!!.intValue
                     val prevRaw = if (current > 12) current - 1 else current - 2
                     state.valoresAtributos[lastAction.attributeName]!!.intValue = prevRaw
-                    val prev = state.comprasAttrPorEstagio[lastAction.stageName] ?: 0
-                    if (prev > 0) {
-                        state.comprasAttrPorEstagio[lastAction.stageName] = prev - 1
+
+                    if (!state.isAttributeFreeForMonster(lastAction.attributeName)) {
+                        val prev = state.comprasAttrPorEstagio[lastAction.stageName] ?: 0
+                        if (prev > 0) {
+                            state.comprasAttrPorEstagio[lastAction.stageName] = prev - 1
+                        }
                     }
+
                     state.paFromProgress = (state.paFromProgress - 1).coerceAtLeast(0)
                     state.recalcularPontosAtributo()
                     if (lastAction.usedLegendaryReservation) {

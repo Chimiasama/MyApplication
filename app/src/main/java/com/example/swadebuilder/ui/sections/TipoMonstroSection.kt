@@ -53,7 +53,7 @@ fun TipoMonstroSection(
                         .padding(vertical = 4.dp)
                         .clickable {
                             onUserFeedback()
-                            state.tipoMonstroSelecionado = template.id
+                            state.aplicarTipoMonstro(template.id)
                         },
                     colors = CardDefaults.cardColors(
                         containerColor = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
@@ -63,7 +63,7 @@ fun TipoMonstroSection(
                         RadioButtonRow(
                             selected = selected,
                             label = template.nome,
-                            onSelect = { state.tipoMonstroSelecionado = template.id }
+                            onSelect = { state.aplicarTipoMonstro(template.id) }
                         )
 
                         if (selected) {
