@@ -2775,10 +2775,7 @@ class CriadorState {
         return (basePoints + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
     }
 
-    fun recalcularPontosAtributo(
-        feedbackMessages: MutableList<String> = mutableListOf(),
-        enforcePoolLimit: Boolean = true
-    ) {
+    fun recalcularPontosAtributo(feedbackMessages: MutableList<String> = mutableListOf()) {
 
         // Ensure current values meet the new racial base (e.g. if Sign increased base from d4 to d6)
         listaAtributos.forEach { attrKey ->
@@ -2791,9 +2788,9 @@ class CriadorState {
 
         pontosAtributo = calcularPontosAtributoRestantes()
 
-        trimAttributeStacks(feedbackMessages, enforcePoolLimit)
+        trimAttributeStacks(feedbackMessages)
 
-        rebuildAllPericiaStacks(feedbackMessages, enforcePoolLimit)
+        rebuildAllPericiaStacks(feedbackMessages)
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -2921,11 +2918,7 @@ class CriadorState {
         }
     }
 
-    private fun trimAttributeStacks(
-        feedbackMessages: MutableList<String> = mutableListOf(),
-        enforcePoolLimit: Boolean = true
-    ) {
-        if (!enforcePoolLimit) return
+    private fun trimAttributeStacks(feedbackMessages: MutableList<String> = mutableListOf()) {
 
         while (pontosAtributo < 0) {
             val entry = paCostStackPorAtributo
@@ -2955,7 +2948,7 @@ class CriadorState {
         jovemAutoPequeno = false
         jovemMalusPa = 1
         jovemMalusSp = 2
-        recalcularPontosAtributo(enforcePoolLimit = false)
+        recalcularPontosAtributo()
     }
 
     fun applyYoungMajor(pequComp: Complicacao) {
@@ -2964,7 +2957,7 @@ class CriadorState {
         jovemMalusSp = 2
         desvantagensAutomaticas.add(pequComp.id.substringBefore("(").trim())
         complicacoesSelecionadas[pequComp] = "Menor"
-        recalcularPontosAtributo(enforcePoolLimit = false)
+        recalcularPontosAtributo()
     }
 
     fun removeYoung(pequComp: Complicacao) {
@@ -3092,8 +3085,7 @@ class CriadorState {
     }
 
     fun rebuildAllPericiaStacks(
-        feedbackMessages: MutableList<String> = mutableListOf(),
-        enforcePoolLimit: Boolean = true
+        feedbackMessages: MutableList<String> = mutableListOf()
     ) {
         if (modoProgressaoAtivo) return
 
@@ -3140,10 +3132,10 @@ class CriadorState {
 
             var cost = costFor(target)
 
-            if (enforcePoolLimit && cost > 0 && cumulativeCost + cost > pool) {
+            if (cost > 0 && cumulativeCost + cost > pool) {
                 feedbackMessages.add("Perícia ${per.nome} reduzida para d$target para compensar pontos.")
             }
-            while (enforcePoolLimit && cumulativeCost + cost > pool) {
+            while (cumulativeCost + cost > pool) {
                 target = (target - 2).coerceAtLeast(minRaw)
                 cost   = costFor(target)
             }
