@@ -191,10 +191,13 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         .filter { idiomaRegex.matches(it) }
         .sortedBy { idiomaRegex.find(it)?.groupValues?.getOrNull(1)?.toIntOrNull() ?: Int.MAX_VALUE }
     val periciasOrdenadas = buildList {
+        val seen = mutableSetOf<String>()
         listaPericias.forEach { per ->
-            add(per.nome)
-            if (per.nome.equals("Idiomas", ignoreCase = true)) {
-                addAll(idiomaExtras)
+            if (seen.add(per.nome.keyify())) {
+                add(per.nome)
+                if (per.nome.equals("Idiomas", ignoreCase = true)) {
+                    addAll(idiomaExtras)
+                }
             }
         }
     }
