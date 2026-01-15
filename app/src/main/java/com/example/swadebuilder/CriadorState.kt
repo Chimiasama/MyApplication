@@ -47,7 +47,6 @@ class CriadorState {
     var hapticStrength by mutableIntStateOf(DEFAULT_HAPTIC_STRENGTH)
     var soundVolume by mutableIntStateOf(DEFAULT_SOUND_VOLUME)
     var showSystemMessages by mutableStateOf(true)
-    // showHelpMessages removido
     var modoSupers by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)
@@ -3184,7 +3183,6 @@ class CriadorState {
             appTheme = appTheme.name,
             hapticStrength = hapticStrength,
             soundVolume = soundVolume,
-            // showHelpMessages removido (PersonagemSnapshot tem default = false)
             anotacoes = anotacoes,
             flags = SnapshotFlags(
                 cartaSelvagem = cartaSelvagem,
@@ -3334,7 +3332,6 @@ class CriadorState {
     fun restoreFromSnapshot(snapshot: PersonagemSnapshot, feedbackMessages: MutableList<String>) {
         val flags = snapshot.flags
 
-        // showHelpMessages = snapshot.showHelpMessages
         cartaSelvagem = flags.cartaSelvagem
         maisPontosPericias = flags.maisPontosPericias
         modoSupers = flags.modoSupers

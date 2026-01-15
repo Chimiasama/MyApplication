@@ -232,7 +232,6 @@ class CriadorViewModel : ViewModel() {
             optRegraFama = flags.optRegraFama,
             optRegraRiqueza = flags.optRegraRiqueza,
             optRegraCosaNostra = flags.optRegraCosaNostra
-            // showHelpMessages removido
         )
         state.restoreFromSnapshot(snapshot, mutableListOf())
         state.idAtual = saveId
@@ -282,13 +281,11 @@ class CriadorViewModel : ViewModel() {
         regraMultiplosIdiomas: Boolean = false,
         optRegraFama: Boolean = false,
         optRegraRiqueza: Boolean = false,
-        optRegraCosaNostra: Boolean = false,
-        // showHelpMessages removido
+        optRegraCosaNostra: Boolean = false
     ) {
 
         state.appTheme = com.example.swadebuilder.ui.theme.AppTheme.DEFAULT
 
-        // state.showHelpMessages = showHelpMessages (Removido)
         state.modoSupers = modoSupers
         state.compendioFantasiaAtivo = compendioFantasiaAtivo
         state.compendioHorrorAtivo = compendioHorrorAtivo

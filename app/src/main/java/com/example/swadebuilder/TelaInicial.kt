@@ -93,7 +93,6 @@ fun TelaInicial(
         optRegraFama: Boolean,
         optRegraRiqueza: Boolean,
         optRegraCosaNostra: Boolean
-        // showHelpMessages removido
     ) -> Unit,
     onCarregarPersonagem: () -> Unit,
     onOpenSettings: () -> Unit,
