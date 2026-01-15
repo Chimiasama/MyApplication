@@ -824,7 +824,6 @@ class MainActivity : ComponentActivity() {
                                         optRegraFama = optRegraFama,
                                         optRegraRiqueza = optRegraRiqueza,
                                         optRegraCosaNostra = optRegraCosaNostra
-                                        // showHelpMessages removido
                                     )
                                     scope.launch {
                                         criadorViewModel.prepararNomeInicial(context)

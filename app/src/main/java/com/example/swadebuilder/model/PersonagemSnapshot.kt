@@ -12,7 +12,6 @@ data class PersonagemSnapshot(
     val appTheme: String,
     val hapticStrength: Int = 70,
     val soundVolume: Int = 70,
-    val showHelpMessages: Boolean = false,
     val anotacoes: String,
     val flags: SnapshotFlags,
     val recursos: SnapshotRecursos,
