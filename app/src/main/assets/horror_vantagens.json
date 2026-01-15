@@ -270,7 +270,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Asas atacam (For+d6, Alcance 2). Causa +4 dano se voar 5 quadros antes. Asas estendidas dão +2 Resistência."
+    "descricao": "As asas do anjo se tornam armas. Pode atacar com elas causando For+d6, com Alcance 2, e pode usá-las com a Vantagem Varredura.\nSe voar pelo menos 5 quadros (10 metros) em uma linha relativamente reta, o primeiro ataque de suas asas no turno causa +4 de dano.\nAs asas também se tornam mais resistentes, permitindo que o anjo se envolva com elas. Enquanto estiver com as asas estendidas, recebe Resistência +2 — isso pode ser ignorado com um Ataque Localizado com -2."
   },
   {
     "id": "imortalidade_anjo",
@@ -287,7 +287,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Se morto, retorna em d4 dias em um novo corpo. Só morre permanentemente com armas infernais."
+    "descricao": "O ser angelical possuí alma eterna e não é destruído mesmo se seu corpo for “morto”. Se morto, volta para o “paraíso” de onde veio por d4 dias e então retorna a um novo corpo com as mesmas estatísticas. Só pode ser morto de forma permanente com uma arma forjada no Inferno ou outros métodos desenvolvidos pelo Mestre."
   },
   {
     "id": "lamina_divina",
@@ -304,7 +304,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Arma mágica que ignora Imortalidade e adiciona +d6 de dano."
+    "descricao": "Este anjo possuí uma arma mágica que pode facilmente matar outros imortais. Ela ignora a Vantagem Imortalidade e adiciona +d6 de dano a seu dano básico. Uma espada longa divina, por exemplo, causaria For+d8+d6 de dano."
   },
   {
     "id": "linguas",
@@ -321,7 +321,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode ler, escrever e falar qualquer idioma humano."
+    "descricao": "O ser angelical poder ler, escrever e falar em qualquer idioma conhecido da humanidade. Porém não consegue entender idiomas alienígenas e mensagens escritas em código."
   },
   {
     "id": "luz_sagrada",
@@ -338,7 +338,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Cria luz (Modelo Grande). Pode atacar em Cone (Fé, 2d4 dano)."
+    "descricao": "O anjo pode criar uma luz fraca ou brilhante em um único Modelo Grande de Explosão a até 12 quadros (24 metros) e pode movê-lo como ação livre limitada a cada rodada.\nComo ação limitada, o ser angelical também pode focar sua luz sagrada em um Modelo de Cone (ou Raio) abrasador. O ataque usa Fé e causa 2d4 de dano que pode ser Evadido (-2 com uma ampliação na rolagem de ataque). Uma Falha Crítica na rolagem de ataque causa Fadiga ao anjo."
   },
   {
     "id": "rajada_abrasadora",
@@ -357,7 +357,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Dano da Luz Sagrada aumenta para 2d6."
+    "descricao": "O dano da Luz Sagrada do anjo causa 2d6 de dano."
   },
   {
     "id": "resistencia_anjo",
@@ -374,7 +374,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Aura divina garante +2 Resistência."
+    "descricao": "O anjo é protegido por uma aura invisível de proteção divina que lhe fornece Resistência +2."
   },
   {
     "id": "resistencia_divina",
@@ -393,10 +393,10 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Adiciona +2 Resistência (total +4)."
+    "descricao": "O anjo é protegido por uma aura invisível de proteção divina que lhe fornece +2 de Resistência adicional (+4 no total)."
   },
   {
-    "id": "sentido_sobrenatural",
+    "id": "sentido_sobrenatural_anjo",
     "nome": "SENTIDO SOBRENATURAL",
     "categoria": "MONSTRUOSAS",
     "origem": "HORROR",
@@ -406,17 +406,16 @@
       "pericias": {},
       "vantagens_previas": [],
       "template": [
-        "anjo",
-        "demonio"
+        "anjo"
       ]
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sente seres sobrenaturais e magia a 10 quadros."
+    "descricao": "O anjo pode sentir seres sobrenaturais e efeitos mágicos a até 10 quadros (20 metros). A habilidade não aponta ou rastreia estes seres, apenas diz que estão presentes e dá uma noção geral de quantidade (poucos ou muitos)."
   },
   {
-    "id": "velocidade_voo",
+    "id": "velocidade_anjo",
     "nome": "VELOCIDADE (Voo)",
     "categoria": "MONSTRUOSAS",
     "origem": "HORROR",
@@ -426,14 +425,13 @@
       "pericias": {},
       "vantagens_previas": [],
       "template": [
-        "anjo",
-        "demonio"
+        "anjo"
       ]
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Movimentação de voo aumenta para 24. Pode comprar 2x para 48."
+    "descricao": "A Movimentação do Voo do anjo é aumentada para 24. A Vantagem pode ser adquirida uma segunda vez para aumentá-la para 48."
   },
   {
     "id": "poderes_misticos_anjo",
@@ -450,7 +448,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 10 PP e poderes temáticos (Arauto ou Morte)."
+    "descricao": "Algumas criaturas angelicais possuem Antecedentes Arcanos completos, mas outras são abençoadas com habilidades limitadas, mas muito mais diretas garantidas por seu criador. Escolha um dos pacotes a seguir e veja o quadro Poderes Místicos na p. 14 para mais detalhes.\nARAUTO: Adivinhação, aumentar/reduzir Característica, cura, vidência.\nMORTE: Aumentar Característica (apenas a si mesmo), deflexão, ferir, proteção (apenas a si mesmo)."
   },
   {
     "id": "asas_demonio",
@@ -467,7 +465,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha asas retráteis (Mov 12). Pode comprar mais vezes para aumentar velocidade."
+    "descricao": "O demônio tem asas retráteis e pode voar com Movimentação 12. Esta Vantagem pode ser adquirida uma segunda vez para aumentar a Movimentação para 24 e uma terceira vez para aumentá-la para 48."
   },
   {
     "id": "couro_blindado",
@@ -484,7 +482,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pele grossa concede +4 Armadura."
+    "descricao": "A pele do demônio é grossa e escamosa, conferindo +4 de Armadura em todo o corpo."
   },
   {
     "id": "demonio_verdadeiro",
@@ -501,7 +499,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe metade do dano de armas não mágicas (exceto ferro frio)."
+    "descricao": "O ser demoníaco recupera as bênçãos do Inferno. Ele sofre metade do dano (arredondando para cima) de armas não mágicas, exceto ferro frio."
   },
   {
     "id": "fogo_infernal",
@@ -518,7 +516,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Cria fogo (1d6) em área ou cone (Atletismo, 2d4)."
+    "descricao": "O demônio pode criar fogo (1d6) em um único Modelo Pequeno de Explosão em qualquer lugar a 12 quadros (24 metros) e pode movê-lo como ação livre limitada a cada rodada.\nComo ação limitada, pode também focar sua chama infernal em um Modelo de Cone ardente. O ataque usa Atletismo e causa 2d4 de dano, que pode ser Evadido (-2 com uma ampliação na rolagem de ataque). Uma Falha Crítica na rolagem de ataque causa Fadiga ao demônio."
   },
   {
     "id": "queimar_demonio",
@@ -537,7 +535,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Dano do Fogo Infernal aumenta para 2d6. Cone à vontade."
+    "descricao": "O Fogo Infernal do demônio aumenta para 2d6. Isso também permite usar o Modelo de Cone (ou Raio) a vontade."
   },
   {
     "id": "garras_demonio",
@@ -554,7 +552,26 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Garras (For+d4, +2 escalar). 2ª compra: For+d6, PA 2."
+    "descricao": "O demônio tem garras retráteis que causam For+d4 de dano e adiciona +2 à rolagens de Atletismo (escalar). A Vantagem pode ser adquirida uma segunda vez para aumentar o dano para For+d6, PA 2."
+  },
+  {
+    "id": "sentido_sobrenatural_demonio",
+    "nome": "SENTIDO SOBRENATURAL",
+    "categoria": "MONSTRUOSAS",
+    "origem": "HORROR",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "template": [
+        "demonio"
+      ]
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O ser demoníaco pode sentir seres sobrenaturais e efeitos mágicos a 10 quadros (20 metros). A Vantagem não aponta ou rastreia esses seres, apenas diz que estão presentes e dá uma noção geral de quantidade (poucos ou muitos)."
   },
   {
     "id": "imortalidade_demoniaca",
@@ -571,7 +588,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Retorna em d4 dias se morto. Morte permanente apenas com armas sagradas."
+    "descricao": "O demônio tem uma alma imortal que retorna mesmo se seu corpo for destruído. Se morto, ele volta para qualquer que seja o “inferno” de onde veio por d4 dias e então retorna a um novo corpo com as mesmas estatísticas. Só pode ser morto permanentemente com uma arma forjada no Paraíso ou Inferno, ou outros métodos desenvolvidos pelo Mestre."
   },
   {
     "id": "incorporeo",
@@ -588,7 +605,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Etéreo por padrão. Pode se manifestar por 1 rodada com teste de Espírito."
+    "descricao": "O demônio é um espírito de energia sombria e maldade sem forma material. Ele pode passar por barreiras e não é afetado por armas físicas ou energias não mágicas como fogo, frio ou eletricidade. Armas mágicas ou abençoadas e energia o afetam normalmente.\nO demônio pode se tornar corpóreo por uma rodada ao realizar uma rolagem de Espírito como ação livre limitada. Enquanto corpóreo, pode afetar o mundo físico e também pode ser ferido por armas e energias normais."
   },
   {
     "id": "mordida_demonio",
@@ -605,7 +622,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Presas (For+d6). 2ª compra: For+d6, PA 2."
+    "descricao": "A criatura demoníaca possui presas que causam For+d6 de dano e podem ser usadas contra inimigos agarrados (veja Agarrar no Savage Worlds). A Vantagem pode ser adquirida uma segunda vez para aumentar o dano para For+d6, PA 2."
   },
   {
     "id": "poderes_misticos_demonio",
@@ -622,7 +639,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 10 PP e poderes temáticos (Invocador, Possessor, Sedutor ou Trapaceiro)."
+    "descricao": "Demônios são seres mágicos e, às vezes, ampliam suas habilidades naturais com poderes variados. Escolha um dos pacotes a seguir e veja o quadro Poderes Místicos na p. 14 para mais detalhes.\nINVOCADOR: Conjurar aliado, conjurar demônio, proteção, zumbi.\nPOSSESSOR: Aumentar/reduzir Característica, fantoche, maldição, pesadelos.\nSEDUTOR: Aumentar/reduzir Característica, disfarce, empatia, leitura de mente.\nTRAPACEIRO: Disfarce, deflexão (apenas a si mesmo), horrores ilusórios, medo."
   },
   {
     "id": "invisibilidade_fantasma",
