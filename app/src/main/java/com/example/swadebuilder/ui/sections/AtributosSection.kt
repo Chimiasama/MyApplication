@@ -156,7 +156,8 @@ fun AtributosContent(
             val nextRaw = if (baseRaw < 12) baseRaw + 2 else baseRaw + 1
             val prevRaw = if (baseRaw <= 12) baseRaw - 2 else baseRaw - 1
 
-            val canIncrease = !locked && state.pontosAtributo > 0 && (nextRaw <= maxRaw)
+            val allowedByRule = !state.isAttributeRankLimitReached() || state.isAttributeFreeForMonster(nome)
+            val canIncrease = !locked && state.pontosAtributo > 0 && (nextRaw <= maxRaw) && allowedByRule
 
             val canReduce = run {
                 val baseCanReduce = !locked && stack.isNotEmpty() && (prevRaw >= minReq)

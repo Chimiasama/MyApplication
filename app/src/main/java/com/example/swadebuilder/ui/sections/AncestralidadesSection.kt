@@ -214,7 +214,31 @@ fun AncestralidadesSection(
             origin in allowedOrigins
         }
 
-        val deduped = filtered
+        // Deduplicate by Name first, prioritizing Settings over Basic
+        val prioritized = filtered.groupBy { it.nome.keyify() }
+            .map { (_, duplicates) ->
+                if (duplicates.size == 1) return@map duplicates.first()
+
+                fun priority(origin: String?): Int {
+                    val o = origin?.uppercase() ?: "BASICO"
+                    return when {
+                        o == "HORROR" -> 1000
+                        o == "FANTASIA" -> 900
+                        o == "ARTE_DA_GUERRA" -> 800
+                        o == "DEADLANDS" -> 800
+                        o == "WISEGUYS" -> 800
+                        o == "CIDADE_SOL_VAPOR" -> 800
+                        o.contains("TRILHADOR") || o.contains("BUSCATRILHA") -> 800
+                        o == "FC" || o == "SCIFI" -> 800
+                        o == "CRYSTAL_HEART" -> 800
+                        o == "BASICO" -> 0
+                        else -> 100
+                    }
+                }
+                duplicates.maxBy { priority(it.origem) }
+            }
+
+        val deduped = prioritized
             .groupBy { it.signature() }
             .values
             .map { group ->

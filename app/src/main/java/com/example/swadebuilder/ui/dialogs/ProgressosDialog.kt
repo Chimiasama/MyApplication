@@ -128,7 +128,7 @@ fun ProgressosDialog(
     val canUseReservation = isLendarioStage && state.legendaryAttrReservations > 0
     val needsReservation = isLendarioStage && remainingBaseAttrs <= 0 && !canUseReservation
     val canBuyAttr = creditsLeft > 0 && state.progressosDisponiveis >= 1 &&
-            (remainingBaseAttrs > 0 || canUseReservation)
+            (remainingBaseAttrs > 0 || canUseReservation || state.modoMonstroAtivo)
     val canReserveLegendary = isLendarioStage &&
             totalAttrPurchases >= lendarioIndex && creditsLeft > 0 &&
             state.progressosDisponiveis >= 1 && state.legendaryAttrReservations == 0
