@@ -7,6 +7,7 @@ package com.example.swadebuilder
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -211,7 +212,7 @@ class MainActivity : ComponentActivity() {
                 mainActivityData = DataLoader.load(this@MainActivity)
                 isDataLoaded.value = LoadingState.Success
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("MainActivity", "Erro ao carregar dados: ${e.message}")
                 isDataLoaded.value = LoadingState.Error(e.message ?: "Erro desconhecido")
             }
         }
