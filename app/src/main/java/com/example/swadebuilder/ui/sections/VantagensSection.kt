@@ -310,7 +310,7 @@ fun VantagensContent(
     // --- PERFORMANCE OPTIMIZATION: Calculations moved up ---
     val hasProfissional = state.vantagensSelecionadas.any { it.id == "profissional" }
 
-    val filteredListGlobal = remember(listaVantagensAtivas, state.modoSupers, hasProfissional, filter) {
+    val filteredListGlobal = remember(listaVantagensAtivas, state.modoSupers, hasProfissional, filter, multiplosAAHabilitados) {
         listaVantagensAtivas.filter { vant ->
             // Supers Logic
             if (state.modoSupers) {
@@ -319,6 +319,21 @@ fun VantagensContent(
                 if (vant.categoria == Categoria.PODER) return@filter false
                 if (vant.requisitos.vantagensPrevias.contains("antecedente_arcano") ||
                     vant.id == "superpoderes") return@filter false
+            }
+
+            // Logic for Arcane Background Visibility
+            // Generic AB has id "antecedente_arcano"
+            // Specific ABs have id starting with "antecedente_arcano_" (e.g. "antecedente_arcano_magia")
+            val isGenericAB = vant.id == "antecedente_arcano"
+            val isSpecificAB = (vant.id.startsWith("antecedente_arcano_") || vant.id.startsWith("aa_"))
+
+            if (!multiplosAAHabilitados) {
+                // If Multiple ABs DISABLED: Show ONLY the Generic AB (Hide specific ones)
+                // "antecedente_arcano" does NOT start with "antecedente_arcano_" so it passes the check below.
+                if (isSpecificAB) return@filter false
+            } else {
+                // If Multiple ABs ENABLED: Show Specific ABs (Hide the Generic one)
+                if (isGenericAB) return@filter false
             }
 
             // Professional/Specialist Dependency
