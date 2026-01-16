@@ -2937,6 +2937,7 @@
     "descricao": "Combina magia arcana e divina. Pode conjurar duas magias simultaneamente como ação limitada (rolando dois dados de perícia).",
     "originalName": null
   },
+  [
     {
       "id": "classe_barbaro",
       "nome": "BÁRBARO",
@@ -2952,7 +2953,7 @@
         "vantagens_previas": []
       },
       "limite_compra": "uma_vez",
-      "descricao": "Restrição de Armadura (Média), Rápido (Movimentação +2), Fúria (veja texto)."
+      "descricao": "• RESTRIÇÃO DE ARMADURA (Média): Bárbaros são guerreiros selvagens treinados em ambientes brutais e imprevisíveis. Agilidade e todas as perícias ligadas a ela sofrem uma penalidade de –4 se o bárbaro usar armadura pesada.\n• RÁPIDO: Bárbaros têm uma Movimentação +2 e seu dado de corrida aumenta em um tipo (d6 para d8, por exemplo).\n• FÚRIA: Bárbaros podem enfurecer-se como uma ação livre (e podem cessar sua fúria da mesma forma). Enquanto estiver enfurecido, seus ataques corpo a corpo e danos aumentam em +2 e recebem +2 de Resistência. No entanto, sua natureza imprudente se manifesta como uma penalidade de –2 em Aparar. A Fúria dura 5 rodadas. O bárbaro pode estender a fúria por mais 5 rodadas gastando 1 Ponto de Poder ou um Bene. Quando a fúria termina, o bárbaro sofre um nível de Fadiga."
     },
     {
       "id": "ataque_poderoso",
@@ -2963,7 +2964,9 @@
         "estagio": "Experiente",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_barbaro"]
+        "vantagens_previas": [
+          "classe_barbaro"
+        ]
       },
       "limite_compra": "uma_vez",
       "descricao": "Os Ataques Selvagens causam +4 de dano em vez de +2."
@@ -2977,7 +2980,9 @@
         "estagio": "Veterano",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_barbaro"]
+        "vantagens_previas": [
+          "classe_barbaro"
+        ]
       },
       "limite_compra": "uma_vez",
       "descricao": "Faz uma rolagem de Intimidar como ação livre ao sacar um Valete ou melhor em combate."
@@ -2991,7 +2996,9 @@
         "estagio": "Heroico",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_barbaro"]
+        "vantagens_previas": [
+          "classe_barbaro"
+        ]
       },
       "limite_compra": "uma_vez",
       "descricao": "A Força aumenta em dois tipos de dado quando em fúria."
@@ -3012,7 +3019,7 @@
         "vantagens_previas": []
       },
       "limite_compra": "uma_vez",
-      "descricao": "Antecedente Arcano (Bardo), Interferência de Armadura (Leve), Língua Afiada (pode usar Performance para Provocar)."
+      "descricao": "• ANTECEDENTE ARCANO (Bardo): Personagens da classe bardo usam Performance como perícia arcana. Têm 3 poderes iniciais e 10 Pontos de Poder. Poderes Disponíveis: adivinhação, aliado, amigo das feras, atordoar, aumentar/diminuir Característica, banir, confusão, conjurar item, cura, deflexão, detectar/ocultar arcano, dissipar, drenar Pontos de Poder, dádiva do guerreiro, elo mental, empatia, falar idioma, ilusão, leitura de mente, leitura de objeto, marionete, medo, morosidade/velocidade, proteção arcana, som/silêncio, sono, teleporte.\n• INTERFERÊNCIA DA ARMADURA (Leve): Armaduras grandes interferem na graça e destreza de bardos. Subtraem 4 de suas rolagens de Performance, de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos médios ou pesados.\n• LÍNGUA AFIADA: Bardos podem usar Performance como Provocar em Desafios. Também podem ignorar o conselho de Repetição presente nos Desafios (veja a página 141), desde que possam recitar versos, estrofes ou músicas diferentes. Bardos também podem usar Performance no lugar de Provocar para atender aos Requisitos de Vantagem."
     },
     {
       "id": "inspirar_heroismo",
@@ -3023,10 +3030,12 @@
         "estagio": "Experiente",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_bardo"]
+        "vantagens_previas": [
+          "classe_bardo"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Uma vez por encontro, como ação limitada, pode dar 5 marcadores de Inspiração a seus aliados para rerrolagens."
+      "descricao": "Bardos inspiram seus camaradas com histórias épicas de valor e bravura. Uma vez durante um encontro (decisão do Mestre), o bardo pode gastar um Bene para ganhar cinco marcadores de Inspiração. Isso é uma ação livre limitada. Pelo restante do encontro, a personagem de classe bardo pode dar estes marcadores a qualquer um, exceto por si mesmo, que esteja em um alcance igual ao seu dado de Astúcia. Isso pode ser feito a qualquer momento (desde que o bardo esteja consciente). O alvo deve usar o marcador imediatamente – não pode ser guardado. Cada marcador de inspiração permite a uma personagem rerrolar uma Característica ou rolagem de dano. Uma Característica ou rolagem de dano só pode se beneficiar de um único marcador de Inspiração, mesmo que existam vários bardos presentes. Para rerrolagens adicionais é necessário gastar um Bene ou habilidade especial. Marcadores de Inspiração não são Benes, não podem ativar Vantagens que requeiram o uso de Benes (como Impulso) e não podem ser usados de outras formas como o saque de uma nova Carta de Ação ou para Absorver Ferimentos."
     },
     {
       "id": "contra_cancao",
@@ -3037,10 +3046,12 @@
         "estagio": "Veterano",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_bardo"]
+        "vantagens_previas": [
+          "classe_bardo"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Aliados a 5 quadros ganham uma rerrolagem para resistir ou se recuperar de efeitos de poderes inimigos."
+      "descricao": "Bardos e todos os seus aliados a 5 quadros (10 metros) ganham uma rerrolagem para resistir a efeitos de magias de oponentes ou tentativas de se recuperar deles. Isso inclui rolagens para se recuperar de quaisquer efeitos mágicos como cegar, diminuir Característica, ou atordoar. Contra-canção não ajuda a resistir ou recuperar de efeitos naturais."
     },
     {
       "id": "marcha_funebre",
@@ -3051,10 +3062,12 @@
         "estagio": "Heroico",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_bardo"]
+        "vantagens_previas": [
+          "classe_bardo"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Cartas Selvagens inimigos a 10 quadros subtraem 2 de seus resultados quando gastam um Bene."
+      "descricao": "Esta canção sinistra causa terror nos seus adversários. A seu critério, qualquer oponente que gaste um Bene para Absorver Ferimentos ou rerrolar uma Caraterística ou dano a 10 quadros (20 metros) e na linha de visão do bardo subtrai 2 de seu resultado total."
     },
     {
       "id": "classe_clerigo",
@@ -3068,11 +3081,10 @@
         },
         "pericias": {
           "Ocultismo": 6
-        },
-        "vantagens_previas": []
+        }
       },
       "limite_compra": "uma_vez",
-      "descricao": "Antecedentes Arcano (Clérigo), Canalização de Energia (pode curar a alcance igual Espírito)."
+      "descricao": "• ANTECEDENTE ARCANO (Clérigo): Clérigos usam Fé como perícia arcana. Ao escolher esta Vantagem, ganham 10 Pontos de Poder e devem escolher um Domínio referente à divindade que servem da lista da página 50. Todos os clérigos começam com o poder cura e outros dois poderes disponíveis em sua listagem.\n• PODERES DISPONÍVEIS: Clérigos têm acesso aos poderes desta lista além dos poderes listados no Domínio escolhido: adivinhação, aumentar/diminuir Característica, banir, conjurar item, cura, dissipar, empatia, ferir, iluminar/obscurecer, ressurreição, santuário, socorro, som/silêncio, sono, visão sombria.\n• CANALIZAR ENERGIA: Clérigos podem conjurar o poder cura à uma Distância igual a seu dado de Espírito em vez de Toque. Seu poder cura também têm o Modificador Receptores Adicionais, permitindo que curem aliados próximos ao custo de um Ponto de Poder extra para cada.\n• VOTO (Maior): Clérigos têm o voto de servir a sua divindade. Aqueles que desejam usar energia de fontes divinas devem seguir os princípios de seu Domínio. Se violar a confiança de sua divindade (decisão do Mestre) o clérigo subtrai 2 de suas rolagens de Fé por uma semana. Atos de verdadeiro sacrilégio podem retirar seus poderes inteiramente até que busquem redenção de alguma forma."
     },
     {
       "id": "destruir_mortos_vivos",
@@ -3083,10 +3095,12 @@
         "estagio": "Experiente",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_clerigo"]
+        "vantagens_previas": [
+          "classe_clerigo"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Gasta 2 Pontos de Poder para criar uma onda de energia em um Modelo Médio de Explosão. Todos os mortos-vivos devem fazer uma rolagem de Espírito ou sofrem um Ferimento."
+      "descricao": "Como uma ação, clérigos podem gastar 2 Pontos de Poder para canalizar energia positiva em um Modelo Médio de Explosão centrado em si mesmos. Todas as criaturas mortas-vivas dentro do modelo devem fazer uma rolagem de Espírito ou recebem um Ferimento (pode ser Absorvido como de costume)."
     },
     {
       "id": "poderes_favorecidos_clerigo",
@@ -3097,10 +3111,12 @@
         "estagio": "Veterano",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_clerigo"]
+        "vantagens_previas": [
+          "classe_clerigo"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Como ação livre limitada pode ignorar até dois pontos de quaisquer penalidades quando conjurar cura, santuário, ou ferir."
+      "descricao": "A personagem de classe clérigo tem grande familiaridade com alguns de seus poderes e pode conjurá-los com maior rapidez e facilidade. Como ação livre limitada pode ignorar até dois pontos de quaisquer penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.) quando conjurar cura, santuário, ou ferir. Esta Vantagem não lhe dá esses poderes – eles devem ser adquiridos separadamente como de costume."
     },
     {
       "id": "maestria_divina_clerigo",
@@ -3111,10 +3127,12 @@
         "estagio": "Heroico",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_clerigo"]
+        "vantagens_previas": [
+          "classe_clerigo"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Pode usar Modificadores Épicos de Poderes."
+      "descricao": "Divindades recompensam seus clérigos com poderes adicionais e energia para alimentar seus milagres. Personagens da classe Clérigo que adquiram esta Vantagem ganham acesso a todos os Modificadores Épicos de Poderes (veja a página 183)."
     },
     {
       "id": "classe_druida",
@@ -3128,11 +3146,10 @@
         },
         "pericias": {
           "Sobrevivência": 6
-        },
-        "vantagens_previas": []
+        }
       },
       "limite_compra": "uma_vez",
-      "descricao": "Antecedentes Arcano (Druida), Interferência de Armadura (Leve), Elo com a Natureza, Sentido Natural."
+      "descricao": "• ANTECEDENTES ARCANO (Druida): Druidas usam Fé como perícia arcana. Ao adquirir esta Vantagem, o herói ou heroína recebe 3 poderes iniciais e 10 Pontos de Poder. Poderes Disponíveis: Druidas escolhem magias dentre os poderes disponíveis para o clérigo (página 48) e daqueles incluídos no Domínio da Natureza (página 52).\n• ELO COM A NATUREZA: Druidas podem sintonizar com a natureza ou com um companheiro animal especial. Escolha uma destas habilidades: Sintonizado (recebe uma rerrolagem gratuita sempre que falhar em um teste de Fé para ativar uma magia) ou Senhor das Feras (recebe a Vantagem Senhor das Feras, ganhando um companheiro animal Carta Selvagem).\n• IDIOMA SECRETO: Todos os druidas sabem um idioma secreto conhecido como Druídico.\n• INTERFERÊNCIA DA ARMADURA (leve): Armaduras robustas interferem com as habilidades dos druidas em sentir e comungar com a natureza. Subtraem 4 de suas rolagens de Fé, Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos médios ou pesados. Druidas não podem usar armaduras de metal.\n• SENTIDO NATURAL: Druidas entram em comunhão com a natureza e seus espíritos. Sobrevivência é ligada a seu Espírito em vez de Astúcia.\n• TRAVESSIA DE FLORESTA: Druidas passam por terrenos difíceis como floresta densa, colinas rochosas ou desertos arenosos com facilidade. Ignoram as penalidades de Terreno Acidentado (veja a página 130).\n• VOTO (Maior): Druidas tem um voto maior de proteger a natureza. Aqueles que usam energia de fontes divinas devem seguir os princípios do Domínio da Natureza."
     },
     {
       "id": "forma_selvagem",
@@ -3143,10 +3160,12 @@
         "estagio": "Experiente",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_druida"]
+        "vantagens_previas": [
+          "classe_druida"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Ganha mudança de forma. A duração é de uma hora e pode conjurar como se fosse de um estágio maior do que o normal."
+      "descricao": "A personagem de classe druida ganha o poder mudança de forma, se já não a possuía, e dobra a duração do poder quando conjura. Trate como um estágio maior quando se transforma em uma criatura de Tipo: Animal."
     },
     {
       "id": "poderes_favorecidos_druida",
@@ -3157,10 +3176,12 @@
         "estagio": "Veterano",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_druida"]
+        "vantagens_previas": [
+          "classe_druida"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Como ação livre limitada pode ignorar até dois pontos de qualquer penalidades quando conjurar cura, santuário, ou ferir."
+      "descricao": "A personagem de classe druida tem grande familiaridade com alguns de seus poderes e pode conjurá-los com maior rapidez e facilidade. Como ação livre limitada pode ignorar até dois pontos de quaisquer penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.) quando conjurar enredar, ferir, ou proteção. Essa Vantagem não lhe dá esses poderes – eles devem ser adquiridos separadamente como de costume."
     },
     {
       "id": "maestria_divina_druida",
@@ -3171,10 +3192,12 @@
         "estagio": "Heroico",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_druida"]
+        "vantagens_previas": [
+          "classe_druida"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Pode usar Modificadores Épicos de Poderes."
+      "descricao": "A Natureza recompensa seus defensores com poderes e energia adicionais. Personagens da classe Druida que adquiram esta Vantagem ganham acesso a todos os Modificadores Épicos de Poderes (veja a página 183)."
     },
     {
       "id": "classe_feiticeiro",
@@ -3187,11 +3210,10 @@
           "Astúcia": 6,
           "Espírito": 6
         },
-        "pericias": {},
-        "vantagens_previas": []
+        "pericias": {}
       },
       "limite_compra": "uma_vez",
-      "descricao": "Antecedente Arcano (Feiticeiro), Interferência de Armadura (qualquer), Linhagem."
+      "descricao": "• ANTECEDENTE ARCANO (Feiticeiro): Personagens de classe Feiticeiro usam Conjurar como sua perícia arcana, mas ela é ligada à Espírito em vez de Astúcia (se for multiclasse entre um conjurador baseado em Astúcia, use o melhor entre os dois Atributos). Ao adquirir esta Vantagem, a personagem ganha 15 Pontos de Poder e dois poderes iniciais da lista a seguir. Poderes Disponíveis: adivinhação, amigo das feras, âncora planar, andar nas paredes, atordoar, aumentar/diminuir Característica, banir, barreira, campo de dano, cavar, cegar, confusão, conjurar item, convocar aliado, crescimento/encolhimento, deflexão, desejo, detectar/ocultar arcano, devastação, disfarce, dissipar, drenar Pontos de Poder, dádiva do guerreiro, elo mental, empatia, enredar, explosão, falar idioma, ferir, iluminar/obscurecer, ilusão, intangibilidade, invisibilidade, leitura de mente, leitura de objeto, limpeza mental, localizar, maldição, manipulação elemental, marionete, medo, morosidade/velocidade, mudança de forma, parar tempo, polimorfia perniciosa, proteção, proteção ambiental, proteção arcana, raio, rajada, som/silêncio, sono, telecinese, teleporte, viagem planar, vidência, visão distante, visão sombria, voar, zumbi.\n• INTERFERÊNCIA DE ARMADURA (qualquer uma): Feitiçaria requer movimentos somáticos rápidos, intrincados e desimpedidos. Subtraem 4 de suas rolagens de Conjurar, de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos leves, médios ou pesados.\n• LINHAGEM: Personagens da classe Feiticeiro devem escolher uma linhagem (veja a página 58). Abaixo da descrição de cada Linhagem há também habilidades especiais adicionais recebidas ao escolher a Vantagem Linhagem Avançada."
     },
     {
       "id": "poderes_favorecidos_feiticeiro",
@@ -3202,10 +3224,12 @@
         "estagio": "Experiente",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_feiticeiro"]
+        "vantagens_previas": [
+          "classe_feiticeiro"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Como ação livre limitada pode ignorar até dois pontos de quaisquer penalidades quando conjurar raio, manipulação elemental ou proteção."
+      "descricao": "A personagem de classe feiticeiro tem grande familiaridade com alguns de seus poderes e pode conjurá-los com maior rapidez e facilidade. Como ação livre limitada pode ignorar até dois pontos de quaisquer penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.) quando conjura manipulação elemental, proteção ou raio. Esta Vantagem não lhe dá estes poderes – eles devem ser adquiridos separadamente como de costume."
     },
     {
       "id": "maestria_arcana_feiticeiro",
@@ -3216,10 +3240,12 @@
         "estagio": "Veterano",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_feiticeiro"]
+        "vantagens_previas": [
+          "classe_feiticeiro"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Pode usar Modificadores Épicos de Poderes."
+      "descricao": "Verdadeiro entendimento da energia mágica vem com prática e experiência. Aqueles que adquirem esta Vantagem ganham acesso aos Modificadores Épicos de Poderes (veja Poderes no Capítulo Cinco)."
     },
     {
       "id": "linhagem_avancada",
@@ -3230,10 +3256,12 @@
         "estagio": "Heroico",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_feiticeiro"]
+        "vantagens_previas": [
+          "classe_feiticeiro"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Ganha suas habilidades de linhagem avançada."
+      "descricao": "Você ganha a habilidade adicional listada em sua Linhagem (veja a página 58)."
     },
     {
       "id": "classe_guerreiro",
@@ -3245,13 +3273,15 @@
         "atributos": {
           "Força": 6
         },
-        "pericias": {
-          "Lutar": 6
-        },
-        "vantagens_previas": []
+        "pericias": {},
+        "periciaMinOpcional": {
+          "Lutar": 6,
+          "Atletismo": 6,
+          "Atirar": 6
+        }
       },
       "limite_compra": "uma_vez",
-      "descricao": "Flexibilidade Marcial (pode assumir uma Vantagem de Combate uma vez por encontro)."
+      "descricao": "• FLEXIBILIDADE MARCIAL: Uma vez por encontro, como ação livre limitada, personagens da classe guerreiro podem ganhar os benefícios de uma única Vantagem de Combate. É necessário cumprir os requisitos da Vantagem e os benefícios da Vantagem acabam após cinco rodadas."
     },
     {
       "id": "golpe_mortal",
@@ -3262,10 +3292,12 @@
         "estagio": "Experiente",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_guerreiro"]
+        "vantagens_previas": [
+          "classe_guerreiro"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Adiciona +1 em todos os ataques que provoquem dano."
+      "descricao": "Adicionam +1 ao dano de todas as rolagens bem-sucedidas de Atletismo (arremessar), Lutar ou Atirar."
     },
     {
       "id": "flexibilidade_marcial_aprimorada",
@@ -3276,10 +3308,12 @@
         "estagio": "Veterano",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_guerreiro"]
+        "vantagens_previas": [
+          "classe_guerreiro"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Pode escolher duas Vantagens de Combate por encontro."
+      "descricao": "Personagens da classe Guerreiro recebem o benefício de duas Vantagens de Combate (sujeito as restrições normais de Flexibilidade Marcial). É possível escolher ambas as Vantagens de Combate ao mesmo tempo, ou escolher a segunda como uma ação livre limitada em um turno posterior."
     },
     {
       "id": "proeza_marcial",
@@ -3290,10 +3324,12 @@
         "estagio": "Heroico",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_guerreiro"]
+        "vantagens_previas": [
+          "classe_guerreiro"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Garante uma rerrolagem gratuita de qualquer rolagem de Lutar."
+      "descricao": "Personagens da classe guerreiro ganham uma rerrolagem gratuita em qualquer teste falho de Atletismo (arremessar), Lutar ou Atirar."
     },
     {
       "id": "classe_ladino",
@@ -3308,11 +3344,10 @@
         "pericias": {
           "Perceber": 6,
           "Furtividade": 6
-        },
-        "vantagens_previas": []
+        }
       },
       "limite_compra": "uma_vez",
-      "descricao": "Restrição de Armadura (leve), Ataque Furtivo."
+      "descricao": "• RESTRIÇÃO DE ARMADURA (Leve): Ladinos são acrobatas ágeis e mortais. Armaduras volumosas interferem em suas habilidades, então subtraem 4 de suas rolagens de Agilidade e perícias baseadas em Agilidade quando usam armaduras ou escudos médias e pesadas.\n• ATAQUE FURTIVO: Ladinos adicionam um d6 extra a seu dano quando conseguem a Finalização em sua vítima ou quando a vítima está vulnerável. Isso se aplica a ataques de Atletismo (arremessar), Lutar ou Atirar."
     },
     {
       "id": "pressentir_armadilhas",
@@ -3323,10 +3358,12 @@
         "estagio": "Experiente",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_ladino"]
+        "vantagens_previas": [
+          "classe_ladino"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Tem uma chance de detectar armadilhas antes de ativar-las. Também ignora dois pontos de penalidades para desarmá-las com Ladinagem."
+      "descricao": "Personagens da classe Ladino são hábeis em encontrar e desarmar armadilhas, exceto as mais bem planejadas. Fazem uma rolagem de Perceber sempre que uma armadilha detectável está para ser ativada a 5 quadros (10 metros). Devem ter linha de visão para a armadilha e não podem estar Abalados ou Atordoados. Isso normalmente funciona como Noção do Perigo, mas se aplica apenas à armadilhas mecânicas e mágicas. Se a armadilha é detectada e pode ser Evadida, ladinos e qualquer um que for avisado ignora 2 pontos de penalidades de Evasão para fazê-lo. Se a armadilha não pode ser Evadida, qualquer um avisado pode Evadir com a penalidade usual de -2. Desarmando Armadilhas: Ladinos com Pressentir Armadilhas ignoram até 2 pontos de penalidades de Ladinagem para desarmar armadilhas."
     },
     {
       "id": "reflexos_sobrenaturais",
@@ -3337,10 +3374,12 @@
         "estagio": "Veterano",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_ladino"]
+        "vantagens_previas": [
+          "classe_ladino"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Ignora a penalidade habitual de -2 na Agilidade para tentativas de Evasão e podem tentar Evadir qualquer efeito de área que normalmente não poderiam."
+      "descricao": "Personagens de classe ladino têm a habilidade sobrenatural de evitar ataques e efeitos que afetam área. Ignoram a penalidade habitual de -2 na Agilidade ao realizar tentativas de Evasão. Também é possível tentar Evadir de ataques ou efeitos de área dos quais normalmente não seria possível (com o redutor habitual de -2), tais como explosão ou rajada, ou ainda confusão ou poderes similares conjurados com o modificador Área."
     },
     {
       "id": "oportunista",
@@ -3351,10 +3390,12 @@
         "estagio": "Heroico",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_ladino"]
+        "vantagens_previas": [
+          "classe_ladino"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Ganha um ataque livre contra um oponente que se retire de combate corpo a corpo, mesmo com Retirada. Se não tiver Retirada, conta como Vulnerável."
+      "descricao": "Quando um alvo usa Retirada para se afastar de um ladino, é possível atacá-lo gratuitamente mesmo que o inimigo tenha Retirada ou Retirada Aprimorada. Se o oponente não possuir nenhuma destas Vantagens, ele conta como Vulnerável para este ataque."
     },
     {
       "id": "classe_mago",
@@ -3368,11 +3409,10 @@
         },
         "pericias": {
           "Ocultismo": 6
-        },
-        "vantagens_previas": []
+        }
       },
       "limite_compra": "uma_vez",
-      "descricao": "Antecedente Arcano (Mago), Elo Arcano (elo com um item, fornece Conjurar +1 ou ganha um familiar), Interferência de Armadura (qualquer), Escola, Grimório."
+      "descricao": "• ANTECEDENTE ARCANO (Mago): Magos usam Conjurar como perícia arcana. Ao adquirir esta Vantagem você recebe 10 Pontos de Poder e três poderes da lista (mesma do Feiticeiro).\n• ESCOLA: O estudo dos magos os conduz a um de dois caminhos, o 'universalista' – que passeia pelas várias 'escolas' de magia –, ou o 'especialista' – que se foca em uma escola às custas de algumas outras. Especialistas devem escolher uma escola favorita e duas escolas opostas da lista na página 182. Recebem uma rerrolagem gratuita nas rolagens de perícia arcana para conjurar magias (não inclui ativar um item) de sua escola, mas magias de suas escolas opostas custam um Ponto de Poder adicional e sofrem uma penalidade de -2 na rolagem de perícia arcana.\n• ELO ARCANO: Magos possuem um intenso elo mágico com um objeto ou criatura (Familiar ou Objeto Ligado).\n• GRIMÓRIO: Magos devem manter grimórios (veja página 66).\n• INTERFERÊNCIA DE ARMADURA (Qualquer um): Assim como feiticeiros, magos devem fazer gestos com padrões precisos. Subtraem 4 de suas rolagens de Conjurar, de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos leves, médios ou pesados."
     },
     {
       "id": "poderes_favorecidos_mago",
@@ -3383,10 +3423,12 @@
         "estagio": "Experiente",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_mago"]
+        "vantagens_previas": [
+          "classe_mago"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Como ação livre limitada pode ignorar até dois pontos de qualquer penalidades quando conjurar proteção arcana, deflexão, dissipar."
+      "descricao": "A personagem de classe mago tem grande familiaridade com alguns de seus poderes e pode conjurá-los com maior rapidez e facilidade. Como ação livre limitada, ele pode ignorar até dois pontos de quaisquer penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.), quando conjurar proteção arcana, deflexão, dissipar. Esta Vantagem não lhe dá estes poderes – eles devem ser adquiridos separadamente como de costume."
     },
     {
       "id": "maestria_arcana_mago",
@@ -3397,10 +3439,12 @@
         "estagio": "Veterano",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_mago"]
+        "vantagens_previas": [
+          "classe_mago"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Pode usar Modificadores Épicos de Poderes."
+      "descricao": "Verdadeiro entendimento da energia mágica vem com prática e experiência. Aqueles que adquirem esta Vantagem ganham acesso aos Modificadores Épicos de Poderes (veja Poderes no Capítulo Cinco)."
     },
     {
       "id": "inspiracao_mistica",
@@ -3411,10 +3455,12 @@
         "estagio": "Heroico",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_mago"]
+        "vantagens_previas": [
+          "classe_mago"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Pode gastar um Bene para conjurar qualquer poder de seu Estágio ou menor com uma penalidade de -2."
+      "descricao": "Grandes magos reúnem informações esotéricas em seus grimórios, permitindo que aproveitem os poderes mágicos à vontade. Assumindo que ele esteja com seu grimório pessoalmente, magos podem gastar um Bene para conjurar qualquer poder de seu Estágio ou menor. O poder pode ser mantido normalmente, mas depois é esquecido (ele não é adicionado na sua lista de poderes)."
     },
     {
       "id": "classe_monge",
@@ -3429,11 +3475,10 @@
         },
         "pericias": {
           "Lutar": 6
-        },
-        "vantagens_previas": []
+        }
       },
       "limite_compra": "uma_vez",
-      "descricao": "Restrição de Armadura (qualquer), Punho Atordoante, Golpe Desarmado."
+      "descricao": "• DISCIPLINA MARCIAL: Monges treinam seus corpos à perfeição recebendo Resistência +1 se não usarem armadura.\n• GOLPE DESARMADO: Monges recebem +1 no seu Lutar e PA +2 quando realizam um ataque desarmado. Causam For+d4 com suas mãos, pés ou outras Armas Naturais. Com uma ampliação, monges rolam um d10 como bônus de dano.\n• MOBILIDADE: Rápido e ágil, monges aumentam seu dado de corrida em um tipo.\n• PUNHO ATORDOANTE: Quando uma personagem da classe monge atinge o alvo com um Golpe Desarmado e consegue uma ampliação, ela pode deixar o alvo Distraído ou Vulnerável. Isso ocorre mesmo se a vítima não receber dano ou o Absorver.\n• RESTRIÇÃO DE ARMADURA (Qualquer): Monges devem estar completamente sem armadura para realizar suas manobras complexas. Subtraem 4 de rolagens de Agilidade e perícias baseadas em Agilidade, se estiverem usando armaduras e escudos leves, médios ou pesados."
     },
     {
       "id": "poderes_misticos_monge",
@@ -3444,10 +3489,12 @@
         "estagio": "Experiente",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_monge"]
+        "vantagens_previas": [
+          "classe_monge"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Tem 10 Pontos de Poder dedicados que pode usar para conjurar aumentar Característica (Agilidade, Atletismo, Lutar ou Furtividade), deflexão, ferir e velocidade. Todos apenas em si mesmo."
+      "descricao": "Como ação livre limitada, o monge pode invocar um de seus poderes 'ki' a seguir: aumentar Característica (Agilidade, Atletismo, Lutar e Furtividade apenas), deflexão, ferir, e velocidade. Todos afetam apenas a si mesmo, mas não ganham os benefícios da Limitação. Possuem 10 Pontos de Poder dedicados que se recarregam normalmente."
     },
     {
       "id": "grande_ki",
@@ -3458,10 +3505,13 @@
         "estagio": "Veterano",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_monge", "poderes_misticos_monge"]
+        "vantagens_previas": [
+          "classe_monge",
+          "poderes_misticos_monge"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Os Poderes Místicos agora incluem Aumentar Característica (Força), proteção, velocidade, andar nas paredes, dádiva do guerreiro."
+      "descricao": "Personagens da classe Monge nutrem e refinam seu ki. Adicione os seguintes poderes à sua Vantagem Poderes Místicos: andar nas paredes, aumentar Característica (Força), dádiva do guerreiro, proteção."
     },
     {
       "id": "corpo_vazio",
@@ -3472,7 +3522,10 @@
         "estagio": "Heroico",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_monge", "poderes_misticos_monge"]
+        "vantagens_previas": [
+          "classe_monge",
+          "poderes_misticos_monge"
+        ]
       },
       "limite_compra": "uma_vez",
       "descricao": "Pode gastar 2 Pontos de Poder para fazer uma Rolagem de Absorção. Isso não conta como gasto de Bene."
@@ -3489,11 +3542,10 @@
           "Espírito": 6
         },
         "pericias": {},
-        "vantagens_previas": [],
-        "observacoes": "Voto (Maior ou Menor)"
+        "observacoes": "Voto (Menor ou Maior)"
       },
       "limite_compra": "uma_vez",
-      "descricao": "Aura de Coragem (+1 para testes de Medo a 10 quadros), Código de Honra, Detectar o Mal, Punir o Mal (rerrolagem gratuita em rolagens de ataque que falhem contra um único inimigo maligno por encontro)."
+      "descricao": "• AURA DE CORAGEM: Enquanto estiver consciente, todos os aliados dentro de 10 quadros (20 metros) adicionam +2 em seus testes de Medo.\n• CÓDIGO DE HONRA: Todos os bons paladinos têm a complicação Código de Honra.\n• DETECTAR O MAL: Como uma ação, paladinos podem se concentrar em qualquer objeto ou indivíduo a um alcance igual a sua Astúcia para determinar se é Mau em sua natureza.\n• PUNIR O MAL: Como ação livre, personagens da classe paladino podem escolher um inimigo. Se aquele inimigo for maligno, o paladino ganha uma rerrolagem gratuita em qualquer rolagem de Atletismo (arremessar), Lutar ou Atirar contra o alvo pelo restante do encontro. Essa habilidade pode ser usada uma vez por Estágio por encontro."
     },
     {
       "id": "poderes_misticos_paladino",
@@ -3504,10 +3556,12 @@
         "estagio": "Experiente",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_paladino"]
+        "vantagens_previas": [
+          "classe_paladino"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Tem 10 Pontos de Poder dedicados que pode usar para conjurar aumentar Característica (Lutar, Força, Vigor), cura, ajuda, ferir. Todos, exceto cura e ajuda, afetam apenas a si mesmo."
+      "descricao": "Como ação livre limitada, paladinos podem invocar um dos seguintes milagres: ajuda, aumentar Característica (Lutar, Força e Vigor apenas), curar e ferir. Aumentar Característica e ferir afetam apenas a si mesmos, mas não recebem os benefícios da Limitação. Possuem 10 Pontos de Poder dedicados que se recarregam normalmente."
     },
     {
       "id": "misericordia",
@@ -3518,10 +3572,12 @@
         "estagio": "Veterano",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_paladino"]
+        "vantagens_previas": [
+          "classe_paladino"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Pode remover os Estados Distraídos, Vulnerável ou Abalado de qualquer aliado ao Alcance do Espírito."
+      "descricao": "Como ação, paladinos podem garantir 'Misericórdia' a qualquer personagem com um Alcance igual seu Espírito. Misericórdia remove um dos seguintes Estados: Distraído, Vulnerável ou Abalado."
     },
     {
       "id": "montaria_paladino",
@@ -3532,10 +3588,12 @@
         "estagio": "Heroico",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_paladino"]
+        "vantagens_previas": [
+          "classe_paladino"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Ganha um cavalo, leve ou pesado, CS leal."
+      "descricao": "Personagens da classe Paladino formam um elo divino com uma montaria de sua posse. Normalmente é um cavalo ou pônei, mas pode ser qualquer montaria aprovada pelo Mestre com Tamanho 3 ou menor. Ao formar o elo, a montaria ganha dois progressos (Características ou Vantagens apropriadas com aprovação do Mestre) e é Resiliente. Ela pode ser convocada como ação limitada, chegando no início da próxima rodada e agindo na Carta de Ação do Paladino em combate. Se a montaria perecer, paladinos podem adquirir e se conectar com outra, mas só é possível ter elo com uma montaria por vez."
     },
     {
       "id": "classe_patrulheiro",
@@ -3552,11 +3610,10 @@
           "Atletismo": 6,
           "Lutar": 6,
           "Atirar": 6
-        },
-        "vantagens_previas": []
+        }
       },
       "limite_compra": "uma_vez",
-      "descricao": "Restrição de Armadura (Média), Inimigo Predileto, Terreno Predileto, Travessia de Floresta."
+      "descricao": "• INIMIGO PREDILETO: Escolha um tipo de inimigo na lista da página 256. Personagens da classe Patrulheiro têm uma rerrolagem gratuita quando falham em rastrear – Sobrevivência – ou atacar – Atletismo (arremessar), Lutar, Atirar – aquele tipo de criatura.\n• RESTRIÇÃO DE ARMADURA (Média): Patrulheiros são guerreiros e batedores com agilidade e mobilidade. Subtraem 4 das rolagens de Agilidade e perícias baseadas em Agilidade ao usar armaduras ou escudo pesados.\n• TERRENO PREDILETO: Escolha um tipo de terreno (Ártico, Deserto, Floresta, Selva, Planície, Colinas/Montanhas, Rios/Mares, Pântano, Urbano ou Subterrâneo). Patrulheiros sacam uma Carta de Ação adicional para iniciativa quando estão em seu Terreno Predileto.\n• TRAVESSIA DE FLORESTA: Patrulheiros passam por terrenos difíceis como floresta densa, colinas rochosas ou desertos arenosos com facilidade. Ignoram as penalidades de Terreno Acidentado."
     },
     {
       "id": "presa",
@@ -3567,10 +3624,12 @@
         "estagio": "Experiente",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_patrulheiro"]
+        "vantagens_previas": [
+          "classe_patrulheiro"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Escolhe um inimigo e um tipo de terreno adicionais para suas habilidades Inimigo Predileto e Terreno Predileto."
+      "descricao": "A habilidade da personagem aumenta para incluir um inimigo e terreno adicional. Escolhe um inimigo e um tipo de terreno adicionais para suas habilidades Inimigo Predileto e Terreno Predileto. Esta Vantagem pode ser adquirida uma vez por Estágio."
     },
     {
       "id": "poderes_misticos_patrulheiro",
@@ -3581,10 +3640,12 @@
         "estagio": "Veterano",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_patrulheiro"]
+        "vantagens_previas": [
+          "classe_patrulheiro"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Tem 10 Pontos de Poder dedicados que pode usar para conjurar amigo das feras, aumentar Característica (Atletismo, Lutar, Atirar), enredar e dádiva do guerreiro. Todos, exceto enredar, afetam apenas a si mesmo."
+      "descricao": "Como ação livre limitada, podem conjurar um dos seguintes poderes: elo animal, aumentar característica (Atletismo, Lutar e Atirar apenas), enredar e dádiva do guerreiro. Aumentar Característica e dádiva do guerreiro afetam apenas a si mesmo, mas não recebem o benefício da Limitação. Possuem 10 Pontos de Poder dedicados que se recarregam normalmente."
     },
     {
       "id": "mestre_cacador",
@@ -3595,9 +3656,12 @@
         "estagio": "Heroico",
         "atributos": {},
         "pericias": {},
-        "vantagens_previas": ["classe_patrulheiro"]
+        "vantagens_previas": [
+          "classe_patrulheiro"
+        ]
       },
       "limite_compra": "uma_vez",
-      "descricao": "Adiciona um d6 no dano quando realizam um ataque bem-sucedido de Atletismo (arremessar), Lutar ou Atirar contra seu Inimigo Predileto."
+      "descricao": "Personagens de classe patrulheiro agora são inimigos mortais de suas presas. Adicionam um d6 adicional no dano quando realizam um ataque bem-sucedido de Atletismo (arremessar), Lutar ou Atirar contra seu Inimigo Predileto."
     }
+  ]
 ]
