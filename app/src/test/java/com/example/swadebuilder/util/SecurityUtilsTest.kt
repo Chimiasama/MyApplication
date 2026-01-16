@@ -72,4 +72,47 @@ class SecurityUtilsTest {
         parent.delete()
         File("temp").delete()
     }
+
+    @Test
+    fun `isValidFilename validation logic`() {
+        // Valid cases
+        assert(SecurityUtils.isValidFilename("SimpleName"))
+        assert(SecurityUtils.isValidFilename("file.name"))
+        assert(SecurityUtils.isValidFilename("name_with_underscores"))
+        assert(SecurityUtils.isValidFilename("name-with-dashes"))
+        assert(SecurityUtils.isValidFilename("12345"))
+
+        // Invalid cases
+        assert(!SecurityUtils.isValidFilename("")) // Empty
+        assert(!SecurityUtils.isValidFilename("With Spaces"))
+        assert(!SecurityUtils.isValidFilename("With/Slashes"))
+        assert(!SecurityUtils.isValidFilename("With\\Backslashes"))
+        assert(!SecurityUtils.isValidFilename("With?Question"))
+        assert(!SecurityUtils.isValidFilename("With*Star"))
+        assert(!SecurityUtils.isValidFilename("With<Less"))
+        assert(!SecurityUtils.isValidFilename("With>Greater"))
+        assert(!SecurityUtils.isValidFilename("With:Colon"))
+        assert(!SecurityUtils.isValidFilename("With|Pipe"))
+        assert(!SecurityUtils.isValidFilename("With\"Quote"))
+
+        // Length check
+        val longName = "a".repeat(51)
+        assert(!SecurityUtils.isValidFilename(longName))
+    }
+
+    @Test
+    fun `sanitizeFilename sanitization logic`() {
+        assertEquals("SimpleName", SecurityUtils.sanitizeFilename("SimpleName"))
+        assertEquals("With_Spaces", SecurityUtils.sanitizeFilename("With Spaces"))
+        assertEquals("With_Slashes", SecurityUtils.sanitizeFilename("With/Slashes"))
+        assertEquals("file.txt", SecurityUtils.sanitizeFilename("file.txt"))
+        assertEquals("Jos_", SecurityUtils.sanitizeFilename("José"))
+        assertEquals("personagem_sem_nome", SecurityUtils.sanitizeFilename(""))
+
+        // Length truncation
+        val longInput = "a".repeat(60)
+        val sanitized = SecurityUtils.sanitizeFilename(longInput)
+        assertEquals(50, sanitized.length)
+        assertEquals("a".repeat(50), sanitized)
+    }
 }

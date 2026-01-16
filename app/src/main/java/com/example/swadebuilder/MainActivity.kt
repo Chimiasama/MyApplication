@@ -90,6 +90,7 @@ import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.AppPreferences
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
+import com.example.swadebuilder.util.SecurityUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.coroutines.Dispatchers
@@ -603,6 +604,7 @@ class MainActivity : ComponentActivity() {
             }
 
             if (showSaveDialog) {
+                val isValid = SecurityUtils.isValidFilename(saveName)
                 AlertDialog(
                     onDismissRequest = { showSaveDialog = false },
                     title = { Text("Salvar personagem") },
@@ -610,25 +612,32 @@ class MainActivity : ComponentActivity() {
                         Column {
                             Text("Defina um nome para o salvamento.")
                             OutlinedTextField(
-                                value = saveName.ifBlank { state.nomePersonagem },
+                                value = saveName,
                                 onValueChange = { saveName = it },
                                 label = { Text("Nome do arquivo") },
+                                isError = !isValid,
+                                supportingText = if (!isValid) {
+                                    { Text("Inválido: use apenas letras, números, '.', '_' ou '-' (máx 50).") }
+                                } else null,
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
                     },
                     confirmButton = {
-                        TextButton(onClick = {
-                            triggerFeedback()
-                            scope.launch {
-                                val entry = criadorViewModel.salvarPersonagem(
-                                    context,
-                                    saveName.ifBlank { state.nomePersonagem }
-                                )
-                                showSaveDialog = false
-                                snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
-                            }
-                        }) {
+                        TextButton(
+                            onClick = {
+                                triggerFeedback()
+                                scope.launch {
+                                    val entry = criadorViewModel.salvarPersonagem(
+                                        context,
+                                        saveName
+                                    )
+                                    showSaveDialog = false
+                                    snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
+                                }
+                            },
+                            enabled = isValid
+                        ) {
                             Text("Salvar")
                         }
                     },
@@ -890,7 +899,7 @@ class MainActivity : ComponentActivity() {
 
                                             IconButton(onClick = {
                                                 triggerFeedback()
-                                                saveName = state.nomePersonagem
+                                                saveName = SecurityUtils.sanitizeFilename(state.nomePersonagem)
                                                 showSaveDialog = true
                                             }) {
                                                 Icon(Icons.Default.Save, contentDescription = "Salvar personagem")

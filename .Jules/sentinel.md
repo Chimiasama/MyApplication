@@ -9,3 +9,8 @@
 **Vulnerability:** Even if file creation uses safe names (UUIDs), reading filenames from persisted state (JSON) without validation allows Path Traversal if the state file is tampered with (integrity check was non-cryptographic).
 **Learning:** Always use `SecurityUtils.getSafeChildFile` (or equivalent canonical path check) when constructing `File` objects from string paths, even if those strings originated from the app itself previously.
 **Prevention:** Enforce usage of `SecurityUtils.getSafeChildFile` for all file access involving dynamic paths.
+
+## 2025-02-14 - Input Validation for User-Defined Filenames
+**Vulnerability:** The application allowed arbitrary strings for filenames in the Save Dialog, relying on backend exceptions to catch invalid paths. This could lead to crashes or confusing errors, and potentially allowed excessively long filenames or reserved characters.
+**Learning:** Validating input at the UI layer (using `OutlinedTextField`'s `isError` and `supportingText`) provides a better user experience and reduces the attack surface by filtering out malformed data early. Using a strict whitelist (alphanumeric + `_.-`) for filenames is safer than a blacklist.
+**Prevention:** Implement `isValidFilename` and `sanitizeFilename` utilities and integrate them into UI input fields. Always pre-fill and validate filenames before attempting file operations.
