@@ -97,7 +97,7 @@ class CriadorViewModel : ViewModel() {
             compendioFantasiaAtivo = false,
             compendioHorrorAtivo = false,
             compendioSciFiAtivo = false,
-            compendioBuscatrilhaAtivo = false,
+            compendioPathfinderAtivo = false,
             compendioDeadlandsAtivo = false,
             compendioCrystalHeartAtivo = false,
             compendioArteDaGuerraAtivo = false,
@@ -220,7 +220,7 @@ class CriadorViewModel : ViewModel() {
             compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
             compendioHorrorAtivo = flags.compendioHorrorAtivo,
             compendioSciFiAtivo = flags.compendioSciFiAtivo,
-            compendioBuscatrilhaAtivo = flags.compendioBuscatrilhaAtivo,
+            compendioPathfinderAtivo = flags.compendioPathfinderAtivo,
             compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo,
             compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo,
             compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo,
@@ -269,7 +269,7 @@ class CriadorViewModel : ViewModel() {
         compendioFantasiaAtivo: Boolean,
         compendioHorrorAtivo: Boolean = false,
         compendioSciFiAtivo: Boolean = false,
-        compendioBuscatrilhaAtivo: Boolean = false,
+        compendioPathfinderAtivo: Boolean = false,
         compendioDeadlandsAtivo: Boolean = false,
         compendioCrystalHeartAtivo: Boolean = false,
         compendioArteDaGuerraAtivo: Boolean = false,
@@ -290,7 +290,7 @@ class CriadorViewModel : ViewModel() {
         state.compendioFantasiaAtivo = compendioFantasiaAtivo
         state.compendioHorrorAtivo = compendioHorrorAtivo
         state.compendioSciFiAtivo = compendioSciFiAtivo
-        state.compendioBuscatrilhaAtivo = compendioBuscatrilhaAtivo
+        state.compendioPathfinderAtivo = compendioPathfinderAtivo
         state.compendioDeadlandsAtivo = compendioDeadlandsAtivo
         state.compendioCrystalHeartAtivo = compendioCrystalHeartAtivo
         state.compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo
@@ -324,7 +324,7 @@ class CriadorViewModel : ViewModel() {
 
         // Fix: Force transition from empty string to ensure aplicarAncestralidade logic runs fully
         state.ancestralidade = ""
-        val targetAncestralidade = if (state.compendioBuscatrilhaAtivo) "Humano (Buscatrilha)" else "HUMANOS"
+        val targetAncestralidade = if (state.compendioPathfinderAtivo) "Humano (Pathfinder)" else "HUMANOS"
 
         state.vantagensSelecionadas.clear()
         state.complicacoesSelecionadas.clear()
@@ -418,7 +418,7 @@ class CriadorViewModel : ViewModel() {
         state.naturalArmorFromRace = 0
         // ─────────────────────────────────────────────────────────────
 
-        state.dinheiro = if (compendioBuscatrilhaAtivo) {
+        state.dinheiro = if (compendioPathfinderAtivo) {
             30000
         } else if (compendioFantasiaAtivo) {
             300
@@ -840,14 +840,14 @@ class CriadorViewModel : ViewModel() {
 
     fun gastarPontoComplicacaoEmRecursos() {
         if (state.gastarPcParaRecursos()) {
-            val amount = if (state.compendioBuscatrilhaAtivo) "600 de ouro" else "$500"
+            val amount = if (state.compendioPathfinderAtivo) "600 de ouro" else "$500"
             logFeedback("1 Ponto de Complicação gasto em +$amount.")
         }
     }
 
     fun desfazerPontoComplicacaoEmRecursos() {
         state.devolverPcDeRecursos()
-        val amount = if (state.compendioBuscatrilhaAtivo) "600 de ouro" else "$500"
+        val amount = if (state.compendioPathfinderAtivo) "600 de ouro" else "$500"
         logFeedback("Gasto em recursos desfeito (-$amount).")
     }
 

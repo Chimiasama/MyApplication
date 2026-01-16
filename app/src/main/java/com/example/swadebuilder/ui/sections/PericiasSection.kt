@@ -140,7 +140,7 @@ fun PericiasContent(
                 false
             } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
                 state.compendioFantasiaAtivo || state.compendioHorrorAtivo
-            } else if (state.compendioBuscatrilhaAtivo) {
+            } else if (state.compendioPathfinderAtivo) {
                 // Pathfinder exclusions
                 val n = per.nome.keyify()
                 n != "FOCO" && n !in SAVAGE_PATHFINDER_BLOCKED_SKILLS

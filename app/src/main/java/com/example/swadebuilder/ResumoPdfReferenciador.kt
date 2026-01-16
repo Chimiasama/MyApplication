@@ -82,7 +82,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         soldadoCargaAtivo = this.soldadoCargaAtivo,
         modoOficialAtivo = this.modoOficialAtivo,
         compendioArteDaGuerraAtivo = this.compendioArteDaGuerraAtivo,
-        compendioBuscatrilhaAtivo = this.compendioBuscatrilhaAtivo,
+        compendioPathfinderAtivo = this.compendioPathfinderAtivo,
         heroisSemArmadura = this.heroisSemArmadura,
         compendioDeadlandsAtivo = this.compendioDeadlandsAtivo,
         compendioHorrorAtivo = this.compendioHorrorAtivo,

@@ -104,7 +104,7 @@ fun SummaryContent(
             "Sem Pontos de Poder".takeIf { state.usarSemPontosDePoder },
             "Mais Pontos de Perícias".takeIf { state.maisPontosPericias },
             "Especializações".takeIf { state.usarEspecializacoesDePericia },
-            if (state.compendioBuscatrilhaAtivo) {
+            if (state.compendioPathfinderAtivo) {
                 val hasLinguista = state.vantagensSelecionadas.any { it.id == "linguista" }
                 "Idiomas: comum + ${if (hasLinguista) "Astúcia" else "1/2 Astúcia"}"
             } else null
@@ -119,22 +119,22 @@ fun SummaryContent(
 
     // Dynamic update for Language note (Pathfinder)
     val hasLinguista = state.vantagensSelecionadas.any { it.id == "linguista" }
-    var previousPathfinderState by remember { mutableStateOf(state.compendioBuscatrilhaAtivo) }
+    var previousPathfinderState by remember { mutableStateOf(state.compendioPathfinderAtivo) }
 
-    LaunchedEffect(hasLinguista, state.compendioBuscatrilhaAtivo) {
+    LaunchedEffect(hasLinguista, state.compendioPathfinderAtivo) {
         val newText = "• Idiomas: comum + ${if (hasLinguista) "Astúcia" else "1/2 Astúcia"}"
 
         // Case 1: Just toggled Pathfinder ON? Append if missing.
         // This handles existing characters that didn't have it initialized via flagsTemplate
-        if (!previousPathfinderState && state.compendioBuscatrilhaAtivo) {
+        if (!previousPathfinderState && state.compendioPathfinderAtivo) {
             if (!state.anotacoes.contains("Idiomas: comum")) {
                 state.anotacoes = if (state.anotacoes.isBlank()) newText else "${state.anotacoes}\n$newText"
             }
         }
-        previousPathfinderState = state.compendioBuscatrilhaAtivo
+        previousPathfinderState = state.compendioPathfinderAtivo
 
         // Case 2: Already active, Linguist changed (or re-evaluating). Update if old version present.
-        if (state.compendioBuscatrilhaAtivo) {
+        if (state.compendioPathfinderAtivo) {
             val oldText1 = "• Idiomas: comum + 1/2 Astúcia"
             val oldText2 = "• Idiomas: comum + Astúcia"
 

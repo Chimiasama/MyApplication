@@ -104,7 +104,7 @@ fun ComplicacoesSection(
         }
         if (state.modoSupers) add("SUPER")
         if (state.compendioHorrorAtivo) add("HORROR")
-        if (state.compendioBuscatrilhaAtivo) add("FANTASIABUSCATRILHA")
+        if (state.compendioPathfinderAtivo) add("PATHFINDER")
         if (state.compendioDeadlandsAtivo) add("OESTE_ESTRANHO")
         if (state.compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
         if (state.compendioCidadeSolVaporAtivo) add("CIDADE_SOL_VAPOR")
@@ -301,7 +301,7 @@ fun ComplicacoesSection(
                                 }
                                 "pobreza" -> {
                                     state.complicacoesSelecionadas.remove(comp)
-                                    if(state.compendioBuscatrilhaAtivo){
+                                    if(state.compendioPathfinderAtivo){
                                         state.dinheiro += 15000
                                     } else if (state.compendioFantasiaAtivo) {
                                         state.dinheiro += 150
@@ -441,7 +441,7 @@ fun ComplicacoesSection(
                                                       "SUPER" -> "SUPERS"
                                                       "FANTASIA" -> "FANTASIA"
                                                       "HORROR" -> "HORROR"
-                                                      "FANTASIABUSCATRILHA" -> "BUSCATRILHA"
+                                                      "PATHFINDER" -> "BUSCATRILHA"
                                                       else -> v.origem.toEditionDisplayName().uppercase()
                                                   }
                                                   val txt = if (showOfficialNames && !v.originalDescription.isNullOrBlank())
@@ -529,7 +529,7 @@ fun ComplicacoesSection(
                                                         }
                                                         "pobreza" -> {
                                                             state.complicacoesSelecionadas[comp] = "Menor"
-                                                            if(state.compendioBuscatrilhaAtivo){
+                                                            if(state.compendioPathfinderAtivo){
                                                                 state.dinheiro -= 15000
                                                             } else if (state.compendioFantasiaAtivo) {
                                                                 state.dinheiro -= 150

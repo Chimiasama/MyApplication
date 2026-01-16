@@ -31,7 +31,7 @@ data class SnapshotFlags(
     val compendioFantasiaAtivo: Boolean,
     val compendioHorrorAtivo: Boolean,
     val compendioSciFiAtivo: Boolean = false,
-    val compendioBuscatrilhaAtivo: Boolean = false,
+    val compendioPathfinderAtivo: Boolean = false,
     val compendioDeadlandsAtivo: Boolean = false,
     val compendioCrystalHeartAtivo: Boolean = false,
     val compendioArteDaGuerraAtivo: Boolean = false,

@@ -126,7 +126,7 @@ private fun buildUsageInstructions(state: CriadorState, pathfinderLabel: String)
         if (state.compendioFantasiaAtivo) add("Compêndio Fantasia")
         if (state.compendioHorrorAtivo) add("Compêndio Horror")
         if (state.compendioSciFiAtivo) add("Compêndio Sci-Fi")
-        if (state.compendioBuscatrilhaAtivo) add("Compêndio $pathfinderLabel")
+        if (state.compendioPathfinderAtivo) add("Compêndio $pathfinderLabel")
         if (state.compendioDeadlandsAtivo) add("Compêndio Deadlands".toEditionDisplayName())
         if (state.compendioArteDaGuerraAtivo) add("Arte da Guerra".toEditionDisplayName())
         if (state.compendioCidadeSolVaporAtivo) add("Cidade do Sol a Vapor".toEditionDisplayName())
@@ -808,7 +808,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         if (mostrouTelaInicial) {
                             TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioBuscatrilhaAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo,
+                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioPathfinderAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, multiplosIdiomas, grandesResponsabilidades,
                                                 optRegraFama, optRegraRiqueza, optRegraCosaNostra ->
@@ -822,7 +822,7 @@ class MainActivity : ComponentActivity() {
                                         compendioFantasiaAtivo = compendioFantasiaAtivo,
                                         compendioHorrorAtivo = compendioHorrorAtivo,
                                         compendioSciFiAtivo = compendioSciFiAtivo,
-                                        compendioBuscatrilhaAtivo = compendioBuscatrilhaAtivo,
+                                        compendioPathfinderAtivo = compendioPathfinderAtivo,
                                         compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                                         compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
                                         compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,

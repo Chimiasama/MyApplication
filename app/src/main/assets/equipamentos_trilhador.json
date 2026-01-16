@@ -2,7 +2,7 @@
   {
     "tipo": "Equipamento de Aventura",
     "subtipo": "Geral",
-    "origem": "FANTASIABUSCATRILHA",
+    "origem": "PATHFINDER",
     "itens": [
       { "nome": "Agulha", "custo": "5 pp", "peso": "-" },
       { "nome": "Algemas", "custo": "15 po", "peso": "1" },
@@ -56,7 +56,7 @@
   {
     "tipo": "Equipamento de Aventura",
     "subtipo": "Kits e Ferramentas",
-    "origem": "FANTASIABUSCATRILHA",
+    "origem": "PATHFINDER",
     "itens": [
       { "nome": "Bolsa de componentes mágicos", "custo": "5 po", "peso": "1" },
       { "nome": "Ferramentas de Artesão", "custo": "5 po", "peso": "2,5" },
@@ -80,7 +80,7 @@
   {
     "tipo": "Equipamento de Aventura",
     "subtipo": "Vestuário e Serviços",
-    "origem": "FANTASIABUSCATRILHA",
+    "origem": "PATHFINDER",
     "itens": [
       { "nome": "Traje de Artesão", "custo": "1 po", "peso": "2" },
       { "nome": "Traje de Frio", "custo": "8 po", "peso": "3,5" },
@@ -106,7 +106,7 @@
   {
     "tipo": "Animais e Arreios",
     "subtipo": "Animais",
-    "origem": "FANTASIABUSCATRILHA",
+    "origem": "PATHFINDER",
     "itens": [
       { "nome": "Burro ou mula", "custo": "8 po", "peso": "-" },
       { "nome": "Cão de guarda", "custo": "25 po", "peso": "-" },
@@ -123,7 +123,7 @@
   {
     "tipo": "Armaduras",
     "subtipo": "Medievais",
-    "origem": "FANTASIABUSCATRILHA",
+    "origem": "PATHFINDER",
     "itens": [
       { "nome": "Túnica ou Gibão (Tronco/Braços)", "custo": "20 po", "peso": "5,5" },
       { "nome": "Perneiras de Couro (Pernas)", "custo": "20 po", "peso": "4" },
@@ -146,7 +146,7 @@
   {
     "tipo": "Escudos",
     "subtipo": "Medievais",
-    "origem": "FANTASIABUSCATRILHA",
+    "origem": "PATHFINDER",
     "itens": [
       { "nome": "Escudo Leve", "custo": "5 po", "peso": "2" },
       { "nome": "Escudo Médio", "custo": "9 po", "peso": "4" },
@@ -157,7 +157,7 @@
   {
     "tipo": "Armas Medievais",
     "subtipo": "Corpo a Corpo",
-    "origem": "FANTASIABUSCATRILHA",
+    "origem": "PATHFINDER",
     "itens": [
       { "nome": "Adaga/Faca", "custo": "2 po", "peso": "0,5" },
       { "nome": "Alabarda", "custo": "10 po", "peso": "6" },
@@ -201,7 +201,7 @@
   {
     "tipo": "Armas Medievais",
     "subtipo": "Distância",
-    "origem": "FANTASIABUSCATRILHA",
+    "origem": "PATHFINDER",
     "itens": [
       { "nome": "Arco Composto", "custo": "100 po", "peso": "1,5" },
       { "nome": "Arco Curto", "custo": "30 po", "peso": "1" },
@@ -222,7 +222,7 @@
   {
     "tipo": "Armas Medievais",
     "subtipo": "Munição",
-    "origem": "FANTASIABUSCATRILHA",
+    "origem": "PATHFINDER",
     "itens": [
       { "nome": "Dardos de Zarabatana (10)", "custo": "5 pp", "peso": "-" },
       { "nome": "Flechas (20)", "custo": "1 po", "peso": "1,5" },
@@ -233,7 +233,7 @@
   {
     "tipo": "Armas Especiais",
     "subtipo": "Armas de Cerco",
-    "origem": "FANTASIABUSCATRILHA",
+    "origem": "PATHFINDER",
     "itens": [
       { "nome": "Aríete", "custo": "1.000 po", "peso": "N/A" },
       { "nome": "Balista", "custo": "500 po", "peso": "N/A" },
@@ -246,7 +246,7 @@
   {
     "tipo": "Equipamento de Aventura",
     "subtipo": "Itens Alquímicos",
-    "origem": "FANTASIABUSCATRILHA",
+    "origem": "PATHFINDER",
     "itens": [
       { "nome": "Ácido (frasco)", "custo": "10 po", "peso": "0,5" },
       { "nome": "Água Benta (frasco)", "custo": "25 po", "peso": "0,5" },
@@ -263,7 +263,7 @@
   {
     "tipo": "Veículos",
     "subtipo": "Terrestres",
-    "origem": "FANTASIABUSCATRILHA",
+    "origem": "PATHFINDER",
     "itens": [
       { "nome": "Carroça", "custo": "15 po" },
       { "nome": "Carroção leve", "custo": "35 po" },
@@ -275,7 +275,7 @@
   {
     "tipo": "Veículos",
     "subtipo": "Aéreos",
-    "origem": "FANTASIABUSCATRILHA",
+    "origem": "PATHFINDER",
     "itens": [
       { "nome": "Aeronave (Dirigível)", "custo": "50.000 po" },
       { "nome": "Dragão Alquímico", "custo": "100.000 po" },
@@ -285,7 +285,7 @@
   {
     "tipo": "Veículos",
     "subtipo": "Aquáticos",
-    "origem": "FANTASIABUSCATRILHA",
+    "origem": "PATHFINDER",
     "itens": [
       { "nome": "Barcaça", "custo": "3.000 po" },
       { "nome": "Barco a Remo", "custo": "50 po" },

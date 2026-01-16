@@ -350,7 +350,7 @@ fun UnifiedScreen(
                     val compendioFantasiaAtivo = state.compendioFantasiaAtivo
                     val compendioHorrorAtivo = state.compendioHorrorAtivo
                     val compendioSciFiAtivo = state.compendioSciFiAtivo
-                    val compendioBuscatrilhaAtivo = state.compendioBuscatrilhaAtivo
+                    val compendioPathfinderAtivo = state.compendioPathfinderAtivo
                     val compendioDeadlandsAtivo = state.compendioDeadlandsAtivo
                     val compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
                     val compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo
@@ -371,7 +371,7 @@ fun UnifiedScreen(
                         compendioFantasiaAtivo = compendioFantasiaAtivo,
                         compendioHorrorAtivo = compendioHorrorAtivo,
                         compendioSciFiAtivo = compendioSciFiAtivo,
-                        compendioBuscatrilhaAtivo = compendioBuscatrilhaAtivo,
+                        compendioPathfinderAtivo = compendioPathfinderAtivo,
                         compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                         compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
                         compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
@@ -1243,7 +1243,7 @@ private fun EquipamentoSection(
         compendioFantasiaAtivo = state.compendioFantasiaAtivo,
         compendioHorrorAtivo = state.compendioHorrorAtivo,
         compendioSciFiAtivo = state.compendioSciFiAtivo,
-        compendioBuscatrilhaAtivo = state.compendioBuscatrilhaAtivo,
+        compendioPathfinderAtivo = state.compendioPathfinderAtivo,
         compendioDeadlandsAtivo = state.compendioDeadlandsAtivo,
         compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo,
         compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo,

@@ -77,7 +77,7 @@ fun TelaInicial(
         compendioFantasiaAtivo: Boolean,
         compendioHorrorAtivo: Boolean,
         compendioSciFiAtivo: Boolean,
-        compendioBuscatrilhaAtivo: Boolean,
+        compendioPathfinderAtivo: Boolean,
         compendioDeadlandsAtivo: Boolean,
         compendioCrystalHeartAtivo: Boolean,
         compendioArteDaGuerraAtivo: Boolean,
@@ -123,7 +123,7 @@ fun TelaInicial(
 
     // Fantasy
     var optCompendioFantasia by rememberSaveable { mutableStateOf(false) }
-    var optCompendioBuscatrilha by rememberSaveable { mutableStateOf(false) }
+    var optCompendioPathfinder by rememberSaveable { mutableStateOf(false) }
     var optCompendioDeadlands by rememberSaveable { mutableStateOf(false) }
     var optCompendioCrystalHeart by rememberSaveable { mutableStateOf(false) }
     var optCompendioArteDaGuerra by rememberSaveable { mutableStateOf(false) }
@@ -153,7 +153,7 @@ fun TelaInicial(
     )
 
     val isAnyBookSelected = optCompendioFantasia || optCompendioSciFi || optCompendioHorror || optSuperPoderes ||
-            optCompendioBuscatrilha || optCompendioDeadlands || optCompendioCrystalHeart ||
+            optCompendioPathfinder || optCompendioDeadlands || optCompendioCrystalHeart ||
             optCompendioArteDaGuerra || optCompendioCidadeSolVapor || optCompendioWiseguys
 
     val officialModules = listOf(
@@ -198,9 +198,9 @@ fun TelaInicial(
             androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label),
             if (isFullEdition) "Conteúdo oficial de Mundo Ancestral (Classes, Raças)." else "Cenário ${androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label)} e material temático.",
             Icons.Default.Map,
-            optCompendioBuscatrilha,
-            !isAnyBookSelected || optCompendioBuscatrilha
-        ) { optCompendioBuscatrilha = !optCompendioBuscatrilha },
+            optCompendioPathfinder,
+            !isAnyBookSelected || optCompendioPathfinder
+        ) { optCompendioPathfinder = !optCompendioPathfinder },
         ModuleItemData(
             "Deadlands".toEditionDisplayName(),
             if (isFullEdition) "Pistoleiros, atormentados e o horror do Oeste." else "Pistoleiros, revividos e o horror do Oeste.",
@@ -290,7 +290,7 @@ fun TelaInicial(
                         optCompendioFantasia,
                         optCompendioHorror,
                         optCompendioSciFi,
-                        optCompendioBuscatrilha,
+                        optCompendioPathfinder,
                         optCompendioDeadlands,
                         optCompendioCrystalHeart,
                         optCompendioArteDaGuerra,
@@ -307,7 +307,7 @@ fun TelaInicial(
                         optRegraRiqueza,
                         optRegraCosaNostra
                     )
-                    viewModel.state.compendioBuscatrilhaAtivo = optCompendioBuscatrilha
+                    viewModel.state.compendioPathfinderAtivo = optCompendioPathfinder
                     viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
                     viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
                     viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
@@ -393,7 +393,7 @@ fun TelaInicial(
                     if (optSuperPoderes) {
                         SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
                         SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
-                        if (!optCompendioBuscatrilha) {
+                        if (!optCompendioPathfinder) {
                             SimpleCheckRow("Múltiplos Idiomas", "Personagem inicia poliglota.", optMultiplosIdiomas) { optMultiplosIdiomas = it }
                         }
                         SimpleCheckRow(
@@ -403,7 +403,7 @@ fun TelaInicial(
                             onCheckedChange = { optGrandesResponsabilidades = it }
                         )
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
-                        if (!optCompendioBuscatrilha) {
+                        if (!optCompendioPathfinder) {
                             SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
                         }
                         SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
@@ -419,7 +419,7 @@ fun TelaInicial(
                         )
                     } else {
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
-                        if (!optCompendioBuscatrilha) {
+                        if (!optCompendioPathfinder) {
                             SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
                         }
 
@@ -427,7 +427,7 @@ fun TelaInicial(
                             SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) { optMultiAntecedenteArcano = it }
                             SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
                             SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
-                            if (!optCompendioBuscatrilha) {
+                            if (!optCompendioPathfinder) {
                                 SimpleCheckRow("Múltiplos Idiomas", "Personagem inicia poliglota.", optMultiplosIdiomas) { optMultiplosIdiomas = it }
                             }
                             SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
