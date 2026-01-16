@@ -186,7 +186,7 @@ fun VantagensContent(
         state.modoSupers,
         state.compendioFantasiaAtivo,
         state.compendioHorrorAtivo,
-        state.compendioBuscatrilhaAtivo,
+        state.compendioPathfinderAtivo,
         state.compendioDeadlandsAtivo,
         state.compendioCrystalHeartAtivo,
         state.compendioArteDaGuerraAtivo,
@@ -199,7 +199,7 @@ fun VantagensContent(
             val isSuper = origemNorm == "SUPER"
             val isFantasia = origemNorm == "FANTASIA"
             val isHorror = origemNorm == "HORROR"
-            val isBuscatrilha = origemNorm == "FANTASIABUSCATRILHA"
+            val isBuscatrilha = origemNorm == "PATHFINDER"
             val isDeadlands = origemNorm == "OESTE_ESTRANHO"
             val isAdg = origemNorm == "ARTE_DA_GUERRA"
             val isCidadeSolVapor = origemNorm == "CIDADE_SOL_VAPOR"
@@ -212,7 +212,7 @@ fun VantagensContent(
                 }
             }
 
-            if (state.compendioBuscatrilhaAtivo) {
+            if (state.compendioPathfinderAtivo) {
                 val forbiddenIds = setOf(
                     "antecedente_arcano_ciencia_estranha",
                     "antecedente_arcano_psionicos",
@@ -251,7 +251,7 @@ fun VantagensContent(
                 }
             }
 
-            (isBasico && !state.compendioFantasiaAtivo) || (isAdg && state.compendioArteDaGuerraAtivo) || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isBuscatrilha && state.compendioBuscatrilhaAtivo) || (isDeadlands && state.compendioDeadlandsAtivo) || (isCidadeSolVapor && state.compendioCidadeSolVaporAtivo) || (isWiseguys && state.compendioWiseguysAtivo) || (isCrystalHeart && state.compendioCrystalHeartAtivo)
+            (isBasico && !state.compendioFantasiaAtivo) || (isAdg && state.compendioArteDaGuerraAtivo) || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isBuscatrilha && state.compendioPathfinderAtivo) || (isDeadlands && state.compendioDeadlandsAtivo) || (isCidadeSolVapor && state.compendioCidadeSolVaporAtivo) || (isWiseguys && state.compendioWiseguysAtivo) || (isCrystalHeart && state.compendioCrystalHeartAtivo)
         }.sortedWith(compareBy({ it.categoria }, { it.nomeExibicao }))
     }
 
@@ -371,7 +371,7 @@ fun VantagensContent(
             Spacer(Modifier.size(4.dp))
 
             if (!state.emProgresso) {
-                if (state.compendioBuscatrilhaAtivo) {
+                if (state.compendioPathfinderAtivo) {
                     val slotAvailable = state.pathfinderSlotAvailable
                     val (color, text) = if (slotAvailable) {
                         MaterialTheme.colorScheme.primaryContainer to "Vantagem de Classe Gratuita DISPONÍVEL"
@@ -459,7 +459,7 @@ fun VantagensContent(
                         if (state.modoSupers && cat == Categoria.PODER) return@items
 
                         // --- NEW FILTERING LOGIC ---
-                        if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioBuscatrilhaAtivo) return@items
+                        if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioPathfinderAtivo) return@items
                         if (cat == Categoria.RESSUSCITADO && !state.compendioDeadlandsAtivo) return@items
                         if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@items
                         if (cat == Categoria.SUPER && !state.modoSupers) return@items
@@ -615,7 +615,7 @@ fun VantagensContent(
                 if (lista == null) return@forEach // Skip empty
 
                 if (state.modoSupers && cat == Categoria.PODER) return@forEach
-                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioBuscatrilhaAtivo) return@forEach
+                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioPathfinderAtivo) return@forEach
                 if (cat == Categoria.RESSUSCITADO && !state.compendioDeadlandsAtivo) return@forEach
                 if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@forEach
 
@@ -780,7 +780,7 @@ fun VantagensContent(
                 false
             } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
                 state.compendioFantasiaAtivo || state.compendioHorrorAtivo
-            } else if (state.compendioBuscatrilhaAtivo) {
+            } else if (state.compendioPathfinderAtivo) {
                 val n = per.nome.keyify()
                 n != "FOCO" && n !in com.example.swadebuilder.model.SAVAGE_PATHFINDER_BLOCKED_SKILLS
             } else {

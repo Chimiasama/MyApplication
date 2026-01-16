@@ -51,7 +51,7 @@ class CriadorState {
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)
     var compendioSciFiAtivo by mutableStateOf(false)
-    var compendioBuscatrilhaAtivo by mutableStateOf(false)
+    var compendioPathfinderAtivo by mutableStateOf(false)
     var compendioDeadlandsAtivo by mutableStateOf(false)
     var compendioCrystalHeartAtivo by mutableStateOf(false)
     var compendioArteDaGuerraAtivo by mutableStateOf(false)
@@ -328,10 +328,10 @@ class CriadorState {
             }
 
             // Garante redução para raças lentas do Pathfinder
-            val isPathfinderSlowRace = compendioBuscatrilhaAtivo &&
-                    (anc.id == "anc_anaobuscatrilha" ||
-                            anc.id == "anc_gnomobuscatrilha" ||
-                            anc.id == "anc_halflingbuscatrilha")
+            val isPathfinderSlowRace = compendioPathfinderAtivo &&
+                    (anc.id == "anc_anaopathfinder" ||
+                            anc.id == "anc_gnomopathfinder" ||
+                            anc.id == "anc_halflingpathfinder")
 
             if (inDesvantagens || inHabilidades || isPathfinderSlowRace) 1 else 0
         } ?: 0
@@ -680,7 +680,7 @@ class CriadorState {
         if (pontosComplicacao - pontosComplicacaoGastos < 1) return false
         pontosComplicacaoGastos += 1
         cpRecursosStack.add(Unit)
-        dinheiro += if (compendioBuscatrilhaAtivo) 60000 else 500
+        dinheiro += if (compendioPathfinderAtivo) 60000 else 500
         return true
     }
 
@@ -689,7 +689,7 @@ class CriadorState {
         if (cpRecursosStack.isNotEmpty()) {
             cpRecursosStack.removeLast()
             pontosComplicacaoGastos -= 1
-            val amount = if (compendioBuscatrilhaAtivo) 60000 else 500
+            val amount = if (compendioPathfinderAtivo) 60000 else 500
             dinheiro = (dinheiro - amount).coerceAtLeast(0)
         }
     }
@@ -737,7 +737,7 @@ class CriadorState {
     }
 
     fun isPathfinderEligible(v: Vantagem): Boolean {
-        if (!compendioBuscatrilhaAtivo) return false
+        if (!compendioPathfinderAtivo) return false
         return when (v.categoria) {
             Categoria.CLASSE, Categoria.PROFISSIONAL, Categoria.ANTECEDENTE -> true
             else -> false
@@ -745,7 +745,7 @@ class CriadorState {
     }
 
     val pathfinderSlotAvailable: Boolean by derivedStateOf {
-        if (!compendioBuscatrilhaAtivo) false
+        if (!compendioPathfinderAtivo) false
         else vantagensSelecionadas.none { isPathfinderEligible(it) }
     }
 
@@ -806,7 +806,7 @@ class CriadorState {
 
         var shouldRefund = true
 
-        if (wasEligible && compendioBuscatrilhaAtivo) {
+        if (wasEligible && compendioPathfinderAtivo) {
             // Count remaining eligible edges
             val remainingEligible = vantagensSelecionadas.count { isPathfinderEligible(it) }
             // If we have ZERO eligible edges left, then we removed the one that was occupying the free slot.
@@ -989,7 +989,7 @@ class CriadorState {
                     group.find { it.origem.equals("BASICO", ignoreCase = true) } ?: group.firstOrNull()
                 }
 
-            return if (compendioBuscatrilhaAtivo) {
+            return if (compendioPathfinderAtivo) {
                 // If Pathfinder active:
                 val forbiddenIds = setOf("ELETRONICA", "FOCO", "HACKEAR", "PSIONICOS", "IDIOMAS")
                 unifiedList.filter { per ->
@@ -1138,7 +1138,7 @@ class CriadorState {
         }
 
         // Gnomo Buscatrilha - Obsessivos (d4 em perícia de Astúcia à escolha)
-        if (compendioBuscatrilhaAtivo && ancKey.contains("GNOMO") && ancKey.contains("BUSCATRILHA")) {
+        if (compendioPathfinderAtivo && ancKey.contains("GNOMO") && ancKey.contains("PATHFINDER")) {
             val chosen = gnomoPericiaEscolhida?.keyify()
             if (chosen != null && perKey == chosen) {
                 modifiedBase = maxOf(modifiedBase, 4)
@@ -1798,7 +1798,7 @@ class CriadorState {
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
                 // Standard Logic
-                val base = if (compendioBuscatrilhaAtivo) 12 else if (maisPontosPericias) BASE_SP_POOL else BASE_SP_POOL - 3
+                val base = if (compendioPathfinderAtivo) 12 else if (maisPontosPericias) BASE_SP_POOL else BASE_SP_POOL - 3
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp)
                     .coerceAtLeast(0)
             }
@@ -1995,7 +1995,7 @@ class CriadorState {
         if (compendioFantasiaAtivo && v.id == "mago") return false
 
         // Regra: Antecedentes Arcanos que não existem em Pathfinder (Ciência Estranha, Psiônicos, Dom)
-        if (compendioBuscatrilhaAtivo) {
+        if (compendioPathfinderAtivo) {
             val forbiddenIds = setOf(
                 "antecedente_arcano_ciencia_estranha",
                 "antecedente_arcano_psionicos",
@@ -2421,9 +2421,9 @@ class CriadorState {
         val startRaw = periciaStartRaw(ancestralidade, per)
 
         // Half-Orc Buscatrilha Intimidate Exception (starts d4 but gets cap increase)
-        val isHalfOrcIntimidate = compendioBuscatrilhaAtivo &&
+        val isHalfOrcIntimidate = compendioPathfinderAtivo &&
                 ancestralidade.keyify().contains("MEIO-ORC") &&
-                ancestralidade.keyify().contains("BUSCATRILHA") &&
+                ancestralidade.keyify().contains("PATHFINDER") &&
                 per.nome.keyify() == "INTIMIDAR"
 
         val baseCap = if (startRaw >= 6 || isHalfOrcIntimidate) 13 else 12
@@ -2856,11 +2856,11 @@ class CriadorState {
             }
         }
 
-        val isPathfinderHuman = compendioBuscatrilhaAtivo &&
-                (ancestralidade.equals("Humano (Buscatrilha)", ignoreCase = true) ||
+        val isPathfinderHuman = compendioPathfinderAtivo &&
+                (ancestralidade.equals("Humano (Pathfinder)", ignoreCase = true) ||
                         ancestralidade.equals("Humano (Pathfinder)", ignoreCase = true))
-        val isPathfinderHalfElf = compendioBuscatrilhaAtivo &&
-                (ancestralidade.keyify().contains("MEIO-ELFO") && ancestralidade.keyify().contains("BUSCATRILHA"))
+        val isPathfinderHalfElf = compendioPathfinderAtivo &&
+                (ancestralidade.keyify().contains("MEIO-ELFO") && ancestralidade.keyify().contains("PATHFINDER"))
 
         val basePoints = if (isPathfinderHuman || isPathfinderHalfElf) 6 else 5
 
@@ -3283,7 +3283,7 @@ class CriadorState {
                 compendioFantasiaAtivo = compendioFantasiaAtivo,
                 compendioHorrorAtivo = compendioHorrorAtivo,
                 compendioSciFiAtivo = compendioSciFiAtivo,
-                compendioBuscatrilhaAtivo = compendioBuscatrilhaAtivo,
+                compendioPathfinderAtivo = compendioPathfinderAtivo,
                 compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                 compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
                 compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
@@ -3430,7 +3430,7 @@ class CriadorState {
         compendioFantasiaAtivo = flags.compendioFantasiaAtivo
         compendioHorrorAtivo = flags.compendioHorrorAtivo
         compendioSciFiAtivo = flags.compendioSciFiAtivo
-        compendioBuscatrilhaAtivo = flags.compendioBuscatrilhaAtivo
+        compendioPathfinderAtivo = flags.compendioPathfinderAtivo
         compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo
         compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo
         compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo

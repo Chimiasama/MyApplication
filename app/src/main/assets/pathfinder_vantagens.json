@@ -3,7 +3,7 @@
     "id": "classe_barbaro",
     "nome": "BÁRBARO",
     "categoria": "CLASSE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -21,7 +21,7 @@
     "id": "classe_bardo",
     "nome": "BARDO",
     "categoria": "CLASSE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -40,7 +40,7 @@
     "id": "classe_clerigo",
     "nome": "CLÉRIGO",
     "categoria": "CLASSE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -59,7 +59,7 @@
     "id": "classe_druida",
     "nome": "DRUIDA",
     "categoria": "CLASSE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -78,7 +78,7 @@
     "id": "classe_feiticeiro",
     "nome": "FEITICEIRO",
     "categoria": "CLASSE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -96,7 +96,7 @@
     "id": "classe_guerreiro",
     "nome": "GUERREIRO",
     "categoria": "CLASSE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -118,7 +118,7 @@
     "id": "classe_ladino",
     "nome": "LADINO",
     "categoria": "CLASSE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -138,7 +138,7 @@
     "id": "classe_mago",
     "nome": "MAGO",
     "categoria": "CLASSE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -157,7 +157,7 @@
     "id": "classe_monge",
     "nome": "MONGE",
     "categoria": "CLASSE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -177,7 +177,7 @@
     "id": "classe_paladino",
     "nome": "PALADINO",
     "categoria": "CLASSE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -196,7 +196,7 @@
     "id": "classe_patrulheiro",
     "nome": "PATRULHEIRO",
     "categoria": "CLASSE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -218,7 +218,7 @@
     "id": "prestigio_cronista",
     "nome": "CRONISTA EXPLORADOR",
     "categoria": "PRESTIGIO",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -239,7 +239,7 @@
     "id": "prestigio_mistico_teurgo",
     "nome": "MÍSTICO TEURGO",
     "categoria": "PRESTIGIO",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},

@@ -12,7 +12,7 @@ private val rawIdToDisplayName = mapOf(
     "FANTASIA" to "Fantasia",
     "HORROR" to "Horror",
     "SCI_FI" to "Sci-Fi",
-    "FANTASIABUSCATRILHA" to "Pathfinder",
+    "PATHFINDER" to "Pathfinder",
     "BASICO" to "Básico"
 )
 

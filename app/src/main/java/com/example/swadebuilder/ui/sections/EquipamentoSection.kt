@@ -294,7 +294,7 @@ fun EquipamentoSection(
     compendioFantasiaAtivo: Boolean = false,
     compendioHorrorAtivo: Boolean = false,
     compendioSciFiAtivo: Boolean = false,
-    compendioBuscatrilhaAtivo: Boolean = false,
+    compendioPathfinderAtivo: Boolean = false,
     compendioDeadlandsAtivo: Boolean = false,
     compendioArteDaGuerraAtivo: Boolean = false,
     compendioCidadeSolVaporAtivo: Boolean = false,
@@ -325,8 +325,8 @@ fun EquipamentoSection(
     val expandedTypeMap = state.equipExpandedTypes
 
     // Pre-calculate allowed keys set for performance
-    val pathfinderAllowedKeys = remember(compendioBuscatrilhaAtivo) {
-        if (compendioBuscatrilhaAtivo) {
+    val pathfinderAllowedKeys = remember(compendioPathfinderAtivo) {
+        if (compendioPathfinderAtivo) {
             SAVAGE_PATHFINDER_ALLOWLIST.map { it.keyify() }.toSet()
         } else {
             emptySet()
@@ -365,7 +365,7 @@ fun EquipamentoSection(
                             (origem != "FANTASIA" || compendioFantasiaAtivo) &&
                             (origem != "HORROR" || compendioHorrorAtivo) &&
                             (origem != "SCI_FI" || compendioSciFiAtivo) &&
-                            ((origem != "FANTASIABUSCATRILHA" && origem != "BUSCATRILHA") || compendioBuscatrilhaAtivo) &&
+                            ((origem != "PATHFINDER" && origem != "PATHFINDER") || compendioPathfinderAtivo) &&
                             ((origem != "OESTE_ESTRANHO" && origem != "DEADLANDS") || compendioDeadlandsAtivo)
                 }
 
@@ -377,9 +377,9 @@ fun EquipamentoSection(
 
             // Helper function for filtering logic
             fun isItemAllowedByPathfinderRule(item: EquipamentoItem, origemKey: String): Boolean {
-                if (!compendioBuscatrilhaAtivo) return true
+                if (!compendioPathfinderAtivo) return true
                 // If the item is explicitly from Pathfinder module, allow it
-                if (origemKey == "FANTASIABUSCATRILHA" || origemKey == "BUSCATRILHA") return true
+                if (origemKey == "PATHFINDER" || origemKey == "PATHFINDER") return true
 
                 // If item is from BASE, strictly enforce AllowList
                 if (origemKey == "BASICO") {
@@ -394,7 +394,7 @@ fun EquipamentoSection(
             }
 
             // Available SuperTypes for Chips (Filtered by Pathfinder rules if active)
-            val availableSuperTypes = remember(mappedCategories, compendioBuscatrilhaAtivo) {
+            val availableSuperTypes = remember(mappedCategories, compendioPathfinderAtivo) {
                 mappedCategories
                     .filter { mapped ->
                         // Filter categories that contain at least one valid item for the current mode
@@ -412,7 +412,7 @@ fun EquipamentoSection(
             // 2. Header (Money)
             SectionHeader(
                 onHelpClick = null,
-                centerText = if (usaRiqueza) "Riqueza: d$dadoRiqueza" else "Dinheiro: ${formatCurrency(dinheiro, compendioBuscatrilhaAtivo)}",
+                centerText = if (usaRiqueza) "Riqueza: d$dadoRiqueza" else "Dinheiro: ${formatCurrency(dinheiro, compendioPathfinderAtivo)}",
                 onCenterClick = null,
                 onListaCompletaClick = null,
                 listaCompletaText = ""
@@ -614,7 +614,7 @@ fun EquipamentoSection(
             // 5. List Content
             if (isSearching) {
                 // Flat List Mode
-                val finalFlatList = remember(mappedCategories, filter, selectedSuperTypes, searchQuery, dinheiro, usaRiqueza, compendioBuscatrilhaAtivo) {
+                val finalFlatList = remember(mappedCategories, filter, selectedSuperTypes, searchQuery, dinheiro, usaRiqueza, compendioPathfinderAtivo) {
                     mappedCategories.filter { mapped ->
                         // Filter Check (removed Origin logic)
                         if (filter.superTipos.isNotEmpty() && mapped.superType !in filter.superTipos) return@filter false
@@ -623,7 +623,7 @@ fun EquipamentoSection(
                     }.flatMap { mapped ->
                         mapped.original.itens.filter { item ->
                             if (filter.somenteAcessiveis) {
-                                val c = parseCostInBaseUnit(item.custo, compendioBuscatrilhaAtivo)
+                                val c = parseCostInBaseUnit(item.custo, compendioPathfinderAtivo)
                                 if (!usaRiqueza && c > dinheiro) return@filter false
                             }
                             val q = searchQuery.semAcentos().lowercase()
@@ -670,7 +670,7 @@ fun EquipamentoSection(
                 }
 
                 // --- SOLUÇÃO DEFINITIVA: Pré-calcular os dados filtrados ---
-                val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, dinheiro, compendioBuscatrilhaAtivo) {
+                val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, dinheiro, compendioPathfinderAtivo) {
                     // Mapeia cada SuperType para seus dados filtrados
                     groupsBySuperType.mapValues { (_, categoriesInSuper) ->
                         // Process the subgroups directly to check for content
@@ -685,7 +685,7 @@ fun EquipamentoSection(
                                     }
                                 }.filter { entry ->
                                     val isAcessivel = if (filter.somenteAcessiveis) {
-                                        val c = parseCostInBaseUnit(entry.item.custo, compendioBuscatrilhaAtivo)
+                                        val c = parseCostInBaseUnit(entry.item.custo, compendioPathfinderAtivo)
                                         usaRiqueza || c <= dinheiro
                                     } else {
                                         true

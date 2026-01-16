@@ -142,7 +142,7 @@ fun AncestralidadesSection(
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
 
     val compendioFantasiaAtivo = state.compendioFantasiaAtivo
-    val compendioBuscatrilhaAtivo = state.compendioBuscatrilhaAtivo
+    val compendioPathfinderAtivo = state.compendioPathfinderAtivo
     val compendioDeadlandsAtivo = state.compendioDeadlandsAtivo
     val compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo
     val compendioWiseguysAtivo = state.compendioWiseguysAtivo
@@ -154,7 +154,7 @@ fun AncestralidadesSection(
     val ancestralidadesState = androidx.compose.runtime.produceState(
         initialValue = emptyList<RacialModifierLite>(),
         compendioFantasiaAtivo,
-        compendioBuscatrilhaAtivo,
+        compendioPathfinderAtivo,
         compendioDeadlandsAtivo,
         compendioArteDaGuerraAtivo,
         compendioWiseguysAtivo,
@@ -167,7 +167,7 @@ fun AncestralidadesSection(
         val pathfinderLabel = context.getString(R.string.sw_pathfinder_label)
 
         fun adjustName(nome: String): String {
-            if (compendioBuscatrilhaAtivo) {
+            if (compendioPathfinderAtivo) {
                  return nome.replace(" (Trilhador)", "")
                     .replace(" (Buscatrilha)", "")
                     .replace(" (Pathfinder)", "")
@@ -181,7 +181,7 @@ fun AncestralidadesSection(
             if (!compendioFantasiaAtivo && !compendioHorrorAtivo) add("BASICO")
             if (compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
             if (compendioFantasiaAtivo) add("FANTASIA")
-            if (compendioBuscatrilhaAtivo) add("FANTASIA_TRILHADOR")
+            if (compendioPathfinderAtivo) add("PATHFINDER")
             if (compendioDeadlandsAtivo) add("DEADLANDS")
             if (compendioCidadeSolVaporAtivo) add("CIDADE_SOL_VAPOR")
             if (compendioWiseguysAtivo) add("WISEGUYS")
@@ -228,7 +228,7 @@ fun AncestralidadesSection(
                         o == "DEADLANDS" -> 800
                         o == "WISEGUYS" -> 800
                         o == "CIDADE_SOL_VAPOR" -> 800
-                        o.contains("TRILHADOR") || o.contains("BUSCATRILHA") -> 800
+                        o.contains("TRILHADOR") || o.contains("PATHFINDER") -> 800
                         o == "FC" || o == "SCIFI" -> 800
                         o == "CRYSTAL_HEART" -> 800
                         o == "BASICO" -> 0
@@ -290,8 +290,8 @@ fun AncestralidadesSection(
         val available = ancestralidadesState.value
         val currentKey = currentAncestralidade.uppercase().semAcentos()
 
-        val humanSearch = if (compendioBuscatrilhaAtivo) "Humano (Buscatrilha)" else "Humanos"
-        val fallbackHuman = if (compendioBuscatrilhaAtivo) "Humanos" else null
+        val humanSearch = if (compendioPathfinderAtivo) "Humano (Buscatrilha)" else "Humanos"
+        val fallbackHuman = if (compendioPathfinderAtivo) "Humanos" else null
 
         val preferredItem = when {
             currentKey.isNotBlank() -> available.firstOrNull {
@@ -481,7 +481,7 @@ fun AncestralidadesSection(
                                 }
                             }
 
-                            if (isSelected && item.nome.keyify().contains("GNOMO") && item.nome.keyify().contains("BUSCATRILHA")) {
+                            if (isSelected && item.nome.keyify().contains("GNOMO") && item.nome.keyify().contains("PATHFINDER")) {
                                 Spacer(Modifier.height(8.dp))
                                 Text("Perícia Obsessiva (Astúcia):", style = MaterialTheme.typography.labelMedium)
 
@@ -491,7 +491,7 @@ fun AncestralidadesSection(
                                         val key = it.nome.keyify()
                                         it.atributo == "ASTUCIA" &&
                                         !key.contains("IDIOMAS") &&
-                                        (!compendioBuscatrilhaAtivo || (key != "ALQUIMIA" && key != "CIENCIA ESTRANHA"))
+                                        (!compendioPathfinderAtivo || (key != "ALQUIMIA" && key != "CIENCIA ESTRANHA"))
                                     }
                                     .sortedBy { it.nome }
 

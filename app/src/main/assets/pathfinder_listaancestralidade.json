@@ -1,9 +1,9 @@
 [
   {
-    "id": "anc_anaobuscatrilha",
-    "nome": "Anão (Buscatrilha)",
+    "id": "anc_anaopathfinder",
+    "nome": "Anão (Pathfinder)",
     "categoria": "ANCESTRALIDADE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "atributos": {
       "Vigor": 2,
       "Astúcia": 2
@@ -36,10 +36,10 @@
     "originalName": "Anão (Mundo Ancestral)"
   },
   {
-    "id": "anc_elfobuscatrilha",
-    "nome": "Elfo (Buscatrilha)",
+    "id": "anc_elfopathfinder",
+    "nome": "Elfo (Pathfinder)",
     "categoria": "ANCESTRALIDADE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "atributos": {
       "Agilidade": 2,
       "Astúcia": 2
@@ -78,10 +78,10 @@
     "originalName": "Elfo (Mundo Ancestral)"
   },
   {
-    "id": "anc_gnomobuscatrilha",
-    "nome": "Gnomo (Buscatrilha)",
+    "id": "anc_gnomopathfinder",
+    "nome": "Gnomo (Pathfinder)",
     "categoria": "ANCESTRALIDADE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "atributos": {
       "Vigor": 2
     },
@@ -123,10 +123,10 @@
     "originalName": "Gnomo (Mundo Ancestral)"
   },
   {
-    "id": "anc_halflingbuscatrilha",
-    "nome": "Halfling (Buscatrilha)",
+    "id": "anc_halflingpathfinder",
+    "nome": "Halfling (Pathfinder)",
     "categoria": "ANCESTRALIDADE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "atributos": {
       "Agilidade": 2
     },
@@ -167,10 +167,10 @@
     "originalName": "Halfling (Mundo Ancestral)"
   },
   {
-    "id": "anc_humanobuscatrilha",
-    "nome": "Humano (Buscatrilha)",
+    "id": "anc_humanopathfinder",
+    "nome": "Humano (Pathfinder)",
     "categoria": "ANCESTRALIDADE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [
@@ -186,10 +186,10 @@
     "originalName": "Humano (Mundo Ancestral)"
   },
   {
-    "id": "anc_meio_elfobuscatrilha",
-    "nome": "Meio-Elfo (Buscatrilha)",
+    "id": "anc_meio_elfopathfinder",
+    "nome": "Meio-Elfo (Pathfinder)",
     "categoria": "ANCESTRALIDADE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [],
@@ -211,10 +211,10 @@
     "originalName": "Meio-Elfo (Mundo Ancestral)"
   },
   {
-    "id": "anc_meio_orcbuscatrilha",
-    "nome": "Meio-Orc (Buscatrilha)",
+    "id": "anc_meio_orcpathfinder",
+    "nome": "Meio-Orc (Pathfinder)",
     "categoria": "ANCESTRALIDADE",
-    "origem": "FANTASIA_TRILHADOR",
+    "origem": "PATHFINDER",
     "atributos": {
       "Força": 2
     },

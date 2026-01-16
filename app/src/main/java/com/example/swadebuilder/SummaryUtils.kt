@@ -27,7 +27,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
 
     // Remove sufixos como (Buscatrilha), (Trilhador), etc.
     val ancestralidadeNome: String = rawAncestralidadeNome
-        .replace(Regex("\\s*\\((Buscatrilha|Trilhador|Mundo Ancestral)\\)"), "")
+        .replace(Regex("\\s*\\((Pathfinder|Buscatrilha|Trilhador|Mundo Ancestral)\\)"), "")
         .trim()
         .titleCase()
 
@@ -67,10 +67,10 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
                             anc.habilidades.any { it.nome.contains("Movimentação Reduzida", ignoreCase = true) }
 
                     // Garante redução para raças lentas do Pathfinder
-                    val isPathfinderSlowRace = personagem.compendioBuscatrilhaAtivo &&
-                            (anc.id == "anc_anaobuscatrilha" ||
-                                    anc.id == "anc_gnomobuscatrilha" ||
-                                    anc.id == "anc_halflingbuscatrilha")
+                    val isPathfinderSlowRace = personagem.compendioPathfinderAtivo &&
+                            (anc.id == "anc_anaopathfinder" ||
+                                    anc.id == "anc_gnomopathfinder" ||
+                                    anc.id == "anc_halflingpathfinder")
 
                     if (hasTrait || isPathfinderSlowRace) 1 else 0
                 } ?: 0
