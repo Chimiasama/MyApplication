@@ -5699,5 +5699,2193 @@
         "espionagem",
         "tecnológico"
       ]
+    },
+    {
+      "id": "adivinhacao_pf",
+      "origem": "PATHFINDER",
+      "nome": "ADIVINHAÇÃO",
+      "estagio": "Experiente",
+      "pontosDePoder": 5,
+      "distancia": "Pessoal",
+      "duracao": "Uma breve conversa de cerca de cinco minutos",
+      "escola": "Adivinhação",
+      "manifestacoes": [
+        "Sessões espíritas",
+        "Interrogatório demoníaco"
+      ],
+      "descricao": "Adivinhação permite entrar em contato com seres sobrenaturais para adquirir informação. Preparar o feitiço leva um minuto ininterrupto de preces, persuasão ou outro tipo de comunicação com um espírito ou divindade. Depois que o tempo de preparação estiver completo, faça uma rolagem de perícia arcana. Sucesso significa que a entidade responde da melhor maneira possível. Uma ampliação significa que o espírito é mais prestativo, melhor informado ou mais direto do que o habitual (quer ele deseje ser ou não).\nAs respostas normalmente são vagas ou simbólicas e não diretas – eles fornecem pistas e orientação em vez de spoilers que podem arruinar um mistério ou aventura.\nO tipo de entidade contatada determina como ela se comunica. Espíritos do submundo tendem a conhecer apenas coisas pertinentes a sua vida e morte – e eles podem nem saber a identidade do seu assassino se a pessoa estava de máscara ou não foi vista.\nDa mesma forma, espíritos da natureza só conhecem sobre seus habitats, demônios sobre os assuntos nos quais estão diretamente envolvidos e daí em diante. Mestres de Jogo devem decidir o que a entidade sabe baseado em sua história, origem e personalidade.\nUma vez que tenha se conversado com um espírito, ele não pode ser contatado novamente por 24 horas.\nSolo Sagrado: Contatar um espírito em solo considerado sagrado por ele adiciona +2 à rolagem.",
+      "modificadores": [
+        {
+          "nome": "Poder (Épico)",
+          "custo": "+3",
+          "descricao": "Funciona apenas em solo sagrado. A entidade não apenas irá responder a qualquer pergunta, mas também oferecerá conselhos não requisitados e pode até se manifestar."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:informação",
+        "adivinhação",
+        "social"
+      ]
+    },
+    {
+      "id": "ajuda_pf",
+      "origem": "PATHFINDER",
+      "nome": "AJUDA",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "Instantâneo/Uma hora",
+      "escola": "Invocação",
+      "manifestacoes": [
+        "Orações",
+        "Mãos brilhantes",
+        "Espirais cintilantes de magia",
+        "Uma brisa fresca"
+      ],
+      "descricao": "Ajuda permite a quem conjura recuperar uma condição negativa dos efeitos de Fadiga.\n\nRecuperação: Remove uma das seguintes condições negativas: Abalado, Distraído ou Vulnerável. Uma ampliação na rolagem da perícia arcana remove duas condições. Se afetar mais de um alvo (através do modificador Receptores Adicionais) é possível escolher que condições remover de cada aliado. Ajuda não remove condições negativas causadas por efeitos que estejam acontecendo (Preso ou Enredado, Atordoado etc.) a menos que a fonte do efeito seja removida.\n\nEntorpecer: Com um sucesso reduz o total de penalidades de Ferimentos e Fadiga do receptor em um (ou dois com uma ampliação). Esse efeito dura uma hora. Isso não remove realmente os Ferimentos ou Fadiga, apenas permite que o receptor possa ignorar as penalidades. Se o alvo ficaria Incapacitado pelos Ferimentos ou Fadiga, ele fica Incapacitado como de costume.",
+      "modificadores": [
+        {
+          "nome": "Atordoado",
+          "custo": "+1",
+          "descricao": "Se usar a opção de Recuperação, é possível também remover a condição Atordoado."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "O poder afeta um novo alvo para cada Ponto de Poder adicional."
+        },
+        {
+          "nome": "Restauração",
+          "custo": "+3",
+          "descricao": "Quem conjura pode restaurar um tipo de dado de um efeito de dreno de energia com um sucesso, dois com uma ampliação."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:suporte",
+        "cura",
+        "condições"
+      ]
+    },
+    {
+      "id": "amigo_das_feras_pf",
+      "origem": "PATHFINDER",
+      "nome": "AMIGO DAS FERAS",
+      "estagio": "Novato",
+      "pontosDePoder": "Especial",
+      "distancia": "Astúcia",
+      "duracao": "10 minutos",
+      "escola": "Encantamento",
+      "manifestacoes": [
+        "Concentração e gestos"
+      ],
+      "descricao": "Este feitiço permite que um indivíduo fale e guie as ações de feras da natureza. O custo para conjurar é igual ao valor do seu Tamanho (mínimo 1 por criatura). Controlar cinco lobos (Tamanho -1) custa 5 pontos, por exemplo.\nSucesso significa que a criatura obedece comandos simples, como um cão bem treinado. Ela ataca inimigos e coloca sua vida em risco por quem a controla. Uma ampliação na rolagem da perícia arcana significa que a fera é mais obediente. Ela não irá se matar, mas irá superar seus medos (fogo, criaturas assustadoras) para seguir suas ordens.\nBandos também podem ser controlados. Bandos Pequenos custam 1 ponto, Bandos Médios custam 2 e Bandos Grandes 3.\nAmigo das Feras funciona apenas em criaturas naturais com inteligência animal, não em humanoides e não tem efeito em animais conjurados, mágicos ou “antinaturais”.",
+      "modificadores": [
+        {
+          "nome": "Bestiário (Épico)",
+          "custo": "+2",
+          "descricao": "Quem conjura pode afetar feras mágicas com inteligência animal."
+        },
+        {
+          "nome": "Duração",
+          "custo": "+1",
+          "descricao": "A Duração base aumenta para 30 minutos."
+        },
+        {
+          "nome": "Passageiro da Mente",
+          "custo": "+1",
+          "descricao": "Permite se comunicar e sentir através da fera com a qual fez amizade."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:controle",
+        "animais"
+      ]
+    },
+    {
+      "id": "ancora_planar_pf",
+      "origem": "PATHFINDER",
+      "nome": "ÂNCORA PLANAR",
+      "estagio": "Veterano",
+      "pontosDePoder": 8,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "escola": "Invocação",
+      "manifestacoes": [
+        "Círculo de invocação",
+        "Encantamento",
+        "Caixão de ferro",
+        "Correntes mágicas"
+      ],
+      "descricao": "Quem conjura invoca uma criatura de outro plano, a prendendo em algum tipo de prisão. A armadilha é criada antes e leva 10 minutos para ser preparada.\nA convocação é uma rolagem resistida entre a perícia arcana de quem conjura e o Espírito da entidade. Se quem conjura vencer, a criatura é invocada na armadilha e presa magicamente até que concorde em realizar um serviço para o conjurador ou liberte-se. Os Pontos de Poder usados para prender o alvo são investidos e ficam indisponíveis até que a criatura se liberte ou complete a tarefa.\nBarganhando: Conjuradores invocam criaturas para realizar tarefas para eles. A negociação pode ser conduzida por interpretação. Uma vez que a criatura concorde com os termos, ela o fará com o melhor de suas habilidades.\nSe libertando: Se nenhum acordo for feito após 24 horas, o conjurador deve renovar seus elos místicos realizando uma nova rolagem resistida. A entidade não pode usar qualquer poder ou habilidade para escapar.",
+      "modificadores": [],
+      "tags": [
+        "stage:veterano",
+        "tipo:invocação",
+        "extraplanar",
+        "prisão"
+      ]
+    },
+    {
+      "id": "andar_nas_paredes_pf",
+      "origem": "PATHFINDER",
+      "nome": "ANDAR NAS PAREDES",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Transmutação",
+      "manifestacoes": [
+        "Traços ou feição de aranha",
+        "Pelos espinhosos"
+      ],
+      "descricao": "Andar nas paredes permite deslocar-se em superfícies verticais ou horizontais. Com sucesso, a pessoa irá se mover com a metade da sua Movimentação normal. Com uma ampliação, pode se mover com toda sua Movimentação e ainda pode correr.\nSe fizer uma rolagem de Atletismo para escalar ou se agarrar a uma superfície, adiciona +4 ao total.",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "É possível afetar outras pessoas a um custo de 1 Ponto de Poder cada."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:movimento",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "atordoar_pf",
+      "origem": "PATHFINDER",
+      "nome": "ATORDOAR",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "escola": "Evocação",
+      "manifestacoes": [
+        "Raios de energia",
+        "Bombas atordoantes",
+        "Estampidos",
+        "Luz ofuscante"
+      ],
+      "descricao": "Atordoar impacta o alvo com força concussiva, som, luz, energia mágica ou afins. Uma conjuração bem-sucedida significa que a vítima deve fazer uma rolagem de Vigor (com -2 em uma ampliação na rolagem da perícia arcana) ou fica em Estado Atordoado.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+2/+3",
+          "descricao": "Modelo Médio (+2) ou Grande (+3)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:ataque",
+        "controle",
+        "debuff"
+      ]
+    },
+    {
+      "id": "aumentar_reduzir_caracteristica_pf",
+      "origem": "PATHFINDER",
+      "nome": "AUMENTAR/REDUZIR CARACTERÍSTICA",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5 (aumentar); Instantâneo (reduzir)",
+      "escola": "Transmutação (aumentar); Necromancia (reduzir)",
+      "manifestacoes": [
+        "Mudança física",
+        "Aura brilhante",
+        "Poções"
+      ],
+      "descricao": "Aumentar: Aumenta a Característica selecionada em um tipo de dado, ou dois com uma ampliação.\nReduzir: Duração Instantânea. Reduz o atributo ou perícia selecionada em um tipo de dado com um sucesso, ou em dois com uma ampliação (até um mínimo de d4). A vítima tenta automaticamente se livrar do efeito com uma rolagem de Espírito no fim dos seus turnos seguintes.\nConjurações adicionais não se acumulam em uma única Característica.",
+      "modificadores": [
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+2",
+          "descricao": "Aumentar: ganha rerrolagem uma vez por rodada (ou por ação com ampliação). Reduzir: aplica penalidade de -2 à Característica afetada."
+        },
+        {
+          "nome": "Forte",
+          "custo": "+1",
+          "descricao": "Apenas para Reduzir. A rolagem de Espírito para se livrar do efeito é feita com -2."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta um novo alvo para cada Ponto de Poder adicional."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:buff",
+        "tipo:debuff",
+        "atributos"
+      ]
+    },
+    {
+      "id": "banir_pf",
+      "origem": "PATHFINDER",
+      "nome": "BANIR",
+      "estagio": "Veterano",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "escola": "Abjuração",
+      "manifestacoes": [
+        "Itens sagrados",
+        "Símbolos arcanos",
+        "Punhado de sal"
+      ],
+      "descricao": "Banir manda entidades de planos imateriais de volta para suas dimensões nativas. Banir uma criatura é uma rolagem resistida da perícia arcana contra o Espírito do alvo. Sucesso significa que o alvo é Abalado e cada ampliação causa um Ferimento.\nSe isso Incapacitar o alvo, ele retorna para seu plano nativo de existência.",
+      "modificadores": [
+        {
+          "nome": "Área (Épico)",
+          "custo": "+1/+2/+3",
+          "descricao": "O poder afeta tudo em um Modelo Pequeno, Médio ou Grande."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:ataque",
+        "banimento"
+      ]
+    },
+    {
+      "id": "barreira_pf",
+      "origem": "PATHFINDER",
+      "nome": "BARREIRA",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Invocação",
+      "manifestacoes": [
+        "Fogo",
+        "Gelo",
+        "Espinhos",
+        "Ossos",
+        "Energia"
+      ],
+      "descricao": "Barreira cria um muro de 5 quadros (10 metros) de comprimento e 1 quadro (2 metros) de altura. Dobre o comprimento com uma ampliação. O muro tem Dureza 10 (ou 12 com uma ampliação) e pode ser destruído. Cada Ferimento destrói uma seção de 1 quadro. Armas perfurantes não podem danificar a barreira.",
+      "modificadores": [
+        {
+          "nome": "Dano",
+          "custo": "+0/+1",
+          "descricao": "A barreira causa 2d4 de dano. Se for imaterial, custa +0."
+        },
+        {
+          "nome": "Endurecida",
+          "custo": "+1",
+          "descricao": "Dureza do muro é 12 (14 com uma ampliação)."
+        },
+        {
+          "nome": "Modelado",
+          "custo": "+1",
+          "descricao": "Forma um círculo, quadrado ou retângulo."
+        },
+        {
+          "nome": "Mortal (Épico)",
+          "custo": "+2",
+          "descricao": "A barreira causa 2d6 de dano."
+        },
+        {
+          "nome": "Tamanho",
+          "custo": "+2",
+          "descricao": "O comprimento e altura da barreira dobram."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:controle",
+        "construção",
+        "defesa"
+      ]
+    },
+    {
+      "id": "campo_de_dano_pf",
+      "origem": "PATHFINDER",
+      "nome": "CAMPO DE DANO",
+      "estagio": "Experiente",
+      "pontosDePoder": 4,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Abjuração",
+      "manifestacoes": [
+        "Aura flamejante",
+        "Espinhos",
+        "Campo elétrico"
+      ],
+      "descricao": "Campo de dano cria uma aura perigosa ao redor de quem a recebe. No fim do turno da pessoa afetada, todos os indivíduos adjacentes (incluindo aliados!) recebem automaticamente 2d4 de dano.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+2",
+          "descricao": "Estende para Modelo Médio de Explosão. Conjurador é imune."
+        },
+        {
+          "nome": "Melhorado (Épico)",
+          "custo": "+4",
+          "descricao": "Dano 3d6 e é Arma Pesada."
+        },
+        {
+          "nome": "Dano",
+          "custo": "+2",
+          "descricao": "Dano 2d6."
+        },
+        {
+          "nome": "Móvel",
+          "custo": "+2",
+          "descricao": "Requer Área. Permite mover o campo."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:ataque",
+        "aura",
+        "dano"
+      ]
+    },
+    {
+      "id": "cavar_pf",
+      "origem": "PATHFINDER",
+      "nome": "CAVAR",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Invocação",
+      "manifestacoes": [
+        "Dissolver-se na terra",
+        "Corpo de areia"
+      ],
+      "descricao": "Cavar permite mesclar-se com a terra. É possível permanecer no subterrâneo ou cavar com a metade da Movimentação normal (ou inteira com ampliação). Não é possível correr.\nPode tentar surpreender oponentes (Furtividade vs Perceber) para ganhar Vulnerável ou Finalização.",
+      "modificadores": [
+        {
+          "nome": "Poder",
+          "custo": "+1",
+          "descricao": "Permite cavar através de pedra, concreto ou substâncias similares."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta um novo alvo para cada Ponto de Poder adicional."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:movimento",
+        "furtividade"
+      ]
+    },
+    {
+      "id": "cegar_pf",
+      "origem": "PATHFINDER",
+      "nome": "CEGAR",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "escola": "Necromancia",
+      "manifestacoes": [
+        "Luz brilhante",
+        "Areia nos olhos"
+      ],
+      "descricao": "Sucesso significa que a vítima sofre uma penalidade de -2 em todas as ações que envolvam visão ou -4, com uma ampliação. A vítima tenta automaticamente se livrar do efeito com uma rolagem de Vigor no fim dos seus turnos seguintes.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+2/+3",
+          "descricao": "Modelo Médio (+2) ou Grande (+3)."
+        },
+        {
+          "nome": "Forte",
+          "custo": "+1",
+          "descricao": "A rolagem de Vigor para se livrar do efeito é feita com -2."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:debuff",
+        "cegueira"
+      ]
+    },
+    {
+      "id": "confusao_pf",
+      "origem": "PATHFINDER",
+      "nome": "CONFUSÃO",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "escola": "Encantamento",
+      "manifestacoes": [
+        "Luzes hipnóticas",
+        "Ilusões breves"
+      ],
+      "descricao": "Afeta todos os alvos em um Modelo Médio de Explosão, deixando-os Distraídos ou Vulneráveis, ou ambos com uma ampliação. Removido no fim do próximo turno da vítima.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+0/+1",
+          "descricao": "Modelo Pequeno (0) ou Grande (+1)."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+2",
+          "descricao": "Causa também Abalado."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:debuff",
+        "controle"
+      ]
+    },
+    {
+      "id": "conjurar_aliado_pf",
+      "origem": "PATHFINDER",
+      "nome": "CONJURAR ALIADO",
+      "estagio": "Novato",
+      "pontosDePoder": "Especial",
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Invocação",
+      "manifestacoes": [
+        "Figura de barro",
+        "Tatuagem"
+      ],
+      "descricao": "Conjura um servo aliado. Com ampliação, será Resiliente. Tipos:\n• Assistente (Novato, 2 PP): Construto, Destemido, Garras For+d4.\n• Guarda-costas (Experiente, 4 PP): Armadura +2, Construto, Destemido, Atacar Primeiro, Ataque For+d6.\n• Reflexo Pessoal (Veterano, 6 PP): Clone Extra, sem poderes, equipamento mundano.\n• Sentinela (Heroico, 8 PP): Armadura +4, Tam 2, Construto, Destemido, Resistência Arcana, Varredura Aprimorada, Ataque For+d8.",
+      "modificadores": [
+        {
+          "nome": "Aliados Adicionais (Épico)",
+          "custo": "Varia",
+          "descricao": "Metade do custo para extras."
+        },
+        {
+          "nome": "Aumentar Característica",
+          "custo": "+1",
+          "descricao": "Aumenta Característica em um tipo de dado."
+        },
+        {
+          "nome": "Mordida/Garra",
+          "custo": "+1",
+          "descricao": "Ataque com For+d6."
+        },
+        {
+          "nome": "Passageiro da Mente",
+          "custo": "+1",
+          "descricao": "Comunicação e sentidos."
+        },
+        {
+          "nome": "Vantagem de Combate",
+          "custo": "+1",
+          "descricao": "Ganha uma Vantagem de Combate."
+        },
+        {
+          "nome": "Voo",
+          "custo": "+2",
+          "descricao": "Voa com Movimentação 12."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:invocação",
+        "minion"
+      ]
+    },
+    {
+      "id": "conjurar_item_pf",
+      "origem": "PATHFINDER",
+      "nome": "CONJURAR ITEM",
+      "estagio": "Novato",
+      "pontosDePoder": "2 por 0,5kg",
+      "distancia": "Astúcia",
+      "duracao": "Uma hora",
+      "escola": "Invocação",
+      "manifestacoes": [
+        "Luz",
+        "Retirar de desenho",
+        "Modelar barro"
+      ],
+      "descricao": "Cria um objeto simples e mundano de até 0,5kg por 2 PP. Ampliação produz versão mais resistente.",
+      "modificadores": [
+        {
+          "nome": "Completo",
+          "custo": "+1",
+          "descricao": "Conjunto completo (ex: xadrez, flechas)."
+        },
+        {
+          "nome": "Criar Comida e Água",
+          "custo": "Especial",
+          "descricao": "1 PP cria comida/água para 1 humanoide por 1 dia."
+        },
+        {
+          "nome": "Durável",
+          "custo": "+1/0,5kg",
+          "descricao": "Duração permanente (PP investidos)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:criação",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "crescimento_encolhimento_pf",
+      "origem": "PATHFINDER",
+      "nome": "CRESCIMENTO/ENCOLHIMENTO",
+      "estagio": "Experiente",
+      "pontosDePoder": "2/ponto",
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Transmutação",
+      "manifestacoes": [
+        "Gestos",
+        "Poções"
+      ],
+      "descricao": "Crescimento: Aumenta Tamanho em 1 por 2 PP. Ganha Força (passo) e Resistência (+1) por aumento.\nEncolhimento: Reduz Tamanho em 1 por 2 PP (máx Tam -2). Reduz Força (passo) e Resistência (-1).",
+      "modificadores": [
+        {
+          "nome": "Duração (Épico)",
+          "custo": "+2",
+          "descricao": "Duração em minutos."
+        },
+        {
+          "nome": "Poder (Épico)",
+          "custo": "+2",
+          "descricao": "Mantém Força e Resistência normais ao encolher."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:transformação",
+        "tamanho"
+      ]
+    },
+    {
+      "id": "cura_pf",
+      "origem": "PATHFINDER",
+      "nome": "CURA",
+      "estagio": "Novato",
+      "pontosDePoder": 3,
+      "distancia": "Toque",
+      "duracao": "Instantânea",
+      "escola": "Invocação",
+      "manifestacoes": [
+        "Toque",
+        "Oração"
+      ],
+      "descricao": "Remove 1 Ferimento (2 com ampliação) sofrido há menos de uma hora.",
+      "modificadores": [
+        {
+          "nome": "Cura em Massa (Épico)",
+          "custo": "+2/+3",
+          "descricao": "Modelo Médio (+2) ou Grande (+3)."
+        },
+        {
+          "nome": "Cura Melhorada",
+          "custo": "+10",
+          "descricao": "Cura ferimentos antigos (>1 hora)."
+        },
+        {
+          "nome": "Lesões Debilitantes",
+          "custo": "+15",
+          "descricao": "Cura Lesão Permanente. 1 hora de preparação. Alvo fica Exausto."
+        },
+        {
+          "nome": "Neutralizar Veneno ou Doença",
+          "custo": "+1",
+          "descricao": "Anula veneno ou doença."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:cura",
+        "recuperação"
+      ]
+    },
+    {
+      "id": "dadiva_do_guerreiro_pf",
+      "origem": "PATHFINDER",
+      "nome": "DÁDIVA DO GUERREIRO",
+      "estagio": "Experiente",
+      "pontosDePoder": 4,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Invocação",
+      "manifestacoes": [
+        "Gestos",
+        "Prece"
+      ],
+      "descricao": "Concede uma Vantagem de Combate ao alvo. Conjurador deve cumprir requisitos de Estágio. Ampliação concede versão Aprimorada.",
+      "modificadores": [
+        {
+          "nome": "Poder (Épico)",
+          "custo": "+4",
+          "descricao": "Concede duas Vantagens."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta um novo alvo para cada Ponto de Poder adicional."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:buff",
+        "combate"
+      ]
+    },
+    {
+      "id": "deflexao_pf",
+      "origem": "PATHFINDER",
+      "nome": "DEFLEXÃO",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Abjuração",
+      "manifestacoes": [
+        "Escudo místico",
+        "Vento"
+      ],
+      "descricao": "Oponentes subtraem 2 de ataques corpo a corpo ou distância (escolha do conjurador). Ampliação penaliza ambos.",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta um novo alvo para cada Ponto de Poder adicional."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:defesa",
+        "buff"
+      ]
+    },
+    {
+      "id": "desejo_pf",
+      "origem": "PATHFINDER",
+      "nome": "DESEJO",
+      "estagio": "Lendário",
+      "pontosDePoder": 20,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "escola": "Universal",
+      "manifestacoes": [
+        "Gênio",
+        "Encantamento"
+      ],
+      "descricao": "Altera a realidade. Custa 3 PP permanentes (exceto com ampliação). Efeitos:\n• Ativar Poder (com ampliação).\n• Aumentar Característica (permanente, +1 tipo).\n• Especial (mudança menor de aspecto).\n• Ganhar Vantagem (permanente).\n• Intervenção (ajuda).\n• Restaurar Destino (recuperar Benes).\n• Riqueza (10.000 po).\n• Ver o Futuro (Convicção ou pergunta).\n• Viajar pelo Tempo (reverter rodada/minuto).",
+      "modificadores": [],
+      "tags": [
+        "stage:lendario",
+        "tipo:milagre",
+        "realidade"
+      ]
+    },
+    {
+      "id": "detectar_ocultar_arcano_pf",
+      "origem": "PATHFINDER",
+      "nome": "DETECTAR/OCULTAR ARCANO",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5 (detectar); uma hora (ocultar)",
+      "escola": "Adivinhação (detectar); Ilusão (ocultar)",
+      "manifestacoes": [
+        "Aceno",
+        "Sussurros"
+      ],
+      "descricao": "Detectar: Vê sobrenatural/invisível. Ampliação revela tipo/fraquezas. Ignora penalidade de invisibilidade (-4/-todos).\nOcultar: Evita detecção (-2/-4 na rolagem oposta). Custo aumenta com Tamanho.",
+      "modificadores": [
+        {
+          "nome": "Forte",
+          "custo": "+1",
+          "descricao": "Ocultar apenas. Penalidade de detecção aumenta para -4/-6."
+        },
+        {
+          "nome": "Identificar",
+          "custo": "+1",
+          "descricao": "Identifica poderes de item."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Sentir Alinhamento",
+          "custo": "+1",
+          "descricao": "Sente bem/mal, ignora linha de visão."
+        },
+        {
+          "nome": "Área",
+          "custo": "+1/+2",
+          "descricao": "Ocultar apenas. Modelo Médio (+1) ou Grande (+2)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:informação",
+        "furtividade",
+        "meta-magia"
+      ]
+    },
+    {
+      "id": "devastacao_pf",
+      "origem": "PATHFINDER",
+      "nome": "DEVASTAÇÃO",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "escola": "Evocação",
+      "manifestacoes": [
+        "Redemoinho",
+        "Repulsão"
+      ],
+      "descricao": "Modelo Médio ou Cone. Alvos ficam Distraídos e fazem Força (-2 ampliação) ou são arremessados 2d6 quadros. Impacto causa 2d4 dano.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+1",
+          "descricao": "Modelo Grande."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+2",
+          "descricao": "Arremesso 3d6 quadros, dano de impacto 2d6."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:ataque",
+        "controle",
+        "arremesso"
+      ]
+    },
+    {
+      "id": "disfarce_pf",
+      "origem": "PATHFINDER",
+      "nome": "DISFARCE",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "10 minutos",
+      "escola": "Ilusão",
+      "manifestacoes": [
+        "Ilusão",
+        "Traços maleáveis"
+      ],
+      "descricao": "Assume aparência de outro. Perceber -2 (-4 ampliação) para detectar.",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Tamanho",
+          "custo": "+1",
+          "descricao": "Varia tamanho em +/- 2."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:ilusão",
+        "social"
+      ]
+    },
+    {
+      "id": "dissipar_pf",
+      "origem": "PATHFINDER",
+      "nome": "DISSIPAR",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "escola": "Abjuração",
+      "manifestacoes": [
+        "Aceno",
+        "Sussurros"
+      ],
+      "descricao": "Anula poderes (resistida por Arcana/Espírito). Ampliação deixa alvo Distraído.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+1/+2/+3",
+          "descricao": "Pequeno/Médio/Grande."
+        },
+        {
+          "nome": "Campo Anti-Magia (Épico)",
+          "custo": "+8",
+          "descricao": "Modelo Médio, Duração 5. Nega magia na área."
+        },
+        {
+          "nome": "Desencantar",
+          "custo": "+1",
+          "descricao": "Anula item mágico por 1 rodada (2 com ampliação)."
+        },
+        {
+          "nome": "Múltiplos Poderes",
+          "custo": "+3",
+          "descricao": "Dissipa todos os poderes ativos."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:meta-magia",
+        "cancelamento"
+      ]
+    },
+    {
+      "id": "drenar_pontos_de_poder_pf",
+      "origem": "PATHFINDER",
+      "nome": "DRENAR PONTOS DE PODER",
+      "estagio": "Veterano",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "escola": "Necromancia",
+      "manifestacoes": [
+        "Prece",
+        "Gestos"
+      ],
+      "descricao": "Resistida por Espírito. Drena 1d6 PP. Ampliação transfere PP para conjurador.",
+      "modificadores": [
+        {
+          "nome": "Poder",
+          "custo": "+2",
+          "descricao": "Drena 2d6 PP."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:ataque",
+        "meta-magia"
+      ]
+    },
+    {
+      "id": "elo_mental_pf",
+      "origem": "PATHFINDER",
+      "nome": "ELO MENTAL",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "30 minutos",
+      "escola": "Adivinhação",
+      "manifestacoes": [
+        "Tiaras",
+        "Talismãs"
+      ],
+      "descricao": "Telepatia voluntária. 1,5km (8km ampliação). Dano em um exige Astúcia dos outros para não ficar Abalado.",
+      "modificadores": [
+        {
+          "nome": "Elo de Longa Distância (Épico)",
+          "custo": "+3",
+          "descricao": "Qualquer distância no mesmo plano."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Transmissão (Épico)",
+          "custo": "+2",
+          "descricao": "Transmite para todos na área (Astúcia x4/x8)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:comunicação",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "empatia_pf",
+      "origem": "PATHFINDER",
+      "nome": "EMPATIA",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Encantamento",
+      "manifestacoes": [
+        "Concentração",
+        "Sorriso"
+      ],
+      "descricao": "+1 (+2 ampliação) em perícias sociais contra o alvo.",
+      "modificadores": [
+        {
+          "nome": "Duração",
+          "custo": "+1",
+          "descricao": "Minutos."
+        },
+        {
+          "nome": "Encantar",
+          "custo": "+2",
+          "descricao": "Melhora atitude do alvo."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Verdade (Épico)",
+          "custo": "+2",
+          "descricao": "Detecta mentiras."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:social",
+        "buff"
+      ]
+    },
+    {
+      "id": "enredar_pf",
+      "origem": "PATHFINDER",
+      "nome": "ENREDAR",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "escola": "Transmutação",
+      "manifestacoes": [
+        "Vinhas",
+        "Teias",
+        "Gelo"
+      ],
+      "descricao": "Deixa Enredado (Preso com ampliação). Dureza 8.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+2/+3",
+          "descricao": "Modelo Médio (+2) ou Grande/Raio (+3)."
+        },
+        {
+          "nome": "Dano",
+          "custo": "+2",
+          "descricao": "2d4 dano/turno."
+        },
+        {
+          "nome": "Forte",
+          "custo": "+2",
+          "descricao": "Dureza 10."
+        },
+        {
+          "nome": "Mortal (Épico)",
+          "custo": "+4",
+          "descricao": "2d6 dano/turno."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:controle",
+        "imobilização"
+      ]
+    },
+    {
+      "id": "explosao_pf",
+      "origem": "PATHFINDER",
+      "nome": "EXPLOSÃO",
+      "estagio": "Experiente",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia x2",
+      "duracao": "Instantânea",
+      "escola": "Evocação",
+      "manifestacoes": [
+        "Bola de fogo",
+        "Gelo"
+      ],
+      "descricao": "Modelo Médio. 2d6 dano (3d6 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+0/+1",
+          "descricao": "Pequeno (0) / Grande (+1)."
+        },
+        {
+          "nome": "Dano",
+          "custo": "+2",
+          "descricao": "3d6 dano (4d6 ampliação)."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+4",
+          "descricao": "4d6 dano, Arma Pesada."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:ataque",
+        "área",
+        "dano"
+      ]
+    },
+    {
+      "id": "falar_idioma_pf",
+      "origem": "PATHFINDER",
+      "nome": "FALAR IDIOMA",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "10 minutos",
+      "escola": "Adivinhação",
+      "manifestacoes": [
+        "Palavras",
+        "Imagens"
+      ],
+      "descricao": "Fala/lê/escreve idioma. Ampliação: gírias/dialetos.",
+      "modificadores": [
+        {
+          "nome": "Entendimento em Massa (Épico)",
+          "custo": "+5",
+          "descricao": "Todos em Astúcia x2 se entendem."
+        },
+        {
+          "nome": "Melhorado (Épico)",
+          "custo": "+2",
+          "descricao": "Todos os idiomas de uma vez."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:social",
+        "comunicação"
+      ]
+    },
+    {
+      "id": "fantoche_pf",
+      "origem": "PATHFINDER",
+      "nome": "FANTOCHE",
+      "estagio": "Veterano",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Encantamento",
+      "manifestacoes": [
+        "Olhos brilhantes",
+        "Bonecos"
+      ],
+      "descricao": "Controle mental. Resistida por Espírito. Ordens suicidas permitem nova resistência.",
+      "modificadores": [
+        {
+          "nome": "Forte",
+          "custo": "+2",
+          "descricao": "Resistência com -2. Elo Mental permite alcance infinito."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+2",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:controle",
+        "mental"
+      ]
+    },
+    {
+      "id": "ferir_pf",
+      "origem": "PATHFINDER",
+      "nome": "FERIR",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Transmutação",
+      "manifestacoes": [
+        "Brilho",
+        "Runas"
+      ],
+      "descricao": "Aumenta dano da arma em +2 (+4 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Melhorado (Épico)",
+          "custo": "+2",
+          "descricao": "+4 dano (+6 ampliação), Arma Pesada."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:buff",
+        "ataque"
+      ]
+    },
+    {
+      "id": "iluminar_obscurecer_pf",
+      "origem": "PATHFINDER",
+      "nome": "ILUMINAR/OBSCURECER",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "10 minutos",
+      "escola": "Evocação",
+      "manifestacoes": [
+        "Toque",
+        "Luz",
+        "Escuridão"
+      ],
+      "descricao": "Iluminar: Modelo Grande de luz. Obscurecer: Modelo Grande de Escuridão.",
+      "modificadores": [
+        {
+          "nome": "Área (Épico)",
+          "custo": "+2",
+          "descricao": "Iluminar: Raio = Astúcia. Luz solar natural."
+        },
+        {
+          "nome": "Escuridão Verdadeira (Épico)",
+          "custo": "+2",
+          "descricao": "Bloqueia infravisão e visão no escuro."
+        },
+        {
+          "nome": "Móvel",
+          "custo": "+1",
+          "descricao": "Move o efeito."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:ambiente",
+        "luz",
+        "trevas"
+      ]
+    },
+    {
+      "id": "ilusao_pf",
+      "origem": "PATHFINDER",
+      "nome": "ILUSÃO",
+      "estagio": "Novato",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Ilusão",
+      "manifestacoes": [
+        "Hologramas",
+        "Feitiços"
+      ],
+      "descricao": "Cria imagem visual. Astúcia para desacreditar (-2 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+1",
+          "descricao": "Modelo Grande."
+        },
+        {
+          "nome": "Duração (Épico)",
+          "custo": "+2",
+          "descricao": "Minutos."
+        },
+        {
+          "nome": "Forte",
+          "custo": "+2",
+          "descricao": "Desacreditar com -2."
+        },
+        {
+          "nome": "Mortal (Épico)",
+          "custo": "+3",
+          "descricao": "Ilusão ataca (dano Abalado/Ferimento)."
+        },
+        {
+          "nome": "Mobilidade",
+          "custo": "+1/+2",
+          "descricao": "Move/Voa."
+        },
+        {
+          "nome": "Som",
+          "custo": "+1",
+          "descricao": "Gera som."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:ilusão",
+        "engano"
+      ]
+    },
+    {
+      "id": "intangibilidade_pf",
+      "origem": "PATHFINDER",
+      "nome": "INTANGIBILIDADE",
+      "estagio": "Veterano",
+      "pontosDePoder": 5,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Transmutação",
+      "manifestacoes": [
+        "Fantasma",
+        "Fumaça"
+      ],
+      "descricao": "Fica incorpóreo. Atravessa paredes, imune a não-mágico.",
+      "modificadores": [
+        {
+          "nome": "Duração (Épico)",
+          "custo": "+3",
+          "descricao": "Minutos."
+        },
+        {
+          "nome": "Receptores Adicionais (Épico)",
+          "custo": "+3",
+          "descricao": "Afeta outros (cada 3 PP)."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:defesa",
+        "movimento"
+      ]
+    },
+    {
+      "id": "invisibilidade_pf",
+      "origem": "PATHFINDER",
+      "nome": "INVISIBILIDADE",
+      "estagio": "Experiente",
+      "pontosDePoder": 5,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Ilusão",
+      "manifestacoes": [
+        "Pó",
+        "Luzes"
+      ],
+      "descricao": "Transparente. -4 para ser atingido (-6 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Duração (Épico)",
+          "custo": "+2",
+          "descricao": "Minutos."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+3",
+          "descricao": "Afeta outros (cada 3 PP)."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:furtividade",
+        "defesa"
+      ]
+    },
+    {
+      "id": "leitura_de_objeto_pf",
+      "origem": "PATHFINDER",
+      "nome": "LEITURA DE OBJETO",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Toque",
+      "duracao": "Especial",
+      "escola": "Adivinhação",
+      "manifestacoes": [
+        "Toque"
+      ],
+      "descricao": "Vê passado do objeto.",
+      "modificadores": [
+        {
+          "nome": "Projeção (Épico)",
+          "custo": "+2",
+          "descricao": "Projeta a visão para todos verem."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:informação",
+        "investigação"
+      ]
+    },
+    {
+      "id": "leitura_mental_pf",
+      "origem": "PATHFINDER",
+      "nome": "LEITURA MENTAL",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "escola": "Adivinhação",
+      "manifestacoes": [
+        "Invasão psiônica"
+      ],
+      "descricao": "Resistida por Astúcia. Lê pensamento superficial.",
+      "modificadores": [
+        {
+          "nome": "Andarilho da Mente (Épico)",
+          "custo": "+2",
+          "descricao": "Acesso maior a memórias/cenas."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:informação",
+        "mental"
+      ]
+    },
+    {
+      "id": "limpeza_mental_pf",
+      "origem": "PATHFINDER",
+      "nome": "LIMPEZA MENTAL",
+      "estagio": "Veterano",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "escola": "Encantamento",
+      "manifestacoes": [
+        "Bebida",
+        "Toque"
+      ],
+      "descricao": "Remove memórias. Resistida por Astúcia. 1 minuto de preparação.",
+      "modificadores": [
+        {
+          "nome": "Editar",
+          "custo": "+1",
+          "descricao": "Altera memória em vez de apagar."
+        },
+        {
+          "nome": "Conjuração Rápida",
+          "custo": "+2",
+          "descricao": "Ação padrão."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+2",
+          "descricao": "Remove completamente pessoa/evento."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:mental",
+        "ataque"
+      ]
+    },
+    {
+      "id": "localizar_pf",
+      "origem": "PATHFINDER",
+      "nome": "LOCALIZAR",
+      "estagio": "Novato",
+      "pontosDePoder": 3,
+      "distancia": "Pessoal",
+      "duracao": "10 minutos",
+      "escola": "Adivinhação",
+      "manifestacoes": [
+        "Cristal",
+        "Mensagem"
+      ],
+      "descricao": "Encontra direção/distância de objeto/criatura. Água corrente bloqueia.",
+      "modificadores": [
+        {
+          "nome": "Encontrar o Caminho",
+          "custo": "+1",
+          "descricao": "Mostra melhor caminho."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:informação",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "maldicao_pf",
+      "origem": "PATHFINDER",
+      "nome": "MALDIÇÃO",
+      "estagio": "Experiente",
+      "pontosDePoder": 5,
+      "distancia": "Toque",
+      "duracao": "Especial",
+      "escola": "Necromancia",
+      "manifestacoes": [
+        "Efígie",
+        "Toque"
+      ],
+      "descricao": "Causa Fadiga diária até a morte. Resistida por Espírito.",
+      "modificadores": [
+        {
+          "nome": "Transformar em Pedra (Épico)",
+          "custo": "+5",
+          "descricao": "Transforma vítima em pedra ao incapacitar."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:ataque",
+        "debuff"
+      ]
+    },
+    {
+      "id": "manipulacao_elemental_pf",
+      "origem": "PATHFINDER",
+      "nome": "MANIPULAÇÃO ELEMENTAL",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Transmutação",
+      "manifestacoes": [
+        "Gestos"
+      ],
+      "descricao": "Controla elementos. Efeitos: Ar, Fogo, Terra, Água (ver descrição).",
+      "modificadores": [
+        {
+          "nome": "Clima (Épico)",
+          "custo": "+5",
+          "descricao": "Controla clima em 8km."
+        },
+        {
+          "nome": "Poder",
+          "custo": "+3",
+          "descricao": "Volume triplicado."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:controle",
+        "elemental"
+      ]
+    },
+    {
+      "id": "medo_pf",
+      "origem": "PATHFINDER",
+      "nome": "MEDO",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "escola": "Necromancia",
+      "manifestacoes": [
+        "Calafrios",
+        "Energia"
+      ],
+      "descricao": "Causa teste de Medo. Ampliação: -2.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+2/+3",
+          "descricao": "Modelo Pequeno/Médio (+2) ou Grande (+3)."
+        },
+        {
+          "nome": "Melhorado (Épico)",
+          "custo": "+2",
+          "descricao": "Teste com -2 (-4 ampliação)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:debuff",
+        "medo"
+      ]
+    },
+    {
+      "id": "morosidade_velocidade_pf",
+      "origem": "PATHFINDER",
+      "nome": "MOROSIDADE/VELOCIDADE",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea (morosidade); 5 (velocidade)",
+      "escola": "Transmutação",
+      "manifestacoes": [
+        "Tempo",
+        "Borrão"
+      ],
+      "descricao": "Morosidade: Metade Movimentação. Velocidade: Dobro Movimentação.",
+      "modificadores": [
+        {
+          "nome": "Área (Morosidade)",
+          "custo": "+2/+3",
+          "descricao": "Modelo Médio (+2) ou Grande (+3)."
+        },
+        {
+          "nome": "Disparada (Velocidade)",
+          "custo": "+2",
+          "descricao": "Corrida máxima."
+        },
+        {
+          "nome": "Forte (Morosidade)",
+          "custo": "+1",
+          "descricao": "Resistência com -2."
+        },
+        {
+          "nome": "Rapidez (Velocidade)",
+          "custo": "+2",
+          "descricao": "Reduz penalidade de multi-ação em 2."
+        },
+        {
+          "nome": "Receptores Adicionais (Velocidade)",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:buff",
+        "tipo:debuff",
+        "movimento"
+      ]
+    },
+    {
+      "id": "mudanca_de_forma_pf",
+      "origem": "PATHFINDER",
+      "nome": "MUDANÇA DE FORMA",
+      "estagio": "Novato",
+      "pontosDePoder": "Especial",
+      "distancia": "Pessoal",
+      "duracao": "5",
+      "escola": "Transmutação",
+      "manifestacoes": [
+        "Morfar"
+      ],
+      "descricao": "Assume forma de criatura. Custo por Tamanho. Novato (3 PP, Tam -4 a -1), Experiente (5 PP, Tam 0), etc.",
+      "modificadores": [
+        {
+          "nome": "Duração",
+          "custo": "+1",
+          "descricao": "Minutos."
+        },
+        {
+          "nome": "Transformar (Épico)",
+          "custo": "+2/+3",
+          "descricao": "Afeta voluntário (Toque/Distância)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:transformação",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "parar_o_tempo_pf",
+      "origem": "PATHFINDER",
+      "nome": "PARAR O TEMPO",
+      "estagio": "Heroico",
+      "pontosDePoder": 8,
+      "distancia": "Pessoal",
+      "duracao": "Instantânea",
+      "escola": "Transmutação",
+      "manifestacoes": [
+        "Ampulheta"
+      ],
+      "descricao": "Ganha turno extra. Ampliação: até 4 ações, ignora 2 de penalidade.",
+      "modificadores": [],
+      "tags": [
+        "stage:heroico",
+        "tipo:tempo",
+        "ação extra"
+      ]
+    },
+    {
+      "id": "polimorfia_perniciosa_pf",
+      "origem": "PATHFINDER",
+      "nome": "POLIMORFIA PERNICIOSA",
+      "estagio": "Veterano",
+      "pontosDePoder": "3+2/tam",
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Transmutação",
+      "manifestacoes": [
+        "Artefato",
+        "Raio"
+      ],
+      "descricao": "Transforma alvo em criatura inofensiva (Tam -2 a 3). Resistida por Espírito.",
+      "modificadores": [
+        {
+          "nome": "Duração (Épico)",
+          "custo": "+2",
+          "descricao": "Minutos."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:ataque",
+        "transformação"
+      ]
+    },
+    {
+      "id": "protecao_pf",
+      "origem": "PATHFINDER",
+      "nome": "PROTEÇÃO",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Abjuração",
+      "manifestacoes": [
+        "Brilho",
+        "Pele dura"
+      ],
+      "descricao": "+2 Armadura (+2 Resistência com ampliação).",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:buff",
+        "defesa"
+      ]
+    },
+    {
+      "id": "protecao_ambiental_pf",
+      "origem": "PATHFINDER",
+      "nome": "PROTEÇÃO AMBIENTAL",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Uma hora",
+      "escola": "Abjuração",
+      "manifestacoes": [
+        "Marca",
+        "Guelras"
+      ],
+      "descricao": "Protege contra ambiente (frio, calor, pressão, falta de ar).",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Resistência Ambiental",
+          "custo": "+1",
+          "descricao": "Reduz dano de energia em 4 (6 ampliação)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:buff",
+        "sobrevivência"
+      ]
+    },
+    {
+      "id": "protecao_arcana_pf",
+      "origem": "PATHFINDER",
+      "nome": "PROTEÇÃO ARCANA",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Abjuração",
+      "manifestacoes": [
+        "Brilho opaco"
+      ],
+      "descricao": "Poderes hostis sofrem -2 (-4 ampliação) para afetar alvo. Reduz dano igual.",
+      "modificadores": [
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+2",
+          "descricao": "Penalidade aumenta para -4 (-6 ampliação)."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:buff",
+        "defesa mágica"
+      ]
+    },
+    {
+      "id": "raio_pf",
+      "origem": "PATHFINDER",
+      "nome": "RAIO",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia x2",
+      "duracao": "Instantânea",
+      "escola": "Evocação",
+      "manifestacoes": [
+        "Fogo",
+        "Gelo"
+      ],
+      "descricao": "Ataque à distância. Dano 2d6 (3d6 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Cadência (Épico)",
+          "custo": "+2",
+          "descricao": "CdT 2."
+        },
+        {
+          "nome": "Dano",
+          "custo": "+2",
+          "descricao": "Dano 3d6 (4d6 ampliação)."
+        },
+        {
+          "nome": "Desintegrar (Épico)",
+          "custo": "+2",
+          "descricao": "Incapacitado vira pó (Vigor). Dano extra em objetos."
+        },
+        {
+          "nome": "Maior (Épico)",
+          "custo": "+4",
+          "descricao": "Dano 4d6, Arma Pesada."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:ataque",
+        "dano"
+      ]
+    },
+    {
+      "id": "rajada_pf",
+      "origem": "PATHFINDER",
+      "nome": "RAJADA",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Cone/Raio",
+      "duracao": "Instantânea",
+      "escola": "Evocação",
+      "manifestacoes": [
+        "Fogo",
+        "Luz"
+      ],
+      "descricao": "Cone ou Raio. Dano 2d6 (3d6 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Dano",
+          "custo": "+2",
+          "descricao": "Dano 3d6 (4d6 ampliação)."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+4",
+          "descricao": "Dano 4d6, Arma Pesada."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:ataque",
+        "área"
+      ]
+    },
+    {
+      "id": "ressurreicao_pf",
+      "origem": "PATHFINDER",
+      "nome": "RESSURREIÇÃO",
+      "estagio": "Heroico",
+      "pontosDePoder": 20,
+      "distancia": "Toque",
+      "duracao": "Instantânea",
+      "escola": "Invocação",
+      "manifestacoes": [
+        "Cerimônia",
+        "Amuletos"
+      ],
+      "descricao": "Traz morto à vida (<1 ano). -4 na rolagem. Volta com 3 ferimentos e exausto.",
+      "modificadores": [
+        {
+          "nome": "Poder",
+          "custo": "+5",
+          "descricao": "Até uma década."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+10",
+          "descricao": "Qualquer tempo, sem corpo. 12h de ritual."
+        }
+      ],
+      "tags": [
+        "stage:heroico",
+        "tipo:cura",
+        "milagre"
+      ]
+    },
+    {
+      "id": "santuario_pf",
+      "origem": "PATHFINDER",
+      "nome": "SANTUÁRIO",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Toque",
+      "duracao": "5",
+      "escola": "Encantamento",
+      "manifestacoes": [
+        "Palavras",
+        "Símbolo"
+      ],
+      "descricao": "Inimigos devem testar Espírito para atacar o protegido. Termina se protegido atacar.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+2/+3",
+          "descricao": "Modelo Médio (+2) ou Grande (+3)."
+        },
+        {
+          "nome": "Forte (Épico)",
+          "custo": "+1",
+          "descricao": "Teste com -2 (-4 ampliação)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:defesa",
+        "proteção"
+      ]
+    },
+    {
+      "id": "som_silencio_pf",
+      "origem": "PATHFINDER",
+      "nome": "SOM/SILÊNCIO",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Varia",
+      "duracao": "Instantânea/5",
+      "escola": "Ilusão",
+      "manifestacoes": [
+        "Ondulação",
+        "Efeitos"
+      ],
+      "descricao": "Som: cria som ilusório. Silêncio: abafa som em Modelo Grande (-4 Perceber).",
+      "modificadores": [
+        {
+          "nome": "Mirado",
+          "custo": "+0",
+          "descricao": "Silencia indivíduo."
+        },
+        {
+          "nome": "Móvel",
+          "custo": "+1",
+          "descricao": "Move área."
+        },
+        {
+          "nome": "Melhorado (Épico)",
+          "custo": "+1",
+          "descricao": "Resistência com -2."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:ilusão",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "sono_pf",
+      "origem": "PATHFINDER",
+      "nome": "SONO",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Uma hora",
+      "escola": "Encantamento",
+      "manifestacoes": [
+        "Canção",
+        "Pó"
+      ],
+      "descricao": "Causa sono. Resistido por Espírito.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+2/+3",
+          "descricao": "Modelo Médio (+2) ou Grande (+3)."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:debuff",
+        "controle"
+      ]
+    },
+    {
+      "id": "telecinese_pf",
+      "origem": "PATHFINDER",
+      "nome": "TELECINESE",
+      "estagio": "Experiente",
+      "pontosDePoder": 5,
+      "distancia": "Astúcia x2",
+      "duracao": "5",
+      "escola": "Transmutação",
+      "manifestacoes": [
+        "Aceno",
+        "Olhar"
+      ],
+      "descricao": "Move objetos (Força d10). Bater vítimas causa For+d6.",
+      "modificadores": [
+        {
+          "nome": "Poder (Épico)",
+          "custo": "+3",
+          "descricao": "Força d12. Bater For+d6. Arma Pesada."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:controle",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "teleporte_pf",
+      "origem": "PATHFINDER",
+      "nome": "TELEPORTE",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "escola": "Invocação",
+      "manifestacoes": [
+        "Fumaça",
+        "Luz"
+      ],
+      "descricao": "Teleporta 12 quadros (24 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Portal (Épico)",
+          "custo": "+5",
+          "descricao": "Abre portal por 5 rodadas."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Teleportar Inimigo",
+          "custo": "+2",
+          "descricao": "Ataque de toque para teleportar inimigo."
+        },
+        {
+          "nome": "Melhorado (Épico)",
+          "custo": "+5",
+          "descricao": "Alcance de quilômetros ou mundial."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:movimento",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "viagem_planar_pf",
+      "origem": "PATHFINDER",
+      "nome": "VIAGEM PLANAR",
+      "estagio": "Veterano",
+      "pontosDePoder": 4,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "escola": "Invocação",
+      "manifestacoes": [
+        "Buraco cósmico",
+        "Runas"
+      ],
+      "descricao": "Move para outro plano.",
+      "modificadores": [
+        {
+          "nome": "Espaço Extra-Dimensional (Épico)",
+          "custo": "+1",
+          "descricao": "Cria abrigo em dimensão de bolso."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Transportar Inimigo (Épico)",
+          "custo": "+2",
+          "descricao": "Bane inimigo temporariamente."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:movimento",
+        "extraplanar"
+      ]
+    },
+    {
+      "id": "videncia_pf",
+      "origem": "PATHFINDER",
+      "nome": "VIDÊNCIA",
+      "estagio": "Experiente",
+      "pontosDePoder": 3,
+      "distancia": "Pessoal",
+      "duracao": "5",
+      "escola": "Adivinhação",
+      "manifestacoes": [
+        "Bola de cristal",
+        "Espelho"
+      ],
+      "descricao": "Espia alvo distante. Resistida por Espírito. Requer 1 min preparação.",
+      "modificadores": [
+        {
+          "nome": "Visão em Grupo",
+          "custo": "+1",
+          "descricao": "Compartilha com aliados."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:informação",
+        "espionagem"
+      ]
+    },
+    {
+      "id": "visao_distante_pf",
+      "origem": "PATHFINDER",
+      "nome": "VISÃO DISTANTE",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Transmutação",
+      "manifestacoes": [
+        "Olhos de águia"
+      ],
+      "descricao": "Vê detalhes a 1km. Reduz penalidade de distância.",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+2",
+          "descricao": "Ignora penalidade de distância."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:percepção",
+        "buff"
+      ]
+    },
+    {
+      "id": "visao_sombria_pf",
+      "origem": "PATHFINDER",
+      "nome": "VISÃO SOMBRIA",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "Uma hora",
+      "escola": "Transmutação",
+      "manifestacoes": [
+        "Olhos brilhantes"
+      ],
+      "descricao": "Reduz penalidade de iluminação em 4 (6 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+2",
+          "descricao": "Ignora pen. iluminação e 4 pontos de invisibilidade."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:percepção",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "voar_pf",
+      "origem": "PATHFINDER",
+      "nome": "VOAR",
+      "estagio": "Veterano",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "escola": "Transmutação",
+      "manifestacoes": [
+        "Vento",
+        "Asas"
+      ],
+      "descricao": "Voo Movimentação 12 (24 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+2",
+          "descricao": "Afeta outros (cada 2 PP)."
+        },
+        {
+          "nome": "Voo Rápido",
+          "custo": "+5",
+          "descricao": "Movimentação 24 (48 ampliação)."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:movimento",
+        "voo"
+      ]
+    },
+    {
+      "id": "zumbi_pf",
+      "origem": "PATHFINDER",
+      "nome": "ZUMBI",
+      "estagio": "Veterano",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia",
+      "duracao": "Uma hora",
+      "escola": "Necromancia",
+      "manifestacoes": [
+        "Símbolos",
+        "Ossos"
+      ],
+      "descricao": "Anima cadáver. Obediente, não telepático.\nCriaturas Zumbificadas: Custo varia por tamanho (2 para Tam -1/-2; 3 para Tam 0; etc).",
+      "modificadores": [
+        {
+          "nome": "Armado",
+          "custo": "+1/Zumbi",
+          "descricao": "Arma."
+        },
+        {
+          "nome": "Armadura",
+          "custo": "+1/Zumbi",
+          "descricao": "Armadura +2."
+        },
+        {
+          "nome": "Esquelético",
+          "custo": "+1/Zumbi",
+          "descricao": "Usa perfil de Esqueleto."
+        },
+        {
+          "nome": "Passageiro da Mente",
+          "custo": "+1/+3",
+          "descricao": "Comunicação (1 para um, 3 para todos)."
+        },
+        {
+          "nome": "Permanente",
+          "custo": "0",
+          "descricao": "Dura até ser destruído. PP investido."
+        },
+        {
+          "nome": "Zumbis Adicionais",
+          "custo": "+1",
+          "descricao": "Cria horda."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:necromancia",
+        "minion"
+      ]
     }
 ]
