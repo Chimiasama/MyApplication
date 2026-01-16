@@ -2917,5 +2917,2787 @@
       "tipo:informação",
       "espionagem"
     ]
-  }
+  },
+    {
+      "id": "adivinhacao_fantasia",
+      "origem": "FANTASIA",
+      "nome": "ADIVINHAÇÃO",
+      "estagio": "Experiente",
+      "pontosDePoder": 5,
+      "distancia": "Pessoal",
+      "duracao": "Uma breve conversa de cerca de cinco minutos",
+      "manifestacoes": [
+        "Sessões espíritas",
+        "Interrogatório demoníaco"
+      ],
+      "descricao": "Adivinhação permite que o conjurador entre em contato com seres ou forças sobrenaturais para adquirir informação. Preparar o feitiço leva um minuto ininterrupto. Sucesso significa que a entidade responde da melhor maneira possível. Uma ampliação significa que o espírito é mais prestativo, melhor informado ou mais direto do que o habitual.\nO tipo de entidade contatada determina como ela se comunica. Espíritos do submundo tendem a conhecer apenas coisas pertinentes a sua vida e morte. Uma vez que tenha se conversado com um espírito, ele não pode ser contatado novamente por 24 horas.\nSolo Sagrado: Contatar um espírito em solo considerado sagrado por ele adiciona +2 à rolagem.",
+      "modificadores": [
+        {
+          "nome": "Poder (Épico)",
+          "custo": "+3",
+          "descricao": "Funciona apenas em solo sagrado. A entidade não apenas responde, mas oferece conselhos não requisitados e pode até se manifestar."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:informação",
+        "adivinhação",
+        "social"
+      ]
+    },
+    {
+      "id": "ajuda_fantasia",
+      "origem": "FANTASIA",
+      "nome": "AJUDA",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea / Uma hora",
+      "manifestacoes": [
+        "Preces",
+        "Mãos brilhantes",
+        "Espirais cintilantes",
+        "Brisa fresca"
+      ],
+      "descricao": "Selecione uma opção:\nRecuperação: Remove Abalado, Distraído ou Vulnerável (2 com ampliação). Não remove condições contínuas (Preso, etc) a menos que a fonte suma.\nEntorpecer: Reduz penalidade de Ferimentos/Fadiga em 1 (2 com ampliação) por uma hora. Não cura, apenas ignora penalidade.",
+      "modificadores": [
+        {
+          "nome": "Atordoado",
+          "custo": "+1",
+          "descricao": "Na opção Recuperação, também remove a condição Atordoado."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta mais de um alvo por +1 PP cada."
+        },
+        {
+          "nome": "Restauração",
+          "custo": "+3",
+          "descricao": "Restaura um tipo de dado de dreno de energia (ou dois com ampliação)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:suporte",
+        "cura",
+        "condições"
+      ]
+    },
+    {
+      "id": "amigo_das_feras_fantasia",
+      "origem": "FANTASIA",
+      "nome": "AMIGO DAS FERAS",
+      "estagio": "Novato",
+      "pontosDePoder": "Especial",
+      "distancia": "Astúcia",
+      "duracao": "10 minutos",
+      "manifestacoes": [
+        "Concentração e gestos"
+      ],
+      "descricao": "Permite falar e guiar feras naturais. Custo = soma dos Tamanhos (mínimo 1). Sucesso: obedece comandos simples. Ampliação: mais obediente, supera medos.\nBandos: Pequenos (1 PP), Médios (2 PP), Grandes (3 PP).\nFunciona apenas em criaturas naturais com inteligência animal.",
+      "modificadores": [
+        {
+          "nome": "Bestiário (Épico)",
+          "custo": "+2",
+          "descricao": "Afeta feras mágicas com inteligência animal."
+        },
+        {
+          "nome": "Duração",
+          "custo": "+1",
+          "descricao": "Duração aumenta para 30 minutos."
+        },
+        {
+          "nome": "Passageiro da Mente",
+          "custo": "+1",
+          "descricao": "Permite comunicar e sentir através da fera."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:controle",
+        "animais"
+      ]
+    },
+    {
+      "id": "ancora_planar",
+      "origem": "FANTASIA",
+      "nome": "ÂNCORA PLANAR",
+      "estagio": "Veterano",
+      "pontosDePoder": 8,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Círculo de invocação",
+        "Caixão de ferro",
+        "Correntes mágicas"
+      ],
+      "descricao": "Invoca e prende uma criatura extraplanar. Requer 10 min de preparação de armadilha. Rolagem resistida de perícia arcana vs Espírito. Sucesso: criatura presa até concordar com serviço. Pontos de Poder ficam investidos.\nBarganha: Criatura realiza serviço em troca de algo. Se não houver acordo em 24h, deve renovar a rolagem.",
+      "modificadores": [],
+      "tags": [
+        "stage:veterano",
+        "tipo:invocação",
+        "prisão",
+        "extraplanar"
+      ]
+    },
+    {
+      "id": "andar_nas_paredes_fantasia",
+      "origem": "FANTASIA",
+      "nome": "ANDAR NAS PAREDES",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Feição aracnídea",
+        "Pelos espinhosos"
+      ],
+      "descricao": "Permite andar em superfícies verticais/horizontais. Metade da Movimentação (Total com ampliação e pode correr). Adiciona +4 em Atletismo para escalar/agarrar.",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros por +1 PP cada."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:movimento",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "atordoar_fantasia",
+      "origem": "FANTASIA",
+      "nome": "ATORDOAR",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Raios de energia",
+        "Bombas atordoantes",
+        "Luz ofuscante"
+      ],
+      "descricao": "Impacta alvo com força/som/luz. Vítima faz rolagem de Vigor (-2 com ampliação na conjuração) ou fica Atordoada.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+2/+3",
+          "descricao": "Modelo Médio (+2) ou Grande (+3)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:ataque",
+        "controle",
+        "debuff"
+      ]
+    },
+    {
+      "id": "aumentar_reduzir_caracteristica_fantasia",
+      "origem": "FANTASIA",
+      "nome": "AUMENTAR/REDUZIR CARACTERÍSTICA",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5 (aumentar); Instantânea (reduzir)",
+      "manifestacoes": [
+        "Mudança física",
+        "Aura brilhante",
+        "Poções"
+      ],
+      "descricao": "Aumentar: Aumenta Característica em 1 tipo de dado (2 com ampliação).\nReduzir: Reduz Característica em 1 tipo de dado (2 com ampliação, min d4). Vítima resiste com Espírito no fim dos turnos.",
+      "modificadores": [
+        {
+          "nome": "Melhorado (Épico)",
+          "custo": "+2",
+          "descricao": "Aumentar: ganha rerrolagem por turno (ou por ação com ampliação). Reduzir: penalidade de -2 nas rolagens da característica."
+        },
+        {
+          "nome": "Forte",
+          "custo": "+1",
+          "descricao": "Reduzir apenas. Resistência feita com -2."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta mais de um alvo."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:buff",
+        "tipo:debuff",
+        "atributos"
+      ]
+    },
+    {
+      "id": "banir_fantasia",
+      "origem": "FANTASIA",
+      "nome": "BANIR",
+      "estagio": "Veterano",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Itens sagrados",
+        "Símbolos arcanos",
+        "Sal"
+      ],
+      "descricao": "Manda entidades extraplanares de volta. Rolagem resistida de Arcana vs Espírito. Sucesso: Abalado. Ampliação: Ferimento. Se Incapacitado, retorna ao plano nativo.",
+      "modificadores": [
+        {
+          "nome": "Área (Épico)",
+          "custo": "+1/+2/+3",
+          "descricao": "Modelo Pequeno (+1), Médio (+2) ou Grande (+3)."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:ataque",
+        "banimento"
+      ]
+    },
+    {
+      "id": "barreira_fantasia",
+      "origem": "FANTASIA",
+      "nome": "BARREIRA",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Fogo",
+        "Gelo",
+        "Espinhos"
+      ],
+      "descricao": "Cria muro de 5 quadros (comprimento) x 1 (altura). Dureza 10 (12 com ampliação).",
+      "modificadores": [
+        {
+          "nome": "Dano",
+          "custo": "+0/+1",
+          "descricao": "Causa 2d4 de dano ao contato. Custa +0 se for Imaterial."
+        },
+        {
+          "nome": "Endurecida",
+          "custo": "+1",
+          "descricao": "Dureza 12 (14 com ampliação)."
+        },
+        {
+          "nome": "Imaterial",
+          "custo": "0",
+          "descricao": "Dureza 0, indestrutível, fornece ocultação, permite passagem."
+        },
+        {
+          "nome": "Modelada",
+          "custo": "+1",
+          "descricao": "Formas básicas (círculo, quadrado)."
+        },
+        {
+          "nome": "Mortal (Épico)",
+          "custo": "+1/+2",
+          "descricao": "Causa 2d6 de dano. Custa +1 se Imaterial."
+        },
+        {
+          "nome": "Tamanho",
+          "custo": "+1",
+          "descricao": "Dobra comprimento e altura."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:controle",
+        "construção",
+        "defesa"
+      ]
+    },
+    {
+      "id": "bencao",
+      "origem": "FANTASIA",
+      "nome": "BÊNÇÃO",
+      "estagio": "Experiente",
+      "pontosDePoder": 10,
+      "distancia": "Comunidade",
+      "duracao": "Um ano",
+      "manifestacoes": [
+        "Orações",
+        "Festivais"
+      ],
+      "descricao": "Abençoa colheitas, crianças e animais. Requer 1 hora de ritual. Sucesso: colheitas abundantes, saúde, fertilidade. Falha Crítica: impede nova conjuração por um ano.",
+      "modificadores": [],
+      "tags": [
+        "stage:experiente",
+        "tipo:ritual",
+        "narrativo",
+        "buff"
+      ]
+    },
+    {
+      "id": "campo_de_dano_fantasia",
+      "origem": "FANTASIA",
+      "nome": "CAMPO DE DANO",
+      "estagio": "Experiente",
+      "pontosDePoder": 4,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Aura flamejante",
+        "Espinhos",
+        "Eletricidade"
+      ],
+      "descricao": "Cria aura que causa 2d4 de dano a adjacentes no fim do turno.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+2",
+          "descricao": "Estende para Modelo Médio de Explosão."
+        },
+        {
+          "nome": "Melhorado (Épico)",
+          "custo": "+4",
+          "descricao": "Dano 3d6, Arma Pesada."
+        },
+        {
+          "nome": "Dano",
+          "custo": "+2",
+          "descricao": "Dano 2d6."
+        },
+        {
+          "nome": "Móvel",
+          "custo": "+2",
+          "descricao": "Requer Área. Permite mover o campo."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:ataque",
+        "aura",
+        "dano"
+      ]
+    },
+    {
+      "id": "cavar_fantasia",
+      "origem": "FANTASIA",
+      "nome": "CAVAR",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Dissolver na terra"
+      ],
+      "descricao": "Mescla com a terra. Move metade da movimentação (total com ampliação). Pode surpreender (Furtividade vs Perceber) para ganhar Vulnerável/Finalização.",
+      "modificadores": [
+        {
+          "nome": "Poder",
+          "custo": "+1",
+          "descricao": "Cava pedra/concreto."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:movimento",
+        "furtividade"
+      ]
+    },
+    {
+      "id": "cegar_fantasia",
+      "origem": "FANTASIA",
+      "nome": "CEGAR",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Luz",
+        "Areia"
+      ],
+      "descricao": "Penalidade de -2 (-4 com ampliação) em ações visuais. Vítima rola Vigor para remover.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+2/+3",
+          "descricao": "Modelo Médio (+2) ou Grande (+3)."
+        },
+        {
+          "nome": "Forte",
+          "custo": "+1",
+          "descricao": "Resistência com -2."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:debuff",
+        "cegueira"
+      ]
+    },
+    {
+      "id": "confusao_fantasia",
+      "origem": "FANTASIA",
+      "nome": "CONFUSÃO",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Luzes",
+        "Ilusões",
+        "Barulhos"
+      ],
+      "descricao": "Causa Distraído ou Vulnerável (ambos com ampliação) em Modelo Médio.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+0/+1",
+          "descricao": "Modelo Pequeno (0) ou Grande (+1)."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+2",
+          "descricao": "Causa também Abalado."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:debuff",
+        "controle"
+      ]
+    },
+    {
+      "id": "conjurar_aliado_fantasia",
+      "origem": "FANTASIA",
+      "nome": "CONJURAR ALIADO",
+      "estagio": "Novato",
+      "pontosDePoder": "Especial",
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Figura de barro",
+        "Tatuagem"
+      ],
+      "descricao": "Conjura servo. Tipos:\n• Assistente (Novato, 1 PP): Construto, Destemido, Garras For+d4.\n• Guarda-costas (Experiente, 3 PP): Armadura +2, Atacar Primeiro, Pancada For+d6.\n• Sentinela (Veterano, 5 PP): Armadura +4, Tam 2, Resistência Arcana, Varredura Aprimorada, Ataque For+d8.\n• Reflexo Pessoal (Heroico, 7 PP): Clone Extra, perícias d4+.",
+      "modificadores": [
+        {
+          "nome": "Aliados Adicionais (Épico)",
+          "custo": "Varia",
+          "descricao": "Metade do custo para extras."
+        },
+        {
+          "nome": "Aumentar Característica",
+          "custo": "+1",
+          "descricao": "Aumenta atributo/perícia em 1 dado."
+        },
+        {
+          "nome": "Passageiro da Mente",
+          "custo": "+1",
+          "descricao": "Comunicação/sentidos."
+        },
+        {
+          "nome": "Vantagem de Combate",
+          "custo": "+1",
+          "descricao": "Ganha vantagem."
+        },
+        {
+          "nome": "Voo",
+          "custo": "+1",
+          "descricao": "Voa com movimentação base."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:invocação",
+        "minion"
+      ]
+    },
+    {
+      "id": "conjurar_animal",
+      "origem": "FANTASIA",
+      "nome": "CONJURAR ANIMAL",
+      "estagio": "Novato",
+      "pontosDePoder": "Especial",
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Figura de barro",
+        "Tatuagem"
+      ],
+      "descricao": "Canaliza feras naturais. Custo por Estágio/Tamanho. Exemplos:\n• 1 PP: Gato pequeno.\n• 2 PP: Abelha/Aranha/Rato Gigante, Ave de rapina, Cão/Lobo, Mosquito.\n• 3 PP: Carcaju, Cobra (ven/const), Lobo Atroz, Manto sombrio.\n• 4 PP: Cavalo, Formiga/Lagarto Gigante, Javali, Mula, Tubarão.\n• 5 PP: Bando, Cavalo Guerra, Dinossauros, Gárgula, Grifo, Leão, Mantícora, Sapo/Pássaro Gigante, Tigre Sabre.\n• 6 PP: Caranguejo/Hipogrifo/Urso-Coruja, Crocodilo, Elemental, Minotauro, Touro, Tubarão Branco, Urso.\n• 7 PP: Cavador, Dinossauro Herb., Elefante, Escorpião/Polvo Gigante, Rinoceronte, Vulto.\n• 8 PP: Centopeia Gigante, Wyvern.\n• 9 PP: Cobra Gigante.\n• 10 PP: Draco, Elemental Ancião.",
+      "modificadores": [
+        {
+          "nome": "Animais Adicionais (Épico)",
+          "custo": "Varia",
+          "descricao": "Metade do custo para extras."
+        },
+        {
+          "nome": "Aumentar Característica",
+          "custo": "+1",
+          "descricao": "Aumenta atributo/perícia."
+        },
+        {
+          "nome": "Passageiro da Mente",
+          "custo": "+1",
+          "descricao": "Comunicação/sentidos."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:invocação",
+        "animais"
+      ]
+    },
+    {
+      "id": "conjurar_item",
+      "origem": "FANTASIA",
+      "nome": "CONJURAR ITEM",
+      "estagio": "Novato",
+      "pontosDePoder": "2 por 0,5kg",
+      "distancia": "Astúcia",
+      "duracao": "Uma hora",
+      "manifestacoes": [
+        "Luz",
+        "Retirar de desenho",
+        "Moldar argila"
+      ],
+      "descricao": "Cria objeto mundano simples (material comum) de até 0,5kg por 2 PP. Ampliação faz versão durável.",
+      "modificadores": [
+        {
+          "nome": "Completo",
+          "custo": "+1",
+          "descricao": "Conjunto completo (ex: aljava cheia) dentro do peso."
+        },
+        {
+          "nome": "Criar Comida e Água",
+          "custo": "Especial",
+          "descricao": "1 PP sustenta 1 humanoide por 1 dia."
+        },
+        {
+          "nome": "Duradouro",
+          "custo": "+1/0,5kg",
+          "descricao": "Permanente até dissipar. PP ficam investidos."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:criação",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "conjurar_monstro",
+      "origem": "FANTASIA",
+      "nome": "CONJURAR MONSTRO",
+      "estagio": "Novato",
+      "pontosDePoder": "Especial",
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Figura de barro",
+        "Tatuagem"
+      ],
+      "descricao": "Invoca monstros leais. Exemplos de Custo:\n• 3 PP: Duende, Manto Sombrio.\n• 4 PP: Cocatriz, Khazok, Monstro da Ferrugem.\n• 5 PP: Gárgula, Grifo, Mantícora, Perítio, Quimera, Salamandra.\n• 6 PP: Basilisco, Elemental, Hipogrifo, Minotauro, Urso-coruja.\n• 7 PP: Cavador.\n• 8 PP: Wyvern.\n• 10 PP: Draco, Elemental Ancião.",
+      "modificadores": [
+        {
+          "nome": "Aumentar Característica",
+          "custo": "+1",
+          "descricao": "Aumenta atributo/perícia."
+        },
+        {
+          "nome": "Monstros Adicionais (Épico)",
+          "custo": "Varia",
+          "descricao": "Metade do custo para extras."
+        },
+        {
+          "nome": "Passageiro da Mente",
+          "custo": "+1",
+          "descricao": "Comunicação/sentidos."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:invocação",
+        "monstros"
+      ]
+    },
+    {
+      "id": "conjurar_morto_vivo",
+      "origem": "FANTASIA",
+      "nome": "CONJURAR MORTO-VIVO",
+      "estagio": "Novato",
+      "pontosDePoder": "Especial",
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Figura de barro",
+        "Tatuagem"
+      ],
+      "descricao": "Traz mortos-vivos existentes para o local (não cria zumbis novos). Exemplos de Custo:\n• 3 PP: Esqueleto, Zumbi.\n• 4 PP: Fantasma.\n• 5 PP: Carniçal, Esqueleto Gigante, Múmia Guardiã.\n• 6 PP: Esqueleto Flamejante, Esqueleto Multiforme, Guardião do Túmulo, Sombra.\n• 7 PP: Vulto.\n• 8 PP: Lâmina Fantasma.",
+      "modificadores": [
+        {
+          "nome": "Aumentar Característica",
+          "custo": "+1",
+          "descricao": "Aumenta atributo/perícia."
+        },
+        {
+          "nome": "Mortos-Vivos Adicionais (Épico)",
+          "custo": "Varia",
+          "descricao": "Metade do custo para extras."
+        },
+        {
+          "nome": "Passageiro da Mente",
+          "custo": "+1",
+          "descricao": "Comunicação/sentidos."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:invocação",
+        "necromancia",
+        "mortos-vivos"
+      ]
+    },
+    {
+      "id": "crescimento_encolhimento_fantasia",
+      "origem": "FANTASIA",
+      "nome": "CRESCIMENTO/ENCOLHIMENTO",
+      "estagio": "Experiente",
+      "pontosDePoder": "2/ponto",
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Gestos",
+        "Poções"
+      ],
+      "descricao": "Crescimento: Aumenta Tamanho em 1 por 2 PP. Ganha Força (dado) e Resistência (+1) por ponto.\nEncolhimento: Reduz Tamanho em 1 por 2 PP (máx Tam -2). Reduz Força (dado) e Resistência (-1) por ponto.",
+      "modificadores": [
+        {
+          "nome": "Duração (Épico)",
+          "custo": "+2",
+          "descricao": "Duração em minutos."
+        },
+        {
+          "nome": "Poder (Épico)",
+          "custo": "+2",
+          "descricao": "Mantém Força/Resistência normais ao encolher."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:transformação",
+        "tamanho"
+      ]
+    },
+    {
+      "id": "cura_fantasia",
+      "origem": "FANTASIA",
+      "nome": "CURA",
+      "estagio": "Novato",
+      "pontosDePoder": 3,
+      "distancia": "Toque",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Toque",
+        "Oração"
+      ],
+      "descricao": "Remove 1 ferimento (2 com ampliação) recente (<1 hora).",
+      "modificadores": [
+        {
+          "nome": "Cura em Massa (Épico)",
+          "custo": "+2/+3",
+          "descricao": "Modelo Médio (+2) ou Grande (+3)."
+        },
+        {
+          "nome": "Cura Melhorada",
+          "custo": "+10",
+          "descricao": "Cura ferimentos antigos (>1 hora)."
+        },
+        {
+          "nome": "Lesões Debilitantes",
+          "custo": "+20",
+          "descricao": "Cura lesão permanente. Requer 1 hora. Alvo fica Exausto."
+        },
+        {
+          "nome": "Neutralizar Venenos/Doenças",
+          "custo": "+1",
+          "descricao": "Anula veneno ou doença."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:cura",
+        "recuperação"
+      ]
+    },
+    {
+      "id": "dadiva_guerreiro_fantasia",
+      "origem": "FANTASIA",
+      "nome": "DÁDIVA DO GUERREIRO",
+      "estagio": "Experiente",
+      "pontosDePoder": 4,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Gestos",
+        "Prece"
+      ],
+      "descricao": "Concede Vantagem de Combate (requisitos baseados no conjurador). Ampliação: versão Aprimorada.",
+      "modificadores": [
+        {
+          "nome": "Poder (Épico)",
+          "custo": "+4",
+          "descricao": "Concede duas Vantagens."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:buff",
+        "combate"
+      ]
+    },
+    {
+      "id": "deflexao_fantasia",
+      "origem": "FANTASIA",
+      "nome": "DEFLEXÃO",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Escudo",
+        "Vento",
+        "Ilusão"
+      ],
+      "descricao": "Inimigos subtraem 2 de ataques (corpo a corpo ou distância). Ampliação: subtrai de ambos.",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:defesa",
+        "buff"
+      ]
+    },
+    {
+      "id": "desejo",
+      "origem": "FANTASIA",
+      "nome": "DESEJO",
+      "estagio": "Lendário",
+      "pontosDePoder": 20,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Gênio",
+        "Encantamento"
+      ],
+      "descricao": "Altera a realidade. Custo adicional: sacrifica 3 PP permanentes (salvo com ampliação). Efeitos:\n• Ativar Poder (qualquer um, com ampliação).\n• Aumentar Característica (permanente, +1 tipo).\n• Especial (mudança menor, aspecto).\n• Intervenção (ajuda).\n• Ganhar Vantagem (permanente).\n• Restaurar Destino (recupera Benes).\n• Riqueza (10.000 PO).\n• Ver o Futuro (Convicção ou perguntas).\n• Viajar pelo Tempo (reverte rodada ou minuto).",
+      "modificadores": [],
+      "tags": [
+        "stage:lendario",
+        "tipo:milagre",
+        "realidade"
+      ]
+    },
+    {
+      "id": "detectar_ocultar_arcano_fantasia",
+      "origem": "FANTASIA",
+      "nome": "DETECTAR/OCULTAR ARCANO",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5 (detectar); Uma hora (ocultar)",
+      "manifestacoes": [
+        "Aceno",
+        "Sussurros"
+      ],
+      "descricao": "Detectar: Vê sobrenatural/invisível. Ampliação: sabe tipo/fraquezas. Ignora até 4 de penalidade de invisibilidade.\nOcultar: Evita detecção (-2/-4 na rolagem oposta). Custo escala com Tamanho.",
+      "modificadores": [
+        {
+          "nome": "Área (Ocultar)",
+          "custo": "+1/+2",
+          "descricao": "Modelo Médio (+1) ou Grande (+2)."
+        },
+        {
+          "nome": "Forte (Ocultar)",
+          "custo": "+1",
+          "descricao": "Penalidade extra de -2 na detecção."
+        },
+        {
+          "nome": "Identificar",
+          "custo": "+1",
+          "descricao": "Identifica poderes de item (maldições com ampliação)."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Sentir Alinhamento",
+          "custo": "+1",
+          "descricao": "Sente benigno/maligno, ignora linha de visão."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:informação",
+        "furtividade",
+        "meta-magia"
+      ]
+    },
+    {
+      "id": "devastacao_fantasia",
+      "origem": "FANTASIA",
+      "nome": "DEVASTAÇÃO",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Redemoinho",
+        "Repulsão"
+      ],
+      "descricao": "Modelo Médio, Cone ou Raio. Alvos ficam Distraídos e fazem Força (-2 com ampliação) ou são arremessados 2d6 quadros e sofrem 2d4 de dano se baterem.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+1",
+          "descricao": "Modelo Grande."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+2",
+          "descricao": "Arremesso 3d6 quadros, dano de impacto 2d6."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:ataque",
+        "controle",
+        "arremesso"
+      ]
+    },
+    {
+      "id": "disfarce_fantasia",
+      "origem": "FANTASIA",
+      "nome": "DISFARCE",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "10 minutos",
+      "manifestacoes": [
+        "Ilusão",
+        "Traços maleáveis"
+      ],
+      "descricao": "Assume aparência de outro. Perceber -2 (-4 ampliação) para detectar.",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Tamanho",
+          "custo": "+1",
+          "descricao": "Varia tamanho em +/- 2."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:ilusão",
+        "social"
+      ]
+    },
+    {
+      "id": "dissipar_fantasia",
+      "origem": "FANTASIA",
+      "nome": "DISSIPAR",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Aceno",
+        "Sussurros"
+      ],
+      "descricao": "Anula poderes ou itens (resistida por Arcana/Espírito). Ampliação deixa alvo Distraído.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+1/+2/+3",
+          "descricao": "Pequeno/Médio/Grande. Afeta todos na área."
+        },
+        {
+          "nome": "Campo Antimagia (Épico)",
+          "custo": "+8",
+          "descricao": "Modelo Médio, Duração 5. Nega magia na área."
+        },
+        {
+          "nome": "Desencantar (Épico)",
+          "custo": "+1",
+          "descricao": "Anula item mágico por 1 rodada (2 com ampliação)."
+        },
+        {
+          "nome": "Múltiplos Poderes",
+          "custo": "+3",
+          "descricao": "Dissipa todos os poderes ativos."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:meta-magia",
+        "cancelamento"
+      ]
+    },
+    {
+      "id": "drenar_pp_fantasia",
+      "origem": "FANTASIA",
+      "nome": "DRENAR PONTOS DE PODER",
+      "estagio": "Veterano",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Preces",
+        "Gestos"
+      ],
+      "descricao": "Resistida por Espírito. Drena 1d6 PP. Ampliação transfere PP para conjurador.",
+      "modificadores": [
+        {
+          "nome": "Poder",
+          "custo": "+2",
+          "descricao": "Drena 2d6 PP."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:ataque",
+        "meta-magia"
+      ]
+    },
+    {
+      "id": "elo_mental_fantasia",
+      "origem": "FANTASIA",
+      "nome": "ELO MENTAL",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "30 minutos",
+      "manifestacoes": [
+        "Tiaras",
+        "Talismãs"
+      ],
+      "descricao": "Telepatia voluntária. 1,5km (8km ampliação). Dano em um exige Astúcia dos outros para não ficar Abalado.",
+      "modificadores": [
+        {
+          "nome": "Elo de Longa Distância (Épico)",
+          "custo": "+3",
+          "descricao": "Qualquer distância no mesmo plano."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Transmissão (Épico)",
+          "custo": "+2",
+          "descricao": "Transmite para todos na área (Astúcia x4/x8)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:comunicação",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "empatia_fantasia",
+      "origem": "FANTASIA",
+      "nome": "EMPATIA",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Concentração"
+      ],
+      "descricao": "+1 (+2 ampliação) em perícias sociais contra o alvo.",
+      "modificadores": [
+        {
+          "nome": "Duração",
+          "custo": "+1",
+          "descricao": "Minutos."
+        },
+        {
+          "nome": "Encantar",
+          "custo": "+2",
+          "descricao": "Melhora atitude do alvo."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Verdade (Épico)",
+          "custo": "+2",
+          "descricao": "Detecta mentiras."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:social",
+        "buff"
+      ]
+    },
+    {
+      "id": "enredar_fantasia",
+      "origem": "FANTASIA",
+      "nome": "ENREDAR",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Vinhas",
+        "Teias",
+        "Gelo"
+      ],
+      "descricao": "Deixa Enredado (Preso com ampliação). Dureza 8.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+2/+3",
+          "descricao": "Modelo Médio/Grande."
+        },
+        {
+          "nome": "Dano",
+          "custo": "+2",
+          "descricao": "2d4 dano/turno."
+        },
+        {
+          "nome": "Forte",
+          "custo": "+2",
+          "descricao": "Dureza 10."
+        },
+        {
+          "nome": "Mortal (Épico)",
+          "custo": "+4",
+          "descricao": "2d6 dano/turno."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:controle",
+        "imobilização"
+      ]
+    },
+    {
+      "id": "explosao_fantasia",
+      "origem": "FANTASIA",
+      "nome": "EXPLOSÃO",
+      "estagio": "Experiente",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia x2",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Bola de fogo",
+        "Gelo",
+        "Energia"
+      ],
+      "descricao": "Modelo Médio. 2d6 dano (3d6 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+0/+1",
+          "descricao": "Pequeno/Grande."
+        },
+        {
+          "nome": "Dano",
+          "custo": "+2",
+          "descricao": "3d6 dano (4d6 ampliação)."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+4",
+          "descricao": "4d6 dano, Arma Pesada."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:ataque",
+        "dano",
+        "área"
+      ]
+    },
+    {
+      "id": "falar_idioma_fantasia",
+      "origem": "FANTASIA",
+      "nome": "FALAR IDIOMA",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "10 minutos",
+      "manifestacoes": [
+        "Palavras",
+        "Gestos"
+      ],
+      "descricao": "Fala/lê/escreve idioma. Ampliação: gírias/dialetos.",
+      "modificadores": [
+        {
+          "nome": "Entendimento em Massa (Épico)",
+          "custo": "+5",
+          "descricao": "Todos em Astúcia x2 se entendem."
+        },
+        {
+          "nome": "Melhorado (Épico)",
+          "custo": "+2",
+          "descricao": "Todos os idiomas de uma vez."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:social",
+        "comunicação"
+      ]
+    },
+    {
+      "id": "fantoche_fantasia",
+      "origem": "FANTASIA",
+      "nome": "FANTOCHE",
+      "estagio": "Veterano",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Olhos brilhantes",
+        "Bonecos"
+      ],
+      "descricao": "Controle mental. Resistida por Espírito. Ordens suicidas permitem nova resistência.",
+      "modificadores": [
+        {
+          "nome": "Forte",
+          "custo": "+2",
+          "descricao": "Resistência com -2. Elo Mental permite alcance infinito."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+2",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:controle",
+        "mental"
+      ]
+    },
+    {
+      "id": "ferir_fantasia",
+      "origem": "FANTASIA",
+      "nome": "FERIR",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Brilho",
+        "Runas"
+      ],
+      "descricao": "Aumenta dano da arma em +2 (+4 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outras armas."
+        },
+        {
+          "nome": "Melhorado (Épico)",
+          "custo": "+2",
+          "descricao": "+4 dano (+6 ampliação), Arma Pesada."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:buff",
+        "ataque"
+      ]
+    },
+    {
+      "id": "iluminar_obscurecer_fantasia",
+      "origem": "FANTASIA",
+      "nome": "ILUMINAR/OBSCURECER",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "10 minutos",
+      "manifestacoes": [
+        "Luz",
+        "Escuridão"
+      ],
+      "descricao": "Iluminar: Modelo Grande de luz. Obscurecer: Modelo Grande de Escuridão.",
+      "modificadores": [
+        {
+          "nome": "Área (Épico)",
+          "custo": "+2",
+          "descricao": "Raio = Astúcia. Luz solar natural."
+        },
+        {
+          "nome": "Brilhar",
+          "custo": "+1",
+          "descricao": "Alvo brilha, reduz penalidade de iluminação/invisibilidade."
+        },
+        {
+          "nome": "Melhorado (Épico)",
+          "custo": "+2",
+          "descricao": "Obscurecer bloqueia infravisão/visão no escuro."
+        },
+        {
+          "nome": "Móvel",
+          "custo": "+1",
+          "descricao": "Move o efeito."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:ambiente",
+        "luz",
+        "trevas"
+      ]
+    },
+    {
+      "id": "ilusao_fantasia",
+      "origem": "FANTASIA",
+      "nome": "ILUSÃO",
+      "estagio": "Novato",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Hologramas",
+        "Feitiços"
+      ],
+      "descricao": "Cria imagem visual. Astúcia para desacreditar (-2 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+1",
+          "descricao": "Modelo Grande."
+        },
+        {
+          "nome": "Duração (Épico)",
+          "custo": "+2",
+          "descricao": "Minutos."
+        },
+        {
+          "nome": "Forte",
+          "custo": "+2",
+          "descricao": "Desacreditar com -2."
+        },
+        {
+          "nome": "Mortal (Épico)",
+          "custo": "+3",
+          "descricao": "Ilusão ataca (dano Abalado/Ferimento)."
+        },
+        {
+          "nome": "Mobilidade",
+          "custo": "+1/+2",
+          "descricao": "Move/Voa."
+        },
+        {
+          "nome": "Som",
+          "custo": "+1",
+          "descricao": "Gera som."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:ilusão",
+        "engano"
+      ]
+    },
+    {
+      "id": "intangibilidade_fantasia",
+      "origem": "FANTASIA",
+      "nome": "INTANGIBILIDADE",
+      "estagio": "Veterano",
+      "pontosDePoder": 5,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Fantasma",
+        "Fumaça"
+      ],
+      "descricao": "Fica incorpóreo. Atravessa paredes, imune a não-mágico.",
+      "modificadores": [
+        {
+          "nome": "Duração (Épico)",
+          "custo": "+3",
+          "descricao": "Minutos."
+        },
+        {
+          "nome": "Receptores Adicionais (Épico)",
+          "custo": "+3",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:defesa",
+        "movimento"
+      ]
+    },
+    {
+      "id": "intervencao_mistica",
+      "origem": "FANTASIA",
+      "nome": "INTERVENÇÃO MÍSTICA",
+      "estagio": "Lendário",
+      "pontosDePoder": 20,
+      "distancia": "Especial",
+      "duracao": "Especial",
+      "manifestacoes": [
+        "Ritual",
+        "Milagre"
+      ],
+      "descricao": "Solicita intervenção direta de patrono para evento épico (terremoto, ressurreição em massa). Conjurador fica Exausto por 5 dias.",
+      "modificadores": [],
+      "tags": [
+        "stage:lendario",
+        "tipo:milagre",
+        "narrativo"
+      ]
+    },
+    {
+      "id": "invisibilidade_fantasia",
+      "origem": "FANTASIA",
+      "nome": "INVISIBILIDADE",
+      "estagio": "Experiente",
+      "pontosDePoder": 5,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Pó",
+        "Luzes"
+      ],
+      "descricao": "Transparente. -4 para ser atingido (-6 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Duração (Épico)",
+          "custo": "+2",
+          "descricao": "Minutos."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+3",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:furtividade",
+        "defesa"
+      ]
+    },
+    {
+      "id": "leitura_objeto_fantasia",
+      "origem": "FANTASIA",
+      "nome": "LEITURA DE OBJETO",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Toque",
+      "duracao": "Um minuto",
+      "manifestacoes": [
+        "Toque"
+      ],
+      "descricao": "Vê passado do objeto.",
+      "modificadores": [
+        {
+          "nome": "Projeção (Épico)",
+          "custo": "+2",
+          "descricao": "Projeta a visão para todos verem."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:informação",
+        "investigação"
+      ]
+    },
+    {
+      "id": "leitura_mental_fantasia",
+      "origem": "FANTASIA",
+      "nome": "LEITURA MENTAL",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Invasão psiônica"
+      ],
+      "descricao": "Resistida por Astúcia. Lê pensamento superficial.",
+      "modificadores": [
+        {
+          "nome": "Andarilho da Mente (Épico)",
+          "custo": "+2",
+          "descricao": "Acesso maior a memórias/cenas."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:informação",
+        "mental"
+      ]
+    },
+    {
+      "id": "limpeza_mental_fantasia",
+      "origem": "FANTASIA",
+      "nome": "LIMPEZA MENTAL",
+      "estagio": "Veterano",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Bebida",
+        "Toque"
+      ],
+      "descricao": "Remove memórias. Resistida por Astúcia. 1 minuto de preparação.",
+      "modificadores": [
+        {
+          "nome": "Conjuração Rápida",
+          "custo": "+2",
+          "descricao": "Ação padrão."
+        },
+        {
+          "nome": "Editar",
+          "custo": "+1",
+          "descricao": "Altera memória em vez de apagar."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+2",
+          "descricao": "Remove completamente pessoa/evento."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:mental",
+        "ataque"
+      ]
+    },
+    {
+      "id": "localizar_fantasia",
+      "origem": "FANTASIA",
+      "nome": "LOCALIZAR",
+      "estagio": "Novato",
+      "pontosDePoder": 3,
+      "distancia": "Pessoal",
+      "duracao": "10 minutos",
+      "manifestacoes": [
+        "Cristal",
+        "Bússola"
+      ],
+      "descricao": "Encontra direção/distância de objeto/criatura. Água corrente bloqueia.",
+      "modificadores": [
+        {
+          "nome": "Encontrar o Caminho",
+          "custo": "+1",
+          "descricao": "Mostra melhor caminho."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:informação",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "maldicao_fantasia",
+      "origem": "FANTASIA",
+      "nome": "MALDIÇÃO",
+      "estagio": "Experiente",
+      "pontosDePoder": 5,
+      "distancia": "Toque",
+      "duracao": "Especial",
+      "manifestacoes": [
+        "Efígie",
+        "Palavras"
+      ],
+      "descricao": "Causa Fadiga diária até a morte. Resistida por Espírito.",
+      "modificadores": [
+        {
+          "nome": "Transformar em Pedra (Épico)",
+          "custo": "+5",
+          "descricao": "Transforma vítima em pedra ao incapacitar."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:ataque",
+        "debuff"
+      ]
+    },
+    {
+      "id": "manipulacao_elemental_fantasia",
+      "origem": "FANTASIA",
+      "nome": "MANIPULAÇÃO ELEMENTAL",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Gestos"
+      ],
+      "descricao": "Controla elementos. Efeitos: Atacar (2d4), Efeitos Especiais, Empurrar, Mover.",
+      "modificadores": [
+        {
+          "nome": "Poder (Épico)",
+          "custo": "+3",
+          "descricao": "Volume triplicado, dano 2d6, empurrar -2."
+        },
+        {
+          "nome": "Clima (Épico)",
+          "custo": "+5",
+          "descricao": "Controla clima em 8km."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:controle",
+        "elemental"
+      ]
+    },
+    {
+      "id": "medo_fantasia",
+      "origem": "FANTASIA",
+      "nome": "MEDO",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Calafrios",
+        "Energia"
+      ],
+      "descricao": "Causa teste de Medo. Ampliação: -2.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+2/+3",
+          "descricao": "Modelo Médio/Grande."
+        },
+        {
+          "nome": "Melhorado (Épico)",
+          "custo": "+2",
+          "descricao": "Teste com -2 (-4 ampliação)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:debuff",
+        "medo"
+      ]
+    },
+    {
+      "id": "morosidade_velocidade_fantasia",
+      "origem": "FANTASIA",
+      "nome": "MOROSIDADE/VELOCIDADE",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea (morosidade); 5 (velocidade)",
+      "manifestacoes": [
+        "Tempo",
+        "Borrão"
+      ],
+      "descricao": "Morosidade: Metade Movimentação. Velocidade: Dobro Movimentação.",
+      "modificadores": [
+        {
+          "nome": "Área (Morosidade)",
+          "custo": "+2/+3",
+          "descricao": "Modelo Médio/Grande."
+        },
+        {
+          "nome": "Disparada",
+          "custo": "+2",
+          "descricao": "Corrida máxima."
+        },
+        {
+          "nome": "Forte (Morosidade)",
+          "custo": "+1",
+          "descricao": "Resistência com -2."
+        },
+        {
+          "nome": "Rapidez",
+          "custo": "+2",
+          "descricao": "Reduz penalidade de multi-ação em 2."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:buff",
+        "tipo:debuff",
+        "movimento"
+      ]
+    },
+    {
+      "id": "mudanca_de_forma_fantasia",
+      "origem": "FANTASIA",
+      "nome": "MUDANÇA DE FORMA",
+      "estagio": "Novato",
+      "pontosDePoder": "Especial",
+      "distancia": "Pessoal",
+      "duracao": "5",
+      "manifestacoes": [
+        "Morfar"
+      ],
+      "descricao": "Assume forma de criatura. Custo por Tamanho. Novato (3 PP, Tam -4 a -1), Experiente (5 PP, Tam 0), etc.",
+      "modificadores": [
+        {
+          "nome": "Duração",
+          "custo": "+1",
+          "descricao": "Minutos."
+        },
+        {
+          "nome": "Polimorfia (Épico)",
+          "custo": "+3",
+          "descricao": "Transforma outros (toque, resistido)."
+        },
+        {
+          "nome": "Transformar (Épico)",
+          "custo": "+2/+3",
+          "descricao": "Afeta voluntário (Toque/Distância)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:transformação",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "parar_o_tempo",
+      "origem": "FANTASIA",
+      "nome": "PARAR O TEMPO",
+      "estagio": "Heroico",
+      "pontosDePoder": 10,
+      "distancia": "Pessoal",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Ampulheta"
+      ],
+      "descricao": "Ganha 1d4+1 turnos extras imediatamente. Termina se afetar outros.",
+      "modificadores": [],
+      "tags": [
+        "stage:heroico",
+        "tipo:tempo",
+        "ação extra"
+      ]
+    },
+    {
+      "id": "protecao_fantasia",
+      "origem": "FANTASIA",
+      "nome": "PROTEÇÃO",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Brilho",
+        "Pele dura"
+      ],
+      "descricao": "+2 Armadura (+2 Resistência com ampliação).",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:buff",
+        "defesa"
+      ]
+    },
+    {
+      "id": "protecao_arcana_fantasia",
+      "origem": "FANTASIA",
+      "nome": "PROTEÇÃO ARCANA",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Brilho opaco"
+      ],
+      "descricao": "Poderes hostis sofrem -2 (-4 ampliação) para afetar alvo. Reduz dano igual.",
+      "modificadores": [
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+2",
+          "descricao": "Penalidade aumenta para -4 (-6 ampliação)."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:buff",
+        "defesa mágica"
+      ]
+    },
+    {
+      "id": "protecao_ambiental_fantasia",
+      "origem": "FANTASIA",
+      "nome": "PROTEÇÃO AMBIENTAL",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Uma hora",
+      "manifestacoes": [
+        "Marca",
+        "Guelras"
+      ],
+      "descricao": "Protege contra ambiente (frio, calor, pressão, falta de ar).",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Resistência Ambiental",
+          "custo": "+1",
+          "descricao": "Reduz dano de energia em 4 (6 ampliação)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:buff",
+        "sobrevivência"
+      ]
+    },
+    {
+      "id": "raio_fantasia",
+      "origem": "FANTASIA",
+      "nome": "RAIO",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia x2",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Fogo",
+        "Gelo",
+        "Energia"
+      ],
+      "descricao": "Ataque à distância. Dano 2d6 (3d6 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Cadência de Tiro (Épico)",
+          "custo": "+2",
+          "descricao": "CdT 2."
+        },
+        {
+          "nome": "Dano",
+          "custo": "+2",
+          "descricao": "Dano 3d6 (4d6 ampliação)."
+        },
+        {
+          "nome": "Desintegrar (Épico)",
+          "custo": "+2",
+          "descricao": "Incapacitado vira pó (Vigor). Dano extra em objetos."
+        },
+        {
+          "nome": "Melhorado (Épico)",
+          "custo": "+4",
+          "descricao": "Dano 4d6, Arma Pesada."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:ataque",
+        "dano"
+      ]
+    },
+    {
+      "id": "rajada_fantasia",
+      "origem": "FANTASIA",
+      "nome": "RAJADA",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Cone/Raio",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Fogo",
+        "Gelo"
+      ],
+      "descricao": "Cone ou Raio. Dano 2d6 (3d6 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Dano",
+          "custo": "+2",
+          "descricao": "Dano 3d6."
+        },
+        {
+          "nome": "Empurrar",
+          "custo": "+1",
+          "descricao": "Empurra alvos."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+4",
+          "descricao": "Dano 4d6, Arma Pesada."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:ataque",
+        "área"
+      ]
+    },
+    {
+      "id": "ressurreicao_fantasia",
+      "origem": "FANTASIA",
+      "nome": "RESSURREIÇÃO",
+      "estagio": "Heroico",
+      "pontosDePoder": 30,
+      "distancia": "Toque",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Cerimônia",
+        "Amuletos"
+      ],
+      "descricao": "Traz morto à vida (<1 ano). -4 na rolagem. Volta com 3 ferimentos e exausto.",
+      "modificadores": [
+        {
+          "nome": "Poder",
+          "custo": "+5",
+          "descricao": "Até uma década."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+10",
+          "descricao": "Qualquer tempo, sem corpo. 12h de ritual."
+        }
+      ],
+      "tags": [
+        "stage:heroico",
+        "tipo:cura",
+        "milagre"
+      ]
+    },
+    {
+      "id": "santuario_fantasia",
+      "origem": "FANTASIA",
+      "nome": "SANTUÁRIO",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Toque",
+      "duracao": "5",
+      "manifestacoes": [
+        "Luz",
+        "Símbolo sagrado"
+      ],
+      "descricao": "Inimigos devem testar Espírito para atacar o protegido. Termina se protegido atacar.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+2/+3",
+          "descricao": "Modelo Médio/Grande."
+        },
+        {
+          "nome": "Forte (Épico)",
+          "custo": "+1",
+          "descricao": "Teste com -2 (-4 ampliação)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:defesa",
+        "proteção"
+      ]
+    },
+    {
+      "id": "som_silencio_fantasia",
+      "origem": "FANTASIA",
+      "nome": "SOM/SILÊNCIO",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Varia",
+      "duracao": "Instantânea/5",
+      "manifestacoes": [
+        "Ondulação",
+        "Efeitos"
+      ],
+      "descricao": "Som: cria som ilusório. Silêncio: abafa som em Modelo Grande (-4 Perceber).",
+      "modificadores": [
+        {
+          "nome": "Berro (Épico)",
+          "custo": "+1",
+          "descricao": "Voz ecoa 1km. +2 Intimidar."
+        },
+        {
+          "nome": "Mirado",
+          "custo": "+1",
+          "descricao": "Silencia indivíduo."
+        },
+        {
+          "nome": "Móvel",
+          "custo": "+1",
+          "descricao": "Move área."
+        },
+        {
+          "nome": "Melhorado (Épico)",
+          "custo": "+1",
+          "descricao": "Resistência com -2."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:ilusão",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "sono_fantasia",
+      "origem": "FANTASIA",
+      "nome": "SONO",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Uma hora",
+      "manifestacoes": [
+        "Canção",
+        "Pó"
+      ],
+      "descricao": "Causa sono. Resistido por Espírito.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+2/+3",
+          "descricao": "Modelo Médio/Grande."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:debuff",
+        "controle"
+      ]
+    },
+    {
+      "id": "telecinese_fantasia",
+      "origem": "FANTASIA",
+      "nome": "TELECINESE",
+      "estagio": "Experiente",
+      "pontosDePoder": 5,
+      "distancia": "Astúcia x2",
+      "duracao": "5",
+      "manifestacoes": [
+        "Aceno",
+        "Olhar"
+      ],
+      "descricao": "Move objetos (Força d10). Arremessar (For+d6), Manipular, Mover.",
+      "modificadores": [
+        {
+          "nome": "Poder (Épico)",
+          "custo": "+3",
+          "descricao": "Força d12. Arremesso For+d8. Arma Pesada."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:controle",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "teleporte_fantasia",
+      "origem": "FANTASIA",
+      "nome": "TELEPORTE",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Fumaça",
+        "Luz"
+      ],
+      "descricao": "Teleporta 12 quadros (24 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Portal (Épico)",
+          "custo": "+5",
+          "descricao": "Abre portal por 5 rodadas."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Teleportar Inimigo (Épico)",
+          "custo": "+2",
+          "descricao": "Ataque de toque para teleportar inimigo."
+        },
+        {
+          "nome": "Melhorado (Épico)",
+          "custo": "+5",
+          "descricao": "Alcance de quilômetros ou mundial."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:movimento",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "trancar_destrancar_fantasia",
+      "origem": "FANTASIA",
+      "nome": "TRANCAR/DESTRANCAR",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "Permanente / Instantânea",
+      "manifestacoes": [
+        "Chave mestra"
+      ],
+      "descricao": "Trancar: Sela objeto (-4 para abrir). Destrancar: Abre (+4 bônus).",
+      "modificadores": [
+        {
+          "nome": "Alerta",
+          "custo": "+1",
+          "descricao": "Avisa se for aberto."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:utilitário",
+        "segurança"
+      ]
+    },
+    {
+      "id": "viagem_planar",
+      "origem": "FANTASIA",
+      "nome": "VIAGEM PLANAR",
+      "estagio": "Veterano",
+      "pontosDePoder": 4,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Buraco cósmico",
+        "Runas"
+      ],
+      "descricao": "Move para outro plano.",
+      "modificadores": [
+        {
+          "nome": "Espaço Extradimensional (Épico)",
+          "custo": "+1",
+          "descricao": "Cria abrigo em dimensão de bolso."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Transportar Inimigo (Épico)",
+          "custo": "+2",
+          "descricao": "Bane inimigo temporariamente."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:movimento",
+        "extraplanar"
+      ]
+    },
+    {
+      "id": "videncia_fantasia",
+      "origem": "FANTASIA",
+      "nome": "VIDÊNCIA",
+      "estagio": "Experiente",
+      "pontosDePoder": 3,
+      "distancia": "Pessoal",
+      "duracao": "5",
+      "manifestacoes": [
+        "Bola de cristal",
+        "Espelho"
+      ],
+      "descricao": "Espia alvo distante. Resistida por Espírito. Requer 1 min preparação.",
+      "modificadores": [
+        {
+          "nome": "Visão em Grupo",
+          "custo": "+1",
+          "descricao": "Compartilha com aliados."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:informação",
+        "espionagem"
+      ]
+    },
+    {
+      "id": "visao_distante_fantasia",
+      "origem": "FANTASIA",
+      "nome": "VISÃO DISTANTE",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Olhos de águia"
+      ],
+      "descricao": "Vê detalhes a 1km. Reduz penalidade de distância.",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+2",
+          "descricao": "Ignora penalidade de distância."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:percepção",
+        "buff"
+      ]
+    },
+    {
+      "id": "visao_sombria_fantasia",
+      "origem": "FANTASIA",
+      "nome": "VISÃO SOMBRIA",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "Uma hora",
+      "manifestacoes": [
+        "Olhos brilhantes"
+      ],
+      "descricao": "Reduz penalidade de iluminação em 4 (6 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Melhorada (Épico)",
+          "custo": "+2",
+          "descricao": "Ignora pen. iluminação e 4 pontos de invisibilidade."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:percepção",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "voar_fantasia",
+      "origem": "FANTASIA",
+      "nome": "VOAR",
+      "estagio": "Veterano",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Vento",
+        "Asas"
+      ],
+      "descricao": "Voo Movimentação 12 (24 ampliação).",
+      "modificadores": [
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+2",
+          "descricao": "Afeta outros."
+        },
+        {
+          "nome": "Voo Veloz",
+          "custo": "+5",
+          "descricao": "Movimentação 24 (48 ampliação)."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:movimento",
+        "voo"
+      ]
+    },
+    {
+      "id": "zumbi_fantasia",
+      "origem": "FANTASIA",
+      "nome": "ZUMBI",
+      "estagio": "Veterano",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia",
+      "duracao": "Uma hora",
+      "manifestacoes": [
+        "Símbolos",
+        "Ossos"
+      ],
+      "descricao": "Anima cadáver. Obediente, não telepático.",
+      "modificadores": [
+        {
+          "nome": "Arma e Armadura",
+          "custo": "+1/Zumbi",
+          "descricao": "Armadura +2 e arma."
+        },
+        {
+          "nome": "Esquelético",
+          "custo": "+1/Zumbi",
+          "descricao": "Usa perfil de Esqueleto."
+        },
+        {
+          "nome": "Passageiro da Mente",
+          "custo": "+1",
+          "descricao": "Comunicação."
+        },
+        {
+          "nome": "Permanente",
+          "custo": "0",
+          "descricao": "Dura até ser destruído. PP investido."
+        },
+        {
+          "nome": "Zumbis Adicionais",
+          "custo": "+1",
+          "descricao": "Cria horda."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:necromancia",
+        "minion"
+      ]
+    },
+    {
+      "id": "aperto_telecinetico",
+      "origem": "SCIFI",
+      "nome": "APERTO TELECINÉTICO",
+      "estagio": "Experiente",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia x2",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Aceno de mão",
+        "Gesto de beliscar",
+        "Sufocar"
+      ],
+      "descricao": "Ataque telecinético em órgãos internos. Rolagem resistida de Perícia Arcana (-2) vs Vigor do alvo. Sucesso causa 2d10 de dano que ignora armadura (exceto arcana). Ampliação adiciona +1d6. Não afeta mortos-vivos, construtos ou criaturas sem biologia.",
+      "modificadores": [],
+      "tags": [
+        "stage:experiente",
+        "tipo:ataque",
+        "psionico",
+        "dano direto"
+      ]
+    },
+    {
+      "id": "buraco_negro",
+      "origem": "SCIFI",
+      "nome": "BURACO NEGRO",
+      "estagio": "Veterano",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia x2",
+      "duracao": "5",
+      "manifestacoes": [
+        "Poço de energia negra rodopiante"
+      ],
+      "descricao": "Cria um Modelo Grande de Explosão que atrai tudo. Itens soltos são sugados. Seres sencientes rolam Força (-2 com ampliação na conjuração) ou são puxados d6 quadros para o centro e sofrem 2d6 de dano (ignora armadura não-mágica). Nas rodadas seguintes, rolam Força para se mover ou são puxados novamente.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+3",
+          "descricao": "Raio aumenta para 10 quadros (20m) e dano aumenta para 3d6."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:controle",
+        "gravidade",
+        "área"
+      ]
+    },
+    {
+      "id": "conjurar_aliado_scifi",
+      "origem": "SCIFI",
+      "nome": "CONJURAR ALIADO (SCIFI)",
+      "estagio": "Novato",
+      "pontosDePoder": "Especial",
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Figura de barro",
+        "Tatuagem",
+        "Nanotecnologia"
+      ],
+      "descricao": "Conjura um servo mágico ou tecnológico. Custo depende do tipo:\n• Assistente (Novato, 1 PP): Construto, Destemido, Garras (For+d4).\n• Guarda-costas (Experiente, 3 PP): Armadura +2, Construto, Destemido, Atacar Primeiro, Ataque (For+d6).\n• Sentinela (Veterano, 5 PP): Armadura +4, Tam 2, Construto, Destemido, Resistência Arcana, Varredura Aprimorada, Ataque (For+d8).\n• Reflexo Pessoal (Heroico, 7 PP): Clone Extra do conjurador, perícias um dado menor.",
+      "modificadores": [
+        {
+          "nome": "Aliados Adicionais",
+          "custo": "Varia",
+          "descricao": "Metade do custo para aliados extras do mesmo tipo."
+        },
+        {
+          "nome": "Característica Aprimorada",
+          "custo": "+1",
+          "descricao": "Aumenta um atributo ou perícia em 1 dado."
+        },
+        {
+          "nome": "Vantagem de Combate",
+          "custo": "+1",
+          "descricao": "Aliado ganha uma Vantagem de Combate."
+        },
+        {
+          "nome": "Voo",
+          "custo": "+1",
+          "descricao": "Aliado pode voar."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:invocação",
+        "minion",
+        "robô"
+      ]
+    },
+    {
+      "id": "contra_ataque_mental",
+      "origem": "SCIFI",
+      "nome": "CONTRA-ATAQUE MENTAL",
+      "estagio": "Experiente",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia x2",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Aceno de mão",
+        "Olhar penetrante"
+      ],
+      "descricao": "Ataca o controlador de um aliado (ex: alguém usando Fantoche). O psionista escolhe uma vítima de controle mental e rola Psiônicos. Sucesso causa 3d6 de dano (4d6 com ampliação) no controlador. Apenas armadura arcana protege.",
+      "modificadores": [],
+      "tags": [
+        "stage:experiente",
+        "tipo:ataque",
+        "psionico",
+        "anti-controle"
+      ]
+    },
+    {
+      "id": "controlar_maquina",
+      "origem": "SCIFI",
+      "nome": "CONTROLAR MÁQUINA",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Visão",
+      "duracao": "Uma hora",
+      "manifestacoes": [
+        "Nanotecnologia",
+        "Hacker sem fio"
+      ],
+      "descricao": "Assume controle de máquina complexa (veículo, computador, linha de montagem). Operador original pode resistir com Eletrônica/Hackear/Consertar (-2 com ampliação na conjuração) como ação limitada. Caster usa suas próprias perícias para operar.",
+      "modificadores": [],
+      "tags": [
+        "stage:novato",
+        "tipo:controle",
+        "tecnológico",
+        "hacker"
+      ]
+    },
+    {
+      "id": "criar_item",
+      "origem": "SCIFI",
+      "nome": "CRIAR ITEM",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Uma hora",
+      "manifestacoes": [
+        "Luz sólida",
+        "Nanotecnologia"
+      ],
+      "descricao": "Cria objeto simples de Tamanho 0 (ferramenta, arma, escada). Dureza 8. Ampliação dobra duração ou dá +4 Dureza.",
+      "modificadores": [
+        {
+          "nome": "Completo",
+          "custo": "+1",
+          "descricao": "Conjunto com várias peças (ex: xadrez, aljava)."
+        },
+        {
+          "nome": "Máquina",
+          "custo": "+2",
+          "descricao": "Máquina funcional (Dev I) com peças móveis (arma de fogo, drone). +2 PP extras se precisar de combustível."
+        },
+        {
+          "nome": "Tamanho Aumentado",
+          "custo": "+3/tam",
+          "descricao": "Aumenta tamanho máximo em +1 (até Tam 3)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:criação",
+        "utilitário",
+        "luz sólida"
+      ]
+    },
+    {
+      "id": "curto_circuito",
+      "origem": "SCIFI",
+      "nome": "CURTO-CIRCUITO",
+      "estagio": "Novato",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Nanotecnologia",
+        "Hacker sem fio"
+      ],
+      "descricao": "Modelo Médio. Sabota dispositivos mecânicos/eletrônicos. Rolagens usando esses itens sofrem -2 (-4 com ampliação). Pode mover o modelo 12 quadros como ação limitada.",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+2",
+          "descricao": "Modelo Grande de Explosão."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:debuff",
+        "tecnológico",
+        "sabotagem"
+      ]
+    },
+    {
+      "id": "fantasma_na_maquina",
+      "origem": "SCIFI",
+      "nome": "FANTASMA NA MÁQUINA",
+      "estagio": "Veterano",
+      "pontosDePoder": 3,
+      "distancia": "Visão",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Nanotecnologia",
+        "Hacker sem fio"
+      ],
+      "descricao": "Causa um Acerto Crítico imediato em um veículo (Casco/Tripulação deixam Distraído). Ampliação: Operador deve fazer rolagem de manobra ou fica Fora de Controle.",
+      "modificadores": [
+        {
+          "nome": "Selecionar",
+          "custo": "+3",
+          "descricao": "O conjurador escolhe o resultado do Acerto Crítico."
+        }
+      ],
+      "tags": [
+        "stage:veterano",
+        "tipo:ataque",
+        "veículos",
+        "tecnológico"
+      ]
+    },
+    {
+      "id": "gravidade",
+      "origem": "SCIFI",
+      "nome": "GRAVIDADE",
+      "estagio": "Novato",
+      "pontosDePoder": 3,
+      "distancia": "Astúcia",
+      "duracao": "5",
+      "manifestacoes": [
+        "Energia negra rodopiante"
+      ],
+      "descricao": "Modelo Grande de Explosão. Aumenta ou reduz a gravidade na área em um nível (dois com ampliação).",
+      "modificadores": [
+        {
+          "nome": "Área",
+          "custo": "+3",
+          "descricao": "Estende para 25 quadros (50m) de raio."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:ambiente",
+        "controle",
+        "gravidade"
+      ]
+    },
+    {
+      "id": "leitura_de_objeto_scifi",
+      "origem": "SCIFI",
+      "nome": "LEITURA DE OBJETO",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Toque",
+      "duracao": "Um minuto",
+      "manifestacoes": [
+        "Mãos brilhantes",
+        "Toque"
+      ],
+      "descricao": "Permite ver o passado de um objeto inanimado. Sucesso: impressão vaga. Ampliação: informações específicas.",
+      "modificadores": [
+        {
+          "nome": "Projeção",
+          "custo": "+2",
+          "descricao": "Projeta a visão como um holograma visível a todos."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:informação",
+        "psionico",
+        "investigação"
+      ]
+    },
+    {
+      "id": "localizar_scifi",
+      "origem": "SCIFI",
+      "nome": "LOCALIZAR",
+      "estagio": "Novato",
+      "pontosDePoder": 3,
+      "distancia": "Pessoal",
+      "duracao": "10 minutos",
+      "manifestacoes": [
+        "Cristal flutuante",
+        "Mensagem nas nuvens"
+      ],
+      "descricao": "Encontra objeto, ser ou localização. -2 na rolagem se nunca viu o alvo. Sucesso: direção e distância. Ampliação: impressão do contexto (ex: está dormindo).",
+      "modificadores": [],
+      "tags": [
+        "stage:novato",
+        "tipo:informação",
+        "adivinhação"
+      ]
+    },
+    {
+      "id": "mudanca_de_forma_scifi",
+      "origem": "SCIFI",
+      "nome": "MUDANÇA DE FORMA",
+      "estagio": "Novato",
+      "pontosDePoder": "Especial",
+      "distancia": "Pessoal",
+      "duracao": "5",
+      "manifestacoes": [
+        "Morfar",
+        "Nanotecnologia"
+      ],
+      "descricao": "Assume forma de criatura viva. Custo baseado no Tamanho (-4 a 10). Mantém atributos mentais, ganha físicos e poderes naturais. Equipamento absorvido.",
+      "modificadores": [
+        {
+          "nome": "Duração",
+          "custo": "+1",
+          "descricao": "Duração em minutos."
+        },
+        {
+          "nome": "Polimorfia",
+          "custo": "+3",
+          "descricao": "Transforma outro ser vivo (Toque, resistido por Espírito)."
+        },
+        {
+          "nome": "Transformar",
+          "custo": "+2/+3",
+          "descricao": "Afeta alvo voluntário (Toque +2 / Astúcia +3)."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:transformação",
+        "biológico"
+      ]
+    },
+    {
+      "id": "parar_o_tempo_scifi",
+      "origem": "SCIFI",
+      "nome": "PARAR O TEMPO",
+      "estagio": "Heroico",
+      "pontosDePoder": 10,
+      "distancia": "Pessoal",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Ampulheta brilhante",
+        "Borrão"
+      ],
+      "descricao": "Ganha 1d4+1 turnos extras imediatamente. Caster age normalmente. Se afetar outra criatura, o efeito termina.",
+      "modificadores": [],
+      "tags": [
+        "stage:heroico",
+        "tipo:tempo",
+        "ação extra"
+      ]
+    },
+    {
+      "id": "previsao",
+      "origem": "SCIFI",
+      "nome": "PREVISÃO",
+      "estagio": "Experiente",
+      "pontosDePoder": 5,
+      "distancia": "Pessoal",
+      "duracao": "5",
+      "manifestacoes": [
+        "Visões",
+        "Cálculo de probabilidades"
+      ],
+      "descricao": "Ganha 3 Marcadores de Previsão. Pode gastar para permitir que qualquer um na Distância (Astúcia) rerrole qualquer Característica ou dano.",
+      "modificadores": [],
+      "tags": [
+        "stage:experiente",
+        "tipo:buff",
+        "destino",
+        "psionico"
+      ]
+    },
+    {
+      "id": "telecinese_scifi",
+      "origem": "SCIFI",
+      "nome": "TELECINESE",
+      "estagio": "Experiente",
+      "pontosDePoder": 5,
+      "distancia": "Astúcia x2",
+      "duracao": "5",
+      "manifestacoes": [
+        "Aceno de mão",
+        "Olhar"
+      ],
+      "descricao": "Move objetos/criaturas com Força d10 (d12 com ampliação). Ações: Arremessar (For+d6), Manipular, Mover, Mudar Alvo.",
+      "modificadores": [
+        {
+          "nome": "Poder",
+          "custo": "+3",
+          "descricao": "Força d12 (d12+2 ampliação). Arremesso For+d8. Objetos >250kg são Arma Pesada."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:controle",
+        "psionico",
+        "utilitário"
+      ]
+    },
+    {
+      "id": "teleporte_scifi",
+      "origem": "SCIFI",
+      "nome": "TELEPORTE",
+      "estagio": "Experiente",
+      "pontosDePoder": 2,
+      "distancia": "Astúcia",
+      "duracao": "Instantânea",
+      "manifestacoes": [
+        "Desaparecimento",
+        "Raio de luz"
+      ],
+      "descricao": "Move-se 12 quadros (24 com ampliação) instantaneamente. Não gera ataques livres.",
+      "modificadores": [
+        {
+          "nome": "Portal",
+          "custo": "+5",
+          "descricao": "Abre portal por 5 rodadas (Apenas Veterano)."
+        },
+        {
+          "nome": "Receptores Adicionais",
+          "custo": "+1",
+          "descricao": "Afeta outros alvos."
+        },
+        {
+          "nome": "Teleportar Inimigos",
+          "custo": "+2",
+          "descricao": "Ataque de Toque. Inimigo resiste com Espírito."
+        },
+        {
+          "nome": "Melhorado",
+          "custo": "+5",
+          "descricao": "Alcance de até 150km (1 rodada conc.), 1500km (2 rodadas) ou mundial (3 rodadas). (Apenas Veterano)."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:movimento",
+        "transporte"
+      ]
+    },
+    {
+      "id": "trancar_destrancar_scifi",
+      "origem": "SCIFI",
+      "nome": "TRANCAR/DESTRANCAR",
+      "estagio": "Novato",
+      "pontosDePoder": 1,
+      "distancia": "Astúcia",
+      "duracao": "Permanente / Instantânea",
+      "manifestacoes": [
+        "Dispositivos tecnológicos",
+        "Interface"
+      ],
+      "descricao": "Trancar: Sela porta/recipiente (-4 para abrir). Pode ter senha.\nDestrancar: Abre porta/recipiente (ignora até 4 de penalidade). Ampliação desarma alarmes.",
+      "modificadores": [
+        {
+          "nome": "Alerta",
+          "custo": "+1",
+          "descricao": "Avisa o conjurador se o objeto for aberto."
+        }
+      ],
+      "tags": [
+        "stage:novato",
+        "tipo:utilitário",
+        "segurança",
+        "tecnológico"
+      ]
+    },
+    {
+      "id": "videncia_scifi",
+      "origem": "SCIFI",
+      "nome": "VIDÊNCIA",
+      "estagio": "Experiente",
+      "pontosDePoder": 3,
+      "distancia": "Pessoal",
+      "duracao": "5",
+      "manifestacoes": [
+        "Projetor holográfico",
+        "Drones",
+        "Satélite"
+      ],
+      "descricao": "Espia local/alvo distante. 1 min preparação. -2 se nunca viu, -2 se outro planeta. Resistido por Espírito. Ampliação permite seguir o alvo.",
+      "modificadores": [
+        {
+          "nome": "Projeção",
+          "custo": "+2",
+          "descricao": "Projeta a visão em um espaço físico (sala pequena)."
+        }
+      ],
+      "tags": [
+        "stage:experiente",
+        "tipo:informação",
+        "espionagem",
+        "tecnológico"
+      ]
+    }
 ]
