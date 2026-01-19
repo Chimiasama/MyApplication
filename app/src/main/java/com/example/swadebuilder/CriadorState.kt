@@ -315,95 +315,8 @@ class CriadorState {
 
     fun valorMovimentacao(): Int {
         val base = 6
-
-        val ancestralidadeObj = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade.keyify() }
-        var racialMod = 0
-        ancestralidadeObj?.let { anc ->
-            val inDesvantagens = anc.desvantagens.any { d ->
-                val k = d.keyify()
-                k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
-            }
-            val inHabilidades = anc.habilidades.any { h ->
-                val k = h.nome.keyify()
-                k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
-            }
-
-            // Garante redução para raças lentas do Pathfinder
-            val isPathfinderSlowRace = compendioPathfinderAtivo &&
-                    (anc.id == "anc_anaopathfinder" ||
-                            anc.id == "anc_gnomopathfinder" ||
-                            anc.id == "anc_halflingpathfinder")
-
-            if (inDesvantagens || inHabilidades || isPathfinderSlowRace) {
-                racialMod -= 1
-            }
-
-            // Explicit Field
-            if (anc.movimentacao != 0) {
-                racialMod += anc.movimentacao
-            } else {
-                // Dynamic Bonus/Penalty Parsing (fallback)
-                val sources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
-                sources.forEach { str ->
-                    val k = str.keyify()
-                    if (k.contains("MOVIMENTACAO")) {
-                        val bonusMatch = Regex("""MOVIMENTACAO\s*\+(\d+)""").find(k)
-                        if (bonusMatch != null) {
-                            racialMod += bonusMatch.groupValues[1].toInt()
-                        }
-                        val malusMatch = Regex("""MOVIMENTACAO\s*\-(\d+)""").find(k)
-                        if (malusMatch != null) {
-                            racialMod -= malusMatch.groupValues[1].toInt()
-                        }
-                    }
-                }
-            }
-        }
-
-        val idosoPenalty =
-            complicacoesSelecionadas
-                .filterKeys { it.name.keyify() == "IDOSO" || it.id.keyify().endsWith("IDOSO") }
-                .isNotEmpty()
-                .takeIf { it }
-                ?.let { 1 }
-                ?: 0
-
-        val lentoPenalty = complicacoesSelecionadas
-            .entries
-            .firstOrNull {
-                it.key.name.keyify() == "LENTO" || it.key.id.keyify().endsWith("LENTO")
-            }
-            ?.let { (_, grau) ->
-                when (grau) {
-                    "Menor" -> 1
-                    "Maior" -> 2
-                    else    -> 0
-                }
-            }
-            ?: 0
-
-        val obesoPenalty =
-            complicacoesSelecionadas
-                .filterKeys { it.name.keyify() == "OBESO" || it.id.keyify().endsWith("OBESO") }
-                .isNotEmpty()
-                .takeIf { it }
-                ?.let { 1 }
-                ?: 0
-
-        val ligeiroBonus =
-            if (vantagensSelecionadas.any { it.nome.keyify() == "LIGEIRO" })
-                2
-            else
-                0
-
-        return (base
-                + racialMod
-                - idosoPenalty
-                - lentoPenalty
-                - obesoPenalty
-                + ligeiroBonus
-                + bonusMovimentacaoFromPower)
-            .coerceAtLeast(0)
+        val mods = ModifierEngine.sum(this, ModifierTarget.PACE)
+        return (base + mods).coerceAtLeast(0)
     }
 
     fun totalTensaoEquipamentos(): Int = totalTensaoCibernetica()
@@ -441,14 +354,9 @@ class CriadorState {
         val melhorLuta = maxOf(lutarRaw, jutsuRaw)
         val base     = 2 + (melhorLuta / 2)
 
-        val bloquearBonus =
-            if (vantagensSelecionadas.any { it.nome.keyify() == "BLOQUEAR" }) 1 else 0
-        val bloquearAprimoradoBonus =
-            if (vantagensSelecionadas.any { it.nome.keyify() == "BLOQUEAR APRIMORADO" }) 1 else 0
+        val mods = ModifierEngine.sum(this, ModifierTarget.PARRY)
 
-        val signBonus = if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO") && signoAdgSelecionado?.equals("Garça", ignoreCase = true) == true) 1 else 0
-
-        return base + bloquearBonus + bloquearAprimoradoBonus + bonusApararFromPower + signBonus
+        return base + mods
     }
 
     // Engine Delegation

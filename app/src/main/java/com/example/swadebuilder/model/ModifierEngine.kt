@@ -8,7 +8,9 @@ enum class ModifierTarget {
     SIZE_DISPLAY,
     SIZE_TOUGHNESS,
     TOUGHNESS_FLAT,
-    ARMOR
+    ARMOR,
+    PACE,
+    PARRY
 }
 
 enum class StackRule {
@@ -98,6 +100,33 @@ object ModifierEngine {
                 ))
             }
 
+            // Movimentação Racial (Pace)
+            // 1. Explicit Field
+            if (anc.movimentacao != 0) {
+                modifiers.add(Modifier("racial_pace_explicit", SourceType.ANCESTRALIDADE, anc.nome, ModifierTarget.PACE, anc.movimentacao))
+            }
+
+            // 2. Pathfinder Slow Races
+            val isPathfinderSlowRace = state.compendioPathfinderAtivo &&
+                    (anc.id == "anc_anaopathfinder" ||
+                            anc.id == "anc_gnomopathfinder" ||
+                            anc.id == "anc_halflingpathfinder")
+            if (isPathfinderSlowRace) {
+                modifiers.add(Modifier("racial_pace_pathfinder", SourceType.ANCESTRALIDADE, "Raça Lenta (Pathfinder)", ModifierTarget.PACE, -1))
+            }
+
+            // 3. Keyword Checks (Movimentação Reduzida)
+            val hasMovReduzida = anc.desvantagens.any {
+                val k = it.keyify()
+                k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
+            } || anc.habilidades.any {
+                val k = it.nome.keyify()
+                k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
+            }
+            if (hasMovReduzida) {
+                modifiers.add(Modifier("racial_pace_reduced", SourceType.ANCESTRALIDADE, "Movimentação Reduzida", ModifierTarget.PACE, -1))
+            }
+
             // Diminuto (Ancestralidade)
             // Se tiver "DIMINUTO" nas desvantagens, habilidades ou vantagens grátis, aplica Tamanho -4
             val hasDiminuto = anc.desvantagens.any { it.keyify() == "DIMINUTO" } ||
@@ -165,11 +194,30 @@ object ModifierEngine {
                         }
                     }
                 }
+                if (k.contains("MOVIMENTACAO")) {
+                    // Only apply generic regex if explicit field is 0 (to match legacy logic fallback)
+                    if (anc.movimentacao == 0) {
+                        val bonusMatch = Regex("""MOVIMENTACAO\s*\+(\d+)""").find(k)
+                        if (bonusMatch != null) {
+                             modifiers.add(Modifier("racial_pace_generic_plus", SourceType.ANCESTRALIDADE, str, ModifierTarget.PACE, bonusMatch.groupValues[1].toInt()))
+                        }
+                        val malusMatch = Regex("""MOVIMENTACAO\s*\-(\d+)""").find(k)
+                        if (malusMatch != null) {
+                             modifiers.add(Modifier("racial_pace_generic_minus", SourceType.ANCESTRALIDADE, str, ModifierTarget.PACE, -malusMatch.groupValues[1].toInt()))
+                        }
+                    }
+                }
+                if (k.contains("APARAR")) {
+                    val bonusMatch = Regex("""APARAR\s*\+(\d+)""").find(k)
+                    if (bonusMatch != null) {
+                        modifiers.add(Modifier("racial_parry_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.PARRY, bonusMatch.groupValues[1].toInt()))
+                    }
+                }
             }
         }
 
         // 3. Complications
-        state.complicacoesSelecionadas.keys.forEach { comp ->
+        state.complicacoesSelecionadas.entries.forEach { (comp, nivel) ->
             val key = comp.id.keyify()
             if (key == "PEQUENO") {
                 modifiers.add(Modifier("comp_pequeno_size", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_DISPLAY, -1))
@@ -178,6 +226,14 @@ object ModifierEngine {
             if (key == "OBESO") {
                 modifiers.add(Modifier("comp_obeso_size", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_DISPLAY, 1))
                 modifiers.add(Modifier("comp_obeso_tough", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_TOUGHNESS, 1))
+                modifiers.add(Modifier("comp_obeso_pace", SourceType.COMPLICACAO, comp.name, ModifierTarget.PACE, -1))
+            }
+            if (key == "IDOSO" || key.endsWith("IDOSO")) {
+                modifiers.add(Modifier("comp_idoso_pace", SourceType.COMPLICACAO, comp.name, ModifierTarget.PACE, -1))
+            }
+            if (key == "LENTO" || key.endsWith("LENTO")) {
+                val penalty = if (nivel == "Maior") -2 else -1
+                modifiers.add(Modifier("comp_lento_pace", SourceType.COMPLICACAO, comp.name, ModifierTarget.PACE, penalty))
             }
         }
 
@@ -194,11 +250,26 @@ object ModifierEngine {
             if (key == "BRIGAO" || key == "PUGILISTA") {
                 modifiers.add(Modifier("edge_brigao", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 1))
             }
+            if (key == "LIGEIRO") {
+                modifiers.add(Modifier("edge_ligeiro_pace", SourceType.VANTAGEM, vant.nome, ModifierTarget.PACE, 2))
+            }
+            if (key == "BLOQUEAR") {
+                modifiers.add(Modifier("edge_bloquear_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
+            }
+            if (key == "BLOQUEAR APRIMORADO") {
+                modifiers.add(Modifier("edge_bloquear_imp_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
+            }
         }
 
         // 5. Powers / Other
         if (state.bonusResFromPower != 0) {
             modifiers.add(Modifier("power_bonus_res", SourceType.OUTRO, "Poderes", ModifierTarget.TOUGHNESS_FLAT, state.bonusResFromPower))
+        }
+        if (state.bonusMovimentacaoFromPower != 0) {
+            modifiers.add(Modifier("power_bonus_pace", SourceType.OUTRO, "Poderes", ModifierTarget.PACE, state.bonusMovimentacaoFromPower))
+        }
+        if (state.bonusApararFromPower != 0) {
+            modifiers.add(Modifier("power_bonus_parry", SourceType.OUTRO, "Poderes", ModifierTarget.PARRY, state.bonusApararFromPower))
         }
 
         // 6. Signos (Arte da Guerra)
@@ -207,6 +278,9 @@ object ModifierEngine {
             if (sign != null) {
                 if (sign.equals("Tartaruga", ignoreCase = true)) {
                     modifiers.add(Modifier("sign_tartaruga_tough", SourceType.OUTRO, "Signo Tartaruga", ModifierTarget.TOUGHNESS_FLAT, 1))
+                }
+                if (sign.equals("Garça", ignoreCase = true)) {
+                    modifiers.add(Modifier("sign_garca_parry", SourceType.OUTRO, "Signo Garça", ModifierTarget.PARRY, 1))
                 }
             }
         }
