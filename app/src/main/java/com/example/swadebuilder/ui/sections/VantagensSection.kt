@@ -64,6 +64,7 @@ import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.classeExclusivaBloqueada
+import com.example.swadebuilder.model.isVantagemVisible
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
@@ -191,67 +192,11 @@ fun VantagensContent(
         state.compendioCrystalHeartAtivo,
         state.compendioArteDaGuerraAtivo,
         state.compendioCidadeSolVaporAtivo,
-        state.compendioWiseguysAtivo
+        state.compendioWiseguysAtivo,
+        multiplosAAHabilitados
     ) {
         listaVantagens.filter { vant ->
-            val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase()
-            val isBasico = origemNorm == "BASICO"
-            val isSuper = origemNorm == "SUPER"
-            val isFantasia = origemNorm == "FANTASIA"
-            val isHorror = origemNorm == "HORROR"
-            val isBuscatrilha = origemNorm == "PATHFINDER"
-            val isDeadlands = origemNorm == "OESTE_ESTRANHO"
-            val isAdg = origemNorm == "ARTE_DA_GUERRA"
-            val isCidadeSolVapor = origemNorm == "CIDADE_SOL_VAPOR"
-            val isWiseguys = origemNorm == "WISEGUYS"
-            val isCrystalHeart = origemNorm == "CRYSTAL_HEART"
-
-            if (state.compendioCrystalHeartAtivo) {
-                if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
-                    return@filter false
-                }
-            }
-
-            if (state.compendioPathfinderAtivo) {
-                val forbiddenIds = setOf(
-                    "antecedente_arcano_ciencia_estranha",
-                    "antecedente_arcano_psionicos",
-                    "antecedente_arcano_dom",
-                    "rico",
-                    "podre_de_rico"
-                )
-                if (vant.id in forbiddenIds) return@filter false
-            }
-
-            if (state.compendioArteDaGuerraAtivo) {
-                if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
-                    return@filter false
-                }
-                if (vant.categoria == Categoria.PODER) {
-                    return@filter false
-                }
-                if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") {
-                    return@filter false
-                }
-            }
-
-            if (state.compendioWiseguysAtivo) {
-                if (vant.categoria == Categoria.PODER) {
-                    return@filter false
-                }
-                if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") {
-                    return@filter false
-                }
-                if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
-                    return@filter false
-                }
-                val forbiddenIds = setOf("aristocrata", "chi", "campeao", "matador_de_gigantes", "corajoso")
-                if (vant.id in forbiddenIds) {
-                    return@filter false
-                }
-            }
-
-            (isBasico && !state.compendioFantasiaAtivo) || (isAdg && state.compendioArteDaGuerraAtivo) || (isSuper && state.modoSupers) || (isFantasia && state.compendioFantasiaAtivo) || (isHorror && state.compendioHorrorAtivo) || (isBuscatrilha && state.compendioPathfinderAtivo) || (isDeadlands && state.compendioDeadlandsAtivo) || (isCidadeSolVapor && state.compendioCidadeSolVaporAtivo) || (isWiseguys && state.compendioWiseguysAtivo) || (isCrystalHeart && state.compendioCrystalHeartAtivo)
+            state.isVantagemVisible(vant, multiplosAAHabilitados)
         }.sortedWith(compareBy({ it.categoria }, { it.nomeExibicao }))
     }
 
@@ -312,30 +257,6 @@ fun VantagensContent(
 
     val filteredListGlobal = remember(listaVantagensAtivas, state.modoSupers, hasProfissional, filter, multiplosAAHabilitados) {
         listaVantagensAtivas.filter { vant ->
-            // Supers Logic
-            if (state.modoSupers) {
-                if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) return@filter false
-                if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") return@filter false
-                if (vant.categoria == Categoria.PODER) return@filter false
-                if (vant.requisitos.vantagensPrevias.contains("antecedente_arcano") ||
-                    vant.id == "superpoderes") return@filter false
-            }
-
-            // Logic for Arcane Background Visibility
-            // Generic AB has id "antecedente_arcano"
-            // Specific ABs have id starting with "antecedente_arcano_" (e.g. "antecedente_arcano_magia")
-            val isGenericAB = vant.id == "antecedente_arcano"
-            val isSpecificAB = (vant.id.startsWith("antecedente_arcano_") || vant.id.startsWith("aa_"))
-
-            if (!multiplosAAHabilitados) {
-                // If Multiple ABs DISABLED: Show ONLY the Generic AB (Hide specific ones)
-                // "antecedente_arcano" does NOT start with "antecedente_arcano_" so it passes the check below.
-                if (isSpecificAB) return@filter false
-            } else {
-                // If Multiple ABs ENABLED: Show Specific ABs (Hide the Generic one)
-                if (isGenericAB) return@filter false
-            }
-
             // Professional/Specialist Dependency
             if (vant.id == "especialista" && !hasProfissional) return@filter false
 

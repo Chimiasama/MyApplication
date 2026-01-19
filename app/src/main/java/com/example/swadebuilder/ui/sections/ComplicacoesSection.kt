@@ -60,6 +60,8 @@ import com.example.swadebuilder.R
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.model.Complicacao
+import com.example.swadebuilder.model.getActiveOrigins
+import com.example.swadebuilder.model.isComplicacaoVisible
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -96,21 +98,7 @@ fun ComplicacoesSection(
     var tempErrorMsg by remember { mutableStateOf("") }
     var showTempError by remember { mutableStateOf(false) }
 
-    val origensAtivas: Set<String> = buildSet {
-        if (state.compendioFantasiaAtivo) {
-            add("FANTASIA")
-        } else {
-            add("BASICO")
-        }
-        if (state.modoSupers) add("SUPER")
-        if (state.compendioHorrorAtivo) add("HORROR")
-        if (state.compendioPathfinderAtivo) add("PATHFINDER")
-        if (state.compendioDeadlandsAtivo) add("OESTE_ESTRANHO")
-        if (state.compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
-        if (state.compendioCidadeSolVaporAtivo) add("CIDADE_SOL_VAPOR")
-        if (state.compendioWiseguysAtivo) add("WISEGUYS")
-        if (state.compendioCrystalHeartAtivo) add("CRYSTAL_HEART")
-    }
+    val origensAtivas = state.getActiveOrigins()
 
     // Filter states
     var searchQuery by rememberSaveable { mutableStateOf("") }
@@ -118,10 +106,7 @@ fun ComplicacoesSection(
     var selectedSeverity by rememberSaveable { mutableStateOf("Todos") }
 
     val complicacoesFiltradas = listaComplicacoes.filter { comp ->
-        val origemSafe = if (comp.origem.isBlank()) "BASICO" else comp.origem.uppercase().semAcentos().trim()
-        val matchesActiveOrigin = origemSafe in origensAtivas
-
-        if (!matchesActiveOrigin) return@filter false
+        if (!state.isComplicacaoVisible(comp, origensAtivas)) return@filter false
 
         // Filter Logic
         val matchesSeverity = when (selectedSeverity) {
@@ -427,221 +412,237 @@ fun ComplicacoesSection(
                 ) {
                     listaParaMostrar.forEach { comp ->
                         key(comp.id) {
-                            // MERGED DESCRIPTION LOGIC
-                            val mergedDescription = remember(comp, groupedComplications, allowLongTexts) {
-                                if (allowLongTexts) {
-                                    val group = groupedComplications[comp.name.trim().lowercase().semAcentos()] ?: listOf(comp)
-                                    val showMerged = group.size > 1 && EditionConfig.isFullEdition
-
-                                    if (showMerged) {
-                                         group.sortedBy { if (it.origem == "BASICO") 0 else 1 }
-                                              .joinToString("\n\n") { v ->
-                                                  val tag = when(v.origem) {
-                                                      "BASICO" -> "BÁSICO"
-                                                      "SUPER" -> "SUPERS"
-                                                      "FANTASIA" -> "FANTASIA"
-                                                      "HORROR" -> "HORROR"
-                                                      "PATHFINDER" -> "BUSCATRILHA"
-                                                      else -> v.origem.toEditionDisplayName().uppercase()
-                                                  }
-                                                  val txt = if (showOfficialNames && !v.originalDescription.isNullOrBlank())
-                                                      v.originalDescription.trim()
-                                                  else
-                                                      v.description.trim()
-                                                  "[$tag] $txt"
-                                              }
-                                    } else {
-                                         if (showOfficialNames && !comp.originalDescription.isNullOrBlank())
-                                             comp.originalDescription.trim()
-                                         else
-                                             comp.description.trim()
+                            ComplicacaoItem(
+                                comp = comp,
+                                state = state,
+                                locked = locked,
+                                allowLongTexts = allowLongTexts,
+                                showOfficialNames = showOfficialNames,
+                                groupedComplications = groupedComplications,
+                                detalhesExpandidos = detalhesExpandidos,
+                                onUserFeedback = onUserFeedback,
+                                onLogFeedback = onLogFeedback,
+                                onError = { msg ->
+                                    tempErrorMsg = msg
+                                    showTempError = true
+                                    scope.launch {
+                                        delay(2_000)
+                                        showTempError = false
                                     }
-                                } else ""
-                            }
-
-                            val cur    = state.complicacoesSelecionadas[comp]
-                            val sevRaw = comp.severity.lowercase().trim()
-                            val menorOnly = sevRaw.contains("menor") && !sevRaw.contains("maior")
-                            val maiorOnly = sevRaw.contains("maior") && !sevRaw.contains("menor")
-                            val ambos     = sevRaw.contains("menor") && sevRaw.contains("maior")
-
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp)
-                            ) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Column(
-                                        modifier = Modifier.weight(1f)
-                                    ) {
-                                        Text(
-                                            text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName.toSentenceCase() else comp.name.toSentenceCase(),
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = MaterialTheme.colorScheme.onSurface
-                                        )
-                                    }
-
-                                    Spacer(Modifier.width(8.dp))
-
-                                    Row(
-                                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        if (menorOnly || ambos) {
-                                            val enabledMenor = !locked && cur == null
-                                            TextButton(
-                                                onClick = {
-                                                    if (!enabledMenor) return@TextButton
-                                                    val (pode, msg) = state.podeSelecionarComplicacao(comp)
-                                                    if (!pode) {
-                                                        tempErrorMsg = msg ?: "Requisito não atendido."
-                                                        showTempError = true
-                                                        scope.launch {
-                                                            delay(2_000)
-                                                            showTempError = false
-                                                        }
-                                                        return@TextButton
-                                                    }
-
-                                                    val conflitoMsg = state.mensagemConflitoParaComplicacao(comp)
-                                                    if (conflitoMsg != null) {
-                                                        tempErrorMsg = conflitoMsg
-                                                        showTempError = true
-                                                        scope.launch {
-                                                            delay(2_000)
-                                                            showTempError = false
-                                                        }
-                                                        return@TextButton
-                                                    }
-                                                    onUserFeedback()
-                                                    when (comp.id) {
-                                                        "jovem" -> {
-                                                            state.complicacoesSelecionadas[comp] = "Menor"
-                                                            state.applyYoungMinor()
-                                                        }
-                                                        "obeso" -> {
-                                                            state.complicacoesSelecionadas[comp] = "Menor"
-                                                            state.obesoBonusSize = 1
-                                                            state.obesoMalusMov = 1
-                                                        }
-                                                        "pobreza" -> {
-                                                            state.complicacoesSelecionadas[comp] = "Menor"
-                                                            if(state.compendioPathfinderAtivo){
-                                                                state.dinheiro -= 15000
-                                                            } else if (state.compendioFantasiaAtivo) {
-                                                                state.dinheiro -= 150
-                                                            } else {
-                                                                state.dinheiro -= 250
-                                                            }
-                                                        }
-                                                        else -> {
-                                                            state.complicacoesSelecionadas[comp] = "Menor"
-                                                        }
-                                                    }
-                                                    onLogFeedback("Complicação ${comp.name} (Menor) adicionada.")
-                                                },
-                                                enabled = enabledMenor
-                                            ) {
-                                                Text("Menor")
-                                            }
-                                        }
-
-                                        if (maiorOnly || ambos) {
-                                            val enabledMaior = !locked && (
-                                                    (maiorOnly && cur == null) ||
-                                                            (ambos && cur == "Menor")
-                                                    )
-                                            TextButton(
-                                                onClick = {
-                                                    if (!enabledMaior) return@TextButton
-                                                    val (pode, msg) = state.podeSelecionarComplicacao(comp)
-                                                    if (!pode) {
-                                                        tempErrorMsg = msg ?: "Requisito não atendido."
-                                                        showTempError = true
-                                                        scope.launch {
-                                                            delay(2_000)
-                                                            showTempError = false
-                                                        }
-                                                        return@TextButton
-                                                    }
-
-                                                    val conflitoMsg = state.mensagemConflitoParaComplicacao(comp)
-                                                    if (conflitoMsg != null) {
-                                                        tempErrorMsg = conflitoMsg
-                                                        showTempError = true
-                                                        scope.launch {
-                                                            delay(2_000)
-                                                            showTempError = false
-                                                        }
-                                                        return@TextButton
-                                                    }
-                                                    onUserFeedback()
-                                                    when (comp.id) {
-                                                        "idoso" -> {
-                                                            state.complicacoesSelecionadas[comp] = "Maior"
-                                                            state.idosoBonusSp = 5
-                                                            state.rebuildAllPericiaStacks()
-                                                        }
-                                                        "jovem" -> {
-                                                            if (pequComp != null) {
-                                                                state.complicacoesSelecionadas[comp] = "Maior"
-                                                                state.applyYoungMajor(pequComp)
-                                                            }
-                                                        }
-                                                        "obeso" -> {
-                                                            state.complicacoesSelecionadas[comp] = "Maior"
-                                                            state.obesoBonusSize = 1
-                                                            state.obesoMalusMov = 1
-                                                        }
-                                                        else -> {
-                                                            state.complicacoesSelecionadas[comp] = "Maior"
-                                                        }
-                                                    }
-                                                    onLogFeedback("Complicação ${comp.name} (Maior) adicionada.")
-                                                },
-                                                enabled = enabledMaior
-                                            ) {
-                                                Text("Maior")
-                                            }
-                                        }
-                                    }
-                                }
-
-                                if (allowLongTexts && mergedDescription.isNotBlank()) {
-                                    TextButton(
-                                        onClick = {
-                                            onUserFeedback()
-                                            val current = detalhesExpandidos[comp.id] ?: false
-                                            detalhesExpandidos[comp.id] = !current
-                                        },
-                                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp)
-                                    ) {
-                                        Text(
-                                            if (detalhesExpandidos[comp.id] == true) "Ocultar detalhes" else "Ver detalhes",
-                                            style = MaterialTheme.typography.labelMedium,
-                                            color = MaterialTheme.colorScheme.onSurface
-                                        )
-                                    }
-
-                                    AnimatedVisibility(visible = detalhesExpandidos[comp.id] == true) {
-                                        Text(
-                                            text = mergedDescription,
-                                            style = MaterialTheme.typography.bodySmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            modifier = Modifier.padding(top = 4.dp)
-                                        )
-                                    }
-                                }
-                            }
+                                },
+                                peqComp = pequComp
+                            )
                         }
                     }
                 }
             }
         }
         // Closing brace for outer Column (scrolling)
+        }
+    }
+}
+
+@Composable
+private fun ComplicacaoItem(
+    comp: Complicacao,
+    state: CriadorState,
+    locked: Boolean,
+    allowLongTexts: Boolean,
+    showOfficialNames: Boolean,
+    groupedComplications: Map<String, List<Complicacao>>,
+    detalhesExpandidos: MutableMap<String, Boolean>,
+    onUserFeedback: () -> Unit,
+    onLogFeedback: (String) -> Unit,
+    onError: (String) -> Unit,
+    peqComp: Complicacao?
+) {
+    // MERGED DESCRIPTION LOGIC
+    val mergedDescription = remember(comp, groupedComplications, allowLongTexts) {
+        if (allowLongTexts) {
+            val group = groupedComplications[comp.name.trim().lowercase().semAcentos()] ?: listOf(comp)
+            val showMerged = group.size > 1 && EditionConfig.isFullEdition
+
+            if (showMerged) {
+                group.sortedBy { if (it.origem == "BASICO") 0 else 1 }
+                    .joinToString("\n\n") { v ->
+                        val tag = when(v.origem) {
+                            "BASICO" -> "BÁSICO"
+                            "SUPER" -> "SUPERS"
+                            "FANTASIA" -> "FANTASIA"
+                            "HORROR" -> "HORROR"
+                            "PATHFINDER" -> "BUSCATRILHA"
+                            else -> v.origem.toEditionDisplayName().uppercase()
+                        }
+                        val txt = if (showOfficialNames && !v.originalDescription.isNullOrBlank())
+                            v.originalDescription.trim()
+                        else
+                            v.description.trim()
+                        "[$tag] $txt"
+                    }
+            } else {
+                if (showOfficialNames && !comp.originalDescription.isNullOrBlank())
+                    comp.originalDescription.trim()
+                else
+                    comp.description.trim()
+            }
+        } else ""
+    }
+
+    val cur    = state.complicacoesSelecionadas[comp]
+    val sevRaw = comp.severity.lowercase().trim()
+    val menorOnly = sevRaw.contains("menor") && !sevRaw.contains("maior")
+    val maiorOnly = sevRaw.contains("maior") && !sevRaw.contains("menor")
+    val ambos     = sevRaw.contains("menor") && sevRaw.contains("maior")
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName.toSentenceCase() else comp.name.toSentenceCase(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+
+            Spacer(Modifier.width(8.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (menorOnly || ambos) {
+                    val enabledMenor = !locked && cur == null
+                    TextButton(
+                        onClick = {
+                            if (!enabledMenor) return@TextButton
+                            val (pode, msg) = state.podeSelecionarComplicacao(comp)
+                            if (!pode) {
+                                onError(msg ?: "Requisito não atendido.")
+                                return@TextButton
+                            }
+
+                            val conflitoMsg = state.mensagemConflitoParaComplicacao(comp)
+                            if (conflitoMsg != null) {
+                                onError(conflitoMsg)
+                                return@TextButton
+                            }
+                            onUserFeedback()
+                            when (comp.id) {
+                                "jovem" -> {
+                                    state.complicacoesSelecionadas[comp] = "Menor"
+                                    state.applyYoungMinor()
+                                }
+                                "obeso" -> {
+                                    state.complicacoesSelecionadas[comp] = "Menor"
+                                    state.obesoBonusSize = 1
+                                    state.obesoMalusMov = 1
+                                }
+                                "pobreza" -> {
+                                    state.complicacoesSelecionadas[comp] = "Menor"
+                                    if(state.compendioPathfinderAtivo){
+                                        state.dinheiro -= 15000
+                                    } else if (state.compendioFantasiaAtivo) {
+                                        state.dinheiro -= 150
+                                    } else {
+                                        state.dinheiro -= 250
+                                    }
+                                }
+                                else -> {
+                                    state.complicacoesSelecionadas[comp] = "Menor"
+                                }
+                            }
+                            onLogFeedback("Complicação ${comp.name} (Menor) adicionada.")
+                        },
+                        enabled = enabledMenor
+                    ) {
+                        Text("Menor")
+                    }
+                }
+
+                if (maiorOnly || ambos) {
+                    val enabledMaior = !locked && (
+                            (maiorOnly && cur == null) ||
+                                    (ambos && cur == "Menor")
+                            )
+                    TextButton(
+                        onClick = {
+                            if (!enabledMaior) return@TextButton
+                            val (pode, msg) = state.podeSelecionarComplicacao(comp)
+                            if (!pode) {
+                                onError(msg ?: "Requisito não atendido.")
+                                return@TextButton
+                            }
+
+                            val conflitoMsg = state.mensagemConflitoParaComplicacao(comp)
+                            if (conflitoMsg != null) {
+                                onError(conflitoMsg)
+                                return@TextButton
+                            }
+                            onUserFeedback()
+                            when (comp.id) {
+                                "idoso" -> {
+                                    state.complicacoesSelecionadas[comp] = "Maior"
+                                    state.idosoBonusSp = 5
+                                    state.rebuildAllPericiaStacks()
+                                }
+                                "jovem" -> {
+                                    if (peqComp != null) {
+                                        state.complicacoesSelecionadas[comp] = "Maior"
+                                        state.applyYoungMajor(peqComp)
+                                    }
+                                }
+                                "obeso" -> {
+                                    state.complicacoesSelecionadas[comp] = "Maior"
+                                    state.obesoBonusSize = 1
+                                    state.obesoMalusMov = 1
+                                }
+                                else -> {
+                                    state.complicacoesSelecionadas[comp] = "Maior"
+                                }
+                            }
+                            onLogFeedback("Complicação ${comp.name} (Maior) adicionada.")
+                        },
+                        enabled = enabledMaior
+                    ) {
+                        Text("Maior")
+                    }
+                }
+            }
+        }
+
+        if (allowLongTexts && mergedDescription.isNotBlank()) {
+            TextButton(
+                onClick = {
+                    onUserFeedback()
+                    val current = detalhesExpandidos[comp.id] ?: false
+                    detalhesExpandidos[comp.id] = !current
+                },
+                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp)
+            ) {
+                Text(
+                    if (detalhesExpandidos[comp.id] == true) "Ocultar detalhes" else "Ver detalhes",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+
+            AnimatedVisibility(visible = detalhesExpandidos[comp.id] == true) {
+                Text(
+                    text = mergedDescription,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
         }
     }
 }
