@@ -1,6 +1,6 @@
 [
   {
-    "nome": "ANÕES (S.F.)",
+    "nome": "ANÕES",
     "origem": "FC",
     "descricao": "Nesta ambientação, o amor dos anões por artesanato se traduz em afinidade tecnológica. Muitos utilizam aprimoramentos cibernéticos para melhorar sua eficiência em mineração e engenharia espacial.",
     "atributos": {
@@ -14,11 +14,11 @@
     ],
     "desvantagens": [
       "MOVIMENTAÇÃO REDUZIDA",
-      "2 PONTOS DE DESVANTAGENS (Sugerido: Ganancioso ou Teimoso)"
+      "GANANCIOSO"
     ]
   },
   {
-    "nome": "AQUARIANOS (S.F.)",
+    "nome": "AQUARIANOS",
     "origem": "FC",
     "descricao": "Diferente dos atlantes clássicos, esta variante evoluiu de seres semelhantes a ouriços-do-mar em planetas oceânicos.",
     "atributos": {},
@@ -33,7 +33,7 @@
     ]
   },
   {
-    "nome": "AVIANOS (S.F.)",
+    "nome": "AVIANOS",
     "origem": "FC",
     "descricao": "Mais próximos de aves de rapina alienígenas, possuem cabeças avícolas e muitas vezes asas no lugar dos braços, adaptados para mundos de baixa gravidade.",
     "atributos": {},
@@ -51,7 +51,7 @@
     ]
   },
   {
-    "nome": "ELFOS (S.F.)",
+    "nome": "ELFOS",
     "origem": "FC",
     "descricao": "Um povo enigmático e moribundo. Os poucos restantes têm milênios de idade e vivem em 'mundos de criação' tentando curar a infertilidade de sua espécie enquanto pilham rotas espaciais.",
     "atributos": {
@@ -68,7 +68,7 @@
     ]
   },
   {
-    "nome": "HUMANOS (S.F.)",
+    "nome": "HUMANOS",
     "origem": "FC",
     "descricao": "Versáteis por natureza, humanos no futuro se adaptam cultural e biologicamente aos seus lares planetários ou estações espaciais.",
     "atributos": {},
@@ -80,7 +80,7 @@
     "variantes": "Estação Espacial (Habitante de Gravidade Baixa + Agilidade d6); Planeta de Mineração (Dependência Atmosférica Maior + Força ou Vigor d6)."
   },
   {
-    "nome": "RAKASHANOS (S.F.)",
+    "nome": "RAKASHANOS",
     "origem": "FC",
     "descricao": "Variante mais brincalhona e curiosa dos humanoides felinos, menos focada na crueldade predatória e mais na exploração.",
     "atributos": {
@@ -99,7 +99,7 @@
     ]
   },
   {
-    "nome": "SAÚRIOS (S.F.)",
+    "nome": "SAÚRIOS",
     "origem": "FC",
     "descricao": "Uma linhagem de reptilianos que desenvolveu capacidades defensivas químicas em vez de força na mandíbula.",
     "atributos": {},
@@ -218,7 +218,7 @@
     ]
   },
   {
-    "nome": "INSETOIDES (S.F.)",
+    "nome": "INSETOIDES",
     "origem": "FC",
     "descricao": "Seres baseados em formigas e louva-a-deus com mentes coletivas e visão panorâmica.",
     "atributos": {},
