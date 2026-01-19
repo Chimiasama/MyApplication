@@ -965,8 +965,7 @@ class CriadorState {
     private val jutsuExtras = mutableStateListOf<Pericia>()
 
     // Computed property for basic filtering before injecting dynamic slots (Idioms, Jutsu)
-    val periciasFiltradasPorCompendio: List<Pericia>
-        get() {
+    val periciasFiltradasPorCompendio: List<Pericia> by derivedStateOf {
             // Unify duplicates by Key, choosing the most relevant source
             val unifiedList = listaPericias.groupBy { it.nome.keyify() }
                 .mapNotNull { (_, group) ->
@@ -1148,42 +1147,48 @@ class CriadorState {
         return modifiedBase
     }
 
-    fun periciasComIdiomas(): List<Pericia> {
+    private val _periciasComIdiomas: List<Pericia> by derivedStateOf {
         // Use the filtered list as base instead of raw global listaPericias
         val baseList = periciasFiltradasPorCompendio
 
-        val idiomaBase = idiomaBasePericia() ?: return periciasComJutsu(baseList) // fallback if no idioms
-        val extrasOrdenados = idiomasExtras.sortedBy { idiomaSlotIndex(it) ?: Int.MAX_VALUE }
+        val idiomaBase = idiomaBasePericia()
+        if (idiomaBase == null) {
+            periciasComJutsu(baseList) // fallback if no idioms
+        } else {
+            val extrasOrdenados = idiomasExtras.sortedBy { idiomaSlotIndex(it) ?: Int.MAX_VALUE }
 
-        // Combine base list + idioms first
-        val listWithIdioms = buildList {
-            baseList.forEach { per ->
-                add(per)
-                if (per == idiomaBase) {
-                    addAll(extrasOrdenados)
-                }
-            }
-        }
-
-        // Then inject Jutsu extras
-        // Base skill is "Lutar". If Arte da Guerra is active, we treat "Lutar" as "Jutsu".
-        // The extras should appear after "Lutar".
-        val lutarBase = listWithIdioms.firstOrNull { it.nome.equals("LUTAR", ignoreCase = true) }
-
-        return if (lutarBase != null && compendioArteDaGuerraAtivo) {
-            val jutsuExtrasOrdenados = jutsuExtras.sortedBy { jutsuSlotIndex(it) ?: Int.MAX_VALUE }
-            buildList {
-                listWithIdioms.forEach { per ->
+            // Combine base list + idioms first
+            val listWithIdioms = buildList {
+                baseList.forEach { per ->
                     add(per)
-                    if (per == lutarBase) {
-                        addAll(jutsuExtrasOrdenados)
+                    if (per == idiomaBase) {
+                        addAll(extrasOrdenados)
                     }
                 }
             }
-        } else {
-            listWithIdioms
+
+            // Then inject Jutsu extras
+            // Base skill is "Lutar". If Arte da Guerra is active, we treat "Lutar" as "Jutsu".
+            // The extras should appear after "Lutar".
+            val lutarBase = listWithIdioms.firstOrNull { it.nome.equals("LUTAR", ignoreCase = true) }
+
+            if (lutarBase != null && compendioArteDaGuerraAtivo) {
+                val jutsuExtrasOrdenados = jutsuExtras.sortedBy { jutsuSlotIndex(it) ?: Int.MAX_VALUE }
+                buildList {
+                    listWithIdioms.forEach { per ->
+                        add(per)
+                        if (per == lutarBase) {
+                            addAll(jutsuExtrasOrdenados)
+                        }
+                    }
+                }
+            } else {
+                listWithIdioms
+            }
         }
     }
+
+    fun periciasComIdiomas(): List<Pericia> = _periciasComIdiomas
 
     // Helper used above if Idiomas base is missing (unlikely but safe)
     private fun periciasComJutsu(baseList: List<Pericia> = periciasFiltradasPorCompendio): List<Pericia> {
