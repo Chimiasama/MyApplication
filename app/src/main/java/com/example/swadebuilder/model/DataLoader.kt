@@ -41,54 +41,108 @@ object DataLoader {
         ignoreUnknownKeys = true
     }
 
+    private data class ModuleFile(val fileName: String, val originOverride: String? = null)
+
+    // --- Module Definitions ---
+
+    private val equipmentModules = listOf(
+        ModuleFile("basico_equipamentos.json"),
+        ModuleFile("suplementos_equipamentos.json"),
+        ModuleFile("fantasia_equipamentos.json"),
+        ModuleFile("horror_equipamentos.json"),
+        ModuleFile("scifi_equipamentos.json"),
+        ModuleFile("equipamentos_crystal.json"),
+        ModuleFile("equipamentos_trilhador.json"),
+        ModuleFile("pathfinder_equipamentos.json"),
+        ModuleFile("super_equipamentos.json"),
+        ModuleFile("wiseguys_equipamentos.json"),
+        ModuleFile("equipamentos_adg.json"),
+        ModuleFile("equipamentos_sol_vapor.json"),
+        ModuleFile("equipamentos_deadlands.json")
+    )
+
+    private val skillModules = listOf(
+        ModuleFile("basico_pericias.json"),
+        ModuleFile("suplementos_pericias.json"),
+        ModuleFile("pericias_adg.json"),
+        ModuleFile("fantasia_pericias.json")
+    )
+
+    private val advantageModules = listOf(
+        ModuleFile("basico_vantagens.json"),
+        ModuleFile("suplementos_vantagens.json"),
+        ModuleFile("fantasia_vantagens.json", originOverride = "FANTASIA"),
+        ModuleFile("horror_vantagens.json"),
+        ModuleFile("scifi_vantagens.json"),
+        ModuleFile("vantagens_crystal.json"),
+        ModuleFile("super_vantagens.json"),
+        ModuleFile("wiseguys_vantagens.json"),
+        ModuleFile("vantagens_adg.json"),
+        ModuleFile("vantagens_sol_vapor.json"),
+        ModuleFile("vantagens_deadlands.json"),
+        ModuleFile("pathfinder_vantagens.json")
+    )
+
+    private val complicationModules = listOf(
+        ModuleFile("basico_complicacoes.json"),
+        ModuleFile("suplementos_complicacoes.json"),
+        ModuleFile("fantasia_complicacoes.json"),
+        ModuleFile("horror_complicacoes.json"),
+        ModuleFile("scifi_complicacoes.json"),
+        ModuleFile("super_complicacoes.json"),
+        ModuleFile("wiseguys_complicacoes.json"),
+        ModuleFile("complicacoes_crystal.json"),
+        ModuleFile("complicacoes_adg.json"),
+        ModuleFile("complicacoes_sol_vapor.json"),
+        ModuleFile("complicacoes_deadlands.json"),
+        ModuleFile("pathfinder_complicacoes.json")
+    )
+
+    private val ancestryModules = listOf(
+        ModuleFile("basico_listaancestralidade.json"),
+        ModuleFile("suplementos_listaancestralidade.json"),
+        ModuleFile("fantasia_listaancestralidade.json"),
+        ModuleFile("horror_listaancestralidade.json"),
+        ModuleFile("scifi_listaancestralidade.json"),
+        ModuleFile("super_listaancestralidade.json"),
+        ModuleFile("wiseguys_ancestralidades.json"),
+        ModuleFile("ancestralidades_crystal.json"),
+        ModuleFile("ancestralidades_adg.json"),
+        ModuleFile("ancestralidades_sol_vapor.json"),
+        ModuleFile("ancestralidades_deadlands.json"),
+        ModuleFile("pathfinder_listaancestralidade.json")
+    )
+
+    // --- Loading Logic ---
+
     @OptIn(ExperimentalSerializationApi::class)
     private inline fun <reified T> AssetManager.readJsonList(fileName: String): List<T> =
         open(fileName).use { input -> json.decodeFromStream(input) }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    private inline fun <reified T> AssetManager.loadAndMerge(
+        modules: List<ModuleFile>,
+        crossinline transform: (T, String?) -> T = { item, _ -> item }
+    ): List<T> {
+        return modules.flatMap { module ->
+            runCatching {
+                readJsonList<T>(module.fileName).map { item ->
+                    if (module.originOverride != null) {
+                        transform(item, module.originOverride)
+                    } else {
+                        item
+                    }
+                }
+            }.getOrElse { emptyList() }
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun load(context: Context): MainActivityData {
         val assets = context.assets
 
         // 1. Equipamentos
-        val baseEquip = assets.readJsonList<EquipamentoCategoria>("basico_equipamentos.json")
-        val suppEquip = runCatching {
-            assets.readJsonList<EquipamentoCategoria>("suplementos_equipamentos.json")
-        }.getOrElse { emptyList() }
-        val fantasyEquip = runCatching {
-            assets.readJsonList<EquipamentoCategoria>("fantasia_equipamentos.json")
-        }.getOrElse { emptyList() }
-        val horrorEquip = runCatching {
-            assets.readJsonList<EquipamentoCategoria>("horror_equipamentos.json")
-        }.getOrElse { emptyList() }
-        val scifiEquip = runCatching {
-            assets.readJsonList<EquipamentoCategoria>("scifi_equipamentos.json")
-        }.getOrElse { emptyList() }
-        val crystalEquip = runCatching {
-            assets.readJsonList<EquipamentoCategoria>("equipamentos_crystal.json")
-        }.getOrElse { emptyList() }
-        val trilhadorEquip = runCatching {
-            assets.readJsonList<EquipamentoCategoria>("equipamentos_trilhador.json")
-        }.getOrElse { emptyList() }
-        val pathfinderEquip = runCatching {
-            assets.readJsonList<EquipamentoCategoria>("pathfinder_equipamentos.json")
-        }.getOrElse { emptyList() }
-        val superEquip = runCatching {
-            assets.readJsonList<EquipamentoCategoria>("super_equipamentos.json")
-        }.getOrElse { emptyList() }
-        val wiseguysEquip = runCatching {
-            assets.readJsonList<EquipamentoCategoria>("wiseguys_equipamentos.json")
-        }.getOrElse { emptyList() }
-        val adgEquip = runCatching {
-            assets.readJsonList<EquipamentoCategoria>("equipamentos_adg.json")
-        }.getOrElse { emptyList() }
-        val csvEquip = runCatching {
-            assets.readJsonList<EquipamentoCategoria>("equipamentos_sol_vapor.json")
-        }.getOrElse { emptyList() }
-        val deadlandsEquip = runCatching {
-            assets.readJsonList<EquipamentoCategoria>("equipamentos_deadlands.json")
-        }.getOrElse { emptyList() }
-        val allEquip = baseEquip + suppEquip + fantasyEquip + horrorEquip + scifiEquip + crystalEquip + trilhadorEquip + pathfinderEquip + superEquip + wiseguysEquip + adgEquip + csvEquip + deadlandsEquip
-
+        val allEquip = assets.loadAndMerge<EquipamentoCategoria>(equipmentModules)
         listaEquipamentos = allEquip.flatMap { it.itens }
 
         val equipamentoCategorias = deduplicarEquipamentoCategorias(
@@ -96,8 +150,9 @@ object DataLoader {
                 cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
             }
         )
+        // Includes all categories with origin SUPER (from any file)
         val superequipCategorias = deduplicarEquipamentoCategorias(
-            (baseEquip + suppEquip).filter { cat ->
+            allEquip.filter { cat ->
                 cat.origem?.equals("super", ignoreCase = true) ?: false
             }
         )
@@ -132,18 +187,12 @@ object DataLoader {
             .associate { it.nome.keyify() to it.nome }
 
         // 6. Pericias
-        val periciasCoreData = loadJsonAsset<PericiaList>(context, "basico_pericias.json")
-        val periciasSuppData = runCatching {
-            loadJsonAsset<PericiaList>(context, "suplementos_pericias.json")
-        }.getOrElse { PericiaList(emptyList()) }
-        val periciasAdgData = runCatching {
-            loadJsonAsset<PericiaList>(context, "pericias_adg.json")
-        }.getOrElse { PericiaList(emptyList()) }
-        val periciasFantasiaData = runCatching {
-            loadJsonAsset<PericiaList>(context, "fantasia_pericias.json")
-        }.getOrElse { PericiaList(emptyList()) }
-
-        val todasPericiasJson = periciasCoreData.pericias + periciasSuppData.pericias + periciasAdgData.pericias + periciasFantasiaData.pericias
+        // Special handling for nested "pericias" object in PericiaList wrapper
+        val todasPericiasJson = skillModules.flatMap { module ->
+            runCatching {
+                loadJsonAsset<PericiaList>(context, module.fileName).pericias
+            }.getOrElse { emptyList() }
+        }
 
         listaPericias = todasPericiasJson.map { pj ->
             Pericia(
@@ -156,7 +205,7 @@ object DataLoader {
         }
         mapaPericias = listaPericias.associateBy { it.nome.keyify() }
 
-        // Carrega descrições de perícias (novo arquivo JSON, ex-txt)
+        // Carrega descrições de perícias
         val periciasDescList = runCatching {
             assets.open("pericias_desc.json").use { input ->
                 json.decodeFromStream<List<PericiaDescricaoJson>>(input)
@@ -172,69 +221,28 @@ object DataLoader {
         mapaPericiasDescricao = periciasDescList.associate { it.nome.keyify() to it.descricao }
         mapaPericiasDescricaoAdg = periciasDescAdgList.associate { it.nome.keyify() to it.descricao }
 
-        // Atualizar listaPericias para incluir a descrição
-        // Prioridade: Descrição do JSON principal > Descrição do arquivo pericias_desc.json
         listaPericias = listaPericias.map { pericia ->
             val desc = pericia.descricao ?: mapaPericiasDescricao[pericia.nome.keyify()]
             pericia.copy(descricao = desc)
         }
 
-        // Carrega descrições de atributos (novo arquivo JSON, ex-txt)
+        // Carrega descrições de atributos
         val atributosDescList = runCatching {
             assets.open("atributos_desc.json").use { input ->
-                json.decodeFromStream<List<PericiaDescricaoJson>>(input) // Reutiliza DTO pois estrutura é igual
+                json.decodeFromStream<List<PericiaDescricaoJson>>(input)
             }
         }.getOrElse { emptyList() }
         mapaAtributosDescricao = atributosDescList.associate { it.nome.keyify() to it.descricao }
 
         // 7. Vantagens
-        val coreVantagens: List<Vantagem> = loadJsonAsset(context, "basico_vantagens.json")
-        val suppVantagens: List<Vantagem> = runCatching {
-            loadJsonAsset<List<Vantagem>>(context, "suplementos_vantagens.json")
-        }.getOrElse { emptyList() }
-        val fantasyVantagens: List<Vantagem> = runCatching {
-            loadJsonAsset<List<Vantagem>>(context, "fantasia_vantagens.json")
-                .map { it.copy(origem = "FANTASIA") }
-        }.getOrElse { emptyList() }
-        val horrorVantagens: List<Vantagem> = runCatching {
-            loadJsonAsset<List<Vantagem>>(context, "horror_vantagens.json")
-        }.getOrElse { emptyList() }
-        val scifiVantagens: List<Vantagem> = runCatching {
-            loadJsonAsset<List<Vantagem>>(context, "scifi_vantagens.json")
-        }.getOrElse { emptyList() }
-        val crystalVantagens: List<Vantagem> = runCatching {
-            loadJsonAsset<List<Vantagem>>(context, "vantagens_crystal.json")
-        }.getOrElse { emptyList() }
-        val superVantagensList: List<Vantagem> = runCatching {
-            loadJsonAsset<List<Vantagem>>(context, "super_vantagens.json")
-        }.getOrElse { emptyList() }
-        val wiseguysVantagens: List<Vantagem> = runCatching {
-            loadJsonAsset<List<Vantagem>>(context, "wiseguys_vantagens.json")
-        }.getOrElse { emptyList() }
-        val adgVantagens: List<Vantagem> = runCatching {
-            loadJsonAsset<List<Vantagem>>(context, "vantagens_adg.json")
-        }.getOrElse { emptyList() }
-        val csvVantagens: List<Vantagem> = runCatching {
-            loadJsonAsset<List<Vantagem>>(context, "vantagens_sol_vapor.json")
-        }.getOrElse { emptyList() }
-        val deadlandsVantagens: List<Vantagem> = runCatching {
-            loadJsonAsset<List<Vantagem>>(context, "vantagens_deadlands.json")
-        }.getOrElse { emptyList() }
-        val pathfinderVantagens: List<Vantagem> = runCatching {
-            loadJsonAsset<List<Vantagem>>(context, "pathfinder_vantagens.json")
-        }.getOrElse { emptyList() }
-        val todasVantagens = coreVantagens + suppVantagens + fantasyVantagens + horrorVantagens + scifiVantagens + crystalVantagens + superVantagensList + wiseguysVantagens + adgVantagens + csvVantagens + deadlandsVantagens + pathfinderVantagens
+        val todasVantagens = assets.loadAndMerge<Vantagem>(advantageModules) { item, override ->
+             if (override != null) item.copy(origem = override) else item
+        }
 
         AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
-        AppData.superVantagens = todasVantagens.filter {
-            it.origem.equals("SUPER", ignoreCase = true)
-        }
-        AppData.horrorVantagens = todasVantagens.filter {
-            it.origem.equals("HORROR", ignoreCase = true)
-        }
-        AppData.pathfinderVantagens = todasVantagens.filter {
-            it.origem.equals("PATHFINDER", ignoreCase = true)
-        }
+        AppData.superVantagens = todasVantagens.filter { it.origem.equals("SUPER", ignoreCase = true) }
+        AppData.horrorVantagens = todasVantagens.filter { it.origem.equals("HORROR", ignoreCase = true) }
+        AppData.pathfinderVantagens = todasVantagens.filter { it.origem.equals("PATHFINDER", ignoreCase = true) }
 
         listaVantagens = todasVantagens
         AppData.superVantagensParaDetalhe = AppData.superVantagens
@@ -248,78 +256,11 @@ object DataLoader {
         }.getOrElse { emptyList() }
 
         listaTropos = adgTropos + chTropos
-        val coreComplicacoes = loadJsonAsset<List<Complicacao>>(context, "basico_complicacoes.json")
-        val suppComplicacoes = runCatching {
-            loadJsonAsset<List<Complicacao>>(context, "suplementos_complicacoes.json")
-        }.getOrElse { emptyList() }
-        val fantasyComplicacoes = runCatching {
-            loadJsonAsset<List<Complicacao>>(context, "fantasia_complicacoes.json")
-        }.getOrElse { emptyList() }
-        val horrorComplicacoes = runCatching {
-            loadJsonAsset<List<Complicacao>>(context, "horror_complicacoes.json")
-        }.getOrElse { emptyList() }
-        val scifiComplicacoes = runCatching {
-            loadJsonAsset<List<Complicacao>>(context, "scifi_complicacoes.json")
-        }.getOrElse { emptyList() }
-        val superComplicacoes = runCatching {
-            loadJsonAsset<List<Complicacao>>(context, "super_complicacoes.json")
-        }.getOrElse { emptyList() }
-        val wiseguysComplicacoes = runCatching {
-            loadJsonAsset<List<Complicacao>>(context, "wiseguys_complicacoes.json")
-        }.getOrElse { emptyList() }
-        val crystalComplicacoes = runCatching {
-            loadJsonAsset<List<Complicacao>>(context, "complicacoes_crystal.json")
-        }.getOrElse { emptyList() }
-        val adgComplicacoes = runCatching {
-            loadJsonAsset<List<Complicacao>>(context, "complicacoes_adg.json")
-        }.getOrElse { emptyList() }
-        val csvComplicacoes = runCatching {
-            loadJsonAsset<List<Complicacao>>(context, "complicacoes_sol_vapor.json")
-        }.getOrElse { emptyList() }
-        val deadlandsComplicacoes = runCatching {
-            loadJsonAsset<List<Complicacao>>(context, "complicacoes_deadlands.json")
-        }.getOrElse { emptyList() }
-        val pathfinderComplicacoes = runCatching {
-            loadJsonAsset<List<Complicacao>>(context, "pathfinder_complicacoes.json")
-        }.getOrElse { emptyList() }
-        listaComplicacoes = coreComplicacoes + suppComplicacoes + fantasyComplicacoes + horrorComplicacoes + scifiComplicacoes + superComplicacoes + wiseguysComplicacoes + crystalComplicacoes + adgComplicacoes + csvComplicacoes + deadlandsComplicacoes + pathfinderComplicacoes
+
+        listaComplicacoes = assets.loadAndMerge<Complicacao>(complicationModules)
 
         // 9. Ancestralidades
-        val coreAncestries = assets.readJsonList<RacialModifier>("basico_listaancestralidade.json")
-        val suppAncestries = runCatching {
-            assets.readJsonList<RacialModifier>("suplementos_listaancestralidade.json")
-        }.getOrElse { emptyList() }
-        val fantasyAncestries = runCatching {
-            assets.readJsonList<RacialModifier>("fantasia_listaancestralidade.json")
-        }.getOrElse { emptyList() }
-        val horrorAncestries = runCatching {
-            assets.readJsonList<RacialModifier>("horror_listaancestralidade.json")
-        }.getOrElse { emptyList() }
-        val scifiAncestries = runCatching {
-            assets.readJsonList<RacialModifier>("scifi_listaancestralidade.json")
-        }.getOrElse { emptyList() }
-        val superAncestries = runCatching {
-            assets.readJsonList<RacialModifier>("super_listaancestralidade.json")
-        }.getOrElse { emptyList() }
-        val wiseguysAncestries = runCatching {
-            assets.readJsonList<RacialModifier>("wiseguys_ancestralidades.json")
-        }.getOrElse { emptyList() }
-        val crystalAncestries = runCatching {
-            assets.readJsonList<RacialModifier>("ancestralidades_crystal.json")
-        }.getOrElse { emptyList() }
-        val adgAncestries = runCatching {
-            assets.readJsonList<RacialModifier>("ancestralidades_adg.json")
-        }.getOrElse { emptyList() }
-        val csvAncestries = runCatching {
-            assets.readJsonList<RacialModifier>("ancestralidades_sol_vapor.json")
-        }.getOrElse { emptyList() }
-        val deadlandsAncestries = runCatching {
-            assets.readJsonList<RacialModifier>("ancestralidades_deadlands.json")
-        }.getOrElse { emptyList() }
-        val pathfinderAncestries = runCatching {
-            assets.readJsonList<RacialModifier>("pathfinder_listaancestralidade.json")
-        }.getOrElse { emptyList() }
-        listaAncestralidadesJson = coreAncestries + suppAncestries + fantasyAncestries + horrorAncestries + scifiAncestries + superAncestries + wiseguysAncestries + crystalAncestries + adgAncestries + csvAncestries + deadlandsAncestries + pathfinderAncestries
+        listaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestryModules)
 
         // 10. Monstros
         listaMonstroTemplates = assets
