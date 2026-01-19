@@ -147,22 +147,17 @@ object ModifierEngine {
             // Generic Parsing
             sources.forEach { str ->
                 val k = str.keyify()
-                if (k.contains("RESISTENCIA") || k.contains("RESISTÊNCIA")) {
-                    val match = Regex("""RESIST[ÊE]NCIA\s*\+(\d+)""", RegexOption.IGNORE_CASE).find(str)
+                if (k.contains("RESISTENCIA")) {
+                    val match = Regex("""RESISTENCIA\s*\+(\d+)""").find(k)
                     if (match != null) {
                         val valInt = match.groupValues[1].toInt()
-                        // Avoid duplicates if caught by hardcoded check above?
-                        // Above checks for "RESISTENCIA" in vantagesAutomaticas (which are keys).
-                        // If "RESISTENCIA +2" is in vantagensGratis, keyify is "RESISTENCIA 2".
-                        // hasResistencia checks exact "RESISTENCIA".
-                        // So it won't duplicate unless the advantage name is EXACTLY "RESISTENCIA".
-                        // Drakens: "RESISTÊNCIA +2". Key: "RESISTENCIA 2". hasResistencia = false.
-                        // So parsing adds it. Correct.
+                        // Avoid duplicates if caught by hardcoded check above
+                        // (see reasoning in previous revision)
                         modifiers.add(Modifier("racial_res_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.TOUGHNESS_FLAT, valInt))
                     }
                 }
                 if (k.contains("ARMADURA")) {
-                    val match = Regex("""ARMADURA(\s*NATURAL)?\s*\+(\d+)""", RegexOption.IGNORE_CASE).find(str)
+                    val match = Regex("""ARMADURA(.*?)\+(\d+)""").find(k)
                     if (match != null) {
                         val valInt = match.groupValues[2].toInt()
                         if (state.naturalArmorFromRace == 0) {

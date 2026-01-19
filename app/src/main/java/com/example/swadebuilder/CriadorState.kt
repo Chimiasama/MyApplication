@@ -343,11 +343,11 @@ class CriadorState {
             sources.forEach { str ->
                 val k = str.keyify()
                 if (k.contains("MOVIMENTACAO")) {
-                    val bonusMatch = Regex("""MOVIMENTA[CÇ][ÃA]O\s*\+(\d+)""", RegexOption.IGNORE_CASE).find(str)
+                    val bonusMatch = Regex("""MOVIMENTACAO\s*\+(\d+)""").find(k)
                     if (bonusMatch != null) {
                         racialMod += bonusMatch.groupValues[1].toInt()
                     }
-                    val malusMatch = Regex("""MOVIMENTA[CÇ][ÃA]O\s*\-(\d+)""", RegexOption.IGNORE_CASE).find(str)
+                    val malusMatch = Regex("""MOVIMENTACAO\s*\-(\d+)""").find(k)
                     if (malusMatch != null) {
                         racialMod -= malusMatch.groupValues[1].toInt()
                     }
