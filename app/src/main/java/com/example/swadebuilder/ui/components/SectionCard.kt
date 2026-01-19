@@ -41,7 +41,7 @@ fun SectionCard(
             ) {
                 Icon(
                     imageVector = icon,
-                    contentDescription = title,
+                    contentDescription = null,
                     modifier = Modifier
                         .size(32.dp)
                         .padding(end = 12.dp),

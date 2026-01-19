@@ -5,3 +5,7 @@
 ## 2024-05-24 - Touch Targets in Inline Chips
 **Learning:** Custom "chip-like" rows often suffer from small touch targets (e.g., 18dp icons) that violate accessibility standards.
 **Action:** Replace custom implementations with standard Material3 `InputChip` or `SuggestionChip`, leveraging the component's built-in min-height and semantics, and map complex actions (Edit/Remove) to the chip body and trailing icon respectively.
+
+## 2026-01-19 - Redundant Content Descriptions
+**Learning:** Decorative icons next to text labels (like in section headers) should have `contentDescription = null` to avoid redundant announcements by screen readers.
+**Action:** Audit `Icon` usage in headers and cards; if the text immediately follows, mark the icon as decorative.
