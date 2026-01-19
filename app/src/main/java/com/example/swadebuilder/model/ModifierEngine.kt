@@ -69,14 +69,14 @@ object ModifierEngine {
         val ancestral = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralName.keyify() }
 
         ancestral?.let { anc ->
+            val sources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
+
             // Size from Ancestry (Tamanho X)
-            // Checks desvantagens AND habilidades. Uses contains for robustness.
-            val sizeSource = anc.desvantagens.firstOrNull { it.contains("TAMANHO", ignoreCase = true) }
-                ?: anc.habilidades.map { it.nome }.firstOrNull { it.contains("TAMANHO", ignoreCase = true) }
+            val sizeSource = sources.firstOrNull { it.contains("TAMANHO", ignoreCase = true) }
 
             val racialSize = sizeSource
                 ?.substringAfter("TAMANHO", "") // Try uppercase first
-                ?.ifBlank { sizeSource.substringAfter("Tamanho", "") } // Try title case
+                ?.ifBlank { sizeSource?.substringAfter("Tamanho", "") } // Try title case
                 ?.trim()
                 ?.toIntOrNull()
                 ?: 0
@@ -105,8 +105,6 @@ object ModifierEngine {
                     anc.habilidades.any { it.nome.keyify() == "DIMINUTO" }
 
             if (hasDiminuto) {
-                 // Diminuto geralmente substitui o tamanho base ou soma?
-                 // Pelo prompt, Fadas são Diminuto. Se não tiver TAMANHO definido, aplica -4.
                  modifiers.add(Modifier(
                     id = "racial_diminuto",
                     sourceType = SourceType.ANCESTRALIDADE,
@@ -144,6 +142,29 @@ object ModifierEngine {
             }
             if (hasFerocidade) {
                 modifiers.add(Modifier("racial_ferocidade", SourceType.ANCESTRALIDADE, "Ferocidade Orc", ModifierTarget.TOUGHNESS_FLAT, 1))
+            }
+
+            // Generic Parsing
+            sources.forEach { str ->
+                val k = str.keyify()
+                if (k.contains("RESISTENCIA")) {
+                    val match = Regex("""RESISTENCIA\s*\+(\d+)""").find(k)
+                    if (match != null) {
+                        val valInt = match.groupValues[1].toInt()
+                        // Avoid duplicates if caught by hardcoded check above
+                        // (see reasoning in previous revision)
+                        modifiers.add(Modifier("racial_res_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.TOUGHNESS_FLAT, valInt))
+                    }
+                }
+                if (k.contains("ARMADURA")) {
+                    val match = Regex("""ARMADURA(.*?)\+(\d+)""").find(k)
+                    if (match != null) {
+                        val valInt = match.groupValues[2].toInt()
+                        if (state.naturalArmorFromRace == 0) {
+                            modifiers.add(Modifier("racial_armor_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.ARMOR, valInt))
+                        }
+                    }
+                }
             }
         }
 

@@ -317,7 +317,8 @@ class CriadorState {
         val base = 6
 
         val ancestralidadeObj = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade.keyify() }
-        val racialPenalty = ancestralidadeObj?.let { anc ->
+        var racialMod = 0
+        ancestralidadeObj?.let { anc ->
             val inDesvantagens = anc.desvantagens.any { d ->
                 val k = d.keyify()
                 k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
@@ -333,8 +334,31 @@ class CriadorState {
                             anc.id == "anc_gnomopathfinder" ||
                             anc.id == "anc_halflingpathfinder")
 
-            if (inDesvantagens || inHabilidades || isPathfinderSlowRace) 1 else 0
-        } ?: 0
+            if (inDesvantagens || inHabilidades || isPathfinderSlowRace) {
+                racialMod -= 1
+            }
+
+            // Explicit Field
+            if (anc.movimentacao != 0) {
+                racialMod += anc.movimentacao
+            } else {
+                // Dynamic Bonus/Penalty Parsing (fallback)
+                val sources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
+                sources.forEach { str ->
+                    val k = str.keyify()
+                    if (k.contains("MOVIMENTACAO")) {
+                        val bonusMatch = Regex("""MOVIMENTACAO\s*\+(\d+)""").find(k)
+                        if (bonusMatch != null) {
+                            racialMod += bonusMatch.groupValues[1].toInt()
+                        }
+                        val malusMatch = Regex("""MOVIMENTACAO\s*\-(\d+)""").find(k)
+                        if (malusMatch != null) {
+                            racialMod -= malusMatch.groupValues[1].toInt()
+                        }
+                    }
+                }
+            }
+        }
 
         val idosoPenalty =
             complicacoesSelecionadas
@@ -373,7 +397,7 @@ class CriadorState {
                 0
 
         return (base
-                - racialPenalty
+                + racialMod
                 - idosoPenalty
                 - lentoPenalty
                 - obesoPenalty
@@ -565,8 +589,14 @@ class CriadorState {
 
         // Parse logic
         keywords.forEach { key ->
-            if (sources.any { it.contains(key, ignoreCase = true) }) {
-                val desc = findDesc(key)
+            val matchedSource = sources.firstOrNull { it.contains(key, ignoreCase = true) }
+
+            if (matchedSource != null) {
+                var desc = findDesc(key)
+                if (desc.isBlank()) {
+                    desc = matchedSource
+                }
+
                 // Regex to find damage like "For+d4", "Str+d4", "For+d6", allowing for spaces
                 val dmgRegex = Regex("""(For|Str|Força|Strength)(\s*\+\s*)?d\d+""", RegexOption.IGNORE_CASE)
                 val paRegex = Regex("""PA\s*\d+""", RegexOption.IGNORE_CASE)
@@ -581,9 +611,17 @@ class CriadorState {
                     }
                 }
 
+                var finalName = key
+                if (matchedSource.contains("(") && matchedSource.contains(")")) {
+                    val prefix = matchedSource.substringBefore("(").trim()
+                    if (prefix.isNotBlank() && !prefix.equals(key, ignoreCase = true)) {
+                        finalName = prefix.lowercase().split(" ").joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
+                    }
+                }
+
                 weapons.add(
                     EquipamentoItem(
-                        nome = key,
+                        nome = finalName,
                         dano = JsonPrimitive(dmgMatch),
                         pa = if (paMatch > 0) JsonPrimitive(paMatch) else null,
                         distancia = JsonPrimitive("Toque"),
@@ -2726,6 +2764,7 @@ class CriadorState {
                 when {
                     hasMaior -> complicacoesSelecionadas[comp] = "Maior"
                     hasMenor -> complicacoesSelecionadas[comp] = "Menor"
+                    else -> complicacoesSelecionadas[comp] = "Menor"
                 }
             }
 
