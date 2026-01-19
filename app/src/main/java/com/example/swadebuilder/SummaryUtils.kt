@@ -56,42 +56,6 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     fun temComp(key: String): Boolean =
         allComplicationsKeys.any { it.keyify() == key }
 
-    fun calcMovimento(): Int {
-        val base = 6
-
-        val racialPenalty =
-            listaAncestralidadesJson
-                .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
-                ?.let { anc ->
-                    val hasTrait = anc.desvantagens.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) } ||
-                            anc.habilidades.any { it.nome.contains("Movimentação Reduzida", ignoreCase = true) }
-
-                    // Garante redução para raças lentas do Pathfinder
-                    val isPathfinderSlowRace = personagem.compendioPathfinderAtivo &&
-                            (anc.id == "anc_anaopathfinder" ||
-                                    anc.id == "anc_gnomopathfinder" ||
-                                    anc.id == "anc_halflingpathfinder")
-
-                    if (hasTrait || isPathfinderSlowRace) 1 else 0
-                } ?: 0
-
-        val lentoPenalty = if (temComp("LENTO")) 1 else 0
-        val idosoPenalty = if (temComp("IDOSO")) 1 else 0
-        val obesoPenalty = if (temComp("OBESO")) 1 else 0
-        val ligeiroBonus =
-            if (vantagensNomeKey.any { it == "LIGEIRO" }) 2 else 0
-
-        return (
-                base
-                        - racialPenalty
-                        - lentoPenalty
-                        - idosoPenalty
-                        - obesoPenalty
-                        + ligeiroBonus
-                        + personagem.bonusMovimentacaoFromPower
-                ).coerceAtLeast(0)
-    }
-
     fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
         var raw = rawStart
         var remaining = steps.coerceAtLeast(0)
@@ -143,7 +107,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val aparar = calcAparar()
     val resFinal = personagem.resistencia
     val tamanho = personagem.tamanho
-    val mov = calcMovimento()
+    val mov = personagem.movimentacao
     val armadura = (max(personagem.armorFromPower, personagem.armorBase) + personagem.naturalArmorFromRace).coerceAtLeast(0)
     val temArmaduraDeEquip = personagem.equipamentos.any { it.armadura != null }
     val bonusSemArmadura =

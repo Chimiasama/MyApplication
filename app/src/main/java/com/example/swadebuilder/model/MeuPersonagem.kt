@@ -80,6 +80,7 @@ data class MeuPersonagem(
 
     // ENGINE
     val tamanho: Int = 0,
+    val movimentacao: Int = 0,
     val resistencia: Int = 0,
     val appTheme: String = "DEFAULT",
     val portraitFileName: String? = null,

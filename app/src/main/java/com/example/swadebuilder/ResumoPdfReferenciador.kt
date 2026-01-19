@@ -95,6 +95,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         reservaChi = if (this.compendioArteDaGuerraAtivo) this.reservaChi else null,
         notasPericia = this.notasPericia.toMap(),
         tamanho = this.tamanhoExibido(),
+        movimentacao = this.valorMovimentacao(),
         resistencia = this.resistenciaBase(),
         appTheme = this.appTheme.name,
         portraitFileName = this.portraitFileName,
@@ -778,7 +779,7 @@ fun drawTrack(canvas: Canvas, x: Float, y: Float, label: String, boxes: Int, cur
 fun drawDerivedStats(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme) {
     val aparar = calcAparar(p)
     val resistencia = calcResistencia(p)
-    val mov = calcMovimento(p)
+    val mov = p.movimentacao
     val boxWidth = rect.width() / 3
     val labels = listOf("Aparar", "Resistência", "Movimentação")
     val values = listOf(aparar.toString(), resistencia, mov.toString())
@@ -817,16 +818,6 @@ fun drawAttributeShape(canvas: Canvas, cx: Float, cy: Float, text: String, theme
 }
 
 // Calculation Helpers
-fun calcMovimento(personagem: MeuPersonagem): Int {
-    val base = 6
-    val racialPenalty = com.example.swadebuilder.listaAncestralidadesJson.firstOrNull { it.nome.keyify() == personagem.ancestralidade }?.desvantagens?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) } == true
-    val lento = if (personagem.complicacoes.any { it.keyify().contains("LENTO") }) 1 else 0
-    val idoso = if (personagem.complicacoes.any { it.keyify().contains("IDOSO") }) 1 else 0
-    val obeso = if (personagem.complicacoes.any { it.keyify().contains("OBESO") }) 1 else 0
-    val ligeiro = if (personagem.vantagens.any { it.keyify() == "LIGEIRO" }) 2 else 0
-    return (base - (if(racialPenalty) 1 else 0) - lento - idoso - obeso + ligeiro + personagem.bonusMovimentacaoFromPower).coerceAtLeast(0)
-}
-
 fun calcAparar(personagem: MeuPersonagem): Int {
     val lutar = personagem.pericias["Lutar"] ?: 0
     val jutsu = personagem.pericias["Jutsu"] ?: 0
