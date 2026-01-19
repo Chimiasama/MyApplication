@@ -14,3 +14,8 @@
 **Vulnerability:** The application allowed arbitrary strings for filenames in the Save Dialog, relying on backend exceptions to catch invalid paths. This could lead to crashes or confusing errors, and potentially allowed excessively long filenames or reserved characters.
 **Learning:** Validating input at the UI layer (using `OutlinedTextField`'s `isError` and `supportingText`) provides a better user experience and reduces the attack surface by filtering out malformed data early. Using a strict whitelist (alphanumeric + `_.-`) for filenames is safer than a blacklist.
 **Prevention:** Implement `isValidFilename` and `sanitizeFilename` utilities and integrate them into UI input fields. Always pre-fill and validate filenames before attempting file operations.
+
+## 2025-02-14 - Insecure File Sharing (Least Privilege & Race Condition)
+**Vulnerability:** The application saved generated PDFs to the root of External Storage (`getExternalFilesDir(null)`) with a static filename (`ficha_preenchida.pdf`). This exposed the file to race conditions (overwriting before sharing completes) and violated the Principle of Least Privilege by exposing the entire external files root via FileProvider.
+**Learning:** Using `context.cacheDir` is safer for temporary files to be shared, as it is internal to the app and managed by the OS. Dynamic filenames prevent data leakage between operations.
+**Prevention:** Use `cache-path` in `file_paths.xml` with a specific subdirectory. Generate unique or sanitized filenames for shared content.

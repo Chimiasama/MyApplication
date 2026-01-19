@@ -107,7 +107,11 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
 // =================================================================================================
 
 fun produzirEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
-    val pdfFile = File(context.getExternalFilesDir(null), "ficha_preenchida.pdf")
+    // Save to internal cache/pdfs/ to avoid exposing root external files and support FileProvider
+    val pdfsDir = File(context.cacheDir, "pdfs").apply { mkdirs() }
+    val safeName = SecurityUtils.sanitizeFilename(dadosDoPersonagem.nome.ifBlank { "sem_nome" })
+    // Use character name to avoid race conditions when generating multiple PDFs
+    val pdfFile = File(pdfsDir, "ficha_$safeName.pdf")
 
     var portrait: Bitmap? = null
     dadosDoPersonagem.portraitFileName?.let { fileName ->
