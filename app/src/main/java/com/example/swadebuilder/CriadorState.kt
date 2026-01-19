@@ -338,18 +338,23 @@ class CriadorState {
                 racialMod -= 1
             }
 
-            // Dynamic Bonus/Penalty Parsing
-            val sources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
-            sources.forEach { str ->
-                val k = str.keyify()
-                if (k.contains("MOVIMENTACAO")) {
-                    val bonusMatch = Regex("""MOVIMENTACAO\s*\+(\d+)""").find(k)
-                    if (bonusMatch != null) {
-                        racialMod += bonusMatch.groupValues[1].toInt()
-                    }
-                    val malusMatch = Regex("""MOVIMENTACAO\s*\-(\d+)""").find(k)
-                    if (malusMatch != null) {
-                        racialMod -= malusMatch.groupValues[1].toInt()
+            // Explicit Field
+            if (anc.movimentacao != 0) {
+                racialMod += anc.movimentacao
+            } else {
+                // Dynamic Bonus/Penalty Parsing (fallback)
+                val sources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
+                sources.forEach { str ->
+                    val k = str.keyify()
+                    if (k.contains("MOVIMENTACAO")) {
+                        val bonusMatch = Regex("""MOVIMENTACAO\s*\+(\d+)""").find(k)
+                        if (bonusMatch != null) {
+                            racialMod += bonusMatch.groupValues[1].toInt()
+                        }
+                        val malusMatch = Regex("""MOVIMENTACAO\s*\-(\d+)""").find(k)
+                        if (malusMatch != null) {
+                            racialMod -= malusMatch.groupValues[1].toInt()
+                        }
                     }
                 }
             }

@@ -116,6 +116,7 @@
   {
     "nome": "CENTAUX",
     "origem": "FC",
+    "movimentacao": 2,
     "descricao": "Combinam a parte inferior de um animal quadrúpede com a superior humanoide. São rápidos e estáveis, mas chamativos.",
     "atributos": {},
     "pericias": {},
@@ -134,6 +135,7 @@
   {
     "nome": "DRAKENS",
     "origem": "FC",
+    "movimentacao": -1,
     "descricao": "Seres intimidadores que lembram dragões ou basiliscos, com pele dura e temperamento rude.",
     "atributos": {
       "Força": 2
