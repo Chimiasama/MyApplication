@@ -16,6 +16,7 @@ import android.graphics.pdf.PdfDocument
 import android.net.Uri
 import android.text.StaticLayout
 import android.text.TextPaint
+import android.util.Log
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.example.swadebuilder.model.EquipamentoItem
@@ -24,6 +25,8 @@ import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.SecurityUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonPrimitive
 import java.io.File
 import java.io.FileOutputStream
@@ -106,44 +109,55 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
 // 2. ENTRY POINT FOR PDF GENERATION
 // =================================================================================================
 
-fun produzirEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
-    // Save to internal cache/pdfs/ to avoid exposing root external files and support FileProvider
-    val pdfsDir = File(context.cacheDir, "pdfs").apply { mkdirs() }
-    val safeName = SecurityUtils.sanitizeFilename(dadosDoPersonagem.nome.ifBlank { "sem_nome" })
-    // Use character name to avoid race conditions when generating multiple PDFs
-    val pdfFile = File(pdfsDir, "ficha_$safeName.pdf")
-
-    var portrait: Bitmap? = null
-    dadosDoPersonagem.portraitFileName?.let { fileName ->
+suspend fun produzirEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
+    withContext(Dispatchers.IO) {
         try {
-            val portraitsDir = File(context.filesDir, "portraits")
-            val file = SecurityUtils.getSafeChildFile(portraitsDir, fileName)
-            if (file.exists()) {
-                portrait = BitmapFactory.decodeFile(file.absolutePath)
+            // Save to internal cache/pdfs/ to avoid exposing root external files and support FileProvider
+            val pdfsDir = File(context.cacheDir, "pdfs").apply { mkdirs() }
+            val safeName = SecurityUtils.sanitizeFilename(dadosDoPersonagem.nome.ifBlank { "sem_nome" })
+            // Use character name to avoid race conditions when generating multiple PDFs
+            val pdfFile = File(pdfsDir, "ficha_$safeName.pdf")
+
+            var portrait: Bitmap? = null
+            dadosDoPersonagem.portraitFileName?.let { fileName ->
+                try {
+                    val portraitsDir = File(context.filesDir, "portraits")
+                    val file = SecurityUtils.getSafeChildFile(portraitsDir, fileName)
+                    if (file.exists()) {
+                        portrait = BitmapFactory.decodeFile(file.absolutePath)
+                    }
+                } catch (e: Exception) {
+                    // Path traversal attempt or invalid filename; ignore portrait
+                }
+            }
+
+            gerarFichaEmPdf(pdfFile, dadosDoPersonagem, portrait)
+
+            val uri: Uri = FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                pdfFile
+            )
+
+            withContext(Dispatchers.Main) {
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    setDataAndType(uri, "application/pdf")
+                    flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    clipData = ClipData.newRawUri(null, uri)
+                }
+
+                if (intent.resolveActivity(context.packageManager) != null) {
+                    context.startActivity(intent)
+                } else {
+                    Toast.makeText(context, "Nenhum app de PDF encontrado.", Toast.LENGTH_SHORT).show()
+                }
             }
         } catch (e: Exception) {
-            // Path traversal attempt or invalid filename; ignore portrait
+            Log.e("PDFGeneration", "Erro ao gerar PDF", e)
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, "Erro ao gerar PDF: ${e.message}", Toast.LENGTH_LONG).show()
+            }
         }
-    }
-
-    gerarFichaEmPdf(pdfFile, dadosDoPersonagem, portrait)
-
-    val uri: Uri = FileProvider.getUriForFile(
-        context,
-        "${context.packageName}.fileprovider",
-        pdfFile
-    )
-
-    val intent = Intent(Intent.ACTION_VIEW).apply {
-        setDataAndType(uri, "application/pdf")
-        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        clipData = ClipData.newRawUri(null, uri)
-    }
-
-    if (intent.resolveActivity(context.packageManager) != null) {
-        context.startActivity(intent)
-    } else {
-        Toast.makeText(context, "Nenhum app de PDF encontrado.", Toast.LENGTH_SHORT).show()
     }
 }
 

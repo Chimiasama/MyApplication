@@ -441,8 +441,9 @@ fun SummaryContent(
 
         OutlinedTextField(
             value = state.anotacoes,
-            onValueChange = { state.anotacoes = it },
+            onValueChange = { if (it.length <= 5000) state.anotacoes = it },
             label = { Text("Anotações") },
+            supportingText = { Text("${state.anotacoes.length}/5000") },
             modifier = Modifier.fillMaxWidth(),
             minLines = 3
         )
@@ -1077,8 +1078,9 @@ private fun SpecializationsSummaryCard(
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value = editNewName,
-                        onValueChange = { editNewName = it },
+                        onValueChange = { if (it.length <= 50) editNewName = it },
                         label = { Text("Nome") },
+                        supportingText = { Text("${editNewName.length}/50") },
                         singleLine = true
                     )
                 }
