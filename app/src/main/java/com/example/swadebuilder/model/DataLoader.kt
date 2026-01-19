@@ -99,18 +99,18 @@ object DataLoader {
     )
 
     private val ancestryModules = listOf(
-        ModuleFile("basico_listaancestralidade.json"),
-        ModuleFile("suplementos_listaancestralidade.json"),
-        ModuleFile("fantasia_listaancestralidade.json"),
-        ModuleFile("horror_listaancestralidade.json"),
-        ModuleFile("scifi_listaancestralidade.json"),
-        ModuleFile("super_listaancestralidade.json"),
+        ModuleFile("basico_ancestralidades.json"),
+        ModuleFile("suplementos_ancestralidades.json"),
+        ModuleFile("fantasia_ancestralidades.json"),
+        ModuleFile("horror_ancestralidades.json"),
+        ModuleFile("scifi_ancestralidades.json"),
+        ModuleFile("super_ancestralidades.json"),
         ModuleFile("wiseguys_ancestralidades.json"),
         ModuleFile("ancestralidades_crystal.json"),
         ModuleFile("ancestralidades_adg.json"),
         ModuleFile("ancestralidades_sol_vapor.json"),
         ModuleFile("ancestralidades_deadlands.json"),
-        ModuleFile("pathfinder_listaancestralidade.json")
+        ModuleFile("pathfinder_ancestralidades.json")
     )
 
     // --- Loading Logic ---
