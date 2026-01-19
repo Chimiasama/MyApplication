@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <!-- Permite compartilhar arquivo em getExternalFilesDir(null) -->
-    <external-files-path
+    <!-- Permite compartilhar arquivo em cacheDir/pdfs/ -->
+    <cache-path
         name="meus_pdfs"
-        path="." />
+        path="pdfs/" />
 </paths>
