@@ -988,7 +988,7 @@ class CriadorState {
                     group.find { it.origem.equals("BASICO", ignoreCase = true) } ?: group.firstOrNull()
                 }
 
-            return if (compendioPathfinderAtivo) {
+            if (compendioPathfinderAtivo) {
                 // If Pathfinder active:
                 val forbiddenIds = setOf("ELETRONICA", "FOCO", "HACKEAR", "PSIONICOS", "IDIOMAS")
                 unifiedList.filter { per ->
