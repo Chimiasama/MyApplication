@@ -47,7 +47,6 @@ object DataLoader {
 
     private val equipmentModules = listOf(
         ModuleFile("basico_equipamentos.json"),
-        ModuleFile("suplementos_equipamentos.json"),
         ModuleFile("fantasia_equipamentos.json"),
         ModuleFile("horror_equipamentos.json"),
         ModuleFile("scifi_equipamentos.json"),
@@ -63,14 +62,12 @@ object DataLoader {
 
     private val skillModules = listOf(
         ModuleFile("basico_pericias.json"),
-        ModuleFile("suplementos_pericias.json"),
         ModuleFile("pericias_adg.json"),
         ModuleFile("fantasia_pericias.json")
     )
 
     private val advantageModules = listOf(
         ModuleFile("basico_vantagens.json"),
-        ModuleFile("suplementos_vantagens.json"),
         ModuleFile("fantasia_vantagens.json", originOverride = "FANTASIA"),
         ModuleFile("horror_vantagens.json"),
         ModuleFile("scifi_vantagens.json"),
@@ -85,7 +82,6 @@ object DataLoader {
 
     private val complicationModules = listOf(
         ModuleFile("basico_complicacoes.json"),
-        ModuleFile("suplementos_complicacoes.json"),
         ModuleFile("fantasia_complicacoes.json"),
         ModuleFile("horror_complicacoes.json"),
         ModuleFile("scifi_complicacoes.json", originOverride = "SCI_FI"),
@@ -100,7 +96,6 @@ object DataLoader {
 
     private val ancestryModules = listOf(
         ModuleFile("basico_ancestralidades.json"),
-        ModuleFile("suplementos_ancestralidades.json"),
         ModuleFile("fantasia_ancestralidades.json"),
         ModuleFile("horror_ancestralidades.json"),
         ModuleFile("scifi_ancestralidades.json"),
