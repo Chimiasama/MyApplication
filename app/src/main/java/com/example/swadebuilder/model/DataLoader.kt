@@ -101,10 +101,10 @@ object DataLoader {
         ModuleFile("scifi_ancestralidades.json"),
         ModuleFile("super_ancestralidades.json"),
         ModuleFile("wiseguys_ancestralidades.json"),
-        ModuleFile("ancestralidades_crystal.json"),
-        ModuleFile("ancestralidades_adg.json"),
-        ModuleFile("ancestralidades_sol_vapor.json"),
-        ModuleFile("ancestralidades_deadlands.json"),
+        ModuleFile("crystal_ancestralidades.json"),
+        ModuleFile("adg_ancestralidades.json"),
+        ModuleFile("sol_vapor_ancestralidades.json"),
+        ModuleFile("deadlands_ancestralidades.json"),
         ModuleFile("pathfinder_ancestralidades.json")
     )
 
