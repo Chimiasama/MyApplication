@@ -8,9 +8,14 @@ import com.example.swadebuilder.util.semAcentos
  */
 
 fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
+    val basicReplaced = compendioFantasiaAtivo || compendioSciFiAtivo
     if (compendioFantasiaAtivo) {
         add("FANTASIA")
-    } else {
+    }
+    if (compendioSciFiAtivo) {
+        add("SCI_FI")
+    }
+    if (!basicReplaced) {
         add("BASICO")
     }
     if (modoSupers) add("SUPER")
@@ -46,6 +51,7 @@ fun CriadorState.isVantagemVisible(
     val isCidadeSolVapor = origemNorm == "CIDADE_SOL_VAPOR"
     val isWiseguys = origemNorm == "WISEGUYS"
     val isCrystalHeart = origemNorm == "CRYSTAL_HEART"
+    val isSciFi = origemNorm == "SCI_FI"
 
     // 1. Check Compendium Activation Logic
     if (compendioCrystalHeartAtivo) {
@@ -102,7 +108,8 @@ fun CriadorState.isVantagemVisible(
             (isDeadlands && compendioDeadlandsAtivo) ||
             (isCidadeSolVapor && compendioCidadeSolVaporAtivo) ||
             (isWiseguys && compendioWiseguysAtivo) ||
-            (isCrystalHeart && compendioCrystalHeartAtivo)
+            (isCrystalHeart && compendioCrystalHeartAtivo) ||
+            (isSciFi && compendioSciFiAtivo)
 
     if (!isActive) return false
 
