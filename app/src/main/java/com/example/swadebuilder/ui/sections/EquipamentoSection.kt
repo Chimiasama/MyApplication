@@ -357,7 +357,7 @@ fun EquipamentoSection(
                 .filter { categoria ->
                     val origem = categoria.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
                     (origem != "SUPLEMENTO") &&
-                            (origem != "BASICO" || (!compendioFantasiaAtivo && !compendioSciFiAtivo)) &&
+                            (origem != "BASICO" || (!compendioFantasiaAtivo && !compendioSciFiAtivo && !state.modoSupers)) &&
                             (origem != "ARTE_DA_GUERRA" || compendioArteDaGuerraAtivo) &&
                             (origem != "CIDADE_SOL_VAPOR" || compendioCidadeSolVaporAtivo) &&
                             (origem != "WISEGUYS" || compendioWiseguysAtivo) &&
