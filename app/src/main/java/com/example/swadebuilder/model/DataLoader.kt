@@ -88,7 +88,7 @@ object DataLoader {
         ModuleFile("suplementos_complicacoes.json"),
         ModuleFile("fantasia_complicacoes.json"),
         ModuleFile("horror_complicacoes.json"),
-        ModuleFile("scifi_complicacoes.json"),
+        ModuleFile("scifi_complicacoes.json", originOverride = "SCI_FI"),
         ModuleFile("super_complicacoes.json"),
         ModuleFile("wiseguys_complicacoes.json"),
         ModuleFile("complicacoes_crystal.json"),
@@ -257,7 +257,9 @@ object DataLoader {
 
         listaTropos = adgTropos + chTropos
 
-        listaComplicacoes = assets.loadAndMerge<Complicacao>(complicationModules)
+        listaComplicacoes = assets.loadAndMerge<Complicacao>(complicationModules) { item, override ->
+            if (override != null) item.copy(origem = override) else item
+        }
 
         // 9. Ancestralidades
         listaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestryModules)
