@@ -50,19 +50,19 @@ object DataLoader {
         ModuleFile("fantasia_equipamentos.json"),
         ModuleFile("horror_equipamentos.json"),
         ModuleFile("scifi_equipamentos.json"),
-        ModuleFile("equipamentos_crystal.json"),
-        ModuleFile("equipamentos_trilhador.json"),
+        ModuleFile("crystal_equipamentos.json"),
+        ModuleFile("trilhador_equipamentos.json"),
         ModuleFile("pathfinder_equipamentos.json"),
         ModuleFile("super_equipamentos.json"),
         ModuleFile("wiseguys_equipamentos.json"),
-        ModuleFile("equipamentos_adg.json"),
-        ModuleFile("equipamentos_sol_vapor.json"),
-        ModuleFile("equipamentos_deadlands.json")
+        ModuleFile("adg_equipamentos.json"),
+        ModuleFile("sol_vapor_equipamentos.json"),
+        ModuleFile("deadlands_equipamentos.json")
     )
 
     private val skillModules = listOf(
         ModuleFile("basico_pericias.json"),
-        ModuleFile("pericias_adg.json"),
+        ModuleFile("adg_pericias.json"),
         ModuleFile("fantasia_pericias.json")
     )
 
@@ -71,12 +71,12 @@ object DataLoader {
         ModuleFile("fantasia_vantagens.json", originOverride = "FANTASIA"),
         ModuleFile("horror_vantagens.json"),
         ModuleFile("scifi_vantagens.json"),
-        ModuleFile("vantagens_crystal.json"),
+        ModuleFile("crystal_vantagens.json"),
         ModuleFile("super_vantagens.json"),
         ModuleFile("wiseguys_vantagens.json"),
-        ModuleFile("vantagens_adg.json"),
-        ModuleFile("vantagens_sol_vapor.json"),
-        ModuleFile("vantagens_deadlands.json"),
+        ModuleFile("adg_vantagens.json"),
+        ModuleFile("sol_vapor_vantagens.json"),
+        ModuleFile("deadlands_vantagens.json"),
         ModuleFile("pathfinder_vantagens.json")
     )
 
@@ -87,10 +87,10 @@ object DataLoader {
         ModuleFile("scifi_complicacoes.json", originOverride = "SCI_FI"),
         ModuleFile("super_complicacoes.json"),
         ModuleFile("wiseguys_complicacoes.json"),
-        ModuleFile("complicacoes_crystal.json"),
-        ModuleFile("complicacoes_adg.json"),
-        ModuleFile("complicacoes_sol_vapor.json"),
-        ModuleFile("complicacoes_deadlands.json"),
+        ModuleFile("crystal_complicacoes.json"),
+        ModuleFile("adg_complicacoes.json"),
+        ModuleFile("sol_vapor_complicacoes.json"),
+        ModuleFile("deadlands_complicacoes.json"),
         ModuleFile("pathfinder_complicacoes.json")
     )
 
@@ -154,7 +154,7 @@ object DataLoader {
 
         // 2. Crystal Hearts
         listaCoracoesCrystal = runCatching {
-            assets.open("coracoes_crystal.json")
+            assets.open("crystal_coracoes.json")
                 .use { input -> json.decodeFromStream<List<CrystalHeart>>(input) }
         }.getOrElse { emptyList() }
 
@@ -208,7 +208,7 @@ object DataLoader {
         }.getOrElse { emptyList() }
 
         val periciasDescAdgList = runCatching {
-            assets.open("pericias_desc_adg.json").use { input ->
+            assets.open("adg_pericias_desc.json").use { input ->
                 json.decodeFromStream<List<PericiaDescricaoJson>>(input)
             }
         }.getOrElse { emptyList() }
@@ -244,10 +244,10 @@ object DataLoader {
 
         // 8. Tropos e Complicações
         val adgTropos = runCatching {
-            loadJsonAsset<List<Tropo>>(context, "tropos_adg.json")
+            loadJsonAsset<List<Tropo>>(context, "adg_tropos.json")
         }.getOrElse { emptyList() }
         val chTropos = runCatching {
-            loadJsonAsset<List<Tropo>>(context, "tropos_ch.json")
+            loadJsonAsset<List<Tropo>>(context, "crystal_tropos.json")
         }.getOrElse { emptyList() }
 
         listaTropos = adgTropos + chTropos
