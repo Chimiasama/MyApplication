@@ -285,6 +285,53 @@ object ModifierEngine {
             }
         }
 
+        // 7. Equipment Toughness (Resistência)
+        val nonStackingArmorToughness = mutableListOf<Pair<String, Int>>()
+
+        state.equipamentosComprados.forEach { item ->
+            val resVal = (item.resistencia as? kotlinx.serialization.json.JsonPrimitive)
+                ?.content?.toIntOrNull() ?: 0
+
+            if (resVal > 0) {
+                val obs = (item.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
+                // Checks for "Stacks with armor" note
+                val explicitlyStacks = obs.contains("Acumula com armaduras", ignoreCase = true)
+                // Treat as "Armor" (non-stacking by default) if it has the 'armadura' field defined
+                val isArmor = item.armadura != null
+
+                if (isArmor && !explicitlyStacks) {
+                    nonStackingArmorToughness.add(item.nome to resVal)
+                } else {
+                    // Stacking (Accessories, Shields, or explicit stacking armor)
+                    modifiers.add(
+                        Modifier(
+                            id = "equip_tough_${item.nome.keyify()}",
+                            sourceType = SourceType.OUTRO,
+                            sourceName = item.nome,
+                            target = ModifierTarget.TOUGHNESS_FLAT,
+                            value = resVal
+                        )
+                    )
+                }
+            }
+        }
+
+        // Add the best non-stacking armor toughness
+        if (nonStackingArmorToughness.isNotEmpty()) {
+            val best = nonStackingArmorToughness.maxByOrNull { it.second }
+            if (best != null) {
+                modifiers.add(
+                    Modifier(
+                        id = "equip_tough_armor_max",
+                        sourceType = SourceType.OUTRO,
+                        sourceName = "${best.first} (Armadura)",
+                        target = ModifierTarget.TOUGHNESS_FLAT,
+                        value = best.second
+                    )
+                )
+            }
+        }
+
         return modifiers
     }
 
