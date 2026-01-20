@@ -7887,5 +7887,115 @@
         "tipo:necromancia",
         "minion"
       ]
+    },
+  [
+    {
+      "nome": "Pane",
+      "estagio": "Novato",
+      "custo": "2",
+      "alcance": "Astúcia",
+      "duracao": "Instantânea",
+      "descricao": "Magos e Magas do metal podem criar engenhocas que fazem com que outros dispositivos mecânicos emperrem, sofram uma pane ou um mau funcionamento. Quem conjura escolhe qualquer dispositivo com partes móveis ou conectadas no Alcance (a critério do MJ, mas não ferramentas \"simples\") e faz uma rolagem de Ciência Estranha. Se bem-sucedido, aqueles que usam o item subtraem 2 de seus totais, em caso de uma Falha Crítica ele quebra. Ambos os efeitos funcionam como a Complicação Desajeitado e não se acumulam com ela. Conjurar pane em um dispositivo que já esteja sofrendo esta penalidade conta como uma Ampliação.\n\nCom uma ampliação o dispositivo sofre uma pane imediata e se for uma engenhoca de ciência estranha ou um dispositivo infernal quem usa também deve imediatamente rolar na sua Tabela de Mau Funcionamento apropriada. Qualquer resultado pode ser removido com uma rolagem de Consertar, que dura uma ação, se apenas remover a penalidade, ou 1d6 horas, se estiver quebrado.\n\nMODIFICADORES:\n- RECEPTORES ADICIONAIS (+1): O poder pode afetar um item adicional por cada 1 Ponto de Poder extra.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Reparar",
+      "estagio": "Novato",
+      "custo": "3",
+      "alcance": "Astúcia",
+      "duracao": "Instantânea",
+      "descricao": "Reparar permite que um mago ou maga do metal repare danos causados a máquinas complexas — essencialmente qualquer dispositivo que tenha Ferimentos, como veículos ou certos tipos de construtos sencientes. Pode assumir a forma de um kit de ferramentas de mecânico, uma multi-ferramenta ou outro dispositivo de reparação projetado pelo mago ou maga do metal.\n\nReparar os Ferimentos de uma máquina é um rolagem de Ciência Estranha. Um sucesso repara um Ferimento e uma ampliação repara dois. Se a conjuração falhar ou não curar todos os danos, o mago ou maga do metal pode tentar novamente. Em uma falha crítica, os danos só podem ser reparados através do trabalho duro normal e peças de substituição.\n\nMODIFICADORES:\n- ACERTOS CRÍTICOS (+2): O inventor ou inventora pode tentar consertar um Acerto Crítico por conjuração de Reparar. Assim como com reparar Ferimentos, isto pode ser feito várias vezes.\n- EXPULSAR GREMLINS (+1): Uma rolagem de Ciência Estranha bem-sucedida remove um gremlin de uma máquina ou todos os gremlins com uma ampliação.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Iludir",
+      "estagio": "Novato",
+      "custo": "3",
+      "alcance": "Espírito",
+      "duracao": "Até o próximo pôr-do-sol",
+      "descricao": "As bruxas sabem que o caminho mais fácil para conseguirem o que desejam é atrair amantes crédulos para fazerem pacificamente o que querem.\n\nIludir é uma rolagem resistida do Conjurar da bruxa contra o Espírito do alvo. Ele só funciona naqueles romanticamente atraídos pelo gênero da bruxa e apenas se eles tiverem uma atitude neutra ou superior para com ela. Se for bem-sucedido, a atitude do alvo melhora em um nível, ou dois com uma ampliação. Ao contrário do poder fantoche, o alvo não é controlado mentalmente. Ele ou ela tem livre arbítrio, mas está genuinamente enamorado pela bruxa e quer fazer o que ele ou ela puder para agradá-la.\n\nO poder desaparece ao nascer do sol ou ao pôr do sol, o que vier a seguir. Isto não pode ser mantido, mas pode ser reconjurado.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Pavor",
+      "estagio": "Experiente",
+      "custo": "5",
+      "alcance": "Espírito",
+      "duracao": "Um Dia",
+      "descricao": "Pavor permite que uma bruxa aumente o Nível de Medo em 1 com um sucesso, ou 2 com uma ampliação. A área afetada é de 25 quadros (50 metros) de diâmetro.\n\nMODIFICADORES:\n- EFEITO DE ÁREA (+3): O efeito abrange uma área de aproximadamente 50 quadros (100 metros) de diâmetro.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Transformar",
+      "estagio": "Experiente",
+      "custo": "5",
+      "alcance": "Toque",
+      "duracao": "Uma hora",
+      "descricao": "Transformar amaldiçoa um alvo transformando-o em um animal comum de Tamanho -2 a -3 (a escolha da bruxa). Um Toque bem-sucedido em uma vítima não-voluntária faz com que ela realize uma rolagem de Espírito (com –2 com um ampliação na rolagem de Conjurar). Se a vítima falhar, ela é transformada – suas roupas e outros itens pessoais caem ao seu redor (eles não se transformam). A maldição pode ser cancelada à vontade pela pessoa que a lançou originalmente e termina automaticamente se ela for morta. Dissipar também termina a transformação.\n\nMODIFICADORES:\n- MALDIÇÃO VERDADEIRA (+0): Uma bruxa pode transformar um alvo permanentemente, mas o processo leva muito mais tempo. O Alcance torna-se de 1,5 km ao invés de Toque, mas requer um item pessoal do alvo. Com uma conjuração bem-sucedida, a vítima começa a assumir as características do animal nas próximas 12 horas. Na 13ª hora, a transformação torna-se chocantemente aparente. A vítima sofre 3 pontos de penalidades de Ferimento, embora não esteja realmente Ferida. Tentativas de dissipar sofrem uma penalidade de -4 e cada indivíduo só pode tentar uma vez.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Enfeitiçar Munição",
+      "estagio": "Experiente",
+      "custo": "4",
+      "alcance": "Pessoal",
+      "duracao": "5",
+      "descricao": "Este poder só pode ser usado por um mascate com a Vantagem Bruxeiro. Runas arcanas no cano de uma arma enfeitiçada desencadeiam vários poderes nas balas dentro da arma. Enquanto o poder estiver ativo, o bruxeiro ou bruxeira pode escolher qualquer um dos efeitos abaixo para aplicar a cada tiro disparado de sua arma (ou dois efeitos simultâneos com uma ampliação!).\n\n- Agonia Argêntea: O tiro afeta um ser como se fosse composto de sua Fraqueza (não funciona contra Servitores).\n- Bala Fantasma: O tiro está metade neste mundo e metade nos Campos de Caça, dando-lhe PA 6.\n- Carregado Para Ursos: O tiro é uma Arma Pesada e aumenta o dano base da Arma em um tipo de dado.\n- Explosivo: O tiro causa dano em um Modelo Pequeno de Explosão.\n- Labareda: Remove penalidades de Iluminação na área por um minuto. Se interior, 2-6 no d6 incendeia materiais.\n- Surpresa de Sacramento: O tiro surge com poder de algum tipo (fogo, eletricidade, frio, etc.).\n- Uma bala Com o Seu Nome: Adiciona +2 a rolagem de Atirar.\n- Vento do Kentucky: Duplica a Distância do tiro.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Caminhada Selvagem",
+      "estagio": "Novato",
+      "custo": "2",
+      "alcance": "Pessoal",
+      "duracao": "Uma hora",
+      "descricao": "Caminhada selvagem pede aos espíritos da terra para mover o xamã para dentro e para fora dos Campos de Caça enquanto ele viaja, encurtando caminhadas árduas e escondendo seu caminho. Depois de caminhar por pelo menos 1,6 km no deserto, cada 4,8 km contam como um (não tem efeito na Movimentação) e as pegadas do xamã são impossíveis de rastrear além de seções curtas. Com uma ampliação na perícia arcana, cada oito quilômetros contam como um.\n\nMODIFICADORES:\n- RECEPTORES ADICIONAIS (+1): O poder pode afetar mais de um alvo por 1 Ponto de Poder adicional por cada um.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Entorpecimento",
+      "estagio": "Novato",
+      "custo": "2",
+      "alcance": "Espírito",
+      "duracao": "5",
+      "descricao": "Entorpecimento alivia a dor causada por lesões. Com um sucesso na rolagem de perícia arcana, quem conjura e todos os aliados dentro de um raio igual a seu Espírito em quadros na mesa ignoram 1 ponto de penalidades de Ferimentos ou Fadiga, ou 2 com uma ampliação.\n\nEntorpecimento também anula qualquer resultado temporário na Tabela de Lesões pela sua duração. Uma personagem deixada Lenta por um golpe na perna, por exemplo, pode mover-se normalmente enquanto entorpecido. O poder não tem efeito em lesões permanentes.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Santificar",
+      "estagio": "Veterano",
+      "custo": "10",
+      "alcance": "Especial",
+      "duracao": "Até o próximo pôr-do-sol",
+      "descricao": "Um abençoado pode tornar uma área temporariamente sagrada por oração e devoção extenuantes. O processo leva quatro horas seguidas de meditação e rituais. Uma vez completo, o abençoado faz a sua rolagem de Fé. Falha significa tempo desperdiçado. Falha Crítica impede novas tentativas no local até que um mal seja derrotado.\n\nSucesso significa que uma área de cerca de 30 metros quadrados é um anátema para as forças das trevas. Qualquer criatura maligna que tente entrar no solo sagrado deve fazer uma rolagem de Espírito no início de cada rodada (ação livre) ou sofre Fadiga (com –2 se houver ampliação na Fé). Isto pode levar à Incapacitação, mas não à morte.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Símbolo Sagrado",
+      "estagio": "Novato",
+      "custo": "3",
+      "alcance": "Pessoal",
+      "duracao": "5",
+      "descricao": "Qualquer criatura sobrenatural maléfica que deseje realizar um ataque físico direto contra o portador do símbolo, deve fazer uma rolagem de Espírito como uma ação livre (a criatura subtrai 2 se o abençoado lançar o poder com uma ampliação). Símbolo sagrado não tem efeito em Desafios ou outros ataques não prejudiciais. Requer um símbolo sagrado (improvisado impõe -2 na invocação).\n\nEfeito em Vampiros: Sanguessugas têm fraqueza inata a símbolos sagrados. O personagem pode usar este poder (gastando PP e rolando perícia) OU apenas brandir o símbolo conforme a Fraqueza da criatura.\n\nMODIFICADORES:\n- ÁREA (+2/+3): Por +2 pontos, afeta aliados em um MME centrado no conjurador. Por +3, aumenta para MGE.\n- FORTE (+1): As rolagens de Espírito da criatura são feitas com –2 (–4 com uma ampliação).",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Aspecto do Loa Rada",
+      "estagio": "Novato",
+      "custo": "5",
+      "alcance": "Pessoal",
+      "duracao": "Uma hora",
+      "descricao": "Este poder convida um loa rada para \"montar\" o corpo do houngan ou da mambo. Apenas um espírito por vez. Concede traços específicos conforme o Loa:\n\n- AGWÉ: Caminhar sobre a água, respirar submerso, nadar com Movimentação total. Ampliação: +2 Movimentação.\n- BARÃO SAMEDI: Corta ligação de mortos-vivos com Campos de Caça. Morto-Vivo movendo-se ao lado faz Vigor (–2 se ampliação) ou fica Atordoado.\n- DAMBALLA: Rerrolar testes de Vigor e Riqueza (ou Persuadir para negociar). Ampliação: rolagens com +1.\n- ERZULIE FRÉDA: Concede auxílio de uma pessoa romanticamente inclinada pelo gênero do conjurador (reação Neutra ou melhor). Não é controle mental. Ampliação: alvo mais ansioso para ajudar.\n- PAPA LEGBA: Rerrolagem gratuita em Persuadir, Intimidar ou Provocar. Ampliação: +1 na rolagem.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Fúria do Loa Petro",
+      "estagio": "Novato",
+      "custo": "5",
+      "alcance": "Pessoal",
+      "duracao": "5",
+      "descricao": "Convida espíritos agressivos para o corpo do voduísta. Apenas um espírito por vez.\n\n- ERZULIE DANTOR: Ganha corte na língua e Complicação Vingativo (Menor). Quem prejudicar a voduísta (Abalada, Atordoada ou Ferida) faz Espírito (–2 se ampliação) ou fica Atordoado.\n- MARINETTE BWA CHECH: Ganha Complicação Desagradável. Aumenta ataques de Lutar para Alcance 2, For+d6 e PA 2 se desarmado. Ampliação: Dano For+d8.\n- MET KALFU: Ganha Complicação Sem Escrúpulos (Menor). Pode cortar laços com Destino: se inimigo gasta Bene, voduísta faz Espírito com –2 (sem penalidade se ampliação) para cancelar o gasto. Com ampliação, o Bene é perdido.",
+      "origem": "DEADLANDS"
     }
+  ]
 ]
