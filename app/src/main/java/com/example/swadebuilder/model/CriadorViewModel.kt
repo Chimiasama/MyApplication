@@ -420,6 +420,8 @@ class CriadorViewModel : ViewModel() {
 
         state.dinheiro = if (compendioPathfinderAtivo) {
             30000
+        } else if (compendioSciFiAtivo) {
+            1000
         } else if (compendioFantasiaAtivo) {
             300
         } else {
