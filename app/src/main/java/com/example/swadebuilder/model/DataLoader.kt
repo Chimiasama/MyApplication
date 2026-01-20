@@ -222,12 +222,9 @@ object DataLoader {
         }
 
         // Carrega descrições de atributos
-        val atributosDescList = runCatching {
-            assets.open("atributos_desc.json").use { input ->
-                json.decodeFromStream<List<PericiaDescricaoJson>>(input)
-            }
-        }.getOrElse { emptyList() }
-        mapaAtributosDescricao = atributosDescList.associate { it.nome.keyify() to it.descricao }
+        mapaAtributosDescricao = atributosData.atributos.associate {
+            it.nome.keyify() to (it.descricao ?: "")
+        }
 
         // 7. Vantagens
         val todasVantagens = assets.loadAndMerge<Vantagem>(advantageModules) { item, override ->
