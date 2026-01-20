@@ -1,576 +1,2528 @@
 [
   {
-    "tipo": "Armas Pessoais",
-    "subtipo": "Futuristas",
-    "subsubtipo": "Combate corpo a corpo",
+    "tipo": "Equipamento de Aventura",
+    "subtipo": "Geral",
     "origem": "SCI_FI",
     "itens": [
       {
-        "nome": "Espada Molecular",
-        "dano": "For+d8+2",
-        "forcaMin": "d6",
-        "peso": "1",
-        "custo": 500,
-        "observacoes": "PA 4",
-        "subsubtipo": "Espadas",
-        "origem": "SCI_FI"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas de Combate à Distância",
-    "subtipo": "Lasers Futuristas",
-    "origem": "SCI_FI",
-    "itens": [
-      {
-        "nome": "Gatling Laser",
-        "distancia": "50/100/200",
-        "dano": "3d6+4",
-        "pa": 2,
-        "cdt": 4,
-        "forcaMin": "800",
-        "peso": "10",
-        "custo": 1000,
-        "observacoes": "—",
-        "origem": "SCI_FI"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Especiais",
-    "subtipo": "Armas Veiculares",
-    "subsubtipo": "Futuristas",
-    "itens": [
-      {
-        "nome": "Laser Pesado",
-        "distancia": "150/300/600",
-        "municaoPa": "4d10, AP 30",
-        "municaoAe": null,
-        "cdt": 1,
-        "custo": 1000000,
-        "origem": "SCI_FI"
-      },
-      {
-        "nome": "Gatling Laser",
-        "distancia": "50/100/200",
-        "municaoPa": "3d6+4, PA 4",
-        "municaoAe": null,
-        "cdt": 4,
-        "custo": 1000,
-        "origem": "SCI_FI"
-      }
-    ],
-    "origem": "SCI_FI"
-  },
-  {
-    "tipo": "Veículos",
-    "subtipo": "Veículos Militares Futuristas",
-    "origem": "SCI_FI",
-    "itens": [
-      {
-        "nome": "APC Flutuador",
-        "tamanho": 7,
-        "manobrabilidade": 0,
-        "velMaxima": 120,
-        "resistencia": 26,
-        "tripulacao": "(10)",
-        "custo": "75K",
-        "observacoes": "Armadura Pesada, Flutuador. Armas: Gatling Laser (Fixa na Frente, Tiro de Reação)",
-        "origem": "SCI_FI"
-      },
-      {
-        "nome": "Tanque Flutuador",
-        "tamanho": 7,
-        "manobrabilidade": 0,
-        "velMaxima": 72,
-        "resistencia": 38,
-        "tripulacao": "(22)",
-        "custo": "1.2M",
-        "observacoes": "Armadura Pesada, Flutuador, Visão Noturna. Armas: Laser Pesado (Torreta, Estabilizador Aprimorado), Gatling Laser (Fixa na Frente, Tiro de Reação)",
-        "origem": "SCI_FI"
-      }
-    ]
-  },
-  {
-    "tipo": "Equipamento Supers",
-    "subtipo": "Veículos",
-    "origem": "SCI_FI",
-    "itens": [
-      {
-        "nome": "Moto Chieftain",
-        "tamanho": 1,
-        "manobrabilidade": "+1",
-        "velMaxima": 160,
-        "resistencia": 11,
-        "tripulacao": "1+1",
-        "custo": 8000,
-        "observacoes": "50% de chance de tiros atingirem piloto/passageiro em vez da moto",
-        "origem": "SCI_FI"
-      },
-      {
-        "nome": "Jato Peregrine Jump",
-        "tamanho": 8,
-        "manobrabilidade": "+1",
-        "velMaxima": 800,
-        "resistencia": 18,
-        "tripulacao": "1+5",
-        "custo": 5000000,
-        "observacoes": "VTOL; opcional Gatlings ou mísseis Sidewinder",
-        "origem": "SCI_FI"
-      },
-      {
-        "nome": "Juggernaut VBTP",
-        "tamanho": 7,
-        "manobrabilidade": "-1",
-        "velMaxima": 50,
-        "resistencia": 24,
-        "tripulacao": "2+12",
-        "custo": 400000,
-        "observacoes": "Anfíbio, Armadura Pesada, pode equipar 2×Gatling de Pulso",
-        "origem": "SCI_FI"
-      },
-      {
-        "nome": "Submarino de Ataque Mako",
-        "tamanho": 9,
-        "manobrabilidade": "-1",
-        "velMaxima": 30,
-        "resistencia": 27,
-        "tripulacao": "1+11",
-        "custo": 800000,
-        "observacoes": "Submersível; 2×Torpedos + 2×Gatling de Pulso (superfície)",
-        "origem": "SCI_FI"
-      },
-      {
-        "nome": "Tanque de Batalha Grizzly",
-        "tamanho": 9,
-        "manobrabilidade": "-1",
-        "velMaxima": 50,
-        "resistencia": 50,
-        "tripulacao": "4",
-        "custo": 5000000,
-        "observacoes": "Esteira, Armadura Pesada, Canhão 120 mm + 2×Gatling de Pulso",
-        "origem": "SCI_FI"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas de Energia",
-    "subtipo": "Lasers",
-    "origem": "SCI_FI",
-    "itens": [
-      {
-        "nome": "Pistola Laser",
-        "dano": "2d6",
-        "pa": 2,
-        "peso": "1",
-        "custo": 300,
-        "observacoes": "Sem recuo. Cargas: 50.",
-        "origem": "SCI_FI"
-      },
-      {
-        "nome": "Rifle Laser",
-        "dano": "3d6",
-        "pa": 2,
-        "peso": "4",
-        "custo": 700,
-        "observacoes": "Sem recuo. Cargas: 100. Automático (CdT 3).",
-        "origem": "SCI_FI"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas de Energia",
-    "subtipo": "Plasma",
-    "origem": "SCI_FI",
-    "itens": [
-      {
-        "nome": "Pistola de Plasma",
-        "dano": "2d10+2",
-        "pa": 0,
-        "peso": "2",
-        "custo": 500,
-        "observacoes": "Pode sobreaquecer.",
-        "origem": "SCI_FI"
-      },
-      {
-        "nome": "Rifle de Plasma",
-        "dano": "3d10+2",
-        "pa": 0,
-        "peso": "6",
-        "custo": 2000,
-        "observacoes": "Pode sobreaquecer. Arma Pesada.",
-        "origem": "SCI_FI"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Corpo a Corpo",
-    "subtipo": "Energia",
-    "origem": "SCI_FI",
-    "itens": [
-      {
-        "nome": "Vibro-Faca",
-        "dano": "For+d6",
-        "pa": 4,
-        "peso": "1",
+        "nome": "Algemas",
+        "peso": 0.5,
         "custo": 200,
-        "observacoes": "Lâmina vibratória.",
-        "origem": "SCI_FI"
+        "dev": 1,
+        "observacoes": "Algemas de alta tecnologia feitas de material resistente, talvez até mesmo luz sólida ou nanotecnologia. Possuem Dureza 16, e as tentativas de Libertar-se são feitas com -6."
       },
       {
-        "nome": "Vibro-Espada",
-        "dano": "For+d8+2",
-        "pa": 6,
-        "peso": "2",
-        "custo": 500,
-        "observacoes": "Lâmina vibratória.",
-        "origem": "SCI_FI"
-      },
-      {
-        "nome": "Espada de Energia",
-        "dano": "For+d8+4",
-        "pa": 8,
-        "peso": "1",
+        "nome": "Armadilha Gravitacional",
+        "peso": 2.5,
         "custo": 1000,
-        "observacoes": "Ignora armaduras não seladas/energizadas.",
-        "origem": "SCI_FI"
+        "dev": 3,
+        "observacoes": "A armadilha é um pequeno disco preto com cerca de 30 centímetros de diâmetro e alguns centímetros de espessura, conectado a uma bateria padrão que garante apenas um uso. Preparar o dispositivo leva cerca de um minuto — ele não pode ser lançado nem usado como arma —, criando uma armadilha do tamanho de um Modelo Grande de Explosão. Quando um alvo se mover dentro do modelo, ele ativa um poço de gravidade que prende tudo acima dele em um Modelo Grande de Explosão. O usuário pode definir os protocolos de ativação da armadilha por meio de sua IA (que tem Astúcia d10). Alvos de Tamanho 7 ou maior se libertam automaticamente, mas se movem como se estivessem percorrendo Terreno Difícil. Todos os outros alvos ficam automaticamente Presos, têm uma única chance de se libertar (com -6) ou são mantidos Presos até que a armadilha seja desativada ou seu poder acabe uma hora após ativada. Detectar o dispositivo exige um teste de Perceber (-4 se enterrado ou escondido com competência)."
+      },
+      {
+        "nome": "Bateria Universal",
+        "peso": 0.25,
+        "custo": 50,
+        "dev": 1,
+        "observacoes": "Uma bateria universal para a maioria dos itens eletrônicos. Baterias universais são facilmente carregadas em áreas civilizadas (ou autorrecarregáveis no Dev III), mas uma Falha Crítica ao usar o dispositivo que alimentam significa que a bateria morreu e deve ser substituída."
+      },
+      {
+        "nome": "Binóculo",
+        "peso": 1,
+        "custo": 250,
+        "dev": 1,
+        "observacoes": "Ampliação de 100× e aprimoramento ótico de luz anulam até 4 pontos de penalidades por Iluminação e adicionam +2 às rolagens de Perceber do usuário quando usado como uma ação. Binóculos podem ser usados como óculos por 2x o preço, permitindo que o usuário os ligue ou desligue com um comando de voz ou toque de um botão (ambas as ações livres)."
+      },
+      {
+        "nome": "Biolink",
+        "peso": 0.5,
+        "custo": 100,
+        "dev": 1,
+        "observacoes": "Esses pequenos sistemas de sensores são usados por comandantes de segurança ou militares para monitorar suas tropas. Biolinks atuam como comunicadores, câmeras e monitores vitais seguros com qualquer central de comando autorizada. Tamanhos e formatos variam, mas são bastante óbvios no Dev I e pesam meio quilo. No Dev II e acima, pesam apenas alguns gramas e podem ser facilmente escondidos (Perceber -2, ou -4 no Dev III)."
+      },
+      {
+        "nome": "Bloqueador Psiônico",
+        "peso": 0.5,
+        "custo": 5000,
+        "dev": 2,
+        "observacoes": "Uma faixa de cabeça que concede ao usuário +4 em rolagens de resistência ou Armadura contra ataques psiônicos. O bônus se acumula com a Vantagem Resistência Arcana."
+      },
+      {
+        "nome": "Central de Comando",
+        "peso": 10,
+        "custo": 10000,
+        "dev": 1,
+        "observacoes": "Um tablet portátil e um conjunto de aplicativos HUD (Heads-Up Display, ou Monitor de Alerta) que conectam com segurança o usuário a até 100 membros da equipe equipados com biolinks (veja acima), armaduras energizadas ou mechas. O alcance da central de comando é o mesmo dos comunicadores (geralmente 32 km), ou maior, por meio de redes civis ou militares. Isso permite que o comandante veja e ouça através dos biolinks de suas tropas, monitore seus sinais vitais e estenda seu Raio de Comando a todos aqueles em contato."
+      },
+      {
+        "nome": "Cobertor Energético",
+        "peso": 0.5,
+        "custo": 100,
+        "dev": 1,
+        "observacoes": "Fornece conforto e proteção ambiental contra temperaturas de -45 a 100° Celsius para uma única pessoa por até 72 horas."
+      },
+      {
+        "nome": "Comunicadores",
+        "peso": 0,
+        "custo": 50,
+        "dev": 1,
+        "observacoes": "Um comunicador bidirecional de mãos livres ativado por voz que pode se conectar a outros receptores em um raio de 32 km. Ele pode ser usado sobre a orelha ou na lapela, ou configurado de mão, relógio, pulseira e similares, conforme a preferência do usuário."
+      },
+      {
+        "nome": "Cortador de Matéria",
+        "peso": 3,
+        "custo": 400,
+        "dev": 1,
+        "observacoes": "Uma ferramenta usada para cortar matéria rígida, como cascos de naves estelares. É desajeitada como arma (arma improvisada média, Aparar -2, For. Mín. d6), mas causa 2d4+8 de dano (II), PA 8, AP, Cauterizante (p. 52)."
+      },
+      {
+        "nome": "Desintegrador de Matéria",
+        "peso": 5,
+        "custo": 4000,
+        "dev": 2,
+        "observacoes": "Dano 3d10, PA 20, For. Mín. d10. Vaporiza até 30 centímetros cúbicos de material a cada rodada. Pode ser usado como uma arma improvisada (veja Savage Worlds Edição Aventura)."
+      },
+      {
+        "nome": "Detector de Minério",
+        "peso": 2,
+        "custo": 100,
+        "dev": 1,
+        "observacoes": "Detecta minérios dentro de um Modelo Grande de Explosão a até 1,8 metro de profundidade e elimina quaisquer penalidades por detectar minas ou perigos semelhantes."
+      },
+      {
+        "nome": "Detector de Movimento",
+        "peso": 1,
+        "custo": 200,
+        "dev": 1,
+        "observacoes": "Mostra a posição de qualquer coisa que não esteja absolutamente parada dentro de 25 quadros (50 metros). Bloqueado apenas por energia ou sólidos densos."
+      },
+      {
+        "nome": "Dilatador de Tempo",
+        "peso": 0.5,
+        "custo": 50000,
+        "dev": 3,
+        "observacoes": "Um dilatador de tempo é um dispositivo geralmente usado no pulso, como um relógio. Pode ser ativado como uma ação livre limitada, dura cinco rodadas e, enquanto ativado, distorce o tempo ao redor do usuário, dobrando sua Movimentação e permitindo que ignore 2 pontos de penalidades por Ações Múltiplas. Após o uso, o dilatador deve ser recarregado por uma hora antes que possa ser usado novamente."
+      },
+      {
+        "nome": "Dispositivo de Projeção de Luz",
+        "peso": 2,
+        "custo": 1000,
+        "dev": 2,
+        "observacoes": "Um projetor de luz tridimensional ou holográfico que gera imagens que podem preencher até um Modelo Pequeno de Explosão, centrado no dispositivo. As imagens podem causar um teste de Medo ou deixar o atacante Distraído, a critério do Mestre."
+      },
+      {
+        "nome": "Drone Comercial",
+        "peso": 1,
+        "custo": 200,
+        "dev": 1,
+        "observacoes": "Um drone comercial de Tamanho -2 que contém uma câmera de alta resolução e um microfone. Resistência 3, Movimentação 12 e é controlado por meio de um aplicativo e da perícia Pilotar."
+      },
+      {
+        "nome": "Drone de Combate",
+        "peso": 5,
+        "custo": 10000,
+        "dev": 1,
+        "observacoes": "Drones de médio porte capazes de transportar munições pesadas. Podem pairar sobre uma área e liberar poder de fogo devastador com precisão mortal. Armadura pesada (+4) e sensores táticos. Voo: Movimentação 24. Tamanho 1 (Normal)."
+      },
+      {
+        "nome": "Escalador",
+        "peso": 2,
+        "custo": 2500,
+        "dev": 2,
+        "observacoes": "O usuário tem uma estrutura exoesquelética que lhe permite andar em superfícies lisas horizontais e verticais com metade da Movimentação (mas não correr). No Dev III, o usuário pode se mover com Movimentação máxima, pode correr e, em geral, pode percorrer qualquer superfície."
+      },
+      {
+        "nome": "Exoesqueleto",
+        "peso": 2.5,
+        "custo": 10000,
+        "dev": 1,
+        "observacoes": "Aumenta a Força em dois tipos de dado. Requer uma bateria. Pode ser usado sobre roupas normais e armaduras. Força aprimorada dessa forma não conta para Progressos."
+      },
+      {
+        "nome": "Gargantilha de Choque",
+        "peso": 0.5,
+        "custo": 500,
+        "dev": 1,
+        "observacoes": "Uma vez colocada no pescoço de um alvo (ou local vulnerável similar), a gargantilha pode ser ativada por comunicadores como uma ação livre, o que obriga o alvo a fazer uma rolagem de Vigor -4 ou ficar Atordoado. Multiplique o custo e o peso pelo Tamanho se o alvo for maior que Tamanho 1."
+      },
+      {
+        "nome": "Gerador",
+        "peso": 25,
+        "custo": 500,
+        "dev": 1,
+        "observacoes": "Geradores usam reatores de microfusão ou outras formas de energia avançada para alimentar estruturas, veículos, armas pesadas ou recarregar baterias universais. Em média, gastam $10.000 em materiais (geralmente raros ou radioativos) por mês de uso intenso, mas podem ser recarregados por geradores de tamanho industrial."
+      },
+      {
+        "nome": "Impressora 3D",
+        "peso": 5,
+        "custo": 500,
+        "dev": 1,
+        "observacoes": "É possível fabricar qualquer outro equipamento comum que pese até 5 kg com um projeto e os materiais — geralmente o mesmo custo total do item concluído. Itens são impressos em cerca de 1 minuto para cada meio quilo."
+      },
+      {
+        "nome": "Maçarico de Corte",
+        "peso": 0.5,
+        "custo": 200,
+        "dev": 1,
+        "observacoes": "Dano 3d6 (II), PA 10, AP. Pode ser usado como uma arma improvisada (veja Savage Worlds Edição Aventura)."
+      },
+      {
+        "nome": "Microfone Direcional",
+        "peso": 0.5,
+        "custo": 250,
+        "dev": 1,
+        "observacoes": "Um pequeno microfone do tamanho de um cassetete e um fone de ouvido que podem detectar sons tão baixos quanto um sussurro a até 200 metros de distância (+2 em rolagens de Perceber baseadas em audição)."
+      },
+      {
+        "nome": "Omniferramenta",
+        "peso": 3,
+        "custo": 600,
+        "dev": 3,
+        "observacoes": "Dispositivo pessoal de dados (p. 44) usado como uma pulseira leve que, ao comando, projeta um console de luz sólida. Esse console fornece um teclado, tela e interface, enquanto o projetor de luz sólida replica qualquer ferramenta pequena e portátil. A omniferramenta geralmente dura um mês sem recarga, embora o uso extensivo de funções de ferramentas energizadas reduza esse tempo significativamente."
+      },
+      {
+        "nome": "Patch de Reparo",
+        "peso": 5,
+        "custo": 1000,
+        "dev": 3,
+        "observacoes": "Um patch de nanorrobôs de reparo que solda lacunas e restaura sistemas conhecidos ao seu estado padrão. Os nanorrobôs têm Consertar d10+2 e reduzem pela metade o tempo de reparo (um quarto do tempo com uma ampliação)."
+      },
+      {
+        "nome": "Projetor de Corda",
+        "peso": 1.5,
+        "custo": 100,
+        "dev": 2,
+        "observacoes": "Este dispositivo de pulso cria uma corda de nanotecnologia, luz sólida ou outro material. Uma única corda pode suportar até 500 kg e atingir um comprimento de 150 metros."
+      },
+      {
+        "nome": "Regulador de Tempo",
+        "peso": 0.5,
+        "custo": 25000,
+        "dev": 3,
+        "observacoes": "Ao usar este dispositivo autoalimentado, a personagem mantém plena consciência de quaisquer mudanças na linha do tempo e fica imune a efeitos baseados no tempo, como granadas de tempo ou o poder parar o tempo. Se alguém com um dilatador de tempo chegar a 5 quadros (10 metros) de um regulador de tempo, os efeitos do dilatador terminam imediatamente."
+      },
+      {
+        "nome": "Remendo Adesivo",
+        "peso": 0.1,
+        "custo": 20,
+        "dev": 1,
+        "observacoes": "Cada adesivo conserta um traje selado. Aplicar um remendo adesivo requer uma ação e uma rolagem de Consertar com bônus de +2. Falha estraga o adesivo."
+      },
+      {
+        "nome": "Replicador de Matéria",
+        "peso": 10,
+        "custo": 100000,
+        "dev": 3,
+        "observacoes": "Pode reorganizar até 250 kg de matéria em um objeto com a mesma massa. Pode replicar a estrutura de um ser vivo, mas o resultado é irracional e morto."
+      },
+      {
+        "nome": "Respirador",
+        "peso": 0.5,
+        "custo": 250,
+        "dev": 1,
+        "observacoes": "Fornece 12 horas de ar respirável e adiciona +2 para resistir a gases ou atmosferas nocivas. Se a atmosfera contiver o ar necessário ao ser (como oxigênio), o respirador pode funcionar indefinidamente."
+      },
+      {
+        "nome": "Sinalizador de Emergência",
+        "peso": 2.5,
+        "custo": 250,
+        "dev": 1,
+        "observacoes": "Envia um sinal de socorro superluminal com a localização do sinalizador. O sinal pode durar semanas com uma única carga de bateria."
+      },
+      {
+        "nome": "Tenda Energética",
+        "peso": 1,
+        "custo": 200,
+        "dev": 1,
+        "observacoes": "Tenda para duas pessoas, com o mesmo efeito do cobertor energético (veja acima)."
+      },
+      {
+        "nome": "Tradutor de Idiomas",
+        "peso": 0.5,
+        "custo": 250,
+        "dev": 1,
+        "observacoes": "Traduz todos os idiomas conhecidos de seres sencientes em d10 para línguas comuns e d6 para idiomas com bancos de dados menores."
+      },
+      {
+        "nome": "Visor Penetrante",
+        "peso": 1,
+        "custo": 1000,
+        "dev": 2,
+        "observacoes": "Anula até 4 pontos de penalidades por Iluminação ou Distância e pode “ver” através de até 6 quadros (12 metros) de qualquer coisa, exceto energia ou matéria sólida densa."
+      },
+      {
+        "nome": "Coleira de Controle",
+        "peso": 1,
+        "custo": 1000,
+        "dev": 2,
+        "observacoes": "Quando colocada no pescoço ou cabeça de uma criatura com Astúcia Animal, ela se torna leal a quem controla o comunicador pareado. A fera obedece a comandos simples dentro de sua compreensão limitada, mas não se sacrifica conscientemente. Multiplique o custo e o peso pelo Tamanho se o alvo for maior que Tamanho 1."
+      }
+    ]
+  },
+  {
+    "tipo": "Vestuário",
+    "subtipo": "Roupas e Acessórios",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Arnês Gravitacional",
+        "peso": 2,
+        "custo": 500,
+        "dev": 3,
+        "observacoes": "Este arnês leve e de alta tecnologia permite que o usuário ajuste seu campo gravitacional pessoal como Baixo, Normal ou Intenso."
+      },
+      {
+        "nome": "Botas Magnéticas",
+        "peso": 2,
+        "custo": 100,
+        "dev": 1,
+        "observacoes": "Os ímãs nestas botas pesadas permitem que as personagens andem em qualquer superfície de metal com metade da Movimentação (mas não correr)."
+      },
+      {
+        "nome": "Nanorroupas",
+        "peso": 2,
+        "custo": 500,
+        "dev": 2,
+        "observacoes": "Este tecido avançado pode mudar seu formato, cor ou textura para adotar a aparência de qualquer tipo de roupa, de um smoking a uma parca ou um agasalho esportivo respirável. Não pode formar armaduras ou trajes selados de nenhum tipo."
+      },
+      {
+        "nome": "Roupa Mutável",
+        "peso": 0.5,
+        "custo": 100,
+        "dev": 1,
+        "observacoes": "Uma camisa vibrante (manga curta ou longa) que pode mudar de cor e carregar padronagens, ícones e mensagens definidos pelo usuário."
+      },
+      {
+        "nome": "Traje Ambiental",
+        "peso": 1.5,
+        "custo": 450,
+        "dev": 1,
+        "observacoes": "Reduz as penalidades para rolagens de Vigor feitas para resistir à Fadiga a temperaturas desde -45 a 100° Celsius em 2 pontos. Com uma bateria opcional (veja acima), o traje fornece ar frio ou quente e anula completamente o teste, ou reduz as penalidades para extremos maiores, a critério do Mestre."
+      },
+      {
+        "nome": "Traje de Camuflagem",
+        "peso": 1,
+        "custo": 2500,
+        "dev": 1,
+        "observacoes": "Este traje de corpo inteiro muda de cor e se sombreia para combinar com o ambiente, adicionando +2 às rolagens de Furtividade do usuário. No Dev II, dobre o custo para conceder ao traje o poder invisibilidade quando ligado (uma hora de poder, ou um dia no Dev III)."
+      }
+    ]
+  },
+  {
+    "tipo": "Eletrônicos",
+    "subtipo": "Computadores e Vigilância",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Ciberdeck",
+        "peso": 1,
+        "custo": 500,
+        "dev": 2,
+        "observacoes": "Permite que hackers se conectem diretamente com a realidade virtual. Veja a p. 98 para mais informações sobre seu uso em hackeamento e ciberespaço."
+      },
+      {
+        "nome": "Conjunto de RV",
+        "peso": 0.5,
+        "custo": 200,
+        "dev": 1,
+        "observacoes": "Um visor que permite aos usuários visualizar e interagir com a realidade virtual. Por mais 1,5 kg e $1K, o conjunto inclui um traje de imersão total que transmite sensações físicas por todo o corpo do usuário."
+      },
+      {
+        "nome": "Dispositivo Pessoal de Dados",
+        "peso": 0.5,
+        "custo": 500,
+        "dev": 1,
+        "observacoes": "Os DPDs são versões atualizadas de celulares modernos, com duração de um mês com uma única carga e alcance planetário, desde que estejam conectados a redes de alcance mundial. Eles permitem acesso a essas redes e concedem uma rerrolagem gratuita em testes de Conhecimento Geral, quando usados para coletar informações. No Dev III, use uma omniferramenta (veja Equipamentos de Aventura)."
+      },
+      {
+        "nome": "Escâner",
+        "peso": 1,
+        "custo": 500,
+        "dev": 1,
+        "observacoes": "Este dispositivo pode detectar e identificar matéria ou energia. Os alvos não precisam ser visíveis, embora certos tipos de matéria ou energia possam interferir. Escâneres pequenos são portáteis e têm um alcance de 50 metros. Conjuntos de tamanho médio são do tamanho de uma mochila e têm um alcance de 500 metros."
+      },
+      {
+        "nome": "Gazua Eletrônica",
+        "peso": 1,
+        "custo": 500,
+        "dev": 1,
+        "observacoes": "Este hardware de decifração de código pode ser conectado a uma fechadura eletrônica. Após um minuto, ele faz uma rolagem de Eletrônica d10. Sucesso abre a fechadura sem alarmes. Falha significa que a gazua pode fazer outra tentativa, mas uma Falha Crítica significa que não pode abrir esta fechadura específica. No Dev III, os nanorrobôs também podem abrir fechaduras físicas."
+      },
+      {
+        "nome": "Óculos de RA",
+        "peso": 0.5,
+        "custo": 300,
+        "dev": 1,
+        "observacoes": "Estes óculos de realidade aumentada sobrepõem um display de informações em tempo real sobre o ambiente, que adiciona +1 às rolagens de Perceber e Pesquisar em situações apropriadas."
+      },
+      {
+        "nome": "Sensor",
+        "peso": 10,
+        "custo": 25000,
+        "dev": 1,
+        "observacoes": "Uma antena parabólica expansível e um console que podem escanear calor, luz, forças gravitacionais, ondas eletromagnéticas, ondas de rádio e quaisquer outras quantidades significativas de matéria ou energia conhecidas a até um ano-luz de distância no espaço ou na linha de visão do planeta. Se o minissatélite que o acompanha for lançado, ou se houver outros satélites para se conectar, o sistema poderá escanear um hemisfério planetário."
+      },
+      {
+        "nome": "Sinalizador de Navegação",
+        "peso": 12.5,
+        "custo": 5000,
+        "dev": 2,
+        "observacoes": "Estes pesados sinalizadores autoalimentados são colocados nas profundezas do espaço como faróis para outros viajantes, particularmente aqueles que tentam viajar para lá em velocidade superlumínica. Eles transmitem coordenadas tridimensionais e qualquer outra informação que o engenheiro queira deixar, incluindo dados planetários ou até mesmo mensagens audiovisuais — ou avisos!"
+      }
+    ]
+  },
+  {
+    "tipo": "Acessórios para Armas",
+    "subtipo": "Geral",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Arnês de Arma Pesada",
+        "peso": 2.5,
+        "custo": 150,
+        "dev": 1,
+        "observacoes": "Um arnês para costas, ombros e cinto destinado a compensar o peso e o recuo de lança-projéteis (p. 65). O arnês anula as penalidades de Recuo e Tiro Rápido da arma anexada e reduz dois tipos de dados de For. Mín. No entanto, o arnês torna as manobras difíceis e reduz a Movimentação, Aparar, e rolagens de Lutar e Atletismo em 2. A arma pode ser \"guardada\" nas costas do usuário quando não estiver em uso, mas as penalidades permanecem. O arnês não pode ser usado dentro de um veículo ou outro espaço apertado, a menos que o usuário tenha espaço suficiente para estender a arma. No Dev III, o arnês não tem efeito na Movimentação."
+      },
+      {
+        "nome": "Luva e Empunhadura Magnéticas",
+        "peso": 0.25,
+        "custo": 100,
+        "dev": 2,
+        "observacoes": "Esta luva permite que seu usuário saque uma arma equipada com uma empunhadura correspondente a até 5 quadros (10 metros) de distância. Isso é uma ação livre limitada e a arma não pode pesar mais do que 2,5 kg. Instalar empunhaduras adicionais custa $50 cada."
+      },
+      {
+        "nome": "Mira Avançada",
+        "peso": 0.5,
+        "custo": 1000,
+        "dev": 1,
+        "observacoes": "Ignora penalidades por Iluminação e 4 pontos de penalidades por Distância ou Escala ao Mirar ou ao Perceber objetos através dela."
+      },
+      {
+        "nome": "Trava de Arma",
+        "peso": 0,
+        "custo": 200,
+        "dev": 1,
+        "observacoes": "A arma não disparará a menos que seja segurada pela pessoa com quem está pareada. No Dev I, geralmente é um dispositivo de impressão digital. No Dev II e superior, detecta os biorritmos do usuário."
+      }
+    ]
+  },
+  {
+    "tipo": "Medicinais",
+    "subtipo": "Geral",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Gel de Regeneração",
+        "peso": 0.25,
+        "custo": 1000,
+        "dev": 3,
+        "observacoes": "Uma dose leva uma ação para ser aplicada e cura automaticamente um Ferimento, independentemente da Hora de Ouro. Cura uma Lesão Permanente se usado em alguém sem Ferimentos."
+      },
+      {
+        "nome": "Kit de Ressuscitação",
+        "peso": 5,
+        "custo": 50000,
+        "dev": 3,
+        "observacoes": "Se usado em um cadáver em boas condições com o cérebro intacto, a personagem morta retorna à vida totalmente curada após um período de regeneração de uma hora."
+      },
+      {
+        "nome": "Medi-Gel",
+        "peso": 0.5,
+        "custo": 50,
+        "dev": 2,
+        "observacoes": "Uma dose adiciona +2 às rolagens de Curar dentro da Hora de Ouro ou para estabilizar alguém que esteja Sangrando."
+      },
+      {
+        "nome": "Medi-Escâner",
+        "peso": 1,
+        "custo": 500,
+        "dev": 2,
+        "observacoes": "Permite uma rerrolagem de Curar gratuita."
+      }
+    ]
+  },
+  {
+    "tipo": "Meios de Locomoção",
+    "subtipo": "Geral",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Carregador",
+        "peso": 10,
+        "custo": 5000,
+        "dev": 1,
+        "observacoes": "Um exoesqueleto grande e pesado projetado para levantar cargas pesadas ou armamentos. Em caso de emergência, suas garras de metal podem ser usadas para lidar com ameaças alienígenas grandes e mortíferas. O traje não fornece Armadura, mas tem uma Força d12+4. Veja o Capítulo Cinco para trajes com mais recursos e proteção."
+      },
+      {
+        "nome": "Cinto Teleportador",
+        "peso": 0.5,
+        "custo": 25000,
+        "dev": 3,
+        "observacoes": "Quando ativado como uma ação livre, o usuário desaparece e reaparece instantaneamente em um teleportador vinculado em uma base ou nave estelar. Se vários teleportadores estiverem pareados com o cinto, o usuário poderá escolher para qual deles viajar. O usuário também pode se teletransportar para até 12 quadros (24 metros) com linha de visão como uma ação limitada — além de seu movimento."
+      },
+      {
+        "nome": "Mochila Foguete",
+        "peso": 15,
+        "custo": 25000,
+        "dev": 1,
+        "observacoes": "Este foguete barulhento é usado como uma mochila e permite ao usuário voar até 40 km/h (Classificação de Velocidade 4). Tem um alcance máximo de 150 km e usa a perícia Pilotar. No Dev II, o foguete é muito mais silencioso e atinge uma velocidade máxima de 400 km/h (Classificação de Velocidade 12). No Dev III, a mochila foguete tem metade do peso e pode impulsionar o usuário a até 1.300 km/h (Classificação de Velocidade 15)."
+      },
+      {
+        "nome": "Propulsor",
+        "peso": 10,
+        "custo": 5000,
+        "dev": 1,
+        "observacoes": "No Dev I, um propulsor é uma mochila pesada e barulhenta que dobra a distância do salto e permite que as personagens se movam automaticamente seu dado de corrida total, ignorando a maioria dos terrenos no caminho (a critério do Mestre). O usuário também ignora 2 pontos de penalidade de Evasão se o propulsor estiver ativado. No Dev II, o propulsor é uma pulseira antigravidade silenciosa que pesa apenas 2,5 kg."
+      },
+      {
+        "nome": "Traje Planador",
+        "peso": 4,
+        "custo": 15000,
+        "dev": 1,
+        "observacoes": "Um traje com asas que permite ao usuário planar a uma Movimentação 48 (190 km/h) em distâncias de aproximadamente 10x a altura de lançamento. Para manobras e pousos, o usuário usa seu Pilotar. Uma falha no pouso resulta em 3d6 de dano, enquanto uma Falha Crítica ou colisão em alta velocidade causa 5d6 de dano."
+      },
+      {
+        "nome": "Unidade de Propulsão",
+        "peso": 6,
+        "custo": 500,
+        "dev": 1,
+        "observacoes": "Uma unidade portátil que permite ao usuário voar com Movimentação 6 em gravidade zero. Contém energia e combustível para 24 horas de uso."
+      }
+    ]
+  },
+  {
+    "tipo": "Itens de Defesa Pessoal",
+    "subtipo": "Campos de Força",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Campo de Força",
+        "peso": 0.1,
+        "custo": 10000,
+        "dev": 3,
+        "observacoes": "Geralmente projetado de um cinto ou relógio e construído para envolver um ser de Tamanho 2 ou menor. Acumula com armaduras usadas e pode ser ativado ou desativado como uma ação livre limitada. Se o usuário receber três ou mais Ferimentos de um único golpe, a bateria descarrega e deverá ser recarregada."
+      },
+      {
+        "nome": "Gerador de Domo de Força",
+        "peso": 15,
+        "custo": 50000,
+        "dev": 2,
+        "observacoes": "Cria um campo de força ao redor de um Modelo Grande de Explosão com Dureza 16. A bolha não pode ser movida enquanto estiver ativada e dura uma hora com uma bateria padrão. Se quebrado, ele queima e não pode ser recarregado sem uma rolagem de Consertar, que leva dez minutos. Vários domos podem se sobrepor e se conectar automaticamente, eliminando barreiras internas."
       }
     ]
   },
   {
     "tipo": "Armaduras",
-    "subtipo": "Trajes",
+    "subtipo": "Trajes Armadurados",
     "origem": "SCI_FI",
     "itens": [
       {
-        "nome": "Traje de Voo",
-        "armadura": "+2",
-        "peso": "3",
+        "nome": "Armadura Corporal",
+        "armadura": "+4",
+        "resistencia": 0,
+        "forca_min": "d4",
+        "peso": 2,
         "custo": 200,
-        "observacoes": "Cobre tronco, braços e pernas.",
-        "origem": "SCI_FI"
+        "dev": 1,
+        "observacoes": "Proteção Balística (reduz dano de balas em 4). Cobre tronco, braços e pernas. Roupas leves e blindadas feitas de polímeros complexos."
       },
       {
-        "nome": "Armadura de Infantaria",
+        "nome": "Elmo de Batalha de Infantaria",
         "armadura": "+6",
-        "peso": "10",
+        "resistencia": 0,
+        "forca_min": "d6",
+        "peso": 1,
+        "custo": 100,
+        "dev": 1,
+        "observacoes": "Proteção Balística. Cobre cabeça e rosto."
+      },
+      {
+        "nome": "Pele Inteligente",
+        "armadura": "+1",
+        "resistencia": 0,
+        "forca_min": "d4",
+        "peso": 1,
+        "custo": 900,
+        "dev": 1,
+        "observacoes": "Cobre tronco, braços e pernas. Concede uma rerrolagem gratuita de Vigor contra Sangramento. Pode ser usada por baixo de outra armadura."
+      },
+      {
+        "nome": "Traje de Batalha de Infantaria",
+        "armadura": "+6",
+        "resistencia": 0,
+        "forca_min": "d6",
+        "peso": 6,
         "custo": 800,
-        "observacoes": "Corpo todo. Reduz dano balístico em 2.",
-        "origem": "SCI_FI"
+        "dev": 1,
+        "observacoes": "Proteção Balística. Cobre tronco, braços e pernas. Um traje completo de armadura corporal articulada."
       },
       {
-        "nome": "Traje de Batalha (Energizado)",
-        "armadura": "+8",
-        "peso": "20",
+        "nome": "Traje de Contenção",
+        "armadura": "+0",
+        "resistencia": 2,
+        "forca_min": "d4",
+        "peso": 2.5,
         "custo": 5000,
-        "observacoes": "Aumenta Força em um dado. Requer bateria.",
-        "origem": "SCI_FI"
+        "dev": 2,
+        "observacoes": "Trajes de contenção permitem que seres de energia usem armas e equipamentos normalmente. O traje não é hermético e pequenas brechas não causam problemas a curto prazo, mas, toda vez que o usuário sofrer Ferimentos, role um d6 e some o número de Ferimentos causados pelo ataque. Se o resultado for 7 ou maior, o traje não funciona mais."
+      },
+      {
+        "nome": "Traje de Malha Sintética",
+        "armadura": "+2",
+        "resistencia": 0,
+        "forca_min": "-",
+        "peso": 0.5,
+        "custo": 100,
+        "dev": 1,
+        "observacoes": "Cobre tronco, braços e pernas. Roupa de proteção feita de materiais sintéticos."
       }
     ]
   },
   {
-    "tipo": "CIBERNETICO",
-    "subtipo": "Implantes",
+    "tipo": "Armaduras",
+    "subtipo": "Armaduras de Energia",
     "origem": "SCI_FI",
     "itens": [
       {
-        "nome": "Olhos Biônicos",
-        "custo": 2000,
-        "tensao": 1,
-        "origem": "SCI_FI",
-        "observacoes": "Ignora penalidades de iluminação (Visão Noturna). Zoom 10x (+2 em Perceber visual)."
+        "nome": "Campo de Força Pessoal",
+        "armadura": "-",
+        "resistencia": 4,
+        "forca_min": "-",
+        "peso": 0.1,
+        "custo": 10000,
+        "dev": 3,
+        "observacoes": "Geralmente projetado de um cinto ou relógio e construído para envolver um ser de Tamanho 2 ou menor. Acumula com armaduras usadas e pode ser ativado ou desativado como uma ação livre limitada. Se o usuário receber três ou mais Ferimentos de um único golpe, a bateria descarrega e deverá ser recarregada."
+      }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Trajes Espaciais",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Traje Espacial",
+        "armadura": "+1",
+        "resistencia": 0,
+        "forca_min": "-",
+        "peso": 9,
+        "custo": 500,
+        "dev": 1,
+        "observacoes": "Selado, corpo inteiro. Protege contra o vácuo do espaço e fornece 12 horas de ar."
       },
       {
-        "nome": "Braço Cibernético",
+        "nome": "Traje Espacial Blindado",
+        "armadura": "+4",
+        "resistencia": 0,
+        "forca_min": "d6",
+        "peso": 13,
+        "custo": 2500,
+        "dev": 1,
+        "observacoes": "Proteção Balística. Selado, corpo inteiro. Protege contra o vácuo do espaço e fornece 24 horas de ar. Se o usuário sofrer um Ferimento sem Absorver, o traje perde a integridade sem um remendo adesivo."
+      },
+      {
+        "nome": "Traje Espacial de Combate",
+        "armadura": "+4",
+        "resistencia": 2,
+        "forca_min": "d6",
+        "peso": 10,
         "custo": 5000,
-        "tensao": 2,
-        "origem": "SCI_FI",
-        "observacoes": "Aumenta Força do braço em um dado. Dano desarmado For+d4. Não sente dor no membro."
+        "dev": 1,
+        "observacoes": "Proteção Balística. Selado, corpo inteiro. Protege contra o vácuo do espaço e fornece 48 horas de ar. Ele sela automaticamente qualquer ruptura de Ferimentos sem perder a integridade."
+      }
+    ]
+  },
+  {
+    "tipo": "Escudos",
+    "subtipo": "Geral",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Escudo de Polímero Pequeno",
+        "aparar": "+1",
+        "cobertura": "-",
+        "forca_min": "d4",
+        "peso": 1,
+        "custo": 200,
+        "dev": 1,
+        "observacoes": "Dureza 10, Armadura +4 contra tiros."
       },
       {
-        "nome": "Pernas Cibernéticas",
-        "custo": 6000,
-        "tensao": 2,
-        "origem": "SCI_FI",
-        "observacoes": "Aumenta Movimentação em +2 e Salto."
+        "nome": "Escudo de Polímero Médio",
+        "aparar": "+2",
+        "cobertura": "-2",
+        "forca_min": "d4",
+        "peso": 2,
+        "custo": 300,
+        "dev": 1,
+        "observacoes": "Dureza 10, Armadura +4 contra tiros."
       },
       {
-        "nome": "Blindagem Dérmica (Nível 1)",
-        "custo": 3000,
-        "tensao": 1,
-        "origem": "SCI_FI",
-        "observacoes": "Concede +2 de Armadura natural."
+        "nome": "Escudo de Polímero Grande",
+        "aparar": "+3",
+        "cobertura": "-4",
+        "forca_min": "d6",
+        "peso": 3,
+        "custo": 400,
+        "dev": 1,
+        "observacoes": "Dureza 10, Armadura +4 contra tiros."
       },
       {
-        "nome": "Interface de Dados",
+        "nome": "Drone-Escudo Inteligente",
+        "aparar": "+2",
+        "cobertura": "-2",
+        "forca_min": "-",
+        "peso": 1,
+        "custo": 2000,
+        "dev": 3,
+        "observacoes": "Ativado como uma ação livre limitada, após a qual ele paira e protege o portador como se estivesse carregando um escudo próprio. Podem ser utilizados vários drones. Os efeitos não se acumulam, mas ter mais de um drone protege de todos os ataques em uma única Carta de Ação, em vez de metade."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Geral",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Alabarda (Corrente)",
+        "dano": "2d6+4",
+        "pa": "-",
+        "forca_min": "d8",
+        "peso": 5,
+        "custo": 450,
+        "dev": 1,
+        "observacoes": "Lâmina Corrente, Alcance 1, Duas Mãos."
+      },
+      {
+        "nome": "Baioneta (Corrente)",
+        "dano": "2d6+4",
+        "pa": "-",
+        "forca_min": "d6",
+        "peso": 2,
+        "custo": 200,
+        "dev": 1,
+        "observacoes": "Lâmina Corrente, deve ser fixada em um rifle, Duas Mãos."
+      },
+      {
+        "nome": "Espada (Corrente)",
+        "dano": "2d6+4",
+        "pa": "-",
+        "forca_min": "d4",
+        "peso": 4,
+        "custo": 300,
+        "dev": 1,
+        "observacoes": "Lâmina Corrente."
+      },
+      {
+        "nome": "Bastão PEM",
+        "dano": "For+d4",
+        "pa": "-",
+        "forca_min": "d6",
+        "peso": 0.5,
+        "custo": 510,
+        "dev": 2,
+        "observacoes": "Eletromagnética."
+      },
+      {
+        "nome": "Cajado PEM",
+        "dano": "For+d6",
+        "pa": "-",
+        "forca_min": "d6",
+        "peso": 2,
+        "custo": 510,
+        "dev": 2,
+        "observacoes": "Eletromagnética, Aparar +1 quando usado com as duas mãos, Alcance 1."
+      },
+      {
+        "nome": "Espada de Energia",
+        "dano": "For+d6",
+        "pa": "4",
+        "forca_min": "d4",
+        "peso": 1,
+        "custo": 900,
+        "dev": 3,
+        "observacoes": "Incendiária (I), Cauterizante, Arma Pesada, Aparar +1."
+      },
+      {
+        "nome": "Lança de Energia",
+        "dano": "For+d10",
+        "pa": "4",
+        "forca_min": "d8",
+        "peso": 9,
+        "custo": 1150,
+        "dev": 2,
+        "observacoes": "Incendiária (I), Cauterizante, Arma Pesada, Alcance 2."
+      },
+      {
+        "nome": "Chicote Molecular",
+        "dano": "For+d4+2",
+        "pa": "2",
+        "forca_min": "d4",
+        "peso": 1,
+        "custo": 600,
+        "dev": 1,
+        "observacoes": "Aparar -1, Alcance 2, ignora bônus de escudo. Com uma ampliação o atacante pode provocar dano extra ou Enredar o alvo."
+      },
+      {
+        "nome": "Espada Molecular",
+        "dano": "For+d8+2",
+        "pa": "4",
+        "forca_min": "d8",
+        "peso": 1,
+        "custo": 600,
+        "dev": 1
+      },
+      {
+        "nome": "Faca Molecular",
+        "dano": "For+d4+2",
+        "pa": "2",
+        "forca_min": "d4",
+        "peso": 0.25,
+        "custo": 550,
+        "dev": 1
+      },
+      {
+        "nome": "Lança Molecular",
+        "dano": "For+d6+2",
+        "pa": "3",
+        "forca_min": "d6",
+        "peso": 1,
+        "custo": 600,
+        "dev": 1,
+        "observacoes": "Aparar +1 se usada com as duas mãos, Alcance 1."
+      },
+      {
+        "nome": "Machado Grande Molecular",
+        "dano": "For+d10+2",
+        "pa": "7",
+        "forca_min": "d10",
+        "peso": 3.5,
+        "custo": 900,
+        "dev": 1,
+        "observacoes": "Aparar -1, Duas Mãos."
+      },
+      {
+        "nome": "Chicote Energizado",
+        "dano": "For+d4+d6",
+        "pa": "-",
+        "forca_min": "d6",
+        "peso": 2,
+        "custo": 600,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Arma Pesada, Aparar -1, Alcance 2, ignora bônus de escudo. Energizada: Com uma ampliação, o atacante pode escolher Enredar o alvo ou provocar +d10 de dano bônus."
+      },
+      {
+        "nome": "Maça Energizada",
+        "dano": "For+2d6",
+        "pa": "-",
+        "forca_min": "d6",
+        "peso": 2.5,
+        "custo": 600,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Arma Pesada, Energizada."
+      },
+      {
+        "nome": "Manopla Energizada",
+        "dano": "For+2d6",
+        "pa": "-",
+        "forca_min": "d6",
+        "peso": 1.5,
+        "custo": 600,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Arma Pesada, Energizada, não conta como uma arma para Defensores Desarmados."
+      },
+      {
+        "nome": "Lâmina Psiônica",
+        "dano": "For+d8",
+        "pa": "4",
+        "forca_min": "d4",
+        "peso": 0.5,
+        "custo": 1350,
+        "dev": 3,
+        "observacoes": "Incendiária (I), Psíquica, Cauterizante, Arma Pesada."
+      },
+      {
+        "nome": "Manoplas Gravitacionais",
+        "dano": "For+2d6",
+        "pa": "-",
+        "forca_min": "d4",
+        "peso": 1.5,
+        "custo": 1100,
+        "dev": 3,
+        "observacoes": "Incendiária (I), Arma Pesada, Energizada, Repulsora. Não conta como arma para Defensor Desarmado."
+      },
+      {
+        "nome": "Martelo Gravitacional",
+        "dano": "For+d10+d6",
+        "pa": "2",
+        "forca_min": "d10",
+        "peso": 5,
+        "custo": 1500,
+        "dev": 3,
+        "observacoes": "Incendiária (I), Energizada, Repulsora."
+      },
+      {
+        "nome": "Bastão Atordoante",
+        "dano": "For+d4",
+        "pa": "-",
+        "forca_min": "d4",
+        "peso": 1,
+        "custo": 260,
+        "dev": 1,
+        "observacoes": "Dano Não Letal, Atordoante."
+      },
+      {
+        "nome": "Lança Atordoante",
+        "dano": "For+d6",
+        "pa": "-",
+        "forca_min": "d6",
+        "peso": 3,
+        "custo": 650,
+        "dev": 1,
+        "observacoes": "Dano Não Letal, Alcance 2, Atordoante."
+      },
+      {
+        "nome": "Vibroespada",
+        "dano": "For+d8+d6",
+        "pa": "2",
+        "forca_min": "d6",
+        "peso": 1.5,
+        "custo": 600,
+        "dev": 2
+      },
+      {
+        "nome": "Vibrolâmina",
+        "dano": "For+d6+d4",
+        "pa": "2",
+        "forca_min": "d4",
+        "peso": 0.5,
+        "custo": 525,
+        "dev": 2
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Longa Distância",
+    "subtipo": "Blasters",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Blaster Gatling",
+        "distancia": "25/50/100",
+        "dano": "3d6+2",
+        "pa": 2,
+        "cdt": 4,
+        "tiros": 80,
+        "forca_min": "d8",
+        "peso": 10,
+        "custo": 1500,
+        "dev": 2,
+        "observacoes": "Arma Pesada, a menos que montada. Suporta até quatro pentes de partículas de uma vez."
+      },
+      {
+        "nome": "Blaster Pistola",
+        "distancia": "12/24/48",
+        "dano": "2d6+2",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": 50,
+        "forca_min": "d4",
+        "peso": 0.5,
+        "custo": 200,
+        "dev": 2
+      },
+      {
+        "nome": "Blaster Pistola Pesada",
+        "distancia": "10/20/40",
+        "dano": "3d6",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": 40,
+        "forca_min": "d6",
+        "peso": 1.5,
+        "custo": 300,
+        "dev": 2
+      },
+      {
+        "nome": "Blaster Rifle",
+        "distancia": "25/50/100",
+        "dano": "3d6+2",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": 30,
+        "forca_min": "d6",
+        "peso": 3,
+        "custo": 600,
+        "dev": 2
+      },
+      {
+        "nome": "Blaster Rifle Pesado",
+        "distancia": "25/50/100",
+        "dano": "3d6+4",
+        "pa": 4,
+        "cdt": 1,
+        "tiros": 20,
+        "forca_min": "d8",
+        "peso": 4.5,
+        "custo": 800,
+        "dev": 2,
+        "observacoes": "Incendiária (I), Tiro Rápido, Arma Pesada."
+      },
+      {
+        "nome": "Blaster Submetralhadora",
+        "distancia": "12/24/48",
+        "dano": "2d6+2",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": 50,
+        "forca_min": "d4",
+        "peso": 2,
+        "custo": 350,
+        "dev": 2
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Longa Distância",
+    "subtipo": "Desintegradores",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Desintegrador Pistola",
+        "distancia": "3/6/12",
+        "dano": "3d10",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 10,
+        "forca_min": "d4",
+        "peso": 2.5,
+        "custo": 600,
+        "dev": 2
+      },
+      {
+        "nome": "Desintegrador Rifle",
+        "distancia": "5/10/20",
+        "dano": "3d10",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 5,
+        "forca_min": "d6",
+        "peso": 6,
         "custo": 1000,
-        "tensao": 1,
-        "origem": "SCI_FI",
-        "observacoes": "Permite conexão direta com computadores (+2 em Hacking/Eletrônica)."
-      },
-      {
-        "nome": "Reflexos Ampliados",
-        "custo": 10000,
-        "tensao": 3,
-        "origem": "SCI_FI",
-        "observacoes": "Requer Agilidade d8. Concede a vantagem Rápido ou Nível 1 de Rapidez."
+        "dev": 2
       }
     ]
   },
   {
-    "tipo": "MECHA",
-    "subtipo": "Chassis",
+    "tipo": "Armas de Longa Distância",
+    "subtipo": "Armas de Estilhaço",
     "origem": "SCI_FI",
     "itens": [
       {
-        "nome": "Chassis Leve (Batedor)",
-        "tamanho": 4,
-        "resistencia": 12,
-        "armadura": 4,
-        "movimentacao": 14,
-        "custo": 50000,
-        "mods_slots": 5,
-        "origem": "SCI_FI",
-        "observacoes": "Mecha rápido para reconhecimento."
-      },
-      {
-        "nome": "Chassis Médio (Linha de Frente)",
-        "tamanho": 6,
-        "resistencia": 16,
-        "armadura": 6,
-        "movimentacao": 10,
-        "custo": 100000,
-        "mods_slots": 10,
-        "origem": "SCI_FI",
-        "observacoes": "Equilíbrio entre proteção e poder de fogo."
-      },
-      {
-        "nome": "Chassis Pesado (Assalto)",
-        "tamanho": 8,
-        "resistencia": 20,
-        "armadura": 8,
-        "movimentacao": 6,
-        "custo": 250000,
-        "mods_slots": 15,
-        "origem": "SCI_FI",
-        "observacoes": "Plataforma de armas móvel."
+        "nome": "Arma de Estilhaços",
+        "distancia": "12/24/48",
+        "dano": "3d6+2",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 6,
+        "forca_min": "d6",
+        "peso": 7.5,
+        "custo": 800,
+        "dev": 1,
+        "observacoes": "MGE, Dilacerante."
       }
     ]
   },
   {
-    "tipo": "ARMADURA_ENERGIZADA",
-    "subtipo": "Chassis",
+    "tipo": "Armas de Longa Distância",
+    "subtipo": "Lança-Chamas",
     "origem": "SCI_FI",
     "itens": [
       {
-        "nome": "Traje Leve (Infiltração)",
-        "tamanho": 1,
-        "resistencia": 8,
-        "armadura": 4,
-        "movimentacao": 8,
-        "custo": 10000,
-        "mods_slots": 3,
-        "origem": "SCI_FI",
-        "observacoes": "Traje amplificado para batedores."
+        "nome": "Lança-chamas de Mão",
+        "distancia": "Cone",
+        "dano": "3d6",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 20,
+        "forca_min": "d4",
+        "peso": 2.5,
+        "custo": 500,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Cauterizante, Arma Pesada, Incendiária, pode afetar um MME a até 18 quadros (36 metros) em vez de um Cone."
       },
       {
-        "nome": "Traje Pesado (Tanque)",
-        "tamanho": 2,
-        "resistencia": 12,
-        "armadura": 8,
-        "movimentacao": 6,
-        "custo": 30000,
-        "mods_slots": 6,
-        "origem": "SCI_FI",
-        "observacoes": "Armadura de batalha completa."
-      }
-    ]
-  },
-  {
-    "tipo": "ROBO",
-    "subtipo": "Chassis",
-    "origem": "SCI_FI",
-    "itens": [
-      {
-        "nome": "Drone de Reparo",
-        "tamanho": -1,
-        "resistencia": 6,
-        "armadura": 2,
-        "movimentacao": 6,
-        "custo": 2000,
-        "mods_slots": 2,
-        "origem": "SCI_FI",
-        "observacoes": "Robô utilitário."
-      },
-      {
-        "nome": "Sentinela de Combate",
-        "tamanho": -1,
-        "resistencia": 10,
-        "armadura": 4,
-        "movimentacao": 12,
-        "custo": 5000,
-        "mods_slots": 4,
-        "origem": "SCI_FI",
-        "observacoes": "Voo: Movimentação 12. Tamanho -1 (Pequeno).",
-        "descricao": "Pequenas plataformas aéreas projetadas para auxiliar soldados em escaramuças, flanquear inimigos ou realizar reconhecimento. Possuem corpo reforçado (Armadura +4), sensores avançados que ignoram iluminação e são destemidos. Vulneráveis a PEM e bloqueio de sinal (falha de controle remoto)."
-      },
-      {
-        "nome": "Drone de Batalha",
-        "origem": "SCI_FI",
-        "mods_slots": 0,
-        "resistencia": 10,
-        "descricao": "Drones de médio porte capazes de transportar munições pesadas. Podem pairar sobre uma área e liberar poder de fogo devastador com precisão mortal. Armadura pesada (+4) e sensores táticos.",
-        "observacoes": "Voo: Movimentação 24. Tamanho 1 (Normal).",
-        "tamanho": 1,
-        "movimentacao": 24,
-        "armadura": 4
-      }
-    ]
-  },
-  {
-    "tipo": "CIBERNETICO",
-    "subtipo": "Implantes",
-    "origem": "SCI_FI",
-    "itens": [
-      {
-        "nome": "Olhos Biônicos",
-        "custo": 2000,
-        "tensao": 1,
-        "origem": "SCI_FI",
-        "observacoes": "Ignora penalidades de iluminação (Visão Noturna). Zoom 10x (+2 em Perceber visual)."
-      },
-      {
-        "nome": "Braço Cibernético",
-        "custo": 5000,
-        "tensao": 2,
-        "origem": "SCI_FI",
-        "observacoes": "Aumenta Força do braço em um dado. Dano desarmado For+d4. Não sente dor no membro."
-      },
-      {
-        "nome": "Pernas Cibernéticas",
-        "custo": 6000,
-        "tensao": 2,
-        "origem": "SCI_FI",
-        "observacoes": "Aumenta Movimentação em +2 e Salto."
-      },
-      {
-        "nome": "Blindagem Dérmica (Nível 1)",
-        "custo": 3000,
-        "tensao": 1,
-        "origem": "SCI_FI",
-        "observacoes": "Concede +2 de Armadura natural."
-      },
-      {
-        "nome": "Interface de Dados",
+        "nome": "Lança-Chamas Pesado",
+        "distancia": "Cone",
+        "dano": "4d6",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 10,
+        "forca_min": "d6",
+        "peso": 7.5,
         "custo": 1000,
-        "tensao": 1,
-        "origem": "SCI_FI",
-        "observacoes": "Permite conexão direta com computadores (+2 em Hacking/Eletrônica)."
+        "dev": 1,
+        "observacoes": "Incendiária (I), Cauterizante, Arma Pesada, Incendiária, pode afetar um MME a até 18 quadros (36 metros) em vez de um Cone."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Longa Distância",
+    "subtipo": "Flechetes",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Submetralhadora Flechete",
+        "distancia": "12/24/48",
+        "dano": "2d4+1",
+        "pa": "-",
+        "cdt": 3,
+        "tiros": 90,
+        "forca_min": "d4",
+        "peso": 2,
+        "custo": 150,
+        "dev": 1
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Longa Distância",
+    "subtipo": "Granadas",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Granada de Fragmentação",
+        "distancia": "5/10/20",
+        "dano": "3d6",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 1,
+        "forca_min": "d4",
+        "peso": 0.25,
+        "custo": 50,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Arma Pesada, MME."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Longa Distância",
+    "subtipo": "Girofoguetes",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Girofoguete Pistola",
+        "distancia": "12/24/48",
+        "dano": "3d6",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 10,
+        "forca_min": "d4",
+        "peso": 1.5,
+        "custo": 400,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Arma Pesada."
       },
       {
-        "nome": "Reflexos Ampliados",
+        "nome": "Girofoguete Rifle",
+        "distancia": "24/48/96",
+        "dano": "3d6",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 30,
+        "forca_min": "d6",
+        "peso": 3,
+        "custo": 600,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Arma Pesada."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Longa Distância",
+    "subtipo": "Lasers",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Laser Pistola",
+        "distancia": "15/30/60",
+        "dano": "2d6",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": 50,
+        "forca_min": "d4",
+        "peso": 1,
+        "custo": 250,
+        "dev": 2,
+        "observacoes": "Cauterizante, Sobrecarga."
+      },
+      {
+        "nome": "Laser Submetralhadora",
+        "distancia": "15/30/60",
+        "dano": "2d6",
+        "pa": 2,
+        "cdt": 4,
+        "tiros": 50,
+        "forca_min": "d4",
+        "peso": 2,
+        "custo": 500,
+        "dev": 2,
+        "observacoes": "Cauterizante, Sem Recuo, Sobrecarga."
+      },
+      {
+        "nome": "Laser Rifle",
+        "distancia": "30/60/120",
+        "dano": "3d6",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": 30,
+        "forca_min": "d6",
+        "peso": 4,
+        "custo": 700,
+        "dev": 2,
+        "observacoes": "Cauterizante, Sem Recuo, Sobrecarga."
+      },
+      {
+        "nome": "Laser Rifle Sniper",
+        "distancia": "100/300/400",
+        "dano": "3d6",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": 20,
+        "forca_min": "d6",
+        "peso": 7.5,
+        "custo": 1000,
+        "dev": 2,
+        "observacoes": "Cauterizante, Sobrecarga, Tiro Rápido."
+      },
+      {
+        "nome": "Gatling Laser",
+        "distancia": "50/100/200",
+        "dano": "3d6+4",
+        "pa": 4,
+        "cdt": 4,
+        "tiros": 80,
+        "forca_min": "d8",
+        "peso": 10,
+        "custo": 3000,
+        "dev": 2,
+        "observacoes": "Incendiária (I), Cauterizante, Arma Pesada, Sem Recuo, Sobrecarga, Fogo Rápido. Pode ser montada."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Longa Distância",
+    "subtipo": "Lança-Mísseis",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Míssil Micro",
+        "distancia": "25/50/100",
+        "dano": "3d6",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 1,
+        "forca_min": "-",
+        "peso": 1,
+        "custo": 1000,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Um conjunto de micromísseis disparados como um único bando. Arma Guiada, Arma Pesada, MGE, ignora Defesa de Ponto."
+      },
+      {
+        "nome": "Míssil Leve",
+        "distancia": "100/200/400",
+        "dano": "6d6",
+        "pa": 16,
+        "cdt": 4,
+        "tiros": 4,
+        "forca_min": "-",
+        "peso": 4,
+        "custo": 4000,
+        "dev": 1,
+        "observacoes": "Incendiária (III), Arma Guiada, Arma Pesada, Sem Recuo, MPE."
+      },
+      {
+        "nome": "Míssil Médio",
+        "distancia": "150/300/600",
+        "dano": "7d6",
+        "pa": 24,
+        "cdt": 2,
+        "tiros": 2,
+        "forca_min": "-",
+        "peso": 4,
         "custo": 10000,
-        "tensao": 3,
-        "origem": "SCI_FI",
-        "observacoes": "Requer Agilidade d8. Concede a vantagem Rápido ou Nível 1 de Rapidez."
+        "dev": 1,
+        "observacoes": "Incendiária (IV), Arma Guiada, Arma Pesada, Sem Recuo, MME."
+      },
+      {
+        "nome": "Míssil Pesado",
+        "distancia": "200/400/800",
+        "dano": "8d6",
+        "pa": 32,
+        "cdt": 1,
+        "tiros": 1,
+        "forca_min": "-",
+        "peso": 4,
+        "custo": 20000,
+        "dev": 1,
+        "observacoes": "Incendiária (V), Arma Guiada, Arma Pesada, Sem Recuo, MGE."
       }
     ]
   },
   {
-    "tipo": "MECHA",
-    "subtipo": "Chassis",
+    "tipo": "Armas de Longa Distância",
+    "subtipo": "Armas de Plasma",
     "origem": "SCI_FI",
     "itens": [
       {
-        "nome": "Chassis Leve (Batedor)",
-        "tamanho": 4,
-        "resistencia": 12,
-        "armadura": 4,
-        "movimentacao": 14,
-        "custo": 50000,
-        "mods_slots": 5,
-        "origem": "SCI_FI",
-        "observacoes": "Mecha rápido para reconhecimento."
-      },
-      {
-        "nome": "Chassis Médio (Linha de Frente)",
-        "tamanho": 6,
-        "resistencia": 16,
-        "armadura": 6,
-        "movimentacao": 10,
-        "custo": 100000,
-        "mods_slots": 10,
-        "origem": "SCI_FI",
-        "observacoes": "Equilíbrio entre proteção e poder de fogo."
-      },
-      {
-        "nome": "Chassis Pesado (Assalto)",
-        "tamanho": 8,
-        "resistencia": 20,
-        "armadura": 8,
-        "movimentacao": 6,
-        "custo": 250000,
-        "mods_slots": 15,
-        "origem": "SCI_FI",
-        "observacoes": "Plataforma de armas móvel."
-      }
-    ]
-  },
-  {
-    "tipo": "ARMADURA_ENERGIZADA",
-    "subtipo": "Chassis",
-    "origem": "SCI_FI",
-    "itens": [
-      {
-        "nome": "Traje Leve (Infiltração)",
-        "tamanho": 1,
-        "resistencia": 8,
-        "armadura": 4,
-        "movimentacao": 8,
-        "custo": 10000,
-        "mods_slots": 3,
-        "origem": "SCI_FI",
-        "observacoes": "Traje amplificado para batedores."
-      },
-      {
-        "nome": "Traje Pesado (Tanque)",
-        "tamanho": 2,
-        "resistencia": 12,
-        "armadura": 8,
-        "movimentacao": 6,
-        "custo": 30000,
-        "mods_slots": 6,
-        "origem": "SCI_FI",
-        "observacoes": "Armadura de batalha completa."
-      }
-    ]
-  },
-  {
-    "tipo": "ROBO",
-    "subtipo": "Chassis",
-    "origem": "SCI_FI",
-    "itens": [
-      {
-        "nome": "Drone de Reparo",
-        "tamanho": -1,
-        "resistencia": 6,
-        "armadura": 2,
-        "movimentacao": 6,
+        "nome": "Escopeta de Plasma",
+        "distancia": "Cone",
+        "dano": "2d10",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 5,
+        "forca_min": "d8",
+        "peso": 8,
         "custo": 2000,
-        "mods_slots": 2,
-        "origem": "SCI_FI",
-        "observacoes": "Robô utilitário."
+        "dev": 2,
+        "observacoes": "Incendiária (I), Cauterizante, Arma Pesada, Plasma."
       },
       {
-        "nome": "Sentinela de Combate",
-        "tamanho": 0,
-        "resistencia": 10,
-        "armadura": 4,
-        "movimentacao": 6,
+        "nome": "Pistola de Plasma",
+        "distancia": "5/10/20",
+        "dano": "2d10",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 10,
+        "forca_min": "d6",
+        "peso": 4,
+        "custo": 800,
+        "dev": 2,
+        "observacoes": "Incendiária (I), Cauterizante, Arma Pesada, Plasma."
+      },
+      {
+        "nome": "Rifle de Plasma",
+        "distancia": "10/20/40",
+        "dano": "2d10",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 10,
+        "forca_min": "d8",
+        "peso": 6,
+        "custo": 1000,
+        "dev": 2,
+        "observacoes": "Incendiária (I), Cauterizante, Arma Pesada, Plasma."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Longa Distância",
+    "subtipo": "Armas Psíquicas",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Pistola Psíquica",
+        "distancia": "5/10/20",
+        "dano": "2d6",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 24,
+        "forca_min": "d4",
+        "peso": 0.5,
+        "custo": 250,
+        "dev": 3,
+        "observacoes": "Psíquica."
+      },
+      {
+        "nome": "Submetralhadora Psíquica",
+        "distancia": "10/20/40",
+        "dano": "2d8",
+        "pa": "-",
+        "cdt": 3,
+        "tiros": 20,
+        "forca_min": "d4",
+        "peso": 1,
+        "custo": 350,
+        "dev": 3,
+        "observacoes": "Psíquica."
+      },
+      {
+        "nome": "Rifle Psíquico",
+        "distancia": "20/40/80",
+        "dano": "2d10",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 16,
+        "forca_min": "d6",
+        "peso": 3,
+        "custo": 350,
+        "dev": 3,
+        "observacoes": "Psíquica."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Longa Distância",
+    "subtipo": "Armas de Pulso",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Pistola de Pulso",
+        "distancia": "10/20/40",
+        "dano": "2d6",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": 12,
+        "forca_min": "d4",
+        "peso": 1,
+        "custo": 300,
+        "dev": 2,
+        "observacoes": "Sobrecarga."
+      },
+      {
+        "nome": "Submetralhadora de Pulso",
+        "distancia": "10/20/40",
+        "dano": "2d6",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": 25,
+        "forca_min": "d6",
+        "peso": 2,
+        "custo": 500,
+        "dev": 2,
+        "observacoes": "Sobrecarga."
+      },
+      {
+        "nome": "Rifle de Pulso",
+        "distancia": "20/40/80",
+        "dano": "3d6",
+        "pa": 4,
+        "cdt": 1,
+        "tiros": 12,
+        "forca_min": "d6",
+        "peso": 3,
+        "custo": 1000,
+        "dev": 2,
+        "observacoes": "Sobrecarga."
+      },
+      {
+        "nome": "Rifle de Assalto de Pulso",
+        "distancia": "15/30/60",
+        "dano": "3d6",
+        "pa": 4,
+        "cdt": 3,
+        "tiros": 30,
+        "forca_min": "d6",
+        "peso": 4,
+        "custo": 1000,
+        "dev": 2,
+        "observacoes": "Sobrecarga."
+      },
+      {
+        "nome": "Rifle Sniper de Pulso",
+        "distancia": "40/80/160",
+        "dano": "4d6",
+        "pa": 4,
+        "cdt": 1,
+        "tiros": 6,
+        "forca_min": "d6",
+        "peso": 3,
+        "custo": 1000,
+        "dev": 2,
+        "observacoes": "Sobrecarga."
+      },
+      {
+        "nome": "Gatling de Pulso",
+        "distancia": "20/40/80",
+        "dano": "3d6",
+        "pa": 4,
+        "cdt": 3,
+        "tiros": 50,
+        "forca_min": "d8",
+        "peso": 6,
+        "custo": 2000,
+        "dev": 2,
+        "observacoes": "Sobrecarga, Tiro Rápido. Pode ser montada."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Longa Distância",
+    "subtipo": "Lança-Foguetes",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Foguete Micro",
+        "distancia": "20/40/80",
+        "dano": "3d6",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 1,
+        "forca_min": "-",
+        "peso": 1,
+        "custo": 500,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Um conjunto de micro foguetes disparados como um único bando. Arma Pesada, MGE, ignora Defesa de Ponto."
+      },
+      {
+        "nome": "Foguete Leve",
+        "distancia": "20/40/80",
+        "dano": "6d6",
+        "pa": 16,
+        "cdt": 4,
+        "tiros": 4,
+        "forca_min": "-",
+        "peso": 4,
+        "custo": 2000,
+        "dev": 1,
+        "observacoes": "Incendiária (III), Arma Pesada, Sem Recuo, MPE."
+      },
+      {
+        "nome": "Foguete Médio",
+        "distancia": "20/40/80",
+        "dano": "7d6",
+        "pa": 24,
+        "cdt": 2,
+        "tiros": 2,
+        "forca_min": "-",
+        "peso": 4,
+        "custo": 6000,
+        "dev": 1,
+        "observacoes": "Incendiária (IV), Arma Pesada, Sem Recuo, MME."
+      },
+      {
+        "nome": "Foguete Pesado",
+        "distancia": "20/40/80",
+        "dano": "8d6",
+        "pa": 32,
+        "cdt": 1,
+        "tiros": 1,
+        "forca_min": "-",
+        "peso": 4,
+        "custo": 15000,
+        "dev": 1,
+        "observacoes": "Incendiária (V), Arma Pesada, MGE."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Longa Distância",
+    "subtipo": "Lança-Projéteis",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Pistola Leve",
+        "distancia": "10/20/40",
+        "dano": "2d6",
+        "pa": 1,
+        "cdt": 2,
+        "tiros": 10,
+        "forca_min": "d4",
+        "peso": 0.5,
+        "custo": 200,
+        "dev": 1
+      },
+      {
+        "nome": "Pistola Média",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": 10,
+        "forca_min": "d4",
+        "peso": 1,
+        "custo": 250,
+        "dev": 1
+      },
+      {
+        "nome": "Pistola Pesada",
+        "distancia": "12/24/48",
+        "dano": "2d10",
+        "pa": 4,
+        "cdt": 1,
+        "tiros": 6,
+        "forca_min": "d6",
+        "peso": 2,
+        "custo": 400,
+        "dev": 1
+      },
+      {
+        "nome": "Pistola-Metralhadora",
+        "distancia": "5/10/20",
+        "dano": "2d6",
+        "pa": 2,
+        "cdt": 4,
+        "tiros": 25,
+        "forca_min": "d4",
+        "peso": 2,
+        "custo": 300,
+        "dev": 1,
+        "observacoes": "Rajada de 3 Balas."
+      },
+      {
+        "nome": "Submetralhadora Média",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": 30,
+        "forca_min": "d6",
+        "peso": 3,
+        "custo": 500,
+        "dev": 1,
+        "observacoes": "Rajada de 3 Balas."
+      },
+      {
+        "nome": "Submetralhadora Pesada",
+        "distancia": "12/24/48",
+        "dano": "2d10",
+        "pa": 4,
+        "cdt": 3,
+        "tiros": 25,
+        "forca_min": "d8",
+        "peso": 4,
+        "custo": 600,
+        "dev": 1,
+        "observacoes": "Rajada de 3 Balas."
+      },
+      {
+        "nome": "Rifle de Assalto",
+        "distancia": "24/48/96",
+        "dano": "2d10",
+        "pa": 4,
+        "cdt": 3,
+        "tiros": 30,
+        "forca_min": "d6",
+        "peso": 5,
+        "custo": 600,
+        "dev": 1,
+        "observacoes": "Rajada de 3 Balas."
+      },
+      {
+        "nome": "Rifle de Caça",
+        "distancia": "24/48/96",
+        "dano": "2d10",
+        "pa": 4,
+        "cdt": 1,
+        "tiros": 12,
+        "forca_min": "d6",
+        "peso": 4,
+        "custo": 500,
+        "dev": 1
+      },
+      {
+        "nome": "Carabina",
+        "distancia": "20/40/80",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": 24,
+        "forca_min": "d4",
+        "peso": 3,
+        "custo": 400,
+        "dev": 1
+      },
+      {
+        "nome": "Rifle Sniper",
+        "distancia": "50/100/200",
+        "dano": "2d12",
+        "pa": 4,
+        "cdt": 1,
+        "tiros": 6,
+        "forca_min": "d6",
+        "peso": 12.5,
+        "custo": 1000,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Arma Pesada, Tiro Rápido."
+      },
+      {
+        "nome": "Escopeta Automática",
+        "distancia": "12/24/48",
+        "dano": "1–3d6",
+        "pa": "-",
+        "cdt": 3,
+        "tiros": 32,
+        "forca_min": "d8",
+        "peso": 8,
+        "custo": 400,
+        "dev": 1
+      },
+      {
+        "nome": "Escopeta Semiautomática",
+        "distancia": "12/24/48",
+        "dano": "1–3d6",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 12,
+        "forca_min": "d6",
+        "peso": 5,
+        "custo": 250,
+        "dev": 1
+      },
+      {
+        "nome": "Metralhadora Leve",
+        "distancia": "30/60/120",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": 200,
+        "forca_min": "d6",
+        "peso": 10,
+        "custo": 700,
+        "dev": 1,
+        "observacoes": "Ganha Defesa de Ponto e Tiro de Reação quando montada."
+      },
+      {
+        "nome": "Metralhadora Média",
+        "distancia": "30/60/120",
+        "dano": "2d8+1",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": 100,
+        "forca_min": "d8",
+        "peso": 15,
+        "custo": 1000,
+        "dev": 1,
+        "observacoes": "Ganha Defesa de Ponto e Tiro de Reação quando montada."
+      },
+      {
+        "nome": "Metralhadora Pesada",
+        "distancia": "50/100/200",
+        "dano": "2d10",
+        "pa": 4,
+        "cdt": 3,
+        "tiros": 50,
+        "forca_min": "d10",
+        "peso": 20,
+        "custo": 2000,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Arma Pesada, Tiro Rápido exceto quando montada. Ganha Defesa de Ponto e Tiro de Reação quando montada."
+      },
+      {
+        "nome": "Minigun",
+        "distancia": "50/100/200",
+        "dano": "2d8+1",
+        "pa": 2,
+        "cdt": 5,
+        "tiros": 2000,
+        "forca_min": "d10",
+        "peso": 20,
+        "custo": 10000,
+        "dev": 1,
+        "observacoes": "Incendiária (I), CdT Mínima 3. Ignora Recuo e ganha Defesa de Ponto e Tiro de Reação quando montada."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Longa Distância",
+    "subtipo": "Armas Atordoantes",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Acessório de Arma Atordoante",
+        "distancia": "6/12/24",
+        "dano": "-",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 6,
+        "forca_min": "-",
+        "peso": 0.5,
+        "custo": 300,
+        "dev": 1,
+        "observacoes": "O alvo deve rolar Vigor -2 (-4 com uma ampliação) ou ficará Atordoado. Atordoador e célula de energia podem ser acoplados a outra arma do mesmo peso ou maior."
+      },
+      {
+        "nome": "Arma Atordoante",
+        "distancia": "12/24/48",
+        "dano": "-",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 12,
+        "forca_min": "-",
+        "peso": 0.5,
+        "custo": 300,
+        "dev": 1,
+        "observacoes": "O alvo deve rolar Vigor -2 (-4 com uma ampliação) ou ficará Atordoado."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Veiculares",
+    "subtipo": "Geral",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Canhão Automático Leve",
+        "distancia": "50/100/200",
+        "dano": "3d8",
+        "pa": 4,
+        "cdt": 4,
+        "tiros": 100,
+        "tamanho_min": 2,
+        "custo": 10000,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Defesa de Ponto, Tiro de Reação."
+      },
+      {
+        "nome": "Canhão Automático Médio",
+        "distancia": "50/100/200",
+        "dano": "4d8",
+        "pa": 6,
+        "cdt": 4,
+        "tiros": 80,
+        "tamanho_min": 8,
+        "custo": 20000,
+        "dev": 1,
+        "observacoes": "Incendiária (II)."
+      },
+      {
+        "nome": "Canhão Automático Pesado",
+        "distancia": "75/150/300",
+        "dano": "5d8",
+        "pa": 8,
+        "cdt": 4,
+        "tiros": 60,
+        "tamanho_min": 12,
+        "custo": 50000,
+        "dev": 1,
+        "observacoes": "Incendiária (III)."
+      },
+      {
+        "nome": "Bomba Micro (Bomblets)",
+        "distancia": "25/50/100",
+        "dano": "3d6",
+        "pa": 4,
+        "cdt": 1,
+        "tiros": 2,
+        "tamanho_min": "-",
+        "custo": 500,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Um conjunto de bomblets disparados como um único bando. MGE."
+      },
+      {
+        "nome": "Bomba Leve",
+        "distancia": "-",
+        "dano": "6d10",
+        "pa": 5,
+        "cdt": 4,
+        "tiros": 8,
+        "tamanho_min": "-",
+        "custo": 1000,
+        "dev": 1,
+        "observacoes": "Incendiária (III), MGE."
+      },
+      {
+        "nome": "Bomba Média",
+        "distancia": "-",
+        "dano": "8d10",
+        "pa": 10,
+        "cdt": 2,
+        "tiros": 4,
+        "tamanho_min": "-",
+        "custo": 4000,
+        "dev": 1,
+        "observacoes": "Incendiária (V), 10 quadros (20 metros) de raio."
+      },
+      {
+        "nome": "Bomba Pesada",
+        "distancia": "-",
+        "dano": "10d10",
+        "pa": 10,
+        "cdt": 1,
+        "tiros": 2,
+        "tamanho_min": "-",
+        "custo": 10000,
+        "dev": 1,
+        "observacoes": "Incendiária (VI), 25 quadros (50 metros) de raio."
+      },
+      {
+        "nome": "Canhão Leve",
+        "distancia": "50/100/200",
+        "dano": "3d10",
+        "pa": 5,
+        "cdt": 1,
+        "tiros": 80,
+        "tamanho_min": 1,
+        "custo": 15000,
+        "dev": 1,
+        "observacoes": "Incendiária (II), Tiro de Reação, MPE. Munição AE tem dano 3d8 (I), MGE, PA 0."
+      },
+      {
+        "nome": "Canhão Médio",
+        "distancia": "75/150/300",
+        "dano": "4d10",
+        "pa": 10,
+        "cdt": 1,
+        "tiros": 60,
+        "tamanho_min": 2,
+        "custo": 30000,
+        "dev": 1,
+        "observacoes": "Incendiária (III), MPE. Munição AE tem dano 4d8 (II), MGE, PA 5."
+      },
+      {
+        "nome": "Canhão Pesado",
+        "distancia": "100/200/400",
+        "dano": "5d10",
+        "pa": 20,
+        "cdt": 1,
+        "tiros": 40,
+        "tamanho_min": 4,
+        "custo": 60000,
+        "dev": 1,
+        "observacoes": "Incendiária (IV), MPE. Munição AE tem dano 5d8 (III), MGE, PA 10."
+      },
+      {
+        "nome": "Canhão Super",
+        "distancia": "150/300/600",
+        "dano": "6d10",
+        "pa": 30,
+        "cdt": 1,
+        "tiros": 20,
+        "tamanho_min": 10,
+        "custo": 100000,
+        "dev": 1,
+        "observacoes": "Incendiária (VI), MME. Munição AE tem dano 6d8 (IV), MGE, PA 15."
+      },
+      {
+        "nome": "Canhão Superpesado",
+        "distancia": "150/300/600",
+        "dano": "8d10",
+        "pa": 40,
+        "cdt": 1,
+        "tiros": 10,
+        "tamanho_min": 16,
+        "custo": 500000,
+        "dev": 1,
+        "observacoes": "Incendiária (VII), MME. Munição AE tem dano 8d8 (V), MGE, PA 20."
+      },
+      {
+        "nome": "Lança-Chamas Pesado",
+        "distancia": "Cone",
+        "dano": "3d12",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 30,
+        "tamanho_min": 1,
         "custo": 5000,
-        "mods_slots": 4,
-        "origem": "SCI_FI",
-        "observacoes": "Robô soldado padrão."
+        "dev": 1,
+        "observacoes": "Incendiária (I), Cauterizante, Incendiária, Cone ou MME a até 18 quadros (36 metros)."
+      },
+      {
+        "nome": "Canhão Gravitacional Pesado",
+        "distancia": "50/100/200",
+        "dano": "5d12",
+        "pa": 10,
+        "cdt": 1,
+        "tiros": 10,
+        "tamanho_min": 12,
+        "custo": 100000,
+        "dev": 3,
+        "observacoes": "Incendiária (IV), MGE. Um alvo Abalado ou Ferido por um canhão gravitacional fica Distraído."
+      },
+      {
+        "nome": "Lança-Granadas",
+        "distancia": "24/48/96",
+        "dano": "3d6",
+        "pa": "-",
+        "cdt": 3,
+        "tiros": 12,
+        "tamanho_min": "-",
+        "custo": 600,
+        "dev": 1,
+        "observacoes": "Incendiária (I), MME."
+      },
+      {
+        "nome": "Canhão de Íon Leve",
+        "distancia": "75/150/300",
+        "dano": "5d8",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 10,
+        "tamanho_min": 4,
+        "custo": 20000,
+        "dev": 2,
+        "observacoes": "Incendiária (II)."
+      },
+      {
+        "nome": "Canhão de Íon Médio",
+        "distancia": "75/150/300",
+        "dano": "7d8",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 10,
+        "tamanho_min": 8,
+        "custo": 50000,
+        "dev": 2,
+        "observacoes": "Incendiária (III)."
+      },
+      {
+        "nome": "Canhão de Íon Pesado",
+        "distancia": "75/150/300",
+        "dano": "9d8",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 10,
+        "tamanho_min": 20,
+        "custo": 100000,
+        "dev": 2,
+        "observacoes": "Incendiária (IV)."
+      },
+      {
+        "nome": "Gatling Laser Veicular",
+        "distancia": "50/100/200",
+        "dano": "3d6+4",
+        "pa": 4,
+        "cdt": 4,
+        "tiros": 80,
+        "tamanho_min": 1,
+        "custo": 3000,
+        "dev": 2,
+        "observacoes": "Incendiária (I), Cauterizante, Sobrecarga, Defesa de Ponto, Tiro de Reação."
+      },
+      {
+        "nome": "Laser Leve Veicular",
+        "distancia": "150/300/600",
+        "dano": "2d10",
+        "pa": 10,
+        "cdt": 3,
+        "tiros": 80,
+        "tamanho_min": 2,
+        "custo": 20000,
+        "dev": 2,
+        "observacoes": "Incendiária (II), Cauterizante, Sobrecarga, Tiro de Reação."
+      },
+      {
+        "nome": "Laser Médio Veicular",
+        "distancia": "150/300/600",
+        "dano": "3d10",
+        "pa": 20,
+        "cdt": 2,
+        "tiros": 60,
+        "tamanho_min": 4,
+        "custo": 50000,
+        "dev": 2,
+        "observacoes": "Incendiária (III), Cauterizante, Sobrecarga."
+      },
+      {
+        "nome": "Laser Pesado Veicular",
+        "distancia": "150/300/600",
+        "dano": "4d10",
+        "pa": 30,
+        "cdt": 1,
+        "tiros": 40,
+        "tamanho_min": 8,
+        "custo": 200000,
+        "dev": 2,
+        "observacoes": "Incendiária (V), Cauterizante, Sobrecarga."
+      },
+      {
+        "nome": "Laser Super Veicular",
+        "distancia": "150/300/600",
+        "dano": "5d10",
+        "pa": 30,
+        "cdt": 1,
+        "tiros": 20,
+        "tamanho_min": 12,
+        "custo": 300000,
+        "dev": 2,
+        "observacoes": "Incendiária (V), Cauterizante, Sobrecarga."
+      },
+      {
+        "nome": "Laser Superpesado Veicular",
+        "distancia": "150/300/600",
+        "dano": "6d10",
+        "pa": 40,
+        "cdt": 1,
+        "tiros": 10,
+        "tamanho_min": 20,
+        "custo": 1000000,
+        "dev": 2,
+        "observacoes": "Incendiária (VII), Cauterizante, Sobrecarga."
+      },
+      {
+        "nome": "Laser Mega Veicular",
+        "distancia": "150/300/600",
+        "dano": "8d10",
+        "pa": 40,
+        "cdt": 1,
+        "tiros": 1,
+        "tamanho_min": 28,
+        "custo": 2000000,
+        "dev": 2,
+        "observacoes": "Incendiária (VII), Cauterizante, não pode ser Conectada ou Sobrecarregada. Leva um minuto para recarregar após disparar."
+      },
+      {
+        "nome": "Condutor de Massa Leve",
+        "distancia": "100/200/400",
+        "dano": "2d12+2",
+        "pa": 5,
+        "cdt": 3,
+        "tiros": 100,
+        "tamanho_min": 2,
+        "custo": 10000,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Defesa de Ponto, Tiro de Reação, MPE."
+      },
+      {
+        "nome": "Condutor de Massa Médio",
+        "distancia": "100/200/400",
+        "dano": "3d12+3",
+        "pa": 5,
+        "cdt": 2,
+        "tiros": 80,
+        "tamanho_min": 4,
+        "custo": 20000,
+        "dev": 1,
+        "observacoes": "Incendiária (II), MME."
+      },
+      {
+        "nome": "Condutor de Massa Pesado",
+        "distancia": "100/200/400",
+        "dano": "4d12+4",
+        "pa": 5,
+        "cdt": 1,
+        "tiros": 60,
+        "tamanho_min": 8,
+        "custo": 40000,
+        "dev": 1,
+        "observacoes": "Incendiária (III), MGE."
+      },
+      {
+        "nome": "Condutor de Massa Super",
+        "distancia": "100/200/400",
+        "dano": "6d12+6",
+        "pa": 5,
+        "cdt": 1,
+        "tiros": 40,
+        "tamanho_min": 12,
+        "custo": 80000,
+        "dev": 1,
+        "observacoes": "Incendiária (IV), 10 quadros (20 metros) de raio."
+      },
+      {
+        "nome": "Condutor de Massa Superpesado",
+        "distancia": "100/200/400",
+        "dano": "8d12+8",
+        "pa": 5,
+        "cdt": 1,
+        "tiros": 10,
+        "tamanho_min": 20,
+        "custo": 400000,
+        "dev": 1,
+        "observacoes": "Incendiária (VI), 25 quadros (50 metros) de raio."
+      },
+      {
+        "nome": "Condutor de Massa Mega",
+        "distancia": "100/200/400",
+        "dano": "10d12+10",
+        "pa": 5,
+        "cdt": 1,
+        "tiros": 1,
+        "tamanho_min": 28,
+        "custo": 1000000,
+        "dev": 1,
+        "observacoes": "Incendiária (VII), 50 quadros (100 metros) de raio."
+      },
+      {
+        "nome": "Mina MGE",
+        "distancia": "-",
+        "dano": "4d6",
+        "pa": 10,
+        "cdt": 1,
+        "tiros": 1,
+        "tamanho_min": 1,
+        "custo": 1000,
+        "dev": 1,
+        "observacoes": "Incendiária (II)."
+      },
+      {
+        "nome": "Míssil Veicular Micro",
+        "distancia": "25/50/100",
+        "dano": "3d6",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 2,
+        "tamanho_min": "-",
+        "custo": 1000,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Um conjunto de micromísseis disparados como um único bando. Se o atacante mirar (veja Mirar em Savage Worlds Edição Aventura), ele pode escolher quais alvos no modelo serão afetados. Arma Guiada, MGE, ignora Defesa de Ponto."
+      },
+      {
+        "nome": "Míssil Veicular Leve",
+        "distancia": "100/200/400",
+        "dano": "6d6",
+        "pa": 16,
+        "cdt": 4,
+        "tiros": 8,
+        "tamanho_min": "-",
+        "custo": 4000,
+        "dev": 1,
+        "observacoes": "Incendiária (III), Arma Guiada, MPE."
+      },
+      {
+        "nome": "Míssil Veicular Médio",
+        "distancia": "150/300/600",
+        "dano": "7d6",
+        "pa": 24,
+        "cdt": 2,
+        "tiros": 4,
+        "tamanho_min": "-",
+        "custo": 10000,
+        "dev": 1,
+        "observacoes": "Incendiária (IV), Arma Pesada, MME."
+      },
+      {
+        "nome": "Míssil Veicular Pesado",
+        "distancia": "200/400/800",
+        "dano": "8d6",
+        "pa": 32,
+        "cdt": 1,
+        "tiros": 2,
+        "tamanho_min": "-",
+        "custo": 20000,
+        "dev": 1,
+        "observacoes": "Incendiária (V), Arma Guiada, MGE."
+      },
+      {
+        "nome": "Feixe de Partículas Leve",
+        "distancia": "75/150/300",
+        "dano": "5d8",
+        "pa": 24,
+        "cdt": 2,
+        "tiros": 40,
+        "tamanho_min": 4,
+        "custo": 150000,
+        "dev": 2,
+        "observacoes": "Incendiária (IV), Arma de Feixe, Tiro de Reação."
+      },
+      {
+        "nome": "Feixe de Partículas Médio",
+        "distancia": "75/150/300",
+        "dano": "7d8",
+        "pa": 32,
+        "cdt": 2,
+        "tiros": 20,
+        "tamanho_min": 8,
+        "custo": 750000,
+        "dev": 2,
+        "observacoes": "Incendiária (VI), Arma de Feixe."
+      },
+      {
+        "nome": "Feixe de Partículas Pesado",
+        "distancia": "75/150/300",
+        "dano": "9d8",
+        "pa": 40,
+        "cdt": 2,
+        "tiros": 2,
+        "tamanho_min": 20,
+        "custo": 3000000,
+        "dev": 2,
+        "observacoes": "Incendiária (VII), Arma de Feixe."
+      },
+      {
+        "nome": "Canhão de Partículas Leve",
+        "distancia": "100/200/400",
+        "dano": "4d6+4",
+        "pa": 5,
+        "cdt": 3,
+        "tiros": 90,
+        "tamanho_min": 2,
+        "custo": 25000,
+        "dev": 2,
+        "observacoes": "Incendiária (II), Defesa de Ponto, Tiro de Reação."
+      },
+      {
+        "nome": "Canhão de Partículas Médio",
+        "distancia": "100/200/400",
+        "dano": "6d6+6",
+        "pa": 10,
+        "cdt": 3,
+        "tiros": 60,
+        "tamanho_min": 8,
+        "custo": 50000,
+        "dev": 2,
+        "observacoes": "Incendiária (III)."
+      },
+      {
+        "nome": "Canhão de Partículas Pesado",
+        "distancia": "100/200/400",
+        "dano": "8d6+8",
+        "pa": 20,
+        "cdt": 3,
+        "tiros": 30,
+        "tamanho_min": 12,
+        "custo": 250000,
+        "dev": 2,
+        "observacoes": "Incendiária (V)."
+      },
+      {
+        "nome": "Foguete Veicular Micro",
+        "distancia": "20/40/80",
+        "dano": "3d6",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 2,
+        "tamanho_min": "-",
+        "custo": 500,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Um conjunto de micro foguetes disparados como um único bando. MGE, ignora Defesa de Ponto."
+      },
+      {
+        "nome": "Foguete Veicular Leve",
+        "distancia": "20/40/80",
+        "dano": "6d6",
+        "pa": 16,
+        "cdt": 4,
+        "tiros": 8,
+        "tamanho_min": "-",
+        "custo": 2000,
+        "dev": 1,
+        "observacoes": "Incendiária (III), Sem Recuo, MPE."
+      },
+      {
+        "nome": "Foguete Veicular Médio",
+        "distancia": "20/40/80",
+        "dano": "7d6",
+        "pa": 24,
+        "cdt": 2,
+        "tiros": 4,
+        "tamanho_min": "-",
+        "custo": 6000,
+        "dev": 1,
+        "observacoes": "Incendiária (IV), Sem Recuo, MME."
+      },
+      {
+        "nome": "Foguete Veicular Pesado",
+        "distancia": "20/40/80",
+        "dano": "8d6",
+        "pa": 32,
+        "cdt": 1,
+        "tiros": 2,
+        "tamanho_min": "-",
+        "custo": 15000,
+        "dev": 1,
+        "observacoes": "Incendiária (V), Sem Recuo, MGE."
+      },
+      {
+        "nome": "Metralhadora Leve Veicular",
+        "distancia": "30/60/120",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": 200,
+        "tamanho_min": 1,
+        "custo": 700,
+        "dev": 1,
+        "observacoes": "Ganha Defesa de Ponto e Tiro de Reação quando montada. Tambor com 200 balas custa $100."
+      },
+      {
+        "nome": "Metralhadora Média Veicular",
+        "distancia": "30/60/120",
+        "dano": "2d8+1",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": 100,
+        "tamanho_min": 2,
+        "custo": 1000,
+        "dev": 1,
+        "observacoes": "Ganha Defesa de Ponto e Tiro de Reação quando montada. Tambor com 100 balas custa $100."
+      },
+      {
+        "nome": "Metralhadora Pesada Veicular",
+        "distancia": "50/100/200",
+        "dano": "2d10",
+        "pa": 4,
+        "cdt": 3,
+        "tiros": 50,
+        "tamanho_min": 3,
+        "custo": 2000,
+        "dev": 1,
+        "observacoes": "Incendiária (I), Defesa de Ponto, Tiro de Reação. Tambor com 50 balas custa $100."
+      },
+      {
+        "nome": "Minigun Veicular",
+        "distancia": "50/100/200",
+        "dano": "2d8+1",
+        "pa": 2,
+        "cdt": 5,
+        "tiros": 2000,
+        "tamanho_min": 3,
+        "custo": 10000,
+        "dev": 1,
+        "observacoes": "Incendiária (I), CdT Mínima 3. Ignora Recuo e ganha Defesa de Ponto e Tiro de Reação quando montada. Lata com 2.000 balas custa $1K."
+      },
+      {
+        "nome": "Projetor Atordoante",
+        "distancia": "25/50/100",
+        "dano": "-",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 30,
+        "tamanho_min": 2,
+        "custo": 10000,
+        "dev": 1,
+        "observacoes": "Modelo de Cone. Com um acerto bem-sucedido, o alvo deve rolar Vigor -4 ou ficará Atordoado (-6 com uma ampliação)."
+      },
+      {
+        "nome": "Raio Atordoante",
+        "distancia": "50/100/200",
+        "dano": "-",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 60,
+        "tamanho_min": 1,
+        "custo": 5000,
+        "dev": 1,
+        "observacoes": "Com um acerto bem-sucedido, o alvo deve rolar Vigor -4 ou ficará Atordoado (-6 com uma ampliação)."
+      },
+      {
+        "nome": "Torpedo Leve",
+        "distancia": "300/600/1200",
+        "dano": "6d10",
+        "pa": 20,
+        "cdt": 2,
+        "tiros": 2,
+        "tamanho_min": "-",
+        "custo": 200000,
+        "dev": 1,
+        "observacoes": "Incendiária (V), Arma Guiada, MGE."
+      },
+      {
+        "nome": "Torpedo Médio",
+        "distancia": "300/600/1200",
+        "dano": "7d10",
+        "pa": 30,
+        "cdt": 1,
+        "tiros": 1,
+        "tamanho_min": "-",
+        "custo": 300000,
+        "dev": 1,
+        "observacoes": "Incendiária (VI), Arma Guiada, MGE."
+      },
+      {
+        "nome": "Torpedo Pesado",
+        "distancia": "300/600/1200",
+        "dano": "8d12",
+        "pa": 40,
+        "cdt": 1,
+        "tiros": 1,
+        "tamanho_min": "-",
+        "custo": 400000,
+        "dev": 1,
+        "observacoes": "Incendiária (VII), Arma Guiada, MGE."
+      },
+      {
+        "nome": "Raio Trator Leve",
+        "distancia": "50/100/200",
+        "dano": "-",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 20,
+        "tamanho_min": 10,
+        "custo": 100000,
+        "dev": 3,
+        "observacoes": "Pode afetar veículos de até Tamanho 11."
+      },
+      {
+        "nome": "Raio Trator Médio",
+        "distancia": "100/200/400",
+        "dano": "-",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 10,
+        "tamanho_min": 20,
+        "custo": 300000,
+        "dev": 3,
+        "observacoes": "Pode afetar veículos de até Tamanho 28."
+      },
+      {
+        "nome": "Raio Trator Pesado",
+        "distancia": "100/200/400",
+        "dano": "-",
+        "pa": "-",
+        "cdt": 1,
+        "tiros": 1,
+        "tamanho_min": 30,
+        "custo": 500000,
+        "dev": 3,
+        "observacoes": "Pode afetar veículos de até Tamanho 44."
+      }
+    ]
+  },
+  {
+    "tipo": "Ogivas",
+    "subtipo": "Modificadores de Munição",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Altamente Explosivo",
+        "custo_mult": 1,
+        "peso_mult": 1,
+        "dev": 1,
+        "observacoes": "Aumenta o raio da explosão em um Modelo (um Modelo Grande de Explosão aumenta seu diâmetro em 4 quadros (8 metros)), mas reduz o dano em um tipo de dado (2d12 se torna 2d10, por exemplo). Se um veículo sofrer um ou mais Ferimentos de uma ogiva Altamente Explosiva, ele sofrerá um Acerto Crítico adicional."
+      },
+      {
+        "nome": "Atordoante",
+        "custo_mult": 2,
+        "peso_mult": 2,
+        "dev": 1,
+        "observacoes": "Ogivas atordoantes não afetam veículos, mas seres desprotegidos pegos na área de efeito devem rolar Vigor -2 (-4 com uma ampliação) ou ficarão Atordoados."
+      },
+      {
+        "nome": "Fase",
+        "custo_mult": 10,
+        "peso_mult": 2,
+        "dev": 3,
+        "observacoes": "Estes projéteis de alta tecnologia se teletransportam ou \"passam\" pela blindagem do veículo para o interior. Se rolar o dano, ignore a Armadura do alvo. Escudos de energia interferem na tecnologia de fase da ogiva, então o defensor adiciona +4 às rolagens de Absorção do escudo."
+      },
+      {
+        "nome": "Fumaça",
+        "custo_mult": 1,
+        "peso_mult": 1,
+        "dev": 1,
+        "observacoes": "Cria uma área de fumaça que bloqueia a visão (Escuridão) em um Modelo Grande de Explosão. Pelo dobro do preço, a fumaça também contém partículas reflexivas que interferem em Armas Guiadas e lasers (-4 em Eletrônica ou Atirar) que passarem por ela."
+      },
+      {
+        "nome": "Incendiário",
+        "custo_mult": 1,
+        "peso_mult": 1,
+        "dev": 1,
+        "observacoes": "Alvos podem pegar fogo. Veja a qualidade Incendiária."
+      },
+      {
+        "nome": "Nuclear",
+        "custo_mult": 100,
+        "peso_mult": 3,
+        "dev": 1,
+        "observacoes": "Somente bombas, mísseis pesados ou torpedos. Catastrófica, Arma Pesada. Bombas nucleares táticas têm um raio de 800 metros e causam 100 de dano. Em terra, todas as estruturas, exceto as endurecidas, geralmente são destruídas e a área fica impregnada de radiação mortífera por séculos. O uso de armas nucleares é considerado uma ação desprezível e criminosa na maioria das sociedades civilizadas."
+      },
+      {
+        "nome": "PEM",
+        "custo_mult": 5,
+        "peso_mult": 2,
+        "dev": 1,
+        "observacoes": "Componentes eletrônicos do alvo são desativados se o ataque for maior ou igual à sua Resistência, mas quaisquer Ferimentos reais são reduzidos em 1. Veja a qualidade Eletromagnética (PEM)."
+      },
+      {
+        "nome": "Perfurante de Armadura",
+        "custo_mult": 1,
+        "peso_mult": 1,
+        "dev": 1,
+        "observacoes": "Aumenta o valor de PA da arma em 8, mas reduz o dano de um tipo de dado (3d6 se torna 3d4, por exemplo)."
+      },
+      {
+        "nome": "Plasma",
+        "custo_mult": 5,
+        "peso_mult": 5,
+        "dev": 2,
+        "observacoes": "Alvos podem pegar fogo. Uma ampliação no ataque causa +2d6 de dano, em vez de +1d6."
+      },
+      {
+        "nome": "Temporal",
+        "custo_mult": 50,
+        "peso_mult": 2,
+        "dev": 3,
+        "observacoes": "Estas munições de alta tecnologia detonam no impacto, distorcendo o campo de tempo ao redor de qualquer alvo atingido. Alvos atingidos pelo projétil ou pegos no modelo de explosão ficam automaticamente Distraídos, Vulneráveis e reduzem seu movimento pela metade até o final do próximo turno."
       }
     ]
   }
