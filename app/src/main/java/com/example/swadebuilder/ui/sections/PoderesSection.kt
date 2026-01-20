@@ -109,7 +109,7 @@ fun PoderesSection(
 
     val allPoderes: List<Poder> by androidx.compose.runtime.produceState(initialValue = emptyList()) {
         val poderesBase = runCatching { context.loadJsonAsset<List<Poder>>("poderes.json") }.getOrElse { emptyList() }
-        val tecnicasChi = runCatching { context.loadJsonAsset<List<Poder>>("tecnicas_chi.json") }.getOrElse { emptyList() }
+        val tecnicasChi = runCatching { context.loadJsonAsset<List<Poder>>("adg_tecnicas_chi.json") }.getOrElse { emptyList() }
         value = poderesBase + tecnicasChi
     }
 
