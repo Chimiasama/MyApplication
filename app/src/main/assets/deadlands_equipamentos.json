@@ -1,283 +1,1492 @@
 [
   {
     "tipo": "Equipamento Comum",
-    "subtipo": "Animais e Arreios",
+    "subtipo": "Roupas",
     "origem": "DEADLANDS",
     "itens": [
       {
-        "nome": "Cavalo",
-        "custo": 300,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
+        "nome": "Armadura nativa",
+        "custo": 2,
+        "peso": 1.5,
+        "forcaMin": "d4",
+        "armadura": "+1",
+        "observacoes": "Inclui peles, couro macio, peitorais entrelaçados, etc.",
         "origem": "DEADLANDS"
       },
       {
-        "nome": "Cavalo de Guerra",
-        "custo": 750,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
+        "nome": "Botas",
+        "custo": 8,
+        "peso": 2,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Calças/saia",
+        "custo": 2,
+        "peso": 1,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Camisa/blusa de trabalho",
+        "custo": 1,
+        "peso": 0.5,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Camisa/blusa, vestido",
+        "custo": 3,
+        "peso": 0.5,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Casaco de inverno",
+        "custo": 15,
+        "peso": 1.5,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Ceroulas",
+        "custo": 2,
+        "peso": 1,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Escudo Nativo (Médio)",
+        "custo": 3,
+        "peso": 2.5,
+        "forcaMin": "d4",
+        "aparar": "+2",
+        "observacoes": "Um escudo médio feito de peles. Cobertura –2, Dureza 8.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Escudo Nativo (Pequeno)",
+        "custo": 2,
+        "peso": 1.5,
+        "forcaMin": "d4",
+        "aparar": "+1",
+        "observacoes": "Um escudo pequeno feito de peles. Cobertura –1, Dureza 7.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Meias de seda",
+        "custo": 1,
+        "peso": 0,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Perneira",
+        "custo": 4,
+        "peso": 3,
+        "armadura": "+1",
+        "observacoes": "Couro Grosso, calças sem fundos para proteger as calças e as pernas de quem cavalga. Elas concedem Armadura +1 (pernas) e +1 em rolagens de Cavalgar contra Fadiga.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Ressecador",
+        "custo": 10,
+        "peso": 2,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Sapatos",
+        "custo": 2,
+        "peso": 0.5,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Terno/vestido chique",
+        "custo": 15,
+        "peso": 3,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Couro de Cascavel (Material)",
+        "custo": 0,
+        "peso": 0,
+        "armadura": "+2",
+        "observacoes": "Artigos de couro (botas, calças, sobretudos, etc.) feito de couro de cascavel são mais duráveis e concedem Armadura +2. Apenas alguns comerciantes no Sudoeste os vendem – por 10 vezes o preço normal da própria roupa.",
         "origem": "DEADLANDS"
       }
     ]
   },
   {
-    "tipo": "Armaduras",
-    "subtipo": "Antigas e Medievais",
+    "tipo": "Consumíveis",
+    "subtipo": "Comida e Bebida",
     "origem": "DEADLANDS",
     "itens": [
-      {
-        "nome": "Barda de Bronze (cavalo)",
-        "custo": 1500,
-        "peso": "25",
-        "forcaMin": "d10",
-        "armadura": "+3",
-        "aparar": null,
-        "observacoes": "",
-        "subsubtipo": "Armadura de Bronze (Cenários Pré-Idade do Ferro)",
-        "origem": "DEADLANDS"
-      },
-      {
-        "nome": "Barda de Placas (cavalo)",
-        "custo": 1500,
-        "peso": "25",
-        "forcaMin": "d10",
-        "armadura": "+4",
-        "aparar": null,
-        "observacoes": "",
-        "subsubtipo": "Malha de Placas",
-        "origem": "DEADLANDS"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas de Combate à Distância",
-    "subtipo": "Revólveres",
-    "origem": "DEADLANDS",
-    "itens": [
-      {
-        "nome": "Colt Peacemaker (.45)",
-        "distancia": "12/24/48",
-        "dano": "2d6+1",
-        "pa": 1,
-        "cdt": 1,
-        "forcaMin": "6",
-        "peso": "2",
-        "custo": 200,
-        "observacoes": "—",
-        "origem": "DEADLANDS"
-      },
-      {
-        "nome": "Smith & Wesson (.357)",
-        "distancia": "12/24/48",
-        "dano": "2d6+1",
-        "pa": 1,
-        "cdt": 1,
-        "forcaMin": "6",
-        "peso": "2,5",
-        "custo": 250,
-        "observacoes": "—",
-        "origem": "DEADLANDS"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas de Combate à Distância",
-    "subtipo": "Rifles com ação por alavanca e ferrolho",
-    "origem": "DEADLANDS",
-    "itens": [
-      {
-        "nome": "Carabina Spencer (.52)",
-        "distancia": "20/40/80",
-        "dano": "2d8",
-        "pa": 2,
-        "cdt": 1,
-        "forcaMin": "7",
-        "peso": "4",
-        "custo": 250,
-        "observacoes": "—",
-        "origem": "DEADLANDS"
-      },
-      {
-        "nome": "Sharps Big 50 (.50)",
-        "distancia": "30/60/120",
-        "dano": "2d10",
-        "pa": 2,
-        "cdt": 1,
-        "forcaMin": "1",
-        "peso": "5,5",
-        "custo": 400,
-        "observacoes": "Tiro Rápido",
-        "origem": "DEADLANDS"
-      },
-      {
-        "nome": "Winchester ‘73 (.44-40)",
-        "distancia": "24/48/96",
-        "dano": "2d8-1",
-        "pa": 2,
-        "cdt": 1,
-        "forcaMin": "15",
-        "peso": "5",
-        "custo": 300,
-        "observacoes": "—",
-        "origem": "DEADLANDS"
-      }
+      { "nome": "Bacon (0,5kg)", "custo": 0.15, "peso": 0.5, "origem": "DEADLANDS" },
+      { "nome": "Café (0,5kg)", "custo": 0.25, "peso": 0.5, "origem": "DEADLANDS" },
+      { "nome": "Rações de viagem (por dia)", "custo": 0.50, "peso": 1.5, "origem": "DEADLANDS" },
+      { "nome": "Restaurante barato (qualquer refeição)", "custo": 0.25, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Restaurante bom (Almoço)", "custo": 0.25, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Restaurante bom (Café da Manha)", "custo": 0.50, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Restaurante bom (Jantar)", "custo": 1.00, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Cerveja (copo)", "custo": 0.05, "peso": 0, "observacoes": "O triplo ou mais para 'coisa da boa'.", "origem": "DEADLANDS" },
+      { "nome": "Dose", "custo": 0.10, "peso": 0, "observacoes": "O triplo ou mais para 'coisa da boa'.", "origem": "DEADLANDS" },
+      { "nome": "Garrafa", "custo": 2.00, "peso": 2, "observacoes": "O triplo ou mais para 'coisa da boa'.", "origem": "DEADLANDS" }
     ]
   },
   {
     "tipo": "Equipamento Comum",
-    "subtipo": "Animais e Arreios",
+    "subtipo": "Equipamento Geral",
     "origem": "DEADLANDS",
     "itens": [
-      {
-        "nome": "Cavalo de guerra",
-        "custo": 350,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "DEADLANDS"
-      },
-      {
-        "nome": "Cavalo de montaria",
-        "custo": 75,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "DEADLANDS"
-      },
-      {
-        "nome": "Mula/burro",
-        "custo": 8,
-        "peso": "—",
-        "forcaMin": null,
-        "armadura": null,
-        "aparar": null,
-        "observacoes": "",
-        "origem": "DEADLANDS"
-      }
+      { "nome": "Algemas", "custo": 3.50, "peso": 1.5, "origem": "DEADLANDS" },
+      { "nome": "Arame farpado (por metro)", "custo": 0.05, "peso": 2.5, "observacoes": "Peso por 15m", "origem": "DEADLANDS" },
+      { "nome": "Arquivo", "custo": 0.25, "peso": 0.5, "origem": "DEADLANDS" },
+      { "nome": "Broca", "custo": 2.00, "peso": 1, "origem": "DEADLANDS" },
+      { "nome": "Câmera", "custo": 3.00, "peso": 2.5, "observacoes": "Uma câmera de caixa. O alvo deve ficar parado por vários minutos para uma imagem clara. Uma câmera tira uma foto por placa fotográfica (que custa $1 cada e pesa 0,2).", "origem": "DEADLANDS" },
+      { "nome": "Cantil", "custo": 1.00, "peso": 0.5, "observacoes": "2,5kg cheio.", "origem": "DEADLANDS" },
+      { "nome": "Cartas de baralho", "custo": 0.25, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Charuto", "custo": 0.05, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Corda (20 metros)", "custo": 5.00, "peso": 4, "observacoes": "Aguenta 150kg. Role 1d6 para cada 25kg adicionais por minuto ou sempre que a corda sofrer tensão. Ela se parte em qualquer resultado de 1.", "origem": "DEADLANDS" },
+      { "nome": "Ferramentas", "custo": 25.00, "peso": 2.5, "observacoes": "Ignora até 2 pontos de penalidades (veja Consertar no Savage Worlds).", "origem": "DEADLANDS" },
+      { "nome": "Fósforos (caixa com 100)", "custo": 0.50, "peso": 0.25, "origem": "DEADLANDS" },
+      { "nome": "Frigideira de ferro", "custo": 0.50, "peso": 2.5, "observacoes": "Arma Improvisada Leve", "origem": "DEADLANDS" },
+      { "nome": "Gaita", "custo": 0.50, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Gazuas", "custo": 5.00, "peso": 0.5, "origem": "DEADLANDS" },
+      { "nome": "Kit de cozinha", "custo": 2.00, "peso": 1.5, "origem": "DEADLANDS" },
+      { "nome": "Kit de disfarce", "custo": 10.00, "peso": 4, "observacoes": "5 usos. Pode ser reabastecido por $8.", "origem": "DEADLANDS" },
+      { "nome": "Kit de ferramentas (Ciência Estranha)", "custo": 50.00, "peso": 2.5, "observacoes": "Ignora até 4 pontos de penalidades (veja Consertar, equipamento especializado, no Savage Worlds).", "origem": "DEADLANDS" },
+      { "nome": "Lanterna", "custo": 2.50, "peso": 2, "observacoes": "Fornece luz em um raio de 4 quadros por três horas para cada meio litro de óleo. Se for derrubada, há 50% de chance da lanterna se quebrar e 1 em 6 de incendiar combustíveis normais.", "origem": "DEADLANDS" },
+      { "nome": "Machadinha", "custo": 1.00, "peso": 1.5, "observacoes": "Arma Improvisada Leve", "origem": "DEADLANDS" },
+      { "nome": "Machado de lenha", "custo": 2.00, "peso": 2.5, "observacoes": "Arma Improvisada Média", "origem": "DEADLANDS" },
+      { "nome": "Maleta de Médico", "custo": 10.00, "peso": 3, "observacoes": "Concede rerrolagem de Curar, 5 usos, pode ser reabastecido por $8.", "origem": "DEADLANDS" },
+      { "nome": "Martelo", "custo": 0.50, "peso": 1, "observacoes": "Arma Improvisada Leve", "origem": "DEADLANDS" },
+      { "nome": "Mochila", "custo": 2.00, "peso": 1.5, "origem": "DEADLANDS" },
+      { "nome": "Óculos", "custo": 5.00, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Óleo de lanterna (por galão)", "custo": 0.10, "peso": 3, "origem": "DEADLANDS" },
+      { "nome": "Pá", "custo": 1.50, "peso": 2.5, "observacoes": "Arma Improvisada Média", "origem": "DEADLANDS" },
+      { "nome": "Picareta", "custo": 2.00, "peso": 6, "observacoes": "Arma Improvisada Média", "origem": "DEADLANDS" },
+      { "nome": "Relógio comum", "custo": 2.50, "peso": 0.25, "origem": "DEADLANDS" },
+      { "nome": "Relógio de ouro", "custo": 10.00, "peso": 0.25, "origem": "DEADLANDS" },
+      { "nome": "Saco de dormir", "custo": 4.00, "peso": 5, "origem": "DEADLANDS" },
+      { "nome": "Violão", "custo": 8.00, "peso": 3, "origem": "DEADLANDS" },
+      { "nome": "Minério de ouro (30 g.)", "custo": 20.00, "peso": 0.03, "origem": "DEADLANDS" },
+      { "nome": "Minério de prata (30 g.)", "custo": 1.50, "peso": 0.03, "origem": "DEADLANDS" },
+      { "nome": "Minério de rocha fantasma (30 g.)", "custo": 6.25, "peso": 0.03, "observacoes": "Mais comumente vendido a US $200 por quilo.", "origem": "DEADLANDS" }
     ]
   },
   {
-    "tipo": "Armas Pessoais",
-    "subtipo": "Medievais",
-    "subsubtipo": "Combate corpo a corpo",
+    "tipo": "Acessórios para armas",
+    "subtipo": "Acessórios",
     "origem": "DEADLANDS",
     "itens": [
-      {
-        "nome": "Chicote",
-        "dano": "For+d4",
-        "forcaMin": "d4",
-        "peso": "1",
-        "custo": 5,
-        "observacoes": "Aparar -1, Alcance 2, Ampliação = Enredado",
-        "origem": "DEADLANDS"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas de Fogo",
-    "subtipo": "Revólveres",
-    "origem": "DEADLANDS",
-    "itens": [
-      {
-        "nome": "Colt Peacemaker (.45)",
-        "dano": "2d6+1",
-        "pa": 1,
-        "peso": "1",
-        "custo": 15,
-        "observacoes": "Ação Simples. Cadência 1. 6 Tiros.",
-        "origem": "DEADLANDS"
-      },
-      {
-        "nome": "Colt Army (.44)",
-        "dano": "2d6+1",
-        "pa": 0,
-        "peso": "1",
-        "custo": 12,
-        "observacoes": "Ação Simples. Cadência 1. 6 Tiros.",
-        "origem": "DEADLANDS"
-      },
-      {
-        "nome": "LeMat Grapeshot",
-        "dano": "2d6",
-        "pa": 0,
-        "peso": "2",
-        "custo": 25,
-        "observacoes": "9 Tiros (.42) + 1 Cano de Escopeta (20g) sob o cano principal.",
-        "origem": "DEADLANDS"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas de Fogo",
-    "subtipo": "Rifles e Escopetas",
-    "origem": "DEADLANDS",
-    "itens": [
-      {
-        "nome": "Winchester '73 (.44-40)",
-        "dano": "2d8",
-        "pa": 2,
-        "peso": "4",
-        "custo": 25,
-        "observacoes": "15 Tiros. Ação por Alavanca.",
-        "origem": "DEADLANDS"
-      },
-      {
-        "nome": "Sharps Big 50 (.50)",
-        "dano": "2d10",
-        "pa": 2,
-        "peso": "5",
-        "custo": 50,
-        "observacoes": "1 Tiro. Alcance longo (50/100/200).",
-        "origem": "DEADLANDS"
-      },
-      {
-        "nome": "Escopeta Cano Duplo (Scattergun)",
-        "dano": "1-3d6",
-        "peso": "3",
-        "custo": 35,
-        "observacoes": "2 Tiros. +2 para acertar a curta distância.",
-        "origem": "DEADLANDS"
-      }
+      { "nome": "Bota de rifle", "custo": 3.00, "peso": 0.25, "origem": "DEADLANDS" },
+      { "nome": "Cilindro de recarga rápida", "custo": 3.00, "peso": 0.25, "observacoes": "Permite que quem usa recarregue um revolver como uma ação, desde que tenha pré-carregado o cilindro.", "origem": "DEADLANDS" },
+      { "nome": "Cinto de armas", "custo": 2.00, "peso": 0.5, "origem": "DEADLANDS" },
+      { "nome": "Coldre", "custo": 3.00, "peso": 0.5, "origem": "DEADLANDS" },
+      { "nome": "Coldre de saque rápido", "custo": 11.00, "peso": 0.5, "observacoes": "Sacar a partir de um coldre de saque rápido adiciona +2 quando se tenta interromper alguém e a pistola precisa ser sacada.", "origem": "DEADLANDS" },
+      { "nome": "Correia de espingarda", "custo": 0.25, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Luneta", "custo": 30.00, "peso": 1, "observacoes": "Cancela 2 pontos adicionais de penalidades ao Mirar.", "origem": "DEADLANDS" }
     ]
   },
   {
     "tipo": "Munição",
-    "subtipo": "Especial",
+    "subtipo": "Munição de Fogo",
+    "origem": "DEADLANDS",
+    "itens": [
+      { "nome": "Cartuchos de espingarda (20)", "custo": 2.00, "peso": 1, "observacoes": "Pacote com 20. O chumbo grosso padrão.", "origem": "DEADLANDS" },
+      { "nome": "Disparo c/ pólvora (20)", "custo": 1.00, "peso": 2, "observacoes": "Pacote com 20. Para armas de pólvora negra.", "origem": "DEADLANDS" },
+      { "nome": "Espoleta de percussão (60)", "custo": 0.50, "peso": 0.5, "observacoes": "Pacote com 60. Para armas de percussão.", "origem": "DEADLANDS" },
+      { "nome": "Flecha (20)", "custo": 2.00, "peso": 2, "observacoes": "Pacote com 20. Peso listado 0,5 por 5.", "origem": "DEADLANDS" },
+      { "nome": "Pistola Grande (50)", "custo": 3.00, "peso": 2.5, "observacoes": "Pacote com 50. Calibre .40–.50.", "origem": "DEADLANDS" },
+      { "nome": "Pistola Pequena (50)", "custo": 2.00, "peso": 1.5, "observacoes": "Pacote com 50. Calibre .22–.38.", "origem": "DEADLANDS" },
+      { "nome": "Rifle Grande (50)", "custo": 5.00, "peso": 4, "observacoes": "Pacote com 50. Calibre .45 e acima.", "origem": "DEADLANDS" },
+      { "nome": "Rifle Pequeno (50)", "custo": 4.00, "peso": 3, "observacoes": "Pacote com 50. Calibre .38–44.", "origem": "DEADLANDS" }
+    ]
+  },
+  {
+    "tipo": "Serviços e Bens Pessoais",
+    "subtipo": "Diversos",
+    "origem": "DEADLANDS",
+    "itens": [
+      { "nome": "Banho", "custo": 1.00, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Barbear e corte de cabelo", "custo": 0.25, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Consulta médica (Escritório)", "custo": 3.00, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Consulta médica (Visita domiciliar)", "custo": 5.00, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Enterro", "custo": 5.00, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Fotografia", "custo": 10.00, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Quarto (Pensão c/ refeições)", "custo": 1.00, "peso": 0, "observacoes": "Por dia.", "origem": "DEADLANDS" },
+      { "nome": "Quarto (Hotel de classe baixa)", "custo": 2.00, "peso": 0, "observacoes": "Por dia.", "origem": "DEADLANDS" },
+      { "nome": "Quarto (Hotel de classe alta)", "custo": 10.00, "peso": 0, "observacoes": "Por dia.", "origem": "DEADLANDS" },
+      { "nome": "Telegrama (por palavra)", "custo": 0.05, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Chapéu (Coco)", "custo": 1.50, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Chapéu (Fedora)", "custo": 3.00, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Chapéu (Gorro)", "custo": 2.00, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Chapéu (Sombreiro)", "custo": 3.50, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Chapéu (Stetson)", "custo": 5.00, "peso": 0, "origem": "DEADLANDS" }
+    ]
+  },
+  {
+    "tipo": "Transporte",
+    "subtipo": "Montaria e Viagem",
+    "origem": "DEADLANDS",
+    "itens": [
+      { "nome": "Alforges", "custo": 5.00, "peso": 2.5, "origem": "DEADLANDS" },
+      { "nome": "Barco fluvial (para cada 1,6 km)", "custo": 0.05, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Bilhete de trem (para cada 1,6 km)", "custo": 0.05, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Cavalo", "custo": 150.00, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Diligência (para cada 1,6 km)", "custo": 0.10, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Mula", "custo": 50.00, "peso": 0, "origem": "DEADLANDS" },
+      { "nome": "Sela", "custo": 25.00, "peso": 15, "origem": "DEADLANDS" }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Medievais e Brancas",
     "origem": "DEADLANDS",
     "itens": [
       {
-        "nome": "Cartuchos de Pedra Fantasma (50)",
+        "nome": "Baioneta",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 5,
+        "observacoes": "For+d6 e Aparar + 1 se presa a um rifle, Alcance 1, duas mãos",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Chicote",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 10,
+        "observacoes": "Aparar –1, Alcance 2",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Clava de Guerra",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 3,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Faca",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 2,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Faca Bowie",
+        "dano": "For+d4+1",
+        "pa": 1,
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 4,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Laço",
+        "dano": "—",
+        "forcaMin": "d4",
+        "peso": 1.5,
+        "custo": 4,
+        "observacoes": "Aparar –1, Alcance 2. Usado para iniciar um Desafio com a perícia Lutar de quem o empunha. O alvo é Enredado com um sucesso, Preso em um ampliação.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Lança",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 2.5,
+        "custo": 3,
+        "observacoes": "Aparar +1, Alcance 1, duas mãos",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Lança Longa (Indígenas das Planícies)",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 2,
+        "custo": 20,
+        "observacoes": "Alcance 2, combate montado apenas",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Porrete",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 1,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Porrete de Guerra (Afiado)",
+        "dano": "For+d8",
+        "pa": 2,
+        "forcaMin": "d8",
+        "peso": 3,
+        "custo": 8,
+        "observacoes": "Aparar –1, duas mãos",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Sabre",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 2,
+        "custo": 15,
+        "observacoes": "Tipicamente usado pela cavalaria.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Soqueiras",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 1,
+        "observacoes": "Não conta como uma arma para um Defensor Desarmado.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Tomahawk",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 2,
+        "custo": 3,
+        "observacoes": "Com uma ampliação na rolagem de ataque, a vítima está enredada ao invés de receber o d6 de bônus de dano.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Arma de Aço Fantasma (Modificador)",
+        "custo": 0,
+        "peso": 0,
+        "observacoes": "Armas metálicas de aço fantasma adicionam +1 ao Dano, ganham PA 1 (ou +1 ao PA existente), Dureza +5 e custam 5x o preço listado.",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Armas Gatling",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Carabina Gatling (.45)",
+        "distancia": "20/40/80",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 2,
+        "tiros": "30",
+        "forcaMin": "d6",
+        "peso": 6,
+        "custo": 750,
+        "observacoes": "Deve disparar CdT total. Falha crítica = emperra. Tambores: rifle ($5, 1kg descarregado).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Espingarda Gatling",
+        "distancia": "12/24/48",
+        "dano": "1–3d6",
+        "cdt": 2,
+        "tiros": "15",
+        "forcaMin": "d8",
+        "peso": 7.5,
+        "custo": 1000,
+        "observacoes": "Deve disparar CdT total. Falha crítica = emperra. Tambores: espingarda ($5, 1kg descarregado).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Pistola Gatling (.36)",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "pa": 1,
+        "cdt": 3,
+        "tiros": "30",
+        "forcaMin": "d4",
+        "peso": 2.5,
+        "custo": 400,
+        "observacoes": "Deve disparar CdT total. Falha crítica = emperra. Tambores: pistola ($2, 0.5kg descarregado).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Rifle Gatling (.45)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 2,
+        "tiros": "30",
+        "forcaMin": "d8",
+        "peso": 8.5,
+        "custo": 1000,
+        "observacoes": "Deve disparar CdT total. Falha crítica = emperra. Tambores: rifle ($5, 1kg descarregado).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Metralhadora Gatling (.45)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": "100",
+        "forcaMin": "d6",
+        "peso": 20,
+        "custo": 1500,
+        "observacoes": "Nega penalidade de Recuo. Cinturão de 100 balas (2,5kg descarregado). Carregar cinto requer duas ações.",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Pistolas e Derringers",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Derringer (.41)",
+        "distancia": "3/6/12",
+        "dano": "2d4",
+        "cdt": 1,
+        "tiros": "2",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 5,
+        "observacoes": "-2 para Perceber se escondida.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Modelo Inglês 1840 (.36)",
+        "distancia": "5/10/20",
+        "dano": "2d6-1",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "8",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 5,
+        "observacoes": "Recarregar 3, arma de pólvora negra.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Pimenteira Rupertus (.22)",
+        "distancia": "5/10/20",
+        "dano": "2d4",
+        "cdt": 1,
+        "tiros": "8",
+        "forcaMin": "d6",
+        "peso": 0.5,
+        "custo": 6,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Pistola-Adaga Wesson (.41)",
+        "distancia": "5/10/20",
+        "dano": "2d4",
+        "cdt": 1,
+        "tiros": "2",
+        "forcaMin": "d6",
+        "peso": 0.5,
+        "custo": 6,
+        "observacoes": "Lâmina de faca (dano For+d4) sai do meio dos vários canos.",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Revólveres de Ação Simples",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Colt Army (.44)",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 12,
+        "observacoes": "Versões mais antigas são de percussão (Recarregar 3, $10).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Colt Buntline Especial (.45)",
+        "distancia": "15/30/60",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 500,
+        "observacoes": "Cano de 40cm, coronha de ombro. Não beneficia de coldres de saque rápido.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Colt Dragoon (.44)",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 2,
+        "custo": 11,
+        "observacoes": "Recarregar 3, arma de pólvora negra.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Colt Navy (.36)",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 1.5,
+        "custo": 10,
+        "observacoes": "Versões mais antigas são de percussão (Recarregar 3, $8).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Colt Peacemaker (.45)",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 2,
+        "custo": 15,
+        "observacoes": "Também conhecido como Colt Army de Ação Simples.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Revolver LeMat (.40) e Espingarda (20-ga)",
+        "distancia": "12/24/48 / 5/10/20",
+        "dano": "2d6 / 1-3d6",
+        "pa": "1 / -",
+        "cdt": 1,
+        "tiros": "9 / 1",
+        "forcaMin": "d6",
+        "peso": 2,
+        "custo": 25,
+        "observacoes": "Cano de espingarda de calibre 20 montado sob uma pistola. Trocar entre eles é uma ação livre.",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Revólveres de Ação Dupla",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Colt Frontier (.44-40)",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 15,
+        "observacoes": "Army de Ação Dupla, munições compartilhadas com Winchester '73.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Colt Lightning (.38)",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 13,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Colt Rainmaker (.32)",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 8,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Colt Thunderer (.41)",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 14,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Revolver Starr (.44)",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 9,
+        "observacoes": "Versões mais antigas são de percussão (Recarregar 3, $7).",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Carabinas",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Carabina LeMat (.42) e Espingarda (20-ga)",
+        "distancia": "20/40/80 / 12/24/48",
+        "dano": "2d8 / 1-3d6",
+        "pa": "1 / -",
+        "cdt": 1,
+        "tiros": "9 / 1",
+        "forcaMin": "d6",
+        "peso": 4.5,
+        "custo": 35,
+        "observacoes": "Cano de espingarda de calibre 20 montado sob uma rifle. Trocar entre eles é uma ação livre. Ambas são armas de percussão, Recarregar 3.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Sharps '55 (.57)",
+        "distancia": "20/40/80",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d6",
+        "peso": 4,
+        "custo": 18,
+        "observacoes": "Recarregar 3, arma de pólvora negra.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Spencer (.56)",
+        "distancia": "20/40/80",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "7",
+        "forcaMin": "d4",
+        "peso": 4,
+        "custo": 15,
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Rifles",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Ballard ' 72 (.56)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d6",
+        "peso": 5.5,
+        "custo": 24,
+        "observacoes": "Recarregar 3, arma de pólvora negra.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Bullard Express (.50)",
+        "distancia": "24/48/96",
+        "dano": "2d10",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "11",
+        "forcaMin": "d8",
+        "peso": 5.5,
+        "custo": 30,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Colt-Paterson Modelo '36 (.69)",
+        "distancia": "24/48/96",
+        "dano": "2d10",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "7",
+        "forcaMin": "d8",
+        "peso": 6,
+        "custo": 25,
+        "observacoes": "Recarregar 3, arma de pólvora negra.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Evans Old Modelo Esportivo (.44)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "34",
+        "forcaMin": "d6",
+        "peso": 6,
+        "custo": 30,
+        "observacoes": "Munição difícil de encontrar (encomenda leva 3 semanas).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Mosquete Enfield (.58)",
+        "distancia": "12/24/48",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d6",
+        "peso": 4.5,
+        "custo": 25,
+        "observacoes": "Recarregar 3, arma de pólvora negra.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Rifle Mosquetão Springfield (.58)",
+        "distancia": "15/30/60",
+        "dano": "2d8",
+        "pa": 0,
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d6",
+        "peso": 5.5,
+        "custo": 8,
+        "observacoes": "Recarregar 3, arma de pólvora negra.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Sharp's Big 50 (.50)",
+        "distancia": "30/60/120",
+        "dano": "2d10",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d8",
+        "peso": 5.5,
         "custo": 50,
-        "peso": "1",
-        "observacoes": "Adiciona +1 de Dano a armas de fogo. Queima com chama verde.",
+        "observacoes": "Tiro Rápido, arma de percussão, Recarregar 3.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Winchester Serrado (.44-40)",
+        "distancia": "12/24/48",
+        "dano": "2d8-1",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 2,
+        "custo": 25,
+        "observacoes": "Conhecido como 'pata de égua', fácil de esconder como pistola.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Winchester '73 (.44–40)",
+        "distancia": "24/48/96",
+        "dano": "2d8-1",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "15",
+        "forcaMin": "d6",
+        "peso": 5,
+        "custo": 25,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Winchester '76 (.45)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "15",
+        "forcaMin": "d4",
+        "peso": 3.5,
+        "custo": 40,
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Espingardas",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Cano Duplo",
+        "distancia": "12/24/48",
+        "dano": "1–3d6",
+        "cdt": 1,
+        "tiros": "2",
+        "forcaMin": "d6",
+        "peso": 5.5,
+        "custo": 35,
+        "observacoes": "Atirar +2. Disparar ambos canos: rola dano 1 vez +4.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Cano Duplo Serrado",
+        "distancia": "5/10/20",
+        "dano": "1–3d6",
+        "cdt": 1,
+        "tiros": "2",
+        "forcaMin": "d4",
+        "peso": 3,
+        "custo": 35,
+        "observacoes": "Atirar +2. Pode ser disparado em corpo a corpo.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Cano Simples",
+        "distancia": "12/24/48",
+        "dano": "1–3d6",
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d4",
+        "peso": 3,
+        "custo": 25,
+        "observacoes": "Atirar +2.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Espingarda Revolver Colt",
+        "distancia": "12/24/48",
+        "dano": "1–3d6",
+        "cdt": 1,
+        "tiros": "5",
+        "forcaMin": "d6",
+        "peso": 5,
+        "custo": 45,
+        "observacoes": "Atirar +2. Arma de percussão, Recarregar 3.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Winchester de Ação por Alavanca",
+        "distancia": "12/24/48",
+        "dano": "1–3d6",
+        "cdt": 1,
+        "tiros": "4",
+        "forcaMin": "d6",
+        "peso": 4,
+        "custo": 35,
+        "observacoes": "Atirar +2.",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas à Distância",
+    "subtipo": "Diversas",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Arco",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d6",
+        "peso": 1,
+        "custo": 3,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Boleadera",
+        "distancia": "4/8/16",
+        "dano": "For+1",
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d4",
+        "peso": 2.5,
+        "custo": 3,
+        "observacoes": "Ampliação no ataque = vítima enredada em vez de d6 bônus.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Faca (Arremesso)",
+        "distancia": "3/6/12",
+        "dano": "For+d4",
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 2,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Faca Bowie (Arremesso)",
+        "distancia": "2/4/8",
+        "dano": "For+d4+1",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 4,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Lança (Arremesso)",
+        "distancia": "3/6/12",
+        "dano": "For+d6",
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d6",
+        "peso": 2.5,
+        "custo": 3,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Lança Longa (Arremesso)",
+        "distancia": "2/4/8",
+        "dano": "For+d6",
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d6",
+        "peso": 2,
+        "custo": 20,
+        "observacoes": "Combate montado apenas, só pode ser arremessada à cavalo.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Porrete de Guerra (Arremesso)",
+        "distancia": "3/6/12",
+        "dano": "For+d6",
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 3,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Tomahawk (Arremesso)",
+        "distancia": "3/6/12",
+        "dano": "For+d6",
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 3,
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Especiais",
+    "subtipo": "Explosivos",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Dinamite (1-2 bastões)",
+        "distancia": "4/8/16",
+        "dano": "2d6",
+        "peso": 0.25,
+        "custo": 3,
+        "observacoes": "MME. Arma Pesada. +2 dano para cada 2 bastões. Custo por banana.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Nitroglicerina (1-2 quartilhos)",
+        "distancia": "4/8/16",
+        "dano": "2d6",
+        "peso": 1,
+        "observacoes": "MME. Arma Pesada. Explode com 4 dano. Ilegal.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Detonador",
+        "custo": 1.00,
+        "peso": 0.5,
+        "observacoes": "Peso por 12.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Êmbolo de dinamite",
+        "custo": 20.00,
+        "peso": 1.5,
+        "observacoes": "Inclui 50 metros de fio de detonação.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Rastilho (cada 30cm)",
+        "custo": 0.05,
+        "peso": 0.5,
+        "observacoes": "Peso por 15m. Queima 30cm/5 rodadas.",
         "origem": "DEADLANDS"
       }
     ]
   },
   {
     "tipo": "Veículos",
-    "subtipo": "Terrestres e Aéreos",
+    "subtipo": "Terrestres",
     "origem": "DEADLANDS",
     "itens": [
       {
-        "nome": "Carroça",
+        "nome": "Carroção",
         "tamanho": 4,
-        "resistencia": 10,
-        "tripulacao": "1+4",
+        "manobrabilidade": 1,
+        "velMaxima": 19,
+        "resistencia": "11 (2)",
+        "tripulacao": "1+5",
+        "custo": 200,
+        "observacoes": "Movimentação 12. Pode correr. Grande.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Carruagem",
+        "tamanho": 3,
+        "manobrabilidade": -2,
+        "velMaxima": 25,
+        "resistencia": "6",
+        "tripulacao": "1+3",
+        "custo": 200,
+        "observacoes": "Movimentação 12. Pode correr.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Charrete/Carroça",
+        "tamanho": 1,
+        "manobrabilidade": -1,
+        "velMaxima": 25,
+        "resistencia": "6",
+        "tripulacao": "1+1",
+        "custo": 75,
+        "observacoes": "Movimentação 12. Pode correr.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Diligência",
+        "tamanho": 4,
+        "manobrabilidade": -2,
+        "velMaxima": 22,
+        "resistencia": "10 (2)",
+        "tripulacao": "2+9",
+        "custo": 300,
+        "observacoes": "Movimentação 12. Pode correr. Grande.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Locomotiva",
+        "tamanho": 11,
+        "manobrabilidade": -1,
+        "velMaxima": 80,
+        "resistencia": "16 (2)",
+        "tripulacao": "2+28",
+        "custo": 15000,
+        "observacoes": "Enorme. Requer tripulação mínima de 3.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Vagão de trem",
+        "tamanho": 9,
+        "manobrabilidade": 0,
+        "resistencia": "12 (2)",
+        "tripulacao": "Varia",
+        "custo": 8000,
+        "observacoes": "Enorme. Carrega até 100 passageiros ou carga.",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Aquáticos",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Bateaux",
+        "tamanho": 2,
+        "manobrabilidade": -2,
+        "velMaxima": 3,
+        "resistencia": "7 (1)",
+        "tripulacao": "1+8",
         "custo": 50,
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Roda de Pás, Pequeno",
+        "tamanho": 13,
+        "manobrabilidade": -2,
         "velMaxima": 8,
-        "observacoes": "Tração animal.",
-        "originalName": "Cart",
+        "resistencia": "21 (3)",
+        "tripulacao": "6+80",
+        "custo": 20000,
+        "observacoes": "Colossal.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Roda de Pás, Grande",
+        "tamanho": 17,
+        "manobrabilidade": -2,
+        "velMaxima": 8,
+        "resistencia": "25 (3)",
+        "tripulacao": "18+400",
+        "custo": 50000,
+        "observacoes": "Colossal.",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Dispositivos Infernais",
+    "subtipo": "Roupas e Acessórios",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Botas de mola",
+        "custo": 400.00,
+        "peso": 1,
+        "observacoes": "Atletismo +2 para saltar. +2q vertical, +4q horizontal. Mau Funcionamento: lança contra parede.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Chapéu periscópio",
+        "custo": 200.00,
+        "peso": 6,
+        "observacoes": "Olhar por cima de obstáculos. Perceber -2, ações complexas -4.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Máscara de vapor",
+        "custo": 100.00,
+        "peso": 0.25,
+        "observacoes": "Vigor +4 contra gases. Filtro dura 30h ($25 reposição).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Óculos de coruja",
+        "custo": 600.00,
+        "peso": 0.5,
+        "observacoes": "Ignora penalidade Iluminação (exceto Escuro Como Breu). Perceber -2 além de 10 quadros. Catastrófico: Cega 1d6 horas.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Sapatos silenciosos",
+        "custo": 500.00,
+        "peso": 0.5,
+        "observacoes": "Furtividade +2.",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Dispositivos Infernais",
+    "subtipo": "Elixires e Tônicos",
+    "origem": "DEADLANDS",
+    "itens": [
+      { "nome": "Comprimido de ar desidratado", "custo": 30.00, "peso": 0, "observacoes": "10 min de ar.", "origem": "DEADLANDS" },
+      { "nome": "Coragem líquida", "custo": 30.00, "peso": 0, "observacoes": "+2 Medo por 30min. Astúcia (-4) para fugir. Catastrófico: Furioso e imune a Medo.", "origem": "DEADLANDS" },
+      { "nome": "Dessensibilizador tátil", "custo": 30.00, "peso": 0, "observacoes": "Ignora 2 pontos de ferimentos por 10 min.", "origem": "DEADLANDS" },
+      { "nome": "Elixir da unção vocal", "custo": 50.00, "peso": 0, "observacoes": "Rerrolagem Persuadir por 1h. Catastrófico: mudo 24h.", "origem": "DEADLANDS" },
+      { "nome": "Elixir de restauração", "custo": 100.00, "peso": 0, "observacoes": "Recupera todos níveis de Fadiga.", "origem": "DEADLANDS" },
+      { "nome": "Elixir de Sansão", "custo": 60.00, "peso": 0, "observacoes": "Força +2 tipos de dado por 10 min.", "origem": "DEADLANDS" },
+      { "nome": "Pílula untada de relâmpago", "custo": 75.00, "peso": 0, "observacoes": "Vantagem Rápido por 5 rodadas. Se já tem, carta menor é 8.", "origem": "DEADLANDS" },
+      { "nome": "Reforço adrenal", "custo": 200.00, "peso": 0, "observacoes": "Força e Vigor +1 tipo de dado, Mov +2 por 10 min.", "origem": "DEADLANDS" },
+      { "nome": "Unguento de cura", "custo": 80.00, "peso": 0, "observacoes": "Vigor cura 1 Ferimento (2 com ampliação).", "origem": "DEADLANDS" }
+    ]
+  },
+  {
+    "tipo": "Dispositivos Infernais",
+    "subtipo": "Diversos",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Anti-pragas Motorizado",
+        "custo": 120.00,
+        "peso": 2.5,
+        "observacoes": "Causa 2d6 dano (MPE) a quem entra (3d6 a Bandos não-voadores). Queima 30g rocha fantasma/10 min.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Câmera Epitáfio",
+        "custo": 1600.00,
+        "peso": 3.5,
+        "observacoes": "Fotografa movimento. Placas $5.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Cinto eletrostático",
+        "custo": 1500.00,
+        "peso": 3.5,
+        "observacoes": "-1 em tiros de balas de metal contra usuário. 5 rodadas/30g rocha fantasma.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Detector de cascavéis",
+        "custo": 100.00,
+        "peso": 2.5,
+        "observacoes": "Cascavéis furtivas sofrem -6 a menos de 100m. 1 hora/30g rocha fantasma.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Mula mecânica",
+        "custo": 1500.00,
+        "peso": 400,
+        "observacoes": "Mov 4, carrega 500kg. 8 quadros/0,5kg rocha fantasma. Tam 1, Res 11(2).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Traje de mergulho",
+        "custo": 2000.00,
+        "peso": 22.5,
+        "observacoes": "Metade Mov. Mangueira 100m. Upgrade $500 para filtro (1h duração).",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Dispositivos Infernais",
+    "subtipo": "Armas e Armaduras",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Gatling a Vapor",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 4,
+        "tiros": "100",
+        "forcaMin": "d6",
+        "peso": 25,
+        "custo": 3000,
+        "observacoes": "Deve disparar CdT total. Falha crítica = emperra (Consertar como ação).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Lança-Chamas Modelo de Cone",
+        "distancia": "Modelo de Cone",
+        "dano": "3d6",
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d6",
+        "peso": 7.5,
+        "custo": 700,
+        "observacoes": "Arma Pesada. Pode ser evadido. Alvos inflamáveis pegam fogo.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Serra a vapor",
+        "distancia": "Corpo a corpo",
+        "dano": "2d6+4",
+        "forcaMin": "d8",
+        "peso": 10,
+        "custo": 800,
+        "observacoes": "Mau Funcionamento atinge usuário. Caldeira separada (15kg). Se sem mochila, Vigor ou Fadiga.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Avental de inventor",
+        "armadura": "+2",
+        "forcaMin": "d4",
+        "peso": 2,
+        "custo": 40,
+        "observacoes": "Tronco e coxas. -4 dano fogo/calor.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Chapéu blindado (leve)",
+        "armadura": "+1",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 40,
+        "observacoes": "Cabeça. Proteção Balística (reduz bala em 2).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Chapéu blindado (pesado)",
+        "armadura": "+2",
+        "forcaMin": "d4",
+        "peso": 2,
+        "custo": 80,
+        "observacoes": "Cabeça. Proteção Balística (reduz bala em 2).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Colete/espartilho blindado (leve)",
+        "armadura": "+2",
+        "forcaMin": "d4",
+        "peso": 2.5,
+        "custo": 100,
+        "observacoes": "Tronco. Proteção Balística (reduz bala em 2).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Colete/espartilho blindado (pesado)",
+        "armadura": "+4",
+        "forcaMin": "d6",
+        "peso": 5,
+        "custo": 500,
+        "observacoes": "Tronco. Proteção Balística (reduz bala em 2).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Sobretudo reforçado (leve)",
+        "armadura": "+2",
+        "forcaMin": "d6",
+        "peso": 5,
+        "custo": 200,
+        "observacoes": "Tronco, braços, pernas. Proteção Balística (reduz bala em 2).",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Sobretudo reforçado (pesado)",
+        "armadura": "+4",
+        "forcaMin": "d8",
+        "peso": 10,
+        "custo": 400,
+        "observacoes": "Tronco, braços, pernas. Proteção Balística (reduz bala em 2).",
+        "origem": "DEADLANDS"
+      }
+    ]
+  },
+  {
+    "tipo": "Dispositivos Infernais",
+    "subtipo": "Veículos Infernais",
+    "origem": "DEADLANDS",
+    "itens": [
+      {
+        "nome": "Carrinho a Vapor",
+        "tamanho": 3,
+        "manobrabilidade": 0,
+        "velMaxima": 25,
+        "resistencia": "8",
+        "tripulacao": "1+5",
+        "custo": 800,
+        "observacoes": "160km/0,5kg rocha fantasma.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Carroção a Vapor",
+        "tamanho": 4,
+        "manobrabilidade": -1,
+        "velMaxima": 50,
+        "resistencia": "10 (3)",
+        "tripulacao": "1+5",
+        "custo": 1500,
+        "observacoes": "Grande. 80km/0,5kg rocha fantasma.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Corredor Ferroviário",
+        "tamanho": 4,
+        "manobrabilidade": -1,
+        "velMaxima": 40,
+        "resistencia": "12 (5)",
+        "tripulacao": "1+7",
+        "custo": 2500,
+        "observacoes": "Grande. 64km terra / 128km trilhos por 0,5kg rocha fantasma.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Velocípede",
+        "tamanho": 0,
+        "manobrabilidade": 1,
+        "velMaxima": 75,
+        "resistencia": "10 (3)",
+        "tripulacao": "1",
+        "custo": 1000,
+        "observacoes": "120km/0,5kg rocha fantasma. 50% chance tiro atingir piloto.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Barco submergível",
+        "tamanho": 6,
+        "manobrabilidade": -2,
+        "velMaxima": 8,
+        "resistencia": "13 (2)",
+        "tripulacao": "2+5",
+        "custo": 20000,
+        "observacoes": "Grande. 32km/0,5kg rocha fantasma. Pode ter torpedos e Gatling.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Corredor do Labirinto",
+        "tamanho": 6,
+        "manobrabilidade": 0,
+        "velMaxima": 18,
+        "resistencia": "13 (2)",
+        "tripulacao": "1+7",
+        "custo": 15000,
+        "observacoes": "Grande. 40km/0,5kg rocha fantasma.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Auto-Giroscópio",
+        "tamanho": 1,
+        "manobrabilidade": 2,
+        "velMaxima": 75,
+        "resistencia": "7 (1)",
+        "tripulacao": "1+1",
+        "custo": 1500,
+        "observacoes": "40km/0,5kg rocha fantasma. Carrega 100kg.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Carruagem Aérea",
+        "tamanho": 6,
+        "manobrabilidade": -2,
+        "velMaxima": 50,
+        "resistencia": "16 (4)",
+        "tripulacao": "2+8",
+        "custo": 5000,
+        "observacoes": "Grande. 40km/0,5kg rocha fantasma. Carrega 1250kg.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Cata-Vento (Pessoal)",
+        "tamanho": 0,
+        "manobrabilidade": -1,
+        "velMaxima": 30,
+        "resistencia": "6 (1)",
+        "tripulacao": "1",
+        "custo": 1000,
+        "observacoes": "60 min/0,5kg rocha fantasma. 50% chance tiro atingir piloto.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Mochila a Jato",
+        "manobrabilidade": -2,
+        "velMaxima": 100,
+        "resistencia": "3",
+        "tripulacao": "1",
+        "custo": 2100,
+        "observacoes": "10 min/0,5kg rocha fantasma.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Ornitóptero Motorizado",
+        "tamanho": 5,
+        "manobrabilidade": 1,
+        "velMaxima": 100,
+        "resistencia": "11 (2)",
+        "tripulacao": "1+3",
+        "custo": 3000,
+        "observacoes": "Grande. 80km/0,5kg rocha fantasma.",
+        "origem": "DEADLANDS"
+      },
+      {
+        "nome": "Super Giroscópio",
+        "tamanho": 5,
+        "manobrabilidade": -2,
+        "velMaxima": 50,
+        "resistencia": "10 (2)",
+        "tripulacao": "1+3",
+        "custo": 4000,
+        "observacoes": "Grande. 80km/0,5kg rocha fantasma.",
         "origem": "DEADLANDS"
       }
     ]
