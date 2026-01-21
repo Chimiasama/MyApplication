@@ -5590,5 +5590,152 @@
         "observacoes": "Estas munições de alta tecnologia detonam no impacto, distorcendo o campo de tempo ao redor de qualquer alvo atingido. Alvos atingidos pelo projétil ou pegos no modelo de explosão ficam automaticamente Distraídos, Vulneráveis e reduzem seu movimento pela metade até o final do próximo turno."
       }
     ]
+  },
+  {
+    "tipo": "Mecha",
+    "subtipo": "Chassis",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Chassis Leve (Batedor)",
+        "tamanho": 4,
+        "resistencia": 12,
+        "armadura": 4,
+        "movimentacao": 14,
+        "custo": 50000,
+        "mods_slots": 5,
+        "origem": "SCI_FI",
+        "observacoes": "Mecha rápido para reconhecimento."
+      },
+      {
+        "nome": "Chassis Médio (Linha de Frente)",
+        "tamanho": 6,
+        "resistencia": 16,
+        "armadura": 6,
+        "movimentacao": 10,
+        "custo": 100000,
+        "mods_slots": 10,
+        "origem": "SCI_FI",
+        "observacoes": "Equilíbrio entre proteção e poder de fogo."
+      },
+      {
+        "nome": "Chassis Pesado (Assalto)",
+        "tamanho": 8,
+        "resistencia": 20,
+        "armadura": 8,
+        "movimentacao": 6,
+        "custo": 250000,
+        "mods_slots": 15,
+        "origem": "SCI_FI",
+        "observacoes": "Plataforma de armas móvel."
+      }
+    ]
+  },
+  {
+    "tipo": "Mecha",
+    "subtipo": "Chassis",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Traje Leve (Infiltração)",
+        "tamanho": 1,
+        "resistencia": 8,
+        "armadura": 4,
+        "movimentacao": 8,
+        "custo": 10000,
+        "mods_slots": 3,
+        "origem": "SCI_FI",
+        "observacoes": "Traje amplificado para batedores."
+      },
+      {
+        "nome": "Traje Pesado (Tanque)",
+        "tamanho": 2,
+        "resistencia": 12,
+        "armadura": 8,
+        "movimentacao": 6,
+        "custo": 30000,
+        "mods_slots": 6,
+        "origem": "SCI_FI",
+        "observacoes": "Armadura de batalha completa."
+      }
+    ]
+  },
+  {
+    "tipo": "Mecha",
+    "subtipo": "Chassis",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Drone de Reparo",
+        "tamanho": -1,
+        "resistencia": 6,
+        "armadura": 2,
+        "movimentacao": 6,
+        "custo": 2000,
+        "mods_slots": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Robô utilitário."
+      },
+      {
+        "nome": "Sentinela de Combate",
+        "tamanho": 0,
+        "resistencia": 10,
+        "armadura": 4,
+        "movimentacao": 6,
+        "custo": 5000,
+        "mods_slots": 4,
+        "origem": "SCI_FI",
+        "observacoes": "Robô soldado padrão."
+      }
+    ]
+  },
+  {
+    "tipo": "Cibernéticos",
+    "subtipo": "Implantes",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Olhos Biônicos",
+        "custo": 2000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Ignora penalidades de iluminação (Visão Noturna). Zoom 10x (+2 em Perceber visual)."
+      },
+      {
+        "nome": "Braço Cibernético",
+        "custo": 5000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Aumenta Força do braço em um dado. Dano desarmado For+d4. Não sente dor no membro."
+      },
+      {
+        "nome": "Pernas Cibernéticas",
+        "custo": 6000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Aumenta Movimentação em +2 e Salto."
+      },
+      {
+        "nome": "Blindagem Dérmica (Nível 1)",
+        "custo": 3000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Concede +2 de Armadura natural."
+      },
+      {
+        "nome": "Interface de Dados",
+        "custo": 1000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Permite conexão direta com computadores (+2 em Hacking/Eletrônica)."
+      },
+      {
+        "nome": "Reflexos Ampliados",
+        "custo": 10000,
+        "tensao": 3,
+        "origem": "SCI_FI",
+        "observacoes": "Requer Agilidade d8. Concede a vantagem Rápido ou Nível 1 de Rapidez."
+      }
+    ]
   }
 ]
