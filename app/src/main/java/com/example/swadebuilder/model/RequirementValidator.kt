@@ -33,7 +33,7 @@ object RequirementValidator {
         }
 
         // 2a) Vantagens exclusivas de Ressuscitado exigem ter a vantagem-base
-        if (v.categoria == Categoria.RESSUSCITADO) {
+        if (v.categoria == Categoria.ATORMENTADO) {
             val temRessuscitado = state.vantagensSelecionadas.any { it.id == Constants.ID_RESSUSCITADO }
             if (!temRessuscitado) return false
         }
