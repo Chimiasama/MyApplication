@@ -6,7 +6,8 @@ import kotlinx.serialization.Serializable
 
 data class AtributoJson(
     val nome: String,
-    val min: Int = 4
+    val min: Int = 4,
+    val descricao: String? = null
 )
 
 @Serializable
