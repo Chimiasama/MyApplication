@@ -381,7 +381,7 @@ fun VantagensContent(
 
                         // --- NEW FILTERING LOGIC ---
                         if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioPathfinderAtivo) return@items
-                        if (cat == Categoria.RESSUSCITADO && !state.compendioDeadlandsAtivo) return@items
+                        if (cat == Categoria.ATORMENTADO && !state.compendioDeadlandsAtivo) return@items
                         if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@items
                         if (cat == Categoria.SUPER && !state.modoSupers) return@items
                         if (cat == Categoria.MONSTRUOSAS && !state.compendioHorrorAtivo) return@items
@@ -537,7 +537,7 @@ fun VantagensContent(
 
                 if (state.modoSupers && cat == Categoria.PODER) return@forEach
                 if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioPathfinderAtivo) return@forEach
-                if (cat == Categoria.RESSUSCITADO && !state.compendioDeadlandsAtivo) return@forEach
+                if (cat == Categoria.ATORMENTADO && !state.compendioDeadlandsAtivo) return@forEach
                 if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@forEach
 
                 val expanded = expandedMap[cat] ?: false

@@ -22,7 +22,6 @@ import com.example.swadebuilder.mapaAtributosDescricao
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.mapaPericiasDescricao
-import com.example.swadebuilder.mapaPericiasDescricaoAdg
 import com.example.swadebuilder.racialAttrMinMap
 import com.example.swadebuilder.racialSkillStartMap
 import com.example.swadebuilder.util.keyify
@@ -159,12 +158,12 @@ object DataLoader {
 
         // 3. Super Poderes
         val listaSuperPoderes: List<SuperPoder> =
-            assets.open("superpoderes.json")
+            assets.open("super_poderes.json")
                 .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
 
         // 4. Arcano Info
         val arcanoList: List<ArcanoInfo> =
-            assets.open("arcano_info.json")
+            assets.open("geral_arcano_info.json")
                 .use { input -> json.decodeFromStream<List<ArcanoInfo>>(input) }
         arcanoInfo = arcanoList.associate {
             it.key
@@ -174,7 +173,7 @@ object DataLoader {
         }
 
         // 5. Atributos
-        val atributosData = loadJsonAsset<AtributoList>(context, "atributos.json")
+        val atributosData = loadJsonAsset<AtributoList>(context, "geral_atributos.json")
         listaAtributos = atributosData.atributos
             .map { it.nome.keyify() }
         mapaAtributosDisplay = atributosData.atributos
@@ -206,14 +205,7 @@ object DataLoader {
             }
         }.getOrElse { emptyList() }
 
-        val periciasDescAdgList = runCatching {
-            assets.open("adg_pericias_desc.json").use { input ->
-                json.decodeFromStream<List<PericiaDescricaoJson>>(input)
-            }
-        }.getOrElse { emptyList() }
-
         mapaPericiasDescricao = periciasDescList.associate { it.nome.keyify() to it.descricao }
-        mapaPericiasDescricaoAdg = periciasDescAdgList.associate { it.nome.keyify() to it.descricao }
 
         listaPericias = listaPericias.map { pericia ->
             val desc = pericia.descricao ?: mapaPericiasDescricao[pericia.nome.keyify()]
@@ -257,7 +249,7 @@ object DataLoader {
 
         // 10. Monstros
         listaMonstroTemplates = assets
-            .open("monstros.json")
+            .open("horror_monstros.json")
             .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
 
         // 11. Mapas Raciais
