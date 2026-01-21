@@ -107,10 +107,25 @@ fun PoderesSection(
         }
     }
 
-    val allPoderes: List<Poder> by androidx.compose.runtime.produceState(initialValue = emptyList()) {
-        val poderesBase = runCatching { context.loadJsonAsset<List<Poder>>("poderes.json") }.getOrElse { emptyList() }
-        val tecnicasChi = runCatching { context.loadJsonAsset<List<Poder>>("adg_tecnicas_chi.json") }.getOrElse { emptyList() }
-        value = poderesBase + tecnicasChi
+    val powerCache: Map<String, List<Poder>> by androidx.compose.runtime.produceState(initialValue = emptyMap()) {
+        val origins = listOf("basico", "fantasia", "scifi", "horror", "deadlands", "pathfinder", "crystal", "sol_vapor")
+        val map = mutableMapOf<String, List<Poder>>()
+
+        origins.forEach { org ->
+            val list = runCatching { context.loadJsonAsset<List<Poder>>("${org}_poderes.json") }.getOrElse { emptyList() }
+            map[org.uppercase()] = list
+        }
+
+        // ADG special case
+        val adgList = runCatching { context.loadJsonAsset<List<Poder>>("adg_tecnicas_chi.json") }.getOrElse { emptyList() }
+        map["ADG"] = adgList
+        map["ARTE DA GUERRA"] = adgList
+
+        value = map
+    }
+
+    val allPoderes = remember(powerCache) {
+        powerCache.values.flatten().distinctBy { it.id }
     }
 
     var searchQuery by rememberSaveable { mutableStateOf("") }
@@ -133,13 +148,26 @@ fun PoderesSection(
     }
 
     // Pre-calculate powers for each displayed key to avoid doing it inside LazyColumn (and avoid @Composable error)
-    val powersByArcKey = remember(allPoderes, searchQuery, selectedRank, displayKeys) {
+    val powersByArcKey = remember(powerCache, searchQuery, selectedRank, displayKeys, state.vantagensSelecionadas) {
         displayKeys.associateWith { arcKeyRaw ->
             val arcKey = arcKeyRaw.normAAKey()
             val permittedSet = ArcaneConfig.getPermittedPowers(arcKey)
             val blockedSet = ArcaneConfig.getBlockedPowers(arcKey)
 
-            allPoderes.filter { power ->
+            // Determine origin
+            val advantage = state.vantagensSelecionadas.find { it.toArcanoKey() == arcKeyRaw }
+            val originRaw = advantage?.origem?.uppercase() ?: "BASICO"
+            val normalizedOrigin = when (originRaw) {
+                "SCI_FI", "SCIFI" -> "SCIFI"
+                "SOL E VAPOR", "SOL_VAPOR" -> "SOL_VAPOR"
+                "CRYSTAL HEARTS", "CRYSTAL" -> "CRYSTAL"
+                "ARTE DA GUERRA", "ADG" -> "ADG"
+                else -> originRaw
+            }
+
+            val sourceList = powerCache[normalizedOrigin] ?: powerCache["BASICO"] ?: emptyList()
+
+            sourceList.filter { power ->
                 // 1. Check permissions/blocks
                 val isAllowed = if (permittedSet != null) {
                     power.id in permittedSet
