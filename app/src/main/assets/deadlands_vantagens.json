@@ -1,7 +1,101 @@
 [
   {
-    "id": "aa_abencoado",
-    "nome": "ANTECEDENTE ARCANO (Abençoado)",
+    "id": "ambidestro",
+    "nome": "AMBIDESTRO",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade Mão Inábil (veja pág. 115) é ignorada. Se estiverem empunhando uma arma em cada mão, personagens com esta Vantagem podem acumular os bônus de Aparar de ambas as armas (se houverem bônus)."
+  },
+  {
+    "id": "aristocrata",
+    "nome": "ARISTOCRATA",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Este indivíduo nasceu com privilégios ou os adquiriu ao longo da vida. Pode ter dinheiro ou não (Vantagem Rico ou Podre de Rico), mas ainda anda no círculo social da elite dentro do cenário. Aristocratas adicionam +2 em Persuadir quando em uma Rede de Contatos (veja pág. 160) com a elite local, industriais, nobres ou demais aristocratas.\n\nTambém adicionam +2 em rolagens de Conhecimento Geral feitas para conhecer a etiqueta da elite, reconhecer ramos familiares e heráldica ou rumores envolvendo outros de sua posição."
+  },
+  {
+    "id": "atraente",
+    "nome": "ATRAENTE",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Vigor": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Não é segredo que as pessoas ficam mais dispostas a ajudar quem consideram fisicamente atraentes.\n\nAdicione +1 em rolagens de Performance e Persuadir se o alvo estiver atraído pelo seu tipo em geral (gênero, sexo, espécie etc.)."
+  },
+  {
+    "id": "muito_atraente",
+    "nome": "MUITO ATRAENTE",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atraente"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Sua personagem é linda de morrer. Seu bônus em Performance e Persuadir aumenta para +2."
+  },
+  {
+    "id": "brutamontes",
+    "nome": "BRUTAMONTES",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Força": 6,
+        "Vigor": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Brutamontes se focam em força e capacidade física no lugar de coordenação e flexibilidade. Tratam Atletismo como se ela estivesse ligada a Força no lugar de Agilidade para propósitos de Progresso. Também podem resistir a Desafios de Atletismo com força, se desejarem. Por fim, Brutamontes aumentam em +1 a Curta Distância de qualquer item arremessado. Dobre isso para a Média Distância ajustada e dobre novamente para a Longa Distância.\n\nSe a Distância de um item arremessado for 3/6/12, por exemplo, a Distância para o Brutamontes é 4/8/16."
+  },
+  {
+    "id": "carismatico",
+    "nome": "CARISMÁTICO",
     "categoria": "ANTECEDENTE",
     "origem": "DEADLANDS",
     "requisitos": {
@@ -9,35 +103,147 @@
       "atributos": {
         "Espírito": 8
       },
-      "pericias": {
-        "Fé": 6
-      }
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
     },
-    "descricao": "Usa Fé. 15 PP. Milagres divinos. Se violar conduta, perde poderes. Acesso a poderes de proteção e cura.",
-    "subtipoArcano": "ABENCOADO",
-    "grupoId": "antecedente_arcano"
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Confere simpatia por alguma razão. Pode ser confiável, agir com bondade ou apenas transparecer confiança e boa vontade. Você tem uma rerrolagem gratuita em rolagens de Persuadir."
   },
   {
-    "id": "aa_cientista_louco",
-    "nome": "ANTECEDENTE ARCANO (Cientista Louco)",
+    "id": "corajoso",
+    "nome": "CORAJOSO",
     "categoria": "ANTECEDENTE",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
-        "Astúcia": 8
+        "Espírito": 6
       },
-      "pericias": {
-        "Ciência Estranha": 6
-      }
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
     },
-    "descricao": "Usa Ciência Estranha. 15 PP. Cria dispositivos infernais. Falha Crítica causa Malfuncionamento (explosão, defeito, etc).",
-    "subtipoArcano": "CIENTISTA LOUCO",
-    "grupoId": "antecedente_arcano"
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Quem possui esta Vantagem aprendeu a dominar seus medos ou lidou com tantos horrores que acabou se habituando. Estas figuras valentes e exploradoras adicionam +2 em Testes de Medo e subtraem 2 dos resultados da Tabela de Medo (veja pág. 140)."
   },
   {
-    "id": "aa_huckster",
-    "nome": "ANTECEDENTE ARCANO (Vigarista)",
+    "id": "cura_rapida",
+    "nome": "CURA RÁPIDA",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Vigor": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Personagens com esta bênção adicionam +2 ao Vigor em rolagens de cura natural e testam a cada três dias em vez de cinco (veja Cura, pág. 112)."
+  },
+  {
+    "id": "famoso",
+    "nome": "FAMOSO",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Personagens com essa vantagem são uma espécie de subcelebridade. Podem ter reconhecimento como membro popular da classe barda em um feudo em particular, uma estrela de rock menor ou ter atuado em um filme B. Ganham o dobro do cachê normal quando estiverem realizando uma performance (veja Performance, pág. 38). Também podem usar sua fama para adicionar +1 em rolagens de Persuadir se o alvo for amigável e souber quem são (rolagem de Conhecimento Geral modificada pela probabilidade do indivíduo conhecer a celebridade). A parte ruim de ser Famoso é que a personagem é geralmente reconhecida: pessoas querem algo dela com certa frequência, pode sofrer perseguição por parte de fãs ou admiradores, ou ainda não conseguir se livrar de obrigações, apresentações ou outras atividades sem se complicar."
+  },
+  {
+    "id": "muito_famoso",
+    "nome": "MUITO FAMOSO",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "famoso"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Personagens com esta Vantagem realmente têm fama. São bastante conhecidas em um círculo grande — país, grande indústria ou mídia popular (cinema, televisão, música etc.). Fazem 5× o cachê normal quando se apresentam e adicionam +2 em Persuadir ao influenciar indivíduos amigáveis que as conhecem. O preço também é mais alto: mais exigências de tempo, obrigações, rivais, escândalos e incapacidade de se misturar à multidão sem serem reconhecidas."
+  },
+  {
+    "id": "furioso",
+    "nome": "FURIOSO",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Furiosos tornam-se selvagens e quase incontroláveis quando ficam com “sangue nos olhos”, mas continuam verdadeiras máquinas de matar! Imediatamente após sofrer um Ferimento ou resultado Abalado (só por dano físico), alguém com essa Vantagem deve fazer um teste de Astúcia ou ficar Furioso. Você pode falhar voluntariamente, se desejar.\n\nFicar Furioso tem os seguintes efeitos:\n- FÚRIA: Força aumenta em um tipo de dado e todo ataque corpo a corpo deve ser Ataque Selvagem (veja pág. 115). Não é permitido usar perícias que requeiram inteligência ou concentração (critério do Mestre).\n- ENRAIVECIDO: Adrenalina e raiva fortalecem os músculos, adicionando +2 em Resistência. Ignore um nível de penalidades por Ferimentos (acumula com outras habilidades que reduzam essas penalidades).\n- IMPRUDÊNCIA: Toda vez que rolar Falha Crítica em Lutar, acerta um alvo aleatório no seu raio de ataque (amigo ou inimigo). Se não houver, o golpe erra e pode quebrar objetos próximos.\n\nDepois de cinco rodadas consecutivas de fúria, ocorre um nível de Fadiga. Com dez rodadas, outro nível de Fadiga e a fúria termina. Também é possível encerrar a fúria a qualquer momento fazendo teste de Astúcia –2 (ação livre), possivelmente evitando a Fadiga se obtiver sucesso. Se entrar em fúria de novo, comece uma nova contagem, mesmo na mesma batalha."
+  },
+  {
+    "id": "impulso",
+    "nome": "IMPULSO",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Impulso reflete energia ou espírito. Quando você gasta um Bene para rerrolar uma Característica, adicione +2 ao total da rerrolagem. Não se aplica a rolagens de dano nem a Absorção, a menos que use outro Bene para rerrolar Vigor."
+  },
+  {
+    "id": "ligeiro",
+    "nome": "LIGEIRO",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Sua Movimentação é aumentada em +2 e seu dado de corrida avança um passo (por ex., d6 → d8)."
+  },
+  {
+    "id": "linguista",
+    "nome": "LINGUISTA",
     "categoria": "ANTECEDENTE",
     "origem": "DEADLANDS",
     "requisitos": {
@@ -45,18 +251,2313 @@
       "atributos": {
         "Astúcia": 6
       },
-      "pericias": {
-        "Jogar": 6,
-        "Conjurar": 6
-      }
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
     },
-    "descricao": "Usa Conjurar (com baralho de poker para efeitos extras). 10 PP. Magia através de jogos com espíritos obscuros.",
-    "subtipoArcano": "VIGARISTA",
-    "grupoId": "antecedente_arcano"
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Esta pessoa viaja o mundo e tem um ouvido apurado. Começa o jogo conhecendo um número de Idiomas igual à metade do seu dado de Astúcia, cada um em d6 (veja perícia Idiomas, pág. 35)."
   },
   {
-    "id": "aa_mestre_chi",
-    "nome": "ANTECEDENTE ARCANO (Mestre do Chi)",
+    "id": "musculoso",
+    "nome": "MUSCULOSO",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Força": 6,
+        "Vigor": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Esta pessoa é muito forte ou está em ótima forma. Seu Tamanho aumenta em +1 (e a Resistência em 1), e a Força conta como dado maior para Sobrecarga (pág. 77) e Força Mínima para usar equipamentos sem penalidade (pág. 76). Não pode elevar Tamanho acima de +3."
+  },
+  {
+    "id": "prontidao",
+    "nome": "PRONTIDÃO",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Nada escapa a personagens com Prontidão. Adicionam +2 em Perceber para ouvir, ver ou sentir o mundo ao redor."
+  },
+  {
+    "id": "rapido",
+    "nome": "RÁPIDO",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Reflexos ultrarrápidos: sempre que sacar Carta de Ação ≤ 5, pode descartá-la e sacar novamente até obter > 5. Personagens com Focado e Rápido sacam primeiro as cartas adicionais e escolhem qual usar; se for ≤ 5, usam a Vantagem para sacar até obter ≥ 6."
+  },
+  {
+    "id": "resistencia_arcana",
+    "nome": "RESISTÊNCIA ARCANA",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Magia e sobrenatural pouco afetam este indivíduo. Habilidades arcanas hostis contra ele sofrem −2 na rolagem e dano mágico é reduzido em 2. Mesmo se o poder não efetuar, consome Pontos de Poder e ainda pode afetar outros."
+  },
+  {
+    "id": "resistencia_arcana_aprimorada",
+    "nome": "RESISTÊNCIA ARCANA APRIMORADA",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "resistencia_arcana"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Como acima, mas penalidade −4 em rolagens e dano."
+  },
+  {
+    "id": "rico",
+    "nome": "RICO",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Nascido ou tornado rico. Inicia com 3× recursos normais; se cenário usar salário, equivale a US$ 150 000/ano."
+  },
+  {
+    "id": "podre_de_rico",
+    "nome": "PODRE DE RICO",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "rico"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "5× recursos iniciais e renda anual líquida ≈ US$ 500 000."
+  },
+  {
+    "id": "sorte",
+    "nome": "SORTE",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Quem tem Sorte parece ser abençoado pelo destino, deuses ou qualquer força externa na qual acredite (ou que acredite nesta figura!).\nReceba um Bene adicional no início de cada sessão de jogo, de modo a ser frequentemente mais bem-sucedido que a maioria em tarefas importantes e para sobreviver a perigos incríveis."
+  },
+  {
+    "id": "sorte_grande",
+    "nome": "SORTE GRANDE",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "sorte"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Concede dois Benes adicionais no início de cada sessão em vez de um."
+  },
+  {
+    "id": "arma_predileta",
+    "nome": "ARMA PREDILETA",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Lutar": 8,
+        "Atirar": 8,
+        "Atletismo": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Alguém com essa Vantagem conhece uma arma única (Excalibur, Old Betsy, Ferroada) como a palma da sua mão. Quando a usa, pode adicionar +1 em suas rolagens de Atletismo (arremessar), Lutar ou Atirar e +1 no Aparar quando ela está preparada (mesmo que seja arma à distância). É permitido escolher várias vezes, aplicando a uma arma diferente cada vez. Se perdida, pode substituí-la, mas benefícios entram em vigor só após alguns dias."
+  },
+  {
+    "id": "arma_predileta_aprimorada",
+    "nome": "ARMA PREDILETA APRIMORADA",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "arma_predileta"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Como acima, mas bônus ao usar a arma aumentam para +2."
+  },
+  {
+    "id": "artista_marcial",
+    "nome": "ARTISTA MARCIAL",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Lutar": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Alguém com essa Vantagem tem treinamento básico em artes marciais. Sempre está com armas, causa dano com punhos e pés (Armas Naturais, pág. 114). Soma +1 quando golpeia com eles e causa Força + d4 de dano. Se já tiver dano por Garras ou Brigão, aumente o dado em um tipo. Não soma com outras Armas Naturais."
+  },
+  {
+    "id": "guerreiro_marcial",
+    "nome": "GUERREIRO MARCIAL",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "artista_marcial"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aumente bônus de Lutar para +2 e dado de dano em um tipo adicional."
+  },
+  {
+    "id": "atacar_primeiro",
+    "nome": "ATACAR PRIMEIRO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Uma vez por rodada, se não estiver Abalado ou Atordoado, ganha um ataque livre de Lutar contra adversário que entrar em seu Alcance (veja Ataques Livres, pág. 116)."
+  },
+  {
+    "id": "atacar_primeiro_aprimorado",
+    "nome": "ATACAR PRIMEIRO APRIMORADO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Heroico",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atacar_primeiro"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Como acima, mas permite atacar até três oponentes por turno."
+  },
+  {
+    "id": "atirador",
+    "nome": "ATIRADOR",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Atletismo": 8,
+        "Atirar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Talento nato com armas de combate à distância. Se não se mover e não disparar acima de Cadência de Tiro 1 na primeira ação, pode adicionar +1 em uma rolagem de Atletismo ou Atirar, ou ignorar até 2 pontos em penalidades por localização, cobertura, distância, escala ou velocidade. Não se acumula com Mirar e não vale para ataques extras."
+  },
+  {
+    "id": "atirar_com_duas_armas",
+    "nome": "ATIRAR COM DUAS ARMAS",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Funciona como Lutar com Duas Armas, mas para armas à distância. Permite disparo de cada mão em duas ações sem penalidade por Ação Múltipla. Se tiver Lutar com Duas Armas, segunda ação pode ser corpo a corpo."
+  },
+  {
+    "id": "bloquear",
+    "nome": "BLOQUEAR",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Lutar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aprendeu a se defender em combates corpo a corpo. Aparar +1 e bônus de Agrupar de oponentes contra ela é reduzido em 1."
+  },
+  {
+    "id": "bloquear_aprimorado",
+    "nome": "BLOQUEAR APRIMORADO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "bloquear"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aparar +2 e redução de Agrupar contra ela em 2."
+  },
+  {
+    "id": "brigao",
+    "nome": "BRIGÃO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Força": 8,
+        "Vigor": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Punhos como martelos ou garras cortantes. Resistência +1 e rola Força + d4 de dano com punhos ou garras. Se já tiver dano por Garras, Artista Marcial etc., aumente o dado em um tipo."
+  },
+  {
+    "id": "pugilista",
+    "nome": "PUGILISTA",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "brigao"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Resistência +1 adicional e dano por punhos/garras em mais um tipo de dado."
+  },
+  {
+    "id": "calculista",
+    "nome": "CALCULISTA",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Estuda ações do oponente e ganha vantagem. Quando Carta de Ação ≤ 5, ignore até 2 pontos de penalidades em uma ação daquele turno."
+  },
+  {
+    "id": "contra_ataque",
+    "nome": "CONTRA-ATAQUE",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Lutar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Uma vez por rodada (se não Abalado ou Atordoado), ganha um ataque livre contra quem falhar em ataque de Lutar direcionado a si."
+  },
+  {
+    "id": "contra_ataque_aprimorado",
+    "nome": "CONTRA-ATAQUE APRIMORADO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "contra_ataque"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Como acima, mas contra até três adversários que falharem em ataques contrários por rodada."
+  },
+  {
+    "id": "corredor",
+    "nome": "CORREDOR",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {
+        "Atletismo": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pratica parkour, movendo-se em terreno acidentado com Movimentação total a pé. +2 em Atletismo para escalar e em Perseguições a pé (veja pág. 148)."
+  },
+  {
+    "id": "disparo_duplo",
+    "nome": "DISPARO DUPLO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Atirar": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Dispara dois tiros rápidos sem prejudicar mira. Só com armas de Cadência de Tiro 1 que disparam dois tiros sem recarregar. +1 em ataque e dano, gasta bala extra. Não combina com Disparo Rápido. Com rajada de três balas (pág. 77), +2 em Atirar e dano, gasta seis balas."
+  },
+  {
+    "id": "disparo_rapido",
+    "nome": "DISPARO RÁPIDO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Atirar": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aumenta Cadência de Tiro da arma em +1 para um ataque no turno, se tiver munição."
+  },
+  {
+    "id": "disparo_rapido_aprimorado",
+    "nome": "DISPARO RÁPIDO APRIMORADO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "disparo_rapido"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aumenta Cadência de Tiro em +1 até duas vezes no mesmo turno via Ação Múltipla."
+  },
+  {
+    "id": "duro_de_matar",
+    "nome": "DURO DE MATAR",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ignore penalidades por Ferimentos em rolagens de Vigor para evitar Sangrar (veja pág. 111)."
+  },
+  {
+    "id": "muito_duro_de_matar",
+    "nome": "MUITO DURO DE MATAR",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "duro_de_matar"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Se “morrer”, role um dado: ímpar = morte; par = Estado Incapacitado mas sobrevive."
+  },
+  {
+    "id": "esquiva",
+    "nome": "ESQUIVA",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Subtrai 2 de todos os ataques à distância feitos contra a personagem, não cumulativo com cobertura."
+  },
+  {
+    "id": "esquiva_aprimorada",
+    "nome": "ESQUIVA APRIMORADA",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "esquiva"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Sub +2 quando Evadindo de ataques em área (veja pág. 122)."
+  },
+  {
+    "id": "finta",
+    "nome": "FINTA",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Lutar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Em Desafio de Lutar, faça o adversário resistir com Astúcia em vez de Agilidade."
+  },
+  {
+    "id": "focado",
+    "nome": "FOCADO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Astúcia": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Saca uma Carta de Ação adicional em combate e escolhe qual usar."
+  },
+  {
+    "id": "extremamente_focado",
+    "nome": "EXTREMAMENTE FOCADO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "focado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Saca duas cartas adicionais e escolhe qual usar."
+  },
+  {
+    "id": "frenesi",
+    "nome": "FRENESI",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Lutar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Como ação limitada, role um segundo dado de Lutar em ataque corpo a corpo no turno."
+  },
+  {
+    "id": "frenesi_aprimorado",
+    "nome": "FRENESI APRIMORADO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "frenesi"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Adiciona um terceiro dado de Lutar como ataque extra na ação de Frenesi."
+  },
+  {
+    "id": "golpe_poderoso",
+    "nome": "GOLPE PODEROSO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Lutar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Se Carta de Ação for Curinga, dobre dano do primeiro ataque bem-sucedido com Lutar no turno."
+  },
+  {
+    "id": "impiedoso",
+    "nome": "IMPIEDOSO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ao gastar Bene para rerrolar dano, adicione +2 ao total."
+  },
+  {
+    "id": "instinto_assassino",
+    "nome": "INSTINTO ASSASSINO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Tem uma rerrolagem gratuita em qualquer Desafio que inicie."
+  },
+  {
+    "id": "lutador_improvisador",
+    "nome": "LUTADOR IMPROVISADOR",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Astúcia": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Ignora penalidade −2 ao usar armas improvisadas (veja pág. 114)."
+  },
+  {
+    "id": "lutar_com_duas_armas",
+    "nome": "LUTAR COM DUAS ARMAS",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Segundo ataque não sofre penalidade por Ação Múltipla; Mão Inábil ainda vale a menos que seja Ambidestro."
+  },
+  {
+    "id": "maos_firmes",
+    "nome": "MÃOS FIRMES",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ignore penalidade por Plataforma Instável (veja pág. 124) e penalidade de corrida reduzida a −1."
+  },
+  {
+    "id": "matador_de_gigantes",
+    "nome": "MATADOR DE GIGANTES",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+1d6 de dano ao atacar criaturas de Tamanho ≥ 3 maiores (veja pág. 215–216)."
+  },
+  {
+    "id": "nervos_de_aco",
+    "nome": "NERVOS DE AÇO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Vigor": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ignore 1 ponto de penalidades por Ferimento."
+  },
+  {
+    "id": "nervos_de_aco_aprimorados",
+    "nome": "NERVOS DE AÇO APRIMORADOS",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "nervos_de_aco"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ignore 2 pontos de penalidades por Ferimento."
+  },
+  {
+    "id": "queixo_de_ferro",
+    "nome": "QUEIXO DE FERRO",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Vigor": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Absorção e Vigor para evitar Nocaute (veja pág. 122)."
+  },
+  {
+    "id": "reflexos_de_combate",
+    "nome": "REFLEXOS DE COMBATE",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 ao rolar para recuperar de Estado Abalado ou Atordoado."
+  },
+  {
+    "id": "retirada",
+    "nome": "RETIRADA",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Oponente adjacente não recebe ataque livre ao se retirar de corpo a corpo."
+  },
+  {
+    "id": "retirada_aprimorada",
+    "nome": "RETIRADA APRIMORADA",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "retirada"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Até três adversários não recebem ataques livres ao retirar-se corpo a corpo."
+  },
+  {
+    "id": "rock_and_roll",
+    "nome": "ROCK AND ROLL!",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Atirar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Se não se movimentar, ignore penalidade por Recuo em Cadência ≥ 2 (veja pág. 126)."
+  },
+  {
+    "id": "tiro_mortal",
+    "nome": "TIRO MORTAL",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Atletismo": 8,
+        "Atirar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Se Carta de Ação for Curinga, dobre dano da primeira rolagem bem-sucedida de Atletismo ou Atirar."
+  },
+  {
+    "id": "varredura",
+    "nome": "VARREDURA",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Força": 8
+      },
+      "pericias": {
+        "Lutar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ataque com arma de duas mãos a todos os alvos no Alcance; se sem arma de duas mãos, penalidade −2."
+  },
+  {
+    "id": "varredura_aprimorada",
+    "nome": "VARREDURA APRIMORADA",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "varredura"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Como acima, mas pode evitar atingir aliados."
+  },
+  {
+    "id": "comando",
+    "nome": "COMANDO",
+    "categoria": "LIDERANCA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Astúcia": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Extras no Raio de Comando +1 em Espírito para recuperar de Abalado e Vigor para Atordoado."
+  },
+  {
+    "id": "presenca_de_comando",
+    "nome": "PRESENÇA DE COMANDO",
+    "categoria": "LIDERANCA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "comando"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Raio de Comando passa a 10 quadros (20 m)."
+  },
+  {
+    "id": "estrategista",
+    "nome": "ESTRATEGISTA",
+    "categoria": "LIDERANCA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Astúcia": 8
+      },
+      "pericias": {
+        "Conhecimento Batalha": 6
+      },
+      "vantagens_previas": [
+        "comando"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Saca uma Carta de Ação extra por rodada para dar a um Extra no Raio de Comando."
+  },
+  {
+    "id": "mestre_estrategista",
+    "nome": "MESTRE ESTRATEGISTA",
+    "categoria": "LIDERANCA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "estrategista"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Duas Cartas de Ação extras por rodada para distribuir."
+  },
+  {
+    "id": "fervor",
+    "nome": "FERVOR",
+    "categoria": "LIDERANCA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [
+        "comando"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Extras no Raio de Comando +1 em dano de Lutar."
+  },
+  {
+    "id": "inspirar",
+    "nome": "INSPIRAR",
+    "categoria": "LIDERANCA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "comando"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Uma vez por turno, role Conhecimento Batalha para dar Suporte em Característica escolhida a todos os Extras no Raio de Comando."
+  },
+  {
+    "id": "lider_nato",
+    "nome": "LÍDER NATO",
+    "categoria": "LIDERANCA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [
+        "comando"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Vantagens de Liderança aplicáveis a Extras também valem para Cartas Selvagens."
+  },
+  {
+    "id": "mantenham_a_formacao",
+    "nome": "MANTENHAM A FORMAÇÃO!",
+    "categoria": "LIDERANCA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Astúcia": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [
+        "comando"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Extras no Raio de Comando +1 em Resistência."
+  },
+  {
+    "id": "artifice",
+    "nome": "ARTÍFICE",
+    "categoria": "PODER",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pode criar Dispositivos Arcanos temporários e itens mágicos permanentes."
+  },
+  {
+    "id": "canalizacao",
+    "nome": "CANALIZAÇÃO",
+    "categoria": "PODER",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Reduz custo de PP em 1 ao obter ampliação em rolagem arcana."
+  },
+  {
+    "id": "concentracao",
+    "nome": "CONCENTRAÇÃO",
+    "categoria": "PODER",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Dobra Duração de poderes Não Instantâneos."
+  },
+  {
+    "id": "engenhoqueiro",
+    "nome": "ENGENHOQUEIRO",
+    "categoria": "PODER",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Ciência Estranha": 6
+      },
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Improvisa Dispositivo Arcano com custo até 3 PP de componentes, ativado com Ciência Estranha –2."
+  },
+  {
+    "id": "esforco_extra",
+    "nome": "ESFORÇO EXTRA",
+    "categoria": "PODER",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Foco": 6
+      },
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+1 Foco por 1 PP ou +2 por 3 PP em rolagens (não em Falha Crítica)."
+  },
+  {
+    "id": "guerreiro_sagrado_profano",
+    "nome": "GUERREIRO SAGRADO/PROFANO",
+    "categoria": "PODER",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Fé": 6
+      },
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Fiéis enfrentam grandes perigos à serviço de suas divindades. Para sobreviverem a tais provações, as forças do bem (ou do mal) concedem milagres e a habilidade de transformar seu favor em proteção sobrenatural.\nAdicione +1 ao total do valor final de uma rolagem de Absorção para cada Ponto de Poder gasto, até um máximo de +4."
+  },
+  {
+    "id": "mago",
+    "nome": "MAGO",
+    "categoria": "PODER",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Conjurar": 6
+      },
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Gasta 1 PP extra ao conjurar para mudar Manifestação."
+  },
+  {
+    "id": "mentalista",
+    "nome": "MENTALISTA",
+    "categoria": "PODER",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Psiônicos": 6
+      },
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em testes resistidos de Psiônicos."
+  },
+  {
+    "id": "novos_poderes",
+    "nome": "NOVOS PODERES",
+    "categoria": "PODER",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ganha 2 novos poderes de seu Estágio ou menor; pode repetir."
+  },
+  {
+    "id": "pontos_de_poder",
+    "nome": "PONTOS DE PODER",
+    "categoria": "PODER",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez_por_estagio",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+5 PP adicionais (1 vez por Estágio, 2 pontos no Lendário)."
+  },
+  {
+    "id": "recarga_rapida",
+    "nome": "RECARGA RÁPIDA",
+    "categoria": "PODER",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Recupera 10 PP por hora de descanso."
+  },
+  {
+    "id": "recarga_rapida_aprimorada",
+    "nome": "RECARGA RÁPIDA APRIMORADA",
+    "categoria": "PODER",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "recarga_rapida"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Recupera 20 PP por hora."
+  },
+  {
+    "id": "surto_de_poder",
+    "nome": "SURTO DE PODER",
+    "categoria": "PODER",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Arcana": 8
+      },
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": "Carta Selvagem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Recupere 10 PP quando Carta de Ação for Curinga."
+  },
+  {
+    "id": "acrobata",
+    "nome": "ACROBATA",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {
+        "Atletismo": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Rerrolagem gratuita em Atletismo envolvendo equilíbrio ou acrobacias."
+  },
+  {
+    "id": "combatente_acrobata",
+    "nome": "COMBATENTE ACROBATA",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "acrobata"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ataques contra ele têm −1, desde que não sofra penalidades por Sobrecarga ou Força Mínima."
+  },
+  {
+    "id": "as",
+    "nome": "ÁS",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ignora −2 em Navegar, Dirigir ou Pilotar e pode gastar Benes para Absorver dano em veículos que controla."
+  },
+  {
+    "id": "assassino",
+    "nome": "ASSASSINO",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {
+        "Lutar": 6,
+        "Furtividade": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em dano contra vulneráveis ou em Finalizações."
+  },
+  {
+    "id": "erudito",
+    "nome": "ERUDITO",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Pesquisar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Escolha Conhecimento Acadêmico, Batalha, Ocultismo, Ciência ou outra “Conhecimento” baseada em Astúcia. +2 nessas perícias (repetível para diferentes perícias)."
+  },
+  {
+    "id": "investigador",
+    "nome": "INVESTIGADOR",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 8
+      },
+      "pericias": {
+        "Pesquisar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Pesquisar e Perceber ao buscar documentos, pistas ou itens escondidos."
+  },
+  {
+    "id": "ladrao",
+    "nome": "LADRÃO",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {
+        "Furtividade": 6,
+        "Ladinagem": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+1 em Atletismo para escalar em áreas urbanas, +1 em Furtividade urbana e +1 em Ladinagem."
+  },
+  {
+    "id": "mateiro",
+    "nome": "MATEIRO",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {
+        "Sobrevivência": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Sobrevivência e Furtividade na natureza."
+  },
+  {
+    "id": "mcgyver",
+    "nome": "MCGYVER",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 6
+      },
+      "pericias": {
+        "Perceber": 8,
+        "Consertar": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Durante um turno, rola Consertar para criar dispositivo improvisado; sucesso/ampliação definem qualidade."
+  },
+  {
+    "id": "pau_pra_toda_obra",
+    "nome": "PAU PRA TODA OBRA",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 10
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Rola Astúcia após estudar para ganhar d4 (sucesso) ou d6 (ampliação) na perícia relevante. Pode tentar novamente após 1 h de estudo."
+  },
+  {
+    "id": "senhor_conserta_tudo",
+    "nome": "SENHOR CONSERTA TUDO",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Consertar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Consertar; ampliação reduz tempo de conserto pela metade (um quarto do tempo normal)."
+  },
+  {
+    "id": "soldado",
+    "nome": "SOLDADO",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Força": 6,
+        "Vigor": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Força conta como dado maior para Sobrecarga e Força Mínima (acumula com Musculoso). Rerrolagem gratuita em Vigor para evitar perigos ambientais."
+  },
+  {
+    "id": "ameacador",
+    "nome": "AMEAÇADOR",
+    "categoria": "SOCIAIS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "sanguinario",
+        "desagradavel",
+        "sem_escrupulos",
+        "feio"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Intimidar usando aparência ou atitude ruim."
+  },
+  {
+    "id": "agitador",
+    "nome": "AGITADOR",
+    "categoria": "SOCIAIS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Uma vez por turno, Desafio social com Intimidar ou Provocar contra todos os oponentes em Modelo Médio de Explosão."
+  },
+  {
+    "id": "cativar_o_ambiente",
+    "nome": "CATIVAR O AMBIENTE",
+    "categoria": "SOCIAIS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Uma vez por turno, ao dar Suporte com Persuadir ou Performance, role um dado adicional de perícia."
+  },
+  {
+    "id": "cativar_a_multidao",
+    "nome": "CATIVAR A MULTIDÃO",
+    "categoria": "SOCIAIS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "cativar_o_ambiente"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Como acima, mas dá terceiro dado de Suporte e pode beneficiar um aliado adicional."
+  },
+  {
+    "id": "conexoes",
+    "nome": "CONEXÕES",
+    "categoria": "SOCIAIS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez_por_sessao",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Até uma vez por sessão, peça favor a uma facção ou contato; benefício a critério do Mestre."
+  },
+  {
+    "id": "confiavel",
+    "nome": "CONFIÁVEL",
+    "categoria": "SOCIAIS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Rerrolagem gratuita em rolagens de Suporte."
+  },
+  {
+    "id": "elevar_o_moral",
+    "nome": "ELEVAR O MORAL",
+    "categoria": "SOCIAIS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Após Desafio bem-sucedido, remove Distraído ou Vulnerável de um aliado."
+  },
+  {
+    "id": "elo_comum",
+    "nome": "ELO COMUM",
+    "categoria": "SOCIAIS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pode dar Benes livremente a qualquer pessoa que possa se comunicar."
+  },
+  {
+    "id": "humilhar",
+    "nome": "HUMILHAR",
+    "categoria": "SOCIAIS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Provocar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Rerrolagem gratuita em Desafios de Provocar."
+  },
+  {
+    "id": "manha",
+    "nome": "MANHA",
+    "categoria": "SOCIAIS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Intimidar e Persuadir em Redes de Contatos criminosos; +2 em Conhecimento Geral sobre atividades ilícitas."
+  },
+  {
+    "id": "obstinado",
+    "nome": "OBSTINADO",
+    "categoria": "SOCIAIS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 ao resistir a Desafios com Astúcia ou Espírito."
+  },
+  {
+    "id": "vontade_de_ferro",
+    "nome": "VONTADE DE FERRO",
+    "categoria": "SOCIAIS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "corajoso",
+        "obstinado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Adiciona bônus de Obstinado para resistir a poderes e negar seus efeitos (não cumulativo com Corajoso)."
+  },
+  {
+    "id": "provocador",
+    "nome": "PROVOCADOR",
+    "categoria": "SOCIAIS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Provocar": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Ao obter ampliação em Desafio de Provocar, penaliza demais alvos em −2 até cartão novo, outro provocar ou fim do encontro."
+  },
+  {
+    "id": "replica",
+    "nome": "RÉPLICA",
+    "categoria": "SOCIAIS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Provocar": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Ao ampliação defendendo Provocar, adversário fica Distraído."
+  },
+  {
+    "id": "campeao",
+    "nome": "CAMPEÃO",
+    "categoria": "ESTRANHAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {
+        "Lutar": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 dano a criaturas sobrenaturais malignas (ou benignas) em qualquer ataque ou poder."
+  },
+  {
+    "id": "chi",
+    "nome": "CHI",
+    "categoria": "ESTRANHAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "guerreiro_marcial"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "No início de cada encontro, recebe 1 Ponto de Chi para rerrolar ataque falho, fazer inimigo descartar e rerrolar, ou adicionar d6 de dano a ataque de Lutar com Armas Naturais."
+  },
+  {
+    "id": "coragem_liquida",
+    "nome": "CORAGEM LÍQUIDA",
+    "categoria": "ESTRANHAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Vigor": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Após beber destilado, +1 tipo de dado em Vigor (e Resistência) e ignore 1 penalidade por Ferimento. Astúcia, Agilidade e perícias sofrem −1. Dura 1 hora, depois 1 Fadiga por 4 h."
+  },
+  {
+    "id": "curandeiro",
+    "nome": "CURANDEIRO",
+    "categoria": "ESTRANHAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em todas as rolagens de Curar, natural ou mágica."
+  },
+  {
+    "id": "elo_animal",
+    "nome": "ELO ANIMAL",
+    "categoria": "ESTRANHAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pode gastar seus Benes em quaisquer animais sob controle (montarias, pets, familiares)."
+  },
+  {
+    "id": "nocao_do_perigo",
+    "nome": "NOÇÃO DO PERIGO",
+    "categoria": "ESTRANHAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Perceber em testes de Surpresa (pág. 127); ampliação permite agir em Aguardar. Em outras situações, rolagem de Perceber com −2 (ou +2 se permitido) para detectar perigo; impede Finalização."
+  },
+  {
+    "id": "senhor_das_feras",
+    "nome": "SENHOR DAS FERAS",
+    "categoria": "ESTRANHAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Animais não atacam a menos que iniciem; atrai um companheiro animal Extra Tamanho 0 (substituível em 1d4 dias). Repetível: ganha animal adicional, aumenta uma característica em +1 dado, aumenta Tamanho máximo do animal em +1 (max +3), ou torna animal Carta Selvagem (personagem Estágio Heroico)."
+  },
+  {
+    "id": "sucateiro",
+    "nome": "SUCATEIRO",
+    "categoria": "ESTRANHAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "sorte"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez_por_encontro",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Uma vez por encontro, “lembra” equipamento, munição ou dispositivo necessário de última hora."
+  },
+  {
+    "id": "seguidores",
+    "nome": "SEGUIDORES",
+    "categoria": "LENDARIAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Cada escolha adiciona 5 Extras ao grupo; mantêm Progresso e precisam de cuidados e parte do saque."
+  },
+  {
+    "id": "profissional",
+    "nome": "PROFISSIONAL",
+    "categoria": "LENDARIAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": "tipo de dado máximo na característica"
+    },
+    "limite_compra": "infinito_por_caracteristica",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aumenta uma Característica e seu limite em 1 passo (ex: d12+1 → d12+2). Repetível para cada característica."
+  },
+  {
+    "id": "especialista",
+    "nome": "ESPECIALISTA",
+    "categoria": "LENDARIAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "profissional"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito_por_caracteristica",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aumenta novamente Característica e limite em 1 passo."
+  },
+  {
+    "id": "mestre",
+    "nome": "MESTRE",
+    "categoria": "LENDARIAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "especialista",
+        "carta_selvagem"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez_por_caracteristica",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Dado Selvagem torna-se d10 na característica escolhida."
+  },
+  {
+    "id": "parceiro",
+    "nome": "PARCEIRO",
+    "categoria": "LENDARIAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {
+        "Espirito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)"
+  },
+  {
+    "id": "duro_na_queda",
+    "nome": "DURO NA QUEDA",
+    "categoria": "LENDARIAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {
+        "Vigor": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Recebe até 4 Ferimentos antes de Incapacitar (penalidade máxima −3)."
+  },
+  {
+    "id": "muito_duro_na_queda",
+    "nome": "MUITO DURO NA QUEDA",
+    "categoria": "LENDARIAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "duro_na_queda"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Até 5 Ferimentos antes de Incapacitar (penalidade máxima −3)."
+  },
+  {
+    "id": "mestre_de_arma",
+    "nome": "MESTRE DE ARMA",
+    "categoria": "LENDARIAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {
+        "Lutar": 12
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Aparar +1 e dado bônus de dano em Lutar passa a d8 (veja Bônus de Dano, pág. 109)."
+  },
+  {
+    "id": "mestre_das_armas",
+    "nome": "MESTRE DAS ARMAS",
+    "categoria": "LENDARIAS",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "mestre_de_arma"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aparar +1 e dado bônus de dano em Lutar passa a d10."
+  },
+  {
+    "nome": "Antecedente Arcano (Abençoado)",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {
+        "Fé": 4
+      }
+    },
+    "descricao": "Certas personagens podem invocar o poder do seu deus ou divindade para pedir ajuda. No Oeste Estranho, estas almas piedosas são conhecidas como Abençoadas. Abençoados são freiras, sacerdotes, ou qualquer pessoa comum, mas (relativamente) de coração puro, tocada por uma entidade divina. Embora raros no Oeste Estranho, há também imames abençoados, monges budistas e outros devotos correndo por aí com poderes superiores protegendo os seus traseiros sagrados. Quando estas pessoas se comportam, elas podem invocar milagres para os ajudar a combater os males do Oeste estranho. Abençoados usam Fé como sua perícia arcana."
+  },
+  {
+    "nome": "Antecedente Arcano (Mestre do Chi)",
     "categoria": "ANTECEDENTE",
     "origem": "DEADLANDS",
     "requisitos": {
@@ -66,16 +2567,209 @@
         "Espírito": 6
       },
       "pericias": {
-        "Foco": 6
-      }
+        "Foco": 4
+      },
+      "vantagens": [
+        "Artista Marcial"
+      ]
     },
-    "descricao": "Usa Foco. 15 PP. Artes marciais sobrenaturais. Poderes afetam principalmente a si mesmo.",
-    "subtipoArcano": "MESTRE DO CHI",
-    "grupoId": "antecedente_arcano"
+    "descricao": "Algumas pessoas no oeste estranho estudaram as antigas artes asiáticas de combate. Muito poucos desses combatentes extremamente habilidosos alcançaram a disciplina espiritual necessária para canalizar a força sobrenatural chamada chi através de seus próprios corpos. Esses combatentes iluminados usam a Vantagem Antecedente Arcano (Mestre do Chi) para refletir suas habilidades surpreendentes. Mestres e mestras do chi usam Foco como sua perícia arcana."
   },
   {
-    "id": "pistoleiro",
-    "nome": "PISTOLEIRO",
+    "nome": "Antecedente Arcano (Mascate)",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "pericias": {
+        "Jogar": 6,
+        "Conjurar": 4
+      }
+    },
+    "descricao": "A magia no Oeste Estranho não deve ser escolhida levianamente. Aqueles que praticam feitiçaria muitas vezes devem tomar a força seus poderes dos espíritos das trevas, que raramente estão dispostos a cedê-lo facilmente. Mascates enxergam estes duelos de vontade como jogos de cartas e os melhores são capazes de poderes incríveis. Outros supostamente trilham caminhos ainda mais sombrios e aproveitam o poder da magia do sangue. Mascates usam Conjurar como sua perícia arcana."
+  },
+  {
+    "nome": "Antecedente Arcano (Cientista Louco)",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 8
+      },
+      "pericias": {
+        "Ciência": 6,
+        "Ciência Estranha": 4
+      }
+    },
+    "descricao": "Adeptos dos princípios da Nova Ciência (chamados de cientistas loucos pela maioria) constroem dispositivos estranhos e maravilhosos, máquinas que muitas vezes parecem desafiar as próprias leis da realidade. A maioria desses inventores — ou pelo menos os bem-sucedidos – dependem da rocha fantasma para alimentar suas invenções de alguma forma. Cientistas loucos usam Ciência Estranha como sua perícia arcana."
+  },
+  {
+    "nome": "Antecedente Arcano (Xamã)",
+    "categoria": "ANTECEDENTE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {
+        "Fé": 4
+      }
+    },
+    "descricao": "Xamãs são os homens e mulheres sagrados povos indígenas e guardiões da medicina tribal. Seu poder vem de barganhas com os exigentes espíritos do mundo natural. Quando estes homens ou mulheres curandeiros honram os espíritos da natureza, podem realizar feitos incríveis que fazem até o maior dos incrédulos tremer. Xamãs usam Fé como sua perícia arcana."
+  },
+  {
+    "nome": "Humor Ácido",
+    "categoria": "SOCIAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "pericias": {
+        "Provocar": 6
+      }
+    },
+    "descricao": "Algumas pessoas fazem piadas sobre as situações mais difíceis. Elas podem olhar na cara do próprio Ceifador, desde que algo nele lhe pareça engraçado. Esta é uma habilidade útil para qualquer um.\nUma personagem com esta vantagem pode usar sua perícia Provocar ao invés de espírito ao fazer um teste de Medo (e todos os modificadores usuais se aplicam normalmente). Se ela conseguir uma ampliação, ela zomba da ameaça tão eficazmente que age como +1 de suporte para todos os aliados fazendo o mesmo teste de medo. Apenas certifique-se de rolar e resolver o seu teste de medo primeiro, colega!"
+  },
+  {
+    "nome": "Veterano do Oeste Estranho",
+    "categoria": "SOCIAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {
+        "Ocultismo": 6
+      },
+      "vantagens": [
+        "Carta Selvagem"
+      ]
+    },
+    "descricao": "Então você quer ser um herói? Um herói grande, durão e experiente? Saquei. Apenas verifique a sua sanidade antes de entrar, porque aqueles que já deram a volta pelos cactos algumas vezes, viram coisas que paralisariam a maioria das pessoas. Como resultado, eles já não são como eram!\nVeteranos do Oeste Estranho começam jogando como Experiente (ou um Estágio acima do restante dos vaqueiros e vaqueiras em sua campanha), o que significa que eles ganham quatro Progressos imediatamente. Vá em frente e os aplique agora.\nMas há um preço. Quando você escolher esta Vantagem, saque uma única carta do Baralho de Ação. Mostre-a ao Xerife e ele vai checar a tabela na página 100 para ver em que tipo de azar você esbarrou no seu caminho para tornar-se calejado.\nCuidado – os resultados podem variar de mutilação a insanidade. O seu Xerife tem todos os detalhes. Lhe avisamos, Tex!"
+  },
+  {
+    "nome": "Duelista",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "pericias": {
+        "Provocar": 6
+      }
+    },
+    "descricao": "Seu hombre é um pistoleiro mortal, e qualquer um tolo o suficiente para lhe enfrentar ao Meio Dia vai acabar no cemitério ao pôr-do-sol. Em um duelo, este herói ou heroína recebe duas Cartas Fechadas adicionais no início do confronto. As regras de Duelo podem ser encontradas na página 53."
+  },
+  {
+    "nome": "Martelar o Cão",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {
+        "Atirar": 8
+      }
+    },
+    "descricao": "A maioria das pessoas já tem bastante problema para sacar uma azeitona e acertar um alvo com um único tiro. Atiradores extremamente habilidosos com esta Vantagem podem atingir um alvo enquanto martelam sua arma mais rápido do que uma corrente elétrica com um curto circuito.\nUm pistoleiro que queira \"martelar o cão\" segura o gatilho de uma pistola de ação simples, enquanto repetidamente bate o cão com a sua outra mão. Presumindo que sua arma esteja carregada, você pode disparar até seis tiros numa única ação. Cada disparo é um dado de Atirar com uma penalidade de Atirar de –4, juntamente com o Dado Selvagem (se quem atira for Carta Selvagem).\nUma personagem jogadora disparando todos os seis tiros, por exemplo, rola seis dados de Atirar e um Dado Selvagem. O que você perde em precisão (esperançosamente) é compensado por encher o ar de chumbo! Apenas preste atenção em quem está por perto quando martelar o cão, colega. Se obtiver 1 ou 2 em seu dado de Atirar, há uma chance de você atingir um Espectador Inocente (veja o Savage Worlds)."
+  },
+  {
+    "nome": "Martelar o Cão Aprimorado",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Heroico",
+      "atributos": {
+        "Agilidade": 10
+      },
+      "pericias": {
+        "Atirar": 10
+      },
+      "vantagens": [
+        "Martelar o Cão"
+      ]
+    },
+    "descricao": "Como Martelar o Cão, acima, mas a penalidade de Atirar aplicada a cada tiro é de apenas –2."
+  },
+  {
+    "nome": "Não Me Irrite!",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato"
+    },
+    "descricao": "O herói ou heroína com esta vantagem pode ser um animal acuado quando recebe maus tratos. Ao causar danos corpo a corpo, ele ou ela adiciona seus níveis de Ferimento à rolagem.\nUma heroína com três Ferimentos, por exemplo, adiciona mais 3 na rolagem de dano corpo a corpo!"
+  },
+  {
+    "nome": "Saque Rápido",
+    "categoria": "COMBATE",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      }
+    },
+    "descricao": "Você saca duas cartas quando gasta um Bene para ter uma Carta de Ação adicional no início de uma rodada. Você pode escolher a sua Carta de Ação final a partir de qualquer uma das suas opções disponíveis, incluindo saques adicionais de Focado, Rápido, etc.\nVocê também adiciona +2 às rolagens de Atletismo feitas para interromper as ações dos outros (incluindo resistir a ser interrompido)."
+  },
+  {
+    "nome": "Agente",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 8
+      },
+      "pericias": {
+        "Atirar": 6,
+        "Lutar": 6,
+        "Ocultismo": 6
+      }
+    },
+    "descricao": "A misteriosa Agência é responsável por erradicar a insurreição, traição, espionagem, corrupção e atos ilegais que podem mergulhar o país em outra Guerra Civil. Agentes são um grupo secreto que não compartilha informações fora de suas fileiras se puderem evitar – nem mesmo com a lei local. Espera-se que escondam suas credenciais, exceto em circunstâncias extremas e desesperadas. Leia os detalhes ultra-secretos na página 60."
+  },
+  {
+    "nome": "Batedor",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "vantagens": [
+        "Mateiro"
+      ]
+    },
+    "descricao": "Batedores são mestres da navegação na vastidão selvagem do Oeste. Quando o Xerife sacar uma carta de figura enquanto o grupo estiver viajando — indicando um encontro — o Batedor pode fazer uma rolagem de Perceber com –2 para detectar antes o perigo, criatura ou evento. Batedores sempre são considerados atentos para rolagens resistidas de Perceber contra Furtividade, ignoram até 2 pontos de penalidades em rolagens de Sobrevivência para rastrear, com uma ampliação recebem informações mais específicas sobre o que eles estão seguindo. Também adicionam +2 as rolagens de Conhecimento Geral para recordar informações sobre cidades, postos avançados, pontos de referência e poços, pessoas ou tribos ao longo de uma rota específica que já percorreram antes."
+  },
+  {
+    "nome": "Contador de Histórias",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "pericias": {
+        "Performance": 8
+      }
+    },
+    "descricao": "Um bom contador de histórias não só entretém, como também dá esperança e conforto. No Oeste Estranho, Contadores de Histórias são essenciais para salvar o mundo!\nO Xerife tem todos os detalhes na página 95, mas esta Vantagem lhe dá duas regalias. Primeiro, ao fazer uma rolagem de Persuadir ou Performance para reduzir o Nível de Medo local, o seu herói ou heroína adiciona +2 para o seu total. Em segundo lugar, quando você tem sucesso em reduzir o Nível de Medo local e obtém uma ampliação na rolagem de Persuadir ou Performance, o Contador de Histórias e qualquer um que lhe dê Suporte ganham Convicção (veja em Savage Worlds)."
+  },
+  {
+    "nome": "Coragem",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      }
+    },
+    "descricao": "Um herói ou heroína com esta Vantagem aprendeu a se blindar contra os horrores que espreitam no Oeste Estranho. Ele ou ela recebe uma rerrolagem gratuita quando faz testes de Medo."
+  },
+  {
+    "nome": "Nascido na Sela",
     "categoria": "PROFISSIONAL",
     "origem": "DEADLANDS",
     "requisitos": {
@@ -84,64 +2778,559 @@
         "Agilidade": 8
       },
       "pericias": {
-        "Atirar": 8
+        "Cavalgar": 6
       }
     },
-    "descricao": "Pode gastar Benes para 'Ventilar o Cão' (fanning the hammer) com precisão mortal ou ganhar vantagem em Duelos."
+    "descricao": "Algumas pessoas passam tanto tempo montadas, que é como se tivessem nascido na sela e vivessem inteiramente nela. Não há lugar em que prefiram estar mais do que no dorso de uma montaria de confiança.\nHeróis e heroínas com a Vantagem Nascido na Sela têm uma rerrolagem gratuita em rolagens de Cavalgar. Eles também sabem como tirar o máximo proveito de suas montarias de confiança em uma emergência. Isto aumenta a Movimentação do seu cavalo em 2 e o seu dado de corrida um passo."
   },
   {
-    "id": "veterano_oeste",
-    "nome": "VETERANO DO FAROESTE ASSOMBRADO",
+    "nome": "Patrulheiro Territorial",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Vigor": 6
+      },
+      "pericias": {
+        "Atirar": 6,
+        "Dirigir": 6,
+        "Lutar": 6,
+        "Intimidar": 6,
+        "Sobrevivência": 4
+      }
+    },
+    "descricao": "Os Delegados dos Estados Unidos policiam os estados. Patrulheiros são responsáveis pelos oito territórios – Arizona, Califórnia, Idaho, Montana, Novo México, Washington, Wyoming, o Distrito do Alasca— e um estado, o Texas, dada a longa história dessa organização. Estes cães da lei caçam ladrões, bandidos, desertores e outros fugitivos da Justiça em todos os territórios. O Epitáfio Tombstone afirma que eles muitas vezes caçam presas mais estranhas — mas só os malucos acreditam nessas histórias pra boi dormir, certo? Há mais informações sobre estes hombres durões na página 78."
+  },
+  {
+    "nome": "Soldado",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Força": 6,
+        "Vigor": 6
+      }
+    },
+    "descricao": "Esta Vantagem funciona como descrita no Savage Worlds e significa que a personagem serviu no exército. Se o herói ou heroína ainda servir no exército, ele é um soldado, ganha a Complicação Obrigação (Menor) e é pago mensalmente (se puder chegar até ele!). Espera-se que ele ou ela faça o que lhe mandarem e ponha a vida dos outros à frente da sua. Nem todo soldado defende esse princípio, mas fazem o juramento quando vestem o uniforme. Soldados podem ser rebaixados se agirem mal, abandonarem o seu posto, mostrarem covardia diante do inimigo, desobedecerem ordens ou, de outra forma, fugirem ao código de conduta militar. Rebaixamento fica inteiramente a cargo do Xerife.\nPatente: Um herói ou heroína pode começar como Sargento ou 2º Tenente, mas a sua Obrigação torna-se Maior e se espera que executem tarefas mais complexas que patentes menores podem evitar. Oficiais frequentam uma das várias academias de treinamento militar e devem ter Conhecimento Acadêmico e Batalha em d6+. A Vantagem Comando não é um requisito para nenhum dos dois, mas é altamente recomendada para ambos.\nPromoção: Independentemente da patente inicial, uma personagem servindo ativamente com a Vantagem Soldado, pode gastar um Progresso para ser promovido para a sua próxima patente. Ela não pode fazer isto mais do que três vezes, e não mais do que uma vez por Patente da personagem (não patente militar). Patentes mais altas são possíveis, mas geralmente fora do escopo normal do jogo."
+  },
+  {
+    "nome": "Trapaceiro",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "pericias": {
+        "Jogar": 6
+      }
+    },
+    "descricao": "O seu herói ou heroína leva jeito para as probabilidades, apostas e sabe quando e como blefar. Ele ou ela nunca se sente mais em casa do que quando embaralhando cartas, jogando dados ou calculando as probabilidades de uma aposta. Sua personagem tem uma rerrolagem grátis quando fazendo rolagens de Jogar. Isso inclui mascates que Barganham com o Diabo!"
+  },
+  {
+    "nome": "Delegado Federal",
+    "categoria": "PROFISSIONAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "pericias": {
+        "Atirar": 4,
+        "Cavalgar": 4,
+        "Comércio (Direito)": 4,
+        "Lutar": 4
+      }
+    },
+    "descricao": "Delegados Federais e Delegados Federais Assistentes têm autoridade legal e policial em todos os Estados Unidos. Eles podem perseguir fugitivos em territórios, mas espera-se que cooperem com os Patrulheiros locais o mais rápido possível. A sua personagem pode ser um Delegado Federal Assistente ou um Delegado Federal – a escolha é sua. Usar o distintivo de um deles concede +1 em rolagens de Persuadir e Intimidar dentro de sua jurisdição.\nDelegados Federais Assistentes são nomeados por Delegados Federais \"plenos\" e têm a Complicação Obrigação (Menor) de manter e fazer cumprir a lei. Delegados Federais têm a versão Maior da Complicação e é esperado que lidem com a maior parte das situações por conta própria. Delegados Federais ganham e podem usar Favores como Agentes ou Patrulheiros Territoriais."
+  },
+  {
+    "nome": "Reputação",
+    "categoria": "SOCIAL",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano"
+    },
+    "descricao": "Seja esta personagem marcada como heroína ou vilã, ela ganhou uma reputação em todo o Oeste Estranho. Decida se a reputação do seu herói ou heroína é boa ou má. Com uma boa Reputação, a celebridade recebe uma rerrolagem gratuita em rolagens de Persuadir com qualquer um que já tenha ouvido histórias sobre ela. Se a reputação de um fora da lei for negativa, ele adiciona mais +2 as rolagens de Intimidar entre os que a conhecem."
+  },
+  {
+    "nome": "Atormentado",
+    "categoria": "ESTRANHA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      },
+      "vantagens": [
+        "Carta Selvagem"
+      ]
+    },
+    "descricao": "Alguns pistoleiros são demasiadamente tenazes para se deitarem e ficarem mortos depois de serem assassinados. O preço que pagam é uma batalha eterna pela sua própria alma. Se escolher esta Vantagem, a sua personagem renasceu na não-vida e você pode ler detalhes pavorosos na página 63.\nA Vantagem Atormentado só pode ser selecionada na criação da personagem. Tornar-se um Atormentado mais tarde requer a eliminação da carcaça mortal e muita sorte (o Xerife tem informações sobre como isso pode ocorrer), ou pegando a Vantagem Condenado no estágio lendário.\nObservação: Converse com o seu Xerife antes de escolher esta Vantagem, porque ela às vezes pode se tornar uma Complicação involuntária para todos os outros no grupo!"
+  },
+  {
+    "nome": "Determinação",
+    "categoria": "ESTRANHA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {
+        "Espírito": 8
+      },
+      "vantagens": [
+        "Coragem"
+      ]
+    },
+    "descricao": "Através da perseverança e talvez um pouco de insanidade, estes casca-grossa reduzem em 2 as penalidades nos teste de Medo. Isto se acumula com Corajoso."
+  },
+  {
+    "nome": "Talento",
+    "categoria": "ESTRANHA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato"
+    },
+    "descricao": "O Oeste Estranho é um lugar supersticioso, onde abundam rumores e velhas lendas. Ocasionalmente, estas lendas contêm uma pitada de verdade. Um Talento é exatamente isso – folclore que se torna realidade. Agora você pode escolher um dos eventos especiais que coincidiram com o momento do nascimento da sua personagem.\n\nBastardo: Bem, é isso que o seu herói ou heroína é. Não do tipo desgraçado, mas do tipo sem pai. Dizem que uma criança nascida fora do casamento é capaz de ver o invisível. Gaste um Bene para automaticamente ser capaz de ver criaturas invisíveis e escondidas, ou aquelas que se misturam sobrenaturalmente com o ambiente, durante cinco rodadas.\n\nNascido na Véspera do Dia de Todos os Santos: dizem que os nascidos neste dia têm uma maior conexão com o mundo espiritual. Eles ocasionalmente recebem avisos se suas ações estão prestes a causar consequências desastrosas. Um herói ou heroína que Nasceu na Véspera do Dia de Todos os Santos pode gastar Convicção para rerrolar uma Falha Crítica.\n\nNascido no Natal: Bebês nascidos no Natal são particularmente resistentes a efeitos arcanos alimentados por espíritos malignos. Apenas heróis e heroínas com um Antecedente Arcano Abençoado ou Xamã podem escolher este Talento. Quando alvo de um poder de qualquer outro Antecedente Arcano, um herói ou heroína com este Talento pode gastar um Bene para negar o efeito e forçar a pessoa conjurando a fazer uma rolagem de Espírito (–4) ou sofrerá o estado Abalado.\n\nParto Invertido: Dizem que um bebê nascido sentado tem a incrível capacidade de curar feridas. O seu herói ou heroína é uma dessas pessoas e pode gastar um Bene para usar o poder cura. Ele ou ela não precisa fazer uma rolagem e automaticamente consegue um único sucesso (dessa forma, curando um Ferimento).\n\nSétimo Filho: Seu herói ou heroína está destinado à grandeza; sua lenda crescerá no Oeste Estranho. Este hombre tem a capacidade de controlar o destino. Sempre que um Bene é usado na sua presença, ele pode gastar um de seus próprios Benes para negar o seu efeito.\n\nEstrela Cadente: Uma estrela cadente ou um cometa iluminou o céu no momento do nascimento do seu herói ou heroína e muitos acreditam que isto previu suas habilidades como um grande líder. No início de qualquer combate, você pode gastar um Bene para dobrar o alcance do Raio de Comando da personagem. Este aumento de alcance dura até o final do encontro.\n\nNascido numa Tempestade: Sua personagem nasceu no meio de uma grande tempestade. Entre o seu povo, diz-se que o medo não tem poder sobre ela. Quando gastar um Bene para rerrolar um teste de Medo, ignore todas as penalidades de Medo, tanto de criaturas quanto do Nível de Medo local."
+  },
+  {
+    "nome": "Condenado",
+    "categoria": "LENDARIA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {
+        "Espírito": 6
+      },
+      "vantagens": [
+        "Carta Selvagem",
+        "Reputação"
+      ]
+    },
+    "descricao": "Pistoleiros velhos não morrem, eles apenas.… Está bem, eles de fato morrem. Normalmente de formas confusas e embaraçosas. Mas se o sua personagem veterana calejada do Oeste Estranho cair, ela definitivamente vai voltar. Escolher esta Vantagem é uma apólice de seguro contra ter seus planos para esta velha mão encerrados prematuramente.\nSe o seu herói ou heroína for morto, ele ou ela retorna automaticamente do túmulo como um Atormentado (veja página 63 para mais detalhes). O tempo que isso leva depende dos caprichos do Xerife e da história. Pode ser quase instantaneamente, ou pode ser depois dos seus colegas terem lhe colocado numa caixa de pinho e lido o Salmo 23. Uma vez que você retorne como um Atormentado, você pode trocar esta Vantagem por uma Vantagem de Atormentado adicional."
+  },
+  {
+    "nome": "Determinação Verdadeira",
+    "categoria": "LENDARIA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {
+        "Espírito": 10
+      },
+      "vantagens": [
+        "Determinação"
+      ]
+    },
+    "descricao": "Estas pessoas veteranas e calejadas viram coisas que fariam os olhos dos outros saltarem como se tivessem visto uma cascavel no seu leito de rocha. Elas ignoram todas as penalidades ao fazerem testes de Medo e se falharem, recebem uma rerrolagem gratuita na Tabela de Efeitos de Medo se assim desejarem."
+  },
+  {
+    "nome": "Eis um Cavalo Amarelo...",
+    "categoria": "LENDARIA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Lendário"
+    },
+    "descricao": "O Cavaleiro Solitário tinha Silver, Zorro tinha Tornado, e o corcel do seu caballero não é menos impressionante. Seja um novo garanhão ou o mesmo um pônei fiel que o seu herói ou heroína tem desde jovem, há algo de especial neste cavalo. Ele tem personalidade. A besta leal usa as estatísticas de um cavalo de guerra (veja em Savage Worlds), mas ganha a habilidade especial Destemido e a Vantagem Noção do Perigo. Além disso, o cavalo é uma Carta Selvagem e começa cada sessão com os seus dois Benes. Se a fiel montaria morrer, o seu hombre pode começar a treinar outro, um processo que normalmente leva algumas semanas de tempo de jogo (a critério do Xerife)."
+  },
+  {
+    "nome": "Mão Direita do Diabo",
+    "categoria": "LENDARIA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "pericias": {
+        "Atirar": 10,
+        "Lutar": 10,
+        "Atletismo": 10
+      },
+      "vantagens": [
+        "Arma Predileta"
+      ]
+    },
+    "descricao": "O teu herói ou heroína é rápido no gatilho e renomado como um \"hombre\" ruim. As pessoas começaram a lhe chamar de Mão Direita do Diabo (ou Esquerda se o seu vaqueiro ou vaqueira é canhoto, em vez de destro). Seja qual for a arma que o seu atirador normalmente usa na sua mão favorecida, ela foi infundida com parte do status mítico que lhe foi concedido, transformando essa arma numa poderosa relíquia. Uma arma relíquia causa um dado extra de dano do mesmo tipo que o maior dado de dano dessa arma. Então, um rifle Colt revolver relíquia causaria um dano terrível de 3d8. A Vantagem permanece com a arma, por isso, se o atirador perdê-la, também perde a Vantagem – pelo menos até recuperá-la de volta. E sim, qualquer outro que a encontre nesse meio tempo recebe os seus benefícios!"
+  },
+  {
+    "nome": "Rápido Como um Raio",
+    "categoria": "LENDARIA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {
+        "Agilidade": 10
+      },
+      "vantagens": [
+        "Rápido"
+      ]
+    },
+    "descricao": "Quando o seu herói ou heroína pega o ferro, as pessoas raramente têm tempo para piscar, muito menos para derrubá-lo. Alguns dizem que ele ou ela tem o gatilho mais rápido do Oeste. Você ganha uma quarta ação. Isto aumenta a penalidade máxima de Ação Múltipla para –6 (que pode ser reduzida por quaisquer Vantagens ou habilidades que o fazem, como Atirar ou Lutar com Duas Armas)."
+  },
+  {
+    "nome": "Arame Espiritual",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Esta Vantagem permite a um desmorto criar uma barreira que mantém afastado fantasmas, assombrações e outras entidades etéreas — não tem nenhum efeito em entidades físicas. O Atormentado faz uma rolagem de Espírito e, em seguida, coloca um Modelo Médio de Explosão centrado em si mesmo. O Arame Espiritual persiste enquanto o vaqueiro ou vaqueira se concentrar nele, o que inflige uma penalidade de –2 em outras rolagens."
+  },
+  {
+    "nome": "Cavar",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "O Atormentado ganha a capacidade de escavar através da terra bruta, como no poder (veja em Savage Worlds). O desmorto pode cavar em terra macia e se mover através dela com metade de sua Movimentação (ele ou ela não pode correr). Normalmente, não se pode ser atacado enquanto cavando, e é possível tentar surpreender oponentes que não lhes vejam chegando ao fazer uma rolagem resistida de Furtividade contra Perceber. Se tiver sucesso, quem cava adiciona +2 ao seu ataque e rolagens de dano nessa rodada, ou +4 com uma ampliação e, nesse caso, ganha a Finalização sobre o alvo."
+  },
+  {
+    "nome": "Chamado dos Mortos",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Chamado dos Mortos é a habilidade de sentir a direção de todos os cadáveres — animais, humanos ou outros — dentro de 1,5 km. Isto aparece quase como um radar na mente dos Atormentados. Detectar os mortos é uma ação, mas não requer uma rolagem de característica. E sim, isso absolutamente pode ser usado para dizer se um indivíduo é um cadáver ambulante, embora não lhe diga de que tipo — outro Atormentado, um vampiro, um morto ambulante, etc."
+  },
+  {
+    "nome": "Contorcer",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Heroico",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Contorcer permite que um Atormentado desloque praticamente todos os ossos do seu corpo – incluindo escápulas, costelas e pelve. Para escapar de estar Preso ou Enredado, ou se espremer através de uma fenda com aproximadamente a largura do crânio do Atormentado, como uma ação, o desmorto faz uma rolagem de Vigor para deslocar alguns ossos de suas juntas e deslizar ou rastejar através de uma abertura. Falha significa que ele sofre Fadiga e não consegue nenhum progresso (ou recebe um Ferimento com uma Falha Crítica). Sucesso significa que ele ou melhora sua situação em um passo (de Preso para Enredado) ou desliza através da fenda (mas isto leva todo o seu turno — nenhuma outra ação é permitida). Uma ampliação significa que o contorcionista não está mais Preso ou Enredado, ou se move através de uma abertura como um movimento normal."
+  },
+  {
+    "nome": "Corcel Infernal",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Um Corcel Infernal é um tipo estranho de cavalo desenterrado dos Campos de Caça pelo manitu do Atormentado. Quando invocado (escolhendo esta Vantagem), ele sai de um portal do Inferno, bufando fogo, com olhos flamejantes e uma nuvem de enxofre em seu encalço. Em poucos minutos a besta chega a um acordo com o reino mortal e se torna um cavalo normal — embora um que é claramente mais feroz e poderoso.\nO cavalo tem as estatísticas habituais para um Cavalo de Guerra (veja em Savage Worlds), é destemido e uma Carta Selvagem. A besta é Leal e tem uma inteligência sinistra que compreende os comandos do seu mestre (trate a sua Astúcia como humana em vez de animal). Se o Corcel Infernal for morto, o Atormentado não recebe um substituto automaticamente! No entanto, ele pode pegar a Vantagem novamente para convocar uma nova besta. Um Atormentado não pode ter mais do que um Corcel Infernal por vez."
+  },
+  {
+    "nome": "Falar com os Mortos",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Atormentados com este poder podem se aproveitar da conexão espiritual para convocar o espírito de um cadáver e falar com ele. O contato requer toque e o cadáver não pode estar morto há mais tempo do que o dado de Astúcia do Atormentado em meses. Uma vez iniciado o contato, o Xerife rola um d6. Em um 2-6, o espírito é arrastado e responde a algumas perguntas antes de ser puxado de volta para os Campos de Caça e não pode ser convocado novamente até a próxima lua cheia. Com 1, um manitu responde em vez disso, fingindo ser o espírito do cadáver e causa o máximo de estrago possível!"
+  },
+  {
+    "nome": "Hálito da Sepultura",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Hálito da Sepultura é a habilidade de reunir o pior fedor de decadência no corpo de um Atormentado, sobrenaturalmente piorá-lo ainda mais e expeli-lo sobre um alvo desavisado ao alcance do braço. Para fazer isso, ele ou ela sopra uma nuvem de vapores tóxicos em um Modelo Médio de Explosão adjacente à sua posição. Aqueles atingidos devem fazer uma rolagem de Vigor com –2 ou sofrem Fadiga. Este efeito só pode causar Incapacitação, não morte. Seres que não respiram são imunes. Um Atormentado só pode liberar esses vapores imundos depois de comer alguma coisa e esperar pelo menos uma hora."
+  },
+  {
+    "nome": "Hoste Profana",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Esta Vantagem concede ao Atormentado um grupo de cinco aliados Extras. A hoste consiste em cinco Mortos Errantes. Eles são animados por manitus menores, que servem como aliados cruéis e caóticos. Eles podem falar, usar armas ou fazer qualquer outra coisa que uma pessoa normal pode fazer. O herói ou heroína não tem uma ligação mental com a sua Hoste Profana, mas quando lhes dá ordens, eles são obrigados a segui-las. Se algum deles for perdido, o Atormentado precisa apenas de um novo suprimento de cadáveres para deixar os manitus voltarem."
+  },
+  {
+    "nome": "Imitar",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Quando qualquer poder que usa a perícia Conjurar é usado diante do Atormentado, ele ganha a capacidade de lançá-lo. Ele só pode fazer isto uma vez e deve estar no mesmo encontro em que o viu sendo usado. O Atormentado usa Conjurar para lançar o feitiço se possuir essa perícia, ou Astúcia se não a tiver. Quaisquer Pontos de Poder ou modificadores devem ser idênticos. Uma Falha Crítica significa que o Atormentado está Fadigado e todos os poderes atualmente mantidos (se houver) terminam."
+  },
+  {
+    "nome": "Mão de Defunto",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Atormentados com esse poder continuam a controlar partes decepadas de seu corpo – normalmente uma mão ou um olho – por curtos períodos de tempo. Para usar a Vantagem, o desmorto decepa a própria mão ou arranca um globo ocular. A parte do corpo decepada permanece ativa e sob o controle mental do seu dono até uma Distância de 1,5 km. Mãos cortadas usam o perfil da Mão Animada (Mov 6). Olhos magicamente transmitem tudo o que enxergam para o seu dono e podem rolar com Mov 6. Decepar uma parte do corpo causa um Ferimento imediato e qualquer Complicação associada."
+  },
+  {
+    "nome": "Máscara da Morte",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "pericias": {
+        "Persuadir": 6
+      },
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "O uso desta Vantagem permite que um Atormentado se pareça como quando ainda estava vivo, negando as atitudes hostis dos outros e a penalidade inata de –2 em Persuadir que os Atormentados possuem. Máscara da Morte é ativada com uma ação, mas não requer uma rolagem de Característica. Uma vez ativada, os Atormentados podem mantê-la pelo tempo que quiserem. Se o Atormentado for Abalado, Atordoado ou sofrer um ou mais Ferimentos, ele deve fazer uma rolagem de Espírito com –2 para manter o disfarce ativo."
+  },
+  {
+    "nome": "Pesadelos",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Um Atormentado cujo verme cerebral lhe concede este poder, pode partilhar a sua miséria, dando a outras mentes vivas sonhos sombrios e terríveis. O Atormentado precisa de algo do alvo para causar pesadelos sobre ele — pode ser algo de seu corpo ou um item de significado. O desmorto então simplesmente decide se ele quer que seu manitu atormente o alvo todas as noites. Se assim for, a vítima tem a Complicação Terrores Noturnos enquanto o Atormentado desejar atormentá-la. Uma vítima pode livrar-se dos pesadelos matando o Atormentado ou dormindo em solo santificado. Dissipar não tem efeito, mas detectar arcano sente uma presença maligna na vítima."
+  },
+  {
+    "nome": "Possessão",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Se um manitu é bom em alguma coisa, é assumir o controle do corpo de outra pessoa. Este poder concede ao Atormentado uma capacidade limitada de fazer o mesmo. Controlar alguém funciona exatamente como o poder fantoche do Savage Worlds, mas o Atormentado usa seu Espírito –2 para a rolagem de perícia arcana. O desmorto fica Distraído enquanto mantiver o controle. Ele pode manter o poder o quanto quiser, mas permanece Distraído ao fazê-lo. Se for Abalado, Atordoado ou Ferido, ele tem que fazer uma rolagem de Astúcia ou o poder também termina."
+  },
+  {
+    "nome": "Rápido Como a Morte",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Normalmente, os cadáveres não se movem muito depressa. Mas o Atormentado com esta Vantagem pode se mover com velocidade sobrenatural quando a necessidade surge. Isto aumenta a sua Movimentação em 3 e o seu dado de corrida em um passo. Isto se acumula com Ligeiro e habilidades semelhantes!"
+  },
+  {
+    "nome": "Rastro de Dentes",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Aqueles com esta Vantagem podem controlar partes do corpo, estejam ligadas ao resto do cadáver ou não! Um Atormentado inteligente pode aprender a usá-la não só para manter o controle de suas partes, mas também saber do paradeiro de seus inimigos. Ele precisa simplesmente colocar um pedaço substancial de si mesmo (osso, dente) dentro de uma pessoa ou em algo dela. Enquanto a parte do Atormentado estiver dentro de 15 km, ele ou ela pode automaticamente sentir sua direção e distância aproximada."
+  },
+  {
+    "nome": "Rastro de Dentes Aprimorado",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Heroico",
+      "vantagens": [
+        "Atormentado",
+        "Rastro de Dentes"
+      ]
+    },
+    "descricao": "Como acima, exceto que a parte pode ser rastreada até 150 km de distância."
+  },
+  {
+    "nome": "Rigor Mortis",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Heroico",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Um desmorto usa este poder para infligir uma dor terrível a todos os que se aproximam demais do seu cadáver. Ativar Rigor Mortis é uma ação livre que cria um campo de agonia do tamanho de um Modelo Médio de Explosão centrado no Atormentado. Todos os que entram no modelo (amigos e inimigos) são devastados pela dor e rigidez e ficam Distraídos. A condição termina no final do turno da vítima, se ela não estiver mais na área de efeito. Rigor Mortis pode ser mantido enquanto o Atormentado desejar, mas termina se ele não fizer uma rolagem de Astúcia quando for Abalado, Atordoado ou Ferido."
+  },
+  {
+    "nome": "Silencioso Como um Cadáver",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "pericias": {
+        "Furtividade": 8
+      },
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Enquanto os pés deste desmorto estiverem em contato com a terra, ele pode se mover sem fazer barulho (mesmo que esteja usando botas). Ele adiciona +4 à Furtividade onde o som for o principal fator de detecção."
+  },
+  {
+    "nome": "Sono dos Mortos",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Manitus têm um talento para fazer os mortais dormirem. Atormentados com esta Vantagem podem acessar as habilidades dos manitus para enviar uma vítima diretamente para a Terra de Nod com um único toque. Até mesmo outros atormentados são afetados. Isso funciona muito como o poder do sono (veja em Savage Worlds), exceto que não custa Pontos de Poder, tem um Alcance de Toque e é decretado com uma rolagem resistida de Espírito contra o alvo como uma ação. Se o Atormentado vencer a rolagem resistida de Espírito, o alvo adormece por um minuto ou 1d6 horas com uma ampliação. Isto não pode ser mantido."
+  },
+  {
+    "nome": "Toque Diabólico",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Um Atormentado com esta vantagem pode, com um toque, interromper o funcionamento de qualquer engenhoca de cientista louco ou dispositivo Infernal. Isto é uma ação e uma rolagem de Espirito. Se for bem-sucedido, qualquer falha ao usar o dispositivo conta como uma Falha Crítica. Isto dura três rodadas após o dispositivo ser tocado, ou cinco com uma ampliação."
+  },
+  {
+    "nome": "Visão Espiritual",
+    "categoria": "ATORMENTADO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "vantagens": [
+        "Atormentado"
+      ]
+    },
+    "descricao": "Visão Espiritual permite que o Atormentado toque a mente do manitu e consiga dar uma rápida olhada no mundo dos espíritos. Ativar a Visão Espiritual é uma ação livre (mas só pode ser feito uma vez por turno se o jogo estiver em rodadas). Isto é desorientador, pois a personagem fica Distraída até o final do turno após desativar a Visão Espiritual. Enquanto espreita os campos de Caça, o Atormentado pode ver coisas como manitus, Nível de Medo, efeitos mágicos, ou se um manitu está contorcendo-se dentro de alguém. Isto pode permitir ao desmorto notar uma criatura Invisível se ela possuir um espírito. Além disso, qualquer criatura com a Habilidade Especial de Medo deixa um rastro sombrio através do mundo espiritual por até uma hora (teste de Perceber para seguir)."
+  },
+  {
+    "nome": "Mago do Metal",
+    "categoria": "CIENTISTA LOUCO",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Novato",
+      "pericias": {
+        "Ciência Estranha": 8,
+        "Ocultismo": 6
+      },
+      "vantagens": [
+        "Antecedente Arcano (Cientista Louco)"
+      ]
+    },
+    "descricao": "Magos do Metal são inventores que descobriram e aceitaram o fato de que seus poderes são dados a eles por manitus. Magos de Metal usam dispositivos como qualquer outro cientista estranho, mas também podem Barganhar com o Diabo como um mascate! Isso permite que eles lancem quaisquer poderes disponíveis para cientistas loucos, mesmo aqueles que eles não possuem ou que estão acima de seu Estágio. O processo envolve sacar cartas de poker. Veja detalhes completos nas regras de Barganhar com o Diabo para Magos do Metal."
+  },
+  {
+    "nome": "Antecedente Arcano (Vuduísmo)",
     "categoria": "ANTECEDENTE",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
-        "Espírito": 6,
-        "Vigor": 6
+        "Espírito": 8
+      },
+      "pericias": {
+        "Fé": 4
       }
     },
-    "descricao": "Começa no estágio Experiente (4 avanços), mas deve comprar uma carta do baralho de ação para determinar um trauma ou evento passado horrível."
+    "descricao": "Voduístas são houngans e mambos cujo poder vem de espíritos chamados loas. Usam Fé como perícia arcana (baseada em Espírito). Têm 15 Pontos de Poder e 2 poderes iniciais. Uma Falha Crítica em Fé causa Fadiga e encerra poderes. Voduístas precisam carregar bolsas gris-gris para ativar seus poderes. Podem escolher Vantagens de Milagres."
   },
   {
-    "id": "ATORMENTADO",
-    "nome": "ATORMENTADO",
-    "categoria": "ESTRANHAS",
+    "nome": "Esteve na Encruzilhada",
+    "categoria": "VODUISTA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {
+        "Fé": 8
+      },
+      "vantagens": [
+        "Antecedente Arcano (Vuduísmo)"
+      ]
+    },
+    "descricao": "Este herói ou heroína quase morreu em algum momento, mas retornou. Ele ou ela viu a encruzilhada entre os mundos e os espíritos ouvem o seu chamado melhor do que os da maioria. Essa Vantagem só pode ser escolhida na criação da personagem. A personagem deve ter sido Incapacitado devido a um efeito que poderia causar a morte. Recebe uma rerrolagem gratuita em rolagens de Fé."
+  },
+  {
+    "nome": "Favorecido",
+    "categoria": "VODUISTA",
+    "origem": "DEADLANDS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {
+        "Fé": 8
+      },
+      "vantagens": [
+        "Antecedente Arcano (Vuduísmo)"
+      ]
+    },
+    "descricao": "Esta Vantagem só pode ser escolhida uma vez e significa uma relação especial entre uma mambo ou um houngan e um loa específico. Só beneficia aqueles que têm os feitiços aspecto do loa rada ou a fúria do loa petro. O herói ou heroína deve clara e visivelmente marcar sua lealdade ao loa escolhido de alguma forma. Enquanto esta homenagem estiver presente, ambos os poderes custam 3 Pontos de Poder ao invés de 5."
+  },
+  {
+    "nome": "Antecedente Arcano (Bruxa)",
+    "categoria": "ANTECEDENTE",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
-        "Espírito": 6,
-        "Vigor": 6
+        "Espírito": 8
       },
-      "observacoes": "Deve ter morrido e voltado"
+      "pericias": {
+        "Conjurar": 4
+      }
     },
-    "descricao": "+2 em Intimidar. Não respira, não come. +2 para recuperar Abalado. Precisa lutar contra o Espírito Obscuro pelo controle (Dominion)."
+    "descricao": "Bruxas e feiticeiros extraem energia diretamente da parte mais sombria dos Campos de Caça (Magia das Trevas). Usam Conjurar (Astúcia). 10 Pontos de Poder, 3 poderes iniciais. Falha Crítica causa Fadiga, encerra poderes e dá 1 ponto de Corrupção. Ganham rerrolagens em áreas de Nível de Medo alto (4-5) ou Terra Morta. Podem pegar a Vantagem Sangue dos Whateley."
   },
   {
-    "id": "garras_ATORMENTADO",
-    "nome": "GARRAS (ATORMENTADO)",
-    "categoria": "ATORMENTADO",
+    "nome": "Bruxa de Wichita",
+    "categoria": "BRUXA",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Novato",
-      "vantagens_previas": [
-        "ATORMENTADO"
+      "pericias": {
+        "Conjurar": 8
+      },
+      "vantagens": [
+        "Antecedente Arcano (Bruxa)"
       ]
     },
-    "descricao": "Pode estender garras de osso ou energia. For+d6, PA 2."
+    "descricao": "Mina Devlin ensina suas meninas órfãs a ler, escrever, aritmética, etiqueta e, é claro, bruxaria! A máscara negra e roupas de couro identificam a bruxa. Quando totalmente paramentada, ela adiciona +1 às rolagens de Intimidar e +1 às rolagens de Persuadir com quem possa sentir atração por ela (mas -1 com autoridades). As bruxas de Wichita também aprendem a carregar o seu chicote com energia violenta (custa 1 PP, ação livre, se acertar com ampliação adiciona dado de bônus ao dano)."
   },
   {
-    "id": "costura_cadaverica",
-    "nome": "COSTURA CADAVÉRICA (ATORMENTADO)",
-    "categoria": "ATORMENTADO",
+    "nome": "Familiar",
+    "categoria": "BRUXA",
     "origem": "DEADLANDS",
     "requisitos": {
-      "estagio": "Experiente",
-      "vantagens_previas": [
-        "ATORMENTADO"
+      "estagio": "Novato",
+      "pericias": {
+        "Conjurar": 8
+      },
+      "vantagens": [
+        "Antecedente Arcano (Bruxa)"
       ]
     },
-    "descricao": "Cura natural acelerada. Pode 'costurar' ferimentos para curar instantaneamente com teste de Vigor."
+    "descricao": "Sua bruxa tem uma pequena criatura (Tamanho –3) que a serve. O familiar é Leal, uma Carta Selvagem, e tem ligação mental. A bruxa pode transferir Ferimentos/Fadiga para ele, aumentar uma característica dele, usar seus sentidos (15km) ou usar seus 5 Pontos de Poder próprios."
   }
 ]
