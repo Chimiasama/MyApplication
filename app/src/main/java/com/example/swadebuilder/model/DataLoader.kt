@@ -51,7 +51,6 @@ object DataLoader {
         ModuleFile("horror_equipamentos.json"),
         ModuleFile("scifi_equipamentos.json"),
         ModuleFile("crystal_equipamentos.json"),
-        ModuleFile("trilhador_equipamentos.json"),
         ModuleFile("pathfinder_equipamentos.json"),
         ModuleFile("super_equipamentos.json"),
         ModuleFile("wiseguys_equipamentos.json"),
