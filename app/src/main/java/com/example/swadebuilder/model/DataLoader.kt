@@ -61,7 +61,8 @@ object DataLoader {
     private val skillModules = listOf(
         ModuleFile("basico_pericias.json"),
         ModuleFile("adg_pericias.json"),
-        ModuleFile("fantasia_pericias.json")
+        ModuleFile("fantasia_pericias.json"),
+        ModuleFile("horror_pericias.json")
     )
 
     private val advantageModules = listOf(
