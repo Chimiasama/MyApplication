@@ -61,7 +61,15 @@ object DataLoader {
     private val skillModules = listOf(
         ModuleFile("basico_pericias.json"),
         ModuleFile("adg_pericias.json"),
-        ModuleFile("fantasia_pericias.json")
+        ModuleFile("fantasia_pericias.json"),
+        ModuleFile("horror_pericias.json"),
+        ModuleFile("wiseguys_pericias.json"),
+        ModuleFile("scifi_pericias.json"),
+        ModuleFile("deadlands_pericias.json"),
+        ModuleFile("pathfinder_pericias.json"),
+        ModuleFile("sol_vapor_pericias.json"),
+        ModuleFile("crystal_pericias.json"),
+        ModuleFile("super_pericias.json")
     )
 
     private val advantageModules = listOf(
@@ -102,7 +110,8 @@ object DataLoader {
         ModuleFile("adg_ancestralidades.json"),
         ModuleFile("sol_vapor_ancestralidades.json"),
         ModuleFile("deadlands_ancestralidades.json"),
-        ModuleFile("pathfinder_ancestralidades.json")
+        ModuleFile("pathfinder_ancestralidades.json"),
+        ModuleFile("super_ancestralidades.json")
     )
 
     // --- Loading Logic ---
