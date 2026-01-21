@@ -88,7 +88,7 @@ object DataLoader {
         ModuleFile("crystal_complicacoes.json"),
         ModuleFile("adg_complicacoes.json"),
         ModuleFile("sol_vapor_complicacoes.json"),
-        ModuleFile("deadlands_complicacoes.json"),
+        ModuleFile("deadlands_complicacoes.json", originOverride = "DEADLANDS"),
         ModuleFile("pathfinder_complicacoes.json")
     )
 
