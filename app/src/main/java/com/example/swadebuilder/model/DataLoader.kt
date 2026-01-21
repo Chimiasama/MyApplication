@@ -97,7 +97,6 @@ object DataLoader {
         ModuleFile("fantasia_ancestralidades.json"),
         ModuleFile("horror_ancestralidades.json"),
         ModuleFile("scifi_ancestralidades.json"),
-        ModuleFile("super_ancestralidades.json"),
         ModuleFile("wiseguys_ancestralidades.json"),
         ModuleFile("crystal_ancestralidades.json"),
         ModuleFile("adg_ancestralidades.json"),
