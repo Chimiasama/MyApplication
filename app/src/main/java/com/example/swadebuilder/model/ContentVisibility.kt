@@ -21,7 +21,7 @@ fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
     if (modoSupers) add("SUPER")
     if (compendioHorrorAtivo) add("HORROR")
     if (compendioPathfinderAtivo) add("PATHFINDER")
-    if (compendioDeadlandsAtivo) add("OESTE_ESTRANHO")
+    if (compendioDeadlandsAtivo) add("DEADLANDS")
     if (compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
     if (compendioCidadeSolVaporAtivo) add("CIDADE_SOL_VAPOR")
     if (compendioWiseguysAtivo) add("WISEGUYS")
@@ -46,7 +46,7 @@ fun CriadorState.isVantagemVisible(
     val isFantasia = origemNorm == "FANTASIA"
     val isHorror = origemNorm == "HORROR"
     val isBuscatrilha = origemNorm == "PATHFINDER"
-    val isDeadlands = origemNorm == "OESTE_ESTRANHO"
+    val isDeadlands = origemNorm == "DEADLANDS"
     val isAdg = origemNorm == "ARTE_DA_GUERRA"
     val isCidadeSolVapor = origemNorm == "CIDADE_SOL_VAPOR"
     val isWiseguys = origemNorm == "WISEGUYS"
@@ -99,7 +99,7 @@ fun CriadorState.isVantagemVisible(
         }
     }
 
-    val isActive = (isBasico && !compendioFantasiaAtivo) ||
+    val isActive = (isBasico && !compendioFantasiaAtivo && !compendioDeadlandsAtivo) ||
             (isAdg && compendioArteDaGuerraAtivo) ||
             (isSuper && modoSupers) ||
             (isFantasia && compendioFantasiaAtivo) ||
