@@ -1,7 +1,7 @@
 [
   {
     "id": "adivinhacao",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ADIVINHAÇÃO",
     "estagio": "Experiente",
     "pontosDePoder": 5,
@@ -23,7 +23,7 @@
   },
   {
     "id": "ajuda",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "AJUDA",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -55,7 +55,7 @@
   },
   {
     "id": "alivio",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ALIVIO",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -70,7 +70,7 @@
   },
   {
     "id": "amigo_das_feras",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "AMIGO DAS FERAS",
     "estagio": "Novato",
     "pontosDePoder": "Especial",
@@ -96,7 +96,7 @@
   },
   {
     "id": "amigo_feras",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "AMIGO DAS FERAS",
     "estagio": "Novato",
     "pontosDePoder": "Especial",
@@ -122,7 +122,7 @@
   },
   {
     "id": "amortecer",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "AMORTECER",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -137,7 +137,7 @@
   },
   {
     "id": "andar_nas_paredes",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ANDAR NAS PAREDES",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -163,7 +163,7 @@
   },
   {
     "id": "andar_paredes",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ANDAR NAS PAREDES",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -189,7 +189,7 @@
   },
   {
     "id": "animacao",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ANIMACAO",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -204,7 +204,7 @@
   },
   {
     "id": "armadura",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ARMADURA",
     "estagio": "—",
     "pontosDePoder": "—",
@@ -220,7 +220,7 @@
   },
   {
     "id": "atordoar",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ATORDOAR",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -249,7 +249,7 @@
   },
   {
     "id": "aumentar_reduzir_caracteristica",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "AUMENTAR/REDUZIR CARACTERÍSTICA",
     "estagio": "Novato",
     "pontosDePoder": 3,
@@ -282,7 +282,7 @@
   },
   {
     "id": "banir",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "BANIR",
     "estagio": "Veterano",
     "pontosDePoder": 3,
@@ -293,7 +293,7 @@
       "símbolos arcanos",
       "punhado de sal"
     ],
-    "descricao": "Banir manda entidades de planos imateriais de volta para suas dimensões nativas. Isso inclui fantasmas, demônios, elementais e criaturas similares (a critério do Mestre). Banir uma criatura é uma rolagem resistida da perícia arcana contra o Espírito do alvo. Sucesso significa que o alvo é Abalado e cada ampliação causa um Ferimento. Se isso Incapacitar o alvo, ele retorna para seu plano nativo de existência. Entidades Banidas podem retornar quando o Mestre de Jogo considerar apropriado, como na próxima lua cheia, quando conjuradas novamente ou até mesmo algumas rodadas depois se for uma criatura particularmente poderosa sob as condições certas ou em um lugar de poder.",
+    "descricao": "Banir funciona como descrito em Savage Worlds, mas usá-lo nos Atormentados requer alguma descrição adicional.\nO manitu dentro de um Atormentado nunca pode ser banido ou destruído permanentemente com este poder — Ele está ligado ao corpo e espírito do hospedeiro. Um banimento bem-sucedido, no entanto, torna a coisa odiosa \"inerte\" por uma hora. Durante este tempo, os Atormentados não podem usar nenhuma das suas Vantagens de Atormentado ou Deixar o Diabo Sair, mas ele mantém as habilidades básicas concedidas por ser um morto-vivo.\nSe o manitu obteve Domínio total, a consciência do hospedeiro retorna enquanto ele está inerte, mas é subjugada mais uma vez quando o manitu reassume seu controle (e não está mais inerte).",
     "modificadores": [],
     "tags": [
       "stage:veterano",
@@ -304,7 +304,7 @@
   },
   {
     "id": "barreira",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "BARREIRA",
     "estagio": "Experiente",
     "pontosDePoder": 2,
@@ -350,7 +350,7 @@
   },
   {
     "id": "bolso_dimensional",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "BOLSO DIMENSIONAL",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -365,7 +365,7 @@
   },
   {
     "id": "bugigangas",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "BUGIGANGAS",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -380,7 +380,7 @@
   },
   {
     "id": "busca_visao",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "BUSCA VISAO",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -395,7 +395,7 @@
   },
   {
     "id": "caminhar_ermos",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "CAMINHAR ERMOS",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -410,7 +410,7 @@
   },
   {
     "id": "campo_de_dano",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "CAMPO DE DANO",
     "estagio": "Experiente",
     "pontosDePoder": 4,
@@ -437,7 +437,7 @@
   },
   {
     "id": "cavar",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "CAVAR",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -468,7 +468,7 @@
   },
   {
     "id": "cegar",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "CEGAR",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -501,7 +501,7 @@
   },
   {
     "id": "confusao",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "CONFUSÃO",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -529,7 +529,7 @@
   },
   {
     "id": "conjurar_aliado",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "CONJURAR ALIADO",
     "estagio": "Novato",
     "pontosDePoder": "2+",
@@ -566,7 +566,7 @@
   },
   {
     "id": "consagrar",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "CONSAGRAR",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -581,7 +581,7 @@
   },
   {
     "id": "convocar_aliado",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "CONJURAR ALIADO",
     "estagio": "Novato",
     "pontosDePoder": "2+",
@@ -618,7 +618,7 @@
   },
   {
     "id": "cova",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "COVA",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -633,7 +633,7 @@
   },
   {
     "id": "crescimento_encolhimento",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "CRESCIMENTO/ENCOLHIMENTO",
     "estagio": "Experiente",
     "pontosDePoder": "2 por ponto de mudança de Tamanho",
@@ -655,7 +655,7 @@
   },
   {
     "id": "cura",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "CURA",
     "estagio": "Novato",
     "pontosDePoder": 3,
@@ -693,7 +693,7 @@
   },
   {
     "id": "dadiva_do_guerreiro",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "DÁDIVA DO GUERREIRO",
     "estagio": "Experiente",
     "pontosDePoder": 4,
@@ -722,7 +722,7 @@
   },
   {
     "id": "dano_campo",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "CAMPO DE DANO",
     "estagio": "Experiente",
     "pontosDePoder": 4,
@@ -749,7 +749,7 @@
   },
   {
     "id": "deflexao",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "DEFLEXÃO",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -777,7 +777,7 @@
   },
   {
     "id": "detectar_ocultar_arcano",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "DETECTAR/OCULTAR ARCANO",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -814,7 +814,7 @@
   },
   {
     "id": "devastacao",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "DEVASTAÇÃO",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -847,7 +847,7 @@
   },
   {
     "id": "disfarce",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "DISFARCE",
     "estagio": "Experiente",
     "pontosDePoder": 2,
@@ -880,7 +880,7 @@
   },
   {
     "id": "dissipar",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "DISSIPAR",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -912,7 +912,7 @@
   },
   {
     "id": "drenar_pontosDePoder",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "DRENAR PONTOS DE PODER",
     "estagio": "Veterano",
     "pontosDePoder": 2,
@@ -934,7 +934,7 @@
   },
   {
     "id": "elo_mental",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ELO MENTAL",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -962,7 +962,7 @@
   },
   {
     "id": "empatia",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "EMPATIA",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -990,7 +990,7 @@
   },
   {
     "id": "enredar",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ENREDAR",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -1023,7 +1023,7 @@
   },
   {
     "id": "enterrar",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ENTERRAR",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -1038,7 +1038,7 @@
   },
   {
     "id": "entidade",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ENTIDADE",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -1053,7 +1053,7 @@
   },
   {
     "id": "escuridao",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ESCURIDAO",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -1068,7 +1068,7 @@
   },
   {
     "id": "explosao",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "EXPLOSÃO",
     "estagio": "Experiente",
     "pontosDePoder": 3,
@@ -1104,7 +1104,7 @@
   },
   {
     "id": "falar_idioma",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "FALAR IDIOMA",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -1132,7 +1132,7 @@
   },
   {
     "id": "fantoche",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "FANTOCHE",
     "estagio": "Veterano",
     "pontosDePoder": 3,
@@ -1160,7 +1160,7 @@
   },
   {
     "id": "ferir",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "FERIR",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -1190,7 +1190,7 @@
   },
   {
     "id": "fogo_infernal",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "FOGO INFERNAL",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -1205,7 +1205,7 @@
   },
   {
     "id": "furia",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "FURIA",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -1220,7 +1220,7 @@
   },
   {
     "id": "golpear",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "GOLPEAR",
     "estagio": "—",
     "pontosDePoder": "—",
@@ -1236,7 +1236,7 @@
   },
   {
     "id": "guerreiro",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "DÁDIVA DO GUERREIRO",
     "estagio": "Experiente",
     "pontosDePoder": 4,
@@ -1265,7 +1265,7 @@
   },
   {
     "id": "iluminar_obscurecer",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ILUMINAR/OBSCURECER",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -1294,7 +1294,7 @@
   },
   {
     "id": "ilusão",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ILUSÃO",
     "estagio": "Novato",
     "pontosDePoder": 3,
@@ -1327,7 +1327,7 @@
   },
   {
     "id": "intangibilidade",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "INTANGIBILIDADE",
     "estagio": "Veterano",
     "pontosDePoder": 5,
@@ -1349,7 +1349,7 @@
   },
   {
     "id": "invisibilidade",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "INVISIBILIDADE",
     "estagio": "Experiente",
     "pontosDePoder": 5,
@@ -1377,7 +1377,7 @@
   },
   {
     "id": "invocar_demonio",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "INVOCAR DEMONIO",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -1392,7 +1392,7 @@
   },
   {
     "id": "jogatina",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "JOGATINA",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -1407,7 +1407,7 @@
   },
   {
     "id": "leitura_de_objeto",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "LEITURA DE OBJETO",
     "estagio": "Experiente",
     "pontosDePoder": 2,
@@ -1428,7 +1428,7 @@
   },
   {
     "id": "leitura_mental",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "LEITURA MENTAL",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -1449,7 +1449,7 @@
   },
   {
     "id": "leitura_mentes",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "LEITURA MENTAL",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -1470,7 +1470,7 @@
   },
   {
     "id": "lentidao_velocidade_referencia",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "LENTIDÃO/VELOCIDADE",
     "estagio": "—",
     "pontosDePoder": "—",
@@ -1486,7 +1486,7 @@
   },
   {
     "id": "limpeza_mental",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "LIMPEZA MENTAL",
     "estagio": "Veterano",
     "pontosDePoder": 3,
@@ -1519,7 +1519,7 @@
   },
   {
     "id": "luz_escuridao",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ILUMINAR/OBSCURECER",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -1548,7 +1548,7 @@
   },
   {
     "id": "maldicao",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "MALDICAO",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -1563,7 +1563,7 @@
   },
   {
     "id": "manipulacao_elemental",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "MANIPULAÇÃO ELEMENTAL",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -1583,7 +1583,7 @@
   },
   {
     "id": "manipular_elementos",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "MANIPULAÇÃO ELEMENTAL",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -1603,7 +1603,7 @@
   },
   {
     "id": "marionete",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "FANTOCHE",
     "estagio": "Veterano",
     "pontosDePoder": 3,
@@ -1631,7 +1631,7 @@
   },
   {
     "id": "medo",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "MEDO",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -1659,7 +1659,7 @@
   },
   {
     "id": "metamorfose",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "MUDANÇA DE FORMA",
     "estagio": "Novato",
     "pontosDePoder": "Especial",
@@ -1681,7 +1681,7 @@
   },
   {
     "id": "mirar",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "MIRAR",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -1696,7 +1696,7 @@
   },
   {
     "id": "morosidade_velocidade",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "MOROSIDADE/VELOCIDADE",
     "estagio": "Experiente",
     "pontosDePoder": 2,
@@ -1739,7 +1739,7 @@
   },
   {
     "id": "mudanca_de_forma",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "MUDANÇA DE FORMA",
     "estagio": "Novato",
     "pontosDePoder": "Especial",
@@ -1761,7 +1761,7 @@
   },
   {
     "id": "peregrino",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "PEREGRINO",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -1776,7 +1776,7 @@
   },
   {
     "id": "protecao",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "PROTEÇÃO",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -1805,7 +1805,7 @@
   },
   {
     "id": "protecao_ambiental",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "PROTEÇÃO AMBIENTAL",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -1833,7 +1833,7 @@
   },
   {
     "id": "protecao_arcana",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "PROTEÇÃO ARCANA",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -1861,7 +1861,7 @@
   },
   {
     "id": "raio",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "RAIO",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -1892,7 +1892,7 @@
   },
   {
     "id": "rajada",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "RAJADA",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -1920,7 +1920,7 @@
   },
   {
     "id": "rapidez",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "MOROSIDADE/VELOCIDADE",
     "estagio": "Experiente",
     "pontosDePoder": 2,
@@ -1963,7 +1963,7 @@
   },
   {
     "id": "rapidez_referencia",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "RAPIDEZ",
     "estagio": "—",
     "pontosDePoder": "—",
@@ -1979,7 +1979,7 @@
   },
   {
     "id": "ressurreicao",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "RESSURREIÇÃO",
     "estagio": "Heroico",
     "pontosDePoder": 30,
@@ -2008,7 +2008,7 @@
   },
   {
     "id": "santuario",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "SANTUARIO",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -2023,7 +2023,7 @@
   },
   {
     "id": "simbolo_sagrado",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "SIMBOLO SAGRADO",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -2038,7 +2038,7 @@
   },
   {
     "id": "socorro_referencia",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "SOCORRO",
     "estagio": "—",
     "pontosDePoder": "—",
@@ -2054,7 +2054,7 @@
   },
   {
     "id": "som",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "SOM/SILÊNCIO",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -2087,7 +2087,7 @@
   },
   {
     "id": "som_silencio",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "SOM/SILÊNCIO",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -2120,7 +2120,7 @@
   },
   {
     "id": "sono",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "SONO",
     "estagio": "Experiente",
     "pontosDePoder": 2,
@@ -2147,7 +2147,7 @@
   },
   {
     "id": "telecinese",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "TELECINESE",
     "estagio": "Experiente",
     "pontosDePoder": 5,
@@ -2169,7 +2169,7 @@
   },
   {
     "id": "teleporte",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "TELEPORTE",
     "estagio": "Experiente",
     "pontosDePoder": 2,
@@ -2202,7 +2202,7 @@
   },
   {
     "id": "velocidade",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "MOROSIDADE/VELOCIDADE",
     "estagio": "Experiente",
     "pontosDePoder": 2,
@@ -2245,7 +2245,7 @@
   },
   {
     "id": "vendaval",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "VENDAVAL",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -2260,7 +2260,7 @@
   },
   {
     "id": "visao_distante",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "VISÃO DISTANTE",
     "estagio": "Experiente",
     "pontosDePoder": 2,
@@ -2288,7 +2288,7 @@
   },
   {
     "id": "visao_no_escuro",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "VISÃO SOMBRIA",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -2316,7 +2316,7 @@
   },
   {
     "id": "visao_sombria",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "VISÃO SOMBRIA",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -2344,7 +2344,7 @@
   },
   {
     "id": "voar",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "VOAR",
     "estagio": "Veterano",
     "pontosDePoder": 3,
@@ -2372,7 +2372,7 @@
   },
   {
     "id": "zumbi",
-    "origem": "BASICO",
+    "origem": "DEADLANDS",
     "nome": "ZUMBI",
     "estagio": "Veterano",
     "pontosDePoder": 3,
@@ -2414,112 +2414,139 @@
       "invocação"
     ]
   },
-  {
-    "nome": "Pane",
-    "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
-    "duracao": "Instantânea",
-    "descricao": "Magos e Magas do metal podem criar engenhocas que fazem com que outros dispositivos mecânicos emperrem, sofram uma pane ou um mau funcionamento. Quem conjura escolhe qualquer dispositivo com partes móveis ou conectadas no Alcance (a critério do MJ, mas não ferramentas \"simples\") e faz uma rolagem de Ciência Estranha. Se bem-sucedido, aqueles que usam o item subtraem 2 de seus totais, em caso de uma Falha Crítica ele quebra. Ambos os efeitos funcionam como a Complicação Desajeitado e não se acumulam com ela. Conjurar pane em um dispositivo que já esteja sofrendo esta penalidade conta como uma Ampliação.\n\nCom uma ampliação o dispositivo sofre uma pane imediata e se for uma engenhoca de ciência estranha ou um dispositivo infernal quem usa também deve imediatamente rolar na sua Tabela de Mau Funcionamento apropriada. Qualquer resultado pode ser removido com uma rolagem de Consertar, que dura uma ação, se apenas remover a penalidade, ou 1d6 horas, se estiver quebrado.\n\nMODIFICADORES:\n- RECEPTORES ADICIONAIS (+1): O poder pode afetar um item adicional por cada 1 Ponto de Poder extra.",
-    "origem": "DEADLANDS"
-  },
-  {
-    "nome": "Reparar",
-    "estagio": "Novato",
-    "custo": "3",
-    "alcance": "Astúcia",
-    "duracao": "Instantânea",
-    "descricao": "Reparar permite que um mago ou maga do metal repare danos causados a máquinas complexas — essencialmente qualquer dispositivo que tenha Ferimentos, como veículos ou certos tipos de construtos sencientes. Pode assumir a forma de um kit de ferramentas de mecânico, uma multi-ferramenta ou outro dispositivo de reparação projetado pelo mago ou maga do metal.\n\nReparar os Ferimentos de uma máquina é um rolagem de Ciência Estranha. Um sucesso repara um Ferimento e uma ampliação repara dois. Se a conjuração falhar ou não curar todos os danos, o mago ou maga do metal pode tentar novamente. Em uma falha crítica, os danos só podem ser reparados através do trabalho duro normal e peças de substituição.\n\nMODIFICADORES:\n- ACERTOS CRÍTICOS (+2): O inventor ou inventora pode tentar consertar um Acerto Crítico por conjuração de Reparar. Assim como com reparar Ferimentos, isto pode ser feito várias vezes.\n- EXPULSAR GREMLINS (+1): Uma rolagem de Ciência Estranha bem-sucedida remove um gremlin de uma máquina ou todos os gremlins com uma ampliação.",
-    "origem": "DEADLANDS"
-  },
-  {
-    "nome": "Iludir",
-    "estagio": "Novato",
-    "custo": "3",
-    "alcance": "Espírito",
-    "duracao": "Até o próximo pôr-do-sol",
-    "descricao": "As bruxas sabem que o caminho mais fácil para conseguirem o que desejam é atrair amantes crédulos para fazerem pacificamente o que querem.\n\nIludir é uma rolagem resistida do Conjurar da bruxa contra o Espírito do alvo. Ele só funciona naqueles romanticamente atraídos pelo gênero da bruxa e apenas se eles tiverem uma atitude neutra ou superior para com ela. Se for bem-sucedido, a atitude do alvo melhora em um nível, ou dois com uma ampliação. Ao contrário do poder fantoche, o alvo não é controlado mentalmente. Ele ou ela tem livre arbítrio, mas está genuinamente enamorado pela bruxa e quer fazer o que ele ou ela puder para agradá-la.\n\nO poder desaparece ao nascer do sol ou ao pôr do sol, o que vier a seguir. Isto não pode ser mantido, mas pode ser reconjurado.",
-    "origem": "DEADLANDS"
-  },
-  {
-    "nome": "Pavor",
-    "estagio": "Experiente",
-    "custo": "5",
-    "alcance": "Espírito",
-    "duracao": "Um Dia",
-    "descricao": "Pavor permite que uma bruxa aumente o Nível de Medo em 1 com um sucesso, ou 2 com uma ampliação. A área afetada é de 25 quadros (50 metros) de diâmetro.\n\nMODIFICADORES:\n- EFEITO DE ÁREA (+3): O efeito abrange uma área de aproximadamente 50 quadros (100 metros) de diâmetro.",
-    "origem": "DEADLANDS"
-  },
-  {
-    "nome": "Transformar",
-    "estagio": "Experiente",
-    "custo": "5",
-    "alcance": "Toque",
-    "duracao": "Uma hora",
-    "descricao": "Transformar amaldiçoa um alvo transformando-o em um animal comum de Tamanho -2 a -3 (a escolha da bruxa). Um Toque bem-sucedido em uma vítima não-voluntária faz com que ela realize uma rolagem de Espírito (com –2 com um ampliação na rolagem de Conjurar). Se a vítima falhar, ela é transformada – suas roupas e outros itens pessoais caem ao seu redor (eles não se transformam). A maldição pode ser cancelada à vontade pela pessoa que a lançou originalmente e termina automaticamente se ela for morta. Dissipar também termina a transformação.\n\nMODIFICADORES:\n- MALDIÇÃO VERDADEIRA (+0): Uma bruxa pode transformar um alvo permanentemente, mas o processo leva muito mais tempo. O Alcance torna-se de 1,5 km ao invés de Toque, mas requer um item pessoal do alvo. Com uma conjuração bem-sucedida, a vítima começa a assumir as características do animal nas próximas 12 horas. Na 13ª hora, a transformação torna-se chocantemente aparente. A vítima sofre 3 pontos de penalidades de Ferimento, embora não esteja realmente Ferida. Tentativas de dissipar sofrem uma penalidade de -4 e cada indivíduo só pode tentar uma vez.",
-    "origem": "DEADLANDS"
-  },
-  {
-    "nome": "Enfeitiçar Munição",
-    "estagio": "Experiente",
-    "custo": "4",
-    "alcance": "Pessoal",
-    "duracao": "5",
-    "descricao": "Este poder só pode ser usado por um mascate com a Vantagem Bruxeiro. Runas arcanas no cano de uma arma enfeitiçada desencadeiam vários poderes nas balas dentro da arma. Enquanto o poder estiver ativo, o bruxeiro ou bruxeira pode escolher qualquer um dos efeitos abaixo para aplicar a cada tiro disparado de sua arma (ou dois efeitos simultâneos com uma ampliação!).\n\n- Agonia Argêntea: O tiro afeta um ser como se fosse composto de sua Fraqueza (não funciona contra Servitores).\n- Bala Fantasma: O tiro está metade neste mundo e metade nos Campos de Caça, dando-lhe PA 6.\n- Carregado Para Ursos: O tiro é uma Arma Pesada e aumenta o dano base da Arma em um tipo de dado.\n- Explosivo: O tiro causa dano em um Modelo Pequeno de Explosão.\n- Labareda: Remove penalidades de Iluminação na área por um minuto. Se interior, 2-6 no d6 incendeia materiais.\n- Surpresa de Sacramento: O tiro surge com poder de algum tipo (fogo, eletricidade, frio, etc.).\n- Uma bala Com o Seu Nome: Adiciona +2 a rolagem de Atirar.\n- Vento do Kentucky: Duplica a Distância do tiro.",
-    "origem": "DEADLANDS"
-  },
-  {
-    "nome": "Caminhada Selvagem",
-    "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Pessoal",
-    "duracao": "Uma hora",
-    "descricao": "Caminhada selvagem pede aos espíritos da terra para mover o xamã para dentro e para fora dos Campos de Caça enquanto ele viaja, encurtando caminhadas árduas e escondendo seu caminho. Depois de caminhar por pelo menos 1,6 km no deserto, cada 4,8 km contam como um (não tem efeito na Movimentação) e as pegadas do xamã são impossíveis de rastrear além de seções curtas. Com uma ampliação na perícia arcana, cada oito quilômetros contam como um.\n\nMODIFICADORES:\n- RECEPTORES ADICIONAIS (+1): O poder pode afetar mais de um alvo por 1 Ponto de Poder adicional por cada um.",
-    "origem": "DEADLANDS"
-  },
-  {
-    "nome": "Entorpecimento",
-    "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Espírito",
-    "duracao": "5",
-    "descricao": "Entorpecimento alivia a dor causada por lesões. Com um sucesso na rolagem de perícia arcana, quem conjura e todos os aliados dentro de um raio igual a seu Espírito em quadros na mesa ignoram 1 ponto de penalidades de Ferimentos ou Fadiga, ou 2 com uma ampliação.\n\nEntorpecimento também anula qualquer resultado temporário na Tabela de Lesões pela sua duração. Uma personagem deixada Lenta por um golpe na perna, por exemplo, pode mover-se normalmente enquanto entorpecido. O poder não tem efeito em lesões permanentes.",
-    "origem": "DEADLANDS"
-  },
-  {
-    "nome": "Santificar",
-    "estagio": "Veterano",
-    "custo": "10",
-    "alcance": "Especial",
-    "duracao": "Até o próximo pôr-do-sol",
-    "descricao": "Um abençoado pode tornar uma área temporariamente sagrada por oração e devoção extenuantes. O processo leva quatro horas seguidas de meditação e rituais. Uma vez completo, o abençoado faz a sua rolagem de Fé. Falha significa tempo desperdiçado. Falha Crítica impede novas tentativas no local até que um mal seja derrotado.\n\nSucesso significa que uma área de cerca de 30 metros quadrados é um anátema para as forças das trevas. Qualquer criatura maligna que tente entrar no solo sagrado deve fazer uma rolagem de Espírito no início de cada rodada (ação livre) ou sofre Fadiga (com –2 se houver ampliação na Fé). Isto pode levar à Incapacitação, mas não à morte.",
-    "origem": "DEADLANDS"
-  },
-  {
-    "nome": "Símbolo Sagrado",
-    "estagio": "Novato",
-    "custo": "3",
-    "alcance": "Pessoal",
-    "duracao": "5",
-    "descricao": "Qualquer criatura sobrenatural maléfica que deseje realizar um ataque físico direto contra o portador do símbolo, deve fazer uma rolagem de Espírito como uma ação livre (a criatura subtrai 2 se o abençoado lançar o poder com uma ampliação). Símbolo sagrado não tem efeito em Desafios ou outros ataques não prejudiciais. Requer um símbolo sagrado (improvisado impõe -2 na invocação).\n\nEfeito em Vampiros: Sanguessugas têm fraqueza inata a símbolos sagrados. O personagem pode usar este poder (gastando PP e rolando perícia) OU apenas brandir o símbolo conforme a Fraqueza da criatura.\n\nMODIFICADORES:\n- ÁREA (+2/+3): Por +2 pontos, afeta aliados em um MME centrado no conjurador. Por +3, aumenta para MGE.\n- FORTE (+1): As rolagens de Espírito da criatura são feitas com –2 (–4 com uma ampliação).",
-    "origem": "DEADLANDS"
-  },
-  {
-    "nome": "Aspecto do Loa Rada",
-    "estagio": "Novato",
-    "custo": "5",
-    "alcance": "Pessoal",
-    "duracao": "Uma hora",
-    "descricao": "Este poder convida um loa rada para \"montar\" o corpo do houngan ou da mambo. Apenas um espírito por vez. Concede traços específicos conforme o Loa:\n\n- AGWÉ: Caminhar sobre a água, respirar submerso, nadar com Movimentação total. Ampliação: +2 Movimentação.\n- BARÃO SAMEDI: Corta ligação de mortos-vivos com Campos de Caça. Morto-Vivo movendo-se ao lado faz Vigor (–2 se ampliação) ou fica Atordoado.\n- DAMBALLA: Rerrolar testes de Vigor e Riqueza (ou Persuadir para negociar). Ampliação: rolagens com +1.\n- ERZULIE FRÉDA: Concede auxílio de uma pessoa romanticamente inclinada pelo gênero do conjurador (reação Neutra ou melhor). Não é controle mental. Ampliação: alvo mais ansioso para ajudar.\n- PAPA LEGBA: Rerrolagem gratuita em Persuadir, Intimidar ou Provocar. Ampliação: +1 na rolagem.",
-    "origem": "DEADLANDS"
-  },
-  {
-    "nome": "Fúria do Loa Petro",
-    "estagio": "Novato",
-    "custo": "5",
-    "alcance": "Pessoal",
-    "duracao": "5",
-    "descricao": "Convida espíritos agressivos para o corpo do voduísta. Apenas um espírito por vez.\n\n- ERZULIE DANTOR: Ganha corte na língua e Complicação Vingativo (Menor). Quem prejudicar a voduísta (Abalada, Atordoada ou Ferida) faz Espírito (–2 se ampliação) ou fica Atordoado.\n- MARINETTE BWA CHECH: Ganha Complicação Desagradável. Aumenta ataques de Lutar para Alcance 2, For+d6 e PA 2 se desarmado. Ampliação: Dano For+d8.\n- MET KALFU: Ganha Complicação Sem Escrúpulos (Menor). Pode cortar laços com Destino: se inimigo gasta Bene, voduísta faz Espírito com –2 (sem penalidade se ampliação) para cancelar o gasto. Com ampliação, o Bene é perdido.",
-    "origem": "DEADLANDS"
-  }
+    {
+      "nome": "Bugigangas",
+      "estagio": "Novato",
+      "custo": "3",
+      "alcance": "Astúcia",
+      "duracao": "5",
+      "descricao": "Bugigangas permite que mascates criem um pequeno item mundano pesando menos de meio quilo — uma Derringer, uma carta de baralho, um espelho de mão e assim por diante. Com uma ampliação, a duração é em minutos ao invés de rodadas (e também é Mantida em minutos, se desejado).\nItens conjurados normalmente aparecem em um bolso, bolsa ou saco para esconder a magia que os conjura, mas isto não é estritamente necessário.\nUma vez que a Duração expira, o item desaparece da realidade. Se esta pessoa trapaceira usou moedas conjuradas para comprar algo, ela pode estar em apuros se o comerciante descobrir quem lhe enganou.\n\nMODIFICADORES:\n- COMPLETO (+1): O objeto é um conjunto completo ou carregado (para armas de fogo), embora ainda deva caber no limite de peso. Um baralho de cartas tem todas as 54 cartas nele, uma arma de fogo está completamente carregada e assim por diante.\n- PESO (+2): o item pode pesar até um quilo.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Caminhada Selvagem",
+      "estagio": "Novato",
+      "custo": "2",
+      "alcance": "Pessoal",
+      "duracao": "Uma hora",
+      "descricao": "Caminhada selvagem pede aos espíritos da terra para mover o xamã para dentro e para fora dos Campos de Caça enquanto ele viaja, encurtando caminhadas árduas e escondendo seu caminho. Xamãs usam este poder para se comunicar com os seus aliados através de vastas distâncias e espionar seus inimigos!\nDepois de caminhar por pelo menos 1,6 km no deserto (a critério do Xerife), cada 4,8 km contam como um (não tem efeito na Movimentação) e as pegadas do xamã são impossíveis de rastrear além de seções curtas.\nCom uma ampliação na perícia arcana, cada oito quilômetros contam como um.\n\nMODIFICADORES:\n- RECEPTORES ADICIONAIS (+1): O poder pode afetar mais de um alvo por 1 Ponto de Poder adicional por cada um.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Enfeitiçar Munição",
+      "estagio": "Experiente",
+      "custo": "4",
+      "alcance": "Pessoal",
+      "duracao": "5",
+      "descricao": "Este poder só pode ser usado por um mascate com a Vantagem Bruxeiro. Runas arcanas no cano de uma arma enfeitiçada desencadeiam vários poderes nas balas dentro da arma, dando-lhes impacto extra e outras surpresas para aqueles tolos o suficiente para ficarem na mira!\nEnquanto o poder estiver ativo, o bruxeiro ou bruxeira pode escolher qualquer um dos efeitos abaixo para aplicar a cada tiro disparado de sua arma (ou dois efeitos simultâneos com uma ampliação!).\n- Agonia Argêntea: O tiro afeta um ser como se fosse composto de sua Fraqueza. O bruxeiro ou bruxeira deve conhecer a Fraqueza da criatura e não funciona contra certos inimigos poderosos como, por exemplo, os Servitores. Os manitus não têm a capacidade de igualar esse tipo de mojo.\n- Bala Fantasma: o tiro está metade neste mundo e metade nos Campos de Caça, dando-lhe PA 6.\n- Carregado Para Ursos: O tiro é uma Arma Pesada e aumenta o dano base da Arma em um tipo de dado. Uma pistola que causa 2d6, passa a causar 2d8 com essa munição mortal.\n- Explosivo: O tiro causa dano em um Modelo Pequeno de Explosão.\n- Labareda: Disparar um tiro de \"labareda\" no céu noturno remove as penalidades de Iluminação na área imediata por um minuto. Se disparada em interiores, role um d6: num 2-6, a bala incendeia materiais inflamáveis que ela atinge.\n- Surpresa de Sacramento: Este tiro surge com poder de algum tipo – fogo, eletricidade, frio, etc. É especialmente útil contra criaturas com uma Fraqueza Ambiental!\n- Uma bala Com o Seu Nome: Adiciona +2 a rolagem de Atirar do bruxeiro ou bruxeira.\n- Vento do Kentucky: Duplica a Distância do tiro.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Entorpecimento",
+      "estagio": "Novato",
+      "custo": "2",
+      "alcance": "Espírito",
+      "duracao": "5",
+      "descricao": "Entorpecimento alivia a dor causada por lesões. Com um sucesso na rolagem de perícia arcana, quem conjura e todos os aliados dentro de um raio igual a seu Espírito em quadros na mesa ignoram 1 ponto de penalidades de Ferimentos ou Fadiga, ou 2 com uma ampliação.\nEntorpecimento também anula qualquer resultado temporário na Tabela de Lesões pela sua duração. Uma personagem deixada Lenta por um golpe na perna, por exemplo, pode mover-se normalmente enquanto entorpecido. O poder não tem efeito em lesões permanentes.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Fantoche",
+      "estagio": "Novato",
+      "custo": "3",
+      "alcance": "Astúcia",
+      "duracao": "5",
+      "descricao": "Este poder funciona exatamente como em mundos selvagens, mas o modificador de Passageiro da Mente pode ser usado com ele.\n\nMODIFICADORES:\n- PASSAGEIRO DA MENTE (+1): O lançador pode comunicar-se e sentir através de qualquer alvo sob os efeitos de fantoche.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Maldição",
+      "estagio": "Experiente",
+      "custo": "5",
+      "alcance": "Toque",
+      "duracao": "Instantânea",
+      "descricao": "Alguns praticantes das artes arcanas curam os seus aliados. Outros infligem doenças sobre os seus inimigos. Para usar este feitiço particularmente desagradável, a pessoa conjurando faz uma rolagem de perícia arcana resistida pela rolagem de Espírito da vítima. Falha significa que a vítima sofre um nível de Fadiga imediatamente e ao pôr-do-sol de cada dia seguinte (novos lançamentos de maldição não têm efeito adicional).\nUma vez que a pessoa amaldiçoada fique Incapacitada, ela faz uma rolagem de Vigor todos os dias para evitar a morte.\nQuebrando a Maldição: A maldição pode ser cancelada à vontade pela pessoa que a lançou originalmente e termina automaticamente se ela for morta. Dissipar também remove uma maldição, embora cada indivíduo só possa tentar uma vez — se falhar, remover a maldição está além de suas habilidades.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Santificar",
+      "estagio": "Veterano",
+      "custo": "10",
+      "alcance": "Especial",
+      "duracao": "Até o próximo pôr-do-sol",
+      "descricao": "Lugares significativos ou importantes podem tornar-se permanentemente \"santificados\" – uma área sagrada que causa dano à criaturas malignas. Tais localidades são o resultado de uma afiliação a longo prazo com uma religião ou crença.\nUm abençoado pode replicar esses efeitos de forma temporária por oração e devoção extenuantes. O processo leva quatro horas seguidas de meditação e rituais apropriados à sua religião ou crenças.\nUma vez que isso esteja completo, o abençoado faz a sua rolagem de Fé. Falha significa apenas que o tempo é desperdiçado. Uma Falha Crítica significa que os poderes não vão santificar este lugar em particular e o ritual não pode ser tentado neste local até que algum mal significativo seja derrotado (a critério do Xerife).\nSucesso significa que uma área de cerca de 30 metros quadrados é um anátema para as forças das trevas. Qualquer criatura maligna (a critério do MJ) que tente entrar no solo sagrado deve fazer uma rolagem de Espírito no início de cada rodada (como uma ação livre) ou sofre Fadiga, em caso de ampliação na rolagem de Fé o teste de Espírito da criatura sofre um redutor de –2 . Isto pode levar à Incapacitação, mas não à morte.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Símbolo Sagrado",
+      "estagio": "Novato",
+      "custo": "3",
+      "alcance": "Pessoal",
+      "duracao": "5",
+      "descricao": "Criaturas malignas acham difícil atacar um viajante devoto com fé verdadeira – e um símbolo de sua divindade para apoiá-lo.\nUma vez invocado, qualquer criatura sobrenatural maléfica (a critério do Xerife) que deseje realizar um ataque físico direto contra o portador do símbolo, deve fazer uma rolagem de Espírito como uma ação livre (a criatura subtrai 2 se o abençoado lançar o poder com uma ampliação).\nOs ataques incluem ataques de área que pegariam o portador em seu modelo, mas não afetaria derrubar uma prateleira para cair sobre o portador, por exemplo. Símbolo sagrado não tem efeito em Desafios ou outros ataques não prejudiciais.\nO abençoado deve ter um símbolo sagrado de verdade para invocar o milagre. Sem um símbolo sagrado, sem símbolo sagrado. Comprende, amigo? Um símbolo improvisado funciona – uma moldura quebrada na forma de uma cruz em vez de um crucifixo real, por exemplo, mas o abençoado subtrai 2 da invocação sem um símbolo apropriado.\nVampiros: Sanguessugas têm uma Fraqueza inata aos símbolos sagrados. Uma personagem com este milagre pode usar aquilo que desejar – o poder (usando pontos de poder e exigindo uma rolagem de perícia arcana) ou as regras menos poderosas delineadas na Fraqueza (que não tem efeito de ampliação).\n\nMODIFICADORES:\n- ÁREA (+2/+3): Por +2 pontos, o poder afeta todos os aliados dentro de um Modelo Médio de Explosão centrado na pessoa que conjura. Isto não impede que as criaturas entrem na área, apenas os seus ataques contra aqueles que estão dentro dela. Por +3 pontos a área de efeito é aumentada para um Modelo Grande de Explosão.\n- FORTE (+1): As rolagens de Espírito da criatura são feitas com –2 (–4 com uma ampliação).",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Pane",
+      "estagio": "Novato",
+      "custo": "2",
+      "alcance": "Astúcia",
+      "duracao": "Instantânea",
+      "descricao": "Magos e Magas do metal podem criar engenhocas que fazem com que outros dispositivos mecânicos emperrem, sofram uma pane ou um mau funcionamento. Quem conjura escolhe qualquer dispositivo com partes móveis ou conectadas no Alcance (a critério do MJ, mas não ferramentas \"simples\") e faz uma rolagem de Ciência Estranha. Se bem-sucedido, aqueles que usam o item subtraem 2 de seus totais, em caso de uma Falha Crítica ele quebra. Ambos os efeitos funcionam como a Complicação Desajeitado e não se acumulam com ela. Conjurar pane em um dispositivo que já esteja sofrendo esta penalidade conta como uma Ampliação.\nCom uma ampliação o dispositivo sofre uma pane imediata e se for uma engenhoca de ciência estranha ou um dispositivo infernal quem usa também deve imediatamente rolar na sua Tabela de Mau Funcionamento apropriada. Qualquer resultado pode ser removido com uma rolagem de Consertar, que dura uma ação, se apenas remover a penalidade, ou 1d6 horas, se estiver quebrado.\n\nMODIFICADORES:\n- RECEPTORES ADICIONAIS (+1): O poder pode afetar um item adicional por cada 1 Ponto de Poder extra.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Reparar",
+      "estagio": "Novato",
+      "custo": "3",
+      "alcance": "Astúcia",
+      "duracao": "Instantânea",
+      "descricao": "Reparar permite que um mago ou maga do metal repare danos causados a máquinas complexas — essencialmente qualquer dispositivo que tenha Ferimentos, como veículos ou certos tipos de construtos sencientes. Pode assumir a forma de um kit de ferramentas de mecânico, uma multi-ferramenta ou outro dispositivo de reparação projetado pelo mago ou maga do metal.\nReparar os Ferimentos de uma máquina é um rolagem de Ciência Estranha. Um sucesso repara um Ferimento e uma ampliação repara dois. Se a conjuração falhar ou não curar todos os danos, o mago ou maga do metal pode tentar novamente. Em uma falha crítica, os danos só podem ser reparados através do trabalho duro normal e peças de substituição (veja Consertar no Savage Worlds).\n\nMODIFICADORES:\n- ACERTOS CRÍTICOS (+2): O inventor ou inventora pode tentar consertar um Acerto Crítico por conjuração de Reparar. Assim como com reparar Ferimentos, isto pode ser feito várias vezes.\n- EXPULSAR GREMLINS (+1): Uma rolagem de Ciência Estranha bem-sucedida remove um gremlin de uma máquina ou todos os gremlins com uma ampliação.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Aspecto do Loa Rada",
+      "estagio": "Novato",
+      "custo": "5",
+      "alcance": "Pessoal",
+      "duracao": "Uma hora",
+      "descricao": "Este poder convida um loa rada para \"montar\" o corpo do houngan ou da mambo por até uma hora. Apenas um espírito pode montar a voduísta de cada vez.\n- AGWÉ: Caminhar sobre a água, respirar debaixo da sua superfície e nadar com sua Movimentação total (além do dado de corrida se desejar). Com um ampliação, ela adiciona +2 a sua Movimentação total em cada rodada.\n- BARÃO SAMEDI: Samedi corta temporariamente a ligação de uma criatura morta-viva com os Campos de Caça. Uma criatura com a Habilidade Especial de Morto-Vivo que se movimente ao lado da voduísta deve fazer uma rolagem de Vigor (com –2 se for conjurada com uma ampliação) ou será Atordoada.\n- DAMBALLA: Você pode rerrolar qualquer rolagem de Vigor pela Duração do feitiço. Se usar as regras de Riqueza, você também pode rerrolar qualquer rolagem de Riqueza. Se não, rerrole qualquer rolagem de Persuadir para pechinchar. Se o feitiço for lançado com uma ampliação, todas as rolagens são feitas com +1.\n- ERZULIE FRÉDA: O poder concede ao herói ou heroína o auxilio de uma única pessoa que esteja romanticamente inclinada pelo seu gênero e começa com uma reação Neutra ou melhor. Este não é o poder fantoche — a pessoa não é uma escrava mentalmente controlada – ele ou ela está apenas ansioso para agradar o houngan ou a mambo. Uma ampliação significa que o alvo está ainda mais ansioso para ajudar a voduísta.\n- PAPA LEGBA: O houngan ou a mambo recebe uma rerrolagem gratuita em qualquer rolagem de Persuadir, Intimidar, ou Provocar pela Duração da possessão (com +1 se for lançado com uma ampliação).",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Fúria do Loa Petro",
+      "estagio": "Novato",
+      "custo": "5",
+      "alcance": "Pessoal",
+      "duracao": "5",
+      "descricao": "Convida espíritos mais agressivos (Petro) para o corpo.\n- ERZULIE DANTOR: Ganha a Complicação Vingativo (Menor) e um corte na língua. Qualquer um que prejudique a voduísta (Abalada, Atordoada ou Ferida) deve fazer uma rolagem de Espírito imediatamente (com –2 se for lançado com uma ampliação) ou ficará Atordoado. Alvos veem a aparição fantasmagórica de Erzulie.\n- MARINETTE BWA CHECH: Ganha a Complicação Desagradável. Aumenta os ataques de Lutar de seu hospedeiro para Alcance 2, For+d6 e PA 2 se desarmado. O dano é aumentado para For+d8 se for conjurado com uma ampliação.\n- MET KALFU: Ganha a Complicação Sem Escrúpulos (Menor). Sempre que um inimigo gasta um Bene e o voduísta quer se contrapor a isto, ele pode fazer uma rolagem de Espírito com –2 (ou nenhuma penalidade se for conjurado com uma ampliação). Se for bem-sucedido, nenhum Bene pode ser gasto nessa rolagem. Com uma ampliação, o Bene também é perdido!",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Iludir",
+      "estagio": "Novato",
+      "custo": "3",
+      "alcance": "Espírito",
+      "duracao": "Até o próximo pôr-do-sol",
+      "descricao": "As bruxas sabem que o caminho mais fácil para conseguirem o que desejam é atrair amantes crédulos.\nIludir é uma rolagem resistida do Conjurar da bruxa contra o Espírito do alvo. Ele só funciona naqueles romanticamente atraídos pelo gênero da bruxa e apenas se eles tiverem uma atitude neutra ou superior para com ela.\nSe for bem-sucedido, a atitude do alvo melhora em um nível, ou dois com uma ampliação. Ao contrário do poder fantoche, o alvo não é controlado mentalmente. Ele ou ela tem livre arbítrio, mas está genuinamente enamorado pela bruxa e quer fazer o que ele ou ela puder para agradá-la.\nO poder desaparece ao nascer do sol ou ao pôr do sol, o que vier a seguir. Isto não pode ser mantido, mas pode ser reconjurado.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Pavor",
+      "estagio": "Experiente",
+      "custo": "5",
+      "alcance": "Espírito",
+      "duracao": "Um Dia",
+      "descricao": "Pavor permite que uma bruxa aumente o Nível de Medo em 1 com um sucesso, ou 2 com uma ampliação. A área afetada é de 25 quadros (50 metros) de diâmetro.\n\nMODIFICADORES:\n- EFEITO DE ÁREA (+3): O efeito abrange uma área de aproximadamente 50 quadros (100 metros) de diâmetro.",
+      "origem": "DEADLANDS"
+    },
+    {
+      "nome": "Transformar",
+      "estagio": "Experiente",
+      "custo": "5",
+      "alcance": "Toque",
+      "duracao": "Uma hora",
+      "descricao": "Transformar amaldiçoa um alvo transformando-o em um animal comum de Tamanho -2 a -3 (a escolha da bruxa). Um Toque bem-sucedido em uma vítima não-voluntária faz com que ela realize uma rolagem de Espírito (com –2 com um ampliação na rolagem de Conjurar). Se a vítima falhar, ela é transformada – suas roupas e outros itens pessoais caem ao seu redor (eles não se transformam).\nQuebrando a Maldição: A maldição pode ser cancelada à vontade pela pessoa que a lançou originalmente e termina automaticamente se ela for morta. Dissipar também termina a transformação.\n\nMODIFICADORES:\n- MALDIÇÃO VERDADEIRA (+0): Uma bruxa pode transformar um alvo permanentemente, mas o processo leva muito mais tempo. O Alcance torna-se de 1,5 km ao invés de Toque, mas requer um item pessoal de algum tipo. Com uma conjuração bem-sucedida, a vítima começa a assumir as características do animal nas próximas 12 horas. Na 13ª hora, a transformação torna-se chocantemente aparente. A vítima sofre 3 pontos de penalidades de Ferimento. Tentativas de dissipar sofrem uma penalidade de -4 e cada indivíduo só pode tentar uma vez.",
+      "origem": "DEADLANDS"
+    }
 ]

@@ -2415,507 +2415,165 @@
     ]
   },
   {
-    "id": "aspecto_de_loa_rada",
-    "origem": "HORROR",
-    "nome": "ASPECTO DE LOA RADA",
+    "nome": "Aspecto de Loa Rada",
     "estagio": "Novato",
-    "pontosDePoder": 5,
-    "distancia": "Pessoal",
-    "duracao": "Uma hora",
-    "manifestacoes": [
-      "Possessão",
-      "Mudança de personalidade",
-      "Olhos verdes profundos (Agwé)",
-      "Face pintada de crânio (Barão Samedi)"
-    ],
-    "descricao": "Este poder convida um loa rada para possuir o corpo do houngan ou da mambo por até uma hora. Apenas um espírito pode entrar na voduísta de cada vez. Aspecto de loa rada convida o espírito para dentro de seu corpo, dando-lhe um pouco de sua personalidade.\n\nAGWÉ: Permite dominar a água. Pode caminhar sobre ela, respirar debaixo da superfície e nadar com Movimentação total. Com uma ampliação, adiciona +2 a Movimentação total.\n\nBARÃO SAMEDI: Samedi corta temporariamente a ligação de uma criatura morta-viva com o mundo espiritual. Uma criatura Morto-Vivo que se movimente ao lado da voduísta deve fazer uma rolagem de Vigor (-2 com ampliação) ou ficará Atordoada.\n\nDAMBALLA: Rerrolagem em qualquer teste de Vigor. Se usar regras de Riqueza, rerrola testes de Riqueza. Se não, rerrola Persuadir para pechinchar. Com ampliação, todas essas rolagens têm +1.\n\nERZULIE FRÉDA: Concede o auxílio de uma única pessoa romanticamente inclinada pelo seu gênero (começa com reação Neutra ou melhor). O alvo fica ansioso para agradar (não é escravidão mental). Com ampliação, o alvo fica ainda mais ansioso.\n\nPAPA LEGBA: Concede uma rerrolagem gratuita em qualquer rolagem de Persuadir, Intimidar ou Provocar. Com ampliação, recebe +1 nessas rolagens.",
-    "modificadores": [],
-    "tags": [
-      "stage:novato",
-      "tipo:buff",
-      "vodu",
-      "possessão"
-    ]
+    "custo": "5",
+    "alcance": "Pessoal",
+    "duracao": "Uma Hora",
+    "descricao": "Este poder convida um loa rada para possuir o corpo do houngan ou da mambo por até uma hora. Apenas um espírito pode entrar na voduísta de cada vez.\n- AGWÉ: Caminhar sobre a água, respirar debaixo da superfície, nadar com Movimentação total. Ampliação: +2 Movimentação.\n- BARÃO SAMEDI: Corta ligação de mortos-vivos com mundo espiritual. Morto-Vivo adjacente faz Vigor (–2 se ampliação) ou fica Atordoado.\n- DAMBALLA: Rerrolar Vigor e Riqueza (ou Persuadir para pechinchar). Ampliação: rolagens com +1.\n- ERZULIE FRÉDA: Auxílio de pessoa romanticamente inclinada (reação Neutra ou melhor). Não é controle mental. Ampliação: alvo mais ansioso para ajudar.\n- PAPA LEGBA: Rerrolagem gratuita em Persuadir, Intimidar ou Provocar. Ampliação: +1 na rolagem.",
+    "origem": "HORROR"
   },
   {
-    "id": "conjurar_aliado_horror",
-    "origem": "HORROR",
-    "nome": "CONJURAR ALIADO (HORROR)",
+    "nome": "Conjurar Aliado",
     "estagio": "Novato",
-    "pontosDePoder": "Especial",
-    "distancia": "Astúcia",
+    "custo": "Especial",
+    "alcance": "Astúcia",
     "duracao": "5",
-    "manifestacoes": [
-      "Figura de barro que cresce",
-      "Tatuagem que ganha vida"
-    ],
-    "descricao": "Este poder permite conjurar um servo mágico a partir do nada. O ser age na Carta de Ação de quem o conjurou. O custo depende do tipo:\n\n• Assistente (Novato, 1 PP): Construto, Destemido, Garras (For+d4).\n• Guarda-costas (Experiente, 3 PP): Armadura +2, Construto, Destemido, Atacar Primeiro, Pancada (For+d6).\n• Sentinela (Veterano, 5 PP): Armadura +4, Construto, Destemido, Tamanho 2, Resistência Arcana, Varredura Aprimorada, Ataque (For+d8).\n• Reflexo-Pessoal (Heroico, 7 PP): Clone do conjurador (Extra), perícias um dado menor, equipamento mundano idêntico.",
-    "modificadores": [
-      {
-        "nome": "Aliados Adicionais",
-        "custo": "Varia",
-        "descricao": "Metade do custo de PP para cada aliado extra do mesmo tipo."
-      },
-      {
-        "nome": "Característica Aprimorada",
-        "custo": "+1",
-        "descricao": "Aumenta uma Característica em um tipo de dado."
-      },
-      {
-        "nome": "Passageiro da Mente",
-        "custo": "+1",
-        "descricao": "Comunicação e sentidos compartilhados."
-      },
-      {
-        "nome": "Vantagem de Combate",
-        "custo": "+1",
-        "descricao": "O aliado ganha uma Vantagem de Combate (até 3 vezes)."
-      },
-      {
-        "nome": "Voo",
-        "custo": "+1",
-        "descricao": "A criação pode voar com sua Movimentação base."
-      }
-    ],
-    "tags": [
-      "stage:novato",
-      "tipo:invocação",
-      "minion",
-      "suporte"
-    ]
+    "descricao": "Conjura servo mágico. Tipos: Assistente (1), Guarda-costas (3), Sentinela (5), Reflexo-Pessoal (7).\n\nMODIFICADORES:\n- ALIADOS ADICIONAIS (Varia): Metade do custo para extras.\n- CARACTERÍSTICA APRIMORADA (+1): Aumenta característica por 1 PP.\n- PASSAGEIRO DA MENTE (+1): Comunicação/sentidos.\n- VANTAGEM DE COMBATE (+1): Concede vantagem.\n- VOO (+1): Pode voar.",
+    "origem": "HORROR"
   },
   {
-    "id": "conjurar_demonio",
-    "origem": "HORROR",
-    "nome": "CONJURAR DEMÔNIO",
+    "nome": "Conjurar Demônio",
     "estagio": "Veterano",
-    "pontosDePoder": "Especial",
-    "distancia": "Astúcia",
+    "custo": "Especial",
+    "alcance": "Astúcia",
     "duracao": "Não mais do que uma semana",
-    "manifestacoes": [
-      "Pentagramas",
-      "Velas pretas",
-      "Sacrifícios animais"
-    ],
-    "descricao": "Demônios só podem ser convocados por Magia Ritualística e em um círculo de aprisionamento. O custo é 3 PP + o dado de Espírito da entidade (se Carta Selvagem) ou 3 + metade do Espírito (se Extra).\nCada rodada do ritual é uma rolagem resistida de perícia arcana vs Espírito da criatura. Se bem-sucedido, o demônio aparece Preso no círculo. Com uma ampliação final, o demônio é mais poderoso.\nAo demônio Preso pode ser ofertada liberdade em troca de uma tarefa. Uma vez acordado, o círculo é quebrado e o demônio deve realizar a tarefa (embora possa criar caos).",
-    "modificadores": [],
-    "tags": [
-      "stage:veterano",
-      "tipo:invocação",
-      "demônio",
-      "ritual"
-    ]
+    "descricao": "Invoca demônio via Magia Ritualística em círculo de aprisionamento. Rolagem resistida de arcana vs Espírito a cada rodada. Custo: 3 + Espírito (Carta Selvagem) ou 3 + metade Espírito (Extra). Falha Crítica no ritual: demônio solto. Sucesso: demônio Preso (ampliação: mais poderoso). Pode barganhar tarefa por liberdade.",
+    "origem": "HORROR"
   },
   {
-    "id": "consagrar_solo",
-    "origem": "HORROR",
-    "nome": "CONSAGRAR SOLO",
+    "nome": "Consagrar Solo",
     "estagio": "Experiente",
-    "pontosDePoder": 5,
-    "distancia": "Toque",
+    "custo": "5",
+    "alcance": "Toque",
     "duracao": "Uma hora",
-    "manifestacoes": [
-      "Círculo de água benta ou sal",
-      "Barreira de energia",
-      "Pentagrama"
-    ],
-    "descricao": "Transforma uma porção de solo (Modelo Grande de Explosão) em solo consagrado. Requer 1 minuto de preparação. Criaturas sobrenaturais boas recebem Resistência +2 na área. Criaturas malignas ficam Distraídas e Vulneráveis na área. Com uma ampliação, entidades malignas recebem 2d4 de dano no final de seu turno ao contato com a área.",
-    "modificadores": [
-      {
-        "nome": "Duração",
-        "custo": "+5",
-        "descricao": "Deve ser conjurado como ritual. Duração estendida até o próximo pôr do sol."
-      }
-    ],
-    "tags": [
-      "stage:experiente",
-      "tipo:ambiente",
-      "sagrado",
-      "proteção"
-    ]
+    "descricao": "Cria solo consagrado em Modelo Grande. Preparação 1 min. Sobrenaturais bons: Resistência +2. Malignos: Distraídos e Vulneráveis. Ampliação: Malignos sofrem 2d4 dano no fim do turno.\n\nMODIFICADORES:\n- DURAÇÃO (+5): Ritual estende até próximo pôr do sol.",
+    "origem": "HORROR"
   },
   {
-    "id": "exorcismo",
-    "origem": "HORROR",
-    "nome": "EXORCISMO",
+    "nome": "Exorcismo",
     "estagio": "Veterano",
-    "pontosDePoder": "Especial",
-    "distancia": "Astúcia",
+    "custo": "Especial",
+    "alcance": "Astúcia",
     "duracao": "Permanente",
-    "manifestacoes": [
-      "Itens sagrados",
-      "Símbolos arcanos",
-      "Punhado de sal"
-    ],
-    "descricao": "Exorcismo só pode ser conjurado como ritual e afeta espíritos como demônios, fantasmas ou possessões. O custo é 3 PP + dado de Espírito da entidade (Carta Selvagem) ou 3 + metade do Espírito (Extra).\nCada rodada é uma rolagem resistida de perícia arcana vs Espírito. Se bem-sucedido, a entidade é enviada para seu plano nativo permanentemente ou destruída.",
-    "modificadores": [
-      {
-        "nome": "Inimigo Oculto",
-        "custo": "+4",
-        "descricao": "Permite exorcizar um espírito não visto se souber sua localização geral ou tiver um objeto ligado a ele."
-      }
-    ],
-    "tags": [
-      "stage:veterano",
-      "tipo:ataque",
-      "banimento",
-      "ritual"
-    ]
+    "descricao": "Exila espíritos permanentemente. Apenas ritual. Rolagem resistida arcana vs Espírito a cada rodada. Custo: 3 + Espírito (Carta Selvagem) ou 3 + metade Espírito (Extra).\n\nMODIFICADORES:\n- INIMIGO OCULTO (+4): Exorciza espírito não visto se souber localização geral ou tiver elo.",
+    "origem": "HORROR"
   },
   {
-    "id": "furia_de_loa_petro",
-    "origem": "HORROR",
-    "nome": "FÚRIA DE LOA PETRO",
+    "nome": "Fúria de Loa Petro",
     "estagio": "Novato",
-    "pontosDePoder": 5,
-    "distancia": "Pessoal",
+    "custo": "5",
+    "alcance": "Pessoal",
     "duracao": "5",
-    "manifestacoes": [
-      "Possessão agressiva",
-      "Cicatriz na bochecha",
-      "Roupas esfarrapadas"
-    ],
-    "descricao": "Convida loas petros (agressivos) para o corpo. Apenas um por vez.\n\nERZULIE DANTOR: Ganha Vingativo (Menor). Qualquer um que prejudique a voduísta (Abalado/Ferido) deve rolar Espírito (-2 com ampliação) ou ficará Atordoado.\n\nMARINETTE BWA CHECH: Ganha Desagradável. Aumenta ataques de Lutar para Alcance 2, For+d6, PA 2 (desarmado). Com ampliação, dano é For+d8.\n\nMET KALFU: Ganha Sem Escrúpulos (Menor). Sempre que um inimigo a 12 quadros gastar um Bene, o voduísta pode fazer uma rolagem de Espírito -2 (ou 0 com ampliação) para cancelar o gasto. Com ampliação, o Bene é perdido.",
-    "modificadores": [],
-    "tags": [
-      "stage:novato",
-      "tipo:buff",
-      "combate",
-      "vodu"
-    ]
+    "descricao": "Convida espíritos agressivos (Petro).\n- ERZULIE DANTOR: Ganha Vingativo (Menor) e corte na língua. Quem prejudicar voduísta faz Espírito (–2 se ampliação) ou fica Atordoado.\n- MARINETTE BWA CHECH: Ganha Desagradável. Ataques de Lutar aumentam alcance 2, For+d6, PA 2 (desarmado). Ampliação: Dano For+d8.\n- MET KALFU: Ganha Sem Escrúpulos (Menor). Corta laços com destino: se inimigo a 12 quadros gasta Bene, voduísta faz Espírito -2 (ou 0 ampliação) para cancelar. Ampliação: Bene perdido.",
+    "origem": "HORROR"
   },
   {
-    "id": "horrores_ilusorios",
-    "origem": "HORROR",
-    "nome": "HORRORES ILUSÓRIOS",
+    "nome": "Horrores Ilusórios",
     "estagio": "Experiente",
-    "pontosDePoder": 5,
-    "distancia": "Astúcia",
+    "custo": "5",
+    "alcance": "Astúcia",
     "duracao": "Um dia",
-    "manifestacoes": [
-      "Olho gordo",
-      "Cuspir",
-      "Objeto amaldiçoado"
-    ],
-    "descricao": "A maldição faz o alvo ver horrores. Os efeitos ativam à vontade do Mestre ou em combate se a carta da vítima não for figura (K, Q, J). Nesses casos, o alvo fica Distraído pela rodada.",
-    "modificadores": [
-      {
-        "nome": "Alvos Adicionais",
-        "custo": "+2",
-        "descricao": "Afeta mais de um alvo por +2 PP cada."
-      }
-    ],
-    "tags": [
-      "stage:experiente",
-      "tipo:debuff",
-      "ilusão",
-      "medo"
-    ]
+    "descricao": "Distorce mente do alvo para ver horrores. Se carta não for figura, alvo fica Distraído e comportamento é afetado.\n\nMODIFICADORES:\n- ALVOS ADICIONAIS (+2): Afeta mais alvos.",
+    "origem": "HORROR"
   },
   {
-    "id": "localizar",
-    "origem": "HORROR",
-    "nome": "LOCALIZAR",
+    "nome": "Localizar",
     "estagio": "Novato",
-    "pontosDePoder": 3,
-    "distancia": "Pessoal",
+    "custo": "3",
+    "alcance": "Pessoal",
     "duracao": "10 minutos",
-    "manifestacoes": [
-      "Cristal flutuante",
-      "Mensagem nas nuvens",
-      "Raio de luz"
-    ],
-    "descricao": "Permite encontrar coisas escondidas (objeto, criatura ou local). Se nunca viu o alvo, rolagem com -2. Sucesso dá direção e distância geral. Ampliação dá uma impressão do alvo (ex: está dormindo).",
-    "modificadores": [
-      {
-        "nome": "Encontrar o Caminho",
-        "custo": "+1",
-        "descricao": "Noção sobrenatural do melhor caminho ou o mais rápido."
-      }
-    ],
-    "tags": [
-      "stage:novato",
-      "tipo:informação",
-      "adivinhação"
-    ]
+    "descricao": "Encontra objeto, criatura ou local. -2 se nunca viu. Sucesso: direção/distância. Ampliação: impressão do alvo.\n\nMODIFICADORES:\n- ENCONTRAR O CAMINHO (+1): Senso do melhor caminho.",
+    "origem": "HORROR"
   },
   {
-    "id": "maldicao",
-    "origem": "HORROR",
-    "nome": "MALDIÇÃO",
+    "nome": "Maldição",
     "estagio": "Experiente",
-    "pontosDePoder": 5,
-    "distancia": "Toque",
+    "custo": "5",
+    "alcance": "Toque",
     "duracao": "Instantânea",
-    "manifestacoes": [
-      "Bonecos vodu",
-      "Marcas estranhas",
-      "Olho gordo"
-    ],
-    "descricao": "Inflige doenças ou maldições. Rolagem resistida por Espírito. Falha da vítima causa 1 nível de Fadiga imediatamente e a cada pôr do sol. Se Incapacitada, rola Vigor diariamente para evitar morte. Pode ser quebrada pelo conjurador, morte do conjurador ou Dissipar (uma tentativa apenas).",
-    "modificadores": [
-      {
-        "nome": "Efeito Alternativo",
-        "custo": "+2",
-        "descricao": "Em vez de Fadiga, causa uma Complicação Menor (ou Maior com ampliação)."
-      }
-    ],
-    "tags": [
-      "stage:experiente",
-      "tipo:debuff",
-      "ataque",
-      "necro"
-    ]
+    "descricao": "Inflige Fadiga diária (resistida por Espírito). Incapacitado faz Vigor diário para não morrer.\n\nMODIFICADORES:\n- EFEITO ALTERNATIVO (+2): Inflige Complicação Menor (Maior com ampliação).",
+    "origem": "HORROR"
   },
   {
-    "id": "mortalha_da_cova",
-    "origem": "HORROR",
-    "nome": "MORTALHA DA COVA",
+    "nome": "Mortalha da Cova",
     "estagio": "Experiente",
-    "pontosDePoder": 2,
-    "distancia": "Astúcia",
+    "custo": "2",
+    "alcance": "Astúcia",
     "duracao": "10 minutos",
-    "manifestacoes": [
-      "Sangue",
-      "Carne podre",
-      "Lixo"
-    ],
-    "descricao": "Transforma a aparência, cheiro e aura do alvo na de um zumbi. Mortos-vivos sem mente tratam o alvo como um dos seus. Inteligentes podem testar Perceber -2 (-4 com ampliação) para detectar.",
-    "modificadores": [
-      {
-        "nome": "Alvos Adicionais",
-        "custo": "+1",
-        "descricao": "Afeta mais de um alvo por +1 PP cada."
-      }
-    ],
-    "tags": [
-      "stage:experiente",
-      "tipo:ilusão",
-      "disfarce",
-      "mortos-vivos"
-    ]
+    "descricao": "Transforma aparência/aura em zumbi. Mortos-vivos sem mente ignoram. Inteligentes fazem Perceber -2 (-4 ampliação) se desconfiarem.\n\nMODIFICADORES:\n- ALVOS ADICIONAIS (+1): Afeta mais alvos.",
+    "origem": "HORROR"
   },
   {
-    "id": "pesadelos",
-    "origem": "HORROR",
-    "nome": "PESADELOS",
+    "nome": "Pesadelos",
     "estagio": "Novato",
-    "pontosDePoder": 2,
-    "distancia": "Ilimitada",
+    "custo": "2",
+    "alcance": "Ilimitada",
     "duracao": "Uma semana",
-    "manifestacoes": [
-      "Ritual com nome",
-      "Item pessoal"
-    ],
-    "descricao": "Faz a vítima sofrer terríveis pesadelos. Requer nome e item pessoal. Se bem-sucedido, a vítima recebe a Complicação Terrores Noturnos até o fim da duração ou dissipação.",
-    "modificadores": [
-      {
-        "nome": "Tema Específico",
-        "custo": "+1",
-        "descricao": "Implanta cenas ou temas específicos, incitando crenças ou ações."
-      }
-    ],
-    "tags": [
-      "stage:novato",
-      "tipo:debuff",
-      "longa distância"
-    ]
+    "descricao": "Causa Terrores Noturnos. Requer nome e item pessoal.\n\nMODIFICADORES:\n- TEMA ESPECÍFICO (+1): Implanta cenas/temas.",
+    "origem": "HORROR"
   },
   {
-    "id": "rancor",
-    "origem": "HORROR",
-    "nome": "RANCOR",
+    "nome": "Rancor",
     "estagio": "Experiente",
-    "pontosDePoder": 3,
-    "distancia": "Pessoal",
+    "custo": "3",
+    "alcance": "Pessoal",
     "duracao": "5",
-    "manifestacoes": [
-      "Entidade protetiva",
-      "Runas protetivas",
-      "Aura vermelha"
-    ],
-    "descricao": "Sempre que quem conjurou receber um ou mais Ferimentos de um ataque direto, o atacante recebe 1d6 de dano por Ferimento infligido.",
-    "modificadores": [],
-    "tags": [
-      "stage:experiente",
-      "tipo:buff",
-      "combate",
-      "retaliação"
-    ]
+    "descricao": "Se receber Ferimento de ataque direto, atacante sofre 1d6 dano por ferimento.",
+    "origem": "HORROR"
   },
   {
-    "id": "santuario",
-    "origem": "HORROR",
-    "nome": "SANTUÁRIO",
+    "nome": "Santuário",
     "estagio": "Novato",
-    "pontosDePoder": 2,
-    "distancia": "Toque",
+    "custo": "2",
+    "alcance": "Toque",
     "duracao": "5",
-    "manifestacoes": [
-      "Palavras de poder",
-      "Símbolo sagrado",
-      "Luz brilhante"
-    ],
-    "descricao": "Qualquer criatura sobrenatural que tente um ataque danoso ao alvo deve rolar Espírito (-2 com ampliação) ou perde a ação. Se o protegido tentar ferir outra criatura, o efeito termina. Supera proteções do conjurador.",
-    "modificadores": [
-      {
-        "nome": "Afeta Área",
-        "custo": "+2/+3",
-        "descricao": "Modelo Médio (+2) ou Grande (+3) centrado no alvo."
-      },
-      {
-        "nome": "Forte",
-        "custo": "+1",
-        "descricao": "Penalidade adicional de -2 na rolagem de Espírito da criatura."
-      }
-    ],
-    "tags": [
-      "stage:novato",
-      "tipo:defesa",
-      "proteção",
-      "sagrado"
-    ]
+    "descricao": "Protege contra sobrenatural maligno. Atacante faz Espírito (-2 ampliação) ou perde ação. Encerra se alvo atacar.\n\nMODIFICADORES:\n- AFETA ÁREA (+2/+3): Modelo Médio/Grande.\n- FORTE (+1): Resistência com -2.",
+    "origem": "HORROR"
   },
   {
-    "id": "sentir_cadaver",
-    "origem": "HORROR",
-    "nome": "SENTIR CADÁVER",
+    "nome": "Sentir Cadáver",
     "estagio": "Novato",
-    "pontosDePoder": 2,
-    "distancia": "Pessoal",
+    "custo": "2",
+    "alcance": "Pessoal",
     "duracao": "30 minutos",
-    "manifestacoes": [
-      "Cânticos",
-      "Encarar um espelho"
-    ],
-    "descricao": "Detecta cadáveres e mortos-vivos (Minúsculo+) a até 1,5km (7,5km com ampliação). Permite ver e ouvir através de crânios. Mortos-vivos sencientes podem resistir com Espírito.",
-    "modificadores": [
-      {
-        "nome": "Fala",
-        "custo": "+1",
-        "descricao": "Permite falar através dos crânios ou mortos-vivos sem mente."
-      }
-    ],
-    "tags": [
-      "stage:novato",
-      "tipo:informação",
-      "detecção",
-      "necromancia"
-    ]
+    "descricao": "Detecta cadáveres/mortos-vivos a 1,5km (7,5km ampliação). Vê/ouve através de crânios.\n\nMODIFICADORES:\n- FALA (+1): Fala através de crânios.",
+    "origem": "HORROR"
   },
   {
-    "id": "sessao_espirita",
-    "origem": "HORROR",
-    "nome": "SESSÃO ESPÍRITA",
+    "nome": "Sessão Espírita",
     "estagio": "Experiente",
-    "pontosDePoder": 5,
-    "distancia": "Pessoal",
+    "custo": "5",
+    "alcance": "Pessoal",
     "duracao": "Especial",
-    "manifestacoes": [
-      "Tabuleiro Ouija",
-      "Itens pessoais",
-      "Sessão"
-    ],
-    "descricao": "Permite falar com espíritos (requer nome ou item pessoal). Se bem-sucedido, a entidade responde 3 perguntas. Falha Crítica pode manifestar a entidade ou impostor nos arredores.",
-    "modificadores": [
-      {
-        "nome": "Presença Demoníaca",
-        "custo": "+2",
-        "descricao": "Permite falar com demônios e diabos."
-      },
-      {
-        "nome": "Tarefa",
-        "custo": "+2",
-        "descricao": "Em vez de perguntas, convence a entidade a realizar uma tarefa simples (menos de 1 hora)."
-      }
-    ],
-    "tags": [
-      "stage:experiente",
-      "tipo:informação",
-      "adivinhação",
-      "espíritos"
-    ]
+    "descricao": "Fala com espírito específico (requer nome/item). Responde 3 perguntas.\n\nMODIFICADORES:\n- PRESENÇA DEMONÍACA (+2): Fala com demônios.\n- TAREFA (+2): Espírito realiza tarefa simples (menos de 1h) em vez de perguntas.",
+    "origem": "HORROR"
   },
   {
-    "id": "suprimir_transformacao",
-    "origem": "HORROR",
-    "nome": "SUPRIMIR TRANSFORMAÇÃO",
+    "nome": "Suprimir Transformação",
     "estagio": "Veterano",
-    "pontosDePoder": 3,
-    "distancia": "Toque",
+    "custo": "3",
+    "alcance": "Toque",
     "duracao": "Uma noite",
-    "manifestacoes": [
-      "Poção",
-      "Runas",
-      "Acônito",
-      "Moedas de prata"
-    ],
-    "descricao": "Vítima de licantropia ou doença transformadora resiste à mudança ou para seu progresso por 24 horas.",
-    "modificadores": [
-      {
-        "nome": "Permanente",
-        "custo": "+4",
-        "descricao": "Se ritual, cura permanentemente. Requer órgão vital de criatura grande do mesmo tipo."
-      }
-    ],
-    "tags": [
-      "stage:veterano",
-      "tipo:cura",
-      "proteção",
-      "licantropia"
-    ]
+    "descricao": "Suprime licantropia ou transformação por 24h.\n\nMODIFICADORES:\n- PERMANENTE (+4): Ritual cura permanentemente (requer coração de criatura similar).",
+    "origem": "HORROR"
   },
   {
-    "id": "trancar_destrancar",
-    "origem": "HORROR",
-    "nome": "TRANCAR/DESTRANCAR",
+    "nome": "Trancar/Destrancar",
     "estagio": "Novato",
-    "pontosDePoder": 1,
-    "distancia": "Astúcia",
+    "custo": "1",
+    "alcance": "Astúcia",
     "duracao": "Permanente (trancar); Instantânea (destrancar)",
-    "manifestacoes": [
-      "Chave-mestra",
-      "Imitar abrir/fechar"
-    ],
-    "descricao": "TRANCAR: Sela magicamente porta ou contêiner. Tentativas de abrir sofrem -4. Pode definir senha.\nDESTRANCAR: Ignora até 4 pontos de penalidade para arrombar. Com ampliação, desarma armadilhas/alarmes.",
-    "modificadores": [
-      {
-        "nome": "Alerta",
-        "custo": "+1",
-        "descricao": "Trancar apenas. Conjurador sabe se objeto foi aberto (dura um dia)."
-      }
-    ],
-    "tags": [
-      "stage:novato",
-      "tipo:utilitário",
-      "segurança"
-    ]
+    "descricao": "TRANCAR: Sela magicamente. Abrir sofre -4. Pode ter senha. DESTRANCAR: Ignora 4 pontos de penalidade. Ampliação: desarma armadilhas.\n\nMODIFICADORES:\n- ALERTA (+1): Trancar apenas. Avisa se aberto.",
+    "origem": "HORROR"
   },
   {
-    "id": "videncia",
-    "origem": "HORROR",
-    "nome": "VIDÊNCIA",
+    "nome": "Vidência",
     "estagio": "Experiente",
-    "pontosDePoder": 3,
-    "distancia": "Pessoal",
+    "custo": "3",
+    "alcance": "Pessoal",
     "duracao": "5",
-    "manifestacoes": [
-      "Superfície reflexiva",
-      "Olhos brilhantes",
-      "Bola de cristal"
-    ],
-    "descricao": "Espia alvo distante. Requer 1 minuto de preparação (Fica Vulnerável). Rolagem -2 se nunca viu o alvo. Resistida por Espírito. Sucesso permite ver e ouvir. Ampliação permite mover a perspectiva (Mov 24).",
-    "modificadores": [
-      {
-        "nome": "Visão em Grupo",
-        "custo": "+1",
-        "descricao": "Compartilha percepção com aliados dentro da Distância Astúcia."
-      }
-    ],
-    "tags": [
-      "stage:experiente",
-      "tipo:informação",
-      "espionagem"
-    ]
+    "descricao": "Espia alvo distante. Preparação 1 min. Resistida por Espírito. Vê/ouve.\n\nMODIFICADORES:\n- VISÃO EM GRUPO (+1): Compartilha visão com aliados.",
+    "origem": "HORROR"
   }
 ]
