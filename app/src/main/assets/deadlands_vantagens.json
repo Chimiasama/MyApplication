@@ -104,8 +104,8 @@
     "descricao": "Começa no estágio Experiente (4 avanços), mas deve comprar uma carta do baralho de ação para determinar um trauma ou evento passado horrível."
   },
   {
-    "id": "ressuscitado",
-    "nome": "RESSUSCITADO (Revivido)",
+    "id": "ATORMENTADO",
+    "nome": "ATORMENTADO",
     "categoria": "ESTRANHAS",
     "origem": "DEADLANDS",
     "requisitos": {
@@ -119,27 +119,27 @@
     "descricao": "+2 em Intimidar. Não respira, não come. +2 para recuperar Abalado. Precisa lutar contra o Espírito Obscuro pelo controle (Dominion)."
   },
   {
-    "id": "garras_ressuscitado",
-    "nome": "GARRAS (Ressuscitado)",
-    "categoria": "RESSUSCITADO",
+    "id": "garras_ATORMENTADO",
+    "nome": "GARRAS (ATORMENTADO)",
+    "categoria": "ATORMENTADO",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Novato",
       "vantagens_previas": [
-        "ressuscitado"
+        "ATORMENTADO"
       ]
     },
     "descricao": "Pode estender garras de osso ou energia. For+d6, PA 2."
   },
   {
     "id": "costura_cadaverica",
-    "nome": "COSTURA CADAVÉRICA (Ressuscitado)",
-    "categoria": "RESSUSCITADO",
+    "nome": "COSTURA CADAVÉRICA (ATORMENTADO)",
+    "categoria": "ATORMENTADO",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": [
-        "ressuscitado"
+        "ATORMENTADO"
       ]
     },
     "descricao": "Cura natural acelerada. Pode 'costurar' ferimentos para curar instantaneamente com teste de Vigor."

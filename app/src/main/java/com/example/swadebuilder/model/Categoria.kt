@@ -17,7 +17,7 @@ enum class Categoria {
     @SerialName("PROFISSIONAL")  PROFISSIONAL,
     @SerialName("SOCIAIS")       SOCIAIS,
     @SerialName("ESTRANHAS")     ESTRANHAS,
-    @SerialName("RESSUSCITADO")  RESSUSCITADO,
+    @SerialName("ATORMENTADO")  ATORMENTADO,
     @SerialName("LENDARIAS")     LENDARIAS,
     @SerialName("SUPER")         SUPER,
     @SerialName("MONSTRUOSAS")   MONSTRUOSAS,
