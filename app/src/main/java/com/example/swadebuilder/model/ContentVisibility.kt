@@ -126,6 +126,12 @@ fun CriadorState.isVantagemVisible(
     val isGenericAB = vant.id == "antecedente_arcano"
     val isSpecificAB = (vant.id.startsWith("antecedente_arcano_") || vant.id.startsWith("aa_"))
 
+    // Fantasy Logic: Keep Generic visible, Hide Specifics (Use Generic as selector)
+    if (compendioFantasiaAtivo) {
+        if (isSpecificAB) return false
+        if (isGenericAB) return true
+    }
+
     if (!multiplosAAHabilitados) {
         // If Multiple ABs DISABLED: Show ONLY the Generic AB (Hide specific ones)
         if (isSpecificAB) return false

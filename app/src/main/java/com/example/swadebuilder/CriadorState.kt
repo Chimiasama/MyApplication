@@ -1718,15 +1718,15 @@ class CriadorState {
                     // For now, if blank, +2 (Standard behavior)
                     bonusSlots += 2
                 } else {
-                    val normalizedChoice = choice.normAAKey()
-                    if (normalizedChoice.contains("&")) {
+                    if (choice.contains("&")) {
                         // Split logic: "Key1 & Key2"
-                        if (normalizedChoice.split("&").any { it.trim() == arcKey }) {
+                        // Normalize each part individually
+                        if (choice.split("&").any { it.normAAKey() == arcKey }) {
                             bonusSlots += 1
                         }
                     } else {
                         // Single target
-                        if (normalizedChoice == arcKey) {
+                        if (choice.normAAKey() == arcKey) {
                             bonusSlots += 2
                         }
                     }

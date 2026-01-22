@@ -768,7 +768,15 @@ fun VantagensContent(
 
     if (dialogMostrandoAntecedente != null) {
         val vantOriginal = dialogMostrandoAntecedente!!
-        val opcoesArcano: List<String> = vantOriginal.choiceOptions
+        // Fantasy Override: Show list of Fantasy ABs instead of generic options
+        val opcoesArcano: List<String> = if (state.compendioFantasiaAtivo) {
+            listaVantagens
+                .filter { it.origem.equals("FANTASIA", ignoreCase = true) && it.id.startsWith("antecedente_arcano_") }
+                .map { it.subtipoArcano?.toSentenceCase() ?: it.nome.removePrefix("ANTECEDENTE ARCANO ").replace("(", "").replace(")", "").trim().toSentenceCase() }
+                .sorted()
+        } else {
+            vantOriginal.choiceOptions
+        }
 
         AlertDialog(
             onDismissRequest = {
@@ -777,7 +785,7 @@ fun VantagensContent(
             },
             title = { Text("Escolha o tipo de ${vantOriginal.nome}") },
             text = {
-                Column {
+                Column(Modifier.verticalScroll(rememberScrollState())) {
                     opcoesArcano.forEach { opcao ->
                         Row(
                             Modifier
@@ -800,21 +808,48 @@ fun VantagensContent(
                 TextButton(
                     enabled = (subOpcaoSelecionada != null),
                     onClick = {
-                        val novaVantagem = vantOriginal.copy(
-                            choice = subOpcaoSelecionada
-                        )
+                        if (state.compendioFantasiaAtivo) {
+                            // Find the specific edge corresponding to the choice
+                            val choiceLabel = subOpcaoSelecionada!!
+                            val specificEdge = listaVantagens.firstOrNull {
+                                it.origem.equals("FANTASIA", ignoreCase = true) &&
+                                        it.id.startsWith("antecedente_arcano_") &&
+                                        (it.subtipoArcano?.equals(choiceLabel, ignoreCase = true) == true ||
+                                                it.nome.contains(choiceLabel, ignoreCase = true))
+                            }
 
-                        if (state.podeSelecionar(novaVantagem)) {
-                            if (state.advantageAdvancementInProgress) {
-                                viewModel.selectAdvantageForAdvancement(novaVantagem)
-                            } else {
-                                state.comprarVantagem(novaVantagem) { msg ->
-                                    viewModel.logFeedback(msg)
-                                    onUserFeedback()
+                            if (specificEdge != null) {
+                                if (state.podeSelecionar(specificEdge)) {
+                                    if (state.advantageAdvancementInProgress) {
+                                        viewModel.selectAdvantageForAdvancement(specificEdge)
+                                    } else {
+                                        state.comprarVantagem(specificEdge) { msg ->
+                                            viewModel.logFeedback(msg)
+                                            onUserFeedback()
+                                        }
+                                    }
+                                } else {
+                                    // Trigger error feedback if requirements not met
+                                    viewModel.logFeedback("Requisitos não atendidos para ${specificEdge.nome}")
                                 }
                             }
-                            onUserFeedback()
+                        } else {
+                            val novaVantagem = vantOriginal.copy(
+                                choice = subOpcaoSelecionada
+                            )
+
+                            if (state.podeSelecionar(novaVantagem)) {
+                                if (state.advantageAdvancementInProgress) {
+                                    viewModel.selectAdvantageForAdvancement(novaVantagem)
+                                } else {
+                                    state.comprarVantagem(novaVantagem) { msg ->
+                                        viewModel.logFeedback(msg)
+                                        onUserFeedback()
+                                    }
+                                }
+                            }
                         }
+                        onUserFeedback()
                         dialogMostrandoAntecedente = null
                         subOpcaoSelecionada = null
                     }
