@@ -780,8 +780,8 @@ fun VantagensContent(
                     val baseName = vant.subtipoArcano?.toSentenceCase()
                         ?: vant.nome.removePrefix("ANTECEDENTE ARCANO ").replace("(", "").replace(")", "").trim().toSentenceCase()
 
-                    val reqs = if (vant.requisitos.atributos.isNotEmpty()) {
-                        val r = vant.requisitos.atributos.entries.joinToString(", ") { "${it.key} d${it.value}" }
+                    val reqs = if (vant.requisitos.atributoMin.isNotEmpty()) {
+                        val r = vant.requisitos.atributoMin.entries.joinToString(", ") { "${it.key} d${it.value}" }
                         " ($r)"
                     } else ""
 
