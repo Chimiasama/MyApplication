@@ -3221,6 +3221,7 @@ class CriadorState {
         val snapshotId = idAtual ?: UUID.randomUUID().toString()
 
         return PersonagemSnapshot(
+            version = 2,
             id = snapshotId,
             nome = nomePersonagem,
             timestamp = System.currentTimeMillis(),
