@@ -1703,12 +1703,38 @@ class CriadorState {
 
     fun getSlotsCountForArcano(arcKey: String): Int {
         val base = arcanoInfo[arcKey]?.first ?: 0
-        val newPowersCount = vantagensSelecionadas.count {
-            it.id == "novos_poderes" &&
-                    (it.choice.isNullOrBlank() || it.choice?.normAAKey() == arcKey)
-        }
+        var bonusSlots = 0
+
+        vantagensSelecionadas
+            .filter { it.id == "novos_poderes" }
+            .forEach { vant ->
+                val choice = vant.choice
+                if (choice.isNullOrBlank()) {
+                    // Legacy or Single AB: counts for this one if it's the only one or default
+                    // If we have multiple ABs and blank choice, it might be ambiguous,
+                    // but usually means it belongs to the primary/only one.
+                    // To be safe, if blank, we assume it adds +2 if this is the only AB?
+                    // Or we let the new logic handle it.
+                    // For now, if blank, +2 (Standard behavior)
+                    bonusSlots += 2
+                } else {
+                    val normalizedChoice = choice.normAAKey()
+                    if (normalizedChoice.contains("&")) {
+                        // Split logic: "Key1 & Key2"
+                        if (normalizedChoice.split("&").any { it.trim() == arcKey }) {
+                            bonusSlots += 1
+                        }
+                    } else {
+                        // Single target
+                        if (normalizedChoice == arcKey) {
+                            bonusSlots += 2
+                        }
+                    }
+                }
+            }
+
         val bonusTecnicas = if (arcKey == "MESTRE DO CHI") tecnicasIniciaisFromTropo else 0
-        return base + (newPowersCount * 2) + bonusTecnicas
+        return base + bonusSlots + bonusTecnicas
     }
 
     fun arcanoCompraPendente(): Boolean {

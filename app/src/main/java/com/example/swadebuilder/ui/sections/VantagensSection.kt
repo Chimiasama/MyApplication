@@ -218,6 +218,7 @@ fun VantagensContent(
     var dialogMostrandoAntecedente by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoCavaleiro by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoMontaria by remember { mutableStateOf<Vantagem?>(null) }
+    var dialogMostrandoNovosPoderes by remember { mutableStateOf<Vantagem?>(null) }
     var subOpcaoSelecionada by rememberSaveable { mutableStateOf<String?>(null) }
 
     val scope = rememberCoroutineScope()
@@ -585,6 +586,30 @@ fun VantagensContent(
                                         dialogMostrandoCavaleiro = vant
                                     } else if (vant.nome.keyify() == "MONTARIA") {
                                         dialogMostrandoMontaria = vant
+                                    } else if (vant.id == "novos_poderes") {
+                                        val activeABs = state.vantagensSelecionadas
+                                            .mapNotNull { it.toArcanoKey() }
+                                            .distinct()
+                                        if (activeABs.size > 1) {
+                                            dialogMostrandoNovosPoderes = vant
+                                        } else {
+                                            // Single AB: proceed normally (likely assigning default if blank or single choice)
+                                            // If standard purchase flow doesn't auto-assign, we might need to set choice.
+                                            // But for now, let's assume standard behavior works for single AB.
+                                            // Actually, if single AB, let's explicitly set it if not set?
+                                            // Legacy behavior handled blank as "The AB".
+                                            // Let's stick to standard flow.
+                                            if (state.advantageAdvancementInProgress) {
+                                                viewModel.selectAdvantageForAdvancement(vant)
+                                                onUserFeedback()
+                                                viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
+                                            } else {
+                                                state.comprarVantagem(vant) { msg ->
+                                                    viewModel.logFeedback(msg)
+                                                    onUserFeedback()
+                                                }
+                                            }
+                                        }
                                     } else {
                                         if (state.advantageAdvancementInProgress) {
                                             viewModel.selectAdvantageForAdvancement(vant)
@@ -659,6 +684,24 @@ fun VantagensContent(
                                     dialogMostrandoCavaleiro = vant
                                 } else if (vant.nome.keyify() == "MONTARIA") {
                                     dialogMostrandoMontaria = vant
+                                } else if (vant.id == "novos_poderes") {
+                                    val activeABs = state.vantagensSelecionadas
+                                        .mapNotNull { it.toArcanoKey() }
+                                        .distinct()
+                                    if (activeABs.size > 1) {
+                                        dialogMostrandoNovosPoderes = vant
+                                    } else {
+                                        if (state.advantageAdvancementInProgress) {
+                                            viewModel.selectAdvantageForAdvancement(vant)
+                                            onUserFeedback()
+                                            viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
+                                        } else {
+                                            state.comprarVantagem(vant) { msg ->
+                                                viewModel.logFeedback(msg)
+                                                onUserFeedback()
+                                            }
+                                        }
+                                    }
                                 } else {
                                     if (state.advantageAdvancementInProgress) {
                                         viewModel.selectAdvantageForAdvancement(vant)
@@ -860,6 +903,83 @@ fun VantagensContent(
                 TextButton(
                     onClick = {
                         dialogMostrandoMontaria = null
+                        subOpcaoSelecionada = null
+                    }
+                ) { Text("Cancelar") }
+            }
+        )
+    }
+
+    if (dialogMostrandoNovosPoderes != null) {
+        val vantOriginal = dialogMostrandoNovosPoderes!!
+        val activeABs = state.vantagensSelecionadas.mapNotNull { it.toArcanoKey() }.distinct()
+
+        val options = mutableListOf<Pair<String, String>>()
+        activeABs.forEach { abKey ->
+            val label = "2 poderes para ${abKey.toSentenceCase()}"
+            options.add(label to abKey)
+        }
+        if (activeABs.size == 2) {
+            val keyCombined = "${activeABs[0]} & ${activeABs[1]}"
+            val label = "1 poder para ${activeABs[0].toSentenceCase()} e 1 para ${activeABs[1].toSentenceCase()}"
+            options.add(label to keyCombined)
+        }
+
+        AlertDialog(
+            onDismissRequest = {
+                dialogMostrandoNovosPoderes = null
+                subOpcaoSelecionada = null
+            },
+            title = { Text("Novos Poderes: Escolha o Destino") },
+            text = {
+                Column {
+                    Text("Você tem múltiplos Antecedentes Arcanos. Como deseja distribuir os 2 novos poderes?")
+                    Spacer(Modifier.size(8.dp))
+                    options.forEach { (label, value) ->
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable { subOpcaoSelecionada = value }
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (subOpcaoSelecionada == value),
+                                onClick = { subOpcaoSelecionada = value }
+                            )
+                            Spacer(Modifier.size(8.dp))
+                            Text(label, style = MaterialTheme.typography.bodyMedium)
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = (subOpcaoSelecionada != null),
+                    onClick = {
+                        val choice = subOpcaoSelecionada!!
+                        val vantToAdd = vantOriginal.copy(choice = choice)
+
+                        if (state.advantageAdvancementInProgress) {
+                            viewModel.selectAdvantageForAdvancement(vantToAdd)
+                            onUserFeedback()
+                            viewModel.logFeedback("Vantagem ${vantToAdd.nome} adicionada ($choice).")
+                        } else {
+                            state.comprarVantagem(vantToAdd) { msg ->
+                                viewModel.logFeedback(msg)
+                                onUserFeedback()
+                            }
+                        }
+
+                        dialogMostrandoNovosPoderes = null
+                        subOpcaoSelecionada = null
+                    }
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        dialogMostrandoNovosPoderes = null
                         subOpcaoSelecionada = null
                     }
                 ) { Text("Cancelar") }
