@@ -153,10 +153,17 @@ fun PoderesSection(
     }
 
     // Determine which ABs to display
-    val displayKeys = if (!state.permiteMultiAntecedenteArcano) {
+    val displayKeys = if (!state.permiteMultiAntecedenteArcano && !state.compendioFantasiaAtivo) {
         listOf(arcanosAtivos.first())
     } else {
         arcanosAtivos
+    }
+
+    val sharedTotalPP = remember(state.compendioFantasiaAtivo, arcanosAtivos, state.bonusPoderExtra) {
+        if (!state.compendioFantasiaAtivo) 0 else {
+            val maxBase = arcanosAtivos.maxOfOrNull { k -> arcanoInfo[k.normAAKey()]?.second ?: 0 } ?: 0
+            maxBase + state.bonusPoderExtra
+        }
     }
 
     // Pre-calculate powers for each displayed key to avoid doing it inside LazyColumn (and avoid @Composable error)
@@ -257,7 +264,8 @@ fun PoderesSection(
             val centerText = if (state.usarSemPontosDePoder) {
                 "Teste $foco = -(custo/2)"
             } else {
-                "PP: $ppTotal  •  $foco"
+                val ppDisplay = if (state.compendioFantasiaAtivo) sharedTotalPP else ppTotal
+                "PP: $ppDisplay  •  $foco"
             }
 
             // Treat null as true (default expanded)

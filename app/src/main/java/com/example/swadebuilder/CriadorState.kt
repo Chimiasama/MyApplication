@@ -1090,6 +1090,21 @@ class CriadorState {
             }
         }
 
+        // Fantasia: Antecedente Arcano concede d4 na perícia (se não tiver)
+        if (compendioFantasiaAtivo) {
+            val myAbs = vantagensSelecionadas.mapNotNull { it.toArcanoKey()?.normAAKey() }
+            if (myAbs.isNotEmpty()) {
+                myAbs.forEach { abKey ->
+                    if (arcanoInfo.containsKey(abKey)) {
+                        val info = arcanoInfo[abKey]
+                        if (info != null && info.third.keyify() == perKey) {
+                            modifiedBase = maxOf(modifiedBase, 4)
+                        }
+                    }
+                }
+            }
+        }
+
         return modifiedBase
     }
 
@@ -2003,7 +2018,7 @@ class CriadorState {
                 return false
             }
 
-            if (!permiteMultiAntecedenteArcano) {
+            if (!permiteMultiAntecedenteArcano && !compendioFantasiaAtivo) {
                 val anyArcano = vantagensSelecionadas.any { it.nome.keyify().startsWith("ANTECEDENTE ARCANO") }
                 if (anyArcano && vantagensSelecionadas.none { it.nome.keyify() == key }) {
                     return false
