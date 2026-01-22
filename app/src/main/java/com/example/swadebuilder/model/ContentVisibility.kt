@@ -99,6 +99,9 @@ fun CriadorState.isVantagemVisible(
         }
     }
 
+    val isGenericAB = vant.id == "antecedente_arcano"
+    val isSpecificAB = (vant.id.startsWith("antecedente_arcano_") || vant.id.startsWith("aa_"))
+
     val isActive = (isBasico && (!compendioFantasiaAtivo || isGenericAB) && !compendioDeadlandsAtivo) ||
             (isAdg && compendioArteDaGuerraAtivo) ||
             (isSuper && modoSupers) ||
@@ -123,8 +126,6 @@ fun CriadorState.isVantagemVisible(
     }
 
     // 3. Arcane Background Visibility
-    val isGenericAB = vant.id == "antecedente_arcano"
-    val isSpecificAB = (vant.id.startsWith("antecedente_arcano_") || vant.id.startsWith("aa_"))
 
     // Fantasy Logic: Keep Generic visible, Hide Specifics (Use Generic as selector)
     if (compendioFantasiaAtivo) {
