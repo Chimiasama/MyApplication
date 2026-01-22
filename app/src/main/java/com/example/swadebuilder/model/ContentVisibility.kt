@@ -8,7 +8,7 @@ import com.example.swadebuilder.util.semAcentos
  */
 
 fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
-    val basicReplaced = compendioFantasiaAtivo || compendioSciFiAtivo || compendioDeadlandsAtivo
+    val basicReplaced = compendioFantasiaAtivo || compendioSciFiAtivo || compendioDeadlandsAtivo || compendioPathfinderAtivo
     if (compendioFantasiaAtivo) {
         add("FANTASIA")
     }
