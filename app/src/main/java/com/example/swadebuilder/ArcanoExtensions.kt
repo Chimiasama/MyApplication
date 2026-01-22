@@ -8,7 +8,18 @@ fun String.normAAKey(): String =
 
 fun Vantagem.toArcanoKey(): String? {
     if (!subtipoArcano.isNullOrBlank()) return subtipoArcano.normAAKey()
-    if (!choice.isNullOrBlank()) return choice!!.normAAKey()
+    if (!choice.isNullOrBlank()) {
+        val c = choice!!.normAAKey()
+        // Map new (Básico) keys to standard keys
+        return when {
+            "DOM BASICO" in c -> "DOM"
+            "MAGIA BASICO" in c -> "MAGIA"
+            "MILAGRES BASICO" in c -> "MILAGRES"
+            "PSIONICOS BASICO" in c -> "PSIONICOS"
+            "CIENCIA ESTRANHA BASICO" in c -> "CIENCIA ESTRANHA"
+            else -> c
+        }
+    }
     val n = nome.normAAKey()
     return when {
         "(DOM" in n -> "DOM"

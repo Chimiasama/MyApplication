@@ -31,11 +31,11 @@
       "observacoes": ""
     },
     "choiceOptions": [
-      "Dom",
-      "Magia",
-      "Milagres",
-      "Psiônicos",
-      "Ciência Estranha"
+      "Dom (Básico)",
+      "Magia (Básico)",
+      "Milagres (Básico)",
+      "Psiônicos (Básico)",
+      "Ciência Estranha (Básico)"
     ],
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -44,7 +44,7 @@
   },
   {
     "id": "antecedente_arcano_dom",
-    "nome": "ANTECEDENTE ARCANO (Dom)",
+    "nome": "ANTECEDENTE ARCANO (Dom - Básico)",
     "categoria": "ANTECEDENTE",
     "origem": "BASICO",
     "requisitos": {
@@ -64,7 +64,7 @@
   },
   {
     "id": "antecedente_arcano_magia",
-    "nome": "ANTECEDENTE ARCANO (Magia)",
+    "nome": "ANTECEDENTE ARCANO (Magia - Básico)",
     "categoria": "ANTECEDENTE",
     "origem": "BASICO",
     "requisitos": {
@@ -84,7 +84,7 @@
   },
   {
     "id": "antecedente_arcano_milagres",
-    "nome": "ANTECEDENTE ARCANO (Milagres)",
+    "nome": "ANTECEDENTE ARCANO (Milagres - Básico)",
     "categoria": "ANTECEDENTE",
     "origem": "BASICO",
     "requisitos": {
@@ -104,7 +104,7 @@
   },
   {
     "id": "antecedente_arcano_ciencia_estranha",
-    "nome": "ANTECEDENTE ARCANO (Ciência Estranha)",
+    "nome": "ANTECEDENTE ARCANO (Ciência Estranha - Básico)",
     "categoria": "ANTECEDENTE",
     "origem": "BASICO",
     "requisitos": {
@@ -124,7 +124,7 @@
   },
   {
     "id": "antecedente_arcano_psionicos",
-    "nome": "ANTECEDENTE ARCANO (Psiônicos)",
+    "nome": "ANTECEDENTE ARCANO (Psiônicos - Básico)",
     "categoria": "ANTECEDENTE",
     "origem": "BASICO",
     "requisitos": {

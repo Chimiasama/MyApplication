@@ -1839,7 +1839,7 @@
   },
   {
     "id": "antecedente_arcano_mago_fantasia",
-    "nome": "ANTECEDENTE ARCANO (Mago - Fantasia)",
+    "nome": "ANTECEDENTE ARCANO (Mago)",
     "categoria": "ANTECEDENTE",
     "origem": "FANTASIA",
     "requisitos": {
@@ -1852,7 +1852,7 @@
       "observacoes": ""
     },
     "grupoId": "antecedente_arcano",
-    "subtipoArcano": "MAGO (FANTASIA)",
+    "subtipoArcano": "MAGO",
     "isGrupoSelector": false,
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
