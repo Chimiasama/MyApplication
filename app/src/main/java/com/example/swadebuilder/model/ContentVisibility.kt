@@ -99,7 +99,7 @@ fun CriadorState.isVantagemVisible(
         }
     }
 
-    val isActive = (isBasico && !compendioFantasiaAtivo && !compendioDeadlandsAtivo) ||
+    val isActive = (isBasico && (!compendioFantasiaAtivo || isGenericAB) && !compendioDeadlandsAtivo) ||
             (isAdg && compendioArteDaGuerraAtivo) ||
             (isSuper && modoSupers) ||
             (isFantasia && compendioFantasiaAtivo) ||
