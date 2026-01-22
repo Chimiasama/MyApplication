@@ -768,14 +768,28 @@ fun VantagensContent(
 
     if (dialogMostrandoAntecedente != null) {
         val vantOriginal = dialogMostrandoAntecedente!!
-        // Fantasy Override: Show list of Fantasy ABs instead of generic options
-        val opcoesArcano: List<String> = if (state.compendioFantasiaAtivo) {
+        // Fantasy Override: Show list of Fantasy + Basic ABs with requirements
+        val opcoesArcano: List<Pair<String, Vantagem>> = if (state.compendioFantasiaAtivo) {
             listaVantagens
-                .filter { it.origem.equals("FANTASIA", ignoreCase = true) && it.id.startsWith("antecedente_arcano_") }
-                .map { it.subtipoArcano?.toSentenceCase() ?: it.nome.removePrefix("ANTECEDENTE ARCANO ").replace("(", "").replace(")", "").trim().toSentenceCase() }
-                .sorted()
+                .filter {
+                    val isAb = it.id.startsWith("antecedente_arcano_")
+                    val isSrc = it.origem.equals("FANTASIA", ignoreCase = true) || it.origem.equals("BASICO", ignoreCase = true)
+                    isAb && isSrc
+                }
+                .map { vant ->
+                    val baseName = vant.subtipoArcano?.toSentenceCase()
+                        ?: vant.nome.removePrefix("ANTECEDENTE ARCANO ").replace("(", "").replace(")", "").trim().toSentenceCase()
+
+                    val reqs = if (vant.requisitos.atributos.isNotEmpty()) {
+                        val r = vant.requisitos.atributos.entries.joinToString(", ") { "${it.key} d${it.value}" }
+                        " ($r)"
+                    } else ""
+
+                    "$baseName$reqs" to vant
+                }
+                .sortedBy { it.first }
         } else {
-            vantOriginal.choiceOptions
+            emptyList()
         }
 
         AlertDialog(
@@ -786,20 +800,39 @@ fun VantagensContent(
             title = { Text("Escolha o tipo de ${vantOriginal.nome}") },
             text = {
                 Column(Modifier.verticalScroll(rememberScrollState())) {
-                    opcoesArcano.forEach { opcao ->
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .clickable { subOpcaoSelecionada = opcao }
-                                .padding(vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RadioButton(
-                                selected = (subOpcaoSelecionada == opcao),
-                                onClick = { subOpcaoSelecionada = opcao }
-                            )
-                            Spacer(Modifier.size(8.dp))
-                            Text(opcao)
+                    if (state.compendioFantasiaAtivo) {
+                        opcoesArcano.forEach { (label, _) ->
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable { subOpcaoSelecionada = label }
+                                    .padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = (subOpcaoSelecionada == label),
+                                    onClick = { subOpcaoSelecionada = label }
+                                )
+                                Spacer(Modifier.size(8.dp))
+                                Text(label)
+                            }
+                        }
+                    } else {
+                        vantOriginal.choiceOptions.forEach { opcao ->
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable { subOpcaoSelecionada = opcao }
+                                    .padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = (subOpcaoSelecionada == opcao),
+                                    onClick = { subOpcaoSelecionada = opcao }
+                                )
+                                Spacer(Modifier.size(8.dp))
+                                Text(opcao)
+                            }
                         }
                     }
                 }
@@ -809,14 +842,8 @@ fun VantagensContent(
                     enabled = (subOpcaoSelecionada != null),
                     onClick = {
                         if (state.compendioFantasiaAtivo) {
-                            // Find the specific edge corresponding to the choice
                             val choiceLabel = subOpcaoSelecionada!!
-                            val specificEdge = listaVantagens.firstOrNull {
-                                it.origem.equals("FANTASIA", ignoreCase = true) &&
-                                        it.id.startsWith("antecedente_arcano_") &&
-                                        (it.subtipoArcano?.equals(choiceLabel, ignoreCase = true) == true ||
-                                                it.nome.contains(choiceLabel, ignoreCase = true))
-                            }
+                            val specificEdge = opcoesArcano.firstOrNull { it.first == choiceLabel }?.second
 
                             if (specificEdge != null) {
                                 if (state.podeSelecionar(specificEdge)) {
