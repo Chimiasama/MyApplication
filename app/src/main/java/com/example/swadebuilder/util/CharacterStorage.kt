@@ -51,6 +51,10 @@ object CharacterStorage {
     }
 
     private fun validateChecksum(snapshot: PersonagemSnapshot): Boolean {
+        // For new save files (version 2+), checksum is mandatory to prevent tampering
+        if (snapshot.version >= 2 && snapshot.checksum == null) {
+            return false
+        }
         val expected = snapshot.checksum ?: return true
         return expected == checksumFor(snapshot)
     }

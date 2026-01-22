@@ -19,3 +19,8 @@
 **Vulnerability:** The application saved generated PDFs to the root of External Storage (`getExternalFilesDir(null)`) with a static filename (`ficha_preenchida.pdf`). This exposed the file to race conditions (overwriting before sharing completes) and violated the Principle of Least Privilege by exposing the entire external files root via FileProvider.
 **Learning:** Using `context.cacheDir` is safer for temporary files to be shared, as it is internal to the app and managed by the OS. Dynamic filenames prevent data leakage between operations.
 **Prevention:** Use `cache-path` in `file_paths.xml` with a specific subdirectory. Generate unique or sanitized filenames for shared content.
+
+## 2025-02-14 - Optional Checksum Bypass (Integrity Validation)
+**Vulnerability:** The integrity check for save files (`validateChecksum`) returned `true` if the checksum field was missing. This allowed an attacker to bypass validation by simply removing the `checksum` field from a tampered JSON file.
+**Learning:** Integrity checks must be mandatory. If a field is optional for legacy reasons, a strict versioning strategy must be used to enforce the check for new data while allowing migration. "Fail Open" (defaulting to true) in security checks negates the protection.
+**Prevention:** Enforce checksum presence for new data versions. For `snapshot.version >= 2`, absence of checksum is now treated as a validation failure.
