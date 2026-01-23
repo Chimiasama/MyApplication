@@ -424,7 +424,13 @@ fun TelaInicial(
                         }
 
                         if (!optCompendioWiseguys) {
-                            SimpleCheckRow("Múltiplos Ant. Arcanos", "Permite combinar classes conjuradoras.", optMultiAntecedenteArcano) { optMultiAntecedenteArcano = it }
+                            if (!optCompendioFantasia) {
+                                SimpleCheckRow(
+                                    "Múltiplos Ant. Arcanos",
+                                    "Permite combinar classes conjuradoras.",
+                                    optMultiAntecedenteArcano
+                                ) { optMultiAntecedenteArcano = it }
+                            }
                             SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
                             SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
                             if (!optCompendioPathfinder) {
