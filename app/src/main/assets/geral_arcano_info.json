@@ -32,7 +32,7 @@
   {
     "key": "ALQUIMIA",
     "slots": 3,
-    "pp": 10,
+    "pp": 15,
     "foco": "Alquimia"
   },
   {
@@ -49,19 +49,19 @@
   },
   {
     "key": "CLERIGO",
-    "slots": 3,
+    "slots": 5,
     "pp": 10,
     "foco": "Fé"
   },
   {
     "key": "DIABOLISTA",
-    "slots": 3,
+    "slots": 5,
     "pp": 10,
     "foco": "Conjurar"
   },
   {
     "key": "DRUIDA",
-    "slots": 3,
+    "slots": 5,
     "pp": 10,
     "foco": "Fé"
   },

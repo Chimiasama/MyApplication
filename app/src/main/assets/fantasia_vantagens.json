@@ -1145,7 +1145,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Alquimistas criam poções, óleos e elixires. Seus poderes são preparados antecipadamente em frascos. Possuem a Complicação Componente Material (poções são descartáveis) e precisam de sua Bolsa de Alquimista para ativar poderes. Perícia Arcana: Alquimia (Astúcia)."
+    "descricao": "Alquimistas criam poções, óleos e elixires. Seus poderes são preparados antecipadamente em frascos. Possuem a Complicação Componente Material (poções são descartáveis) e precisam de sua Bolsa de Alquimista para ativar poderes. Perícia Arcana: Alquimia (Astúcia). Começam com 15 Pontos de Poder e 3 Poderes."
   },
   {
     "id": "mestre_alquimista",
@@ -1209,7 +1209,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Bardos conjuram feitiços através de performance. Possuem Interferência de Armadura (Menor) e Língua Afiada (podem usar Performance como Provocar em Desafios e ignorar repetição se mudarem os versos). Perícia Arcana: Performance (Espírito)."
+    "descricao": "Bardos conjuram feitiços através de performance. Possuem Interferência de Armadura (Menor) e Língua Afiada (podem usar Performance como Provocar em Desafios e ignorar repetição se mudarem os versos). Perícia Arcana: Performance (Espírito). Começam com 10 Pontos de Poder e 3 Poderes (Aumentar/Reduzir Característica, Som/Silêncio e um de livre escolha)."
   },
   {
     "id": "inspirar_heroismo",
@@ -1292,7 +1292,7 @@
     "ganha_ao_comprar": [
       "familiar"
     ],
-    "descricao": "Bruxos usam magia antiga e pactos. Possuem Interferência de Armadura (Maior), Componentes Materiais, Corrupção, e a habilidade Congregação (transferir PP). Começam com a Vantagem Familiar e podem Preparar Poderes. Perícia Arcana: Conjurar (Astúcia)."
+    "descricao": "Bruxos usam magia antiga e pactos. Possuem Interferência de Armadura (Maior), Componentes Materiais, Corrupção, e a habilidade Congregação (transferir PP). Começam com a Vantagem Familiar e podem Preparar Poderes. Perícia Arcana: Conjurar (Astúcia). Começam com 10 Pontos de Poder e 3 Poderes."
   },
   {
     "id": "a_hora_das_bruxas",
@@ -1352,7 +1352,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Servos de divindades. Devem escolher um Domínio. Possuem Voto (Maior). Exibir símbolo sagrado concede rerrolagem em Fé. Perícia Arcana: Fé (Espírito)."
+    "descricao": "Servos de divindades. Devem escolher um Domínio. Possuem Voto (Maior). Exibir símbolo sagrado concede rerrolagem em Fé. Perícia Arcana: Fé (Espírito). Começam com 10 Pontos de Poder e 5 Poderes (Cura, Santuário e três de livre escolha)."
   },
   {
     "id": "destruir_mortos_vivos",
@@ -1414,7 +1414,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Conjuram servos do Abismo. Possuem Interferência de Armadura (Maior) e Corrupção. Podem invocar demônios específicos com Conjurar Aliado. Perícia Arcana: Conjurar (Astúcia)."
+    "descricao": "Conjuram servos do Abismo. Possuem Interferência de Armadura (Maior) e Corrupção. Podem invocar demônios específicos com Conjurar Aliado. Perícia Arcana: Conjurar (Astúcia). Começam com 10 Pontos de Poder e 5 Poderes (Banir, Devastação, Conjurar Aliado e dois de livre escolha)."
   },
   {
     "id": "armadura_infernal",
@@ -1474,7 +1474,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Protetores da natureza. Possuem Interferência de Armadura (Menor), Componentes Materiais e Voto (Maior). Duração de Conjurar Animal e Mudança de Forma (animal) aumentada para 1h. Ignoram terreno acidentado natural. Perícia Arcana: Fé (Espírito)."
+    "descricao": "Protetores da natureza. Possuem Interferência de Armadura (Menor), Componentes Materiais e Voto (Maior). Duração de Conjurar Animal e Mudança de Forma (animal) aumentada para 1h. Ignoram terreno acidentado natural. Perícia Arcana: Fé (Espírito). Começam com 10 Pontos de Poder e 5 Poderes (Amigo das Feras, Proteção Ambiental, Mudança de Forma e dois de livre escolha)."
   },
   {
     "id": "cajado_do_coracao_da_mata",
