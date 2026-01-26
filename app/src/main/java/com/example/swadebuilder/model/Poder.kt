@@ -44,7 +44,7 @@ data class Poder(
     val pontosDePoder: String,     // agora sempre String, mas aceita número ou texto no JSON
     val distancia: String,
     val duracao: String,
-    val manifestacoes: List<String>,
+    val manifestacoes: List<String> = emptyList(),
     val descricao: String,
-    val modificadores: List<Modificador>
+    val modificadores: List<Modificador> = emptyList()
 )
