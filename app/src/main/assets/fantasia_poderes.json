@@ -2,622 +2,691 @@
   {
     "nome": "Adivinhação",
     "estagio": "Experiente",
-    "custo": "5",
-    "alcance": "Pessoal",
     "duracao": "Uma breve conversa de cerca de cinco minutos",
     "descricao": "Adivinhação permite que o conjurador entre em contato com seres ou forças sobrenaturais para adquirir informação. Preparar o feitiço leva um minuto ininterrupto de preces, persuasão ou comunicação com um espírito ou divindade. Depois que o tempo de preparação estiver completo, faça uma rolagem de perícia arcana. Sucesso significa que a entidade responde da melhor maneira possível. Uma ampliação significa que o espírito é mais prestativo, melhor informado ou mais direto do que o habitual.\n\nMODIFICADORES:\n- PODER (+3): Funciona apenas em solo considerado sagrado pela entidade. A entidade oferece conselhos não requisitados e pode se manifestar com uma ampliação.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "adivinhacao",
+    "pontosDePoder": "5",
+    "distancia": "Pessoal"
   },
   {
     "nome": "Ajuda",
     "estagio": "Novato",
-    "custo": "1",
-    "alcance": "Astúcia",
     "duracao": "Instantânea/Uma Hora",
     "descricao": "Selecione uma das opções: Recuperação (remove Abalado, Distraído ou Vulnerável; remove dois com ampliação) ou Entorpecer (reduz penalidade de Ferimentos/Fadiga em 1, ou 2 com ampliação, por uma hora).\n\nMODIFICADORES:\n- ATORDOADO (+1): Remove também a condição Atordoado na opção Recuperação.\n- RECEPTORES ADICIONAIS (+1): Afeta mais de um alvo.\n- RESTAURAÇÃO (+3): Restaura um tipo de dado de dreno de energia (dois com ampliação).",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "ajuda",
+    "pontosDePoder": "1",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Amigo das Feras",
     "estagio": "Novato",
-    "custo": "Especial",
-    "alcance": "Astúcia",
     "duracao": "10 minutos",
     "descricao": "Permite falar e guiar feras da natureza. O custo é igual à soma dos Tamanhos das criaturas (mínimo 1). Bandos custam 1 (Pequeno), 2 (Médio) ou 3 (Grande).\n\nMODIFICADORES:\n- BESTIÁRIO (+2): Afeta feras mágicas com inteligência animal.\n- DURAÇÃO (+1): Aumenta para 30 minutos.\n- PASSAGEIRO DA MENTE (+1): Permite comunicar e sentir através das feras.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "amigo_das_feras",
+    "pontosDePoder": "Especial",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Âncora Planar",
     "estagio": "Veterano",
-    "custo": "8",
-    "alcance": "Astúcia",
     "duracao": "Instantânea",
     "descricao": "Invoca e prende uma criatura extraplanar em uma armadilha (círculo, glifos) que leva 10 minutos para preparar. É uma rolagem resistida de perícia arcana contra Espírito. Se vencer, a criatura é presa e deve concordar com um serviço ou se libertar (testes a cada 24h).",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "ancora_planar",
+    "pontosDePoder": "8",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Andar nas Paredes",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Permite andar em superfícies verticais ou horizontais com metade da Movimentação (total com ampliação). Adiciona +4 em Atletismo para escalar/agarrar.\n\nMODIFICADORES:\n- RECEPTORES ADICIONAIS (+1): Afeta outros alvos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "andar_nas_paredes",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Atordoar",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "Instantânea",
     "descricao": "Impacta o alvo com força, som ou luz. Vítima faz Vigor (-2 com ampliação na conjuração) ou fica Atordoado.\n\nMODIFICADORES:\n- ÁREA (+2/+3): Modelo Médio (+2) ou Grande (+3).",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "atordoar",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Aumentar/Reduzir Característica",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "5 (aumentar); Instantânea (reduzir)",
     "descricao": "Aumenta (aliado) ou reduz (inimigo) uma Característica em um tipo de dado (dois com ampliação).\n\nMODIFICADORES:\n- MELHORADO (+2): Aumentar ganha rerrolagem por turno/ação. Reduzir impõe penalidade de -2 nas rolagens da característica.\n- FORTE (+1): Reduzir apenas. Resistência com -2.\n- RECEPTORES ADICIONAIS (+1): Afeta mais alvos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "aumentar_reduzir_caracteristica",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Banir",
     "estagio": "Veterano",
-    "custo": "3",
-    "alcance": "Astúcia",
     "duracao": "Instantânea",
     "descricao": "Manda entidades de outros planos de volta para suas dimensões. Rolagem resistida de arcana vs Espírito. Sucesso = Abalado; Ampliação = Ferimento. Se Incapacitar, a entidade é banida.\n\nMODIFICADORES:\n- ÁREA (+1/+2/+3): Modelo Pequeno/Médio/Grande.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "banir",
+    "pontosDePoder": "3",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Barreira",
     "estagio": "Experiente",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Cria muro de 5 quadros de comprimento e 1 de altura (dobro com ampliação). Dureza 10 (12 com ampliação).\n\nMODIFICADORES:\n- DANO (+0/+1): Causa 2d4 de dano.\n- ENDURECIDA (+1): Dureza 12 (14 ampliação).\n- IMATERIAL (+0): Atravessável, Dureza 0.\n- MODELADA (+1): Círculo, quadrado ou forma básica.\n- MORTAL (+1/+2): Causa 2d6 dano.\n- TAMANHO (+1): Dobra dimensões.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "barreira",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Bênção",
     "estagio": "Experiente",
-    "custo": "10",
-    "alcance": "Uma cidade/comunidade",
     "duracao": "Um ano",
     "descricao": "Abençoa colheitas, crianças e animais. Requer uma hora de ritual. Sucesso garante colheitas abundantes e saúde.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "bencao",
+    "pontosDePoder": "10",
+    "distancia": "Uma cidade/comunidade"
   },
   {
     "nome": "Campo de Dano",
     "estagio": "Experiente",
-    "custo": "4",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Cria aura que causa 2d4 de dano a adjacentes no fim do turno do receptor.\n\nMODIFICADORES:\n- ÁREA (+2): Modelo Médio.\n- MELHORADO (+4): Dano 3d6 e Arma Pesada.\n- DANO (+2): Dano 2d6.\n- MÓVEL (+2): Permite mover o campo (com Área).",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "campo_de_dano",
+    "pontosDePoder": "4",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Cavar",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Permite mesclar-se com a terra e mover-se no subterrâneo (metade da movimentação; total com ampliação).\n\nMODIFICADORES:\n- PODER (+1): Cava pedra/concreto.\n- RECEPTORES ADICIONAIS (+1): Afeta mais alvos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "cavar",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Cegar",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "Instantânea",
     "descricao": "Vítima sofre -2 em ações visuais (-4 com ampliação). Teste de Vigor para se livrar.\n\nMODIFICADORES:\n- ÁREA (+2/+3): Modelo Médio/Grande.\n- FORTE (+1): Resistência com -2.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "cegar",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Confusão",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "Instantânea",
     "descricao": "Confunde alvos em Modelo Médio, tornando-os Distraídos ou Vulneráveis (ambos com ampliação).\n\nMODIFICADORES:\n- ÁREA (+0/+1): Modelo Pequeno/Grande.\n- MELHORADA (+2): Alvos também ficam Abalados.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "confusao",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Conjurar Aliado",
     "estagio": "Novato",
-    "custo": "Especial",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Cria um servo. Tipos: Assistente (1), Guarda-costas (3), Sentinela (5), Reflexo Pessoal (7).\n\nMODIFICADORES:\n- ALIADOS ADICIONAIS (Variável): Metade do custo para extras.\n- AUMENTAR CARACTERÍSTICA (+1): Aumenta atributo/perícia.\n- PASSAGEIRO DA MENTE (+1): Comunicação/sentidos.\n- VANTAGEM DE COMBATE (+1): Concede vantagem.\n- VOO (+1): Pode voar.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "conjurar_aliado",
+    "pontosDePoder": "Especial",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Conjurar Animal",
     "estagio": "Novato",
-    "custo": "Especial",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Canaliza feras naturais. Custo baseado no tamanho/tipo (ex: Cão 2, Urso 6, Elefante 7).\n\nMODIFICADORES:\n- ANIMAIS ADICIONAIS (Variável): Metade do custo para extras.\n- AUMENTAR CARACTERÍSTICA (+1): Aumenta atributo/perícia.\n- PASSAGEIRO DA MENTE (+1): Comunicação/sentidos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "conjurar_animal",
+    "pontosDePoder": "Especial",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Conjurar Item",
     "estagio": "Novato",
-    "custo": "2 por 0,5 kg",
-    "alcance": "Astúcia",
     "duracao": "Uma hora",
     "descricao": "Cria objeto mundano. Ampliação torna item mais durável.\n\nMODIFICADORES:\n- COMPLETO (+1): Conjunto completo (xadrez, aljava).\n- CRIAR COMIDA E ÁGUA (Especial): 1 PP sustenta 1 pessoa por dia.\n- DURADOURO (+1/0,5kg): Permanente até dissipado (investe PP).",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "conjurar_item",
+    "pontosDePoder": "2 por 0,5 kg",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Conjurar Monstro",
     "estagio": "Novato",
-    "custo": "Especial",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Invoca monstros leais (ex: Grifo 5, Hidra 9, Dragão).\n\nMODIFICADORES:\n- AUMENTAR CARACTERÍSTICA (+1): Aumenta atributo/perícia.\n- MONSTROS ADICIONAIS (Variável): Metade do custo para extras.\n- PASSAGEIRO DA MENTE (+1): Comunicação/sentidos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "conjurar_monstro",
+    "pontosDePoder": "Especial",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Conjurar Morto-Vivo",
     "estagio": "Novato",
-    "custo": "Especial",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Traz mortos-vivos para servir (ex: Esqueleto 3, Zumbi 3, Múmia 5).\n\nMODIFICADORES:\n- AUMENTAR CARACTERÍSTICA (+1): Aumenta atributo/perícia.\n- MORTOS-VIVOS ADICIONAIS (Variável): Metade do custo para extras.\n- PASSAGEIRO DA MENTE (+1): Comunicação/sentidos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "conjurar_mortovivo",
+    "pontosDePoder": "Especial",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Crescimento/Encolhimento",
     "estagio": "Experiente",
-    "custo": "2/ponto",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Aumenta ou reduz Tamanho. Crescimento aumenta Força e Resistência. Encolhimento reduz.\n\nMODIFICADORES:\n- DURAÇÃO (+2): Medida em minutos.\n- PODER (+2): Encolhimento mantém Força/Resistência originais.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "crescimento_encolhimento",
+    "pontosDePoder": "2/ponto",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Cura",
     "estagio": "Novato",
-    "custo": "3",
-    "alcance": "Toque",
     "duracao": "Instantânea",
     "descricao": "Remove 1 Ferimento (2 com ampliação) sofrido na última hora.\n\nMODIFICADORES:\n- CURA EM MASSA (+2/+3): Modelo Médio/Grande.\n- MELHORADA (+10): Cura ferimentos antigos.\n- LESÕES DEBILITANTES (+20): Cura lesão permanente (preparação 1h, conjurador exausto).\n- NEUTRALIZAR VENENOS/DOENÇAS (+1): Anula veneno/doença.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "cura",
+    "pontosDePoder": "3",
+    "distancia": "Toque"
   },
   {
     "nome": "Dádiva do Guerreiro",
     "estagio": "Experiente",
-    "custo": "4",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Receptor ganha uma Vantagem de Combate (Aprimorada com ampliação).\n\nMODIFICADORES:\n- PODER (+4): Ganha duas vantagens.\n- RECEPTORES ADICIONAIS (+1): Afeta mais alvos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "dadiva_do_guerreiro",
+    "pontosDePoder": "4",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Deflexão",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "-2 para ser atingido por ataques corpo a corpo OU distância (ambos com ampliação).\n\nMODIFICADORES:\n- RECEPTORES ADICIONAIS (+1): Afeta mais alvos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "deflexao",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Desejo",
     "estagio": "Lendário",
-    "custo": "20",
-    "alcance": "Astúcia",
     "duracao": "Instantânea",
     "descricao": "Altera a realidade. Custa 3 PP permanentes (salvo com ampliação). Efeitos: Ativar Poder, Aumentar Característica (perm), Especial, Intervenção, Ganhar Vantagem, Restaurar Destino, Riqueza, Ver Futuro, Viajar pelo Tempo.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "desejo",
+    "pontosDePoder": "20",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Detectar/Ocultar Arcano",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "5 (detectar); 1h (ocultar)",
     "descricao": "Detecta magia/sobrenatural ou oculta energias. Detectar ignora penalidades contra invisíveis.\n\nMODIFICADORES:\n- ÁREA (+1/+2): Ocultar em área.\n- FORTE (+1): Ocultar impõe -2 na detecção.\n- IDENTIFICAR (+1): Revela poderes do item.\n- RECEPTORES ADICIONAIS (+1): Afeta mais alvos.\n- SENTIR ALINHAMENTO (+1): Sente bem/mal.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "detectar_ocultar_arcano",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Devastação",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "Instantânea",
     "descricao": "Modelo Médio, Cone ou Raio. Alvos fazem Força (ou -2) ou são arremessados 2d6 quadros e ficam Distraídos.\n\nMODIFICADORES:\n- ÁREA (+1): Modelo Grande.\n- MELHORADA (+2): Arremesso 3d6 quadros, dano 2d6 ao bater.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "devastacao",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Disfarce",
     "estagio": "Experiente",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "10 minutos",
     "descricao": "Assume aparência de outra pessoa. Perceber -2 para notar (-4 com ampliação).\n\nMODIFICADORES:\n- RECEPTORES ADICIONAIS (+1): Afeta mais alvos.\n- TAMANHO (+1): Assume forma +/- 2 tamanhos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "disfarce",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Dissipar",
     "estagio": "Novato",
-    "custo": "1",
-    "alcance": "Astúcia",
     "duracao": "Instantânea",
     "descricao": "Anula poderes inimigos (resistida). Ampliação deixa alvo Distraído.\n\nMODIFICADORES:\n- ÁREA (+1/+2/+3): Afeta área.\n- CAMPO ANTIMAGIA (+8): Aura onde mágica não funciona.\n- DESENCANTAR (+1): Anula item mágico por 1-2 rodadas.\n- MÚLTIPLOS PODERES (+3): Dissipa todos os poderes do alvo.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "dissipar",
+    "pontosDePoder": "1",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Drenar Pontos de Poder",
     "estagio": "Veterano",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "Instantânea",
     "descricao": "Drena 1d6 PP do alvo (resistida por Espírito). Ampliação transfere pontos para o conjurador.\n\nMODIFICADORES:\n- PODER (+2): Drena 2d6 PP.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "drenar_pontos_de_poder",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Elo Mental",
     "estagio": "Novato",
-    "custo": "1",
-    "alcance": "Astúcia",
     "duracao": "30 minutos",
     "descricao": "Conexão telepática até 1,5km (8km ampliação).\n\nMODIFICADORES:\n- LONGA DISTÂNCIA (+3): Qualquer distância no mesmo plano.\n- RECEPTORES ADICIONAIS (+1): Afeta mais alvos.\n- TRANSMISSÃO (+2): Transmite para todos na área.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "elo_mental",
+    "pontosDePoder": "1",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Empatia",
     "estagio": "Novato",
-    "custo": "1",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Lê emoções. +1 (+2 ampliação) em interações sociais.\n\nMODIFICADORES:\n- DURAÇÃO (+1): Minutos.\n- ENCANTAR (+2): Melhora atitude do alvo.\n- RECEPTORES ADICIONAIS (+1): Afeta mais alvos.\n- VERDADE (+2): Sabe se alvo acredita no que diz.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "empatia",
+    "pontosDePoder": "1",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Enredar",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "Instantânea",
     "descricao": "Prende alvo (Enredado; Preso com ampliação).\n\nMODIFICADORES:\n- ÁREA (+2/+3): Modelo Médio/Grande.\n- DANO (+2): Causa 2d4 dano.\n- FORTE (+2): Dureza 10.\n- MORTAL (+4): Causa 2d6 dano.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "enredar",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Explosão",
     "estagio": "Experiente",
-    "custo": "3",
-    "alcance": "Astúcia x2",
     "duracao": "Instantânea",
     "descricao": "Modelo Médio de Explosão causa 2d6 dano (3d6 ampliação).\n\nMODIFICADORES:\n- ÁREA (+0/+1): Modelo Pequeno/Grande.\n- DANO (+2): Dano 3d6 (4d6).\n- MELHORADA (+4): Dano 4d6 (5d6) e Arma Pesada.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "explosao",
+    "pontosDePoder": "3",
+    "distancia": "Astúcia x2"
   },
   {
     "nome": "Falar Idioma",
     "estagio": "Novato",
-    "custo": "1",
-    "alcance": "Astúcia",
     "duracao": "10 minutos",
     "descricao": "Fala/lê/escreve idioma.\n\nMODIFICADORES:\n- ENTENDIMENTO EM MASSA (+5): Todos se entendem na área.\n- MELHORADO (+2): Todos os idiomas.\n- RECEPTORES ADICIONAIS (+1): Afeta mais alvos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "falar_idioma",
+    "pontosDePoder": "1",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Fantoche",
     "estagio": "Veterano",
-    "custo": "3",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Controla alvo (resistida por Espírito).\n\nMODIFICADORES:\n- FORTE (+2): Resistência com -2. Com Elo Mental alcance ilimitado.\n- RECEPTORES ADICIONAIS (+2): Afeta mais alvos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "fantoche",
+    "pontosDePoder": "3",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Ferir",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Arma causa +2 dano (+4 ampliação).\n\nMODIFICADORES:\n- RECEPTORES ADICIONAIS (+1): Afeta mais armas.\n- MELHORADO (+2): Dano +4 (+6) e Arma Pesada.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "ferir",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Iluminar/Obscurecer",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "10 minutos",
     "descricao": "Ilumina ou escurece Modelo Grande.\n\nMODIFICADORES:\n- ÁREA (+2): Iluminar; raio igual a Astúcia (Luz Solar).\n- BRILHAR (+1): Iluminar; elimina penalidade em alvo.\n- MELHORADO (+2): Obscurecer bloqueia infravisão/visão no escuro.\n- MÓVEL (+1): Move área.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "iluminar_obscurecer",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Ilusão",
     "estagio": "Novato",
-    "custo": "3",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Cria ilusão visual/auditiva. Resistida por Astúcia para desacreditar.\n\nMODIFICADORES:\n- ÁREA (+1): Modelo Grande.\n- DURAÇÃO (+2): Minutos.\n- FORTE (+2): Resistência com -2.\n- MORTAL (+3): Ilusão ataca (dano Abalado ou Ferimento).\n- MOBILIDADE (+1/+2): Ilusão move/voa.\n- SOM (+1): Gera som.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "ilusao",
+    "pontosDePoder": "3",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Intangibilidade",
     "estagio": "Veterano",
-    "custo": "5",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Torna-se incorpóreo. Atravessa paredes, imune a não-mágico.\n\nMODIFICADORES:\n- DURAÇÃO (+3): Minutos.\n- RECEPTORES ADICIONAIS (+3): Afeta mais alvos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "intangibilidade",
+    "pontosDePoder": "5",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Intervenção Mística",
     "estagio": "Lendário",
-    "custo": "20",
-    "alcance": "Especial",
     "duracao": "Especial",
     "descricao": "Causa grande evento/milagre via Magia Ritualística. Conjurador fica Exausto por 5 dias.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "intervencao_mistica",
+    "pontosDePoder": "20",
+    "distancia": "Especial"
   },
   {
     "nome": "Invisibilidade",
     "estagio": "Experiente",
-    "custo": "5",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Fica invisível (-4 para ser atingido, -6 ampliação).\n\nMODIFICADORES:\n- DURAÇÃO (+2): Minutos.\n- RECEPTORES ADICIONAIS (+3): Afeta mais alvos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "invisibilidade",
+    "pontosDePoder": "5",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Leitura de Objeto",
     "estagio": "Experiente",
-    "custo": "2",
-    "alcance": "Toque",
     "duracao": "Um minuto",
     "descricao": "Vê passado do objeto.\n\nMODIFICADORES:\n- PROJEÇÃO (+2): Projeta visão para outros verem.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "leitura_de_objeto",
+    "pontosDePoder": "2",
+    "distancia": "Toque"
   },
   {
     "nome": "Leitura Mental",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "Instantânea",
     "descricao": "Lê pensamentos (resistida por Astúcia).\n\nMODIFICADORES:\n- ANDARILHO DA MENTE (+2): Acesso a memórias profundas.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "leitura_mental",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Limpeza Mental",
     "estagio": "Veterano",
-    "custo": "3",
-    "alcance": "Astúcia",
     "duracao": "Instantânea",
     "descricao": "Remove memória (resistida por Astúcia).\n\nMODIFICADORES:\n- CONJURAÇÃO RÁPIDA (+2): Ação.\n- EDITAR (+1): Edita memória.\n- MELHORADA (+2): Remove completamente evento/pessoa.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "limpeza_mental",
+    "pontosDePoder": "3",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Localizar",
     "estagio": "Novato",
-    "custo": "3",
-    "alcance": "Pessoal",
     "duracao": "10 minutos",
     "descricao": "Encontra objeto, criatura ou local.\n\nMODIFICADORES:\n- ENCONTRAR O CAMINHO (+1): Senso do caminho mais seguro/rápido.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "localizar",
+    "pontosDePoder": "3",
+    "distancia": "Pessoal"
   },
   {
     "nome": "Maldição",
     "estagio": "Experiente",
-    "custo": "5",
-    "alcance": "Toque",
     "duracao": "Especial",
     "descricao": "Inflige Fadiga diária no alvo (resistida por Espírito).\n\nMODIFICADORES:\n- TRANSFORMAR EM PEDRA (+5): Transforma em pedra se incapacitado.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "maldicao",
+    "pontosDePoder": "5",
+    "distancia": "Toque"
   },
   {
     "nome": "Manipulação Elemental",
     "estagio": "Novato",
-    "custo": "1",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Controla elementos: Atacar (2d4), Empurrar, Mover, Efeitos Especiais.\n\nMODIFICADORES:\n- PODER (+3): Triplica volume, +2 dano, penalidade -2 empurrar.\n- CLIMA (+5): Controla clima em 8km.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "manipulacao_elemental",
+    "pontosDePoder": "1",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Medo",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "Instantânea",
     "descricao": "Causa teste de Medo no alvo (-2 com ampliação).\n\nMODIFICADORES:\n- ÁREA (+2/+3): Modelo Pequeno/Médio/Grande.\n- MELHORADO (+2): Teste com -2 (-4 ampliação).",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "medo",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Morosidade/Velocidade",
     "estagio": "Experiente",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "Instantânea (morosidade); 5 (velocidade)",
     "descricao": "Morosidade: Metade da mov. Velocidade: Dobra mov.\n\nMODIFICADORES:\n- ÁREA (+2/+3): Morosidade em área.\n- DISPARADA (+2): Velocidade corrida máxima.\n- FORTE (+1): Morosidade resistida com -2.\n- RAPIDEZ (+2): Velocidade reduz penalidade de ação múltipla.\n- RECEPTORES ADICIONAIS (+1): Velocidade mais alvos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "morosidade_velocidade",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Mudança de Forma",
     "estagio": "Novato",
-    "custo": "Especial",
-    "alcance": "Pessoal",
     "duracao": "5",
     "descricao": "Assume forma de criatura (Custo varia por tamanho).\n\nMODIFICADORES:\n- DURAÇÃO (+1): Minutos.\n- POLIMORFIA (+3): Transforma outros (Toque).\n- TRANSFORMAR (+2/+3): Transforma voluntário (Toque/Astúcia).",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "mudanca_de_forma",
+    "pontosDePoder": "Especial",
+    "distancia": "Pessoal"
   },
   {
     "nome": "Parar o Tempo",
     "estagio": "Heroico",
-    "custo": "10",
-    "alcance": "Pessoal",
     "duracao": "Instantânea",
     "descricao": "Conjurador ganha 1d4+1 turnos extras imediatamente.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "parar_o_tempo",
+    "pontosDePoder": "10",
+    "distancia": "Pessoal"
   },
   {
     "nome": "Proteção",
     "estagio": "Novato",
-    "custo": "1",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Armadura +2 (+2 Resistência com ampliação).\n\nMODIFICADORES:\n- RECEPTORES ADICIONAIS (+1): Afeta mais alvos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "protecao",
+    "pontosDePoder": "1",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Proteção Ambiental",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "Uma hora",
     "descricao": "Protege contra ambientes perigosos (calor, frio, pressão).\n\nMODIFICADORES:\n- RECEPTORES ADICIONAIS (+1): Afeta mais alvos.\n- RESISTÊNCIA AMBIENTAL (+1): Reduz dano elemental em 4 (6).",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "protecao_ambiental",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Proteção Arcana",
     "estagio": "Novato",
-    "custo": "1",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Poderes hostis sofrem -2 para afetar alvo (-4 ampliação).\n\nMODIFICADORES:\n- MELHORADA (+2): Penalidade aumenta para -4 (-6).\n- RECEPTORES ADICIONAIS (+1): Afeta mais alvos.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "protecao_arcana",
+    "pontosDePoder": "1",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Raio",
     "estagio": "Novato",
-    "custo": "1",
-    "alcance": "Astúcia x2",
     "duracao": "Instantânea",
     "descricao": "Ataque à distância 2d6 (3d6 ampliação).\n\nMODIFICADORES:\n- CADÊNCIA DE TIRO (+2): CdT 2.\n- DANO (+2): Dano 3d6 (4d6).\n- DESINTEGRAR (+2): Se incapacitar, vira pó.\n- MELHORADO (+4): Dano 4d6 (5d6) e Arma Pesada.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "raio",
+    "pontosDePoder": "1",
+    "distancia": "Astúcia x2"
   },
   {
     "nome": "Rajada",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Modelo de Cone ou de Raio",
     "duracao": "Instantânea",
     "descricao": "Ataque de área 2d6 (3d6 ampliação).\n\nMODIFICADORES:\n- DANO (+2): Dano 3d6 (4d6).\n- EMPURRAR (+1): Empurra alvos.\n- MELHORADA (+4): Dano 4d6 (5d6) e Arma Pesada.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "rajada",
+    "pontosDePoder": "2",
+    "distancia": "Modelo de Cone ou de Raio"
   },
   {
     "nome": "Ressurreição",
     "estagio": "Heroico",
-    "custo": "30",
-    "alcance": "Toque",
     "duracao": "Instantânea",
     "descricao": "Revive mortos (até 1 ano).\n\nMODIFICADORES:\n- PODER (+5): Até uma década.\n- MELHORADA (+10): Qualquer tempo, sem corpo.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "ressurreicao",
+    "pontosDePoder": "30",
+    "distancia": "Toque"
   },
   {
     "nome": "Santuário",
     "estagio": "Novato",
-    "custo": "2",
-    "alcance": "Toque",
     "duracao": "5",
     "descricao": "Inimigos devem passar em Espírito para atacar alvo.\n\nMODIFICADORES:\n- ÁREA (+2/+3): Modelo Médio/Grande.\n- FORTE (+1): Resistência com -2.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "santuario",
+    "pontosDePoder": "2",
+    "distancia": "Toque"
   },
   {
     "nome": "Som/Silêncio",
     "estagio": "Novato",
-    "custo": "1",
-    "alcance": "Astúcia x5 (som); Astúcia (silêncio)",
     "duracao": "5",
     "descricao": "Cria som ou abafa área (furtividade/perceber afetados).\n\nMODIFICADORES:\n- BERRO (+1): Som alto, ajuda Intimidar.\n- MIRADO (+1/Alvo): Silêncio em indivíduos.\n- MÓVEL (+1): Move área.\n- MELHORADO (+1): Penalidade -2 para resistir.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "som_silencio",
+    "pontosDePoder": "1",
+    "distancia": "Astúcia x5 (som); Astúcia (silêncio)"
   },
   {
     "nome": "Sono",
     "estagio": "Experiente",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "Uma hora",
     "descricao": "Coloca alvo para dormir (resistida por Espírito).\n\nMODIFICADORES:\n- ÁREA (+2/+3): Modelo Médio/Grande.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "sono",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Telecinese",
     "estagio": "Experiente",
-    "custo": "5",
-    "alcance": "Astúcia x2",
     "duracao": "5",
     "descricao": "Move objetos/criaturas com Força d10 (d12 ampliação).\n\nMODIFICADORES:\n- PODER (+3): Força d12 (d12+2).",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "telecinese",
+    "pontosDePoder": "5",
+    "distancia": "Astúcia x2"
   },
   {
     "nome": "Teleporte",
     "estagio": "Experiente",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "Instantânea",
     "descricao": "Move-se 12 quadros (24 ampliação).\n\nMODIFICADORES:\n- PORTAL (+5): Abre portal para outros.\n- RECEPTORES ADICIONAIS (+1): Leva outros.\n- TELEPORTAR INIMIGO (+2): Teleporta oponente.\n- MELHORADO (+5): Teleporte de longa distância (até mundial).",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "teleporte",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Trancar/Destrancar",
     "estagio": "Novato",
-    "custo": "1",
-    "alcance": "Astúcia",
     "duracao": "Permanente (trancar); Instantânea (destrancar)",
     "descricao": "Tranca ou abre fechaduras magicamente.\n\nMODIFICADORES:\n- ALERTA (+1): Avisa se aberto.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "trancar_destrancar",
+    "pontosDePoder": "1",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Viagem Planar",
     "estagio": "Veterano",
-    "custo": "4",
-    "alcance": "Astúcia",
     "duracao": "Instantânea",
     "descricao": "Move-se para outro plano de existência.\n\nMODIFICADORES:\n- ESPAÇO EXTRADIMENSIONAL (+1): Cria abrigo em dimensão de bolso.\n- RECEPTORES ADICIONAIS (+1): Leva outros.\n- TRANSPORTAR INIMIGO (+2): Envia inimigo para outro plano.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "viagem_planar",
+    "pontosDePoder": "4",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Vidência",
     "estagio": "Experiente",
-    "custo": "3",
-    "alcance": "Pessoal",
     "duracao": "5",
     "descricao": "Espia local/alvo remotamente.\n\nMODIFICADORES:\n- VISÃO EM GRUPO (+1): Compartilha visão.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "videncia",
+    "pontosDePoder": "3",
+    "distancia": "Pessoal"
   },
   {
     "nome": "Visão Distante",
     "estagio": "Experiente",
-    "custo": "2",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Enxerga longe (zoom).\n\nMODIFICADORES:\n- RECEPTORES ADICIONAIS (+1): Afeta outros.\n- MELHORADA (+2): Ignora penalidade de distância.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "visao_distante",
+    "pontosDePoder": "2",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Visão Sombria",
     "estagio": "Novato",
-    "custo": "1",
-    "alcance": "Astúcia",
     "duracao": "Uma hora",
     "descricao": "Ignora 4 pontos de escuridão (6 com ampliação).\n\nMODIFICADORES:\n- RECEPTORES ADICIONAIS (+1): Afeta outros.\n- MELHORADA (+2): Ignora todas penalidades luz/invisibilidade.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "visao_sombria",
+    "pontosDePoder": "1",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Voar",
     "estagio": "Veterano",
-    "custo": "3",
-    "alcance": "Astúcia",
     "duracao": "5",
     "descricao": "Voo Movimentação 12 (24 ampliação).\n\nMODIFICADORES:\n- RECEPTORES ADICIONAIS (+2): Afeta outros.\n- VOO VELOZ (+5): Movimentação 24 (48 ampliação).",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "voar",
+    "pontosDePoder": "3",
+    "distancia": "Astúcia"
   },
   {
     "nome": "Zumbi",
     "estagio": "Veterano",
-    "custo": "3",
-    "alcance": "Astúcia",
     "duracao": "Uma hora",
     "descricao": "Anima cadáver. Obediente, não telepático.\n\nMODIFICADORES:\n- ARMA E ARMADURA (+1/Zumbi): Armadura +2 e arma.\n- ESQUELÉTICO (+1/Zumbi): Usa perfil de Esqueleto.\n- PASSAGEIRO DA MENTE (+1): Comunicação/sentidos.\n- PERMANENTE (0): Investe PP até destruído.\n- ZUMBIS ADICIONAIS (+1): Mais zumbis.",
-    "origem": "FANTASIA"
+    "origem": "FANTASIA",
+    "id": "zumbi",
+    "pontosDePoder": "3",
+    "distancia": "Astúcia"
   }
 ]

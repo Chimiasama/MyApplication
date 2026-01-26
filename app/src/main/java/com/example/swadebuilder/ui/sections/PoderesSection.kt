@@ -170,11 +170,12 @@ fun PoderesSection(
     val powersByArcKey = remember(powerCache, searchQuery, selectedRank, displayKeys, state.vantagensSelecionadas) {
         displayKeys.associateWith { arcKeyRaw ->
             val arcKey = arcKeyRaw.normAAKey()
-            val permittedSet = ArcaneConfig.getPermittedPowers(arcKey)
-            val blockedSet = ArcaneConfig.getBlockedPowers(arcKey)
-
             // Determine origin
             val advantage = state.vantagensSelecionadas.find { it.toArcanoKey() == arcKeyRaw }
+
+            val permittedSet = advantage?.poderesPermitidos?.takeIf { it.isNotEmpty() }?.toSet()
+                ?: ArcaneConfig.getPermittedPowers(arcKey)
+            val blockedSet = ArcaneConfig.getBlockedPowers(arcKey)
             val originRaw = advantage?.origem?.uppercase() ?: "BASICO"
             val normalizedOrigin = when (originRaw) {
                 "SCI_FI", "SCIFI" -> "SCIFI"
