@@ -27,6 +27,9 @@ data class Vantagem(
     @SerialName("ganha_ao_comprar")
     val ganhaAoComprar: List<String> = emptyList(),
 
+    @SerialName("poderes_permitidos")
+    val poderesPermitidos: List<String> = emptyList(),
+
     val descricao: String = "",
 
 
