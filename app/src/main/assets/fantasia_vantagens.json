@@ -1140,7 +1140,7 @@
       "observacoes": ""
     },
     "grupoId": "antecedente_arcano",
-    "subtipoArcano": "ALQUIMISTA",
+    "subtipoArcano": "ALQUIMIA",
     "isGrupoSelector": false,
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,

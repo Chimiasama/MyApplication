@@ -78,6 +78,24 @@
     "foco": "Conjurar"
   },
   {
+    "key": "ENGENHOQUEIRO",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Consertar"
+  },
+  {
+    "key": "ILUSIONISTA",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "INVOCADOR",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
     "key": "MAGO",
     "slots": 3,
     "pp": 10,
