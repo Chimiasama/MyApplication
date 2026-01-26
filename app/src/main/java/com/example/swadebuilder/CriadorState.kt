@@ -103,7 +103,13 @@ class CriadorState {
         "BARDO" to listOf("aumentar_reduzir_caracteristica", "som_silencio"),
         "CLERIGO" to listOf("cura", "santuario"),
         "DIABOLISTA" to listOf("banir", "devastacao", "conjurar_aliado"),
-        "DRUIDA" to listOf("amigo_das_feras", "protecao_ambiental", "mudanca_de_forma")
+        "DRUIDA" to listOf("amigo_das_feras", "protecao_ambiental", "mudanca_de_forma"),
+        "ELEMENTALISTA" to listOf("manipulacao_elemental", "protecao_ambiental"),
+        "ILUSIONISTA" to listOf("ilusao", "iluminar_obscurecer", "som_silencio"),
+        "INVOCADOR" to listOf("amigo_das_feras", "aumentar_reduzir_caracteristica", "conjurar_aliado"),
+        "MAGO" to listOf("detectar_ocultar_arcano", "dissipar", "trancar_destrancar"),
+        "NECROMANTE" to listOf("detectar_ocultar_arcano", "dissipar", "zumbi"),
+        "XAMA" to listOf("protecao_arcana", "ajuda")
     )
 
     fun isFixedPower(arcanoKey: String, powerId: String?): Boolean {
