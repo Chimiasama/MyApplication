@@ -1140,12 +1140,12 @@
       "observacoes": ""
     },
     "grupoId": "antecedente_arcano",
-    "subtipoArcano": "ALQUIMISTA",
+    "subtipoArcano": "ALQUIMIA",
     "isGrupoSelector": false,
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Alquimistas criam poções, óleos e elixires. Seus poderes são preparados antecipadamente em frascos. Possuem a Complicação Componente Material (poções são descartáveis) e precisam de sua Bolsa de Alquimista para ativar poderes. Perícia Arcana: Alquimia (Astúcia)."
+    "descricao": "Alquimistas criam poções, óleos e elixires. Seus poderes são preparados antecipadamente em frascos. Possuem a Complicação Componente Material (poções são descartáveis) e precisam de sua Bolsa de Alquimista para ativar poderes. Perícia Arcana: Alquimia (Astúcia). Começam com 15 Pontos de Poder e 3 Poderes."
   },
   {
     "id": "mestre_alquimista",
@@ -1209,7 +1209,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Bardos conjuram feitiços através de performance. Possuem Interferência de Armadura (Menor) e Língua Afiada (podem usar Performance como Provocar em Desafios e ignorar repetição se mudarem os versos). Perícia Arcana: Performance (Espírito)."
+    "descricao": "Bardos conjuram feitiços através de performance. Possuem Interferência de Armadura (Menor) e Língua Afiada (podem usar Performance como Provocar em Desafios e ignorar repetição se mudarem os versos). Perícia Arcana: Performance (Espírito). Começam com 10 Pontos de Poder e 3 Poderes (Aumentar/Reduzir Característica, Som/Silêncio e um de livre escolha)."
   },
   {
     "id": "inspirar_heroismo",
@@ -1292,7 +1292,7 @@
     "ganha_ao_comprar": [
       "familiar"
     ],
-    "descricao": "Bruxos usam magia antiga e pactos. Possuem Interferência de Armadura (Maior), Componentes Materiais, Corrupção, e a habilidade Congregação (transferir PP). Começam com a Vantagem Familiar e podem Preparar Poderes. Perícia Arcana: Conjurar (Astúcia)."
+    "descricao": "Bruxos usam magia antiga e pactos. Possuem Interferência de Armadura (Maior), Componentes Materiais, Corrupção, e a habilidade Congregação (transferir PP). Começam com a Vantagem Familiar e podem Preparar Poderes. Perícia Arcana: Conjurar (Astúcia). Começam com 10 Pontos de Poder e 3 Poderes."
   },
   {
     "id": "a_hora_das_bruxas",
@@ -1352,7 +1352,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Servos de divindades. Devem escolher um Domínio. Possuem Voto (Maior). Exibir símbolo sagrado concede rerrolagem em Fé. Perícia Arcana: Fé (Espírito)."
+    "descricao": "Servos de divindades. Devem escolher um Domínio. Possuem Voto (Maior). Exibir símbolo sagrado concede rerrolagem em Fé. Perícia Arcana: Fé (Espírito). Começam com 10 Pontos de Poder e 5 Poderes (Cura, Santuário e três de livre escolha)."
   },
   {
     "id": "destruir_mortos_vivos",
@@ -1414,7 +1414,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Conjuram servos do Abismo. Possuem Interferência de Armadura (Maior) e Corrupção. Podem invocar demônios específicos com Conjurar Aliado. Perícia Arcana: Conjurar (Astúcia)."
+    "descricao": "Conjuram servos do Abismo. Possuem Interferência de Armadura (Maior) e Corrupção. Podem invocar demônios específicos com Conjurar Aliado. Perícia Arcana: Conjurar (Astúcia). Começam com 10 Pontos de Poder e 5 Poderes (Banir, Devastação, Conjurar Aliado e dois de livre escolha)."
   },
   {
     "id": "armadura_infernal",
@@ -1474,7 +1474,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Protetores da natureza. Possuem Interferência de Armadura (Menor), Componentes Materiais e Voto (Maior). Duração de Conjurar Animal e Mudança de Forma (animal) aumentada para 1h. Ignoram terreno acidentado natural. Perícia Arcana: Fé (Espírito)."
+    "descricao": "Protetores da natureza. Possuem Interferência de Armadura (Menor), Componentes Materiais e Voto (Maior). Duração de Conjurar Animal e Mudança de Forma (animal) aumentada para 1h. Ignoram terreno acidentado natural. Perícia Arcana: Fé (Espírito). Começam com 10 Pontos de Poder e 5 Poderes (Amigo das Feras, Proteção Ambiental, Mudança de Forma e dois de livre escolha)."
   },
   {
     "id": "cajado_do_coracao_da_mata",
@@ -1534,7 +1534,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Especialistas em um elemento (fogo, água, terra ou ar). Possuem Interferência de Armadura (Maior). Ganham rerrolagem perto do elemento, ou -2 se ausente. Devem escolher Origem Elemental. Perícia Arcana: Conjurar (Astúcia)."
+    "descricao": "Especialistas em um elemento (fogo, água, terra ou ar). Possuem Interferência de Armadura (Maior). Ganham rerrolagem perto do elemento, ou -2 se ausente. Devem escolher Origem Elemental. Perícia Arcana: Conjurar (Astúcia). Começam com 10 Pontos de Poder e 5 Poderes (Manipulação Elemental, Proteção Ambiental e três de livre escolha)."
   },
   {
     "id": "absorcao_elemental",
@@ -1594,7 +1594,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Criam dispositivos arcanos. Falha Crítica quebra o dispositivo (sem Fadiga). Precisam de kit de ferramentas. Podem sabotar máquinas com Consertar. Perícia Arcana: Consertar (Astúcia)."
+    "descricao": "Criam dispositivos arcanos. Falha Crítica quebra o dispositivo (sem Fadiga). Precisam de kit de ferramentas. Podem sabotar máquinas com Consertar. Perícia Arcana: Consertar (Astúcia). Começam com 15 Pontos de Poder e 2 Poderes livres."
   },
   {
     "id": "armadura_de_engenhoqueiro",
@@ -1654,7 +1654,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Conjuram poder bruto, muitas vezes de fontes perigosas. Possuem Interferência de Armadura (Menor) e Corrupção. Falha Crítica causa Fadiga, Atordoamento e Corrupção. Podem Sobrecarregar (gastar PP extras para aumentar total da rolagem). Perícia Arcana: Conjurar (Astúcia)."
+    "descricao": "Conjuram poder bruto, muitas vezes de fontes perigosas. Possuem Interferência de Armadura (Menor) e Corrupção. Falha Crítica causa Fadiga, Atordoamento e Corrupção. Podem Sobrecarregar (gastar PP extras para aumentar total da rolagem). Perícia Arcana: Conjurar (Astúcia). Começam com 15 Pontos de Poder e 3 Poderes livres."
   },
   {
     "id": "grande_poder",
@@ -1714,7 +1714,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Especialistas em enganação. Possuem Interferência de Armadura (Maior). Ilusões são sempre Fortes (grátis) e podem preencher Modelo Grande. Se um inimigo descrer, vê através de todas as ilusões. Perícia Arcana: Conjurar (Astúcia)."
+    "descricao": "Especialistas em enganação. Possuem Interferência de Armadura (Maior). Ilusões são sempre Fortes (grátis) e podem preencher Modelo Grande. Se um inimigo descrer, vê através de todas as ilusões. Perícia Arcana: Conjurar (Astúcia). Começam com 10 Pontos de Poder e 5 Poderes (Ilusão, Iluminar/Obscurecer, Som/Silêncio e dois de livre escolha)."
   },
   {
     "id": "ilusao_mortal",
@@ -1778,7 +1778,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Chamam criaturas para lutar. Possuem Interferência de Armadura (Menor). Reduzem custo de poderes de conjuração em 2 (min 1) e duração é em minutos. Perícia Arcana: Conjurar (Astúcia)."
+    "descricao": "Chamam criaturas para lutar. Possuem Interferência de Armadura (Menor). Reduzem custo de poderes de conjuração em 2 (min 1) e duração é em minutos. Perícia Arcana: Conjurar (Astúcia). Começam com 15 Pontos de Poder e 5 Poderes (Amigo das Feras, Aumentar/Reduzir Característica, Conjurar Aliado e dois de livre escolha)."
   },
   {
     "id": "barda_arcana",
@@ -1857,7 +1857,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O conjurador clássico e versátil. Possui maior lista de poderes, mas sofre Interferência de Armadura (Maior) e Componentes Materiais. Perícia Arcana: Conjurar (Astúcia)."
+    "descricao": "O conjurador clássico e versátil. Possui maior lista de poderes, mas sofre Interferência de Armadura (Maior) e Componentes Materiais. Perícia Arcana: Conjurar (Astúcia). Começam com 15 Pontos de Poder e 6 Poderes (Detectar/Ocultar Arcano, Dissipar, Trancar/Destrancar e três de livre escolha)."
   },
   {
     "id": "grimorio",
@@ -1917,7 +1917,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Mestres da morte. Possuem Corrupção. O poder Zumbi é Novato e dura 4 horas. Perícia Arcana: Conjurar (Astúcia)."
+    "descricao": "Mestres da morte. Possuem Corrupção. O poder Zumbi é Novato e dura 4 horas. Perícia Arcana: Conjurar (Astúcia). Começam com 10 Pontos de Poder e 5 Poderes (Detectar/Ocultar Arcano, Dissipar, Zumbi e dois de livre escolha)."
   },
   {
     "id": "familiar_morto_vivo",
@@ -1979,7 +1979,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Conectados aos espíritos. Possuem Interferência de Armadura (Menor) e Desagradável (peculiaridade). Devem usar um Fetiche (-2 sem ele). Escolhem um Poder Favorecido. Perícia Arcana: Fé (Espírito)."
+    "descricao": "Conectados aos espíritos. Possuem Interferência de Armadura (Menor) e Desagradável (peculiaridade). Devem usar um Fetiche (-2 sem ele). Escolhem um Poder Favorecido. Perícia Arcana: Fé (Espírito). Começam com 10 Pontos de Poder e 5 Poderes (Proteção Arcana, Ajuda e três de livre escolha)."
   },
   {
     "id": "fetiche_sagrado",

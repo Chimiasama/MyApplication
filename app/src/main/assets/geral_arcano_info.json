@@ -32,7 +32,7 @@
   {
     "key": "ALQUIMIA",
     "slots": 3,
-    "pp": 10,
+    "pp": 15,
     "foco": "Alquimia"
   },
   {
@@ -49,43 +49,61 @@
   },
   {
     "key": "CLERIGO",
-    "slots": 3,
+    "slots": 5,
     "pp": 10,
     "foco": "Fé"
   },
   {
     "key": "DIABOLISTA",
-    "slots": 3,
+    "slots": 5,
     "pp": 10,
     "foco": "Conjurar"
   },
   {
     "key": "DRUIDA",
-    "slots": 3,
+    "slots": 5,
     "pp": 10,
     "foco": "Fé"
   },
   {
     "key": "ELEMENTALISTA",
-    "slots": 3,
+    "slots": 5,
     "pp": 10,
     "foco": "Conjurar"
   },
   {
     "key": "FEITICEIRO",
     "slots": 3,
+    "pp": 15,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "ENGENHOQUEIRO",
+    "slots": 2,
+    "pp": 15,
+    "foco": "Consertar"
+  },
+  {
+    "key": "ILUSIONISTA",
+    "slots": 5,
     "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "INVOCADOR",
+    "slots": 5,
+    "pp": 15,
     "foco": "Conjurar"
   },
   {
     "key": "MAGO",
-    "slots": 3,
-    "pp": 10,
+    "slots": 6,
+    "pp": 15,
     "foco": "Conjurar"
   },
   {
     "key": "NECROMANTE",
-    "slots": 3,
+    "slots": 5,
     "pp": 10,
     "foco": "Conjurar"
   },
@@ -139,8 +157,8 @@
   },
   {
     "key": "XAMA",
-    "slots": 3,
-    "pp": 15,
+    "slots": 5,
+    "pp": 10,
     "foco": "Fé"
   },
   {
