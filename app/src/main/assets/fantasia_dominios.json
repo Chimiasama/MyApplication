@@ -1,0 +1,117 @@
+[
+  {
+    "nome": "Conhecimento",
+    "poderes": [
+      "adivinhacao", "atordoar", "aumentar_reduzir_caracteristica", "banir", "barreira", "bencao",
+      "cegar", "confusao", "conjurar_aliado", "conjurar_item", "cura", "deflexao",
+      "detectar_ocultar_arcano", "devastacao", "disfarce", "dissipar", "elo_mental",
+      "falar_idioma", "iluminar_obscurecer", "intervencao_mistica", "leitura_de_objeto",
+      "leitura_mental", "limpeza_mental", "medo", "protecao", "protecao_arcana", "santuario",
+      "som_silencio", "sono", "visao_distante", "visao_sombria"
+    ]
+  },
+  {
+    "nome": "Ladinagem",
+    "poderes": [
+      "andar_nas_paredes", "atordoar", "aumentar_reduzir_caracteristica", "barreira", "bencao",
+      "cegar", "confusao", "conjurar_item", "crescimento_encolhimento", "cura", "deflexao",
+      "detectar_ocultar_arcano", "devastacao", "disfarce", "dissipar", "drenar_pontos_de_poder",
+      "empatia", "falar_idioma", "iluminar_obscurecer", "ilusao", "intangibilidade",
+      "invisibilidade", "leitura_de_objeto", "morosidade_velocidade", "protecao",
+      "protecao_arcana", "santuario", "som_silencio", "sono", "visao_sombria"
+    ]
+  },
+  {
+    "nome": "Lua",
+    "poderes": [
+      "adivinhacao", "ajuda", "amigo_das_feras", "atordoar", "aumentar_reduzir_caracteristica",
+      "bencao", "cegar", "confusao", "crescimento_encolhimento", "cura", "deflexao",
+      "detectar_ocultar_arcano", "disfarce", "dissipar", "drenar_pontos_de_poder", "empatia",
+      "fantoche", "iluminar_obscurecer", "ilusao", "intangibilidade", "intervencao_mistica",
+      "invisibilidade", "medo", "morosidade_velocidade", "mudanca_de_forma", "protecao_arcana",
+      "raio", "santuario", "som_silencio", "sono", "visao_distante", "visao_sombria", "voar"
+    ]
+  },
+  {
+    "nome": "Mar",
+    "poderes": [
+      "adivinhacao", "amigo_das_feras", "atordoar", "aumentar_reduzir_caracteristica",
+      "barreira", "bencao", "campo_de_dano", "conjurar_aliado", "crescimento_encolhimento",
+      "cura", "dadiva_do_guerreiro", "deflexao", "devastacao", "dissipar", "drenar_pontos_de_poder",
+      "enredar", "explosao", "ferir", "iluminar_obscurecer", "intervencao_mistica",
+      "invisibilidade", "manipulacao_elemental", "morosidade_velocidade", "mudanca_de_forma",
+      "protecao", "protecao_ambiental", "protecao_arcana", "raio", "rajada", "santuario",
+      "som_silencio", "sono", "teleporte", "visao_distante", "visao_sombria", "voar", "zumbi"
+    ]
+  },
+  {
+    "nome": "Guerra",
+    "poderes": [
+      "adivinhacao", "ajuda", "atordoar", "aumentar_reduzir_caracteristica", "barreira",
+      "campo_de_dano", "conjurar_aliado", "conjurar_item", "conjurar_monstro",
+      "crescimento_encolhimento", "cura", "dadiva_do_guerreiro", "deflexao", "devastacao",
+      "dissipar", "explosao", "ferir", "intervencao_mistica", "medo", "morosidade_velocidade",
+      "protecao", "protecao_arcana", "raio", "rajada", "santuario", "voar"
+    ]
+  },
+  {
+    "nome": "Justiça",
+    "poderes": [
+      "adivinhacao", "atordoar", "aumentar_reduzir_caracteristica", "banir", "campo_de_dano",
+      "cegar", "confusao", "conjurar_item", "cura", "deflexao", "detectar_ocultar_arcano",
+      "devastacao", "dissipar", "drenar_pontos_de_poder", "empatia", "explosao", "falar_idioma",
+      "ferir", "iluminar_obscurecer", "intervencao_mistica", "invisibilidade", "leitura_de_objeto",
+      "leitura_mental", "morosidade_velocidade", "protecao", "protecao_arcana", "raio",
+      "rajada", "santuario", "som_silencio", "visao_distante", "visao_sombria", "voar"
+    ]
+  },
+  {
+    "nome": "Morte",
+    "poderes": [
+      "adivinhacao", "atordoar", "aumentar_reduzir_caracteristica", "banir", "barreira",
+      "campo_de_dano", "cavar", "cegar", "confusao", "conjurar_aliado", "conjurar_monstro",
+      "conjurar_mortovivo", "cura", "dadiva_do_guerreiro", "deflexao", "detectar_ocultar_arcano",
+      "devastacao", "disfarce", "dissipar", "drenar_pontos_de_poder", "enredar", "explosao",
+      "ferir", "iluminar_obscurecer", "intangibilidade", "intervencao_mistica", "leitura_de_objeto",
+      "medo", "morosidade_velocidade", "protecao", "protecao_arcana", "raio", "rajada",
+      "ressurreicao", "santuario", "som_silencio", "sono", "teleporte", "visao_distante",
+      "visao_sombria", "voar", "zumbi"
+    ]
+  },
+  {
+    "nome": "Natureza",
+    "poderes": [
+      "adivinhacao", "ajuda", "amigo_das_feras", "andar_nas_paredes", "atordoar",
+      "aumentar_reduzir_caracteristica", "barreira", "bencao", "campo_de_dano", "cavar",
+      "conjurar_animal", "conjurar_item", "conjurar_monstro", "crescimento_encolhimento",
+      "cura", "dadiva_do_guerreiro", "deflexao", "devastacao", "disfarce", "enredar",
+      "ferir", "intervencao_mistica", "manipulacao_elemental", "medo", "morosidade_velocidade",
+      "mudanca_de_forma", "protecao", "protecao_ambiental", "protecao_arcana", "raio",
+      "santuario", "som_silencio", "visao_distante", "visao_sombria", "voar"
+    ]
+  },
+  {
+    "nome": "Sol",
+    "poderes": [
+      "adivinhacao", "atordoar", "aumentar_reduzir_caracteristica", "banir", "bencao",
+      "campo_de_dano", "cegar", "confusao", "cura", "deflexao", "detectar_ocultar_arcano",
+      "devastacao", "dissipar", "explosao", "ferir", "iluminar_obscurecer", "ilusao",
+      "intervencao_mistica", "manipulacao_elemental", "medo", "morosidade_velocidade",
+      "protecao", "ajuda", "protecao_ambiental", "protecao_arcana", "raio", "rajada",
+      "ressurreicao", "santuario", "visao_sombria", "voar"
+    ]
+  },
+  {
+    "nome": "Vida",
+    "poderes": [
+      "adivinhacao", "ajuda", "amigo_das_feras", "atordoar", "aumentar_reduzir_caracteristica",
+      "banir", "barreira", "bencao", "confusao", "conjurar_aliado", "conjurar_animal",
+      "conjurar_item", "crescimento_encolhimento", "cura", "dadiva_do_guerreiro", "deflexao",
+      "detectar_ocultar_arcano", "devastacao", "disfarce", "dissipar", "empatia", "enredar",
+      "falar_idioma", "ferir", "iluminar_obscurecer", "intervencao_mistica",
+      "morosidade_velocidade", "protecao", "protecao_ambiental", "protecao_arcana",
+      "ressurreicao", "santuario", "som_silencio", "sono", "visao_distante",
+      "visao_sombria", "voar"
+    ]
+  }
+]

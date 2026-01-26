@@ -3,6 +3,7 @@ package com.example.swadebuilder.ui.sections
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -15,11 +16,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
@@ -56,6 +60,10 @@ import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toSentenceCase
+import kotlinx.serialization.Serializable
+
+@Serializable
+private data class DominioJson(val nome: String, val poderes: List<String>)
 
 private fun custoParaPenalidadeTexto(custo: String): String {
     val clean = custo.trim()
@@ -136,6 +144,11 @@ fun PoderesSection(
         value = map
     }
 
+    val dominiosCache: List<DominioJson> by androidx.compose.runtime.produceState(initialValue = emptyList()) {
+        val list = runCatching { context.loadJsonAsset<List<DominioJson>>("fantasia_dominios.json") }.getOrElse { emptyList() }
+        value = list
+    }
+
     val allPoderes = remember(powerCache) {
         powerCache.values.flatten().distinctBy { it.id }
     }
@@ -167,7 +180,7 @@ fun PoderesSection(
     }
 
     // Pre-calculate powers for each displayed key to avoid doing it inside LazyColumn (and avoid @Composable error)
-    val powersByArcKey = remember(powerCache, searchQuery, selectedRank, displayKeys, state.vantagensSelecionadas) {
+    val powersByArcKey = remember(powerCache, searchQuery, selectedRank, displayKeys, state.vantagensSelecionadas, state.dominioClerigoSelecionado, dominiosCache) {
         displayKeys.associateWith { arcKeyRaw ->
             val arcKey = arcKeyRaw.normAAKey()
             // Determine origin
@@ -185,11 +198,28 @@ fun PoderesSection(
                 else -> originRaw
             }
 
-            val sourceList = powerCache[normalizedOrigin] ?: powerCache["BASICO"] ?: emptyList()
+            var sourceList = powerCache[normalizedOrigin] ?: powerCache["BASICO"] ?: emptyList()
+
+            // Fantasy Cleric Domain Filtering
+            if (state.compendioFantasiaAtivo && arcKey == "CLERIGO") {
+                val domName = state.dominioClerigoSelecionado
+                if (domName != null) {
+                    val dom = dominiosCache.find { it.nome == domName }
+                    if (dom != null) {
+                        sourceList = sourceList.filter { it.id in dom.poderes }
+                    } else {
+                        sourceList = emptyList()
+                    }
+                } else {
+                    sourceList = emptyList()
+                }
+            }
 
             sourceList.filter { power ->
                 // 1. Check permissions/blocks
-                val isAllowed = if (permittedSet != null) {
+                val isAllowed = if (state.compendioFantasiaAtivo && arcKey == "CLERIGO") {
+                    true // Already filtered by domain logic above
+                } else if (permittedSet != null) {
                     power.id in permittedSet
                 } else if (blockedSet.isNotEmpty()) {
                     power.id !in blockedSet
@@ -273,6 +303,48 @@ fun PoderesSection(
             val isExpanded = sectionStates[arcKey] ?: true
 
             val poderesParaEsteArcano = powersByArcKey[arcKeyRaw] ?: emptyList()
+
+            // Domain Selection UI for Cleric
+            if (state.compendioFantasiaAtivo && arcKey == "CLERIGO") {
+                item(key = "domain_selector_$arcKey") {
+                    var expandedDomain by remember { mutableStateOf(false) }
+
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp)) {
+                        OutlinedTextField(
+                            value = state.dominioClerigoSelecionado ?: "Selecione um Domínio",
+                            onValueChange = {},
+                            readOnly = true,
+                            label = { Text("Domínio Divino") },
+                            trailingIcon = { Icon(Icons.Filled.ArrowDropDown, "Expandir") },
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            enabled = !locked
+                        )
+                        Box(
+                            Modifier
+                                .matchParentSize()
+                                .clickable(enabled = !locked) { expandedDomain = true }
+                        )
+
+                        DropdownMenu(
+                            expanded = expandedDomain,
+                            onDismissRequest = { expandedDomain = false }
+                        ) {
+                            dominiosCache.forEach { dom ->
+                                DropdownMenuItem(
+                                    text = { Text(dom.nome) },
+                                    onClick = {
+                                        state.dominioClerigoSelecionado = dom.nome
+                                        expandedDomain = false
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
 
             // HEADER (Custom Collapsible)
             item(key = "header_$arcKey") {

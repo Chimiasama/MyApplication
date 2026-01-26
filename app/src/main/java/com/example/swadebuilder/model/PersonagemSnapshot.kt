@@ -133,7 +133,8 @@ data class SnapshotSelecoes(
     val portraitScaleType: String = "CROP",
     val portraitAlignment: String = "CENTER",
     val signoAdgSelecionado: String? = null,
-    val gnomoPericiaEscolhida: String? = null
+    val gnomoPericiaEscolhida: String? = null,
+    val dominioClerigoSelecionado: String? = null
 )
 
 @Serializable
