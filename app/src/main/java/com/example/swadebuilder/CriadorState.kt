@@ -99,6 +99,19 @@ class CriadorState {
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
     val vantagensAutomaticasDoElemento = mutableStateListOf<String>()
 
+    val fixedPowersByArcano = mapOf(
+        "BARDO" to listOf("aumentar_reduzir_caracteristica", "som_silencio"),
+        "CLERIGO" to listOf("cura", "santuario"),
+        "DIABOLISTA" to listOf("banir", "devastacao", "conjurar_aliado"),
+        "DRUIDA" to listOf("amigo_das_feras", "protecao_ambiental", "mudanca_de_forma")
+    )
+
+    fun isFixedPower(arcanoKey: String, powerId: String?): Boolean {
+        if (powerId == null) return false
+        val fixedList = fixedPowersByArcano[arcanoKey.normAAKey()] ?: return false
+        return fixedList.contains(powerId)
+    }
+
     companion object {
         const val BASE_SP_POOL = 15
         const val DEFAULT_HAPTIC_STRENGTH = 70
@@ -777,6 +790,27 @@ class CriadorState {
 
     fun adicionarVantagem(v: Vantagem) {
         vantagensSelecionadas.add(v)
+
+        v.toArcanoKey()?.let { arcKeyRaw ->
+            val arcKey = arcKeyRaw.normAAKey()
+            fixedPowersByArcano[arcKey]?.let { fixedList ->
+                val slots = poderSlotsPorArcano.getOrPut(arcKey) {
+                    val count = getSlotsCountForArcano(arcKey)
+                    mutableStateListOf<String?>().apply { repeat(count) { add(null) } }
+                }
+
+                // Ensure slots size
+                val requiredSize = getSlotsCountForArcano(arcKey)
+                while (slots.size < requiredSize) slots.add(null)
+
+                fixedList.forEachIndexed { index, powerId ->
+                    if (index < slots.size) {
+                        slots[index] = powerId
+                    }
+                }
+                syncPoderesSelecionadosFromSlots()
+            }
+        }
 
         if (v.id == "escolhido") {
             val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }

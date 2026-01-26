@@ -324,7 +324,8 @@ fun PoderesSection(
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 slots.forEachIndexed { idx, poderId ->
                                     val label = if (poderId == null) "— vazio —" else (idToName[poderId] ?: poderId.toSentenceCase())
-                                    val isSlotLocked = locked || idx < lockedCount
+                                    val isFixed = state.isFixedPower(arcKey, poderId)
+                                    val isSlotLocked = locked || idx < lockedCount || isFixed
                                     AssistChip(
                                         onClick = {
                                             if (!isSlotLocked && poderId != null) {
@@ -333,7 +334,12 @@ fun PoderesSection(
                                                 state.manifestacoesPoderes.remove(poderId)
                                             }
                                         },
-                                        label = { Text("${idx + 1}: $label", style = MaterialTheme.typography.bodySmall) },
+                                        label = {
+                                            Text(
+                                                text = "${idx + 1}: $label" + if (isFixed) " (Fixo)" else "",
+                                                style = MaterialTheme.typography.bodySmall
+                                            )
+                                        },
                                         enabled = !isSlotLocked && poderId != null
                                     )
                                 }
@@ -365,6 +371,9 @@ fun PoderesSection(
 
                         var expanded by remember { mutableStateOf(false) }
 
+                        val isFixed = state.isFixedPower(arcKey, poder.id)
+                        val isCardLocked = locked || isFixed
+
                         Card(
                             colors = CardDefaults.cardColors(
                                 containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -373,7 +382,7 @@ fun PoderesSection(
                                 .fillMaxWidth()
                                 .padding(horizontal = 8.dp, vertical = 2.dp) // Reduced padding
                                 .alpha(if (selecionado) 0.6f else 1f) // Increased opacity for selected for better visibility
-                                .clickable(enabled = !locked) {
+                                .clickable(enabled = !isCardLocked) {
                                     if (selecionado) {
                                         val idx = slots.indexOfFirst { it?.equals(poder.id, ignoreCase = true) == true }
                                         if (idx >= 0 && idx >= lockedCount) {
