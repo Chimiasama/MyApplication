@@ -471,23 +471,6 @@ fun PoderesSection(
                                         }
                                     }
                                 }
-
-                                if (selecionado) {
-                                    Spacer(Modifier.height(4.dp))
-                                    OutlinedTextField(
-                                        value = state.manifestacoesPoderes[poder.id].orEmpty(),
-                                        onValueChange = { value ->
-                                            if (value.isBlank()) {
-                                                state.manifestacoesPoderes.remove(poder.id)
-                                            } else {
-                                                state.manifestacoesPoderes[poder.id] = value
-                                            }
-                                        },
-                                        label = { Text("Manifestação/Aparência", style = MaterialTheme.typography.labelSmall) },
-                                        modifier = Modifier.fillMaxWidth(),
-                                        textStyle = MaterialTheme.typography.bodySmall
-                                    )
-                                }
                             }
                         }
                     }
