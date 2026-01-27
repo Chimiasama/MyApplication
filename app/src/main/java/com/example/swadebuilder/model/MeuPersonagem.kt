@@ -76,6 +76,10 @@ data class MeuPersonagem(
     val dominio: Int? = null,
     val compendioDeadlandsAtivo: Boolean = false,
     val compendioHorrorAtivo: Boolean = false,
+    val compendioFantasiaAtivo: Boolean = false,
+    val compendioSciFiAtivo: Boolean = false,
+    val compendioWiseguysAtivo: Boolean = false,
+    val compendioCidadeSolVaporAtivo: Boolean = false,
     val notasPericia: Map<String, String> = emptyMap(), // PROMPT 5
 
     // ENGINE

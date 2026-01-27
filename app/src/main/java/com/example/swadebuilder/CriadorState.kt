@@ -81,6 +81,35 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
+    fun getAncestralidadeDef(name: String): com.example.swadebuilder.model.RacialModifier? {
+        val key = name.keyify()
+        val candidates = listaAncestralidadesJson.filter { it.nome.keyify() == key }
+        if (candidates.isEmpty()) return null
+        if (candidates.size == 1) return candidates.first()
+
+        val activeCandidates = candidates.filter { item ->
+            val origin = item.origem.uppercase()
+            when (origin) {
+                "FANTASIA" -> compendioFantasiaAtivo
+                "HORROR" -> compendioHorrorAtivo
+                "ARTE_DA_GUERRA" -> compendioArteDaGuerraAtivo
+                "DEADLANDS" -> compendioDeadlandsAtivo
+                "WISEGUYS" -> compendioWiseguysAtivo
+                "CIDADE_SOL_VAPOR" -> compendioCidadeSolVaporAtivo
+                "CRYSTAL_HEART" -> compendioCrystalHeartAtivo
+                "FC", "SCIFI" -> compendioSciFiAtivo
+                else -> {
+                    if (origin.contains("TRILHADOR") || origin.contains("PATHFINDER")) compendioPathfinderAtivo
+                    else true // BASICO or others
+                }
+            }
+        }
+
+        if (activeCandidates.isEmpty()) return candidates.firstOrNull()
+
+        return activeCandidates.maxByOrNull { getOriginPriority(it.origem) }
+    }
+
     fun isAttributeRankLimitReached(): Boolean {
         val stageIndex = currentProgressStageIndex()
         val lendarioIndex = listaDeEstagios.indexOfFirst { it.nome.equals("Lendário", ignoreCase = true) }
@@ -120,6 +149,23 @@ class CriadorState {
     }
 
     companion object {
+        fun getOriginPriority(origin: String?): Int {
+            val o = origin?.uppercase() ?: "BASICO"
+            return when {
+                o == "HORROR" -> 1000
+                o == "FANTASIA" -> 900
+                o == "ARTE_DA_GUERRA" -> 800
+                o == "DEADLANDS" -> 800
+                o == "WISEGUYS" -> 800
+                o == "CIDADE_SOL_VAPOR" -> 800
+                o.contains("TRILHADOR") || o.contains("PATHFINDER") -> 800
+                o == "FC" || o == "SCIFI" -> 800
+                o == "CRYSTAL_HEART" -> 800
+                o == "BASICO" -> 0
+                else -> 100
+            }
+        }
+
         const val BASE_SP_POOL = 15
         const val DEFAULT_HAPTIC_STRENGTH = 70
         const val DEFAULT_SOUND_VOLUME = 70
@@ -2492,10 +2538,10 @@ class CriadorState {
     fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>) {
         val prevAnc = ancestralidade
 
-        val prevAncDef = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == prevAnc.keyify() }
+        val prevAncDef = getAncestralidadeDef(prevAnc)
         val wasHumano = (prevAnc == "HUMANOS" || prevAncDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true)
 
-        val ancDef = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == anc.keyify() }
+        val ancDef = getAncestralidadeDef(anc)
         val vaiSerHumano = (anc == "HUMANOS" || ancDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true)
 
         val paAntes = pontosAtributo
@@ -2634,28 +2680,23 @@ class CriadorState {
         vantagensRaciais.clear()
         desvantagensRaciais.clear()
 
-        listaAncestralidadesJson
-            .firstOrNull { it.nome.keyify() == anc }
-            ?.let { rm ->
-                desvantagensAutomaticas.addAll(rm.desvantagens)
-                vantagensAutomaticas.addAll(rm.vantagensGratis)
-                vantagensRaciais.addAll(rm.vantagensGratis)
-                desvantagensRaciais.addAll(rm.desvantagens)
-            }
+        getAncestralidadeDef(anc)?.let { rm ->
+            desvantagensAutomaticas.addAll(rm.desvantagens)
+            vantagensAutomaticas.addAll(rm.vantagensGratis)
+            vantagensRaciais.addAll(rm.vantagensGratis)
+            desvantagensRaciais.addAll(rm.desvantagens)
+        }
 
         naturalArmorFromRace = 0
 
         // Generic Logic for Edges listed in vantagesGratis strings
-        listaAncestralidadesJson
-            .firstOrNull { it.nome.keyify() == anc }
-            ?.vantagensGratis
-            ?.forEach { featString ->
-                val featKey = featString.keyify()
-                val edge = listaVantagens.firstOrNull { it.nome.keyify() == featKey }
-                if (edge != null && vantagensSelecionadas.none { it.id == edge.id }) {
-                    vantagensSelecionadas.add(edge)
-                }
+        getAncestralidadeDef(anc)?.vantagensGratis?.forEach { featString ->
+            val featKey = featString.keyify()
+            val edge = listaVantagens.firstOrNull { it.nome.keyify() == featKey }
+            if (edge != null && vantagensSelecionadas.none { it.id == edge.id }) {
+                vantagensSelecionadas.add(edge)
             }
+        }
 
         when (anc) {
             "SAURIOS" -> {
@@ -2724,8 +2765,7 @@ class CriadorState {
 
         // --- Complicações raciais automáticas ---
 
-        val oldAutoKeys = listaAncestralidadesJson
-            .firstOrNull { it.nome.keyify() == prevAnc }
+        val oldAutoKeys = getAncestralidadeDef(prevAnc)
             ?.desvantagens
             ?.map { it.substringBefore("(").trim().keyify() }
             ?.toSet()
@@ -2741,7 +2781,10 @@ class CriadorState {
 
         listaComplicacoes
             .filter { it.id.keyify() in autoBaseKeys }
-            .forEach { comp ->
+            .groupBy { it.id.keyify() }
+            .forEach { (_, variants) ->
+                val comp = variants.maxByOrNull { getOriginPriority(it.origem) } ?: variants.first()
+
                 val hasMenor = desvantagensAutomaticas.any {
                     it.substringBefore("(").trim().keyify() == comp.id.keyify()
                             && it.contains("Menor", ignoreCase = true)
