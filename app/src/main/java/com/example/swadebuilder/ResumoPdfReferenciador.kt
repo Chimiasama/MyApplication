@@ -22,6 +22,7 @@ import androidx.core.content.FileProvider
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.ui.theme.AppTheme
+import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.SecurityUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
@@ -126,13 +127,9 @@ suspend fun produzirEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPers
             var portrait: Bitmap? = null
             dadosDoPersonagem.portraitFileName?.let { fileName ->
                 try {
-                    val portraitsDir = File(context.filesDir, "portraits")
-                    val file = SecurityUtils.getSafeChildFile(portraitsDir, fileName)
-                    if (file.exists()) {
-                        portrait = BitmapFactory.decodeFile(file.absolutePath)
-                    }
+                    portrait = CharacterPortraitStorage.loadPortrait(context, fileName)
                 } catch (e: Exception) {
-                    // Path traversal attempt or invalid filename; ignore portrait
+                    // Ignore portrait on error
                 }
             }
 

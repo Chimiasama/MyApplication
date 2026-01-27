@@ -90,6 +90,7 @@ import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.AppPreferences
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
+import com.example.swadebuilder.util.SecurityHardening
 import com.example.swadebuilder.util.SecurityUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.toEditionDisplayName
@@ -205,6 +206,14 @@ class MainActivity : ComponentActivity() {
 
         // Protect against Tapjacking (Overlay attacks)
         window.decorView.filterTouchesWhenObscured = true
+
+        // Runtime Security Checks
+        if (!SecurityHardening.isSafe(this)) {
+            finish()
+            // Force exit to prevent bypass
+            android.os.Process.killProcess(android.os.Process.myPid())
+            return
+        }
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
