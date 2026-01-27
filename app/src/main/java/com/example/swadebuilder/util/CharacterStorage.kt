@@ -5,6 +5,7 @@ import com.example.swadebuilder.model.PersonagemSnapshot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -27,6 +28,15 @@ object CharacterStorage {
         val id: String,
         val nome: String,
         val timestamp: Long
+    )
+
+    @Serializable
+    private data class MetadataSnapshot(
+        val version: Int = 1,
+        val id: String,
+        val nome: String,
+        val timestamp: Long,
+        val checksum: String? = null
     )
 
     sealed class LoadResult {
@@ -67,17 +77,18 @@ object CharacterStorage {
         val dir = savesDirectory(context)
         dir.listFiles()?.mapNotNull { file ->
             if (file.length() > MAX_FILE_SIZE) return@mapNotNull null
-            val snapshot = decodeSnapshot(file) ?: return@mapNotNull null
-            if (!validateChecksum(snapshot)) return@mapNotNull null
+            val snapshot = decodeMetadata(file) ?: return@mapNotNull null
+            // Checksum validation skipped for listing performance (DoS prevention)
+            // Integrity is fully verified on load()
             SaveEntry(file.nameWithoutExtension, snapshot.nome, snapshot.timestamp)
         }?.sortedByDescending { it.timestamp } ?: emptyList()
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    private fun decodeSnapshot(file: File): PersonagemSnapshot? {
+    private fun decodeMetadata(file: File): MetadataSnapshot? {
         return try {
             file.inputStream().use { input ->
-                json.decodeFromStream<PersonagemSnapshot>(input)
+                json.decodeFromStream<MetadataSnapshot>(input)
             }
         } catch (e: SerializationException) {
             null
