@@ -15,13 +15,6 @@
       "descricao": "Atletismo combina a coordenação de um indivíduo com perícias treinadas como escalar, saltar, equilíbrio, ciclismo, luta livre, esquiar, nadar, arremessar ou pegar algo. Personagens que se baseiam mais em força física do que coordenação podem escolher a Vantagem Brutamontes (pág. 42) para associar esta perícia à sua Força no lugar da Agilidade."
     },
     {
-      "nome": "Conhecimento de Batalha",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "BASICO",
-      "descricao": "Conhecimento Batalha é o comando da estratégia e das táticas de um indivíduo. Pode ser usada como conhecimento militar no geral e é crítico quando se comanda tropas em Batalhas em Massa (veja pág. 133)."
-    },
-    {
       "nome": "Cavalgar",
       "atributo": "Agilidade",
       "basica": false,
@@ -36,11 +29,11 @@
       "descricao": "Quem possui essa perícia estudou várias ciências complexas como biologia, xenobiologia, química, geologia, engenharia ou qualquer outra ciência “complexa”. Uma rolagem bem-sucedida de Ciência revela informações básicas sobre o tópico e uma ampliação dá mais detalhes."
     },
     {
-      "nome": "Ciência Estranha",
+      "nome": "Conjurar",
       "atributo": "Astúcia",
       "basica": false,
       "origem": "BASICO",
-      "descricao": "Pessoas que fazem Ciência “louca”, inventores em mundos com magia (ou tecnologia muito além da nossa), alquimistas ou artífices podem ser encontrados em muitos Mundos Selvagens. Embora suas técnicas possam variar, sempre usam Ciência Estranha como perícia arcana. Veja a Vantagem Antecedente Arcano (Ciência Estranha) na pág. 178 para saber mais sobre suas maravilhas."
+      "descricao": "Magia, feitiçaria e bruxaria são usos de Conjurar para utilizar poderes. Veja a Vantagem Antecedente Arcano (Magia) na pág. 178."
     },
     {
       "nome": "Conhecimento Acadêmico",
@@ -50,18 +43,18 @@
       "descricao": "Conhecimento Acadêmico reflete o conhecimento das artes, ciências sociais, literatura, história, arqueologia e campos similares. Se uma personagem quiser se lembrar quando acaba o calendário Maia ou citar uma fala de Macbeth, esta é a perícia a se usar."
     },
     {
+      "nome": "Conhecimento de Batalha",
+      "atributo": "Astúcia",
+      "basica": false,
+      "origem": "BASICO",
+      "descricao": "Conhecimento Batalha é o comando da estratégia e das táticas de um indivíduo. Pode ser usada como conhecimento militar no geral e é crítico quando se comanda tropas em Batalhas em Massa (veja pág. 133)."
+    },
+    {
       "nome": "Conhecimento Geral",
       "atributo": "Astúcia",
       "basica": true,
       "origem": "BASICO",
       "descricao": "Personagens rolam Conhecimento Geral para conhecer pessoas, lugares e coisas do seu mundo, incluindo etiqueta, geografia, cultura, tecnologia popular, contatos e costumes."
-    },
-    {
-      "nome": "Conjurar",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "BASICO",
-      "descricao": "Magia, feitiçaria e bruxaria são usos de Conjurar para utilizar poderes. Veja a Vantagem Antecedente Arcano (Magia) na pág. 178."
     },
     {
       "nome": "Consertar",
@@ -85,13 +78,6 @@
       "descricao": "Dirigir permite controle de qualquer veículo terrestre motorizado comum em seu cenário. Isso inclui carros, motocicletas, tanques e afins (bicicletas e outras formas de transporte automotrizes usam Atletismo, transportes movidos à tração animal usam Cavalgar). Personagens em cenários modernos onde veículos são comuns não precisam de Dirigir para viagens corriqueiras. Geralmente só são necessárias rolagens de Dirigir em condições estressantes ou perigosas, como nas Perseguições (pág. 148)."
     },
     {
-      "nome": "Eletrônica",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "BASICO",
-      "descricao": "Eletrônica permite o uso de dispositivos complexos ou especializados como os painéis de controle em uma máquina industrial ou os sistemas de sensores encontrados nas espaçonaves dos cenários futuristas.\nEletrodomésticos ou dispositivos eletrônicos comuns no cenário não requerem Eletrônica— Conhecimento Geral basta caso uma rolagem seja necessária. Em um mundo moderno isso se aplica a aparelhos de vídeo, celulares, etc.\nPara reparar qualquer tipo de eletrônico quebrado usa-se a perícia Consertar (veja pág. 33)."
-    },
-    {
       "nome": "Fé",
       "atributo": "Espírito",
       "basica": false,
@@ -99,32 +85,11 @@
       "descricao": "Fé é a perícia arcana requerida para o Antecedente Arcano (Milagres), descrito na pág. 178."
     },
     {
-      "nome": "Foco",
-      "atributo": "Espírito",
-      "basica": false,
-      "origem": "BASICO",
-      "descricao": "Foco é a perícia arcana para o Antecedente Arcano (Dom), veja pág. 177."
-    },
-    {
       "nome": "Furtividade",
       "atributo": "Agilidade",
       "basica": true,
       "origem": "BASICO",
       "descricao": "Furtividade é a habilidade de se esconder e se mover silenciosamente. Um sucesso simples em uma rolagem de Furtividade significa evitar ser detectado por rivais que não estejam particularmente alertas; uma falha nessa rolagem faz com que inimigos se deem conta de que algo está errado e comecem a procurar ativamente pela causa do distúrbio.\nPara oponentes alertas e em atividade, Furtividade é resistida por Perceber (uma rolagem em grupo pode ser feita para muitos oponentes, veja pág. 103).\nMestres devem aplicar quaisquer penalidades circunstanciais em rolagens de Perceber por conta da escuridão, cobertura, barulho, distrações e quaisquer diferenças na Escala (como no ataque, veja Escala em pág. 127). Para esgueirar-se em cima de folhas secas deve-se subtrair 2 da rolagem de Furtividade, por exemplo, enquanto notar alguém no escuro usa a penalidade por Iluminação listada na pág. 124 (-4). Contudo, não aplique o mesmo modificador a ambas as rolagens (se Furtividade está com -2 pelas folhas, não dê também Perceber +2).\nAtaque Furtivo: Esgueirar-se perto o suficiente para realizar um ataque corpo a corpo sempre requer um teste resistido de Furtividade contra o Perceber do alvo, quer ele esteja ativamente atento ou não. Se o teste de Furtividade for bem-sucedido, a vítima fica Vulnerável (pág. 120) a quem faz o ataque, mas somente até o fim de seu turno. Com uma ampliação é possível realizar a manobra Finalização (pág. 122).\nMovimento: Em combate, personagens rolam sua Furtividade como ação livre a cada turno no fim do seu movimento ou em qualquer ação que o Mestre ache que possa chamar atenção.\nFora de combate, a distância movida depende inteiramente da situação. Mestres podem desejar uma rolagem por minuto se o grupo estiver esgueirando-se no perímetro de uma posição defensiva ou a cada certa distância em quilômetros, se tentarem caminhar silenciosamente através de uma floresta escura sem alertar as criaturas que ali vivem."
-    },
-    {
-      "nome": "Hackear",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "BASICO",
-      "descricao": "Hackear é a perícia usada para criar programas e invadir sistemas seguros. O uso dessa perícia sempre requer um computador ou algum tipo de interface.\nA maioria das tarefas são uma simples rolagem de Hackear. O tempo que leva é determinado pelo Mestre, vai de uma simples ação a horas, dias ou mesmo meses, dependendo da complexidade do projeto. Um sucesso significa que a tentativa funciona como desejado e uma ampliação reduz à metade o tempo necessário. Uma falha geralmente significa que a tentativa de hackear deve ser feita novamente, enquanto uma Falha Crítica pode significar que o sistema expulsa quem está tentando invadi-lo, aciona um alarme ou aplica algum outro tipo de contramedida."
-    },
-    {
-      "nome": "Idiomas",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "BASICO",
-      "descricao": "Em alguns cenários, como aqueles focados em ação pulp ou “romance planetário” (onde os personagens viajam entre diversas civilizações estranhas com frequência), falar vários idiomas pode ser simplesmente interpretado travando um diálogo com sotaques exagerados que começam com um pouco de dificuldade e logo são rapidamente esquecidos. Esta perícia pode ser ignorada nesses cenários ou pode ser usada a Regra de Ambientação Múltiplos Idiomas na pág. 167.\nEm cenários mais realistas, a comunicação pode ser uma grande barreira que requer que as personagens aloquem pontos de perícia em idiomas adicionais. Em um jogo na Terceira Guerra Mundial nos anos 80, por exemplo, um grupo de paraquedistas da ONU pode não conseguir falar com oponentes a menos que tenham Russo, Polonês ou outra das línguas comuns no Pacto de Varsóvia.\nSe a perícia Idiomas estiver em uso ela deve ser listada como Idiomas (Espanhol), Idioma (Língua de Sinais) etc. O tipo de dado também denota a fluência (personagens começam com um d8 no seu próprio Idioma).\nLimitado: Use a menor perícia quando realizar uma ação que requer o conhecimento de uma língua estrangeira. Intimidar (se for verbal), Persuadir, Pesquisar, Provocar e quaisquer outras perícias que envolvam ações verbais serão limitadas pela perícia Idiomas de cada personagem.\nEsta limitação nunca se aplica à língua nativa de uma personagem."
     },
     {
       "nome": "Intimidar",
@@ -190,13 +155,6 @@
       "descricao": "Persuadir é a habilidade de convencer as outras pessoas do que você quer através de explicações, bajulação, enganação, recompensas ou outros meios amigáveis.\nPersuadir não é controle da mente. Pode mudar as atitudes de uma pessoa, mas não seus objetivos. Com uma boa rolagem de persuadir, alguém que estava te roubando pode permitir que você fique com uma joia de grande valor sentimental, mas ainda levará o resto dos seus pertences.\nQuando usada para dar Suporte a aliados (pág. 126) é um teste não resistido. Se o alvo resistir, é uma rolagem resistida contra o Espírito do alvo. O Mestre deve modificar a rolagem de acordo com seu critério baseado na interpretação, quaisquer Vantagens ou Complicações que afetem a conversa e nas circunstâncias.\nNível de Reação: O quanto uma pessoa está disposta a cooperar depende da sua atitude em relação a quem está falando com ela. O Mestre pode decidir como personagens sob seu comando reagem com base no cenário, ou rolar na Tabela de Reação (veja a barra lateral) se ele não tiver nada planejado. Um sucesso melhora a atitude do alvo em um nível, ou dois níveis com uma ampliação. Melhoras adicionais geralmente não são possíveis no mesmo encontro — leva um certo tempo para que as pessoas mudem suas opiniões.\nUma falha significa que o alvo manterá sua opinião nesta cena ou até que a situação mude de forma relevante. Uma Falha Crítica também reduz a atitude do alvo em dois níveis. No geral, apenas uma rolagem por interação deve ser permitida, a menos que informações novas sejam reveladas, uma recompensa substancial seja oferecida etc.\nRede de Contatos: As personagens também podem usar Persuadir como uma perícia \"macro\", simulando algumas horas de fraternização e socialização para ganhar favores ou informação. Veja Rede de Contatos na pág. 160."
     },
     {
-      "nome": "Pesquisar",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "BASICO",
-      "descricao": "Personagens hábeis na perícia Pesquisar sabem como fazer um bom uso de bibliotecas, arquivos de necrotérios, a internet ou outras fontes de informação escritas.\nO tempo que isso leva depende do Mestre e da situação. Encontrar algo na internet ou uma passagem específica em um livro pode ser possível em uma rodada de combate. Procurar em livros de uma biblioteca, procurar sobre um tópico complexo na internet ou desenterrar informações sobre os antecedentes de indivíduos geralmente leva uma hora.\nUm sucesso garante informações básicas e uma ampliação dá mais detalhes. Uma falha significa não encontrar o que está procurando.\nUma Falha Crítica pode significar que quem está pesquisando encontra uma informação plausível, mas incorreta; atrai a atenção de uma entidade ou facção rival; encontra algo que “A Humanidade Não Deveria Conhecer” e sofre com algum tipo de doença mental (Fobia Menor, Peculiaridade etc.); ou que acidentalmente destrói a fonte. O Mestre é encorajado a ser criativo se tal infortúnio acontecer, talvez forçando o grupo a abordar a situação de modo diferente.\nPerícias Relacionadas: Personagens com uma perícia que se relaciona diretamente ao que estão pesquisando podem usá-la em vez de Pesquisar. Alguém com Ocultismo d10 e Pesquisar d6, por exemplo, rola um d10 quando investiga conhecimento vampírico em uma biblioteca proibida. Se mais tarde for procurar pela escritura da casa onde dizem ser o covil dos vampiros, rola Pesquisar normalmente.\nNota: Pesquisar pode apenas dar as pistas, especialmente em um jogo repleto de mistérios. Juntar as peças da informação coletada fica a cargo de quem está jogando."
-    },
-    {
       "nome": "Pilotar",
       "atributo": "Agilidade",
       "basica": false,
@@ -209,13 +167,6 @@
       "basica": false,
       "origem": "BASICO",
       "descricao": "Provocar ataca o orgulho com ridicularização, tiradas cruéis ou demonstrações de superioridade.\nProvocar é uma rolagem resistida pela Astúcia de oponentes. Em combate, isto é um Desafio (veja pág. 119).\nFora de combate, um sucesso significa que a vítima recua, escapa ou começa uma briga. Uma ampliação a deixa acovardada pelo resto da cena, faz com que saia da área espumando ou até chorando ou ainda faz com que ela ataque seu algoz de modo inconsequente (talvez com um Ataque Selvagem na primeira rodada de combate).\nUma Falha Crítica significa que o alvo é imune às provocações pessoais pelo resto do encontro."
-    },
-    {
-      "nome": "Psiônicos",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "BASICO",
-      "descricao": "É a perícia que \"psions\" ou \"psis\" usam para ativar e controlar suas habilidades psiônicas. Veja a Vantagem Antecedente Arcano (Psiônicos) na pág. 178."
     },
     {
       "nome": "Sobrevivência",
