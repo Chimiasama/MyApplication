@@ -1,16 +1,16 @@
 package com.example.swadebuilder.util
 
 import android.content.Context
+import androidx.security.crypto.EncryptedFile
+import androidx.security.crypto.MasterKey
 import com.example.swadebuilder.model.PersonagemSnapshot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import java.io.File
-import java.security.MessageDigest
+import java.io.IOException
 import java.util.UUID
 
 object CharacterStorage {
@@ -28,15 +28,6 @@ object CharacterStorage {
         val id: String,
         val nome: String,
         val timestamp: Long
-    )
-
-    @Serializable
-    private data class MetadataSnapshot(
-        val version: Int = 1,
-        val id: String,
-        val nome: String,
-        val timestamp: Long,
-        val checksum: String? = null
     )
 
     sealed class LoadResult {
@@ -57,19 +48,17 @@ object CharacterStorage {
         return SecurityUtils.getSafeChildFile(savesDirectory(context), "$id.json")
     }
 
-    private fun checksumFor(snapshot: PersonagemSnapshot): String {
-        val payload = json.encodeToString(snapshot.copy(checksum = null))
-        val digest = MessageDigest.getInstance("SHA-256").digest(payload.toByteArray())
-        return digest.joinToString("") { "%02x".format(it) }
-    }
+    private fun getEncryptedFile(context: Context, file: File): EncryptedFile {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
 
-    private fun validateChecksum(snapshot: PersonagemSnapshot): Boolean {
-        // For new save files (version 2+), checksum is mandatory to prevent tampering
-        if (snapshot.version >= 2 && snapshot.checksum == null) {
-            return false
-        }
-        val expected = snapshot.checksum ?: return true
-        return expected == checksumFor(snapshot)
+        return EncryptedFile.Builder(
+            context,
+            file,
+            masterKey,
+            EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+        ).build()
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -77,24 +66,29 @@ object CharacterStorage {
         val dir = savesDirectory(context)
         dir.listFiles()?.mapNotNull { file ->
             if (file.length() > MAX_FILE_SIZE) return@mapNotNull null
-            val snapshot = decodeMetadata(file) ?: return@mapNotNull null
-            // Checksum validation skipped for listing performance (DoS prevention)
-            // Integrity is fully verified on load()
-            SaveEntry(file.nameWithoutExtension, snapshot.nome, snapshot.timestamp)
-        }?.sortedByDescending { it.timestamp } ?: emptyList()
-    }
 
-    @OptIn(ExperimentalSerializationApi::class)
-    private fun decodeMetadata(file: File): MetadataSnapshot? {
-        return try {
-            file.inputStream().use { input ->
-                json.decodeFromStream<MetadataSnapshot>(input)
+            // Try encrypted first
+            var snapshot: PersonagemSnapshot? = null
+            try {
+                val encryptedFile = getEncryptedFile(context, file)
+                encryptedFile.openFileInput().use { input ->
+                    snapshot = json.decodeFromStream<PersonagemSnapshot>(input)
+                }
+            } catch (e: Exception) {
+                // Fallback to plain text (legacy)
+                try {
+                    file.inputStream().use { input ->
+                        snapshot = json.decodeFromStream<PersonagemSnapshot>(input)
+                    }
+                } catch (e2: Exception) {
+                    return@mapNotNull null
+                }
             }
-        } catch (e: SerializationException) {
-            null
-        } catch (e: Exception) {
-            null
-        }
+
+            snapshot?.let {
+                SaveEntry(file.nameWithoutExtension, it.nome, it.timestamp)
+            }
+        }?.sortedByDescending { it.timestamp } ?: emptyList()
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -106,44 +100,69 @@ object CharacterStorage {
                 return@withContext LoadResult.Failure("Arquivo excede o limite de tamanho.")
             }
 
-            val snapshot = try {
-                file.inputStream().use { input ->
-                    json.decodeFromStream<PersonagemSnapshot>(input)
+            var snapshot: PersonagemSnapshot? = null
+            var migrated = false
+
+            // 1. Try Encrypted Load
+            try {
+                val encryptedFile = getEncryptedFile(context, file)
+                encryptedFile.openFileInput().use { input ->
+                    snapshot = json.decodeFromStream<PersonagemSnapshot>(input)
                 }
-            } catch (e: SerializationException) {
-                return@withContext LoadResult.Failure(
-                    "Arquivo corrompido ou inválido. Tente salvar novamente."
-                )
+            } catch (e: Exception) {
+                // 2. Fallback: Try Plain Text Load
+                try {
+                    file.inputStream().use { input ->
+                        snapshot = json.decodeFromStream<PersonagemSnapshot>(input)
+                    }
+                    migrated = true
+                } catch (e2: Exception) {
+                    return@withContext LoadResult.Failure("Arquivo corrompido ou falha de integridade.")
+                }
             }
-            if (!validateChecksum(snapshot)) {
-                return@withContext LoadResult.Failure(
-                    "Falha na verificação de integridade do personagem."
-                )
+
+            if (snapshot == null) return@withContext LoadResult.Failure("Erro desconhecido ao ler arquivo.")
+
+            // 3. Auto-Migrate if needed
+            if (migrated) {
+                try {
+                    save(context, snapshot!!)
+                } catch (e: Exception) {
+                    // Proceed even if migration save fails (rare)
+                }
             }
-            LoadResult.Success(snapshot)
+
+            LoadResult.Success(snapshot!!)
         } catch (e: Exception) {
-            LoadResult.Failure("Erro ao carregar personagem.")
+            LoadResult.Failure("Erro ao carregar personagem: ${e.message}")
         }
     }
 
     suspend fun save(context: Context, snapshot: PersonagemSnapshot): SaveEntry = withContext(Dispatchers.IO) {
-        // Gera ID novo se estiver em branco
         val saveId = snapshot.id.ifBlank { UUID.randomUUID().toString() }
-
-        // Obtém arquivo seguro
         val file = getSafeFile(context, saveId)
+        val tempFile = File(file.parentFile, "${file.name}.tmp")
 
-        val snapshotForChecksum = snapshot.copy(checksum = null)
-        val snapshotToSave = snapshotForChecksum.copy(checksum = checksumFor(snapshotForChecksum))
-        val payload = json.encodeToString(snapshotToSave)
+        // Clean up stale temp file
+        if (tempFile.exists()) tempFile.delete()
 
-        val tempFile = File(file.parentFile, "${file.nameWithoutExtension}_temp.json")
-        tempFile.writeText(payload)
-        if (file.exists()) {
-            file.delete()
-        }
-        if (!tempFile.renameTo(file)) {
-            throw IllegalStateException("Falha ao finalizar salvamento atômico.")
+        val encryptedTemp = getEncryptedFile(context, tempFile)
+
+        try {
+            encryptedTemp.openFileOutput().use { output ->
+                output.write(json.encodeToString(snapshot).toByteArray())
+            }
+
+            // Atomic replace
+            if (file.exists()) {
+                if (!file.delete()) throw IOException("Falha ao substituir arquivo antigo.")
+            }
+            if (!tempFile.renameTo(file)) {
+                throw IOException("Falha ao renomear arquivo temporário.")
+            }
+        } catch (e: IOException) {
+            if (tempFile.exists()) tempFile.delete()
+            throw IllegalStateException("Falha ao salvar personagem criptografado.", e)
         }
 
         SaveEntry(saveId, snapshot.nome, snapshot.timestamp)
@@ -156,7 +175,7 @@ object CharacterStorage {
                 file.delete()
             }
         } catch (e: Exception) {
-            // Ignora erro se ID for inválido (nada a deletar)
+            // Ignora erro
         }
     }
 }

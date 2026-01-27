@@ -1077,17 +1077,6 @@ private fun SummaryTabContent(
             viewModel.atualizarRetrato(context, uri)
         }
     }
-    val portraitFile = remember(state.portraitFileName, context) {
-        state.portraitFileName?.let {
-            try {
-                val portraitsDir = File(context.filesDir, "portraits")
-                SecurityUtils.getSafeChildFile(portraitsDir, it)
-            } catch (e: Exception) {
-                null
-            }
-        }
-    }
-    val portraitUri = portraitFile?.takeIf { it.exists() }?.let(Uri::fromFile)
 
     Column(
         modifier = Modifier
@@ -1097,7 +1086,7 @@ private fun SummaryTabContent(
         // Pass image selection data to SummaryContent which now houses the placeholder
         SummaryContent(
             state = state,
-            imageUri = portraitUri,
+            portraitFileName = state.portraitFileName,
             onSelectImage = { portraitLauncher.launch("image/*") }
         )
         Spacer(Modifier.height(12.dp))

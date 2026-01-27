@@ -182,6 +182,9 @@ dependencies {
     // --- iText para PDF ---
     implementation(libs.itextg)
 
+    // --- Security ---
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
     // --- Testes ---
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
