@@ -4,13 +4,11 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Debug
+import android.util.Base64
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 import java.security.MessageDigest
-import android.content.pm.PackageManager
-import android.content.pm.Signature
-import android.util.Base64
 
 object SecurityHardening {
 
