@@ -195,9 +195,13 @@ fun VantagensContent(
         state.compendioWiseguysAtivo,
         multiplosAAHabilitados
     ) {
-        listaVantagens.filter { vant ->
-            state.isVantagemVisible(vant, multiplosAAHabilitados)
-        }.sortedWith(compareBy({ it.categoria }, { it.nomeExibicao }))
+        listaVantagens
+            .filter { vant -> state.isVantagemVisible(vant, multiplosAAHabilitados) }
+            .groupBy { it.id }
+            .map { (_, duplicates) ->
+                duplicates.maxByOrNull { CriadorState.getOriginPriority(it.origem) }!!
+            }
+            .sortedWith(compareBy({ it.categoria }, { it.nomeExibicao }))
     }
 
     val idParaNome = remember(listaVantagens) {

@@ -676,7 +676,12 @@ fun EquipamentoSection(
                                             ?: (cat.original.origem ?: "BASICO")).uppercase()
                                         EquipamentoListEntry(item, origemKey, origemKey.toEditionDisplayName())
                                     }
-                                }.filter { entry ->
+                                    }
+                                    .groupBy { it.item.nome.keyify() }
+                                    .map { (_, duplicates) ->
+                                        duplicates.maxByOrNull { CriadorState.getOriginPriority(it.origemKey) }!!
+                                    }
+                                    .filter { entry ->
                                     val isAcessivel = if (filter.somenteAcessiveis) {
                                         val c = parseCostInBaseUnit(entry.item.custo, compendioPathfinderAtivo)
                                         usaRiqueza || c <= dinheiro
