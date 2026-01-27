@@ -54,6 +54,7 @@ import com.example.swadebuilder.model.EquipSuperType
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.SAVAGE_PATHFINDER_ALLOWLIST
+import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.PbLegacyActions

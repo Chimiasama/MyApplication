@@ -35,6 +35,7 @@ import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.classeExclusivaBloqueada
+import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
@@ -1001,7 +1002,7 @@ class CriadorState {
     val periciasFiltradasPorCompendio: List<Pericia> by derivedStateOf {
             val activeOrigins = getActiveOrigins()
             val filteredByOrigin = listaPericias.filter {
-                val o = it.origem.ifBlank { "BASICO" }.uppercase().semAcentos()
+                val o = (it.origem ?: "").ifBlank { "BASICO" }.uppercase().semAcentos()
                 o in activeOrigins
             }
 
