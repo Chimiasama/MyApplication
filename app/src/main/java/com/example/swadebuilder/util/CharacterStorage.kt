@@ -4,14 +4,17 @@ import android.content.Context
 import com.example.swadebuilder.model.PersonagemSnapshot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
 import java.io.File
 import java.security.MessageDigest
 import java.util.UUID
 
 object CharacterStorage {
     private const val SAVE_DIR = "personagens"
+    private const val MAX_FILE_SIZE = 5 * 1024 * 1024L // 5 MB
 
     private val json = Json {
         encodeDefaults = true
@@ -59,18 +62,23 @@ object CharacterStorage {
         return expected == checksumFor(snapshot)
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     suspend fun listSaves(context: Context): List<SaveEntry> = withContext(Dispatchers.IO) {
         val dir = savesDirectory(context)
         dir.listFiles()?.mapNotNull { file ->
-            val snapshot = decodeSnapshot(file.readText()) ?: return@mapNotNull null
+            if (file.length() > MAX_FILE_SIZE) return@mapNotNull null
+            val snapshot = decodeSnapshot(file) ?: return@mapNotNull null
             if (!validateChecksum(snapshot)) return@mapNotNull null
             SaveEntry(file.nameWithoutExtension, snapshot.nome, snapshot.timestamp)
         }?.sortedByDescending { it.timestamp } ?: emptyList()
     }
 
-    private fun decodeSnapshot(rawJson: String): PersonagemSnapshot? {
+    @OptIn(ExperimentalSerializationApi::class)
+    private fun decodeSnapshot(file: File): PersonagemSnapshot? {
         return try {
-            json.decodeFromString<PersonagemSnapshot>(rawJson)
+            file.inputStream().use { input ->
+                json.decodeFromStream<PersonagemSnapshot>(input)
+            }
         } catch (e: SerializationException) {
             null
         } catch (e: Exception) {
@@ -78,13 +86,19 @@ object CharacterStorage {
         }
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     suspend fun load(context: Context, id: String): LoadResult = withContext(Dispatchers.IO) {
         try {
             val file = getSafeFile(context, id)
             if (!file.exists()) return@withContext LoadResult.NotFound
-            val raw = file.readText()
+            if (file.length() > MAX_FILE_SIZE) {
+                return@withContext LoadResult.Failure("Arquivo excede o limite de tamanho.")
+            }
+
             val snapshot = try {
-                json.decodeFromString<PersonagemSnapshot>(raw)
+                file.inputStream().use { input ->
+                    json.decodeFromStream<PersonagemSnapshot>(input)
+                }
             } catch (e: SerializationException) {
                 return@withContext LoadResult.Failure(
                     "Arquivo corrompido ou inválido. Tente salvar novamente."
