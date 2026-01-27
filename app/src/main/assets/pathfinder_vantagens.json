@@ -1,7 +1,7 @@
 [
   {
     "id": "ambidestro",
-    "name": "AMBIDESTRO",
+    "nome": "AMBIDESTRO",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -10,21 +10,21 @@
         "Agilidade": 8
       }
     },
-    "description": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade para Mão Inábil (veja página 137) é ignorada. Se estiverem empunhando uma arma em cada mão, personagens com esta Vantagem podem acumular os bônus de Aparar de ambas as armas (se houverem bônus)."
+    "descricao": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade para Mão Inábil (veja página 137) é ignorada. Se estiverem empunhando uma arma em cada mão, personagens com esta Vantagem podem acumular os bônus de Aparar de ambas as armas (se houverem bônus)."
   },
   {
     "id": "antecedente_arcano",
-    "name": "ANTECEDENTE ARCANO",
+    "nome": "ANTECEDENTE ARCANO",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
       "estagio": "Novato"
     },
-    "description": "Exposição à energias estranhas, estudos em uma escola mágica ou dons de entidades divinas ou espirituais às vezes concedem às personagens seus próprios poderes e habilidades."
+    "descricao": "Exposição à energias estranhas, estudos em uma escola mágica ou dons de entidades divinas ou espirituais às vezes concedem às personagens seus próprios poderes e habilidades."
   },
   {
     "id": "atraente",
-    "name": "ATRAENTE",
+    "nome": "ATRAENTE",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -33,22 +33,22 @@
         "Vigor": 6
       }
     },
-    "description": "Não é segredo que as pessoas ficam mais dispostas a ajudar quem consideram fisicamente atraentes. Adicione +1 em rolagens de Performance e Persuadir se o alvo estiver atraído pelo seu tipo em geral (gênero, sexo, espécie etc.)."
+    "descricao": "Não é segredo que as pessoas ficam mais dispostas a ajudar quem consideram fisicamente atraentes. Adicione +1 em rolagens de Performance e Persuadir se o alvo estiver atraído pelo seu tipo em geral (gênero, sexo, espécie etc.)."
   },
   {
     "id": "muito_atraente",
-    "name": "MUITO ATRAENTE",
+    "nome": "MUITO ATRAENTE",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
       "estagio": "Novato",
       "vantagens_previas": ["atraente"]
     },
-    "description": "Sua personagem é linda de morrer. Ela aumenta seu bônus em Performance e Persuadir para +2."
+    "descricao": "Sua personagem é linda de morrer. Ela aumenta seu bônus em Performance e Persuadir para +2."
   },
   {
     "id": "brutamontes",
-    "name": "BRUTAMONTES",
+    "nome": "BRUTAMONTES",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -58,11 +58,11 @@
         "Vigor": 6
       }
     },
-    "description": "Brutamontes se focam em força e capacidade física no lugar de coordenação e flexibilidade. Tratam a perícia Atletismo como se estivesse ligada a Força no lugar de Agilidade para propósitos de Progresso. Também podem resistir a Desafios de Atletismo com Força, se desejarem. Por fim, Brutamontes aumentam a Curta Distância de qualquer item arremessado em +1. A Média Distância é aumentada em +2 e a Longa Distância em +4. Se a Distância de um item arremessado for 3/6/12, por exemplo, a Distância para o Brutamontes é 4/8/16."
+    "descricao": "Brutamontes se focam em força e capacidade física no lugar de coordenação e flexibilidade. Tratam a perícia Atletismo como se estivesse ligada a Força no lugar de Agilidade para propósitos de Progresso. Também podem resistir a Desafios de Atletismo com Força, se desejarem. Por fim, Brutamontes aumentam a Curta Distância de qualquer item arremessado em +1. A Média Distância é aumentada em +2 e a Longa Distância em +4. Se a Distância de um item arremessado for 3/6/12, por exemplo, a Distância para o Brutamontes é 4/8/16."
   },
   {
     "id": "carismatico",
-    "name": "CARISMÁTICO",
+    "nome": "CARISMÁTICO",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -71,11 +71,11 @@
         "Espírito": 8
       }
     },
-    "description": "Confere simpatia por alguma razão. Pode ser confiável, agir com bondade ou apenas pode transparecer confiança e boa vontade. Você tem uma rerrolagem gratuita em rolagens de Persuadir."
+    "descricao": "Confere simpatia por alguma razão. Pode ser confiável, agir com bondade ou apenas pode transparecer confiança e boa vontade. Você tem uma rerrolagem gratuita em rolagens de Persuadir."
   },
   {
     "id": "corajoso",
-    "name": "CORAJOSO",
+    "nome": "CORAJOSO",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -84,11 +84,11 @@
         "Espírito": 6
       }
     },
-    "description": "Quem possui esta Vantagem aprendeu a dominar seus medos ou lidou com tantos horrores que acabou se habituando. Estas figuras valentes e exploradoras adicionam +2 em Testes de Medo e subtraem 2 dos resultados da Tabela de Medo (veja página 160)."
+    "descricao": "Quem possui esta Vantagem aprendeu a dominar seus medos ou lidou com tantos horrores que acabou se habituando. Estas figuras valentes e exploradoras adicionam +2 em Testes de Medo e subtraem 2 dos resultados da Tabela de Medo (veja página 160)."
   },
   {
     "id": "cura_rapida",
-    "name": "CURA RÁPIDA",
+    "nome": "CURA RÁPIDA",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -97,32 +97,32 @@
         "Vigor": 8
       }
     },
-    "description": "Personagens com esta bênção adicionam +2 ao Vigor em rolagens de cura natural e testam a cada três dias em vez de cinco (veja Cura, página 134)."
+    "descricao": "Personagens com esta bênção adicionam +2 ao Vigor em rolagens de cura natural e testam a cada três dias em vez de cinco (veja Cura, página 134)."
   },
   {
     "id": "famoso",
-    "name": "FAMOSO",
+    "nome": "FAMOSO",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
       "estagio": "Novato"
     },
-    "description": "Personagens com essa vantagem são uma espécie de celebridade menor. Podem ter reconhecimento como membro popular da classe barda em um feudo em particular, uma aventureira que salvou a vila, ou um amado mago que entretém as crianças. Irão ganhar o dobro do cachê normal quando estiverem realizando uma performance (veja Performance, página 38). Também podem usar sua fama para adicionar +1 em rolagens de Persuadir se o alvo for amigável e souber quem elas são (uma rolagem de Conhecimento Geral modificada pela probabilidade do indivíduo conhecer a celebridade). A parte ruim de ser Famoso é que o indivíduo geralmente é reconhecido, pessoas querem algo dele com certa frequência, pode sofrer perseguição por parte de fãs ou pessoas que admirem seu trabalho, ou ainda pode não conseguir se livrar de suas obrigações, apresentações ou outras atividades sem se complicar."
+    "descricao": "Personagens com essa vantagem são uma espécie de celebridade menor. Podem ter reconhecimento como membro popular da classe barda em um feudo em particular, uma aventureira que salvou a vila, ou um amado mago que entretém as crianças. Irão ganhar o dobro do cachê normal quando estiverem realizando uma performance (veja Performance, página 38). Também podem usar sua fama para adicionar +1 em rolagens de Persuadir se o alvo for amigável e souber quem elas são (uma rolagem de Conhecimento Geral modificada pela probabilidade do indivíduo conhecer a celebridade). A parte ruim de ser Famoso é que o indivíduo geralmente é reconhecido, pessoas querem algo dele com certa frequência, pode sofrer perseguição por parte de fãs ou pessoas que admirem seu trabalho, ou ainda pode não conseguir se livrar de suas obrigações, apresentações ou outras atividades sem se complicar."
   },
   {
     "id": "muito_famoso",
-    "name": "MUITO FAMOSO",
+    "nome": "MUITO FAMOSO",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["famoso"]
     },
-    "description": "Personagens com esta Vantagem realmente têm fama. São bastante conhecidas em um círculo grande como um reino, cidade ou pelo circuito de shows. Fazem 5x o cachê normal quando se apresentam e adicionam +2 em Persuadir quando estão influenciando indivíduos amigáveis que o conhecem. O preço também é mais alto para quem é verdadeiramente Famoso, com mais exigências em questão de tempo, obrigações, rivais, escândalos e na incapacidade de se misturar à multidão sem que lhe reconheçam."
+    "descricao": "Personagens com esta Vantagem realmente têm fama. São bastante conhecidas em um círculo grande como um reino, cidade ou pelo circuito de shows. Fazem 5x o cachê normal quando se apresentam e adicionam +2 em Persuadir quando estão influenciando indivíduos amigáveis que o conhecem. O preço também é mais alto para quem é verdadeiramente Famoso, com mais exigências em questão de tempo, obrigações, rivais, escândalos e na incapacidade de se misturar à multidão sem que lhe reconheçam."
   },
   {
     "id": "impulso",
-    "name": "IMPULSO",
+    "nome": "IMPULSO",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -131,11 +131,11 @@
         "Espírito": 8
       }
     },
-    "description": "Impulso tem a ver com energia ou espírito. Pessoas que o possuem estão à altura da situação quando a coisa fica feia. Quando você gasta um Bene para rerrolar uma Característica, adicione +2 ao total. O bônus se aplica apenas na rerrolagem. Não se aplica a rolagens de dano (já que não são uma rolagem de Característica), também não se aplica a rolagens de Absorção a menos que você esteja usando outro Bene para rerrolar o teste de Vigor."
+    "descricao": "Impulso tem a ver com energia ou espírito. Pessoas que o possuem estão à altura da situação quando a coisa fica feia. Quando você gasta um Bene para rerrolar uma Característica, adicione +2 ao total. O bônus se aplica apenas na rerrolagem. Não se aplica a rolagens de dano (já que não são uma rolagem de Característica), também não se aplica a rolagens de Absorção a menos que você esteja usando outro Bene para rerrolar o teste de Vigor."
   },
   {
     "id": "ligeiro",
-    "name": "LIGEIRO",
+    "nome": "LIGEIRO",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -144,11 +144,11 @@
         "Agilidade": 6
       }
     },
-    "description": "Sua Movimentação é aumentada em +2 e seu dado de corrida aumenta em um tipo (de d6 para d8, por exemplo)."
+    "descricao": "Sua Movimentação é aumentada em +2 e seu dado de corrida aumenta em um tipo (de d6 para d8, por exemplo)."
   },
   {
     "id": "linguista",
-    "name": "LINGUISTA",
+    "nome": "LINGUISTA",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -157,11 +157,11 @@
         "Astúcia": 6
       }
     },
-    "description": "Essa pessoa viaja o mundo e tem um ouvido bom para idiomas. Todas as personagens começam com um número de idiomas igual a metade de seu dado de Astúcia automaticamente. Aqueles que escolhem esta Vantagem sabem um número de idiomas igual a seu dado de Astúcia. Veja a tabela de Idiomas Comuns na página 35."
+    "descricao": "Essa pessoa viaja o mundo e tem um ouvido bom para idiomas. Todas as personagens começam com um número de idiomas igual a metade de seu dado de Astúcia automaticamente. Aqueles que escolhem esta Vantagem sabem um número de idiomas igual a seu dado de Astúcia. Veja a tabela de Idiomas Comuns na página 35."
   },
   {
     "id": "musculoso",
-    "name": "MUSCULOSO",
+    "nome": "MUSCULOSO",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -171,21 +171,21 @@
         "Vigor": 6
       }
     },
-    "description": "Esta pessoa é muito grande ou está em forma. Seu Tamanho aumenta em +1 (e também a Resistência em 1) e a Força é tratada como se fosse um tipo de dado maior quando determina Sobrecarga (página 108) e Força Mínima para usar armadura, armas e equipamentos sem penalidade (página 108). Musculoso não pode aumentar o Tamanho da personagem acima de +3 e não tem efeito em Interferência da Armadura ou Restrição de Armadura."
+    "descricao": "Esta pessoa é muito grande ou está em forma. Seu Tamanho aumenta em +1 (e também a Resistência em 1) e a Força é tratada como se fosse um tipo de dado maior quando determina Sobrecarga (página 108) e Força Mínima para usar armadura, armas e equipamentos sem penalidade (página 108). Musculoso não pode aumentar o Tamanho da personagem acima de +3 e não tem efeito em Interferência da Armadura ou Restrição de Armadura."
   },
   {
     "id": "prontidao",
-    "name": "PRONTIDÃO",
+    "nome": "PRONTIDÃO",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
       "estagio": "Novato"
     },
-    "description": "Nada escapa a esse herói. São bastante observadores e adicionam +2 em seu Perceber para ouvir, ver ou sentir o mundo ao seu redor."
+    "descricao": "Nada escapa a esse herói. São bastante observadores e adicionam +2 em seu Perceber para ouvir, ver ou sentir o mundo ao seu redor."
   },
   {
     "id": "resistencia_arcana",
-    "name": "RESISTÊNCIA ARCANA",
+    "nome": "RESISTÊNCIA ARCANA",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -194,43 +194,43 @@
         "Espírito": 8
       }
     },
-    "description": "Magia e o sobrenatural pouco influenciam este indivíduo. Seja por natureza, herança ou treinamento a personagem é particularmente resistente a magia e outras energias sobrenaturais. Habilidades arcanas de oponentes tendo esta personagem como alvo sofrem uma penalidade de -2 e dano mágico também é reduzido em 2. Isso inclui bônus mágico proveniente de armas, tais como o poder ferir ou o encantamento Dano (página 221)."
+    "descricao": "Magia e o sobrenatural pouco influenciam este indivíduo. Seja por natureza, herança ou treinamento a personagem é particularmente resistente a magia e outras energias sobrenaturais. Habilidades arcanas de oponentes tendo esta personagem como alvo sofrem uma penalidade de -2 e dano mágico também é reduzido em 2. Isso inclui bônus mágico proveniente de armas, tais como o poder ferir ou o encantamento Dano (página 221)."
   },
   {
     "id": "resistencia_arcana_aprimorada",
-    "name": "RESISTÊNCIA ARCANA APRIMORADA",
+    "nome": "RESISTÊNCIA ARCANA APRIMORADA",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
       "estagio": "Novato",
       "vantagens_previas": ["resistencia_arcana"]
     },
-    "description": "Como acima, mas a penalidade para a rolagem da perícia arcana e no dano é aumentada para 4."
+    "descricao": "Como acima, mas a penalidade para a rolagem da perícia arcana e no dano é aumentada para 4."
   },
   {
     "id": "sorte",
-    "name": "SORTE",
+    "nome": "SORTE",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
       "estagio": "Novato"
     },
-    "description": "Quem tem Sorte parece ser abençoado pelo destino, deuses ou qualquer força externa na qual acredite (ou que acredite nesta figura!). Deve sacar um Bene adicional no início de cada sessão de jogo, de modo a ser mais frequentemente bem-sucedido em tarefas importantes que a maioria e sobreviver a perigos incríveis."
+    "descricao": "Quem tem Sorte parece ser abençoado pelo destino, deuses ou qualquer força externa na qual acredite (ou que acredite nesta figura!). Deve sacar um Bene adicional no início de cada sessão de jogo, de modo a ser mais frequentemente bem-sucedido em tarefas importantes que a maioria e sobreviver a perigos incríveis."
   },
   {
     "id": "sorte_grande",
-    "name": "SORTE GRANDE",
+    "nome": "SORTE GRANDE",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
       "estagio": "Novato",
       "vantagens_previas": ["sorte"]
     },
-    "description": "Concede dois Benes adicionais no início de cada sessão em vez de um."
+    "descricao": "Concede dois Benes adicionais no início de cada sessão em vez de um."
   },
   {
     "id": "rapido",
-    "name": "RÁPIDO",
+    "nome": "RÁPIDO",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
@@ -239,11 +239,11 @@
         "Agilidade": 8
       }
     },
-    "description": "Personagens com rapidez possuem reflexos ultrarrápidos e uma cabeça fria. Sempre que sacar uma Carta de Ação com um valor Cinco ou menor, você pode descartá-la e sacar novamente até que consiga uma carta mais alta do que Cinco. Personagens com as Vantagens Focado e Rápido sacam primeiro suas cartas adicionais e escolhem qual irão usar. Se a carta for um Cinco ou menos, a Vantagem Rápido pode ser usada para sacar uma substituta até que um Seis ou maior apareça."
+    "descricao": "Personagens com rapidez possuem reflexos ultrarrápidos e uma cabeça fria. Sempre que sacar uma Carta de Ação com um valor Cinco ou menor, você pode descartá-la e sacar novamente até que consiga uma carta mais alta do que Cinco. Personagens com as Vantagens Focado e Rápido sacam primeiro suas cartas adicionais e escolhem qual irão usar. Se a carta for um Cinco ou menos, a Vantagem Rápido pode ser usada para sacar uma substituta até que um Seis ou maior apareça."
   },
   {
     "id": "classe_barbaro",
-    "name": "BÁRBARO",
+    "nome": "BÁRBARO",
     "origem": "PATHFINDER",
     "categoria": "CLASSE",
     "requisitos": {
@@ -254,11 +254,11 @@
       }
     },
     "limite_compra": "uma_vez",
-    "description": "• FÚRIA: Bárbaros em circunstâncias desesperadas podem convocar suas reservas internas de força e ferocidade. Como uma ação livre limitada, pode \"entrar em fúria\" voluntariamente. Se receber o Estado Abalado ou um Ferimento, deve fazer uma rolagem de Astúcia ou entra em fúria quer queira ou não. Fúria dura cinco rodadas. Após o quinto turno, personagens da classe bárbaro recebem um nível de Fadiga que só pode ser recuperado com uma hora de descanso (geralmente sem andar, cavalgar etc). Bárbaros Exaustos que entram em fúria ficam Incapacitados no final das cinco rodadas. Veja a página 144 para mais informações sobre Fadiga. Durante a fúria, ganham as seguintes habilidades: Raiva (Sua Força aumenta em um tipo de dado e todo ataque deve ser um Ataque Selvagem. Não pode usar nenhuma perícia ou habilidade que requeira mais do que alguns segundos de concentração), Enfurecido (Ignora dois pontos de penalidades de Ferimentos e todas as penalidades de Fadiga), Imprudência (Enquanto em Fúria, toda vez que rolar uma Falha crítica em uma rolagem de ataque, ele acerta um alvo aleatoriamente no seu raio de ataque). • RESTRIÇÃO DE ARMADURA (Média): O estilo de combate de um bárbaro requer grande liberdade de movimento. Subtraem 4 das rolagens de Agilidade e perícias baseadas em Agilidade ao usar armaduras ou escudo pesados. • VELOZ: Bárbaros são corredores rápidos e resistentes. Aumentam sua Movimentação base em +2. Isso não afeta o dado de corrida, mas acumula com Vantagens como Ligeiro ou modificadores de ancestralidade."
+    "descricao": "• FÚRIA: Bárbaros em circunstâncias desesperadas podem convocar suas reservas internas de força e ferocidade. Como uma ação livre limitada, pode \"entrar em fúria\" voluntariamente. Se receber o Estado Abalado ou um Ferimento, deve fazer uma rolagem de Astúcia ou entra em fúria quer queira ou não. Fúria dura cinco rodadas. Após o quinto turno, personagens da classe bárbaro recebem um nível de Fadiga que só pode ser recuperado com uma hora de descanso (geralmente sem andar, cavalgar etc). Bárbaros Exaustos que entram em fúria ficam Incapacitados no final das cinco rodadas. Veja a página 144 para mais informações sobre Fadiga. Durante a fúria, ganham as seguintes habilidades: Raiva (Sua Força aumenta em um tipo de dado e todo ataque deve ser um Ataque Selvagem. Não pode usar nenhuma perícia ou habilidade que requeira mais do que alguns segundos de concentração), Enfurecido (Ignora dois pontos de penalidades de Ferimentos e todas as penalidades de Fadiga), Imprudência (Enquanto em Fúria, toda vez que rolar uma Falha crítica em uma rolagem de ataque, ele acerta um alvo aleatoriamente no seu raio de ataque). • RESTRIÇÃO DE ARMADURA (Média): O estilo de combate de um bárbaro requer grande liberdade de movimento. Subtraem 4 das rolagens de Agilidade e perícias baseadas em Agilidade ao usar armaduras ou escudo pesados. • VELOZ: Bárbaros são corredores rápidos e resistentes. Aumentam sua Movimentação base em +2. Isso não afeta o dado de corrida, mas acumula com Vantagens como Ligeiro ou modificadores de ancestralidade."
   },
   {
     "id": "ataque_poderoso",
-    "name": "ATAQUE PODEROSO",
+    "nome": "ATAQUE PODEROSO",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -266,11 +266,11 @@
       "vantagens_previas": ["classe_barbaro"]
     },
     "limite_compra": "uma_vez",
-    "description": "Os Ataques Selvagens de uma personagem da classe bárbaro causam +4 de dano em vez de +2. Veja Ataques Selvagens na página 138."
+    "descricao": "Os Ataques Selvagens de uma personagem da classe bárbaro causam +4 de dano em vez de +2. Veja Ataques Selvagens na página 138."
   },
   {
     "id": "olhar_intimidador",
-    "name": "OLHAR INTIMIDADOR",
+    "nome": "OLHAR INTIMIDADOR",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -278,11 +278,11 @@
       "vantagens_previas": ["classe_barbaro"]
     },
     "limite_compra": "uma_vez",
-    "description": "O olhar temível e maligno de um bárbaro selvagem perturba até mesmo as almas mais calejadas. Quando a Carta de Ação do bárbaro é um Valete ou maior, ele faz uma rolagem de Intimidar como uma ação livre limitada. Isso também ignora o conselho habitual de Repetição (veja a página 142). Pode fazer insultos e ameaças se quiser, mas seu olhar terrível normalmente é o suficiente para causar arrepios na espinha de seus oponentes."
+    "descricao": "O olhar temível e maligno de um bárbaro selvagem perturba até mesmo as almas mais calejadas. Quando a Carta de Ação do bárbaro é um Valete ou maior, ele faz uma rolagem de Intimidar como uma ação livre limitada. Isso também ignora o conselho habitual de Repetição (veja a página 142). Pode fazer insultos e ameaças se quiser, mas seu olhar terrível normalmente é o suficiente para causar arrepios na espinha de seus oponentes."
   },
   {
     "id": "surto_de_forca",
-    "name": "SURTO DE FORÇA",
+    "nome": "SURTO DE FORÇA",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -290,11 +290,11 @@
       "vantagens_previas": ["classe_barbaro"]
     },
     "limite_compra": "uma_vez",
-    "description": "A fúria do bárbaro não conhece limites! Sua Força aumenta dois dados quando em fúria, em vez de apenas um. Isso pode exceder o limite da ancestralidade da personagem."
+    "descricao": "A fúria do bárbaro não conhece limites! Sua Força aumenta dois dados quando em fúria, em vez de apenas um. Isso pode exceder o limite da ancestralidade da personagem."
   },
   {
     "id": "classe_bardo",
-    "name": "BARDO",
+    "nome": "BARDO",
     "origem": "PATHFINDER",
     "categoria": "CLASSE",
     "requisitos": {
@@ -307,11 +307,11 @@
       }
     },
     "limite_compra": "uma_vez",
-    "description": "• ANTECEDENTE ARCANO (Bardo): Personagens da classe bardo usam Performance como perícia arcana. Têm 3 poderes iniciais e 10 Pontos de Poder. • INTERFERÊNCIA DA ARMADURA (Leve): Armaduras grandes interferem na graça e destreza de bardos. Subtraem 4 de suas rolagens de Performance, de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos médios ou pesados. • LÍNGUA AFIADA: Bardos podem usar Performance como Provocar em Desafios. Também podem ignorar o conselho de Repetição presente nos Desafios (veja a página 141), desde que possam recitar versos, estrofes ou músicas diferentes. Bardos também podem usar Performance no lugar de Provocar para atender aos Requisitos de Vantagem."
+    "descricao": "• ANTECEDENTE ARCANO (Bardo): Personagens da classe bardo usam Performance como perícia arcana. Têm 3 poderes iniciais e 10 Pontos de Poder. • INTERFERÊNCIA DA ARMADURA (Leve): Armaduras grandes interferem na graça e destreza de bardos. Subtraem 4 de suas rolagens de Performance, de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos médios ou pesados. • LÍNGUA AFIADA: Bardos podem usar Performance como Provocar em Desafios. Também podem ignorar o conselho de Repetição presente nos Desafios (veja a página 141), desde que possam recitar versos, estrofes ou músicas diferentes. Bardos também podem usar Performance no lugar de Provocar para atender aos Requisitos de Vantagem."
   },
   {
     "id": "inspirar_heroismo",
-    "name": "INSPIRAR HEROÍSMO",
+    "nome": "INSPIRAR HEROÍSMO",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -319,11 +319,11 @@
       "vantagens_previas": ["classe_bardo"]
     },
     "limite_compra": "uma_vez",
-    "description": "Bardos inspiram seus camaradas com histórias épicas de valor e bravura. Uma vez durante um encontro (decisão do Mestre), o bardo pode gastar um Bene para ganhar cinco marcadores de Inspiração. Isso é uma ação livre limitada. Pelo restante do encontro, a personagem de classe bardo pode dar estes marcadores a qualquer um, exceto por si mesmo, que esteja em um alcance igual ao seu dado de Astúcia. Cada marcador de inspiração permite a uma personagem rerrolar uma Característica ou rolagem de dano."
+    "descricao": "Bardos inspiram seus camaradas com histórias épicas de valor e bravura. Uma vez durante um encontro (decisão do Mestre), o bardo pode gastar um Bene para ganhar cinco marcadores de Inspiração. Isso é uma ação livre limitada. Pelo restante do encontro, a personagem de classe bardo pode dar estes marcadores a qualquer um, exceto por si mesmo, que esteja em um alcance igual ao seu dado de Astúcia. Cada marcador de inspiração permite a uma personagem rerrolar uma Característica ou rolagem de dano."
   },
   {
     "id": "contra_cancao",
-    "name": "CONTRA-CANÇÃO",
+    "nome": "CONTRA-CANÇÃO",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -331,11 +331,11 @@
       "vantagens_previas": ["classe_bardo"]
     },
     "limite_compra": "uma_vez",
-    "description": "Bardos e todos os seus aliados a 5 quadros (10 metros) ganham uma rerrolagem para resistir a efeitos de magias de oponentes ou tentativas de se recuperar deles. Isso inclui rolagens para se recuperar de quaisquer efeitos mágicos como cegar, diminuir Característica, ou atordoar. Contra-canção não ajuda a resistir ou recuperar de efeitos naturais."
+    "descricao": "Bardos e todos os seus aliados a 5 quadros (10 metros) ganham uma rerrolagem para resistir a efeitos de magias de oponentes ou tentativas de se recuperar deles. Isso inclui rolagens para se recuperar de quaisquer efeitos mágicos como cegar, diminuir Característica, ou atordoar. Contra-canção não ajuda a resistir ou recuperar de efeitos naturais."
   },
   {
     "id": "marcha_funebre",
-    "name": "MARCHA FÚNEBRE",
+    "nome": "MARCHA FÚNEBRE",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -343,11 +343,11 @@
       "vantagens_previas": ["classe_bardo"]
     },
     "limite_compra": "uma_vez",
-    "description": "Esta canção sinistra causa terror nos seus adversários. A seu critério, qualquer oponente que gaste um Bene para Absorver Ferimentos ou rerrolar uma Caraterística ou dano a 10 quadros (20 metros) e na linha de visão do bardo subtrai 2 de seu resultado total."
+    "descricao": "Esta canção sinistra causa terror nos seus adversários. A seu critério, qualquer oponente que gaste um Bene para Absorver Ferimentos ou rerrolar uma Caraterística ou dano a 10 quadros (20 metros) e na linha de visão do bardo subtrai 2 de seu resultado total."
   },
   {
     "id": "classe_clerigo",
-    "name": "CLÉRIGO",
+    "nome": "CLÉRIGO",
     "origem": "PATHFINDER",
     "categoria": "CLASSE",
     "requisitos": {
@@ -360,11 +360,11 @@
       }
     },
     "limite_compra": "uma_vez",
-    "description": "• ANTECEDENTE ARCANO (Clérigo): Clérigos usam Fé como perícia arcana. Ao escolher esta Vantagem, ganham 10 Pontos de Poder e devem escolher um Domínio referente à divindade que servem da lista da página 50. • CANALIZAR ENERGIA: Clérigos podem conjurar o poder cura à uma Distância igual a seu dado de Espírito em vez de Toque. Seu poder cura também têm o Modificador Receptores Adicionais, permitindo que curem aliados próximos ao custo de um Ponto de Poder extra para cada. • VOTO (Maior): Clérigos têm o voto de servir a sua divindade. Aqueles que desejam usar energia de fontes divinas devem seguir os princípios de seu Domínio. Se violar a confiança de sua divindade (decisão do Mestre) o clérigo subtrai 2 de suas rolagens de Fé por uma semana. Atos de verdadeiro sacrilégio podem retirar seus poderes inteiramente até que busquem redenção de alguma forma."
+    "descricao": "• ANTECEDENTE ARCANO (Clérigo): Clérigos usam Fé como perícia arcana. Ao escolher esta Vantagem, ganham 10 Pontos de Poder e devem escolher um Domínio referente à divindade que servem da lista da página 50. • CANALIZAR ENERGIA: Clérigos podem conjurar o poder cura à uma Distância igual a seu dado de Espírito em vez de Toque. Seu poder cura também têm o Modificador Receptores Adicionais, permitindo que curem aliados próximos ao custo de um Ponto de Poder extra para cada. • VOTO (Maior): Clérigos têm o voto de servir a sua divindade. Aqueles que desejam usar energia de fontes divinas devem seguir os princípios de seu Domínio. Se violar a confiança de sua divindade (decisão do Mestre) o clérigo subtrai 2 de suas rolagens de Fé por uma semana. Atos de verdadeiro sacrilégio podem retirar seus poderes inteiramente até que busquem redenção de alguma forma."
   },
   {
     "id": "destruir_mortos_vivos",
-    "name": "DESTRUIR MORTOS-VIVOS",
+    "nome": "DESTRUIR MORTOS-VIVOS",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -372,11 +372,11 @@
       "vantagens_previas": ["classe_clerigo"]
     },
     "limite_compra": "uma_vez",
-    "description": "Como uma ação, clérigos podem gastar 2 Pontos de Poder para canalizar energia positiva em um Modelo Médio de Explosão centrado em si mesmos. Todas as criaturas mortas-vivas dentro do modelo devem fazer uma rolagem de Espírito ou recebem um Ferimento (pode ser Absorvido como de costume)."
+    "descricao": "Como uma ação, clérigos podem gastar 2 Pontos de Poder para canalizar energia positiva em um Modelo Médio de Explosão centrado em si mesmos. Todas as criaturas mortas-vivas dentro do modelo devem fazer uma rolagem de Espírito ou recebem um Ferimento (pode ser Absorvido como de costume)."
   },
   {
     "id": "poderes_favorecidos_clerigo",
-    "name": "PODERES FAVORECIDOS (CLÉRIGO)",
+    "nome": "PODERES FAVORECIDOS (CLÉRIGO)",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -384,11 +384,11 @@
       "vantagens_previas": ["classe_clerigo"]
     },
     "limite_compra": "uma_vez",
-    "description": "A personagem de classe clérigo tem grande familiaridade com alguns de seus poderes e pode conjurá-los com maior rapidez e facilidade. Como ação livre limitada pode ignorar até dois pontos de quaisquer penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.) quando conjurar cura, santuário, ou ferir. Esta Vantagem não lhe dá esses poderes – eles devem ser adquiridos separadamente como de costume."
+    "descricao": "A personagem de classe clérigo tem grande familiaridade com alguns de seus poderes e pode conjurá-los com maior rapidez e facilidade. Como ação livre limitada pode ignorar até dois pontos de quaisquer penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.) quando conjurar cura, santuário, ou ferir. Esta Vantagem não lhe dá esses poderes – eles devem ser adquiridos separadamente como de costume."
   },
   {
     "id": "maestria_divina_clerigo",
-    "name": "MAESTRIA DIVINA (CLÉRIGO)",
+    "nome": "MAESTRIA DIVINA (CLÉRIGO)",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -396,11 +396,11 @@
       "vantagens_previas": ["classe_clerigo"]
     },
     "limite_compra": "uma_vez",
-    "description": "Divindades recompensam seus clérigos com poderes adicionais e energia para alimentar seus milagres. Personagens da classe Clérigo que adquiram esta Vantagem ganham acesso a todos os Modificadores Épicos de Poderes (veja a página 183)."
+    "descricao": "Divindades recompensam seus clérigos com poderes adicionais e energia para alimentar seus milagres. Personagens da classe Clérigo que adquiram esta Vantagem ganham acesso a todos os Modificadores Épicos de Poderes (veja a página 183)."
   },
   {
     "id": "classe_druida",
-    "name": "DRUIDA",
+    "nome": "DRUIDA",
     "origem": "PATHFINDER",
     "categoria": "CLASSE",
     "requisitos": {
@@ -413,11 +413,11 @@
       }
     },
     "limite_compra": "uma_vez",
-    "description": "• ANTECEDENTES ARCANO (Druida): Druidas usam Fé como perícia arcana. Recebe 3 poderes iniciais e 10 Pontos de Poder. • ELO COM A NATUREZA: Druidas podem sintonizar com a natureza ou com um companheiro animal especial. Escolha uma destas habilidades: Sintonizado (recebe uma rerrolagem gratuita sempre que falhar em um teste de Fé para ativar uma magia) ou Senhor das Feras (recebe a Vantagem Senhor das Feras, ganhando um companheiro animal Carta Selvagem). • IDIOMA SECRETO: Todos os druidas sabem um idioma secreto conhecido como Druídico. • INTERFERÊNCIA DA ARMADURA (leve): Subtraem 4 de suas rolagens de Fé, Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos médios ou pesados. Druidas não podem usar armaduras de metal. • SENTIDO NATURAL: Sobrevivência é ligada a seu Espírito em vez de Astúcia. • TRAVESSIA DE FLORESTA: Ignoram as penalidades de Terreno Acidentado. • VOTO (Maior): Druidas tem um voto maior de proteger a natureza."
+    "descricao": "• ANTECEDENTES ARCANO (Druida): Druidas usam Fé como perícia arcana. Recebe 3 poderes iniciais e 10 Pontos de Poder. • ELO COM A NATUREZA: Druidas podem sintonizar com a natureza ou com um companheiro animal especial. Escolha uma destas habilidades: Sintonizado (recebe uma rerrolagem gratuita sempre que falhar em um teste de Fé para ativar uma magia) ou Senhor das Feras (recebe a Vantagem Senhor das Feras, ganhando um companheiro animal Carta Selvagem). • IDIOMA SECRETO: Todos os druidas sabem um idioma secreto conhecido como Druídico. • INTERFERÊNCIA DA ARMADURA (leve): Subtraem 4 de suas rolagens de Fé, Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos médios ou pesados. Druidas não podem usar armaduras de metal. • SENTIDO NATURAL: Sobrevivência é ligada a seu Espírito em vez de Astúcia. • TRAVESSIA DE FLORESTA: Ignoram as penalidades de Terreno Acidentado. • VOTO (Maior): Druidas tem um voto maior de proteger a natureza."
   },
   {
     "id": "forma_selvagem",
-    "name": "FORMA SELVAGEM",
+    "nome": "FORMA SELVAGEM",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -425,11 +425,11 @@
       "vantagens_previas": ["classe_druida"]
     },
     "limite_compra": "uma_vez",
-    "description": "A personagem de classe druida ganha o poder mudança de forma, se já não a possuía, e dobra a duração do poder quando conjura. Trate como um estágio maior quando se transforma em uma criatura de Tipo: Animal."
+    "descricao": "A personagem de classe druida ganha o poder mudança de forma, se já não a possuía, e dobra a duração do poder quando conjura. Trate como um estágio maior quando se transforma em uma criatura de Tipo: Animal."
   },
   {
     "id": "poderes_favorecidos_druida",
-    "name": "PODERES FAVORECIDOS (DRUIDA)",
+    "nome": "PODERES FAVORECIDOS (DRUIDA)",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -437,11 +437,11 @@
       "vantagens_previas": ["classe_druida"]
     },
     "limite_compra": "uma_vez",
-    "description": "A personagem de classe druida tem grande familiaridade com alguns de seus poderes e pode conjurá-los com maior rapidez e facilidade. Como ação livre limitada pode ignorar até dois pontos de quaisquer penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.) quando conjurar enredar, ferir, ou proteção. Essa Vantagem não lhe dá esses poderes – eles devem ser adquiridos separadamente como de costume."
+    "descricao": "A personagem de classe druida tem grande familiaridade com alguns de seus poderes e pode conjurá-los com maior rapidez e facilidade. Como ação livre limitada pode ignorar até dois pontos de quaisquer penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.) quando conjurar enredar, ferir, ou proteção. Essa Vantagem não lhe dá esses poderes – eles devem ser adquiridos separadamente como de costume."
   },
   {
     "id": "maestria_divina_druida",
-    "name": "MAESTRIA DIVINA (DRUIDA)",
+    "nome": "MAESTRIA DIVINA (DRUIDA)",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -449,11 +449,11 @@
       "vantagens_previas": ["classe_druida"]
     },
     "limite_compra": "uma_vez",
-    "description": "A Natureza recompensa seus defensores com poderes e energia adicionais. Personagens da classe Druida que adquiram esta Vantagem ganham acesso a todos os Modificadores Épicos de Poderes (veja a página 183)."
+    "descricao": "A Natureza recompensa seus defensores com poderes e energia adicionais. Personagens da classe Druida que adquiram esta Vantagem ganham acesso a todos os Modificadores Épicos de Poderes (veja a página 183)."
   },
   {
     "id": "classe_feiticeiro",
-    "name": "FEITICEIRO",
+    "nome": "FEITICEIRO",
     "origem": "PATHFINDER",
     "categoria": "CLASSE",
     "requisitos": {
@@ -464,11 +464,11 @@
       }
     },
     "limite_compra": "uma_vez",
-    "description": "• ANTECEDENTE ARCANO (Feiticeiro): Personagens de classe Feiticeiro usam Conjurar como sua perícia arcana, mas ela é ligada à Espírito em vez de Astúcia. Ganha 15 Pontos de Poder e dois poderes iniciais. • INTERFERÊNCIA DE ARMADURA (qualquer uma): Feitiçaria requer movimentos somáticos rápidos, intrincados e desimpedidos. Subtraem 4 de suas rolagens de Conjurar, de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos leves, médios ou pesados. • LINHAGEM: Personagens da classe Feiticeiro devem escolher uma linhagem (veja a página 58). Abaixo da descrição de cada Linhagem há também habilidades especiais adicionais recebidas ao escolher a Vantagem Linhagem Avançada."
+    "descricao": "• ANTECEDENTE ARCANO (Feiticeiro): Personagens de classe Feiticeiro usam Conjurar como sua perícia arcana, mas ela é ligada à Espírito em vez de Astúcia. Ganha 15 Pontos de Poder e dois poderes iniciais. • INTERFERÊNCIA DE ARMADURA (qualquer uma): Feitiçaria requer movimentos somáticos rápidos, intrincados e desimpedidos. Subtraem 4 de suas rolagens de Conjurar, de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos leves, médios ou pesados. • LINHAGEM: Personagens da classe Feiticeiro devem escolher uma linhagem (veja a página 58). Abaixo da descrição de cada Linhagem há também habilidades especiais adicionais recebidas ao escolher a Vantagem Linhagem Avançada."
   },
   {
     "id": "poderes_favorecidos_feiticeiro",
-    "name": "PODERES FAVORECIDOS (FEITICEIRO)",
+    "nome": "PODERES FAVORECIDOS (FEITICEIRO)",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -476,11 +476,11 @@
       "vantagens_previas": ["classe_feiticeiro"]
     },
     "limite_compra": "uma_vez",
-    "description": "A personagem de classe feiticeiro tem grande familiaridade com alguns de seus poderes e pode conjurá-los com maior rapidez e facilidade. Como ação livre limitada pode ignorar até dois pontos de quaisquer penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.) quando conjura manipulação elemental, proteção ou raio. Esta Vantagem não lhe dá estes poderes – eles devem ser adquiridos separadamente como de costume."
+    "descricao": "A personagem de classe feiticeiro tem grande familiaridade com alguns de seus poderes e pode conjurá-los com maior rapidez e facilidade. Como ação livre limitada pode ignorar até dois pontos de quaisquer penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.) quando conjura manipulação elemental, proteção ou raio. Esta Vantagem não lhe dá estes poderes – eles devem ser adquiridos separadamente como de costume."
   },
   {
     "id": "maestria_arcana_feiticeiro",
-    "name": "MAESTRIA ARCANA (FEITICEIRO)",
+    "nome": "MAESTRIA ARCANA (FEITICEIRO)",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -488,11 +488,11 @@
       "vantagens_previas": ["classe_feiticeiro"]
     },
     "limite_compra": "uma_vez",
-    "description": "Verdadeiro entendimento da energia mágica vem com prática e experiência. Aqueles que adquirem esta Vantagem ganham acesso aos Modificadores Épicos de Poderes (veja Poderes no Capítulo Cinco)."
+    "descricao": "Verdadeiro entendimento da energia mágica vem com prática e experiência. Aqueles que adquirem esta Vantagem ganham acesso aos Modificadores Épicos de Poderes (veja Poderes no Capítulo Cinco)."
   },
   {
     "id": "linhagem_avancada",
-    "name": "LINHAGEM AVANÇADA",
+    "nome": "LINHAGEM AVANÇADA",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -500,11 +500,11 @@
       "vantagens_previas": ["classe_feiticeiro"]
     },
     "limite_compra": "uma_vez",
-    "description": "Você ganha a habilidade adicional listada em sua Linhagem (veja a página 58)."
+    "descricao": "Você ganha a habilidade adicional listada em sua Linhagem (veja a página 58)."
   },
   {
     "id": "classe_guerreiro",
-    "name": "GUERREIRO",
+    "nome": "GUERREIRO",
     "origem": "PATHFINDER",
     "categoria": "CLASSE",
     "requisitos": {
@@ -519,11 +519,11 @@
       }
     },
     "limite_compra": "uma_vez",
-    "description": "• FLEXIBILIDADE MARCIAL: Uma vez por encontro, como ação livre limitada, personagens da classe guerreiro podem ganhar os benefícios de uma única Vantagem de Combate. É necessário cumprir os requisitos da Vantagem e os benefícios da Vantagem acabam após cinco rodadas."
+    "descricao": "• FLEXIBILIDADE MARCIAL: Uma vez por encontro, como ação livre limitada, personagens da classe guerreiro podem ganhar os benefícios de uma única Vantagem de Combate. É necessário cumprir os requisitos da Vantagem e os benefícios da Vantagem acabam após cinco rodadas."
   },
   {
     "id": "golpe_mortal",
-    "name": "GOLPE MORTAL",
+    "nome": "GOLPE MORTAL",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -531,11 +531,11 @@
       "vantagens_previas": ["classe_guerreiro"]
     },
     "limite_compra": "uma_vez",
-    "description": "Adicionam +1 ao dano de todas as rolagens bem-sucedidas de Atletismo (arremessar), Lutar ou Atirar."
+    "descricao": "Adicionam +1 ao dano de todas as rolagens bem-sucedidas de Atletismo (arremessar), Lutar ou Atirar."
   },
   {
     "id": "flexibilidade_marcial_aprimorada",
-    "name": "FLEXIBILIDADE MARCIAL APRIMORADA",
+    "nome": "FLEXIBILIDADE MARCIAL APRIMORADA",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -543,11 +543,11 @@
       "vantagens_previas": ["classe_guerreiro"]
     },
     "limite_compra": "uma_vez",
-    "description": "Personagens da classe Guerreiro recebem o benefício de duas Vantagens de Combate (sujeito as restrições normais de Flexibilidade Marcial). É possível escolher ambas as Vantagens de Combate ao mesmo tempo, ou escolher a segunda como uma ação livre limitada em um turno posterior."
+    "descricao": "Personagens da classe Guerreiro recebem o benefício de duas Vantagens de Combate (sujeito as restrições normais de Flexibilidade Marcial). É possível escolher ambas as Vantagens de Combate ao mesmo tempo, ou escolher a segunda como uma ação livre limitada em um turno posterior."
   },
   {
     "id": "proeza_marcial",
-    "name": "PROEZA MARCIAL",
+    "nome": "PROEZA MARCIAL",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -555,11 +555,11 @@
       "vantagens_previas": ["classe_guerreiro"]
     },
     "limite_compra": "uma_vez",
-    "description": "Personagens da classe guerreiro ganham uma rerrolagem gratuita em qualquer teste falho de Atletismo (arremessar), Lutar ou Atirar."
+    "descricao": "Personagens da classe guerreiro ganham uma rerrolagem gratuita em qualquer teste falho de Atletismo (arremessar), Lutar ou Atirar."
   },
   {
     "id": "classe_ladino",
-    "name": "LADINO",
+    "nome": "LADINO",
     "origem": "PATHFINDER",
     "categoria": "CLASSE",
     "requisitos": {
@@ -573,11 +573,11 @@
       }
     },
     "limite_compra": "uma_vez",
-    "description": "• RESTRIÇÃO DE ARMADURA (Leve): Ladinos são acrobatas ágeis e mortais. Armaduras volumosas interferem em suas habilidades, então subtraem 4 de suas rolagens de Agilidade e perícias baseadas em Agilidade quando usam armaduras ou escudos médias e pesadas. • ATAQUE FURTIVO: Ladinos adicionam um d6 extra a seu dano quando conseguem a Finalização em sua vítima ou quando a vítima está vulnerável. Isso se aplica a ataques de Atletismo (arremessar), Lutar ou Atirar."
+    "descricao": "• RESTRIÇÃO DE ARMADURA (Leve): Ladinos são acrobatas ágeis e mortais. Armaduras volumosas interferem em suas habilidades, então subtraem 4 de suas rolagens de Agilidade e perícias baseadas em Agilidade quando usam armaduras ou escudos médias e pesadas. • ATAQUE FURTIVO: Ladinos adicionam um d6 extra a seu dano quando conseguem a Finalização em sua vítima ou quando a vítima está vulnerável. Isso se aplica a ataques de Atletismo (arremessar), Lutar ou Atirar."
   },
   {
     "id": "pressentir_armadilhas",
-    "name": "PRESSENTIR ARMADILHAS",
+    "nome": "PRESSENTIR ARMADILHAS",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -585,11 +585,11 @@
       "vantagens_previas": ["classe_ladino"]
     },
     "limite_compra": "uma_vez",
-    "description": "Personagens da classe Ladino são hábeis em encontrar e desarmar armadilhas, exceto as mais bem planejadas. Fazem uma rolagem de Perceber sempre que uma armadilha detectável está para ser ativada a 5 quadros (10 metros). Devem ter linha de visão para a armadilha e não podem estar Abalados ou Atordoados. Isso normalmente funciona como Noção do Perigo, mas se aplica apenas à armadilhas mecânicas e mágicas. Se a armadilha é detectada e pode ser Evadida, ladinos e qualquer um que for avisado ignora 2 pontos de penalidades de Evasão para fazê-lo. Se a armadilha não pode ser Evadida, qualquer um avisado pode Evadir com a penalidade usual de -2. Desarmando Armadilhas: Ladinos com Pressentir Armadilhas ignoram até 2 pontos de penalidades de Ladinagem para desarmar armadilhas."
+    "descricao": "Personagens da classe Ladino são hábeis em encontrar e desarmar armadilhas, exceto as mais bem planejadas. Fazem uma rolagem de Perceber sempre que uma armadilha detectável está para ser ativada a 5 quadros (10 metros). Devem ter linha de visão para a armadilha e não podem estar Abalados ou Atordoados. Isso normalmente funciona como Noção do Perigo, mas se aplica apenas à armadilhas mecânicas e mágicas. Se a armadilha é detectada e pode ser Evadida, ladinos e qualquer um que for avisado ignora 2 pontos de penalidades de Evasão para fazê-lo. Se a armadilha não pode ser Evadida, qualquer um avisado pode Evadir com a penalidade usual de -2. Desarmando Armadilhas: Ladinos com Pressentir Armadilhas ignoram até 2 pontos de penalidades de Ladinagem para desarmar armadilhas."
   },
   {
     "id": "reflexos_sobrenaturais",
-    "name": "REFLEXOS SOBRENATURAIS",
+    "nome": "REFLEXOS SOBRENATURAIS",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -597,11 +597,11 @@
       "vantagens_previas": ["classe_ladino"]
     },
     "limite_compra": "uma_vez",
-    "description": "Personagens de classe ladino têm a habilidade sobrenatural de evitar ataques e efeitos que afetam área Ignoram a penalidade habitual de -2 na Agilidade ao realizar tentativas de Evasão (veja a página 143). Também é possível tentar Evadir de ataques ou efeitos de área dos quais normalmente não seria possível (com o redutor habitual de -2), tais como explosão ou rajada, ou ainda confusão ou poderes similares conjurados com o modificador Área."
+    "descricao": "Personagens de classe ladino têm a habilidade sobrenatural de evitar ataques e efeitos que afetam área Ignoram a penalidade habitual de -2 na Agilidade ao realizar tentativas de Evasão (veja a página 143). Também é possível tentar Evadir de ataques ou efeitos de área dos quais normalmente não seria possível (com o redutor habitual de -2), tais como explosão ou rajada, ou ainda confusão ou poderes similares conjurados com o modificador Área."
   },
   {
     "id": "oportunista",
-    "name": "OPORTUNISTA",
+    "nome": "OPORTUNISTA",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -609,11 +609,11 @@
       "vantagens_previas": ["classe_ladino"]
     },
     "limite_compra": "uma_vez",
-    "description": "Quando um alvo usa Retirada para se afastar de um ladino (veja a página 148), é possível atacá-lo gratuitamente mesmo que o inimigo tenha Retirada ou Retirada Aprimorada. Se o oponente não possuir nenhuma destas Vantagens, ele conta como Vulnerável para este ataque."
+    "descricao": "Quando um alvo usa Retirada para se afastar de um ladino (veja a página 148), é possível atacá-lo gratuitamente mesmo que o inimigo tenha Retirada ou Retirada Aprimorada. Se o oponente não possuir nenhuma destas Vantagens, ele conta como Vulnerável para este ataque."
   },
   {
     "id": "classe_mago",
-    "name": "MAGO",
+    "nome": "MAGO",
     "origem": "PATHFINDER",
     "categoria": "CLASSE",
     "requisitos": {
@@ -626,11 +626,11 @@
       }
     },
     "limite_compra": "uma_vez",
-    "description": "• ANTECEDENTE ARCANO (Mago): Magos usam Conjurar como perícia arcana. Ao adquirir esta Vantagem você recebe 10 Pontos de Poder e três poderes. • ESCOLA: Especialistas devem escolher uma escola favorita e duas escolas opostas. Recebem uma rerrolagem gratuita nas rolagens de perícia arcana para conjurar magias de sua escola, mas magias de suas escolas opostas custam um Ponto de Poder adicional e sofrem uma penalidade de -2 na rolagem de perícia arcana. • ELO ARCANO: Magos possuem um intenso elo mágico com um objeto ou criatura (Familiar ou Objeto Ligado). • GRIMÓRIO: Magos devem manter grimórios. • INTERFERÊNCIA DE ARMADURA (Qualquer um): Assim como feiticeiros, magos devem fazer gestos com padrões precisos. Subtraem 4 de suas rolagens de Conjurar , de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos leves, médios ou pesados."
+    "descricao": "• ANTECEDENTE ARCANO (Mago): Magos usam Conjurar como perícia arcana. Ao adquirir esta Vantagem você recebe 10 Pontos de Poder e três poderes. • ESCOLA: Especialistas devem escolher uma escola favorita e duas escolas opostas. Recebem uma rerrolagem gratuita nas rolagens de perícia arcana para conjurar magias de sua escola, mas magias de suas escolas opostas custam um Ponto de Poder adicional e sofrem uma penalidade de -2 na rolagem de perícia arcana. • ELO ARCANO: Magos possuem um intenso elo mágico com um objeto ou criatura (Familiar ou Objeto Ligado). • GRIMÓRIO: Magos devem manter grimórios. • INTERFERÊNCIA DE ARMADURA (Qualquer um): Assim como feiticeiros, magos devem fazer gestos com padrões precisos. Subtraem 4 de suas rolagens de Conjurar , de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos leves, médios ou pesados."
   },
   {
     "id": "poderes_favorecidos_mago",
-    "name": "PODERES FAVORECIDOS (MAGO)",
+    "nome": "PODERES FAVORECIDOS (MAGO)",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -638,11 +638,11 @@
       "vantagens_previas": ["classe_mago"]
     },
     "limite_compra": "uma_vez",
-    "description": "A personagem de classe mago tem grande familiaridade com alguns de seus poderes e pode conjurá-los com maior rapidez e facilidade. Como ação livre limitada, ele pode ignorar até dois pontos de quaisquer penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.), quando conjurar proteção arcana, deflexão, dissipar. Esta Vantagem não lhe dá estes poderes – eles devem ser adquiridos separadamente como de costume."
+    "descricao": "A personagem de classe mago tem grande familiaridade com alguns de seus poderes e pode conjurá-los com maior rapidez e facilidade. Como ação livre limitada, ele pode ignorar até dois pontos de quaisquer penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.), quando conjurar proteção arcana, deflexão, dissipar. Esta Vantagem não lhe dá estes poderes – eles devem ser adquiridos separadamente como de costume."
   },
   {
     "id": "maestria_arcana_mago",
-    "name": "MAESTRIA ARCANA (MAGO)",
+    "nome": "MAESTRIA ARCANA (MAGO)",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -650,11 +650,11 @@
       "vantagens_previas": ["classe_mago"]
     },
     "limite_compra": "uma_vez",
-    "description": "Verdadeiro entendimento da energia mágica vem com prática e experiência. Aqueles que adquirem esta Vantagem ganham acesso aos Modificadores Épicos de Poderes (veja Poderes no Capítulo Cinco)."
+    "descricao": "Verdadeiro entendimento da energia mágica vem com prática e experiência. Aqueles que adquirem esta Vantagem ganham acesso aos Modificadores Épicos de Poderes (veja Poderes no Capítulo Cinco)."
   },
   {
     "id": "inspiracao_mistica",
-    "name": "INSPIRAÇÃO MÍSTICA",
+    "nome": "INSPIRAÇÃO MÍSTICA",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -662,11 +662,11 @@
       "vantagens_previas": ["classe_mago"]
     },
     "limite_compra": "uma_vez",
-    "description": "Grandes magos reúnem informações esotéricas em seus grimórios, permitindo que aproveitem os poderes mágicos à vontade. Assumindo que ele esteja com seu grimório pessoalmente, magos podem gastar um Bene para conjurar qualquer poder de seu Estágio ou menor. O poder pode ser mantido normalmente, mas depois é esquecido (ele não é adicionado na sua lista de poderes)."
+    "descricao": "Grandes magos reúnem informações esotéricas em seus grimórios, permitindo que aproveitem os poderes mágicos à vontade. Assumindo que ele esteja com seu grimório pessoalmente, magos podem gastar um Bene para conjurar qualquer poder de seu Estágio ou menor. O poder pode ser mantido normalmente, mas depois é esquecido (ele não é adicionado na sua lista de poderes)."
   },
   {
     "id": "classe_monge",
-    "name": "MONGE",
+    "nome": "MONGE",
     "origem": "PATHFINDER",
     "categoria": "CLASSE",
     "requisitos": {
@@ -680,11 +680,11 @@
       }
     },
     "limite_compra": "uma_vez",
-    "description": "• DISCIPLINA MARCIAL: Monges treinam seus corpos à perfeição recebendo Resistência +1 se não usarem armadura. • GOLPE DESARMADO: Monges recebem +1 no seu Lutar e PA +2 quando realizam um ataque desarmado. Causam For+d4 com suas mãos, pés ou outras Armas Naturais. Com uma ampliação, monges rolam um d10 como bônus de dano. • MOBILIDADE: Rápido e ágil, monges aumentam seu dado de corrida em um tipo. • PUNHO ATORDOANTE: Quando uma personagem da classe monge atinge o alvo com um Golpe Desarmado e consegue uma ampliação, ela pode deixar o alvo Distraído ou Vulnerável. Isso ocorre mesmo se a vítima não receber dano ou o Absorver (o estado é aplicado após a vítima tentar Absorver). • RESTRIÇÃO DE ARMADURA (Qualquer): Monges devem estar completamente sem armadura para realizar suas manobras complexas. Subtraem 4 de rolagens de Agilidade e perícias baseadas em Agilidade, se estiverem usando armaduras e escudos leves, médios ou pesados."
+    "descricao": "• DISCIPLINA MARCIAL: Monges treinam seus corpos à perfeição recebendo Resistência +1 se não usarem armadura. • GOLPE DESARMADO: Monges recebem +1 no seu Lutar e PA +2 quando realizam um ataque desarmado. Causam For+d4 com suas mãos, pés ou outras Armas Naturais. Com uma ampliação, monges rolam um d10 como bônus de dano. • MOBILIDADE: Rápido e ágil, monges aumentam seu dado de corrida em um tipo. • PUNHO ATORDOANTE: Quando uma personagem da classe monge atinge o alvo com um Golpe Desarmado e consegue uma ampliação, ela pode deixar o alvo Distraído ou Vulnerável. Isso ocorre mesmo se a vítima não receber dano ou o Absorver (o estado é aplicado após a vítima tentar Absorver). • RESTRIÇÃO DE ARMADURA (Qualquer): Monges devem estar completamente sem armadura para realizar suas manobras complexas. Subtraem 4 de rolagens de Agilidade e perícias baseadas em Agilidade, se estiverem usando armaduras e escudos leves, médios ou pesados."
   },
   {
     "id": "poderes_misticos_monge",
-    "name": "PODERES MÍSTICOS (MONGE)",
+    "nome": "PODERES MÍSTICOS (MONGE)",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -692,11 +692,11 @@
       "vantagens_previas": ["classe_monge"]
     },
     "limite_compra": "uma_vez",
-    "description": "Como ação livre limitada, o monge pode invocar um de seus poderes \"ki\" a seguir: aumentar Característica (Agilidade, Atletismo, Lutar e Furtividade apenas), deflexão, ferir, e velocidade. Todos afetam apenas a si mesmo, mas não ganham os benefícios da Limitação (veja a página 176). Possuem 10 Pontos de Poder dedicados que se recarregam normalmente (veja a página 177)."
+    "descricao": "Como ação livre limitada, o monge pode invocar um de seus poderes \"ki\" a seguir: aumentar Característica (Agilidade, Atletismo, Lutar e Furtividade apenas), deflexão, ferir, e velocidade. Todos afetam apenas a si mesmo, mas não ganham os benefícios da Limitação (veja a página 176). Possuem 10 Pontos de Poder dedicados que se recarregam normalmente (veja a página 177)."
   },
   {
     "id": "grande_ki",
-    "name": "GRANDE KI",
+    "nome": "GRANDE KI",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -704,11 +704,11 @@
       "vantagens_previas": ["classe_monge", "poderes_misticos_monge"]
     },
     "limite_compra": "uma_vez",
-    "description": "Personagens da classe Monge nutrem e refinam seu ki. Adicione os seguintes poderes à sua Vantagem Poderes Místicos: andar nas paredes, aumentar Característica (Força), dádiva do guerreiro, proteção."
+    "descricao": "Personagens da classe Monge nutrem e refinam seu ki. Adicione os seguintes poderes à sua Vantagem Poderes Místicos: andar nas paredes, aumentar Característica (Força), dádiva do guerreiro, proteção."
   },
   {
     "id": "corpo_vazio",
-    "name": "CORPO VAZIO",
+    "nome": "CORPO VAZIO",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -716,11 +716,11 @@
       "vantagens_previas": ["classe_monge", "poderes_misticos_monge"]
     },
     "limite_compra": "uma_vez",
-    "description": "Pode gastar 2 Pontos de Poder para fazer uma Rolagem de Absorção. Isso não conta como gasto de Bene."
+    "descricao": "Pode gastar 2 Pontos de Poder para fazer uma Rolagem de Absorção. Isso não conta como gasto de Bene."
   },
   {
     "id": "classe_paladino",
-    "name": "PALADINO",
+    "nome": "PALADINO",
     "origem": "PATHFINDER",
     "categoria": "CLASSE",
     "requisitos": {
@@ -732,11 +732,11 @@
       "observacoes": "Voto (Menor ou Maior)"
     },
     "limite_compra": "uma_vez",
-    "description": "• AURA DE CORAGEM: Enquanto estiver consciente, todos os aliados dentro de 10 quadros (20 metros) adicionam +2 em seus testes de Medo. • CÓDIGO DE HONRA: Todos os bons paladinos têm a complicação Código de Honra. • DETECTAR O MAL: Como uma ação, paladinos podem se concentrar em qualquer objeto ou indivíduo a um alcance igual a sua Astúcia para determinar se é Mau em sua natureza. • PUNIR O MAL: Como ação livre, personagens da classe paladino podem escolher um inimigo. Se aquele inimigo for maligno, o paladino ganha uma rerrolagem gratuita em qualquer rolagem de Atletismo (arremessar), Lutar ou Atirar contra o alvo pelo restante do encontro. Essa habilidade pode ser usada uma vez por Estágio por encontro."
+    "descricao": "• AURA DE CORAGEM: Enquanto estiver consciente, todos os aliados dentro de 10 quadros (20 metros) adicionam +2 em seus testes de Medo. • CÓDIGO DE HONRA: Todos os bons paladinos têm a complicação Código de Honra. • DETECTAR O MAL: Como uma ação, paladinos podem se concentrar em qualquer objeto ou indivíduo a um alcance igual a sua Astúcia para determinar se é Mau em sua natureza. • PUNIR O MAL: Como ação livre, personagens da classe paladino podem escolher um inimigo. Se aquele inimigo for maligno, o paladino ganha uma rerrolagem gratuita em qualquer rolagem de Atletismo (arremessar), Lutar ou Atirar contra o alvo pelo restante do encontro. Essa habilidade pode ser usada uma vez por Estágio por encontro."
   },
   {
     "id": "poderes_misticos_paladino",
-    "name": "PODERES MÍSTICOS (PALADINO)",
+    "nome": "PODERES MÍSTICOS (PALADINO)",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -744,11 +744,11 @@
       "vantagens_previas": ["classe_paladino"]
     },
     "limite_compra": "uma_vez",
-    "description": "Como ação livre limitada, paladinos podem invocar um dos seguintes milagres: ajuda, aumentar Característica (Lutar, Força e Vigor apenas), curar e ferir. Aumentar Característica e ferir afetam apenas a si mesmos, mas não recebem os benefícios da Limitação (veja a página 176). Possuem 10 Pontos de Poder dedicados que se recarregam normalmente (veja a página 177)."
+    "descricao": "Como ação livre limitada, paladinos podem invocar um dos seguintes milagres: ajuda, aumentar Característica (Lutar, Força e Vigor apenas), curar e ferir. Aumentar Característica e ferir afetam apenas a si mesmos, mas não recebem os benefícios da Limitação (veja a página 176). Possuem 10 Pontos de Poder dedicados que se recarregam normalmente (veja a página 177)."
   },
   {
     "id": "misericordia",
-    "name": "MISERICÓRDIA",
+    "nome": "MISERICÓRDIA",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -756,11 +756,11 @@
       "vantagens_previas": ["classe_paladino"]
     },
     "limite_compra": "uma_vez",
-    "description": "Como ação, paladinos podem garantir \"Misericórdia\" a qualquer personagem com um Alcance igual seu Espírito. Misericórdia remove um dos seguintes Estados: Distraído, Vulnerável ou Abalado."
+    "descricao": "Como ação, paladinos podem garantir \"Misericórdia\" a qualquer personagem com um Alcance igual seu Espírito. Misericórdia remove um dos seguintes Estados: Distraído, Vulnerável ou Abalado."
   },
   {
     "id": "montaria_paladino",
-    "name": "MONTARIA",
+    "nome": "MONTARIA",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -768,11 +768,11 @@
       "vantagens_previas": ["classe_paladino"]
     },
     "limite_compra": "uma_vez",
-    "description": "Personagens da classe Paladino formam um elo divino com uma montaria de sua posse. Normalmente é um cavalo ou pônei, mas pode ser qualquer montaria aprovada pelo Mestre com Tamanho 3 ou menor. Ao formar o elo, a montaria ganha dois progressos (Características ou Vantagens apropriadas com aprovação do Mestre) e é Resiliente. Ela pode ser convocada como ação limitada, chegando no início da próxima rodada e agindo na Carta de Ação do Paladino em combate. Se a montaria perecer, paladinos podem adquirir e se conectar com outra, mas só é possível ter elo com uma montaria por vez."
+    "descricao": "Personagens da classe Paladino formam um elo divino com uma montaria de sua posse. Normalmente é um cavalo ou pônei, mas pode ser qualquer montaria aprovada pelo Mestre com Tamanho 3 ou menor. Ao formar o elo, a montaria ganha dois progressos (Características ou Vantagens apropriadas com aprovação do Mestre) e é Resiliente. Ela pode ser convocada como ação limitada, chegando no início da próxima rodada e agindo na Carta de Ação do Paladino em combate. Se a montaria perecer, paladinos podem adquirir e se conectar com outra, mas só é possível ter elo com uma montaria por vez."
   },
   {
     "id": "classe_patrulheiro",
-    "name": "PATRULHEIRO",
+    "nome": "PATRULHEIRO",
     "origem": "PATHFINDER",
     "categoria": "CLASSE",
     "requisitos": {
@@ -787,11 +787,11 @@
       }
     },
     "limite_compra": "uma_vez",
-    "description": "• INIMIGO PREDILETO: Escolha um tipo de inimigo na lista da página 256. Personagens da classe Patrulheiro têm uma rerrolagem gratuita quando falham em rastrear – Sobrevivência – ou atacar – Atletismo (arremessar), Lutar, Atirar – aquele tipo de criatura. • RESTRIÇÃO DE ARMADURA (Média): Patrulheiros são guerreiros e batedores com agilidade e mobilidade. Subtraem 4 das rolagens de Agilidade e perícias baseadas em Agilidade ao usar armaduras ou escudo pesados. • TERRENO PREDILETO: Escolha um tipo de terreno. Patrulheiros sacam uma Carta de Ação adicional para iniciativa quando estão em seu Terreno Predileto. • TRAVESSIA DE FLORESTA: Patrulheiros passam por terrenos difíceis como floresta densa, colinas rochosas ou desertos arenosos com facilidade. Ignoram as penalidades de Terreno Acidentado (veja a página 130)."
+    "descricao": "• INIMIGO PREDILETO: Escolha um tipo de inimigo na lista da página 256. Personagens da classe Patrulheiro têm uma rerrolagem gratuita quando falham em rastrear – Sobrevivência – ou atacar – Atletismo (arremessar), Lutar, Atirar – aquele tipo de criatura. • RESTRIÇÃO DE ARMADURA (Média): Patrulheiros são guerreiros e batedores com agilidade e mobilidade. Subtraem 4 das rolagens de Agilidade e perícias baseadas em Agilidade ao usar armaduras ou escudo pesados. • TERRENO PREDILETO: Escolha um tipo de terreno. Patrulheiros sacam uma Carta de Ação adicional para iniciativa quando estão em seu Terreno Predileto. • TRAVESSIA DE FLORESTA: Patrulheiros passam por terrenos difíceis como floresta densa, colinas rochosas ou desertos arenosos com facilidade. Ignoram as penalidades de Terreno Acidentado (veja a página 130)."
   },
   {
     "id": "presa",
-    "name": "PRESA",
+    "nome": "PRESA",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -799,11 +799,11 @@
       "vantagens_previas": ["classe_patrulheiro"]
     },
     "limite_compra": "uma_vez",
-    "description": "A habilidade da personagem aumenta para incluir um inimigo e terreno adicional. Escolhe um inimigo e um tipo de terreno adicionais para suas habilidades Inimigo Predileto e Terreno Predileto. Esta Vantagem pode ser adquirida uma vez por Estágio."
+    "descricao": "A habilidade da personagem aumenta para incluir um inimigo e terreno adicional. Escolhe um inimigo e um tipo de terreno adicionais para suas habilidades Inimigo Predileto e Terreno Predileto. Esta Vantagem pode ser adquirida uma vez por Estágio."
   },
   {
     "id": "poderes_misticos_patrulheiro",
-    "name": "PODERES MÍSTICOS (PATRULHEIRO)",
+    "nome": "PODERES MÍSTICOS (PATRULHEIRO)",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -811,11 +811,11 @@
       "vantagens_previas": ["classe_patrulheiro"]
     },
     "limite_compra": "uma_vez",
-    "description": "Como ação livre limitada, podem conjurar um dos seguintes poderes: elo animal, aumentar característica (Atletismo, Lutar e Atirar apenas), enredar e dádiva do guerreiro. Aumentar Característica e dádiva do guerreiro afetam apenas a si mesmo, mas não recebem o benefício da Limitação (veja a página 176). Possuem 10 Pontos de Poder dedicados que se recarregam normalmente (veja a página 177)."
+    "descricao": "Como ação livre limitada, podem conjurar um dos seguintes poderes: elo animal, aumentar característica (Atletismo, Lutar e Atirar apenas), enredar e dádiva do guerreiro. Aumentar Característica e dádiva do guerreiro afetam apenas a si mesmo, mas não recebem o benefício da Limitação (veja a página 176). Possuem 10 Pontos de Poder dedicados que se recarregam normalmente (veja a página 177)."
   },
   {
     "id": "mestre_cacador",
-    "name": "MESTRE CAÇADOR",
+    "nome": "MESTRE CAÇADOR",
     "origem": "PATHFINDER",
     "categoria": "VANTAGEM_DE_CLASSE",
     "requisitos": {
@@ -823,11 +823,11 @@
       "vantagens_previas": ["classe_patrulheiro"]
     },
     "limite_compra": "uma_vez",
-    "description": "Personagens de classe patrulheiro agora são inimigos mortais de suas presas. Adicionam um d6 adicional no dano quando realizam um ataque bem-sucedido de Atletismo (arremessar), Lutar ou Atirar contra seu Inimigo Predileto."
+    "descricao": "Personagens de classe patrulheiro agora são inimigos mortais de suas presas. Adicionam um d6 adicional no dano quando realizam um ataque bem-sucedido de Atletismo (arremessar), Lutar ou Atirar contra seu Inimigo Predileto."
   },
   {
     "id": "arma_predileta",
-    "name": "ARMA PREDILETA",
+    "nome": "ARMA PREDILETA",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -838,22 +838,22 @@
         "Atletismo": 8
       }
     },
-    "description": "Alguém com essa Vantagem conhece uma única arma (Excalibur, Old Betsy, Ferroada) como a palma da sua mão. Quando a usa, pode adicionar +1 em suas rolagens de Atletismo (arremessar), Lutar ou Atirar e +1 no Aparar quando ela está preparada (mesmo que seja uma arma de combate à distância). É permitido escolher esta Vantagem várias vezes, aplicando a uma arma diferente cada vez."
+    "descricao": "Alguém com essa Vantagem conhece uma única arma (Excalibur, Old Betsy, Ferroada) como a palma da sua mão. Quando a usa, pode adicionar +1 em suas rolagens de Atletismo (arremessar), Lutar ou Atirar e +1 no Aparar quando ela está preparada (mesmo que seja uma arma de combate à distância). É permitido escolher esta Vantagem várias vezes, aplicando a uma arma diferente cada vez."
   },
   {
     "id": "arma_predileta_aprimorada",
-    "name": "ARMA PREDILETA APRIMORADA",
+    "nome": "ARMA PREDILETA APRIMORADA",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["arma_predileta"]
     },
-    "description": "Como acima, mas os bônus quando se usa a arma aumentam para +2."
+    "descricao": "Como acima, mas os bônus quando se usa a arma aumentam para +2."
   },
   {
     "id": "atacar_primeiro",
-    "name": "ATACAR PRIMEIRO",
+    "nome": "ATACAR PRIMEIRO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -862,22 +862,22 @@
         "Agilidade": 8
       }
     },
-    "description": "Uma vez por rodada, contando que não esteja em Estado Abalado ou Atordoado, quem tiver essa Vantagem ganha um ataque livre de Lutar contra um adversário imediatamente após ele entrar no seu Alcance (veja Ataques Livres na página 138)."
+    "descricao": "Uma vez por rodada, contando que não esteja em Estado Abalado ou Atordoado, quem tiver essa Vantagem ganha um ataque livre de Lutar contra um adversário imediatamente após ele entrar no seu Alcance (veja Ataques Livres na página 138)."
   },
   {
     "id": "atacar_primeiro_aprimorado",
-    "name": "ATACAR PRIMEIRO APRIMORADO",
+    "nome": "ATACAR PRIMEIRO APRIMORADO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Heroico",
       "vantagens_previas": ["atacar_primeiro"]
     },
-    "description": "Como acima, porém permitindo atacar até três oponentes em cada turno."
+    "descricao": "Como acima, porém permitindo atacar até três oponentes em cada turno."
   },
   {
     "id": "atirador",
-    "name": "ATIRADOR",
+    "nome": "ATIRADOR",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -887,11 +887,11 @@
         "Atirar": 8
       }
     },
-    "description": "Confere um talento nato com armas de combate à distância. Se não se mover em um turno e não disparar acima de uma Cadência de Tiro 1 na sua primeira ação, pode adicionar +1 a uma rolagem de Atletismo (arremessar) ou Atirar, ou ignora até 2 pontos em penalidades por Ataques Localizados, Cobertura, Distância, Escala ou Velocidade. Isso é uma versão menor da manobra Mirar e não se acumula com ela."
+    "descricao": "Confere um talento nato com armas de combate à distância. Se não se mover em um turno e não disparar acima de uma Cadência de Tiro 1 na sua primeira ação, pode adicionar +1 a uma rolagem de Atletismo (arremessar) ou Atirar, ou ignora até 2 pontos em penalidades por Ataques Localizados, Cobertura, Distância, Escala ou Velocidade. Isso é uma versão menor da manobra Mirar e não se acumula com ela."
   },
   {
     "id": "bloquear",
-    "name": "BLOQUEAR",
+    "nome": "BLOQUEAR",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -900,22 +900,22 @@
         "Lutar": 8
       }
     },
-    "description": "Através de experiência em batalha esta pessoa aprendeu a se defender em brutais combates corpo a corpo. Seu Aparar aumenta em +1 e qualquer bônus de Agrupar de oponentes é reduzido em 1."
+    "descricao": "Através de experiência em batalha esta pessoa aprendeu a se defender em brutais combates corpo a corpo. Seu Aparar aumenta em +1 e qualquer bônus de Agrupar de oponentes é reduzido em 1."
   },
   {
     "id": "bloquear_aprimorado",
-    "name": "BLOQUEAR APRIMORADO",
+    "nome": "BLOQUEAR APRIMORADO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["bloquear"]
     },
-    "description": "O bônus de Aparar agora é +2 e o bônus de Agrupar é reduzido em 2."
+    "descricao": "O bônus de Aparar agora é +2 e o bônus de Agrupar é reduzido em 2."
   },
   {
     "id": "corredor",
-    "name": "CORREDOR",
+    "nome": "CORREDOR",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -927,11 +927,11 @@
         "Atletismo": 6
       }
     },
-    "description": "A personagem é destemida e habilidosa correndo, saltando, se balançando, escalando muros e obstáculos. Desloca-se com sua Movimentação total em Terreno Acidentado quando a pé. Também adiciona +2 em suas rolagens de Atletismo feitas para escalar ou superar obstáculos."
+    "descricao": "A personagem é destemida e habilidosa correndo, saltando, se balançando, escalando muros e obstáculos. Desloca-se com sua Movimentação total em Terreno Acidentado quando a pé. Também adiciona +2 em suas rolagens de Atletismo feitas para escalar ou superar obstáculos."
   },
   {
     "id": "duro_de_matar",
-    "name": "DURO DE MATAR",
+    "nome": "DURO DE MATAR",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -940,22 +940,22 @@
         "Espírito": 8
       }
     },
-    "description": "Personagens com essa vantagem têm mais vidas que uma gataria. Podem ignorar suas penalidades por Ferimentos quando fazem rolagem de Vigor para evitar ficar Sangrando (veja página 134)."
+    "descricao": "Personagens com essa vantagem têm mais vidas que uma gataria. Podem ignorar suas penalidades por Ferimentos quando fazem rolagem de Vigor para evitar ficar Sangrando (veja página 134)."
   },
   {
     "id": "muito_duro_de_matar",
-    "name": "MUITO DURO DE MATAR",
+    "nome": "MUITO DURO DE MATAR",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["duro_de_matar"]
     },
-    "description": "Se sua personagem “morrer”, role um dado. Com um resultado ímpar, realmente morre. Com uma rolagem par, está em Estado Incapacitado, mas de algum modo escapa da morte."
+    "descricao": "Se sua personagem “morrer”, role um dado. Com um resultado ímpar, realmente morre. Com uma rolagem par, está em Estado Incapacitado, mas de algum modo escapa da morte."
   },
   {
     "id": "esquiva",
-    "name": "ESQUIVA",
+    "nome": "ESQUIVA",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -964,22 +964,22 @@
         "Agilidade": 8
       }
     },
-    "description": "Possibilita antecipar ataques ou se movimentar de modo errático sob fogo. A menos que seja vítima de um ataque surpresa e não tenha como se prevenir, Esquiva subtrai 2 de todos os ataques à distância feitos contra a personagem. Entretanto, Esquiva não se acumula com cobertura."
+    "descricao": "Possibilita antecipar ataques ou se movimentar de modo errático sob fogo. A menos que seja vítima de um ataque surpresa e não tenha como se prevenir, Esquiva subtrai 2 de todos os ataques à distância feitos contra a personagem. Entretanto, Esquiva não se acumula com cobertura."
   },
   {
     "id": "esquiva_aprimorada",
-    "name": "ESQUIVA APRIMORADA",
+    "nome": "ESQUIVA APRIMORADA",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["esquiva"]
     },
-    "description": "Adiciona +2 quando está Evadindo de ataques com efeito em área. Veja Evasão na página 143."
+    "descricao": "Adiciona +2 quando está Evadindo de ataques com efeito em área. Veja Evasão na página 143."
   },
   {
     "id": "brigao",
-    "name": "BRIGÃO",
+    "nome": "BRIGÃO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -989,22 +989,22 @@
         "Vigor": 8
       }
     },
-    "description": "Seus punhos são como martelos ou suas garras cortam como facas. Seu corpo parece ser feito de pedra. Personagens com Brigão aumentam sua Resistência em 1 e rolam Força + d4 quando acertam com seus punhos ou pés (ou mesmo garras, se as tiverem). Se já tiverem um dado de dano por Garras (página 252), a habilidade Golpe Desarmado de Monge etc., aumente o tipo do dado em um, em vez disso. A Vantagem Brigão não torna os punhos Armas Naturais (página 137)."
+    "descricao": "Seus punhos são como martelos ou suas garras cortam como facas. Seu corpo parece ser feito de pedra. Personagens com Brigão aumentam sua Resistência em 1 e rolam Força + d4 quando acertam com seus punhos ou pés (ou mesmo garras, se as tiverem). Se já tiverem um dado de dano por Garras (página 252), a habilidade Golpe Desarmado de Monge etc., aumente o tipo do dado em um, em vez disso. A Vantagem Brigão não torna os punhos Armas Naturais (página 137)."
   },
   {
     "id": "pugilista",
-    "name": "PUGILISTA",
+    "nome": "PUGILISTA",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["brigao"]
     },
-    "description": "Aumenta um adicional de +1 a sua Resistência e o dano causado por seus punhos ou garras em mais um tipo de dado."
+    "descricao": "Aumenta um adicional de +1 a sua Resistência e o dano causado por seus punhos ou garras em mais um tipo de dado."
   },
   {
     "id": "calculista",
-    "name": "CALCULISTA",
+    "nome": "CALCULISTA",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1013,11 +1013,11 @@
         "Astúcia": 8
       }
     },
-    "description": "Alguns segundos gastos estudando as ações de seu oponente conferem à personagem uma grande vantagem. Quando sua Carta de Ação é um Cinco ou menor, ignore até 2 pontos de penalidades em uma ação naquele turno, o que pode incluir Ações Múltiplas, Cobertura, Distância e até mesmo penalidades por Ferimentos."
+    "descricao": "Alguns segundos gastos estudando as ações de seu oponente conferem à personagem uma grande vantagem. Quando sua Carta de Ação é um Cinco ou menor, ignore até 2 pontos de penalidades em uma ação naquele turno, o que pode incluir Ações Múltiplas, Cobertura, Distância e até mesmo penalidades por Ferimentos."
   },
   {
     "id": "contra_ataque",
-    "name": "CONTRA-ATAQUE",
+    "nome": "CONTRA-ATAQUE",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1026,22 +1026,22 @@
         "Lutar": 8
       }
     },
-    "description": "Quem luta com esta Vantagem pune instantaneamente os erros de seus oponentes. Uma vez por rodada (se não estiver em Estado Abalado ou Atordoado) ganha um Ataque Livre (página 138) contra alguém que tenha falhado em um ataque de Lutar direcionado a si."
+    "descricao": "Quem luta com esta Vantagem pune instantaneamente os erros de seus oponentes. Uma vez por rodada (se não estiver em Estado Abalado ou Atordoado) ganha um Ataque Livre (página 138) contra alguém que tenha falhado em um ataque de Lutar direcionado a si."
   },
   {
     "id": "contra_ataque_aprimorado",
-    "name": "CONTRA-ATAQUE APRIMORADO",
+    "nome": "CONTRA-ATAQUE APRIMORADO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["contra_ataque"]
     },
-    "description": "Como acima, mas concede um Ataque Livre contra até três adversários que falharam em ataques contra sua personagem em cada rodada."
+    "descricao": "Como acima, mas concede um Ataque Livre contra até três adversários que falharam em ataques contra sua personagem em cada rodada."
   },
   {
     "id": "guerreiro_treinado",
-    "name": "GUERREIRO TREINADO",
+    "nome": "GUERREIRO TREINADO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1050,31 +1050,31 @@
         "Lutar": 8
       }
     },
-    "description": "A personagem foi treinada para lutar lado a lado com outros, sobrepujando seus inimigos em comum com ataques sincronizados. Seu bônus por Agrupar aumenta em +1 para você e seus aliados. O bônus máximo por Agrupar ainda é +4, não importa quantos Guerreiros Treinados lutem lado a lado."
+    "descricao": "A personagem foi treinada para lutar lado a lado com outros, sobrepujando seus inimigos em comum com ataques sincronizados. Seu bônus por Agrupar aumenta em +1 para você e seus aliados. O bônus máximo por Agrupar ainda é +4, não importa quantos Guerreiros Treinados lutem lado a lado."
   },
   {
     "id": "impiedoso",
-    "name": "IMPIEDOSO",
+    "nome": "IMPIEDOSO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente"
     },
-    "description": "Quando gastar um Bene para rerrolar dano, adicione +2 ao seu total final."
+    "descricao": "Quando gastar um Bene para rerrolar dano, adicione +2 ao seu total final."
   },
   {
     "id": "instinto_assassino",
-    "name": "INSTINTO ASSASSINO",
+    "nome": "INSTINTO ASSASSINO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente"
     },
-    "description": "Por detestar perder, qualquer personagem com essa Vantagem tem uma rerrolagem gratuita em qualquer Desafio que inicie."
+    "descricao": "Por detestar perder, qualquer personagem com essa Vantagem tem uma rerrolagem gratuita em qualquer Desafio que inicie."
   },
   {
     "id": "lutador_improvisador",
-    "name": "LUTADOR IMPROVISADOR",
+    "nome": "LUTADOR IMPROVISADOR",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1083,11 +1083,11 @@
         "Astúcia": 6
       }
     },
-    "description": "Um lutador com esta Vantagem tem um instinto para usar tais armas improvisadas e ignora a penalidade habitual de -2 quando as empunha. Veja página 136 para mais detalhes a respeito de Armas Improvisadas."
+    "descricao": "Um lutador com esta Vantagem tem um instinto para usar tais armas improvisadas e ignora a penalidade habitual de -2 quando as empunha. Veja página 136 para mais detalhes a respeito de Armas Improvisadas."
   },
   {
     "id": "lutar_com_duas_armas",
-    "name": "LUTAR COM DUAS ARMAS",
+    "nome": "LUTAR COM DUAS ARMAS",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1096,11 +1096,11 @@
         "Agilidade": 8
       }
     },
-    "description": "Ao realizar duas ações de ataque (com mãos diferentes), o segundo ataque não inflige uma penalidade por Ação Múltipla. A penalidade por Mão Inábil ainda se aplica, a menos que seja Ambidestro (página 40)."
+    "descricao": "Ao realizar duas ações de ataque (com mãos diferentes), o segundo ataque não inflige uma penalidade por Ação Múltipla. A penalidade por Mão Inábil ainda se aplica, a menos que seja Ambidestro (página 40)."
   },
   {
     "id": "finta",
-    "name": "FINTA",
+    "nome": "FINTA",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1109,11 +1109,11 @@
         "Lutar": 8
       }
     },
-    "description": "Quando realiza um Desafio (página 141) com a perícia Lutar, você pode escolher que um adversário resista com Astúcia em vez de Agilidade."
+    "descricao": "Quando realiza um Desafio (página 141) com a perícia Lutar, você pode escolher que um adversário resista com Astúcia em vez de Agilidade."
   },
   {
     "id": "focado",
-    "name": "FOCADO",
+    "nome": "FOCADO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1122,22 +1122,22 @@
         "Astúcia": 8
       }
     },
-    "description": "Personagens que conseguem manter a calma quando o resto das pessoas estão correndo para achar cobertura são mortais em combate. Esta vantagem permite sacar uma Carta de Ação adicional em combate e escolher qual usar."
+    "descricao": "Personagens que conseguem manter a calma quando o resto das pessoas estão correndo para achar cobertura são mortais em combate. Esta vantagem permite sacar uma Carta de Ação adicional em combate e escolher qual usar."
   },
   {
     "id": "extremamente_focado",
-    "name": "EXTREMAMENTE FOCADO",
+    "nome": "EXTREMAMENTE FOCADO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["focado"]
     },
-    "description": "Como acima, mas permite sacar duas cartas adicionais e escolher qual deseja manter."
+    "descricao": "Como acima, mas permite sacar duas cartas adicionais e escolher qual deseja manter."
   },
   {
     "id": "frenesi",
-    "name": "FRENESI",
+    "nome": "FRENESI",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1146,22 +1146,22 @@
         "Lutar": 8
       }
     },
-    "description": "Quem tem Frenesi rola um segundo dado de Lutar em qualquer um dos seus ataques com Lutar no seu turno (dados extras de Frenesi não podem ser adicionados em ações limitadas). O dado extra pode ser alocado no mesmo alvo ou em alvos diferentes, como achar melhor. Resolva cada um separadamente."
+    "descricao": "Quem tem Frenesi rola um segundo dado de Lutar em qualquer um dos seus ataques com Lutar no seu turno (dados extras de Frenesi não podem ser adicionados em ações limitadas). O dado extra pode ser alocado no mesmo alvo ou em alvos diferentes, como achar melhor. Resolva cada um separadamente."
   },
   {
     "id": "frenesi_aprimorado",
-    "name": "FRENESI APRIMORADO",
+    "nome": "FRENESI APRIMORADO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["frenesi"]
     },
-    "description": "Permite rolar um dado extra de Lutar em até dois ataques de Lutar no mesmo turno."
+    "descricao": "Permite rolar um dado extra de Lutar em até dois ataques de Lutar no mesmo turno."
   },
   {
     "id": "golpe_poderoso",
-    "name": "GOLPE PODEROSO",
+    "nome": "GOLPE PODEROSO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1171,11 +1171,11 @@
       },
       "observacoes": "Carta Selvagem"
     },
-    "description": "Se sua Carta de Ação for um Curinga, dobre o dano do seu primeiro ataque bem-sucedido com Lutar nesta rodada."
+    "descricao": "Se sua Carta de Ação for um Curinga, dobre o dano do seu primeiro ataque bem-sucedido com Lutar nesta rodada."
   },
   {
     "id": "retirada",
-    "name": "RETIRADA",
+    "nome": "RETIRADA",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1184,11 +1184,11 @@
         "Agilidade": 8
       }
     },
-    "description": "Quando se afasta de rivais adjacentes, um deles (à sua escolha), não ganha seu ataque livre de Lutar."
+    "descricao": "Quando se afasta de rivais adjacentes, um deles (à sua escolha), não ganha seu ataque livre de Lutar."
   },
   {
     "id": "maos_firmes",
-    "name": "MÃOS FIRMES",
+    "nome": "MÃOS FIRMES",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1197,21 +1197,21 @@
         "Agilidade": 8
       }
     },
-    "description": "Ignore a penalidade por Plataforma Instável (veja página 146). Isso também ajuda durante a corrida, reduzindo a penalidade habitual de -2 para -1 (veja Movimento, página 129)."
+    "descricao": "Ignore a penalidade por Plataforma Instável (veja página 146). Isso também ajuda durante a corrida, reduzindo a penalidade habitual de -2 para -1 (veja Movimento, página 129)."
   },
   {
     "id": "matador_de_gigantes",
-    "name": "MATADOR DE GIGANTES",
+    "nome": "MATADOR DE GIGANTES",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Veterano"
     },
-    "description": "Adicione +1d6 de dano ao atacar criaturas maiores em três ou mais Tamanhos (veja Tamanho, página 149)."
+    "descricao": "Adicione +1d6 de dano ao atacar criaturas maiores em três ou mais Tamanhos (veja Tamanho, página 149)."
   },
   {
     "id": "nervos_de_aco",
-    "name": "NERVOS DE AÇO",
+    "nome": "NERVOS DE AÇO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1220,22 +1220,22 @@
         "Vigor": 8
       }
     },
-    "description": "Personagens que aprenderam a lutar sob a mais intensa dor. Podem ignorar 1 ponto de penalidades por Ferimento."
+    "descricao": "Personagens que aprenderam a lutar sob a mais intensa dor. Podem ignorar 1 ponto de penalidades por Ferimento."
   },
   {
     "id": "nervos_de_aco_aprimorados",
-    "name": "NERVOS DE AÇO APRIMORADOS",
+    "nome": "NERVOS DE AÇO APRIMORADOS",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Novato",
       "vantagens_previas": ["nervos_de_aco"]
     },
-    "description": "Ignora 2 pontos de penalidades por Ferimento."
+    "descricao": "Ignora 2 pontos de penalidades por Ferimento."
   },
   {
     "id": "queixo_de_ferro",
-    "name": "QUEIXO DE FERRO",
+    "nome": "QUEIXO DE FERRO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1244,11 +1244,11 @@
         "Vigor": 8
       }
     },
-    "description": "Permite suportar até mesmo os golpes mais extremos. Adicione +2 em rolagens de Vigor e Absorção para evitar o Golpe Nocauteador (veja página 144)."
+    "descricao": "Permite suportar até mesmo os golpes mais extremos. Adicione +2 em rolagens de Vigor e Absorção para evitar o Golpe Nocauteador (veja página 144)."
   },
   {
     "id": "recarregamento_rapido",
-    "name": "RECARREGAMENTO RÁPIDO",
+    "nome": "RECARREGAMENTO RÁPIDO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1257,32 +1257,32 @@
         "Atirar": 6
       }
     },
-    "description": "A personagem reduz o valor de Recarga de armas de longa distância em 1. Veja Recarregando na página 147. Personagens com esta Vantagem podem usar Tiro Rápido com uma arma se seu valor de Recarga foi reduzido a ação livre."
+    "descricao": "A personagem reduz o valor de Recarga de armas de longa distância em 1. Veja Recarregando na página 147. Personagens com esta Vantagem podem usar Tiro Rápido com uma arma se seu valor de Recarga foi reduzido a ação livre."
   },
   {
     "id": "reflexos_de_combate",
-    "name": "REFLEXOS DE COMBATE",
+    "nome": "REFLEXOS DE COMBATE",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente"
     },
-    "description": "Adicione +2 na sua rolagem quando tentar se recuperar do Estado Abalado ou Atordoado."
+    "descricao": "Adicione +2 na sua rolagem quando tentar se recuperar do Estado Abalado ou Atordoado."
   },
   {
     "id": "retirada_aprimorada",
-    "name": "RETIRADA APRIMORADA",
+    "nome": "RETIRADA APRIMORADA",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["retirada"]
     },
-    "description": "Até três adversários (à sua escolha) não ganham ataques quando alguém com essa Vantagem se retira do corpo a corpo com eles."
+    "descricao": "Até três adversários (à sua escolha) não ganham ataques quando alguém com essa Vantagem se retira do corpo a corpo com eles."
   },
   {
     "id": "tiro_mortal",
-    "name": "TIRO MORTAL",
+    "nome": "TIRO MORTAL",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1293,11 +1293,11 @@
       },
       "observacoes": "Carta Selvagem"
     },
-    "description": "Quando sua Carta de Ação é um Curinga, dobre o seu total de dano em sua primeira rolagem bem-sucedida de Atletismo (arremessar) ou Atirar nesta rodada."
+    "descricao": "Quando sua Carta de Ação é um Curinga, dobre o seu total de dano em sua primeira rolagem bem-sucedida de Atletismo (arremessar) ou Atirar nesta rodada."
   },
   {
     "id": "tiro_rapido",
-    "name": "TIRO RÁPIDO",
+    "nome": "TIRO RÁPIDO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1306,22 +1306,22 @@
         "Atirar": 6
       }
     },
-    "description": "Você é mestre na prática de dar tiros rápidos e precisos. Contanto que tenha uma arma de combate à distância que possa ser Recarregada como uma ação livre, pode aumentar a Cadência de Tiro da sua arma em +1 para um dos seus ataques com atirar (de sua escolha) naquele turno. Tiro Rápido pode ser usada com Recarregamento Rápido."
+    "descricao": "Você é mestre na prática de dar tiros rápidos e precisos. Contanto que tenha uma arma de combate à distância que possa ser Recarregada como uma ação livre, pode aumentar a Cadência de Tiro da sua arma em +1 para um dos seus ataques com atirar (de sua escolha) naquele turno. Tiro Rápido pode ser usada com Recarregamento Rápido."
   },
   {
     "id": "tiro_rapido_aprimorado",
-    "name": "TIRO RÁPIDO APRIMORADO",
+    "nome": "TIRO RÁPIDO APRIMORADO",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["tiro_rapido"]
     },
-    "description": "Permite aumentar a Cadência de Tiro da sua arma em 1 até duas vezes no mesmo turno (via Ação Múltipla). Tiro Rápido Aprimorado pode ser usada com Recarregamento Rápido."
+    "descricao": "Permite aumentar a Cadência de Tiro da sua arma em 1 até duas vezes no mesmo turno (via Ação Múltipla). Tiro Rápido Aprimorado pode ser usada com Recarregamento Rápido."
   },
   {
     "id": "varredura",
-    "name": "VARREDURA",
+    "nome": "VARREDURA",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
@@ -1333,22 +1333,22 @@
         "Lutar": 8
       }
     },
-    "description": "Como uma ação limitada, Varredura permite realizar um único ataque com uma arma de duas mãos e aplicá-lo a todos os alvos dentro do seu Alcance com uma penalidade de -2 (rivais ou aliados). Resolva o dano separadamente para cada alvo atingido."
+    "descricao": "Como uma ação limitada, Varredura permite realizar um único ataque com uma arma de duas mãos e aplicá-lo a todos os alvos dentro do seu Alcance com uma penalidade de -2 (rivais ou aliados). Resolva o dano separadamente para cada alvo atingido."
   },
   {
     "id": "varredura_aprimorada",
-    "name": "VARREDURA APRIMORADA",
+    "nome": "VARREDURA APRIMORADA",
     "origem": "PATHFINDER",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["varredura"]
     },
-    "description": "Como acima, mas o redemoinho de morte pode ignorar a penalidade de -2."
+    "descricao": "Como acima, mas o redemoinho de morte pode ignorar a penalidade de -2."
   },
   {
     "id": "comando",
-    "name": "COMANDO",
+    "nome": "COMANDO",
     "origem": "PATHFINDER",
     "categoria": "LIDERANÇA",
     "requisitos": {
@@ -1357,22 +1357,22 @@
         "Astúcia": 6
       }
     },
-    "description": "Comando é a habilidade básica de dar instruções claras e suporte no calor da batalha. Extras dentro do Raio de Comando adicionam +1 para suas rolagens quando tentam se recuperar do Estado Abalado e Atordoado."
+    "descricao": "Comando é a habilidade básica de dar instruções claras e suporte no calor da batalha. Extras dentro do Raio de Comando adicionam +1 para suas rolagens quando tentam se recuperar do Estado Abalado e Atordoado."
   },
   {
     "id": "presenca_de_comando",
-    "name": "PRESENÇA DE COMANDO",
+    "nome": "PRESENÇA DE COMANDO",
     "origem": "PATHFINDER",
     "categoria": "LIDERANÇA",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["comando"]
     },
-    "description": "Uma voz firme, comandos eficientes, carisma natural ou simplesmente treino resultam em um elemento de combate mais eficiente. Quem tem esta Vantagem tem um Raio de Comando de 10 quadros (20 metros)."
+    "descricao": "Uma voz firme, comandos eficientes, carisma natural ou simplesmente treino resultam em um elemento de combate mais eficiente. Quem tem esta Vantagem tem um Raio de Comando de 10 quadros (20 metros)."
   },
   {
     "id": "estrategista",
-    "name": "ESTRATEGISTA",
+    "nome": "ESTRATEGISTA",
     "origem": "PATHFINDER",
     "categoria": "LIDERANÇA",
     "requisitos": {
@@ -1385,22 +1385,22 @@
       },
       "vantagens_previas": ["comando"]
     },
-    "description": "Quem tem Estrategista saca uma Carta de Ação extra a cada rodada de combate — mantida em separado das suas próprias cartas. No começo da rodada, pode descartá-la ou dá-la a qualquer Extra aliado no Raio de Comando."
+    "descricao": "Quem tem Estrategista saca uma Carta de Ação extra a cada rodada de combate — mantida em separado das suas próprias cartas. No começo da rodada, pode descartá-la ou dá-la a qualquer Extra aliado no Raio de Comando."
   },
   {
     "id": "mestre_estrategista",
-    "name": "MESTRE ESTRATEGISTA",
+    "nome": "MESTRE ESTRATEGISTA",
     "origem": "PATHFINDER",
     "categoria": "LIDERANÇA",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["estrategista"]
     },
-    "description": "Como o anterior, porém agora recebe duas Cartas de Ação extras para distribuir a cada rodada."
+    "descricao": "Como o anterior, porém agora recebe duas Cartas de Ação extras para distribuir a cada rodada."
   },
   {
     "id": "fervor",
-    "name": "FERVOR",
+    "nome": "FERVOR",
     "origem": "PATHFINDER",
     "categoria": "LIDERANÇA",
     "requisitos": {
@@ -1410,22 +1410,22 @@
       },
       "vantagens_previas": ["comando"]
     },
-    "description": "Uma simples frase proferida por grandes líderes às vezes pode ter grandes resultados. Quem comanda com esta habilidade pode inspirar suas tropas a um fervor sanguinário. Extras no Raio de Comando adicionam +1 nas rolagens de dano com Lutar."
+    "descricao": "Uma simples frase proferida por grandes líderes às vezes pode ter grandes resultados. Quem comanda com esta habilidade pode inspirar suas tropas a um fervor sanguinário. Extras no Raio de Comando adicionam +1 nas rolagens de dano com Lutar."
   },
   {
     "id": "inspirar",
-    "name": "INSPIRAR",
+    "nome": "INSPIRAR",
     "origem": "PATHFINDER",
     "categoria": "LIDERANÇA",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["comando"]
     },
-    "description": "Líderes excepcionais inspiram aqueles ao seu redor a grandes feitos de valor e determinação. Uma vez por turno, essa habilidade permite rolar sua perícia Conhecimento Batalha para dar Suporte a um tipo de rolagem de Característica e aplicar a quaisquer Extras aliados no Raio de Comando."
+    "descricao": "Líderes excepcionais inspiram aqueles ao seu redor a grandes feitos de valor e determinação. Uma vez por turno, essa habilidade permite rolar sua perícia Conhecimento Batalha para dar Suporte a um tipo de rolagem de Característica e aplicar a quaisquer Extras aliados no Raio de Comando."
   },
   {
     "id": "lider_nato",
-    "name": "LÍDER NATO",
+    "nome": "LÍDER NATO",
     "origem": "PATHFINDER",
     "categoria": "LIDERANÇA",
     "requisitos": {
@@ -1435,11 +1435,11 @@
       },
       "vantagens_previas": ["comando"]
     },
-    "description": "Todas as Vantagens de Liderança que o texto diz se aplicarem apenas a Extras agora também se aplicam a Cartas Selvagens."
+    "descricao": "Todas as Vantagens de Liderança que o texto diz se aplicarem apenas a Extras agora também se aplicam a Cartas Selvagens."
   },
   {
     "id": "mantenham_a_formacao",
-    "name": "MANTENHAM A FORMAÇÃO!",
+    "nome": "MANTENHAM A FORMAÇÃO!",
     "origem": "PATHFINDER",
     "categoria": "LIDERANÇA",
     "requisitos": {
@@ -1449,55 +1449,55 @@
       },
       "vantagens_previas": ["comando"]
     },
-    "description": "Mantenham a Formação! fortalece a vontade de Extras sob este comando, adicionando +1 em sua Resistência."
+    "descricao": "Mantenham a Formação! fortalece a vontade de Extras sob este comando, adicionando +1 em sua Resistência."
   },
   {
     "id": "armadura_arcana",
-    "name": "ARMADURA ARCANA",
+    "nome": "ARMADURA ARCANA",
     "origem": "PATHFINDER",
     "categoria": "PODER",
     "requisitos": {
       "estagio": "Novato",
       "observacoes": "Interferência de Armadura"
     },
-    "description": "Sua Interferência de Armadura conta como um nível maior (então uma personagem aumentando sua Interferência de Armadura qualquer para leve poderia usar armaduras e escudos Leves sem redutores). Armadura arcana pode ser comprada mais de uma vez."
+    "descricao": "Sua Interferência de Armadura conta como um nível maior (então uma personagem aumentando sua Interferência de Armadura qualquer para leve poderia usar armaduras e escudos Leves sem redutores). Armadura arcana pode ser comprada mais de uma vez."
   },
   {
     "id": "artifice",
-    "name": "ARTÍFICE",
+    "nome": "ARTÍFICE",
     "origem": "PATHFINDER",
     "categoria": "PODER",
     "requisitos": {
       "estagio": "Experiente",
       "observacoes": "Antecedente Arcano (qualquer um)"
     },
-    "description": "Artífices podem criar Dispositivos Arcanos e dá-los a aliados (veja a página 180). Quando possível, o dispositivo representa o antecedente de quem o forjou."
+    "descricao": "Artífices podem criar Dispositivos Arcanos e dá-los a aliados (veja a página 180). Quando possível, o dispositivo representa o antecedente de quem o forjou."
   },
   {
     "id": "canalizacao",
-    "name": "CANALIZAÇÃO",
+    "nome": "CANALIZAÇÃO",
     "origem": "PATHFINDER",
     "categoria": "PODER",
     "requisitos": {
       "estagio": "Experiente",
       "observacoes": "Antecedente Arcano (qualquer um)"
     },
-    "description": "Quando conseguir uma ampliação na sua rolagem de perícia arcana (ou rolagem para ativar ou usar um dispositivo arcano), reduz seu custo em Pontos de Poder em 1. Isso pode reduzi-lo a 0."
+    "descricao": "Quando conseguir uma ampliação na sua rolagem de perícia arcana (ou rolagem para ativar ou usar um dispositivo arcano), reduz seu custo em Pontos de Poder em 1. Isso pode reduzi-lo a 0."
   },
   {
     "id": "concentracao",
-    "name": "CONCENTRAÇÃO",
+    "nome": "CONCENTRAÇÃO",
     "origem": "PATHFINDER",
     "categoria": "PODER",
     "requisitos": {
       "estagio": "Experiente",
       "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)"
     },
-    "description": "Através de treino e foco, quem tem essa Vantagem se tornou extremamente eficiente em canalizar as forças arcanas. A Duração base de qualquer poder Não Instantâneo é dobrada. Isso também inclui manter poderes."
+    "descricao": "Através de treino e foco, quem tem essa Vantagem se tornou extremamente eficiente em canalizar as forças arcanas. A Duração base de qualquer poder Não Instantâneo é dobrada. Isso também inclui manter poderes."
   },
   {
     "id": "drenar_a_alma",
-    "name": "DRENAR A ALMA",
+    "nome": "DRENAR A ALMA",
     "origem": "PATHFINDER",
     "categoria": "PODER",
     "requisitos": {
@@ -1507,22 +1507,22 @@
       },
       "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)"
     },
-    "description": "Uma vez por dia, Drenar Alma permite a personagem receber um Nível de Fadiga para recuperar até cinco Pontos de Poder como uma ação livre limitada. É possível receber dois níveis de Fadiga (exaustão) para recuperar até 10 Pontos de Poder. Não se poder ficar Incapacitado dessa maneira."
+    "descricao": "Uma vez por dia, Drenar Alma permite a personagem receber um Nível de Fadiga para recuperar até cinco Pontos de Poder como uma ação livre limitada. É possível receber dois níveis de Fadiga (exaustão) para recuperar até 10 Pontos de Poder. Não se poder ficar Incapacitado dessa maneira."
   },
   {
     "id": "guerreiro_sagrado_profano",
-    "name": "GUERREIRO SAGRADO/PROFANO",
+    "nome": "GUERREIRO SAGRADO/PROFANO",
     "origem": "PATHFINDER",
     "categoria": "PODER",
     "requisitos": {
       "estagio": "Experiente",
       "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um), Voto (sua divindade)"
     },
-    "description": "Fiéis enfrentam grandes perigos à serviço de suas divindades. Para sobreviverem a tais provações, as forças do bem (ou do mal) concedem milagres e a habilidade de transformar seu favor em proteção sobrenatural. Adicione +1 ao total do valor final de uma rolagem de Absorção para cada Ponto de Poder gasto, até um máximo de +4."
+    "descricao": "Fiéis enfrentam grandes perigos à serviço de suas divindades. Para sobreviverem a tais provações, as forças do bem (ou do mal) concedem milagres e a habilidade de transformar seu favor em proteção sobrenatural. Adicione +1 ao total do valor final de uma rolagem de Absorção para cada Ponto de Poder gasto, até um máximo de +4."
   },
   {
     "id": "novos_poderes",
-    "name": "NOVOS PODERES",
+    "nome": "NOVOS PODERES",
     "origem": "PATHFINDER",
     "categoria": "PODER",
     "requisitos": {
@@ -1530,11 +1530,11 @@
       "observacoes": "Antecedente Arcano (qualquer um)"
     },
     "limite_compra": "infinito",
-    "description": "Uma personagem arcanista pode aprender dois novos poderes escolhendo esta Vantagem (que pode ser escolhida várias vezes). É permitido escolher quaisquer poderes do seu Estágio ou menor normalmente disponíveis ao seu Antecedente Arcano em particular. Uma personagem pode adicionar uma nova Manifestação a um poder que já possui em vez de ganhar um novo."
+    "descricao": "Uma personagem arcanista pode aprender dois novos poderes escolhendo esta Vantagem (que pode ser escolhida várias vezes). É permitido escolher quaisquer poderes do seu Estágio ou menor normalmente disponíveis ao seu Antecedente Arcano em particular. Uma personagem pode adicionar uma nova Manifestação a um poder que já possui em vez de ganhar um novo."
   },
   {
     "id": "pontos_de_poder",
-    "name": "PONTOS DE PODER",
+    "nome": "PONTOS DE PODER",
     "origem": "PATHFINDER",
     "categoria": "PODER",
     "requisitos": {
@@ -1542,11 +1542,11 @@
       "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)"
     },
     "limite_compra": "uma_vez_por_estagio",
-    "description": "Esta Vantagem concede 5 Pontos de Poder adicionais. Pontos de Poder pode ser selecionada mais de uma vez, mas apenas uma vez por Estágio. Pode ser escolhida quantas vezes for desejada no Estágio Lendário, mas só concede 2 pontos adicionais."
+    "descricao": "Esta Vantagem concede 5 Pontos de Poder adicionais. Pontos de Poder pode ser selecionada mais de uma vez, mas apenas uma vez por Estágio. Pode ser escolhida quantas vezes for desejada no Estágio Lendário, mas só concede 2 pontos adicionais."
   },
   {
     "id": "surto_de_poder",
-    "name": "SURTO DE PODER",
+    "nome": "SURTO DE PODER",
     "origem": "PATHFINDER",
     "categoria": "PODER",
     "requisitos": {
@@ -1556,11 +1556,11 @@
       },
       "observacoes": "Carta Selvagem, Antecedente Arcano (qualquer um)"
     },
-    "description": "Recupere 10 Pontos de Poder quando sua Carta de Ação for um Curinga. Isso não pode exceder seu limite normal."
+    "descricao": "Recupere 10 Pontos de Poder quando sua Carta de Ação for um Curinga. Isso não pode exceder seu limite normal."
   },
   {
     "id": "arqueiro_arcano",
-    "name": "ARQUEIRO ARCANO",
+    "nome": "ARQUEIRO ARCANO",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
@@ -1570,66 +1570,66 @@
       },
       "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)"
     },
-    "description": "Arqueiros Arcanos usam energias místicas para melhorar suas flechas e setas. É possível garantir automaticamente uma \"qualidade\" em qualquer flecha que dispare (designada por disparo). As primeiras duas qualidades que arqueiros arcanos aprendem são: Ampliar (Adiciona +1 em Atirar e dano) e Manifestação (A flecha tem uma Manifestação ambiental como fogo, frio, escuridão etc)."
+    "descricao": "Arqueiros Arcanos usam energias místicas para melhorar suas flechas e setas. É possível garantir automaticamente uma \"qualidade\" em qualquer flecha que dispare (designada por disparo). As primeiras duas qualidades que arqueiros arcanos aprendem são: Ampliar (Adiciona +1 em Atirar e dano) e Manifestação (A flecha tem uma Manifestação ambiental como fogo, frio, escuridão etc)."
   },
   {
     "id": "arqueiro_arcano_2",
-    "name": "ARQUEIRO ARCANO II",
+    "nome": "ARQUEIRO ARCANO II",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["arqueiro_arcano"]
     },
-    "description": "Arqueiros arcanos ganham duas novas qualidades: Flecha Alternante (Uma vez por encontro é possível disparar uma flecha que irá atravessar quaisquer barreiras não mágicas, ignorando penalidades de Cobertura) e Salva de Flechas (Uma vez por encontro é possível encantar uma flecha que se divide em várias quando disparada, caindo como uma chuva em um Modelo Grande de Explosão)."
+    "descricao": "Arqueiros arcanos ganham duas novas qualidades: Flecha Alternante (Uma vez por encontro é possível disparar uma flecha que irá atravessar quaisquer barreiras não mágicas, ignorando penalidades de Cobertura) e Salva de Flechas (Uma vez por encontro é possível encantar uma flecha que se divide em várias quando disparada, caindo como uma chuva em um Modelo Grande de Explosão)."
   },
   {
     "id": "arqueiro_arcano_3",
-    "name": "ARQUEIRO ARCANO III",
+    "nome": "ARQUEIRO ARCANO III",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Heroico",
       "vantagens_previas": ["arqueiro_arcano_2"]
     },
-    "description": "Arqueiros arcanos ganham duas novas qualidades: Imbuir (Uma vez por turno, é possível imbuir qualquer poder que afete área em uma flecha, \"conjurando\" o poder com Atirar e usando o Alcance de seu arco no lugar da Distância do poder) e Flecha da Morte (Uma vez por dia, é possível disparar uma flecha assustadora que vibra com energia mortal. Alvos Abalados ou Feridos pela flecha devem fazer uma rolagem de Vigor ou morrem!)."
+    "descricao": "Arqueiros arcanos ganham duas novas qualidades: Imbuir (Uma vez por turno, é possível imbuir qualquer poder que afete área em uma flecha, \"conjurando\" o poder com Atirar e usando o Alcance de seu arco no lugar da Distância do poder) e Flecha da Morte (Uma vez por dia, é possível disparar uma flecha assustadora que vibra com energia mortal. Alvos Abalados ou Feridos pela flecha devem fazer uma rolagem de Vigor ou morrem!)."
   },
   {
     "id": "assassino",
-    "name": "ASSASSINO",
+    "nome": "ASSASSINO",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Experiente",
       "observacoes": "habilidade Ataque Furtivo"
     },
-    "description": "Aqueles com esta Vantagem são adeptos da infiltração e assassinos frios e eficientes. Se consideram artistas e sua arte é a morte. Ataque Mortal: Se a personagem atingir uma vítima viva com a Finalização e causar pelo menos um Ferimento (Após qualquer Absorção), o alvo deve fazer uma rolagem de Vigor ou morre. Se a personagem com a Vantagem Assassino incapacitar ou matar um alvo que tenha Finalização, a vítima cai silenciosamente."
+    "descricao": "Aqueles com esta Vantagem são adeptos da infiltração e assassinos frios e eficientes. Se consideram artistas e sua arte é a morte. Ataque Mortal: Se a personagem atingir uma vítima viva com a Finalização e causar pelo menos um Ferimento (Após qualquer Absorção), o alvo deve fazer uma rolagem de Vigor ou morre. Se a personagem com a Vantagem Assassino incapacitar ou matar um alvo que tenha Finalização, a vítima cai silenciosamente."
   },
   {
     "id": "assassino_2",
-    "name": "ASSASSINO II",
+    "nome": "ASSASSINO II",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["assassino"]
     },
-    "description": "Esconder-se em Plena Vista: Assassinos podem desaparecer magicamente à plena vista. Trate isso como invisibilidade (-4 para ser percebido) desde que a personagem não se mova e não faça barulho. Resistência contra Venenos: A personagem adiciona +4 às rolagens feitas para resistir a venenos."
+    "descricao": "Esconder-se em Plena Vista: Assassinos podem desaparecer magicamente à plena vista. Trate isso como invisibilidade (-4 para ser percebido) desde que a personagem não se mova e não faça barulho. Resistência contra Venenos: A personagem adiciona +4 às rolagens feitas para resistir a venenos."
   },
   {
     "id": "assassino_3",
-    "name": "ASSASSINO III",
+    "nome": "ASSASSINO III",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Heroico",
       "vantagens_previas": ["assassino_2"]
     },
-    "description": "Anjo da Morte: Ganha a habilidade mística de imbuir seu ataque com energia letal. Se escolher usá-lo, a vítima morta por suas mãos vira pó e não pode ser ressuscitada. Não pode fazer isso mais do que uma vez por dia. Morte Rápida: Uma vez por dia, como ação livre, assassinos ganham a Finalização contra um oponente a sua escolha, mesmo que o alvo esteja completamente ciente da presença do assassino."
+    "descricao": "Anjo da Morte: Ganha a habilidade mística de imbuir seu ataque com energia letal. Se escolher usá-lo, a vítima morta por suas mãos vira pó e não pode ser ressuscitada. Não pode fazer isso mais do que uma vez por dia. Morte Rápida: Uma vez por dia, como ação livre, assassinos ganham a Finalização contra um oponente a sua escolha, mesmo que o alvo esteja completamente ciente da presença do assassino."
   },
   {
     "id": "cavaleiro_mistico",
-    "name": "CAVALEIRO MÍSTICO",
+    "nome": "CAVALEIRO MÍSTICO",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
@@ -1639,33 +1639,33 @@
       },
       "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)"
     },
-    "description": "Recarga Mística: Sempre que cavaleiros místicos conseguirem uma ampliação em uma rolagem de ataque para provocar dano (Atletismo (arremessar), Lutar, Atirar ou perícia arcana), recuperam um Ponto de Poder."
+    "descricao": "Recarga Mística: Sempre que cavaleiros místicos conseguirem uma ampliação em uma rolagem de ataque para provocar dano (Atletismo (arremessar), Lutar, Atirar ou perícia arcana), recuperam um Ponto de Poder."
   },
   {
     "id": "cavaleiro_mistico_2",
-    "name": "CAVALEIRO MÍSTICO II",
+    "nome": "CAVALEIRO MÍSTICO II",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["cavaleiro_mistico"]
     },
-    "description": "Ataque Místico: A personagem pode gastar dois Pontos de Poder após fazer uma rolagem de ataque para aumentar seu total em +2."
+    "descricao": "Ataque Místico: A personagem pode gastar dois Pontos de Poder após fazer uma rolagem de ataque para aumentar seu total em +2."
   },
   {
     "id": "cavaleiro_mistico_3",
-    "name": "CAVALEIRO MÍSTICO III",
+    "nome": "CAVALEIRO MÍSTICO III",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Heroico",
       "vantagens_previas": ["cavaleiro_mistico_2"]
     },
-    "description": "Ataque Místico Aprimorado: A personagem pode gastar dois Pontos de Poder após fazer uma rolagem de ataque bem-sucedida para aumentar o dano em +2."
+    "descricao": "Ataque Místico Aprimorado: A personagem pode gastar dois Pontos de Poder após fazer uma rolagem de ataque bem-sucedida para aumentar o dano em +2."
   },
   {
     "id": "cronista_desbravador",
-    "name": "CRONISTA DESBRAVADOR",
+    "nome": "CRONISTA DESBRAVADOR",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
@@ -1678,33 +1678,33 @@
         "Ocultismo": 8
       }
     },
-    "description": "Exploração: Desbravadores aumentam a velocidade do grupo em 10% quando navegam por áreas conhecidas ou mapeadas. Também sabem quais caminhos são mais seguros e onde ter mais cuidado. Se o Mestre sacar encontros e sair o resultado Inimigos (veja a página 173), personagens cronistas podem fazer uma rolagem de Astúcia -2 para descartar e sacar uma nova carta."
+    "descricao": "Exploração: Desbravadores aumentam a velocidade do grupo em 10% quando navegam por áreas conhecidas ou mapeadas. Também sabem quais caminhos são mais seguros e onde ter mais cuidado. Se o Mestre sacar encontros e sair o resultado Inimigos (veja a página 173), personagens cronistas podem fazer uma rolagem de Astúcia -2 para descartar e sacar uma nova carta."
   },
   {
     "id": "cronista_desbravador_2",
-    "name": "CRONISTA DESBRAVADOR II",
+    "nome": "CRONISTA DESBRAVADOR II",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["cronista_desbravador"]
     },
-    "description": "Contos Épicos: Cronistas recitam uma história comovente e evocativa. Uma vez por sessão, quando o grupo estiver descansando, cada Carta Selvagem que escutar a história ganha um Bene."
+    "descricao": "Contos Épicos: Cronistas recitam uma história comovente e evocativa. Uma vez por sessão, quando o grupo estiver descansando, cada Carta Selvagem que escutar a história ganha um Bene."
   },
   {
     "id": "cronista_desbravador_3",
-    "name": "CRONISTA DESBRAVADOR III",
+    "nome": "CRONISTA DESBRAVADOR III",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["cronista_desbravador_2"]
     },
-    "description": "Convocar as Lendas: Uma vez por semana de jogo, a personagem pode convocar magicamente cinco \"sombras\" de grandes heróis e heroínas de Golarion que já se foram. As sombras assumem forma mortal, possuem as fichas da coluna lateral e duram uma hora."
+    "descricao": "Convocar as Lendas: Uma vez por semana de jogo, a personagem pode convocar magicamente cinco \"sombras\" de grandes heróis e heroínas de Golarion que já se foram. As sombras assumem forma mortal, possuem as fichas da coluna lateral e duram uma hora."
   },
   {
     "id": "dancarino_das_sombras",
-    "name": "DANÇARINO DAS SOMBRAS",
+    "nome": "DANÇARINO DAS SOMBRAS",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
@@ -1715,33 +1715,33 @@
         "Ladinagem": 6
       }
     },
-    "description": "Visão no Escuro Melhorada: Uma forte conexão ao plano das sombras permite que a personagem enxergue perfeitamente em qualquer nível de iluminação a até 20 quadros (40 metros), ignorando todas as penalidades que provenham dela. Isso inclui ver através de efeitos que normalmente impediriam a Visão no Escuro."
+    "descricao": "Visão no Escuro Melhorada: Uma forte conexão ao plano das sombras permite que a personagem enxergue perfeitamente em qualquer nível de iluminação a até 20 quadros (40 metros), ignorando todas as penalidades que provenham dela. Isso inclui ver através de efeitos que normalmente impediriam a Visão no Escuro."
   },
   {
     "id": "dancarino_das_sombras_2",
-    "name": "DANÇARINO DAS SOMBRAS II",
+    "nome": "DANÇARINO DAS SOMBRAS II",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["dancarino_das_sombras"]
     },
-    "description": "Manto Sombrio: Escuridão envolve e protege seu campeão. A personagem recebe uma tentativa de Absorção gratuita com -2 sempre que for Ferida em Penumbra ou Escuridão. Isso não conta como gasto de Bene."
+    "descricao": "Manto Sombrio: Escuridão envolve e protege seu campeão. A personagem recebe uma tentativa de Absorção gratuita com -2 sempre que for Ferida em Penumbra ou Escuridão. Isso não conta como gasto de Bene."
   },
   {
     "id": "dancarino_das_sombras_3",
-    "name": "DANÇARINO DAS SOMBRAS III",
+    "nome": "DANÇARINO DAS SOMBRAS III",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["dancarino_das_sombras_2"]
     },
-    "description": "Poderes Místicos (Força Sombria): Como uma ação livre limitada, dançarinos das sombras podem conjurar um dos seguintes poderes: rajada, ilusão, convocar aliado ou teleporte (em si mesmo apenas). Todos possuem a Manifestação Sombras. Possuem 10 Pontos de Poder dedicados que se recarregam normalmente."
+    "descricao": "Poderes Místicos (Força Sombria): Como uma ação livre limitada, dançarinos das sombras podem conjurar um dos seguintes poderes: rajada, ilusão, convocar aliado ou teleporte (em si mesmo apenas). Todos possuem a Manifestação Sombras. Possuem 10 Pontos de Poder dedicados que se recarregam normalmente."
   },
   {
     "id": "discipulo_do_dragao",
-    "name": "DISCÍPULO DO DRAGÃO",
+    "nome": "DISCÍPULO DO DRAGÃO",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
@@ -1751,33 +1751,33 @@
       },
       "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)"
     },
-    "description": "Sopro: Uma vez por encontro, como ação limitada, discípulos do dragão podem fazer um ataque de sopro em um Modelo de Cone. O ataque causa 3d6 de dano e pode ser Evadido. O ataque tem um dos seguintes efeitos baseados no tipo de dragão da qual a personagem descende: fogo, ácido, eletricidade ou frio."
+    "descricao": "Sopro: Uma vez por encontro, como ação limitada, discípulos do dragão podem fazer um ataque de sopro em um Modelo de Cone. O ataque causa 3d6 de dano e pode ser Evadido. O ataque tem um dos seguintes efeitos baseados no tipo de dragão da qual a personagem descende: fogo, ácido, eletricidade ou frio."
   },
   {
     "id": "discipulo_do_dragao_2",
-    "name": "DISCÍPULO DO DRAGÃO II",
+    "nome": "DISCÍPULO DO DRAGÃO II",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["discipulo_do_dragao"]
     },
-    "description": "Asas: O corpo do discípulo do dragão se torna mais escamoso, seus olhos mais ferais e até mesmo pequenos chifres podem nascer. Eventualmente, asas escamosas surgem de suas costas, garantindo Voo (Movimentação 8)."
+    "descricao": "Asas: O corpo do discípulo do dragão se torna mais escamoso, seus olhos mais ferais e até mesmo pequenos chifres podem nascer. Eventualmente, asas escamosas surgem de suas costas, garantindo Voo (Movimentação 8)."
   },
   {
     "id": "discipulo_do_dragao_3",
-    "name": "DISCÍPULO DO DRAGÃO III",
+    "nome": "DISCÍPULO DO DRAGÃO III",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Heroico",
       "vantagens_previas": ["discipulo_do_dragao_2"]
     },
-    "description": "A transformação agora está completa – isso muda o Tipo da personagem permanentemente para Dragão. Forma de Dragão: Duas vezes por dia como ação limitada, discípulos de dragão podem assumir a forma do dragão de sua linhagem. Isso confere Tamanho 3, Força d12 e Vigor d10. Armadura 4 e ataques de Mordida/Garras causam For+d8, PA 2. Suas asas crescem para acomodar esta forma."
+    "descricao": "A transformação agora está completa – isso muda o Tipo da personagem permanentemente para Dragão. Forma de Dragão: Duas vezes por dia como ação limitada, discípulos de dragão podem assumir a forma do dragão de sua linhagem. Isso confere Tamanho 3, Força d12 e Vigor d10. Armadura 4 e ataques de Mordida/Garras causam For+d8, PA 2. Suas asas crescem para acomodar esta forma."
   },
   {
     "id": "duelista",
-    "name": "DUELISTA",
+    "nome": "DUELISTA",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
@@ -1789,33 +1789,33 @@
         "Lutar": 8
       }
     },
-    "description": "Golpe Preciso: Duelistas realizam ataques precisos com armas perfurantes de uma mão com Força Mínima d6 ou menos, adicionando +2 ao dano. Aparar: Se não tiver agido neste turno, personagens duelistas podem declarar a manobra Defender após um oponente declarar um ataque de Lutar contra ela, mas antes da sua rolagem. A Carta de Ação é descartada e o bônus de Aparar é +6 em vez de +4."
+    "descricao": "Golpe Preciso: Duelistas realizam ataques precisos com armas perfurantes de uma mão com Força Mínima d6 ou menos, adicionando +2 ao dano. Aparar: Se não tiver agido neste turno, personagens duelistas podem declarar a manobra Defender após um oponente declarar um ataque de Lutar contra ela, mas antes da sua rolagem. A Carta de Ação é descartada e o bônus de Aparar é +6 em vez de +4."
   },
   {
     "id": "duelista_2",
-    "name": "DUELISTA II",
+    "nome": "DUELISTA II",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["duelista"]
     },
-    "description": "Ataque Incapacitante: Um oponente Abalado ou Ferido por duelistas reduz sua Movimentação em 2 até ser curado. Nenhum oponente pode ser alvo de mais do que um ataque incapacitante e não pode ser reduzido abaixo de Movimentação 1."
+    "descricao": "Ataque Incapacitante: Um oponente Abalado ou Ferido por duelistas reduz sua Movimentação em 2 até ser curado. Nenhum oponente pode ser alvo de mais do que um ataque incapacitante e não pode ser reduzido abaixo de Movimentação 1."
   },
   {
     "id": "duelista_3",
-    "name": "DUELISTA III",
+    "nome": "DUELISTA III",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["duelista_2"]
     },
-    "description": "Desviar Flechas: Duelistas agora podem defletir flechas, setas e armas arremessadas. Inimigos subtraem 2 de suas rolagens de Atletismo (arremessar) ou Atirar feitas contra duelistas."
+    "descricao": "Desviar Flechas: Duelistas agora podem defletir flechas, setas e armas arremessadas. Inimigos subtraem 2 de suas rolagens de Atletismo (arremessar) ou Atirar feitas contra duelistas."
   },
   {
     "id": "mestre_do_conhecimento",
-    "name": "MESTRE DO CONHECIMENTO",
+    "nome": "MESTRE DO CONHECIMENTO",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
@@ -1829,66 +1829,66 @@
         "Ocultismo": 8
       }
     },
-    "description": "Conhecimento: Ganha uma rerrolagem gratuita ao realizar testes de Conhecimento Acadêmico, Conhecimento Geral, Ocultismo ou Ciência."
+    "descricao": "Conhecimento: Ganha uma rerrolagem gratuita ao realizar testes de Conhecimento Acadêmico, Conhecimento Geral, Ocultismo ou Ciência."
   },
   {
     "id": "mestre_do_conhecimento_2",
-    "name": "MESTRE DO CONHECIMENTO II",
+    "nome": "MESTRE DO CONHECIMENTO II",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["mestre_do_conhecimento"]
     },
-    "description": "Segredo: Com o consentimento do Mestre, é possível assumir uma habilidade de qualquer Vantagem de Classe central que ainda não tenha."
+    "descricao": "Segredo: Com o consentimento do Mestre, é possível assumir uma habilidade de qualquer Vantagem de Classe central que ainda não tenha."
   },
   {
     "id": "mestre_do_conhecimento_3",
-    "name": "MESTRE DO CONHECIMENTO III",
+    "nome": "MESTRE DO CONHECIMENTO III",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Heroico",
       "vantagens_previas": ["mestre_do_conhecimento_2"]
     },
-    "description": "Conhecimento Maior: Mestres do conhecimento aprendem dois novos poderes quaisquer dentro daqueles disponíveis na campanha."
+    "descricao": "Conhecimento Maior: Mestres do conhecimento aprendem dois novos poderes quaisquer dentro daqueles disponíveis na campanha."
   },
   {
     "id": "mistico_teurgo",
-    "name": "MÍSTICO TEURGO",
+    "nome": "MÍSTICO TEURGO",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Experiente",
       "observacoes": "dois Antecedentes Arcanos com duas perícias arcanas diferentes"
     },
-    "description": "Magias Combinadas: Teurgos podem conjurar dois poderes como ação limitada. É necessário usar duas perícias arcanas diferentes, declarar os poderes e todos os Modificadores como de costume e então rolar um dado para cada perícia (o Dado Selvagem pode substituir qualquer um)."
+    "descricao": "Magias Combinadas: Teurgos podem conjurar dois poderes como ação limitada. É necessário usar duas perícias arcanas diferentes, declarar os poderes e todos os Modificadores como de costume e então rolar um dado para cada perícia (o Dado Selvagem pode substituir qualquer um)."
   },
   {
     "id": "mistico_teurgo_2",
-    "name": "MÍSTICO TEURGO II",
+    "nome": "MÍSTICO TEURGO II",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["mistico_teurgo"]
     },
-    "description": "Sinergia Mágica: Quando teurgos usam sua habilidade Magias Combinadas, o custo de cada poder é reduzido em um Ponto de Poder (até um mínimo de 1)."
+    "descricao": "Sinergia Mágica: Quando teurgos usam sua habilidade Magias Combinadas, o custo de cada poder é reduzido em um Ponto de Poder (até um mínimo de 1)."
   },
   {
     "id": "mistico_teurgo_3",
-    "name": "MÍSTICO TEURGO III",
+    "nome": "MÍSTICO TEURGO III",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Heroico",
       "vantagens_previas": ["mistico_teurgo_2"]
     },
-    "description": "Sintetizar Magias: As habilidades das Vantagens de Classe agora podem ser aplicadas para todos os poderes fornecidos por qualquer uma de suas classes."
+    "descricao": "Sintetizar Magias: As habilidades das Vantagens de Classe agora podem ser aplicadas para todos os poderes fornecidos por qualquer uma de suas classes."
   },
   {
     "id": "trapaceiro_arcano",
-    "name": "TRAPACEIRO ARCANO",
+    "nome": "TRAPACEIRO ARCANO",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
@@ -1898,33 +1898,33 @@
       },
       "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um), Ataque Furtivo"
     },
-    "description": "Prestigiditação à Distância: Personagens trapaceiras podem usar Ladinagem a 5 quadros (10 metros) de distância, ou menos, com uma penalidade de -2. Qualquer objeto manipulado à distância deve pesar menos de 2,5 kg. Ataque Furtivo Improvisado: Uma vez por encontro, trapaceiros podem usar a habilidade Ataque Furtivo mesmo se o alvo não está Vulnerável ou sujeito à Finalização."
+    "descricao": "Prestigiditação à Distância: Personagens trapaceiras podem usar Ladinagem a 5 quadros (10 metros) de distância, ou menos, com uma penalidade de -2. Qualquer objeto manipulado à distância deve pesar menos de 2,5 kg. Ataque Furtivo Improvisado: Uma vez por encontro, trapaceiros podem usar a habilidade Ataque Furtivo mesmo se o alvo não está Vulnerável ou sujeito à Finalização."
   },
   {
     "id": "trapaceiro_arcano_2",
-    "name": "TRAPACEIRO ARCANO II",
+    "nome": "TRAPACEIRO ARCANO II",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["trapaceiro_arcano"]
     },
-    "description": "Ladrão Invisível: Uma vez por dia, como ação livre, a personagem pode conjurar invisibilidade com um custo base de 1 Ponto de Poder. Não é necessário rolagem de perícia arcana e é conjurado como se conseguisse uma ampliação."
+    "descricao": "Ladrão Invisível: Uma vez por dia, como ação livre, a personagem pode conjurar invisibilidade com um custo base de 1 Ponto de Poder. Não é necessário rolagem de perícia arcana e é conjurado como se conseguisse uma ampliação."
   },
   {
     "id": "trapaceiro_arcano_3",
-    "name": "TRAPACEIRO ARCANO III",
+    "nome": "TRAPACEIRO ARCANO III",
     "origem": "PATHFINDER",
     "categoria": "PRESTIGIO",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["trapaceiro_arcano_2"]
     },
-    "description": "Magias Surpresa: Os poderes de ataque da personagem se beneficiam de sua habilidade Ataque Furtivo."
+    "descricao": "Magias Surpresa: Os poderes de ataque da personagem se beneficiam de sua habilidade Ataque Furtivo."
   },
   {
     "id": "acrobata",
-    "name": "ACROBATA",
+    "nome": "ACROBATA",
     "origem": "PATHFINDER",
     "categoria": "PROFISSIONAL",
     "requisitos": {
@@ -1936,22 +1936,22 @@
         "Atletismo": 8
       }
     },
-    "description": "Acrobatas ganham uma rerrolagem gratuita em Atletismo que envolva equilíbrio, acrobacias ou agarrões. Não afeta rolagens para interromper ações, escalar, nadar ou arremessar."
+    "descricao": "Acrobatas ganham uma rerrolagem gratuita em Atletismo que envolva equilíbrio, acrobacias ou agarrões. Não afeta rolagens para interromper ações, escalar, nadar ou arremessar."
   },
   {
     "id": "combatente_acrobata",
-    "name": "COMBATENTE ACROBATA",
+    "nome": "COMBATENTE ACROBATA",
     "origem": "PATHFINDER",
     "categoria": "PROFISSIONAL",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["acrobata"]
     },
-    "description": "Desde que estejam cientes, possam se mover e não sofram penalidades por Sobrecarga ou Força Mínima, ataques desferidos contra Combatentes Acrobatas são feitos com -1."
+    "descricao": "Desde que estejam cientes, possam se mover e não sofram penalidades por Sobrecarga ou Força Mínima, ataques desferidos contra Combatentes Acrobatas são feitos com -1."
   },
   {
     "id": "ladrao",
-    "name": "LADRÃO",
+    "nome": "LADRÃO",
     "origem": "PATHFINDER",
     "categoria": "PROFISSIONAL",
     "requisitos": {
@@ -1964,11 +1964,11 @@
         "Ladinagem": 6
       }
     },
-    "description": "Tais personagens são especialistas em enganação, traição e acrobacias e podem ser imprescindíveis onde armadilhas precisam ser detectadas, muros escalados e trancas arrombadas. Adicione +1 em rolagens de Atletismo feitas para escalar em áreas urbanas. Também podem usar as áreas escuras entre a iluminação das cidades para ocultar seus movimentos e adicionam +1 para rolagens de Furtividade em ambientes urbanos. Por fim, são obviamente adeptos da Ladinagem em si, adicionando +1 a essas rolagens em todas as circunstâncias."
+    "descricao": "Tais personagens são especialistas em enganação, traição e acrobacias e podem ser imprescindíveis onde armadilhas precisam ser detectadas, muros escalados e trancas arrombadas. Adicione +1 em rolagens de Atletismo feitas para escalar em áreas urbanas. Também podem usar as áreas escuras entre a iluminação das cidades para ocultar seus movimentos e adicionam +1 para rolagens de Furtividade em ambientes urbanos. Por fim, são obviamente adeptos da Ladinagem em si, adicionando +1 a essas rolagens em todas as circunstâncias."
   },
   {
     "id": "as",
-    "name": "ÁS",
+    "nome": "ÁS",
     "origem": "PATHFINDER",
     "categoria": "PROFISSIONAL",
     "requisitos": {
@@ -1977,11 +1977,11 @@
         "Agilidade": 8
       }
     },
-    "description": "Ases são pilotos e motoristas que têm uma afinidade especial com seu veículo. Ignoram dois pontos por penalidades para qualquer rolagem de Navegar, Dirigir ou Pilotar e podem gastar Benes para Absorver dano para qualquer veículo que controlem ou comandem usando a perícia apropriada entre Navegar, Dirigir ou Pilotar em vez de Vigor."
+    "descricao": "Ases são pilotos e motoristas que têm uma afinidade especial com seu veículo. Ignoram dois pontos por penalidades para qualquer rolagem de Navegar, Dirigir ou Pilotar e podem gastar Benes para Absorver dano para qualquer veículo que controlem ou comandem usando a perícia apropriada entre Navegar, Dirigir ou Pilotar em vez de Vigor."
   },
   {
     "id": "conserta_tudo",
-    "name": "CONSERTA TUDO",
+    "nome": "CONSERTA TUDO",
     "origem": "PATHFINDER",
     "categoria": "PROFISSIONAL",
     "requisitos": {
@@ -1990,11 +1990,11 @@
         "Consertar": 8
       }
     },
-    "description": "Confere um talento natural com engenhocas mecânicas. Esta habilidade soma +2 em rolagens de Consertar. Com uma ampliação ela diminui à metade o tempo normalmente requerido para se consertar algo."
+    "descricao": "Confere um talento natural com engenhocas mecânicas. Esta habilidade soma +2 em rolagens de Consertar. Com uma ampliação ela diminui à metade o tempo normalmente requerido para se consertar algo."
   },
   {
     "id": "erudito",
-    "name": "ERUDITO",
+    "nome": "ERUDITO",
     "origem": "PATHFINDER",
     "categoria": "PROFISSIONAL",
     "requisitos": {
@@ -2004,11 +2004,11 @@
       }
     },
     "limite_compra": "infinito",
-    "description": "Escolha uma das perícias a seguir: Conhecimento Acadêmico, Conhecimento Batalha, Ocultismo, Ciência ou uma perícia de “conhecimento” baseada em Astúcia permitida no seu jogo e adicione +2 ao total quando elas forem usadas."
+    "descricao": "Escolha uma das perícias a seguir: Conhecimento Acadêmico, Conhecimento Batalha, Ocultismo, Ciência ou uma perícia de “conhecimento” baseada em Astúcia permitida no seu jogo e adicione +2 ao total quando elas forem usadas."
   },
   {
     "id": "investigador",
-    "name": "INVESTIGADOR",
+    "nome": "INVESTIGADOR",
     "origem": "PATHFINDER",
     "categoria": "PROFISSIONAL",
     "requisitos": {
@@ -2020,11 +2020,11 @@
         "Conhecimento Acadêmico": 8
       }
     },
-    "description": "Adicione +2 em rolagens de Conhecimento Acadêmico e Perceber feitas para buscar papéis importantes em uma mesa, olhar uma estante de livros atrás de algo digno de nota, ou notar itens escondidos em meio a montes de lixo ou detritos."
+    "descricao": "Adicione +2 em rolagens de Conhecimento Acadêmico e Perceber feitas para buscar papéis importantes em uma mesa, olhar uma estante de livros atrás de algo digno de nota, ou notar itens escondidos em meio a montes de lixo ou detritos."
   },
   {
     "id": "mateiro",
-    "name": "MATEIRO",
+    "nome": "MATEIRO",
     "origem": "PATHFINDER",
     "categoria": "PROFISSIONAL",
     "requisitos": {
@@ -2036,11 +2036,11 @@
         "Sobrevivência": 8
       }
     },
-    "description": "Mateiros somam +2 nas rolagens de Sobrevivência e Furtividade feitas na natureza (não em cidades, ruínas ou no subterrâneo)."
+    "descricao": "Mateiros somam +2 nas rolagens de Sobrevivência e Furtividade feitas na natureza (não em cidades, ruínas ou no subterrâneo)."
   },
   {
     "id": "nascido_na_sela",
-    "name": "NASCIDO NA SELA",
+    "nome": "NASCIDO NA SELA",
     "origem": "PATHFINDER",
     "categoria": "PROFISSIONAL",
     "requisitos": {
@@ -2052,11 +2052,11 @@
         "Cavalgar": 6
       }
     },
-    "description": "Esta Vantagem garante uma rerrolagem gratuita em todas as rolagens de Cavalgar e aumenta a Movimentação da montaria em 2 e o dado de corrida em um nível."
+    "descricao": "Esta Vantagem garante uma rerrolagem gratuita em todas as rolagens de Cavalgar e aumenta a Movimentação da montaria em 2 e o dado de corrida em um nível."
   },
   {
     "id": "pau_pra_toda_obra",
-    "name": "PAU PRA TODA OBRA",
+    "nome": "PAU PRA TODA OBRA",
     "origem": "PATHFINDER",
     "categoria": "PROFISSIONAL",
     "requisitos": {
@@ -2065,11 +2065,11 @@
         "Astúcia": 10
       }
     },
-    "description": "A personagem faz uma rolagem de Astúcia como uma ação depois de observar ou estudar algum assunto. Ela ganha um d4 na perícia relevante com um sucesso ou um d6 com uma ampliação. Se falhar ou quiser tentar uma ampliação, pode tentar novamente depois de uma hora de estudo, tentativa e erro ou imersão."
+    "descricao": "A personagem faz uma rolagem de Astúcia como uma ação depois de observar ou estudar algum assunto. Ela ganha um d4 na perícia relevante com um sucesso ou um d6 com uma ampliação. Se falhar ou quiser tentar uma ampliação, pode tentar novamente depois de uma hora de estudo, tentativa e erro ou imersão."
   },
   {
     "id": "soldado",
-    "name": "SOLDADO",
+    "nome": "SOLDADO",
     "origem": "PATHFINDER",
     "categoria": "PROFISSIONAL",
     "requisitos": {
@@ -2079,11 +2079,11 @@
         "Vigor": 6
       }
     },
-    "description": "Depois de alguns dias se acostumando com seu equipamento (critério do Mestre), podem tratar sua Força como um tipo de dado maior quando determinam Sobrecarga (página 108) e Força Mínima para usar armaduras, armas e equipamento sem uma penalidade. Também ganham uma rerrolagem gratuita em rolagens de Vigor feitas para se evitar perigos ambientais."
+    "descricao": "Depois de alguns dias se acostumando com seu equipamento (critério do Mestre), podem tratar sua Força como um tipo de dado maior quando determinam Sobrecarga (página 108) e Força Mínima para usar armaduras, armas e equipamento sem uma penalidade. Também ganham uma rerrolagem gratuita em rolagens de Vigor feitas para se evitar perigos ambientais."
   },
   {
     "id": "trovador",
-    "name": "TROVADOR",
+    "nome": "TROVADOR",
     "origem": "PATHFINDER",
     "categoria": "PROFISSIONAL",
     "requisitos": {
@@ -2093,11 +2093,11 @@
         "Performance": 8
       }
     },
-    "description": "Personagens com esta Vantagem viajam o mundo, aprendem sobre culturas, etiqueta, história e, acima de tudo, lendas. Adicionam +2 em rolagens de Conhecimento Geral e podem usar Performance no lugar de Conhecimento Batalha para uso de Vantagens de Liderança ou Vantagens que requeiram Conhecimento Batalha."
+    "descricao": "Personagens com esta Vantagem viajam o mundo, aprendem sobre culturas, etiqueta, história e, acima de tudo, lendas. Adicionam +2 em rolagens de Conhecimento Geral e podem usar Performance no lugar de Conhecimento Batalha para uso de Vantagens de Liderança ou Vantagens que requeiram Conhecimento Batalha."
   },
   {
     "id": "agitador",
-    "name": "AGITADOR",
+    "nome": "AGITADOR",
     "origem": "PATHFINDER",
     "categoria": "SOCIAIS",
     "requisitos": {
@@ -2106,22 +2106,22 @@
         "Espírito": 8
       }
     },
-    "description": "Personagens com essa característica sabem irritar diferentes rivais ao mesmo tempo. Uma vez por turno, esta Vantagem permite realizar um Desafio social com Intimidar ou Provocar contra todos os oponentes em um Modelo Médio de Explosão."
+    "descricao": "Personagens com essa característica sabem irritar diferentes rivais ao mesmo tempo. Uma vez por turno, esta Vantagem permite realizar um Desafio social com Intimidar ou Provocar contra todos os oponentes em um Modelo Médio de Explosão."
   },
   {
     "id": "ameacador",
-    "name": "AMEAÇADOR",
+    "nome": "AMEAÇADOR",
     "origem": "PATHFINDER",
     "categoria": "SOCIAIS",
     "requisitos": {
       "estagio": "Novato",
       "observacoes": "qualquer um dentre Sanguinário, Desagradável, Sem Escrúpulos ou Feio"
     },
-    "description": "Ameaçador permite que personagens deem um bom uso para sua má aparência ou atitude ruim, permitindo adicionar +2 em suas rolagens de Intimidar."
+    "descricao": "Ameaçador permite que personagens deem um bom uso para sua má aparência ou atitude ruim, permitindo adicionar +2 em suas rolagens de Intimidar."
   },
   {
     "id": "cativar_o_ambiente",
-    "name": "CATIVAR O AMBIENTE",
+    "nome": "CATIVAR O AMBIENTE",
     "origem": "PATHFINDER",
     "categoria": "SOCIAIS",
     "requisitos": {
@@ -2130,33 +2130,33 @@
         "Espírito": 8
       }
     },
-    "description": "Uma vez por turno, você pode usar Cativar o Ambiente para rolar um dado adicional de perícia quando dá Suporte com Persuadir ou Performance. O dado adicional proporciona Suporte a qualquer outro aliado que possa ver ou ouvir tal personagem e se aplica em sua próxima ação, seja ela qual for."
+    "descricao": "Uma vez por turno, você pode usar Cativar o Ambiente para rolar um dado adicional de perícia quando dá Suporte com Persuadir ou Performance. O dado adicional proporciona Suporte a qualquer outro aliado que possa ver ou ouvir tal personagem e se aplica em sua próxima ação, seja ela qual for."
   },
   {
     "id": "cativar_a_multidao",
-    "name": "CATIVAR A MULTIDÃO",
+    "nome": "CATIVAR A MULTIDÃO",
     "origem": "PATHFINDER",
     "categoria": "SOCIAIS",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["cativar_o_ambiente"]
     },
-    "description": "Como em Cativar o Ambiente, mas agora o Suporte pode ser concedido até duas de suas ações de Suporte."
+    "descricao": "Como em Cativar o Ambiente, mas agora o Suporte pode ser concedido até duas de suas ações de Suporte."
   },
   {
     "id": "conexoes",
-    "name": "CONEXÕES",
+    "nome": "CONEXÕES",
     "origem": "PATHFINDER",
     "categoria": "SOCIAIS",
     "requisitos": {
       "estagio": "Novato"
     },
     "limite_compra": "uma_vez_por_sessao",
-    "description": "Conexões pode ser escolhida mais de uma vez, selecionando uma nova facção ou contato em cada uma. Uma vez por sessão, e assumindo que seja possível estabelecer contato, é possível pedir um favor às conexões."
+    "descricao": "Conexões pode ser escolhida mais de uma vez, selecionando uma nova facção ou contato em cada uma. Uma vez por sessão, e assumindo que seja possível estabelecer contato, é possível pedir um favor às conexões."
   },
   {
     "id": "confiavel",
-    "name": "CONFIÁVEL",
+    "nome": "CONFIÁVEL",
     "origem": "PATHFINDER",
     "categoria": "SOCIAIS",
     "requisitos": {
@@ -2165,11 +2165,11 @@
         "Espírito": 8
       }
     },
-    "description": "As pessoas sabem que podem contar com alguém Confiável quando precisam de ajuda. Concede uma rerrolagem gratuita em qualquer rolagem de Suporte."
+    "descricao": "As pessoas sabem que podem contar com alguém Confiável quando precisam de ajuda. Concede uma rerrolagem gratuita em qualquer rolagem de Suporte."
   },
   {
     "id": "elevar_o_moral",
-    "name": "ELEVAR O MORAL",
+    "nome": "ELEVAR O MORAL",
     "origem": "PATHFINDER",
     "categoria": "SOCIAIS",
     "requisitos": {
@@ -2178,11 +2178,11 @@
         "Espírito": 8
       }
     },
-    "description": "Quando alguém com esta Vantagem faz um Desafio bem-sucedido contra qualquer oponente, também pode remover o Estado Distraído ou Vulnerável (página 142) de um de seus aliados."
+    "descricao": "Quando alguém com esta Vantagem faz um Desafio bem-sucedido contra qualquer oponente, também pode remover o Estado Distraído ou Vulnerável (página 142) de um de seus aliados."
   },
   {
     "id": "elo_comum",
-    "name": "ELO COMUM",
+    "nome": "ELO COMUM",
     "origem": "PATHFINDER",
     "categoria": "SOCIAIS",
     "requisitos": {
@@ -2192,11 +2192,11 @@
       },
       "observacoes": "Carta Selvagem"
     },
-    "description": "Alguém com esta Vantagem pode dar seus Benes livremente para qualquer outra pessoa com quem possa se comunicar."
+    "descricao": "Alguém com esta Vantagem pode dar seus Benes livremente para qualquer outra pessoa com quem possa se comunicar."
   },
   {
     "id": "humilhar",
-    "name": "HUMILHAR",
+    "nome": "HUMILHAR",
     "origem": "PATHFINDER",
     "categoria": "SOCIAIS",
     "requisitos": {
@@ -2205,11 +2205,11 @@
         "Provocar": 8
       }
     },
-    "description": "Esta vantagem concede uma rerrolagem gratuita em Desafios de Provocar."
+    "descricao": "Esta vantagem concede uma rerrolagem gratuita em Desafios de Provocar."
   },
   {
     "id": "manha",
-    "name": "MANHA",
+    "nome": "MANHA",
     "origem": "PATHFINDER",
     "categoria": "SOCIAIS",
     "requisitos": {
@@ -2218,11 +2218,11 @@
         "Astúcia": 6
       }
     },
-    "description": "Personagens que têm Manha adicionam +2 em rolagens de Intimidar e Persuadir feitas para uma Rede de Contatos (veja página 170) com elementos suspeitos ou criminosos. Também adicionam +2 em rolagens de Conhecimento Geral tratando das atividades infames."
+    "descricao": "Personagens que têm Manha adicionam +2 em rolagens de Intimidar e Persuadir feitas para uma Rede de Contatos (veja página 170) com elementos suspeitos ou criminosos. Também adicionam +2 em rolagens de Conhecimento Geral tratando das atividades infames."
   },
   {
     "id": "obstinado",
-    "name": "OBSTINADO",
+    "nome": "OBSTINADO",
     "origem": "PATHFINDER",
     "categoria": "SOCIAIS",
     "requisitos": {
@@ -2231,22 +2231,22 @@
         "Espírito": 8
       }
     },
-    "description": "Autoconfiança é uma armadura poderosa contra quem tenta atacar a vontade deste indivíduo. Adicione +2 em seu total quando resiste a Desafios com Astúcia ou Espírito."
+    "descricao": "Autoconfiança é uma armadura poderosa contra quem tenta atacar a vontade deste indivíduo. Adicione +2 em seu total quando resiste a Desafios com Astúcia ou Espírito."
   },
   {
     "id": "vontade_de_ferro",
-    "name": "VONTADE DE FERRO",
+    "nome": "VONTADE DE FERRO",
     "origem": "PATHFINDER",
     "categoria": "SOCIAIS",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["corajoso", "obstinado"]
     },
-    "description": "Agora é possível adicionar seu bônus de Obstinado para resistir a poderes e negar seus efeitos. Vontade de Ferro não se acumula com Corajoso."
+    "descricao": "Agora é possível adicionar seu bônus de Obstinado para resistir a poderes e negar seus efeitos. Vontade de Ferro não se acumula com Corajoso."
   },
   {
     "id": "provocador",
-    "name": "PROVOCADOR",
+    "nome": "PROVOCADOR",
     "origem": "PATHFINDER",
     "categoria": "SOCIAIS",
     "requisitos": {
@@ -2255,11 +2255,11 @@
         "Provocar": 6
       }
     },
-    "description": "Uma vez por turno, quando usa Provocar para um Desafio e consegue uma ampliação (veja Desafio, página 141), pode usar Provocador em um alvo. Além de todos os efeitos normais do sucesso e da ampliação, ocorre uma penalidade de -2 para afetar qualquer outro alvo além de quem fez a provocação."
+    "descricao": "Uma vez por turno, quando usa Provocar para um Desafio e consegue uma ampliação (veja Desafio, página 141), pode usar Provocador em um alvo. Além de todos os efeitos normais do sucesso e da ampliação, ocorre uma penalidade de -2 para afetar qualquer outro alvo além de quem fez a provocação."
   },
   {
     "id": "replica",
-    "name": "RÉPLICA",
+    "nome": "RÉPLICA",
     "origem": "PATHFINDER",
     "categoria": "SOCIAIS",
     "requisitos": {
@@ -2268,11 +2268,11 @@
         "Provocar": 6
       }
     },
-    "description": "Se uma personagem com Réplica conseguir uma ampliação quando resiste a um Desafio de Intimidar e Provocar, o adversário fica Distraído."
+    "descricao": "Se uma personagem com Réplica conseguir uma ampliação quando resiste a um Desafio de Intimidar e Provocar, o adversário fica Distraído."
   },
   {
     "id": "campeao",
-    "name": "CAMPEÃO",
+    "nome": "CAMPEÃO",
     "origem": "PATHFINDER",
     "categoria": "ESTRANHAS",
     "requisitos": {
@@ -2284,11 +2284,11 @@
         "Lutar": 6
       }
     },
-    "description": "Campeões combatem as forças da escuridão (ou do bem) adicionando +2 ao dano quando atacam criaturas sobrenaturais malignas (ou benignas). O bônus se aplica a ataques de efeito em área, ataques à distância, poderes etc."
+    "descricao": "Campeões combatem as forças da escuridão (ou do bem) adicionando +2 ao dano quando atacam criaturas sobrenaturais malignas (ou benignas). O bônus se aplica a ataques de efeito em área, ataques à distância, poderes etc."
   },
   {
     "id": "curandeiro",
-    "name": "CURANDEIRO",
+    "nome": "CURANDEIRO",
     "origem": "PATHFINDER",
     "categoria": "ESTRANHAS",
     "requisitos": {
@@ -2297,42 +2297,42 @@
         "Espírito": 8
       }
     },
-    "description": "Quem conta com esta Vantagem adiciona +2 em todas as rolagens de Curar, seja natural ou mágica."
+    "descricao": "Quem conta com esta Vantagem adiciona +2 em todas as rolagens de Curar, seja natural ou mágica."
   },
   {
     "id": "elo_animal",
-    "name": "ELO ANIMAL",
+    "nome": "ELO ANIMAL",
     "origem": "PATHFINDER",
     "categoria": "ESTRANHAS",
     "requisitos": {
       "estagio": "Novato"
     },
-    "description": "Alguns indivíduos podem exercer incrível domínio sobre suas companhias animais. É permitido que gastem seus próprios Benes para quaisquer animais sob o seu controle incluindo montarias, animais de estimação, familiares e assim por diante."
+    "descricao": "Alguns indivíduos podem exercer incrível domínio sobre suas companhias animais. É permitido que gastem seus próprios Benes para quaisquer animais sob o seu controle incluindo montarias, animais de estimação, familiares e assim por diante."
   },
   {
     "id": "sucateiro",
-    "name": "SUCATEIRO",
+    "nome": "SUCATEIRO",
     "origem": "PATHFINDER",
     "categoria": "ESTRANHAS",
     "requisitos": {
       "estagio": "Novato",
       "vantagens_previas": ["sorte"]
     },
-    "description": "Uma vez por encontro é permitido “lembrar de repente”, ou arrumar um equipamento, punhado de munição ou algum outro dispositivo útil que seja extremamente necessário."
+    "descricao": "Uma vez por encontro é permitido “lembrar de repente”, ou arrumar um equipamento, punhado de munição ou algum outro dispositivo útil que seja extremamente necessário."
   },
   {
     "id": "nocao_do_perigo",
-    "name": "NOÇÃO DO PERIGO",
+    "nome": "NOÇÃO DO PERIGO",
     "origem": "PATHFINDER",
     "categoria": "ESTRANHAS",
     "requisitos": {
       "estagio": "Novato"
     },
-    "description": "Quando rola para determinar Surpresa (página 148), adiciona +2 em sua rolagem de Perceber para agir na primeira rodada. Com uma ampliação, começa o encontro em situação de Aguardar. Em outras situações não cobertas pelas regras de Surpresa, concede uma rolagem de Perceber com -2 para detectar o perigo."
+    "descricao": "Quando rola para determinar Surpresa (página 148), adiciona +2 em sua rolagem de Perceber para agir na primeira rodada. Com uma ampliação, começa o encontro em situação de Aguardar. Em outras situações não cobertas pelas regras de Surpresa, concede uma rolagem de Perceber com -2 para detectar o perigo."
   },
   {
     "id": "senhor_das_feras",
-    "name": "SENHOR DAS FERAS",
+    "nome": "SENHOR DAS FERAS",
     "origem": "PATHFINDER",
     "categoria": "ESTRANHAS",
     "requisitos": {
@@ -2341,11 +2341,11 @@
         "Espírito": 8
       }
     },
-    "description": "O “magnetismo animal” do Senhor das Feras é tão grande que também atrai um animal leal de alguma espécie. Geralmente é um animal de Tamanho 0 ou menor, sujeito à aprovação do Mestre. O animal é um Extra e não tem Progresso em Estágio ou habilidades. Se um animal for dispensado ou morto, pode-se ganhar um substituto em 1d4 dias."
+    "descricao": "O “magnetismo animal” do Senhor das Feras é tão grande que também atrai um animal leal de alguma espécie. Geralmente é um animal de Tamanho 0 ou menor, sujeito à aprovação do Mestre. O animal é um Extra e não tem Progresso em Estágio ou habilidades. Se um animal for dispensado ou morto, pode-se ganhar um substituto em 1d4 dias."
   },
   {
     "id": "duro_na_queda",
-    "name": "DURO NA QUEDA",
+    "nome": "DURO NA QUEDA",
     "origem": "PATHFINDER",
     "categoria": "LENDARIAS",
     "requisitos": {
@@ -2354,11 +2354,11 @@
         "Vigor": 8
       }
     },
-    "description": "Personagens com esta Vantagem ficam de pé enquanto outras pessoas caem. Podem receber quatro Ferimentos antes de ficarem Incapacitados (sua penalidade máxima por Ferimento ainda é -3)."
+    "descricao": "Personagens com esta Vantagem ficam de pé enquanto outras pessoas caem. Podem receber quatro Ferimentos antes de ficarem Incapacitados (sua penalidade máxima por Ferimento ainda é -3)."
   },
   {
     "id": "muito_duro_na_queda",
-    "name": "MUITO DURO NA QUEDA",
+    "nome": "MUITO DURO NA QUEDA",
     "origem": "PATHFINDER",
     "categoria": "LENDARIAS",
     "requisitos": {
@@ -2368,11 +2368,11 @@
       },
       "vantagens_previas": ["duro_na_queda"]
     },
-    "description": "Aumenta o limite para até cinco Ferimentos antes de ser Incapacitado! Sua penalidade máxima por Ferimento ainda é -3."
+    "descricao": "Aumenta o limite para até cinco Ferimentos antes de ser Incapacitado! Sua penalidade máxima por Ferimento ainda é -3."
   },
   {
     "id": "mestre_de_arma",
-    "name": "MESTRE DE ARMA",
+    "nome": "MESTRE DE ARMA",
     "origem": "PATHFINDER",
     "categoria": "LENDARIAS",
     "requisitos": {
@@ -2381,72 +2381,72 @@
         "Lutar": 12
       }
     },
-    "description": "Aumenta o Aparar em +1 e seu dado de bônus de dano em rolagens de Lutar é um d8 em vez de um d6 (veja Bônus de Dano, página 131)."
+    "descricao": "Aumenta o Aparar em +1 e seu dado de bônus de dano em rolagens de Lutar é um d8 em vez de um d6 (veja Bônus de Dano, página 131)."
   },
   {
     "id": "mestre_das_armas",
-    "name": "MESTRE DAS ARMAS",
+    "nome": "MESTRE DAS ARMAS",
     "origem": "PATHFINDER",
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
       "vantagens_previas": ["mestre_de_arma"]
     },
-    "description": "Aumente o Aparar em +1 e seu dado de bônus de dano em Lutar agora é d10."
+    "descricao": "Aumente o Aparar em +1 e seu dado de bônus de dano em Lutar agora é d10."
   },
   {
     "id": "parceiro",
-    "name": "PARCEIRO",
+    "nome": "PARCEIRO",
     "origem": "PATHFINDER",
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
       "observacoes": "Carta Selvagem"
     },
-    "description": "A habilidade concede parceria com uma Carta Selvagem de Estágio Novato que começa cada sessão com dois Benes, pode Progredir e tem habilidades que complementam as de quem o mentora."
+    "descricao": "A habilidade concede parceria com uma Carta Selvagem de Estágio Novato que começa cada sessão com dois Benes, pode Progredir e tem habilidades que complementam as de quem o mentora."
   },
   {
     "id": "profissional",
-    "name": "PROFISSIONAL",
+    "nome": "PROFISSIONAL",
     "origem": "PATHFINDER",
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
       "observacoes": "tipo de dado máximo na Característica afetada"
     },
-    "description": "Quem tem essa Vantagem é especialista em uma perícia ou atributo em particular (sua escolha). Isso aumenta a Característica e o seu limite em um passo (um d12 + 1 se torna um d12 + 2 , por exemplo). Esta Vantagem pode ser selecionada uma vez por Característica."
+    "descricao": "Quem tem essa Vantagem é especialista em uma perícia ou atributo em particular (sua escolha). Isso aumenta a Característica e o seu limite em um passo (um d12 + 1 se torna um d12 + 2 , por exemplo). Esta Vantagem pode ser selecionada uma vez por Característica."
   },
   {
     "id": "especialista",
-    "name": "ESPECIALISTA",
+    "nome": "ESPECIALISTA",
     "origem": "PATHFINDER",
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
       "observacoes": "Profissional na Característica afetada"
     },
-    "description": "Como na Vantagem Profissional, aumentando a Característica e seu limite em um passo adicional."
+    "descricao": "Como na Vantagem Profissional, aumentando a Característica e seu limite em um passo adicional."
   },
   {
     "id": "mestre",
-    "name": "MESTRE",
+    "nome": "MESTRE",
     "origem": "PATHFINDER",
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
       "observacoes": "Carta Selvagem, Especialista na Característica afetada"
     },
-    "description": "O Dado Selvagem aumenta para d10 em rolagens da Característica em que é Especialista."
+    "descricao": "O Dado Selvagem aumenta para d10 em rolagens da Característica em que é Especialista."
   },
   {
     "id": "seguidores",
-    "name": "SEGUIDORES",
+    "nome": "SEGUIDORES",
     "origem": "PATHFINDER",
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
       "observacoes": "Carta Selvagem"
     },
-    "description": "Cada vez que esta Vantagem é escolhida, cinco pessoas se juntam à luta ao lado da personagem. No caso de perder essas pessoas outras eventualmente tomam seu lugar (por quanto tempo fica a critério do Mestre e das circunstâncias)."
+    "descricao": "Cada vez que esta Vantagem é escolhida, cinco pessoas se juntam à luta ao lado da personagem. No caso de perder essas pessoas outras eventualmente tomam seu lugar (por quanto tempo fica a critério do Mestre e das circunstâncias)."
   }
 ]
