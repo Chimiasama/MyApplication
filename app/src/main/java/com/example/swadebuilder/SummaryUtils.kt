@@ -254,7 +254,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         } else {
             allRacialTraits
         }
-        lines += "Vantagens Raciais: ${displayVantagensRaciais.joinToString(", ")}"
+        lines += "Características Raciais: ${displayVantagensRaciais.joinToString(", ")}"
     }
     lines += ""
 

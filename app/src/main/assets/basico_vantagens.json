@@ -44,7 +44,7 @@
   },
   {
     "id": "antecedente_arcano_dom",
-    "nome": "ANTECEDENTE ARCANO (Dom - Básico)",
+    "nome": "ANTECEDENTE ARCANO (Dom)",
     "categoria": "ANTECEDENTE",
     "origem": "BASICO",
     "requisitos": {
@@ -64,7 +64,7 @@
   },
   {
     "id": "antecedente_arcano_magia",
-    "nome": "ANTECEDENTE ARCANO (Magia - Básico)",
+    "nome": "ANTECEDENTE ARCANO (Magia)",
     "categoria": "ANTECEDENTE",
     "origem": "BASICO",
     "requisitos": {
@@ -84,7 +84,7 @@
   },
   {
     "id": "antecedente_arcano_milagres",
-    "nome": "ANTECEDENTE ARCANO (Milagres - Básico)",
+    "nome": "ANTECEDENTE ARCANO (Milagres)",
     "categoria": "ANTECEDENTE",
     "origem": "BASICO",
     "requisitos": {
@@ -104,7 +104,7 @@
   },
   {
     "id": "antecedente_arcano_ciencia_estranha",
-    "nome": "ANTECEDENTE ARCANO (Ciência Estranha - Básico)",
+    "nome": "ANTECEDENTE ARCANO (Ciência Estranha)",
     "categoria": "ANTECEDENTE",
     "origem": "BASICO",
     "requisitos": {
@@ -124,7 +124,7 @@
   },
   {
     "id": "antecedente_arcano_psionicos",
-    "nome": "ANTECEDENTE ARCANO (Psiônicos - Básico)",
+    "nome": "ANTECEDENTE ARCANO (Psiônicos)",
     "categoria": "ANTECEDENTE",
     "origem": "BASICO",
     "requisitos": {
