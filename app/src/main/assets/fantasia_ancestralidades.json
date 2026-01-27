@@ -8,6 +8,7 @@
       "Vigor": 2
     },
     "pericias": {},
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
@@ -30,6 +31,7 @@
     "variantes": "Ideias Variantes: Aquarianos de águas profundas podem ter Fosforescência e maior Resistência ou Vigor. Aqueles que vivem na escuridão também podem ter Ecolocalização.\nConsidere Vantagens como Rugido se a espécie tiver Ecolocalização, ou Antecedente Arcano (Dom) com manipulação elemental ou até mesmo explosão se puderem controlar a água.",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["DEPENDÊNCIA"],
     "habilidades": [
       {
         "nome": "AQUÁTICO",
@@ -58,6 +60,7 @@
     "pericias": {
       "Perceber": 2
     },
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "FRÁGIL",
@@ -88,6 +91,7 @@
     "variantes": "Ideias Variantes: Nem todos os celestiais servem à luz. Avatares de poderes mais sombrios trocam Código de Honra por Complicações como Arrogante, Implacável ou algum Voto destrutivo. São frequentemente conhecidos por sua crueldade ou ódio para com os mortais. Como uma ironia cruel, podem manter suas asas angelicais ou elas podem se parecer com asas de morcego ou demônios.",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["CÓDIGO DE HONRA", "VOTO (Maior)"],
     "habilidades": [
       {
         "nome": "ATRAENTE",
@@ -114,6 +118,7 @@
     "variantes": "Ideias Variantes: Aumente o Tamanho para +2 e considere Musculoso para representar centauros descendentes de cavalos de guerra, clydesdales ou similares. Balanceie com Inimigo, ou uma escolha de tendências como Teimosia ou até mesmo uma penalidade em Astúcia ou a Complicação Sem Noção se a cultura enfatizar a batalha em vez da educação.\nCentauros relacionados aos pégasos podem ter asas (Voo), compensadas por Movimentação mais lenta em terra (reduza Movimentação para 8 e um dado de corrida d8).",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["DEPENDÊNCIA"],
     "habilidades": [
       {
         "nome": "CASCOS",
@@ -144,6 +149,7 @@
     "variantes": "Ideias Variantes: Descendentes elementais “mais próximos” de sua herança podem ter poderes mais desenvolvidos sobre os elementos. Podem ser capazes de voar, começar com manipulação elemental (Antecedente Arcano (Dom)), ser mais fortes, mais resistentes ou ter outras vantagens concedidas por seus laços com o plano elemental. Equilibre isso com a versão maior de Forasteiro, Fraquezas Ambientais ou outras Complicações que reflitam a “personalidade” do elemento.",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["FORASTEIRO (Menor)"],
     "habilidades": [
       {
         "nome": "AQUÁTICO (Apenas Descendentes da Água)",
@@ -178,6 +184,7 @@
     "variantes": "Ideias Variantes: Os draconianos apresentados aqui nascem do fogo e do calor. Ajuste a Resistência Ambiental, a Fraqueza Ambiental e a Arma de Sopro conforme desejado para refletir outras ancestralidades. Se draconianos em seu cenário tiverem asas, adicione Voo à lista e equilibre-os com características de ancestralidade negativas adicionais.",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["ARROGANTE", "FRAQUEZA AMBIENTAL (Frio)"],
     "habilidades": [
       {
         "nome": "ARMA DE SOPRO",
@@ -218,6 +225,7 @@
       "Agilidade": 2
     },
     "pericias": {},
+    "desvantagens": ["DESASTRADO"],
     "habilidades": [
       {
         "nome": "DESASTRADO",
@@ -240,6 +248,7 @@
     "variantes": "Ideias Variantes: Fadas criadas na corte Seelie podem ter perícias aprimoradas, como Persuadir, compensadas por um Voto de servir seu rei ou rainha. Fadas malignas da corte Unseelie adoram travessuras e são cheias de rancor. Elas têm a Complicação Desagradável e abraçam suas Complicações Curioso e Boca Grande para espalhar discórdia em qualquer lugar por onde andam. Isso pode lhes dar uma velocidade de Voo maior ou habilidades como Robusto para ajudá-las a sobreviver aos problemas que causam.",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["BOCA GRANDE", "CURIOSO", "DESASTRADO", "IMPULSIVO"],
     "habilidades": [
       {
         "nome": "BOCA GRANDE",
@@ -278,6 +287,7 @@
     "pericias": {
       "Perceber": 2
     },
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ASTÚCIA",
@@ -310,6 +320,7 @@
     "pericias": {
       "Furtividade": 2
     },
+    "desvantagens": ["DESAGRADÁVEL"],
     "habilidades": [
       {
         "nome": "DESAGRADÁVEL",
@@ -340,6 +351,7 @@
     "variantes": "Ideias Variantes: É fácil adaptar o golem de pedra aqui apresentado para aqueles construídos com outros materiais, como metal, osso, cinzas ou até mesmo carne. Adicione a habilidade de ancestralidade Mordida, Garras ou Chifres para refletir armas integradas. Se o golem puder curar suas feridas absorvendo material, considere a habilidade de ancestralidade Regeneração. Reduza o custo em 1 se o material for relativamente incomum.",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["DESAJEITADO", "SEM NOÇÃO"],
     "habilidades": [
       {
         "nome": "ARMADURA +2",
@@ -386,6 +398,7 @@
     "variantes": "Ideias Variantes: Seres humanos são uma escolha natural para os Pacotes Culturais descritos na página 9.",
     "atributos": {},
     "pericias": {},
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ADAPTÁVEL",
@@ -400,6 +413,7 @@
     "variantes": "Ideias Variantes: Troque o fogo por outros tipos de energia, como frio ou escuridão, para refletir origens demoníacas alternativas. Aumente o dano dos chifres do infernal para For+d6 se tiver chifres maiores e adicione Voo se tiver asas. Isso pode aumentar sua Complicação Forasteiro para Maior, dependendo do mundo.",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["FORASTEIRO (Menor)", "FRAQUEZA AMBIENTAL (Frio)"],
     "habilidades": [
       {
         "nome": "CHIFRES",
@@ -434,6 +448,7 @@
     "variantes": "Ideias Variantes: Alguns insetoides vêm de espécies mais independentes, como besouros ou louva-a-deus. Abandone a Complicação Mente de Colmeia e adicione habilidades adequadas a essa espécie, como mais armadura para besouros ou pinças mais perigosas para louva-a-deus. Insetoides voadores também são comuns. Adicione Voo no nível apropriado e equilibre com Complicações como Dependência de uma dieta específica ou incapacidade de falar.",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["FORASTEIRO (Menor)", "GUIADO (Maior)", "LEAL"],
     "habilidades": [
       {
         "nome": "ANDAR NAS PAREDES",
@@ -472,6 +487,7 @@
     "variantes": "Ideias Variantes: Em alguns mundos, elfos são resistentes à magia de oponentes, concedendo-lhes Sangue Feérico ou a Vantagem Resistência Arcana como uma habilidade inerente. Em ambientes selvagens, meio-elfos podem ser caçados por elfos, humanos ou ambos! Possuem a Complicação Procurado, mas ganham outras habilidades que refletem sua vida em fuga, como Características aumentadas ou Vantagens adicionais à sua escolha.",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["FORASTEIRO (Menor)"],
     "habilidades": [
       {
         "nome": "FORASTEIRO (Menor)",
@@ -497,6 +513,7 @@
       "Vigor": 3
     },
     "pericias": {},
+    "desvantagens": ["ANALFABETO", "FORASTEIRO (Maior)", "SEM NOÇÃO"],
     "habilidades": [
       {
         "nome": "ANALFABETO",
@@ -539,6 +556,7 @@
     "variantes": "Ideias Variantes: Meio-orcs podem ser mais do que simplesmente brutais em alguns cenários, ganhando Agilidade, Espírito ou Sorte em vez de Força e Vigor.",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["FORASTEIRO (Menor)"],
     "habilidades": [
       {
         "nome": "ENDURECIDO",
@@ -564,6 +582,7 @@
       "Vigor": 2
     },
     "pericias": {},
+    "desvantagens": ["DESAGRADÁVEL", "SENSÍVEL (Maior)"],
     "habilidades": [
       {
         "nome": "CHIFRES",
@@ -609,6 +628,7 @@
       "Vigor": 3
     },
     "pericias": {},
+    "desvantagens": ["ARROGANTE", "DESAJEITADO", "FORASTEIRO (Menor)", "SEM NOÇÃO"],
     "habilidades": [
       {
         "nome": "ARROGANTE",
@@ -658,6 +678,7 @@
       "Vigor": 2
     },
     "pericias": {},
+    "desvantagens": ["FORASTEIRO (Maior)"],
     "habilidades": [
       {
         "nome": "BRUTAL",
@@ -694,6 +715,7 @@
       "Espírito": 2
     },
     "pericias": {},
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ESPIRITUOSO",
@@ -720,6 +742,7 @@
     "variantes": "Ideias Variantes: Membros do povo ratazana têm mordidas muito mais afiadas em alguns mundos e também podem espalhar veneno. Equilibre esses benefícios com Complicações como Sem Escrúpulos ou Desagradável para representar sua natureza selvagem.",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["COVARDE", "FORASTEIRO (Maior)", "GANANCIOSO (Menor)"],
     "habilidades": [
       {
         "nome": "COVARDE",
@@ -766,6 +789,7 @@
     "variantes": "Ideias Variantes: O povo rato pode ser inerentemente tímido, conferindo uma penalidade em Intimidar ao lidar com alguém maior ou mais poderoso que eles. Você também pode usar este modelo para criaturas descendentes de esquilos ou roedores semelhantes. Troque Visão no Escuro por Voo para esquilos-voadores, Atletismo aumentado para esquilos e assim por diante.",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["FOBIA (Menor: Gatos)", "FORASTEIRO (Maior)", "ALMOFADINHA"],
     "habilidades": [
       {
         "nome": "DIMINUTO",
@@ -800,6 +824,7 @@
     "variantes": "Ideias Variantes: O povo serpente pode ter o corpo de uma cobra em vez de pernas humanoides. Essas nagas podem ter sua Movimentação aumentada ou a Vantagem Corredor equilibrada pela Forma Incomum (veja Centauros na página 14).\nVocê também pode melhorar o veneno do povo serpente para Nocaute, Letal ou Paralisante adquirindo 2 pontos adicionais em habilidades de ancestralidades negativas ou Complicações. Personagens relacionadas a cascavéis, por exemplo, podem ser Desagradáveis ou ter Inimigos Ancestrais, e aquelas que se assemelham a cobras podem ter a habilidade de cuspir seu veneno (veja a página 59).",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["FORASTEIRO (Menor)", "FRAQUEZA AMBIENTAL (Frio)"],
     "habilidades": [
       {
         "nome": "FORASTEIRO (Menor)",
@@ -840,6 +865,7 @@
       "Agilidade": 2
     },
     "pericias": {},
+    "desvantagens": ["SANGUINÁRIO", "INIMIGO RACIAL"],
     "habilidades": [
       {
         "nome": "GARRAS",
@@ -880,6 +906,7 @@
       "Força": 2
     },
     "pericias": {},
+    "desvantagens": ["FORASTEIRO (Maior)", "SENSIBILIDADE À LUZ SOLAR", "AVERSÃO ANIMAL"],
     "habilidades": [
       {
         "nome": "AVERSÃO ANIMAL",
@@ -922,6 +949,7 @@
     "variantes": "Ideias Variantes: Os sáurios em alguns mundos podem se parecer com os lendários dinossauros! Aumente seu Tamanho e Força e aumente sua Mordida para For+d6. Compense essas habilidades poderosas com desvantagens como Grande, Forasteiro ou outras que reflitam o medo que a maioria tem para com eles.",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["FORASTEIRO (Menor)", "FRAQUEZA AMBIENTAL (Frio)"],
     "habilidades": [
       {
         "nome": "ARMADURA +2",
@@ -952,6 +980,7 @@
     "variantes": "Ideias Variantes: Alguns transmorfos são limitados em suas habilidades e só conseguem imitar a aparência de alguém com quem interagiram ou que tocaram. Podem manter a nova aparência por muito mais tempo do que outros transmorfos, estendendo a duração de sua habilidade Mudar de Forma para um dia (veja a seguir).\nTransmorfos não precisam necessariamente ser uma ancestralidade de humanoides misteriosos que podem imitar os outros. Alguns se parecem com qualquer outro ser humano, mas podem transformar-se em animais à vontade. A habilidade Mudar de Forma do transmorfo usa o poder mudança de forma em vez de disfarce. Se só puderem se transformar sob certas circunstâncias — como enquanto estão Feridos, sob a luz da lua cheia e assim por diante — ou precisarem gastar uma rodada inteira sem realizar outras ações além da transformação, podem reduzir o custo em Pontos de Poder em 2 (a critério do Mestre).",
     "atributos": {},
     "pericias": {},
+    "desvantagens": ["SEGREDO (Maior)"],
     "habilidades": [
       {
         "nome": "CARISMÁTICO",
