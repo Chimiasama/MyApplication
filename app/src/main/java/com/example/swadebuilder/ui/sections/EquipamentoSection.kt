@@ -346,6 +346,7 @@ fun EquipamentoSection(
 
         Column(modifier = containerModifier) {
             // 1. Prepare Data
+            val activeOrigins = state.getActiveOrigins()
             val esconderSupers = superequipCategorias.isEmpty()
             val rawCategories = (categorias + superequipCategorias)
                 .filterNot {
@@ -356,17 +357,8 @@ fun EquipamentoSection(
                 }
                 .filter { categoria ->
                     val origem = categoria.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
-                    (origem != "SUPLEMENTO") &&
-                            (origem != "BASICO" || (!compendioFantasiaAtivo && !compendioSciFiAtivo && !state.modoSupers)) &&
-                            (origem != "ARTE_DA_GUERRA" || compendioArteDaGuerraAtivo) &&
-                            (origem != "CIDADE_SOL_VAPOR" || compendioCidadeSolVaporAtivo) &&
-                            (origem != "WISEGUYS" || compendioWiseguysAtivo) &&
-                            (origem != "CRYSTAL_HEART" || compendioCrystalHeartAtivo) &&
-                            (origem != "FANTASIA" || compendioFantasiaAtivo) &&
-                            (origem != "HORROR" || compendioHorrorAtivo) &&
-                            (origem != "SCI_FI" || compendioSciFiAtivo) &&
-                            ((origem != "PATHFINDER" && origem != "PATHFINDER") || compendioPathfinderAtivo) &&
-                            ((origem != "OESTE_ESTRANHO" && origem != "DEADLANDS") || compendioDeadlandsAtivo)
+                    if (origem == "SUPLEMENTO") false
+                    else origem in activeOrigins
                 }
 
             // Mapped Data
