@@ -17,7 +17,26 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val showOfficialNames = personagem.modoOficialAtivo
 
     val ancestralidadeNomeObj = listaAncestralidadesJson
-        .firstOrNull { it.nome.keyify() == personagem.ancestralidade }
+        .filter { it.nome.keyify() == personagem.ancestralidade }
+        .filter { item ->
+            val origin = item.origem.uppercase()
+            when (origin) {
+                "FANTASIA" -> personagem.compendioFantasiaAtivo
+                "HORROR" -> personagem.compendioHorrorAtivo
+                "ARTE_DA_GUERRA" -> personagem.compendioArteDaGuerraAtivo
+                "DEADLANDS" -> personagem.compendioDeadlandsAtivo
+                "WISEGUYS" -> personagem.compendioWiseguysAtivo
+                "CIDADE_SOL_VAPOR" -> personagem.compendioCidadeSolVaporAtivo
+                "CRYSTAL_HEART" -> personagem.coracaoCrystalSelecionado != null
+                "FC", "SCIFI" -> personagem.compendioSciFiAtivo
+                else -> {
+                    if (origin.contains("TRILHADOR") || origin.contains("PATHFINDER")) personagem.compendioPathfinderAtivo
+                    else true
+                }
+            }
+        }
+        .maxByOrNull { CriadorState.getOriginPriority(it.origem) }
+        ?: listaAncestralidadesJson.firstOrNull { it.nome.keyify() == personagem.ancestralidade }
 
     val rawAncestralidadeNome = if (showOfficialNames && ancestralidadeNomeObj?.originalName != null) {
         ancestralidadeNomeObj.originalName
