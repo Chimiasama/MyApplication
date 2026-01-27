@@ -35,6 +35,7 @@ import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.classeExclusivaBloqueada
+import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
@@ -999,26 +1000,16 @@ class CriadorState {
 
     // Computed property for basic filtering before injecting dynamic slots (Idioms, Jutsu)
     val periciasFiltradasPorCompendio: List<Pericia> by derivedStateOf {
+            val activeOrigins = getActiveOrigins()
+            val filteredByOrigin = listaPericias.filter {
+                val o = (it.origem ?: "").ifBlank { "BASICO" }.uppercase().semAcentos()
+                o in activeOrigins
+            }
+
             // Unify duplicates by Key, choosing the most relevant source
-            val unifiedList = listaPericias.groupBy { it.nome.keyify() }
+            val unifiedList = filteredByOrigin.groupBy { it.nome.keyify() }
                 .mapNotNull { (_, group) ->
-                    // FANTASIA PRIORITY
-                    if (compendioFantasiaAtivo) {
-                        val fantasy = group.find { it.origem.equals("FANTASIA", ignoreCase = true) }
-                        if (fantasy != null) return@mapNotNull fantasy
-                        // If Fantasy is active, block BASIC skills unless they are also in Fantasy (which means we found it above)
-                        // If strict replacement is desired:
-                        if (group.any { it.origem.equals("BASICO", ignoreCase = true) }) return@mapNotNull null
-                    }
-
-                    // ARTE DA GUERRA PRIORITY
-                    if (compendioArteDaGuerraAtivo) {
-                        val adg = group.find { it.origem.equals("ARTE_DA_GUERRA", ignoreCase = true) }
-                        if (adg != null) return@mapNotNull adg
-                    }
-
-                    // Default: Basic or First available
-                    group.find { it.origem.equals("BASICO", ignoreCase = true) } ?: group.firstOrNull()
+                    group.maxByOrNull { CriadorState.getOriginPriority(it.origem) }
                 }
 
             if (compendioPathfinderAtivo) {

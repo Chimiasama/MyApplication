@@ -54,6 +54,7 @@ import com.example.swadebuilder.model.EquipSuperType
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.SAVAGE_PATHFINDER_ALLOWLIST
+import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.PbLegacyActions
@@ -346,6 +347,7 @@ fun EquipamentoSection(
 
         Column(modifier = containerModifier) {
             // 1. Prepare Data
+            val activeOrigins = state.getActiveOrigins()
             val esconderSupers = superequipCategorias.isEmpty()
             val rawCategories = (categorias + superequipCategorias)
                 .filterNot {
@@ -356,17 +358,8 @@ fun EquipamentoSection(
                 }
                 .filter { categoria ->
                     val origem = categoria.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
-                    (origem != "SUPLEMENTO") &&
-                            (origem != "BASICO" || (!compendioFantasiaAtivo && !compendioSciFiAtivo && !state.modoSupers)) &&
-                            (origem != "ARTE_DA_GUERRA" || compendioArteDaGuerraAtivo) &&
-                            (origem != "CIDADE_SOL_VAPOR" || compendioCidadeSolVaporAtivo) &&
-                            (origem != "WISEGUYS" || compendioWiseguysAtivo) &&
-                            (origem != "CRYSTAL_HEART" || compendioCrystalHeartAtivo) &&
-                            (origem != "FANTASIA" || compendioFantasiaAtivo) &&
-                            (origem != "HORROR" || compendioHorrorAtivo) &&
-                            (origem != "SCI_FI" || compendioSciFiAtivo) &&
-                            ((origem != "PATHFINDER" && origem != "PATHFINDER") || compendioPathfinderAtivo) &&
-                            ((origem != "OESTE_ESTRANHO" && origem != "DEADLANDS") || compendioDeadlandsAtivo)
+                    if (origem == "SUPLEMENTO") false
+                    else origem in activeOrigins
                 }
 
             // Mapped Data
@@ -683,7 +676,12 @@ fun EquipamentoSection(
                                             ?: (cat.original.origem ?: "BASICO")).uppercase()
                                         EquipamentoListEntry(item, origemKey, origemKey.toEditionDisplayName())
                                     }
-                                }.filter { entry ->
+                                    }
+                                    .groupBy { it.item.nome.keyify() }
+                                    .map { (_, duplicates) ->
+                                        duplicates.maxByOrNull { CriadorState.getOriginPriority(it.origemKey) }!!
+                                    }
+                                    .filter { entry ->
                                     val isAcessivel = if (filter.somenteAcessiveis) {
                                         val c = parseCostInBaseUnit(entry.item.custo, compendioPathfinderAtivo)
                                         usaRiqueza || c <= dinheiro
