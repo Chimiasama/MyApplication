@@ -1,7 +1,7 @@
 [
   {
     "key": "DOM",
-    "slots": 3,
+    "slots": 1,
     "pp": 15,
     "foco": "Foco"
   },
@@ -25,7 +25,7 @@
   },
   {
     "key": "CIENCIA ESTRANHA",
-    "slots": 1,
+    "slots": 2,
     "pp": 15,
     "foco": "Ciência Estranha"
   },
