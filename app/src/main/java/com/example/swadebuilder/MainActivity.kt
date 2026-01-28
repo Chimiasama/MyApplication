@@ -917,7 +917,11 @@ class MainActivity : ComponentActivity() {
                                                 val personagem = state.toMeuPersonagem()
 
                                                 scope.launch(Dispatchers.IO) {
-                                                    produzirEExibirFichaPdf(this@MainActivity, personagem)
+                                                    produzirEExibirFichaPdf(this@MainActivity, personagem) { msg ->
+                                                        scope.launch {
+                                                            snackHost.showSnackbar(msg)
+                                                        }
+                                                    }
                                                 }
                                             }) {
                                                 Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")

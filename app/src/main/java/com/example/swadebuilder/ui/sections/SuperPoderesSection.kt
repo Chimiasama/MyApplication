@@ -3,7 +3,6 @@
 package com.example.swadebuilder.ui.sections
 
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -340,9 +339,9 @@ private fun Vantagem.bloqueadaComoSuperVantagem(): Boolean {
 fun SuperPoderesSection(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
-    viewModel: CriadorViewModel = viewModel()
+    viewModel: CriadorViewModel = viewModel(),
+    onShowMessage: (String) -> Unit
 ) {
-    val context = LocalContext.current
     var poderParaComprar by remember { mutableStateOf<SuperPoder?>(null) }
 
     val listState = rememberLazyListState()
@@ -448,7 +447,7 @@ fun SuperPoderesSection(
                                     if (r.ok) {
                                         state.removerSuperPoder(investment, desfazerNoLedger = false)
                                     } else {
-                                        Toast.makeText(context, r.mensagem, Toast.LENGTH_SHORT).show()
+                                        onShowMessage(r.mensagem)
                                     }
                                 },
                                 label = { Text("${investment.displayName} (+${investment.cost})") },
@@ -759,7 +758,6 @@ fun SuperPoderesSection(
     var bonusPericiaNivel by rememberSaveable { mutableIntStateOf(0) }
 
     poderParaComprar?.let { poder ->
-        val context2 = LocalContext.current
 
         if (!supersLiberados) {
             poderParaComprar = null
@@ -911,7 +909,7 @@ fun SuperPoderesSection(
                             if (poolSuperPericia > 0) {
                                 showSuperPericiaPicker = true
                             } else {
-                                Toast.makeText(context2, "Limite deste poder já foi atingido.", Toast.LENGTH_SHORT).show()
+                                onShowMessage("Limite deste poder já foi atingido.")
                             }
                         }
                         nome == "SUPERVANTAGEM" || nome == "SUPER VANTAGEM" -> {
@@ -947,7 +945,7 @@ fun SuperPoderesSection(
                         if (result.ok) {
                             poderParaComprar = null
                         } else {
-                            Toast.makeText(context2, result.mensagem, Toast.LENGTH_LONG).show()
+                            onShowMessage(result.mensagem)
                         }
                     } else {
                         // Pickers opened or other non-invest actions
@@ -1196,7 +1194,8 @@ fun SuperPoderesSection(
 @Composable
 fun SuperPoderesContent(
     state: CriadorState,
-    listaSuperPoderes: List<SuperPoder>
+    listaSuperPoderes: List<SuperPoder>,
+    onShowMessage: (String) -> Unit
 ) {
     SectionCard(
         title = "Superpoderes",
@@ -1213,7 +1212,8 @@ fun SuperPoderesContent(
 
         SuperPoderesSection(
             state = state,
-            listaSuperPoderes = listaSuperPoderes
+            listaSuperPoderes = listaSuperPoderes,
+            onShowMessage = onShowMessage
         )
     }
 }

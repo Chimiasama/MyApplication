@@ -1038,7 +1038,8 @@ private fun CreationDetailContent(
             }
             SuperPoderesSection(
                 state = state,
-                listaSuperPoderes = listaSuperPoderes
+                listaSuperPoderes = listaSuperPoderes,
+                onShowMessage = onShowMessage
             )
         }
         MainSection.EQUIPAMENTOS -> EquipamentoSection(
@@ -1142,12 +1143,14 @@ private fun PoderesSection(
 @Composable
 private fun SuperPoderesSection(
     state: CriadorState,
-    listaSuperPoderes: List<SuperPoder>
+    listaSuperPoderes: List<SuperPoder>,
+    onShowMessage: (String) -> Unit
 ) {
     if (state.modoSupers) {
         SuperPoderesContent(
             state = state,
-            listaSuperPoderes = listaSuperPoderes
+            listaSuperPoderes = listaSuperPoderes,
+            onShowMessage = onShowMessage
         )
     }
 }
@@ -1207,14 +1210,17 @@ private fun EquipamentoSection(
                     state.dinheiro -= custo
                 }
                 onLogFeedback("Equipamento ${equipamento.nome} adicionado.")
+                onUserFeedback()
             } else {
                 onLogFeedback("Faltam recursos para obter o equipamento ${equipamento.nome}.")
+                onUserFeedback()
             }
         },
         equipamentosComprados = state.equipamentosComprados,
         onRemoveEquipamentoClick = { equipamento ->
             if (!state.modoProgressaoAtivo && equipamento.origemGrant != null) {
                 onLogFeedback("Item de vantagem (fixo na criação).")
+                onUserFeedback()
             } else {
                 val custo = (equipamento.custo as? JsonPrimitive)
                     ?.content?.toIntOrNull() ?: 0
@@ -1223,6 +1229,7 @@ private fun EquipamentoSection(
                     state.dinheiro += custo
                 }
                 onLogFeedback("Equipamento ${equipamento.nome} removido.")
+                onUserFeedback()
             }
         },
         categorias = equipamentoCategorias,
