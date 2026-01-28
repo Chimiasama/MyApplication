@@ -246,8 +246,6 @@ fun VantagensContent(
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
 
     // --- Interaction State ---
-    var tempErrorMsg by remember { mutableStateOf("") }
-    var showTempError by remember { mutableStateOf(false) }
     var pendingVantagem by remember { mutableStateOf<Vantagem?>(null) }
     var showChoiceDialog by rememberSaveable { mutableStateOf(false) }
     var dialogMostrandoAntecedente by remember { mutableStateOf<Vantagem?>(null) }
@@ -502,12 +500,8 @@ fun VantagensContent(
 
                             val (pode, msg) = state.podeRemoverVantagem(vant)
                             if (!pode) {
-                                tempErrorMsg = msg ?: "Não é possível remover."
-                                showTempError = true
-                                scope.launch {
-                                    delay(2_000)
-                                    showTempError = false
-                                }
+                                viewModel.logFeedback(msg ?: "Não é possível remover.")
+                                onUserFeedback()
                                 return@AssistChip
                             }
 
@@ -544,16 +538,6 @@ fun VantagensContent(
             }
 
             Spacer(Modifier.size(16.dp))
-
-            if (showTempError) {
-                Text(
-                    tempErrorMsg,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-            }
-
-            Spacer(Modifier.size(8.dp))
         }
     }
 
@@ -649,12 +633,8 @@ fun VantagensContent(
                                     } else if (vant.id == "poder_favorito") {
                                         val ownedPowers = state.poderesSelecionados.filterNotNull()
                                         if (ownedPowers.isEmpty()) {
-                                            tempErrorMsg = "Escolha ao menos um poder na seção de Poderes!"
-                                            showTempError = true
-                                            scope.launch {
-                                                delay(2_000)
-                                                showTempError = false
-                                            }
+                                            viewModel.logFeedback("Escolha ao menos um poder na seção de Poderes!")
+                                            onUserFeedback()
                                         } else {
                                             dialogMostrandoPoderFavorito = vant
                                         }
@@ -672,12 +652,8 @@ fun VantagensContent(
                                     }
                                  },
                                  onError = { msg ->
-                                     tempErrorMsg = msg
-                                     showTempError = true
-                                     scope.launch {
-                                        delay(2_000)
-                                        showTempError = false
-                                     }
+                                     viewModel.logFeedback(msg)
+                                     onUserFeedback()
                                  }
                              )
                          }
@@ -753,12 +729,8 @@ fun VantagensContent(
                                 } else if (vant.id == "poder_favorito") {
                                     val ownedPowers = state.poderesSelecionados.filterNotNull()
                                     if (ownedPowers.isEmpty()) {
-                                        tempErrorMsg = "Escolha ao menos um poder na seção de Poderes!"
-                                        showTempError = true
-                                        scope.launch {
-                                            delay(2_000)
-                                            showTempError = false
-                                        }
+                                        viewModel.logFeedback("Escolha ao menos um poder na seção de Poderes!")
+                                        onUserFeedback()
                                     } else {
                                         dialogMostrandoPoderFavorito = vant
                                     }
@@ -776,12 +748,8 @@ fun VantagensContent(
                                 }
                             },
                              onError = { msg ->
-                                 tempErrorMsg = msg
-                                 showTempError = true
-                                 scope.launch {
-                                    delay(2_000)
-                                    showTempError = false
-                                 }
+                                 viewModel.logFeedback(msg)
+                                 onUserFeedback()
                              }
                          )
                      }
@@ -1291,10 +1259,8 @@ fun VantagensContent(
 
             if (knowledgeOptions.isEmpty()) {
                 LaunchedEffect(vant) {
-                    tempErrorMsg = "Nenhuma perícia de Conhecimento disponível"
-                    showTempError = true
-                    delay(2_000)
-                    showTempError = false
+                    viewModel.logFeedback("Nenhuma perícia de Conhecimento disponível")
+                    onUserFeedback()
                     showChoiceDialog = false
                     pendingVantagem = null
                 }
@@ -1363,10 +1329,8 @@ fun VantagensContent(
 
             if (validOptions.isEmpty()) {
                 LaunchedEffect(vant) {
-                    tempErrorMsg = "Nenhuma opção disponível para escolher"
-                    showTempError = true
-                    delay(2_000)
-                    showTempError = false
+                    viewModel.logFeedback("Nenhuma opção disponível para escolher")
+                    onUserFeedback()
                     showChoiceDialog = false
                     pendingVantagem = null
                 }

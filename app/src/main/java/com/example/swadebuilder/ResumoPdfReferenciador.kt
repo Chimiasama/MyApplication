@@ -17,7 +17,6 @@ import android.net.Uri
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.Log
-import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MeuPersonagem
@@ -114,7 +113,11 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
 // 2. ENTRY POINT FOR PDF GENERATION
 // =================================================================================================
 
-suspend fun produzirEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPersonagem) {
+suspend fun produzirEExibirFichaPdf(
+    context: Context,
+    dadosDoPersonagem: MeuPersonagem,
+    onShowMessage: (String) -> Unit
+) {
     withContext(Dispatchers.IO) {
         try {
             // Save to internal cache/pdfs/ to avoid exposing root external files and support FileProvider
@@ -154,13 +157,13 @@ suspend fun produzirEExibirFichaPdf(context: Context, dadosDoPersonagem: MeuPers
                 if (intent.resolveActivity(context.packageManager) != null) {
                     context.startActivity(intent)
                 } else {
-                    Toast.makeText(context, "Nenhum app de PDF encontrado.", Toast.LENGTH_SHORT).show()
+                    onShowMessage("Nenhum app de PDF encontrado.")
                 }
             }
         } catch (e: Exception) {
             Log.e("PDFGeneration", "Erro ao gerar PDF", e)
             withContext(Dispatchers.Main) {
-                Toast.makeText(context, "Erro ao gerar PDF: ${e.message}", Toast.LENGTH_LONG).show()
+                onShowMessage("Erro ao gerar PDF: ${e.message}")
             }
         }
     }
