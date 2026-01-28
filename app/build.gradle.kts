@@ -84,12 +84,27 @@ android {
     }
 
     // ------------------------------------------------------------
+    // 🔹 Signing Configs
+    // ------------------------------------------------------------
+    signingConfigs {
+        create("release") {
+            // Placeholder: Replace with actual keystore values in CI/CD or local.properties
+            storeFile = file("keystore.jks")
+            storePassword = "password"
+            keyAlias = "key0"
+            keyPassword = "password"
+        }
+    }
+
+    // ------------------------------------------------------------
     // 🔹 Build Types
     // ------------------------------------------------------------
     buildTypes {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            debuggable = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -178,6 +193,9 @@ dependencies {
     // --- JSON / Serialização ---
     implementation(libs.gson)
     implementation(libs.kotlinx.serialization.json)
+
+    // --- Segurança ---
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 
     // --- iText para PDF ---
     implementation(libs.itextg)

@@ -1,8 +1,11 @@
 package com.example.swadebuilder.util
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import androidx.security.crypto.EncryptedFile
+import androidx.security.crypto.MasterKey
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -17,6 +20,12 @@ object CharacterPortraitStorage {
         return File(context.filesDir, PORTRAIT_DIR).apply { mkdirs() }
     }
 
+    private fun getMasterKey(context: Context): MasterKey {
+        return MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+    }
+
     private fun extensionFor(uri: Uri, context: Context): String {
         val mime = context.contentResolver.getType(uri).orEmpty().lowercase(Locale.ROOT)
         return when {
@@ -27,6 +36,76 @@ object CharacterPortraitStorage {
         }
     }
 
+    suspend fun loadPortrait(context: Context, fileName: String): Bitmap? = withContext(Dispatchers.IO) {
+        val dir = portraitsDirectory(context)
+        val file = try {
+            SecurityUtils.getSafeChildFile(dir, fileName)
+        } catch (e: Exception) {
+            return@withContext null
+        }
+
+        if (!file.exists()) return@withContext null
+
+        // 1. Try Encrypted
+        try {
+            val encryptedFile = EncryptedFile.Builder(
+                context,
+                file,
+                getMasterKey(context),
+                EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+            ).build()
+
+            return@withContext encryptedFile.openFileInput().use { input ->
+                BitmapFactory.decodeStream(input)
+            }
+        } catch (e: Exception) {
+            // Ignore, try plaintext
+        }
+
+        // 2. Try Plaintext (Legacy)
+        return@withContext try {
+             BitmapFactory.decodeFile(file.absolutePath)?.also { bitmap ->
+                 // Migration: Re-save encrypted
+                 // We need to write back the bitmap as encrypted.
+                 // This is complex because we need to know the format (PNG/JPG).
+                 // We can infer from extension.
+                 // Since we have the bitmap, we can compress it back.
+                 // Note: this might lose quality for JPG.
+                 // Alternative: Read bytes of plaintext file and write to temp encrypted, then rename.
+                 migrateToEncrypted(context, file)
+             }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private fun migrateToEncrypted(context: Context, file: File) {
+        try {
+            val tempFile = File(file.parentFile, "${file.name}_temp")
+            val masterKey = getMasterKey(context)
+            val encryptedTemp = EncryptedFile.Builder(
+                context,
+                tempFile,
+                masterKey,
+                EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+            ).build()
+
+            encryptedTemp.openFileOutput().use { output ->
+                file.inputStream().use { input ->
+                    input.copyTo(output)
+                }
+            }
+
+            if (file.delete()) {
+                tempFile.renameTo(file)
+            } else {
+                tempFile.delete()
+            }
+        } catch (e: Exception) {
+            // Migration failed, keep plaintext
+        }
+    }
+
     suspend fun savePortrait(context: Context, sourceUri: Uri): String? = withContext(Dispatchers.IO) {
         val dir = portraitsDirectory(context)
         val fileName = "portrait_${UUID.randomUUID()}${extensionFor(sourceUri, context)}"
@@ -34,7 +113,15 @@ object CharacterPortraitStorage {
 
         try {
             context.contentResolver.openInputStream(sourceUri)?.use { input ->
-                destination.outputStream().use { output ->
+                val masterKey = getMasterKey(context)
+                val encryptedFile = EncryptedFile.Builder(
+                    context,
+                    destination,
+                    masterKey,
+                    EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+                ).build()
+
+                encryptedFile.openFileOutput().use { output ->
                     val buffer = ByteArray(8 * 1024)
                     var totalBytes = 0L
                     var bytesRead = input.read(buffer)
@@ -50,11 +137,12 @@ object CharacterPortraitStorage {
             } ?: return@withContext null
 
             // Validate that the file is actually an image
-            val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-            BitmapFactory.decodeFile(destination.absolutePath, options)
+            // We need to read it back via EncryptedFile to validate
+            val isValid = try {
+                 loadPortrait(context, fileName) != null
+            } catch (e: Exception) { false }
 
-            if (options.outWidth == -1 || options.outHeight == -1) {
-                // Invalid image
+            if (!isValid) {
                 if (destination.exists()) destination.delete()
                 return@withContext null
             }

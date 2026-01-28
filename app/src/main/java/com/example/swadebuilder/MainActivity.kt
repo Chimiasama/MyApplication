@@ -91,6 +91,7 @@ import com.example.swadebuilder.util.AppPreferences
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.SecurityUtils
+import com.example.swadebuilder.security.SecurityHardening
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.coroutines.Dispatchers
@@ -202,6 +203,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        // Security Integrity Check
+        try {
+            SecurityHardening.integrityCheck(this)
+        } catch (e: SecurityException) {
+            finishAffinity()
+            android.os.Process.killProcess(android.os.Process.myPid())
+            return
+        }
 
         // Protect against Tapjacking (Overlay attacks)
         window.decorView.filterTouchesWhenObscured = true
