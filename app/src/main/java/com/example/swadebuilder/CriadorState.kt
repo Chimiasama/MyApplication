@@ -2268,15 +2268,41 @@ class CriadorState {
         // 12) Perícias mínimas opcionais (qualquer uma)
         val periciaMinOpcMap = v.requisitos.periciaMinOpcional
         if (periciaMinOpcMap.isNotEmpty()) {
-            val atendeUmaOpc = periciaMinOpcMap.any { (perNome, minRaw) ->
-                val per = mapaPericias[perNome.keyify()]
-                per != null && rawTotal(per) >= minRaw
+            if (v.vinculadoPericia && !v.choice.isNullOrBlank()) {
+                val choiceKey = v.choice!!.keyify()
+                val matchEntry = periciaMinOpcMap.entries.firstOrNull { it.key.keyify() == choiceKey }
+                if (matchEntry == null) return false
+                val per = mapaPericias[choiceKey] ?: return false
+                if (rawTotal(per) < matchEntry.value) return false
+            } else {
+                val atendeUmaOpc = periciaMinOpcMap.any { (perNome, minRaw) ->
+                    val per = mapaPericias[perNome.keyify()]
+                    per != null && rawTotal(per) >= minRaw
+                }
+                if (!atendeUmaOpc) return false
             }
-            if (!atendeUmaOpc) return false
         }
 
         // 13) Exige Carta Selvagem?
         if (v.requisitos.exigeCS && !cartaSelvagem) return false
+
+        // 13a) Tags Raciais
+        if (v.requisitos.tags.isNotEmpty()) {
+            val ancDef = getAncestralidadeDef(ancestralidade)
+            if (ancDef == null || !ancDef.tags.containsAll(v.requisitos.tags)) {
+                return false
+            }
+        }
+
+        // 13b) Tiro Duplo Aprimorado
+        if (v.id == "tiro_duplo_aprimorado") {
+            val base = vantagensSelecionadas.firstOrNull { it.id == "tiro_duplo" }
+            if (base == null) return false
+            val choice = base.choice
+            if (choice.isNullOrBlank()) return false
+            val skill = mapaPericias[choice.keyify()] ?: return false
+            if (rawTotal(skill) < 10) return false
+        }
 
         // 14) Conflitos com complicações (Lento x Ligeiro, etc.)
         val compsConfl = incompatibilidades[key] ?: emptySet()
@@ -2803,6 +2829,117 @@ class CriadorState {
         if (paDepois > paAntes) feedbackMessages.add("${paDepois - paAntes} ponto(s) de atributo devolvido(s).")
         if (spDepois > spAntes) feedbackMessages.add("${spDepois - spAntes} ponto(s) de perícia devolvido(s).")
         if (pvDepois > pvAntes) feedbackMessages.add("${pvDepois - pvAntes} ponto(s) de vantagem devolvido(s).")
+
+        // Validar requisitos das vantagens existentes
+        var changed = true
+        while (changed) {
+            changed = false
+            val iterator = vantagensSelecionadas.iterator()
+            while (iterator.hasNext()) {
+                val v = iterator.next()
+
+                val autoKeys = (vantagensAutomaticas + vantagensRaciais)
+                    .map { it.substringBefore("(").trim().keyify() }
+                    .toSet()
+
+                if (v.nome.substringBefore("(").trim().keyify() in autoKeys) continue
+                if (v.id in vantagensAutomaticasDoTropo) continue
+                if (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true) continue
+
+                if (!atendeRequisitosMantidos(v)) {
+                    iterator.remove()
+                    removeVantagemDinheiro(v)
+                    pontosVantagem++
+                    feedbackMessages.add("Vantagem '${v.nome}' removida (requisitos não atendidos).")
+                    changed = true
+                }
+            }
+        }
+        if (pontosVantagem != pvDepois) {
+            rebuildAllPericiaStacks(feedbackMessages)
+        }
+    }
+
+    private fun atendeRequisitosMantidos(v: Vantagem): Boolean {
+        // Estágio
+        val estagioRequerido = listaDeEstagios.firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
+        if (estagioRequerido != null) {
+            val atual = estagioAtual()
+            if (listaDeEstagios.indexOf(atual) < listaDeEstagios.indexOf(estagioRequerido)) return false
+        }
+
+        // Prévias
+        if (v.requisitos.vantagensPrevias.isNotEmpty()) {
+            val faltam = v.requisitos.vantagensPrevias.any { prevId ->
+                when (prevId) {
+                    "antecedente_arcano", "antecedente_arcano:*" -> {
+                        vantagensSelecionadas.none { poss ->
+                            poss.id.startsWith("antecedente_arcano_") ||
+                                    (poss.id == "antecedente_arcano" && !poss.choice.isNullOrBlank())
+                        }
+                    }
+                    else -> vantagensSelecionadas.none { it.id == prevId }
+                }
+            }
+            if (faltam) return false
+        }
+
+        // Atributos
+        if (v.requisitos.atributoMin.any { (nome, min) ->
+                val chaveNorm = nome.uppercase().semAcentos().trim()
+                val attrKey = mapaAtributosDisplay.keys.firstOrNull { it.equals(chaveNorm, ignoreCase = true) } ?: chaveNorm
+                (valoresAtributos[attrKey]?.intValue ?: 0) < min
+            }) return false
+
+        // Perícias
+        val periciaMinMap = v.requisitos.periciaMin
+        if (v.vinculadoPericia && periciaMinMap.isNotEmpty()) {
+            val atende = periciaMinMap.any { (nome, min) ->
+                val p = mapaPericias[nome.keyify()] ?: return@any false
+                rawTotal(p) >= min
+            }
+            if (!atende) return false
+        } else {
+            if (periciaMinMap.any { (nome, min) ->
+                    val p = mapaPericias[nome.keyify()] ?: return@any false
+                    rawTotal(p) < min
+                }) return false
+        }
+
+        // Opcionais
+        val periciaMinOpcMap = v.requisitos.periciaMinOpcional
+        if (periciaMinOpcMap.isNotEmpty()) {
+            if (v.vinculadoPericia && !v.choice.isNullOrBlank()) {
+                val choiceKey = v.choice!!.keyify()
+                val matchEntry = periciaMinOpcMap.entries.firstOrNull { it.key.keyify() == choiceKey }
+                if (matchEntry == null) return false
+                val per = mapaPericias[choiceKey] ?: return false
+                if (rawTotal(per) < matchEntry.value) return false
+            } else {
+                val atende = periciaMinOpcMap.any { (nome, min) ->
+                    val p = mapaPericias[nome.keyify()] ?: return@any false
+                    rawTotal(p) >= min
+                }
+                if (!atende) return false
+            }
+        }
+
+        // Tags
+        if (v.requisitos.tags.isNotEmpty()) {
+            val ancDef = getAncestralidadeDef(ancestralidade)
+            if (ancDef == null || !ancDef.tags.containsAll(v.requisitos.tags)) return false
+        }
+
+        // Tiro Duplo Aprimorado
+        if (v.id == "tiro_duplo_aprimorado") {
+            val base = vantagensSelecionadas.firstOrNull { it.id == "tiro_duplo" } ?: return false
+            val choice = base.choice
+            if (choice.isNullOrBlank()) return false
+            val skill = mapaPericias[choice.keyify()] ?: return false
+            if (rawTotal(skill) < 10) return false
+        }
+
+        return true
     }
 
     fun spendProgressAcrossStages(n: Int) {

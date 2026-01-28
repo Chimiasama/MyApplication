@@ -82,7 +82,8 @@
         "nome": "VOO",
         "descricao": "Avianos voam com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras."
       }
-    ]
+    ],
+    "tags": ["asas"]
   },
   {
     "nome": "CELESTIAIS",
@@ -109,7 +110,8 @@
         "nome": "VOTO (Maior)",
         "descricao": "Servir à divindade que os criou."
       }
-    ]
+    ],
+    "tags": ["asas"]
   },
   {
     "nome": "CENTAUROS",
@@ -214,7 +216,8 @@
         "nome": "SANGUE FRIO",
         "descricao": "Draconianos subtraem 1 dos testes de Agilidade, Força e Vigor depois de passar mais de dez minutos em temperaturas abaixo de 18 °Celsius."
       }
-    ]
+    ],
+    "tags": ["arma_de_sopro", "asas"]
   },
   {
     "nome": "ELFOS",
@@ -274,7 +277,8 @@
         "nome": "VOO",
         "descricao": "Fadas voam com Movimentação 6."
       }
-    ]
+    ],
+    "tags": ["asas"]
   },
   {
     "nome": "GNOMOS",

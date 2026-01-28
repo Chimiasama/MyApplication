@@ -21,7 +21,8 @@ data class RacialModifier(
     val desvantagens: List<String> = emptyList(),
     val habilidades: List<RacialAbility> = emptyList(),
     val origem: String = "BASICO",
-    val movimentacao: Int = 0
+    val movimentacao: Int = 0,
+    val tags: List<String> = emptyList()
 )
 
 @Serializable

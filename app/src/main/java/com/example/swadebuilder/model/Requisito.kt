@@ -28,7 +28,10 @@ data class Requisito(
     val observacoes: String = "",
 
     @SerialName("choiceOptions")
-    val choiceOptions: List<String> = emptyList()
+    val choiceOptions: List<String> = emptyList(),
+
+    @SerialName("tags")
+    val tags: List<String> = emptyList()
 ) {
     val exigeCS: Boolean
         get() = observacoes.contains("Carta Selvagem", ignoreCase = true)

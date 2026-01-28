@@ -346,9 +346,8 @@
       "estagio": "Experiente",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "asas"
-      ],
+      "vantagens_previas": [],
+      "tags": ["asas"],
       "observacoes": ""
     },
     "limite_compra": "uma_vez",
@@ -460,9 +459,8 @@
         "Vigor": 8
       },
       "pericias": {},
-      "vantagens_previas": [
-        "arma_de_sopro"
-      ],
+      "vantagens_previas": [],
+      "tags": ["arma_de_sopro"],
       "observacoes": ""
     },
     "limite_compra": "uma_vez",
@@ -518,10 +516,14 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [],
-      "observacoes": "Atletismo d8+ (arremesso) ou Atirar d8+ (arco)"
+      "observacoes": "Atletismo d8+ (arremesso) ou Atirar d8+ (arco)",
+      "periciaMinOpcional": {
+        "Atletismo": 8,
+        "Atirar": 8
+      }
     },
     "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
+    "vinculado_pericia": true,
     "ganha_ao_comprar": [],
     "descricao": "Tiro Duplo permite que arqueiros disparem duas flechas em um ataque com um arco normal ou arremesse duas armas de arremesso em um único ataque.\nComo ação limitada, a personagem rola dois dados de Atirar ou Atletismo (arremessar) em vez de um (isso não aumenta a Cadência de Tiro, não incorre em Recuo e usa dois projéteis). Cada dado atinge e causa dano separadamente (o Dado Selvagem pode substituir qualquer tiro conforme desejado).\nQuem ataca deve ter uma fonte útil de projéteis para realizar a façanha (uma aljava, facas em uma bandoleira etc.)."
   },
