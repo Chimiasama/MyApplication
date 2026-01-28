@@ -49,6 +49,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -648,7 +649,12 @@ fun VantagensContent(
                                     } else if (vant.id == "poder_favorito") {
                                         val ownedPowers = state.poderesSelecionados.filterNotNull()
                                         if (ownedPowers.isEmpty()) {
-                                            onError("Escolha ao menos um poder na seção de Poderes!")
+                                            tempErrorMsg = "Escolha ao menos um poder na seção de Poderes!"
+                                            showTempError = true
+                                            scope.launch {
+                                                delay(2_000)
+                                                showTempError = false
+                                            }
                                         } else {
                                             dialogMostrandoPoderFavorito = vant
                                         }
@@ -747,7 +753,12 @@ fun VantagensContent(
                                 } else if (vant.id == "poder_favorito") {
                                     val ownedPowers = state.poderesSelecionados.filterNotNull()
                                     if (ownedPowers.isEmpty()) {
-                                        onError("Escolha ao menos um poder na seção de Poderes!")
+                                        tempErrorMsg = "Escolha ao menos um poder na seção de Poderes!"
+                                        showTempError = true
+                                        scope.launch {
+                                            delay(2_000)
+                                            showTempError = false
+                                        }
                                     } else {
                                         dialogMostrandoPoderFavorito = vant
                                     }
