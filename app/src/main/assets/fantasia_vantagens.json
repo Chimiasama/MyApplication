@@ -31,7 +31,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Concede um item mágico (ou conjunto) com valor total de 10.000 PO. Se destruído/consumido, não recupera. Se perdido, pode ser recuperado em aventura."
+    "descricao": "Ocasionalmente, itens mágicos poderosos acabam nas mãos de aventureiros relativamente novatos. Esta Vantagem concede um item mágico (ou um conjunto temático, a critério do Mestre) escolhido dentre aqueles listados no Capítulo Cinco, com um valor total de 10.000 PO cada vez que esta Vantagem é adquirida.\nEste é um benefício único — se o item for destruído ou for consumível (como uma poção), ele não será recuperado. Se for perdido, poderá ser recuperado por meio de uma aventura!"
   },
   {
     "id": "inimigo_predileto",
@@ -48,7 +48,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Escolha um tipo de inimigo (mortos-vivos, fadas, etc.). Ganha uma rerrolagem gratuita para rastrear (Sobrevivência) ou atacar (Atletismo, Lutar, Atirar) esse tipo de ser."
+    "descricao": "Sua heroína lutou contra um tipo específico de inimigo por muitos anos. Ela sabe a melhor forma de atacar e se defender deles e quais são os seus pontos fracos.\nEscolha um tipo de inimigo nativo da terra natal ou da história de sua personagem, como mortos-vivos, seres feéricos, demônios, construtos, gigantes, animais ou uma ancestralidade específica, como elfos ou anões.\nVocê ganha uma rerrolagem gratuita para rastrear (Sobrevivência) ou atacar (Atletismo (arremessar), Lutar, Atirar) esse tipo de ser.\nVocê pode adquirir esta Vantagem mais de uma vez para refletir a experiência com vários tipos de inimigos."
   },
   {
     "id": "resistencia_arcana_fc",
@@ -86,7 +86,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "A penalidade para a rolagem da perícia arcana contra o herói é -4 e o dano mágico também é reduzido em 4."
+    "descricao": "Como acima, mas a penalidade para a rolagem da perícia arcana é -4 e o dano mágico também é reduzido em 4."
   },
   {
     "id": "sangue_feerico",
@@ -103,7 +103,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha uma rerrolagem gratuita ao resistir a poderes inimigos e efeitos semelhantes a feitiços."
+    "descricao": "Elfos, meio-elfos e certos seres feéricos são frequentemente resistentes a magias hostis. Aqueles que carregam isso em seu sangue ganham uma rerrolagem gratuita ao resistir a poderes inimigos e efeitos semelhantes a feitiços."
   },
   {
     "id": "terreno_predileto",
@@ -122,7 +122,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Escolha um terreno. Nele, ganha rerrolagem gratuita para Sobrevivência e Perceber, e compra uma Carta de Ação adicional para iniciativa."
+    "descricao": "Patrulheiros, druidas e aqueles que passam muito tempo na natureza sabem como tirar vantagem disso.\nEscolha um tipo de terreno (Ártico, Aquático, Deserto, Floresta, Colina/Montanha, Selva, Planície, Pântano, Urbano ou Subterrâneo). Enquanto estiver em seu Terreno Predileto, sua personagem ganha uma rerrolagem gratuita para testes de Sobrevivência e Perceber. Além disso, a personagem compra uma Carta de Ação adicional para iniciativa quando estiver em seu Terreno Predileto. Como de costume, ela pode escolher entre todas as Cartas de Ação possíveis.\nEsta Vantagem pode ser adquirida várias vezes, adicionando um novo tipo de terreno a cada vez."
   },
   {
     "id": "aguento_o_tranco",
@@ -143,7 +143,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha uma rerrolagem gratuita em testes de Absorção para eliminar Ferimentos ou testes de Vigor para resistir a Golpes Nocauteadores."
+    "descricao": "Guerreiros, bárbaros, gladiadores e similares devem aprender a suportar vidas violentas cheias de brutalidade. Uma personagem com esta Vantagem aprendeu a sobreviver sob as condições mais implacáveis. Ganha uma rerrolagem gratuita em testes de Absorção feitos para eliminar Ferimentos ou testes de Vigor para resistir a Golpes Nocauteadores."
   },
   {
     "id": "ataque_furtivo",
@@ -162,7 +162,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O bônus de +2 da Vantagem Assassino é substituído por um d6 no dano (pode gerar Ases). Aplica-se a Atletismo (arremessar), Lutar ou Atirar."
+    "descricao": "O bônus de +2 da Vantagem Assassino é substituído por um d6, que pode gerar Ases como de costume. Isso se aplica a ataques de Atletismo (arremessar), Lutar ou Atirar."
   },
   {
     "id": "ataque_furtivo_aprimorado",
@@ -181,7 +181,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O bônus de Ataque Furtivo agora também se aplica se o inimigo estiver Distraído."
+    "descricao": "O bônus de Ataque Furtivo da personagem agora também se aplica se o inimigo estiver Distraído."
   },
   {
     "id": "carga",
@@ -200,7 +200,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Se correr pelo menos 5 quadros (10m), adiciona +2 ao dano do primeiro ataque de Lutar. Pode combinar com Ataque Selvagem."
+    "descricao": "Uma pequena explosão de velocidade adiciona um impacto significativo ao dano corpo a corpo deste herói ou heroína. Se correr pelo menos 5 quadros (10 metros), adiciona +2 ao dano de seu primeiro ataque de Lutar naquele turno. Isto pode ser combinado com um Ataque Selvagem."
   },
   {
     "id": "combate_proximo",
@@ -221,7 +221,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Se armado com faca/arma pequena, escolhe alvo adjacente como ação livre: ganha Alcance +1 contra ele para ataques e Aparar (se o inimigo não tiver arma pequena/desarmado)."
+    "descricao": "Lutadores habilidosos exploram o alcance do inimigo, deslizando para mais próximo e atacando com precisão mortal.\nAlguém com a Vantagem Combate Próximo armado com uma faca ou arma pequena semelhante (a critério do Mestre) pode escolher um único alvo adjacente como ação livre a cada turno. Seus ataques e Aparar para aquele inimigo (apenas) têm um aumento igual ao Alcance +1 do alvo.\nNenhum bônus é concedido se o inimigo estiver desarmado ou também armado com uma arma pequena, como uma faca."
   },
   {
     "id": "combate_proximo_aprimorado",
@@ -240,7 +240,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O bônus de Combate Próximo aumenta para Alcance +2."
+    "descricao": "O bônus de Combate Próximo aumenta para Alcance +2 do alvo."
   },
   {
     "id": "defensor",
@@ -259,7 +259,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode compartilhar o Aparar e bônus de cobertura do escudo com um aliado adjacente como ação livre."
+    "descricao": "Você pode compartilhar o Aparar e o bônus de cobertura do seu escudo com um aliado adjacente como uma ação livre. Bônus de escudo não se acumulam, então use apenas o maior se uma personagem estiver protegida por mais de uma pessoa."
   },
   {
     "id": "deflexao_de_projeteis",
@@ -278,7 +278,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ataques físicos à distância contra a personagem usam o Aparar como dificuldade base (se tiver arma branca ou Artista Marcial)."
+    "descricao": "A habilidade do herói ou heroína com uma arma branca é incomparável. Contanto que tenha uma arma corpo a corpo em mãos (ou a Vantagem Artista Marcial), ataques físicos à distância (flechas, machados, poderes com manifestações físicas etc.) tendo a personagem como alvo (e assumindo que possa ver o ataque chegando) usam o Aparar como dificuldade base."
   },
   {
     "id": "fender",
@@ -297,7 +297,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ao golpear para quebrar um objeto, adiciona +d6 ao dano total."
+    "descricao": "Aqueles que passam a vida trabalhando com pedra e outros materiais naturais não só sabem fabricar ferramentas com eles, mas também sabem quebrá-los.\nAo golpear para quebrar um objeto, adiciona um d6 ao seu dano total. Os dados de dano ainda não podem gerar Ases (veja Quebrando Coisas em Savage Worlds Edição Aventura)."
   },
   {
     "id": "flexibilidade_marcial",
@@ -316,7 +316,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por encontro (ação livre), ganha uma Vantagem de Combate por 5 rodadas (deve atender requisitos)."
+    "descricao": "Uma vez por encontro, como ação livre, guerreiros com esta Vantagem podem ganhar os benefícios de uma única Vantagem de Combate. É necessário atender aos requisitos da Vantagem e os benefícios acabam após cinco rodadas."
   },
   {
     "id": "golpe_atordoador",
@@ -335,7 +335,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Se causar Abalado/Ferido com arma contundente, a vítima deve fazer teste de Vigor ou fica Atordoada."
+    "descricao": "Os golpes da personagem são poderosos ou precisos o suficiente para atordoar seus inimigos. Se atacar um oponente com uma arma contundente (um martelo, malho, maça, suas mãos etc.) e causar pelo menos um resultado Abalado ou Ferido, resolva o dano e qualquer tentativa de Absorção. Então, a vítima deve fazer um teste de Vigor ou fica Atordoada."
   },
   {
     "id": "golpe_de_asa",
@@ -354,7 +354,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ação limitada (Atletismo). Cria Cone. Alvos rolam Vigor (-2 com ampliação) ou ficam Abalados. Se for Curinga, falha causa Atordoado."
+    "descricao": "As asas da personagem são poderosas o suficiente para derrubar outros do mesmo Tamanho ou menores. Usar Golpe de Asa é uma ação limitada que requer uma rolagem de Atletismo. Em uma Falha Crítica, o ser alado se esforçou demais e adquire um nível de Fadiga. Se bem-sucedida, personagens dentro de um Modelo de Cone originado do herói ou heroína devem fazer uma rolagem de Vigor (-2 com uma ampliação) ou ficam Abalados. Se a Carta de Ação do herói ou heroína forum Curinga ou se estiver sob os efeitos de Convicção, aqueles que falharem serão Atordoados!"
   },
   {
     "id": "guerreiro_treinado",
@@ -373,7 +373,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Seu bônus por Agrupar aumenta em +1 para você e aliados (máximo +4)."
+    "descricao": "A personagem foi treinada para lutar lado a lado de outras, sobrepujando seus inimigos com ataques sincronizados. Seu bônus por Agrupar aumenta em +1 para você e seus aliados. O bônus máximo por Agrupar ainda é +4, não importa quantos Guerreiros Treinados lutem lado a lado."
   },
   {
     "id": "parede_de_escudos",
@@ -394,7 +394,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Adiciona +1 ao Aparar se adjacente a aliado com Parede de Escudos, ou +2 se tiver dois aliados adjacentes."
+    "descricao": "Soldados treinados podem enfrentar adversidades esmagadoras e hordas furiosas com disciplina, treinamento e um escudo resistente.\nPersonagens com a Vantagem Parede de Escudos (e pelo menos um escudo médio) adicionam +1 ao seu Aparar se estiverem adjacentes a um aliado que também tenha Parede de Escudos e +2 se tiverem dois aliados adjacentes com esta Vantagem (o bônus máximo)."
   },
   {
     "id": "lutador_sujo",
@@ -411,7 +411,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Adiciona +2 às rolagens ao realizar um Desafio com a perícia Lutar."
+    "descricao": "Aqueles com esta Vantagem farão de tudo para vencer uma luta. Com isso, esta personagem ficou particularmente boa em truques. Ela adiciona +2 às rolagens ao realizar um Desafio com a perícia Lutar."
   },
   {
     "id": "lutador_realmente_sujo",
@@ -430,7 +430,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Se conseguir uma ampliação em um Desafio, recebe a Finalização contra o oponente até ele não estar mais Abalado."
+    "descricao": "Sua personagem é extremamente habilidosa em enganações táticas. Se conseguir uma ampliação em um Desafio, recebe a Finalização contra esse oponente até que o adversário não esteja mais Abalado."
   },
   {
     "id": "oportunista",
@@ -447,7 +447,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ao receber um Curinga, adiciona +4 à Característica e rolagens de dano em vez de +2."
+    "descricao": "Oportunidade é o que se faz dela. Quando uma personagem com esta Vantagem recebe um Curinga, ela adiciona +4 à sua Característica e às rolagens de dano em vez de +2."
   },
   {
     "id": "queimar",
@@ -468,7 +468,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Melhora o dano da arma de sopro em um tipo de dado. Permite usar Cone ou Raio conforme desejado."
+    "descricao": "Esta Vantagem melhora o dano causado por uma arma de sopro em um tipo de dado. Um ataque de sopro que causa 2d6 de dano, por exemplo, causa 2d8 com esta Vantagem. Também permite que o ataque de sopro use o Modelo de Cone ou Raio conforme desejado."
   },
   {
     "id": "rugir",
@@ -487,7 +487,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ação limitada: Desafio de Intimidar em Modelo de Cone."
+    "descricao": "Pulmões fortes, habilidade mágica ou tamanho grande permitem que o ser emita um rugido de fazer tremer os ossos! Como ação limitada, a personagem pode fazer um Desafio de Intimidar em um Modelo de Cone. Todos os alvos dentro dele são afetados e devem resistir separadamente."
   },
   {
     "id": "selvageria",
@@ -506,7 +506,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Causa +4 de dano ao realizar um Ataque Selvagem em vez de +2."
+    "descricao": "Violência é um estilo de vida para algumas pessoas. Aqueles com esta Vantagem atingem seus inimigos com força suficiente para que muitas vezes não consigam responder na mesma moeda. Uma personagem com esta Vantagem causa +4 de dano ao realizar um Ataque Selvagem em vez de +2."
   },
   {
     "id": "tiro_duplo",
@@ -523,7 +523,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ação limitada: dispara dois projéteis (rola dois dados) em um único ataque. Não aumenta Cadência, usa 2 munições."
+    "descricao": "Tiro Duplo permite que arqueiros disparem duas flechas em um ataque com um arco normal ou arremesse duas armas de arremesso em um único ataque.\nComo ação limitada, a personagem rola dois dados de Atirar ou Atletismo (arremessar) em vez de um (isso não aumenta a Cadência de Tiro, não incorre em Recuo e usa dois projéteis). Cada dado atinge e causa dano separadamente (o Dado Selvagem pode substituir qualquer tiro conforme desejado).\nQuem ataca deve ter uma fonte útil de projéteis para realizar a façanha (uma aljava, facas em uma bandoleira etc.)."
   },
   {
     "id": "tiro_duplo_aprimorado",
@@ -542,7 +542,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode usar Tiro Duplo duas vezes por turno."
+    "descricao": "O atacante pode usar sua Vantagem Tiro Duplo duas vezes por turno."
   },
   {
     "id": "tiro_preciso",
@@ -559,7 +559,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um Desafio com Atletismo ou Atirar, pode escolher que o adversário resista com Astúcia em vez de Agilidade."
+    "descricao": "Quando realiza um Desafio com a perícia Atletismo ou Atirar, você pode escolher que um adversário resista com Astúcia em vez de Agilidade."
   },
   {
     "id": "reflexos_aprimorados",
@@ -580,7 +580,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora -2 de Agilidade ao Evadir. Pode Evadir ataques de área que normalmente não permitem (com -2)."
+    "descricao": "A personagem tem uma habilidade incrível de evitar ataques e efeitos em área. Ignora a penalidade usual de -2 em Agilidade ao tentar Evadir. Também recebe uma tentativa regular de Evasão contra efeitos ou ataques que afetem área que normalmente não permitiriam isso (com a penalidade usual de -2), como explosão ou rajada, ou mesmo confusão ou feitiços similares conjurados com o modificador Área."
   },
   {
     "id": "artifice",
