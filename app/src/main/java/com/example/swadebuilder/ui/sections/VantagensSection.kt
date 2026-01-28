@@ -38,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -48,6 +49,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -61,10 +63,12 @@ import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.model.isVantagemVisible
+import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
@@ -77,8 +81,10 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.toSentenceCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 @Composable
@@ -167,6 +173,31 @@ fun VantagensContent(
     viewModel: CriadorViewModel = viewModel(),
     onUserFeedback: () -> Unit = {}
 ) {
+    val context = LocalContext.current
+    val powerCache: Map<String, List<Poder>> by androidx.compose.runtime.produceState(initialValue = emptyMap()) {
+        withContext(Dispatchers.IO) {
+            val origins = listOf("basico", "fantasia", "scifi", "horror", "deadlands", "pathfinder", "crystal", "sol_vapor", "wiseguys", "adg")
+            val map = mutableMapOf<String, List<Poder>>()
+
+            origins.forEach { org ->
+                val list = runCatching { context.loadJsonAsset<List<Poder>>("${org}_poderes.json") }.getOrElse { emptyList() }
+                map[org.uppercase()] = list
+            }
+
+            val superBaseList = runCatching { context.loadJsonAsset<List<Poder>>("super_poderes_base.json") }.getOrElse { emptyList() }
+            map["SUPER"] = superBaseList
+
+            val adgChiList = runCatching { context.loadJsonAsset<List<Poder>>("adg_tecnicas_chi.json") }.getOrElse { emptyList() }
+            val adgStandardList = map["ADG"] ?: emptyList()
+            val combinedAdg = (adgStandardList + adgChiList).distinctBy { it.id }
+
+            map["ADG"] = combinedAdg
+            map["ARTE DA GUERRA"] = combinedAdg
+
+            value = map
+        }
+    }
+
     val listaVantagensGlobal = listaVantagens
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
 
@@ -223,6 +254,7 @@ fun VantagensContent(
     var dialogMostrandoCavaleiro by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoMontaria by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoNovosPoderes by remember { mutableStateOf<Vantagem?>(null) }
+    var dialogMostrandoPoderFavorito by remember { mutableStateOf<Vantagem?>(null) }
     var subOpcaoSelecionada by rememberSaveable { mutableStateOf<String?>(null) }
 
     val scope = rememberCoroutineScope()
@@ -614,6 +646,18 @@ fun VantagensContent(
                                                 }
                                             }
                                         }
+                                    } else if (vant.id == "poder_favorito") {
+                                        val ownedPowers = state.poderesSelecionados.filterNotNull()
+                                        if (ownedPowers.isEmpty()) {
+                                            tempErrorMsg = "Escolha ao menos um poder na seção de Poderes!"
+                                            showTempError = true
+                                            scope.launch {
+                                                delay(2_000)
+                                                showTempError = false
+                                            }
+                                        } else {
+                                            dialogMostrandoPoderFavorito = vant
+                                        }
                                     } else {
                                         if (state.advantageAdvancementInProgress) {
                                             viewModel.selectAdvantageForAdvancement(vant)
@@ -705,6 +749,18 @@ fun VantagensContent(
                                                 onUserFeedback()
                                             }
                                         }
+                                    }
+                                } else if (vant.id == "poder_favorito") {
+                                    val ownedPowers = state.poderesSelecionados.filterNotNull()
+                                    if (ownedPowers.isEmpty()) {
+                                        tempErrorMsg = "Escolha ao menos um poder na seção de Poderes!"
+                                        showTempError = true
+                                        scope.launch {
+                                            delay(2_000)
+                                            showTempError = false
+                                        }
+                                    } else {
+                                        dialogMostrandoPoderFavorito = vant
                                     }
                                 } else {
                                     if (state.advantageAdvancementInProgress) {
@@ -890,6 +946,101 @@ fun VantagensContent(
                 TextButton(
                     onClick = {
                         dialogMostrandoAntecedente = null
+                        subOpcaoSelecionada = null
+                    }
+                ) { Text("Cancelar") }
+            }
+        )
+    }
+
+    if (dialogMostrandoPoderFavorito != null) {
+        val vantOriginal = dialogMostrandoPoderFavorito!!
+
+        // Retrieve owned power IDs
+        val ownedIds by remember {
+            derivedStateOf { state.poderesSelecionados.distinct().filterNotNull() }
+        }
+
+        // Retrieve already selected "Favored Powers" to exclude them
+        val alreadyFavored by remember {
+            derivedStateOf {
+                state.vantagensSelecionadas
+                    .filter { it.id == "poder_favorito" && !it.choice.isNullOrBlank() }
+                    .mapNotNull { it.choice }
+                    .toSet()
+            }
+        }
+
+        // Resolve names and filter
+        val options = remember(ownedIds, powerCache, alreadyFavored) {
+            ownedIds.mapNotNull { id ->
+                val p = powerCache.values.flatten().find { it.id == id }
+                p?.let { it.nome.toSentenceCase() }
+            }
+            .distinct()
+            .filter { it !in alreadyFavored }
+            .sorted()
+        }
+
+        AlertDialog(
+            onDismissRequest = {
+                dialogMostrandoPoderFavorito = null
+                subOpcaoSelecionada = null
+            },
+            title = { Text("Poder Favorito: Escolha um Poder") },
+            text = {
+                Column(Modifier.verticalScroll(rememberScrollState())) {
+                    if (options.isEmpty()) {
+                        Text("Você não possui poderes elegíveis ou já selecionou todos como favoritos.")
+                    } else {
+                        Text("Escolha um dos seus poderes para se tornar Favorito:")
+                        Spacer(Modifier.size(8.dp))
+                        options.forEach { nomePoder ->
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable { subOpcaoSelecionada = nomePoder }
+                                    .padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = (subOpcaoSelecionada == nomePoder),
+                                    onClick = { subOpcaoSelecionada = nomePoder }
+                                )
+                                Spacer(Modifier.size(8.dp))
+                                Text(nomePoder)
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = (subOpcaoSelecionada != null),
+                    onClick = {
+                        val choice = subOpcaoSelecionada!!
+                        val vantToAdd = vantOriginal.copy(choice = choice)
+
+                        if (state.advantageAdvancementInProgress) {
+                            viewModel.selectAdvantageForAdvancement(vantToAdd)
+                            onUserFeedback()
+                            viewModel.logFeedback("Vantagem ${vantToAdd.nome} adicionada ($choice).")
+                        } else {
+                            state.comprarVantagem(vantToAdd) { msg ->
+                                viewModel.logFeedback(msg)
+                                onUserFeedback()
+                            }
+                        }
+
+                        dialogMostrandoPoderFavorito = null
+                        subOpcaoSelecionada = null
+                    }
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        dialogMostrandoPoderFavorito = null
                         subOpcaoSelecionada = null
                     }
                 ) { Text("Cancelar") }

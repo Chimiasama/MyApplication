@@ -847,7 +847,7 @@ private fun ProgressionDetailContent(
 
             if (state.mostrandoPoderesProgresso || state.arcanoCompraPendente()) {
                 Spacer(Modifier.height(8.dp))
-                PoderesSection(state = state)
+                PoderesSection(state = state, onShowMessage = onShowMessage)
             }
 
             Spacer(Modifier.height(16.dp))
@@ -1033,7 +1033,7 @@ private fun CreationDetailContent(
         )
         MainSection.PODERES -> {
             if (!state.compendioCrystalHeartAtivo) {
-                PoderesSection(state = state)
+                PoderesSection(state = state, onShowMessage = onShowMessage)
                 Spacer(Modifier.height(8.dp))
             }
             SuperPoderesSection(
@@ -1117,7 +1117,8 @@ private fun SummaryTabContent(
 
 @Composable
 private fun PoderesSection(
-    state: CriadorState
+    state: CriadorState,
+    onShowMessage: (String) -> Unit = {}
 ) {
     val temArcano = state.vantagensSelecionadas.any {
         it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
@@ -1130,7 +1131,8 @@ private fun PoderesSection(
             showHeader = false
         ) {
             PoderesSection(
-                state = state
+                state = state,
+                onShowMessage = onShowMessage
             )
         }
     }
