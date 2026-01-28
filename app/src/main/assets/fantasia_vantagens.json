@@ -347,7 +347,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [],
-      "tags": ["asas"],
+      "tags": [
+        "asas"
+      ],
       "observacoes": ""
     },
     "limite_compra": "uma_vez",
@@ -460,7 +462,9 @@
       },
       "pericias": {},
       "vantagens_previas": [],
-      "tags": ["arma_de_sopro"],
+      "tags": [
+        "arma_de_sopro"
+      ],
       "observacoes": ""
     },
     "limite_compra": "uma_vez",
@@ -601,7 +605,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Podem criar Dispositivos Arcanos temporários e criar itens mágicos mais permanentes."
+    "descricao": "Aqueles que lidam com as forças sobrenaturais às vezes encontram meios de imbuir poderes em itens. Eles podem transformar uma espada comum em uma mágica, fornecer poções para seus amigos ou até mesmo abençoar relíquias sagradas com a graça divina.\nArtífices podem criar Dispositivos Arcanos temporários e criar itens mágicos mais permanentes. Veja Dispositivos Arcanos na página 123."
   },
   {
     "id": "artifice_mestre",
@@ -622,7 +626,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 1.000 PO de progresso para cada sucesso e aumento em teste de Ocultismo para criar itens."
+    "descricao": "O artífice ganha 1.000 PO de progresso para cada sucesso e aumento em seu teste de Ocultismo (em vez de ficar limitado a 2.000 PO de progresso total por teste)."
   },
   {
     "id": "conjurador_silencioso",
@@ -643,7 +647,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode conjurar feitiços sem falar (debaixo d'água, silêncio, amordaçado)."
+    "descricao": "A personagem aprendeu como conjurar feitiços ou invocar milagres sem falar. Pode conjurar debaixo d’água, no vácuo, enquanto amordaçada, sob efeito de silêncio etc."
   },
   {
     "id": "familiar",
@@ -660,7 +664,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha um familiar (Carta Selvagem, 5 PP, elo mental). O familiar ganha poderes conforme o mestre sobe de Estágio."
+    "descricao": "Familiares são criaturas pequenas (Tamanho -2 ou -3) que servem como animal de estimação leal e companheiro mágico do conjurador. São leais aos seus senhores e senhoras, mas não escravos. Eles são versões muito inteligentes de sua espécie e podem ocasionalmente se distrair com seus próprios instintos inerentes. Por exemplo, um gato pode interromper sua tarefa para perseguir um rato ou tirar uma soneca e um cachorro quase certamente latirá quando um estranho se aproximar.\nUm familiar é uma Carta Selvagem em relação aos Ferimentos e a rolar um Dado Selvagem em suas rolagens de Características. Ele não recebe Benes, mas seu senhor ou senhora pode gastar os seus próprios em seu nome.\nO familiar pode compreender a fala de seu mestre e vice-versa (outros ouvem apenas os sons naturais da criatura), embora os conceitos sejam limitados ao que um membro de sua espécie possa entender.\nO familiar possui 5 Pontos de Poder próprios. Ele não pode lançar feitiços, mas a personagem pode utilizá-los como se fossem seus. Eles recarregam separadamente e na mesma velocidade que os da personagem.\nO vínculo entre o familiar e o conjurador o torna imune ao poder amigo das feras conjurado por terceiros.\nFamiliares não ganham Progressos, mas ganham uma das vantagens a seguir para cada um dos Estágios de seu mestre (incluindo Novato) e para cada quarto progresso que o herói ou heroína passar de Lendário.\n• SEGUNDA VISÃO: O dono pode usar os sentidos do familiar como se fossem seus, com alcance máximo de 15 quilômetros. Fica em Estado Distraído e Vulnerável ao fazer isso.\n• TREINAMENTO: Pode aumentar uma das Características do familiar em um tipo de dado (não mais que uma vez por Característica).\n• APRIMORAMENTO: O familiar ganha uma Vantagem. Deve fazer sentido para a espécie do familiar (a critério do Mestre) e atender aos requisitos normalmente.\nSe o familiar morrer, o herói ou heroína fica automaticamente Atordoado (não importa a distância que esteja). É possível convocar outro após 10 dias e pode mudar o tipo, se quiser."
   },
   {
     "id": "maestria_epica",
@@ -679,7 +683,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha acesso aos Modificadores Épicos de Poder."
+    "descricao": "Conjuradores versados em seu ofício arcano ou divino aprendem novas maneiras de manipular seus poderes. Eles ganham acesso aos Modificadores Épicos de Poder para todos os seus poderes.\nMaestria Épica se aplica a todos os Antecedentes Arcanos de um herói ou heroína se tiver mais de um, embora deva atender aos requisitos de perícia arcana de cada um antes de poder usar Modificadores Épicos de Poder com os poderes daquele antecedente.\nConsulte o Capítulo Quatro para obter uma lista completa de Modificadores Épicos de Poder."
   },
   {
     "id": "mago_de_batalha",
@@ -698,7 +702,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Permite conjurar feitiços em grandes unidades de Extras (Magia de Batalha)."
+    "descricao": "Esta vantagem permite ao usuário conjurar seus feitiços em grandes unidades de Extras, como soldados, capangas ou guardas. Veja Magia de Batalha na página 124 para detalhes."
   },
   {
     "id": "mago_de_sangue",
@@ -717,7 +721,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recupera d6 Pontos de Poder ao causar Ferimento direto em ser consciente e sapiente."
+    "descricao": "A personagem canaliza seu poder arcano por meio de uma fonte maligna ou malévola, ou aprendeu a extrair poder através da dor e tormento dos outros.\nQualquer turno em que o mago cause um Ferimento em algum tipo de ser consciente e sapiente (e o Ferimento não seja Absorvido), é possível recuperar d6 Pontos de Poder. O conjurador deve causar o dano diretamente, usando seus poderes, mãos nuas, armas e assim por diante. Não ganha nenhum benefício de dano indireto, como aquele causado por um inimigo, aliado, zumbi, animal de estimação ou lacaio controlados.\nSuspeitos de praticar uma magia tão profana são frequentemente caçados pelas autoridades locais. Às vezes há ordens inteiras dedicadas à sua erradicação. Quando pego, a sentença é quase sempre lenta, dolorosa e fatal."
   },
   {
     "id": "poder_favorito",
@@ -736,7 +740,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Escolha um poder. Ignora até 2 pontos de penalidade ao ativar esse poder."
+    "descricao": "A personagem dedicou seu tempo a dominar um determinado feitiço, milagre ou dispositivo científico estranho.\nEscolha um dos poderes da sua personagem. Pode ignorar até dois pontos de qualquer penalidade (Ação Múltipla, Ferimentos, Fadiga etc.) ao ativar esse poder."
   },
   {
     "id": "poderes_misticos",
@@ -753,7 +757,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 10 PP e poderes específicos com limitação Pessoal baseados num arquétipo (Bárbaro, Guerreiro, etc.). Não acumula com Antecedente Arcano."
+    "descricao": "Em mundos onde a magia é relativamente comum, aventureiros e aventureiras com disciplina podem aprender alguns poderes simples que os ajudem em suas missões. Escolha uma das opções a seguir. A personagem possui 10 Pontos de Poder dedicados que recarregam normalmente. Como ação livre limitada, é possível ativar automaticamente o poder com sucesso pelo seu custo normal, ou com uma ampliação por 2 Pontos de Poder adicionais. É possível usar Modificadores de Poder aplicáveis, se desejar (ao custo normal).\nA Vantagem Poderes Místicos não concede acesso a Vantagens que exigem um Antecedente Arcano, mas pode adquirir Pontos de Poder ou Drenar Alma. Se o herói ou heroína também tiver um Antecedente Arcano, suas Vantagens e habilidades não poderão ser usadas com Poderes Místicos e vice-versa. Habilidades indicadas como Pessoal não recebem nenhum benefício adicional dessa Limitação.\n• BÁRBARO (Força d8+): Aumentar Característica (somente Lutar, Força, Espírito ou Vigor), ferir e velocidade. Todos têm a Limitação Pessoal.\n• GUERREIRO (Lutar d8+): Aumentar Característica (somente Lutar, Atirar, Força e Vigor), ferir e proteção. Todos têm a Limitação Pessoal.\n• LADRÃO (Ladinagem d8+): Andar nas paredes, aumentar Característica (somente Atletismo, Furtividade e Ladinagem), trancar/destrancar e visão sombria. Todos, exceto trancar/destrancar, têm a Limitação Pessoal.\n• MONGE (Atletismo d8+): Aumentar Característica (somente Agilidade, Atletismo, Lutar e Espírito), deflexão e ferir. Todos têm a Limitação Pessoal.\n• PALADINO (Espírito d8+): Aumentar Característica (somente Lutar e Espírito), cura, ferir, proteção e santuário. Todos, exceto, cura têm a Limitação Pessoal.\n• PATRULHEIRO (Sobrevivência d8+): Amigo das feras, aumentar Característica (somente Atletismo, Atirar e Sobrevivência), enredar e visão distante. Todos, exceto enredar e amigo das feras, têm a Limitação Pessoal."
   },
   {
     "id": "transferencia",
@@ -772,7 +776,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ação livre limitada: transfere até 5 PP para outra pessoa à vista."
+    "descricao": "Magos, sacerdotes ou outros praticantes das artes arcanas podem dar sua energia mágica a outros. Como ação livre limitada, a personagem pode transferir até cinco de seus Pontos de Poder para qualquer outra pessoa que esteja à vista."
   },
   {
     "id": "aptidao_com_pedras",
@@ -791,7 +795,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe rolagem grátis de Perceber +2 para detectar armadilhas/portas em pedra a até 3m."
+    "descricao": "Quem passa a vida trabalhando em torno de pedras percebe rapidamente suas imperfeições ou alterações. Supondo que possa ver ou sentir o trabalho, recebe uma rolagem grátis de Perceber +2 para detectar armadilhas, portas escondidas ou compartimentos em pedra a até 3 metros de sua pessoa. Sucesso significa que sabe que alguma alteração foi feita e uma ampliação lhe dá uma ideia do seu propósito geral."
   },
   {
     "id": "batedor",
@@ -810,7 +814,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rolagem de Perceber -2 para detectar encontros em viagem primeiro. Sempre alerta contra Furtividade. +2 em Conhecimento Geral sobre rotas conhecidas."
+    "descricao": "Batedores são mestres em navegar pelas terras místicas de seus mundos fantásticos. Quando o Mestre compra uma carta ilustrada enquanto o grupo está viajando (veja as Regras de Encontros em Viagem, em Savage Worlds Edição Aventura), o Batedor pode fazer uma rolagem de Perceber -2 para detectar primeiro o perigo, criatura ou evento.\nBatedores são sempre considerados alertas para testes de Perceber contra Furtividade e adicionam +2 aos testes de Conhecimento Geral para recordar informações sobre cidades, postos avançados, pontos de referência ou covis ao longo de uma rota específica que eles possam ter percorrido antes (a critério do jogador e do Mestre)."
   },
   {
     "id": "cacador_de_tesouros",
@@ -830,7 +834,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Avalia valor de tesouros/itens mágicos com Astúcia. Pode gastar Bene para rerrolar tabela de itens mágicos."
+    "descricao": "Desbravadores de tumbas e caçadores de tesouros sabem o que procurar ao vasculhar pilhas de ouro e bens. É possível rolar Astúcia para avaliar o valor de bens ou tesouros ou ter uma ideia básica das habilidades de um item mágico. Alguém que encontre uma pedra explosiva (página 186), por exemplo, pode saber que ela é arremessada para causar efeito explosivo, mas não sabe os incrementos de Distância ou dano até a usar.\nFinalmente, quando o Mestre faz uma rolagem para itens mágicos (veja o Capítulo Cinco: Tesouros), Caçadores de Tesouro podem gastar um Bene para que role novamente."
   },
   {
     "id": "cavaleiro",
@@ -854,7 +858,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1 Intimidar/Persuadir com quem respeita autoridade. Ganha cavalo de guerra, lança, espada, armadura pesada e escudo."
+    "descricao": "Cavaleiros juram lealdade a seus senhores, servindo como executores e, mais importante, como guerreiros em qualquer causa que seu soberano exija. Possuem qualquer autoridade que seu senhor lhes conceda sobre as pessoas comuns em seu reino. Isso geralmente é limitado a alimentação, alojamento e serviços básicos necessários ao cumprimento das suas funções, mas, com aprovação expressa, também pode incluir convocação de tropas, resolução de disputas e distribuição de justiça.\nRepresentam seu soberano e, assim, Cavaleiros representam seu mestre, adicionando +1 as rolagens de Intimidar ou Persuadir com aqueles que respeitam ou temem a autoridade.\nSe a Vantagem for adquirida durante a criação de personagem, ou com a aprovação posterior do Mestre, o herói ou heroína herda ou recebe um cavalo de guerra, uma lança de cavalaria, uma espada longa, uma armadura pesada completa (ou média, se preferir) e um escudo médio."
   },
   {
     "id": "envenenador",
@@ -871,7 +875,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Cria venenos na metade do tempo. Venenos de contato duram 12 horas."
+    "descricao": "A personagem é especialista em venenos. Cria venenos na metade do tempo. Além disso, seus venenos de contato duram 12 horas em vez de 4."
   },
   {
     "id": "explorador",
@@ -892,7 +896,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em viagens, compra carta extra de Ação. Reduz tempo de viagem em 10%."
+    "descricao": "O mundo é vasto, e andarilhos como este são chamados para descobrir os confins desconhecidos. Ao usar as regras de Viagem (veja Savage Worlds Edição Aventura), Exploradores podem fazer uma rolagem de Sobrevivência para comprar uma carta adicional do Baralho de Ação (ou duas cartas adicionais com uma ampliação) e escolher qual usar.\nAlém disso, o Explorador e seu grupo reduzem o Tempo de Viagem em 10%."
   },
   {
     "id": "montaria",
@@ -911,7 +915,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha montaria leal e Resiliente (Astúcia maior). Ganha melhorias a cada Estágio do dono. No Heroico vira Montaria Especial; no Lendário, Montaria Lendária."
+    "descricao": "Você tem uma montaria que é mais resistente e inteligente do que a maioria e totalmente leal ao seu mestre (mesmo que seja rabugenta ou desagradável).\nHeróis e heroínas de Tamanho 0 podem ter um cavalo de montaria, um cavalo de guerra ou um cavalo élfico (a critério do Mestre). Personagens menores também podem escolher um javali, um grande felino, um lobo atroz ou um lobo. Outras montarias podem estar disponíveis conforme fizer sentido para a personagem e o cenário.\nSeja qual for, a fera é Resiliente e sua Astúcia é um tipo de dado maior.\nPara cada um dos Estágios atuais da sua personagem, e cada vez que ganhar um novo Estágio a partir de então, a montaria ganha um dos seguintes efeitos:\n• Aumente uma Característica em um tipo de dado — apenas uma vez por Característica.\n• Ganhe uma Vantagem ou habilidade monstruosa que faça sentido para sua espécie (a critério do Mestre). Como de costume, é necessário atender aos requisitos da Vantagem.\nMorte: Se a montaria morrer, outra eventualmente tomará seu lugar, talvez após um encontro narrativo ou visita a um local onde tais criaturas possam ser domesticadas ou compradas.\n• MONTARIA ESPECIAL: No Estágio Heroico, você pode optar por manter sua montaria e progredi-la normalmente, ou trocá-la por uma Montaria Especial (ou simplesmente pegue uma Montaria Especial se você não tinha essa Vantagem anteriormente).\nHeróis e heroínas de Tamanho 0 podem escolher um urso, dinossauro (herbívoro gigante ou pterossauro), elefante, animal gigante (pássaro, centopeia, escorpião, sapo), grifo, hipogrifo, pégaso, dentes-de-sabre, unicórnio ou wyvern. Heróis ou heroínas Pequenos também podem escolher um dinossauro (velocirraptor), animal gigante (formiga, caranguejo, lagarto), leão ou perítio.\nA Montaria Especial é Muito Resiliente, sua Astúcia é um tipo de dado maior e ela ganha um Progresso para cada um dos Estágios de seu mestre, conforme descrito acima.\n• MONTARIA LENDÁRIA: No Estágio Lendário você pode optar por manter sua montaria e progredi-la normalmente, ou trocá-la por uma Montaria Lendária (ou simplesmente pegue uma Montaria Lendária se você não tinha essa Vantagem anteriormente).\nHeróis e heroínas de Tamanho 0 podem escolher montar um dinossauro (tiranossauro rex), um dragão (jovem, o jogador escolhe o tipo de dragão e sopro), drake, mamute, roc ou um espécime jovem do povo das árvores. Heróis e heroínas Pequenos têm quatro opções adicionais: cocatriz, dragão (filhote), cão infernal ou elemental menor.\nA Montaria Lendária é uma Carta Selvagem, sua Astúcia é um tipo de dado maior e ela ganha um Progresso para cada um dos Estágios de seu mestre, conforme descrito acima."
   },
   {
     "id": "nascido_na_sela",
@@ -932,7 +936,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rerrolagem gratuita em Cavalgar. Aumenta Movimentação da montaria em 2 e dado de corrida em um passo."
+    "descricao": "Não há lugar onde você preferiria estar do que montado em um cavalo rápido ou outra montaria mais exótica.\nEsta Vantagem fornece uma rerrolagem gratuita em todas as rolagens de Cavalgar e aumenta a Movimentação de sua montaria em 2 e seu dado de corrida em um passo."
   },
   {
     "id": "pressentir_armadilhas",
@@ -951,7 +955,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Faz rolagem de Perceber quando armadilha a 5 quadros vai ativar. Ignora 2 de penalidade para Evadir ou Desarmar (Ladinagem) armadilhas."
+    "descricao": "Muitos aventureiros tornam-se capazes de detectar e desarmar todas as armadilhas, exceto as mais inteligentes. Fazem uma rolagem de Perceber sempre que uma armadilha detectável está para ser ativada a 5 quadros (10 metros). Devem ter linha de visão para a armadilha e não podem estar Abalados ou Atordoados. Isso normalmente funciona como Noção do Perigo, mas se aplica apenas a armadilhas mecânicas e mágicas (veja Armadilhas na página 81).\nSe a armadilha for detectada e puder ser Evadida, a personagem e qualquer um que ela avisar ignoram 2 pontos de penalidade de Evasão para fazê-lo. Se a armadilha normalmente não puder ser Evadida, qualquer pessoa avisada ainda assim poderá Evadir com a penalidade usual de -2.\nDesarmar Armadilhas: Personagens com Pressentir Armadilhas ignoram até 2 pontos de penalidade de Ladinagem ao tentar desarmar armadilhas."
   },
   {
     "id": "trovador",
@@ -971,7 +975,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Conhecimento Geral. Pode usar Performance no lugar de Conhecimento Batalha para Liderança."
+    "descricao": "Trovadores viajam pelo mundo, aprendendo cultura, etiqueta, história e, acima de tudo, lendas.\nAdicionam +2 à maioria dos testes de Conhecimento Geral (a critério do Mestre) e podem usar Performance no lugar de Conhecimento Batalha em Vantagens de Liderança ou Vantagens que exigem Conhecimento Batalha."
   },
   {
     "id": "enganador",
@@ -990,7 +994,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ao fazer Desafio com perícias de Astúcia ou Espírito, pode escolher se o alvo resiste com Astúcia ou Espírito."
+    "descricao": "Mentiras, engano e desorientação são um recurso para esse trapaceiro. Ao fazer um Desafio baseado em perícias associadas à Astúcia ou ao Espírito, pode escolher se o alvo resiste com Astúcia ou Espírito."
   },
   {
     "id": "aura_de_coragem",
@@ -1009,7 +1013,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Aliados em raio de 10 quadros ganham +1 em rolagens de Medo e subtraem 1 da Tabela de Medo."
+    "descricao": "Um campo de energia sagrada envolve este nobre ser. Aliados dentro de um raio de 10 quadros (20 metros) adicionam +1 às rolagens de Medo e subtraem 1 dos resultados da Tabela de Medo."
   },
   {
     "id": "falar_com_animais",
@@ -1026,7 +1030,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode compreender e falar com uma classe geral de animais."
+    "descricao": "A personagem pode compreender uma classe geral de animais e falar com eles: pássaros, animais marinhos (peixes, crustáceos etc.), insetos, mamíferos, répteis etc. Não é possível os controlar, mas pode tentar persuadi-los a ajudar ou fornecer qualquer informação que criaturas de seu tipo possam entender. Os Mestres devem impor modificadores apropriados ao conversar com animais de estimação, animais hostis ou ariscos, predadores ou aqueles animais que foram caçados ou predados.\nO vocabulário, memórias e compreensão dessas criaturas são limitados pelo seu tipo — um cachorro sabe e entende muito mais do que um peixe, por exemplo. A natureza do mundo também pode definir o quanto os seus animais entendem."
   },
   {
     "id": "mudanca_rapida",
@@ -1045,7 +1049,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode mudar de forma como ação limitada em vez de 10 minutos."
+    "descricao": "Esta Vantagem está disponível para qualquer personagem que tenha contraído licantropia (veja a página 253). Mudar de forma normalmente leva 10 minutos dolorosos e grotescos, mas aqueles com esta Vantagem aprenderam a abraçar o aspecto arcano da maldição e podem mudar de forma como uma ação limitada."
   },
   {
     "id": "bando_de_guerra",
@@ -1065,7 +1069,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Cinco dos Seguidores ganham Resiliente."
+    "descricao": "Líderes lendários atraem guerreiros dedicados para o seu lado. Cada vez que esta Vantagem é comprada, cinco dos Seguidores do campeão ganham a habilidade monstruosa Resiliente."
   },
   {
     "id": "imparavel",
@@ -1087,7 +1091,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Possui a habilidade monstruosa Imparável."
+    "descricao": "O herói ou a heroína é uma força irresistível da natureza que não teme adversidades e se mantém firme diante dos obstáculos aparentemente intransponíveis. Possui a habilidade monstruosa Imparável."
   },
   {
     "id": "lar_doce_lar",
@@ -1108,7 +1112,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Designa uma área como lar. Pode gastar Bene para recuperar todos PP lá. Sente o lar à distância."
+    "descricao": "Existem poucas coisas mais perigosas do que um druida em sua floresta natal, um mago em seu covil ou um necromante na cidade em ruínas que sua horda de mortos-vivos construiu para ele.\nTrabalhando com o Mestre, designe uma área como o “lar” de seu herói ou heroína. Pode ser uma floresta inteira, uma baía, um litoral ou um lago e seus arredores para um druida, uma igreja e a pequena cidade que ela serve para um clérigo, uma torre e seus arredores para um mago ou elementalista, ou uma fortaleza cheia de engenhocas e produtos químicos para um alquimista ou funileiro.\nUma vez por encontro, enquanto estiver nessa área, a personagem pode gastar um Bene para recuperar todos os seus Pontos de Poder. A personagem também consegue sentir seu lar, não importa o quão distante esteja. Pode se concentrar por dez minutos (um minuto se estiver em seu Lar, Doce Lar) para fazer três perguntas sobre o estado atual e observável de seu Lar, revelado por meio de vidência, visões ou outros sentidos sobrenaturais."
   },
   {
     "id": "reliquia",
@@ -1125,7 +1129,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode escolher qualquer item mágico do livro (com aprovação do Mestre)."
+    "descricao": "Itens mágicos poderosos normalmente só devem ser descobertos por meio de missões épicas, jornadas perigosas em masmorras imensas ou troca de grandes quantidades de ouro e outros tesouros.\nSe essas oportunidades não se apresentarem, é possível aproveitar esta Vantagem para escolher qualquer item mágico deste livro. O Mestre deve aprovar a escolha, como de costume, decidindo se tal coisa existe em seu mundo. Neste caso, o herói ou heroína se depara com isso de alguma forma — talvez herdando, no final da próxima missão, como um presente daqueles que a personagem ajudou.\nSe o item for perdido, é possível recuperá-lo ou substituí-lo eventualmente, mas pode ter que ficar sem ele por uma ou duas sessões para recuperá-lo."
   },
   {
     "id": "antecedente_arcano_alquimista",
