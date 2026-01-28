@@ -68,6 +68,7 @@ fun ExpandableSearchFilter(
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                     trailingIcon = {
                         IconButton(onClick = {
+                            onQueryChange("")
                             onExpandedChange(false)
                         }) {
                             Icon(Icons.Default.Close, contentDescription = "Fechar")
