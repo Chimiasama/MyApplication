@@ -81,7 +81,8 @@ private fun custoParaPenalidadeTexto(custo: String): String {
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PoderesSection(
-    state: CriadorState
+    state: CriadorState,
+    onShowMessage: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
@@ -402,9 +403,14 @@ fun PoderesSection(
                                     AssistChip(
                                         onClick = {
                                             if (!isSlotLocked && poderId != null) {
-                                                slots[idx] = null
-                                                state.syncPoderesSelecionadosFromSlots()
-                                                state.manifestacoesPoderes.remove(poderId)
+                                                val (pode, msg) = state.podeRemoverPoderDoSlot(poderId)
+                                                if (!pode) {
+                                                    onShowMessage(msg ?: "Não é possível remover este poder.")
+                                                } else {
+                                                    slots[idx] = null
+                                                    state.syncPoderesSelecionadosFromSlots()
+                                                    state.manifestacoesPoderes.remove(poderId)
+                                                }
                                             }
                                         },
                                         label = {
@@ -459,9 +465,14 @@ fun PoderesSection(
                                     if (selecionado) {
                                         val idx = slots.indexOfFirst { it?.equals(poder.id, ignoreCase = true) == true }
                                         if (idx >= 0 && idx >= lockedCount) {
-                                            slots[idx] = null
-                                            state.syncPoderesSelecionadosFromSlots()
-                                            state.manifestacoesPoderes.remove(poder.id)
+                                            val (pode, msg) = state.podeRemoverPoderDoSlot(poder.id)
+                                            if (!pode) {
+                                                onShowMessage(msg ?: "Não é possível remover este poder.")
+                                            } else {
+                                                slots[idx] = null
+                                                state.syncPoderesSelecionadosFromSlots()
+                                                state.manifestacoesPoderes.remove(poder.id)
+                                            }
                                         }
                                     } else {
                                         val firstEmpty = slots.indexOfFirst { it == null }

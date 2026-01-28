@@ -646,7 +646,12 @@ fun VantagensContent(
                                             }
                                         }
                                     } else if (vant.id == "poder_favorito") {
-                                        dialogMostrandoPoderFavorito = vant
+                                        val ownedPowers = state.poderesSelecionados.filterNotNull()
+                                        if (ownedPowers.isEmpty()) {
+                                            onError("Escolha ao menos um poder na seção de Poderes!")
+                                        } else {
+                                            dialogMostrandoPoderFavorito = vant
+                                        }
                                     } else {
                                         if (state.advantageAdvancementInProgress) {
                                             viewModel.selectAdvantageForAdvancement(vant)
@@ -740,7 +745,12 @@ fun VantagensContent(
                                         }
                                     }
                                 } else if (vant.id == "poder_favorito") {
-                                    dialogMostrandoPoderFavorito = vant
+                                    val ownedPowers = state.poderesSelecionados.filterNotNull()
+                                    if (ownedPowers.isEmpty()) {
+                                        onError("Escolha ao menos um poder na seção de Poderes!")
+                                    } else {
+                                        dialogMostrandoPoderFavorito = vant
+                                    }
                                 } else {
                                     if (state.advantageAdvancementInProgress) {
                                         viewModel.selectAdvantageForAdvancement(vant)

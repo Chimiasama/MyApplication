@@ -2010,6 +2010,23 @@ class CriadorState {
         return vantagensSelecionadas.any { it.toArcanoKey() != null }
     }
 
+    fun podeRemoverPoderDoSlot(poderId: String): Pair<Boolean, String?> {
+        val normalizedId = poderId.replace('_', ' ').keyify()
+        val linkedAdvantage = vantagensSelecionadas.firstOrNull { vant ->
+            if (vant.id == "poder_favorito" && !vant.choice.isNullOrBlank()) {
+                val choiceKey = vant.choice!!.replace('_', ' ').keyify()
+                choiceKey == normalizedId
+            } else {
+                false
+            }
+        }
+
+        if (linkedAdvantage != null) {
+            return false to "Remova a vantagem Poder Favorito antes de devolver o poder ${linkedAdvantage.choice}."
+        }
+        return true to null
+    }
+
     fun podeSelecionarComplicacao(complicacao: Complicacao): Pair<Boolean, String?> {
         if (complicacao.id == "talisma" && !temAntecedenteArcano()) {
             return false to "Talismã requer um Antecedente Arcano."
