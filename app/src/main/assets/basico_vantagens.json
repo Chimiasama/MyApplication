@@ -31,11 +31,11 @@
       "observacoes": ""
     },
     "choiceOptions": [
-      "Dom (Básico)",
-      "Magia (Básico)",
-      "Milagres (Básico)",
-      "Psiônicos (Básico)",
-      "Ciência Estranha (Básico)"
+      "Dom",
+      "Magia",
+      "Milagres",
+      "Psiônicos",
+      "Ciência Estranha"
     ],
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
