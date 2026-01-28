@@ -14,7 +14,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "As profecias falam de um ser destinado à grandeza. Quando alguém com a Vantagem Escolhido gasta Convicção, ela dura até o final do encontro sem precisar mantê-la com Benes! A personagem Escolhida tem a Complicação Inimigo (Maior) e uma marca que não pode ser removida."
+    "descricao": "As profecias falam de um ser destinado à grandeza. Aquele que, com a ajuda de seus companheiros, fará ações grandiosas. Quando alguém com a Vantagem Escolhido gasta Convicção, ela dura até o final do encontro sem precisar mantê-la com Benes!\nÉ claro que tal benefício tem um grande custo. A personagem Escolhida tem a Complicação Inimigo (Maior) — sempre há algum ser poderoso que se opõe à sua missão! Para piorar, há algum tipo de marca que não pode ser removida, não importa o quanto tente. Pode ser uma tatuagem, marca de nascença, sexto dedo, pupilas felinas ou alguma outra estranheza cosmética visível, mas aqueles que sabem o que procurar podem encontrá-la. E, por quaisquer meios narrativos necessários, a marca aparece ocasionalmente, independentemente do quanto tente cobri-la com roupas, mantos ou mesmo ilusões. Isso significa que o inimigo do herói ou heroína e seus asseclas estão sempre no seu encalço."
   },
   {
     "id": "heranca",
@@ -67,7 +67,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "(Atualizada) Habilidades arcanas de oponentes contra o herói sofrem penalidade de -2 e o dano mágico é reduzido em 2. Inclui bônus mágicos de armas."
+    "descricao": "Magia e o sobrenatural pouco influenciam este indivíduo. Seja por natureza, herança ou treinamento, ele é particularmente resistente à magia e outras energias sobrenaturais.\nHabilidades arcanas de oponentes tendo esse herói ou heroína como alvo sofrem uma penalidade de -2 e o dano mágico também é reduzido em 2. Se um poder hostil não afetar o herói ou heroína devido a esta penalidade, ele ainda será ativado e consumirá Pontos de Poder (e ainda poderá afetar outros alvos). Isso inclui bônus mágicos concedidos a armas, como o poder ferir ou o bônus de dano de armas mágicas."
   },
   {
     "id": "resistencia_arcana_aprimorada_fc",
@@ -599,7 +599,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "(Atualizada) Podem criar Dispositivos Arcanos temporários e criar itens mágicos mais permanentes."
+    "descricao": "Podem criar Dispositivos Arcanos temporários e criar itens mágicos mais permanentes."
   },
   {
     "id": "artifice_mestre",
