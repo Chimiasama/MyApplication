@@ -111,7 +111,6 @@ private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
                 }
                 t == "ARMAS DE FOGO" -> {
                     group = "Ataque a Distância"
-                    subGroup = "Oeste Estranho"
                 }
                 t == "ARMAS DE AR" || t == "ARMAS A VAPOR" -> {
                     group = "Ataque a Distância"
