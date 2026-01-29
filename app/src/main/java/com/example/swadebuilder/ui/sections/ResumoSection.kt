@@ -29,15 +29,15 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.AutoFixHigh
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.LocalPolice
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.SportsMartialArts
-import androidx.compose.material.icons.filled.LocalBar
-import androidx.compose.material.icons.filled.Cloud
-import androidx.compose.material.icons.filled.FlashOn
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -103,16 +103,16 @@ private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int,
 private fun getCompendiumIcons(state: CriadorState): List<Pair<ImageVector, Color>> {
     val icons = mutableListOf<Pair<ImageVector, Color>>()
 
-    if (state.modoSupers) icons.add(Icons.Default.FlashOn to Color(0xFFFFD700)) // Gold
-    if (state.compendioFantasiaAtivo) icons.add(Icons.Default.AutoFixHigh to Color(0xFF9C27B0)) // Purple
+    if (state.modoSupers) icons.add(Icons.Default.Bolt to Color(0xFFFFD700)) // Gold
+    if (state.compendioFantasiaAtivo) icons.add(Icons.Default.AutoAwesome to Color(0xFF9C27B0)) // Purple
     if (state.compendioHorrorAtivo) icons.add(Icons.Default.MoodBad to Color(0xFFD32F2F)) // Red
     if (state.compendioSciFiAtivo) icons.add(Icons.Default.RocketLaunch to Color(0xFF03A9F4)) // Light Blue
     if (state.compendioPathfinderAtivo) icons.add(Icons.Default.Map to Color(0xFF4CAF50)) // Green
-    if (state.compendioDeadlandsAtivo) icons.add(Icons.Default.LocalPolice to Color(0xFFFF9800)) // Orange
+    if (state.compendioDeadlandsAtivo) icons.add(Icons.Default.Shield to Color(0xFFFF9800)) // Orange
     if (state.compendioArteDaGuerraAtivo) icons.add(Icons.Default.SportsMartialArts to Color(0xFF795548)) // Brown
-    if (state.compendioWiseguysAtivo) icons.add(Icons.Default.LocalBar to Color.Gray)
+    if (state.compendioWiseguysAtivo) icons.add(Icons.Default.Groups to Color.Gray)
     if (state.compendioCrystalHeartAtivo) icons.add(Icons.Default.Favorite to Color(0xFFE91E63)) // Pink
-    if (state.compendioCidadeSolVaporAtivo) icons.add(Icons.Default.Cloud to Color.LightGray)
+    if (state.compendioCidadeSolVaporAtivo) icons.add(Icons.Default.Build to Color.LightGray)
 
     return icons
 }
