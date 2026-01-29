@@ -806,7 +806,9 @@ fun VantagensContent(
                     isAb && isSrc
                 }
                 .map { vant ->
-                    val baseName = vant.subtipoArcano?.toSentenceCase()
+                    val nameInParens = Regex("\\((.*?)\\)").find(vant.nome)?.groupValues?.get(1)
+                    val baseName = nameInParens?.toSentenceCase()
+                        ?: vant.subtipoArcano?.toSentenceCase()
                         ?: vant.nome.removePrefix("ANTECEDENTE ARCANO ").replace("(", "").replace(")", "").trim().toSentenceCase()
 
                     val reqs = if (vant.requisitos.atributoMin.isNotEmpty()) {

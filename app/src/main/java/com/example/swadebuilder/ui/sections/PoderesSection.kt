@@ -167,14 +167,14 @@ fun PoderesSection(
     }
 
     // Determine which ABs to display
-    val displayKeys = if (!state.permiteMultiAntecedenteArcano && !state.compendioFantasiaAtivo) {
+    val displayKeys = if (!state.permiteMultiAntecedenteArcano && !state.compendioFantasiaAtivo && !state.compendioHorrorAtivo) {
         listOf(arcanosAtivos.first())
     } else {
         arcanosAtivos
     }
 
-    val sharedTotalPP = remember(state.compendioFantasiaAtivo, arcanosAtivos, state.bonusPoderExtra) {
-        if (!state.compendioFantasiaAtivo) 0 else {
+    val sharedTotalPP = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, arcanosAtivos, state.bonusPoderExtra) {
+        if (!state.compendioFantasiaAtivo && !state.compendioHorrorAtivo) 0 else {
             val maxBase = arcanosAtivos.maxOfOrNull { k -> arcanoInfo[k.normAAKey()]?.second ?: 0 } ?: 0
             maxBase + state.bonusPoderExtra
         }
@@ -199,7 +199,9 @@ fun PoderesSection(
                 else -> originRaw
             }
 
-            var sourceList = powerCache[normalizedOrigin] ?: powerCache["BASICO"] ?: emptyList()
+            val specificList = powerCache[normalizedOrigin] ?: emptyList()
+            val basicList = powerCache["BASICO"] ?: emptyList()
+            var sourceList = if (normalizedOrigin == "BASICO") basicList else (specificList + basicList).distinctBy { it.id }
 
             // Fantasy Cleric Domain Filtering
             if (state.compendioFantasiaAtivo && arcKey == "CLERIGO") {
@@ -296,7 +298,7 @@ fun PoderesSection(
             val centerText = if (state.usarSemPontosDePoder) {
                 "Teste $foco = -(custo/2)"
             } else {
-                val ppDisplay = if (state.compendioFantasiaAtivo) sharedTotalPP else ppTotal
+                val ppDisplay = if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) sharedTotalPP else ppTotal
                 "PP: $ppDisplay  •  $foco"
             }
 

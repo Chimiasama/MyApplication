@@ -425,7 +425,7 @@ fun TelaInicial(
                         SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
 
                         if (!optCompendioWiseguys) {
-                            if (!optCompendioFantasia) {
+                            if (!optCompendioFantasia && !optCompendioHorror) {
                                 SimpleCheckRow(
                                     "Múltiplos Ant. Arcanos",
                                     "Permite combinar classes conjuradoras.",
