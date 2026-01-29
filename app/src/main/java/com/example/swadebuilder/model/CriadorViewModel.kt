@@ -911,6 +911,7 @@ class CriadorViewModel : ViewModel() {
         // Rebuild stacks to update derived stats
         state.rebuildAllPericiaStacks()
 
+        logFeedback("${skill.nome} aumentada para ${state.rawTotal(skill).toDiceString()}.")
         return true
     }
 

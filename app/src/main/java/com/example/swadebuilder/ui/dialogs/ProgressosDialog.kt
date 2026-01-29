@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -71,6 +72,7 @@ import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.periciaStartRaw
 import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.stageIndexForSlot
+import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.RadioButtonRow
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
@@ -765,16 +767,13 @@ fun ProgressosDialog(
                                     .alpha(if (canBuy) 1f else 0.5f)
                                     .clickable(enabled = canBuy) {
                                         onIncreaseSkill(per)
-                                        if (state.spFromProgress <= 0) {
-                                            onFinishSkillAdvancement()
-                                        }
                                     }
                                     .padding(vertical = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Column {
                                     Text(per.nome)
-                                    Text("Atual: d$current | Custo: $cost SP", style = MaterialTheme.typography.bodySmall)
+                                    Text("Atual: ${current.toDiceString()} | Custo: $cost SP", style = MaterialTheme.typography.bodySmall)
                                 }
                             }
                             HorizontalDivider()
@@ -784,7 +783,7 @@ fun ProgressosDialog(
             },
             confirmButton = {
                 // Only show confirm if they are done or want to stop early
-                TextButton(onClick = { onFinishSkillAdvancement() }) {
+                Button(onClick = { onFinishSkillAdvancement() }) {
                     Text("Concluir")
                 }
             }
