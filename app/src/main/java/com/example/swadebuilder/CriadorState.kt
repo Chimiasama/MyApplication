@@ -2322,6 +2322,14 @@ class CriadorState {
             if (rawTotal(skill) < 10) return false
         }
 
+        // 13c) Template Monstruoso
+        if (v.requisitos.templatesRequired.isNotEmpty()) {
+            val selected = tipoMonstroSelecionado
+            if (selected == null || selected !in v.requisitos.templatesRequired) {
+                return false
+            }
+        }
+
         // 14) Conflitos com complicações (Lento x Ligeiro, etc.)
         val compsConfl = incompatibilidades[key] ?: emptySet()
         val vantKey = v.nome.trim().uppercase()
@@ -2946,6 +2954,14 @@ class CriadorState {
         if (v.requisitos.tags.isNotEmpty()) {
             val ancDef = getAncestralidadeDef(ancestralidade)
             if (ancDef == null || !ancDef.tags.containsAll(v.requisitos.tags)) return false
+        }
+
+        // Template Monstruoso
+        if (v.requisitos.templatesRequired.isNotEmpty()) {
+            val selected = tipoMonstroSelecionado
+            if (selected == null || selected !in v.requisitos.templatesRequired) {
+                return false
+            }
         }
 
         // Tiro Duplo Aprimorado

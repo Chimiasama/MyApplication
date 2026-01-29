@@ -28,7 +28,8 @@ fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
     val replacementSettingsActive =
         compendioPathfinderAtivo ||
         compendioDeadlandsAtivo ||
-        compendioArteDaGuerraAtivo
+        compendioArteDaGuerraAtivo ||
+        compendioHorrorAtivo
 
     if (!replacementSettingsActive) {
         add("BASICO")
@@ -136,6 +137,12 @@ fun CriadorState.isVantagemVisible(
 
     // Fantasy Logic: Keep Generic visible, Hide Specifics (Use Generic as selector)
     if (compendioFantasiaAtivo) {
+        if (isSpecificAB) return false
+        if (isGenericAB) return true
+    }
+
+    // Horror Logic: Keep Generic visible, Hide Specifics (Use Generic as selector)
+    if (compendioHorrorAtivo) {
         if (isSpecificAB) return false
         if (isGenericAB) return true
     }
