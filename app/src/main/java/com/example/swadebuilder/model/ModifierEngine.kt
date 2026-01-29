@@ -344,7 +344,7 @@ object ModifierEngine {
     }
 
     fun sizeDisplay(state: CriadorState): Int {
-        return sizeRawDisplay(state).coerceIn(-1, 3)
+        return sizeRawDisplay(state).coerceIn(-4, 20)
     }
 
     fun sizeForToughness(state: CriadorState): Int {

@@ -1868,7 +1868,7 @@ class CriadorState {
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
                 // Standard Logic
-                val base = if (compendioPathfinderAtivo) 12 else if (maisPontosPericias) BASE_SP_POOL else BASE_SP_POOL - 3
+                val base = if (maisPontosPericias) BASE_SP_POOL else (BASE_SP_POOL - 3)
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp)
                     .coerceAtLeast(0)
             }
