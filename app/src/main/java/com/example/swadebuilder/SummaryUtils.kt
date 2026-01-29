@@ -229,7 +229,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         // Create a lookup map: ID -> Best Definition
         val definitionMap = listaVantagens
-            .groupBy { it.id }
+            .groupBy { it.id.keyify() }
             .mapValues { (_, candidates) ->
                 candidates.maxByOrNull { CriadorState.getOriginPriority(it.origem) }!!
             }

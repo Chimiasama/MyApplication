@@ -539,14 +539,18 @@ fun UnifiedScreen(
             onStartSkillAdvancement = { slotIndex, stage ->
                 viewModel.startSkillAdvancement(slotIndex, stage)
             },
-            onStartAdvantageAdvancement = { slotIndex, est ->
-                viewModel.startAdvantageAdvancement(slotIndex, est)
-            },
             onStartAttributeAdvancement = { slotIndex, stage, consumeReservation ->
                 viewModel.startAttributeAdvancement(slotIndex, stage, consumeReservation)
             },
             onReserveLegendaryAttribute = { slotIndex, stage ->
                 viewModel.reserveLegendaryAttribute(slotIndex, stage)
+            },
+            onPurchaseAdvantage = { slotIndex, stage, vant ->
+                // Atomic purchase sequence
+                viewModel.startAdvantageAdvancement(slotIndex, stage)
+                viewModel.selectAdvantageForAdvancement(vant)
+                viewModel.finishAdvantageAdvancement()
+                showAllocDialog = false
             }
         )
     }

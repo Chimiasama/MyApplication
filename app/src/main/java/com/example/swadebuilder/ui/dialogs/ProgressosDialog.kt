@@ -1,7 +1,12 @@
 package com.example.swadebuilder.ui.dialogs
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -9,16 +14,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.RadioButton
@@ -31,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -40,10 +51,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
+import com.example.swadebuilder.R
 import com.example.swadebuilder.dynamicStageCaps
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.listaDeEstagios
@@ -59,21 +72,23 @@ import com.example.swadebuilder.periciaStartRaw
 import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.stageIndexForSlot
 import com.example.swadebuilder.ui.components.RadioButtonRow
+import com.example.swadebuilder.ui.theme.LocalAppThemeData
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ProgressosDialog(
     state: CriadorState,
     slotIndex: Int,
     onDismiss: () -> Unit,
     onStartSkillAdvancement: (Int, String) -> Unit,
-    onStartAdvantageAdvancement: (Int, String) -> Unit,
     onStartAttributeAdvancement: (Int, String, Boolean) -> Unit,
-    onReserveLegendaryAttribute: (Int, String) -> Unit
+    onReserveLegendaryAttribute: (Int, String) -> Unit,
+    onPurchaseAdvantage: (Int, String, Vantagem) -> Unit
 ) {
     // Snackbar para mensagens temporárias (substitui showTempError/tempErrorMsg)
     val snackHost = remember { SnackbarHostState() }
@@ -96,6 +111,7 @@ fun ProgressosDialog(
     var pendingAdv by rememberSaveable { mutableStateOf<Vantagem?>(null) }
     var showPendingChoice by rememberSaveable { mutableStateOf(false) }
     var advSelectedStageIndex by rememberSaveable { mutableIntStateOf(-1) }
+    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     // Slots: perícia OU especialização (quando a regra estiver ON)
     var slot1IsSpec by rememberSaveable { mutableStateOf(false) }
@@ -112,6 +128,10 @@ fun ProgressosDialog(
     val stages = listaDeEstagios
     val stageIndex = stageIndexForSlot(slotIndex)
     var selectedTab by rememberSaveable { mutableIntStateOf(stageIndex) }
+
+    val idParaNome = remember(listaVantagens) {
+        listaVantagens.associate { it.id to it.nomeExibicao.toSentenceCase() }
+    }
 
     // ── Cálculos de atributo via XP ────────────────────────────────────────────
     val est = stageForSlot(slotIndex)
@@ -775,96 +795,48 @@ fun ProgressosDialog(
                 ) {
                     LazyColumn {
                         items(candidatas) { vant ->
-                            val qtdJaTem = state.vantagensSelecionadas.count {
-                                it.nome.equals(vant.nome, ignoreCase = true)
-                            }
-                            Column(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        val qtdJaTemClick = state.vantagensSelecionadas.count {
-                                            it.nome.equals(vant.nome, ignoreCase = true)
-                                        }
-                                        when (val maxEff = maxEffectiveSelections(vant)) {
-                                            null -> {}
-                                            else -> if (qtdJaTemClick >= maxEff) {
-                                                showSnack("Você já atingiu o limite para ${vant.nome}.")
-                                                return@clickable
-                                            }
-                                        }
-                                        if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndex)) {
-                                            showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
-                                            return@clickable
-                                        }
-                                        if (bloquearExclusividadeClasse(vant)) {
-                                            return@clickable
-                                        }
-                                        if (state.progressosDisponiveis < 1) {
-                                            showSnack("Você não tem progressos suficientes.")
-                                            return@clickable
-                                        }
-                                        onStartAdvantageAdvancement(slotIndex, estSel.nome)
-                                        state.recomputeAvailableProgress()
-                                        state.checkFreeze()
-                                        showAdvSelection = false
-
-                                        // Auto-select the chosen advantage in the ViewModel
-                                        if (vant.requiresChoice) {
-                                            pendingAdv = vant
-                                            advSelectedStageIndex = estIndex
-                                            showPendingChoice = true
-                                        } else {
-                                            // Directly select if no choice needed
-                                            // We need to access the ViewModel or pass a callback for selection.
-                                            // Since we only have onStartAdvantageAdvancement, we rely on the flow
-                                            // to open the tab, but we can try to pre-select if possible.
-                                            // However, `onStartAdvantageAdvancement` just sets the flag.
-                                            // The actual selection happens in the UI.
-                                            // To truly "auto-select", we would need a callback here.
-                                            // BUT, the user asked for "Super-like" flow where they select HERE.
-                                            // So we should ideally pass the selected `vant` back.
-                                            // Let's assume onStartAdvantageAdvancement logic is generic start.
-                                            // We can't easily inject the selection without changing the signature.
-                                            // Refactoring plan: The user will be taken to Vantagens tab.
-                                            // To make it better, we can modify `UnifiedScreen` to auto-expand the group?
-                                            // Or just let them browse.
-                                            // Actually, the user said: "opens a screen to select... and forces me to spend".
-                                            // The current `showAdvSelection` IS that screen.
-                                            // If they click here, they expect it to be DONE or taking them to details.
-                                            // The previous code `state.vantagensSelecionadas += vant` bypassed the ViewModel logic (money, requirements checks again).
-
-                                            // Correct approach:
-                                            // 1. Start the advancement mode (locks XP tab).
-                                            // 2. Select the advantage using the ViewModel's logic (which handles cost, etc).
-                                            // But we are inside a Dialog composable, not the ViewModel.
-                                            // We need a way to invoke `viewModel.selectAdvantageForAdvancement(vant)`.
-                                            // Since we don't have it passed, we will fall back to:
-                                            // Start mode -> Dismiss Dialog -> User sees Vantagens tab -> User clicks the advantage again?
-                                            // That's annoying.
-                                            //
-                                            // Wait, the previous code block I searched for was:
-                                            // `state.vantagensSelecionadas += vant`
-                                            // That was WRONG because it bypassed validation/cost logic in ViewModel.
-                                            // That's why I am replacing it.
-
-                                            // If I change `onStartAdvantageAdvancement` to accept a `Vantagem?`, I can pass it.
-                                            // But I can't change the signature easily in this Replace Block without changing the caller in `UnifiedScreen`.
-                                            //
-                                            // Let's stick to: Open the tab.
-                                            // "Até pode ser dessa forma mas se for assim o ideal seria que a seção referente fosse aberta"
-                                            // So just calling `onStartAdvantageAdvancement` and dismissing IS what they asked for as a fallback.
-
-                                            onDismiss()
+                            DialogVantagemItem(
+                                vant = vant,
+                                state = state,
+                                locked = false,
+                                allowLongTexts = true,
+                                showOfficialNames = state.modoOficialAtivo,
+                                idParaNome = idParaNome,
+                                detalhesExpandidos = detalhesExpandidos,
+                                onSelect = {
+                                    val qtdJaTemClick = state.vantagensSelecionadas.count {
+                                        it.nome.equals(vant.nome, ignoreCase = true)
+                                    }
+                                    when (val maxEff = maxEffectiveSelections(vant)) {
+                                        null -> {}
+                                        else -> if (qtdJaTemClick >= maxEff) {
+                                            showSnack("Você já atingiu o limite para ${vant.nome}.")
+                                            return@DialogVantagemItem
                                         }
                                     }
-                                    .padding(vertical = 8.dp, horizontal = 4.dp)
-                            ) {
-                                Text("${vant.nome} (${vant.requisitos.estagio.ifBlank { "—" }})")
-                                if (qtdJaTem > 0) {
-                                    Text("Já possui x$qtdJaTem", fontSize = 10.sp, color = Color.Gray)
-                                }
-                                HorizontalDivider()
-                            }
+                                    if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndex)) {
+                                        showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
+                                        return@DialogVantagemItem
+                                    }
+                                    if (bloquearExclusividadeClasse(vant)) {
+                                        return@DialogVantagemItem
+                                    }
+                                    if (state.progressosDisponiveis < 1) {
+                                        showSnack("Você não tem progressos suficientes.")
+                                        return@DialogVantagemItem
+                                    }
+
+                                    // Use local logic for choices or pass to main callback
+                                    if (vant.requiresChoice) {
+                                        pendingAdv = vant
+                                        advSelectedStageIndex = estIndex
+                                        showPendingChoice = true
+                                    } else {
+                                        onPurchaseAdvantage(slotIndex, estSel.nome, vant)
+                                    }
+                                },
+                                onError = { showSnack(it) }
+                            )
                         }
                     }
                 }
@@ -919,31 +891,11 @@ fun ProgressosDialog(
                             return@onConfirm
                         }
 
-                        state.spendProgressAtStage(estSel.nome, 1)
-                        state.vantagensSelecionadas += vant.copy(choice = choice)
-                        state.advancementHistory.add(
-                            AdvancementAction.SpendOnAdvantage(
-                                advantageId = vant.id,
-                                stageName = estSel.nome
-                            )
-                        )
-                        state.xpSlots[slotIndex] = true
-                        state.recomputeAvailableProgress()
+                        onPurchaseAdvantage(slotIndex, estSel.nome, vant.copy(choice = choice))
 
-                        val choiceKey = choice.uppercase().semAcentos()
-                        if (state.valoresAtributos.containsKey(choiceKey)) {
-                            state.valoresAtributos[choiceKey]!!.intValue += 2
-                        } else {
-                            val per = state.periciasComIdiomas().first { it.nome == choice }
-                            state.baseIncsPorPericia[per] = state.baseIncsPorPericia.getValue(per) + 1
-                            state.spCostStackPorPericia[per]?.add(0)
-                        }
-
-                        state.checkFreeze()
                         showPendingChoice = false
                         showAdvSelection = false
                         pendingAdv = null
-                        onDismiss()
                     },
                     onDismiss = {
                         showPendingChoice = false
@@ -977,31 +929,11 @@ fun ProgressosDialog(
                                 return@onConfirm
                             }
 
-                            state.spendProgressAtStage(estSel.nome, 1)
-                            state.vantagensSelecionadas += vant.copy(choice = choice)
-                            state.advancementHistory.add(
-                                AdvancementAction.SpendOnAdvantage(
-                                    advantageId = vant.id,
-                                    stageName = estSel.nome
-                                )
-                            )
-                            state.xpSlots[slotIndex] = true
-                            state.recomputeAvailableProgress()
+                            onPurchaseAdvantage(slotIndex, estSel.nome, vant.copy(choice = choice))
 
-                            val choiceKey = choice.uppercase().semAcentos()
-                            if (state.valoresAtributos.containsKey(choiceKey)) {
-                                state.valoresAtributos[choiceKey]!!.intValue += 2
-                            } else {
-                                val per = state.periciasComIdiomas().first { it.nome == choice }
-                                state.baseIncsPorPericia[per] = state.baseIncsPorPericia.getValue(per) + 1
-                                state.spCostStackPorPericia[per]?.add(0)
-                            }
-
-                            state.checkFreeze()
                             showPendingChoice = false
                             showAdvSelection = false
                             pendingAdv = null
-                            onDismiss()
                         },
                         onDismiss = {
                             showPendingChoice = false
@@ -1024,21 +956,11 @@ fun ProgressosDialog(
                             return@onConfirm
                         }
 
-                        state.spendProgressAtStage(estSel.nome, 1)
-                        state.vantagensSelecionadas += vant.copy(choice = choice)
-                        state.advancementHistory.add(
-                            AdvancementAction.SpendOnAdvantage(
-                                advantageId = vant.id,
-                                stageName = estSel.nome
-                            )
-                        )
-                        state.xpSlots[slotIndex] = true
-                        state.recomputeAvailableProgress()
-                        state.checkFreeze()
+                        onPurchaseAdvantage(slotIndex, estSel.nome, vant.copy(choice = choice))
+
                         showPendingChoice = false
                         showAdvSelection = false
                         pendingAdv = null
-                        onDismiss()
                     },
                     onDismiss = {
                         showPendingChoice = false
@@ -1055,3 +977,185 @@ private fun maxEffectiveSelections(v: Vantagem): Int? =
     if (v.maxSelections > 0) v.maxSelections else null
 
 private fun validChoiceOptionsFor(v: Vantagem): List<String> = v.choiceOptions
+
+// Extracted reusable item component
+@Composable
+private fun DialogVantagemItem(
+    vant: Vantagem,
+    state: CriadorState,
+    locked: Boolean,
+    allowLongTexts: Boolean,
+    showOfficialNames: Boolean,
+    idParaNome: Map<String, String>,
+    detalhesExpandidos: MutableMap<String, Boolean>,
+    onSelect: () -> Unit,
+    onError: (String) -> Unit
+) {
+    val themeData = LocalAppThemeData.current
+
+    val reqList = buildList {
+        listaDeEstagios.firstOrNull {
+            it.nome.equals(vant.requisitos.estagio, true)
+        }?.let { add(it.nome) }
+
+        vant.requisitos.atributoMin.forEach { (a, m) ->
+            add("$a d$m")
+        }
+        vant.requisitos.periciaMin.forEach { (p, m) ->
+            add("$p d$m")
+        }
+
+        if (vant.requisitos.periciaMinOpcional.isNotEmpty()) {
+            add(
+                vant.requisitos.periciaMinOpcional.entries.joinToString(" ou ") {
+                    "${it.key} d${it.value}"
+                }
+            )
+        }
+
+        vant.requisitos.vantagensPrevias.forEach { prevId ->
+            val legivel = idParaNome[prevId]
+                ?: prevId.replace('_', ' ').replace('-', ' ').toSentenceCase()
+            add("Pré-requisito: $legivel")
+        }
+
+        if (vant.requisitos.observacoes.isNotBlank()) {
+            add(vant.requisitos.observacoes)
+        }
+        if (vant.nome.trim().removeSuffix(":").keyify() == "profissional") {
+            add(
+                "Traço no teto máximo: escolha entre " +
+                        state.maxedTraits.joinToString()
+            )
+        }
+    }
+
+    val jaTem = state.vantagensSelecionadas.any { it.id == vant.id }
+    val requisitosOk = state.podeSelecionar(vant)
+    val bloqueioClasse = if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant)) {
+        "Requer Multiclasse"
+    } else null
+
+    val statusText = when {
+        jaTem -> "Já selecionada"
+        bloqueioClasse != null -> bloqueioClasse
+        requisitosOk -> "Requisitos OK"
+        else -> "Requisitos pendentes"
+    }
+    val statusColor = when {
+        jaTem -> MaterialTheme.colorScheme.tertiary
+        bloqueioClasse != null -> MaterialTheme.colorScheme.error
+        requisitosOk -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.error
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .clickable(enabled = !locked) {
+                if (!locked) {
+                    val conflitoMsg = state.mensagemConflitoParaVantagem(vant)
+
+                    val isPathfinderFree = state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)
+
+                    when {
+                        // Check class blocking specifically for error message
+                        state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
+                        conflitoMsg != null -> onError(conflitoMsg)
+                        !state.podeSelecionar(vant) -> onError("Faltam requisitos para '${vant.nomeExibicao}'")
+                        else -> onSelect()
+                    }
+                }
+            },
+        colors = CardDefaults.cardColors(
+            containerColor = when {
+                jaTem -> MaterialTheme.colorScheme.tertiaryContainer
+                requisitosOk && bloqueioClasse == null -> MaterialTheme.colorScheme.surfaceVariant
+                else -> MaterialTheme.colorScheme.errorContainer
+            }
+        ),
+        border = themeData.cardBorderColor?.let { androidx.compose.foundation.BorderStroke(1.dp, it) }
+    ) {
+        Column(Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toSentenceCase() else vant.nomeExibicao.toSentenceCase(),
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                }
+
+                Text(
+                    statusText,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = statusColor
+                )
+            }
+
+            Spacer(Modifier.size(6.dp))
+
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                if (vant.descricao.isNotBlank() && vant.vinculadoPericia) {
+                    AssistChip(
+                        onClick = {},
+                        label = { Text("Opções especiais") }
+                    )
+                }
+            }
+
+            if (reqList.isNotEmpty()) {
+                Spacer(Modifier.size(4.dp))
+                Text(
+                    "Requisitos:",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                reqList.forEach { req ->
+                    Text(
+                        "• $req",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = if (requisitosOk || jaTem) {
+                            MaterialTheme.colorScheme.onSurface
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        }
+                    )
+                }
+            }
+
+            val canShowDetails = allowLongTexts && vant.descricao.isNotBlank()
+            if (canShowDetails) {
+                Spacer(Modifier.size(8.dp))
+                TextButton(
+                    onClick = {
+                        val current = detalhesExpandidos[vant.id] ?: false
+                        detalhesExpandidos[vant.id] = !current
+                    },
+                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        if (detalhesExpandidos[vant.id] == true) "Ocultar detalhes" else "Ver detalhes",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+
+                AnimatedVisibility(visible = detalhesExpandidos[vant.id] == true) {
+                    Text(
+                        text = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) vant.originalDescription.trim() else vant.descricao.trim(),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+            }
+        }
+    }
+}
