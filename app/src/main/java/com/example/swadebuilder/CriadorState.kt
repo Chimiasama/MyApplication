@@ -3111,8 +3111,15 @@ class CriadorState {
         listaAtributos.forEach { attrKey ->
             val min = atributoBaseRacial(attrKey)
             val state = valoresAtributos[attrKey]
-            if (state != null && state.intValue < min) {
-                state.intValue = min
+            val stack = paCostStackPorAtributo[attrKey] ?: emptyList()
+
+            var newValue = min
+            repeat(stack.size) {
+                newValue = if (newValue < 12) newValue + 2 else newValue + 1
+            }
+
+            if (state != null) {
+                state.intValue = newValue
             }
         }
 
