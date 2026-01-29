@@ -1557,7 +1557,7 @@
       "observacoes": ""
     },
     "grupoId": "antecedente_arcano",
-    "subtipoArcano": "CLÉRIGO",
+    "subtipoArcano": "CLERIGO",
     "isGrupoSelector": false,
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,

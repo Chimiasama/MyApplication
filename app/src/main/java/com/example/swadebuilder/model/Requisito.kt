@@ -2,6 +2,10 @@ package com.example.swadebuilder.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.contentOrNull
 
 const val MULTICLASSE_VANTAGEM_ID = "multiclasse"
 const val MENSAGEM_EXCLUSIVIDADE_CLASSE =
@@ -31,10 +35,20 @@ data class Requisito(
     val choiceOptions: List<String> = emptyList(),
 
     @SerialName("tags")
-    val tags: List<String> = emptyList()
+    val tags: List<String> = emptyList(),
+
+    @SerialName("template")
+    val template: JsonElement? = null
 ) {
     val exigeCS: Boolean
         get() = observacoes.contains("Carta Selvagem", ignoreCase = true)
+
+    val templatesRequired: List<String>
+        get() = when (template) {
+            is JsonPrimitive -> listOfNotNull(template.contentOrNull)
+            is JsonArray -> template.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
+            else -> emptyList()
+        }
 }
 
 fun Vantagem.isClasseOuPrestigio(): Boolean =
