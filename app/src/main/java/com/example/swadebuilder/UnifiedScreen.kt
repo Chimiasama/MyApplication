@@ -615,9 +615,11 @@ private fun CreatorTabRow(
         selectedTabIndex = selectedIndex,
         edgePadding = 0.dp,
         indicator = { tabPositions ->
-            TabRowDefaults.PrimaryIndicator(
-                modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex])
-            )
+            if (selectedIndex < tabPositions.size) {
+                TabRowDefaults.PrimaryIndicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex])
+                )
+            }
         }
     ) {
         tabs.forEach { tab ->

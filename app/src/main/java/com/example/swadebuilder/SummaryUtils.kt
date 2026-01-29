@@ -244,7 +244,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         lines += nomesVantagens.joinToString(", ")
     }
     val habilidadesRaciais = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
-    val allRacialTraits = (personagem.vantagensRaciais + habilidadesRaciais).distinct()
+    val allRacialTraits = (personagem.vantagensRaciais + habilidadesRaciais).distinctBy { it.keyify() }
 
     if (allRacialTraits.isNotEmpty()) {
         val displayVantagensRaciais = if (personagem.ancestralidade.keyify() == "SAURIOS") {

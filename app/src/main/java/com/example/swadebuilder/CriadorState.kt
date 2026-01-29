@@ -2236,9 +2236,8 @@ class CriadorState {
             val limite = maxComprasPpAteAgora()
             if (totalCompras >= limite) return false
         }
-        // >>> AQUI estava o problema: cap geral por maxSelections, ignorando limite_compra "infinito"
         else if (v.limiteCompra != "infinito" && v.maxSelections > 0) {
-            val ja = vantagensSelecionadas.count { it.id == v.id }
+            val ja = vantagensSelecionadas.count { it.id.keyify() == v.id.keyify() }
             if (ja >= v.maxSelections) return false
         }
 
