@@ -1557,7 +1557,7 @@
       "observacoes": ""
     },
     "grupoId": "antecedente_arcano",
-    "subtipoArcano": "MILAGRES",
+    "subtipoArcano": "CLÉRIGO",
     "isGrupoSelector": false,
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -1770,7 +1770,7 @@
       "observacoes": ""
     },
     "grupoId": "antecedente_arcano",
-    "subtipoArcano": "PSIONICOS",
+    "subtipoArcano": "INVESTIGADOR PSIQUICO",
     "isGrupoSelector": false,
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -1935,7 +1935,7 @@
       "observacoes": ""
     },
     "grupoId": "antecedente_arcano",
-    "subtipoArcano": "MAGIA",
+    "subtipoArcano": "OCULTISTA",
     "isGrupoSelector": false,
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,

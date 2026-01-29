@@ -184,5 +184,53 @@
     "slots": 3,
     "pp": 10,
     "foco": "Conjurar"
+  },
+  {
+    "key": "OCULTISTA",
+    "slots": 5,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "INVESTIGADOR PSIQUICO",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Psiônicos"
+  },
+  {
+    "key": "FEITICARIA",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "INFERNAL",
+    "slots": 5,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "ESPIRITUAL",
+    "slots": 3,
+    "pp": 15,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "PRECOGNICAO",
+    "slots": 2,
+    "pp": 15,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "ABERRACAO",
+    "slots": 2,
+    "pp": 15,
+    "foco": "Foco"
+  },
+  {
+    "key": "VODU",
+    "slots": 2,
+    "pp": 15,
+    "foco": "Fé"
   }
 ]
