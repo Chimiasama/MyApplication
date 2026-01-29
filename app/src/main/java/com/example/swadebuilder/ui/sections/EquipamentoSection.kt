@@ -107,8 +107,7 @@ private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
                     group = "Ataque a Distância"
                 }
                 t == "ARMAS DE PÓLVORA NEGRA" -> {
-                    group = "Ataque a Distância"
-                    subGroup = "Pólvora Negra" // Distinct from "Medievais"
+                    group = "Pólvora Negra"
                 }
                 t == "ARMAS DE FOGO" -> {
                     group = "Ataque a Distância"
@@ -723,8 +722,40 @@ fun EquipamentoSection(
                                 modifier = Modifier.padding(start = 8.dp).fillMaxWidth(),
                                 verticalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
+                                val availableGroups = groupData.keys.sorted()
+                                val activeFilters = state.equipSectionFilters[superType] ?: emptySet()
+
+                                LazyRow(
+                                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    item {
+                                        FilterChip(
+                                            selected = activeFilters.isEmpty(),
+                                            onClick = {
+                                                state.equipSectionFilters[superType] = emptySet()
+                                            },
+                                            label = { Text("Todos") }
+                                        )
+                                    }
+                                    items(availableGroups) { gName ->
+                                        val isSelected = gName in activeFilters
+                                        FilterChip(
+                                            selected = isSelected,
+                                            onClick = {
+                                                val newSet = activeFilters.toMutableSet()
+                                                if (isSelected) newSet.remove(gName) else newSet.add(gName)
+                                                state.equipSectionFilters[superType] = newSet
+                                            },
+                                            label = { Text(gName) }
+                                        )
+                                    }
+                                }
+
+                                val filteredGroupKeys = if (activeFilters.isEmpty()) availableGroups else availableGroups.filter { it in activeFilters }
+
                                 // Itera sobre os dados pré-calculados
-                                groupData.keys.sorted().forEach { groupName ->
+                                filteredGroupKeys.forEach { groupName ->
                                     val subGroups = groupData[groupName]!!
                                     Text(
                                         text = groupName,

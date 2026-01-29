@@ -211,6 +211,7 @@ class CriadorState {
     val equipSelectedSuperTypes = mutableStateListOf<EquipSuperType>()
     var equipFilter by mutableStateOf(EquipFilter())
     val equipExpandedTypes = mutableStateMapOf<String, Boolean>()
+    var equipSectionFilters = mutableStateMapOf<EquipSuperType, Set<String>>()
 
     var anotacoes by mutableStateOf("")
     var portraitFileName by mutableStateOf<String?>(null)
