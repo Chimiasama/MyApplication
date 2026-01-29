@@ -200,7 +200,12 @@ fun TelaInicial(
             Icons.Default.Map,
             optCompendioPathfinder,
             !isAnyBookSelected || optCompendioPathfinder
-        ) { optCompendioPathfinder = !optCompendioPathfinder },
+        ) {
+            optCompendioPathfinder = !optCompendioPathfinder
+            if (optCompendioPathfinder) {
+                optMaisPontosPericias = false
+            }
+        },
         ModuleItemData(
             "Deadlands".toEditionDisplayName(),
             if (isFullEdition) "Pistoleiros, atormentados e o horror do Oeste." else "Pistoleiros, revividos e o horror do Oeste.",
@@ -403,9 +408,7 @@ fun TelaInicial(
                             onCheckedChange = { optGrandesResponsabilidades = it }
                         )
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
-                        if (!optCompendioPathfinder) {
-                            SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
-                        }
+                        SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
                         SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
                     } else if (optCompendioArteDaGuerra) {
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
@@ -419,9 +422,7 @@ fun TelaInicial(
                         )
                     } else {
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
-                        if (!optCompendioPathfinder) {
-                            SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
-                        }
+                        SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
 
                         if (!optCompendioWiseguys) {
                             if (!optCompendioFantasia) {
