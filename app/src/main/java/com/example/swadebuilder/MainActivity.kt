@@ -1,7 +1,7 @@
 @file:OptIn(
     ExperimentalMaterial3Api::class
 )
-@file:Suppress("LanguageDetectionInspection")
+@file:Suppress("LanguageDetectionInspection", "unused")
 
 package com.example.swadebuilder
 
