@@ -46,4 +46,11 @@ object SecurityUtils {
         if (name.isBlank() || name.length > 50) return false
         return !INVALID_FILENAME_CHARS.containsMatchIn(name)
     }
+
+    /**
+     * Sanitiza texto geral removendo caracteres de controle que podem causar problemas em exportações (PDF/JSON).
+     */
+    fun sanitizeText(input: String): String {
+        return input.filter { !it.isISOControl() || it == '\n' || it == '\r' || it == '\t' }
+    }
 }

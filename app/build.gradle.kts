@@ -90,6 +90,7 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -178,6 +179,9 @@ dependencies {
     // --- JSON / Serialização ---
     implementation(libs.gson)
     implementation(libs.kotlinx.serialization.json)
+
+    // --- Segurança ---
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 
     // --- iText para PDF ---
     implementation(libs.itextg)
