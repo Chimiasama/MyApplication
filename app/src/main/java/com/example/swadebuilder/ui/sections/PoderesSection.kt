@@ -167,7 +167,7 @@ fun PoderesSection(
     }
 
     // Determine which ABs to display
-    val displayKeys = if (!state.permiteMultiAntecedenteArcano && !state.compendioFantasiaAtivo) {
+    val displayKeys = if (!state.permiteMultiAntecedenteArcano && !state.compendioFantasiaAtivo && !state.compendioHorrorAtivo) {
         listOf(arcanosAtivos.first())
     } else {
         arcanosAtivos
@@ -199,7 +199,9 @@ fun PoderesSection(
                 else -> originRaw
             }
 
-            var sourceList = powerCache[normalizedOrigin] ?: powerCache["BASICO"] ?: emptyList()
+            val specificList = powerCache[normalizedOrigin] ?: emptyList()
+            val basicList = powerCache["BASICO"] ?: emptyList()
+            var sourceList = if (normalizedOrigin == "BASICO") basicList else (specificList + basicList).distinctBy { it.id }
 
             // Fantasy Cleric Domain Filtering
             if (state.compendioFantasiaAtivo && arcKey == "CLERIGO") {
