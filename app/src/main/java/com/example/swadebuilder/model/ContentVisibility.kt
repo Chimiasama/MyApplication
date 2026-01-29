@@ -64,6 +64,11 @@ fun CriadorState.isVantagemVisible(
 
     // 2. Specific Item Logic (Forbidden items within an active setting)
 
+    // Monstrous Advantages (Horror) - Require Monster Rule
+    if (vant.categoria == Categoria.MONSTRUOSAS && !modoMonstroAtivo) {
+        return false
+    }
+
     // Crystal Heart Logic
     if (compendioCrystalHeartAtivo) {
         if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
