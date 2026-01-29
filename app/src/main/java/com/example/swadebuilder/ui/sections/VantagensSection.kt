@@ -797,11 +797,12 @@ fun VantagensContent(
     if (dialogMostrandoAntecedente != null) {
         val vantOriginal = dialogMostrandoAntecedente!!
         // Fantasy Override: Show list of Fantasy + Basic ABs with requirements
-        val opcoesArcano: List<Pair<String, Vantagem>> = if (state.compendioFantasiaAtivo) {
+        val opcoesArcano: List<Pair<String, Vantagem>> = if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
             listaVantagens
                 .filter {
                     val isAb = it.id.startsWith("antecedente_arcano_")
-                    val isSrc = it.origem.equals("FANTASIA", ignoreCase = true) || it.origem.equals("BASICO", ignoreCase = true)
+                    val isSrc = (state.compendioFantasiaAtivo && (it.origem.equals("FANTASIA", ignoreCase = true) || it.origem.equals("BASICO", ignoreCase = true))) ||
+                            (state.compendioHorrorAtivo && it.origem.equals("HORROR", ignoreCase = true))
                     isAb && isSrc
                 }
                 .map { vant ->
@@ -828,7 +829,7 @@ fun VantagensContent(
             title = { Text("Escolha o tipo de ${vantOriginal.nome}") },
             text = {
                 Column(Modifier.verticalScroll(rememberScrollState())) {
-                    if (state.compendioFantasiaAtivo) {
+                    if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
                         opcoesArcano.forEach { (label, _) ->
                             Row(
                                 Modifier
@@ -869,7 +870,7 @@ fun VantagensContent(
                 TextButton(
                     enabled = (subOpcaoSelecionada != null),
                     onClick = {
-                        if (state.compendioFantasiaAtivo) {
+                        if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
                             val choiceLabel = subOpcaoSelecionada!!
                             val specificEdge = opcoesArcano.firstOrNull { it.first == choiceLabel }?.second
 
