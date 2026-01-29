@@ -11,20 +11,16 @@ import java.security.MessageDigest
 
 object SecurityHardening {
 
-    // Placeholder: Replace with actual SHA-256 of your release key
-    // Run: keytool -list -v -keystore release.jks -alias key0
-    // Example: "A1:B2:..." (remove colons and lowercase)
-    private const val EXPECTED_SIGNATURE_HASH = "0000000000000000000000000000000000000000000000000000000000000000"
+    private const val EXPECTED_SIGNATURE_HASH = "193E9413FA759F8E6035C83692FBEF8B924ED9E96B512B7BB6EA9B0F8636A157"
 
     fun integrityCheck(context: Context) {
         if (checkDebuggable(context)) throw SecurityException("Debugger detectado ou App Debuggable.")
         if (checkRoot()) throw SecurityException("Ambiente Root detectado.")
         if (checkEmulator()) throw SecurityException("Execução em emulador não permitida.")
 
-        // Only check signature if NOT a debug build to allow development
         if (!isDebugBuild(context)) {
-             // In a real scenario, you would uncomment this once you have the hash
-             // if (!checkSignature(context)) throw SecurityException("Assinatura inválida/adulterada.")
+
+             if (!checkSignature(context)) throw SecurityException("Assinatura inválida/adulterada.")
         }
     }
 
@@ -97,7 +93,7 @@ object SecurityHardening {
                 }
             }
         } catch (e: Exception) {
-            // Log.e("Security", "Erro ao verificar assinatura", e)
+            Log.e("Security", "Erro ao verificar assinatura", e)
         }
         return false
     }
