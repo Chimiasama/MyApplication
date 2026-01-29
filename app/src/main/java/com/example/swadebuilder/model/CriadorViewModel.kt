@@ -905,9 +905,8 @@ class CriadorViewModel : ViewModel() {
         }
 
         // Apply increase
-        state.increasePericia(skill)
+        state.increasePericiaFromAdvancement(skill, cost)
         state.spFromProgress -= cost
-        state.skillsForCurrentAdvancement.add(skill.nome)
 
         // Rebuild stacks to update derived stats
         state.rebuildAllPericiaStacks()
