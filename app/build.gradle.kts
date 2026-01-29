@@ -84,19 +84,6 @@ android {
     }
 
     // ------------------------------------------------------------
-    // 🔹 Signing Configs
-    // ------------------------------------------------------------
-    signingConfigs {
-        create("release") {
-            // Placeholder: Replace with actual keystore values in CI/CD or local.properties
-            storeFile = file("keystore.jks")
-            storePassword = "password"
-            keyAlias = "key0"
-            keyPassword = "password"
-        }
-    }
-
-    // ------------------------------------------------------------
     // 🔹 Build Types
     // ------------------------------------------------------------
     buildTypes {
@@ -104,9 +91,6 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false
-            if (project.file("keystore.jks").exists()) {
-                signingConfig = signingConfigs.getByName("release")
-            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
