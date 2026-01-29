@@ -227,24 +227,31 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     if (personagem.vantagens.isEmpty()) {
         lines += "– Nenhuma"
     } else {
-        val nomesVantagens = listaVantagens
-            .filter { it.id in personagem.vantagens }
-            .map { vant ->
-                val escolha = vantagemChoices[vant.id]?.removeFirstOrNull()
-                    ?.takeIf { it.isNotBlank() }
-                val rawName = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome
-
-                val baseNome = if (vant.id == "antecedente_arcano_milagres" && personagem.celestialAAMilagresDesabilitado) {
-                    "$rawName (DESABILITADO)"
-                } else {
-                    rawName
-                }
-                if (escolha != null) "$baseNome (${escolha.trim()})" else baseNome
+        // Create a lookup map: ID -> Best Definition
+        val definitionMap = listaVantagens
+            .groupBy { it.id.keyify() }
+            .mapValues { (_, candidates) ->
+                candidates.maxByOrNull { CriadorState.getOriginPriority(it.origem) }!!
             }
+
+        val nomesVantagens = personagem.vantagens.mapNotNull { id ->
+            val vant = definitionMap[id.keyify()] ?: return@mapNotNull null
+
+            val escolha = vantagemChoices[vant.id]?.removeFirstOrNull()
+                ?.takeIf { it.isNotBlank() }
+            val rawName = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome
+
+            val baseNome = if (vant.id == "antecedente_arcano_milagres" && personagem.celestialAAMilagresDesabilitado) {
+                "$rawName (DESABILITADO)"
+            } else {
+                rawName
+            }
+            if (escolha != null) "$baseNome (${escolha.trim()})" else baseNome
+        }
         lines += nomesVantagens.joinToString(", ")
     }
     val habilidadesRaciais = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
-    val allRacialTraits = (personagem.vantagensRaciais + habilidadesRaciais).distinct()
+    val allRacialTraits = (personagem.vantagensRaciais + habilidadesRaciais).distinctBy { it.keyify() }
 
     if (allRacialTraits.isNotEmpty()) {
         val displayVantagensRaciais = if (personagem.ancestralidade.keyify() == "SAURIOS") {

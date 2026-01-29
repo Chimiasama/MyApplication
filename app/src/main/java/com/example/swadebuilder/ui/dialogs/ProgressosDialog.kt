@@ -1,7 +1,12 @@
 package com.example.swadebuilder.ui.dialogs
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -9,16 +14,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.RadioButton
@@ -31,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -40,10 +51,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.Pericia
+import com.example.swadebuilder.R
 import com.example.swadebuilder.dynamicStageCaps
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.listaDeEstagios
@@ -58,22 +71,28 @@ import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.periciaStartRaw
 import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.stageIndexForSlot
+import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.RadioButtonRow
+import com.example.swadebuilder.ui.theme.LocalAppThemeData
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ProgressosDialog(
     state: CriadorState,
     slotIndex: Int,
     onDismiss: () -> Unit,
     onStartSkillAdvancement: (Int, String) -> Unit,
-    onStartAdvantageAdvancement: (Int, String) -> Unit,
     onStartAttributeAdvancement: (Int, String, Boolean) -> Unit,
-    onReserveLegendaryAttribute: (Int, String) -> Unit
+    onReserveLegendaryAttribute: (Int, String) -> Unit,
+    onPurchaseAdvantage: (Int, String, Vantagem) -> Unit,
+    onPurchaseAttribute: (Int, String, String, Boolean) -> Unit,
+    onIncreaseSkill: (Pericia) -> Unit,
+    onFinishSkillAdvancement: () -> Unit
 ) {
     // Snackbar para mensagens temporárias (substitui showTempError/tempErrorMsg)
     val snackHost = remember { SnackbarHostState() }
@@ -81,8 +100,6 @@ fun ProgressosDialog(
     fun showSnack(msg: String) = scope.launch { snackHost.showSnackbar(message = msg) }
 
     var escolheu by rememberSaveable { mutableStateOf<String?>(null) }
-    var perBaixa1 by rememberSaveable { mutableStateOf<Pericia?>(null) }
-    var perBaixa2 by rememberSaveable { mutableStateOf<Pericia?>(null) }
     var compAction by rememberSaveable { mutableStateOf<String?>(null) }
     var compReserveExp by rememberSaveable { mutableStateOf(false) }
     var compReserveSelected by rememberSaveable { mutableStateOf<Complicacao?>(null) }
@@ -92,26 +109,25 @@ fun ProgressosDialog(
     var compReduceSelected by rememberSaveable { mutableStateOf<Complicacao?>(null) }
     var compMinorExp by rememberSaveable { mutableStateOf(false) }
     var compMinorSelected by rememberSaveable { mutableStateOf<Complicacao?>(null) }
+
+    // NEW STATES FOR SELECTION
     var showAdvSelection by rememberSaveable { mutableStateOf(false) }
+    var showAttrSelection by rememberSaveable { mutableStateOf(false) }
+    var showSkillSelection by rememberSaveable { mutableStateOf(false) }
+    var skillSearchQuery by rememberSaveable { mutableStateOf("") }
+
     var pendingAdv by rememberSaveable { mutableStateOf<Vantagem?>(null) }
     var showPendingChoice by rememberSaveable { mutableStateOf(false) }
     var advSelectedStageIndex by rememberSaveable { mutableIntStateOf(-1) }
-
-    // Slots: perícia OU especialização (quando a regra estiver ON)
-    var slot1IsSpec by rememberSaveable { mutableStateOf(false) }
-    var slot2IsSpec by rememberSaveable { mutableStateOf(false) }
-    var slot1SpecPer by rememberSaveable { mutableStateOf<Pericia?>(null) }
-    var slot2SpecPer by rememberSaveable { mutableStateOf<Pericia?>(null) }
-    var slot1SpecName by rememberSaveable { mutableStateOf("") }
-    var slot2SpecName by rememberSaveable { mutableStateOf("") }
-
-    // Especialização inicial para perícia nova (=0) quando a regra estiver ON
-    var slot1NewPerSpecName by rememberSaveable { mutableStateOf("") }
-    var slot2NewPerSpecName by rememberSaveable { mutableStateOf("") }
+    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val stages = listaDeEstagios
     val stageIndex = stageIndexForSlot(slotIndex)
     var selectedTab by rememberSaveable { mutableIntStateOf(stageIndex) }
+
+    val idParaNome = remember(listaVantagens) {
+        listaVantagens.associate { it.id to it.nomeExibicao.toSentenceCase() }
+    }
 
     // ── Cálculos de atributo via XP ────────────────────────────────────────────
     val est = stageForSlot(slotIndex)
@@ -183,39 +199,6 @@ fun ProgressosDialog(
         }
         if (v.requisitos.exigeCS && !state.cartaSelvagem) return false
         return true
-    }
-
-    // Helpers 2×
-    fun possui(per: Pericia): Boolean = state.rawTotal(per) > 0
-    fun sendoCompradaAgora(per: Pericia): Boolean =
-        (!slot1IsSpec && perBaixa1 == per) || (!slot2IsSpec && perBaixa2 == per)
-
-    fun podeAumentarAbaixo(per: Pericia): Boolean {
-        val startRaw = periciaStartRaw(state.ancestralidade, per)
-        val baseIncs = state.baseIncsPorPericia.getValue(per)
-        val extraIncs =
-            (if (!slot1IsSpec && perBaixa1 == per) 1 else 0) +
-                    (if (!slot2IsSpec && perBaixa2 == per) 1 else 0)
-        val totalIncs = baseIncs + extraIncs + 1
-        val extraStep = if (startRaw == 0 && totalIncs > 0) 2 else 0
-        val newRaw = startRaw + 2 * totalIncs + extraStep
-        return state.rawTotal(per) < state.valoresAtributos[per.atributo]!!.intValue &&
-                newRaw <= state.valoresAtributos[per.atributo]!!.intValue
-    }
-
-    fun deveMostrarSpecNesteSlot(slotEh1: Boolean, perDesteSlot: Pericia?): Boolean {
-        if (!state.usarEspecializacoesDePericia) return false
-        if (perDesteSlot == null) return false
-        if (state.rawTotal(perDesteSlot) != 0) return false
-
-        val outroJaInformou = if (slotEh1) {
-            (!slot2IsSpec && perBaixa2 == perDesteSlot && slot2NewPerSpecName.trim().isNotEmpty()) ||
-                    ( slot2IsSpec && slot2SpecPer == perDesteSlot && slot2SpecName.trim().isNotEmpty())
-        } else {
-            (!slot1IsSpec && perBaixa1 == perDesteSlot && slot1NewPerSpecName.trim().isNotEmpty()) ||
-                    ( slot1IsSpec && slot1SpecPer == perDesteSlot && slot1SpecName.trim().isNotEmpty())
-        }
-        return !outroJaInformou
     }
 
     fun bloquearExclusividadeClasse(vant: Vantagem): Boolean {
@@ -534,18 +517,15 @@ fun ProgressosDialog(
                 onClick = {
                     when (escolheu) {
                         "Comprar Vantagem" -> {
-                            onStartAdvantageAdvancement(slotIndex, est.nome)
-                            onDismiss()
+                            showAdvSelection = true
                         }
                         "Aumentar Perícia" -> {
                             onStartSkillAdvancement(slotIndex, est.nome)
-                            onDismiss()
+                            showSkillSelection = true
                         }
                         "Atributo" -> {
                             if (canBuyAttr) {
-                                val consumeReservation = remainingBaseAttrs <= 0
-                                onStartAttributeAdvancement(slotIndex, est.nome, consumeReservation)
-                                onDismiss()
+                                showAttrSelection = true
                             } else if (needsReservation) {
                                 showSnack("Reserve um atributo lendário primeiro.")
                                 return@TextButton
@@ -693,42 +673,6 @@ fun ProgressosDialog(
                     }
                 },
                 enabled = when (escolheu) {
-                    "PericiasBaixas" -> {
-                        if (!state.usarEspecializacoesDePericia) {
-                            val slot1Ok = (!slot1IsSpec) && (perBaixa1 != null)
-                            val slot2Ok = (!slot2IsSpec) && (perBaixa2 != null)
-                            slot1Ok && slot2Ok && state.progressosDisponiveis >= 1
-                        } else {
-                            fun temSpecPara(per: Pericia?): Boolean {
-                                if (per == null) return false
-                                val m1 = slot1IsSpec && slot1SpecPer == per && slot1SpecName.trim().isNotEmpty()
-                                val m2 = slot2IsSpec && slot2SpecPer == per && slot2SpecName.trim().isNotEmpty()
-                                val i1 = (!slot1IsSpec && perBaixa1 == per && state.rawTotal(per) == 0 && slot1NewPerSpecName.trim().isNotEmpty())
-                                val i2 = (!slot2IsSpec && perBaixa2 == per && state.rawTotal(per) == 0 && slot2NewPerSpecName.trim().isNotEmpty())
-                                return m1 || m2 || i1 || i2
-                            }
-                            val slot1Ok = if (!slot1IsSpec) {
-                                val p1 = perBaixa1
-                                p1 != null && (state.rawTotal(p1) > 0 || temSpecPara(p1))
-                            } else {
-                                slot1SpecPer != null && slot1SpecName.trim().isNotEmpty()
-                            }
-                            val slot2Ok = if (!slot2IsSpec) {
-                                val p2 = perBaixa2
-                                p2 != null && (state.rawTotal(p2) > 0 || temSpecPara(p2))
-                            } else {
-                                slot2SpecPer != null && slot2SpecName.trim().isNotEmpty()
-                            }
-                            val nova1 = (!slot1IsSpec && perBaixa1 != null && state.rawTotal(perBaixa1!!) == 0)
-                            val nova2 = (!slot2IsSpec && perBaixa2 != null && state.rawTotal(perBaixa2!!) == 0)
-                            val exigeSpecOk =
-                                (!nova1 && !nova2) ||
-                                        (nova1 && temSpecPara(perBaixa1)) ||
-                                        (nova2 && temSpecPara(perBaixa2)) ||
-                                        (nova1 && nova2 && (temSpecPara(perBaixa1) || temSpecPara(perBaixa2)))
-                            slot1Ok && slot2Ok && exigeSpecOk && state.progressosDisponiveis >= 1
-                        }
-                    }
                     "Atributo" -> canBuyAttr
                     "ReservaLendario" -> canReserveLegendary
                     else -> true
@@ -737,6 +681,115 @@ fun ProgressosDialog(
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar") } }
     )
+
+    if (showAttrSelection) {
+        val consumeReservation = remainingBaseAttrs <= 0
+        AlertDialog(
+            onDismissRequest = { showAttrSelection = false },
+            title = { Text("Selecione o Atributo") },
+            text = {
+                LazyColumn {
+                    items(listaAtributos) { attrKey ->
+                        val label = mapaAtributosDisplay[attrKey] ?: attrKey
+                        val currentVal = state.valoresAtributos[attrKey]?.intValue ?: 4
+
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onPurchaseAttribute(slotIndex, est.nome, attrKey, consumeReservation)
+                                }
+                                .padding(vertical = 12.dp)
+                        ) {
+                            Text("$label (d$currentVal → d${if (currentVal < 12) currentVal + 2 else currentVal + 1})")
+                        }
+                        HorizontalDivider()
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showAttrSelection = false }) { Text("Cancelar") }
+            }
+        )
+    }
+
+    if (showSkillSelection) {
+        val spRemaining = state.spFromProgress
+
+        AlertDialog(
+            onDismissRequest = {
+                // If user dismisses, we finish/commit whatever they bought so far
+                // or cancel? Usually commit if they bought something.
+                if (spRemaining < 2) {
+                    onFinishSkillAdvancement()
+                } else {
+                    // Cancel logic logic should be in viewmodel, but we can just close
+                    // Actually, if we close without finishing, state remains in "progress".
+                    // Safest to call finish which cleans up.
+                    onFinishSkillAdvancement()
+                }
+            },
+            title = {
+                Column {
+                    Text("Aumentar Perícias")
+                    Text("Pontos disponíveis: $spRemaining", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                }
+            },
+            text = {
+                Column {
+                    ExpandableSearchFilter(
+                        query = skillSearchQuery,
+                        onQueryChange = { skillSearchQuery = it },
+                        isExpanded = true,
+                        onExpandedChange = {},
+                        placeholder = "Buscar perícia..."
+                    )
+                    Spacer(Modifier.height(8.dp))
+
+                    val filteredSkills = state.periciasComIdiomas().filter {
+                        it.nome.contains(skillSearchQuery, ignoreCase = true)
+                    }.sortedBy { it.nome }
+
+                    LazyColumn(modifier = Modifier.fillMaxHeight(0.6f)) {
+                        items(filteredSkills) { per ->
+                            val current = state.rawTotal(per)
+                            val attrVal = state.valoresAtributos[per.atributo]?.intValue ?: 4
+                            val cost = if (current >= attrVal) 2 else 1
+                            val canBuy = spRemaining >= cost && current < 12 // Hard cap at d12 usually, but allowing legendaries is complex.
+                            // Standard limit is often d12. Let's assume standard rules.
+
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .alpha(if (canBuy) 1f else 0.5f)
+                                    .clickable(enabled = canBuy) {
+                                        onIncreaseSkill(per)
+                                        if (state.spFromProgress <= 0) {
+                                            onFinishSkillAdvancement()
+                                        }
+                                    }
+                                    .padding(vertical = 8.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column {
+                                    Text(per.nome)
+                                    Text("Atual: d$current | Custo: $cost SP", style = MaterialTheme.typography.bodySmall)
+                                }
+                            }
+                            HorizontalDivider()
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                // Only show confirm if they are done or want to stop early
+                TextButton(onClick = { onFinishSkillAdvancement() }) {
+                    Text("Concluir")
+                }
+            }
+        )
+    }
 
     if (showAdvSelection) {
         val estIndex = if (advSelectedStageIndex >= 0) advSelectedStageIndex else selectedTab
@@ -776,56 +829,48 @@ fun ProgressosDialog(
                 ) {
                     LazyColumn {
                         items(candidatas) { vant ->
-                            val qtdJaTem = state.vantagensSelecionadas.count {
-                                it.nome.equals(vant.nome, ignoreCase = true)
-                            }
-                            Column(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        val qtdJaTemClick = state.vantagensSelecionadas.count {
-                                            it.nome.equals(vant.nome, ignoreCase = true)
-                                        }
-                                        when (val maxEff = maxEffectiveSelections(vant)) {
-                                            null -> {}
-                                            else -> if (qtdJaTemClick >= maxEff) {
-                                                showSnack("Você já atingiu o limite para ${vant.nome}.")
-                                                return@clickable
-                                            }
-                                        }
-                                        if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndex)) {
-                                            showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
-                                            return@clickable
-                                        }
-                                        if (bloquearExclusividadeClasse(vant)) {
-                                            return@clickable
-                                        }
-                                        if (state.progressosDisponiveis < 1) {
-                                            showSnack("Você não tem progressos suficientes.")
-                                            return@clickable
-                                        }
-                        state.spendProgressAtStage(estSel.nome, 1)
-                        state.vantagensSelecionadas += vant
-                        state.advancementHistory.add(
-                            AdvancementAction.SpendOnAdvantage(
-                                advantageId = vant.id,
-                                stageName = estSel.nome
-                            )
-                        )
-                                        state.xpSlots[slotIndex] = true
-                                        state.recomputeAvailableProgress()
-                                        state.checkFreeze()
-                                        showAdvSelection = false
-                                        onDismiss()
+                            DialogVantagemItem(
+                                vant = vant,
+                                state = state,
+                                locked = false,
+                                allowLongTexts = true,
+                                showOfficialNames = state.modoOficialAtivo,
+                                idParaNome = idParaNome,
+                                detalhesExpandidos = detalhesExpandidos,
+                                onSelect = {
+                                    val qtdJaTemClick = state.vantagensSelecionadas.count {
+                                        it.nome.equals(vant.nome, ignoreCase = true)
                                     }
-                                    .padding(vertical = 8.dp, horizontal = 4.dp)
-                            ) {
-                                Text("${vant.nome} (${vant.requisitos.estagio.ifBlank { "—" }})")
-                                if (qtdJaTem > 0) {
-                                    Text("Já possui x$qtdJaTem", fontSize = 10.sp, color = Color.Gray)
-                                }
-                                HorizontalDivider()
-                            }
+                                    when (val maxEff = maxEffectiveSelections(vant)) {
+                                        null -> {}
+                                        else -> if (qtdJaTemClick >= maxEff) {
+                                            showSnack("Você já atingiu o limite para ${vant.nome}.")
+                                            return@DialogVantagemItem
+                                        }
+                                    }
+                                    if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndex)) {
+                                        showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
+                                        return@DialogVantagemItem
+                                    }
+                                    if (bloquearExclusividadeClasse(vant)) {
+                                        return@DialogVantagemItem
+                                    }
+                                    if (state.progressosDisponiveis < 1) {
+                                        showSnack("Você não tem progressos suficientes.")
+                                        return@DialogVantagemItem
+                                    }
+
+                                    // Use local logic for choices or pass to main callback
+                                    if (vant.requiresChoice) {
+                                        pendingAdv = vant
+                                        advSelectedStageIndex = estIndex
+                                        showPendingChoice = true
+                                    } else {
+                                        onPurchaseAdvantage(slotIndex, estSel.nome, vant)
+                                    }
+                                },
+                                onError = { showSnack(it) }
+                            )
                         }
                     }
                 }
@@ -880,31 +925,11 @@ fun ProgressosDialog(
                             return@onConfirm
                         }
 
-                        state.spendProgressAtStage(estSel.nome, 1)
-                        state.vantagensSelecionadas += vant.copy(choice = choice)
-                        state.advancementHistory.add(
-                            AdvancementAction.SpendOnAdvantage(
-                                advantageId = vant.id,
-                                stageName = estSel.nome
-                            )
-                        )
-                        state.xpSlots[slotIndex] = true
-                        state.recomputeAvailableProgress()
+                        onPurchaseAdvantage(slotIndex, estSel.nome, vant.copy(choice = choice))
 
-                        val choiceKey = choice.uppercase().semAcentos()
-                        if (state.valoresAtributos.containsKey(choiceKey)) {
-                            state.valoresAtributos[choiceKey]!!.intValue += 2
-                        } else {
-                            val per = state.periciasComIdiomas().first { it.nome == choice }
-                            state.baseIncsPorPericia[per] = state.baseIncsPorPericia.getValue(per) + 1
-                            state.spCostStackPorPericia[per]?.add(0)
-                        }
-
-                        state.checkFreeze()
                         showPendingChoice = false
                         showAdvSelection = false
                         pendingAdv = null
-                        onDismiss()
                     },
                     onDismiss = {
                         showPendingChoice = false
@@ -938,31 +963,11 @@ fun ProgressosDialog(
                                 return@onConfirm
                             }
 
-                            state.spendProgressAtStage(estSel.nome, 1)
-                            state.vantagensSelecionadas += vant.copy(choice = choice)
-                            state.advancementHistory.add(
-                                AdvancementAction.SpendOnAdvantage(
-                                    advantageId = vant.id,
-                                    stageName = estSel.nome
-                                )
-                            )
-                            state.xpSlots[slotIndex] = true
-                            state.recomputeAvailableProgress()
+                            onPurchaseAdvantage(slotIndex, estSel.nome, vant.copy(choice = choice))
 
-                            val choiceKey = choice.uppercase().semAcentos()
-                            if (state.valoresAtributos.containsKey(choiceKey)) {
-                                state.valoresAtributos[choiceKey]!!.intValue += 2
-                            } else {
-                                val per = state.periciasComIdiomas().first { it.nome == choice }
-                                state.baseIncsPorPericia[per] = state.baseIncsPorPericia.getValue(per) + 1
-                                state.spCostStackPorPericia[per]?.add(0)
-                            }
-
-                            state.checkFreeze()
                             showPendingChoice = false
                             showAdvSelection = false
                             pendingAdv = null
-                            onDismiss()
                         },
                         onDismiss = {
                             showPendingChoice = false
@@ -985,21 +990,11 @@ fun ProgressosDialog(
                             return@onConfirm
                         }
 
-                        state.spendProgressAtStage(estSel.nome, 1)
-                        state.vantagensSelecionadas += vant.copy(choice = choice)
-                        state.advancementHistory.add(
-                            AdvancementAction.SpendOnAdvantage(
-                                advantageId = vant.id,
-                                stageName = estSel.nome
-                            )
-                        )
-                        state.xpSlots[slotIndex] = true
-                        state.recomputeAvailableProgress()
-                        state.checkFreeze()
+                        onPurchaseAdvantage(slotIndex, estSel.nome, vant.copy(choice = choice))
+
                         showPendingChoice = false
                         showAdvSelection = false
                         pendingAdv = null
-                        onDismiss()
                     },
                     onDismiss = {
                         showPendingChoice = false
@@ -1016,3 +1011,185 @@ private fun maxEffectiveSelections(v: Vantagem): Int? =
     if (v.maxSelections > 0) v.maxSelections else null
 
 private fun validChoiceOptionsFor(v: Vantagem): List<String> = v.choiceOptions
+
+// Extracted reusable item component
+@Composable
+private fun DialogVantagemItem(
+    vant: Vantagem,
+    state: CriadorState,
+    locked: Boolean,
+    allowLongTexts: Boolean,
+    showOfficialNames: Boolean,
+    idParaNome: Map<String, String>,
+    detalhesExpandidos: MutableMap<String, Boolean>,
+    onSelect: () -> Unit,
+    onError: (String) -> Unit
+) {
+    val themeData = LocalAppThemeData.current
+
+    val reqList = buildList {
+        listaDeEstagios.firstOrNull {
+            it.nome.equals(vant.requisitos.estagio, true)
+        }?.let { add(it.nome) }
+
+        vant.requisitos.atributoMin.forEach { (a, m) ->
+            add("$a d$m")
+        }
+        vant.requisitos.periciaMin.forEach { (p, m) ->
+            add("$p d$m")
+        }
+
+        if (vant.requisitos.periciaMinOpcional.isNotEmpty()) {
+            add(
+                vant.requisitos.periciaMinOpcional.entries.joinToString(" ou ") {
+                    "${it.key} d${it.value}"
+                }
+            )
+        }
+
+        vant.requisitos.vantagensPrevias.forEach { prevId ->
+            val legivel = idParaNome[prevId]
+                ?: prevId.replace('_', ' ').replace('-', ' ').toSentenceCase()
+            add("Pré-requisito: $legivel")
+        }
+
+        if (vant.requisitos.observacoes.isNotBlank()) {
+            add(vant.requisitos.observacoes)
+        }
+        if (vant.nome.trim().removeSuffix(":").keyify() == "profissional") {
+            add(
+                "Traço no teto máximo: escolha entre " +
+                        state.maxedTraits.joinToString()
+            )
+        }
+    }
+
+    val jaTem = state.vantagensSelecionadas.any { it.id == vant.id }
+    val requisitosOk = state.podeSelecionar(vant)
+    val bloqueioClasse = if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant)) {
+        "Requer Multiclasse"
+    } else null
+
+    val statusText = when {
+        jaTem -> "Já selecionada"
+        bloqueioClasse != null -> bloqueioClasse
+        requisitosOk -> "Requisitos OK"
+        else -> "Requisitos pendentes"
+    }
+    val statusColor = when {
+        jaTem -> MaterialTheme.colorScheme.tertiary
+        bloqueioClasse != null -> MaterialTheme.colorScheme.error
+        requisitosOk -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.error
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .clickable(enabled = !locked) {
+                if (!locked) {
+                    val conflitoMsg = state.mensagemConflitoParaVantagem(vant)
+
+                    val isPathfinderFree = state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)
+
+                    when {
+                        // Check class blocking specifically for error message
+                        state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
+                        conflitoMsg != null -> onError(conflitoMsg)
+                        !state.podeSelecionar(vant) -> onError("Faltam requisitos para '${vant.nomeExibicao}'")
+                        else -> onSelect()
+                    }
+                }
+            },
+        colors = CardDefaults.cardColors(
+            containerColor = when {
+                jaTem -> MaterialTheme.colorScheme.tertiaryContainer
+                requisitosOk && bloqueioClasse == null -> MaterialTheme.colorScheme.surfaceVariant
+                else -> MaterialTheme.colorScheme.errorContainer
+            }
+        ),
+        border = themeData.cardBorderColor?.let { androidx.compose.foundation.BorderStroke(1.dp, it) }
+    ) {
+        Column(Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toSentenceCase() else vant.nomeExibicao.toSentenceCase(),
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                }
+
+                Text(
+                    statusText,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = statusColor
+                )
+            }
+
+            Spacer(Modifier.size(6.dp))
+
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                if (vant.descricao.isNotBlank() && vant.vinculadoPericia) {
+                    AssistChip(
+                        onClick = {},
+                        label = { Text("Opções especiais") }
+                    )
+                }
+            }
+
+            if (reqList.isNotEmpty()) {
+                Spacer(Modifier.size(4.dp))
+                Text(
+                    "Requisitos:",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                reqList.forEach { req ->
+                    Text(
+                        "• $req",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = if (requisitosOk || jaTem) {
+                            MaterialTheme.colorScheme.onSurface
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        }
+                    )
+                }
+            }
+
+            val canShowDetails = allowLongTexts && vant.descricao.isNotBlank()
+            if (canShowDetails) {
+                Spacer(Modifier.size(8.dp))
+                TextButton(
+                    onClick = {
+                        val current = detalhesExpandidos[vant.id] ?: false
+                        detalhesExpandidos[vant.id] = !current
+                    },
+                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        if (detalhesExpandidos[vant.id] == true) "Ocultar detalhes" else "Ver detalhes",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+
+                AnimatedVisibility(visible = detalhesExpandidos[vant.id] == true) {
+                    Text(
+                        text = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) vant.originalDescription.trim() else vant.descricao.trim(),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+            }
+        }
+    }
+}

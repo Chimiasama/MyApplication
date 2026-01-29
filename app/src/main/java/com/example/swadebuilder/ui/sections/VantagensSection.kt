@@ -228,7 +228,7 @@ fun VantagensContent(
     ) {
         listaVantagens
             .filter { vant -> state.isVantagemVisible(vant, multiplosAAHabilitados) }
-            .groupBy { it.id }
+            .groupBy { it.id.keyify() }
             .map { (_, duplicates) ->
                 duplicates.maxByOrNull { CriadorState.getOriginPriority(it.origem) }!!
             }

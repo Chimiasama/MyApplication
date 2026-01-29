@@ -539,14 +539,31 @@ fun UnifiedScreen(
             onStartSkillAdvancement = { slotIndex, stage ->
                 viewModel.startSkillAdvancement(slotIndex, stage)
             },
-            onStartAdvantageAdvancement = { slotIndex, est ->
-                viewModel.startAdvantageAdvancement(slotIndex, est)
-            },
             onStartAttributeAdvancement = { slotIndex, stage, consumeReservation ->
                 viewModel.startAttributeAdvancement(slotIndex, stage, consumeReservation)
             },
             onReserveLegendaryAttribute = { slotIndex, stage ->
                 viewModel.reserveLegendaryAttribute(slotIndex, stage)
+            },
+            onPurchaseAdvantage = { slotIndex, stage, vant ->
+                // Atomic purchase sequence
+                viewModel.startAdvantageAdvancement(slotIndex, stage)
+                viewModel.selectAdvantageForAdvancement(vant)
+                viewModel.finishAdvantageAdvancement()
+                showAllocDialog = false
+            },
+            onPurchaseAttribute = { slotIndex, stage, attributeKey, consumeReservation ->
+                viewModel.startAttributeAdvancement(slotIndex, stage, consumeReservation)
+                viewModel.increaseAttributeForAdvancement(attributeKey)
+                viewModel.finishAttributeAdvancement()
+                showAllocDialog = false
+            },
+            onIncreaseSkill = { skill ->
+                viewModel.increaseSkillForAdvancement(skill)
+            },
+            onFinishSkillAdvancement = {
+                viewModel.finishSkillAdvancement()
+                showAllocDialog = false
             }
         )
     }
@@ -615,9 +632,11 @@ private fun CreatorTabRow(
         selectedTabIndex = selectedIndex,
         edgePadding = 0.dp,
         indicator = { tabPositions ->
-            TabRowDefaults.PrimaryIndicator(
-                modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex])
-            )
+            if (selectedIndex < tabPositions.size) {
+                TabRowDefaults.PrimaryIndicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex])
+                )
+            }
         }
     ) {
         tabs.forEach { tab ->
