@@ -894,6 +894,27 @@ class CriadorViewModel : ViewModel() {
         }
     }
 
+    fun increaseSkillForAdvancement(skill: com.example.swadebuilder.Pericia): Boolean {
+        if (!state.skillAdvancementInProgress) return false
+
+        // Check if user has points
+        val cost = if (state.rawTotal(skill) >= state.valoresAtributos[skill.atributo]!!.intValue) 2 else 1
+        if (state.spFromProgress < cost) {
+            logFeedback("Pontos insuficientes para aumentar ${skill.nome} (Custo: $cost, Disponível: ${state.spFromProgress}).")
+            return false
+        }
+
+        // Apply increase
+        state.increasePericia(skill)
+        state.spFromProgress -= cost
+        state.skillsForCurrentAdvancement.add(skill.nome)
+
+        // Rebuild stacks to update derived stats
+        state.rebuildAllPericiaStacks()
+
+        return true
+    }
+
     fun startAdvantageAdvancement(slotIndex: Int, est: String) {
         if (state.progressosDisponiveis >= 1) {
             resetUiState()
@@ -1048,6 +1069,22 @@ class CriadorViewModel : ViewModel() {
             )
             state.recomputeAvailableProgress()
         }
+    }
+
+    fun increaseAttributeForAdvancement(attributeKey: String) {
+        if (!state.attributeAdvancementInProgress) return
+        if (state.paFromProgress <= 0) {
+            logFeedback("Sem pontos de atributo disponíveis.")
+            return
+        }
+
+        // Apply increase using generic PA logic
+        val stack = state.paCostStackPorAtributo.getOrPut(attributeKey) { mutableListOf() }
+        stack.add(1) // dummy cost, recalculated later
+
+        state.paFromProgress--
+        state.recalcularPontosAtributo()
+        state.checkFreeze()
     }
 
     fun finishAttributeAdvancement() {

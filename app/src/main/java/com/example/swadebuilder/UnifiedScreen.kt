@@ -551,6 +551,19 @@ fun UnifiedScreen(
                 viewModel.selectAdvantageForAdvancement(vant)
                 viewModel.finishAdvantageAdvancement()
                 showAllocDialog = false
+            },
+            onPurchaseAttribute = { slotIndex, stage, attributeKey, consumeReservation ->
+                viewModel.startAttributeAdvancement(slotIndex, stage, consumeReservation)
+                viewModel.increaseAttributeForAdvancement(attributeKey)
+                viewModel.finishAttributeAdvancement()
+                showAllocDialog = false
+            },
+            onIncreaseSkill = { skill ->
+                viewModel.increaseSkillForAdvancement(skill)
+            },
+            onFinishSkillAdvancement = {
+                viewModel.finishSkillAdvancement()
+                showAllocDialog = false
             }
         )
     }

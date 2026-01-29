@@ -71,6 +71,7 @@ import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.periciaStartRaw
 import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.stageIndexForSlot
+import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.RadioButtonRow
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
 import com.example.swadebuilder.util.keyify
@@ -88,7 +89,10 @@ fun ProgressosDialog(
     onStartSkillAdvancement: (Int, String) -> Unit,
     onStartAttributeAdvancement: (Int, String, Boolean) -> Unit,
     onReserveLegendaryAttribute: (Int, String) -> Unit,
-    onPurchaseAdvantage: (Int, String, Vantagem) -> Unit
+    onPurchaseAdvantage: (Int, String, Vantagem) -> Unit,
+    onPurchaseAttribute: (Int, String, String, Boolean) -> Unit,
+    onIncreaseSkill: (Pericia) -> Unit,
+    onFinishSkillAdvancement: () -> Unit
 ) {
     // Snackbar para mensagens temporárias (substitui showTempError/tempErrorMsg)
     val snackHost = remember { SnackbarHostState() }
@@ -96,8 +100,6 @@ fun ProgressosDialog(
     fun showSnack(msg: String) = scope.launch { snackHost.showSnackbar(message = msg) }
 
     var escolheu by rememberSaveable { mutableStateOf<String?>(null) }
-    var perBaixa1 by rememberSaveable { mutableStateOf<Pericia?>(null) }
-    var perBaixa2 by rememberSaveable { mutableStateOf<Pericia?>(null) }
     var compAction by rememberSaveable { mutableStateOf<String?>(null) }
     var compReserveExp by rememberSaveable { mutableStateOf(false) }
     var compReserveSelected by rememberSaveable { mutableStateOf<Complicacao?>(null) }
@@ -107,23 +109,17 @@ fun ProgressosDialog(
     var compReduceSelected by rememberSaveable { mutableStateOf<Complicacao?>(null) }
     var compMinorExp by rememberSaveable { mutableStateOf(false) }
     var compMinorSelected by rememberSaveable { mutableStateOf<Complicacao?>(null) }
+
+    // NEW STATES FOR SELECTION
     var showAdvSelection by rememberSaveable { mutableStateOf(false) }
+    var showAttrSelection by rememberSaveable { mutableStateOf(false) }
+    var showSkillSelection by rememberSaveable { mutableStateOf(false) }
+    var skillSearchQuery by rememberSaveable { mutableStateOf("") }
+
     var pendingAdv by rememberSaveable { mutableStateOf<Vantagem?>(null) }
     var showPendingChoice by rememberSaveable { mutableStateOf(false) }
     var advSelectedStageIndex by rememberSaveable { mutableIntStateOf(-1) }
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
-
-    // Slots: perícia OU especialização (quando a regra estiver ON)
-    var slot1IsSpec by rememberSaveable { mutableStateOf(false) }
-    var slot2IsSpec by rememberSaveable { mutableStateOf(false) }
-    var slot1SpecPer by rememberSaveable { mutableStateOf<Pericia?>(null) }
-    var slot2SpecPer by rememberSaveable { mutableStateOf<Pericia?>(null) }
-    var slot1SpecName by rememberSaveable { mutableStateOf("") }
-    var slot2SpecName by rememberSaveable { mutableStateOf("") }
-
-    // Especialização inicial para perícia nova (=0) quando a regra estiver ON
-    var slot1NewPerSpecName by rememberSaveable { mutableStateOf("") }
-    var slot2NewPerSpecName by rememberSaveable { mutableStateOf("") }
 
     val stages = listaDeEstagios
     val stageIndex = stageIndexForSlot(slotIndex)
@@ -203,39 +199,6 @@ fun ProgressosDialog(
         }
         if (v.requisitos.exigeCS && !state.cartaSelvagem) return false
         return true
-    }
-
-    // Helpers 2×
-    fun possui(per: Pericia): Boolean = state.rawTotal(per) > 0
-    fun sendoCompradaAgora(per: Pericia): Boolean =
-        (!slot1IsSpec && perBaixa1 == per) || (!slot2IsSpec && perBaixa2 == per)
-
-    fun podeAumentarAbaixo(per: Pericia): Boolean {
-        val startRaw = periciaStartRaw(state.ancestralidade, per)
-        val baseIncs = state.baseIncsPorPericia.getValue(per)
-        val extraIncs =
-            (if (!slot1IsSpec && perBaixa1 == per) 1 else 0) +
-                    (if (!slot2IsSpec && perBaixa2 == per) 1 else 0)
-        val totalIncs = baseIncs + extraIncs + 1
-        val extraStep = if (startRaw == 0 && totalIncs > 0) 2 else 0
-        val newRaw = startRaw + 2 * totalIncs + extraStep
-        return state.rawTotal(per) < state.valoresAtributos[per.atributo]!!.intValue &&
-                newRaw <= state.valoresAtributos[per.atributo]!!.intValue
-    }
-
-    fun deveMostrarSpecNesteSlot(slotEh1: Boolean, perDesteSlot: Pericia?): Boolean {
-        if (!state.usarEspecializacoesDePericia) return false
-        if (perDesteSlot == null) return false
-        if (state.rawTotal(perDesteSlot) != 0) return false
-
-        val outroJaInformou = if (slotEh1) {
-            (!slot2IsSpec && perBaixa2 == perDesteSlot && slot2NewPerSpecName.trim().isNotEmpty()) ||
-                    ( slot2IsSpec && slot2SpecPer == perDesteSlot && slot2SpecName.trim().isNotEmpty())
-        } else {
-            (!slot1IsSpec && perBaixa1 == perDesteSlot && slot1NewPerSpecName.trim().isNotEmpty()) ||
-                    ( slot1IsSpec && slot1SpecPer == perDesteSlot && slot1SpecName.trim().isNotEmpty())
-        }
-        return !outroJaInformou
     }
 
     fun bloquearExclusividadeClasse(vant: Vantagem): Boolean {
@@ -558,13 +521,11 @@ fun ProgressosDialog(
                         }
                         "Aumentar Perícia" -> {
                             onStartSkillAdvancement(slotIndex, est.nome)
-                            onDismiss()
+                            showSkillSelection = true
                         }
                         "Atributo" -> {
                             if (canBuyAttr) {
-                                val consumeReservation = remainingBaseAttrs <= 0
-                                onStartAttributeAdvancement(slotIndex, est.nome, consumeReservation)
-                                onDismiss()
+                                showAttrSelection = true
                             } else if (needsReservation) {
                                 showSnack("Reserve um atributo lendário primeiro.")
                                 return@TextButton
@@ -712,42 +673,6 @@ fun ProgressosDialog(
                     }
                 },
                 enabled = when (escolheu) {
-                    "PericiasBaixas" -> {
-                        if (!state.usarEspecializacoesDePericia) {
-                            val slot1Ok = (!slot1IsSpec) && (perBaixa1 != null)
-                            val slot2Ok = (!slot2IsSpec) && (perBaixa2 != null)
-                            slot1Ok && slot2Ok && state.progressosDisponiveis >= 1
-                        } else {
-                            fun temSpecPara(per: Pericia?): Boolean {
-                                if (per == null) return false
-                                val m1 = slot1IsSpec && slot1SpecPer == per && slot1SpecName.trim().isNotEmpty()
-                                val m2 = slot2IsSpec && slot2SpecPer == per && slot2SpecName.trim().isNotEmpty()
-                                val i1 = (!slot1IsSpec && perBaixa1 == per && state.rawTotal(per) == 0 && slot1NewPerSpecName.trim().isNotEmpty())
-                                val i2 = (!slot2IsSpec && perBaixa2 == per && state.rawTotal(per) == 0 && slot2NewPerSpecName.trim().isNotEmpty())
-                                return m1 || m2 || i1 || i2
-                            }
-                            val slot1Ok = if (!slot1IsSpec) {
-                                val p1 = perBaixa1
-                                p1 != null && (state.rawTotal(p1) > 0 || temSpecPara(p1))
-                            } else {
-                                slot1SpecPer != null && slot1SpecName.trim().isNotEmpty()
-                            }
-                            val slot2Ok = if (!slot2IsSpec) {
-                                val p2 = perBaixa2
-                                p2 != null && (state.rawTotal(p2) > 0 || temSpecPara(p2))
-                            } else {
-                                slot2SpecPer != null && slot2SpecName.trim().isNotEmpty()
-                            }
-                            val nova1 = (!slot1IsSpec && perBaixa1 != null && state.rawTotal(perBaixa1!!) == 0)
-                            val nova2 = (!slot2IsSpec && perBaixa2 != null && state.rawTotal(perBaixa2!!) == 0)
-                            val exigeSpecOk =
-                                (!nova1 && !nova2) ||
-                                        (nova1 && temSpecPara(perBaixa1)) ||
-                                        (nova2 && temSpecPara(perBaixa2)) ||
-                                        (nova1 && nova2 && (temSpecPara(perBaixa1) || temSpecPara(perBaixa2)))
-                            slot1Ok && slot2Ok && exigeSpecOk && state.progressosDisponiveis >= 1
-                        }
-                    }
                     "Atributo" -> canBuyAttr
                     "ReservaLendario" -> canReserveLegendary
                     else -> true
@@ -756,6 +681,115 @@ fun ProgressosDialog(
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar") } }
     )
+
+    if (showAttrSelection) {
+        val consumeReservation = remainingBaseAttrs <= 0
+        AlertDialog(
+            onDismissRequest = { showAttrSelection = false },
+            title = { Text("Selecione o Atributo") },
+            text = {
+                LazyColumn {
+                    items(listaAtributos) { attrKey ->
+                        val label = mapaAtributosDisplay[attrKey] ?: attrKey
+                        val currentVal = state.valoresAtributos[attrKey]?.intValue ?: 4
+
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onPurchaseAttribute(slotIndex, est.nome, attrKey, consumeReservation)
+                                }
+                                .padding(vertical = 12.dp)
+                        ) {
+                            Text("$label (d$currentVal → d${if (currentVal < 12) currentVal + 2 else currentVal + 1})")
+                        }
+                        HorizontalDivider()
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showAttrSelection = false }) { Text("Cancelar") }
+            }
+        )
+    }
+
+    if (showSkillSelection) {
+        val spRemaining = state.spFromProgress
+
+        AlertDialog(
+            onDismissRequest = {
+                // If user dismisses, we finish/commit whatever they bought so far
+                // or cancel? Usually commit if they bought something.
+                if (spRemaining < 2) {
+                    onFinishSkillAdvancement()
+                } else {
+                    // Cancel logic logic should be in viewmodel, but we can just close
+                    // Actually, if we close without finishing, state remains in "progress".
+                    // Safest to call finish which cleans up.
+                    onFinishSkillAdvancement()
+                }
+            },
+            title = {
+                Column {
+                    Text("Aumentar Perícias")
+                    Text("Pontos disponíveis: $spRemaining", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                }
+            },
+            text = {
+                Column {
+                    ExpandableSearchFilter(
+                        query = skillSearchQuery,
+                        onQueryChange = { skillSearchQuery = it },
+                        isExpanded = true,
+                        onExpandedChange = {},
+                        placeholder = "Buscar perícia..."
+                    )
+                    Spacer(Modifier.height(8.dp))
+
+                    val filteredSkills = state.periciasComIdiomas().filter {
+                        it.nome.contains(skillSearchQuery, ignoreCase = true)
+                    }.sortedBy { it.nome }
+
+                    LazyColumn(modifier = Modifier.fillMaxHeight(0.6f)) {
+                        items(filteredSkills) { per ->
+                            val current = state.rawTotal(per)
+                            val attrVal = state.valoresAtributos[per.atributo]?.intValue ?: 4
+                            val cost = if (current >= attrVal) 2 else 1
+                            val canBuy = spRemaining >= cost && current < 12 // Hard cap at d12 usually, but allowing legendaries is complex.
+                            // Standard limit is often d12. Let's assume standard rules.
+
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .alpha(if (canBuy) 1f else 0.5f)
+                                    .clickable(enabled = canBuy) {
+                                        onIncreaseSkill(per)
+                                        if (state.spFromProgress <= 0) {
+                                            onFinishSkillAdvancement()
+                                        }
+                                    }
+                                    .padding(vertical = 8.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column {
+                                    Text(per.nome)
+                                    Text("Atual: d$current | Custo: $cost SP", style = MaterialTheme.typography.bodySmall)
+                                }
+                            }
+                            HorizontalDivider()
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                // Only show confirm if they are done or want to stop early
+                TextButton(onClick = { onFinishSkillAdvancement() }) {
+                    Text("Concluir")
+                }
+            }
+        )
+    }
 
     if (showAdvSelection) {
         val estIndex = if (advSelectedStageIndex >= 0) advSelectedStageIndex else selectedTab
