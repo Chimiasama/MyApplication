@@ -1,4 +1,4 @@
-@file:Suppress("UnstableApiUsage")
+@file:Suppress("UnstableApiUsage", "DEPRECATION")
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -26,8 +26,8 @@ android {
         applicationId = "com.swadebuilder"
         minSdk = 25
         targetSdk = 36
-        versionCode = 14
-        versionName = "2.3"
+        versionCode = 16
+        versionName = "2.5"
 
 
         ndk {
@@ -181,7 +181,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     // --- Segurança ---
-    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    implementation(libs.androidx.security.crypto)
 
     // --- iText para PDF ---
     implementation(libs.itextg)
