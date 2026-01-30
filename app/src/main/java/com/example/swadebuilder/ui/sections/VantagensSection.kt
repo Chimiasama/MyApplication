@@ -60,6 +60,7 @@ import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
+import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.Poder
@@ -845,17 +846,17 @@ fun VantagensContent(
                                 else failMsg = "Requer Força d8+"
                             }
                             "Guerreiro" -> {
-                                val lut = state.mapaPericias["LUTAR"]?.let { state.rawTotal(it) } ?: 0
+                                val lut = mapaPericias["LUTAR"]?.let { state.rawTotal(it) } ?: 0
                                 if (lut >= 8) reqMet = true
                                 else failMsg = "Requer Lutar d8+"
                             }
                             "Ladrão" -> {
-                                val lad = state.mapaPericias["LADINAGEM"]?.let { state.rawTotal(it) } ?: 0
+                                val lad = mapaPericias["LADINAGEM"]?.let { state.rawTotal(it) } ?: 0
                                 if (lad >= 8) reqMet = true
                                 else failMsg = "Requer Ladinagem d8+"
                             }
                             "Monge" -> {
-                                val atl = state.mapaPericias["ATLETISMO"]?.let { state.rawTotal(it) } ?: 0
+                                val atl = mapaPericias["ATLETISMO"]?.let { state.rawTotal(it) } ?: 0
                                 if (atl >= 8) reqMet = true
                                 else failMsg = "Requer Atletismo d8+"
                             }
@@ -865,7 +866,7 @@ fun VantagensContent(
                                 else failMsg = "Requer Espírito d8+"
                             }
                             "Patrulheiro" -> {
-                                val sob = state.mapaPericias["SOBREVIVENCIA"]?.let { state.rawTotal(it) } ?: 0
+                                val sob = mapaPericias["SOBREVIVENCIA"]?.let { state.rawTotal(it) } ?: 0
                                 if (sob >= 8) reqMet = true
                                 else failMsg = "Requer Sobrevivência d8+"
                             }
