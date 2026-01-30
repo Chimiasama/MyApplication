@@ -164,7 +164,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     listaAtributos.forEach { attrKey ->
         val label = mapaAtributosDisplay[attrKey] ?: attrKey
         val valor = personagem.atributos[attrKey] ?: 4
-        lines += "$label: d$valor"
+        lines += "$label: ${valor.toDiceString()}"
     }
     lines += ""
 
