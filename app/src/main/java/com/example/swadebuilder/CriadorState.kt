@@ -145,7 +145,13 @@ class CriadorState {
         "INVOCADOR" to listOf("amigo_das_feras", "aumentar_reduzir_caracteristica", "conjurar_aliado"),
         "MAGO" to listOf("detectar_ocultar_arcano", "dissipar", "trancar_destrancar"),
         "NECROMANTE" to listOf("detectar_ocultar_arcano", "dissipar", "zumbi"),
-        "XAMA" to listOf("protecao_arcana", "ajuda")
+        "XAMA" to listOf("protecao_arcana", "ajuda"),
+        "MISTICO_BARBARO" to listOf("aumentar_reduzir_caracteristica", "ferir", "morosidade_velocidade"),
+        "MISTICO_GUERREIRO" to listOf("aumentar_reduzir_caracteristica", "ferir", "protecao"),
+        "MISTICO_LADRAO" to listOf("andar_nas_paredes", "aumentar_reduzir_caracteristica", "trancar_destrancar", "visao_sombria"),
+        "MISTICO_MONGE" to listOf("aumentar_reduzir_caracteristica", "deflexao", "ferir"),
+        "MISTICO_PALADINO" to listOf("aumentar_reduzir_caracteristica", "cura", "ferir", "protecao", "santuario"),
+        "MISTICO_PATRULHEIRO" to listOf("amigo_das_feras", "aumentar_reduzir_caracteristica", "enredar", "visao_distante")
     )
 
     fun isFixedPower(arcanoKey: String, powerId: String?): Boolean {
@@ -853,14 +859,22 @@ class CriadorState {
 
         v.toArcanoKey()?.let { arcKeyRaw ->
             val arcKey = arcKeyRaw.normAAKey()
-            fixedPowersByArcano[arcKey]?.let { fixedList ->
+
+            val effectiveKey = if (arcKey == "MISTICO" && !v.choice.isNullOrBlank()) {
+                "MISTICO_${v.choice!!.normAAKey()}"
+            } else {
+                arcKey
+            }
+
+            fixedPowersByArcano[effectiveKey]?.let { fixedList ->
                 val slots = poderSlotsPorArcano.getOrPut(arcKey) {
                     val count = getSlotsCountForArcano(arcKey)
                     mutableStateListOf<String?>().apply { repeat(count) { add(null) } }
                 }
 
                 // Ensure slots size
-                val requiredSize = getSlotsCountForArcano(arcKey)
+                // Fix: Mystic Powers might have more fixed powers than the default slot count
+                val requiredSize = getEffectiveSlotsCountForArcano(arcKey)
                 while (slots.size < requiredSize) slots.add(null)
 
                 fixedList.forEachIndexed { index, powerId ->
@@ -1819,6 +1833,22 @@ class CriadorState {
 
         val bonusTecnicas = if (arcKey == "MESTRE DO CHI") tecnicasIniciaisFromTropo else 0
         return base + bonusSlots + bonusTecnicas
+    }
+
+    fun getEffectiveSlotsCountForArcano(arcKey: String): Int {
+        val baseCount = getSlotsCountForArcano(arcKey)
+        val arcKeyNorm = arcKey.normAAKey()
+
+        val vant = vantagensSelecionadas.find { it.toArcanoKey()?.normAAKey() == arcKeyNorm }
+
+        if (vant != null && arcKeyNorm == "MISTICO" && !vant.choice.isNullOrBlank()) {
+            val effectiveKey = "MISTICO_${vant.choice!!.normAAKey()}"
+            val fixedList = fixedPowersByArcano[effectiveKey]
+            if (fixedList != null) {
+                return maxOf(baseCount, fixedList.size)
+            }
+        }
+        return baseCount
     }
 
     fun arcanoCompraPendente(): Boolean {

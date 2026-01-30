@@ -96,7 +96,7 @@ fun CriadorState.isVantagemVisible(
         if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
             return false
         }
-        if (vant.categoria == Categoria.PODER) {
+        if (vant.categoria == Categoria.PODER && vant.id != "poderes_misticos") {
             return false
         }
         if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") {
@@ -106,7 +106,7 @@ fun CriadorState.isVantagemVisible(
 
     // Wiseguys Logic
     if (compendioWiseguysAtivo) {
-        if (vant.categoria == Categoria.PODER) {
+        if (vant.categoria == Categoria.PODER && vant.id != "poderes_misticos") {
             return false
         }
         if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") {

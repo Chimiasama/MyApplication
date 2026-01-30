@@ -60,6 +60,7 @@ import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
+import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.Poder
@@ -246,6 +247,7 @@ fun VantagensContent(
     var pendingVantagem by remember { mutableStateOf<Vantagem?>(null) }
     var showChoiceDialog by rememberSaveable { mutableStateOf(false) }
     var dialogMostrandoAntecedente by remember { mutableStateOf<Vantagem?>(null) }
+    var dialogMostrandoPoderesMisticos by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoCavaleiro by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoMontaria by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoNovosPoderes by remember { mutableStateOf<Vantagem?>(null) }
@@ -599,6 +601,8 @@ fun VantagensContent(
                                         showChoiceDialog = true
                                     } else if (vant.id == "antecedente_arcano") {
                                         dialogMostrandoAntecedente = vant
+                                    } else if (vant.id == "poderes_misticos") {
+                                        dialogMostrandoPoderesMisticos = vant
                                     } else if (vant.nome.keyify() == "CAVALEIRO") {
                                         dialogMostrandoCavaleiro = vant
                                     } else if (vant.nome.keyify() == "MONTARIA") {
@@ -701,6 +705,8 @@ fun VantagensContent(
                                     showChoiceDialog = true
                                 } else if (vant.id == "antecedente_arcano") {
                                     dialogMostrandoAntecedente = vant
+                                } else if (vant.id == "poderes_misticos") {
+                                    dialogMostrandoPoderesMisticos = vant
                                 } else if (vant.nome.keyify() == "CAVALEIRO") {
                                     dialogMostrandoCavaleiro = vant
                                 } else if (vant.nome.keyify() == "MONTARIA") {
@@ -788,6 +794,117 @@ fun VantagensContent(
             current = filter,
             onChange = { state.vantFilter = it },
             onDismiss = { showFilterDialog = false }
+        )
+    }
+
+    if (dialogMostrandoPoderesMisticos != null) {
+        val vantOriginal = dialogMostrandoPoderesMisticos!!
+        val options = listOf("Bárbaro", "Guerreiro", "Ladrão", "Monge", "Paladino", "Patrulheiro")
+
+        AlertDialog(
+            onDismissRequest = {
+                dialogMostrandoPoderesMisticos = null
+                subOpcaoSelecionada = null
+            },
+            title = { Text("Poderes Místicos: Escolha a Classe") },
+            text = {
+                Column {
+                    Text("Escolha a classe para definir seus poderes e requisitos:")
+                    Spacer(Modifier.size(8.dp))
+                    options.forEach { opcao ->
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable { subOpcaoSelecionada = opcao }
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (subOpcaoSelecionada == opcao),
+                                onClick = { subOpcaoSelecionada = opcao }
+                            )
+                            Spacer(Modifier.size(8.dp))
+                            Text(opcao)
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = (subOpcaoSelecionada != null),
+                    onClick = {
+                        val choice = subOpcaoSelecionada!!
+
+                        // Validate specific requirements
+                        var reqMet = false
+                        var failMsg = ""
+
+                        when (choice) {
+                            "Bárbaro" -> {
+                                val str = state.valoresAtributos["FORCA"]?.intValue ?: 4
+                                if (str >= 8) reqMet = true
+                                else failMsg = "Requer Força d8+"
+                            }
+                            "Guerreiro" -> {
+                                val lut = mapaPericias["LUTAR"]?.let { state.rawTotal(it) } ?: 0
+                                if (lut >= 8) reqMet = true
+                                else failMsg = "Requer Lutar d8+"
+                            }
+                            "Ladrão" -> {
+                                val lad = mapaPericias["LADINAGEM"]?.let { state.rawTotal(it) } ?: 0
+                                if (lad >= 8) reqMet = true
+                                else failMsg = "Requer Ladinagem d8+"
+                            }
+                            "Monge" -> {
+                                val atl = mapaPericias["ATLETISMO"]?.let { state.rawTotal(it) } ?: 0
+                                if (atl >= 8) reqMet = true
+                                else failMsg = "Requer Atletismo d8+"
+                            }
+                            "Paladino" -> {
+                                val esp = state.valoresAtributos["ESPIRITO"]?.intValue ?: 4
+                                if (esp >= 8) reqMet = true
+                                else failMsg = "Requer Espírito d8+"
+                            }
+                            "Patrulheiro" -> {
+                                val sob = mapaPericias["SOBREVIVENCIA"]?.let { state.rawTotal(it) } ?: 0
+                                if (sob >= 8) reqMet = true
+                                else failMsg = "Requer Sobrevivência d8+"
+                            }
+                            else -> reqMet = true
+                        }
+
+                        if (!reqMet) {
+                            viewModel.logFeedback(failMsg)
+                            onUserFeedback()
+                            return@TextButton
+                        }
+
+                        val vantToAdd = vantOriginal.copy(choice = choice)
+
+                        if (state.advantageAdvancementInProgress) {
+                            viewModel.selectAdvantageForAdvancement(vantToAdd)
+                            onUserFeedback()
+                            viewModel.logFeedback("Vantagem ${vantToAdd.nome} adicionada ($choice).")
+                        } else {
+                            state.comprarVantagem(vantToAdd) { msg ->
+                                viewModel.logFeedback(msg)
+                                onUserFeedback()
+                            }
+                        }
+
+                        dialogMostrandoPoderesMisticos = null
+                        subOpcaoSelecionada = null
+                    }
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        dialogMostrandoPoderesMisticos = null
+                        subOpcaoSelecionada = null
+                    }
+                ) { Text("Cancelar") }
+            }
         )
     }
 

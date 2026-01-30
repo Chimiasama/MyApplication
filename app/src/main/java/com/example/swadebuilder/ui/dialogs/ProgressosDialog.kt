@@ -65,6 +65,7 @@ import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
+import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
@@ -132,6 +133,8 @@ fun ProgressosDialog(
 
     var pendingAdv by rememberSaveable { mutableStateOf<Vantagem?>(null) }
     var showPendingChoice by rememberSaveable { mutableStateOf(false) }
+    var showMysticPowersSelection by rememberSaveable { mutableStateOf(false) }
+    var pendingMysticPowersAdv by remember { mutableStateOf<Vantagem?>(null) }
     var advSelectedStageIndex by rememberSaveable { mutableIntStateOf(-1) }
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
@@ -965,7 +968,11 @@ fun ProgressosDialog(
                                         return@DialogVantagemItem
                                     }
 
-                                    if (vant.requiresChoice) {
+                                    if (vant.id == "poderes_misticos") {
+                                        pendingMysticPowersAdv = vant
+                                        advSelectedStageIndex = estIndex
+                                        showMysticPowersSelection = true
+                                    } else if (vant.requiresChoice) {
                                         pendingAdv = vant
                                         advSelectedStageIndex = estIndex
                                         showPendingChoice = true
@@ -1050,6 +1057,119 @@ fun ProgressosDialog(
         )
     }
 
+    if (showMysticPowersSelection && pendingMysticPowersAdv != null) {
+        val vant = pendingMysticPowersAdv!!
+        val options = listOf("Bárbaro", "Guerreiro", "Ladrão", "Monge", "Paladino", "Patrulheiro")
+        var selectedClass by rememberSaveable { mutableStateOf<String?>(null) }
+
+        AlertDialog(
+            onDismissRequest = {
+                showMysticPowersSelection = false
+                pendingMysticPowersAdv = null
+            },
+            title = { Text("Poderes Místicos: Escolha a Classe") },
+            text = {
+                Column {
+                    Text("Escolha a classe para definir seus poderes e requisitos:")
+                    Spacer(Modifier.size(8.dp))
+                    options.forEach { opcao ->
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable { selectedClass = opcao }
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (selectedClass == opcao),
+                                onClick = { selectedClass = opcao }
+                            )
+                            Spacer(Modifier.size(8.dp))
+                            Text(opcao)
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = (selectedClass != null),
+                    onClick = {
+                        val choice = selectedClass!!
+                        // Validate specific requirements
+                        var reqMet = false
+                        var failMsg = ""
+
+                        when (choice) {
+                            "Bárbaro" -> {
+                                val str = state.valoresAtributos["FORCA"]?.intValue ?: 4
+                                if (str >= 8) reqMet = true
+                                else failMsg = "Requer Força d8+"
+                            }
+                            "Guerreiro" -> {
+                                val lut = mapaPericias["LUTAR"]?.let { state.rawTotal(it) } ?: 0
+                                if (lut >= 8) reqMet = true
+                                else failMsg = "Requer Lutar d8+"
+                            }
+                            "Ladrão" -> {
+                                val lad = mapaPericias["LADINAGEM"]?.let { state.rawTotal(it) } ?: 0
+                                if (lad >= 8) reqMet = true
+                                else failMsg = "Requer Ladinagem d8+"
+                            }
+                            "Monge" -> {
+                                val atl = mapaPericias["ATLETISMO"]?.let { state.rawTotal(it) } ?: 0
+                                if (atl >= 8) reqMet = true
+                                else failMsg = "Requer Atletismo d8+"
+                            }
+                            "Paladino" -> {
+                                val esp = state.valoresAtributos["ESPIRITO"]?.intValue ?: 4
+                                if (esp >= 8) reqMet = true
+                                else failMsg = "Requer Espírito d8+"
+                            }
+                            "Patrulheiro" -> {
+                                val sob = mapaPericias["SOBREVIVENCIA"]?.let { state.rawTotal(it) } ?: 0
+                                if (sob >= 8) reqMet = true
+                                else failMsg = "Requer Sobrevivência d8+"
+                            }
+                            else -> reqMet = true
+                        }
+
+                        if (!reqMet) {
+                            showSnack(failMsg)
+                            return@TextButton
+                        }
+
+                        val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
+                        val estSel = listaDeEstagios[estIndexFinal]
+
+                        if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndexFinal)) {
+                            showSnack("Você não cumpre os requisitos gerais para ${vant.nome}.")
+                            return@TextButton
+                        }
+
+                        val vantChoice = vant.copy(choice = choice)
+                        viewModel.startAdvantageAdvancement(slotIndex, estSel.nome)
+                        viewModel.selectAdvantageForAdvancement(vantChoice)
+
+                        // Místico doesn't open power selection, so just finish
+                        viewModel.finishAdvantageAdvancement()
+                        showMysticPowersSelection = false
+                        showAdvSelection = false
+                        pendingMysticPowersAdv = null
+                        onDismiss()
+                    }
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showMysticPowersSelection = false
+                        pendingMysticPowersAdv = null
+                    }
+                ) { Text("Cancelar") }
+            }
+        )
+    }
+
     if (showPendingChoice && pendingAdv != null) {
         state.identifyMaxedTraits()
         val vant = pendingAdv!!
@@ -1130,6 +1250,93 @@ fun ProgressosDialog(
                 } else {
                     ChoiceDialog(
                         options = profChoices,
+                        onConfirm = { finishWithChoice(it) },
+                        onDismiss = {
+                            showPendingChoice = false
+                            pendingAdv = null
+                        }
+                    )
+                }
+            }
+
+            "ANTECEDENTE ARCANO" -> {
+                if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
+                    val opcoesArcano = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo) {
+                        listaVantagens
+                            .filter {
+                                val isAb = it.id.startsWith("antecedente_arcano_")
+                                val isSrc = (state.compendioFantasiaAtivo && (it.origem.equals("FANTASIA", ignoreCase = true) || it.origem.equals("BASICO", ignoreCase = true))) ||
+                                        (state.compendioHorrorAtivo && it.origem.equals("HORROR", ignoreCase = true))
+                                isAb && isSrc
+                            }
+                            .map { v ->
+                                val nameInParens = Regex("\\((.*?)\\)").find(v.nome)?.groupValues?.get(1)
+                                val baseName = nameInParens?.toSentenceCase()
+                                    ?: v.subtipoArcano?.toSentenceCase()
+                                    ?: v.nome.removePrefix("ANTECEDENTE ARCANO ").replace("(", "").replace(")", "").trim().toSentenceCase()
+
+                                val reqs = if (v.requisitos.atributoMin.isNotEmpty()) {
+                                    val r = v.requisitos.atributoMin.entries.joinToString(", ") { "${it.key} d${it.value}" }
+                                    " ($r)"
+                                } else ""
+
+                                "$baseName$reqs" to v
+                            }
+                            .sortedBy { it.first }
+                    }
+
+                    if (opcoesArcano.isNotEmpty()) {
+                        ChoiceDialog(
+                            options = opcoesArcano.map { it.first },
+                            onConfirm = { choiceLabel ->
+                                val specificEdge = opcoesArcano.firstOrNull { it.first == choiceLabel }?.second
+                                if (specificEdge != null) {
+                                    val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
+                                    val estSel = listaDeEstagios[estIndexFinal]
+
+                                    if (!state.podeSelecionar(specificEdge) || !strictRequirementsOk(specificEdge, estIndexFinal)) {
+                                        showSnack("Você não cumpre os requisitos para ${specificEdge.nome}.")
+                                        return@ChoiceDialog
+                                    }
+                                    if (bloquearExclusividadeClasse(specificEdge)) {
+                                        return@ChoiceDialog
+                                    }
+
+                                    viewModel.startAdvantageAdvancement(slotIndex, estSel.nome)
+                                    viewModel.selectAdvantageForAdvancement(specificEdge)
+
+                                    if (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso) {
+                                        showPendingChoice = false
+                                        showAdvSelection = false
+                                        pendingAdv = null
+                                        showPowerSelection = true
+                                    } else {
+                                        viewModel.finishAdvantageAdvancement()
+                                        showPendingChoice = false
+                                        showAdvSelection = false
+                                        pendingAdv = null
+                                        onDismiss()
+                                    }
+                                }
+                            },
+                            onDismiss = {
+                                showPendingChoice = false
+                                pendingAdv = null
+                            }
+                        )
+                    } else {
+                        ChoiceDialog(
+                            options = vant.choiceOptions,
+                            onConfirm = { finishWithChoice(it) },
+                            onDismiss = {
+                                showPendingChoice = false
+                                pendingAdv = null
+                            }
+                        )
+                    }
+                } else {
+                    ChoiceDialog(
+                        options = vant.choiceOptions,
                         onConfirm = { finishWithChoice(it) },
                         onDismiss = {
                             showPendingChoice = false
