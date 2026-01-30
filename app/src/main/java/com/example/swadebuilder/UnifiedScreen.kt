@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.FlashOn
+import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
@@ -203,7 +204,8 @@ fun UnifiedScreen(
                 onSelectSection = {
                     onUserFeedback()
                     activeSection = it
-                }
+                },
+                tabStyle = state.estiloAbas
             )
             Column(Modifier.weight(1f)) {
                 if (state.modoProgressaoAtivo) {
@@ -593,7 +595,8 @@ private fun CreatorTabRow(
     sections: List<MainSection>,
     selectedSection: MainSection,
     enabledSections: (MainSection) -> Boolean,
-    onSelectSection: (MainSection) -> Unit
+    onSelectSection: (MainSection) -> Unit,
+    tabStyle: TabStyle
 ) {
     val tabs = remember(sections) { sections.map { SectionTab(it, it.tabLabel()) } }
     if (tabs.isEmpty()) {
@@ -618,7 +621,8 @@ private fun CreatorTabRow(
                 selected = tab.section == selectedSection,
                 enabled = enabled,
                 onClick = { if (enabled) onSelectSection(tab.section) },
-                text = { Text(tab.label) },
+                text = if (tabStyle == TabStyle.TEXTO) { { Text(tab.label) } } else null,
+                icon = if (tabStyle == TabStyle.ICONES) { { Icon(tab.section.icon(), null) } } else null,
                 modifier = Modifier.alpha(if (enabled) 1f else 0.5f)
             )
         }
@@ -659,7 +663,7 @@ private fun MainSection.icon(): ImageVector = when (this) {
     MainSection.MONSTRO -> Icons.Default.BugReport
     MainSection.COMPLICACOES -> Icons.Default.Warning
     MainSection.ATRIBUTOS -> Icons.Default.FitnessCenter
-    MainSection.PERICIAS -> Icons.Default.School
+    MainSection.PERICIAS -> Icons.Default.MenuBook
     MainSection.VANTAGENS -> Icons.Default.Star
     MainSection.EQUIPAMENTOS -> Icons.Default.ShoppingCart
     MainSection.PODERES -> Icons.Default.FlashOn

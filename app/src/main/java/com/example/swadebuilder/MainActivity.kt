@@ -394,87 +394,24 @@ class MainActivity : ComponentActivity() {
                     onDismissRequest = { showSettingsDialog = false },
                     title = { Text("Configurações") },
                     text = {
-                        Column {
-                            Text("Resposta háptica")
-                            Slider(
-                                value = state.hapticStrength.toFloat(),
-                                onValueChange = { state.hapticStrength = it.roundToInt() },
-                                onValueChangeFinished = {
-                                    persistFeedbackPrefs()
-                                    feedbackController.play(state.hapticStrength, 0)
-                                },
-                                valueRange = 0f..100f,
-                                steps = 4,
+                        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                            // --- GERAL ---
+                            Text("Geral", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+
+                            Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                colors = SliderDefaults.colors(
-                                    thumbColor = MaterialTheme.colorScheme.primary,
-                                    activeTrackColor = MaterialTheme.colorScheme.primary,
-                                    inactiveTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-                                )
-                            )
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 8.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text("Intensidade: ${state.hapticStrength}%")
-                            }
-
-                            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
-                            Text("Sons do app")
-                            Slider(
-                                value = state.soundVolume.toFloat(),
-                                onValueChange = { state.soundVolume = it.roundToInt() },
-                                onValueChangeFinished = {
-                                    persistFeedbackPrefs()
-                                    feedbackController.play(0, state.soundVolume)
-                                },
-                                valueRange = 0f..100f,
-                                steps = 4,
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = SliderDefaults.colors(
-                                    thumbColor = MaterialTheme.colorScheme.secondary,
-                                    activeTrackColor = MaterialTheme.colorScheme.secondary,
-                                    inactiveTrackColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
-                                )
-                            )
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 8.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text("Volume: ${state.soundVolume}%")
-                            }
-
-                            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
-                            // Retrato: Expandir
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("Expandir retrato no resumo")
+                                Text("Descrições na tela inicial")
                                 androidx.compose.material3.Switch(
-                                    checked = state.expandirRetrato,
-                                    onCheckedChange = { state.expandirRetrato = it }
+                                    checked = state.mostrarDescricaoHome,
+                                    onCheckedChange = { state.mostrarDescricaoHome = it }
                                 )
                             }
 
-                            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
-                            // System Messages Toggle
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp),
+                                modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
@@ -485,9 +422,52 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                            HorizontalDivider(Modifier.padding(vertical = 8.dp))
 
-                            // Theme Selection Button
+                            // --- APARÊNCIA ---
+                            Text("Aparência", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text("Ícone do livro na ficha")
+                                androidx.compose.material3.Switch(
+                                    checked = state.mostrarIdentificadorLivro,
+                                    onCheckedChange = { state.mostrarIdentificadorLivro = it }
+                                )
+                            }
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text("Expandir retrato no resumo")
+                                androidx.compose.material3.Switch(
+                                    checked = state.expandirRetrato,
+                                    onCheckedChange = { state.expandirRetrato = it }
+                                )
+                            }
+
+                            Text("Estilo das Abas", style = MaterialTheme.typography.bodyMedium)
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                androidx.compose.material3.RadioButton(
+                                    selected = state.estiloAbas == TabStyle.ICONES,
+                                    onClick = { state.estiloAbas = TabStyle.ICONES }
+                                )
+                                Text("Ícones")
+                                Spacer(Modifier.width(16.dp))
+                                androidx.compose.material3.RadioButton(
+                                    selected = state.estiloAbas == TabStyle.TEXTO,
+                                    onClick = { state.estiloAbas = TabStyle.TEXTO }
+                                )
+                                Text("Texto")
+                            }
+
+                            Spacer(Modifier.height(8.dp))
+
                             TextButton(
                                 onClick = {
                                     triggerFeedback()
@@ -499,6 +479,40 @@ class MainActivity : ComponentActivity() {
                                 Spacer(Modifier.width(8.dp))
                                 Text("Mudar Tema do App")
                             }
+
+                            HorizontalDivider(Modifier.padding(vertical = 8.dp))
+
+                            // --- FEEDBACK ---
+                            Text("Feedback", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+
+                            Text("Resposta háptica: ${state.hapticStrength}%")
+                            Slider(
+                                value = state.hapticStrength.toFloat(),
+                                onValueChange = { state.hapticStrength = it.roundToInt() },
+                                onValueChangeFinished = {
+                                    persistFeedbackPrefs()
+                                    feedbackController.play(state.hapticStrength, 0)
+                                },
+                                valueRange = 0f..100f,
+                                steps = 4
+                            )
+
+                            Text("Sons do app: ${state.soundVolume}%")
+                            Slider(
+                                value = state.soundVolume.toFloat(),
+                                onValueChange = { state.soundVolume = it.roundToInt() },
+                                onValueChangeFinished = {
+                                    persistFeedbackPrefs()
+                                    feedbackController.play(0, state.soundVolume)
+                                },
+                                valueRange = 0f..100f,
+                                steps = 4,
+                                colors = SliderDefaults.colors(
+                                    thumbColor = MaterialTheme.colorScheme.secondary,
+                                    activeTrackColor = MaterialTheme.colorScheme.secondary,
+                                    inactiveTrackColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
+                                )
+                            )
                         }
                     },
                     confirmButton = {

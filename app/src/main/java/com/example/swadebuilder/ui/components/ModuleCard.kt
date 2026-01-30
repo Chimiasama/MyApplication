@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -37,6 +39,9 @@ fun ModuleCard(
     isSelected: Boolean,
     enabled: Boolean = true,
     onToggle: () -> Unit,
+    showDescription: Boolean = true,
+    onRulesClick: (() -> Unit)? = null,
+    isRulesActive: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val scale by animateFloatAsState(targetValue = if (isSelected) 1.05f else if (enabled) 1.0f else 0.95f, label = "scale")
@@ -82,15 +87,34 @@ fun ModuleCard(
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.Center
-                )
+                if (showDescription) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
+            // Rules Button
+            if (onRulesClick != null) {
+                IconButton(
+                    onClick = onRulesClick,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .size(32.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Gavel,
+                        contentDescription = "Regras",
+                        tint = if (isRulesActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
             }
 
             // Check Icon
