@@ -440,7 +440,8 @@ fun TelaInicial(
                     onToggle = module.onToggle,
                     showDescription = viewModel.state.mostrarDescricaoHome,
                     onRulesClick = module.onRulesClick,
-                    isRulesActive = module.isRulesActive
+                    isRulesActive = module.isRulesActive,
+                    tabStyle = viewModel.state.estiloAbas
                 )
             }
 
@@ -457,7 +458,8 @@ fun TelaInicial(
                     onToggle = module.onToggle,
                     showDescription = viewModel.state.mostrarDescricaoHome,
                     onRulesClick = module.onRulesClick,
-                    isRulesActive = module.isRulesActive
+                    isRulesActive = module.isRulesActive,
+                    tabStyle = viewModel.state.estiloAbas
                 )
             }
 

@@ -30,8 +30,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FolderOpen
+import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Print
 import androidx.compose.material.icons.filled.Save
@@ -281,23 +283,33 @@ class MainActivity : ComponentActivity() {
                 onDispose { feedbackController.dispose() }
             }
             LaunchedEffect(Unit) {
-                val prefs = AppPreferences.loadFeedbackPrefs(
+                val prefs = AppPreferences.loadPrefs(
                     context,
                     CriadorState.DEFAULT_HAPTIC_STRENGTH,
                     CriadorState.DEFAULT_SOUND_VOLUME
                 )
                 state.hapticStrength = prefs.hapticStrength
                 state.soundVolume = prefs.soundVolume
+                state.estiloAbas = prefs.tabStyle
+                state.mostrarIdentificadorLivro = prefs.showBookIcon
+                state.mostrarDescricaoHome = prefs.showDescHome
+                state.showSystemMessages = prefs.showSystemMessages
             }
-            val persistFeedbackPrefs: () -> Unit = remember {
+            val persistPrefs: () -> Unit = remember {
                 {
-                    AppPreferences.saveFeedbackPrefs(
+                    AppPreferences.savePrefs(
                         context,
                         state.hapticStrength,
-                        state.soundVolume
+                        state.soundVolume,
+                        state.estiloAbas,
+                        state.mostrarIdentificadorLivro,
+                        state.mostrarDescricaoHome,
+                        state.showSystemMessages
                     )
                 }
             }
+            val persistFeedbackPrefs: () -> Unit = { persistPrefs() } // Alias for cleaner diff
+
             val triggerFeedback = remember(state.hapticStrength, state.soundVolume) {
                 { feedbackController.play(state.hapticStrength, state.soundVolume) }
             }
@@ -436,7 +448,10 @@ class MainActivity : ComponentActivity() {
                                 Text("Ícone do livro na ficha")
                                 androidx.compose.material3.Switch(
                                     checked = state.mostrarIdentificadorLivro,
-                                    onCheckedChange = { state.mostrarIdentificadorLivro = it }
+                                    onCheckedChange = {
+                                        state.mostrarIdentificadorLivro = it
+                                        persistPrefs()
+                                    }
                                 )
                             }
 
@@ -452,17 +467,23 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            Text("Estilo das Abas", style = MaterialTheme.typography.bodyMedium)
+                            Text("Estilo das Abas / Opções", style = MaterialTheme.typography.bodyMedium)
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 androidx.compose.material3.RadioButton(
                                     selected = state.estiloAbas == TabStyle.ICONES,
-                                    onClick = { state.estiloAbas = TabStyle.ICONES }
+                                    onClick = {
+                                        state.estiloAbas = TabStyle.ICONES
+                                        persistPrefs()
+                                    }
                                 )
                                 Text("Ícones")
                                 Spacer(Modifier.width(16.dp))
                                 androidx.compose.material3.RadioButton(
                                     selected = state.estiloAbas == TabStyle.TEXTO,
-                                    onClick = { state.estiloAbas = TabStyle.TEXTO }
+                                    onClick = {
+                                        state.estiloAbas = TabStyle.TEXTO
+                                        persistPrefs()
+                                    }
                                 )
                                 Text("Texto")
                             }
@@ -895,6 +916,17 @@ class MainActivity : ComponentActivity() {
                                                 modifier = Modifier.fillMaxWidth(),
                                                 contentAlignment = Alignment.Center
                                             ) {
+                                            if (state.estiloAbas == TabStyle.ICONES) {
+                                                IconButton(onClick = {
+                                                    triggerFeedback()
+                                                    showHelpDialog = true
+                                                }) {
+                                                    Icon(
+                                                        imageVector = Icons.Default.Help,
+                                                        contentDescription = "Como usar"
+                                                    )
+                                                }
+                                            } else {
                                                 TextButton(onClick = {
                                                     triggerFeedback()
                                                     showHelpDialog = true
@@ -905,18 +937,31 @@ class MainActivity : ComponentActivity() {
                                                         textAlign = TextAlign.Center
                                                     )
                                                 }
+                                                }
                                             }
                                         },
                                         navigationIcon = {
-                                            TextButton(onClick = {
-                                                triggerFeedback()
-                                                requestNavigation(PendingNavigationAction.ResetAndReturnHome)
-                                            }) {
-                                                Text(
-                                                    text       = "Voltar",
-                                                    fontWeight = FontWeight.Bold,
-                                                    fontSize   = 18.sp
-                                                )
+                                            if (state.estiloAbas == TabStyle.ICONES) {
+                                                IconButton(onClick = {
+                                                    triggerFeedback()
+                                                    requestNavigation(PendingNavigationAction.ResetAndReturnHome)
+                                                }) {
+                                                    Icon(
+                                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                                        contentDescription = "Voltar"
+                                                    )
+                                                }
+                                            } else {
+                                                TextButton(onClick = {
+                                                    triggerFeedback()
+                                                    requestNavigation(PendingNavigationAction.ResetAndReturnHome)
+                                                }) {
+                                                    Text(
+                                                        text       = "Voltar",
+                                                        fontWeight = FontWeight.Bold,
+                                                        fontSize   = 18.sp
+                                                    )
+                                                }
                                             }
                                         },
                                         actions = {

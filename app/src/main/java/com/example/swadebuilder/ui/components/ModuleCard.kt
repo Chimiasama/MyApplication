@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -30,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.TabStyle
 
 @Composable
 fun ModuleCard(
@@ -42,6 +45,7 @@ fun ModuleCard(
     showDescription: Boolean = true,
     onRulesClick: (() -> Unit)? = null,
     isRulesActive: Boolean = false,
+    tabStyle: TabStyle = TabStyle.TEXTO,
     modifier: Modifier = Modifier
 ) {
     val scale by animateFloatAsState(targetValue = if (isSelected) 1.05f else if (enabled) 1.0f else 0.95f, label = "scale")
@@ -60,7 +64,10 @@ fun ModuleCard(
         modifier = modifier
             .scale(scale)
             .fillMaxWidth()
-            .defaultMinSize(minHeight = if (showDescription) 180.dp else 120.dp),
+            .then(
+                if (showDescription) Modifier.defaultMinSize(minHeight = 180.dp)
+                else Modifier.padding(vertical = 4.dp) // Just a bit of padding if no fixed height
+            ),
         border = BorderStroke(borderWidth, borderColor),
         colors = CardDefaults.outlinedCardColors(containerColor = containerColor)
     ) {
@@ -102,16 +109,31 @@ fun ModuleCard(
 
             // Rules Button (TopEnd)
             if (onRulesClick != null) {
-                TextButton(
-                    onClick = onRulesClick,
-                    modifier = Modifier.align(Alignment.TopEnd)
-                ) {
-                    Text(
-                        text = "REGRAS",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = if (isRulesActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                    )
+                val rulesColor = if (isRulesActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+
+                if (tabStyle == TabStyle.ICONES) {
+                    IconButton(
+                        onClick = onRulesClick,
+                        modifier = Modifier.align(Alignment.TopEnd)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Gavel,
+                            contentDescription = "Regras",
+                            tint = rulesColor
+                        )
+                    }
+                } else {
+                    TextButton(
+                        onClick = onRulesClick,
+                        modifier = Modifier.align(Alignment.TopEnd)
+                    ) {
+                        Text(
+                            text = "REGRAS",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = rulesColor
+                        )
+                    }
                 }
             }
 
