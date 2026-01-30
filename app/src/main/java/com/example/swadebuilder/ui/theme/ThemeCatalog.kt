@@ -20,7 +20,7 @@ val DefaultThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = OldSchoolRed,
         onPrimary = Color.White,
-        primaryContainer = Color(0xFFFFDAD6), // Lighter Red for container
+        primaryContainer = Color(0xFFEBC6C6), // Muted Red/Pink for container
         onPrimaryContainer = Color(0xFF410002), // Dark Red for text on container
         secondary = OldSchoolInk,
         tertiary = OldSchoolRed,
@@ -28,7 +28,8 @@ val DefaultThemeData = AppThemeData(
         onBackground = OldSchoolInk,
         surface = OldSchoolPaper,
         onSurface = OldSchoolInk,
-        surfaceVariant = OldSchoolPaper,
+        surfaceVariant = Color(0xFFE6DCC8), // Slightly darker parchment for cards
+        onSurfaceVariant = OldSchoolInk,
         errorContainer = Color(0xFFD32F2F).copy(alpha = 0.1f), // Reddish fade
         onErrorContainer = OldSchoolInk
     ),
@@ -43,6 +44,8 @@ val DefaultThemeData = AppThemeData(
         onBackground = OldSchoolPaper,
         surface = OldSchoolInk,
         onSurface = OldSchoolPaper,
+        surfaceVariant = Color(0xFF2C2C2C), // Slightly lighter black/grey for cards
+        onSurfaceVariant = OldSchoolPaper,
         errorContainer = Color(0xFFD32F2F).copy(alpha = 0.2f),
         onErrorContainer = OldSchoolPaper
     ),

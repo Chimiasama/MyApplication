@@ -126,7 +126,6 @@ fun UnifiedScreen(
 ) {
     var showAllocDialog by rememberSaveable { mutableStateOf(false) }
     var currentSlotIndex by rememberSaveable { mutableIntStateOf(-1) }
-    var showClearDialog by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
 
     // --- estados para o MEIO-ELFO / MEIO-ORC ---
@@ -234,7 +233,6 @@ fun UnifiedScreen(
                         superequipCategorias = superequipCategorias,
                         onClearRequested = {
                             onUserFeedback()
-                            showClearDialog = true
                         },
                         onShowMessage = onShowMessage,
                         onRequestProgression = onRequestProgression,
@@ -308,7 +306,6 @@ fun UnifiedScreen(
                     superequipCategorias = superequipCategorias,
                     onClearRequested = {
                         onUserFeedback()
-                        showClearDialog = true
                     },
                     onShowMessage = onShowMessage,
                     onRequestProgression = onRequestProgression,
@@ -340,71 +337,6 @@ fun UnifiedScreen(
         }
     }
 
-    if (showClearDialog) {
-        AlertDialog(
-            onDismissRequest = { showClearDialog = false },
-            title = { Text("Limpar personagem") },
-            text = { Text("Deseja limpar a ficha atual e iniciar um novo personagem?") },
-            confirmButton = {
-                TextButton(onClick = {
-                    val cartaSelvagem = state.cartaSelvagem
-                    val maisPontosPericias = state.maisPontosPericias
-                    val modoSupers = state.modoSupers
-                    val compendioFantasiaAtivo = state.compendioFantasiaAtivo
-                    val compendioHorrorAtivo = state.compendioHorrorAtivo
-                    val compendioSciFiAtivo = state.compendioSciFiAtivo
-                    val compendioPathfinderAtivo = state.compendioPathfinderAtivo
-                    val compendioDeadlandsAtivo = state.compendioDeadlandsAtivo
-                    val compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
-                    val compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo
-                    val compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo
-                    val compendioWiseguysAtivo = state.compendioWiseguysAtivo
-                    val modoMonstroAtivo = state.modoMonstroAtivo
-                    val usarEspecializacoesDePericia = state.usarEspecializacoesDePericia
-                    val grandesResponsabilidades = state.grandesResponsabilidades
-                    val regraMultiplosIdiomas = state.regraMultiplosIdiomas
-                    val heroisSemArmadura = state.heroisSemArmadura
-                    val nasceUmHeroi = state.nasceUmHeroi
-                    val usarSemPontosDePoder = state.usarSemPontosDePoder
-
-                    viewModel.resetStateParaNovoPersonagem(
-                        cartaSelvagem = cartaSelvagem,
-                        maisPontosPericias = maisPontosPericias,
-                        modoSupers = modoSupers,
-                        compendioFantasiaAtivo = compendioFantasiaAtivo,
-                        compendioHorrorAtivo = compendioHorrorAtivo,
-                        compendioSciFiAtivo = compendioSciFiAtivo,
-                        compendioPathfinderAtivo = compendioPathfinderAtivo,
-                        compendioDeadlandsAtivo = compendioDeadlandsAtivo,
-                        compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
-                        compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
-                        compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
-                        compendioWiseguysAtivo = compendioWiseguysAtivo,
-                        modoMonstroAtivo = modoMonstroAtivo,
-                        usarEspecializacoesDePericia = usarEspecializacoesDePericia,
-                        grandesResponsabilidades = grandesResponsabilidades,
-                        regraMultiplosIdiomas = regraMultiplosIdiomas
-                    )
-                    coroutineScope.launch {
-                        viewModel.prepararNomeInicial(context)
-                    }
-                    state.heroisSemArmadura = heroisSemArmadura
-                    state.nasceUmHeroi = nasceUmHeroi
-                    state.usarSemPontosDePoder = usarSemPontosDePoder
-                    state.grandesResponsabilidades = grandesResponsabilidades
-                    showClearDialog = false
-                    onShowMessage("Ficha limpa.")
-                }) {
-                    Text("Limpar")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showClearDialog = false }) {
-                    Text("Cancelar")
-                }
-            }
-        )
-    }
 
     if (showMeioElfoDialog && pendingAncestryKey != null) {
         AlertDialog(
@@ -545,46 +477,6 @@ fun UnifiedScreen(
     }
 }
 
-@Composable
-private fun GlobalActionButtons(
-    state: CriadorState,
-    onClearRequested: () -> Unit,
-    onShowMessage: (String) -> Unit,
-    onRequestProgression: () -> Unit
-) {
-    val canFinalize = !state.modoProgressaoAtivo && state.creationComplete()
-
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Button(
-            onClick = onClearRequested,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(Icons.Default.Delete, contentDescription = null)
-            Spacer(Modifier.width(8.dp))
-            Text("Reiniciar personagem")
-        }
-
-        Button(
-            onClick = {
-                if (!canFinalize) {
-                    onShowMessage("Finalize a criação antes de iniciar a progressão.")
-                    return@Button
-                }
-
-                onRequestProgression()
-            },
-            enabled = canFinalize,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(Icons.Default.ArrowForward, contentDescription = null)
-            Spacer(Modifier.width(8.dp))
-            Text("Finalizar criação")
-        }
-    }
-}
 
 private data class SectionTab(
     val section: MainSection,
@@ -608,22 +500,36 @@ private fun CreatorTabRow(
     ScrollableTabRow(
         selectedTabIndex = selectedIndex,
         edgePadding = 0.dp,
+        containerColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.primary,
         indicator = { tabPositions ->
             if (selectedIndex < tabPositions.size) {
                 TabRowDefaults.PrimaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex])
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
+                    height = 3.dp,
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp)
                 )
             }
         }
     ) {
         tabs.forEach { tab ->
             val enabled = enabledSections(tab.section)
+            val isSelected = tab.section == selectedSection
             Tab(
-                selected = tab.section == selectedSection,
+                selected = isSelected,
                 enabled = enabled,
                 onClick = { if (enabled) onSelectSection(tab.section) },
-                text = if (tabStyle == TabStyle.TEXTO) { { Text(tab.label) } } else null,
+                text = if (tabStyle == TabStyle.TEXTO) {
+                    {
+                        Text(
+                            tab.label,
+                            fontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal
+                        )
+                    }
+                } else null,
                 icon = if (tabStyle == TabStyle.ICONES) { { Icon(tab.section.icon(), null) } } else null,
+                selectedContentColor = MaterialTheme.colorScheme.primary,
+                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.alpha(if (enabled) 1f else 0.5f)
             )
         }
@@ -1111,15 +1017,6 @@ private fun SummaryTabContent(
         Spacer(Modifier.height(12.dp))
 
         // Removed CharacterPortraitCard and Spacer
-
-        if (!state.modoProgressaoAtivo) {
-            GlobalActionButtons(
-                state = state,
-                onClearRequested = onClearRequested,
-                onShowMessage = onShowMessage,
-                onRequestProgression = onRequestProgression
-            )
-        }
     }
 }
 

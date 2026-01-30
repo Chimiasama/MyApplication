@@ -50,9 +50,9 @@ fun ModuleCard(
 ) {
     val scale by animateFloatAsState(targetValue = if (isSelected) 1.05f else if (enabled) 1.0f else 0.95f, label = "scale")
     val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else if (enabled) MaterialTheme.colorScheme.outlineVariant else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-    val borderWidth = if (isSelected) 2.dp else 1.dp
+    val borderWidth = if (isSelected) 3.dp else 1.dp
     val containerColor = if (isSelected)
-        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f)
+        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
     else if (enabled)
         MaterialTheme.colorScheme.surface
     else
@@ -64,75 +64,91 @@ fun ModuleCard(
         modifier = modifier
             .scale(scale)
             .fillMaxWidth()
-            .then(
-                if (showDescription) Modifier.defaultMinSize(minHeight = 180.dp)
-                else Modifier.padding(vertical = 4.dp) // Just a bit of padding if no fixed height
-            ),
+            .padding(vertical = if (showDescription) 0.dp else 4.dp), // Minimal padding if collapsed
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
         border = BorderStroke(borderWidth, borderColor),
+        elevation = CardDefaults.outlinedCardElevation(defaultElevation = if (isSelected) 6.dp else 0.dp),
         colors = CardDefaults.outlinedCardColors(containerColor = containerColor)
     ) {
-        Box(modifier = Modifier.fillMaxSize().padding(8.dp)) {
-            // Content
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+        Box(modifier = Modifier.fillMaxWidth().padding(6.dp)) {
+            // Inner Frame (Surface)
+            androidx.compose.material3.Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(
+                        if (showDescription) Modifier.defaultMinSize(minHeight = 168.dp)
+                        else Modifier
+                    ),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+                color = if (enabled) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                shadowElevation = 0.dp
             ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    modifier = Modifier.size(if (showDescription) 40.dp else 32.dp),
-                    tint = if (isSelected) MaterialTheme.colorScheme.primary else if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.Center
-                )
-                if (showDescription) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = description,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-
-            // Rules Button (TopEnd)
-            if (onRulesClick != null) {
-                val rulesColor = if (isRulesActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-
-                if (tabStyle == TabStyle.ICONES) {
-                    IconButton(
-                        onClick = onRulesClick,
-                        modifier = Modifier.align(Alignment.TopEnd)
+                // Content
+                Box(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Gavel,
-                            contentDescription = "Regras",
-                            tint = rulesColor
+                            imageVector = icon,
+                            contentDescription = null,
+                            modifier = Modifier.size(if (showDescription) 40.dp else 32.dp),
+                            tint = if (isSelected) MaterialTheme.colorScheme.primary else if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
                         )
-                    }
-                } else {
-                    TextButton(
-                        onClick = onRulesClick,
-                        modifier = Modifier.align(Alignment.TopEnd)
-                    ) {
+                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "REGRAS",
-                            style = MaterialTheme.typography.labelSmall,
+                            text = title,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = rulesColor
+                            color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.Center
                         )
+                        if (showDescription) {
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = description,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                                maxLines = 3,
+                                overflow = TextOverflow.Ellipsis,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+
+                    // Rules Button (TopEnd)
+                    if (onRulesClick != null) {
+                        val rulesColor = if (isRulesActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+
+                        Box(
+                            modifier = Modifier.align(Alignment.TopEnd)
+                        ) {
+                            if (tabStyle == TabStyle.ICONES) {
+                                IconButton(
+                                    onClick = onRulesClick
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Gavel,
+                                        contentDescription = "Regras",
+                                        tint = rulesColor
+                                    )
+                                }
+                            } else {
+                                TextButton(
+                                    onClick = onRulesClick
+                                ) {
+                                    Text(
+                                        text = "REGRAS",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = rulesColor
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -145,7 +161,8 @@ fun ModuleCard(
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .align(Alignment.TopStart)
-                        .size(24.dp)
+                        .padding(2.dp)
+                        .size(28.dp)
                 )
             }
         }

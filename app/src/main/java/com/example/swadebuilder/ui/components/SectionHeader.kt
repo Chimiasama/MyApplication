@@ -2,6 +2,7 @@ package com.example.swadebuilder.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,58 +32,66 @@ fun SectionHeader(
     onListaCompletaClick: (() -> Unit)? = null,
     listaCompletaText: String = "Lista Completa"
 ) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 4.dp, vertical = 2.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
+    Column(Modifier.fillMaxWidth()) {
         Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.weight(1f)
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            if (onHelpClick != null) {
-                IconButton(
-                    onClick = onHelpClick,
-                    modifier = Modifier.size(32.dp)
-                ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.Help,
-                        contentDescription = "Ajuda",
-                        modifier = Modifier.size(20.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
+            ) {
+                if (onHelpClick != null) {
+                    IconButton(
+                        onClick = onHelpClick,
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.Help,
+                            contentDescription = "Ajuda",
+                            modifier = Modifier.size(20.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+
+                Text(
+                    text = centerText,
+                    modifier = Modifier
+                        .weight(1f)
+                        .then(
+                            if (onCenterClick != null) {
+                                Modifier.clickable(onClick = onCenterClick)
+                            } else {
+                                Modifier
+                            }
+                        )
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    textAlign = TextAlign.Start,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
                     )
+                )
+            }
+
+            if (onListaCompletaClick != null && listaCompletaText.isNotEmpty()) {
+                androidx.compose.material3.FilledTonalButton(
+                    onClick = onListaCompletaClick,
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
+                    modifier = Modifier.heightIn(min = 32.dp)
+                ) {
+                    Text(listaCompletaText, fontSize = 11.sp)
                 }
             }
-
-            Text(
-                text = centerText,
-                modifier = Modifier
-                    .weight(1f)
-                    .then(
-                        if (onCenterClick != null) {
-                            Modifier.clickable(onClick = onCenterClick)
-                        } else {
-                            Modifier
-                        }
-                    )
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                textAlign = TextAlign.Start,
-                style = MaterialTheme.typography.labelLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp
-                )
-            )
         }
-
-        if (onListaCompletaClick != null && listaCompletaText.isNotEmpty()) {
-            TextButton(
-                onClick = onListaCompletaClick,
-                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
-                modifier = Modifier.heightIn(min = 32.dp)
-            ) {
-                Text(listaCompletaText, fontSize = 11.sp)
-            }
-        }
+        androidx.compose.material3.HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+        )
     }
 }

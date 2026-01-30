@@ -345,9 +345,10 @@ fun SummaryContent(
                         .aspectRatio(0.8f) // Fixed aspect ratio
                         .clickable(onClick = onSelectImage),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        containerColor = MaterialTheme.colorScheme.surface
                     ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    border = androidx.compose.foundation.BorderStroke(4.dp, MaterialTheme.colorScheme.surfaceVariant)
                 ) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         val imageBitmap = imageBitmapState.value
@@ -476,7 +477,11 @@ fun SummaryContent(
             label = { Text("Anotações") },
             supportingText = { Text("${state.anotacoes.length}/5000") },
             modifier = Modifier.fillMaxWidth(),
-            minLines = 3
+            minLines = 5,
+            colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+            )
         )
     }
 }
@@ -643,7 +648,8 @@ private fun IdentityCard(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        ),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Column(Modifier.padding(16.dp)) {
             if (activeCompendiums.isNotEmpty()) {
@@ -671,12 +677,18 @@ private fun IdentityCard(
                 label = { Text("Nome do Personagem") },
                 supportingText = { Text("${nome.length}/60") },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    focusedLabelColor = MaterialTheme.colorScheme.primary
+                )
             )
             Spacer(Modifier.height(8.dp))
             Text(
                 text = ancestralidade,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -752,7 +764,11 @@ private fun CombatAndEquipmentCard(
             Spacer(Modifier.height(4.dp))
             val armors = state.equipamentosComprados.filter { it.armadura != null || it.aparar != null }
             if (armors.isEmpty()) {
-                Text("– Nenhuma", style = MaterialTheme.typography.bodySmall)
+                Text(
+                    "– Nenhuma",
+                    style = MaterialTheme.typography.bodySmall.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                )
             } else {
                 armors.forEach { item ->
                     val armorVal = (item.armadura as? kotlinx.serialization.json.JsonPrimitive)?.content?.toIntOrNull()
@@ -774,7 +790,11 @@ private fun CombatAndEquipmentCard(
             Spacer(Modifier.height(4.dp))
             val others = state.equipamentosComprados.filter { it.dano == null && it.armadura == null && it.aparar == null }
             if (others.isEmpty()) {
-                Text("– Nenhum", style = MaterialTheme.typography.bodySmall)
+                Text(
+                    "– Nenhum",
+                    style = MaterialTheme.typography.bodySmall.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                )
             } else {
                 others.forEach { item ->
                     Text("• ${item.nome}", style = MaterialTheme.typography.bodySmall)
@@ -842,9 +862,10 @@ fun EditableCircleStat(
         Box(
             modifier = Modifier
                 .size(68.dp)
+                .background(MaterialTheme.colorScheme.surface, CircleShape)
                 .clip(CircleShape)
                 .border(
-                    width = 1.dp,
+                    width = 2.dp,
                     color = MaterialTheme.colorScheme.primary,
                     shape = CircleShape
                 ),
@@ -989,11 +1010,12 @@ private fun LabelValueRow(raw: String, textStyle: TextStyle) {
 
 @Composable
 private fun BulletRow(text: String, textStyle: TextStyle) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(
-            text = "•",
-            style = textStyle,
-            modifier = Modifier.padding(end = 6.dp)
+    Row(verticalAlignment = Alignment.Top) {
+        Box(
+            modifier = Modifier
+                .padding(top = 8.dp, end = 8.dp)
+                .size(6.dp)
+                .background(MaterialTheme.colorScheme.primary, CircleShape)
         )
         Text(text = text, style = textStyle)
     }
@@ -1011,9 +1033,10 @@ fun CircleStat(
         Box(
             modifier = Modifier
                 .size(68.dp)
+                .background(MaterialTheme.colorScheme.surface, CircleShape)
                 .clip(CircleShape)
                 .border(
-                    width = 1.dp,
+                    width = 2.dp,
                     color = MaterialTheme.colorScheme.primary,
                     shape = CircleShape
                 ),
@@ -1168,10 +1191,29 @@ private fun SpecializationsSummaryCard(
 
 @Composable
 private fun SkillChip(text: String) {
-    LabelValueRow(
-        raw = text,
-        textStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp)
-    )
+    val label = text.substringBefore(":").trim()
+    val value = text.substringAfter(":").trim()
+
+    androidx.compose.material3.Surface(
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+    ) {
+        Row(modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary
+            )
+            if (value.isNotBlank() && value != label) {
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.padding(start = 4.dp)
+                )
+            }
+        }
+    }
 }
 
 @Composable
