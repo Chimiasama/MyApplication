@@ -337,9 +337,6 @@ fun TelaInicial(
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
                 actions = {
-                    IconButton(onClick = { showRulesDialog = true }) {
-                        Icon(Icons.Default.Build, contentDescription = "Customizar Regras")
-                    }
                     IconButton(onClick = onCarregarPersonagem) {
                         Icon(Icons.Default.FolderOpen, contentDescription = "Carregar Personagem")
                     }
@@ -439,7 +436,7 @@ fun TelaInicial(
                     enabled = module.enabled,
                     onToggle = module.onToggle,
                     showDescription = viewModel.state.mostrarDescricaoHome,
-                    onRulesClick = module.onRulesClick,
+                    onRulesClick = if (module.isSelected) module.onRulesClick else null,
                     isRulesActive = module.isRulesActive,
                     tabStyle = viewModel.state.estiloAbas
                 )
@@ -457,7 +454,7 @@ fun TelaInicial(
                     enabled = module.enabled,
                     onToggle = module.onToggle,
                     showDescription = viewModel.state.mostrarDescricaoHome,
-                    onRulesClick = module.onRulesClick,
+                    onRulesClick = if (module.isSelected) module.onRulesClick else null,
                     isRulesActive = module.isRulesActive,
                     tabStyle = viewModel.state.estiloAbas
                 )
