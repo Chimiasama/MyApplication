@@ -64,27 +64,29 @@ fun ModuleCard(
         modifier = modifier
             .scale(scale)
             .fillMaxWidth()
-            .then(
-                if (showDescription) Modifier.defaultMinSize(minHeight = 180.dp)
-                else Modifier.padding(vertical = 4.dp) // Just a bit of padding if no fixed height
-            ),
+            .padding(vertical = if (showDescription) 0.dp else 4.dp), // Minimal padding if collapsed
         shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
         border = BorderStroke(borderWidth, borderColor),
         elevation = CardDefaults.outlinedCardElevation(defaultElevation = if (isSelected) 6.dp else 0.dp),
         colors = CardDefaults.outlinedCardColors(containerColor = containerColor)
     ) {
-        Box(modifier = Modifier.fillMaxSize().padding(6.dp)) {
+        Box(modifier = Modifier.fillMaxWidth().padding(6.dp)) {
             // Inner Frame (Surface)
             androidx.compose.material3.Surface(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(
+                        if (showDescription) Modifier.defaultMinSize(minHeight = 168.dp)
+                        else Modifier
+                    ),
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
                 color = if (enabled) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                 shadowElevation = 0.dp
             ) {
                 // Content
-                Box(modifier = Modifier.fillMaxSize().padding(12.dp)) {
+                Box(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
                     Column(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
@@ -117,43 +119,41 @@ fun ModuleCard(
                         }
                     }
 
-                    // Rules Button (TopEnd) - Inside inner frame for alignment, but overlapping content potentially?
-                    // Actually, putting it here ensures it respects the inner frame boundaries.
+                    // Rules Button (TopEnd)
                     if (onRulesClick != null) {
                         val rulesColor = if (isRulesActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
 
-                        if (tabStyle == TabStyle.ICONES) {
-                            IconButton(
-                                onClick = onRulesClick,
-                                modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    // Negative padding to push it slightly out towards the corner if desired,
-                                    // or just align top end. Align top end is safer.
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Gavel,
-                                    contentDescription = "Regras",
-                                    tint = rulesColor
-                                )
-                            }
-                        } else {
-                            TextButton(
-                                onClick = onRulesClick,
-                                modifier = Modifier.align(Alignment.TopEnd)
-                            ) {
-                                Text(
-                                    text = "REGRAS",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    fontWeight = FontWeight.Bold,
-                                    color = rulesColor
-                                )
+                        Box(
+                            modifier = Modifier.align(Alignment.TopEnd)
+                        ) {
+                            if (tabStyle == TabStyle.ICONES) {
+                                IconButton(
+                                    onClick = onRulesClick
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Gavel,
+                                        contentDescription = "Regras",
+                                        tint = rulesColor
+                                    )
+                                }
+                            } else {
+                                TextButton(
+                                    onClick = onRulesClick
+                                ) {
+                                    Text(
+                                        text = "REGRAS",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = rulesColor
+                                    )
+                                }
                             }
                         }
                     }
                 }
             }
 
-            // Check Icon (TopStart) - Outside inner frame to overlay on the border/corner
+            // Check Icon (TopStart)
             if (isSelected) {
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
@@ -161,8 +161,8 @@ fun ModuleCard(
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .align(Alignment.TopStart)
-                        .padding(2.dp) // Slight padding from the very edge
-                        .size(28.dp) // Slightly larger to be visible
+                        .padding(2.dp)
+                        .size(28.dp)
                 )
             }
         }
