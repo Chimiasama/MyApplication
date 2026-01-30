@@ -697,7 +697,6 @@ fun ProgressosDialog(
     )
 
     if (showAttrSelection) {
-        val consumeReservation = remainingBaseAttrs <= 0
         AlertDialog(
             onDismissRequest = { showAttrSelection = false },
             title = { Text("Selecione o Atributo") },
@@ -707,14 +706,22 @@ fun ProgressosDialog(
                         val label = mapaAtributosDisplay[attrKey] ?: attrKey
                         val currentVal = state.valoresAtributos[attrKey]?.intValue ?: 4
                         val maxVal = state.atributoMaxRaw(attrKey)
-                        val canIncrease = currentVal < maxVal
+
+                        // Logic for Monster Mode: Physical attributes are not limited by rank
+                        val isFree = state.isAttributeFreeForMonster(attrKey)
+                        val limitReached = remainingBaseAttrs <= 0
+                        val allowedByRule = !limitReached || isFree || canUseReservation
+
+                        val canIncrease = (currentVal < maxVal) && allowedByRule
 
                         Row(
                             Modifier
                                 .fillMaxWidth()
                                 .alpha(if (canIncrease) 1f else 0.5f)
                                 .clickable(enabled = canIncrease) {
-                                    viewModel.startAttributeAdvancement(slotIndex, est.nome, consumeReservation)
+                                    // Only consume reservation if we are restricted (limit reached & not free)
+                                    val shouldConsumeReservation = limitReached && !isFree
+                                    viewModel.startAttributeAdvancement(slotIndex, est.nome, shouldConsumeReservation)
                                     viewModel.increaseAttributeForAdvancement(attrKey)
                                     viewModel.finishAttributeAdvancement()
                                     onDismiss()
@@ -724,7 +731,12 @@ fun ProgressosDialog(
                             val nextVal = if (currentVal < 12) currentVal + 2 else currentVal + 1
                             val currentValStr = currentVal.toDiceString()
                             val nextValStr = nextVal.toDiceString()
-                            val text = if (canIncrease) "$label ($currentValStr → $nextValStr)" else "$label ($currentValStr) - Máximo"
+
+                            val text = when {
+                                currentVal >= maxVal -> "$label ($currentValStr) - Máximo"
+                                !allowedByRule -> "$label ($currentValStr) - Limite de Estágio"
+                                else -> "$label ($currentValStr → $nextValStr)"
+                            }
                             Text(text)
                         }
                         HorizontalDivider()
