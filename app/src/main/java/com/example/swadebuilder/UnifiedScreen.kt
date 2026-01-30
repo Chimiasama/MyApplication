@@ -534,37 +534,10 @@ fun UnifiedScreen(
     if (showAllocDialog) {
         ProgressosDialog(
             state = state,
+            viewModel = viewModel,
+            onShowMessage = onShowMessage,
             slotIndex = currentSlotIndex,
-            onDismiss = { showAllocDialog = false },
-            onStartSkillAdvancement = { slotIndex, stage ->
-                viewModel.startSkillAdvancement(slotIndex, stage)
-            },
-            onStartAttributeAdvancement = { slotIndex, stage, consumeReservation ->
-                viewModel.startAttributeAdvancement(slotIndex, stage, consumeReservation)
-            },
-            onReserveLegendaryAttribute = { slotIndex, stage ->
-                viewModel.reserveLegendaryAttribute(slotIndex, stage)
-            },
-            onPurchaseAdvantage = { slotIndex, stage, vant ->
-                // Atomic purchase sequence
-                viewModel.startAdvantageAdvancement(slotIndex, stage)
-                viewModel.selectAdvantageForAdvancement(vant)
-                viewModel.finishAdvantageAdvancement()
-                showAllocDialog = false
-            },
-            onPurchaseAttribute = { slotIndex, stage, attributeKey, consumeReservation ->
-                viewModel.startAttributeAdvancement(slotIndex, stage, consumeReservation)
-                viewModel.increaseAttributeForAdvancement(attributeKey)
-                viewModel.finishAttributeAdvancement()
-                showAllocDialog = false
-            },
-            onIncreaseSkill = { skill ->
-                viewModel.increaseSkillForAdvancement(skill)
-            },
-            onFinishSkillAdvancement = {
-                viewModel.finishSkillAdvancement()
-                showAllocDialog = false
-            }
+            onDismiss = { showAllocDialog = false }
         )
     }
 }
