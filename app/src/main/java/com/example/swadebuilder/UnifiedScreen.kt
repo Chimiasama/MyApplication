@@ -204,7 +204,8 @@ fun UnifiedScreen(
                 onSelectSection = {
                     onUserFeedback()
                     activeSection = it
-                }
+                },
+                tabStyle = state.estiloAbas
             )
             Column(Modifier.weight(1f)) {
                 if (state.modoProgressaoAtivo) {
@@ -634,7 +635,8 @@ private fun CreatorNavigationRail(
     sections: List<MainSection>,
     selectedSection: MainSection,
     enabledSections: (MainSection) -> Boolean,
-    onSelectSection: (MainSection) -> Unit
+    onSelectSection: (MainSection) -> Unit,
+    tabStyle: TabStyle
 ) {
     NavigationRail {
         Column(
@@ -648,8 +650,17 @@ private fun CreatorNavigationRail(
                     selected = section == selectedSection,
                     enabled = enabled,
                     onClick = { if (enabled) onSelectSection(section) },
-                    icon = { Icon(section.icon(), contentDescription = null) },
-                    label = { Text(section.tabLabel(), maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                    icon = {
+                        if (tabStyle == TabStyle.ICONES) {
+                            Icon(section.icon(), contentDescription = null)
+                        }
+                    },
+                    label = {
+                        if (tabStyle == TabStyle.TEXTO) {
+                            Text(section.tabLabel(), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        }
+                    },
+                    alwaysShowLabel = (tabStyle == TabStyle.TEXTO)
                 )
             }
         }
