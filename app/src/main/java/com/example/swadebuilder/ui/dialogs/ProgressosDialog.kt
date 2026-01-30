@@ -1,5 +1,7 @@
 package com.example.swadebuilder.ui.dialogs
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -54,19 +56,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.Pericia
-import com.example.swadebuilder.R
 import com.example.swadebuilder.dynamicStageCaps
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
-import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
@@ -78,7 +76,6 @@ import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.isVantagemVisible
-import com.example.swadebuilder.periciaStartRaw
 import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.stageIndexForSlot
 import com.example.swadebuilder.toDiceString
@@ -94,6 +91,7 @@ import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ProgressosDialog(
@@ -762,7 +760,7 @@ fun ProgressosDialog(
                     // Combine active/available skills with existing char skills to ensure new purchases are possible
                     val allSkills = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo) {
                         val available = listaPericias.filter { per ->
-                            val origem = per.origem.ifBlank { "BASICO" }
+                            val origem = per.origem?.ifBlank { "BASICO" }
                             origem in activeOrigins
                         }
                         val existing = state.periciasComIdiomas()
@@ -1226,8 +1224,6 @@ private fun DialogVantagemItem(
                 if (!locked) {
                     val conflitoMsg = state.mensagemConflitoParaVantagem(vant)
 
-                    val isPathfinderFree = state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)
-
                     when {
                         // Check class blocking specifically for error message
                         state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
@@ -1253,7 +1249,7 @@ private fun DialogVantagemItem(
             ) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toSentenceCase() else vant.nomeExibicao.toSentenceCase(),
+                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName.toSentenceCase() else vant.nomeExibicao.toSentenceCase(),
                         style = MaterialTheme.typography.titleSmall
                     )
 
@@ -1327,7 +1323,7 @@ private fun DialogVantagemItem(
 
                 AnimatedVisibility(visible = detalhesExpandidos[vant.id] == true) {
                     Text(
-                        text = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) (vant.originalDescription ?: "").trim() else vant.descricao.trim(),
+                        text = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) vant.originalDescription.trim() else vant.descricao.trim(),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 4.dp)
