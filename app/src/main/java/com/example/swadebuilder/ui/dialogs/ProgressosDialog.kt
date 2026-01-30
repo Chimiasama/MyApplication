@@ -1327,7 +1327,7 @@ private fun DialogVantagemItem(
 
                 AnimatedVisibility(visible = detalhesExpandidos[vant.id] == true) {
                     Text(
-                        text = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) vant.originalDescription?.trim() ?: "" else vant.descricao.trim(),
+                        text = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) (vant.originalDescription ?: "").trim() else vant.descricao.trim(),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 4.dp)
