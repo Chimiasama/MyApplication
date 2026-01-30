@@ -204,7 +204,8 @@ fun UnifiedScreen(
                 onSelectSection = {
                     onUserFeedback()
                     activeSection = it
-                }
+                },
+                tabStyle = state.estiloAbas
             )
             Column(Modifier.weight(1f)) {
                 if (state.modoProgressaoAtivo) {
