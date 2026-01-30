@@ -608,22 +608,36 @@ private fun CreatorTabRow(
     ScrollableTabRow(
         selectedTabIndex = selectedIndex,
         edgePadding = 0.dp,
+        containerColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.primary,
         indicator = { tabPositions ->
             if (selectedIndex < tabPositions.size) {
                 TabRowDefaults.PrimaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex])
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
+                    height = 3.dp,
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp)
                 )
             }
         }
     ) {
         tabs.forEach { tab ->
             val enabled = enabledSections(tab.section)
+            val isSelected = tab.section == selectedSection
             Tab(
-                selected = tab.section == selectedSection,
+                selected = isSelected,
                 enabled = enabled,
                 onClick = { if (enabled) onSelectSection(tab.section) },
-                text = if (tabStyle == TabStyle.TEXTO) { { Text(tab.label) } } else null,
+                text = if (tabStyle == TabStyle.TEXTO) {
+                    {
+                        Text(
+                            tab.label,
+                            fontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal
+                        )
+                    }
+                } else null,
                 icon = if (tabStyle == TabStyle.ICONES) { { Icon(tab.section.icon(), null) } } else null,
+                selectedContentColor = MaterialTheme.colorScheme.primary,
+                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.alpha(if (enabled) 1f else 0.5f)
             )
         }

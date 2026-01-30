@@ -50,9 +50,9 @@ fun ModuleCard(
 ) {
     val scale by animateFloatAsState(targetValue = if (isSelected) 1.05f else if (enabled) 1.0f else 0.95f, label = "scale")
     val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else if (enabled) MaterialTheme.colorScheme.outlineVariant else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-    val borderWidth = if (isSelected) 2.dp else 1.dp
+    val borderWidth = if (isSelected) 3.dp else 1.dp
     val containerColor = if (isSelected)
-        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f)
+        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
     else if (enabled)
         MaterialTheme.colorScheme.surface
     else
@@ -68,7 +68,9 @@ fun ModuleCard(
                 if (showDescription) Modifier.defaultMinSize(minHeight = 180.dp)
                 else Modifier.padding(vertical = 4.dp) // Just a bit of padding if no fixed height
             ),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
         border = BorderStroke(borderWidth, borderColor),
+        elevation = CardDefaults.outlinedCardElevation(defaultElevation = if (isSelected) 6.dp else 0.dp),
         colors = CardDefaults.outlinedCardColors(containerColor = containerColor)
     ) {
         Box(modifier = Modifier.fillMaxSize().padding(8.dp)) {

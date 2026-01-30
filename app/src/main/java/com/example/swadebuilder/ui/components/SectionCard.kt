@@ -45,7 +45,7 @@ fun SectionCard(
                     modifier = Modifier
                         .size(32.dp)
                         .padding(end = 12.dp),
-                    tint = headerColor
+                    tint = MaterialTheme.colorScheme.primary
                 )
                 Text(
                     text = title,
@@ -53,7 +53,7 @@ fun SectionCard(
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
                     ),
-                    color = headerColor
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -62,9 +62,9 @@ fun SectionCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 4.dp, vertical = 0.dp),
-            shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp),
+            shape = RoundedCornerShape(16.dp),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             colors = CardDefaults.cardColors(
                 containerColor = cardColor
             )

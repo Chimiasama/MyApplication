@@ -63,11 +63,25 @@ private fun createTypography(
 }
 
 val DefaultTypography = Typography(
+    titleLarge = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 24.sp,
+        lineHeight = 32.sp,
+        letterSpacing = 0.sp
+    ),
+    titleMedium = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Medium,
+        fontSize = 18.sp,
+        lineHeight = 26.sp,
+        letterSpacing = 0.15.sp
+    ),
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
+        fontSize = 17.sp,
+        lineHeight = 28.sp,
         letterSpacing = 0.5.sp
     )
 )
