@@ -100,7 +100,7 @@ fun PoderesSection(
     LaunchedEffect(arcanosAtivos, state.vantagensSelecionadas.size, state.tropoSelecionado) {
         arcanosAtivos.forEach { arcKeyRaw ->
             val arcKey = arcKeyRaw.normAAKey()
-            val slotsCount = state.getSlotsCountForArcano(arcKey)
+            val slotsCount = state.getEffectiveSlotsCountForArcano(arcKey)
             val existente = state.poderSlotsPorArcano[arcKey]
 
             if (existente == null) {
@@ -293,7 +293,7 @@ fun PoderesSection(
             val baseInfo = arcanoInfo[arcKey] ?: Triple(0, 0, "—")
             val ppTotal = baseInfo.second
             val foco = baseInfo.third
-            val slotsCount = state.getSlotsCountForArcano(arcKey)
+            val slotsCount = state.getEffectiveSlotsCountForArcano(arcKey)
 
             val centerText = if (state.usarSemPontosDePoder) {
                 "Teste $foco = -(custo/2)"
