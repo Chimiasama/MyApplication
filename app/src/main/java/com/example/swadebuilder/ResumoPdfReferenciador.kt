@@ -18,7 +18,6 @@ import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.Log
 import androidx.core.content.FileProvider
-import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.SecurityUtils
@@ -26,7 +25,6 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.JsonPrimitive
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.math.max

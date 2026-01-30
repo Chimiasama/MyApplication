@@ -31,10 +31,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FolderOpen
-import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Print
 import androidx.compose.material.icons.filled.Save
@@ -43,7 +43,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -990,7 +989,7 @@ class MainActivity : ComponentActivity() {
                                                 triggerFeedback()
                                                 requestNavigation(PendingNavigationAction.StartProgression)
                                             },
-                                            icon = { Icon(Icons.Default.ArrowForward, contentDescription = null) },
+                                            icon = { Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null) },
                                             text = { Text("Finalizar") },
                                             containerColor = MaterialTheme.colorScheme.primary,
                                             contentColor = MaterialTheme.colorScheme.onPrimary
@@ -1014,7 +1013,7 @@ class MainActivity : ComponentActivity() {
                                                     showHelpDialog = true
                                                 }) {
                                                     Icon(
-                                                        imageVector = Icons.Default.Help,
+                                                        imageVector = Icons.AutoMirrored.Filled.Help,
                                                         contentDescription = "Como usar"
                                                     )
                                                 }
