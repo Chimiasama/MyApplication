@@ -1107,7 +1107,6 @@ class CriadorViewModel : ViewModel() {
         val stack = state.paCostStackPorAtributo.getOrPut(attributeKey) { mutableListOf() }
         stack.add(1) // dummy cost, recalculated later
 
-        state.paFromProgress--
         state.recalcularPontosAtributo()
         state.checkFreeze()
     }
