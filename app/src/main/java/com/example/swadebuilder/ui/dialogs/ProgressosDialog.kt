@@ -722,7 +722,9 @@ fun ProgressosDialog(
                                 .padding(vertical = 12.dp)
                         ) {
                             val nextVal = if (currentVal < 12) currentVal + 2 else currentVal + 1
-                            val text = if (canIncrease) "$label (d$currentVal → d$nextVal)" else "$label (d$currentVal) - Máximo"
+                            val currentValStr = currentVal.toDiceString()
+                            val nextValStr = nextVal.toDiceString()
+                            val text = if (canIncrease) "$label ($currentValStr → $nextValStr)" else "$label ($currentValStr) - Máximo"
                             Text(text)
                         }
                         HorizontalDivider()
