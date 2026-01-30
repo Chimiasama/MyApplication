@@ -580,7 +580,7 @@ private fun MainSection.icon(): ImageVector = when (this) {
     MainSection.MONSTRO -> Icons.Default.BugReport
     MainSection.COMPLICACOES -> Icons.Default.Warning
     MainSection.ATRIBUTOS -> Icons.Default.FitnessCenter
-    MainSection.PERICIAS -> Icons.Default.MenuBook
+    MainSection.PERICIAS -> Icons.Default.School
     MainSection.VANTAGENS -> Icons.Default.Star
     MainSection.EQUIPAMENTOS -> Icons.Default.ShoppingCart
     MainSection.PODERES -> Icons.Default.FlashOn

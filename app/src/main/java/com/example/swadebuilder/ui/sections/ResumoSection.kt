@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.SportsMartialArts
 import androidx.compose.material.icons.filled.Groups
@@ -113,6 +114,22 @@ private fun getCompendiumIcons(state: CriadorState): List<Pair<ImageVector, Colo
     if (state.compendioWiseguysAtivo) icons.add(Icons.Default.Groups to Color.Gray)
     if (state.compendioCrystalHeartAtivo) icons.add(Icons.Default.Favorite to Color(0xFFE91E63)) // Pink
     if (state.compendioCidadeSolVaporAtivo) icons.add(Icons.Default.Build to Color.LightGray)
+
+    // Basic Rules Icon logic: Show if no other "Setting Book" is active
+    val isAnySpecificBook = state.modoSupers ||
+            state.compendioFantasiaAtivo ||
+            state.compendioHorrorAtivo ||
+            state.compendioSciFiAtivo ||
+            state.compendioPathfinderAtivo ||
+            state.compendioDeadlandsAtivo ||
+            state.compendioArteDaGuerraAtivo ||
+            state.compendioWiseguysAtivo ||
+            state.compendioCrystalHeartAtivo ||
+            state.compendioCidadeSolVaporAtivo
+
+    if (!isAnySpecificBook) {
+        icons.add(Icons.Default.MenuBook to Color(0xFF6D4C41)) // Brown 600
+    }
 
     return icons
 }
