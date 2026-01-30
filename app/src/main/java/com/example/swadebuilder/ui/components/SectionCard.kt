@@ -69,7 +69,7 @@ fun SectionCard(
                 containerColor = cardColor
             )
         ) {
-            Column(modifier = Modifier.padding(12.dp)) {
+            Column(modifier = Modifier.padding(16.dp)) {
                 content()
             }
         }

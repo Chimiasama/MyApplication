@@ -73,73 +73,87 @@ fun ModuleCard(
         elevation = CardDefaults.outlinedCardElevation(defaultElevation = if (isSelected) 6.dp else 0.dp),
         colors = CardDefaults.outlinedCardColors(containerColor = containerColor)
     ) {
-        Box(modifier = Modifier.fillMaxSize().padding(8.dp)) {
-            // Content
-            Column(
+        Box(modifier = Modifier.fillMaxSize().padding(6.dp)) {
+            // Inner Frame (Surface)
+            androidx.compose.material3.Surface(
                 modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+                color = if (enabled) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                shadowElevation = 0.dp
             ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    modifier = Modifier.size(if (showDescription) 40.dp else 32.dp),
-                    tint = if (isSelected) MaterialTheme.colorScheme.primary else if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.Center
-                )
-                if (showDescription) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = description,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-
-            // Rules Button (TopEnd)
-            if (onRulesClick != null) {
-                val rulesColor = if (isRulesActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-
-                if (tabStyle == TabStyle.ICONES) {
-                    IconButton(
-                        onClick = onRulesClick,
-                        modifier = Modifier.align(Alignment.TopEnd)
+                // Content
+                Box(modifier = Modifier.fillMaxSize().padding(12.dp)) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Gavel,
-                            contentDescription = "Regras",
-                            tint = rulesColor
+                            imageVector = icon,
+                            contentDescription = null,
+                            modifier = Modifier.size(if (showDescription) 40.dp else 32.dp),
+                            tint = if (isSelected) MaterialTheme.colorScheme.primary else if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
                         )
-                    }
-                } else {
-                    TextButton(
-                        onClick = onRulesClick,
-                        modifier = Modifier.align(Alignment.TopEnd)
-                    ) {
+                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "REGRAS",
-                            style = MaterialTheme.typography.labelSmall,
+                            text = title,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = rulesColor
+                            color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.Center
                         )
+                        if (showDescription) {
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = description,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                                maxLines = 3,
+                                overflow = TextOverflow.Ellipsis,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+
+                    // Rules Button (TopEnd) - Inside inner frame for alignment, but overlapping content potentially?
+                    // Actually, putting it here ensures it respects the inner frame boundaries.
+                    if (onRulesClick != null) {
+                        val rulesColor = if (isRulesActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+
+                        if (tabStyle == TabStyle.ICONES) {
+                            IconButton(
+                                onClick = onRulesClick,
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    // Negative padding to push it slightly out towards the corner if desired,
+                                    // or just align top end. Align top end is safer.
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Gavel,
+                                    contentDescription = "Regras",
+                                    tint = rulesColor
+                                )
+                            }
+                        } else {
+                            TextButton(
+                                onClick = onRulesClick,
+                                modifier = Modifier.align(Alignment.TopEnd)
+                            ) {
+                                Text(
+                                    text = "REGRAS",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = rulesColor
+                                )
+                            }
+                        }
                     }
                 }
             }
 
-            // Check Icon (TopStart)
+            // Check Icon (TopStart) - Outside inner frame to overlay on the border/corner
             if (isSelected) {
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
@@ -147,7 +161,8 @@ fun ModuleCard(
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .align(Alignment.TopStart)
-                        .size(24.dp)
+                        .padding(2.dp) // Slight padding from the very edge
+                        .size(28.dp) // Slightly larger to be visible
                 )
             }
         }
