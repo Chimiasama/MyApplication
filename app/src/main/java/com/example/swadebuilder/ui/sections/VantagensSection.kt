@@ -833,6 +833,51 @@ fun VantagensContent(
                     enabled = (subOpcaoSelecionada != null),
                     onClick = {
                         val choice = subOpcaoSelecionada!!
+
+                        // Validate specific requirements
+                        var reqMet = false
+                        var failMsg = ""
+
+                        when (choice) {
+                            "Bárbaro" -> {
+                                val str = state.valoresAtributos["FORCA"]?.intValue ?: 4
+                                if (str >= 8) reqMet = true
+                                else failMsg = "Requer Força d8+"
+                            }
+                            "Guerreiro" -> {
+                                val lut = state.mapaPericias["LUTAR"]?.let { state.rawTotal(it) } ?: 0
+                                if (lut >= 8) reqMet = true
+                                else failMsg = "Requer Lutar d8+"
+                            }
+                            "Ladrão" -> {
+                                val lad = state.mapaPericias["LADINAGEM"]?.let { state.rawTotal(it) } ?: 0
+                                if (lad >= 8) reqMet = true
+                                else failMsg = "Requer Ladinagem d8+"
+                            }
+                            "Monge" -> {
+                                val atl = state.mapaPericias["ATLETISMO"]?.let { state.rawTotal(it) } ?: 0
+                                if (atl >= 8) reqMet = true
+                                else failMsg = "Requer Atletismo d8+"
+                            }
+                            "Paladino" -> {
+                                val esp = state.valoresAtributos["ESPIRITO"]?.intValue ?: 4
+                                if (esp >= 8) reqMet = true
+                                else failMsg = "Requer Espírito d8+"
+                            }
+                            "Patrulheiro" -> {
+                                val sob = state.mapaPericias["SOBREVIVENCIA"]?.let { state.rawTotal(it) } ?: 0
+                                if (sob >= 8) reqMet = true
+                                else failMsg = "Requer Sobrevivência d8+"
+                            }
+                            else -> reqMet = true
+                        }
+
+                        if (!reqMet) {
+                            viewModel.logFeedback(failMsg)
+                            onUserFeedback()
+                            return@TextButton
+                        }
+
                         val vantToAdd = vantOriginal.copy(choice = choice)
 
                         if (state.advantageAdvancementInProgress) {
