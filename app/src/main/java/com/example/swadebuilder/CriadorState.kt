@@ -43,8 +43,13 @@ import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
 import java.util.UUID
 
+enum class TabStyle { ICONES, TEXTO }
+
 class CriadorState {
     var appTheme by mutableStateOf(AppTheme.DEFAULT)
+    var mostrarIdentificadorLivro by mutableStateOf(true)
+    var estiloAbas by mutableStateOf(TabStyle.TEXTO)
+    var mostrarDescricaoHome by mutableStateOf(true)
     var hapticStrength by mutableIntStateOf(DEFAULT_HAPTIC_STRENGTH)
     var soundVolume by mutableIntStateOf(DEFAULT_SOUND_VOLUME)
     var showSystemMessages by mutableStateOf(true)

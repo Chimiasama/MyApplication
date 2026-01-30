@@ -266,7 +266,7 @@ fun SummaryContent(
             nome = nome,
             onNomeChange = { state.nomePersonagem = it },
             ancestralidade = "Ancestralidade: $ancestralidadeValue$monstroInfo",
-            activeCompendiums = getCompendiumIcons(state)
+        activeCompendiums = if (state.mostrarIdentificadorLivro) getCompendiumIcons(state) else emptyList()
         )
 
         Spacer(Modifier.height(12.dp))
@@ -513,7 +513,7 @@ fun BasicCharacterInfo(
             nome = nome,
             onNomeChange = { state.nomePersonagem = it },
             ancestralidade = "Ancestralidade: $ancestralidadeValue$monstroInfo",
-            activeCompendiums = getCompendiumIcons(state)
+        activeCompendiums = if (state.mostrarIdentificadorLivro) getCompendiumIcons(state) else emptyList()
         )
 
         if (showDerivedStats) {

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,11 +14,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -28,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.TabStyle
 
 @Composable
 fun ModuleCard(
@@ -37,6 +42,10 @@ fun ModuleCard(
     isSelected: Boolean,
     enabled: Boolean = true,
     onToggle: () -> Unit,
+    showDescription: Boolean = true,
+    onRulesClick: (() -> Unit)? = null,
+    isRulesActive: Boolean = false,
+    tabStyle: TabStyle = TabStyle.TEXTO,
     modifier: Modifier = Modifier
 ) {
     val scale by animateFloatAsState(targetValue = if (isSelected) 1.05f else if (enabled) 1.0f else 0.95f, label = "scale")
@@ -55,11 +64,14 @@ fun ModuleCard(
         modifier = modifier
             .scale(scale)
             .fillMaxWidth()
-            .height(180.dp),
+            .then(
+                if (showDescription) Modifier.defaultMinSize(minHeight = 180.dp)
+                else Modifier.padding(vertical = 4.dp) // Just a bit of padding if no fixed height
+            ),
         border = BorderStroke(borderWidth, borderColor),
         colors = CardDefaults.outlinedCardColors(containerColor = containerColor)
     ) {
-        Box(modifier = Modifier.fillMaxSize().padding(12.dp)) {
+        Box(modifier = Modifier.fillMaxSize().padding(8.dp)) {
             // Content
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -69,10 +81,10 @@ fun ModuleCard(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    modifier = Modifier.size(40.dp),
+                    modifier = Modifier.size(if (showDescription) 40.dp else 32.dp),
                     tint = if (isSelected) MaterialTheme.colorScheme.primary else if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
                 )
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
@@ -82,25 +94,57 @@ fun ModuleCard(
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.Center
-                )
+                if (showDescription) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
 
-            // Check Icon
+            // Rules Button (TopEnd)
+            if (onRulesClick != null) {
+                val rulesColor = if (isRulesActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+
+                if (tabStyle == TabStyle.ICONES) {
+                    IconButton(
+                        onClick = onRulesClick,
+                        modifier = Modifier.align(Alignment.TopEnd)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Gavel,
+                            contentDescription = "Regras",
+                            tint = rulesColor
+                        )
+                    }
+                } else {
+                    TextButton(
+                        onClick = onRulesClick,
+                        modifier = Modifier.align(Alignment.TopEnd)
+                    ) {
+                        Text(
+                            text = "REGRAS",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = rulesColor
+                        )
+                    }
+                }
+            }
+
+            // Check Icon (TopStart)
             if (isSelected) {
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
                     contentDescription = "Selecionado",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
-                        .align(Alignment.TopEnd)
+                        .align(Alignment.TopStart)
                         .size(24.dp)
                 )
             }

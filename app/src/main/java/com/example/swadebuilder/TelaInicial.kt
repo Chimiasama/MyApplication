@@ -24,21 +24,18 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.SportsMartialArts
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -138,118 +135,22 @@ fun TelaInicial(
 
     // Dialog States
     var showCreditsDialog by remember { mutableStateOf(false) }
+    var showRulesDialog by remember { mutableStateOf(false) }
 
-    // UI Expansion States
-    var expandedSettingRules by rememberSaveable { mutableStateOf(false) }
-
-    // Data for Grid
-    data class ModuleItemData(
-        val title: String,
-        val description: String,
-        val icon: ImageVector,
-        val isSelected: Boolean,
-        val enabled: Boolean,
-        val onToggle: () -> Unit
-    )
-
-    val isAnyBookSelected = optCompendioFantasia || optCompendioSciFi || optCompendioHorror || optSuperPoderes ||
-            optCompendioPathfinder || optCompendioDeadlands || optCompendioCrystalHeart ||
-            optCompendioArteDaGuerra || optCompendioCidadeSolVapor || optCompendioWiseguys
-
-    val officialModules = listOf(
-        ModuleItemData(
-            "Compêndio de Fantasia",
-            "Raças, itens mágicos e regras de fantasia.",
-            Icons.Default.AutoAwesome,
-            optCompendioFantasia,
-            !isAnyBookSelected || optCompendioFantasia
-        ) { optCompendioFantasia = !optCompendioFantasia },
-        ModuleItemData(
-            "Compêndio de Ficção",
-            "Tecnologia avançada, naves e cibernéticos.",
-            Icons.Default.RocketLaunch,
-            optCompendioSciFi,
-            !isAnyBookSelected || optCompendioSciFi
-        ) { optCompendioSciFi = !optCompendioSciFi },
-        ModuleItemData(
-            "Compêndio de Horror",
-            "Climas sombrios e criaturas aterrorizantes.",
-            Icons.Default.MoodBad,
-            optCompendioHorror,
-            !isAnyBookSelected || optCompendioHorror
-        ) { optCompendioHorror = !optCompendioHorror },
-        ModuleItemData(
-            "Superpoderes",
-            "Seja um superherói!",
-            Icons.Default.Bolt,
-            optSuperPoderes,
-            !isAnyBookSelected || optSuperPoderes
-        ) {
-            optSuperPoderes = !optSuperPoderes
-            if (optSuperPoderes) {
+    // Helper for applying rules presets
+    fun applyRulesPreset(preset: String) {
+        when (preset) {
+            "Supers" -> {
                 optCartaSelvagem = true
                 optMaisPontosPericias = true
+                optNasceUmHeroi = true // Comum em supers
             }
-        }
-    )
-
-    val settingModules = listOf(
-        ModuleItemData(
-            androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label),
-            if (isFullEdition) "Conteúdo oficial de Mundo Ancestral (Classes, Raças)." else "Cenário ${androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label)} e material temático.",
-            Icons.Default.Map,
-            optCompendioPathfinder,
-            !isAnyBookSelected || optCompendioPathfinder
-        ) {
-            optCompendioPathfinder = !optCompendioPathfinder
-            if (optCompendioPathfinder) {
-                optMaisPontosPericias = false
-            }
-        },
-        ModuleItemData(
-            "Deadlands".toEditionDisplayName(),
-            if (isFullEdition) "Pistoleiros, atormentados e o horror do Oeste." else "Pistoleiros, revividos e o horror do Oeste.",
-            Icons.Default.Shield,
-            optCompendioDeadlands,
-            !isAnyBookSelected || optCompendioDeadlands
-        ) { optCompendioDeadlands = !optCompendioDeadlands },
-        ModuleItemData(
-            "Crystal Heart".toEditionDisplayName(),
-            if (isFullEdition) "Troque seu coração por um cristal mágico." else "Troque seu coração por uma pedra mágica.",
-            Icons.Default.Favorite,
-            optCompendioCrystalHeart,
-            !isAnyBookSelected || optCompendioCrystalHeart
-        ) { optCompendioCrystalHeart = !optCompendioCrystalHeart },
-        ModuleItemData(
-            "Arte da Guerra: Nova Era".toEditionDisplayName(),
-            "Ativa Chi, Tropos e equipamentos orientais.",
-            Icons.Filled.SportsMartialArts,
-            optCompendioArteDaGuerra,
-            !isAnyBookSelected || optCompendioArteDaGuerra
-        ) {
-            optCompendioArteDaGuerra = !optCompendioArteDaGuerra
-            if (optCompendioArteDaGuerra) {
+            "Arte da Guerra" -> {
                 optCartaSelvagem = true
                 optNasceUmHeroi = true
                 optHeroiSemArmadura = true
             }
-        },
-        ModuleItemData(
-            "A Cidade do Sol a Vapor".toEditionDisplayName(),
-            "Estímulos vitorianos, vapor e tecnomagia.",
-            Icons.Default.Build,
-            optCompendioCidadeSolVapor,
-            !isAnyBookSelected || optCompendioCidadeSolVapor
-        ) { optCompendioCidadeSolVapor = !optCompendioCidadeSolVapor },
-        ModuleItemData(
-            "Wiseguys".toEditionDisplayName(),
-            "Crime organizado moderno, conexões e esquemas.",
-            Icons.Default.Groups,
-            optCompendioWiseguys,
-            !isAnyBookSelected || optCompendioWiseguys
-        ) {
-            optCompendioWiseguys = !optCompendioWiseguys
-            if (optCompendioWiseguys) {
+            "Wiseguys" -> {
                 optCartaSelvagem = true
                 optMaisPontosPericias = true
                 optRegraRiqueza = true
@@ -261,7 +162,170 @@ fun TelaInicial(
                 optNasceUmHeroi = false
                 optSemPontosPoder = false
             }
+            "Pathfinder" -> {
+                optMaisPontosPericias = false
+            }
+            "Básico" -> {
+                optCartaSelvagem = true
+                optMaisPontosPericias = true
+                optNasceUmHeroi = false
+                optHeroiSemArmadura = false
+                optRegraRiqueza = false
+                optRegraCosaNostra = false
+                optRegraFama = false
+            }
         }
+    }
+
+    // Data for Grid
+    data class ModuleItemData(
+        val title: String,
+        val description: String,
+        val icon: ImageVector,
+        val isSelected: Boolean,
+        val enabled: Boolean,
+        val onToggle: () -> Unit,
+        val onRulesClick: () -> Unit,
+        val isRulesActive: Boolean = false
+    )
+
+    val isAnyBookSelected = optCompendioFantasia || optCompendioSciFi || optCompendioHorror || optSuperPoderes ||
+            optCompendioPathfinder || optCompendioDeadlands || optCompendioCrystalHeart ||
+            optCompendioArteDaGuerra || optCompendioCidadeSolVapor || optCompendioWiseguys
+
+    val officialModules = listOf(
+        ModuleItemData(
+            "Regras Básicas",
+            "Savage Worlds Edição Aventura (Core).",
+            Icons.Default.MenuBook,
+            isSelected = !isAnyBookSelected,
+            enabled = true,
+            onToggle = {
+                 // Clicking Basic unchecks everything else
+                 optCompendioFantasia = false
+                 optCompendioHorror = false
+                 optCompendioSciFi = false
+                 optSuperPoderes = false
+                 optCompendioPathfinder = false
+                 optCompendioDeadlands = false
+                 optCompendioCrystalHeart = false
+                 optCompendioArteDaGuerra = false
+                 optCompendioCidadeSolVapor = false
+                 optCompendioWiseguys = false
+                 applyRulesPreset("Básico")
+            },
+            onRulesClick = { applyRulesPreset("Básico"); showRulesDialog = true },
+            isRulesActive = !optSuperPoderes && !optCompendioPathfinder && !optCompendioArteDaGuerra && !optCompendioWiseguys
+        ),
+        ModuleItemData(
+            "Compêndio de Fantasia",
+            "Raças, itens mágicos e regras de fantasia.",
+            Icons.Default.AutoAwesome,
+            optCompendioFantasia,
+            !isAnyBookSelected || optCompendioFantasia,
+            { optCompendioFantasia = !optCompendioFantasia },
+            { applyRulesPreset("Básico"); showRulesDialog = true } // Fantasy usually builds on Basic
+        ),
+        ModuleItemData(
+            "Compêndio de Ficção",
+            "Tecnologia avançada, naves e cibernéticos.",
+            Icons.Default.RocketLaunch,
+            optCompendioSciFi,
+            !isAnyBookSelected || optCompendioSciFi,
+            { optCompendioSciFi = !optCompendioSciFi },
+            { applyRulesPreset("Básico"); showRulesDialog = true }
+        ),
+        ModuleItemData(
+            "Compêndio de Horror",
+            "Climas sombrios e criaturas aterrorizantes.",
+            Icons.Default.MoodBad,
+            optCompendioHorror,
+            !isAnyBookSelected || optCompendioHorror,
+            { optCompendioHorror = !optCompendioHorror },
+            { applyRulesPreset("Básico"); showRulesDialog = true }
+        ),
+        ModuleItemData(
+            "Superpoderes",
+            "Seja um superherói!",
+            Icons.Default.Bolt,
+            optSuperPoderes,
+            !isAnyBookSelected || optSuperPoderes,
+            {
+                optSuperPoderes = !optSuperPoderes
+                if (optSuperPoderes) applyRulesPreset("Supers")
+            },
+            { applyRulesPreset("Supers"); showRulesDialog = true },
+            isRulesActive = optSuperPoderes
+        )
+    )
+
+    val settingModules = listOf(
+        ModuleItemData(
+            androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label),
+            if (isFullEdition) "Conteúdo oficial de Mundo Ancestral (Classes, Raças)." else "Cenário ${androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label)} e material temático.",
+            Icons.Default.Map,
+            optCompendioPathfinder,
+            !isAnyBookSelected || optCompendioPathfinder,
+            {
+                optCompendioPathfinder = !optCompendioPathfinder
+                if (optCompendioPathfinder) applyRulesPreset("Pathfinder")
+            },
+            { applyRulesPreset("Pathfinder"); showRulesDialog = true },
+            isRulesActive = optCompendioPathfinder
+        ),
+        ModuleItemData(
+            "Deadlands".toEditionDisplayName(),
+            if (isFullEdition) "Pistoleiros, atormentados e o horror do Oeste." else "Pistoleiros, revividos e o horror do Oeste.",
+            Icons.Default.Shield,
+            optCompendioDeadlands,
+            !isAnyBookSelected || optCompendioDeadlands,
+            { optCompendioDeadlands = !optCompendioDeadlands },
+            { applyRulesPreset("Básico"); showRulesDialog = true }
+        ),
+        ModuleItemData(
+            "Crystal Heart".toEditionDisplayName(),
+            if (isFullEdition) "Troque seu coração por um cristal mágico." else "Troque seu coração por uma pedra mágica.",
+            Icons.Default.Favorite,
+            optCompendioCrystalHeart,
+            !isAnyBookSelected || optCompendioCrystalHeart,
+            { optCompendioCrystalHeart = !optCompendioCrystalHeart },
+            { applyRulesPreset("Básico"); showRulesDialog = true }
+        ),
+        ModuleItemData(
+            "Arte da Guerra: Nova Era".toEditionDisplayName(),
+            "Ativa Chi, Tropos e equipamentos orientais.",
+            Icons.Filled.SportsMartialArts,
+            optCompendioArteDaGuerra,
+            !isAnyBookSelected || optCompendioArteDaGuerra,
+            {
+                optCompendioArteDaGuerra = !optCompendioArteDaGuerra
+                if (optCompendioArteDaGuerra) applyRulesPreset("Arte da Guerra")
+            },
+            { applyRulesPreset("Arte da Guerra"); showRulesDialog = true },
+            isRulesActive = optCompendioArteDaGuerra
+        ),
+        ModuleItemData(
+            "A Cidade do Sol a Vapor".toEditionDisplayName(),
+            "Estímulos vitorianos, vapor e tecnomagia.",
+            Icons.Default.Build,
+            optCompendioCidadeSolVapor,
+            !isAnyBookSelected || optCompendioCidadeSolVapor,
+            { optCompendioCidadeSolVapor = !optCompendioCidadeSolVapor },
+            { applyRulesPreset("Básico"); showRulesDialog = true }
+        ),
+        ModuleItemData(
+            "Wiseguys".toEditionDisplayName(),
+            "Crime organizado moderno, conexões e esquemas.",
+            Icons.Default.Groups,
+            optCompendioWiseguys,
+            !isAnyBookSelected || optCompendioWiseguys,
+            {
+                optCompendioWiseguys = !optCompendioWiseguys
+                if (optCompendioWiseguys) applyRulesPreset("Wiseguys")
+            },
+            { applyRulesPreset("Wiseguys"); showRulesDialog = true },
+            isRulesActive = optCompendioWiseguys
+        )
     )
 
     Scaffold(
@@ -370,7 +434,11 @@ fun TelaInicial(
                     icon = module.icon,
                     isSelected = module.isSelected,
                     enabled = module.enabled,
-                    onToggle = module.onToggle
+                    onToggle = module.onToggle,
+                    showDescription = viewModel.state.mostrarDescricaoHome,
+                    onRulesClick = if (module.isSelected) module.onRulesClick else null,
+                    isRulesActive = module.isRulesActive,
+                    tabStyle = viewModel.state.estiloAbas
                 )
             }
 
@@ -384,17 +452,28 @@ fun TelaInicial(
                     icon = module.icon,
                     isSelected = module.isSelected,
                     enabled = module.enabled,
-                    onToggle = module.onToggle
+                    onToggle = module.onToggle,
+                    showDescription = viewModel.state.mostrarDescricaoHome,
+                    onRulesClick = if (module.isSelected) module.onRulesClick else null,
+                    isRulesActive = module.isRulesActive,
+                    tabStyle = viewModel.state.estiloAbas
                 )
             }
 
-            // --- Regras de Criação ---
-            item(span = { GridItemSpan(2) }) {
-                RuleGroupCard(
-                    title = "Regras de Cenário",
-                    expanded = expandedSettingRules,
-                    onToggle = { expandedSettingRules = !expandedSettingRules }
-                ) {
+            // Spacer for FAB
+            item(span = { GridItemSpan(2) }) { Spacer(Modifier.height(80.dp)) }
+        }
+    }
+
+    // --- Dialogs ---
+
+    if (showRulesDialog) {
+        AlertDialog(
+            onDismissRequest = { showRulesDialog = false },
+            confirmButton = { TextButton(onClick = { showRulesDialog = false }) { Text("Fechar") } },
+            title = { Text("Regras de Cenário") },
+            text = {
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     if (optSuperPoderes) {
                         SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
                         SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
@@ -468,12 +547,8 @@ fun TelaInicial(
                     }
                 }
             }
-
-            // Spacer for FAB
-            item(span = { GridItemSpan(2) }) { Spacer(Modifier.height(80.dp)) }
-        }
+        )
     }
-
 
     // --- Dialogs ---
 
@@ -510,44 +585,6 @@ Feito por Rafael S.W.
     }
 }
 
-@Composable
-fun RuleGroupCard(
-    title: String,
-    expanded: Boolean,
-    onToggle: () -> Unit,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onToggle() },
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-        )
-    ) {
-        Column(Modifier.padding(12.dp)) {
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Build, null, modifier = Modifier.size(20.dp))
-                    Spacer(Modifier.width(8.dp))
-                    Text(title, fontWeight = FontWeight.SemiBold)
-                }
-                Icon(
-                    if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                    null
-                )
-            }
-            if (expanded) {
-                Spacer(Modifier.height(8.dp))
-                content()
-            }
-        }
-    }
-}
 
 @Composable
 fun SectionHeader(title: String) {
