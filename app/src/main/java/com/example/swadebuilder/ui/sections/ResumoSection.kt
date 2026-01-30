@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.SportsMartialArts
 import androidx.compose.material.icons.filled.Groups
