@@ -423,7 +423,10 @@ class MainActivity : ComponentActivity() {
                                 Text("Descrições na tela inicial")
                                 androidx.compose.material3.Switch(
                                     checked = state.mostrarDescricaoHome,
-                                    onCheckedChange = { state.mostrarDescricaoHome = it }
+                                    onCheckedChange = {
+                                        state.mostrarDescricaoHome = it
+                                        persistPrefs()
+                                    }
                                 )
                             }
 
@@ -435,7 +438,10 @@ class MainActivity : ComponentActivity() {
                                 Text("Mensagens do Sistema")
                                 androidx.compose.material3.Switch(
                                     checked = state.showSystemMessages,
-                                    onCheckedChange = { state.showSystemMessages = it }
+                                    onCheckedChange = {
+                                        state.showSystemMessages = it
+                                        persistPrefs()
+                                    }
                                 )
                             }
 
