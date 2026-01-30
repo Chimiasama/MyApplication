@@ -317,6 +317,11 @@ class CriadorViewModel : ViewModel() {
         state.nasceUmHeroi = false // Fix: reset flag
 
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
+        state.tropoSelecionado = null
+        state.signoAdgSelecionado = null
+        state.descendenteElementalSelecionado = null
+        state.gnomoPericiaEscolhida = null
+        state.dominioClerigoSelecionado = null
 
         state.cartaSelvagem = cartaSelvagem
         state.maisPontosPericias = maisPontosPericias
@@ -332,6 +337,13 @@ class CriadorViewModel : ViewModel() {
         state.reservasComplicacaoMaior.clear()
         state.vantagensAutomaticas.clear()
         state.desvantagensAutomaticas.clear()
+        state.vantagensAutomaticasDoTropo.clear()
+        state.vantagensAutomaticasDoSigno.clear()
+        state.vantagensAutomaticasDoElemento.clear()
+        state.transtornos.clear()
+        state.notasPericia.clear()
+        state.manifestacoesPoderes.clear()
+
         state.vantagemEmFoco = null
         state.categoriasVantagensExpandidas.keys.forEach { cat ->
             state.categoriasVantagensExpandidas[cat] = false
@@ -872,6 +884,12 @@ class CriadorViewModel : ViewModel() {
     fun finishSkillAdvancement() {
         if (state.skillAdvancementInProgress) {
             val skills = state.skillsForCurrentAdvancement.toList()
+            if (skills.isEmpty()) {
+                // If nothing was selected, cancel the advancement to free the slot
+                cancelAdvancementInProgress()
+                return
+            }
+
             val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
             val skillValuesSnapshot = skills.associateWith { skillName ->
                 val pericia = mapaPericias[skillName.keyify()]
@@ -937,6 +955,12 @@ class CriadorViewModel : ViewModel() {
         if (state.advantageAdvancementInProgress) {
             if (state.arcanoCompraPendente()) return
             val advantageId = state.advantageForCurrentAdvancement
+            if (advantageId == null) {
+                // If nothing selected, revert
+                cancelAdvancementInProgress()
+                return
+            }
+
             if (advantageId != null) {
                 val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
                 state.advancementHistory.add(
@@ -1095,6 +1119,12 @@ class CriadorViewModel : ViewModel() {
             state.paCostStackPorAtributo.forEach { (attr, stack) ->
                 val diff = stack.size - (before[attr] ?: 0)
                 repeat(diff.coerceAtLeast(0)) { increases.add(attr) }
+            }
+
+            if (increases.isEmpty()) {
+                // Nothing increased, so nothing to finish. Revert.
+                cancelAdvancementInProgress()
+                return
             }
 
             val stageName = state.attributeStageForCurrentAdvancement ?: state.estagioAtual().nome
