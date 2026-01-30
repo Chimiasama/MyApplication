@@ -8,18 +8,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -60,11 +59,11 @@ fun ModuleCard(
         modifier = modifier
             .scale(scale)
             .fillMaxWidth()
-            .height(180.dp),
+            .defaultMinSize(minHeight = if (showDescription) 180.dp else 120.dp),
         border = BorderStroke(borderWidth, borderColor),
         colors = CardDefaults.outlinedCardColors(containerColor = containerColor)
     ) {
-        Box(modifier = Modifier.fillMaxSize().padding(12.dp)) {
+        Box(modifier = Modifier.fillMaxSize().padding(8.dp)) {
             // Content
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -74,10 +73,10 @@ fun ModuleCard(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    modifier = Modifier.size(40.dp),
+                    modifier = Modifier.size(if (showDescription) 40.dp else 32.dp),
                     tint = if (isSelected) MaterialTheme.colorScheme.primary else if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
                 )
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
@@ -88,43 +87,41 @@ fun ModuleCard(
                     textAlign = TextAlign.Center
                 )
                 if (showDescription) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = description,
                         style = MaterialTheme.typography.bodySmall,
                         color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                        maxLines = 2,
+                        maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                         textAlign = TextAlign.Center
                     )
                 }
             }
 
-            // Rules Button
+            // Rules Button (TopEnd)
             if (onRulesClick != null) {
-                IconButton(
+                TextButton(
                     onClick = onRulesClick,
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .size(32.dp)
+                    modifier = Modifier.align(Alignment.TopEnd)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Gavel,
-                        contentDescription = "Regras",
-                        tint = if (isRulesActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                        modifier = Modifier.size(20.dp)
+                    Text(
+                        text = "REGRAS",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = if (isRulesActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     )
                 }
             }
 
-            // Check Icon
+            // Check Icon (TopStart)
             if (isSelected) {
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
                     contentDescription = "Selecionado",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
-                        .align(Alignment.TopEnd)
+                        .align(Alignment.TopStart)
                         .size(24.dp)
                 )
             }

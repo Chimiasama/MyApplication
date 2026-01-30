@@ -198,10 +198,23 @@ fun TelaInicial(
             "Regras Básicas",
             "Savage Worlds Edição Aventura (Core).",
             Icons.Default.MenuBook,
-            isSelected = true,
-            enabled = false, // Always active
-            onToggle = { },
-            onRulesClick = { applyRulesPreset("Básico") },
+            isSelected = !isAnyBookSelected,
+            enabled = true,
+            onToggle = {
+                 // Clicking Basic unchecks everything else
+                 optCompendioFantasia = false
+                 optCompendioHorror = false
+                 optCompendioSciFi = false
+                 optSuperPoderes = false
+                 optCompendioPathfinder = false
+                 optCompendioDeadlands = false
+                 optCompendioCrystalHeart = false
+                 optCompendioArteDaGuerra = false
+                 optCompendioCidadeSolVapor = false
+                 optCompendioWiseguys = false
+                 applyRulesPreset("Básico")
+            },
+            onRulesClick = { applyRulesPreset("Básico"); showRulesDialog = true },
             isRulesActive = !optSuperPoderes && !optCompendioPathfinder && !optCompendioArteDaGuerra && !optCompendioWiseguys
         ),
         ModuleItemData(
@@ -211,7 +224,7 @@ fun TelaInicial(
             optCompendioFantasia,
             !isAnyBookSelected || optCompendioFantasia,
             { optCompendioFantasia = !optCompendioFantasia },
-            { applyRulesPreset("Básico") } // Fantasy usually builds on Basic
+            { applyRulesPreset("Básico"); showRulesDialog = true } // Fantasy usually builds on Basic
         ),
         ModuleItemData(
             "Compêndio de Ficção",
@@ -220,7 +233,7 @@ fun TelaInicial(
             optCompendioSciFi,
             !isAnyBookSelected || optCompendioSciFi,
             { optCompendioSciFi = !optCompendioSciFi },
-            { applyRulesPreset("Básico") }
+            { applyRulesPreset("Básico"); showRulesDialog = true }
         ),
         ModuleItemData(
             "Compêndio de Horror",
@@ -229,7 +242,7 @@ fun TelaInicial(
             optCompendioHorror,
             !isAnyBookSelected || optCompendioHorror,
             { optCompendioHorror = !optCompendioHorror },
-            { applyRulesPreset("Básico") }
+            { applyRulesPreset("Básico"); showRulesDialog = true }
         ),
         ModuleItemData(
             "Superpoderes",
@@ -241,7 +254,7 @@ fun TelaInicial(
                 optSuperPoderes = !optSuperPoderes
                 if (optSuperPoderes) applyRulesPreset("Supers")
             },
-            { applyRulesPreset("Supers") },
+            { applyRulesPreset("Supers"); showRulesDialog = true },
             isRulesActive = optSuperPoderes
         )
     )
@@ -257,7 +270,7 @@ fun TelaInicial(
                 optCompendioPathfinder = !optCompendioPathfinder
                 if (optCompendioPathfinder) applyRulesPreset("Pathfinder")
             },
-            { applyRulesPreset("Pathfinder") },
+            { applyRulesPreset("Pathfinder"); showRulesDialog = true },
             isRulesActive = optCompendioPathfinder
         ),
         ModuleItemData(
@@ -267,7 +280,7 @@ fun TelaInicial(
             optCompendioDeadlands,
             !isAnyBookSelected || optCompendioDeadlands,
             { optCompendioDeadlands = !optCompendioDeadlands },
-            { applyRulesPreset("Básico") }
+            { applyRulesPreset("Básico"); showRulesDialog = true }
         ),
         ModuleItemData(
             "Crystal Heart".toEditionDisplayName(),
@@ -276,7 +289,7 @@ fun TelaInicial(
             optCompendioCrystalHeart,
             !isAnyBookSelected || optCompendioCrystalHeart,
             { optCompendioCrystalHeart = !optCompendioCrystalHeart },
-            { applyRulesPreset("Básico") }
+            { applyRulesPreset("Básico"); showRulesDialog = true }
         ),
         ModuleItemData(
             "Arte da Guerra: Nova Era".toEditionDisplayName(),
@@ -288,7 +301,7 @@ fun TelaInicial(
                 optCompendioArteDaGuerra = !optCompendioArteDaGuerra
                 if (optCompendioArteDaGuerra) applyRulesPreset("Arte da Guerra")
             },
-            { applyRulesPreset("Arte da Guerra") },
+            { applyRulesPreset("Arte da Guerra"); showRulesDialog = true },
             isRulesActive = optCompendioArteDaGuerra
         ),
         ModuleItemData(
@@ -298,7 +311,7 @@ fun TelaInicial(
             optCompendioCidadeSolVapor,
             !isAnyBookSelected || optCompendioCidadeSolVapor,
             { optCompendioCidadeSolVapor = !optCompendioCidadeSolVapor },
-            { applyRulesPreset("Básico") }
+            { applyRulesPreset("Básico"); showRulesDialog = true }
         ),
         ModuleItemData(
             "Wiseguys".toEditionDisplayName(),
@@ -310,7 +323,7 @@ fun TelaInicial(
                 optCompendioWiseguys = !optCompendioWiseguys
                 if (optCompendioWiseguys) applyRulesPreset("Wiseguys")
             },
-            { applyRulesPreset("Wiseguys") },
+            { applyRulesPreset("Wiseguys"); showRulesDialog = true },
             isRulesActive = optCompendioWiseguys
         )
     )
