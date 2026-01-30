@@ -18,6 +18,7 @@ import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.toDiceString
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -1266,7 +1267,8 @@ class CriadorViewModel : ViewModel() {
             is AdvancementAction.SpendOnSkills -> {
                 // Reverte o gasto dos pontos de perícia
                 lastAction.skillsIncreased.forEach { skillName ->
-                    val skill = mapaPericias[skillName.keyify()]
+                    val skill = state.periciasComIdiomas().firstOrNull { it.nome.keyify() == skillName.keyify() }
+                        ?: mapaPericias[skillName.keyify()]
                     if (skill != null) {
                         state.decreasePericia(skill)
                     }
