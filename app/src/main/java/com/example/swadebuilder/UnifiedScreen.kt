@@ -287,8 +287,7 @@ fun UnifiedScreen(
                 onSelectSection = {
                     onUserFeedback()
                     activeSection = it
-                },
-                tabStyle = state.estiloAbas
+                }
             )
 
             HorizontalPager(

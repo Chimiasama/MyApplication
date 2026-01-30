@@ -538,12 +538,6 @@ fun TelaInicial(
         )
     }
 
-            // Spacer for FAB
-            item(span = { GridItemSpan(2) }) { Spacer(Modifier.height(80.dp)) }
-        }
-    }
-
-
     // --- Dialogs ---
 
     if (showCreditsDialog) {
