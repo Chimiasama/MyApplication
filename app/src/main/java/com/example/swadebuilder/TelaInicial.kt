@@ -453,6 +453,8 @@ fun TelaInicial(
         }
     }
 
+    // --- Dialogs ---
+
     if (showRulesDialog) {
         AlertDialog(
             onDismissRequest = { showRulesDialog = false },
