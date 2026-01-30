@@ -41,6 +41,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -320,6 +322,7 @@ class MainActivity : ComponentActivity() {
 
             var showSaveDialog by rememberSaveable { mutableStateOf(false) }
             var showLoadDialog by rememberSaveable { mutableStateOf(false) }
+            var showResetDialog by rememberSaveable { mutableStateOf(false) } // New Reset Dialog
             var saveName by rememberSaveable { mutableStateOf("") }
             var pendingNavigationAction by rememberSaveable {
                 mutableStateOf<PendingNavigationAction?>(null)
@@ -818,6 +821,74 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
+            if (showResetDialog) {
+                AlertDialog(
+                    onDismissRequest = { showResetDialog = false },
+                    title = { Text("Limpar personagem") },
+                    text = { Text("Deseja limpar a ficha atual e iniciar um novo personagem?") },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            val cartaSelvagem = state.cartaSelvagem
+                            val maisPontosPericias = state.maisPontosPericias
+                            val modoSupers = state.modoSupers
+                            val compendioFantasiaAtivo = state.compendioFantasiaAtivo
+                            val compendioHorrorAtivo = state.compendioHorrorAtivo
+                            val compendioSciFiAtivo = state.compendioSciFiAtivo
+                            val compendioPathfinderAtivo = state.compendioPathfinderAtivo
+                            val compendioDeadlandsAtivo = state.compendioDeadlandsAtivo
+                            val compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
+                            val compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo
+                            val compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo
+                            val compendioWiseguysAtivo = state.compendioWiseguysAtivo
+                            val modoMonstroAtivo = state.modoMonstroAtivo
+                            val usarEspecializacoesDePericia = state.usarEspecializacoesDePericia
+                            val grandesResponsabilidades = state.grandesResponsabilidades
+                            val regraMultiplosIdiomas = state.regraMultiplosIdiomas
+                            val heroisSemArmadura = state.heroisSemArmadura
+                            val nasceUmHeroi = state.nasceUmHeroi
+                            val usarSemPontosDePoder = state.usarSemPontosDePoder
+
+                            criadorViewModel.resetStateParaNovoPersonagem(
+                                cartaSelvagem = cartaSelvagem,
+                                maisPontosPericias = maisPontosPericias,
+                                modoSupers = modoSupers,
+                                compendioFantasiaAtivo = compendioFantasiaAtivo,
+                                compendioHorrorAtivo = compendioHorrorAtivo,
+                                compendioSciFiAtivo = compendioSciFiAtivo,
+                                compendioPathfinderAtivo = compendioPathfinderAtivo,
+                                compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+                                compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+                                compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+                                compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+                                compendioWiseguysAtivo = compendioWiseguysAtivo,
+                                modoMonstroAtivo = modoMonstroAtivo,
+                                usarEspecializacoesDePericia = usarEspecializacoesDePericia,
+                                grandesResponsabilidades = grandesResponsabilidades,
+                                regraMultiplosIdiomas = regraMultiplosIdiomas
+                            )
+                            scope.launch {
+                                criadorViewModel.prepararNomeInicial(context)
+                            }
+                            state.heroisSemArmadura = heroisSemArmadura
+                            state.nasceUmHeroi = nasceUmHeroi
+                            state.usarSemPontosDePoder = usarSemPontosDePoder
+                            state.grandesResponsabilidades = grandesResponsabilidades
+                            showResetDialog = false
+                            scope.launch {
+                                snackHost.showSnackbar("Ficha limpa.")
+                            }
+                        }) {
+                            Text("Limpar")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showResetDialog = false }) {
+                            Text("Cancelar")
+                        }
+                    }
+                )
+            }
+
             BackHandler(enabled = mostrouTelaInicial) {
                 showExitDialog = true
             }
@@ -905,6 +976,20 @@ class MainActivity : ComponentActivity() {
 
                             Scaffold(
                                 snackbarHost = { SnackbarHost(hostState = snackHost) },
+                                floatingActionButton = {
+                                    if (!state.modoProgressaoAtivo && state.creationComplete()) {
+                                        ExtendedFloatingActionButton(
+                                            onClick = {
+                                                triggerFeedback()
+                                                requestNavigation(PendingNavigationAction.StartProgression)
+                                            },
+                                            icon = { Icon(Icons.Default.ArrowForward, contentDescription = null) },
+                                            text = { Text("Finalizar") },
+                                            containerColor = MaterialTheme.colorScheme.primary,
+                                            contentColor = MaterialTheme.colorScheme.onPrimary
+                                        )
+                                    }
+                                },
                                 containerColor = Color.Transparent,
                                 topBar         = {
                                     TopAppBar(
@@ -965,7 +1050,15 @@ class MainActivity : ComponentActivity() {
                                             }
                                         },
                                         actions = {
-                                            val scope = rememberCoroutineScope()
+                                            // Reset Character Button
+                                            if (!state.modoProgressaoAtivo) {
+                                                IconButton(onClick = {
+                                                    triggerFeedback()
+                                                    showResetDialog = true
+                                                }) {
+                                                    Icon(Icons.Default.Delete, contentDescription = "Reiniciar personagem")
+                                                }
+                                            }
 
                                             IconButton(onClick = {
                                                 triggerFeedback()
