@@ -9,7 +9,7 @@ object AppPreferences {
     private const val KEY_SOUND = "sound_volume"
     private const val KEY_TAB_STYLE = "tab_style"
     private const val KEY_SHOW_BOOK_ICON = "show_book_icon"
-    private const val KEY_SHOW_DESC_HOME = "show_desc_home"
+    private const val KEY_SHOW_DESC_HOME = "show_desc_home_v2"
     private const val KEY_SYSTEM_MESSAGES = "show_system_messages"
 
     data class GlobalPrefs(
