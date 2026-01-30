@@ -80,9 +80,6 @@ fun XpSection(
                     val slotUsed = state.xpSlots[index]
                     val isEnabled = (if (index == 0) !slotUsed else state.xpSlots[index - 1] && !slotUsed)
                             && !state.emProgresso
-                            && state.pontosVantagem == 0
-                            && state.pontosPericia == 0
-                            && state.pontosAtributo == 0
                             && state.progressosDisponiveis > 0
                     val isLastUsed = state.xpSlots.indexOfLast { it } == index
                     val label = slotStageLabels.getOrNull(index) ?: (index + 1).toString()

@@ -18,6 +18,7 @@ import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.toDiceString
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -316,6 +317,11 @@ class CriadorViewModel : ViewModel() {
         state.nasceUmHeroi = false // Fix: reset flag
 
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
+        state.tropoSelecionado = null
+        state.signoAdgSelecionado = null
+        state.descendenteElementalSelecionado = null
+        state.gnomoPericiaEscolhida = null
+        state.dominioClerigoSelecionado = null
 
         state.cartaSelvagem = cartaSelvagem
         state.maisPontosPericias = maisPontosPericias
@@ -331,6 +337,13 @@ class CriadorViewModel : ViewModel() {
         state.reservasComplicacaoMaior.clear()
         state.vantagensAutomaticas.clear()
         state.desvantagensAutomaticas.clear()
+        state.vantagensAutomaticasDoTropo.clear()
+        state.vantagensAutomaticasDoSigno.clear()
+        state.vantagensAutomaticasDoElemento.clear()
+        state.transtornos.clear()
+        state.notasPericia.clear()
+        state.manifestacoesPoderes.clear()
+
         state.vantagemEmFoco = null
         state.categoriasVantagensExpandidas.keys.forEach { cat ->
             state.categoriasVantagensExpandidas[cat] = false
@@ -871,6 +884,12 @@ class CriadorViewModel : ViewModel() {
     fun finishSkillAdvancement() {
         if (state.skillAdvancementInProgress) {
             val skills = state.skillsForCurrentAdvancement.toList()
+            if (skills.isEmpty()) {
+                // If nothing was selected, cancel the advancement to free the slot
+                cancelAdvancementInProgress()
+                return
+            }
+
             val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
             val skillValuesSnapshot = skills.associateWith { skillName ->
                 val pericia = mapaPericias[skillName.keyify()]
@@ -911,6 +930,7 @@ class CriadorViewModel : ViewModel() {
         // Rebuild stacks to update derived stats
         state.rebuildAllPericiaStacks()
 
+        logFeedback("${skill.nome} aumentada para ${state.rawTotal(skill).toDiceString()}.")
         return true
     }
 
@@ -935,6 +955,12 @@ class CriadorViewModel : ViewModel() {
         if (state.advantageAdvancementInProgress) {
             if (state.arcanoCompraPendente()) return
             val advantageId = state.advantageForCurrentAdvancement
+            if (advantageId == null) {
+                // If nothing selected, revert
+                cancelAdvancementInProgress()
+                return
+            }
+
             if (advantageId != null) {
                 val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
                 state.advancementHistory.add(
@@ -1081,7 +1107,6 @@ class CriadorViewModel : ViewModel() {
         val stack = state.paCostStackPorAtributo.getOrPut(attributeKey) { mutableListOf() }
         stack.add(1) // dummy cost, recalculated later
 
-        state.paFromProgress--
         state.recalcularPontosAtributo()
         state.checkFreeze()
     }
@@ -1093,6 +1118,12 @@ class CriadorViewModel : ViewModel() {
             state.paCostStackPorAtributo.forEach { (attr, stack) ->
                 val diff = stack.size - (before[attr] ?: 0)
                 repeat(diff.coerceAtLeast(0)) { increases.add(attr) }
+            }
+
+            if (increases.isEmpty()) {
+                // Nothing increased, so nothing to finish. Revert.
+                cancelAdvancementInProgress()
+                return
             }
 
             val stageName = state.attributeStageForCurrentAdvancement ?: state.estagioAtual().nome
@@ -1265,7 +1296,8 @@ class CriadorViewModel : ViewModel() {
             is AdvancementAction.SpendOnSkills -> {
                 // Reverte o gasto dos pontos de perícia
                 lastAction.skillsIncreased.forEach { skillName ->
-                    val skill = mapaPericias[skillName.keyify()]
+                    val skill = state.periciasComIdiomas().firstOrNull { it.nome.keyify() == skillName.keyify() }
+                        ?: mapaPericias[skillName.keyify()]
                     if (skill != null) {
                         state.decreasePericia(skill)
                     }
