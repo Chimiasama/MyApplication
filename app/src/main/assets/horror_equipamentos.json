@@ -3064,6 +3064,90 @@
         "custo": 30,
         "observacoes": "Detecta movimento (incluindo etéreos) a 20 metros em 90º. Avançado ($500) tem tela.",
         "origem": "HORROR"
+      },
+      {
+        "tipo": "Consumíveis",
+        "subtipo": "Alquímicos e Especiais",
+        "origem": "HORROR",
+        "itens": [
+          {
+            "nome": "Ácido, frasco",
+            "distancia": "3/6/12",
+            "dano": "2d4",
+            "pa": null,
+            "cdt": null,
+            "explosao": "MPE",
+            "peso": 0.5,
+            "custo": 10,
+            "observacoes": "Arremessado como uma granada. Aqueles dentro do Modelo sofrem 2d4 de dano quando atingidos e 2d4-2 de dano no início do próximo turno, a menos que o ácido seja removido."
+          },
+          {
+            "nome": "Antitoxina, frasco",
+            "distancia": null,
+            "dano": null,
+            "pa": null,
+            "cdt": null,
+            "explosao": null,
+            "peso": 0.25,
+            "custo": 50,
+            "observacoes": "Concede um bônus de +4 para resistir a venenos por uma hora."
+          },
+          {
+            "nome": "Bastão de Fumaça",
+            "distancia": "3/6/12",
+            "dano": null,
+            "pa": null,
+            "cdt": null,
+            "explosao": "MME",
+            "peso": 0.1,
+            "custo": 20,
+            "observacoes": "Cria fumaça espessa (Escuridão) em um Modelo Médio de Explosão por um minuto. Dissipa com vento forte em uma rodada."
+          },
+          {
+            "nome": "Enredapés",
+            "distancia": "1/2/4",
+            "dano": null,
+            "pa": null,
+            "cdt": 1,
+            "explosao": null,
+            "peso": 2,
+            "custo": 50,
+            "observacoes": "Alvos de Tamanho 3 ou menor ficam Distraídos por cinco rodadas. Devem passar em Atletismo ou ficam Enredados."
+          },
+          {
+            "nome": "Fogo Alquímico",
+            "distancia": "3/6/12",
+            "dano": "2d4",
+            "pa": null,
+            "cdt": null,
+            "explosao": "MPE",
+            "peso": 0.5,
+            "custo": 20,
+            "observacoes": "Líquido inflamável que entra em combustão no impacto. Arma Pesada. Causa 2d4 ao acertar e 2d4-2 no próximo turno. Pode causar Fogo."
+          },
+          {
+            "nome": "Fósforos",
+            "distancia": null,
+            "dano": null,
+            "pa": null,
+            "cdt": null,
+            "explosao": null,
+            "peso": 0.1,
+            "custo": 1,
+            "observacoes": "Bastão fino inflamável para acender tochas e materiais com uma ação."
+          },
+          {
+            "nome": "Pedra Explosiva",
+            "distancia": "3/6/12",
+            "dano": null,
+            "pa": null,
+            "cdt": null,
+            "explosao": "MME",
+            "peso": 0.5,
+            "custo": 30,
+            "observacoes": "Explode ao impacto. Alvos no Modelo fazem teste de Vigor ou ficam Abalados e ensurdecidos por uma hora."
+          }
+        ]
       }
     ]
   }
