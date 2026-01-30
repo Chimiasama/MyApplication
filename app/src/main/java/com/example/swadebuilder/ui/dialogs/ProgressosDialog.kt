@@ -694,16 +694,21 @@ fun ProgressosDialog(
                     items(listaAtributos) { attrKey ->
                         val label = mapaAtributosDisplay[attrKey] ?: attrKey
                         val currentVal = state.valoresAtributos[attrKey]?.intValue ?: 4
+                        val maxVal = state.atributoMaxRaw(attrKey)
+                        val canIncrease = currentVal < maxVal
 
                         Row(
                             Modifier
                                 .fillMaxWidth()
-                                .clickable {
+                                .alpha(if (canIncrease) 1f else 0.5f)
+                                .clickable(enabled = canIncrease) {
                                     onPurchaseAttribute(slotIndex, est.nome, attrKey, consumeReservation)
                                 }
                                 .padding(vertical = 12.dp)
                         ) {
-                            Text("$label (d$currentVal → d${if (currentVal < 12) currentVal + 2 else currentVal + 1})")
+                            val nextVal = if (currentVal < 12) currentVal + 2 else currentVal + 1
+                            val text = if (canIncrease) "$label (d$currentVal → d$nextVal)" else "$label (d$currentVal) - Máximo"
+                            Text(text)
                         }
                         HorizontalDivider()
                     }
@@ -1104,7 +1109,7 @@ private fun DialogVantagemItem(
         colors = CardDefaults.cardColors(
             containerColor = when {
                 jaTem -> MaterialTheme.colorScheme.tertiaryContainer
-                requisitosOk && bloqueioClasse == null -> MaterialTheme.colorScheme.surfaceVariant
+                requisitosOk && bloqueioClasse == null -> MaterialTheme.colorScheme.surface
                 else -> MaterialTheme.colorScheme.errorContainer
             }
         ),
