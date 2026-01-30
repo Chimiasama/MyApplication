@@ -1139,6 +1139,93 @@ fun ProgressosDialog(
                 }
             }
 
+            "ANTECEDENTE ARCANO" -> {
+                if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
+                    val opcoesArcano = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo) {
+                        listaVantagens
+                            .filter {
+                                val isAb = it.id.startsWith("antecedente_arcano_")
+                                val isSrc = (state.compendioFantasiaAtivo && (it.origem.equals("FANTASIA", ignoreCase = true) || it.origem.equals("BASICO", ignoreCase = true))) ||
+                                        (state.compendioHorrorAtivo && it.origem.equals("HORROR", ignoreCase = true))
+                                isAb && isSrc
+                            }
+                            .map { v ->
+                                val nameInParens = Regex("\\((.*?)\\)").find(v.nome)?.groupValues?.get(1)
+                                val baseName = nameInParens?.toSentenceCase()
+                                    ?: v.subtipoArcano?.toSentenceCase()
+                                    ?: v.nome.removePrefix("ANTECEDENTE ARCANO ").replace("(", "").replace(")", "").trim().toSentenceCase()
+
+                                val reqs = if (v.requisitos.atributoMin.isNotEmpty()) {
+                                    val r = v.requisitos.atributoMin.entries.joinToString(", ") { "${it.key} d${it.value}" }
+                                    " ($r)"
+                                } else ""
+
+                                "$baseName$reqs" to v
+                            }
+                            .sortedBy { it.first }
+                    }
+
+                    if (opcoesArcano.isNotEmpty()) {
+                        ChoiceDialog(
+                            options = opcoesArcano.map { it.first },
+                            onConfirm = { choiceLabel ->
+                                val specificEdge = opcoesArcano.firstOrNull { it.first == choiceLabel }?.second
+                                if (specificEdge != null) {
+                                    val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
+                                    val estSel = listaDeEstagios[estIndexFinal]
+
+                                    if (!state.podeSelecionar(specificEdge) || !strictRequirementsOk(specificEdge, estIndexFinal)) {
+                                        showSnack("Você não cumpre os requisitos para ${specificEdge.nome}.")
+                                        return@ChoiceDialog
+                                    }
+                                    if (bloquearExclusividadeClasse(specificEdge)) {
+                                        return@ChoiceDialog
+                                    }
+
+                                    viewModel.startAdvantageAdvancement(slotIndex, estSel.nome)
+                                    viewModel.selectAdvantageForAdvancement(specificEdge)
+
+                                    if (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso) {
+                                        showPendingChoice = false
+                                        showAdvSelection = false
+                                        pendingAdv = null
+                                        showPowerSelection = true
+                                    } else {
+                                        viewModel.finishAdvantageAdvancement()
+                                        showPendingChoice = false
+                                        showAdvSelection = false
+                                        pendingAdv = null
+                                        onDismiss()
+                                    }
+                                }
+                            },
+                            onDismiss = {
+                                showPendingChoice = false
+                                pendingAdv = null
+                            }
+                        )
+                    } else {
+                        ChoiceDialog(
+                            options = vant.choiceOptions,
+                            onConfirm = { finishWithChoice(it) },
+                            onDismiss = {
+                                showPendingChoice = false
+                                pendingAdv = null
+                            }
+                        )
+                    }
+                } else {
+                    ChoiceDialog(
+                        options = vant.choiceOptions,
+                        onConfirm = { finishWithChoice(it) },
+                        onDismiss = {
+                            showPendingChoice = false
+                            pendingAdv = null
+                        }
+                    )
+                }
+            }
+
             else -> {
                 ChoiceDialog(
                     options = vant.choiceOptions,

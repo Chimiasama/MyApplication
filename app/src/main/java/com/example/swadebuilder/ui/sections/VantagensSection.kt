@@ -246,6 +246,7 @@ fun VantagensContent(
     var pendingVantagem by remember { mutableStateOf<Vantagem?>(null) }
     var showChoiceDialog by rememberSaveable { mutableStateOf(false) }
     var dialogMostrandoAntecedente by remember { mutableStateOf<Vantagem?>(null) }
+    var dialogMostrandoPoderesMisticos by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoCavaleiro by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoMontaria by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoNovosPoderes by remember { mutableStateOf<Vantagem?>(null) }
@@ -599,6 +600,8 @@ fun VantagensContent(
                                         showChoiceDialog = true
                                     } else if (vant.id == "antecedente_arcano") {
                                         dialogMostrandoAntecedente = vant
+                                    } else if (vant.id == "poderes_misticos") {
+                                        dialogMostrandoPoderesMisticos = vant
                                     } else if (vant.nome.keyify() == "CAVALEIRO") {
                                         dialogMostrandoCavaleiro = vant
                                     } else if (vant.nome.keyify() == "MONTARIA") {
@@ -701,6 +704,8 @@ fun VantagensContent(
                                     showChoiceDialog = true
                                 } else if (vant.id == "antecedente_arcano") {
                                     dialogMostrandoAntecedente = vant
+                                } else if (vant.id == "poderes_misticos") {
+                                    dialogMostrandoPoderesMisticos = vant
                                 } else if (vant.nome.keyify() == "CAVALEIRO") {
                                     dialogMostrandoCavaleiro = vant
                                 } else if (vant.nome.keyify() == "MONTARIA") {
@@ -788,6 +793,72 @@ fun VantagensContent(
             current = filter,
             onChange = { state.vantFilter = it },
             onDismiss = { showFilterDialog = false }
+        )
+    }
+
+    if (dialogMostrandoPoderesMisticos != null) {
+        val vantOriginal = dialogMostrandoPoderesMisticos!!
+        val options = listOf("Bárbaro", "Guerreiro", "Ladrão", "Monge", "Paladino", "Patrulheiro")
+
+        AlertDialog(
+            onDismissRequest = {
+                dialogMostrandoPoderesMisticos = null
+                subOpcaoSelecionada = null
+            },
+            title = { Text("Poderes Místicos: Escolha a Classe") },
+            text = {
+                Column {
+                    Text("Escolha a classe para definir seus poderes e requisitos:")
+                    Spacer(Modifier.size(8.dp))
+                    options.forEach { opcao ->
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable { subOpcaoSelecionada = opcao }
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (subOpcaoSelecionada == opcao),
+                                onClick = { subOpcaoSelecionada = opcao }
+                            )
+                            Spacer(Modifier.size(8.dp))
+                            Text(opcao)
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = (subOpcaoSelecionada != null),
+                    onClick = {
+                        val choice = subOpcaoSelecionada!!
+                        val vantToAdd = vantOriginal.copy(choice = choice)
+
+                        if (state.advantageAdvancementInProgress) {
+                            viewModel.selectAdvantageForAdvancement(vantToAdd)
+                            onUserFeedback()
+                            viewModel.logFeedback("Vantagem ${vantToAdd.nome} adicionada ($choice).")
+                        } else {
+                            state.comprarVantagem(vantToAdd) { msg ->
+                                viewModel.logFeedback(msg)
+                                onUserFeedback()
+                            }
+                        }
+
+                        dialogMostrandoPoderesMisticos = null
+                        subOpcaoSelecionada = null
+                    }
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        dialogMostrandoPoderesMisticos = null
+                        subOpcaoSelecionada = null
+                    }
+                ) { Text("Cancelar") }
+            }
         )
     }
 

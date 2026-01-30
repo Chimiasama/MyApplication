@@ -297,10 +297,24 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     if (personagem.poderes.isNotEmpty()) {
         lines += "Poderes arcanos"
         personagem.poderes.forEach { (arcanoKey, lista) ->
-            val label = arcanoKey
+            val cleanKey = arcanoKey.uppercase().trim()
+            val info = arcanoInfo[cleanKey]
+
+            val details = if (cleanKey == "MISTICO") {
+                "(10 PP)"
+            } else if (info != null) {
+                val (_, pp, foco) = info
+                "($pp PP, $foco)"
+            } else {
+                ""
+            }
+
+            val labelBase = arcanoKey
                 .lowercase()
                 .replace('_', ' ')
                 .replaceFirstChar { it.titlecase() }
+
+            val label = if (details.isNotBlank()) "$labelBase $details" else labelBase
 
             lines += if (lista.isEmpty()) {
                 "• $label: – nenhum poder escolhido"
