@@ -328,6 +328,8 @@ class CriadorViewModel : ViewModel() {
         state.usarEspecializacoesDePericia = usarEspecializacoesDePericia
         state.especializacoesPorPericia.clear()
 
+        state.pontosVantagem = 0
+
         // Fix: Force transition from empty string to ensure aplicarAncestralidade logic runs fully
         state.ancestralidade = ""
         val targetAncestralidade = if (state.compendioPathfinderAtivo) "Humano (Pathfinder)" else "HUMANOS"
