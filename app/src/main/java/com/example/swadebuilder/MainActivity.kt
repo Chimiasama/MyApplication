@@ -1193,6 +1193,7 @@ fun periciaStartRaw(anc: String, per: Pericia): Int {
 }
 
 var listaVantagens:    List<Vantagem>   = emptyList()
+var listaPoderes:      List<Poder>      = emptyList()
 lateinit var listaTropos: List<Tropo>
 var listaEquipamentos: List<EquipamentoItem> = emptyList()
 

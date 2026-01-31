@@ -9,6 +9,7 @@ import com.example.swadebuilder.ArcanoInfo
 import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.SuperPoder
 import com.example.swadebuilder.arcanoInfo
+import com.example.swadebuilder.listaPoderes
 import com.example.swadebuilder.listaAncestralidadesJson
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.listaComplicacoes
@@ -112,6 +113,21 @@ object DataLoader {
         ModuleFile("deadlands_ancestralidades.json"),
         ModuleFile("pathfinder_ancestralidades.json"),
         ModuleFile("super_ancestralidades.json")
+    )
+
+    private val powerModules = listOf(
+        ModuleFile("basico_poderes.json"),
+        ModuleFile("fantasia_poderes.json", originOverride = "FANTASIA"),
+        ModuleFile("scifi_poderes.json", originOverride = "SCI_FI"),
+        ModuleFile("horror_poderes.json", originOverride = "HORROR"),
+        ModuleFile("deadlands_poderes.json", originOverride = "DEADLANDS"),
+        ModuleFile("pathfinder_poderes.json", originOverride = "PATHFINDER"),
+        ModuleFile("crystal_poderes.json", originOverride = "CRYSTAL_HEART"),
+        ModuleFile("sol_vapor_poderes.json", originOverride = "CIDADE_SOL_VAPOR"),
+        ModuleFile("wiseguys_poderes.json", originOverride = "WISEGUYS"),
+        ModuleFile("adg_poderes.json", originOverride = "ARTE_DA_GUERRA"),
+        ModuleFile("adg_tecnicas_chi.json", originOverride = "ARTE_DA_GUERRA"),
+        ModuleFile("super_poderes_base.json", originOverride = "SUPER")
     )
 
     // --- Loading Logic ---
@@ -293,6 +309,12 @@ object DataLoader {
         val regrasCriacaoRaca = runCatching {
             loadJsonAsset<RegrasCriacaoRacaJson>(context, "basico_habilidades_criacao.json").tabela_criacao
         }.getOrNull()
+
+        // 13. Poderes (Magias/Milagres/Etc)
+        val todosPoderes = assets.loadAndMerge<Poder>(powerModules) { item, override ->
+            if (override != null) item.copy(origem = override) else item
+        }
+        listaPoderes = todosPoderes
 
         return MainActivityData(equipamentoCategorias, superequipCategorias, listaSuperPoderes, regrasCriacaoRaca)
     }

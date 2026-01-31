@@ -923,6 +923,7 @@ fun ProgressosDialog(
                                 if (cat == Categoria.SUPER && !state.modoSupers) return@items
                                 if (cat == Categoria.MONSTRUOSAS && !state.compendioHorrorAtivo) return@items
                                 if (cat == Categoria.CHI && !state.compendioArteDaGuerraAtivo) return@items
+                                if (cat == Categoria.ESTILO_MARCIAL && !state.compendioArteDaGuerraAtivo) return@items
 
                                 FilterChip(
                                     selected = cat in advSelectedCategories,

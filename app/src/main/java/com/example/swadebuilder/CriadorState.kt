@@ -903,6 +903,16 @@ class CriadorState {
     fun removerVantagem(v: Vantagem) {
         vantagensSelecionadas.remove(v)
 
+        val arcKey = v.toArcanoKey()?.normAAKey()
+        if (arcKey != null) {
+            val remainingWithSameKey = vantagensSelecionadas.any { it.toArcanoKey()?.normAAKey() == arcKey }
+            if (!remainingWithSameKey) {
+                poderSlotsPorArcano.remove(arcKey)
+                novosPoderesStacksPorArcano.remove(arcKey)
+                syncPoderesSelecionadosFromSlots()
+            }
+        }
+
         if (v.nome.keyify() == "CAVALEIRO") {
             equipamentosComprados.removeAll { it.origemGrant == "CAVALEIRO" }
         }
