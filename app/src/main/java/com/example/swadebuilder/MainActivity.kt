@@ -88,6 +88,7 @@ import com.example.swadebuilder.model.DataLoader
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MainActivityData
 import com.example.swadebuilder.model.MonstroTemplate
+import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem

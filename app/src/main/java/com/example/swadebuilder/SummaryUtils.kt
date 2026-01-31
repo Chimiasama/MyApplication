@@ -2,6 +2,7 @@ package com.example.swadebuilder
 
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.MeuPersonagem
+import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
