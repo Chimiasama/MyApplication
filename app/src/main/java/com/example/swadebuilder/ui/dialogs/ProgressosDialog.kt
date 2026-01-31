@@ -1059,7 +1059,14 @@ fun ProgressosDialog(
 
     if (showMysticPowersSelection && pendingMysticPowersAdv != null) {
         val vant = pendingMysticPowersAdv!!
-        val options = listOf("Bárbaro", "Guerreiro", "Ladrão", "Monge", "Paladino", "Patrulheiro")
+        val options = listOf(
+            "Bárbaro" to "Força d8+",
+            "Guerreiro" to "Lutar d8+",
+            "Ladrão" to "Ladinagem d8+",
+            "Monge" to "Atletismo d8+",
+            "Paladino" to "Espírito d8+",
+            "Patrulheiro" to "Sobrevivência d8+"
+        )
         var selectedClass by rememberSaveable { mutableStateOf<String?>(null) }
 
         AlertDialog(
@@ -1072,7 +1079,7 @@ fun ProgressosDialog(
                 Column {
                     Text("Escolha a classe para definir seus poderes e requisitos:")
                     Spacer(Modifier.size(8.dp))
-                    options.forEach { opcao ->
+                    options.forEach { (opcao, requisito) ->
                         Row(
                             Modifier
                                 .fillMaxWidth()
@@ -1085,7 +1092,10 @@ fun ProgressosDialog(
                                 onClick = { selectedClass = opcao }
                             )
                             Spacer(Modifier.size(8.dp))
-                            Text(opcao)
+                            Column {
+                                Text(opcao, fontWeight = FontWeight.Bold)
+                                Text(requisito, style = MaterialTheme.typography.bodySmall)
+                            }
                         }
                     }
                 }
@@ -1099,6 +1109,13 @@ fun ProgressosDialog(
                         var reqMet = false
                         var failMsg = ""
 
+                        // Helper to find the active instance of a skill to ensure we check the correct point pool
+                        fun getSkillTotal(nameKey: String): Int {
+                            val activePer = state.periciasComIdiomas().firstOrNull { it.nome.keyify() == nameKey }
+                                ?: mapaPericias[nameKey]
+                            return activePer?.let { state.rawTotal(it) } ?: 0
+                        }
+
                         when (choice) {
                             "Bárbaro" -> {
                                 val str = state.valoresAtributos["FORCA"]?.intValue ?: 4
@@ -1106,17 +1123,17 @@ fun ProgressosDialog(
                                 else failMsg = "Requer Força d8+"
                             }
                             "Guerreiro" -> {
-                                val lut = mapaPericias["LUTAR"]?.let { state.rawTotal(it) } ?: 0
+                                val lut = getSkillTotal("LUTAR")
                                 if (lut >= 8) reqMet = true
                                 else failMsg = "Requer Lutar d8+"
                             }
                             "Ladrão" -> {
-                                val lad = mapaPericias["LADINAGEM"]?.let { state.rawTotal(it) } ?: 0
+                                val lad = getSkillTotal("LADINAGEM")
                                 if (lad >= 8) reqMet = true
                                 else failMsg = "Requer Ladinagem d8+"
                             }
                             "Monge" -> {
-                                val atl = mapaPericias["ATLETISMO"]?.let { state.rawTotal(it) } ?: 0
+                                val atl = getSkillTotal("ATLETISMO")
                                 if (atl >= 8) reqMet = true
                                 else failMsg = "Requer Atletismo d8+"
                             }
@@ -1126,7 +1143,7 @@ fun ProgressosDialog(
                                 else failMsg = "Requer Espírito d8+"
                             }
                             "Patrulheiro" -> {
-                                val sob = mapaPericias["SOBREVIVENCIA"]?.let { state.rawTotal(it) } ?: 0
+                                val sob = getSkillTotal("SOBREVIVENCIA")
                                 if (sob >= 8) reqMet = true
                                 else failMsg = "Requer Sobrevivência d8+"
                             }
