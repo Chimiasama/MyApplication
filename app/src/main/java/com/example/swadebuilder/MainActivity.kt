@@ -972,7 +972,6 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onCarregarPersonagem = { showLoadDialog = true },
                                 onOpenSettings = { showSettingsDialog = true },
-                                context   = context,
                                 viewModel = criadorViewModel
                             )
                         } else {

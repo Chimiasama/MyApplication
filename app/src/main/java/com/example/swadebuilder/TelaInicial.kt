@@ -1,6 +1,5 @@
 package com.example.swadebuilder
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Build
@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Settings
@@ -91,7 +90,6 @@ fun TelaInicial(
     ) -> Unit,
     onCarregarPersonagem: () -> Unit,
     onOpenSettings: () -> Unit,
-    context: Context,
     viewModel: CriadorViewModel
 ) {
     val isFullEdition = EditionConfig.isFullEdition
@@ -193,9 +191,9 @@ fun TelaInicial(
 
     val officialModules = listOf(
         ModuleItemData(
-            "Regras Básicas",
-            "Savage Worlds Edição Aventura (Core).",
-            Icons.Default.MenuBook,
+            "Livro Básico",
+            "As regras do livro básico.",
+            Icons.AutoMirrored.Filled.MenuBook,
             isSelected = !isAnyBookSelected,
             enabled = true,
             onToggle = {
