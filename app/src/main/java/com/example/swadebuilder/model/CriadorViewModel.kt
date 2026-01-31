@@ -1182,6 +1182,15 @@ class CriadorViewModel : ViewModel() {
         }
 
         if (state.skillAdvancementInProgress) {
+            // Revert changes made during this session
+            state.skillsForCurrentAdvancement.forEach { skillName ->
+                val skill = state.periciasComIdiomas().firstOrNull { it.nome.keyify() == skillName.keyify() }
+                    ?: mapaPericias[skillName.keyify()]
+                if (skill != null) {
+                    state.decreasePericia(skill)
+                }
+            }
+            state.skillsForCurrentAdvancement.clear()
             state.spFromProgress = (state.spFromProgress - 2).coerceAtLeast(0)
             state.rebuildAllPericiaStacks()
         }

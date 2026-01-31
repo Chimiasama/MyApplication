@@ -782,7 +782,8 @@ fun ProgressosDialog(
                             origem in activeOrigins
                         }
                         val existing = state.periciasComIdiomas()
-                        (available + existing).distinctBy { it.nome.keyify() }.sortedBy { it.nome }
+                        // Prioritize existing instances to ensure correct point lookup
+                        (existing + available).distinctBy { it.nome.keyify() }.sortedBy { it.nome }
                     }
 
                     LazyColumn(modifier = Modifier.fillMaxHeight(0.6f)) {
