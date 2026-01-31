@@ -509,7 +509,10 @@ fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem, portrait: Bitmap? 
         val powerLines = mutableListOf<String>()
         personagem.poderes.forEach { (arc, list) ->
             powerLines.add("Arcano: $arc")
-            powerLines.add(list.joinToString(", "))
+            val namedList = list.map { id ->
+                com.example.swadebuilder.listaPoderes.firstOrNull { it.id == id }?.nome ?: id
+            }
+            powerLines.add(namedList.joinToString(", "))
         }
         rightQueue.add(object : TextListBlock("Poderes", powerLines) {})
     }
