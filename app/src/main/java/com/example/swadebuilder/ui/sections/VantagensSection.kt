@@ -1380,7 +1380,7 @@ fun VantagensContent(
                 .mapNotNull { it.choice?.keyify() }
                 .toSet()
 
-            val knowledgeOptions = listaPericias
+            val knowledgeOptions = state.periciasComIdiomas()
                 .filter { per -> per.nome.contains("CONHECIMENTO", ignoreCase = true) }
                 .map { per ->
                     val base = per.nome.substringBefore("(").trim()
@@ -1419,7 +1419,7 @@ fun VantagensContent(
         } else {
             val validOptions = when {
                 vant.id == "arma_predileta" -> {
-                    listaPericias
+                    state.periciasComIdiomas()
                         .filter { per ->
                             val nome = per.nome
 
