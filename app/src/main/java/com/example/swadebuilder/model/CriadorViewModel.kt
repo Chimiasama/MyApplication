@@ -893,7 +893,9 @@ class CriadorViewModel : ViewModel() {
 
             val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
             val skillValuesSnapshot = skills.associateWith { skillName ->
-                val pericia = mapaPericias[skillName.keyify()]
+                val key = skillName.keyify()
+                val pericia = state.periciasComIdiomas().firstOrNull { it.nome.keyify() == key }
+                    ?: mapaPericias[key]
                 pericia?.let { state.rawTotal(it) }
             }.filterValues { it != null }.mapValues { it.value!! }
             state.advancementHistory.add(
