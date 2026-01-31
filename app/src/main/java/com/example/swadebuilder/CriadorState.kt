@@ -1681,15 +1681,13 @@ class CriadorState {
         vantagensSelecionadas.flatMap { vant ->
             val obrigatorias = vant.requisitos.periciaMin   // se for null, vira um Map vazio
                 .mapNotNull { (nomeRaw, min) ->
-                    val chaveNorm = nomeRaw.uppercase().semAcentos().trim()
-                    mapaPericias[chaveNorm]
+                    getBestPericia(nomeRaw)
                         ?.let { per -> per to min }
                 }
 
             val opcionais = vant.requisitos.periciaMinOpcional   // se null, vira Map vazio
                 .mapNotNull { (nomeRaw, min) ->
-                    val chaveNorm = nomeRaw.uppercase().semAcentos().trim()
-                    mapaPericias[chaveNorm]
+                    getBestPericia(nomeRaw)
                         ?.let { per -> per to min }
                 }
 
@@ -1699,8 +1697,7 @@ class CriadorState {
                     vant.nome.trim().equals("Arma Predileta", ignoreCase = true)
                     && choiceSnapshot != null
                 ) {
-                    val key = choiceSnapshot.uppercase().semAcentos().trim()
-                    mapaPericias[key]
+                    getBestPericia(choiceSnapshot)
                         ?.let { per -> listOf(per to 8) }
                         .orEmpty()
                 } else {
@@ -2066,6 +2063,12 @@ class CriadorState {
         return vantagensSelecionadas.any { it.toArcanoKey() != null }
     }
 
+    fun getBestPericia(nome: String): Pericia? {
+        val key = nome.keyify()
+        return periciasComIdiomas().firstOrNull { it.nome.keyify() == key }
+            ?: mapaPericias[key]
+    }
+
     fun podeRemoverPoderDoSlot(poderId: String): Pair<Boolean, String?> {
         val normalizedId = poderId.replace('_', ' ').keyify()
         val linkedAdvantage = vantagensSelecionadas.firstOrNull { vant ->
@@ -2245,7 +2248,7 @@ class CriadorState {
             return if (listaAtributos.contains(choiceKey)) {
                 valoresAtributos[choiceKey]!!.intValue == atributoMaxRaw(choiceKey)
             } else {
-                val per = mapaPericias[choiceKey] ?: return false
+                val per = getBestPericia(choiceKey) ?: return false
                 rawTotal(per) == periciaCapRaw(per)
             }
         }
@@ -2324,13 +2327,13 @@ class CriadorState {
         val periciaMinMap = v.requisitos.periciaMin
         if (v.vinculadoPericia && periciaMinMap.isNotEmpty()) {
             val atendeUma = periciaMinMap.any { (perNome, minRaw) ->
-                val per = mapaPericias[perNome.keyify()]
+                val per = getBestPericia(perNome)
                 per != null && rawTotal(per) >= minRaw
             }
             if (!atendeUma) return false
         } else {
             if (periciaMinMap.any { (perNome, minRaw) ->
-                    val per = mapaPericias[perNome.keyify()] ?: return@any false
+                    val per = getBestPericia(perNome) ?: return@any false
                     rawTotal(per) < minRaw
                 }) {
                 return false
@@ -2344,11 +2347,11 @@ class CriadorState {
                 val choiceKey = v.choice!!.keyify()
                 val matchEntry = periciaMinOpcMap.entries.firstOrNull { it.key.keyify() == choiceKey }
                 if (matchEntry == null) return false
-                val per = mapaPericias[choiceKey] ?: return false
+                val per = getBestPericia(choiceKey) ?: return false
                 if (rawTotal(per) < matchEntry.value) return false
             } else {
                 val atendeUmaOpc = periciaMinOpcMap.any { (perNome, minRaw) ->
-                    val per = mapaPericias[perNome.keyify()]
+                    val per = getBestPericia(perNome)
                     per != null && rawTotal(per) >= minRaw
                 }
                 if (!atendeUmaOpc) return false
@@ -2372,7 +2375,7 @@ class CriadorState {
             if (base == null) return false
             val choice = base.choice
             if (choice.isNullOrBlank()) return false
-            val skill = mapaPericias[choice.keyify()] ?: return false
+            val skill = getBestPericia(choice) ?: return false
             if (rawTotal(skill) < 10) return false
         }
 
@@ -2975,13 +2978,13 @@ class CriadorState {
         val periciaMinMap = v.requisitos.periciaMin
         if (v.vinculadoPericia && periciaMinMap.isNotEmpty()) {
             val atende = periciaMinMap.any { (nome, min) ->
-                val p = mapaPericias[nome.keyify()] ?: return@any false
+                val p = getBestPericia(nome) ?: return@any false
                 rawTotal(p) >= min
             }
             if (!atende) return false
         } else {
             if (periciaMinMap.any { (nome, min) ->
-                    val p = mapaPericias[nome.keyify()] ?: return@any false
+                    val p = getBestPericia(nome) ?: return@any false
                     rawTotal(p) < min
                 }) return false
         }
@@ -2993,11 +2996,11 @@ class CriadorState {
                 val choiceKey = v.choice!!.keyify()
                 val matchEntry = periciaMinOpcMap.entries.firstOrNull { it.key.keyify() == choiceKey }
                 if (matchEntry == null) return false
-                val per = mapaPericias[choiceKey] ?: return false
+                val per = getBestPericia(choiceKey) ?: return false
                 if (rawTotal(per) < matchEntry.value) return false
             } else {
                 val atende = periciaMinOpcMap.any { (nome, min) ->
-                    val p = mapaPericias[nome.keyify()] ?: return@any false
+                    val p = getBestPericia(nome) ?: return@any false
                     rawTotal(p) >= min
                 }
                 if (!atende) return false
@@ -3023,7 +3026,7 @@ class CriadorState {
             val base = vantagensSelecionadas.firstOrNull { it.id == "tiro_duplo" } ?: return false
             val choice = base.choice
             if (choice.isNullOrBlank()) return false
-            val skill = mapaPericias[choice.keyify()] ?: return false
+            val skill = getBestPericia(choice) ?: return false
             if (rawTotal(skill) < 10) return false
         }
 
