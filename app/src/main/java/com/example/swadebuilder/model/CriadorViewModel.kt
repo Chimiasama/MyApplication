@@ -893,7 +893,9 @@ class CriadorViewModel : ViewModel() {
 
             val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
             val skillValuesSnapshot = skills.associateWith { skillName ->
-                val pericia = mapaPericias[skillName.keyify()]
+                val key = skillName.keyify()
+                val pericia = state.periciasComIdiomas().firstOrNull { it.nome.keyify() == key }
+                    ?: mapaPericias[key]
                 pericia?.let { state.rawTotal(it) }
             }.filterValues { it != null }.mapValues { it.value!! }
             state.advancementHistory.add(
@@ -1182,6 +1184,15 @@ class CriadorViewModel : ViewModel() {
         }
 
         if (state.skillAdvancementInProgress) {
+            // Revert changes made during this session
+            state.skillsForCurrentAdvancement.forEach { skillName ->
+                val skill = state.periciasComIdiomas().firstOrNull { it.nome.keyify() == skillName.keyify() }
+                    ?: mapaPericias[skillName.keyify()]
+                if (skill != null) {
+                    state.decreasePericia(skill)
+                }
+            }
+            state.skillsForCurrentAdvancement.clear()
             state.spFromProgress = (state.spFromProgress - 2).coerceAtLeast(0)
             state.rebuildAllPericiaStacks()
         }

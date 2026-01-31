@@ -8,6 +8,11 @@ fun String.normAAKey(): String =
 
 fun Vantagem.toArcanoKey(): String? {
     if (!subtipoArcano.isNullOrBlank()) return subtipoArcano.normAAKey()
+
+    // Fix for "Poderes Místicos": force MISTICO key even if choice (class) is present
+    // to ensure fixed power lookup works correctly in CriadorState.
+    if ("PODERES MISTICOS" in nome.normAAKey()) return "MISTICO"
+
     if (!choice.isNullOrBlank()) {
         val c = choice!!.normAAKey()
         // Map new (Básico) keys to standard keys
