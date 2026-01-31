@@ -937,6 +937,24 @@ class CriadorViewModel : ViewModel() {
         return true
     }
 
+    fun decreaseSkillForAdvancement(skill: com.example.swadebuilder.Pericia): Boolean {
+        if (!state.skillAdvancementInProgress) return false
+
+        // Ensure the skill was actually increased in this session
+        if (!state.skillsForCurrentAdvancement.contains(skill.nome)) return false
+
+        // Get the cost that was paid (peek the stack)
+        val stack = state.spCostStackPorPericia[skill]
+        val costToRefund = stack?.lastOrNull { it > 0 } ?: return false
+
+        state.decreasePericia(skill)
+        state.spFromProgress += costToRefund
+
+        state.rebuildAllPericiaStacks()
+        logFeedback("${skill.nome} reduzida.")
+        return true
+    }
+
     fun startAdvantageAdvancement(slotIndex: Int, est: String) {
         if (state.progressosDisponiveis >= 1) {
             resetUiState()

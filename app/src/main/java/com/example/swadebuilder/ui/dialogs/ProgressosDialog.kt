@@ -759,8 +759,8 @@ fun ProgressosDialog(
 
         AlertDialog(
             onDismissRequest = {
-                if (spRemaining < 2) {
-                    viewModel.finishSkillAdvancement()
+                if (spRemaining > 0) {
+                    viewModel.cancelAdvancementInProgress()
                 } else {
                     viewModel.finishSkillAdvancement()
                 }
@@ -792,20 +792,30 @@ fun ProgressosDialog(
                             val attrVal = state.valoresAtributos[per.atributo]?.intValue ?: 4
                             val cost = if (current >= attrVal) 2 else 1
                             val canBuy = spRemaining >= cost && current < 12
+                            val wasIncreased = state.skillsForCurrentAdvancement.contains(per.nome)
 
                             Row(
                                 Modifier
                                     .fillMaxWidth()
-                                    .alpha(if (canBuy) 1f else 0.5f)
+                                    .alpha(if (canBuy || wasIncreased) 1f else 0.5f)
                                     .clickable(enabled = canBuy) {
                                         viewModel.increaseSkillForAdvancement(per)
                                     }
                                     .padding(vertical = 8.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Column {
+                                Column(modifier = Modifier.weight(1f)) {
                                     Text(per.nome)
                                     Text("Atual: ${current.toDiceString()} | Custo: $cost SP", style = MaterialTheme.typography.bodySmall)
+                                }
+
+                                if (wasIncreased) {
+                                    TextButton(
+                                        onClick = { viewModel.decreaseSkillForAdvancement(per) }
+                                    ) {
+                                        Text("-", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                                    }
                                 }
                             }
                             HorizontalDivider()
@@ -814,10 +824,13 @@ fun ProgressosDialog(
                 }
             },
             confirmButton = {
-                Button(onClick = {
-                    viewModel.finishSkillAdvancement()
-                    onDismiss()
-                }) {
+                Button(
+                    onClick = {
+                        viewModel.finishSkillAdvancement()
+                        onDismiss()
+                    },
+                    enabled = spRemaining == 0
+                ) {
                     Text("Concluir")
                 }
             }
