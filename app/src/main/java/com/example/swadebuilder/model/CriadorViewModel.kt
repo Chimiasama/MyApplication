@@ -1017,6 +1017,17 @@ class CriadorViewModel : ViewModel() {
             // Fix: Use copy() to avoid shared reference mutation
             val vantagemCopia = vantagem.copy()
 
+            // Identify if this is a new Arcane Background acquisition (e.g. Mystic Powers)
+            // We must snapshot the slots state BEFORE adding the advantage, because adding it
+            // might auto-populate fixed powers (Mystic Powers) into the slots.
+            // If we snapshot AFTER, the snapshot will contain the fixed powers, preventing clean undo.
+            val arcKeyToInit = vantagemCopia.toArcanoKey()
+            val isNovosPoderes = vantagemCopia.id == "novos_poderes"
+
+            if (arcKeyToInit != null && !isNovosPoderes) {
+                state.iniciarCompraArcanoViaXp(arcKeyToInit)
+            }
+
             if (vantagemCopia.nome.keyify() == "CAVALEIRO" && !vantagemCopia.choice.isNullOrBlank()) {
                 state.adicionarVantagemCavaleiro(vantagemCopia, vantagemCopia.choice!!)
             } else if (vantagemCopia.nome.contains("Pontos de Poder", true)) {
@@ -1029,7 +1040,7 @@ class CriadorViewModel : ViewModel() {
             state.advantageForCurrentAdvancement = vantagemCopia.id
 
             // Check if it's "Novos Poderes" to trigger the flow
-            if (vantagemCopia.id == "novos_poderes") {
+            if (isNovosPoderes) {
                 // Find target arcane background
                 // 1. Try choice if set
                 val choiceKey = advantageArcaneKey(vantagemCopia)
@@ -1044,9 +1055,11 @@ class CriadorViewModel : ViewModel() {
                     state.limparCompraArcanoViaXp(restaurarSnapshot = false)
                 }
             } else {
-                vantagemCopia.toArcanoKey()?.let { arcKey ->
-                    state.iniciarCompraArcanoViaXp(arcKey)
-                } ?: state.limparCompraArcanoViaXp(restaurarSnapshot = false)
+                if (arcKeyToInit != null) {
+                    // Already initialized above. Do nothing.
+                } else {
+                    state.limparCompraArcanoViaXp(restaurarSnapshot = false)
+                }
             }
 
             state.rebuildAllPericiaStacks()
