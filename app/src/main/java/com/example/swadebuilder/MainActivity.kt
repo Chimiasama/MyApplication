@@ -88,6 +88,7 @@ import com.example.swadebuilder.model.DataLoader
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MainActivityData
 import com.example.swadebuilder.model.MonstroTemplate
+import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
@@ -1193,6 +1194,7 @@ fun periciaStartRaw(anc: String, per: Pericia): Int {
 }
 
 var listaVantagens:    List<Vantagem>   = emptyList()
+var listaPoderes:      List<Poder>      = emptyList()
 lateinit var listaTropos: List<Tropo>
 var listaEquipamentos: List<EquipamentoItem> = emptyList()
 

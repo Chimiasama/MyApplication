@@ -903,6 +903,26 @@ class CriadorState {
     fun removerVantagem(v: Vantagem) {
         vantagensSelecionadas.remove(v)
 
+        // Safety check for Mystic Powers cleanup
+        if (v.nome.normAAKey().contains("PODERES MISTICOS")) {
+            val anyMystic = vantagensSelecionadas.any { it.nome.normAAKey().contains("PODERES MISTICOS") }
+            if (!anyMystic) {
+                poderSlotsPorArcano.remove("MISTICO")
+                novosPoderesStacksPorArcano.remove("MISTICO")
+                syncPoderesSelecionadosFromSlots()
+            }
+        }
+
+        val arcKey = v.toArcanoKey()?.normAAKey()
+        if (arcKey != null) {
+            val remainingWithSameKey = vantagensSelecionadas.any { it.toArcanoKey()?.normAAKey() == arcKey }
+            if (!remainingWithSameKey) {
+                poderSlotsPorArcano.remove(arcKey)
+                novosPoderesStacksPorArcano.remove(arcKey)
+                syncPoderesSelecionadosFromSlots()
+            }
+        }
+
         if (v.nome.keyify() == "CAVALEIRO") {
             equipamentosComprados.removeAll { it.origemGrant == "CAVALEIRO" }
         }

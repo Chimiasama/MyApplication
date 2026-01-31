@@ -2,6 +2,7 @@ package com.example.swadebuilder
 
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.MeuPersonagem
+import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
@@ -320,10 +321,22 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
                 "• $label: – nenhum poder escolhido"
             } else {
                 val poderesComManifestacao = lista.map { poderId ->
+                    val poderDef = listaPoderes.firstOrNull { it.id == poderId }
+                    val displayNome = if (showOfficialNames && !poderDef?.id.isNullOrBlank()) {
+                        // Logic for official names usually implies using a different property,
+                        // but here we just have 'nome'. If we had 'originalName' in Poder, we'd use it.
+                        // Poder struct only has 'nome'. Assuming 'nome' is what we want.
+                        // If we wanted original names we'd need to update Poder model.
+                        // For now, let's just use 'nome' if found, else ID.
+                        poderDef?.nome ?: poderId
+                    } else {
+                        poderDef?.nome ?: poderId
+                    }
+
                     val manifestacao = personagem.manifestacoesPoderes[poderId]
                         ?.trim()
                         ?.takeIf { it.isNotBlank() }
-                    if (manifestacao != null) "$poderId (${manifestacao})" else poderId
+                    if (manifestacao != null) "$displayNome (${manifestacao})" else displayNome
                 }
                 "• $label: ${poderesComManifestacao.joinToString(", ")}"
             }
