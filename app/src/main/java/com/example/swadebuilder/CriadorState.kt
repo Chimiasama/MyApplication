@@ -340,41 +340,6 @@ class CriadorState {
                 }
             }
         }
-
-        v.toArcanoKey()?.let { arcKeyRaw ->
-            val arcKey = arcKeyRaw.normAAKey()
-            val stillHasArcano = vantagensSelecionadas.any { it.toArcanoKey()?.normAAKey() == arcKey }
-
-            if (!stillHasArcano) {
-                poderSlotsPorArcano.remove(arcKey)
-                novosPoderesStacksPorArcano.remove(arcKey)
-                syncPoderesSelecionadosFromSlots()
-            } else if (arcKey == "MISTICO") {
-                poderSlotsPorArcano.remove(arcKey)
-                vantagensSelecionadas
-                    .filter { it.toArcanoKey()?.normAAKey() == arcKey }
-                    .forEach { remainingVant ->
-                        val effectiveKey = if (!remainingVant.choice.isNullOrBlank()) {
-                            "MISTICO_${remainingVant.choice!!.normAAKey()}"
-                        } else {
-                            arcKey
-                        }
-
-                        fixedPowersByArcano[effectiveKey]?.let { fixedList ->
-                            val slots = poderSlotsPorArcano.getOrPut(arcKey) { mutableStateListOf() }
-                            val requiredSize = getEffectiveSlotsCountForArcano(arcKey)
-                            while (slots.size < requiredSize) slots.add(null)
-
-                            fixedList.forEachIndexed { index, powerId ->
-                                if (index < slots.size) {
-                                    slots[index] = powerId
-                                }
-                            }
-                        }
-                    }
-                syncPoderesSelecionadosFromSlots()
-            }
-        }
     }
 
     fun adicionarVantagemCavaleiro(vant: Vantagem, armorChoice: String) {
