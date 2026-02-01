@@ -216,6 +216,8 @@ fun VantagensContent(
         state.modoSupers,
         state.compendioFantasiaAtivo,
         state.compendioHorrorAtivo,
+        state.compendioSciFiAtivo,
+        state.modoMonstroAtivo,
         state.compendioPathfinderAtivo,
         state.compendioDeadlandsAtivo,
         state.compendioCrystalHeartAtivo,
