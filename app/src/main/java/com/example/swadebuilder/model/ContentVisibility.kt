@@ -49,7 +49,7 @@ fun CriadorState.isVantagemVisible(
     multiplosAAHabilitados: Boolean
 ): Boolean {
     val activeOrigins = getActiveOrigins()
-    val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase().semAcentos()
+    val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase().semAcentos().trim()
 
     // 1. Basic Origin Check
     // If the advantage's origin is not in the active set, hide it.
