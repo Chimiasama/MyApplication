@@ -74,7 +74,10 @@ object ModifierEngine {
             val sources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
 
             // Size from Ancestry (Tamanho X)
-            val sizeSource = sources.firstOrNull { it.contains("TAMANHO", ignoreCase = true) }
+            // Fix: Exclude "DIMINUTO" entries to avoid double-counting if they contain "Tamanho" in text (e.g., "Diminuto (Tamanho -3)")
+            val sizeSource = sources.firstOrNull {
+                it.contains("TAMANHO", ignoreCase = true) && !it.keyify().startsWith("DIMINUTO")
+            }
 
             val racialSize = sizeSource
                 ?.substringAfter("TAMANHO", "") // Try uppercase first
@@ -129,9 +132,8 @@ object ModifierEngine {
 
             // Diminuto (Ancestralidade)
             // Se tiver "DIMINUTO" nas desvantagens, habilidades ou vantagens grátis, aplica Tamanho -4
-            val hasDiminuto = anc.desvantagens.any { it.keyify() == "DIMINUTO" } ||
-                    anc.vantagensGratis.any { it.keyify() == "DIMINUTO" } ||
-                    anc.habilidades.any { it.nome.keyify() == "DIMINUTO" }
+            // Fix: Changed strict equality to startsWith to handle cases like "DIMINUTO (Tamanho -3)" in Sci-Fi
+            val hasDiminuto = sources.any { it.keyify().startsWith("DIMINUTO") }
 
             if (hasDiminuto) {
                  modifiers.add(Modifier(
