@@ -266,7 +266,7 @@
         "descricao": "Fadas tradicionais têm grande desdém por objetos mecânicos. Possuem a Complicação Desastrado."
       },
       {
-        "nome": "DIMINUTO",
+        "nome": "DIMINUTO (Tamanho -4)",
         "descricao": "Fadas são Minúsculas (veja a descrição da habilidade na página 10). Beneficiam-se de Modificadores de Escala, subtraem 4 de suas jogadas de Resistência e dano e têm Força máxima igual a d4."
       },
       {
@@ -796,7 +796,7 @@
     "desvantagens": ["FOBIA (Menor: Gatos)", "FORASTEIRO (Maior)", "ALMOFADINHA"],
     "habilidades": [
       {
-        "nome": "DIMINUTO",
+        "nome": "DIMINUTO (Tamanho -4)",
         "descricao": "Membros do povo rato medem cerca de 18 centímetros de altura. Isso lhes confere Tamanho -4 e concede os benefícios de Minúsculo (veja modificadores de Escala em Savage Worlds Edição Aventura). Subtraem 4 de sua Resistência e têm Força d4. Consulte Diminuto na página 10 para obter mais informações."
       },
       {
