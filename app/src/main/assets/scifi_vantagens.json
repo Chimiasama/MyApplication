@@ -2687,7 +2687,7 @@
     "descricao": "Aparar +1 e dado bônus de dano em Lutar passa a d10."
   },
   {
-    "id": "ace_scifi",
+    "id": "ace",
     "nome": "ÁS (Piloto)",
     "categoria": "PROFISSIONAL",
     "origem": "SCI_FI",
@@ -2792,7 +2792,7 @@
     "descricao": "Vem de um mundo de gravidade intensa. Trate sua Força como um tipo de dado maior para Sobrecarga e Força Mínima de armaduras/armas sem penalidade. Dobra as distâncias normais de salto."
   },
   {
-    "id": "terreno_favorito_scifi",
+    "id": "terreno_favorito",
     "nome": "TERRENO FAVORITO (Sci-Fi)",
     "categoria": "ANTECEDENTE",
     "origem": "SCI_FI",
@@ -2815,7 +2815,7 @@
     "descricao": "Reduz o número de balas disparadas pela metade (arredondada para cima) ao usar Cadência de Tiro (CdT). Ex: CdT 2 usa 3 tiros; CdT 3 usa 5 tiros."
   },
   {
-    "id": "oportunista_scifi",
+    "id": "oportunista",
     "nome": "OPORTUNISTA",
     "categoria": "COMBATE",
     "origem": "SCI_FI",
@@ -2825,7 +2825,7 @@
     "descricao": "Quando sacar um Curinga, adiciona +4 às jogadas de Característica e dano em vez de +2."
   },
   {
-    "id": "saque_rapido_scifi",
+    "id": "saque_rapido",
     "nome": "SAQUE RÁPIDO (Aprimorado)",
     "categoria": "COMBATE",
     "origem": "SCI_FI",
@@ -2902,7 +2902,7 @@
     "descricao": "Ignora a penalidade de -2 para Agilidade e perícias baseadas em Agilidade ao agir em gravidade diferente da sua."
   },
   {
-    "id": "ataque_furtivo_scifi",
+    "id": "ataque_furtivo",
     "nome": "ATAQUE FURTIVO",
     "categoria": "PROFISSIONAL",
     "origem": "SCI_FI",
