@@ -171,7 +171,7 @@ class CriadorState {
                 o == "WISEGUYS" -> 800
                 o == "CIDADE_SOL_VAPOR" -> 800
                 o.contains("TRILHADOR") || o.contains("PATHFINDER") -> 800
-                o == "FC" || o == "SCIFI" -> 800
+                o == "FC" || o == "SCIFI" || o == "SCI_FI" -> 800
                 o == "CRYSTAL_HEART" -> 800
                 o == "BASICO" -> 0
                 else -> 100
