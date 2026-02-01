@@ -315,7 +315,7 @@
     "pericias": {},
     "desvantagens": [
       "INIMIGO ANCESTRAL (Insetoide)",
-      "DIMINUTO",
+      "DIMINUTO (Tamanho -3)",
       "ALTA TECNOLOGIA (Maior)",
       "MOVIMENTAÇÃO REDUZIDA"
     ],
@@ -325,7 +325,7 @@
         "descricao": "Gerações deste feral foram presas por insetoides e guardam um ódio ou medo profundos. Subtraem 2 das rolagens de Persuadir ao lidar com insetoides e podem se tornar hostis com pouca provocação."
       },
       {
-        "nome": "DIMINUTO",
+        "nome": "DIMINUTO (Tamanho -3)",
         "descricao": "A maioria dos ferais tem cerca de 50 centímetros de altura. Possuem tamanho -3 (Muito Pequeno). Subtraem 3 de sua Resistência e têm d6 como Força Máxima. Veja Diminuto na p. 9 para mais informações."
       },
       {

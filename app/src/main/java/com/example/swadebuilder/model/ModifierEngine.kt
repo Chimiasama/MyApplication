@@ -131,24 +131,32 @@ object ModifierEngine {
             }
 
             // Diminuto (Ancestralidade)
-            // Se tiver "DIMINUTO" nas desvantagens, habilidades ou vantagens grátis, aplica Tamanho -4
-            // Fix: Changed strict equality to startsWith to handle cases like "DIMINUTO (Tamanho -3)" in Sci-Fi
-            val hasDiminuto = sources.any { it.keyify().startsWith("DIMINUTO") }
+            // Se tiver "DIMINUTO" nas desvantagens, habilidades ou vantagens grátis, aplica penalidade de Tamanho
+            val diminutoSource = sources.firstOrNull { it.keyify().startsWith("DIMINUTO") }
 
-            if (hasDiminuto) {
+            if (diminutoSource != null) {
+                val k = diminutoSource.keyify()
+                // Default is -4 (Tiny) as per Fantasy/Horror standard if not specified
+                val sizeVal = when {
+                    k.contains("TAMANHO -2") -> -2
+                    k.contains("TAMANHO -3") -> -3
+                    k.contains("TAMANHO -4") -> -4
+                    else -> -4
+                }
+
                  modifiers.add(Modifier(
                     id = "racial_diminuto",
                     sourceType = SourceType.ANCESTRALIDADE,
                     sourceName = "Diminuto",
                     target = ModifierTarget.SIZE_DISPLAY,
-                    value = -4
+                    value = sizeVal
                 ))
                 modifiers.add(Modifier(
                     id = "racial_diminuto_tough",
                     sourceType = SourceType.ANCESTRALIDADE,
                     sourceName = "Diminuto",
                     target = ModifierTarget.SIZE_TOUGHNESS,
-                    value = -4
+                    value = sizeVal
                 ))
             }
 
