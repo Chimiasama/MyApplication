@@ -2840,7 +2840,7 @@
   {
     "id": "lider_equipe",
     "nome": "LÍDER DE EQUIPE",
-    "categoria": "LIDERANÇA",
+    "categoria": "LIDERANCA",
     "origem": "SCI_FI",
     "requisitos": {
       "estagio": "Experiente",
@@ -3037,7 +3037,7 @@
   {
     "id": "enganador",
     "nome": "ENGANADOR",
-    "categoria": "SOCIAL",
+    "categoria": "SOCIAIS",
     "origem": "SCI_FI",
     "requisitos": {
       "estagio": "Experiente",
@@ -3050,7 +3050,7 @@
   {
     "id": "imortal",
     "nome": "IMORTAL",
-    "categoria": "LENDÁRIA",
+    "categoria": "LENDARIAS",
     "origem": "SCI_FI",
     "requisitos": {
       "estagio": "Lendário"
@@ -3060,7 +3060,7 @@
   {
     "id": "milagreiro",
     "nome": "MILAGREIRO",
-    "categoria": "LENDÁRIA",
+    "categoria": "LENDARIAS",
     "origem": "SCI_FI",
     "requisitos": {
       "estagio": "Lendário",
@@ -3073,7 +3073,7 @@
   {
     "id": "salvador_universo",
     "nome": "SALVADOR DO UNIVERSO",
-    "categoria": "LENDÁRIA",
+    "categoria": "LENDARIAS",
     "origem": "SCI_FI",
     "requisitos": {
       "estagio": "Lendário"
