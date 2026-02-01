@@ -2765,7 +2765,7 @@
       "pericias": {
         "Pilotar": 8
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Comando"
       ]
     },
@@ -2844,7 +2844,7 @@
     "origem": "SCI_FI",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
+      "vantagens_previas": [
         "Comando",
         "Elo Comum",
         "Líder Nato"
@@ -2859,7 +2859,7 @@
     "origem": "SCI_FI",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
+      "vantagens_previas": [
         "Antecedente Arcano"
       ],
       "pericias": {
@@ -2908,7 +2908,7 @@
     "origem": "SCI_FI",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
+      "vantagens_previas": [
         "Assassino"
       ]
     },
@@ -2921,7 +2921,7 @@
     "origem": "SCI_FI",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
+      "vantagens_previas": [
         "Ataque Furtivo"
       ]
     },
@@ -2973,7 +2973,7 @@
     "origem": "SCI_FI",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
+      "vantagens_previas": [
         "Ás"
       ]
     },
@@ -2999,7 +2999,7 @@
     "origem": "SCI_FI",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
+      "vantagens_previas": [
         "Ás"
       ]
     },
@@ -3064,7 +3064,7 @@
     "origem": "SCI_FI",
     "requisitos": {
       "estagio": "Lendário",
-      "vantagens": [
+      "vantagens_previas": [
         "Senhor Conserta Tudo"
       ]
     },
