@@ -34,7 +34,7 @@ data class EquipamentoItem(
     val pmf: JsonElement? = null,
     val malfuncionamento: JsonElement? = null,
     val tensao: Int? = null,
-    val mods_slots: Int? = null,
+    val mods_slots: JsonElement? = null,
     val origemGrant: String? = null
 ) {
     val nomeExibicao: String
