@@ -97,6 +97,7 @@ class CriadorViewModel : ViewModel() {
             compendioFantasiaAtivo = false,
             compendioHorrorAtivo = false,
             compendioSciFiAtivo = false,
+            compendioScifiMechasCiberneticosAtivo = false,
             compendioPathfinderAtivo = false,
             compendioDeadlandsAtivo = false,
             compendioCrystalHeartAtivo = false,
@@ -220,6 +221,7 @@ class CriadorViewModel : ViewModel() {
             compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
             compendioHorrorAtivo = flags.compendioHorrorAtivo,
             compendioSciFiAtivo = flags.compendioSciFiAtivo,
+            compendioScifiMechasCiberneticosAtivo = flags.compendioScifiMechasCiberneticosAtivo,
             compendioPathfinderAtivo = flags.compendioPathfinderAtivo,
             compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo,
             compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo,
@@ -269,6 +271,7 @@ class CriadorViewModel : ViewModel() {
         compendioFantasiaAtivo: Boolean,
         compendioHorrorAtivo: Boolean = false,
         compendioSciFiAtivo: Boolean = false,
+        compendioScifiMechasCiberneticosAtivo: Boolean = false,
         compendioPathfinderAtivo: Boolean = false,
         compendioDeadlandsAtivo: Boolean = false,
         compendioCrystalHeartAtivo: Boolean = false,
@@ -290,6 +293,7 @@ class CriadorViewModel : ViewModel() {
         state.compendioFantasiaAtivo = compendioFantasiaAtivo
         state.compendioHorrorAtivo = compendioHorrorAtivo
         state.compendioSciFiAtivo = compendioSciFiAtivo
+        state.compendioScifiMechasCiberneticosAtivo = compendioScifiMechasCiberneticosAtivo
         state.compendioPathfinderAtivo = compendioPathfinderAtivo
         state.compendioDeadlandsAtivo = compendioDeadlandsAtivo
         state.compendioCrystalHeartAtivo = compendioCrystalHeartAtivo

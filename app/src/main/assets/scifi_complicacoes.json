@@ -495,5 +495,26 @@
     "origem": "SCI_FI",
     "severity": "menor",
     "description": "Sua personagem não lida bem com figuras de autoridade. Talvez tenha aprendido a se defender durante a guerra ou talvez nunca tenha se dado bem com pessoas mandonas. De qualquer forma, fala demais, desobedece ordens diretas ou apenas fica sentada e pensativa; não importa como seu desrespeito se manifeste, ele é muito evidente para qualquer observador. Não é de surpreender que isso torne sua personagem muito impopular entre aqueles que pensam que estão no comando. Além das desvantagens óbvias, sua personagem subtrai 2 de rolagens de Persuadir feitas para influenciar qualquer pessoa em posição de autoridade."
+  },
+  {
+    "id": "ciber_resistencia",
+    "name": "CIBER-RESISTÊNCIA",
+    "origem": "SCI_FI",
+    "severity": "menor",
+    "description": "Cibernéticos não são facilmente aceitos pelo corpo desta personagem. Seu Limite de Tensão para cibernéticos cai em 2."
+  },
+  {
+    "id": "cibersensibilidade",
+    "name": "CIBERSENSIBILIDADE",
+    "origem": "SCI_FI",
+    "severity": "menor",
+    "description": "O corpo do herói ou heroína é delicado, estranho ou resistente a implantes cibernéticos. Cirurgiões subtraem 2 de suas rolagens quando tentam instalar cibernéticos."
+  },
+  {
+    "id": "efeito_colateral_de_ciberneticos",
+    "name": "EFEITO COLATERAL DE CIBERNÉTICOS",
+    "origem": "SCI_FI",
+    "severity": "maior",
+    "description": "O personagem ganha até $10 K em implantes de cibernéticos, mas algo deu errado quando foi instalado: é necessário rolar um resultado permanente na tabela Efeitos Colaterais de Cibernéticos (role novamente os resultados Sangramento Interno)."
   }
 ]

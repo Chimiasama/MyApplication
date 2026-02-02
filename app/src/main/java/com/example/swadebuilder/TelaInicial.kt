@@ -86,7 +86,8 @@ fun TelaInicial(
         grandesResponsabilidades: Boolean,
         optRegraFama: Boolean,
         optRegraRiqueza: Boolean,
-        optRegraCosaNostra: Boolean
+        optRegraCosaNostra: Boolean,
+        optRegraMechasCiberneticos: Boolean
     ) -> Unit,
     onCarregarPersonagem: () -> Unit,
     onOpenSettings: () -> Unit,
@@ -128,6 +129,7 @@ fun TelaInicial(
 
     // SciFi
     var optCompendioSciFi by rememberSaveable { mutableStateOf(false) }
+    var optRegraMechasCiberneticos by rememberSaveable { mutableStateOf(false) }
 
     // Dialog States
     var showCreditsDialog by remember { mutableStateOf(false) }
@@ -370,7 +372,8 @@ fun TelaInicial(
                         optGrandesResponsabilidades,
                         optRegraFama,
                         optRegraRiqueza,
-                        optRegraCosaNostra
+                        optRegraCosaNostra,
+                        optRegraMechasCiberneticos
                     )
                     viewModel.state.compendioPathfinderAtivo = optCompendioPathfinder
                     viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
@@ -538,6 +541,15 @@ fun TelaInicial(
                                 description = "Jogar como vampiro, lobisomem, etc.",
                                 checked = optModoMonstro,
                                 onCheckedChange = { optModoMonstro = it }
+                            )
+                        }
+
+                        if (optCompendioSciFi) {
+                            SimpleCheckRow(
+                                title = "Mechas e Cibernéticos",
+                                description = "Ativa regras de Tensão e equipamentos avançados.",
+                                checked = optRegraMechasCiberneticos,
+                                onCheckedChange = { optRegraMechasCiberneticos = it }
                             )
                         }
                     }

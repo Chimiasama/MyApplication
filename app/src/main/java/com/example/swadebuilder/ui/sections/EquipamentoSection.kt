@@ -83,7 +83,8 @@ private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
     // 1. Identify SuperType
     val superType = when {
         t == "CIBERNETICO" -> EquipSuperType.CIBERNETICO
-        t == "MECHA" || t == "ROBO" || t == "VEÍCULOS" -> EquipSuperType.VEICULOS
+        t == "MECHA" -> EquipSuperType.MECHA
+        t == "ROBO" || t == "VEÍCULOS" -> EquipSuperType.VEICULOS
         t.contains("ARMADURA") && t != "ARMADURA_ENERGIZADA" -> EquipSuperType.ARMADURAS // Armadura_Energizada goes to Vehicles/Mecha logic? Or Armors?
         t == "ESCUDOS" -> EquipSuperType.ARMADURAS
         t == "ARMADURA_ENERGIZADA" -> EquipSuperType.ARMADURAS // Or Vehicles? Usually treated as heavy armor
@@ -141,11 +142,14 @@ private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
              }
         }
         EquipSuperType.VEICULOS -> {
-            if (t == "MECHA" || t == "ROBO") {
-                group = "Mechas e Robôs"
+            if (t == "ROBO") {
+                group = "Robôs"
             } else {
                 group = "Veículos"
             }
+        }
+        EquipSuperType.MECHA -> {
+            group = "Mechas"
         }
         EquipSuperType.CIBERNETICO -> {
             group = "Implantes"
@@ -549,6 +553,9 @@ fun EquipamentoSection(
                 MaterialTheme.colorScheme.onSurface
             }
 
+            // Determine visibility of Tensão/Mecha Slots
+            val showSciFiStats = state.compendioScifiMechasCiberneticosAtivo || isPersonagemRobotico
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -562,19 +569,19 @@ fun EquipamentoSection(
                     modifier = Modifier.weight(1f)
                 )
                 Column(horizontalAlignment = Alignment.End) {
-                    if (compendioSciFiAtivo) {
+                    if (showSciFiStats) {
                         Text(
                             "$tensaoLabel: $tensaoTotal/$tensaoLimite",
                             style = MaterialTheme.typography.bodyMedium,
                             color = tensaoColor
                         )
-                        if (mechaSlotsTotal > 0) {
-                            Text(
-                                "Slots Mecha/Veículo usados: $mechaSlotsTotal",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.secondary
-                            )
-                        }
+                    }
+                    if (compendioSciFiAtivo && mechaSlotsTotal > 0) {
+                        Text(
+                            "Slots Mecha/Veículo usados: $mechaSlotsTotal",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
                     }
                     if (hasSoldado) {
                         AssistChip(
@@ -589,7 +596,7 @@ fun EquipamentoSection(
                 }
             }
 
-            if (compendioSciFiAtivo && tensaoExcedida) {
+            if (showSciFiStats && tensaoExcedida) {
                 // ... Error Text ...
                 Text(
                     "Sobrecarga Cibernética: Personagem recebe o estado Fatigado (ou Exausto se X > Y+2).",
@@ -700,6 +707,11 @@ fun EquipamentoSection(
                 Column(Modifier.padding(horizontal = 4.dp)) {
                     // Itera sobre os SuperTypes na ordem definida
                     EquipSuperType.entries.sortedBy { it.order }.forEach { superType ->
+                        // Filter out MECHA and CIBERNETICO if rule is not active
+                        if (superType == EquipSuperType.MECHA || superType == EquipSuperType.CIBERNETICO) {
+                            if (!state.compendioScifiMechasCiberneticosAtivo) return@forEach
+                        }
+
                         // Pula se o supertipo não estiver selecionado ou não tiver conteúdo visível
                         if (selectedSuperTypes.isNotEmpty() && superType !in selectedSuperTypes) return@forEach
                         if (filter.superTipos.isNotEmpty() && superType !in filter.superTipos) return@forEach
