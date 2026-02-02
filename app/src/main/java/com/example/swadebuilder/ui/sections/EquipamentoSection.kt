@@ -361,6 +361,7 @@ fun EquipamentoSection(
                     val origem = categoria.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
                     if (origem == "SUPLEMENTO") false
                     else if (compendioFantasiaAtivo && origem == "BASICO") false
+                    else if (state.compendioScifiMechasCiberneticosAtivo && origem == "SCI_FI") true
                     else origem in activeOrigins
                 }
 
@@ -375,6 +376,9 @@ fun EquipamentoSection(
                 if (!compendioPathfinderAtivo) return true
                 // If the item is explicitly from Pathfinder module, allow it
                 if (origemKey == "PATHFINDER" || origemKey == "PATHFINDER") return true
+
+                // Allow Sci-Fi items if the Mecha rule is active (Explicit exception)
+                if (state.compendioScifiMechasCiberneticosAtivo && origemKey == "SCI_FI") return true
 
                 // If item is from BASE, strictly enforce AllowList
                 if (origemKey == "BASICO") {
