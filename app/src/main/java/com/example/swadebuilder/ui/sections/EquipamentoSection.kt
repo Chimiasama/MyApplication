@@ -77,19 +77,19 @@ private data class MappedCategory(
 )
 
 private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
-    val t = (cat.tipo ?: "").trim().uppercase()
-    val st = (cat.subtipo ?: "").trim().uppercase()
+    val t = (cat.tipo ?: "").trim().uppercase().semAcentos()
+    val st = (cat.subtipo ?: "").trim().uppercase().semAcentos()
 
     // 1. Identify SuperType
     val superType = when {
-        t == "CIBERNETICO" -> EquipSuperType.CIBERNETICO
-        t == "MECHA" -> EquipSuperType.MECHA
-        t == "ROBO" || t == "VEÍCULOS" -> EquipSuperType.VEICULOS
+        t.startsWith("CIBERNETIC") -> EquipSuperType.CIBERNETICO
+        t.startsWith("MECHA") -> EquipSuperType.MECHA
+        t == "ROBO" || t == "VEICULOS" || t == "VEICULO" -> EquipSuperType.VEICULOS
         t == "ARMADURA ENERGIZADA" || t == "ARMADURA_ENERGIZADA" -> EquipSuperType.ARMADURA_ENERGIZADA
         t.contains("ARMADURA") -> EquipSuperType.ARMADURAS
         t == "ESCUDOS" -> EquipSuperType.ARMADURAS
         t.contains("ARMA") || t == "ARTE_DA_GUERRA" -> EquipSuperType.ARMAS
-        t == "EQUIPAMENTO SUPERS" && st == "VEÍCULOS" -> EquipSuperType.VEICULOS
+        t == "EQUIPAMENTO SUPERS" && st == "VEICULOS" -> EquipSuperType.VEICULOS
         else -> EquipSuperType.GERAL
     }
 
