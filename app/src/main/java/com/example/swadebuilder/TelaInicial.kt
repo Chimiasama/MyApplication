@@ -141,7 +141,7 @@ fun TelaInicial(
             "Supers" -> {
                 optCartaSelvagem = true
                 optMaisPontosPericias = true
-                optNasceUmHeroi = true // Comum em supers
+                optNasceUmHeroi = false
             }
             "Arte da Guerra" -> {
                 optCartaSelvagem = true
