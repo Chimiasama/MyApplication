@@ -378,7 +378,8 @@ fun EquipamentoSection(
                 if (origemKey == "PATHFINDER" || origemKey == "PATHFINDER") return true
 
                 // Allow Sci-Fi items if the Mecha rule is active (Explicit exception)
-                if (state.compendioScifiMechasCiberneticosAtivo && origemKey == "SCI_FI") return true
+                // Includes "SUPER" because some sci-fi equipment files might have mixed origins
+                if (state.compendioScifiMechasCiberneticosAtivo && (origemKey == "SCI_FI" || origemKey == "SUPER")) return true
 
                 // If item is from BASE, strictly enforce AllowList
                 if (origemKey == "BASICO") {
@@ -671,7 +672,8 @@ fun EquipamentoSection(
                 }
 
                 // --- SOLUÇÃO DEFINITIVA: Pré-calcular os dados filtrados ---
-                val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, dinheiro, compendioPathfinderAtivo) {
+                // Added state.compendioScifiMechasCiberneticosAtivo to keys to ensure refresh when rule is toggled
+                val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, dinheiro, compendioPathfinderAtivo, state.compendioScifiMechasCiberneticosAtivo) {
                     // Mapeia cada SuperType para seus dados filtrados
                     groupsBySuperType.mapValues { (_, categoriesInSuper) ->
                         // Process the subgroups directly to check for content
