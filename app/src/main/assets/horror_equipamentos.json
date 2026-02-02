@@ -3064,9 +3064,11 @@
         "custo": 30,
         "observacoes": "Detecta movimento (incluindo etéreos) a 20 metros em 90º. Avançado ($500) tem tela.",
         "origem": "HORROR"
-      },
-      {
-        "tipo": "Consumíveis",
+      }
+    ]
+  },
+  {
+    "tipo": "Consumíveis",
         "subtipo": "Alquímicos e Especiais",
         "origem": "HORROR",
         "itens": [
@@ -3149,6 +3151,4 @@
           }
         ]
       }
-    ]
-  }
 ]
