@@ -31,7 +31,6 @@ fun StandardEquipamentoItem(
     equipamento: EquipamentoItem,
     onClick: () -> Unit,
     allowLongTexts: Boolean,
-    origemLabel: String? = null,
     showOriginalName: Boolean = false,
     showTensao: Boolean = false
 ) {
@@ -65,15 +64,6 @@ fun StandardEquipamentoItem(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-
-                    // PASSO 3: Origem em linha secundária, apenas se != BASICO
-                    if (origemLabel != null && origemLabel != "BASICO" && origemLabel.isNotBlank()) {
-                         Text(
-                            text = origemLabel,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
                 }
 
                 resumo.custo?.let {
