@@ -5691,50 +5691,333 @@
   },
   {
     "tipo": "Cibernéticos",
-    "subtipo": "Implantes",
+    "subtipo": "Corpo",
     "origem": "SCI_FI",
     "itens": [
       {
-        "nome": "Olhos Biônicos",
-        "custo": 2000,
-        "tensao": 1,
-        "origem": "SCI_FI",
-        "observacoes": "Ignora penalidades de iluminação (Visão Noturna). Zoom 10x (+2 em Perceber visual)."
-      },
-      {
-        "nome": "Braço Cibernético",
+        "nome": "Anfíbio",
         "custo": 5000,
         "tensao": 2,
         "origem": "SCI_FI",
-        "observacoes": "Aumenta Força do braço em um dado. Dano desarmado For+d4. Não sente dor no membro."
+        "observacoes": "O receptor é dotado de guelras e membranas retráteis. Não pode se afogar em líquidos oxigenados e se move com Movimentação máxima ao nadar. Máx 1."
       },
       {
-        "nome": "Pernas Cibernéticas",
-        "custo": 6000,
+        "nome": "Atraente",
+        "custo": 5000,
         "tensao": 2,
         "origem": "SCI_FI",
-        "observacoes": "Aumenta Movimentação em +2 e Salto."
+        "observacoes": "+1 em Performance e Persuadir. Pode ser adquirido uma segunda vez para +2. Máx 2."
       },
       {
-        "nome": "Blindagem Dérmica (Nível 1)",
-        "custo": 3000,
+        "nome": "Audição Aprimorada",
+        "custo": 5000,
         "tensao": 1,
         "origem": "SCI_FI",
-        "observacoes": "Concede +2 de Armadura natural."
+        "observacoes": "+2 para Perceber (audição) como ação. Ouve sussurros a 200m. Máx 1."
       },
       {
-        "nome": "Interface de Dados",
+        "nome": "Aumento de Atributo",
+        "custo": 5000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Aumenta um atributo em um tipo de dado. Cada passo acima do máximo custa +2 Tensão. Máx Ilimitado."
+      },
+      {
+        "nome": "Bônus de Perícia",
+        "custo": 5000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "+1 em qualquer perícia. Se comprado duas vezes, +2. Máx total +2 por perícia. Máx Ilimitado."
+      },
+      {
+        "nome": "Chip de Perícia",
+        "custo": 15000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Concede d6 em qualquer perícia. Chips podem ser trocados como uma ação. Máx 1."
+      },
+      {
+        "nome": "Compartimento Oculto",
+        "custo": 2000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Espaço interno oculto (até 1kg). Perceber -4 para encontrar. Máx Ilimitado."
+      },
+      {
+        "nome": "Comunicadores",
+        "custo": 1000,
+        "tensao": 0,
+        "origem": "SCI_FI",
+        "observacoes": "Conecta-se a outros dispositivos em um raio de 35km. Máx 1."
+      },
+      {
+        "nome": "Conector de Dados",
+        "custo": 5000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Conexão direta (ação livre limitada). Rerrolagem para falhas em Eletrônica ou Hackear. Máx 1."
+      },
+      {
+        "nome": "Escaner",
         "custo": 1000,
         "tensao": 1,
         "origem": "SCI_FI",
-        "observacoes": "Permite conexão direta com computadores (+2 em Hacking/Eletrônica)."
+        "observacoes": "Detecta composição de matéria/energia a 50m. Máx 1."
       },
       {
-        "nome": "Reflexos Ampliados",
-        "custo": 10000,
+        "nome": "Melhorias Cosméticas",
+        "custo": 5000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Alterações superficiais sem função de jogo. Máx Ilimitado."
+      },
+      {
+        "nome": "Membro Substituto Clonado",
+        "custo": 5000,
+        "tensao": 0,
+        "origem": "SCI_FI",
+        "observacoes": "Substituto biológico cultivado. Não causa tensão. Máx Ilimitado."
+      },
+      {
+        "nome": "Membro Substituto",
+        "custo": 2000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Prótese padrão. Pode receber outro aprimoramento (até 1 Tensão) sem custo adicional de Tensão. Máx Ilimitado."
+      },
+      {
+        "nome": "Membros Extras",
+        "custo": 5000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Braços adicionais. +1 Agrupar, +1 Atletismo (escalar/agarrar). Máx 2."
+      },
+      {
+        "nome": "Mudança de Rosto",
+        "custo": 15000,
         "tensao": 3,
         "origem": "SCI_FI",
-        "observacoes": "Requer Agilidade d8. Concede a vantagem Rápido ou Nível 1 de Rapidez."
+        "observacoes": "Altera características faciais/voz. Leva 1 min. Rolagem de Astúcia para imitar específico. Máx 1."
+      },
+      {
+        "nome": "Olho Destacável",
+        "custo": 5000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Olho removível (ação livre limitada). Vê/grava até 1,5km. Máx 1."
+      },
+      {
+        "nome": "Órgãos Substitutos",
+        "custo": 5000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Corrige Lesão ou Complicação Permanente (ex: Um Olho Só). Máx Ilimitado."
+      },
+      {
+        "nome": "Reforço",
+        "custo": 5000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Esqueleto fortalecido. Força conta maior para Sobrecarga/Mínima. Acumula com Brutamontes/Soldado. Máx 1."
+      },
+      {
+        "nome": "Tamanho",
+        "custo": 5000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Aumenta Tamanho e Resistência em +1. Máx +3. Máx 3."
+      },
+      {
+        "nome": "Visão Aprimorada",
+        "custo": 10000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Zoom 50x, anula 4 pts de iluminação, +2 Perceber (visão) como ação. Máx 1."
+      }
+    ]
+  },
+  {
+    "tipo": "Cibernéticos",
+    "subtipo": "Defensivo",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Analisador de Ameaças",
+        "custo": 5000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Concede a Vantagem Noção do Perigo. Máx 1."
+      },
+      {
+        "nome": "Armadura (Cibernético)",
+        "custo": 5000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "armadura": 2,
+        "observacoes": "+2 Armadura (Natural). Acumula com usada até máx +10. Máx 3."
+      },
+      {
+        "nome": "Autorrecuperação",
+        "custo": 10000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Rolagem de cura natural 1/dia. Remove penalidades de Sangramento. Máx 1."
+      },
+      {
+        "nome": "Blindagem PEM",
+        "custo": 5000,
+        "tensao": 0,
+        "origem": "SCI_FI",
+        "observacoes": "Ignora 2 pts de penalidade ao reiniciar após ataque PEM. Máx 1."
+      },
+      {
+        "nome": "Editor de Dor",
+        "custo": 5000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Ignora 1 ponto de penalidade de Fadiga ou Ferimentos. Máx 3."
+      },
+      {
+        "nome": "Filtros de Toxinas",
+        "custo": 3000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "+4 resistir doenças ar, venenos, atmosferas raras/perigosas. Máx 1."
+      },
+      {
+        "nome": "Órgãos Redundantes",
+        "custo": 5000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Ataques Localizados (órgãos/cabeça) não causam dano adicional. Máx 1."
+      },
+      {
+        "nome": "Resistência (Cibernético)",
+        "custo": 5000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "resistencia": 1,
+        "observacoes": "Aumenta Resistência em +1. Máx 3."
+      },
+      {
+        "nome": "Robusto (Cibernético)",
+        "custo": 5000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Um segundo resultado Abalado não causa Ferimento. Máx 1."
+      },
+      {
+        "nome": "Sentidos Fortalecidos",
+        "custo": 5000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "+4 Vigor para recuperar de Atordoado (flash/som). Máx 1."
+      },
+      {
+        "nome": "Surto de Adrenalina",
+        "custo": 5000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "+2 para recuperar de Abalado ou Atordoado. Acumula com Reflexos de Combate. Máx 1."
+      },
+      {
+        "nome": "Visão de Combate",
+        "custo": 5000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Cancela 1 ponto de bônus de Agrupar (ou 2 se instalado 2x). Máx 2."
+      }
+    ]
+  },
+  {
+    "tipo": "Cibernéticos",
+    "subtipo": "Ofensivo",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Ação Adicional",
+        "custo": 10000,
+        "tensao": 5,
+        "origem": "SCI_FI",
+        "observacoes": "Ignora 2 pontos de penalidades por Ações Múltiplas. Máx 1."
+      },
+      {
+        "nome": "Alcance (Cibernético)",
+        "custo": 2500,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Alcance +1 (2 metros). Máx 3."
+      },
+      {
+        "nome": "Equipamento Integrado",
+        "custo": 5000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Até 5kg integrados. Custo do implante + custo do item. Máx Ilimitado."
+      },
+      {
+        "nome": "Garras (Cibernético)",
+        "custo": 5000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "dano": "For+d4",
+        "observacoes": "For+d4. Se 2x: For+d6, PA 2. Retráteis. Máx 2."
+      },
+      {
+        "nome": "Ponto de Fixação",
+        "custo": 10000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Suporte para armas veiculares (Mod 1 ou -). Custo do implante + custo da arma. Máx 1."
+      },
+      {
+        "nome": "Sistema de Mira",
+        "custo": 5000,
+        "tensao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Reduz 2 pts de penalidade em Atirar (Localizado, Cobertura, Alcance, etc). Não serve para Guiadas. Máx 1."
+      },
+      {
+        "nome": "Soco Poderoso",
+        "custo": 5000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "+4 dano desarmado/melee. Empurrão se alvo menor/igual (Atletismo -2 para não cair). Máx 1."
+      },
+      {
+        "nome": "Vantagem de Combate",
+        "custo": 5000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Concede Vantagem de Combate (Estágio ou -). Ignora requisitos. Custo: $5K x Estágio. Máx Ilimitado."
+      }
+    ]
+  },
+  {
+    "tipo": "Cibernéticos",
+    "subtipo": "Locomoção",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Andar nas Paredes",
+        "custo": 3000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Move em paredes com metade da Movimentação (ou teto/chão com total). Máx 1."
+      },
+      {
+        "nome": "Melhoria de Perna",
+        "custo": 10000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Movimentação +2, Dado de Corrida +1. Máx Ilimitado."
+      },
+      {
+        "nome": "Saltador",
+        "custo": 10000,
+        "tensao": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Pula 8q horiz / 4q vert. +2 dano Ataque Selvagem com salto. Máx 1."
       }
     ]
   }
