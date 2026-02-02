@@ -5593,99 +5593,512 @@
   },
   {
     "tipo": "Mecha",
-    "subtipo": "Chassis",
+    "subtipo": "Estruturas",
     "origem": "SCI_FI",
     "itens": [
       {
-        "nome": "Chassis Leve (Batedor)",
+        "nome": "Estrutura: Mecha Grande",
         "tamanho": 4,
-        "resistencia": 12,
-        "armadura": 4,
-        "movimentacao": 14,
-        "custo": 50000,
+        "resistencia": 15,
+        "armadura": 20,
+        "movimentacao": 8,
+        "custo": 250000,
         "mods_slots": 5,
         "origem": "SCI_FI",
-        "observacoes": "Mecha rápido para reconhecimento."
+        "observacoes": "Tamanho 4–7. Manob. 0, Vel. Máx. 8, Resist. 15 (20). Ferimentos 4. Custo: $250K x Tam. Força d12+Tam."
       },
       {
-        "nome": "Chassis Médio (Linha de Frente)",
-        "tamanho": 6,
-        "resistencia": 16,
-        "armadura": 6,
-        "movimentacao": 10,
-        "custo": 100000,
-        "mods_slots": 10,
-        "origem": "SCI_FI",
-        "observacoes": "Equilíbrio entre proteção e poder de fogo."
-      },
-      {
-        "nome": "Chassis Pesado (Assalto)",
+        "nome": "Estrutura: Mecha Enorme",
         "tamanho": 8,
         "resistencia": 20,
-        "armadura": 8,
+        "armadura": 30,
         "movimentacao": 6,
-        "custo": 250000,
-        "mods_slots": 15,
+        "custo": 500000,
+        "mods_slots": 5,
         "origem": "SCI_FI",
-        "observacoes": "Plataforma de armas móvel."
-      }
-    ]
-  },
-  {
-    "tipo": "Mecha",
-    "subtipo": "Chassis",
-    "origem": "SCI_FI",
-    "itens": [
-      {
-        "nome": "Traje Leve (Infiltração)",
-        "tamanho": 1,
-        "resistencia": 8,
-        "armadura": 4,
-        "movimentacao": 8,
-        "custo": 10000,
-        "mods_slots": 3,
-        "origem": "SCI_FI",
-        "observacoes": "Traje amplificado para batedores."
+        "observacoes": "Tamanho 8–11. Manob. -1, Vel. Máx. 6, Resist. 20 (30). Ferimentos 5. Custo: $500K x Tam. Força d12+Tam."
       },
       {
-        "nome": "Traje Pesado (Tanque)",
-        "tamanho": 2,
-        "resistencia": 12,
-        "armadura": 8,
-        "movimentacao": 6,
-        "custo": 30000,
-        "mods_slots": 6,
+        "nome": "Estrutura: Mecha Colossal",
+        "tamanho": 12,
+        "resistencia": 25,
+        "armadura": 40,
+        "movimentacao": 4,
+        "custo": 1000000,
+        "mods_slots": 5,
         "origem": "SCI_FI",
-        "observacoes": "Armadura de batalha completa."
+        "observacoes": "Tamanho 12–20. Manob. -2, Vel. Máx. 4, Resist. 25 (40). Ferimentos 6. Custo: $1M x Tam. Força d12+Tam."
       }
     ]
   },
   {
     "tipo": "Mecha",
-    "subtipo": "Chassis",
+    "subtipo": "Mechas Padrão",
     "origem": "SCI_FI",
     "itens": [
       {
-        "nome": "Drone de Reparo",
-        "tamanho": -1,
-        "resistencia": 6,
-        "armadura": 2,
-        "movimentacao": 6,
-        "custo": 2000,
+        "nome": "Mecha de Apoio de Infantaria (Classe II)",
+        "tamanho": 4,
+        "manobrabilidade": 0,
+        "velMaxima": 9,
+        "resistencia": "21 (6)",
+        "tripulacao": "1",
+        "custo": 1100000,
+        "mods_slots": 0,
+        "origem": "SCI_FI",
+        "observacoes": "Ferimentos 4. Energia 5. Armadura x3, CA/CE, Estabilizador, Velocidade Ampliada. Canhões Leves Duplos, 2x Lança-Mísseis."
+      },
+      {
+        "nome": "Batedor Leve (Classe II)",
+        "tamanho": 7,
+        "manobrabilidade": 2,
+        "velMaxima": 8,
+        "resistencia": "20 (4)",
+        "tripulacao": "1",
+        "custo": 2100000,
+        "mods_slots": 0,
+        "origem": "SCI_FI",
+        "observacoes": "Ferimentos 4. Energia 5. Armadura x2, Armadura Inclinada, Manobrabilidade x2, Resistência, Sistema de Mira. 2x Lança-Projéteis Médios, Laser Médio."
+      },
+      {
+        "nome": "Mecha Variável Caça (Classe II)",
+        "tamanho": 7,
+        "manobrabilidade": 2,
+        "velMaxima": 8,
+        "resistencia": "22 (6)",
+        "tripulacao": "1",
+        "custo": 2500000,
+        "mods_slots": 0,
+        "origem": "SCI_FI",
+        "observacoes": "Ferimentos 4. Energia 5. Armadura x3, CA/CE, Forma Variável (nave, Vel 17), Manob x2, Resistência, Mira. Laser Gatling, Canhão Médio, Lança-Míssil."
+      },
+      {
+        "nome": "Lutador Médio (Classe III)",
+        "tamanho": 8,
+        "manobrabilidade": 0,
+        "velMaxima": 6,
+        "resistencia": "30 (10)",
+        "tripulacao": "1",
+        "custo": 4500000,
+        "mods_slots": 0,
+        "origem": "SCI_FI",
+        "observacoes": "Ferimentos 5. Energia 5. Armadura x5, Armadura Inclinada, Manob, Propulsores Salto, Mira. Lâmina de Braço, Lasers Leves Duplos, Canhão Médio."
+      },
+      {
+        "nome": "Suporte de Fogo Pesado (Classe IV)",
+        "tamanho": 9,
+        "manobrabilidade": -1,
+        "velMaxima": 6,
+        "resistencia": "40 (20)",
+        "tripulacao": "1",
+        "custo": 5200000,
+        "mods_slots": 0,
+        "origem": "SCI_FI",
+        "observacoes": "Ferimentos 5. Energia 5. Armadura x10, Sistema de Mira. Lasers Médios Quádruplos, Lança-Míssil, 2x Canhões Partículas Médios."
+      },
+      {
+        "nome": "Mecha de Ataque (Classe IV)",
+        "tamanho": 10,
+        "manobrabilidade": -1,
+        "velMaxima": 6,
+        "resistencia": "45 (20)",
+        "tripulacao": "1",
+        "custo": 5900000,
+        "mods_slots": 0,
+        "origem": "SCI_FI",
+        "observacoes": "Ferimentos 5. Energia 5. Armadura x10, Resistência x5, Sistema de Mira. Lasers Médios Quádruplos, Lança-Míssil, Canhão Pesado."
+      },
+      {
+        "nome": "Mecha de Infantaria (Classe V)",
+        "tamanho": 13,
+        "manobrabilidade": 0,
+        "velMaxima": 4,
+        "resistencia": "50 (24)",
+        "tripulacao": "1",
+        "custo": 15100000,
+        "mods_slots": 0,
+        "origem": "SCI_FI",
+        "observacoes": "Ferimentos 6. Energia 5. Armadura x12, CA/CE, Escudo Braço, Força Ampliada, Manob x2, Propulsores, Resistência, Mira. Lança-Projéteis Médios Duplos, Lâmina Energia, Laser Pesado."
+      }
+    ]
+  },
+  {
+    "tipo": "Mecha",
+    "subtipo": "Modificadores (Negativos)",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Danificado",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Reduz Resistência em 2. Máx 2."
+      },
+      {
+        "nome": "Drone",
+        "custo": "-5K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Sem piloto/tripulação. Requer remoto/IA. Tripulação 0. Máx 1."
+      },
+      {
+        "nome": "Exigente",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Consertar -2 (ou -4 se 2x). Máx 2."
+      },
+      {
+        "nome": "Feedback",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Piloto fica Abalado quando mecha sofre Ferimento. Máx 1."
+      },
+      {
+        "nome": "Força Reduzida",
+        "custo": "-5K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Reduz Força em um tipo de dado. Máx 4."
+      },
+      {
+        "nome": "Frágil",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Reduz Ferimentos em 1. Máx 2."
+      },
+      {
+        "nome": "Ineficiente",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Consome dobro de energia. Máx 1."
+      },
+      {
+        "nome": "Inseguro",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Dano total em colisões, -2 para ejetar. Máx 1."
+      },
+      {
+        "nome": "Manobrabilidade Reduzida",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Subtrai 1 de Manobrabilidade (máx -6). Máx 6."
+      },
+      {
+        "nome": "Manual",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Sem sistemas automatizados/eletrônicos. Máx 1."
+      },
+      {
+        "nome": "Passeio Difícil",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Plataforma Instável é -4. Máx 1."
+      },
+      {
+        "nome": "Pilotagem Dupla",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Requer dois pilotos (usa menor perícia). Máx 1."
+      },
+      {
+        "nome": "Sem mãos",
+        "custo": "-5K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Não pode agarrar ou usar armas carregadas. Máx 1."
+      },
+      {
+        "nome": "Tripulação Exposta",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Piloto pode ser alvejado. Sem bônus de Armadura. Máx 1."
+      },
+      {
+        "nome": "Velocidade Reduzida",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Reduz Classificação de Velocidade em 1. Máx 3."
+      }
+    ]
+  },
+  {
+    "tipo": "Mecha",
+    "subtipo": "Modificadores (Centrais)",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Assento para Tripulação",
+        "custo": 10000,
         "mods_slots": 2,
         "origem": "SCI_FI",
-        "observacoes": "Robô utilitário."
+        "observacoes": "+1 assento (1ª vez), +3 assentos (2ª vez). Máx 2."
       },
       {
-        "nome": "Sentinela de Combate",
-        "tamanho": 0,
-        "resistencia": 10,
-        "armadura": 4,
-        "movimentacao": 6,
-        "custo": 5000,
+        "nome": "Comunicações Emaranhadas",
+        "custo": 50000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Alcance ilimitado, não bloqueável. Máx Ilimitado."
+      },
+      {
+        "nome": "Conjunto de Sensores",
+        "custo": 25000,
         "mods_slots": 4,
         "origem": "SCI_FI",
-        "observacoes": "Robô soldado padrão."
+        "observacoes": "Varredura planetária/espacial. Implantação 1 rodada. Máx 1."
+      },
+      {
+        "nome": "Escâner (Mecha)",
+        "custo": 500,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Identifica matéria/energia a 50m (+2 Perceber). 2ª vez: 500m, $5K, +1 Mod. Máx 2."
+      },
+      {
+        "nome": "Força Ampliada",
+        "custo": "5K * Tam",
+        "mods_slots": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Aumenta Força em um tipo de dado. Máx 5."
+      },
+      {
+        "nome": "Forma Variável",
+        "custo": 100000,
+        "mods_slots": "Metade do Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "Transforma em veículo (até 2 tamanhos difer.). Usa maior custo. Máx 1."
+      },
+      {
+        "nome": "Inteligência Artificial (IA)",
+        "custo": "5K * Tam",
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Pilota/atira com d6. 2ª vez: d10. 3ª vez: ignora 2 penalidades Ação Múltipla. Máx 3."
+      },
+      {
+        "nome": "Módulo de Comando",
+        "custo": 10000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Conecta a aliados, monitora vitais, estende Raio de Comando. Máx 1."
+      },
+      {
+        "nome": "Sensores Aprimorados",
+        "custo": 50000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Zoom 100x, +2 testes de Surpresa e Perceber. Máx 1."
+      }
+    ]
+  },
+  {
+    "tipo": "Mecha",
+    "subtipo": "Modificadores (Defensivos)",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Armadura Inclinada",
+        "custo": "5K * Tam",
+        "mods_slots": "Metade do Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "-2 em rolagens de Atirar contra o mecha (fogo direto). Máx 1."
+      },
+      {
+        "nome": "Armadura (Mecha)",
+        "custo": "5K * Tam",
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "+2 Armadura. Máx limitado pela tabela de Estrutura."
+      },
+      {
+        "nome": "Blindagem PEM (Mecha)",
+        "custo": "5K * Tam",
+        "mods_slots": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Ignora 2 pts de penalidade ao reiniciar após PEM. Máx 1."
+      },
+      {
+        "nome": "CA/CE",
+        "custo": "5K * Tam",
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Contramedidas: anula 2 pts de penalidade Evasão vs Guiadas. Máx 1."
+      },
+      {
+        "nome": "Drones de Reparo (Mecha)",
+        "custo": "25K * Tam",
+        "mods_slots": "Metade do Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "Tentam consertar Ferimentos/Críticos. Falha Crítica desativa. Máx 1."
+      },
+      {
+        "nome": "Escudo Braçal",
+        "custo": "10K * Tam",
+        "mods_slots": "Metade do Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "Aparar +2, Cobertura -2. Dureza 20, +10 Armadura Pesada se atirar através. Requer braço. Máx 1."
+      },
+      {
+        "nome": "Escudos (Energia)",
+        "custo": "50K * Tam",
+        "mods_slots": "Metade do Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "Cargas = Metade Ferimentos. Absorção com Eletrônica. Recarga 10 min ou desvio de energia. Máx 1."
+      },
+      {
+        "nome": "Nanomáquinas",
+        "custo": "50K * Tam",
+        "mods_slots": 3,
+        "origem": "SCI_FI",
+        "observacoes": "Consertar 1/rodada (ação limitada). Repara até 3 Ferimentos/dia. Máx 1."
+      },
+      {
+        "nome": "Resistência (Mecha)",
+        "custo": "5K * Tam",
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "+1 Resistência. Máx 5."
+      },
+      {
+        "nome": "Sistema Furtivo",
+        "custo": "50K * Tam",
+        "mods_slots": "Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "-4 para travar alvo/localizar. Dev II: -2 ataque. Dev III: -4 ataque. Ação limitada. Máx 1."
+      },
+      {
+        "nome": "Tecnologia Antiteleporte",
+        "custo": "10K * Tam",
+        "mods_slots": 4,
+        "origem": "SCI_FI",
+        "observacoes": "Impede teleporte para dentro. Máx 1."
+      }
+    ]
+  },
+  {
+    "tipo": "Mecha",
+    "subtipo": "Modificadores (Locomoção)",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Anfíbio (Mecha)",
+        "custo": "1K * Tam",
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Entra na água. Manob -1, Vel 2 (12 km/h). 2ª vez: Vel 3 (24 km/h). Máx 2."
+      },
+      {
+        "nome": "Cápsula de Energia",
+        "custo": "5K * Tam",
+        "mods_slots": "Metade do Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "Adiciona o dobro da Classificação de Energia. Máx Ilimitado."
+      },
+      {
+        "nome": "Manobrabilidade",
+        "custo": "10K * Tam",
+        "mods_slots": "Metade do Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "+1 Manobrabilidade. Máx 4."
+      },
+      {
+        "nome": "Propulsores para Salto",
+        "custo": "10K * Tam",
+        "mods_slots": "Metade do Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "Salta movimento (h) ou metade (v). Permite Morte Vinda de Cima. Máx 1."
+      },
+      {
+        "nome": "Propulsores (Voo)",
+        "custo": "25K * Tam",
+        "mods_slots": "Metade do Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "Voo com Vel 8 (150 km/h). Máx 1."
+      },
+      {
+        "nome": "Quadrúpede",
+        "custo": 10000,
+        "mods_slots": 2,
+        "origem": "SCI_FI",
+        "observacoes": "4 pernas. Rerrolagem contra Fora de Controle. Máx 1."
+      },
+      {
+        "nome": "Velocidade Ampliada",
+        "custo": "10K * Tam",
+        "mods_slots": "Metade do Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "+1 Classificação de Velocidade Máxima. Máx Ilimitado."
+      }
+    ]
+  },
+  {
+    "tipo": "Mecha",
+    "subtipo": "Modificadores (Ofensivos)",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Acessórios Extras",
+        "custo": 10000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Membros adicionais. +1 Agrupar por conjunto. Máx 3."
+      },
+      {
+        "nome": "Arma Transportada",
+        "custo": "10K + Arma",
+        "mods_slots": "Varia",
+        "origem": "SCI_FI",
+        "observacoes": "Arma configurada como rifle. Usa slots de arma fixa. Requer dois braços. Máx 1."
+      },
+      {
+        "nome": "Controle Remoto",
+        "custo": 10000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Controle a distância via Eletrônica -2. Máx 1."
+      },
+      {
+        "nome": "Estabilizador",
+        "custo": 5000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Anula penalidades Plataforma Instável e Corrida para armas. Máx 1."
+      },
+      {
+        "nome": "Lâmina de Braço",
+        "custo": 50000,
+        "mods_slots": 2,
+        "origem": "SCI_FI",
+        "dano": "For+d12",
+        "observacoes": "PA 6, Arma Pesada. Requer um braço. Máx 1."
+      },
+      {
+        "nome": "Lâmina de Energia",
+        "custo": 100000,
+        "mods_slots": 2,
+        "origem": "SCI_FI",
+        "dano": "For+d12",
+        "observacoes": "PA 12, Arma Pesada. Requer um braço. Máx 1."
+      },
+      {
+        "nome": "Sistema de Mira (Mecha)",
+        "custo": 25000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Reduz 2 pts de penalidade Atirar (fogo direto). Máx 1."
       }
     ]
   },
