@@ -443,7 +443,7 @@ class CriadorState {
     }
 
     fun totalSlotsMecha(): Int =
-        equipamentosComprados.sumOf { it.mods_slots ?: 0 }
+        equipamentosComprados.sumOf { (it.mods_slots as? JsonPrimitive)?.content?.toIntOrNull() ?: 0 }
 
     fun isPersonagemRobotico(): Boolean {
         val ancestral = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade }
