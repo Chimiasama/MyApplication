@@ -85,9 +85,9 @@ private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
         t == "CIBERNETICO" -> EquipSuperType.CIBERNETICO
         t == "MECHA" -> EquipSuperType.MECHA
         t == "ROBO" || t == "VEÍCULOS" -> EquipSuperType.VEICULOS
-        t.contains("ARMADURA") && t != "ARMADURA_ENERGIZADA" -> EquipSuperType.ARMADURAS // Armadura_Energizada goes to Vehicles/Mecha logic? Or Armors?
+        t == "ARMADURA ENERGIZADA" || t == "ARMADURA_ENERGIZADA" -> EquipSuperType.ARMADURA_ENERGIZADA
+        t.contains("ARMADURA") -> EquipSuperType.ARMADURAS
         t == "ESCUDOS" -> EquipSuperType.ARMADURAS
-        t == "ARMADURA_ENERGIZADA" -> EquipSuperType.ARMADURAS // Or Vehicles? Usually treated as heavy armor
         t.contains("ARMA") || t == "ARTE_DA_GUERRA" -> EquipSuperType.ARMAS
         t == "EQUIPAMENTO SUPERS" && st == "VEÍCULOS" -> EquipSuperType.VEICULOS
         else -> EquipSuperType.GERAL
@@ -133,13 +133,14 @@ private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
             }
         }
         EquipSuperType.ARMADURAS -> {
-             if (t == "ARMADURA_ENERGIZADA") {
-                 group = "Armaduras Tecnológicas"
-             } else if (t == "ESCUDOS") {
+             if (t == "ESCUDOS") {
                  group = "Escudos"
              } else {
                  group = "Armaduras Corporais"
              }
+        }
+        EquipSuperType.ARMADURA_ENERGIZADA -> {
+            group = "Armaduras Energizadas"
         }
         EquipSuperType.VEICULOS -> {
             if (t == "ROBO") {
@@ -707,8 +708,8 @@ fun EquipamentoSection(
                 Column(Modifier.padding(horizontal = 4.dp)) {
                     // Itera sobre os SuperTypes na ordem definida
                     EquipSuperType.entries.sortedBy { it.order }.forEach { superType ->
-                        // Filter out MECHA and CIBERNETICO if rule is not active
-                        if (superType == EquipSuperType.MECHA || superType == EquipSuperType.CIBERNETICO) {
+                        // Filter out MECHA, CIBERNETICO and ARMADURA_ENERGIZADA if rule is not active
+                        if (superType == EquipSuperType.MECHA || superType == EquipSuperType.CIBERNETICO || superType == EquipSuperType.ARMADURA_ENERGIZADA) {
                             if (!state.compendioScifiMechasCiberneticosAtivo) return@forEach
                         }
 

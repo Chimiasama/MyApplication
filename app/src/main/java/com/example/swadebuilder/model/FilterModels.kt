@@ -6,7 +6,8 @@ enum class EquipSuperType(val label: String, val order: Int) {
     VEICULOS("Veículos", 3),
     CIBERNETICO("Cibernéticos e Robótica", 4),
     GERAL("Equipamentos e Itens", 5),
-    MECHA("Mechas", 6)
+    MECHA("Mechas", 6),
+    ARMADURA_ENERGIZADA("Armaduras Energizadas", 7)
 }
 
 data class VantFilter(

@@ -37,6 +37,463 @@
     ]
   },
   {
+    "tipo": "Armadura Energizada",
+    "subtipo": "Estruturas",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Estrutura: Tam 1 (Leve)",
+        "tamanho": 1,
+        "armadura": 8,
+        "movimentacao": 12,
+        "forca": "d12",
+        "mods_slots": 3,
+        "peso": 100,
+        "custo": 50000,
+        "origem": "SCI_FI",
+        "observacoes": "Armadura Máx 12. Movimentação 12 (12 km/h). Força d12. Mods 3. Peso 100 kg. Custo $50K."
+      },
+      {
+        "nome": "Estrutura: Tam 2 (Médio)",
+        "tamanho": 2,
+        "armadura": 10,
+        "movimentacao": 6,
+        "forca": "d12+1",
+        "mods_slots": 6,
+        "peso": 200,
+        "custo": 100000,
+        "origem": "SCI_FI",
+        "observacoes": "Armadura Máx 16. Movimentação 6 (6 km/h). Força d12+1. Mods 6. Peso 200 kg. Custo $100K."
+      },
+      {
+        "nome": "Estrutura: Tam 3 (Pesado)",
+        "tamanho": 3,
+        "armadura": 12,
+        "movimentacao": 4,
+        "forca": "d12+2",
+        "mods_slots": 9,
+        "peso": 300,
+        "custo": 150000,
+        "origem": "SCI_FI",
+        "observacoes": "Armadura Máx 20. Movimentação 4 (4 km/h). Força d12+2. Mods 9. Peso 300 kg. Custo $150K."
+      }
+    ]
+  },
+  {
+    "tipo": "Armadura Energizada",
+    "subtipo": "Armaduras Padrão",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Traje de Ataque (Classe II)",
+        "tamanho": 2,
+        "armadura": 16,
+        "movimentacao": 6,
+        "forca": "d12+1",
+        "mods_slots": 0,
+        "custo": 155300,
+        "origem": "SCI_FI",
+        "observacoes": "Armadura x3, Equipamento Integrado (lança-granada), Pacote de Salto, Pacote de Trauma. Arma: Lança-Granada."
+      },
+      {
+        "nome": "Carregador de Carga (Classe I)",
+        "tamanho": 2,
+        "armadura": 10,
+        "movimentacao": 6,
+        "forca": "d12+4",
+        "mods_slots": 2,
+        "custo": 100400,
+        "origem": "SCI_FI",
+        "observacoes": "Garras, Tripulação Exposta, Equip. Integrado (cortador), Mov. Reduzida, Força x3. Arma: Cortador de Matéria."
+      },
+      {
+        "nome": "Traje de Exploração de Águas Profundas (Classe II)",
+        "tamanho": 3,
+        "armadura": 12,
+        "resistencia": 2,
+        "movimentacao": 4,
+        "forca": "d12+2",
+        "mods_slots": 0,
+        "custo": 226200,
+        "origem": "SCI_FI",
+        "observacoes": "Resistência +2. Garras, Equip. Integrado x2 (rifle girofoguete, vibroespada), 2x Propulsores de Pressão, Resistência x2."
+      },
+      {
+        "nome": "Traje de Resgate (Classe I)",
+        "tamanho": 2,
+        "armadura": 10,
+        "movimentacao": 6,
+        "forca": "d12+1",
+        "mods_slots": 4,
+        "custo": 105400,
+        "origem": "SCI_FI",
+        "observacoes": "Garras, Frágil, Equip. Integrado (cortador), Escâner, Pacote de Trauma. Arma: Cortador de Matéria."
+      },
+      {
+        "nome": "Traje de Comando (Classe II)",
+        "tamanho": 2,
+        "armadura": 14,
+        "movimentacao": 6,
+        "forca": "d12+1",
+        "mods_slots": 0,
+        "custo": 140000,
+        "origem": "SCI_FI",
+        "observacoes": "Armadura x2, Módulo de Comando, Frágil, Propulsores Salto, Escâner, Estabilizador, Pacote de Trauma. Arma: Lança-Projétil Médio."
+      },
+      {
+        "nome": "Traje de Suporte de Ataque (Classe II)",
+        "tamanho": 3,
+        "armadura": 18,
+        "movimentacao": 4,
+        "forca": "d12+2",
+        "mods_slots": 0,
+        "custo": 230300,
+        "origem": "SCI_FI",
+        "observacoes": "CA/CE, Armadura x3, Escâner, Estabilizador, Pacote de Trauma. Armas: Lança-Projétil Médio, Canhões Auto Leves Duplos."
+      },
+      {
+        "nome": "Traje de Voo (Classe I)",
+        "tamanho": 1,
+        "armadura": 10,
+        "movimentacao": 12,
+        "forca": "d12",
+        "mods_slots": 0,
+        "custo": 75000,
+        "origem": "SCI_FI",
+        "observacoes": "CA/CE, Armadura, Voo x2 (90 km/h), Frágil, Escâner."
+      },
+      {
+        "nome": "Traje Passolargo (Classe I)",
+        "tamanho": 1,
+        "armadura": 10,
+        "movimentacao": 18,
+        "forca": "d12",
+        "mods_slots": 1,
+        "custo": 60000,
+        "origem": "SCI_FI",
+        "observacoes": "Dado de corrida d12. Armadura, Frágil, Movimentação Ampliada x3."
+      },
+      {
+        "nome": "Traje de Batedor (Classe I)",
+        "tamanho": 1,
+        "armadura": 10,
+        "movimentacao": 14,
+        "forca": "d12",
+        "mods_slots": 0,
+        "custo": 110000,
+        "origem": "SCI_FI",
+        "observacoes": "Dado de corrida d8. Armadura, Frágil, Movimentação Ampliada, Escâner x2, Sistema Furtivo."
+      },
+      {
+        "nome": "Traje Zero-G (Classe II)",
+        "tamanho": 2,
+        "armadura": 14,
+        "movimentacao": 4,
+        "forca": "d12+1",
+        "mods_slots": 1,
+        "custo": 147300,
+        "origem": "SCI_FI",
+        "observacoes": "Armadura x2, Voo, Equip. Integrado (lança-granada), Almofadas Magnéticas, Mov. Reduzida, Autovedação, Pacote de Trauma."
+      }
+    ]
+  },
+  {
+    "tipo": "Armadura Energizada",
+    "subtipo": "Modificadores (Negativos)",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Danificado (AE)",
+        "custo": "-5K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Reduz Armadura em 2. Máx 2."
+      },
+      {
+        "nome": "Exigente (AE)",
+        "custo": "-5K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Consertar -2. Máx 2."
+      },
+      {
+        "nome": "Força Reduzida (AE)",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Usa Força do piloto para testes (exceto carga). Máx 1."
+      },
+      {
+        "nome": "Frágil (AE)",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Sofre Acerto Crítico quando usuário é Abalado. Máx 1."
+      },
+      {
+        "nome": "Ineficiente (AE)",
+        "custo": "-5K * Tam",
+        "mods_slots": -1,
+        "origem": "SCI_FI",
+        "observacoes": "Reduz dias de operação em 1. Máx 2."
+      },
+      {
+        "nome": "Leve (AE)",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Não conta como Armadura Pesada. Máx 1."
+      },
+      {
+        "nome": "Movimentação Reduzida",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Reduz Movimentação em 2 (mín 4). Máx 2."
+      },
+      {
+        "nome": "Piloto Exposto (AE)",
+        "custo": "-10K * Tam",
+        "mods_slots": -2,
+        "origem": "SCI_FI",
+        "observacoes": "Piloto alvo de Ataque Localizado (-4), sem Armadura. Máx 1."
+      }
+    ]
+  },
+  {
+    "tipo": "Armadura Energizada",
+    "subtipo": "Modificadores (Centrais)",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Comunicações Emaranhadas (AE)",
+        "custo": 50000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Alcance ilimitado com par. Máx Ilimitado."
+      },
+      {
+        "nome": "Escâner (AE)",
+        "custo": 5000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Detecta 50m. 2ª vez: 500m. Máx 2."
+      },
+      {
+        "nome": "Módulo de Comando (AE)",
+        "custo": 10000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Link com esquadrão. Máx 1."
+      }
+    ]
+  },
+  {
+    "tipo": "Armadura Energizada",
+    "subtipo": "Modificadores (Defensivos)",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Armadura (AE)",
+        "custo": "5K * Tam",
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Armadura +2. Máx limitado pela tabela."
+      },
+      {
+        "nome": "Autovedante",
+        "custo": 10000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Sela brechas após Ferimento (exceto se 3+ Ferimentos). Máx 1."
+      },
+      {
+        "nome": "Blindagem PEM (AE)",
+        "custo": "5K * Tam",
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Ignora 2 pts penalidade reiniciar PEM. Máx 1."
+      },
+      {
+        "nome": "CA/CE (AE)",
+        "custo": "5K * Tam",
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Contramedidas. Ignora 2 pts penalidade Evasão. Máx 1."
+      },
+      {
+        "nome": "Conjunto de Sensores (AE)",
+        "custo": 25000,
+        "mods_slots": 4,
+        "origem": "SCI_FI",
+        "observacoes": "Varredura planetária/espacial. Imóvel/Vulnerável ao usar. Máx 1."
+      },
+      {
+        "nome": "Escudos (Energia) (AE)",
+        "custo": "50K * Tam",
+        "mods_slots": "Metade do Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "Cargas = Tamanho. Absorção com Eletrônica. Máx 1."
+      },
+      {
+        "nome": "Força (AE)",
+        "custo": "5K * Tam",
+        "mods_slots": 2,
+        "origem": "SCI_FI",
+        "observacoes": "Aumenta Força em um tipo de dado. Máx 5."
+      },
+      {
+        "nome": "Nanomáquinas Reparadoras (AE)",
+        "custo": "50K * Tam",
+        "mods_slots": 3,
+        "origem": "SCI_FI",
+        "observacoes": "Repara Acerto Crítico (Consertar d6). 3 usos/dia. Máx 1."
+      },
+      {
+        "nome": "Pacote de Trauma",
+        "custo": 10000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Ignora 2 pts penalidade Ferimento/Fadiga por 1h. Uso único. Máx 1."
+      },
+      {
+        "nome": "Pele de Energia",
+        "custo": "5K * Tam",
+        "mods_slots": 0,
+        "origem": "SCI_FI",
+        "observacoes": "Reduz dano laser em 4. Furtividade -2. Máx 1."
+      },
+      {
+        "nome": "Proteção Balística",
+        "custo": 500,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Reduz dano de balas em 4. Máx 1."
+      },
+      {
+        "nome": "Resistência (AE)",
+        "custo": "5K * Tam",
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Resistência +1. Máx 5."
+      },
+      {
+        "nome": "Sistema Furtivo (AE)",
+        "custo": "50K * Tam",
+        "mods_slots": "Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "Sem penalidade furtividade. Travar alvo -4. Dev II: -2 ataque. Dev III: -4 ataque. Máx 1."
+      }
+    ]
+  },
+  {
+    "tipo": "Armadura Energizada",
+    "subtipo": "Modificadores (Locomoção)",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Almofadas Magnéticas",
+        "custo": 5000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Anda em metal (metade Mov). Dev II: total Mov. Máx 1."
+      },
+      {
+        "nome": "Andar nas Paredes (AE)",
+        "custo": 5000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Move em vertical (metade Mov). Máx 1."
+      },
+      {
+        "nome": "Cápsula de Energia (AE)",
+        "custo": "5K * Tam",
+        "mods_slots": "Metade do Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "+6 dias operação. Máx 1."
+      },
+      {
+        "nome": "Movimentação Ampliada",
+        "custo": 5000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Movimentação +2, Dado Corrida +1 tipo. Máx 3."
+      },
+      {
+        "nome": "Propulsores de Pressão",
+        "custo": "5K * Tam",
+        "mods_slots": "Metade do Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "Mov normal subaquático (150m). 2ª vez: 38 km/h, 1000m. Máx 2."
+      },
+      {
+        "nome": "Propulsores para Salto (AE)",
+        "custo": 10000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Salta 8q (h) ou 4q (v). +2 dano Ataque Selvagem com salto. Máx 1."
+      },
+      {
+        "nome": "Voo (AE)",
+        "custo": "10K * Tam",
+        "mods_slots": "Metade do Tam.",
+        "origem": "SCI_FI",
+        "observacoes": "Mov 6 voo. 2ª vez: 90 km/h. 3ª vez: 300 km/h. Máx 3."
+      }
+    ]
+  },
+  {
+    "tipo": "Armadura Energizada",
+    "subtipo": "Modificadores (Ofensivos)",
+    "origem": "SCI_FI",
+    "itens": [
+      {
+        "nome": "Equipamento Integrado (AE)",
+        "custo": "5K + Item",
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Até 5kg integrados. Máx Ilimitado."
+      },
+      {
+        "nome": "Estabilizador (AE)",
+        "custo": 5000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Anula Plataforma Instável, Recuo, Corrida. Máx 1."
+      },
+      {
+        "nome": "Garras (AE)",
+        "custo": 5000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "dano": "For+d4",
+        "observacoes": "Dano For+d4. 2ª vez: For+d6, PA 2. Mão ocupada. Máx 2."
+      },
+      {
+        "nome": "Kit Antipessoal",
+        "custo": 5000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "dano": "4d6",
+        "observacoes": "Detona MGE centrado no traje (traje sofre 2d6). Uso único. Máx 1."
+      },
+      {
+        "nome": "Sistema de Mira (AE)",
+        "custo": 25000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Reduz 2 pts penalidade Atirar (fogo direto). Máx 1."
+      },
+      {
+        "nome": "Suporte para Arma Pesada",
+        "custo": 50000,
+        "mods_slots": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Ancoragem. Imóvel/Vulnerável. Conta como Tamanho +5 para recuo. Máx 1."
+      }
+    ]
+  },
+  {
     "tipo": "Equipamento Geral",
     "subtipo": "Acessórios para armas de fogo",
     "origem": "SUPER",
