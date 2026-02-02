@@ -2703,17 +2703,37 @@
     "descricao": "Ignora 2 pontos de penalidade em Pilotar. Pode gastar Benes para absorver dano no veículo."
   },
   {
+    "id": "cibertolerancia",
+    "nome": "CIBERTOLERÂNCIA",
+    "categoria": "ANTECEDENTE",
+    "origem": "SCI_FI",
+    "requisitos": {
+      "estagio": "Novato"
+    },
+    "descricao": "O corpo do indivíduo pode lidar com o cibernéticos melhor do que a maioria. Seu Limite de Tensão e máximo aumenta em +2."
+  },
+  {
+    "id": "cibersamurai",
+    "nome": "CIBERSAMURAI",
+    "categoria": "ANTECEDENTE",
+    "origem": "SCI_FI",
+    "requisitos": {
+      "estagio": "Novato",
+      "vantagens_previas": [
+        "cibertolerancia"
+      ]
+    },
+    "descricao": "A personagem foi construída para ser cromada. Seu Limite de Tensão e máximo aumentam em mais 2 pontos, para +4."
+  },
+  {
     "id": "ciborgue",
     "nome": "CIBORGUE",
     "categoria": "ANTECEDENTE",
     "origem": "SCI_FI",
     "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Vigor": 6
-      }
+      "estagio": "Novato"
     },
-    "descricao": "Aumenta o limite máximo de Tensão (Strain) de cibernéticos. O Vigor máximo aumenta em um tipo de dado para fins de calcular Tensão."
+    "descricao": "O Limite de Tensão e o máximo do ciborgue aumentam em +4 (e acumulam com as Vantagens Cibertolerância e Cibersamurai), e ganha $20K em implantes instalados. O herói ou heroína não faz mais rolagens de Cura Natural, mas ainda pode Sangrar, e os Ferimentos são recuperados com a menor perícia entre Curar ou Consertar do médico. No entanto, o preço dessa conversão é alto. É necessário pegar uma Complicação Maior adicional que não seja de Cibernéticos ou rolar um resultado permanente na tabela Efeitos Colaterais de Cibernérticos."
   },
   {
     "id": "jockey_mecha",

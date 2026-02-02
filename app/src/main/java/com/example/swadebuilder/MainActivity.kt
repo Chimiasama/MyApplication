@@ -854,6 +854,7 @@ class MainActivity : ComponentActivity() {
                             val heroisSemArmadura = state.heroisSemArmadura
                             val nasceUmHeroi = state.nasceUmHeroi
                             val usarSemPontosDePoder = state.usarSemPontosDePoder
+                            val compendioScifiMechasCiberneticosAtivo = state.compendioScifiMechasCiberneticosAtivo
 
                             criadorViewModel.resetStateParaNovoPersonagem(
                                 cartaSelvagem = cartaSelvagem,
@@ -862,6 +863,7 @@ class MainActivity : ComponentActivity() {
                                 compendioFantasiaAtivo = compendioFantasiaAtivo,
                                 compendioHorrorAtivo = compendioHorrorAtivo,
                                 compendioSciFiAtivo = compendioSciFiAtivo,
+                                compendioScifiMechasCiberneticosAtivo = compendioScifiMechasCiberneticosAtivo,
                                 compendioPathfinderAtivo = compendioPathfinderAtivo,
                                 compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                                 compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
@@ -935,7 +937,8 @@ class MainActivity : ComponentActivity() {
                                 onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioPathfinderAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo,
                                                 nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
                                                 semPontosDePoder, multiplosIdiomas, grandesResponsabilidades,
-                                                optRegraFama, optRegraRiqueza, optRegraCosaNostra ->
+                                                optRegraFama, optRegraRiqueza, optRegraCosaNostra,
+                                                optRegraMechasCiberneticos ->
 
                                     creationSession++
 
@@ -946,6 +949,7 @@ class MainActivity : ComponentActivity() {
                                         compendioFantasiaAtivo = compendioFantasiaAtivo,
                                         compendioHorrorAtivo = compendioHorrorAtivo,
                                         compendioSciFiAtivo = compendioSciFiAtivo,
+                                        compendioScifiMechasCiberneticosAtivo = optRegraMechasCiberneticos,
                                         compendioPathfinderAtivo = compendioPathfinderAtivo,
                                         compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                                         compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,

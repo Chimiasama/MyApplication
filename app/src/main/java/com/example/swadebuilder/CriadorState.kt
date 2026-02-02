@@ -57,6 +57,7 @@ class CriadorState {
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)
     var compendioSciFiAtivo by mutableStateOf(false)
+    var compendioScifiMechasCiberneticosAtivo by mutableStateOf(false)
     var compendioPathfinderAtivo by mutableStateOf(false)
     var compendioDeadlandsAtivo by mutableStateOf(false)
     var compendioCrystalHeartAtivo by mutableStateOf(false)
@@ -402,6 +403,44 @@ class CriadorState {
 
     fun totalTensaoCibernetica(): Int =
         equipamentosComprados.sumOf { it.tensao ?: 0 }
+
+    fun totalTensaoAtual(): Int = totalTensaoCibernetica()
+
+    fun valorLimiteTensao(): Pair<Int, Int> {
+        val espirito = valoresAtributos["ESPIRITO"]?.intValue ?: 4
+        val vigor = valoresAtributos["VIGOR"]?.intValue ?: 4
+
+        // Base = half the die type of lower attribute (Standard: Die/2)
+        // Or if we treat die value as the number: (e.g. d6 -> 6). 6/2 = 3.
+        // My intValue stores 4, 6, 8, 10, 12. So directly dividing by 2 works.
+        val lower = minOf(espirito, vigor)
+        var baseLimit = lower / 2
+        var maxLimit = baseLimit * 2 // Implied by 3->6 example
+
+        // Modifiers
+        val hasCibertolerancia = vantagensSelecionadas.any { it.nome.keyify() == "CIBERTOLERANCIA" }
+        val hasCibersamurai = vantagensSelecionadas.any { it.nome.keyify() == "CIBERSAMURAI" }
+        val hasCiborgue = vantagensSelecionadas.any { it.nome.keyify() == "CIBORGUE" }
+        val hasCiberResistencia = complicacoesSelecionadas.keys.any { it.id.keyify() == "CIBER_RESISTENCIA" }
+
+        if (hasCibertolerancia) {
+            baseLimit += 2
+            maxLimit += 2
+        }
+        if (hasCibersamurai) {
+            baseLimit += 2
+            maxLimit += 2
+        }
+        if (hasCiborgue) {
+            baseLimit += 4
+            maxLimit += 4
+        }
+        if (hasCiberResistencia) {
+            baseLimit -= 2
+        }
+
+        return baseLimit.coerceAtLeast(0) to maxLimit.coerceAtLeast(0)
+    }
 
     fun totalSlotsMecha(): Int =
         equipamentosComprados.sumOf { it.mods_slots ?: 0 }
@@ -3587,6 +3626,7 @@ class CriadorState {
                 compendioFantasiaAtivo = compendioFantasiaAtivo,
                 compendioHorrorAtivo = compendioHorrorAtivo,
                 compendioSciFiAtivo = compendioSciFiAtivo,
+                compendioScifiMechasCiberneticosAtivo = compendioScifiMechasCiberneticosAtivo,
                 compendioPathfinderAtivo = compendioPathfinderAtivo,
                 compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                 compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
@@ -3735,6 +3775,7 @@ class CriadorState {
         compendioFantasiaAtivo = flags.compendioFantasiaAtivo
         compendioHorrorAtivo = flags.compendioHorrorAtivo
         compendioSciFiAtivo = flags.compendioSciFiAtivo
+        compendioScifiMechasCiberneticosAtivo = flags.compendioScifiMechasCiberneticosAtivo
         compendioPathfinderAtivo = flags.compendioPathfinderAtivo
         compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo
         compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo

@@ -77,18 +77,19 @@ private data class MappedCategory(
 )
 
 private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
-    val t = (cat.tipo ?: "").trim().uppercase()
-    val st = (cat.subtipo ?: "").trim().uppercase()
+    val t = (cat.tipo ?: "").trim().uppercase().semAcentos()
+    val st = (cat.subtipo ?: "").trim().uppercase().semAcentos()
 
     // 1. Identify SuperType
     val superType = when {
-        t == "CIBERNETICO" -> EquipSuperType.CIBERNETICO
-        t == "MECHA" || t == "ROBO" || t == "VEÍCULOS" -> EquipSuperType.VEICULOS
-        t.contains("ARMADURA") && t != "ARMADURA_ENERGIZADA" -> EquipSuperType.ARMADURAS // Armadura_Energizada goes to Vehicles/Mecha logic? Or Armors?
+        t.startsWith("CIBERNETIC") -> EquipSuperType.CIBERNETICO
+        t.startsWith("MECHA") -> EquipSuperType.MECHA
+        t == "ROBO" || t == "VEICULOS" || t == "VEICULO" -> EquipSuperType.VEICULOS
+        t == "ARMADURA ENERGIZADA" || t == "ARMADURA_ENERGIZADA" -> EquipSuperType.ARMADURA_ENERGIZADA
+        t.contains("ARMADURA") -> EquipSuperType.ARMADURAS
         t == "ESCUDOS" -> EquipSuperType.ARMADURAS
-        t == "ARMADURA_ENERGIZADA" -> EquipSuperType.ARMADURAS // Or Vehicles? Usually treated as heavy armor
         t.contains("ARMA") || t == "ARTE_DA_GUERRA" -> EquipSuperType.ARMAS
-        t == "EQUIPAMENTO SUPERS" && st == "VEÍCULOS" -> EquipSuperType.VEICULOS
+        t == "EQUIPAMENTO SUPERS" && st == "VEICULOS" -> EquipSuperType.VEICULOS
         else -> EquipSuperType.GERAL
     }
 
@@ -132,20 +133,24 @@ private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
             }
         }
         EquipSuperType.ARMADURAS -> {
-             if (t == "ARMADURA_ENERGIZADA") {
-                 group = "Armaduras Tecnológicas"
-             } else if (t == "ESCUDOS") {
+             if (t == "ESCUDOS") {
                  group = "Escudos"
              } else {
                  group = "Armaduras Corporais"
              }
         }
+        EquipSuperType.ARMADURA_ENERGIZADA -> {
+            group = "Armaduras Energizadas"
+        }
         EquipSuperType.VEICULOS -> {
-            if (t == "MECHA" || t == "ROBO") {
-                group = "Mechas e Robôs"
+            if (t == "ROBO") {
+                group = "Robôs"
             } else {
                 group = "Veículos"
             }
+        }
+        EquipSuperType.MECHA -> {
+            group = "Mechas"
         }
         EquipSuperType.CIBERNETICO -> {
             group = "Implantes"
@@ -549,6 +554,9 @@ fun EquipamentoSection(
                 MaterialTheme.colorScheme.onSurface
             }
 
+            // Determine visibility of Tensão/Mecha Slots
+            val showSciFiStats = state.compendioScifiMechasCiberneticosAtivo || isPersonagemRobotico
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -562,19 +570,19 @@ fun EquipamentoSection(
                     modifier = Modifier.weight(1f)
                 )
                 Column(horizontalAlignment = Alignment.End) {
-                    if (compendioSciFiAtivo) {
+                    if (showSciFiStats) {
                         Text(
                             "$tensaoLabel: $tensaoTotal/$tensaoLimite",
                             style = MaterialTheme.typography.bodyMedium,
                             color = tensaoColor
                         )
-                        if (mechaSlotsTotal > 0) {
-                            Text(
-                                "Slots Mecha/Veículo usados: $mechaSlotsTotal",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.secondary
-                            )
-                        }
+                    }
+                    if (compendioSciFiAtivo && mechaSlotsTotal > 0) {
+                        Text(
+                            "Slots Mecha/Veículo usados: $mechaSlotsTotal",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
                     }
                     if (hasSoldado) {
                         AssistChip(
@@ -589,7 +597,7 @@ fun EquipamentoSection(
                 }
             }
 
-            if (compendioSciFiAtivo && tensaoExcedida) {
+            if (showSciFiStats && tensaoExcedida) {
                 // ... Error Text ...
                 Text(
                     "Sobrecarga Cibernética: Personagem recebe o estado Fatigado (ou Exausto se X > Y+2).",
@@ -700,6 +708,11 @@ fun EquipamentoSection(
                 Column(Modifier.padding(horizontal = 4.dp)) {
                     // Itera sobre os SuperTypes na ordem definida
                     EquipSuperType.entries.sortedBy { it.order }.forEach { superType ->
+                        // Filter out MECHA, CIBERNETICO and ARMADURA_ENERGIZADA if rule is not active
+                        if (superType == EquipSuperType.MECHA || superType == EquipSuperType.CIBERNETICO || superType == EquipSuperType.ARMADURA_ENERGIZADA) {
+                            if (!state.compendioScifiMechasCiberneticosAtivo) return@forEach
+                        }
+
                         // Pula se o supertipo não estiver selecionado ou não tiver conteúdo visível
                         if (selectedSuperTypes.isNotEmpty() && superType !in selectedSuperTypes) return@forEach
                         if (filter.superTipos.isNotEmpty() && superType !in filter.superTipos) return@forEach
