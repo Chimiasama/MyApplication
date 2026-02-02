@@ -79,7 +79,6 @@ import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
-import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -1605,14 +1604,6 @@ private fun VantagemItem(
                     )
 
                     // PASSO 3: Origem em linha secundária se != BASICO
-                    val origemLabel = vant.origem
-                    if (origemLabel.isNotBlank() && origemLabel != "BASICO") {
-                         Text(
-                             text = origemLabel.toEditionDisplayName(),
-                             style = MaterialTheme.typography.labelSmall,
-                             color = MaterialTheme.colorScheme.onSurfaceVariant
-                         )
-                    }
                 }
 
                 Text(

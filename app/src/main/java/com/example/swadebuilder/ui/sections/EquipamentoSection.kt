@@ -64,7 +64,6 @@ import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.components.StandardEquipamentoItem
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
-import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.serialization.json.JsonPrimitive
 
@@ -168,8 +167,7 @@ private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
 
 private data class EquipamentoListEntry(
     val item: EquipamentoItem,
-    val origemKey: String,
-    val origemLabel: String
+    val origemKey: String
 )
 
 // Helper to parse costs into a single integer base unit.
@@ -624,7 +622,7 @@ fun EquipamentoSection(
                             (n.contains(q) || original.contains(q))
                         }.map { item ->
                             val origemKey = (item.origem?.ifBlank { mapped.original.origem ?: "BASICO" } ?: (mapped.original.origem ?: "BASICO")).uppercase()
-                            EquipamentoListEntry(item, origemKey, origemKey.toEditionDisplayName())
+                            EquipamentoListEntry(item, origemKey)
                         }
                     }.filter { entry ->
                         // Strict Pathfinder Filter
@@ -644,7 +642,6 @@ fun EquipamentoSection(
                         items(finalFlatList, key = { it.item.nome + it.hashCode() }, contentType = { "equip_item" }) { entry ->
                             StandardEquipamentoItem(
                                 equipamento = entry.item,
-                                origemLabel = entry.origemLabel,
                                 onClick = { onEquipamentoDoubleClick(entry.item) },
                                 allowLongTexts = allowLongTexts,
                                 showOriginalName = showOfficialNames,
@@ -673,7 +670,7 @@ fun EquipamentoSection(
                                     cat.original.itens.map { item ->
                                         val origemKey = (item.origem?.ifBlank { cat.original.origem ?: "BASICO" }
                                             ?: (cat.original.origem ?: "BASICO")).uppercase()
-                                        EquipamentoListEntry(item, origemKey, origemKey.toEditionDisplayName())
+                                        EquipamentoListEntry(item, origemKey)
                                     }
                                     }
                                     .groupBy { it.item.nome.keyify() }
@@ -779,7 +776,6 @@ fun EquipamentoSection(
                                         itemsInSub.forEach { entry ->
                                             StandardEquipamentoItem(
                                                 equipamento = entry.item,
-                                                origemLabel = entry.origemLabel,
                                                 onClick = { onEquipamentoDoubleClick(entry.item) },
                                                 allowLongTexts = allowLongTexts,
                                                 showOriginalName = showOfficialNames,
