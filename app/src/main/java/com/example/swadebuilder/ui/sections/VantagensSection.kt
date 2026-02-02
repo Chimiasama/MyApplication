@@ -415,7 +415,7 @@ fun VantagensContent(
                         if (state.modoSupers && cat == Categoria.PODER) return@items
 
                         // --- NEW FILTERING LOGIC ---
-                        if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioPathfinderAtivo) return@items
+                        if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO || cat == Categoria.VANTAGEM_DE_CLASSE) && !state.compendioPathfinderAtivo) return@items
                         if (cat == Categoria.ATORMENTADO && !state.compendioDeadlandsAtivo) return@items
                         if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@items
                         if (cat == Categoria.SUPER && !state.modoSupers) return@items
@@ -558,7 +558,7 @@ fun VantagensContent(
                 if (lista == null) return@forEach // Skip empty
 
                 if (state.modoSupers && cat == Categoria.PODER) return@forEach
-                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioPathfinderAtivo) return@forEach
+                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO || cat == Categoria.VANTAGEM_DE_CLASSE) && !state.compendioPathfinderAtivo) return@forEach
                 if (cat == Categoria.ATORMENTADO && !state.compendioDeadlandsAtivo) return@forEach
                 if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@forEach
 

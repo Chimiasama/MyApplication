@@ -930,7 +930,7 @@ fun ProgressosDialog(
                                 key = { it.name }
                             ) { cat ->
                                 if (state.modoSupers && cat == Categoria.PODER) return@items
-                                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioPathfinderAtivo) return@items
+                                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO || cat == Categoria.VANTAGEM_DE_CLASSE) && !state.compendioPathfinderAtivo) return@items
                                 if (cat == Categoria.ATORMENTADO && !state.compendioDeadlandsAtivo) return@items
                                 if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@items
                                 if (cat == Categoria.SUPER && !state.modoSupers) return@items

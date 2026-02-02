@@ -23,6 +23,7 @@ enum class Categoria {
     @SerialName("MONSTRUOSAS")   MONSTRUOSAS,
     @SerialName("CHI")           CHI,
     @SerialName("CLASSE")        CLASSE,
+    @SerialName("VANTAGEM_DE_CLASSE") VANTAGEM_DE_CLASSE,
     @SerialName("PRESTIGIO")     PRESTIGIO,
     @SerialName("TROPO")         TROPO
 }
