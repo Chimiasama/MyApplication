@@ -20,7 +20,7 @@
     "requisitos": {
       "estagio": "Novato"
     },
-    "subtipoArcano": "CLERIGO_PF",
+    "subtipoArcano": "MILAGRES_PF",
     "descricao": "Clérigos usam Fé como perícia arcana e devem escolher um Domínio (veja página 51). Quando escolhem esta Vantagem, ganham 10 Pontos de Poder, três poderes a sua escolha dentro dos poderes disponíveis de seu Domínio. Também recebem Voto (Maior): servir a sua divindade.",
     "observacoes": "Voto (Maior)",
     "poderes_permitidos": []
@@ -33,6 +33,7 @@
     "requisitos": {
       "estagio": "Novato"
     },
+    "subtipoArcano": "MAGO_PF",
     "tags": [
       "INTERFERENCIA_ARMADURA_LEVE"
     ],
@@ -385,7 +386,40 @@
       }
     },
     "limite_compra": "uma_vez",
-    "descricao": "• ANTECEDENTE ARCANO (Bardo): Personagens da classe bardo usam Performance como perícia arcana. Têm 3 poderes iniciais e 10 Pontos de Poder. • INTERFERÊNCIA DA ARMADURA (Leve): Armaduras grandes interferem na graça e destreza de bardos. Subtraem 4 de suas rolagens de Performance, de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos médios ou pesados. • LÍNGUA AFIADA: Bardos podem usar Performance como Provocar em Desafios. Também podem ignorar o conselho de Repetição presente nos Desafios (veja a página 141), desde que possam recitar versos, estrofes ou músicas diferentes. Bardos também podem usar Performance no lugar de Provocar para atender aos Requisitos de Vantagem."
+    "subtipoArcano": "BARDO_PF",
+    "tags": [
+      "INTERFERENCIA_ARMADURA_LEVE"
+    ],
+    "descricao": "• ANTECEDENTE ARCANO (Bardo): Personagens da classe bardo usam Performance como perícia arcana. Têm 3 poderes iniciais e 10 Pontos de Poder. • INTERFERÊNCIA DA ARMADURA (Leve): Armaduras grandes interferem na graça e destreza de bardos. Subtraem 4 de suas rolagens de Performance, de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos médios ou pesados. • LÍNGUA AFIADA: Bardos podem usar Performance como Provocar em Desafios. Também podem ignorar o conselho de Repetição presente nos Desafios (veja a página 141), desde que possam recitar versos, estrofes ou músicas diferentes. Bardos também podem usar Performance no lugar de Provocar para atender aos Requisitos de Vantagem.",
+    "poderes_permitidos": [
+      "adivinhacao_pf",
+      "conjurar_aliado_pf",
+      "amigo_das_feras_pf",
+      "atordoar_pf",
+      "aumentar_reduzir_caracteristica_pf",
+      "banir_pf",
+      "confusao_pf",
+      "conjurar_item_pf",
+      "cura_pf",
+      "deflexao_pf",
+      "detectar_ocultar_arcano_pf",
+      "dissipar_pf",
+      "drenar_pontos_de_poder_pf",
+      "dadiva_do_guerreiro_pf",
+      "elo_mental_pf",
+      "empatia_pf",
+      "falar_idioma_pf",
+      "ilusao_pf",
+      "leitura_mental_pf",
+      "leitura_de_objeto_pf",
+      "fantoche_pf",
+      "medo_pf",
+      "morosidade_velocidade_pf",
+      "protecao_arcana_pf",
+      "som_silencio_pf",
+      "sono_pf",
+      "teleporte_pf"
+    ]
   },
   {
     "id": "inspirar_heroismo",
@@ -438,7 +472,25 @@
       }
     },
     "limite_compra": "uma_vez",
-    "descricao": "• ANTECEDENTE ARCANO (Clérigo): Clérigos usam Fé como perícia arcana. Ao escolher esta Vantagem, ganham 10 Pontos de Poder e devem escolher um Domínio referente à divindade que servem da lista da página 50. • CANALIZAR ENERGIA: Clérigos podem conjurar o poder cura à uma Distância igual a seu dado de Espírito em vez de Toque. Seu poder cura também têm o Modificador Receptores Adicionais, permitindo que curem aliados próximos ao custo de um Ponto de Poder extra para cada. • VOTO (Maior): Clérigos têm o voto de servir a sua divindade. Aqueles que desejam usar energia de fontes divinas devem seguir os princípios de seu Domínio. Se violar a confiança de sua divindade (decisão do Mestre) o clérigo subtrai 2 de suas rolagens de Fé por uma semana. Atos de verdadeiro sacrilégio podem retirar seus poderes inteiramente até que busquem redenção de alguma forma."
+    "subtipoArcano": "CLERIGO_PF",
+    "descricao": "• ANTECEDENTE ARCANO (Clérigo): Clérigos usam Fé como perícia arcana. Ao escolher esta Vantagem, ganham 10 Pontos de Poder e devem escolher um Domínio referente à divindade que servem da lista da página 50. • CANALIZAR ENERGIA: Clérigos podem conjurar o poder cura à uma Distância igual a seu dado de Espírito em vez de Toque. Seu poder cura também têm o Modificador Receptores Adicionais, permitindo que curem aliados próximos ao custo de um Ponto de Poder extra para cada. • VOTO (Maior): Clérigos têm o voto de servir a sua divindade. Aqueles que desejam usar energia de fontes divinas devem seguir os princípios de seu Domínio. Se violar a confiança de sua divindade (decisão do Mestre) o clérigo subtrai 2 de suas rolagens de Fé por uma semana. Atos de verdadeiro sacrilégio podem retirar seus poderes inteiramente até que busquem redenção de alguma forma.",
+    "poderes_permitidos": [
+      "adivinhacao_pf",
+      "aumentar_reduzir_caracteristica_pf",
+      "banir_pf",
+      "conjurar_item_pf",
+      "cura_pf",
+      "dissipar_pf",
+      "empatia_pf",
+      "ferir_pf",
+      "iluminar_obscurecer_pf",
+      "ressurreicao_pf",
+      "santuario_pf",
+      "ajuda_pf",
+      "som_silencio_pf",
+      "sono_pf",
+      "visao_sombria_pf"
+    ]
   },
   {
     "id": "destruir_mortos_vivos",
@@ -491,7 +543,24 @@
       }
     },
     "limite_compra": "uma_vez",
-    "descricao": "• ANTECEDENTES ARCANO (Druida): Druidas usam Fé como perícia arcana. Recebe 3 poderes iniciais e 10 Pontos de Poder. • ELO COM A NATUREZA: Druidas podem sintonizar com a natureza ou com um companheiro animal especial. Escolha uma destas habilidades: Sintonizado (recebe uma rerrolagem gratuita sempre que falhar em um teste de Fé para ativar uma magia) ou Senhor das Feras (recebe a Vantagem Senhor das Feras, ganhando um companheiro animal Carta Selvagem). • IDIOMA SECRETO: Todos os druidas sabem um idioma secreto conhecido como Druídico. • INTERFERÊNCIA DA ARMADURA (leve): Subtraem 4 de suas rolagens de Fé, Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos médios ou pesados. Druidas não podem usar armaduras de metal. • SENTIDO NATURAL: Sobrevivência é ligada a seu Espírito em vez de Astúcia. • TRAVESSIA DE FLORESTA: Ignoram as penalidades de Terreno Acidentado. • VOTO (Maior): Druidas tem um voto maior de proteger a natureza."
+    "subtipoArcano": "DRUIDA_PF",
+    "tags": [
+      "INTERFERENCIA_ARMADURA_LEVE"
+    ],
+    "descricao": "• ANTECEDENTES ARCANO (Druida): Druidas usam Fé como perícia arcana. Recebe 3 poderes iniciais e 10 Pontos de Poder. • ELO COM A NATUREZA: Druidas podem sintonizar com a natureza ou com um companheiro animal especial. Escolha uma destas habilidades: Sintonizado (recebe uma rerrolagem gratuita sempre que falhar em um teste de Fé para ativar uma magia) ou Senhor das Feras (recebe a Vantagem Senhor das Feras, ganhando um companheiro animal Carta Selvagem). • IDIOMA SECRETO: Todos os druidas sabem um idioma secreto conhecido como Druídico. • INTERFERÊNCIA DA ARMADURA (leve): Subtraem 4 de suas rolagens de Fé, Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos médios ou pesados. Druidas não podem usar armaduras de metal. • SENTIDO NATURAL: Sobrevivência é ligada a seu Espírito em vez de Astúcia. • TRAVESSIA DE FLORESTA: Ignoram as penalidades de Terreno Acidentado. • VOTO (Maior): Druidas tem um voto maior de proteger a natureza.",
+    "poderes_permitidos": [
+      "amigo_das_feras_pf",
+      "andar_nas_paredes_pf",
+      "barreira_pf",
+      "conjurar_aliado_pf",
+      "enredar_pf",
+      "explosao_pf",
+      "manipulacao_elemental_pf",
+      "mudanca_de_forma_pf",
+      "polimorfia_perniciosa_pf",
+      "protecao_pf",
+      "protecao_ambiental_pf"
+    ]
   },
   {
     "id": "forma_selvagem",
@@ -542,7 +611,73 @@
       }
     },
     "limite_compra": "uma_vez",
-    "descricao": "• ANTECEDENTE ARCANO (Feiticeiro): Personagens de classe Feiticeiro usam Conjurar como sua perícia arcana, mas ela é ligada à Espírito em vez de Astúcia. Ganha 15 Pontos de Poder e dois poderes iniciais. • INTERFERÊNCIA DE ARMADURA (qualquer uma): Feitiçaria requer movimentos somáticos rápidos, intrincados e desimpedidos. Subtraem 4 de suas rolagens de Conjurar, de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos leves, médios ou pesados. • LINHAGEM: Personagens da classe Feiticeiro devem escolher uma linhagem (veja a página 58). Abaixo da descrição de cada Linhagem há também habilidades especiais adicionais recebidas ao escolher a Vantagem Linhagem Avançada."
+    "subtipoArcano": "FEITICEIRO_PF",
+    "tags": [
+      "INTERFERENCIA_ARMADURA_QUALQUER"
+    ],
+    "descricao": "• ANTECEDENTE ARCANO (Feiticeiro): Personagens de classe Feiticeiro usam Conjurar como sua perícia arcana, mas ela é ligada à Espírito em vez de Astúcia. Ganha 15 Pontos de Poder e dois poderes iniciais. • INTERFERÊNCIA DE ARMADURA (qualquer uma): Feitiçaria requer movimentos somáticos rápidos, intrincados e desimpedidos. Subtraem 4 de suas rolagens de Conjurar, de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos leves, médios ou pesados. • LINHAGEM: Personagens da classe Feiticeiro devem escolher uma linhagem (veja a página 58). Abaixo da descrição de cada Linhagem há também habilidades especiais adicionais recebidas ao escolher a Vantagem Linhagem Avançada.",
+    "poderes_permitidos": [
+      "adivinhacao_pf",
+      "amigo_das_feras_pf",
+      "ancora_planar_pf",
+      "andar_nas_paredes_pf",
+      "atordoar_pf",
+      "aumentar_reduzir_caracteristica_pf",
+      "banir_pf",
+      "barreira_pf",
+      "campo_de_dano_pf",
+      "cavar_pf",
+      "cegar_pf",
+      "confusao_pf",
+      "conjurar_item_pf",
+      "conjurar_aliado_pf",
+      "crescimento_encolhimento_pf",
+      "deflexao_pf",
+      "desejo_pf",
+      "detectar_ocultar_arcano_pf",
+      "devastacao_pf",
+      "disfarce_pf",
+      "dissipar_pf",
+      "drenar_pontos_de_poder_pf",
+      "dadiva_do_guerreiro_pf",
+      "elo_mental_pf",
+      "empatia_pf",
+      "enredar_pf",
+      "explosao_pf",
+      "falar_idioma_pf",
+      "ferir_pf",
+      "iluminar_obscurecer_pf",
+      "ilusao_pf",
+      "intangibilidade_pf",
+      "invisibilidade_pf",
+      "leitura_mental_pf",
+      "leitura_de_objeto_pf",
+      "limpeza_mental_pf",
+      "localizar_pf",
+      "maldicao_pf",
+      "manipulacao_elemental_pf",
+      "fantoche_pf",
+      "medo_pf",
+      "morosidade_velocidade_pf",
+      "mudanca_de_forma_pf",
+      "parar_o_tempo_pf",
+      "polimorfia_perniciosa_pf",
+      "protecao_pf",
+      "protecao_ambiental_pf",
+      "protecao_arcana_pf",
+      "raio_pf",
+      "rajada_pf",
+      "som_silencio_pf",
+      "sono_pf",
+      "telecinese_pf",
+      "teleporte_pf",
+      "viagem_planar_pf",
+      "videncia_pf",
+      "visao_distante_pf",
+      "visao_sombria_pf",
+      "voar_pf",
+      "zumbi_pf"
+    ]
   },
   {
     "id": "poderes_favorecidos_feiticeiro",
@@ -704,7 +839,73 @@
       }
     },
     "limite_compra": "uma_vez",
-    "descricao": "• ANTECEDENTE ARCANO (Mago): Magos usam Conjurar como perícia arcana. Ao adquirir esta Vantagem você recebe 10 Pontos de Poder e três poderes. • ESCOLA: Especialistas devem escolher uma escola favorita e duas escolas opostas. Recebem uma rerrolagem gratuita nas rolagens de perícia arcana para conjurar magias de sua escola, mas magias de suas escolas opostas custam um Ponto de Poder adicional e sofrem uma penalidade de -2 na rolagem de perícia arcana. • ELO ARCANO: Magos possuem um intenso elo mágico com um objeto ou criatura (Familiar ou Objeto Ligado). • GRIMÓRIO: Magos devem manter grimórios. • INTERFERÊNCIA DE ARMADURA (Qualquer um): Assim como feiticeiros, magos devem fazer gestos com padrões precisos. Subtraem 4 de suas rolagens de Conjurar , de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos leves, médios ou pesados."
+    "subtipoArcano": "MAGO_PF",
+    "tags": [
+      "INTERFERENCIA_ARMADURA_QUALQUER"
+    ],
+    "descricao": "• ANTECEDENTE ARCANO (Mago): Magos usam Conjurar como perícia arcana. Ao adquirir esta Vantagem você recebe 10 Pontos de Poder e três poderes. • ESCOLA: Especialistas devem escolher uma escola favorita e duas escolas opostas. Recebem uma rerrolagem gratuita nas rolagens de perícia arcana para conjurar magias de sua escola, mas magias de suas escolas opostas custam um Ponto de Poder adicional e sofrem uma penalidade de -2 na rolagem de perícia arcana. • ELO ARCANO: Magos possuem um intenso elo mágico com um objeto ou criatura (Familiar ou Objeto Ligado). • GRIMÓRIO: Magos devem manter grimórios. • INTERFERÊNCIA DE ARMADURA (Qualquer um): Assim como feiticeiros, magos devem fazer gestos com padrões precisos. Subtraem 4 de suas rolagens de Conjurar , de Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos leves, médios ou pesados.",
+    "poderes_permitidos": [
+      "adivinhacao_pf",
+      "amigo_das_feras_pf",
+      "ancora_planar_pf",
+      "andar_nas_paredes_pf",
+      "atordoar_pf",
+      "aumentar_reduzir_caracteristica_pf",
+      "banir_pf",
+      "barreira_pf",
+      "campo_de_dano_pf",
+      "cavar_pf",
+      "cegar_pf",
+      "confusao_pf",
+      "conjurar_item_pf",
+      "conjurar_aliado_pf",
+      "crescimento_encolhimento_pf",
+      "deflexao_pf",
+      "desejo_pf",
+      "detectar_ocultar_arcano_pf",
+      "devastacao_pf",
+      "disfarce_pf",
+      "dissipar_pf",
+      "drenar_pontos_de_poder_pf",
+      "dadiva_do_guerreiro_pf",
+      "elo_mental_pf",
+      "empatia_pf",
+      "enredar_pf",
+      "explosao_pf",
+      "falar_idioma_pf",
+      "ferir_pf",
+      "iluminar_obscurecer_pf",
+      "ilusao_pf",
+      "intangibilidade_pf",
+      "invisibilidade_pf",
+      "leitura_mental_pf",
+      "leitura_de_objeto_pf",
+      "limpeza_mental_pf",
+      "localizar_pf",
+      "maldicao_pf",
+      "manipulacao_elemental_pf",
+      "fantoche_pf",
+      "medo_pf",
+      "morosidade_velocidade_pf",
+      "mudanca_de_forma_pf",
+      "parar_o_tempo_pf",
+      "polimorfia_perniciosa_pf",
+      "protecao_pf",
+      "protecao_ambiental_pf",
+      "protecao_arcana_pf",
+      "raio_pf",
+      "rajada_pf",
+      "som_silencio_pf",
+      "sono_pf",
+      "telecinese_pf",
+      "teleporte_pf",
+      "viagem_planar_pf",
+      "videncia_pf",
+      "visao_distante_pf",
+      "visao_sombria_pf",
+      "voar_pf",
+      "zumbi_pf"
+    ]
   },
   {
     "id": "poderes_favorecidos_mago",

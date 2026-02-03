@@ -223,26 +223,41 @@ fun PoderesSection(
                 }
             }
 
-            // Pathfinder Cleric Domain Filtering
-            if (state.compendioPathfinderAtivo && arcKey == "CLERIGO_PF") {
+            // Pathfinder Cleric/Miracles Domain Filtering
+            if (state.compendioPathfinderAtivo && (arcKey == "CLERIGO_PF" || arcKey == "MILAGRES_PF")) {
                 val domName = state.dominioClerigoPathfinderSelecionado
                 if (domName != null) {
                     val dom = dominiosPathfinderCache.find { it.nome == domName }
                     if (dom != null) {
-                        sourceList = sourceList.filter { it.id in dom.poderes }
-                    } else {
+                        // For CLERIGO_PF (Class): Allow Domain Powers OR General List (handled by permittedSet)
+                        // For MILAGRES_PF (AB): Allow ONLY Domain Powers
+                        if (arcKey == "MILAGRES_PF") {
+                            sourceList = sourceList.filter { it.id in dom.poderes }
+                        } else {
+                            // CLERIGO_PF: Keep full list for now, filter in step 1 using permitedSet + Domain
+                        }
+                    } else if (arcKey == "MILAGRES_PF") {
                         sourceList = emptyList()
                     }
-                } else {
+                } else if (arcKey == "MILAGRES_PF") {
                     sourceList = emptyList()
                 }
             }
 
             sourceList.filter { power ->
                 // 1. Check permissions/blocks
-                val isAllowed = if ((state.compendioFantasiaAtivo && arcKey == "CLERIGO") ||
-                    (state.compendioPathfinderAtivo && arcKey == "CLERIGO_PF")) {
-                    true // Already filtered by domain logic above
+                val isAllowed = if (state.compendioFantasiaAtivo && arcKey == "CLERIGO") {
+                    true // Already filtered by domain logic above (Fantasy Cleric)
+                } else if (state.compendioPathfinderAtivo && arcKey == "CLERIGO_PF") {
+                    // Class Cleric: Allowed if in Permitted Set OR in Domain
+                    val inPermitted = permittedSet?.contains(power.id) == true
+                    val inDomain = if (state.dominioClerigoPathfinderSelecionado != null) {
+                        val dom = dominiosPathfinderCache.find { it.nome == state.dominioClerigoPathfinderSelecionado }
+                        dom?.poderes?.contains(power.id) == true
+                    } else false
+                    inPermitted || inDomain
+                } else if (state.compendioPathfinderAtivo && arcKey == "MILAGRES_PF") {
+                    true // Already filtered by domain logic above (Miracles AB)
                 } else if (permittedSet != null) {
                     power.id in permittedSet
                 } else if (blockedSet.isNotEmpty()) {
@@ -370,8 +385,8 @@ fun PoderesSection(
                 }
             }
 
-            // Domain Selection UI for Cleric (Pathfinder)
-            if (state.compendioPathfinderAtivo && arcKey == "CLERIGO_PF") {
+            // Domain Selection UI for Cleric/Miracles (Pathfinder)
+            if (state.compendioPathfinderAtivo && (arcKey == "CLERIGO_PF" || arcKey == "MILAGRES_PF")) {
                 item(key = "domain_selector_pf_$arcKey") {
                     var expandedDomain by remember { mutableStateOf(false) }
 

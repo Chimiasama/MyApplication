@@ -1,1 +1,228 @@
-[]
+[
+  {
+    "nome": "Civilização",
+    "poderes": [
+      "barreira_pf",
+      "conjurar_aliado_pf",
+      "disfarce_pf",
+      "dadiva_do_guerreiro_pf",
+      "elo_mental_pf",
+      "falar_idioma_pf",
+      "localizar_pf",
+      "fantoche_pf",
+      "protecao_pf",
+      "protecao_ambiental_pf"
+    ]
+  },
+  {
+    "nome": "Conhecimento",
+    "poderes": [
+      "detectar_ocultar_arcano_pf",
+      "drenar_pontos_de_poder_pf",
+      "elo_mental_pf",
+      "leitura_de_objeto_pf",
+      "leitura_mental_pf",
+      "localizar_pf",
+      "protecao_pf",
+      "protecao_arcana_pf",
+      "videncia_pf"
+    ]
+  },
+  {
+    "nome": "Destruição",
+    "poderes": [
+      "atordoar_pf",
+      "campo_de_dano_pf",
+      "confusao_pf",
+      "conjurar_aliado_pf",
+      "deflexao_pf",
+      "drenar_pontos_de_poder_pf",
+      "maldicao_pf",
+      "medo_pf",
+      "raio_pf",
+      "zumbi_pf"
+    ]
+  },
+  {
+    "nome": "Elemental",
+    "poderes": [
+      "barreira_pf",
+      "campo_de_dano_pf",
+      "cavar_pf",
+      "deflexao_pf",
+      "devastacao_pf",
+      "explosao_pf",
+      "intangibilidade_pf",
+      "manipulacao_elemental_pf",
+      "protecao_ambiental_pf",
+      "rajada_pf"
+    ]
+  },
+  {
+    "nome": "Enganação",
+    "poderes": [
+      "cegar_pf",
+      "confusao_pf",
+      "deflexao_pf",
+      "detectar_ocultar_arcano_pf",
+      "disfarce_pf",
+      "falar_idioma_pf",
+      "ilusao_pf",
+      "invisibilidade_pf",
+      "fantoche_pf",
+      "parar_o_tempo_pf"
+    ]
+  },
+  {
+    "nome": "Força",
+    "poderes": [
+      "andar_nas_paredes_pf",
+      "atordoar_pf",
+      "cavar_pf",
+      "crescimento_encolhimento_pf",
+      "devastacao_pf",
+      "drenar_pontos_de_poder_pf",
+      "dadiva_do_guerreiro_pf",
+      "morosidade_velocidade_pf",
+      "protecao_pf",
+      "protecao_arcana_pf"
+    ]
+  },
+  {
+    "nome": "Glória",
+    "poderes": [
+      "amigo_das_feras_pf",
+      "barreira_pf",
+      "campo_de_dano_pf",
+      "conjurar_aliado_pf",
+      "crescimento_encolhimento_pf",
+      "deflexao_pf",
+      "explosao_pf",
+      "morosidade_velocidade_pf",
+      "protecao_arcana_pf",
+      "voar_pf"
+    ]
+  },
+  {
+    "nome": "Guerra",
+    "poderes": [
+      "atordoar_pf",
+      "barreira_pf",
+      "cegar_pf",
+      "confusao_pf",
+      "conjurar_aliado_pf",
+      "deflexao_pf",
+      "dadiva_do_guerreiro_pf",
+      "medo_pf",
+      "rajada_pf",
+      "morosidade_velocidade_pf"
+    ]
+  },
+  {
+    "nome": "Morte",
+    "poderes": [
+      "ancora_planar_pf",
+      "campo_de_dano_pf",
+      "cegar_pf",
+      "drenar_pontos_de_poder_pf",
+      "limpeza_mental_pf",
+      "maldicao_pf",
+      "medo_pf",
+      "protecao_pf",
+      "raio_pf",
+      "zumbi_pf"
+    ]
+  },
+  {
+    "nome": "Magia",
+    "poderes": [
+      "ancora_planar_pf",
+      "conjurar_aliado_pf",
+      "detectar_ocultar_arcano_pf",
+      "devastacao_pf",
+      "manipulacao_elemental_pf",
+      "protecao_pf",
+      "protecao_ambiental_pf",
+      "rajada_pf",
+      "viagem_planar_pf",
+      "videncia_pf"
+    ]
+  },
+  {
+    "nome": "Natureza",
+    "poderes": [
+      "amigo_das_feras_pf",
+      "andar_nas_paredes_pf",
+      "barreira_pf",
+      "conjurar_aliado_pf",
+      "enredar_pf",
+      "explosao_pf",
+      "manipulacao_elemental_pf",
+      "mudanca_de_forma_pf",
+      "polimorfia_perniciosa_pf",
+      "protecao_pf",
+      "protecao_ambiental_pf"
+    ]
+  },
+  {
+    "nome": "Proteção",
+    "poderes": [
+      "barreira_pf",
+      "conjurar_aliado_pf",
+      "deflexao_pf",
+      "detectar_ocultar_arcano_pf",
+      "intangibilidade_pf",
+      "invisibilidade_pf",
+      "fantoche_pf",
+      "protecao_pf",
+      "protecao_ambiental_pf",
+      "protecao_arcana_pf"
+    ]
+  },
+  {
+    "nome": "Sol",
+    "poderes": [
+      "atordoar_pf",
+      "campo_de_dano_pf",
+      "cegar_pf",
+      "confusao_pf",
+      "drenar_pontos_de_poder_pf",
+      "ilusao_pf",
+      "protecao_pf",
+      "protecao_ambiental_pf",
+      "raio_pf",
+      "voar_pf"
+    ]
+  },
+  {
+    "id": "Sorte",
+    "nome": "Sorte",
+    "poderes": [
+      "cegar_pf",
+      "confusao_pf",
+      "deflexao_pf",
+      "disfarce_pf",
+      "drenar_pontos_de_poder_pf",
+      "ilusao_pf",
+      "leitura_de_objeto_pf",
+      "leitura_mental_pf",
+      "maldicao_pf",
+      "fantoche_pf"
+    ]
+  },
+  {
+    "nome": "Viagem",
+    "poderes": [
+      "deflexao_pf",
+      "falar_idioma_pf",
+      "intangibilidade_pf",
+      "localizar_pf",
+      "morosidade_velocidade_pf",
+      "protecao_ambiental_pf",
+      "teleporte_pf",
+      "viagem_planar_pf",
+      "videncia_pf",
+      "voar_pf"
+    ]
+  }
+]
