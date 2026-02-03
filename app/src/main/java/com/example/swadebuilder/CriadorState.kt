@@ -76,6 +76,7 @@ class CriadorState {
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
     var dominioClerigoSelecionado by mutableStateOf<String?>(null)
+    var dominioClerigoPathfinderSelecionado by mutableStateOf<String?>(null)
 
     fun getMonstroSelecionado(): com.example.swadebuilder.model.MonstroTemplate? {
         if (!modoMonstroAtivo || tipoMonstroSelecionado == null) return null
@@ -3876,7 +3877,8 @@ class CriadorState {
                 portraitAlignment = portraitAlignment,
                 signoAdgSelecionado = signoAdgSelecionado,
                 gnomoPericiaEscolhida = gnomoPericiaEscolhida,
-                dominioClerigoSelecionado = dominioClerigoSelecionado
+                dominioClerigoSelecionado = dominioClerigoSelecionado,
+                dominioClerigoPathfinderSelecionado = dominioClerigoPathfinderSelecionado
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -3980,6 +3982,7 @@ class CriadorState {
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
         gnomoPericiaEscolhida = snapshot.selecoes.gnomoPericiaEscolhida
         dominioClerigoSelecionado = snapshot.selecoes.dominioClerigoSelecionado
+        dominioClerigoPathfinderSelecionado = snapshot.selecoes.dominioClerigoPathfinderSelecionado
 
         dinheiro = snapshot.recursos.dinheiro
         famaManual = snapshot.recursos.famaManual

@@ -13,17 +13,17 @@
     "descricao": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade para Mão Inábil (veja página 137) é ignorada. Se estiverem empunhando uma arma em cada mão, personagens com esta Vantagem podem acumular os bônus de Aparar de ambas as armas (se houverem bônus)."
   },
   {
-    "id": "antecedente_arcano",
-    "nome": "ANTECEDENTE ARCANO",
+    "id": "antecedente_arcano_milagres_pf",
+    "nome": "ANTECEDENTE ARCANO (Milagres)",
     "origem": "PATHFINDER",
     "categoria": "ANTECEDENTE",
     "requisitos": {
       "estagio": "Novato"
     },
-    "choiceOptions": [
-      "Milagres"
-    ],
-    "descricao": "Exposição à energias estranhas, estudos em uma escola mágica ou dons de entidades divinas ou espirituais às vezes concedem às personagens seus próprios poderes e habilidades."
+    "subtipoArcano": "CLERIGO_PF",
+    "descricao": "Clérigos usam Fé como perícia arcana e devem escolher um Domínio (veja página 51). Quando escolhem esta Vantagem, ganham 10 Pontos de Poder, três poderes a sua escolha dentro dos poderes disponíveis de seu Domínio. Também recebem Voto (Maior): servir a sua divindade.",
+    "observacoes": "Voto (Maior)",
+    "poderes_permitidos": []
   },
   {
     "id": "antecedente_arcano_magia_pf",

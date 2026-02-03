@@ -150,6 +150,11 @@ fun PoderesSection(
         value = list
     }
 
+    val dominiosPathfinderCache: List<DominioJson> by androidx.compose.runtime.produceState(initialValue = emptyList()) {
+        val list = runCatching { context.loadJsonAsset<List<DominioJson>>("pathfinder_dominios.json") }.getOrElse { emptyList() }
+        value = list
+    }
+
     val allPoderes = remember(powerCache) {
         powerCache.values.flatten().distinctBy { it.id }
     }
@@ -181,7 +186,7 @@ fun PoderesSection(
     }
 
     // Pre-calculate powers for each displayed key to avoid doing it inside LazyColumn (and avoid @Composable error)
-    val powersByArcKey = remember(powerCache, searchQuery, selectedRank, displayKeys, state.vantagensSelecionadas, state.dominioClerigoSelecionado, dominiosCache) {
+    val powersByArcKey = remember(powerCache, searchQuery, selectedRank, displayKeys, state.vantagensSelecionadas, state.dominioClerigoSelecionado, state.dominioClerigoPathfinderSelecionado, dominiosCache, dominiosPathfinderCache) {
         displayKeys.associateWith { arcKeyRaw ->
             val arcKey = arcKeyRaw.normAAKey()
             // Determine origin
@@ -218,9 +223,25 @@ fun PoderesSection(
                 }
             }
 
+            // Pathfinder Cleric Domain Filtering
+            if (state.compendioPathfinderAtivo && arcKey == "CLERIGO_PF") {
+                val domName = state.dominioClerigoPathfinderSelecionado
+                if (domName != null) {
+                    val dom = dominiosPathfinderCache.find { it.nome == domName }
+                    if (dom != null) {
+                        sourceList = sourceList.filter { it.id in dom.poderes }
+                    } else {
+                        sourceList = emptyList()
+                    }
+                } else {
+                    sourceList = emptyList()
+                }
+            }
+
             sourceList.filter { power ->
                 // 1. Check permissions/blocks
-                val isAllowed = if (state.compendioFantasiaAtivo && arcKey == "CLERIGO") {
+                val isAllowed = if ((state.compendioFantasiaAtivo && arcKey == "CLERIGO") ||
+                    (state.compendioPathfinderAtivo && arcKey == "CLERIGO_PF")) {
                     true // Already filtered by domain logic above
                 } else if (permittedSet != null) {
                     power.id in permittedSet
@@ -307,7 +328,7 @@ fun PoderesSection(
 
             val poderesParaEsteArcano = powersByArcKey[arcKeyRaw] ?: emptyList()
 
-            // Domain Selection UI for Cleric
+            // Domain Selection UI for Cleric (Fantasy)
             if (state.compendioFantasiaAtivo && arcKey == "CLERIGO") {
                 item(key = "domain_selector_$arcKey") {
                     var expandedDomain by remember { mutableStateOf(false) }
@@ -340,6 +361,48 @@ fun PoderesSection(
                                     text = { Text(dom.nome) },
                                     onClick = {
                                         state.dominioClerigoSelecionado = dom.nome
+                                        expandedDomain = false
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Domain Selection UI for Cleric (Pathfinder)
+            if (state.compendioPathfinderAtivo && arcKey == "CLERIGO_PF") {
+                item(key = "domain_selector_pf_$arcKey") {
+                    var expandedDomain by remember { mutableStateOf(false) }
+
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp)) {
+                        OutlinedTextField(
+                            value = state.dominioClerigoPathfinderSelecionado ?: "Selecione um Domínio",
+                            onValueChange = {},
+                            readOnly = true,
+                            label = { Text("Domínio Divino (Pathfinder)") },
+                            trailingIcon = { Icon(Icons.Filled.ArrowDropDown, "Expandir") },
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            enabled = !locked
+                        )
+                        Box(
+                            Modifier
+                                .matchParentSize()
+                                .clickable(enabled = !locked) { expandedDomain = true }
+                        )
+
+                        DropdownMenu(
+                            expanded = expandedDomain,
+                            onDismissRequest = { expandedDomain = false }
+                        ) {
+                            dominiosPathfinderCache.forEach { dom ->
+                                DropdownMenuItem(
+                                    text = { Text(dom.nome) },
+                                    onClick = {
+                                        state.dominioClerigoPathfinderSelecionado = dom.nome
                                         expandedDomain = false
                                     }
                                 )
