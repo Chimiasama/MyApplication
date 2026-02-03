@@ -2,6 +2,7 @@ package com.example.swadebuilder.util
 
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
+import kotlin.math.roundToInt
 
 object MoneyUtils {
     // Helper to parse costs into a single integer base unit.
@@ -18,23 +19,33 @@ object MoneyUtils {
         if (isPathfinder) {
             val parts = content.split(" ")
             if (parts.isNotEmpty()) {
-                // Remove thousand separators before parsing
-                val value = parts[0].replace(".", "").toIntOrNull() ?: return 0
+                // Handle "5,5 po" -> "5.5"
+                // Replace dot thousands with nothing? Actually standard format for currency might use dots for thousands.
+                // But for decimals, comma is common in BR. "5.500" vs "5,5".
+                // If we assume standard "5.5" or "5,5" is decimal...
+                // Safest is to replace comma with dot for parsing.
+                // But if dot is thousand separator... "1.000" -> 1000.
+                // Simple heuristic: remove dots (thousands), replace comma with dot (decimal).
+
+                val numberString = parts[0].replace(".", "").replace(",", ".")
+                val value = numberString.toDoubleOrNull() ?: return 0
+
                 if (parts.size > 1) {
                     return when (parts[1].lowercase()) {
-                        "pl" -> value * 1000
-                        "po" -> value * 100
-                        "pp" -> value * 10
-                        "pc" -> value
-                        else -> value * 100 // Assume gold (po -> pc) if unit is weird
+                        "pl" -> (value * 1000).roundToInt()
+                        "po" -> (value * 100).roundToInt()
+                        "pp" -> (value * 10).roundToInt()
+                        "pc" -> value.roundToInt()
+                        else -> (value * 100).roundToInt() // Assume gold (po -> pc) if unit is weird
                     }
                 }
-                return value * 100 // Assume gold (po -> pc) if no unit
+                return (value * 100).roundToInt() // Assume gold (po -> pc) if no unit
             }
             return 0
         } else {
-            // Standard system just uses integers
-            return content.toIntOrNull() ?: 0
+            // Standard system just uses integers usually, but let's support decimal just in case
+            val numberString = content.replace(".", "").replace(",", ".")
+            return numberString.toDoubleOrNull()?.roundToInt() ?: 0
         }
     }
 
