@@ -76,7 +76,8 @@ data class SnapshotRecursos(
     val cpSpStack: List<Int>,
     val cpPvStack: List<Int>,
     val cpRecursosStack: List<Int>,
-    val riquezaModifier: Int = 0
+    val riquezaModifier: Int = 0,
+    val carteiraPathfinder: Map<String, Int> = emptyMap()
 )
 
 @Serializable
