@@ -377,9 +377,17 @@ fun EquipamentoSection(
 
 
             // 2. Header (Money)
+            val moneyDisplayText = if (usaRiqueza) {
+                "Riqueza: d$dadoRiqueza"
+            } else if (compendioPathfinderAtivo) {
+                "Dinheiro: ${state.carteiraPathfinder["PL"] ?: 0} pl  ${state.carteiraPathfinder["PO"] ?: 0} po  ${state.carteiraPathfinder["PP"] ?: 0} pp  ${state.carteiraPathfinder["PC"] ?: 0} pc"
+            } else {
+                "Dinheiro: ${MoneyUtils.formatCurrency(dinheiro, false)}"
+            }
+
             SectionHeader(
                 onHelpClick = null,
-                centerText = if (usaRiqueza) "Riqueza: d$dadoRiqueza" else "Dinheiro: ${MoneyUtils.formatCurrency(dinheiro, compendioPathfinderAtivo)}",
+                centerText = moneyDisplayText,
                 onCenterClick = null,
                 onListaCompletaClick = null,
                 listaCompletaText = ""
@@ -781,10 +789,11 @@ fun EquipamentoSection(
             if (showMoneyDialog) {
                 if (compendioPathfinderAtivo) {
                     // Pathfinder Multi-Currency Dialog
-                    var plInput by rememberSaveable { mutableStateOf(((dinheiro / 1000).toString())) }
-                    var poInput by rememberSaveable { mutableStateOf((((dinheiro % 1000) / 100).toString())) }
-                    var ppInput by rememberSaveable { mutableStateOf((((dinheiro % 100) / 10).toString())) }
-                    var pcInput by rememberSaveable { mutableStateOf(((dinheiro % 10).toString())) }
+                    var plInput by remember { mutableStateOf((state.carteiraPathfinder["PL"] ?: 0).toString()) }
+                    var poInput by remember { mutableStateOf((state.carteiraPathfinder["PO"] ?: 0).toString()) }
+                    var ppInput by remember { mutableStateOf((state.carteiraPathfinder["PP"] ?: 0).toString()) }
+                    var pcInput by remember { mutableStateOf((state.carteiraPathfinder["PC"] ?: 0).toString()) }
+                    var otimizar by remember { mutableStateOf(false) }
 
                     AlertDialog(
                         onDismissRequest = { showMoneyDialog = false },
@@ -823,16 +832,31 @@ fun EquipamentoSection(
                                         modifier = Modifier.weight(1f)
                                     )
                                 }
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxWidth().padding(top = 4.dp)
+                                ) {
+                                    Checkbox(
+                                        checked = otimizar,
+                                        onCheckedChange = { otimizar = it }
+                                    )
+                                    Spacer(Modifier.size(8.dp))
+                                    Text("Otimizar moedas")
+                                }
                             }
                         },
                         confirmButton = {
                             TextButton(onClick = {
-                                val pl = plInput.toIntOrNull() ?: 0
-                                val po = poInput.toIntOrNull() ?: 0
-                                val pp = ppInput.toIntOrNull() ?: 0
-                                val pc = pcInput.toIntOrNull() ?: 0
-                                val total = (pl * 1000) + (po * 100) + (pp * 10) + pc
-                                onEditarDinheiro(total)
+                                state.carteiraPathfinder["PL"] = plInput.toIntOrNull() ?: 0
+                                state.carteiraPathfinder["PO"] = poInput.toIntOrNull() ?: 0
+                                state.carteiraPathfinder["PP"] = ppInput.toIntOrNull() ?: 0
+                                state.carteiraPathfinder["PC"] = pcInput.toIntOrNull() ?: 0
+
+                                if (otimizar) {
+                                    state.compactPathfinderMoney()
+                                } else {
+                                    state.updateTotalPathfinderMoney()
+                                }
                                 showMoneyDialog = false
                             }) {
                                 Text("Salvar")

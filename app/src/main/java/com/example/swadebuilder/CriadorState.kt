@@ -205,6 +205,148 @@ class CriadorState {
     var maisPontosPericias by mutableStateOf(true)
     var cartaSelvagem       by mutableStateOf(true)
     var dinheiro by mutableIntStateOf(500)
+    val carteiraPathfinder = mutableStateMapOf("PL" to 0, "PO" to 0, "PP" to 0, "PC" to 0)
+
+    fun updateTotalPathfinderMoney() {
+        if (!compendioPathfinderAtivo) return
+        val pl = carteiraPathfinder["PL"] ?: 0
+        val po = carteiraPathfinder["PO"] ?: 0
+        val pp = carteiraPathfinder["PP"] ?: 0
+        val pc = carteiraPathfinder["PC"] ?: 0
+        dinheiro = (pl * 1000) + (po * 100) + (pp * 10) + pc
+    }
+
+    fun addPathfinderMoney(amountInCopper: Int) {
+        if (amountInCopper <= 0) return
+
+        // Strategy: Maximize PO (Gold), avoid PL (Platinum).
+        // 1 PO = 100 CP. 1 PP = 10 CP.
+
+        var remaining = amountInCopper
+
+        // Add PO
+        val poToAdd = remaining / 100
+        remaining %= 100
+
+        // Add PP
+        val ppToAdd = remaining / 10
+        remaining %= 10
+
+        // Add PC
+        val pcToAdd = remaining
+
+        if (poToAdd > 0) carteiraPathfinder["PO"] = (carteiraPathfinder["PO"] ?: 0) + poToAdd
+        if (ppToAdd > 0) carteiraPathfinder["PP"] = (carteiraPathfinder["PP"] ?: 0) + ppToAdd
+        if (pcToAdd > 0) carteiraPathfinder["PC"] = (carteiraPathfinder["PC"] ?: 0) + pcToAdd
+
+        updateTotalPathfinderMoney()
+    }
+
+    fun spendPathfinderMoney(amountInCopper: Int): Boolean {
+        if (amountInCopper <= 0) return true // No cost
+        updateTotalPathfinderMoney() // Ensure sync
+        if (dinheiro < amountInCopper) return false
+
+        var costRemaining = amountInCopper
+
+        // 1. Spend PC
+        val currentPC = carteiraPathfinder["PC"] ?: 0
+        if (currentPC >= costRemaining) {
+            carteiraPathfinder["PC"] = currentPC - costRemaining
+            updateTotalPathfinderMoney()
+            return true
+        } else {
+            // Spend all PC
+            carteiraPathfinder["PC"] = 0
+            costRemaining -= currentPC
+        }
+
+        // 2. Spend PP (1 PP = 10 PC)
+        // Need X CP.
+        // 1 PP covers 10 CP.
+        // We need ceil(costRemaining / 10.0) PPs.
+        val neededPP = (costRemaining + 9) / 10
+        val currentPP = carteiraPathfinder["PP"] ?: 0
+
+        if (currentPP >= neededPP) {
+            carteiraPathfinder["PP"] = currentPP - neededPP
+            val change = (neededPP * 10) - costRemaining
+            if (change > 0) {
+                carteiraPathfinder["PC"] = (carteiraPathfinder["PC"] ?: 0) + change
+            }
+            updateTotalPathfinderMoney()
+            return true
+        } else {
+            // Spend all PP
+            carteiraPathfinder["PP"] = 0
+            costRemaining -= (currentPP * 10)
+        }
+
+        // 3. Spend PO (1 PO = 100 PC)
+        val neededPO = (costRemaining + 99) / 100
+        val currentPO = carteiraPathfinder["PO"] ?: 0
+
+        if (currentPO >= neededPO) {
+            carteiraPathfinder["PO"] = currentPO - neededPO
+            val changeTotal = (neededPO * 100) - costRemaining
+            // Change needs to be broken down into PP and PC
+            val changePP = changeTotal / 10
+            val changePC = changeTotal % 10
+
+            if (changePP > 0) carteiraPathfinder["PP"] = (carteiraPathfinder["PP"] ?: 0) + changePP
+            if (changePC > 0) carteiraPathfinder["PC"] = (carteiraPathfinder["PC"] ?: 0) + changePC
+
+            updateTotalPathfinderMoney()
+            return true
+        } else {
+            // Spend all PO
+            carteiraPathfinder["PO"] = 0
+            costRemaining -= (currentPO * 100)
+        }
+
+        // 4. Spend PL (1 PL = 1000 PC)
+        val neededPL = (costRemaining + 999) / 1000
+        val currentPL = carteiraPathfinder["PL"] ?: 0
+
+        if (currentPL >= neededPL) {
+            carteiraPathfinder["PL"] = currentPL - neededPL
+            val changeTotal = (neededPL * 1000) - costRemaining
+
+            // Change breakdown (PO, PP, PC)
+            val changePO = changeTotal / 100
+            val rem1 = changeTotal % 100
+            val changePP = rem1 / 10
+            val changePC = rem1 % 10
+
+            if (changePO > 0) carteiraPathfinder["PO"] = (carteiraPathfinder["PO"] ?: 0) + changePO
+            if (changePP > 0) carteiraPathfinder["PP"] = (carteiraPathfinder["PP"] ?: 0) + changePP
+            if (changePC > 0) carteiraPathfinder["PC"] = (carteiraPathfinder["PC"] ?: 0) + changePC
+
+            updateTotalPathfinderMoney()
+            return true
+        }
+
+        // Should not reach here if dinheiro check passed
+        return false
+    }
+
+    fun compactPathfinderMoney() {
+        updateTotalPathfinderMoney()
+        var remaining = dinheiro
+
+        val pl = remaining / 1000
+        remaining %= 1000
+        val po = remaining / 100
+        remaining %= 100
+        val pp = remaining / 10
+        val pc = remaining % 10
+
+        carteiraPathfinder["PL"] = pl
+        carteiraPathfinder["PO"] = po
+        carteiraPathfinder["PP"] = pp
+        carteiraPathfinder["PC"] = pc
+    }
+
     var famaManual by mutableIntStateOf(0)
     val poderesSelecionados = mutableStateListOf<String>()
     val manifestacoesPoderes = mutableStateMapOf<String, String>()
@@ -3669,7 +3811,8 @@ class CriadorState {
                 cpSpStack = cpSpStack.map { 1 },
                 cpPvStack = cpPvStack.map { 1 },
                 cpRecursosStack = cpRecursosStack.map { 1 },
-                riquezaModifier = riquezaModifier
+                riquezaModifier = riquezaModifier,
+                carteiraPathfinder = carteiraPathfinder.toMap()
             ),
             atributos = SnapshotAtributos(
                 ancestralidade = ancestralidade,
@@ -3832,6 +3975,22 @@ class CriadorState {
         cpPvStack.apply { clear(); repeat(snapshot.recursos.cpPvStack.size) { add(Unit) } }
         cpRecursosStack.apply { clear(); repeat(snapshot.recursos.cpRecursosStack.size) { add(Unit) } }
         riquezaModifier = snapshot.recursos.riquezaModifier
+
+        carteiraPathfinder.clear()
+        if (snapshot.recursos.carteiraPathfinder.isNotEmpty()) {
+            carteiraPathfinder.putAll(snapshot.recursos.carteiraPathfinder)
+        } else if (compendioPathfinderAtivo && snapshot.recursos.dinheiro > 0) {
+            val pl = snapshot.recursos.dinheiro / 1000
+            var rem = snapshot.recursos.dinheiro % 1000
+            val po = rem / 100
+            rem %= 100
+            val pp = rem / 10
+            val pc = rem % 10
+            carteiraPathfinder["PL"] = pl
+            carteiraPathfinder["PO"] = po
+            carteiraPathfinder["PP"] = pp
+            carteiraPathfinder["PC"] = pc
+        }
 
         aplicarAncestralidade(snapshot.atributos.ancestralidade, feedbackMessages)
 

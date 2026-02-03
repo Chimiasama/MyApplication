@@ -1089,16 +1089,25 @@ private fun EquipamentoSection(
             if (pcLivresLocal > 0 && state.cpRecursosStack.isEmpty()) {
                 state.cpRecursosStack.add(Unit)
                 state.pontosComplicacaoGastos += 1
-                state.dinheiro += 500
+                if (state.compendioPathfinderAtivo) {
+                    state.addPathfinderMoney(60000)
+                } else {
+                    state.dinheiro += 500
+                }
             }
         },
         onDesfazerPontosBonusEmRecursos = {
             if (state.usaRiqueza) return@EquipamentoSection
-            if (state.cpRecursosStack.isNotEmpty() && state.dinheiro >= 500) {
+            val checkAmount = if (state.compendioPathfinderAtivo) 60000 else 500
+            if (state.cpRecursosStack.isNotEmpty() && state.dinheiro >= checkAmount) {
                 state.cpRecursosStack.removeAt(state.cpRecursosStack.lastIndex)
                 state.pontosComplicacaoGastos =
                     (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                state.dinheiro -= 500
+                if (state.compendioPathfinderAtivo) {
+                    state.spendPathfinderMoney(60000)
+                } else {
+                    state.dinheiro -= 500
+                }
             }
         },
         onEquipamentoDoubleClick = { equipamento ->
@@ -1106,7 +1115,11 @@ private fun EquipamentoSection(
             if (state.usaRiqueza || custo <= state.dinheiro) {
                 state.equipamentosComprados.add(equipamento)
                 if (!state.usaRiqueza) {
-                    state.dinheiro -= custo
+                    if (state.compendioPathfinderAtivo) {
+                        state.spendPathfinderMoney(custo)
+                    } else {
+                        state.dinheiro -= custo
+                    }
                 }
                 onLogFeedback("Equipamento ${equipamento.nome} adicionado.")
                 onUserFeedback()
@@ -1124,7 +1137,11 @@ private fun EquipamentoSection(
                 val custo = MoneyUtils.parseCostInBaseUnit(equipamento.custo, state.compendioPathfinderAtivo)
                 state.equipamentosComprados.remove(equipamento)
                 if (!state.usaRiqueza) {
-                    state.dinheiro += custo
+                    if (state.compendioPathfinderAtivo) {
+                        state.addPathfinderMoney(custo)
+                    } else {
+                        state.dinheiro += custo
+                    }
                 }
                 onLogFeedback("Equipamento ${equipamento.nome} removido.")
                 onUserFeedback()
