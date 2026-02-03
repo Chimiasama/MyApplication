@@ -224,17 +224,17 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     }
     lines += ""
 
+    // Create a lookup map: ID -> Best Definition
+    val definitionMap = listaVantagens
+        .groupBy { it.id.keyify() }
+        .mapValues { (_, candidates) ->
+            candidates.maxByOrNull { CriadorState.getOriginPriority(it.origem) }!!
+        }
+
     lines += "Vantagens"
     if (personagem.vantagens.isEmpty()) {
         lines += "– Nenhuma"
     } else {
-        // Create a lookup map: ID -> Best Definition
-        val definitionMap = listaVantagens
-            .groupBy { it.id.keyify() }
-            .mapValues { (_, candidates) ->
-                candidates.maxByOrNull { CriadorState.getOriginPriority(it.origem) }!!
-            }
-
         val nomesVantagens = personagem.vantagens.mapNotNull { id ->
             val vant = definitionMap[id.keyify()] ?: return@mapNotNull null
 
@@ -250,34 +250,29 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
             if (escolha != null) "$baseNome (${escolha.trim()})" else baseNome
         }
         lines += nomesVantagens.joinToString(", ")
+    }
 
     // Annotations for Armor Interference/Restrictions
-    val definitionMap = listaVantagens
-        .groupBy { it.id.keyify() }
-        .mapValues { (_, candidates) ->
-            candidates.maxByOrNull { CriadorState.getOriginPriority(it.origem) }!!
-        }
-
     personagem.vantagens.forEach { vantId ->
         val vant = definitionMap[vantId.keyify()]
         if (vant != null) {
-            if (vant.tags.contains("INTERFERENCIA_ARMADURA_LEVE")) {
+            val tags = vant.requisitos.tags
+            if (tags.contains("INTERFERENCIA_ARMADURA_LEVE")) {
                 lines += "• Interferência de Armadura (Leve): -4 em perícias de Agilidade e Arcanas se usar armadura média/pesada."
             }
-            if (vant.tags.contains("INTERFERENCIA_ARMADURA_QUALQUER")) {
+            if (tags.contains("INTERFERENCIA_ARMADURA_QUALQUER")) {
                 lines += "• Interferência de Armadura (Qualquer): -4 em perícias de Agilidade e Arcanas se usar qualquer armadura."
             }
-            if (vant.tags.contains("RESTRICAO_ARMADURA_LEVE")) {
+            if (tags.contains("RESTRICAO_ARMADURA_LEVE")) {
                 lines += "• Restrição de Armadura (Leve): -4 em perícias de Agilidade se usar armadura média/pesada."
             }
-            if (vant.tags.contains("RESTRICAO_ARMADURA_MEDIA")) {
+            if (tags.contains("RESTRICAO_ARMADURA_MEDIA")) {
                 lines += "• Restrição de Armadura (Média): -4 em perícias de Agilidade se usar armadura pesada."
             }
-            if (vant.tags.contains("RESTRICAO_ARMADURA_QUALQUER")) {
+            if (tags.contains("RESTRICAO_ARMADURA_QUALQUER")) {
                 lines += "• Restrição de Armadura (Qualquer): -4 em perícias de Agilidade se usar qualquer armadura."
             }
         }
-    }
     }
     val habilidadesRaciais = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
     val allRacialTraits = (personagem.vantagensRaciais + habilidadesRaciais).distinctBy { it.keyify() }
