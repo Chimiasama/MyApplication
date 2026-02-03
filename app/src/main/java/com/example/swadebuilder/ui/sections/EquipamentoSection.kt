@@ -62,6 +62,7 @@ import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.components.StandardEquipamentoItem
+import com.example.swadebuilder.util.MoneyUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toSentenceCase
@@ -174,40 +175,6 @@ private data class EquipamentoListEntry(
     val item: EquipamentoItem,
     val origemKey: String
 )
-
-// Helper to parse costs into a single integer base unit.
-// For Pathfinder (Buscatrilha), this is copper pieces (pc).
-// For standard SWADE, this is dollars.
-fun parseCostInBaseUnit(
-    costJson: kotlinx.serialization.json.JsonElement?,
-    isPathfinder: Boolean
-): Int {
-    if (costJson == null) return Int.MAX_VALUE
-    val content = (costJson as? JsonPrimitive)?.content?.trim() ?: return Int.MAX_VALUE
-    if (content == "-") return 0
-
-    if (isPathfinder) {
-        val parts = content.split(" ")
-        if (parts.isNotEmpty()) {
-            // Remove thousand separators before parsing
-            val value = parts[0].replace(".", "").toIntOrNull() ?: return Int.MAX_VALUE
-            if (parts.size > 1) {
-                return when (parts[1].lowercase()) {
-                    "pl" -> value * 1000
-                    "po" -> value * 100
-                    "pp" -> value * 10
-                    "pc" -> value
-                    else -> value * 100 // Assume gold (po -> pc) if unit is weird
-                }
-            }
-            return value * 100 // Assume gold (po -> pc) if no unit, which seems common
-        }
-        return Int.MAX_VALUE
-    } else {
-        // Standard system just uses integers
-        return content.toIntOrNull() ?: Int.MAX_VALUE
-    }
-}
 
 @Composable
 fun EquipFilterDialog(
@@ -412,7 +379,7 @@ fun EquipamentoSection(
             // 2. Header (Money)
             SectionHeader(
                 onHelpClick = null,
-                centerText = if (usaRiqueza) "Riqueza: d$dadoRiqueza" else "Dinheiro: ${formatCurrency(dinheiro, compendioPathfinderAtivo)}",
+                centerText = if (usaRiqueza) "Riqueza: d$dadoRiqueza" else "Dinheiro: ${MoneyUtils.formatCurrency(dinheiro, compendioPathfinderAtivo)}",
                 onCenterClick = null,
                 onListaCompletaClick = null,
                 listaCompletaText = ""
@@ -626,7 +593,7 @@ fun EquipamentoSection(
                     }.flatMap { mapped ->
                         mapped.original.itens.filter { item ->
                             if (filter.somenteAcessiveis) {
-                                val c = parseCostInBaseUnit(item.custo, compendioPathfinderAtivo)
+                                val c = MoneyUtils.parseCostInBaseUnit(item.custo, compendioPathfinderAtivo)
                                 if (!usaRiqueza && c > dinheiro) return@filter false
                             }
                             val q = searchQuery.semAcentos().lowercase()
@@ -693,7 +660,7 @@ fun EquipamentoSection(
                                     }
                                     .filter { entry ->
                                     val isAcessivel = if (filter.somenteAcessiveis) {
-                                        val c = parseCostInBaseUnit(entry.item.custo, compendioPathfinderAtivo)
+                                        val c = MoneyUtils.parseCostInBaseUnit(entry.item.custo, compendioPathfinderAtivo)
                                         usaRiqueza || c <= dinheiro
                                     } else {
                                         true
@@ -812,40 +779,106 @@ fun EquipamentoSection(
             }
 
             if (showMoneyDialog) {
-                AlertDialog(
-                    onDismissRequest = { showMoneyDialog = false },
-                    title = { Text("Editar dinheiro") },
-                    text = {
-                        OutlinedTextField(
-                            value = dinheiroInput,
-                            onValueChange = { novo ->
-                                dinheiroInput = novo.filter { it.isDigit() || it == '-' }
-                            },
-                            label = { Text("Valor em dinheiro") },
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Done
-                            ),
-                            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            val novoValor = dinheiroInput.toIntOrNull()
-                            if (novoValor != null) {
-                                onEditarDinheiro(novoValor)
+                if (compendioPathfinderAtivo) {
+                    // Pathfinder Multi-Currency Dialog
+                    var plInput by rememberSaveable { mutableStateOf(((dinheiro / 1000).toString())) }
+                    var poInput by rememberSaveable { mutableStateOf((((dinheiro % 1000) / 100).toString())) }
+                    var ppInput by rememberSaveable { mutableStateOf((((dinheiro % 100) / 10).toString())) }
+                    var pcInput by rememberSaveable { mutableStateOf(((dinheiro % 10).toString())) }
+
+                    AlertDialog(
+                        onDismissRequest = { showMoneyDialog = false },
+                        title = { Text("Editar moedas (Pathfinder)") },
+                        text = {
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    OutlinedTextField(
+                                        value = plInput,
+                                        onValueChange = { plInput = it.filter { c -> c.isDigit() } },
+                                        label = { Text("Platina") },
+                                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    OutlinedTextField(
+                                        value = poInput,
+                                        onValueChange = { poInput = it.filter { c -> c.isDigit() } },
+                                        label = { Text("Ouro") },
+                                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                }
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    OutlinedTextField(
+                                        value = ppInput,
+                                        onValueChange = { ppInput = it.filter { c -> c.isDigit() } },
+                                        label = { Text("Prata") },
+                                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    OutlinedTextField(
+                                        value = pcInput,
+                                        onValueChange = { pcInput = it.filter { c -> c.isDigit() } },
+                                        label = { Text("Cobre") },
+                                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                }
                             }
-                            showMoneyDialog = false
-                        }) {
-                            Text("Salvar")
+                        },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                val pl = plInput.toIntOrNull() ?: 0
+                                val po = poInput.toIntOrNull() ?: 0
+                                val pp = ppInput.toIntOrNull() ?: 0
+                                val pc = pcInput.toIntOrNull() ?: 0
+                                val total = (pl * 1000) + (po * 100) + (pp * 10) + pc
+                                onEditarDinheiro(total)
+                                showMoneyDialog = false
+                            }) {
+                                Text("Salvar")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showMoneyDialog = false }) { Text("Cancelar") }
                         }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { showMoneyDialog = false }) { Text("Cancelar") }
-                    }
-                )
+                    )
+                } else {
+                    // Standard Dialog
+                    AlertDialog(
+                        onDismissRequest = { showMoneyDialog = false },
+                        title = { Text("Editar dinheiro") },
+                        text = {
+                            OutlinedTextField(
+                                value = dinheiroInput,
+                                onValueChange = { novo ->
+                                    dinheiroInput = novo.filter { it.isDigit() || it == '-' }
+                                },
+                                label = { Text("Valor em dinheiro") },
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Number,
+                                    imeAction = ImeAction.Done
+                                ),
+                                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                                singleLine = true,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                val novoValor = dinheiroInput.toIntOrNull()
+                                if (novoValor != null) {
+                                    onEditarDinheiro(novoValor)
+                                }
+                                showMoneyDialog = false
+                            }) {
+                                Text("Salvar")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showMoneyDialog = false }) { Text("Cancelar") }
+                        }
+                    )
+                }
             }
             if (showFilterDialog) {
                 EquipFilterDialog(
