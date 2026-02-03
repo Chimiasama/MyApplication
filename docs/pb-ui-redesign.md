@@ -11,7 +11,7 @@
 3. Reduzir clutter na área principal de cada seção, mantendo o foco nas listas/controles próprios (atributos, perícias, vantagens, recursos).
 
 ## Fluxo proposto
-1. **Carteira de PB fixa no topo**: adicionar um componente reutilizável (ex.: `PbWalletBanner`) que apareça no cabeçalho das seções afetadas. Ele apresenta `PB livres / PB total` e um ícone de informação sobre a origem dos pontos. Quando `pcTotal == 0`, mostrar apenas uma linha informativa e nenhum botão.
+1. **Carteira de PB fixa no topo**: adicionar um componente reutilizável (ex.: `PbWalletBanner`) que apareça no cabeçalho das seções afetadas. Ele apresenta `PB livres / PB total` e um ícone de informação sobre a origem dos pontos. Quando `pcTotal == 0`, esconder o banner e não renderizar botões.
 2. **Ações contextuais condicionalmente visíveis**:
    - Se `pcTotal > 0` e `pcLivres > 0`, exibir um botão compacto de ação primária (por exemplo, um `FilledTonalButton` com label curto tipo "Adicionar PB") e um botão secundário de "Desfazer" somente quando houver gasto registrado (`stack` não vazio). Sem PB: esconder ambos e deixar apenas o tooltip/label da carteira.
    - Para complicações que não geram PB (como de raça), a UI naturalmente se mantém no estado informativo porque `pcTotal` continua em zero.
