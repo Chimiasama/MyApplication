@@ -333,6 +333,9 @@
       }
     },
     "limite_compra": "uma_vez",
+    "tags": [
+      "RESTRICAO_ARMADURA_MEDIA"
+    ],
     "descricao": "• FÚRIA: Bárbaros em circunstâncias desesperadas podem convocar suas reservas internas de força e ferocidade. Como uma ação livre limitada, pode \"entrar em fúria\" voluntariamente. Se receber o Estado Abalado ou um Ferimento, deve fazer uma rolagem de Astúcia ou entra em fúria quer queira ou não. Fúria dura cinco rodadas. Após o quinto turno, personagens da classe bárbaro recebem um nível de Fadiga que só pode ser recuperado com uma hora de descanso (geralmente sem andar, cavalgar etc). Bárbaros Exaustos que entram em fúria ficam Incapacitados no final das cinco rodadas. Veja a página 144 para mais informações sobre Fadiga. Durante a fúria, ganham as seguintes habilidades: Raiva (Sua Força aumenta em um tipo de dado e todo ataque deve ser um Ataque Selvagem. Não pode usar nenhuma perícia ou habilidade que requeira mais do que alguns segundos de concentração), Enfurecido (Ignora dois pontos de penalidades de Ferimentos e todas as penalidades de Fadiga), Imprudência (Enquanto em Fúria, toda vez que rolar uma Falha crítica em uma rolagem de ataque, ele acerta um alvo aleatoriamente no seu raio de ataque). • RESTRIÇÃO DE ARMADURA (Média): O estilo de combate de um bárbaro requer grande liberdade de movimento. Subtraem 4 das rolagens de Agilidade e perícias baseadas em Agilidade ao usar armaduras ou escudo pesados. • VELOZ: Bárbaros são corredores rápidos e resistentes. Aumentam sua Movimentação base em +2. Isso não afeta o dado de corrida, mas acumula com Vantagens como Ligeiro ou modificadores de ancestralidade."
   },
   {
@@ -786,6 +789,9 @@
       }
     },
     "limite_compra": "uma_vez",
+    "tags": [
+      "RESTRICAO_ARMADURA_LEVE"
+    ],
     "descricao": "• RESTRIÇÃO DE ARMADURA (Leve): Ladinos são acrobatas ágeis e mortais. Armaduras volumosas interferem em suas habilidades, então subtraem 4 de suas rolagens de Agilidade e perícias baseadas em Agilidade quando usam armaduras ou escudos médias e pesadas. • ATAQUE FURTIVO: Ladinos adicionam um d6 extra a seu dano quando conseguem a Finalização em sua vítima ou quando a vítima está vulnerável. Isso se aplica a ataques de Atletismo (arremessar), Lutar ou Atirar."
   },
   {
@@ -959,6 +965,9 @@
       }
     },
     "limite_compra": "uma_vez",
+    "tags": [
+      "RESTRICAO_ARMADURA_QUALQUER"
+    ],
     "descricao": "• DISCIPLINA MARCIAL: Monges treinam seus corpos à perfeição recebendo Resistência +1 se não usarem armadura. • GOLPE DESARMADO: Monges recebem +1 no seu Lutar e PA +2 quando realizam um ataque desarmado. Causam For+d4 com suas mãos, pés ou outras Armas Naturais. Com uma ampliação, monges rolam um d10 como bônus de dano. • MOBILIDADE: Rápido e ágil, monges aumentam seu dado de corrida em um tipo. • PUNHO ATORDOANTE: Quando uma personagem da classe monge atinge o alvo com um Golpe Desarmado e consegue uma ampliação, ela pode deixar o alvo Distraído ou Vulnerável. Isso ocorre mesmo se a vítima não receber dano ou o Absorver (o estado é aplicado após a vítima tentar Absorver). • RESTRIÇÃO DE ARMADURA (Qualquer): Monges devem estar completamente sem armadura para realizar suas manobras complexas. Subtraem 4 de rolagens de Agilidade e perícias baseadas em Agilidade, se estiverem usando armaduras e escudos leves, médios ou pesados."
   },
   {
@@ -1066,6 +1075,9 @@
       }
     },
     "limite_compra": "uma_vez",
+    "tags": [
+      "RESTRICAO_ARMADURA_MEDIA"
+    ],
     "descricao": "• INIMIGO PREDILETO: Escolha um tipo de inimigo na lista da página 256. Personagens da classe Patrulheiro têm uma rerrolagem gratuita quando falham em rastrear – Sobrevivência – ou atacar – Atletismo (arremessar), Lutar, Atirar – aquele tipo de criatura. • RESTRIÇÃO DE ARMADURA (Média): Patrulheiros são guerreiros e batedores com agilidade e mobilidade. Subtraem 4 das rolagens de Agilidade e perícias baseadas em Agilidade ao usar armaduras ou escudo pesados. • TERRENO PREDILETO: Escolha um tipo de terreno. Patrulheiros sacam uma Carta de Ação adicional para iniciativa quando estão em seu Terreno Predileto. • TRAVESSIA DE FLORESTA: Patrulheiros passam por terrenos difíceis como floresta densa, colinas rochosas ou desertos arenosos com facilidade. Ignoram as penalidades de Terreno Acidentado (veja a página 130)."
   },
   {
