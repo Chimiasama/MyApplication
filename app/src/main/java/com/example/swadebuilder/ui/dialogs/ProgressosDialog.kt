@@ -943,7 +943,10 @@ fun ProgressosDialog(
                                     onClick = {
                                         advSelectedCategories = if (cat in advSelectedCategories) advSelectedCategories - cat else advSelectedCategories + cat
                                     },
-                                    label = { Text(cat.name.toSentenceCase()) }
+                                    label = {
+                                        val label = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toSentenceCase()
+                                        Text(label)
+                                    }
                                 )
                             }
                         }

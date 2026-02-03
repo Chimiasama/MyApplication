@@ -20,6 +20,10 @@
     "requisitos": {
       "estagio": "Novato"
     },
+    "choiceOptions": [
+      "Magia",
+      "Milagres"
+    ],
     "descricao": "Exposição à energias estranhas, estudos em uma escola mágica ou dons de entidades divinas ou espirituais às vezes concedem às personagens seus próprios poderes e habilidades."
   },
   {

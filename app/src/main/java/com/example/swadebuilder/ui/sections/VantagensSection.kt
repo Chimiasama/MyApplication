@@ -429,7 +429,10 @@ fun VantagensContent(
                                 if (cat in selectedCategories) selectedCategories.remove(cat)
                                 else selectedCategories.add(cat)
                             },
-                            label = { Text(cat.name.toSentenceCase()) }
+                            label = {
+                                val label = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toSentenceCase()
+                                Text(label)
+                            }
                         )
                     }
                 }
@@ -568,7 +571,7 @@ fun VantagensContent(
                 item(key = "header_${cat.name}") {
                     Column {
                         CollapsibleSection(
-                            title = cat.name.toSentenceCase(),
+                            title = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toSentenceCase(),
                             expanded = expanded,
                             onToggle = { expandedMap[cat] = !expanded },
                             onToggleFeedback = onUserFeedback
