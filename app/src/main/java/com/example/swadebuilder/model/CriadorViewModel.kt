@@ -445,6 +445,15 @@ class CriadorViewModel : ViewModel() {
         } else {
             500
         }
+
+        if (compendioPathfinderAtivo) {
+            state.carteiraPathfinder.clear()
+            state.carteiraPathfinder["PL"] = 0
+            state.carteiraPathfinder["PO"] = 300
+            state.carteiraPathfinder["PP"] = 0
+            state.carteiraPathfinder["PC"] = 0
+            state.updateTotalPathfinderMoney()
+        }
         state.progresso = 0
         state.progressosDisponiveis = 0
         state.stageXpSpent.keys.forEach { state.stageXpSpent[it] = 0 }

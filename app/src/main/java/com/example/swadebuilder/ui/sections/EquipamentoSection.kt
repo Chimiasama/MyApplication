@@ -789,10 +789,11 @@ fun EquipamentoSection(
             if (showMoneyDialog) {
                 if (compendioPathfinderAtivo) {
                     // Pathfinder Multi-Currency Dialog
-                    var plInput by rememberSaveable { mutableStateOf((state.carteiraPathfinder["PL"] ?: 0).toString()) }
-                    var poInput by rememberSaveable { mutableStateOf((state.carteiraPathfinder["PO"] ?: 0).toString()) }
-                    var ppInput by rememberSaveable { mutableStateOf((state.carteiraPathfinder["PP"] ?: 0).toString()) }
-                    var pcInput by rememberSaveable { mutableStateOf((state.carteiraPathfinder["PC"] ?: 0).toString()) }
+                    var plInput by remember { mutableStateOf((state.carteiraPathfinder["PL"] ?: 0).toString()) }
+                    var poInput by remember { mutableStateOf((state.carteiraPathfinder["PO"] ?: 0).toString()) }
+                    var ppInput by remember { mutableStateOf((state.carteiraPathfinder["PP"] ?: 0).toString()) }
+                    var pcInput by remember { mutableStateOf((state.carteiraPathfinder["PC"] ?: 0).toString()) }
+                    var otimizar by remember { mutableStateOf(false) }
 
                     AlertDialog(
                         onDismissRequest = { showMoneyDialog = false },
@@ -831,29 +832,16 @@ fun EquipamentoSection(
                                         modifier = Modifier.weight(1f)
                                     )
                                 }
-                                Button(
-                                    onClick = {
-                                        val pl = plInput.toIntOrNull() ?: 0
-                                        val po = poInput.toIntOrNull() ?: 0
-                                        val pp = ppInput.toIntOrNull() ?: 0
-                                        val pc = pcInput.toIntOrNull() ?: 0
-                                        var total = (pl * 1000) + (po * 100) + (pp * 10) + pc
-
-                                        val newPl = total / 1000
-                                        total %= 1000
-                                        val newPo = total / 100
-                                        total %= 100
-                                        val newPp = total / 10
-                                        val newPc = total % 10
-
-                                        plInput = newPl.toString()
-                                        poInput = newPo.toString()
-                                        ppInput = newPp.toString()
-                                        pcInput = newPc.toString()
-                                    },
-                                    modifier = Modifier.fillMaxWidth()
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxWidth().padding(top = 4.dp)
                                 ) {
-                                    Text("Compactar Moedas")
+                                    Checkbox(
+                                        checked = otimizar,
+                                        onCheckedChange = { otimizar = it }
+                                    )
+                                    Spacer(Modifier.size(8.dp))
+                                    Text("Otimizar moedas")
                                 }
                             }
                         },
@@ -863,7 +851,12 @@ fun EquipamentoSection(
                                 state.carteiraPathfinder["PO"] = poInput.toIntOrNull() ?: 0
                                 state.carteiraPathfinder["PP"] = ppInput.toIntOrNull() ?: 0
                                 state.carteiraPathfinder["PC"] = pcInput.toIntOrNull() ?: 0
-                                state.updateTotalPathfinderMoney()
+
+                                if (otimizar) {
+                                    state.compactPathfinderMoney()
+                                } else {
+                                    state.updateTotalPathfinderMoney()
+                                }
                                 showMoneyDialog = false
                             }) {
                                 Text("Salvar")
