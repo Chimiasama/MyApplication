@@ -13,6 +13,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,7 @@ import androidx.compose.material.icons.filled.Print
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -661,6 +663,8 @@ class MainActivity : ComponentActivity() {
 
             if (showSaveDialog) {
                 val isValid = SecurityUtils.isValidFilename(saveName)
+                var saveAsNew by rememberSaveable { mutableStateOf(false) }
+
                 AlertDialog(
                     onDismissRequest = { showSaveDialog = false },
                     title = { Text("Salvar personagem") },
@@ -677,6 +681,22 @@ class MainActivity : ComponentActivity() {
                                 } else null,
                                 modifier = Modifier.fillMaxWidth()
                             )
+                            if (state.idAtual != null) {
+                                Spacer(Modifier.height(8.dp))
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Checkbox(
+                                        checked = saveAsNew,
+                                        onCheckedChange = { saveAsNew = it }
+                                    )
+                                    Text(
+                                        text = "Salvar como novo arquivo (Cópia)",
+                                        modifier = Modifier.clickable { saveAsNew = !saveAsNew }
+                                    )
+                                }
+                            }
                         }
                     },
                     confirmButton = {
@@ -686,7 +706,8 @@ class MainActivity : ComponentActivity() {
                                 scope.launch {
                                     val entry = criadorViewModel.salvarPersonagem(
                                         context,
-                                        saveName
+                                        saveName,
+                                        criarCopia = saveAsNew
                                     )
                                     showSaveDialog = false
                                     snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
@@ -768,7 +789,12 @@ class MainActivity : ComponentActivity() {
                     onDismissRequest = { showLoadDialog = false },
                     title = { Text("Carregar personagem") },
                     text = {
-                        Column(modifier = Modifier.fillMaxWidth()) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 350.dp)
+                                .verticalScroll(rememberScrollState())
+                        ) {
                             if (savedEntries.isEmpty()) {
                                 Text("Nenhum personagem salvo.")
                             } else {
@@ -816,6 +842,7 @@ class MainActivity : ComponentActivity() {
                                             }
                                         }
                                     }
+                                    HorizontalDivider()
                                 }
                             }
                         }

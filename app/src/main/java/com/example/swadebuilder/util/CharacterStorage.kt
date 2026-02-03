@@ -108,7 +108,16 @@ object CharacterStorage {
 
     @OptIn(ExperimentalSerializationApi::class)
     private fun decodeMetadataSafely(context: Context, file: File, masterKey: MasterKey): MetadataSnapshot? {
-        // 1. Try Encrypted
+        // 1. Try Plaintext (Preferred)
+        try {
+            file.inputStream().use { input ->
+                return json.decodeFromStream<MetadataSnapshot>(input)
+            }
+        } catch (e: Exception) {
+            // If failed, fall through to encrypted check
+        }
+
+        // 2. Try Encrypted (Legacy)
         try {
             val encryptedFile = EncryptedFile.Builder(
                 context,
@@ -121,22 +130,23 @@ object CharacterStorage {
                 json.decodeFromStream<MetadataSnapshot>(input)
             }
         } catch (e: Exception) {
-            // If failed (not encrypted or key mismatch), fall through to plaintext check
+            // Both failed
         }
-
-        // 2. Try Plaintext (Legacy)
-        return try {
-            file.inputStream().use { input ->
-                json.decodeFromStream<MetadataSnapshot>(input)
-            }
-        } catch (e: Exception) {
-            null
-        }
+        return null
     }
 
     @OptIn(ExperimentalSerializationApi::class)
     private fun decodeSnapshotSafely(context: Context, file: File, masterKey: MasterKey): PersonagemSnapshot? {
-        // 1. Try Encrypted
+        // 1. Try Plaintext (Preferred)
+        try {
+            file.inputStream().use { input ->
+                return json.decodeFromStream<PersonagemSnapshot>(input)
+            }
+        } catch (e: Exception) {
+            // If failed, fall through to encrypted check
+        }
+
+        // 2. Try Encrypted (Legacy)
         try {
             val encryptedFile = EncryptedFile.Builder(
                 context,
@@ -149,17 +159,9 @@ object CharacterStorage {
                 json.decodeFromStream<PersonagemSnapshot>(input)
             }
         } catch (e: Exception) {
-            // If failed (not encrypted or key mismatch), fall through to plaintext check
+            // Both failed
         }
-
-        // 2. Try Plaintext (Legacy)
-        return try {
-            file.inputStream().use { input ->
-                json.decodeFromStream<PersonagemSnapshot>(input)
-            }
-        } catch (e: Exception) {
-            null
-        }
+        return null
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -172,49 +174,44 @@ object CharacterStorage {
             }
 
             var snapshot: PersonagemSnapshot? = null
-            var wasEncrypted = false
 
-            // 1. Try Encrypted
+            // 1. Try Plaintext (Preferred)
             try {
-                val encryptedFile = EncryptedFile.Builder(
-                    context,
-                    file,
-                    getMasterKey(context),
-                    EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
-                ).build()
-
-                snapshot = encryptedFile.openFileInput().use { input ->
+                snapshot = file.inputStream().use { input ->
                     json.decodeFromStream<PersonagemSnapshot>(input)
                 }
-                wasEncrypted = true
             } catch (e: Exception) {
-                // Ignore and try plaintext
+                // Ignore and try encrypted
             }
 
-            // 2. Try Plaintext if not loaded yet
+            // 2. Try Encrypted (Legacy) if not loaded yet
             if (snapshot == null) {
                 try {
-                    snapshot = file.inputStream().use { input ->
+                    val encryptedFile = EncryptedFile.Builder(
+                        context,
+                        file,
+                        getMasterKey(context),
+                        EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+                    ).build()
+
+                    snapshot = encryptedFile.openFileInput().use { input ->
                         json.decodeFromStream<PersonagemSnapshot>(input)
                     }
-                } catch (e: SerializationException) {
-                    return@withContext LoadResult.Failure(
-                        "Arquivo corrompido ou inválido. Tente salvar novamente."
-                    )
+                } catch (e: Exception) {
+                    // Ignore
                 }
             }
 
-            if (snapshot == null) return@withContext LoadResult.Failure("Erro desconhecido ao ler arquivo.")
+            if (snapshot == null) {
+                return@withContext LoadResult.Failure(
+                    "Arquivo corrompido ou inválido. Tente salvar novamente."
+                )
+            }
 
             if (!validateChecksum(snapshot)) {
                 return@withContext LoadResult.Failure(
                     "Falha na verificação de integridade do personagem."
                 )
-            }
-
-            // Migration: If it was plaintext, save it as encrypted immediately
-            if (!wasEncrypted) {
-                save(context, snapshot)
             }
 
             LoadResult.Success(snapshot)
@@ -229,24 +226,12 @@ object CharacterStorage {
 
         val snapshotForChecksum = snapshot.copy(id = saveId, checksum = null)
         val snapshotToSave = snapshotForChecksum.copy(checksum = checksumFor(snapshotForChecksum))
-        // We still encode to string to verify size/payload, but we write via stream
-        // Actually, EncryptedFile gives an OutputStream. We should write directly to it.
-        // But for atomic save, we need a temp file.
 
         val tempFile = File(file.parentFile, "${file.nameWithoutExtension}_temp.json")
         if (tempFile.exists()) tempFile.delete()
 
-        val masterKey = getMasterKey(context)
-        val encryptedTemp = EncryptedFile.Builder(
-            context,
-            tempFile,
-            masterKey,
-            EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
-        ).build()
-
-        // Write encrypted to temp file
-        encryptedTemp.openFileOutput().use { output ->
-            // encoding directly to stream
+        // Write plaintext to temp file
+        tempFile.outputStream().use { output ->
             val jsonString = json.encodeToString(snapshotToSave)
             output.write(jsonString.toByteArray(Charsets.UTF_8))
         }
@@ -256,7 +241,13 @@ object CharacterStorage {
             file.delete()
         }
         if (!tempFile.renameTo(file)) {
-            throw IllegalStateException("Falha ao finalizar salvamento atômico.")
+            // Try explicit copy and delete if rename fails
+            try {
+                tempFile.copyTo(file, overwrite = true)
+                tempFile.delete()
+            } catch (e: Exception) {
+                throw IllegalStateException("Falha ao finalizar salvamento.")
+            }
         }
 
         SaveEntry(saveId, snapshot.nome, snapshot.timestamp)

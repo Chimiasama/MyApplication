@@ -152,20 +152,25 @@ class CriadorViewModel : ViewModel() {
     suspend fun salvarPersonagem(
         context: Context,
         nomePersonalizado: String? = null,
-        silent: Boolean = false
+        silent: Boolean = false,
+        criarCopia: Boolean = false
     ): CharacterStorage.SaveEntry {
-        val previousSnapshot = state.idAtual?.let { id ->
-            when (val result = CharacterStorage.load(context, id)) {
-                is CharacterStorage.LoadResult.Success -> result.snapshot
-                else -> null
+        val previousSnapshot = if (!criarCopia) {
+            state.idAtual?.let { id ->
+                when (val result = CharacterStorage.load(context, id)) {
+                    is CharacterStorage.LoadResult.Success -> result.snapshot
+                    else -> null
+                }
             }
-        }
+        } else null
+
         val desiredName = (nomePersonalizado?.takeIf { it.isNotBlank() } ?: state.nomePersonagem)
             .ifBlank { DEFAULT_CHARACTER_NAME }
 
         val savedEntries = listarPersonagensSalvos(context)
+        val idToIgnore = if (criarCopia) null else state.idAtual
         val otherNames = savedEntries
-            .filter { it.id != state.idAtual }
+            .filter { it.id != idToIgnore }
             .map { it.nome }
 
         val finalName = if (desiredName.equals(DEFAULT_CHARACTER_NAME, ignoreCase = true)) {
@@ -176,14 +181,21 @@ class CriadorViewModel : ViewModel() {
 
         state.nomePersonagem = finalName
 
-        val snapshot = state.toSnapshot().copy(nome = finalName)
+        val idParaSalvar = if (criarCopia) java.util.UUID.randomUUID().toString() else (state.idAtual ?: java.util.UUID.randomUUID().toString())
+        val snapshot = state.toSnapshot().copy(nome = finalName, id = idParaSalvar)
+
         val entry = CharacterStorage.save(context, snapshot)
         state.idAtual = entry.id
-        val previousPortrait = previousSnapshot?.selecoes?.retratoFileName
-        val currentPortrait = snapshot.selecoes.retratoFileName
-        if (previousPortrait != null && previousPortrait != currentPortrait) {
-            CharacterPortraitStorage.deleteIfUnused(context, previousPortrait)
+
+        // Cleanup only if we are overwriting (not creating a copy)
+        if (!criarCopia) {
+            val previousPortrait = previousSnapshot?.selecoes?.retratoFileName
+            val currentPortrait = snapshot.selecoes.retratoFileName
+            if (previousPortrait != null && previousPortrait != currentPortrait) {
+                CharacterPortraitStorage.deleteIfUnused(context, previousPortrait)
+            }
         }
+
         if (!silent) {
             logFeedback("Personagem salvo: ${entry.nome}")
         }
