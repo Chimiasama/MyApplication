@@ -79,6 +79,7 @@ import com.example.swadebuilder.ui.sections.TipoMonstroSection
 import com.example.swadebuilder.ui.sections.TroposSection
 import com.example.swadebuilder.ui.sections.VantagensContent
 import com.example.swadebuilder.ui.sections.XpSection
+import com.example.swadebuilder.util.MoneyUtils
 import com.example.swadebuilder.util.SecurityUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
@@ -1101,8 +1102,7 @@ private fun EquipamentoSection(
             }
         },
         onEquipamentoDoubleClick = { equipamento ->
-            val custo = (equipamento.custo as? JsonPrimitive)
-                ?.content?.toIntOrNull() ?: 0
+            val custo = MoneyUtils.parseCostInBaseUnit(equipamento.custo, state.compendioPathfinderAtivo)
             if (state.usaRiqueza || custo <= state.dinheiro) {
                 state.equipamentosComprados.add(equipamento)
                 if (!state.usaRiqueza) {
@@ -1121,8 +1121,7 @@ private fun EquipamentoSection(
                 onLogFeedback("Item de vantagem (fixo na criação).")
                 onUserFeedback()
             } else {
-                val custo = (equipamento.custo as? JsonPrimitive)
-                    ?.content?.toIntOrNull() ?: 0
+                val custo = MoneyUtils.parseCostInBaseUnit(equipamento.custo, state.compendioPathfinderAtivo)
                 state.equipamentosComprados.remove(equipamento)
                 if (!state.usaRiqueza) {
                     state.dinheiro += custo
