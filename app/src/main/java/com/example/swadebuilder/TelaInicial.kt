@@ -161,7 +161,7 @@ fun TelaInicial(
                 optSemPontosPoder = false
             }
             "Pathfinder" -> {
-                optMaisPontosPericias = true
+                optMaisPontosPericias = false
             }
             "Básico" -> {
                 optCartaSelvagem = true
