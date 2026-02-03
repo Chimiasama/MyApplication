@@ -46,7 +46,15 @@ object CharacterPortraitStorage {
 
         if (!file.exists()) return@withContext null
 
-        // 1. Try Encrypted
+        // 1. Try Plaintext (Preferred)
+        try {
+            val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+            if (bitmap != null) return@withContext bitmap
+        } catch (e: Exception) {
+            // Ignore
+        }
+
+        // 2. Try Encrypted (Legacy)
         try {
             val encryptedFile = EncryptedFile.Builder(
                 context,
@@ -59,51 +67,10 @@ object CharacterPortraitStorage {
                 BitmapFactory.decodeStream(input)
             }
         } catch (e: Exception) {
-            // Ignore, try plaintext
+            // Ignore
         }
 
-        // 2. Try Plaintext (Legacy)
-        return@withContext try {
-             BitmapFactory.decodeFile(file.absolutePath)?.also { bitmap ->
-                 // Migration: Re-save encrypted
-                 // We need to write back the bitmap as encrypted.
-                 // This is complex because we need to know the format (PNG/JPG).
-                 // We can infer from extension.
-                 // Since we have the bitmap, we can compress it back.
-                 // Note: this might lose quality for JPG.
-                 // Alternative: Read bytes of plaintext file and write to temp encrypted, then rename.
-                 migrateToEncrypted(context, file)
-             }
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    private fun migrateToEncrypted(context: Context, file: File) {
-        try {
-            val tempFile = File(file.parentFile, "${file.name}_temp")
-            val masterKey = getMasterKey(context)
-            val encryptedTemp = EncryptedFile.Builder(
-                context,
-                tempFile,
-                masterKey,
-                EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
-            ).build()
-
-            encryptedTemp.openFileOutput().use { output ->
-                file.inputStream().use { input ->
-                    input.copyTo(output)
-                }
-            }
-
-            if (file.delete()) {
-                tempFile.renameTo(file)
-            } else {
-                tempFile.delete()
-            }
-        } catch (e: Exception) {
-            // Migration failed, keep plaintext
-        }
+        return@withContext null
     }
 
     suspend fun savePortrait(context: Context, sourceUri: Uri): String? = withContext(Dispatchers.IO) {
@@ -113,15 +80,8 @@ object CharacterPortraitStorage {
 
         try {
             context.contentResolver.openInputStream(sourceUri)?.use { input ->
-                val masterKey = getMasterKey(context)
-                val encryptedFile = EncryptedFile.Builder(
-                    context,
-                    destination,
-                    masterKey,
-                    EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
-                ).build()
-
-                encryptedFile.openFileOutput().use { output ->
+                // Write directly to file (plaintext)
+                destination.outputStream().use { output ->
                     val buffer = ByteArray(8 * 1024)
                     var totalBytes = 0L
                     var bytesRead = input.read(buffer)
