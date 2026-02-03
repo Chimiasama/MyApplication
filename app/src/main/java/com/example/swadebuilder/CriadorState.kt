@@ -950,9 +950,26 @@ class CriadorState {
         }
     }
 
+    fun isVantagemAutomatica(v: Vantagem): Boolean {
+        val key = v.nome.substringBefore("(").trim().keyify()
+        val autoKeys = (vantagensAutomaticas + vantagensRaciais)
+            .map { it.substringBefore("(").trim().keyify() }
+            .toSet()
+
+        return key in autoKeys ||
+                v.id in vantagensAutomaticasDoTropo ||
+                v.id in vantagensAutomaticasDoSigno ||
+                v.id in vantagensAutomaticasDoElemento ||
+                (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true)
+    }
+
     val pathfinderSlotAvailable: Boolean by derivedStateOf {
         if (!compendioPathfinderAtivo) false
-        else vantagensSelecionadas.none { isPathfinderEligible(it) }
+        else {
+            vantagensSelecionadas.none { vant ->
+                isPathfinderEligible(vant) && !isVantagemAutomatica(vant)
+            }
+        }
     }
 
     private fun Vantagem.isBrutamontes(): Boolean {
@@ -1013,11 +1030,13 @@ class CriadorState {
         var shouldRefund = true
 
         if (wasEligible && compendioPathfinderAtivo) {
-            // Count remaining eligible edges
-            val remainingEligible = vantagensSelecionadas.count { isPathfinderEligible(it) }
-            // If we have ZERO eligible edges left, then we removed the one that was occupying the free slot.
+            // Count remaining eligible edges that are NOT automatic
+            val remainingEligiblePurchased = vantagensSelecionadas.count {
+                isPathfinderEligible(it) && !isVantagemAutomatica(it)
+            }
+            // If we have ZERO purchased eligible edges left, then we removed the one that was occupying the free slot.
             // No refund.
-            if (remainingEligible == 0) {
+            if (remainingEligiblePurchased == 0) {
                 shouldRefund = false
             }
         }
