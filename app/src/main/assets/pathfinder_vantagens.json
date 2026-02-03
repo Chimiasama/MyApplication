@@ -20,6 +20,10 @@
     "requisitos": {
       "estagio": "Novato"
     },
+    "choiceOptions": [
+      "Magia",
+      "Milagres"
+    ],
     "descricao": "Exposição à energias estranhas, estudos em uma escola mágica ou dons de entidades divinas ou espirituais às vezes concedem às personagens seus próprios poderes e habilidades."
   },
   {
@@ -1350,7 +1354,7 @@
     "id": "comando",
     "nome": "COMANDO",
     "origem": "PATHFINDER",
-    "categoria": "LIDERANÇA",
+    "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1363,7 +1367,7 @@
     "id": "presenca_de_comando",
     "nome": "PRESENÇA DE COMANDO",
     "origem": "PATHFINDER",
-    "categoria": "LIDERANÇA",
+    "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["comando"]
@@ -1374,7 +1378,7 @@
     "id": "estrategista",
     "nome": "ESTRATEGISTA",
     "origem": "PATHFINDER",
-    "categoria": "LIDERANÇA",
+    "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {
@@ -1391,7 +1395,7 @@
     "id": "mestre_estrategista",
     "nome": "MESTRE ESTRATEGISTA",
     "origem": "PATHFINDER",
-    "categoria": "LIDERANÇA",
+    "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Veterano",
       "vantagens_previas": ["estrategista"]
@@ -1402,7 +1406,7 @@
     "id": "fervor",
     "nome": "FERVOR",
     "origem": "PATHFINDER",
-    "categoria": "LIDERANÇA",
+    "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {
@@ -1416,7 +1420,7 @@
     "id": "inspirar",
     "nome": "INSPIRAR",
     "origem": "PATHFINDER",
-    "categoria": "LIDERANÇA",
+    "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Experiente",
       "vantagens_previas": ["comando"]
@@ -1427,7 +1431,7 @@
     "id": "lider_nato",
     "nome": "LÍDER NATO",
     "origem": "PATHFINDER",
-    "categoria": "LIDERANÇA",
+    "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {
@@ -1441,7 +1445,7 @@
     "id": "mantenham_a_formacao",
     "nome": "MANTENHAM A FORMAÇÃO!",
     "origem": "PATHFINDER",
-    "categoria": "LIDERANÇA",
+    "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {

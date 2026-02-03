@@ -415,7 +415,7 @@ fun VantagensContent(
                         if (state.modoSupers && cat == Categoria.PODER) return@items
 
                         // --- NEW FILTERING LOGIC ---
-                        if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioPathfinderAtivo) return@items
+                        if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO || cat == Categoria.VANTAGEM_DE_CLASSE) && !state.compendioPathfinderAtivo) return@items
                         if (cat == Categoria.ATORMENTADO && !state.compendioDeadlandsAtivo) return@items
                         if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@items
                         if (cat == Categoria.SUPER && !state.modoSupers) return@items
@@ -429,7 +429,10 @@ fun VantagensContent(
                                 if (cat in selectedCategories) selectedCategories.remove(cat)
                                 else selectedCategories.add(cat)
                             },
-                            label = { Text(cat.name.toSentenceCase()) }
+                            label = {
+                                val label = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toSentenceCase()
+                                Text(label)
+                            }
                         )
                     }
                 }
@@ -558,7 +561,7 @@ fun VantagensContent(
                 if (lista == null) return@forEach // Skip empty
 
                 if (state.modoSupers && cat == Categoria.PODER) return@forEach
-                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO) && !state.compendioPathfinderAtivo) return@forEach
+                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO || cat == Categoria.VANTAGEM_DE_CLASSE) && !state.compendioPathfinderAtivo) return@forEach
                 if (cat == Categoria.ATORMENTADO && !state.compendioDeadlandsAtivo) return@forEach
                 if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@forEach
 
@@ -568,7 +571,7 @@ fun VantagensContent(
                 item(key = "header_${cat.name}") {
                     Column {
                         CollapsibleSection(
-                            title = cat.name.toSentenceCase(),
+                            title = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toSentenceCase(),
                             expanded = expanded,
                             onToggle = { expandedMap[cat] = !expanded },
                             onToggleFeedback = onUserFeedback

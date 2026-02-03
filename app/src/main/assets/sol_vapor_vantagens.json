@@ -2614,7 +2614,7 @@
     "id": "lider_de_manifestacao",
     "nome": "LÍDER DE MANIFESTAÇÃO",
     "origem": "SOL_VAPOR",
-    "categoria": "LIDERANÇA",
+    "categoria": "LIDERANCA",
     "requisitos": "Experiente, Comando, Conhecimento Batalha d8+, Performance d6+",
     "descricao": "Um personagem com esta Vantagem recebe +2 em rolagem resistida de preparatórios para a manifestação."
   },
@@ -2622,7 +2622,7 @@
     "id": "vox_populi",
     "nome": "VOX POPULI",
     "origem": "SOL_VAPOR",
-    "categoria": "LIDERANÇA",
+    "categoria": "LIDERANCA",
     "requisitos": "Veterano, Astúcia d8+, Comando, Conhecimento Batalha d8+",
     "descricao": "Sua voz provoca fúria entre os trabalhadores. Enquanto aliados estiverem cobertos sobre o efeito da Vantagem Presença de Comando deste personagem, eles ignoram a condição Distraído do Lança-Vapores e suas rolagens de moral em batalhas em massa são feitas com um bónus de +2."
   },
@@ -2630,7 +2630,7 @@
     "id": "desmobilizar",
     "nome": "DESMOBILIZAR",
     "origem": "SOL_VAPOR",
-    "categoria": "LIDERANÇA",
+    "categoria": "LIDERANCA",
     "requisitos": "Veterano, Astúcia d8+, Conhecimento Batalha d10+, Furtividade d6+, Ladinagem d8+, Manha, Comando",
     "descricao": "Sacrificando um Marcador de Força Militar, seu personagem pode fazer um Desafio contra o comandante rival. Isso reflete a traidores, infiltrados ou armadilhas no campo de batalah. Resolva o Desafio como descrito nas regras, com um único diferencial de que uma ampliação do comandante que provocou este Desafio o faz recuperar o Marcador de Força Militar sacrificado."
   },
