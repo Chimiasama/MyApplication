@@ -88,10 +88,21 @@ object CharacterStorage {
         dir.listFiles()?.mapNotNull { file ->
             if (file.length() > MAX_FILE_SIZE) return@mapNotNull null
 
-            // Try decoding metadata, handling both encrypted and plaintext
-            val snapshot = decodeMetadataSafely(context, file, masterKey) ?: return@mapNotNull null
+            val metadata = decodeMetadataSafely(context, file, masterKey)
+                ?: decodeSnapshotSafely(context, file, masterKey)
+                    ?.takeIf { validateChecksum(it) }
+                    ?.let {
+                        MetadataSnapshot(
+                            version = it.version,
+                            id = it.id,
+                            nome = it.nome,
+                            timestamp = it.timestamp,
+                            checksum = it.checksum
+                        )
+                    }
+                ?: return@mapNotNull null
 
-            SaveEntry(file.nameWithoutExtension, snapshot.nome, snapshot.timestamp)
+            SaveEntry(file.nameWithoutExtension, metadata.nome, metadata.timestamp)
         }?.sortedByDescending { it.timestamp } ?: emptyList()
     }
 
@@ -117,6 +128,34 @@ object CharacterStorage {
         return try {
             file.inputStream().use { input ->
                 json.decodeFromStream<MetadataSnapshot>(input)
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    private fun decodeSnapshotSafely(context: Context, file: File, masterKey: MasterKey): PersonagemSnapshot? {
+        // 1. Try Encrypted
+        try {
+            val encryptedFile = EncryptedFile.Builder(
+                context,
+                file,
+                masterKey,
+                EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+            ).build()
+
+            return encryptedFile.openFileInput().use { input ->
+                json.decodeFromStream<PersonagemSnapshot>(input)
+            }
+        } catch (e: Exception) {
+            // If failed (not encrypted or key mismatch), fall through to plaintext check
+        }
+
+        // 2. Try Plaintext (Legacy)
+        return try {
+            file.inputStream().use { input ->
+                json.decodeFromStream<PersonagemSnapshot>(input)
             }
         } catch (e: Exception) {
             null
@@ -188,7 +227,7 @@ object CharacterStorage {
         val saveId = snapshot.id.ifBlank { UUID.randomUUID().toString() }
         val file = getSafeFile(context, saveId)
 
-        val snapshotForChecksum = snapshot.copy(checksum = null)
+        val snapshotForChecksum = snapshot.copy(id = saveId, checksum = null)
         val snapshotToSave = snapshotForChecksum.copy(checksum = checksumFor(snapshotForChecksum))
         // We still encode to string to verify size/payload, but we write via stream
         // Actually, EncryptedFile gives an OutputStream. We should write directly to it.

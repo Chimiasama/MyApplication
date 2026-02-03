@@ -35,7 +35,8 @@ object SecurityUtils {
         val safeName = name.replace(INVALID_FILENAME_CHARS, "_")
         // Limita a 50 caracteres para evitar problemas em sistemas de arquivo
         val truncated = safeName.take(50)
-        return truncated.ifBlank { "personagem_sem_nome" }
+        val normalized = truncated.ifBlank { "personagem_sem_nome" }
+        return if (normalized == "." || normalized == "..") "personagem_sem_nome" else normalized
     }
 
     /**
@@ -44,6 +45,7 @@ object SecurityUtils {
      */
     fun isValidFilename(name: String): Boolean {
         if (name.isBlank() || name.length > 50) return false
+        if (name == "." || name == "..") return false
         return !INVALID_FILENAME_CHARS.containsMatchIn(name)
     }
 

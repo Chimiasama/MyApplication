@@ -19,7 +19,7 @@ class SecurityUtilsTest {
     @Test
     fun `getSafeChildFile throws for path traversal`() {
         val parent = File("temp").absoluteFile
-        // Note: Java File behavior on .. depends on OS and canonization.
+        // Note: Java File behavior on .. depends on OS and canonicalization.
         // We simulate a path traversal attempt.
         // On Linux, File(parent, "../hack").canonicalPath resolves to parent's parent.
 
@@ -94,6 +94,8 @@ class SecurityUtilsTest {
         assert(!SecurityUtils.isValidFilename("With:Colon"))
         assert(!SecurityUtils.isValidFilename("With|Pipe"))
         assert(!SecurityUtils.isValidFilename("With\"Quote"))
+        assert(!SecurityUtils.isValidFilename(".")) // Reserved
+        assert(!SecurityUtils.isValidFilename("..")) // Reserved
 
         // Length check
         val longName = "a".repeat(51)
@@ -108,6 +110,8 @@ class SecurityUtilsTest {
         assertEquals("file.txt", SecurityUtils.sanitizeFilename("file.txt"))
         assertEquals("Jos_", SecurityUtils.sanitizeFilename("José"))
         assertEquals("personagem_sem_nome", SecurityUtils.sanitizeFilename(""))
+        assertEquals("personagem_sem_nome", SecurityUtils.sanitizeFilename("."))
+        assertEquals("personagem_sem_nome", SecurityUtils.sanitizeFilename(".."))
 
         // Length truncation
         val longInput = "a".repeat(60)
