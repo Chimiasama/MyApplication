@@ -952,7 +952,22 @@ class CriadorState {
 
     val pathfinderSlotAvailable: Boolean by derivedStateOf {
         if (!compendioPathfinderAtivo) false
-        else vantagensSelecionadas.none { isPathfinderEligible(it) }
+        else {
+            val autoKeys = (vantagensAutomaticas + vantagensRaciais)
+                .map { it.substringBefore("(").trim().keyify() }
+                .toSet()
+
+            vantagensSelecionadas.none { vant ->
+                val key = vant.nome.substringBefore("(").trim().keyify()
+                val isAutomatic = key in autoKeys ||
+                        vant.id in vantagensAutomaticasDoTropo ||
+                        vant.id in vantagensAutomaticasDoSigno ||
+                        vant.id in vantagensAutomaticasDoElemento ||
+                        (vant.id == "conexoes" && vant.choice?.equals("Máfia", ignoreCase = true) == true)
+
+                isPathfinderEligible(vant) && !isAutomatic
+            }
+        }
     }
 
     private fun Vantagem.isBrutamontes(): Boolean {
