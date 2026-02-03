@@ -161,6 +161,7 @@ fun TelaInicial(
                 optSemPontosPoder = false
             }
             "Pathfinder" -> {
+                optCartaSelvagem = true
                 optMaisPontosPericias = false
             }
             "Básico" -> {
@@ -183,7 +184,7 @@ fun TelaInicial(
         val isSelected: Boolean,
         val enabled: Boolean,
         val onToggle: () -> Unit,
-        val onRulesClick: () -> Unit,
+        val onRulesClick: (() -> Unit)?,
         val isRulesActive: Boolean = false
     )
 
@@ -268,8 +269,8 @@ fun TelaInicial(
                 optCompendioPathfinder = !optCompendioPathfinder
                 if (optCompendioPathfinder) applyRulesPreset("Pathfinder")
             },
-            { applyRulesPreset("Pathfinder"); showRulesDialog = true },
-            isRulesActive = optCompendioPathfinder
+            null,
+            isRulesActive = false
         ),
         ModuleItemData(
             "Deadlands".toEditionDisplayName(),
