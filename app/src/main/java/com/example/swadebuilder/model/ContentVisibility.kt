@@ -147,12 +147,18 @@ fun CriadorState.isVantagemVisible(
         if (isGenericAB) return true
     }
 
-    if (!multiplosAAHabilitados) {
-        // If Multiple ABs DISABLED: Show ONLY the Generic AB (Hide specific ones)
-        if (isSpecificAB) return false
+    // Pathfinder & Deadlands Exception: These are replacement settings that do not use the Generic AB selector.
+    // They rely on specific AB edges being directly selectable.
+    if (compendioPathfinderAtivo || compendioDeadlandsAtivo) {
+        // Allow specific ABs to pass through
     } else {
-        // If Multiple ABs ENABLED: Show Specific ABs (Hide the Generic one)
-        if (isGenericAB) return false
+        if (!multiplosAAHabilitados) {
+            // If Multiple ABs DISABLED: Show ONLY the Generic AB (Hide specific ones)
+            if (isSpecificAB) return false
+        } else {
+            // If Multiple ABs ENABLED: Show Specific ABs (Hide the Generic one)
+            if (isGenericAB) return false
+        }
     }
 
     return true
