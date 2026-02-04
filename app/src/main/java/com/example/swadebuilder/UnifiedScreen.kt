@@ -697,9 +697,7 @@ private fun availableSectionsFor(state: CriadorState): List<MainSection> {
         sections += MainSection.CRYSTAL_HEART
     }
 
-    val hasArcano = state.vantagensSelecionadas.any {
-        it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
-    } && !state.celestialAAMilagresDesabilitado
+    val hasArcano = state.temAntecedenteArcano() && !state.celestialAAMilagresDesabilitado
     val mostraPoderesArcanos = hasArcano && !state.compendioCrystalHeartAtivo
     if (mostraPoderesArcanos || state.modoSupers) {
         sections += MainSection.PODERES
@@ -1021,9 +1019,7 @@ private fun PoderesSection(
     state: CriadorState,
     onShowMessage: (String) -> Unit = {}
 ) {
-    val temArcano = state.vantagensSelecionadas.any {
-        it.nome.keyify().startsWith("ANTECEDENTE ARCANO")
-    }
+    val temArcano = state.temAntecedenteArcano()
     if (temArcano && !state.celestialAAMilagresDesabilitado) {
         HorizontalDivider(thickness = 1.dp)
         SectionCard(
