@@ -54,13 +54,12 @@ fun CriadorState.isVantagemVisible(
     // 1. Basic Origin Check
     // If the advantage's origin is not in the active set, hide it.
     if (origemNorm !in activeOrigins) {
-        // Exception: Fantasy Companion uses the Generic "Antecedente Arcano" (from Basic) as a selector/base.
-        // Even if BASICO is hidden (e.g. if we had a theoretical Fantasy + Replacement combo), we might need it.
-        // However, currently Fantasy is an Add-on, so BASICO is usually active.
-        // But if we ever have Fantasy + Pathfinder (unlikely mix, but logic-wise), we might need to handle it.
-        // For now, the strict check is correct based on the requirement "content from its own json".
-        // If Fantasy relies on Basic, BASICO is active.
-        return false
+        // Exception: Pathfinder uses the Generic "Antecedente Arcano" (from Basic) as a selector.
+        if (compendioPathfinderAtivo && vant.id == "antecedente_arcano") {
+            // Allow it
+        } else {
+            return false
+        }
     }
 
     // 2. Specific Item Logic (Forbidden items within an active setting)
@@ -147,18 +146,19 @@ fun CriadorState.isVantagemVisible(
         if (isGenericAB) return true
     }
 
-    // Pathfinder & Deadlands Exception: These are replacement settings that do not use the Generic AB selector.
-    // They rely on specific AB edges being directly selectable.
-    if (compendioPathfinderAtivo || compendioDeadlandsAtivo) {
-        // Allow specific ABs to pass through
+    // Pathfinder Exception: Uses Generic AB as selector for Magia/Milagres
+    if (compendioPathfinderAtivo) {
+        // Show Generic, Hide Specific (unless owned?)
+        if (isSpecificAB) return false
+        if (isGenericAB) return true
+    }
+
+    if (!multiplosAAHabilitados) {
+        // If Multiple ABs DISABLED: Show ONLY the Generic AB (Hide specific ones)
+        if (isSpecificAB) return false
     } else {
-        if (!multiplosAAHabilitados) {
-            // If Multiple ABs DISABLED: Show ONLY the Generic AB (Hide specific ones)
-            if (isSpecificAB) return false
-        } else {
-            // If Multiple ABs ENABLED: Show Specific ABs (Hide the Generic one)
-            if (isGenericAB) return false
-        }
+        // If Multiple ABs ENABLED: Show Specific ABs (Hide the Generic one)
+        if (isGenericAB) return false
     }
 
     return true

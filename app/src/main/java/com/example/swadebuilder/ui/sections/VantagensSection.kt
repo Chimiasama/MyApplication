@@ -959,6 +959,14 @@ fun VantagensContent(
             emptyList()
         }
 
+        // Pathfinder Override: Show Magic and Miracles options
+        val opcoesPathfinder = if (state.compendioPathfinderAtivo) {
+            listOf(
+                "Magia" to "antecedente_arcano_magia_pf",
+                "Milagres" to "antecedente_arcano_milagres_pf"
+            )
+        } else emptyList()
+
         AlertDialog(
             onDismissRequest = {
                 dialogMostrandoAntecedente = null
@@ -967,7 +975,24 @@ fun VantagensContent(
             title = { Text("Escolha o tipo de ${vantOriginal.nome}") },
             text = {
                 Column(Modifier.verticalScroll(rememberScrollState())) {
-                    if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
+                    if (state.compendioPathfinderAtivo) {
+                        opcoesPathfinder.forEach { (label, _) ->
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable { subOpcaoSelecionada = label }
+                                    .padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = (subOpcaoSelecionada == label),
+                                    onClick = { subOpcaoSelecionada = label }
+                                )
+                                Spacer(Modifier.size(8.dp))
+                                Text(label)
+                            }
+                        }
+                    } else if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
                         opcoesArcano.forEach { (label, _) ->
                             Row(
                                 Modifier
@@ -1008,7 +1033,26 @@ fun VantagensContent(
                 TextButton(
                     enabled = (subOpcaoSelecionada != null),
                     onClick = {
-                        if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
+                        if (state.compendioPathfinderAtivo) {
+                            val choiceLabel = subOpcaoSelecionada!!
+                            val edgeId = opcoesPathfinder.firstOrNull { it.first == choiceLabel }?.second
+                            val specificEdge = listaVantagens.firstOrNull { it.id == edgeId }
+
+                            if (specificEdge != null) {
+                                if (state.podeSelecionar(specificEdge)) {
+                                    if (state.advantageAdvancementInProgress) {
+                                        viewModel.selectAdvantageForAdvancement(specificEdge)
+                                    } else {
+                                        state.comprarVantagem(specificEdge) { msg ->
+                                            viewModel.logFeedback(msg)
+                                            onUserFeedback()
+                                        }
+                                    }
+                                } else {
+                                    viewModel.logFeedback("Requisitos não atendidos para ${specificEdge.nome}")
+                                }
+                            }
+                        } else if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
                             val choiceLabel = subOpcaoSelecionada!!
                             val specificEdge = opcoesArcano.firstOrNull { it.first == choiceLabel }?.second
 

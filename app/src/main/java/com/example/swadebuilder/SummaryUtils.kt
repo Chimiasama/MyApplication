@@ -287,14 +287,20 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
 
                 // Extract features from description (naive bullet point extraction)
                 // Assuming bullets start with "•" or "-" or are distinctive
+                // User Request: Show only the indicator (Name), not the full text.
+                // Example: "• FÚRIA: Description..." -> "• FÚRIA"
                 val descriptionLines = vant.descricao.lines()
                 val featureLines = descriptionLines.filter { it.trim().startsWith("•") || it.trim().startsWith("-") }
                 featureLines.forEach { f ->
-                    lines += "  $f"
-                }
-                // Fallback if description is short and has no bullets (show full desc)
-                if (featureLines.isEmpty() && vant.descricao.isNotBlank() && vant.descricao.length < 200) {
-                     lines += "  - ${vant.descricao}"
+                    val cleanLine = f.trim()
+                    val titlePart = if (cleanLine.contains(":")) {
+                        cleanLine.substringBefore(":")
+                    } else if (cleanLine.contains(".")) {
+                        cleanLine.substringBefore(".")
+                    } else {
+                        cleanLine
+                    }
+                    lines += "  $titlePart"
                 }
             }
             lines += ""
