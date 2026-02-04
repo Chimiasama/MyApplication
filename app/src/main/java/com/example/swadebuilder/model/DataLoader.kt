@@ -195,11 +195,12 @@ object DataLoader {
 
         // 2. Crystal Hearts
         if ("CRYSTAL_HEART" in keys) {
+            @Suppress("UNCHECKED_CAST")
             val hearts = dataCache.getOrPut("crystal_coracoes.json") {
                 runCatching {
                     assets.open("crystal_coracoes.json")
                         .use { input -> json.decodeFromStream<List<CrystalHeart>>(input) }
-                }.getOrElse { emptyList() }
+                }.getOrElse { emptyList<CrystalHeart>() }
             } as List<CrystalHeart>
             listaCoracoesCrystal = hearts
         } else {
@@ -208,9 +209,12 @@ object DataLoader {
 
         // 3. Super Poderes
         if ("SUPER" in keys) {
+            @Suppress("UNCHECKED_CAST")
             val supers = dataCache.getOrPut("super_poderes.json") {
-                assets.open("super_poderes.json")
-                    .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
+                runCatching {
+                    assets.open("super_poderes.json")
+                        .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
+                }.getOrElse { emptyList<SuperPoder>() }
             } as List<SuperPoder>
             listaSuperPoderes = supers
         } else {
@@ -218,9 +222,12 @@ object DataLoader {
         }
 
         // 4. Arcano Info (Always load core)
+        @Suppress("UNCHECKED_CAST")
         val arcanoList = dataCache.getOrPut("geral_arcano_info.json") {
-            assets.open("geral_arcano_info.json")
-                .use { input -> json.decodeFromStream<List<ArcanoInfo>>(input) }
+            runCatching {
+                assets.open("geral_arcano_info.json")
+                    .use { input -> json.decodeFromStream<List<ArcanoInfo>>(input) }
+            }.getOrElse { emptyList<ArcanoInfo>() }
         } as List<ArcanoInfo>
 
         arcanoInfo = arcanoList.associate {
@@ -232,7 +239,9 @@ object DataLoader {
 
         // 5. Atributos (Always load core)
         val atributosData = dataCache.getOrPut("geral_atributos.json") {
-            loadJsonAsset<AtributoList>(context, "geral_atributos.json")
+            runCatching {
+                loadJsonAsset<AtributoList>(context, "geral_atributos.json")
+            }.getOrElse { AtributoList(emptyList()) }
         } as AtributoList
 
         listaAtributos = atributosData.atributos.map { it.nome.keyify() }
@@ -244,9 +253,25 @@ object DataLoader {
             key in keys
         }.flatMap { module ->
             val pListWrapper = dataCache.getOrPut(module.fileName) {
-                runCatching {
+                // Try loading as PericiaList (wrapped)
+                val asWrapper = runCatching {
                     loadJsonAsset<PericiaList>(context, module.fileName)
-                }.getOrElse { PericiaList(emptyList()) }
+                }.getOrNull()
+
+                if (asWrapper != null) {
+                    asWrapper
+                } else {
+                    // Try loading as List<PericiaJson> (direct)
+                    val asList = runCatching {
+                        loadJsonAsset<List<PericiaJson>>(context, module.fileName)
+                    }.getOrNull()
+
+                    if (asList != null) {
+                        PericiaList(asList)
+                    } else {
+                        PericiaList(emptyList())
+                    }
+                }
             } as PericiaList
 
             val pList = pListWrapper.pericias
@@ -268,12 +293,13 @@ object DataLoader {
         }
 
         // Descrições
+        @Suppress("UNCHECKED_CAST")
         val periciasDescList = dataCache.getOrPut("pericias_desc.json") {
             runCatching {
                 assets.open("pericias_desc.json").use { input ->
                     json.decodeFromStream<List<PericiaDescricaoJson>>(input)
                 }
-            }.getOrElse { emptyList() }
+            }.getOrElse { emptyList<PericiaDescricaoJson>() }
         } as List<PericiaDescricaoJson>
 
         mapaPericiasDescricao = periciasDescList.associate { it.nome.keyify() to it.descricao }
@@ -303,15 +329,19 @@ object DataLoader {
 
         // 8. Tropos e Complicações
         val adgTropos = if ("ARTE_DA_GUERRA" in keys) {
-            dataCache.getOrPut("adg_tropos.json") {
-                runCatching { loadJsonAsset<List<Tropo>>(context, "adg_tropos.json") }.getOrElse { emptyList() }
+            @Suppress("UNCHECKED_CAST")
+            val cached = dataCache.getOrPut("adg_tropos.json") {
+                runCatching { loadJsonAsset<List<Tropo>>(context, "adg_tropos.json") }.getOrElse { emptyList<Tropo>() }
             } as List<Tropo>
+            cached
         } else emptyList()
 
         val chTropos = if ("CRYSTAL_HEART" in keys) {
-            dataCache.getOrPut("crystal_tropos.json") {
-                runCatching { loadJsonAsset<List<Tropo>>(context, "crystal_tropos.json") }.getOrElse { emptyList() }
+            @Suppress("UNCHECKED_CAST")
+            val cached = dataCache.getOrPut("crystal_tropos.json") {
+                runCatching { loadJsonAsset<List<Tropo>>(context, "crystal_tropos.json") }.getOrElse { emptyList<Tropo>() }
             } as List<Tropo>
+            cached
         } else emptyList()
 
         listaTropos = adgTropos + chTropos
@@ -325,9 +355,12 @@ object DataLoader {
 
         // 10. Monstros
         if ("HORROR" in keys) {
+            @Suppress("UNCHECKED_CAST")
             val monstros = dataCache.getOrPut("horror_monstros.json") {
-                assets.open("horror_monstros.json")
-                    .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
+                runCatching {
+                    assets.open("horror_monstros.json")
+                        .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
+                }.getOrElse { emptyList<MonstroTemplate>() }
             } as List<MonstroTemplate>
             listaMonstroTemplates = monstros
         } else {
