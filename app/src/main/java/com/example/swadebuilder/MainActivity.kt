@@ -89,6 +89,7 @@ import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.model.DataLoader
+import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.Poder

@@ -44,8 +44,9 @@ object DataLoader {
         ignoreUnknownKeys = true
     }
 
-    // Cache for loaded file content (FileName -> List<Any>)
-    private val dataCache = mutableMapOf<String, List<Any>>()
+    // Cache for loaded file content (FileName -> Any)
+    // Stores List<T> or specific wrapper types (AtributoList, PericiaList)
+    private val dataCache = mutableMapOf<String, Any>()
 
     private data class ModuleFile(val fileName: String, val originOverride: String? = null)
 
@@ -148,6 +149,7 @@ object DataLoader {
             val key = it.originOverride?.uppercase() ?: "BASICO"
             key in activeKeys
         }.flatMap { module ->
+            @Suppress("UNCHECKED_CAST")
             val cached = dataCache.getOrPut(module.fileName) {
                 try {
                     open(module.fileName).use { input ->
