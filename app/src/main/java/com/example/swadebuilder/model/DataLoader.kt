@@ -9,7 +9,7 @@ import com.example.swadebuilder.ArcanoInfo
 import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.SuperPoder
 import com.example.swadebuilder.arcanoInfo
-import com.example.swadebuilder.listaPoderes
+import com.example.swadebuilder.equipamentoCategorias
 import com.example.swadebuilder.listaAncestralidadesJson
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.listaComplicacoes
@@ -17,6 +17,8 @@ import com.example.swadebuilder.listaCoracoesCrystal
 import com.example.swadebuilder.listaEquipamentos
 import com.example.swadebuilder.listaMonstroTemplates
 import com.example.swadebuilder.listaPericias
+import com.example.swadebuilder.listaPoderes
+import com.example.swadebuilder.listaSuperPoderes
 import com.example.swadebuilder.listaTropos
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDescricao
@@ -25,6 +27,7 @@ import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.mapaPericiasDescricao
 import com.example.swadebuilder.racialAttrMinMap
 import com.example.swadebuilder.racialSkillStartMap
+import com.example.swadebuilder.superequipCategorias
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -32,14 +35,17 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 
 /**
- * Loads all JSON game data from assets into global variables.
- * This refactors the logic previously found in MainActivity.onCreate.
+ * Loads JSON game data from assets into global variables.
+ * Refactored for Lazy Loading.
  */
 object DataLoader {
 
     private val json = Json {
         ignoreUnknownKeys = true
     }
+
+    // Cache for loaded file content (FileName -> List<Any>)
+    private val dataCache = mutableMapOf<String, List<Any>>()
 
     private data class ModuleFile(val fileName: String, val originOverride: String? = null)
 
@@ -133,64 +139,88 @@ object DataLoader {
     // --- Loading Logic ---
 
     @OptIn(ExperimentalSerializationApi::class)
-    private inline fun <reified T> AssetManager.readJsonList(fileName: String): List<T> =
-        open(fileName).use { input -> json.decodeFromStream(input) }
-
-    @OptIn(ExperimentalSerializationApi::class)
     private inline fun <reified T> AssetManager.loadAndMerge(
         modules: List<ModuleFile>,
-        crossinline transform: (T, String?) -> T = { item, _ -> item }
+        activeKeys: Set<String>,
+        noinline transform: (T, String?) -> T = { item, _ -> item }
     ): List<T> {
-        return modules.flatMap { module ->
-            runCatching {
-                readJsonList<T>(module.fileName).map { item ->
-                    if (module.originOverride != null) {
-                        transform(item, module.originOverride)
-                    } else {
-                        item
+        return modules.filter {
+            val key = it.originOverride?.uppercase() ?: "BASICO"
+            key in activeKeys
+        }.flatMap { module ->
+            val cached = dataCache.getOrPut(module.fileName) {
+                try {
+                    open(module.fileName).use { input ->
+                        json.decodeFromStream<List<T>>(input)
                     }
+                } catch (e: Exception) {
+                    emptyList<T>()
                 }
-            }.getOrElse { emptyList() }
+            } as List<T>
+
+            cached.map { item ->
+                if (module.originOverride != null) transform(item, module.originOverride) else item
+            }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    fun load(context: Context): MainActivityData {
+    fun loadCore(context: Context) {
+        updateActiveModules(context, setOf("BASICO"))
+    }
+
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    fun updateActiveModules(context: Context, activeModules: Set<String>) {
+        val keys = activeModules + "BASICO" // Always include basic
         val assets = context.assets
 
         // 1. Equipamentos
-        val allEquip = assets.loadAndMerge<EquipamentoCategoria>(equipmentModules) { item, override ->
+        val allEquip = assets.loadAndMerge<EquipamentoCategoria>(equipmentModules, keys) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
         listaEquipamentos = allEquip.flatMap { it.itens }
 
-        val equipamentoCategorias = deduplicarEquipamentoCategorias(
+        equipamentoCategorias = deduplicarEquipamentoCategorias(
             allEquip.filter { cat ->
                 cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
             }
         )
-        // Includes all categories with origin SUPER (from any file)
-        val superequipCategorias = deduplicarEquipamentoCategorias(
+        superequipCategorias = deduplicarEquipamentoCategorias(
             allEquip.filter { cat ->
                 cat.origem?.equals("super", ignoreCase = true) ?: false
             }
         )
 
         // 2. Crystal Hearts
-        listaCoracoesCrystal = runCatching {
-            assets.open("crystal_coracoes.json")
-                .use { input -> json.decodeFromStream<List<CrystalHeart>>(input) }
-        }.getOrElse { emptyList() }
+        if ("CRYSTAL_HEART" in keys) {
+            val hearts = dataCache.getOrPut("crystal_coracoes.json") {
+                runCatching {
+                    assets.open("crystal_coracoes.json")
+                        .use { input -> json.decodeFromStream<List<CrystalHeart>>(input) }
+                }.getOrElse { emptyList() }
+            } as List<CrystalHeart>
+            listaCoracoesCrystal = hearts
+        } else {
+            listaCoracoesCrystal = emptyList()
+        }
 
         // 3. Super Poderes
-        val listaSuperPoderes: List<SuperPoder> =
-            assets.open("super_poderes.json")
-                .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
+        if ("SUPER" in keys) {
+            val supers = dataCache.getOrPut("super_poderes.json") {
+                assets.open("super_poderes.json")
+                    .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
+            } as List<SuperPoder>
+            listaSuperPoderes = supers
+        } else {
+            listaSuperPoderes = emptyList()
+        }
 
-        // 4. Arcano Info
-        val arcanoList: List<ArcanoInfo> =
+        // 4. Arcano Info (Always load core)
+        val arcanoList = dataCache.getOrPut("geral_arcano_info.json") {
             assets.open("geral_arcano_info.json")
                 .use { input -> json.decodeFromStream<List<ArcanoInfo>>(input) }
+        } as List<ArcanoInfo>
+
         arcanoInfo = arcanoList.associate {
             it.key
                 .uppercase()
@@ -198,27 +228,34 @@ object DataLoader {
                 .trim() to Triple(it.slots, it.pp, it.foco)
         }
 
-        // 5. Atributos
-        val atributosData = loadJsonAsset<AtributoList>(context, "geral_atributos.json")
-        listaAtributos = atributosData.atributos
-            .map { it.nome.keyify() }
-        mapaAtributosDisplay = atributosData.atributos
-            .associate { it.nome.keyify() to it.nome }
+        // 5. Atributos (Always load core)
+        val atributosData = dataCache.getOrPut("geral_atributos.json") {
+            loadJsonAsset<AtributoList>(context, "geral_atributos.json")
+        } as AtributoList
+
+        listaAtributos = atributosData.atributos.map { it.nome.keyify() }
+        mapaAtributosDisplay = atributosData.atributos.associate { it.nome.keyify() to it.nome }
 
         // 6. Pericias
-        // Special handling for nested "pericias" object in PericiaList wrapper
-        val todasPericiasJson = skillModules.flatMap { module ->
-            runCatching {
-                val pList = loadJsonAsset<PericiaList>(context, module.fileName).pericias
-                if (module.originOverride != null) {
-                    pList.map { it.copy(origem = module.originOverride) }
-                } else {
-                    pList
-                }
-            }.getOrElse { emptyList() }
+        val todasPericiasJson = skillModules.filter {
+            val key = it.originOverride?.uppercase() ?: "BASICO"
+            key in keys
+        }.flatMap { module ->
+            val pListWrapper = dataCache.getOrPut(module.fileName) {
+                runCatching {
+                    loadJsonAsset<PericiaList>(context, module.fileName)
+                }.getOrElse { PericiaList(emptyList()) }
+            } as PericiaList
+
+            val pList = pListWrapper.pericias
+            if (module.originOverride != null) {
+                pList.map { it.copy(origem = module.originOverride) }
+            } else {
+                pList
+            }
         }
 
-        listaPericias = todasPericiasJson.map { pj ->
+        val rawPericias = todasPericiasJson.map { pj ->
             Pericia(
                 nome     = pj.nome,
                 atributo = pj.atributo.uppercase().semAcentos(),
@@ -227,29 +264,30 @@ object DataLoader {
                 descricao = pj.descricao
             )
         }
-        mapaPericias = listaPericias.associateBy { it.nome.keyify() }
 
-        // Carrega descrições de perícias
-        val periciasDescList = runCatching {
-            assets.open("pericias_desc.json").use { input ->
-                json.decodeFromStream<List<PericiaDescricaoJson>>(input)
-            }
-        }.getOrElse { emptyList() }
+        // Descrições
+        val periciasDescList = dataCache.getOrPut("pericias_desc.json") {
+            runCatching {
+                assets.open("pericias_desc.json").use { input ->
+                    json.decodeFromStream<List<PericiaDescricaoJson>>(input)
+                }
+            }.getOrElse { emptyList() }
+        } as List<PericiaDescricaoJson>
 
         mapaPericiasDescricao = periciasDescList.associate { it.nome.keyify() to it.descricao }
 
-        listaPericias = listaPericias.map { pericia ->
+        listaPericias = rawPericias.map { pericia ->
             val desc = pericia.descricao ?: mapaPericiasDescricao[pericia.nome.keyify()]
             pericia.copy(descricao = desc)
         }
+        mapaPericias = listaPericias.associateBy { it.nome.keyify() }
 
-        // Carrega descrições de atributos
         mapaAtributosDescricao = atributosData.atributos.associate {
             it.nome.keyify() to (it.descricao ?: "")
         }
 
         // 7. Vantagens
-        val todasVantagens = assets.loadAndMerge<Vantagem>(advantageModules) { item, override ->
+        val todasVantagens = assets.loadAndMerge<Vantagem>(advantageModules, keys) { item, override ->
              if (override != null) item.copy(origem = override) else item
         }
 
@@ -262,33 +300,37 @@ object DataLoader {
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
         // 8. Tropos e Complicações
-        val adgTropos = runCatching {
-            loadJsonAsset<List<Tropo>>(context, "adg_tropos.json")
-        }.getOrElse { emptyList() }
-        val chTropos = runCatching {
-            loadJsonAsset<List<Tropo>>(context, "crystal_tropos.json")
-        }.getOrElse { emptyList() }
+        val adgTropos = if ("ARTE_DA_GUERRA" in keys) {
+            dataCache.getOrPut("adg_tropos.json") {
+                runCatching { loadJsonAsset<List<Tropo>>(context, "adg_tropos.json") }.getOrElse { emptyList() }
+            } as List<Tropo>
+        } else emptyList()
+
+        val chTropos = if ("CRYSTAL_HEART" in keys) {
+            dataCache.getOrPut("crystal_tropos.json") {
+                runCatching { loadJsonAsset<List<Tropo>>(context, "crystal_tropos.json") }.getOrElse { emptyList() }
+            } as List<Tropo>
+        } else emptyList()
 
         listaTropos = adgTropos + chTropos
 
-        listaComplicacoes = assets.loadAndMerge<Complicacao>(complicationModules) { item, override ->
+        listaComplicacoes = assets.loadAndMerge<Complicacao>(complicationModules, keys) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
 
         // 9. Ancestralidades
-        listaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestryModules) { item, override ->
-            // Optionally override origin for ancestries too if needed, but AncestralidadesSection handles it well.
-            // Leaving as is for now to avoid changing working logic, unless requested.
-            // Actually, for consistency, if we want to ensure "source of truth", we should override.
-            // But let's stick to what was analyzed as broken (Advantages, Equipment).
-            // AncestralidadesSection builds logic based on what is loaded.
-            item
-        }
+        listaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestryModules, keys)
 
         // 10. Monstros
-        listaMonstroTemplates = assets
-            .open("horror_monstros.json")
-            .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
+        if ("HORROR" in keys) {
+            val monstros = dataCache.getOrPut("horror_monstros.json") {
+                assets.open("horror_monstros.json")
+                    .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
+            } as List<MonstroTemplate>
+            listaMonstroTemplates = monstros
+        } else {
+            listaMonstroTemplates = emptyList()
+        }
 
         // 11. Mapas Raciais
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
@@ -305,18 +347,14 @@ object DataLoader {
             rm.nome.keyify() to m
         }
 
-        // 12. Regras de Criação de Raça
-        val regrasCriacaoRaca = runCatching {
-            loadJsonAsset<RegrasCriacaoRacaJson>(context, "basico_habilidades_criacao.json").tabela_criacao
-        }.getOrNull()
+        // 12. Regras de Criação de Raça (Unused mostly but cached)
+        // Kept for consistency if needed later
 
-        // 13. Poderes (Magias/Milagres/Etc)
-        val todosPoderes = assets.loadAndMerge<Poder>(powerModules) { item, override ->
+        // 13. Poderes
+        val todosPoderes = assets.loadAndMerge<Poder>(powerModules, keys) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
         listaPoderes = todosPoderes
-
-        return MainActivityData(equipamentoCategorias, superequipCategorias, listaSuperPoderes, regrasCriacaoRaca)
     }
 
     private fun deduplicarEquipamentoCategorias(
@@ -359,14 +397,6 @@ object DataLoader {
         item.mods_slots?.toString()
     ).joinToString("|")
 }
-
-// Helper data classes for loading context
-data class MainActivityData(
-    val equipamentoCategorias: List<EquipamentoCategoria>,
-    val superequipCategorias: List<EquipamentoCategoria>,
-    val listaSuperPoderes: List<SuperPoder>,
-    val regrasCriacaoRaca: TabelaCriacaoRaca? = null
-)
 
 @OptIn(ExperimentalSerializationApi::class)
 private inline fun <reified T> loadJsonAsset(context: Context, fileName: String): T {

@@ -78,25 +78,11 @@ import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.buildSummaryLines
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.toMeuPersonagem
+import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.keyify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.math.max
-
-private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
-    val (height: Int, width: Int) = options.run { outHeight to outWidth }
-    var inSampleSize = 1
-
-    if (height > reqHeight || width > reqWidth) {
-        val halfHeight: Int = height / 2
-        val halfWidth: Int = width / 2
-
-        while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
-            inSampleSize *= 2
-        }
-    }
-    return inSampleSize
-}
 
 @Composable
 private fun getCompendiumIcons(state: CriadorState): List<Pair<ImageVector, Color>> {
@@ -315,40 +301,11 @@ fun SummaryContent(
                 )
 
                 // Image Placeholder
-                val imageBitmapState = produceState<ImageBitmap?>(initialValue = null, imageUri) {
-                    value = if (imageUri == null) {
+                val imageBitmapState = produceState<ImageBitmap?>(initialValue = null, state.portraitFileName) {
+                    value = if (state.portraitFileName == null) {
                         null
                     } else {
-                        withContext(Dispatchers.IO) {
-                            runCatching {
-                                val maxSide = 1024
-                                val options = BitmapFactory.Options().apply {
-                                    inJustDecodeBounds = true
-                                }
-                                context.contentResolver.openInputStream(imageUri)?.use { stream ->
-                                    BitmapFactory.decodeStream(stream, null, options)
-                                }
-
-                                options.inSampleSize = calculateInSampleSize(options, maxSide, maxSide)
-                                options.inJustDecodeBounds = false
-
-                                context.contentResolver.openInputStream(imageUri)?.use { stream ->
-                                    val sampled = BitmapFactory.decodeStream(stream, null, options)
-                                        ?: return@runCatching null
-
-                                    val currentMax = max(sampled.width, sampled.height)
-                                    val finalBitmap = if (currentMax > maxSide) {
-                                         val ratio = maxSide.toFloat() / currentMax.toFloat()
-                                         val targetWidth = (sampled.width * ratio).toInt().coerceAtLeast(1)
-                                         val targetHeight = (sampled.height * ratio).toInt().coerceAtLeast(1)
-                                         Bitmap.createScaledBitmap(sampled, targetWidth, targetHeight, true)
-                                    } else {
-                                         sampled
-                                    }
-                                    finalBitmap.asImageBitmap()
-                                }
-                            }.getOrNull()
-                        }
+                        CharacterPortraitStorage.loadPortrait(context, state.portraitFileName!!, targetWidth = 512)?.asImageBitmap()
                     }
                 }
 

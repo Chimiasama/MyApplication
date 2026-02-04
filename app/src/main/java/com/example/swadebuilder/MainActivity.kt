@@ -70,6 +70,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -88,7 +90,6 @@ import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.model.DataLoader
 import com.example.swadebuilder.model.EquipamentoItem
-import com.example.swadebuilder.model.MainActivityData
 import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.RacialModifier
@@ -119,7 +120,7 @@ data class ArcanoInfo(
     val foco: String
 )
 
-lateinit var arcanoInfo: Map<String, Triple<Int, Int, String>>
+var arcanoInfo by mutableStateOf<Map<String, Triple<Int, Int, String>>>(emptyMap())
 
 private const val MULTIPLOS_AA_HABILITADOS: Boolean = false
 
@@ -203,7 +204,6 @@ private fun buildUsageInstructions(state: CriadorState, pathfinderLabel: String)
 class MainActivity : ComponentActivity() {
 
     private val isDataLoaded = MutableStateFlow<LoadingState>(LoadingState.Loading)
-    private lateinit var mainActivityData: MainActivityData
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     @OptIn(ExperimentalMaterial3Api::class)
@@ -228,7 +228,7 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                mainActivityData = DataLoader.load(this@MainActivity)
+                DataLoader.loadCore(this@MainActivity)
                 isDataLoaded.value = LoadingState.Success
             } catch (e: Exception) {
                 Log.e("MainActivity", "Erro ao carregar dados: ${e.message}")
@@ -266,10 +266,6 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 is LoadingState.Success -> {
-                    val equipamentoCategorias = mainActivityData.equipamentoCategorias
-                    val superequipCategorias = mainActivityData.superequipCategorias
-                    val listaSuperPoderes = mainActivityData.listaSuperPoderes
-
                     val criadorViewModel: CriadorViewModel = viewModel()
             criadorViewModel.setMultiplosAAHabilitados(MULTIPLOS_AA_HABILITADOS)
             val state = criadorViewModel.state
@@ -1189,9 +1185,9 @@ data class Pericia(
     val descricao: String? = null
 )
 
-var listaComplicacoes: List<Complicacao> = emptyList()
+var listaComplicacoes by mutableStateOf<List<Complicacao>>(emptyList())
 
-var listaCoracoesCrystal: List<CrystalHeart> = emptyList()
+var listaCoracoesCrystal by mutableStateOf<List<CrystalHeart>>(emptyList())
 
 @Serializable
 data class SuperPoder(
@@ -1203,19 +1199,19 @@ data class SuperPoder(
     val manifestacoes: JsonElement? = null
 )
 
-lateinit var listaAncestralidadesJson: List<RacialModifier>
-lateinit var listaMonstroTemplates: List<MonstroTemplate>
+var listaAncestralidadesJson by mutableStateOf<List<RacialModifier>>(emptyList())
+var listaMonstroTemplates by mutableStateOf<List<MonstroTemplate>>(emptyList())
 
-lateinit var racialAttrMinMap: Map<String, Map<String,Int>>
-lateinit var racialSkillStartMap: Map<String, Map<String,Int>>
+var racialAttrMinMap by mutableStateOf<Map<String, Map<String,Int>>>(emptyMap())
+var racialSkillStartMap by mutableStateOf<Map<String, Map<String,Int>>>(emptyMap())
 
-lateinit var listaAtributos: List<String>
-lateinit var mapaAtributosDisplay: Map<String, String>
+var listaAtributos by mutableStateOf<List<String>>(emptyList())
+var mapaAtributosDisplay by mutableStateOf<Map<String, String>>(emptyMap())
 
-lateinit var listaPericias: List<Pericia>
-lateinit var mapaPericias: Map<String, Pericia>
-lateinit var mapaPericiasDescricao: Map<String, String>
-lateinit var mapaAtributosDescricao: Map<String, String>
+var listaPericias by mutableStateOf<List<Pericia>>(emptyList())
+var mapaPericias by mutableStateOf<Map<String, Pericia>>(emptyMap())
+var mapaPericiasDescricao by mutableStateOf<Map<String, String>>(emptyMap())
+var mapaAtributosDescricao by mutableStateOf<Map<String, String>>(emptyMap())
 
 fun periciaStartRaw(anc: String, per: Pericia): Int {
     val ancKey = anc.keyify()
@@ -1224,10 +1220,13 @@ fun periciaStartRaw(anc: String, per: Pericia): Int {
         ?: if (per.basica) 4 else 0
 }
 
-var listaVantagens:    List<Vantagem>   = emptyList()
-var listaPoderes:      List<Poder>      = emptyList()
-lateinit var listaTropos: List<Tropo>
-var listaEquipamentos: List<EquipamentoItem> = emptyList()
+var listaVantagens by mutableStateOf<List<Vantagem>>(emptyList())
+var listaPoderes by mutableStateOf<List<Poder>>(emptyList())
+var listaTropos by mutableStateOf<List<Tropo>>(emptyList())
+var listaEquipamentos by mutableStateOf<List<EquipamentoItem>>(emptyList())
+var equipamentoCategorias by mutableStateOf<List<EquipamentoCategoria>>(emptyList())
+var superequipCategorias by mutableStateOf<List<EquipamentoCategoria>>(emptyList())
+var listaSuperPoderes by mutableStateOf<List<SuperPoder>>(emptyList())
 
 data class Estagio(
     val nome: String,
