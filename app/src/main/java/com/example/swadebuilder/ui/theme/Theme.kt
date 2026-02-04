@@ -6,20 +6,29 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 
 val LocalAppThemeData = staticCompositionLocalOf { DefaultThemeData }
+
+private val AppShapes = Shapes(
+    small = androidx.compose.foundation.shape.RoundedCornerShape(10.dp),
+    medium = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+    large = androidx.compose.foundation.shape.RoundedCornerShape(24.dp)
+)
 
 @Composable
 fun SWADEbuilderTheme(
@@ -47,7 +56,8 @@ fun SWADEbuilderTheme(
     CompositionLocalProvider(LocalAppThemeData provides themeData) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = themeData.typography
+            typography = themeData.typography,
+            shapes = AppShapes
         ) {
             Surface(
                 modifier = Modifier.fillMaxSize(),
@@ -67,6 +77,18 @@ fun SWADEbuilderTheme(
                         .fillMaxSize()
                         .then(backgroundModifier)
                 ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                Brush.verticalGradient(
+                                    colors = listOf(
+                                        colorScheme.primary.copy(alpha = if (darkTheme) 0.12f else 0.08f),
+                                        colorScheme.background.copy(alpha = 0.0f)
+                                    )
+                                )
+                            )
+                    )
                     content()
                 }
             }
