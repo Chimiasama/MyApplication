@@ -78,6 +78,42 @@
     "foco": "Conjurar"
   },
   {
+    "key": "MAGO_PF",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "FEITICEIRO_PF",
+    "slots": 2,
+    "pp": 15,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "BARDO_PF",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Performance"
+  },
+  {
+    "key": "CLERIGO_PF",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Fé"
+  },
+  {
+    "key": "MILAGRES_PF",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Fé"
+  },
+  {
+    "key": "DRUIDA_PF",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Fé"
+  },
+  {
     "key": "ENGENHOQUEIRO",
     "slots": 2,
     "pp": 15,

@@ -252,25 +252,80 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         lines += nomesVantagens.joinToString(", ")
     }
 
-    // Annotations for Armor Interference/Restrictions
-    personagem.vantagens.forEach { vantId ->
-        val vant = definitionMap[vantId.keyify()]
-        if (vant != null) {
-            val tags = vant.requisitos.tags
-            if (tags.contains("INTERFERENCIA_ARMADURA_LEVE")) {
-                lines += "• Interferência de Armadura (Leve): -4 em perícias de Agilidade e Arcanas se usar armadura média/pesada."
+    // Annotations for Armor Interference/Restrictions & Class Features (Pathfinder)
+    if (personagem.compendioPathfinderAtivo) {
+        val classEdges = personagem.vantagens.mapNotNull { definitionMap[it.keyify()] }
+            .filter { it.categoria == Categoria.CLASSE }
+
+        if (classEdges.isNotEmpty()) {
+            lines += "Características de Classe"
+            classEdges.forEach { vant ->
+                val tags = vant.requisitos.tags
+                lines += "• ${vant.nome}"
+
+                // Armor Restrictions/Interference
+                if (tags.contains("INTERFERENCIA_ARMADURA_LEVE")) {
+                    lines += "  - Armadura: Interferência (Leve). Subtraem 4 de rolagens de Perícia Arcana, Agilidade e perícias baseadas em Agilidade se usarem armaduras ou escudos médios/pesados."
+                }
+                if (tags.contains("INTERFERENCIA_ARMADURA_QUALQUER")) {
+                    lines += "  - Armadura: Interferência (Qualquer). Subtraem 4 de rolagens de Perícia Arcana, Agilidade e perícias baseadas em Agilidade se usarem qualquer armadura ou escudo."
+                }
+                if (tags.contains("RESTRICAO_ARMADURA_LEVE")) {
+                    lines += "  - Armadura: Restrição (Leve). Subtraem 4 de rolagens de Agilidade e perícias baseadas em Agilidade se usarem armaduras ou escudos médios/pesados."
+                }
+                if (tags.contains("RESTRICAO_ARMADURA_MEDIA")) {
+                    lines += "  - Armadura: Restrição (Média). Subtraem 4 de rolagens de Agilidade e perícias baseadas em Agilidade se usarem armaduras ou escudos pesados."
+                }
+                if (tags.contains("RESTRICAO_ARMADURA_QUALQUER")) {
+                    lines += "  - Armadura: Restrição (Qualquer). Subtraem 4 de rolagens de Agilidade e perícias baseadas em Agilidade se usarem qualquer armadura ou escudo."
+                }
+
+                // Detect Magic (General Note for AB classes)
+                if (!vant.subtipoArcano.isNullOrBlank()) {
+                    lines += "  - Detectar Magia: Pode sentir auras mágicas/divinas a até 5 quadros (10m) como uma ação."
+                }
+
+                // Extract features from description (naive bullet point extraction)
+                // Assuming bullets start with "•" or "-" or are distinctive
+                // User Request: Show only the indicator (Name), not the full text.
+                // Example: "• FÚRIA: Description..." -> "• FÚRIA"
+                val descriptionLines = vant.descricao.lines()
+                val featureLines = descriptionLines.filter { it.trim().startsWith("•") || it.trim().startsWith("-") }
+                featureLines.forEach { f ->
+                    val cleanLine = f.trim()
+                    val titlePart = if (cleanLine.contains(":")) {
+                        cleanLine.substringBefore(":")
+                    } else if (cleanLine.contains(".")) {
+                        cleanLine.substringBefore(".")
+                    } else {
+                        cleanLine
+                    }
+                    lines += "  $titlePart"
+                }
             }
-            if (tags.contains("INTERFERENCIA_ARMADURA_QUALQUER")) {
-                lines += "• Interferência de Armadura (Qualquer): -4 em perícias de Agilidade e Arcanas se usar qualquer armadura."
-            }
-            if (tags.contains("RESTRICAO_ARMADURA_LEVE")) {
-                lines += "• Restrição de Armadura (Leve): -4 em perícias de Agilidade se usar armadura média/pesada."
-            }
-            if (tags.contains("RESTRICAO_ARMADURA_MEDIA")) {
-                lines += "• Restrição de Armadura (Média): -4 em perícias de Agilidade se usar armadura pesada."
-            }
-            if (tags.contains("RESTRICAO_ARMADURA_QUALQUER")) {
-                lines += "• Restrição de Armadura (Qualquer): -4 em perícias de Agilidade se usar qualquer armadura."
+            lines += ""
+        }
+    } else {
+        // Legacy/Generic display for other settings
+        personagem.vantagens.forEach { vantId ->
+            val vant = definitionMap[vantId.keyify()]
+            if (vant != null) {
+                val tags = vant.requisitos.tags
+                if (tags.contains("INTERFERENCIA_ARMADURA_LEVE")) {
+                    lines += "• Interferência de Armadura (Leve): -4 em perícias de Agilidade e Arcanas se usar armadura média/pesada."
+                }
+                if (tags.contains("INTERFERENCIA_ARMADURA_QUALQUER")) {
+                    lines += "• Interferência de Armadura (Qualquer): -4 em perícias de Agilidade e Arcanas se usar qualquer armadura."
+                }
+                if (tags.contains("RESTRICAO_ARMADURA_LEVE")) {
+                    lines += "• Restrição de Armadura (Leve): -4 em perícias de Agilidade se usar armadura média/pesada."
+                }
+                if (tags.contains("RESTRICAO_ARMADURA_MEDIA")) {
+                    lines += "• Restrição de Armadura (Média): -4 em perícias de Agilidade se usar armadura pesada."
+                }
+                if (tags.contains("RESTRICAO_ARMADURA_QUALQUER")) {
+                    lines += "• Restrição de Armadura (Qualquer): -4 em perícias de Agilidade se usar qualquer armadura."
+                }
             }
         }
     }

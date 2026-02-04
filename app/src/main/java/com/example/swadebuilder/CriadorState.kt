@@ -1061,6 +1061,12 @@ class CriadorState {
         v.toArcanoKey()?.let { arcKeyRaw ->
             val arcKey = arcKeyRaw.normAAKey()
 
+            // Initialize slots for ANY Arcane Background, not just fixed ones
+            val slots = poderSlotsPorArcano.getOrPut(arcKey) {
+                val count = getSlotsCountForArcano(arcKey)
+                mutableStateListOf<String?>().apply { repeat(count) { add(null) } }
+            }
+
             val effectiveKey = if (arcKey == "MISTICO" && !v.choice.isNullOrBlank()) {
                 "MISTICO_${v.choice!!.normAAKey()}"
             } else {
@@ -1068,11 +1074,6 @@ class CriadorState {
             }
 
             fixedPowersByArcano[effectiveKey]?.let { fixedList ->
-                val slots = poderSlotsPorArcano.getOrPut(arcKey) {
-                    val count = getSlotsCountForArcano(arcKey)
-                    mutableStateListOf<String?>().apply { repeat(count) { add(null) } }
-                }
-
                 // Ensure slots size
                 // Fix: Mystic Powers might have more fixed powers than the default slot count
                 val requiredSize = getEffectiveSlotsCountForArcano(arcKey)
@@ -1083,8 +1084,8 @@ class CriadorState {
                         slots[index] = powerId
                     }
                 }
-                syncPoderesSelecionadosFromSlots()
             }
+            syncPoderesSelecionadosFromSlots()
         }
 
         if (v.id == "escolhido") {
