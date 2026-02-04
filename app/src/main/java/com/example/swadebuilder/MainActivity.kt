@@ -1005,22 +1005,24 @@ class MainActivity : ComponentActivity() {
                                     scope.launch {
                                         isDataLoaded.value = LoadingState.Loading
                                         val updated = runCatching {
-                                            DataLoader.load(
-                                                context,
-                                                buildCompendioFlags(
-                                                    modoSupers = modoSupers,
-                                                    compendioFantasiaAtivo = compendioFantasiaAtivo,
-                                                    compendioHorrorAtivo = compendioHorrorAtivo,
-                                                    compendioSciFiAtivo = compendioSciFiAtivo,
-                                                    compendioPathfinderAtivo = compendioPathfinderAtivo,
-                                                    compendioDeadlandsAtivo = compendioDeadlandsAtivo,
-                                                    compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
-                                                    compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
-                                                    compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
-                                                    compendioWiseguysAtivo = compendioWiseguysAtivo,
-                                                    modoMonstroAtivo = modoMonstroAtivo
+                                            kotlinx.coroutines.withContext(Dispatchers.IO) {
+                                                DataLoader.load(
+                                                    context,
+                                                    buildCompendioFlags(
+                                                        modoSupers = modoSupers,
+                                                        compendioFantasiaAtivo = compendioFantasiaAtivo,
+                                                        compendioHorrorAtivo = compendioHorrorAtivo,
+                                                        compendioSciFiAtivo = compendioSciFiAtivo,
+                                                        compendioPathfinderAtivo = compendioPathfinderAtivo,
+                                                        compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+                                                        compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+                                                        compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+                                                        compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+                                                        compendioWiseguysAtivo = compendioWiseguysAtivo,
+                                                        modoMonstroAtivo = modoMonstroAtivo
+                                                    )
                                                 )
-                                            )
+                                            }
                                         }.getOrElse { error ->
                                             isDataLoaded.value = LoadingState.Error(
                                                 error.message ?: "Erro desconhecido"

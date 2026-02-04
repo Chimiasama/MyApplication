@@ -18,6 +18,8 @@ import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.keyify
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -226,22 +228,24 @@ class CriadorViewModel : ViewModel() {
         }
         val flags = snapshot.flags
         val activityData = runCatching {
-            DataLoader.load(
-                context,
-                DataLoader.CompendioFlags(
-                    modoSupers = flags.modoSupers,
-                    compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
-                    compendioHorrorAtivo = flags.compendioHorrorAtivo,
-                    compendioSciFiAtivo = flags.compendioSciFiAtivo,
-                    compendioPathfinderAtivo = flags.compendioPathfinderAtivo,
-                    compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo,
-                    compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo,
-                    compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo,
-                    compendioCidadeSolVaporAtivo = flags.compendioCidadeSolVaporAtivo,
-                    compendioWiseguysAtivo = flags.compendioWiseguysAtivo,
-                    modoMonstroAtivo = flags.modoMonstroAtivo
+            withContext(Dispatchers.IO) {
+                DataLoader.load(
+                    context,
+                    DataLoader.CompendioFlags(
+                        modoSupers = flags.modoSupers,
+                        compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
+                        compendioHorrorAtivo = flags.compendioHorrorAtivo,
+                        compendioSciFiAtivo = flags.compendioSciFiAtivo,
+                        compendioPathfinderAtivo = flags.compendioPathfinderAtivo,
+                        compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo,
+                        compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo,
+                        compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo,
+                        compendioCidadeSolVaporAtivo = flags.compendioCidadeSolVaporAtivo,
+                        compendioWiseguysAtivo = flags.compendioWiseguysAtivo,
+                        modoMonstroAtivo = flags.modoMonstroAtivo
+                    )
                 )
-            )
+            }
         }.getOrElse { error ->
             return LoadOutcome(
                 success = false,
