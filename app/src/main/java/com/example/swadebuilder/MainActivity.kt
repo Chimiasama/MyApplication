@@ -205,6 +205,32 @@ class MainActivity : ComponentActivity() {
     private val isDataLoaded = MutableStateFlow<LoadingState>(LoadingState.Loading)
     private lateinit var mainActivityData: MainActivityData
 
+    private fun buildCompendioFlags(
+        modoSupers: Boolean,
+        compendioFantasiaAtivo: Boolean,
+        compendioHorrorAtivo: Boolean,
+        compendioSciFiAtivo: Boolean,
+        compendioPathfinderAtivo: Boolean,
+        compendioDeadlandsAtivo: Boolean,
+        compendioCrystalHeartAtivo: Boolean,
+        compendioArteDaGuerraAtivo: Boolean,
+        compendioCidadeSolVaporAtivo: Boolean,
+        compendioWiseguysAtivo: Boolean,
+        modoMonstroAtivo: Boolean
+    ): DataLoader.CompendioFlags = DataLoader.CompendioFlags(
+        modoSupers = modoSupers,
+        compendioFantasiaAtivo = compendioFantasiaAtivo,
+        compendioHorrorAtivo = compendioHorrorAtivo,
+        compendioSciFiAtivo = compendioSciFiAtivo,
+        compendioPathfinderAtivo = compendioPathfinderAtivo,
+        compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+        compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+        compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+        compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+        compendioWiseguysAtivo = compendioWiseguysAtivo,
+        modoMonstroAtivo = modoMonstroAtivo
+    )
+
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     @OptIn(ExperimentalMaterial3Api::class)
 
@@ -266,9 +292,10 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 is LoadingState.Success -> {
-                    val equipamentoCategorias = mainActivityData.equipamentoCategorias
-                    val superequipCategorias = mainActivityData.superequipCategorias
-                    val listaSuperPoderes = mainActivityData.listaSuperPoderes
+                    var activityData by remember { mutableStateOf(mainActivityData) }
+                    val equipamentoCategorias = activityData.equipamentoCategorias
+                    val superequipCategorias = activityData.superequipCategorias
+                    val listaSuperPoderes = activityData.listaSuperPoderes
 
                     val criadorViewModel: CriadorViewModel = viewModel()
             criadorViewModel.setMultiplosAAHabilitados(MULTIPLOS_AA_HABILITADOS)
@@ -821,20 +848,29 @@ class MainActivity : ComponentActivity() {
                                             TextButton(onClick = {
                                                 triggerFeedback()
                                                 scope.launch {
+                                                    isDataLoaded.value = LoadingState.Loading
                                                     val result = criadorViewModel.carregarPersonagem(
                                                         context,
                                                         entry.id
                                                     )
                                                     if (result.success) {
+                                                        result.activityData?.let { updated ->
+                                                            mainActivityData = updated
+                                                            activityData = updated
+                                                        }
                                                         creationSession++
                                                         mostrouTelaInicial = false
                                                         showLoadDialog = false
                                                         snackHost.showSnackbar("Carregado: ${entry.nome}")
                                                     } else {
+                                                        isDataLoaded.value = LoadingState.Success
                                                         snackHost.showSnackbar(
                                                             result.message
                                                                 ?: "Falha ao carregar o personagem"
                                                         )
+                                                    }
+                                                    if (result.success) {
+                                                        isDataLoaded.value = LoadingState.Success
                                                     }
                                                 }
                                             }) {
@@ -966,41 +1002,68 @@ class MainActivity : ComponentActivity() {
                                                 semPontosDePoder, multiplosIdiomas, grandesResponsabilidades,
                                                 optRegraFama, optRegraRiqueza, optRegraCosaNostra,
                                                 optRegraMechasCiberneticos ->
-
-                                    creationSession++
-
-                                    criadorViewModel.resetStateParaNovoPersonagem(
-                                        cartaSelvagem      = cartaSelvagem,
-                                        maisPontosPericias = maisPontosPericias,
-                                        modoSupers         = modoSupers,
-                                        compendioFantasiaAtivo = compendioFantasiaAtivo,
-                                        compendioHorrorAtivo = compendioHorrorAtivo,
-                                        compendioSciFiAtivo = compendioSciFiAtivo,
-                                        compendioScifiMechasCiberneticosAtivo = optRegraMechasCiberneticos,
-                                        compendioPathfinderAtivo = compendioPathfinderAtivo,
-                                        compendioDeadlandsAtivo = compendioDeadlandsAtivo,
-                                        compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
-                                        compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
-                                        compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
-                                        compendioWiseguysAtivo = compendioWiseguysAtivo,
-                                        modoMonstroAtivo = modoMonstroAtivo,
-                                        usarEspecializacoesDePericia = usarEspecializacaoPer,
-                                        regraMultiplosIdiomas = multiplosIdiomas,
-                                        optRegraFama = optRegraFama,
-                                        optRegraRiqueza = optRegraRiqueza,
-                                        optRegraCosaNostra = optRegraCosaNostra
-                                    )
                                     scope.launch {
+                                        isDataLoaded.value = LoadingState.Loading
+                                        val updated = runCatching {
+                                            DataLoader.load(
+                                                context,
+                                                buildCompendioFlags(
+                                                    modoSupers = modoSupers,
+                                                    compendioFantasiaAtivo = compendioFantasiaAtivo,
+                                                    compendioHorrorAtivo = compendioHorrorAtivo,
+                                                    compendioSciFiAtivo = compendioSciFiAtivo,
+                                                    compendioPathfinderAtivo = compendioPathfinderAtivo,
+                                                    compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+                                                    compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+                                                    compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+                                                    compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+                                                    compendioWiseguysAtivo = compendioWiseguysAtivo,
+                                                    modoMonstroAtivo = modoMonstroAtivo
+                                                )
+                                            )
+                                        }.getOrElse { error ->
+                                            isDataLoaded.value = LoadingState.Error(
+                                                error.message ?: "Erro desconhecido"
+                                            )
+                                            return@launch
+                                        }
+                                        mainActivityData = updated
+                                        activityData = updated
+
+                                        creationSession++
+
+                                        criadorViewModel.resetStateParaNovoPersonagem(
+                                            cartaSelvagem      = cartaSelvagem,
+                                            maisPontosPericias = maisPontosPericias,
+                                            modoSupers         = modoSupers,
+                                            compendioFantasiaAtivo = compendioFantasiaAtivo,
+                                            compendioHorrorAtivo = compendioHorrorAtivo,
+                                            compendioSciFiAtivo = compendioSciFiAtivo,
+                                            compendioScifiMechasCiberneticosAtivo = optRegraMechasCiberneticos,
+                                            compendioPathfinderAtivo = compendioPathfinderAtivo,
+                                            compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+                                            compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+                                            compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+                                            compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+                                            compendioWiseguysAtivo = compendioWiseguysAtivo,
+                                            modoMonstroAtivo = modoMonstroAtivo,
+                                            usarEspecializacoesDePericia = usarEspecializacaoPer,
+                                            regraMultiplosIdiomas = multiplosIdiomas,
+                                            optRegraFama = optRegraFama,
+                                            optRegraRiqueza = optRegraRiqueza,
+                                            optRegraCosaNostra = optRegraCosaNostra
+                                        )
                                         criadorViewModel.prepararNomeInicial(context)
+                                        criadorViewModel.state.heroisSemArmadura     = heroisSemArmadura
+                                        criadorViewModel.state.nasceUmHeroi          = nasceUmHeroi
+
+                                        criadorViewModel.state.usarSemPontosDePoder  = semPontosDePoder
+                                        criadorViewModel.normalizeArcanoIdsNoCarregamento()
+                                        criadorViewModel.state.grandesResponsabilidades = grandesResponsabilidades
+
+                                        isDataLoaded.value = LoadingState.Success
+                                        mostrouTelaInicial = false
                                     }
-                                    criadorViewModel.state.heroisSemArmadura     = heroisSemArmadura
-                                    criadorViewModel.state.nasceUmHeroi          = nasceUmHeroi
-
-                                    criadorViewModel.state.usarSemPontosDePoder  = semPontosDePoder
-                                    criadorViewModel.normalizeArcanoIdsNoCarregamento()
-                                    criadorViewModel.state.grandesResponsabilidades = grandesResponsabilidades
-
-                                    mostrouTelaInicial = false
                                 },
                                 onCarregarPersonagem = { showLoadDialog = true },
                                 onOpenSettings = { showSettingsDialog = true },

@@ -9,12 +9,14 @@ import androidx.security.crypto.MasterKey
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.IOException
 import java.util.Locale
 import java.util.UUID
 
 object CharacterPortraitStorage {
     private const val PORTRAIT_DIR = "portraits"
     private const val MAX_PORTRAIT_SIZE_BYTES = 10 * 1024 * 1024L // 10 MB
+    private const val MAX_PORTRAIT_DIMENSION = 1024
 
     private fun portraitsDirectory(context: Context): File {
         return File(context.filesDir, PORTRAIT_DIR).apply { mkdirs() }
@@ -36,6 +38,29 @@ object CharacterPortraitStorage {
         }
     }
 
+    private fun calculateInSampleSize(width: Int, height: Int, maxDimension: Int): Int {
+        if (width <= maxDimension && height <= maxDimension) return 1
+        var inSampleSize = 1
+        var halfWidth = width / 2
+        var halfHeight = height / 2
+        while (halfWidth / inSampleSize >= maxDimension && halfHeight / inSampleSize >= maxDimension) {
+            inSampleSize *= 2
+        }
+        return inSampleSize
+    }
+
+    private fun decodeScaledBitmapFromBytes(data: ByteArray): Bitmap? {
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeByteArray(data, 0, data.size, bounds)
+        if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null
+
+        val sampleSize = calculateInSampleSize(bounds.outWidth, bounds.outHeight, MAX_PORTRAIT_DIMENSION)
+        val options = BitmapFactory.Options().apply {
+            inSampleSize = sampleSize
+        }
+        return BitmapFactory.decodeByteArray(data, 0, data.size, options)
+    }
+
     suspend fun loadPortrait(context: Context, fileName: String): Bitmap? = withContext(Dispatchers.IO) {
         val dir = portraitsDirectory(context)
         val file = try {
@@ -48,7 +73,8 @@ object CharacterPortraitStorage {
 
         // 1. Try Plaintext (Preferred)
         try {
-            val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+            val data = file.readBytes()
+            val bitmap = decodeScaledBitmapFromBytes(data)
             if (bitmap != null) return@withContext bitmap
         } catch (e: Exception) {
             // Ignore
@@ -64,7 +90,8 @@ object CharacterPortraitStorage {
             ).build()
 
             return@withContext encryptedFile.openFileInput().use { input ->
-                BitmapFactory.decodeStream(input)
+                val data = input.readBytes()
+                decodeScaledBitmapFromBytes(data)
             }
         } catch (e: Exception) {
             // Ignore
@@ -79,25 +106,23 @@ object CharacterPortraitStorage {
         val destination = File(dir, fileName)
 
         try {
-            context.contentResolver.openInputStream(sourceUri)?.use { input ->
-                // Write directly to file (plaintext)
-                destination.outputStream().use { output ->
-                    val buffer = ByteArray(8 * 1024)
-                    var totalBytes = 0L
-                    var bytesRead = input.read(buffer)
-                    while (bytesRead >= 0) {
-                        output.write(buffer, 0, bytesRead)
-                        totalBytes += bytesRead
-                        if (totalBytes > MAX_PORTRAIT_SIZE_BYTES) {
-                            throw java.io.IOException("Imagem excede o limite de 10MB")
-                        }
-                        bytesRead = input.read(buffer)
-                    }
+            val data = context.contentResolver.openInputStream(sourceUri)?.use { input ->
+                val bytes = input.readBytes()
+                if (bytes.size > MAX_PORTRAIT_SIZE_BYTES) {
+                    throw IOException("Imagem excede o limite de 10MB")
                 }
+                bytes
             } ?: return@withContext null
 
-            // Validate that the file is actually an image
-            // We need to read it back via EncryptedFile to validate
+            val bitmap = decodeScaledBitmapFromBytes(data) ?: return@withContext null
+            val format = if (fileName.endsWith(".png")) Bitmap.CompressFormat.PNG else Bitmap.CompressFormat.JPEG
+            destination.outputStream().use { output ->
+                if (!bitmap.compress(format, 85, output)) {
+                    throw IOException("Falha ao salvar retrato.")
+                }
+            }
+
+            // Validate that the file is actually an image via loader
             val isValid = try {
                  loadPortrait(context, fileName) != null
             } catch (e: Exception) { false }

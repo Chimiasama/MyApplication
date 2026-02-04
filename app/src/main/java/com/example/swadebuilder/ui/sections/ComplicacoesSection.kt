@@ -148,6 +148,10 @@ fun ComplicacoesSection(
             val totalPc = state.pontosComplicacao
             val usadosPc = state.pontosComplicacaoGastos
             val livresPc = (totalPc - usadosPc).coerceAtLeast(0)
+            val pbAtributos = state.cpPaStack.size * 2
+            val pbPericias = state.cpSpStack.size
+            val pbVantagens = state.cpPvStack.size
+            val pbRecursos = state.cpRecursosStack.size
 
             SectionHeader(
                 onHelpClick          = null,
@@ -156,6 +160,54 @@ fun ComplicacoesSection(
                 onListaCompletaClick = null,
                 listaCompletaText    = ""
             )
+
+            if (totalPc > 0) {
+                Spacer(Modifier.height(8.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            shape = MaterialTheme.shapes.medium
+                        )
+                        .padding(12.dp)
+                ) {
+                    Text(
+                        text = "PB ativos",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(Modifier.height(6.dp))
+                    val pbResumo = listOf(
+                        "Atributos" to pbAtributos,
+                        "Perícias" to pbPericias,
+                        "Vantagens" to pbVantagens,
+                        "Recursos" to pbRecursos
+                    ).filter { it.second > 0 }
+
+                    if (pbResumo.isEmpty()) {
+                        Text(
+                            text = "Nenhum PB alocado ainda.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    } else {
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            pbResumo.forEach { (label, value) ->
+                                AssistChip(
+                                    onClick = {},
+                                    label = { Text("$label: $value") },
+                                    enabled = false
+                                )
+                            }
+                        }
+                    }
+                }
+            }
 
         if (showTempError) {
             Spacer(Modifier.height(8.dp))

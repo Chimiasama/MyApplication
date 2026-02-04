@@ -3,6 +3,7 @@ package com.example.swadebuilder.util
 import android.content.Context
 import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.MasterKey
+import com.example.swadebuilder.BuildConfig
 import com.example.swadebuilder.model.PersonagemSnapshot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,7 +22,7 @@ object CharacterStorage {
 
     private val json = Json {
         encodeDefaults = true
-        prettyPrint = true
+        prettyPrint = BuildConfig.DEBUG
         ignoreUnknownKeys = true
         classDiscriminator = "type"
     }

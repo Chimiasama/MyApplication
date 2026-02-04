@@ -208,7 +208,8 @@ class CriadorViewModel : ViewModel() {
 
     data class LoadOutcome(
         val success: Boolean,
-        val message: String? = null
+        val message: String? = null,
+        val activityData: MainActivityData? = null
     )
 
     suspend fun carregarPersonagem(context: Context, saveId: String): LoadOutcome {
@@ -223,9 +224,32 @@ class CriadorViewModel : ViewModel() {
                 message = "Arquivo de personagem não encontrado."
             )
         }
+        val flags = snapshot.flags
+        val activityData = runCatching {
+            DataLoader.load(
+                context,
+                DataLoader.CompendioFlags(
+                    modoSupers = flags.modoSupers,
+                    compendioFantasiaAtivo = flags.compendioFantasiaAtivo,
+                    compendioHorrorAtivo = flags.compendioHorrorAtivo,
+                    compendioSciFiAtivo = flags.compendioSciFiAtivo,
+                    compendioPathfinderAtivo = flags.compendioPathfinderAtivo,
+                    compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo,
+                    compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo,
+                    compendioArteDaGuerraAtivo = flags.compendioArteDaGuerraAtivo,
+                    compendioCidadeSolVaporAtivo = flags.compendioCidadeSolVaporAtivo,
+                    compendioWiseguysAtivo = flags.compendioWiseguysAtivo,
+                    modoMonstroAtivo = flags.modoMonstroAtivo
+                )
+            )
+        }.getOrElse { error ->
+            return LoadOutcome(
+                success = false,
+                message = error.message ?: "Erro ao carregar dados do compêndio."
+            )
+        }
         resetUiState()
         clearFeedbackMessages()
-        val flags = snapshot.flags
         resetStateParaNovoPersonagem(
             cartaSelvagem = flags.cartaSelvagem,
             maisPontosPericias = flags.maisPontosPericias,
@@ -249,7 +273,7 @@ class CriadorViewModel : ViewModel() {
         )
         state.restoreFromSnapshot(snapshot, mutableListOf())
         state.idAtual = saveId
-        return LoadOutcome(success = true)
+        return LoadOutcome(success = true, activityData = activityData)
     }
 
     private fun mapChoiceToArcanoId(choice: String?): String? {

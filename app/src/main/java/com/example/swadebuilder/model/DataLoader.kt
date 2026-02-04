@@ -41,93 +41,122 @@ object DataLoader {
         ignoreUnknownKeys = true
     }
 
-    private data class ModuleFile(val fileName: String, val originOverride: String? = null)
+    data class CompendioFlags(
+        val compendioFantasiaAtivo: Boolean = false,
+        val compendioHorrorAtivo: Boolean = false,
+        val compendioSciFiAtivo: Boolean = false,
+        val compendioPathfinderAtivo: Boolean = false,
+        val compendioDeadlandsAtivo: Boolean = false,
+        val compendioCrystalHeartAtivo: Boolean = false,
+        val compendioArteDaGuerraAtivo: Boolean = false,
+        val compendioCidadeSolVaporAtivo: Boolean = false,
+        val compendioWiseguysAtivo: Boolean = false,
+        val modoSupers: Boolean = false,
+        val modoMonstroAtivo: Boolean = false
+    )
+
+    private data class ModuleFile(
+        val fileName: String,
+        val originOverride: String? = null,
+        val originKey: String? = null
+    )
+
+    private const val ORIGIN_FANTASIA = "FANTASIA"
+    private const val ORIGIN_HORROR = "HORROR"
+    private const val ORIGIN_SCI_FI = "SCI_FI"
+    private const val ORIGIN_PATHFINDER = "PATHFINDER"
+    private const val ORIGIN_DEADLANDS = "DEADLANDS"
+    private const val ORIGIN_CRYSTAL_HEART = "CRYSTAL_HEART"
+    private const val ORIGIN_ARTE_DA_GUERRA = "ARTE_DA_GUERRA"
+    private const val ORIGIN_CIDADE_SOL_VAPOR = "CIDADE_SOL_VAPOR"
+    private const val ORIGIN_WISEGUYS = "WISEGUYS"
+    private const val ORIGIN_SUPER = "SUPER"
 
     // --- Module Definitions ---
 
     private val equipmentModules = listOf(
         ModuleFile("basico_equipamentos.json"),
-        ModuleFile("fantasia_equipamentos.json", originOverride = "FANTASIA"),
-        ModuleFile("horror_equipamentos.json", originOverride = "HORROR"),
-        ModuleFile("scifi_equipamentos.json", originOverride = "SCI_FI"),
-        ModuleFile("crystal_equipamentos.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("pathfinder_equipamentos.json", originOverride = "PATHFINDER"),
-        ModuleFile("super_equipamentos.json", originOverride = "SUPER"),
-        ModuleFile("wiseguys_equipamentos.json", originOverride = "WISEGUYS"),
-        ModuleFile("adg_equipamentos.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("sol_vapor_equipamentos.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("deadlands_equipamentos.json", originOverride = "DEADLANDS")
+        ModuleFile("fantasia_equipamentos.json", originOverride = ORIGIN_FANTASIA, originKey = ORIGIN_FANTASIA),
+        ModuleFile("horror_equipamentos.json", originOverride = ORIGIN_HORROR, originKey = ORIGIN_HORROR),
+        ModuleFile("scifi_equipamentos.json", originOverride = ORIGIN_SCI_FI, originKey = ORIGIN_SCI_FI),
+        ModuleFile("crystal_equipamentos.json", originOverride = ORIGIN_CRYSTAL_HEART, originKey = ORIGIN_CRYSTAL_HEART),
+        ModuleFile("pathfinder_equipamentos.json", originOverride = ORIGIN_PATHFINDER, originKey = ORIGIN_PATHFINDER),
+        ModuleFile("super_equipamentos.json", originOverride = ORIGIN_SUPER, originKey = ORIGIN_SUPER),
+        ModuleFile("wiseguys_equipamentos.json", originOverride = ORIGIN_WISEGUYS, originKey = ORIGIN_WISEGUYS),
+        ModuleFile("adg_equipamentos.json", originOverride = ORIGIN_ARTE_DA_GUERRA, originKey = ORIGIN_ARTE_DA_GUERRA),
+        ModuleFile("sol_vapor_equipamentos.json", originOverride = ORIGIN_CIDADE_SOL_VAPOR, originKey = ORIGIN_CIDADE_SOL_VAPOR),
+        ModuleFile("deadlands_equipamentos.json", originOverride = ORIGIN_DEADLANDS, originKey = ORIGIN_DEADLANDS)
     )
 
     private val skillModules = listOf(
         ModuleFile("basico_pericias.json"),
-        ModuleFile("adg_pericias.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("fantasia_pericias.json", originOverride = "FANTASIA"),
-        ModuleFile("horror_pericias.json", originOverride = "HORROR"),
-        ModuleFile("wiseguys_pericias.json", originOverride = "WISEGUYS"),
-        ModuleFile("scifi_pericias.json", originOverride = "SCI_FI"),
-        ModuleFile("deadlands_pericias.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_pericias.json", originOverride = "PATHFINDER"),
-        ModuleFile("sol_vapor_pericias.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("crystal_pericias.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("super_pericias.json", originOverride = "SUPER")
+        ModuleFile("adg_pericias.json", originOverride = ORIGIN_ARTE_DA_GUERRA, originKey = ORIGIN_ARTE_DA_GUERRA),
+        ModuleFile("fantasia_pericias.json", originOverride = ORIGIN_FANTASIA, originKey = ORIGIN_FANTASIA),
+        ModuleFile("horror_pericias.json", originOverride = ORIGIN_HORROR, originKey = ORIGIN_HORROR),
+        ModuleFile("wiseguys_pericias.json", originOverride = ORIGIN_WISEGUYS, originKey = ORIGIN_WISEGUYS),
+        ModuleFile("scifi_pericias.json", originOverride = ORIGIN_SCI_FI, originKey = ORIGIN_SCI_FI),
+        ModuleFile("deadlands_pericias.json", originOverride = ORIGIN_DEADLANDS, originKey = ORIGIN_DEADLANDS),
+        ModuleFile("pathfinder_pericias.json", originOverride = ORIGIN_PATHFINDER, originKey = ORIGIN_PATHFINDER),
+        ModuleFile("sol_vapor_pericias.json", originOverride = ORIGIN_CIDADE_SOL_VAPOR, originKey = ORIGIN_CIDADE_SOL_VAPOR),
+        ModuleFile("crystal_pericias.json", originOverride = ORIGIN_CRYSTAL_HEART, originKey = ORIGIN_CRYSTAL_HEART),
+        ModuleFile("super_pericias.json", originOverride = ORIGIN_SUPER, originKey = ORIGIN_SUPER)
     )
 
     private val advantageModules = listOf(
         ModuleFile("basico_vantagens.json"),
-        ModuleFile("fantasia_vantagens.json", originOverride = "FANTASIA"),
-        ModuleFile("horror_vantagens.json", originOverride = "HORROR"),
-        ModuleFile("scifi_vantagens.json", originOverride = "SCI_FI"),
-        ModuleFile("crystal_vantagens.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("super_vantagens.json", originOverride = "SUPER"),
-        ModuleFile("wiseguys_vantagens.json", originOverride = "WISEGUYS"),
-        ModuleFile("adg_vantagens.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("sol_vapor_vantagens.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("deadlands_vantagens.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_vantagens.json", originOverride = "PATHFINDER")
+        ModuleFile("fantasia_vantagens.json", originOverride = ORIGIN_FANTASIA, originKey = ORIGIN_FANTASIA),
+        ModuleFile("horror_vantagens.json", originOverride = ORIGIN_HORROR, originKey = ORIGIN_HORROR),
+        ModuleFile("scifi_vantagens.json", originOverride = ORIGIN_SCI_FI, originKey = ORIGIN_SCI_FI),
+        ModuleFile("crystal_vantagens.json", originOverride = ORIGIN_CRYSTAL_HEART, originKey = ORIGIN_CRYSTAL_HEART),
+        ModuleFile("super_vantagens.json", originOverride = ORIGIN_SUPER, originKey = ORIGIN_SUPER),
+        ModuleFile("wiseguys_vantagens.json", originOverride = ORIGIN_WISEGUYS, originKey = ORIGIN_WISEGUYS),
+        ModuleFile("adg_vantagens.json", originOverride = ORIGIN_ARTE_DA_GUERRA, originKey = ORIGIN_ARTE_DA_GUERRA),
+        ModuleFile("sol_vapor_vantagens.json", originOverride = ORIGIN_CIDADE_SOL_VAPOR, originKey = ORIGIN_CIDADE_SOL_VAPOR),
+        ModuleFile("deadlands_vantagens.json", originOverride = ORIGIN_DEADLANDS, originKey = ORIGIN_DEADLANDS),
+        ModuleFile("pathfinder_vantagens.json", originOverride = ORIGIN_PATHFINDER, originKey = ORIGIN_PATHFINDER)
     )
 
     private val complicationModules = listOf(
         ModuleFile("basico_complicacoes.json"),
-        ModuleFile("fantasia_complicacoes.json", originOverride = "FANTASIA"),
-        ModuleFile("horror_complicacoes.json", originOverride = "HORROR"),
-        ModuleFile("scifi_complicacoes.json", originOverride = "SCI_FI"),
-        ModuleFile("super_complicacoes.json", originOverride = "SUPER"),
-        ModuleFile("wiseguys_complicacoes.json", originOverride = "WISEGUYS"),
-        ModuleFile("crystal_complicacoes.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("adg_complicacoes.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("sol_vapor_complicacoes.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("deadlands_complicacoes.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_complicacoes.json", originOverride = "PATHFINDER")
+        ModuleFile("fantasia_complicacoes.json", originOverride = ORIGIN_FANTASIA, originKey = ORIGIN_FANTASIA),
+        ModuleFile("horror_complicacoes.json", originOverride = ORIGIN_HORROR, originKey = ORIGIN_HORROR),
+        ModuleFile("scifi_complicacoes.json", originOverride = ORIGIN_SCI_FI, originKey = ORIGIN_SCI_FI),
+        ModuleFile("super_complicacoes.json", originOverride = ORIGIN_SUPER, originKey = ORIGIN_SUPER),
+        ModuleFile("wiseguys_complicacoes.json", originOverride = ORIGIN_WISEGUYS, originKey = ORIGIN_WISEGUYS),
+        ModuleFile("crystal_complicacoes.json", originOverride = ORIGIN_CRYSTAL_HEART, originKey = ORIGIN_CRYSTAL_HEART),
+        ModuleFile("adg_complicacoes.json", originOverride = ORIGIN_ARTE_DA_GUERRA, originKey = ORIGIN_ARTE_DA_GUERRA),
+        ModuleFile("sol_vapor_complicacoes.json", originOverride = ORIGIN_CIDADE_SOL_VAPOR, originKey = ORIGIN_CIDADE_SOL_VAPOR),
+        ModuleFile("deadlands_complicacoes.json", originOverride = ORIGIN_DEADLANDS, originKey = ORIGIN_DEADLANDS),
+        ModuleFile("pathfinder_complicacoes.json", originOverride = ORIGIN_PATHFINDER, originKey = ORIGIN_PATHFINDER)
     )
 
     private val ancestryModules = listOf(
         ModuleFile("basico_ancestralidades.json"),
-        ModuleFile("fantasia_ancestralidades.json"),
-        ModuleFile("horror_ancestralidades.json"),
-        ModuleFile("scifi_ancestralidades.json"),
-        ModuleFile("wiseguys_ancestralidades.json"),
-        ModuleFile("crystal_ancestralidades.json"),
-        ModuleFile("adg_ancestralidades.json"),
-        ModuleFile("sol_vapor_ancestralidades.json"),
-        ModuleFile("deadlands_ancestralidades.json"),
-        ModuleFile("pathfinder_ancestralidades.json"),
-        ModuleFile("super_ancestralidades.json")
+        ModuleFile("fantasia_ancestralidades.json", originKey = ORIGIN_FANTASIA),
+        ModuleFile("horror_ancestralidades.json", originKey = ORIGIN_HORROR),
+        ModuleFile("scifi_ancestralidades.json", originKey = ORIGIN_SCI_FI),
+        ModuleFile("wiseguys_ancestralidades.json", originKey = ORIGIN_WISEGUYS),
+        ModuleFile("crystal_ancestralidades.json", originKey = ORIGIN_CRYSTAL_HEART),
+        ModuleFile("adg_ancestralidades.json", originKey = ORIGIN_ARTE_DA_GUERRA),
+        ModuleFile("sol_vapor_ancestralidades.json", originKey = ORIGIN_CIDADE_SOL_VAPOR),
+        ModuleFile("deadlands_ancestralidades.json", originKey = ORIGIN_DEADLANDS),
+        ModuleFile("pathfinder_ancestralidades.json", originKey = ORIGIN_PATHFINDER),
+        ModuleFile("super_ancestralidades.json", originKey = ORIGIN_SUPER)
     )
 
     private val powerModules = listOf(
         ModuleFile("basico_poderes.json"),
-        ModuleFile("fantasia_poderes.json", originOverride = "FANTASIA"),
-        ModuleFile("scifi_poderes.json", originOverride = "SCI_FI"),
-        ModuleFile("horror_poderes.json", originOverride = "HORROR"),
-        ModuleFile("deadlands_poderes.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_poderes.json", originOverride = "PATHFINDER"),
-        ModuleFile("crystal_poderes.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("sol_vapor_poderes.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("wiseguys_poderes.json", originOverride = "WISEGUYS"),
-        ModuleFile("adg_poderes.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("adg_tecnicas_chi.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("super_poderes_base.json", originOverride = "SUPER")
+        ModuleFile("fantasia_poderes.json", originOverride = ORIGIN_FANTASIA, originKey = ORIGIN_FANTASIA),
+        ModuleFile("scifi_poderes.json", originOverride = ORIGIN_SCI_FI, originKey = ORIGIN_SCI_FI),
+        ModuleFile("horror_poderes.json", originOverride = ORIGIN_HORROR, originKey = ORIGIN_HORROR),
+        ModuleFile("deadlands_poderes.json", originOverride = ORIGIN_DEADLANDS, originKey = ORIGIN_DEADLANDS),
+        ModuleFile("pathfinder_poderes.json", originOverride = ORIGIN_PATHFINDER, originKey = ORIGIN_PATHFINDER),
+        ModuleFile("crystal_poderes.json", originOverride = ORIGIN_CRYSTAL_HEART, originKey = ORIGIN_CRYSTAL_HEART),
+        ModuleFile("sol_vapor_poderes.json", originOverride = ORIGIN_CIDADE_SOL_VAPOR, originKey = ORIGIN_CIDADE_SOL_VAPOR),
+        ModuleFile("wiseguys_poderes.json", originOverride = ORIGIN_WISEGUYS, originKey = ORIGIN_WISEGUYS),
+        ModuleFile("adg_poderes.json", originOverride = ORIGIN_ARTE_DA_GUERRA, originKey = ORIGIN_ARTE_DA_GUERRA),
+        ModuleFile("adg_tecnicas_chi.json", originOverride = ORIGIN_ARTE_DA_GUERRA, originKey = ORIGIN_ARTE_DA_GUERRA),
+        ModuleFile("super_poderes_base.json", originOverride = ORIGIN_SUPER, originKey = ORIGIN_SUPER)
     )
 
     // --- Loading Logic ---
@@ -136,12 +165,30 @@ object DataLoader {
     private inline fun <reified T> AssetManager.readJsonList(fileName: String): List<T> =
         open(fileName).use { input -> json.decodeFromStream(input) }
 
+    private fun enabledOrigins(flags: CompendioFlags): Set<String> = buildSet {
+        if (flags.compendioFantasiaAtivo) add(ORIGIN_FANTASIA)
+        if (flags.compendioHorrorAtivo) add(ORIGIN_HORROR)
+        if (flags.compendioSciFiAtivo) add(ORIGIN_SCI_FI)
+        if (flags.compendioPathfinderAtivo) add(ORIGIN_PATHFINDER)
+        if (flags.compendioDeadlandsAtivo) add(ORIGIN_DEADLANDS)
+        if (flags.compendioCrystalHeartAtivo) add(ORIGIN_CRYSTAL_HEART)
+        if (flags.compendioArteDaGuerraAtivo) add(ORIGIN_ARTE_DA_GUERRA)
+        if (flags.compendioCidadeSolVaporAtivo) add(ORIGIN_CIDADE_SOL_VAPOR)
+        if (flags.compendioWiseguysAtivo) add(ORIGIN_WISEGUYS)
+        if (flags.modoSupers) add(ORIGIN_SUPER)
+    }
+
+    private fun ModuleFile.isEnabled(enabledOrigins: Set<String>): Boolean {
+        return originKey == null || enabledOrigins.contains(originKey)
+    }
+
     @OptIn(ExperimentalSerializationApi::class)
     private inline fun <reified T> AssetManager.loadAndMerge(
         modules: List<ModuleFile>,
+        enabledOrigins: Set<String>,
         crossinline transform: (T, String?) -> T = { item, _ -> item }
     ): List<T> {
-        return modules.flatMap { module ->
+        return modules.filter { it.isEnabled(enabledOrigins) }.flatMap { module ->
             runCatching {
                 readJsonList<T>(module.fileName).map { item ->
                     if (module.originOverride != null) {
@@ -155,11 +202,12 @@ object DataLoader {
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    fun load(context: Context): MainActivityData {
+    fun load(context: Context, flags: CompendioFlags = CompendioFlags()): MainActivityData {
         val assets = context.assets
+        val enabledOrigins = enabledOrigins(flags)
 
         // 1. Equipamentos
-        val allEquip = assets.loadAndMerge<EquipamentoCategoria>(equipmentModules) { item, override ->
+        val allEquip = assets.loadAndMerge<EquipamentoCategoria>(equipmentModules, enabledOrigins) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
         listaEquipamentos = allEquip.flatMap { it.itens }
@@ -177,15 +225,23 @@ object DataLoader {
         )
 
         // 2. Crystal Hearts
-        listaCoracoesCrystal = runCatching {
-            assets.open("crystal_coracoes.json")
-                .use { input -> json.decodeFromStream<List<CrystalHeart>>(input) }
-        }.getOrElse { emptyList() }
+        listaCoracoesCrystal = if (flags.compendioCrystalHeartAtivo) {
+            runCatching {
+                assets.open("crystal_coracoes.json")
+                    .use { input -> json.decodeFromStream<List<CrystalHeart>>(input) }
+            }.getOrElse { emptyList() }
+        } else {
+            emptyList()
+        }
 
         // 3. Super Poderes
         val listaSuperPoderes: List<SuperPoder> =
-            assets.open("super_poderes.json")
-                .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
+            if (flags.modoSupers) {
+                assets.open("super_poderes.json")
+                    .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
+            } else {
+                emptyList()
+            }
 
         // 4. Arcano Info
         val arcanoList: List<ArcanoInfo> =
@@ -207,7 +263,7 @@ object DataLoader {
 
         // 6. Pericias
         // Special handling for nested "pericias" object in PericiaList wrapper
-        val todasPericiasJson = skillModules.flatMap { module ->
+        val todasPericiasJson = skillModules.filter { it.isEnabled(enabledOrigins) }.flatMap { module ->
             runCatching {
                 val pList = loadJsonAsset<PericiaList>(context, module.fileName).pericias
                 if (module.originOverride != null) {
@@ -249,7 +305,7 @@ object DataLoader {
         }
 
         // 7. Vantagens
-        val todasVantagens = assets.loadAndMerge<Vantagem>(advantageModules) { item, override ->
+        val todasVantagens = assets.loadAndMerge<Vantagem>(advantageModules, enabledOrigins) { item, override ->
              if (override != null) item.copy(origem = override) else item
         }
 
@@ -262,21 +318,29 @@ object DataLoader {
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
         // 8. Tropos e Complicações
-        val adgTropos = runCatching {
-            loadJsonAsset<List<Tropo>>(context, "adg_tropos.json")
-        }.getOrElse { emptyList() }
-        val chTropos = runCatching {
-            loadJsonAsset<List<Tropo>>(context, "crystal_tropos.json")
-        }.getOrElse { emptyList() }
+        val adgTropos = if (flags.compendioArteDaGuerraAtivo) {
+            runCatching {
+                loadJsonAsset<List<Tropo>>(context, "adg_tropos.json")
+            }.getOrElse { emptyList() }
+        } else {
+            emptyList()
+        }
+        val chTropos = if (flags.compendioCrystalHeartAtivo) {
+            runCatching {
+                loadJsonAsset<List<Tropo>>(context, "crystal_tropos.json")
+            }.getOrElse { emptyList() }
+        } else {
+            emptyList()
+        }
 
         listaTropos = adgTropos + chTropos
 
-        listaComplicacoes = assets.loadAndMerge<Complicacao>(complicationModules) { item, override ->
+        listaComplicacoes = assets.loadAndMerge<Complicacao>(complicationModules, enabledOrigins) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
 
         // 9. Ancestralidades
-        listaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestryModules) { item, override ->
+        listaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestryModules, enabledOrigins) { item, override ->
             // Optionally override origin for ancestries too if needed, but AncestralidadesSection handles it well.
             // Leaving as is for now to avoid changing working logic, unless requested.
             // Actually, for consistency, if we want to ensure "source of truth", we should override.
@@ -286,9 +350,13 @@ object DataLoader {
         }
 
         // 10. Monstros
-        listaMonstroTemplates = assets
-            .open("horror_monstros.json")
-            .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
+        listaMonstroTemplates = if (flags.compendioHorrorAtivo || flags.modoMonstroAtivo) {
+            assets
+                .open("horror_monstros.json")
+                .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
+        } else {
+            emptyList()
+        }
 
         // 11. Mapas Raciais
         racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
@@ -311,7 +379,7 @@ object DataLoader {
         }.getOrNull()
 
         // 13. Poderes (Magias/Milagres/Etc)
-        val todosPoderes = assets.loadAndMerge<Poder>(powerModules) { item, override ->
+        val todosPoderes = assets.loadAndMerge<Poder>(powerModules, enabledOrigins) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
         listaPoderes = todosPoderes
