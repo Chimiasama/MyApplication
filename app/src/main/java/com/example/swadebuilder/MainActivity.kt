@@ -847,7 +847,8 @@ class MainActivity : ComponentActivity() {
                                             }
                                             TextButton(onClick = {
                                                 triggerFeedback()
-                                                scope.launch {
+                                                val loadScope = activity?.lifecycleScope ?: scope
+                                                loadScope.launch {
                                                     isDataLoaded.value = LoadingState.Loading
                                                     val result = criadorViewModel.carregarPersonagem(
                                                         context,
@@ -1002,7 +1003,8 @@ class MainActivity : ComponentActivity() {
                                                 semPontosDePoder, multiplosIdiomas, grandesResponsabilidades,
                                                 optRegraFama, optRegraRiqueza, optRegraCosaNostra,
                                                 optRegraMechasCiberneticos ->
-                                    scope.launch {
+                                    val loadScope = activity?.lifecycleScope ?: scope
+                                    loadScope.launch {
                                         isDataLoaded.value = LoadingState.Loading
                                         val updated = runCatching {
                                             kotlinx.coroutines.withContext(Dispatchers.IO) {
