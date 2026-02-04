@@ -136,7 +136,8 @@ data class SnapshotSelecoes(
     val portraitAlignment: String = "CENTER",
     val signoAdgSelecionado: String? = null,
     val gnomoPericiaEscolhida: String? = null,
-    val dominioClerigoSelecionado: String? = null
+    val dominioClerigoSelecionado: String? = null,
+    val dominioClerigoPathfinderSelecionado: String? = null
 )
 
 @Serializable
