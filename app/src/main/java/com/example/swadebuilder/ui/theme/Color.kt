@@ -8,11 +8,18 @@ val Pink80       = Color(0xFFEFB8C8)
 val PurpleGrey40 = Color(0xFF625B71)
 val Pink40       = Color(0xFF7D5260)
 
-// OLD SCHOOL (Papel & Vermelho) - Novo Default
-// Updated to match reference images: darker, warmer beige
-val OldSchoolPaper = Color(0xFFEFE6D5) // Beige/Parchment
-val OldSchoolRed   = Color(0xFFB71C1C) // Deep Red (matches "Voltar", Tab selections)
-val OldSchoolInk   = Color(0xFF212121) // Dark Grey/Black (Body text)
+// OLD SCHOOL (Papel & Vermelho) - Novo Default refinado
+val OldSchoolPaper         = Color(0xFFF7F1E6) // Parchment mais claro
+val OldSchoolSurface       = Color(0xFFF1E6D6) // Superfícies elevadas
+val OldSchoolSurfaceVariant = Color(0xFFE6D7C4) // Cartões/blocks suaves
+val OldSchoolRed           = Color(0xFF8D1D2C) // Vinho profundo
+val OldSchoolGold          = Color(0xFFC99B4A) // Dourado quente de destaque
+val OldSchoolInk           = Color(0xFF2E2A26) // Tinta escura
+val OldSchoolInkSoft       = Color(0xFF4A4037) // Tinta suavizada
+val OldSchoolDarkBg        = Color(0xFF1B1917) // Fundo dark elegante
+val OldSchoolDarkSurface   = Color(0xFF221F1C) // Superfícies dark
+val OldSchoolDarkVariant   = Color(0xFF2C2825) // Variantes dark
+val OldSchoolOutline       = Color(0xFFB8A896) // Contornos sutis
 
 // MEDIEVAL (Pergaminho & Nanquim)
 val MedPaper      = Color(0xFFF5EEDC) // Fundo Creme

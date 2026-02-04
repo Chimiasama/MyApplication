@@ -47,15 +47,15 @@ fun ModuleCard(
     tabStyle: TabStyle = TabStyle.TEXTO,
     modifier: Modifier = Modifier
 ) {
-    val scale by animateFloatAsState(targetValue = if (isSelected) 1.05f else if (enabled) 1.0f else 0.95f, label = "scale")
-    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else if (enabled) MaterialTheme.colorScheme.outlineVariant else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-    val borderWidth = if (isSelected) 3.dp else 1.dp
+    val scale by animateFloatAsState(targetValue = if (isSelected) 1.04f else if (enabled) 1.0f else 0.97f, label = "scale")
+    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else if (enabled) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+    val borderWidth = if (isSelected) 2.dp else 1.dp
     val containerColor = if (isSelected)
-        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
+        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f)
     else if (enabled)
         MaterialTheme.colorScheme.surface
     else
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
 
     OutlinedCard(
         onClick = onToggle,
@@ -64,12 +64,12 @@ fun ModuleCard(
             .scale(scale)
             .fillMaxWidth()
             .padding(vertical = if (showDescription) 0.dp else 4.dp), // Minimal padding if collapsed
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+        shape = MaterialTheme.shapes.medium,
         border = BorderStroke(borderWidth, borderColor),
-        elevation = CardDefaults.outlinedCardElevation(defaultElevation = if (isSelected) 6.dp else 0.dp),
+        elevation = CardDefaults.outlinedCardElevation(defaultElevation = if (isSelected) 8.dp else 2.dp),
         colors = CardDefaults.outlinedCardColors(containerColor = containerColor)
     ) {
-        Box(modifier = Modifier.fillMaxWidth().padding(6.dp)) {
+        Box(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
             // Inner Frame (Surface)
             androidx.compose.material3.Surface(
                 modifier = Modifier
@@ -78,9 +78,9 @@ fun ModuleCard(
                         if (showDescription) Modifier.defaultMinSize(minHeight = 168.dp)
                         else Modifier
                     ),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
-                color = if (enabled) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                shadowElevation = 0.dp
+                shape = MaterialTheme.shapes.small,
+                color = if (enabled) MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                shadowElevation = if (isSelected) 2.dp else 0.dp
             ) {
                 // Content
                 Box(modifier = Modifier.fillMaxWidth().padding(12.dp)) {

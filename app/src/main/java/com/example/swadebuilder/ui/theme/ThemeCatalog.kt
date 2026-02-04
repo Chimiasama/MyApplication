@@ -20,33 +20,45 @@ val DefaultThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = OldSchoolRed,
         onPrimary = Color.White,
-        primaryContainer = Color(0xFFEBC6C6), // Muted Red/Pink for container
-        onPrimaryContainer = Color(0xFF410002), // Dark Red for text on container
-        secondary = OldSchoolInk,
-        tertiary = OldSchoolRed,
+        primaryContainer = OldSchoolRed.copy(alpha = 0.12f),
+        onPrimaryContainer = OldSchoolInk,
+        secondary = OldSchoolGold,
+        onSecondary = OldSchoolInk,
+        secondaryContainer = OldSchoolGold.copy(alpha = 0.18f),
+        onSecondaryContainer = OldSchoolInk,
+        tertiary = OldSchoolInkSoft,
+        onTertiary = Color.White,
         background = OldSchoolPaper,
         onBackground = OldSchoolInk,
-        surface = OldSchoolPaper,
+        surface = OldSchoolSurface,
         onSurface = OldSchoolInk,
-        surfaceVariant = Color(0xFFE6DCC8), // Slightly darker parchment for cards
-        onSurfaceVariant = OldSchoolInk,
-        errorContainer = Color(0xFFD32F2F).copy(alpha = 0.1f), // Reddish fade
+        surfaceVariant = OldSchoolSurfaceVariant,
+        onSurfaceVariant = OldSchoolInkSoft,
+        outline = OldSchoolOutline,
+        outlineVariant = OldSchoolOutline.copy(alpha = 0.6f),
+        errorContainer = Color(0xFFD32F2F).copy(alpha = 0.12f),
         onErrorContainer = OldSchoolInk
     ),
     darkColors = darkColorScheme(
         primary = OldSchoolRed,
         onPrimary = Color.White,
-        primaryContainer = Color(0xFF93000A), // Darker Red for container
-        onPrimaryContainer = Color(0xFFFFDAD6), // Light Red for text
-        secondary = OldSchoolPaper,
-        tertiary = OldSchoolRed,
-        background = OldSchoolInk,
+        primaryContainer = OldSchoolRed.copy(alpha = 0.2f),
+        onPrimaryContainer = OldSchoolPaper,
+        secondary = OldSchoolGold,
+        onSecondary = OldSchoolDarkBg,
+        secondaryContainer = OldSchoolGold.copy(alpha = 0.2f),
+        onSecondaryContainer = OldSchoolPaper,
+        tertiary = OldSchoolInkSoft,
+        onTertiary = OldSchoolPaper,
+        background = OldSchoolDarkBg,
         onBackground = OldSchoolPaper,
-        surface = OldSchoolInk,
+        surface = OldSchoolDarkSurface,
         onSurface = OldSchoolPaper,
-        surfaceVariant = Color(0xFF2C2C2C), // Slightly lighter black/grey for cards
-        onSurfaceVariant = OldSchoolPaper,
-        errorContainer = Color(0xFFD32F2F).copy(alpha = 0.2f),
+        surfaceVariant = OldSchoolDarkVariant,
+        onSurfaceVariant = OldSchoolPaper.copy(alpha = 0.9f),
+        outline = OldSchoolOutline.copy(alpha = 0.5f),
+        outlineVariant = OldSchoolOutline.copy(alpha = 0.35f),
+        errorContainer = Color(0xFFD32F2F).copy(alpha = 0.22f),
         onErrorContainer = OldSchoolPaper
     ),
     typography = DefaultTypography
