@@ -2404,7 +2404,7 @@ class CriadorState {
                 return false
             }
 
-            if (!permiteMultiAntecedenteArcano && !compendioFantasiaAtivo && !compendioHorrorAtivo) {
+            if (!permiteMultiAntecedenteArcano && !compendioFantasiaAtivo && !compendioHorrorAtivo && !compendioPathfinderAtivo) {
                 val anyArcano = vantagensSelecionadas.any { it.nome.keyify().startsWith("ANTECEDENTE ARCANO") }
                 if (anyArcano && vantagensSelecionadas.none { it.nome.keyify() == key }) {
                     return false
