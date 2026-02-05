@@ -110,16 +110,16 @@ object DataLoader {
 
     private val ancestryModules = listOf(
         ModuleFile("basico_ancestralidades.json"),
-        ModuleFile("fantasia_ancestralidades.json"),
-        ModuleFile("horror_ancestralidades.json"),
-        ModuleFile("scifi_ancestralidades.json"),
-        ModuleFile("wiseguys_ancestralidades.json"),
-        ModuleFile("crystal_ancestralidades.json"),
-        ModuleFile("adg_ancestralidades.json"),
-        ModuleFile("sol_vapor_ancestralidades.json"),
-        ModuleFile("deadlands_ancestralidades.json"),
-        ModuleFile("pathfinder_ancestralidades.json"),
-        ModuleFile("super_ancestralidades.json")
+        ModuleFile("fantasia_ancestralidades.json", originOverride = "FANTASIA"),
+        ModuleFile("horror_ancestralidades.json", originOverride = "HORROR"),
+        ModuleFile("scifi_ancestralidades.json", originOverride = "SCI_FI"),
+        ModuleFile("wiseguys_ancestralidades.json", originOverride = "WISEGUYS"),
+        ModuleFile("crystal_ancestralidades.json", originOverride = "CRYSTAL_HEART"),
+        ModuleFile("adg_ancestralidades.json", originOverride = "ARTE_DA_GUERRA"),
+        ModuleFile("sol_vapor_ancestralidades.json", originOverride = "CIDADE_SOL_VAPOR"),
+        ModuleFile("deadlands_ancestralidades.json", originOverride = "DEADLANDS"),
+        ModuleFile("pathfinder_ancestralidades.json", originOverride = "PATHFINDER"),
+        ModuleFile("super_ancestralidades.json", originOverride = "SUPER")
     )
 
     private val powerModules = listOf(
@@ -351,7 +351,12 @@ object DataLoader {
         }
 
         // 9. Ancestralidades
-        listaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestryModules, keys)
+        val ancestriesToLoad = if ("DEADLANDS" in keys || "PATHFINDER" in keys) {
+            ancestryModules.filter { it.fileName != "basico_ancestralidades.json" }
+        } else {
+            ancestryModules
+        }
+        listaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestriesToLoad, keys)
 
         // 10. Monstros
         if ("HORROR" in keys) {
