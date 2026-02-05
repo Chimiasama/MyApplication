@@ -849,7 +849,6 @@ class MainActivity : ComponentActivity() {
                                                 triggerFeedback()
                                                 val loadScope = activity?.lifecycleScope ?: scope
                                                 loadScope.launch {
-                                                    isDataLoaded.value = LoadingState.Loading
                                                     val result = criadorViewModel.carregarPersonagem(
                                                         context,
                                                         entry.id
@@ -864,14 +863,10 @@ class MainActivity : ComponentActivity() {
                                                         showLoadDialog = false
                                                         snackHost.showSnackbar("Carregado: ${entry.nome}")
                                                     } else {
-                                                        isDataLoaded.value = LoadingState.Success
                                                         snackHost.showSnackbar(
                                                             result.message
                                                                 ?: "Falha ao carregar o personagem"
                                                         )
-                                                    }
-                                                    if (result.success) {
-                                                        isDataLoaded.value = LoadingState.Success
                                                     }
                                                 }
                                             }) {
@@ -1005,7 +1000,6 @@ class MainActivity : ComponentActivity() {
                                                 optRegraMechasCiberneticos ->
                                     val loadScope = activity?.lifecycleScope ?: scope
                                     loadScope.launch {
-                                        isDataLoaded.value = LoadingState.Loading
                                         val updated = runCatching {
                                             kotlinx.coroutines.withContext(Dispatchers.IO) {
                                                 DataLoader.load(
@@ -1026,8 +1020,8 @@ class MainActivity : ComponentActivity() {
                                                 )
                                             }
                                         }.getOrElse { error ->
-                                            isDataLoaded.value = LoadingState.Error(
-                                                error.message ?: "Erro desconhecido"
+                                            snackHost.showSnackbar(
+                                                "Erro ao carregar livros: ${error.message ?: "erro desconhecido"}"
                                             )
                                             return@launch
                                         }
@@ -1066,7 +1060,6 @@ class MainActivity : ComponentActivity() {
                                         criadorViewModel.normalizeArcanoIdsNoCarregamento()
                                         criadorViewModel.state.grandesResponsabilidades = grandesResponsabilidades
 
-                                        isDataLoaded.value = LoadingState.Success
                                         mostrouTelaInicial = false
                                     }
                                 },
