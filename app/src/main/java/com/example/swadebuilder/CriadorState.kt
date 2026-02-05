@@ -1596,6 +1596,10 @@ class CriadorState {
         return listOf(base) + idiomasExtras.sortedBy { idiomaSlotIndex(it) ?: Int.MAX_VALUE }
     }
 
+    fun ensureAllPericiasRegistered() {
+        listaPericias.forEach { ensurePericiaEntry(it) }
+    }
+
     private fun ensurePericiaEntry(per: Pericia) {
         if (!baseIncsPorPericia.containsKey(per)) baseIncsPorPericia[per] = 0
         if (!compIncsPorPericia.containsKey(per)) compIncsPorPericia[per] = 0

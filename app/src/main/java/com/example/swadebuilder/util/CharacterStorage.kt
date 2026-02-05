@@ -21,7 +21,7 @@ object CharacterStorage {
 
     private val json = Json {
         encodeDefaults = true
-        prettyPrint = true
+        prettyPrint = false
         ignoreUnknownKeys = true
         classDiscriminator = "type"
     }

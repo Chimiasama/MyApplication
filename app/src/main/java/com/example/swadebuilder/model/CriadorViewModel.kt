@@ -349,6 +349,9 @@ class CriadorViewModel : ViewModel() {
         state.ancestralidade = ""
         val targetAncestralidade = if (state.compendioPathfinderAtivo) "Humano (Pathfinder)" else "HUMANOS"
 
+        // Fix: Ensure all loaded skills are registered in the state maps to prevent crashes in rawTotal
+        state.ensureAllPericiasRegistered()
+
         state.vantagensSelecionadas.clear()
         state.complicacoesSelecionadas.clear()
         state.reservasComplicacaoMaior.clear()

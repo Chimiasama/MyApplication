@@ -58,8 +58,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.DataLoader
 import com.example.swadebuilder.ui.components.ModuleCard
 import com.example.swadebuilder.util.toEditionDisplayName
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,6 +99,8 @@ fun TelaInicial(
     onOpenSettings: () -> Unit,
     viewModel: CriadorViewModel
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val isFullEdition = EditionConfig.isFullEdition
 
     // --- State Variables ---
@@ -351,31 +359,48 @@ fun TelaInicial(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
-                    onCriarNovo(
-                        optCartaSelvagem,
-                        optMaisPontosPericias,
-                        optSuperPoderes,
-                        optCompendioFantasia,
-                        optCompendioHorror,
-                        optCompendioSciFi,
-                        optCompendioPathfinder,
-                        optCompendioDeadlands,
-                        optCompendioCrystalHeart,
-                        optCompendioArteDaGuerra,
-                        optCompendioCidadeSolVapor,
-                        optCompendioWiseguys,
-                        optModoMonstro,
-                        optNasceUmHeroi,
-                        optHeroiSemArmadura,
-                        optEspecializacaoPer,
-                        optSemPontosPoder,
-                        optMultiplosIdiomas,
-                        optGrandesResponsabilidades,
-                        optRegraFama,
-                        optRegraRiqueza,
-                        optRegraCosaNostra,
-                        optRegraMechasCiberneticos
-                    )
+                    val activeModules = mutableSetOf<String>()
+                    if (optCompendioFantasia) activeModules.add("FANTASIA")
+                    if (optCompendioHorror) activeModules.add("HORROR")
+                    if (optCompendioSciFi) activeModules.add("SCI_FI")
+                    if (optCompendioPathfinder) activeModules.add("PATHFINDER")
+                    if (optCompendioDeadlands) activeModules.add("DEADLANDS")
+                    if (optCompendioCrystalHeart) activeModules.add("CRYSTAL_HEART")
+                    if (optCompendioArteDaGuerra) activeModules.add("ARTE_DA_GUERRA")
+                    if (optCompendioCidadeSolVapor) activeModules.add("CIDADE_SOL_VAPOR")
+                    if (optCompendioWiseguys) activeModules.add("WISEGUYS")
+                    if (optSuperPoderes) activeModules.add("SUPER")
+
+                    scope.launch(Dispatchers.IO) {
+                        DataLoader.updateActiveModules(context, activeModules)
+                        withContext(Dispatchers.Main) {
+                            onCriarNovo(
+                                optCartaSelvagem,
+                                optMaisPontosPericias,
+                                optSuperPoderes,
+                                optCompendioFantasia,
+                                optCompendioHorror,
+                                optCompendioSciFi,
+                                optCompendioPathfinder,
+                                optCompendioDeadlands,
+                                optCompendioCrystalHeart,
+                                optCompendioArteDaGuerra,
+                                optCompendioCidadeSolVapor,
+                                optCompendioWiseguys,
+                                optModoMonstro,
+                                optNasceUmHeroi,
+                                optHeroiSemArmadura,
+                                optEspecializacaoPer,
+                                optSemPontosPoder,
+                                optMultiplosIdiomas,
+                                optGrandesResponsabilidades,
+                                optRegraFama,
+                                optRegraRiqueza,
+                                optRegraCosaNostra,
+                                optRegraMechasCiberneticos
+                            )
+                        }
+                    }
                     viewModel.state.compendioPathfinderAtivo = optCompendioPathfinder
                     viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
                     viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart

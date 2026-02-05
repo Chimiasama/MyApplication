@@ -36,7 +36,11 @@ object CharacterPortraitStorage {
         }
     }
 
-    suspend fun loadPortrait(context: Context, fileName: String): Bitmap? = withContext(Dispatchers.IO) {
+    suspend fun loadPortrait(
+        context: Context,
+        fileName: String,
+        targetWidth: Int? = null
+    ): Bitmap? = withContext(Dispatchers.IO) {
         val dir = portraitsDirectory(context)
         val file = try {
             SecurityUtils.getSafeChildFile(dir, fileName)
@@ -46,9 +50,21 @@ object CharacterPortraitStorage {
 
         if (!file.exists()) return@withContext null
 
+        val options = if (targetWidth != null) {
+            val boundsOptions = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            BitmapFactory.decodeFile(file.absolutePath, boundsOptions)
+            val opts = BitmapFactory.Options()
+            var scale = 1
+            if (boundsOptions.outWidth > targetWidth) {
+                scale = boundsOptions.outWidth / targetWidth
+            }
+            opts.inSampleSize = scale
+            opts
+        } else null
+
         // 1. Try Plaintext (Preferred)
         try {
-            val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+            val bitmap = BitmapFactory.decodeFile(file.absolutePath, options)
             if (bitmap != null) return@withContext bitmap
         } catch (e: Exception) {
             // Ignore
@@ -63,8 +79,23 @@ object CharacterPortraitStorage {
                 EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
             ).build()
 
+            val opts = if (targetWidth != null) {
+                // First pass for bounds
+                val boundsOpts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                encryptedFile.openFileInput().use { input ->
+                    BitmapFactory.decodeStream(input, null, boundsOpts)
+                }
+                val finalOpts = BitmapFactory.Options()
+                var scale = 1
+                if (boundsOpts.outWidth > targetWidth) {
+                    scale = boundsOpts.outWidth / targetWidth
+                }
+                finalOpts.inSampleSize = scale
+                finalOpts
+            } else null
+
             return@withContext encryptedFile.openFileInput().use { input ->
-                BitmapFactory.decodeStream(input)
+                BitmapFactory.decodeStream(input, null, opts)
             }
         } catch (e: Exception) {
             // Ignore
