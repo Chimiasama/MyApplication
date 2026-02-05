@@ -176,13 +176,13 @@
   {
     "key": "CIENTISTA LOUCO",
     "slots": 2,
-    "pp": 20,
+    "pp": 15,
     "foco": "Ciência Estranha"
   },
   {
     "key": "MESTRE DO CHI",
     "slots": 3,
-    "pp": 20,
+    "pp": 15,
     "foco": "Foco"
   },
   {
@@ -193,8 +193,8 @@
   },
   {
     "key": "XAMA",
-    "slots": 5,
-    "pp": 10,
+    "slots": 2,
+    "pp": 15,
     "foco": "Fé"
   },
   {
