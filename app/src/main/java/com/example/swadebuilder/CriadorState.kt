@@ -1411,7 +1411,7 @@ class CriadorState {
         }
 
         // Fantasia: Antecedente Arcano concede d4 na perícia (se não tiver)
-        if (compendioFantasiaAtivo || compendioHorrorAtivo) {
+        if (compendioFantasiaAtivo || compendioHorrorAtivo || compendioPathfinderAtivo) {
             val myAbs = vantagensSelecionadas.mapNotNull { it.toArcanoKey()?.normAAKey() }
             if (myAbs.isNotEmpty()) {
                 myAbs.forEach { abKey ->
