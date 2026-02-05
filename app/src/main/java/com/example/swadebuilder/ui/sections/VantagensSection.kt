@@ -967,6 +967,19 @@ fun VantagensContent(
             )
         } else emptyList()
 
+        // Deadlands Override: Show Deadlands ABs
+        val opcoesDeadlands = if (state.compendioDeadlandsAtivo) {
+            listOf(
+                "Abençoado" to "antecedente_arcano_abencoado",
+                "Bruxa" to "antecedente_arcano_bruxa",
+                "Cientista Louco" to "antecedente_arcano_cientista_louco",
+                "Mascate" to "antecedente_arcano_mascate",
+                "Mestre do Chi" to "antecedente_arcano_mestre_do_chi",
+                "Voduísta" to "antecedente_arcano_vuduismo",
+                "Xamã" to "antecedente_arcano_xama"
+            )
+        } else emptyList()
+
         AlertDialog(
             onDismissRequest = {
                 dialogMostrandoAntecedente = null
@@ -977,6 +990,23 @@ fun VantagensContent(
                 Column(Modifier.verticalScroll(rememberScrollState())) {
                     if (state.compendioPathfinderAtivo) {
                         opcoesPathfinder.forEach { (label, _) ->
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable { subOpcaoSelecionada = label }
+                                    .padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = (subOpcaoSelecionada == label),
+                                    onClick = { subOpcaoSelecionada = label }
+                                )
+                                Spacer(Modifier.size(8.dp))
+                                Text(label)
+                            }
+                        }
+                    } else if (state.compendioDeadlandsAtivo) {
+                        opcoesDeadlands.forEach { (label, _) ->
                             Row(
                                 Modifier
                                     .fillMaxWidth()
@@ -1036,6 +1066,25 @@ fun VantagensContent(
                         if (state.compendioPathfinderAtivo) {
                             val choiceLabel = subOpcaoSelecionada!!
                             val edgeId = opcoesPathfinder.firstOrNull { it.first == choiceLabel }?.second
+                            val specificEdge = listaVantagens.firstOrNull { it.id == edgeId }
+
+                            if (specificEdge != null) {
+                                if (state.podeSelecionar(specificEdge)) {
+                                    if (state.advantageAdvancementInProgress) {
+                                        viewModel.selectAdvantageForAdvancement(specificEdge)
+                                    } else {
+                                        state.comprarVantagem(specificEdge) { msg ->
+                                            viewModel.logFeedback(msg)
+                                            onUserFeedback()
+                                        }
+                                    }
+                                } else {
+                                    viewModel.logFeedback("Requisitos não atendidos para ${specificEdge.nome}")
+                                }
+                            }
+                        } else if (state.compendioDeadlandsAtivo) {
+                            val choiceLabel = subOpcaoSelecionada!!
+                            val edgeId = opcoesDeadlands.firstOrNull { it.first == choiceLabel }?.second
                             val specificEdge = listaVantagens.firstOrNull { it.id == edgeId }
 
                             if (specificEdge != null) {

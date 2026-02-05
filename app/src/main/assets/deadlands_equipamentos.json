@@ -1459,7 +1459,8 @@
       },
       {
         "nome": "Mochila a Jato",
-        "manobrabilidade": -2,
+        "tamanho": -2,
+        "manobrabilidade": 1,
         "velMaxima": 100,
         "resistencia": "3",
         "tripulacao": "1",
