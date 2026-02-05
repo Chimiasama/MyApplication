@@ -2627,7 +2627,7 @@
   {
     "id": "humor_acido",
     "nome": "Humor Ácido",
-    "categoria": "SOCIAL",
+    "categoria": "SOCIAIS",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Novato",
@@ -2640,7 +2640,7 @@
   {
     "id": "veterano_do_oeste_estranho",
     "nome": "Veterano do Oeste Estranho",
-    "categoria": "SOCIAL",
+    "categoria": "SOCIAIS",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Novato",
@@ -2866,7 +2866,7 @@
   {
     "id": "reputacao",
     "nome": "Reputação",
-    "categoria": "SOCIAL",
+    "categoria": "SOCIAIS",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Veterano"
@@ -2876,7 +2876,7 @@
   {
     "id": "atormentado",
     "nome": "Atormentado",
-    "categoria": "ESTRANHA",
+    "categoria": "ESTRANHAS",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Novato",
@@ -2892,7 +2892,7 @@
   {
     "id": "determinacao",
     "nome": "Determinação",
-    "categoria": "ESTRANHA",
+    "categoria": "ESTRANHAS",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Veterano",
@@ -2908,7 +2908,7 @@
   {
     "id": "talento",
     "nome": "Talento",
-    "categoria": "ESTRANHA",
+    "categoria": "ESTRANHAS",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Novato"
@@ -2918,7 +2918,7 @@
   {
     "id": "condenado",
     "nome": "Condenado",
-    "categoria": "LENDARIA",
+    "categoria": "LENDARIAS",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Lendário",
@@ -2935,7 +2935,7 @@
   {
     "id": "determinacao_verdadeira",
     "nome": "Determinação Verdadeira",
-    "categoria": "LENDARIA",
+    "categoria": "LENDARIAS",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Lendário",
@@ -2951,7 +2951,7 @@
   {
     "id": "eis_um_cavalo_amarelo",
     "nome": "Eis um Cavalo Amarelo...",
-    "categoria": "LENDARIA",
+    "categoria": "LENDARIAS",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Lendário"
@@ -2961,7 +2961,7 @@
   {
     "id": "mao_direita_do_diabo",
     "nome": "Mão Direita do Diabo",
-    "categoria": "LENDARIA",
+    "categoria": "LENDARIAS",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Lendário",
@@ -2979,7 +2979,7 @@
   {
     "id": "rapido_como_um_raio",
     "nome": "Rápido Como um Raio",
-    "categoria": "LENDARIA",
+    "categoria": "LENDARIAS",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Lendário",
@@ -3275,7 +3275,7 @@
   {
     "id": "mago_do_metal",
     "nome": "Mago do Metal",
-    "categoria": "CIENTISTA LOUCO",
+    "categoria": "PODER",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Novato",
@@ -3308,7 +3308,7 @@
   {
     "id": "esteve_na_encruzilhada",
     "nome": "Esteve na Encruzilhada",
-    "categoria": "VODUISTA",
+    "categoria": "PODER",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Experiente",
@@ -3327,7 +3327,7 @@
   {
     "id": "favorecido",
     "nome": "Favorecido",
-    "categoria": "VODUISTA",
+    "categoria": "PODER",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Experiente",
@@ -3362,7 +3362,7 @@
   {
     "id": "bruxa_de_wichita",
     "nome": "Bruxa de Wichita",
-    "categoria": "BRUXA",
+    "categoria": "PODER",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Novato",
@@ -3378,7 +3378,7 @@
   {
     "id": "familiar",
     "nome": "Familiar",
-    "categoria": "BRUXA",
+    "categoria": "PODER",
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Novato",
