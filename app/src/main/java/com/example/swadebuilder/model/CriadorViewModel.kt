@@ -252,6 +252,7 @@ class CriadorViewModel : ViewModel() {
                 message = error.message ?: "Erro ao carregar dados do compêndio."
             )
         }
+        state.resetPericiaMapsForNewList()
         resetUiState()
         clearFeedbackMessages()
         resetStateParaNovoPersonagem(

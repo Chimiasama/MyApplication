@@ -1034,6 +1034,7 @@ class MainActivity : ComponentActivity() {
                                         mainActivityData = updated
                                         activityData = updated
 
+                                        criadorViewModel.state.resetPericiaMapsForNewList()
                                         creationSession++
 
                                         criadorViewModel.resetStateParaNovoPersonagem(

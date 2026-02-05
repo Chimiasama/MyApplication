@@ -1603,6 +1603,17 @@ class CriadorState {
         if (!spCostStackPorPericia.containsKey(per)) spCostStackPorPericia[per] = mutableStateListOf()
     }
 
+    fun resetPericiaMapsForNewList() {
+        baseIncsPorPericia.clear()
+        compIncsPorPericia.clear()
+        compCostStackPorPericia.clear()
+        spCostStackPorPericia.clear()
+        listaPericias.forEach { ensurePericiaEntry(it) }
+        idiomaBasePericia()?.let { ensurePericiaEntry(it) }
+        idiomasExtras.forEach { ensurePericiaEntry(it) }
+        jutsuExtras.forEach { ensurePericiaEntry(it) }
+    }
+
     private fun ensureIdiomaSlotCount(totalSlots: Int) {
         val base = idiomaBasePericia() ?: return
         val desired = totalSlots.coerceAtLeast(1)
