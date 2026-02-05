@@ -1412,14 +1412,22 @@ class CriadorState {
 
         // Fantasia: Antecedente Arcano concede d4 na perícia (se não tiver)
         if (compendioFantasiaAtivo || compendioHorrorAtivo || compendioPathfinderAtivo) {
-            val myAbs = vantagensSelecionadas.mapNotNull { it.toArcanoKey()?.normAAKey() }
-            if (myAbs.isNotEmpty()) {
-                myAbs.forEach { abKey ->
-                    if (arcanoInfo.containsKey(abKey)) {
-                        val info = arcanoInfo[abKey]
-                        if (info != null && info.third.keyify() == perKey) {
-                            modifiedBase = maxOf(modifiedBase, 4)
-                        }
+            val absVantages = vantagensSelecionadas.filter { it.toArcanoKey() != null }
+
+            // Pathfinder: Apenas o SEGUNDO (ou posteriores) Antecedente Arcano concede a perícia d4 grátis.
+            // O primeiro (classe principal) deve ser comprado com pontos.
+            val absToConsider = if (compendioPathfinderAtivo) {
+                if (absVantages.size > 1) absVantages.drop(1) else emptyList()
+            } else {
+                absVantages
+            }
+
+            absToConsider.forEach { vant ->
+                val abKey = vant.toArcanoKey()?.normAAKey()
+                if (abKey != null && arcanoInfo.containsKey(abKey)) {
+                    val info = arcanoInfo[abKey]
+                    if (info != null && info.third.keyify() == perKey) {
+                        modifiedBase = maxOf(modifiedBase, 4)
                     }
                 }
             }
