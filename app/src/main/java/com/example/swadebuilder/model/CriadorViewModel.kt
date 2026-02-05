@@ -455,6 +455,8 @@ class CriadorViewModel : ViewModel() {
             30000
         } else if (compendioSciFiAtivo) {
             1000
+        } else if (compendioDeadlandsAtivo) {
+            250
         } else if (compendioFantasiaAtivo) {
             300
         } else {
