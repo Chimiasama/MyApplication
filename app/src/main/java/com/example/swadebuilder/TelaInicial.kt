@@ -172,6 +172,10 @@ fun TelaInicial(
                 optCartaSelvagem = true
                 optMaisPontosPericias = false
             }
+            "Deadlands" -> {
+                optCartaSelvagem = true
+                optMaisPontosPericias = false
+            }
             "Básico" -> {
                 optCartaSelvagem = true
                 optMaisPontosPericias = true
@@ -286,8 +290,11 @@ fun TelaInicial(
             Icons.Default.Shield,
             optCompendioDeadlands,
             !isAnyBookSelected || optCompendioDeadlands,
-            { optCompendioDeadlands = !optCompendioDeadlands },
-            { applyRulesPreset("Básico"); showRulesDialog = true }
+            {
+                optCompendioDeadlands = !optCompendioDeadlands
+                if (optCompendioDeadlands) applyRulesPreset("Deadlands")
+            },
+            { applyRulesPreset("Deadlands"); showRulesDialog = true }
         ),
         ModuleItemData(
             "Crystal Heart".toEditionDisplayName(),

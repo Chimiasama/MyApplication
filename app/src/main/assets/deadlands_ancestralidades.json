@@ -6,6 +6,9 @@
     "origem": "DEADLANDS",
     "atributos": {},
     "pericias": {},
+    "vantagensGratis": [
+      "ADAPTÁVEL"
+    ],
     "habilidades": [
       {
         "nome": "Adaptável",

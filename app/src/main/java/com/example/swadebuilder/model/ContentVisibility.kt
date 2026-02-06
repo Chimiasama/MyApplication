@@ -153,6 +153,12 @@ fun CriadorState.isVantagemVisible(
         if (isGenericAB) return true
     }
 
+    // Deadlands Exception: Uses Generic AB as selector
+    if (compendioDeadlandsAtivo) {
+        if (isSpecificAB) return false
+        if (isGenericAB) return true
+    }
+
     if (!multiplosAAHabilitados) {
         // If Multiple ABs DISABLED: Show ONLY the Generic AB (Hide specific ones)
         if (isSpecificAB) return false

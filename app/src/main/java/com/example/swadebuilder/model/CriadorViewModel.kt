@@ -347,7 +347,13 @@ class CriadorViewModel : ViewModel() {
 
         // Fix: Force transition from empty string to ensure aplicarAncestralidade logic runs fully
         state.ancestralidade = ""
-        val targetAncestralidade = if (state.compendioPathfinderAtivo) "Humano (Pathfinder)" else "HUMANOS"
+        val targetAncestralidade = if (state.compendioPathfinderAtivo) {
+            "Humano (Pathfinder)"
+        } else if (state.compendioDeadlandsAtivo) {
+            "Humano"
+        } else {
+            "HUMANOS"
+        }
 
         // Fix: Ensure all loaded skills are registered in the state maps to prevent crashes in rawTotal
         state.ensureAllPericiasRegistered()
@@ -455,6 +461,8 @@ class CriadorViewModel : ViewModel() {
             30000
         } else if (compendioSciFiAtivo) {
             1000
+        } else if (compendioDeadlandsAtivo) {
+            250
         } else if (compendioFantasiaAtivo) {
             300
         } else {
