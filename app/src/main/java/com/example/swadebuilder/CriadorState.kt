@@ -959,7 +959,12 @@ class CriadorState {
             .map { it.substringBefore("(").trim().keyify() }
             .toSet()
 
+        // Also check raw IDs in vantagensRaciais/Automaticas because some JSONs use IDs directly
+        // like "aa_agente_syn" which doesn't match the name "ANTECEDENTE ARCANO"
+        val autoIds = (vantagensAutomaticas + vantagensRaciais).toSet()
+
         return key in autoKeys ||
+                v.id in autoIds ||
                 v.id in vantagensAutomaticasDoTropo ||
                 v.id in vantagensAutomaticasDoSigno ||
                 v.id in vantagensAutomaticasDoElemento ||
@@ -3170,7 +3175,10 @@ class CriadorState {
                     .map { it.substringBefore("(").trim().keyify() }
                     .toSet()
 
+                val autoIds = (vantagensAutomaticas + vantagensRaciais).toSet()
+
                 if (v.nome.substringBefore("(").trim().keyify() in autoKeys) continue
+                if (v.id in autoIds) continue
                 if (v.id in vantagensAutomaticasDoTropo) continue
                 if (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true) continue
 
