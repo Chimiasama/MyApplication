@@ -351,7 +351,7 @@ object DataLoader {
         }
 
         // 9. Ancestralidades
-        val ancestriesToLoad = if ("DEADLANDS" in keys || "PATHFINDER" in keys) {
+        val ancestriesToLoad = if ("DEADLANDS" in keys || "PATHFINDER" in keys || "CRYSTAL_HEART" in keys) {
             ancestryModules.filter { it.fileName != "basico_ancestralidades.json" }
         } else {
             ancestryModules
