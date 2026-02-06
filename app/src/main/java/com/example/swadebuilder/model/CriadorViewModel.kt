@@ -351,6 +351,8 @@ class CriadorViewModel : ViewModel() {
             "Humano (Pathfinder)"
         } else if (state.compendioDeadlandsAtivo) {
             "Humano"
+        } else if (state.compendioCrystalHeartAtivo) {
+            "As Ilhas"
         } else {
             "HUMANOS"
         }
@@ -391,8 +393,8 @@ class CriadorViewModel : ViewModel() {
         }
 
         if (state.compendioCrystalHeartAtivo) {
-            listaVantagens.firstOrNull { it.id == "agente_syn" }?.let { aa ->
-                if (state.vantagensSelecionadas.none { it.id == "agente_syn" }) {
+            listaVantagens.firstOrNull { it.id == "aa_agente_syn" }?.let { aa ->
+                if (state.vantagensSelecionadas.none { it.id == "aa_agente_syn" }) {
                     state.vantagensSelecionadas.add(aa.copy())
                 }
             }

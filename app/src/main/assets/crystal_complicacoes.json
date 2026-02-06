@@ -1,10 +1,66 @@
 [
   {
-    "id": "comp_procurado_deadlands",
-    "name": "PROCURADO (Texas Rangers/Agência)",
+    "id": "forasteiro_ch",
+    "name": "Forasteiro (Menor)",
+    "origem": "CRYSTAL_HEART",
+    "severity": "menor",
+    "description": "No mundo todos os que não são das Ilhas tendem a causar certa suspeita, mas algumas culturas são consideradas tão diferentes que merecem a versão Menor dessa Complicação: os habitantes do pântano de Bogovianos, os bárbaros de Fjordstadianos, os excêntricos das Ilhas, os maseianos da Península do Deserto e os aldeões da selva de Zingamaianos. Ao pertencer à Syn, você automaticamente ganha algum respeito e alguns direitos legais, portanto, a versão Maior dessa Complicação não pode ser escolhida."
+  },
+  {
+    "id": "inimigo_ch",
+    "name": "Inimigo",
+    "origem": "CRYSTAL_HEART",
+    "severity": "menor ou maior",
+    "description": "Pode ser um Agente de uma equipe rival ou outra pessoa da organização, em ambos os casos não desejam a morte, mas certamente querem atrapalhar seus esforços."
+  },
+  {
+    "id": "lento_ch",
+    "name": "Lento",
+    "origem": "CRYSTAL_HEART",
+    "severity": "menor ou maior",
+    "description": "A Syn fornece uma prótese para os Agentes com a versão Menor, e uma cadeira de rodas ultraleve para os Agentes com a versão Maior."
+  },
+  {
+    "id": "procurado_ch",
+    "name": "Procurado",
+    "origem": "CRYSTAL_HEART",
+    "severity": "menor ou maior",
+    "description": "Fugir da lei para se juntar à Syn acontece com uma certa frequência. Os Agentes da Syn são capazes de rejeitar muitas acusações, mas eles não têm imunidade diplomática. A versão Maior dessa Complicação só pode ser escolhida se as autoridades estiverem caçando o Agente."
+  },
+  {
+    "id": "um_braco_so_ch",
+    "name": "Um Braço Só",
+    "origem": "CRYSTAL_HEART",
+    "severity": "menor",
+    "description": "Esta é uma Complicação Menor, já que a Syn fornece uma prótese leve e em grande parte eficaz. Tarefas que requerem duas mãos são feitas com um modificador de -2."
+  },
+  {
+    "id": "compulsivo",
+    "name": "Compulsivo",
     "origem": "CRYSTAL_HEART",
     "severity": "maior",
-    "description": "Caçado por uma das grandes organizações da lei do Oeste. Recompensa alta pela cabeça."
+    "description": "A disposição do seu Cristal tem uma influência poderosa sobre você. Quando você sacar Copas como sua carta de ação, os padrões de pensamento intrusivos do seu Cristal se estabelecem e você deve dedicar uma ação deste turno para satisfazer sua disposição. Se você não tiver certeza do que fazer, pode simplesmente perder uma ação em pensamentos repetitivos."
+  },
+  {
+    "id": "dependente",
+    "name": "Dependente",
+    "origem": "CRYSTAL_HEART",
+    "severity": "menor",
+    "description": "Alguém depende do seu suporte. Você pediu à Syn ajuda, mas a organização não é uma instituição de caridade - alguém precisa pagar pelo serviço, e esse alguém é você. Você começa o jogo com um ponto a menos de Requisição (portanto, zero se for um Agente Novato) e deve pagar um ponto de Requisição a cada poucos meses."
+  },
+  {
+    "id": "dessintonia",
+    "name": "Dessintonia",
+    "origem": "CRYSTAL_HEART",
+    "severity": "maior",
+    "description": "Seu corpo e seu suporte não se dão bem, e forçar sua conexão não é recomendado. Enquanto você manter um poder, deve fazer uma nova rolagem de Canalizar Cristal a cada dez minutos para mantê-lo funcionando. Além disso, sempre que optar por tomar um nível de Fadiga em vez de falhar em uma jogada de Canalizar Cristal, você deve tomar dois níveis de Fadiga."
+  },
+  {
+    "id": "disposicao_persistente",
+    "name": "Disposição Persistente",
+    "origem": "CRYSTAL_HEART",
+    "severity": "menor",
+    "description": "É difícil para você se livrar dos efeitos de um Cristal que você inseriu, mesmo depois de substituí-lo. Quando trocar um Cristal, escolha uma Complicação Menor (ou uma versão Menor de uma Maior) do Cristal anterior. Você mantém essa Complicação até trocar de Cristal novamente. Pode fazer uma rolagem de Astúcia para tentar superar essa Complicação quando ela acontece. Mesmo um Agente Novato tem uma disposição persistente, do Cristal que usou durante o treinamento; pode ser qualquer Complicação Menor razoável de sua escolha."
   },
   {
     "id": "comp_dessorna",

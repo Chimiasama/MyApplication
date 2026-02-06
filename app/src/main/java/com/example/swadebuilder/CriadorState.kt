@@ -959,7 +959,12 @@ class CriadorState {
             .map { it.substringBefore("(").trim().keyify() }
             .toSet()
 
+        // Also check raw IDs in vantagensRaciais/Automaticas because some JSONs use IDs directly
+        // like "aa_agente_syn" which doesn't match the name "ANTECEDENTE ARCANO"
+        val autoIds = (vantagensAutomaticas + vantagensRaciais).toSet()
+
         return key in autoKeys ||
+                v.id in autoIds ||
                 v.id in vantagensAutomaticasDoTropo ||
                 v.id in vantagensAutomaticasDoSigno ||
                 v.id in vantagensAutomaticasDoElemento ||
@@ -2306,6 +2311,25 @@ class CriadorState {
         if (complicacao.id == "talisma" && !temAntecedenteArcano()) {
             return false to "Talismã requer um Antecedente Arcano."
         }
+
+        if (compendioCrystalHeartAtivo) {
+            val forbidden = setOf(
+                "incredulo", "ganancioso", "analfabeto", "pobreza",
+                "forasteiro", "inimigo", "lento", "procurado", "um_braco_so",
+                "obrigacao" // Block generic obligation to favor specific ones if needed, or keeping it?
+                // Prompt said "Normalmente não pode ser escolhida... mas alguns casos raros...".
+                // If blocked, users can't take it. Maybe I should NOT block obligacao?
+                // But text says "Normalmente não pode ser escolhida".
+                // And points to "Dependente".
+                // I'll block it to force setting compliance, assuming "rare cases" are handled by GM override or using Dependente.
+                // Re-reading: "Veja também a nova Complicação, Dependente."
+                // I'll block standard 'obrigacao' since description is generic.
+            )
+            if (complicacao.id.keyify() in forbidden) {
+                return false to "Não utilizada em Crystal Heart (ou substituída por versão específica)."
+            }
+        }
+
         return true to null
     }
 
@@ -2353,6 +2377,26 @@ class CriadorState {
     fun podeSelecionar(v: Vantagem): Boolean {
         val key = v.nome.keyify()
 
+        // Crystal Heart Blocks
+        if (compendioCrystalHeartAtivo) {
+            val forbiddenIds = setOf(
+                "campeao", "chi", "linguista", "resistencia_arcana", "resistencia_arcana_aprimorada",
+                "rico", "podre_de_rico",
+                "aristocrata", "arma_predileta", "comando", "conexoes",
+                // "antecedente_arcano" generic block handled below in generic logic usually,
+                // but explicit block helps if logic is complex.
+                "antecedente_arcano"
+            )
+            val vKey = v.id.keyify()
+
+            if (vKey in forbiddenIds) return false
+
+            // Block Power Edges unless Crystal Heart specific
+            if (v.categoria == Categoria.PODER && v.origem != "CRYSTAL_HEART") {
+                return false
+            }
+        }
+
         // Regra: "Mago" do básico oculto se Fantasia ativo
         if (compendioFantasiaAtivo && v.id == "mago") return false
 
@@ -2399,18 +2443,8 @@ class CriadorState {
         // 3) Antecedente Arcano e multi-arcano
         if (key.startsWith("ANTECEDENTE ARCANO")) {
             if (compendioCrystalHeartAtivo) {
-                // Em jogos de Crystal Heart, apenas "Agente da Agência" é permitido.
-                // Ajustado para usar o ID correto (agente_syn), mas garantindo que seja o único arcano
-                // se for considerado antecedente arcano pelo sistema (via tag ou lógica).
-                // Como "agente_syn" é Profissional no JSON, mas o sistema trata Crystal Heart como tendo Power Points,
-                // devemos permitir que ele seja selecionado. O filtro aqui bloqueia "Antecedente Arcano" genérico.
-                // Se agente_syn não tiver nome começando com "Antecedente Arcano", ele passa direto.
-                // Mas aqui estamos DENTRO do if (key.startsWith("ANTECEDENTE ARCANO")).
-                // O JSON do prompt diz nome: "AGENTE DA SYN". Não começa com "Antecedente Arcano".
-                // Logo, este bloco IF não pega a vantagem agente_syn.
-                // Mas PEGARIA se o usuário tentasse pegar "Antecedente Arcano (Magia)".
-                // Então devemos bloquear QUALQUER coisa que não seja "agente_syn".
-                // Mas como "agente_syn" não entra aqui, qualquer coisa que entra aqui deve ser bloqueada.
+                // Allows only "Antecedente Arcano (Agente da SYN)" which has ID "aa_agente_syn"
+                if (v.id == "aa_agente_syn") return true
                 return false
             }
 
@@ -2701,7 +2735,8 @@ class CriadorState {
     }
 
     private fun atributoBaseRacial(a: String): Int {
-        val base = racialAttrMinMap[ancestralidade]?.get(a) ?: 4
+        // Fix: Use keyified ancestry to match DataLoader map keys
+        val base = racialAttrMinMap[ancestralidade.keyify()]?.get(a.keyify()) ?: 4
 
         var modifiedBase = base
 
@@ -3141,7 +3176,10 @@ class CriadorState {
                     .map { it.substringBefore("(").trim().keyify() }
                     .toSet()
 
+                val autoIds = (vantagensAutomaticas + vantagensRaciais).toSet()
+
                 if (v.nome.substringBefore("(").trim().keyify() in autoKeys) continue
+                if (v.id in autoIds) continue
                 if (v.id in vantagensAutomaticasDoTropo) continue
                 if (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true) continue
 

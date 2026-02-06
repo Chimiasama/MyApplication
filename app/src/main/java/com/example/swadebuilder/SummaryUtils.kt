@@ -330,15 +330,24 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         }
     }
     val habilidadesRaciais = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
-    val allRacialTraits = (personagem.vantagensRaciais + habilidadesRaciais).distinctBy { it.keyify() }
+    // Prioritize manual entries (habilidadesRaciais) over IDs (vantagensRaciais) to preserve formatting (e.g. "Adaptável" vs "ADAPTÁVEL")
+    val allRacialTraits = (habilidadesRaciais + personagem.vantagensRaciais).distinctBy { it.keyify() }
 
     if (allRacialTraits.isNotEmpty()) {
-        val displayVantagensRaciais = if (personagem.ancestralidade.keyify() == "SAURIOS") {
-            allRacialTraits.map {
-                if (it.keyify() == "PRONTIDAO") "Sentidos Aguçados" else it
+        val displayVantagensRaciais = allRacialTraits.map { trait ->
+            val key = trait.keyify()
+            // Specific override for Saurios
+            if (personagem.ancestralidade.keyify() == "SAURIOS" && key == "PRONTIDAO") {
+                "Sentidos Aguçados"
+            } else {
+                // Try to resolve as an Advantage Name (e.g. for "aa_agente_syn")
+                val vant = definitionMap[key]
+                if (vant != null) {
+                    if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome
+                } else {
+                    trait
+                }
             }
-        } else {
-            allRacialTraits
         }
         lines += "Características Raciais: ${displayVantagensRaciais.joinToString(", ")}"
     }
