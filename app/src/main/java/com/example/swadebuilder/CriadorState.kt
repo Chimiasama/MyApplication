@@ -16,6 +16,7 @@ import com.example.swadebuilder.model.AdvantageSnapshot
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.EquipFilter
 import com.example.swadebuilder.model.EquipSuperType
 import com.example.swadebuilder.model.EquipamentoItem
@@ -4134,8 +4135,22 @@ class CriadorState {
                 vantagensSelecionadas.add(newVant)
             }
         }
+        if (compendioCrystalHeartAtivo) {
+            listaVantagens.firstOrNull { it.id == Constants.ID_AA_AGENT_SYN }?.let { vant ->
+                if (vantagensSelecionadas.none { it.id == Constants.ID_AA_AGENT_SYN }) {
+                    vantagensSelecionadas.add(vant.copy())
+                }
+            }
+        }
 
         vantagensAutomaticas.apply { clear(); addAll(snapshot.selecoes.vantagensAutomaticas) }
+        if (compendioCrystalHeartAtivo) {
+            listaVantagens.firstOrNull { it.id == Constants.ID_AA_AGENT_SYN }?.let { aa ->
+                if (vantagensAutomaticas.none { it.keyify() == aa.nome.keyify() }) {
+                    vantagensAutomaticas.add(aa.nome)
+                }
+            }
+        }
         vantagensRaciais.apply { clear(); addAll(snapshot.selecoes.vantagensRaciais) }
         desvantagensAutomaticas.apply { clear(); addAll(snapshot.selecoes.desvantagensAutomaticas) }
         desvantagensRaciais.apply { clear(); addAll(snapshot.selecoes.desvantagensRaciais) }

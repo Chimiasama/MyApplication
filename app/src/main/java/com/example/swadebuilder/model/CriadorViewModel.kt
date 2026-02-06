@@ -397,6 +397,9 @@ class CriadorViewModel : ViewModel() {
                 if (state.vantagensSelecionadas.none { it.id == "aa_agente_syn" }) {
                     state.vantagensSelecionadas.add(aa.copy())
                 }
+                if (state.vantagensAutomaticas.none { it.keyify() == aa.nome.keyify() }) {
+                    state.vantagensAutomaticas.add(aa.nome)
+                }
             }
         }
 

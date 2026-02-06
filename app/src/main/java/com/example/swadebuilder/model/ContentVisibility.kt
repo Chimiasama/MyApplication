@@ -1,6 +1,7 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.model.Constants.ID_AA_AGENT_SYN
 import com.example.swadebuilder.util.semAcentos
 
 /**
@@ -72,6 +73,7 @@ fun CriadorState.isVantagemVisible(
     // Crystal Heart Logic
     if (compendioCrystalHeartAtivo) {
         if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
+            if (vant.id == ID_AA_AGENT_SYN) return false
             // Only specific Crystal Heart ABs allowed (handled by dataset, but hiding generics here)
             // If Generic AB is BASICO and BASICO is active (it is, for CH), we might want to hide it if CH forbids it.
             return false
