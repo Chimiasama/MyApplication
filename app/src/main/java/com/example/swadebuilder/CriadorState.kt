@@ -2390,7 +2390,7 @@ class CriadorState {
 
         // 2a) Vantagens exclusivas de Ressuscitado exigem ter a vantagem-base
         if (v.categoria == Categoria.ATORMENTADO) {
-            val temRessuscitado = vantagensSelecionadas.any { it.id == "ressuscitado" }
+            val temRessuscitado = vantagensSelecionadas.any { it.id == "atormentado" }
             if (!temRessuscitado) return false
         }
 

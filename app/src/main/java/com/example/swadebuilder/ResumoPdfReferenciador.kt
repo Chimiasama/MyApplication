@@ -90,7 +90,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         compendioSciFiAtivo = this.compendioSciFiAtivo,
         compendioWiseguysAtivo = this.compendioWiseguysAtivo,
         compendioCidadeSolVaporAtivo = this.compendioCidadeSolVaporAtivo,
-        dominio = if (this.compendioDeadlandsAtivo) this.valorDominio() else null,
+        dominio = if (this.compendioDeadlandsAtivo && this.vantagensSelecionadas.any { it.id == "atormentado" }) this.valorDominio() else null,
         coracaoCrystalSelecionado = this.coracaoCrystalSelecionado,
         tecnicasIniciaisTropo = this.tecnicasIniciaisFromTropo,
         reservaChi = if (this.compendioArteDaGuerraAtivo) this.reservaChi else null,
