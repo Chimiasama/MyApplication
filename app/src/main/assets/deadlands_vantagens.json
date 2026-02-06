@@ -2542,6 +2542,32 @@
     "descricao": "Aparar +1 e dado bônus de dano em Lutar passa a d10."
   },
   {
+    "id": "antecedente_arcano",
+    "nome": "ANTECEDENTE ARCANO",
+    "categoria": "ANTECEDENTE",
+    "origem": "BASICO",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "choiceOptions": [
+      "Abençoado",
+      "Mestre do Chi",
+      "Mascate",
+      "Cientista Louco",
+      "Xamã",
+      "Vuduísmo",
+      "Bruxa"
+    ],
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Exposição a energias estranhas, estudos em uma escola mágica ou dons de entidades divinas ou espirituais às vezes concedem às personagens seus próprios poderes e habilidades. Tais eventos levam à Vantagem Antecedente Arcano e ao desenvolvimento de habilidades sobrenaturais. Veja o Capítulo Cinco para ter uma descrição completa dos Antecedentes Arcanos, poderes e como usá-los."
+  },
+  {
     "id": "antecedente_arcano_abencoado",
     "nome": "Antecedente Arcano (Abençoado)",
     "categoria": "ANTECEDENTE",
