@@ -16,15 +16,15 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
@@ -143,300 +143,334 @@ fun ComplicacoesSection(
         showHeader = false
     ) {
         Column(
-            modifier = Modifier.verticalScroll(rememberScrollState())
+            modifier = Modifier.fillMaxSize()
         ) {
             val totalPc = state.pontosComplicacao
             val usadosPc = state.pontosComplicacaoGastos
             val livresPc = (totalPc - usadosPc).coerceAtLeast(0)
 
-            SectionHeader(
-                onHelpClick          = null,
-                centerText           = "Pontos Complicação: livres $livresPc / $totalPc",
-                onCenterClick        = null,
-                onListaCompletaClick = null,
-                listaCompletaText    = ""
-            )
-
-        if (showTempError) {
-            Spacer(Modifier.height(8.dp))
-            Text(
-                tempErrorMsg,
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-        }
-
-        Spacer(Modifier.height(4.dp))
-
-        ExpandableSearchFilter(
-            query = searchQuery,
-            onQueryChange = { searchQuery = it },
-            isExpanded = isSearchExpanded,
-            onExpandedChange = { isSearchExpanded = it },
-            placeholder = "Pesquisar Complicações..."
-        ) {
-            // Filters UI inside search expansion
-            if (!locked) {
-                Spacer(Modifier.height(8.dp))
-
-                Column {
-                    // Severity Filter
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        item {
-                            Text(
-                                "Gravidade:",
-                                style = MaterialTheme.typography.labelMedium,
-                                modifier = Modifier.padding(end = 4.dp)
-                            )
-                        }
-                        items(listOf("Todos", "Menor", "Maior")) { type ->
-                            FilterChip(
-                                selected = selectedSeverity == type,
-                                onClick = { selectedSeverity = type },
-                                label = { Text(type) }
-                            )
-                        }
-                    }
-
-                }
-            }
-        }
-
-        Spacer(Modifier.height(4.dp))
-
-        if (totalPc == 0) {
-            Text(
-                "Escolha Complicações para ganhar Pontos Bônus de Criação.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        } else {
-            Text(
-                "Use seus Pontos Bônus de Complicação nas seções de Atributos, Perícias, Vantagens ou Equipamento.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        // PROMPT 3: Add Disorder Button
-        if (state.modoProgressaoAtivo && state.compendioHorrorAtivo) {
-            TextButton(
-                onClick = { showAddTranstornoDialog = true },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Adicionar Transtorno (Gratuito)")
-            }
-            Spacer(Modifier.height(8.dp))
-        }
-
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement   = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.alpha(if (locked && !state.modoProgressaoAtivo) 0.3f else 1f)
-        ) {
-            // Standard Complications
-            state.complicacoesSelecionadas
-                .filterValues { it != null }
-                .forEach { (comp, tipo) ->
-                    val isAuto = comp.id.keyify() in autoBaseKeys
-                    val isYoungAuto = comp.id == "pequeno" && state.jovemAutoPequeno
-                    val cost = if (tipo == "Maior") 2 else 1
-                    val isClickable = !locked && !isAuto && !isYoungAuto
-
-                    AssistChip(
-                        onClick = {
-                            if (!isClickable) return@AssistChip
-
-                            val (pode, msg) = state.podeRemoverComplicacao(comp, tipo)
-                            if (!pode) {
-                                if (msg != null && msg.contains("Pontos em uso")) {
-                                    showPcInUseDialog = true
-                                } else {
-                                    tempErrorMsg = msg ?: "Ação bloqueada."
-                                    showTempError = true
-                                    scope.launch {
-                                        delay(3000)
-                                        showTempError = false
-                                    }
-                                }
-                                return@AssistChip
-                            }
-
-                            onUserFeedback()
-
-                            when (comp.id) {
-                                "idoso" -> {
-                                    state.complicacoesSelecionadas.remove(comp)
-                                    state.idosoBonusSp = 0
-                                    state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                                }
-                                "jovem" -> {
-                                    val pequComp = complicacoesFiltradas.firstOrNull { it.id == "pequeno" }
-                                    if (pequComp != null) {
-                                        state.removeYoung(pequComp)
-                                    }
-                                    state.complicacoesSelecionadas.remove(comp)
-                                }
-                                "pobreza" -> {
-                                    state.complicacoesSelecionadas.remove(comp)
-                                    if(state.compendioPathfinderAtivo){
-                                        state.dinheiro += 15000
-                                    } else if (state.compendioFantasiaAtivo) {
-                                        state.dinheiro += 150
-                                    } else {
-                                        state.dinheiro += 250
-                                    }
-                                }
-                                "obeso" -> {
-                                    state.complicacoesSelecionadas.remove(comp)
-                                    state.obesoBonusSize = 0
-                                    state.obesoMalusMov = 0
-                                }
-                                else -> {
-                                    state.complicacoesSelecionadas.remove(comp)
-                                }
-                            }
-                            onLogFeedback("Complicação ${comp.name} removida.")
-                        },
-                        enabled     = isClickable,
-                        label       = { Text("${comp.name} ($tipo)") },
-                        leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover ${comp.name}") }
-                    )
-                }
-
-            // PROMPT 3: Display Transtornos
-            state.transtornos.forEach { transtorno ->
-                AssistChip(
-                    onClick = {
-                        state.transtornos.remove(transtorno)
-                        onUserFeedback()
-                    },
-                    label = { Text("${transtorno.name} (Transtorno)") },
-                    leadingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover Transtorno") },
-                    colors = androidx.compose.material3.AssistChipDefaults.assistChipColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer
-                    )
-                )
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        if (showPcInUseDialog) {
-            val paCount  = state.cpPaStack.size
-            val spCount  = state.cpSpStack.size
-            val pvCount  = state.cpPvStack.size
-            val recCount = state.cpRecursosStack.size
-            val totalUsados = paCount + spCount + pvCount + recCount
-
-            AlertDialog(
-                onDismissRequest = { showPcInUseDialog = false },
-                confirmButton = {
-                    TextButton(onClick = { showPcInUseDialog = false }) {
-                        Text("OK")
-                    }
-                },
-                title = { Text("Não é possível remover esta Complicação") },
-                text = {
-                    Column {
-                        Text("Você já converteu Pontos Bônus de Criação vindos de Complicações em:")
-                        Spacer(Modifier.height(8.dp))
-
-                        if (totalUsados == 0) {
-                            Text("Nenhum Ponto Bônus está em uso no momento.")
-                        } else {
-                            if (paCount > 0) Text("• $paCount em Atributos adicionais")
-                            if (spCount > 0) Text("• $spCount em passos extras de Perícia")
-                            if (pvCount > 0) Text("• $pvCount em Vantagens adicionais")
-                            if (recCount > 0) Text("• $recCount em Recursos extras (500$ cada)")
-
-                            Spacer(Modifier.height(8.dp))
-                            Text(
-                                "Para remover esta Complicação, primeiro desfaça alguns " +
-                                        "desses Pontos Bônus nas seções de Atributos, Perícias, " +
-                                        "Vantagens ou Equipamento.",
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                    }
-                }
-            )
-        }
-
-        // PROMPT 3: Add Disorder Dialog
-        if (showAddTranstornoDialog) {
-            val available = uniqueComplications.filter {
-                !state.complicacoesSelecionadas.containsKey(it) && !state.transtornos.contains(it)
-            }.map { it.name.toSentenceCase() }.sorted()
-
-            ChoiceDialog(
-                options = available,
-                onConfirm = { choice ->
-                    val selected = uniqueComplications.firstOrNull { it.name.toSentenceCase() == choice }
-                    if (selected != null) {
-                        state.transtornos.add(selected)
-                        onUserFeedback()
-                        onLogFeedback("Transtorno ${selected.name} adicionado.")
-                    }
-                    showAddTranstornoDialog = false
-                },
-                onDismiss = { showAddTranstornoDialog = false }
-            )
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        // Only show list if not locked (Creation phase)
-        if (!locked) {
+            // --- FIXED HEADER ---
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                // No extra padding here to match previous look, elements handle their own padding if needed
+                // But PericiasSection adds padding(8.dp). Let's check visually if it's too much.
+                // ComplicacoesSection previously didn't have padding on the ScrollColumn.
             ) {
-                val pequComp = uniqueComplications.firstOrNull { it.id == "pequeno" }
+                SectionHeader(
+                    onHelpClick          = null,
+                    centerText           = "Pontos Complicação: livres $livresPc / $totalPc",
+                    onCenterClick        = null,
+                    onListaCompletaClick = null,
+                    listaCompletaText    = ""
+                )
 
-                val listaParaMostrar = uniqueComplications
-                    .filter { comp ->
-                        comp.id.keyify() !in autoBaseKeys
-                    }
+                if (showTempError) {
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        tempErrorMsg,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
 
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                Spacer(Modifier.height(4.dp))
+
+                ExpandableSearchFilter(
+                    query = searchQuery,
+                    onQueryChange = { searchQuery = it },
+                    isExpanded = isSearchExpanded,
+                    onExpandedChange = { isSearchExpanded = it },
+                    placeholder = "Pesquisar Complicações..."
                 ) {
-                    listaParaMostrar.forEach { comp ->
-                        key(comp.id) {
-                            ComplicacaoItem(
-                                comp = comp,
-                                state = state,
-                                locked = locked,
-                                allowLongTexts = allowLongTexts,
-                                showOfficialNames = showOfficialNames,
-                                groupedComplications = groupedComplications,
-                                detalhesExpandidos = detalhesExpandidos,
-                                onUserFeedback = onUserFeedback,
-                                onLogFeedback = onLogFeedback,
-                                onError = { msg ->
-                                    tempErrorMsg = msg
-                                    showTempError = true
-                                    scope.launch {
-                                        delay(2_000)
-                                        showTempError = false
-                                    }
-                                },
-                                peqComp = pequComp
-                            )
+                    // Filters UI inside search expansion
+                    if (!locked) {
+                        Spacer(Modifier.height(8.dp))
+
+                        Column {
+                            // Severity Filter
+                            LazyRow(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 4.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                item {
+                                    Text(
+                                        "Gravidade:",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        modifier = Modifier.padding(end = 4.dp)
+                                    )
+                                }
+                                items(listOf("Todos", "Menor", "Maior")) { type ->
+                                    FilterChip(
+                                        selected = selectedSeverity == type,
+                                        onClick = { selectedSeverity = type },
+                                        label = { Text(type) }
+                                    )
+                                }
+                            }
                         }
                     }
                 }
-            }
-        }
-        // Closing brace for outer Column (scrolling)
+            } // End Fixed Header
+
+            Spacer(Modifier.height(4.dp))
+
+            // --- SCROLLABLE CONTENT ---
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                contentPadding = PaddingValues(vertical = 4.dp)
+            ) {
+                item {
+                    if (totalPc == 0) {
+                        Text(
+                            "Escolha Complicações para ganhar Pontos Bônus de Criação.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    } else {
+                        Text(
+                            "Use seus Pontos Bônus de Complicação nas seções de Atributos, Perícias, Vantagens ou Equipamento.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                item {
+                    Spacer(Modifier.height(8.dp))
+                    // PROMPT 3: Add Disorder Button
+                    if (state.modoProgressaoAtivo && state.compendioHorrorAtivo) {
+                        TextButton(
+                            onClick = { showAddTranstornoDialog = true },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Adicionar Transtorno (Gratuito)")
+                        }
+                        Spacer(Modifier.height(8.dp))
+                    }
+                }
+
+                item {
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement   = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.alpha(if (locked && !state.modoProgressaoAtivo) 0.3f else 1f)
+                    ) {
+                        // Standard Complications
+                        state.complicacoesSelecionadas
+                            .filterValues { it != null }
+                            .forEach { (comp, tipo) ->
+                                val isAuto = comp.id.keyify() in autoBaseKeys
+                                val isYoungAuto = comp.id == "pequeno" && state.jovemAutoPequeno
+                                val cost = if (tipo == "Maior") 2 else 1
+                                val isClickable = !locked && !isAuto && !isYoungAuto
+
+                                AssistChip(
+                                    onClick = {
+                                        if (!isClickable) return@AssistChip
+
+                                        val (pode, msg) = state.podeRemoverComplicacao(comp, tipo)
+                                        if (!pode) {
+                                            if (msg != null && msg.contains("Pontos em uso")) {
+                                                showPcInUseDialog = true
+                                            } else {
+                                                tempErrorMsg = msg ?: "Ação bloqueada."
+                                                showTempError = true
+                                                scope.launch {
+                                                    delay(3000)
+                                                    showTempError = false
+                                                }
+                                            }
+                                            return@AssistChip
+                                        }
+
+                                        onUserFeedback()
+
+                                        when (comp.id) {
+                                            "idoso" -> {
+                                                state.complicacoesSelecionadas.remove(comp)
+                                                state.idosoBonusSp = 0
+                                                state.syncFromCPRefund(
+                                                    sp = true,
+                                                    feedbackMessages = feedbackMessages
+                                                )
+                                            }
+
+                                            "jovem" -> {
+                                                val pequComp =
+                                                    complicacoesFiltradas.firstOrNull { it.id == "pequeno" }
+                                                if (pequComp != null) {
+                                                    state.removeYoung(pequComp)
+                                                }
+                                                state.complicacoesSelecionadas.remove(comp)
+                                            }
+
+                                            "pobreza" -> {
+                                                state.complicacoesSelecionadas.remove(comp)
+                                                if (state.compendioPathfinderAtivo) {
+                                                    state.dinheiro += 15000
+                                                } else if (state.compendioFantasiaAtivo) {
+                                                    state.dinheiro += 150
+                                                } else {
+                                                    state.dinheiro += 250
+                                                }
+                                            }
+
+                                            "obeso" -> {
+                                                state.complicacoesSelecionadas.remove(comp)
+                                                state.obesoBonusSize = 0
+                                                state.obesoMalusMov = 0
+                                            }
+
+                                            else -> {
+                                                state.complicacoesSelecionadas.remove(comp)
+                                            }
+                                        }
+                                        onLogFeedback("Complicação ${comp.name} removida.")
+                                    },
+                                    enabled = isClickable,
+                                    label = { Text("${comp.name} ($tipo)") },
+                                    leadingIcon = {
+                                        Icon(
+                                            Icons.Default.Close,
+                                            contentDescription = "Remover ${comp.name}"
+                                        )
+                                    }
+                                )
+                            }
+
+                        // PROMPT 3: Display Transtornos
+                        state.transtornos.forEach { transtorno ->
+                            AssistChip(
+                                onClick = {
+                                    state.transtornos.remove(transtorno)
+                                    onUserFeedback()
+                                },
+                                label = { Text("${transtorno.name} (Transtorno)") },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Default.Close,
+                                        contentDescription = "Remover Transtorno"
+                                    )
+                                },
+                                colors = androidx.compose.material3.AssistChipDefaults.assistChipColors(
+                                    containerColor = MaterialTheme.colorScheme.errorContainer
+                                )
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(8.dp))
+                }
+
+                item {
+                    // Dialogs Logic placed here to be part of the composition tree
+                    // They render on top of everything anyway
+                    if (showPcInUseDialog) {
+                        val paCount = state.cpPaStack.size
+                        val spCount = state.cpSpStack.size
+                        val pvCount = state.cpPvStack.size
+                        val recCount = state.cpRecursosStack.size
+                        val totalUsados = paCount + spCount + pvCount + recCount
+
+                        AlertDialog(
+                            onDismissRequest = { showPcInUseDialog = false },
+                            confirmButton = {
+                                TextButton(onClick = { showPcInUseDialog = false }) {
+                                    Text("OK")
+                                }
+                            },
+                            title = { Text("Não é possível remover esta Complicação") },
+                            text = {
+                                Column {
+                                    Text("Você já converteu Pontos Bônus de Criação vindos de Complicações em:")
+                                    Spacer(Modifier.height(8.dp))
+
+                                    if (totalUsados == 0) {
+                                        Text("Nenhum Ponto Bônus está em uso no momento.")
+                                    } else {
+                                        if (paCount > 0) Text("• $paCount em Atributos adicionais")
+                                        if (spCount > 0) Text("• $spCount em passos extras de Perícia")
+                                        if (pvCount > 0) Text("• $pvCount em Vantagens adicionais")
+                                        if (recCount > 0) Text("• $recCount em Recursos extras (500$ cada)")
+
+                                        Spacer(Modifier.height(8.dp))
+                                        Text(
+                                            "Para remover esta Complicação, primeiro desfaça alguns " +
+                                                    "desses Pontos Bônus nas seções de Atributos, Perícias, " +
+                                                    "Vantagens ou Equipamento.",
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+                                    }
+                                }
+                            }
+                        )
+                    }
+
+                    // PROMPT 3: Add Disorder Dialog
+                    if (showAddTranstornoDialog) {
+                        val available = uniqueComplications.filter {
+                            !state.complicacoesSelecionadas.containsKey(it) && !state.transtornos.contains(
+                                it
+                            )
+                        }.map { it.name.toSentenceCase() }.sorted()
+
+                        ChoiceDialog(
+                            options = available,
+                            onConfirm = { choice ->
+                                val selected =
+                                    uniqueComplications.firstOrNull { it.name.toSentenceCase() == choice }
+                                if (selected != null) {
+                                    state.transtornos.add(selected)
+                                    onUserFeedback()
+                                    onLogFeedback("Transtorno ${selected.name} adicionado.")
+                                }
+                                showAddTranstornoDialog = false
+                            },
+                            onDismiss = { showAddTranstornoDialog = false }
+                        )
+                    }
+                }
+
+                if (!locked) {
+                    val pequComp = uniqueComplications.firstOrNull { it.id == "pequeno" }
+                    val listaParaMostrar = uniqueComplications
+                        .filter { comp ->
+                            comp.id.keyify() !in autoBaseKeys
+                        }
+
+                    items(
+                        items = listaParaMostrar,
+                        key = { it.id }
+                    ) { comp ->
+                        // Using key so state is preserved
+                        ComplicacaoItem(
+                            comp = comp,
+                            state = state,
+                            locked = locked,
+                            allowLongTexts = allowLongTexts,
+                            showOfficialNames = showOfficialNames,
+                            groupedComplications = groupedComplications,
+                            detalhesExpandidos = detalhesExpandidos,
+                            onUserFeedback = onUserFeedback,
+                            onLogFeedback = onLogFeedback,
+                            onError = { msg ->
+                                tempErrorMsg = msg
+                                showTempError = true
+                                scope.launch {
+                                    delay(2_000)
+                                    showTempError = false
+                                }
+                            },
+                            peqComp = pequComp
+                        )
+                    }
+                }
+            } // End LazyColumn
         }
     }
 }
