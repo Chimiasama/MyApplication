@@ -25,5 +25,6 @@ enum class Categoria {
     @SerialName("CLASSE")        CLASSE,
     @SerialName("VANTAGEM_DE_CLASSE") VANTAGEM_DE_CLASSE,
     @SerialName("PRESTIGIO")     PRESTIGIO,
-    @SerialName("TROPO")         TROPO
+    @SerialName("TROPO")         TROPO,
+    @SerialName("ANCESTRALIDADE") ANCESTRALIDADE
 }

@@ -2654,7 +2654,7 @@
     "id": "meu_camarada",
     "nome": "MEU CAMARADA!",
     "origem": "SOL_VAPOR",
-    "categoria": "SOCIAL",
+    "categoria": "SOCIAIS",
     "requisitos": "Experiente, Astúcia d8+, Espírito d6+, Persuadir d8+, Conhecimento Geral d8+, Sindicalizado",
     "descricao": "Sempre que você obtiver um sucesso em Persuadir com um alvo que seja de sua área de trabalho e não possua a Vantagem Sindicalizado, seu nível de reação aumenta em um nível. Numa ampliação, ele se torna seu aliado e ajudará seu personagem como puder até o fim da aventura."
   },
@@ -2765,7 +2765,7 @@
   {
     "id": "elegante",
     "nome": "ELEGANTE",
-    "categoria": "SOCIAL",
+    "categoria": "SOCIAIS",
     "origem": "SOL_VAPOR",
     "requisitos": "Novato",
     "descricao": "Seu personagem tem um senso inato de moda e, em dois minutos, pode criar um traje a partir de trapos, concedendo +1 em todas as rolagens de Persuadir. Se algo acontecer com suas roupas, elas perdem esse modificador até que o traje esteja em ordem. Isso leva 2d6 minutos. Outros personagens também podem se beneficiar de suas habilidades de estilista. Para vestir outra pessoa bem, são necessários d6x10 minutos e uma rolagem de Astúcia. Em caso de sucesso, essa pessoa receberá +1 nas rolagens de Persuadir até o final do dia ou até o traje ser arruinado. Em caso de falha, você apenas perdeu seu tempo."
