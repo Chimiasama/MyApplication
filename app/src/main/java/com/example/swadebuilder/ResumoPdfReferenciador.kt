@@ -643,48 +643,91 @@ enum class ShapeType { CIRCLE, HEXAGON }
 
 fun getPdfTheme(themeName: String): PdfTheme {
     val theme = try { AppTheme.valueOf(themeName) } catch (e: Exception) { AppTheme.DEFAULT }
-    // Same theme logic as before...
     return when (theme) {
-        AppTheme.MEDIEVAL, AppTheme.DEFAULT -> PdfTheme(
+        AppTheme.DEFAULT -> PdfTheme(
+            backgroundColor = Color.rgb(247, 241, 230),
+            primaryColor = Color.rgb(141, 29, 44),
+            accentColor = Color.rgb(201, 155, 74),
+            textColor = Color.rgb(46, 42, 38),
+            gridLineColor = Color.rgb(184, 168, 150),
+            headerBackground = Color.rgb(241, 230, 214),
+            typefaceTitle = Typeface.create(Typeface.SERIF, Typeface.BOLD),
+            typefaceBody = Typeface.create(Typeface.SERIF, Typeface.NORMAL),
+            shapeType = ShapeType.HEXAGON
+        )
+        AppTheme.MEDIEVAL -> PdfTheme(
             backgroundColor = Color.rgb(248, 244, 235),
-            primaryColor = Color.rgb(92, 64, 51),
-            accentColor = Color.rgb(184, 134, 11),
-            textColor = Color.BLACK,
-            gridLineColor = Color.rgb(160, 82, 45),
+            primaryColor = Color.rgb(141, 110, 99),
+            accentColor = Color.rgb(62, 39, 35),
+            textColor = Color.rgb(62, 39, 35),
+            gridLineColor = Color.rgb(141, 110, 99),
             headerBackground = Color.rgb(229, 214, 200),
             typefaceTitle = Typeface.create(Typeface.SERIF, Typeface.BOLD),
             typefaceBody = Typeface.create(Typeface.SERIF, Typeface.NORMAL),
             shapeType = ShapeType.HEXAGON
         )
-        AppTheme.CYBERPUNK, AppTheme.SCIFI -> PdfTheme(
+        AppTheme.CYBERPUNK -> PdfTheme(
             backgroundColor = Color.BLACK,
             primaryColor = Color.rgb(0, 255, 65),
             accentColor = Color.rgb(0, 229, 255),
-            textColor = Color.WHITE,
-            gridLineColor = Color.rgb(0, 100, 0),
-            headerBackground = Color.rgb(20, 20, 20),
+            textColor = Color.rgb(0, 255, 65),
+            gridLineColor = Color.rgb(0, 59, 0),
+            headerBackground = Color.rgb(5, 5, 5),
             typefaceTitle = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD),
             typefaceBody = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL),
             shapeType = ShapeType.HEXAGON
         )
-        AppTheme.HORROR, AppTheme.HALLOWEEN -> PdfTheme(
-            backgroundColor = Color.rgb(20, 5, 5),
-            primaryColor = Color.rgb(180, 20, 20),
-            accentColor = Color.rgb(100, 100, 100),
-            textColor = Color.rgb(240, 240, 230),
-            gridLineColor = Color.rgb(80, 0, 0),
-            headerBackground = Color.rgb(40, 10, 10),
+        AppTheme.SCIFI -> PdfTheme(
+            backgroundColor = Color.rgb(5, 11, 20),
+            primaryColor = Color.rgb(0, 229, 255),
+            accentColor = Color.rgb(207, 216, 220),
+            textColor = Color.rgb(207, 216, 220),
+            gridLineColor = Color.rgb(19, 27, 38),
+            headerBackground = Color.rgb(12, 19, 30),
+            typefaceTitle = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD),
+            typefaceBody = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL),
+            shapeType = ShapeType.HEXAGON
+        )
+        AppTheme.HORROR -> PdfTheme(
+            backgroundColor = Color.rgb(10, 10, 10),
+            primaryColor = Color.rgb(138, 11, 11),
+            accentColor = Color.rgb(158, 123, 91),
+            textColor = Color.rgb(205, 198, 185),
+            gridLineColor = Color.rgb(75, 26, 26),
+            headerBackground = Color.rgb(18, 11, 11),
             typefaceTitle = Typeface.create(Typeface.SERIF, Typeface.BOLD_ITALIC),
             typefaceBody = Typeface.create(Typeface.SERIF, Typeface.NORMAL),
             shapeType = ShapeType.CIRCLE
         )
-        else -> PdfTheme(
+        AppTheme.HALLOWEEN -> PdfTheme(
+            backgroundColor = Color.rgb(13, 10, 15),
+            primaryColor = Color.rgb(255, 109, 0),
+            accentColor = Color.rgb(98, 0, 234),
+            textColor = Color.rgb(255, 195, 122),
+            gridLineColor = Color.rgb(98, 0, 234),
+            headerBackground = Color.rgb(19, 16, 23),
+            typefaceTitle = Typeface.create(Typeface.SERIF, Typeface.BOLD_ITALIC),
+            typefaceBody = Typeface.create(Typeface.SERIF, Typeface.NORMAL),
+            shapeType = ShapeType.CIRCLE
+        )
+        AppTheme.WW2 -> PdfTheme(
+            backgroundColor = Color.rgb(240, 230, 140),
+            primaryColor = Color.rgb(47, 79, 79),
+            accentColor = Color.rgb(75, 83, 32),
+            textColor = Color.BLACK,
+            gridLineColor = Color.rgb(75, 83, 32),
+            headerBackground = Color.rgb(195, 176, 145),
+            typefaceTitle = Typeface.create(Typeface.SERIF, Typeface.BOLD),
+            typefaceBody = Typeface.create(Typeface.SERIF, Typeface.NORMAL),
+            shapeType = ShapeType.CIRCLE
+        )
+        AppTheme.MINIMALIST -> PdfTheme(
             backgroundColor = Color.WHITE,
             primaryColor = Color.BLACK,
-            accentColor = Color.DKGRAY,
+            accentColor = Color.rgb(232, 245, 233),
             textColor = Color.BLACK,
-            gridLineColor = Color.LTGRAY,
-            headerBackground = Color.LTGRAY,
+            gridLineColor = Color.rgb(189, 189, 189),
+            headerBackground = Color.rgb(245, 245, 245),
             typefaceTitle = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD),
             typefaceBody = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL),
             shapeType = ShapeType.CIRCLE
