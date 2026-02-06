@@ -22,6 +22,7 @@ fun Vantagem.toArcanoKey(): String? {
             "MILAGRES BASICO" in c -> "MILAGRES"
             "PSIONICOS BASICO" in c -> "PSIONICOS"
             "CIENCIA ESTRANHA BASICO" in c -> "CIENCIA ESTRANHA"
+            "VUDUISMO" in c -> "VODUISTA"
             else -> c
         }
     }
@@ -60,7 +61,7 @@ fun Vantagem.toArcanoKey(): String? {
         "INVOCADOR DE DEMONIOS" in n -> "INVOCADOR DE DEMONIOS"
         "VIDENTE" in n -> "VIDENTE"
         "MISTICO" in n -> "MISTICO"
-        "VODUISTA" in n -> "VODUISTA"
+        "VODUISTA" in n || "VUDUISMO" in n -> "VODUISTA"
         else -> null
     }
 }
