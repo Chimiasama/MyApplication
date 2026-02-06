@@ -397,6 +397,10 @@ class CriadorViewModel : ViewModel() {
                 if (state.vantagensSelecionadas.none { it.id == "aa_agente_syn" }) {
                     state.vantagensSelecionadas.add(aa.copy())
                 }
+                // Ensure it is marked as automatic so it is not removed by validation logic
+                if (state.vantagensAutomaticas.none { it == "aa_agente_syn" }) {
+                    state.vantagensAutomaticas.add("aa_agente_syn")
+                }
             }
         }
 
