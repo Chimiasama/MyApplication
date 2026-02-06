@@ -4,6 +4,7 @@
     "nome": "Bogovia",
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
+    "tags": ["BOGOVIANO"],
     "atributos": {
       "Vigor": 2
     },
@@ -23,6 +24,7 @@
     "nome": "Fjordstad",
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
+    "tags": ["FJORDSTADIANO"],
     "atributos": {
       "Astúcia": 2
     },
@@ -42,6 +44,7 @@
     "nome": "As Ilhas",
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
+    "tags": ["ILHEU"],
     "atributos": {
       "Vigor": 2
     },
@@ -66,6 +69,7 @@
     "nome": "Maseia",
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
+    "tags": ["MASEIANO"],
     "atributos": {
       "Agilidade": 2
     },
@@ -85,6 +89,7 @@
     "nome": "Zingama",
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
+    "tags": ["ZINGAMAIANO"],
     "atributos": {
       "Espírito": 2
     },

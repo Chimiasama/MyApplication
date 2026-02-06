@@ -2306,6 +2306,25 @@ class CriadorState {
         if (complicacao.id == "talisma" && !temAntecedenteArcano()) {
             return false to "Talismã requer um Antecedente Arcano."
         }
+
+        if (compendioCrystalHeartAtivo) {
+            val forbidden = setOf(
+                "incredulo", "ganancioso", "analfabeto", "pobreza",
+                "forasteiro", "inimigo", "lento", "procurado", "um_braco_so",
+                "obrigacao" // Block generic obligation to favor specific ones if needed, or keeping it?
+                // Prompt said "Normalmente não pode ser escolhida... mas alguns casos raros...".
+                // If blocked, users can't take it. Maybe I should NOT block obligacao?
+                // But text says "Normalmente não pode ser escolhida".
+                // And points to "Dependente".
+                // I'll block it to force setting compliance, assuming "rare cases" are handled by GM override or using Dependente.
+                // Re-reading: "Veja também a nova Complicação, Dependente."
+                // I'll block standard 'obrigacao' since description is generic.
+            )
+            if (complicacao.id.keyify() in forbidden) {
+                return false to "Não utilizada em Crystal Heart (ou substituída por versão específica)."
+            }
+        }
+
         return true to null
     }
 
@@ -2352,6 +2371,26 @@ class CriadorState {
 
     fun podeSelecionar(v: Vantagem): Boolean {
         val key = v.nome.keyify()
+
+        // Crystal Heart Blocks
+        if (compendioCrystalHeartAtivo) {
+            val forbiddenIds = setOf(
+                "campeao", "chi", "linguista", "resistencia_arcana", "resistencia_arcana_aprimorada",
+                "rico", "podre_de_rico",
+                "aristocrata", "arma_predileta", "comando", "conexoes",
+                // "antecedente_arcano" generic block handled below in generic logic usually,
+                // but explicit block helps if logic is complex.
+                "antecedente_arcano"
+            )
+            val vKey = v.id.keyify()
+
+            if (vKey in forbiddenIds) return false
+
+            // Block Power Edges unless Crystal Heart specific
+            if (v.categoria == Categoria.PODER && v.origem != "CRYSTAL_HEART") {
+                return false
+            }
+        }
 
         // Regra: "Mago" do básico oculto se Fantasia ativo
         if (compendioFantasiaAtivo && v.id == "mago") return false

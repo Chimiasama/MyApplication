@@ -10,6 +10,195 @@
     "grupoId": "antecedente_arcano"
   },
   {
+    "id": "aristocrata_ch",
+    "nome": "ARISTOCRATA",
+    "categoria": "SOCIAL",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato" },
+    "descricao": "Você pertence à elite cultural. +1 em Persuadir com aristocratas da sua Terra. Pode ser reduzido em outras Terras."
+  },
+  {
+    "id": "arma_predileta_ch",
+    "nome": "ARMA PREDILETA",
+    "categoria": "COMBATE",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "periciaMinOpcional": { "Atletismo": 8, "Lutar": 8, "Atirar": 8 } },
+    "descricao": "Arma customizada ou de família. +1 nas rolagens de ataque com esta arma específica. Não requer rolagem de Requisição.",
+    "maxSelections": 0,
+    "requiresChoice": true,
+    "vinculadoPericia": true
+  },
+  {
+    "id": "comando_ch",
+    "nome": "COMANDO",
+    "categoria": "LIDERANCA",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "atributos": { "Astúcia": 6 } },
+    "descricao": "+1 na recuperação de Abalado para aliados a 5 quadros. Aplica-se a Extras e Cartas Selvagens."
+  },
+  {
+    "id": "conexoes_ch",
+    "nome": "CONEXÕES",
+    "categoria": "SOCIAL",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato" },
+    "descricao": "Pode pedir favores a grupos/facções (exceto Syn). 1/sessão."
+  },
+  {
+    "id": "feroz",
+    "nome": "FEROZ",
+    "categoria": "SOCIAL",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "atributos": { "Espírito": 6 } },
+    "descricao": "1/dia, aumenta o Dado Selvagem (d6->d8 ou d4) por uma cena se crenças em jogo. Se recuar, Dado Selvagem reduzido por 1d6 horas."
+  },
+  {
+    "id": "mentor",
+    "nome": "MENTOR",
+    "categoria": "ANTECEDENTE",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato" },
+    "descricao": "+1 ponto de perícia em perícia relevante (não excede atributo). +2 Requisição."
+  },
+  {
+    "id": "bogoviano_determinado",
+    "nome": "DETERMINADO (Bogoviano)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "tags": ["BOGOVIANO"] },
+    "descricao": "Quando se recuperar de Abalado, ganha +2 na próxima rolagem de Característica nesta rodada."
+  },
+  {
+    "id": "fjordstadiano_sondagem",
+    "nome": "SONDAGEM (Fjordstadiano)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "tags": ["FJORDSTADIANO"] },
+    "descricao": "Funciona como Noção de Perigo usando Astúcia. Detecta perigos físicos e sociais."
+  },
+  {
+    "id": "dieta_da_ilha",
+    "nome": "DIETA DA ILHA",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "tags": ["ILHEU"] },
+    "descricao": "Resiste 2 dias sem comer. Refeição especial remove 1 Fadiga (dura 8h). Reabastece ingredientes na Syn."
+  },
+  {
+    "id": "maseiano_ritual",
+    "nome": "RITUAL DE PASSAGEM (Maseiano)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "tags": ["MASEIANO"] },
+    "descricao": "Nota pequenos detalhes. 1/sessão influencia a história (detalhe/item) sem gastar Bene."
+  },
+  {
+    "id": "zingamaiano_nacionalismo",
+    "nome": "NACIONALISMO (Zingamaiano)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "tags": ["ZINGAMAIANO"] },
+    "descricao": "Conta como Obstinado e Corajoso."
+  },
+  {
+    "id": "focus_ch",
+    "nome": "FOCUS",
+    "categoria": "PODER",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "pericias": { "Canalizar Cristal": 6 } },
+    "descricao": "Se não se mover, ignora 2 pontos de penalidade em Canalizar Cristal."
+  },
+  {
+    "id": "focus_aprimorado_ch",
+    "nome": "FOCUS APRIMORADO",
+    "categoria": "PODER",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Veterano", "pericias": { "Canalizar Cristal": 8 }, "vantagensPrevias": ["focus_ch"] },
+    "descricao": "Rerrolagem gratuita em Canalizar Cristal."
+  },
+  {
+    "id": "conceder_poderes_ch",
+    "nome": "CONCEDER PODERES",
+    "categoria": "PODER",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Experiente", "pericias": { "Canalizar Cristal": 6 } },
+    "descricao": "Transfere poder para objeto (Ação). Usuário perde acesso. Outros usam com Canalizar Cristal. Dissipa em 1 semana."
+  },
+  {
+    "id": "reter_poder_ch",
+    "nome": "RETER PODER",
+    "categoria": "PODER",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "pericias": { "Canalizar Cristal": 4 } },
+    "descricao": "Pode manter um poder sem custo (ignora 1 ponto de penalidade)."
+  },
+  {
+    "id": "especialista_era_antiga",
+    "nome": "ESPECIALISTA NA ERA ANTIGA",
+    "categoria": "PROFISSIONAL",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "pericias": { "Conhecimento Acadêmico": 6, "Engenharia": 6 } },
+    "descricao": "+2 Conhecimento Acadêmico/Engenharia para tecnologia antiga. Sabe Idioma Antigo."
+  },
+  {
+    "id": "cristaleiro",
+    "nome": "CRISTALEIRO",
+    "categoria": "PROFISSIONAL",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "pericias": { "Conhecimento Acadêmico": 6, "Curar": 6 } },
+    "descricao": "+2 Conhecimento Acadêmico/Curar para Cristais/criaturas. Conhece banco de dados da Syn."
+  },
+  {
+    "id": "especialista_cristal",
+    "nome": "ESPECIALISTA EM UM CRISTAL",
+    "categoria": "PROFISSIONAL",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Experiente" },
+    "descricao": "Escolha um Cristal. Aprende novo poder OU nova Vantagem. Ignora 2 pts de penalidade de Modificadores para este Cristal.",
+    "maxSelections": 0,
+    "requiresChoice": true
+  },
+  {
+    "id": "especialista_aprimorado_cristal",
+    "nome": "ESPECIALISTA APRIMORADO",
+    "categoria": "PROFISSIONAL",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Veterano", "vantagensPrevias": ["especialista_cristal"] },
+    "descricao": "Ganha novo poder com o Cristal especializado. No Heroico, ganha mais um."
+  },
+  {
+    "id": "o_cristal_certo",
+    "nome": "O CRISTAL CERTO",
+    "categoria": "PROFISSIONAL",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Experiente", "pericias": { "Canalizar Cristal": 8 } },
+    "descricao": "Pode carregar 2º Cristal. Troca com Espírito/Vigor (sem -2). Ampliação = ignora 2 penalidades. Dificuldade maior para aprender Truques."
+  },
+  {
+    "id": "invasor_tumbas",
+    "nome": "INVASOR DE TUMBAS",
+    "categoria": "PROFISSIONAL",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Novato", "atributos": { "Agilidade": 8 }, "pericias": { "Perceber": 6, "Ladinagem": 6 } },
+    "descricao": "+1 Perceber (ruínas), +1 Ladinagem (armadilhas). Contos antigos são Conhecimento Geral."
+  },
+  {
+    "id": "assinatura",
+    "nome": "ASSINATURA",
+    "categoria": "ESTRANHAS",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Experiente" },
+    "descricao": "Escolha Preparação (Atributo) e Execução (Perícia). Role Prep: Sucesso/Ampliação = +1 Exec. Falha = -2 Exec. Falha Crítica = Falha. Requer gatilho."
+  },
+  {
+    "id": "segundo_folego_ch",
+    "nome": "SEGUNDO FÔLEGO",
+    "categoria": "ESTRANHAS",
+    "origem": "CRYSTAL_HEART",
+    "requisitos": { "estagio": "Experiente", "atributos": { "Vigor": 6 } },
+    "descricao": "Nível extra de Fadiga (-1). Incapacitado apenas no 3º nível."
+  },
+  {
     "id": "sintonizacao_cristal",
     "nome": "SINTONIZAÇÃO COM CRISTAL",
     "categoria": "PODER",
