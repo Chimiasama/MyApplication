@@ -5,7 +5,7 @@
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
     "atributos": {
-      "Vigor": 1
+      "Vigor": 2
     },
     "pericias": {},
     "vantagensGratis": [
@@ -24,7 +24,7 @@
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
     "atributos": {
-      "Astúcia": 1
+      "Astúcia": 2
     },
     "pericias": {},
     "vantagensGratis": [
@@ -43,7 +43,7 @@
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
     "atributos": {
-      "Vigor": 1
+      "Vigor": 2
     },
     "pericias": {},
     "vantagensGratis": [
@@ -67,7 +67,7 @@
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
     "atributos": {
-      "Agilidade": 1
+      "Agilidade": 2
     },
     "pericias": {},
     "vantagensGratis": [
@@ -86,7 +86,7 @@
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
     "atributos": {
-      "Espírito": 1
+      "Espírito": 2
     },
     "pericias": {},
     "vantagensGratis": [
