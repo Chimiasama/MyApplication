@@ -932,6 +932,14 @@ fun VantagensContent(
 
     if (dialogMostrandoAntecedente != null) {
         val vantOriginal = dialogMostrandoAntecedente!!
+
+        val formatarRequisitos = { vant: Vantagem ->
+            val attrs = vant.requisitos.atributoMin.entries.map { "${it.key} d${it.value}" }
+            val skills = vant.requisitos.periciaMin.entries.map { "${it.key} d${it.value}" }
+            val all = attrs + skills
+            if (all.isNotEmpty()) " (${all.joinToString(", ")})" else ""
+        }
+
         // Fantasy Override: Show list of Fantasy + Basic ABs with requirements
         val opcoesArcano: List<Pair<String, Vantagem>> = if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
             listaVantagens
@@ -947,11 +955,7 @@ fun VantagensContent(
                         ?: vant.subtipoArcano?.toSentenceCase()
                         ?: vant.nome.removePrefix("ANTECEDENTE ARCANO ").replace("(", "").replace(")", "").trim().toSentenceCase()
 
-                    val reqs = if (vant.requisitos.atributoMin.isNotEmpty()) {
-                        val r = vant.requisitos.atributoMin.entries.joinToString(", ") { "${it.key} d${it.value}" }
-                        " ($r)"
-                    } else ""
-
+                    val reqs = formatarRequisitos(vant)
                     "$baseName$reqs" to vant
                 }
                 .sortedBy { it.first }
@@ -960,16 +964,23 @@ fun VantagensContent(
         }
 
         // Pathfinder Override: Show Magic and Miracles options
-        val opcoesPathfinder = if (state.compendioPathfinderAtivo) {
-            listOf(
+        val opcoesPathfinder: List<Pair<String, Vantagem>> = if (state.compendioPathfinderAtivo) {
+            val map = mapOf(
                 "Magia" to "antecedente_arcano_magia_pf",
                 "Milagres" to "antecedente_arcano_milagres_pf"
             )
+            map.mapNotNull { (label, id) ->
+                val v = listaVantagens.firstOrNull { it.id == id }
+                if (v != null) {
+                    val reqs = formatarRequisitos(v)
+                    "$label$reqs" to v
+                } else null
+            }
         } else emptyList()
 
         // Deadlands Override: Show Deadlands ABs
-        val opcoesDeadlands = if (state.compendioDeadlandsAtivo) {
-            listOf(
+        val opcoesDeadlands: List<Pair<String, Vantagem>> = if (state.compendioDeadlandsAtivo) {
+            val map = mapOf(
                 "Abençoado" to "antecedente_arcano_abencoado",
                 "Bruxa" to "antecedente_arcano_bruxa",
                 "Cientista Louco" to "antecedente_arcano_cientista_louco",
@@ -978,6 +989,13 @@ fun VantagensContent(
                 "Voduísta" to "antecedente_arcano_vuduismo",
                 "Xamã" to "antecedente_arcano_xama"
             )
+            map.mapNotNull { (label, id) ->
+                val v = listaVantagens.firstOrNull { it.id == id }
+                if (v != null) {
+                    val reqs = formatarRequisitos(v)
+                    "$label$reqs" to v
+                } else null
+            }
         } else emptyList()
 
         AlertDialog(
@@ -1065,8 +1083,7 @@ fun VantagensContent(
                     onClick = {
                         if (state.compendioPathfinderAtivo) {
                             val choiceLabel = subOpcaoSelecionada!!
-                            val edgeId = opcoesPathfinder.firstOrNull { it.first == choiceLabel }?.second
-                            val specificEdge = listaVantagens.firstOrNull { it.id == edgeId }
+                            val specificEdge = opcoesPathfinder.firstOrNull { it.first == choiceLabel }?.second
 
                             if (specificEdge != null) {
                                 if (state.podeSelecionar(specificEdge)) {
@@ -1084,8 +1101,7 @@ fun VantagensContent(
                             }
                         } else if (state.compendioDeadlandsAtivo) {
                             val choiceLabel = subOpcaoSelecionada!!
-                            val edgeId = opcoesDeadlands.firstOrNull { it.first == choiceLabel }?.second
-                            val specificEdge = listaVantagens.firstOrNull { it.id == edgeId }
+                            val specificEdge = opcoesDeadlands.firstOrNull { it.first == choiceLabel }?.second
 
                             if (specificEdge != null) {
                                 if (state.podeSelecionar(specificEdge)) {
