@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.listaCoracoesCrystal
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.ui.components.SectionCard
@@ -37,7 +38,7 @@ fun CrystalHeartSection(
         icon = Icons.Default.Favorite,
         showHeader = false
     ) {
-        val temAgenteSyn = state.vantagensSelecionadas.any { it.id == "antecedente_arcano_agente_da_syn" }
+        val temAgenteSyn = state.vantagensSelecionadas.any { it.id == Constants.ID_AA_AGENT_SYN }
 
         Column(
             modifier = Modifier
@@ -46,7 +47,7 @@ fun CrystalHeartSection(
         ) {
             if (!temAgenteSyn) {
                 Text(
-                    text = "Você precisa da vantagem 'Antecedente Arcano (Agente da SYN)' para equipar um Coração de Cristal.",
+                    text = "Você precisa da vantagem 'Agente da SYN' para equipar um Coração de Cristal.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.error
                 )

@@ -1,13 +1,11 @@
 [
   {
-    "id": "antecedente_arcano_agente_da_syn",
-    "nome": "ANTECEDENTE ARCANO (Agente da SYN)",
+    "id": "agente_da_syn",
+    "nome": "Agente da SYN",
     "categoria": "ANTECEDENTE",
     "origem": "CRYSTAL_HEART",
     "requisitos": {},
-    "descricao": "Permite equipar e usar Corações de Cristal. Perícia Arcana: Canalizar Cristal (Espírito). Se o cristal for removido, perde acesso aos poderes. Começa com um Coração Inicial.",
-    "subtipoArcano": "AGENTE DA SYN",
-    "grupoId": "antecedente_arcano"
+    "descricao": "Permite equipar e usar Corações de Cristal. Perícia Arcana: Canalizar Cristal (Espírito). Se o cristal for removido, perde acesso aos poderes. Começa com um Coração Inicial."
   },
   {
     "id": "aristocrata_ch",
@@ -206,7 +204,7 @@
     "requisitos": {
       "estagio": "Novato",
       "vantagens_previas": [
-        "antecedente_arcano_agente_da_syn"
+        "agente_da_syn"
       ]
     },
     "descricao": "+2 nas rolagens de Canalizar para ativar poderes do Coração."

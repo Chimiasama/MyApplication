@@ -13,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.example.swadebuilder.model.AdvantageSnapshot
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
@@ -960,7 +961,7 @@ class CriadorState {
             .toSet()
 
         // Also check raw IDs in vantagensRaciais/Automaticas because some JSONs use IDs directly
-        // like "antecedente_arcano_agente_da_syn" which doesn't match the name "ANTECEDENTE ARCANO"
+        // like "agente_da_syn" which doesn't match the name "ANTECEDENTE ARCANO"
         val autoIds = (vantagensAutomaticas + vantagensRaciais).toSet()
 
         return key in autoKeys ||
@@ -2443,8 +2444,7 @@ class CriadorState {
         // 3) Antecedente Arcano e multi-arcano
         if (key.startsWith("ANTECEDENTE ARCANO")) {
             if (compendioCrystalHeartAtivo) {
-                // Allows only "Antecedente Arcano (Agente da SYN)" which has ID "antecedente_arcano_agente_da_syn"
-                if (v.id == "antecedente_arcano_agente_da_syn") return true
+                // All ABs forbidden in CH (Agente da Syn is normal edge now)
                 return false
             }
 
@@ -2943,7 +2943,7 @@ class CriadorState {
             val candidatos = vantagensSelecionadas.filter { v ->
                 val isScenarioEdge = v.id == "superpoderes" ||
                         v.id == "agente_syn" ||
-                        v.id == "antecedente_arcano_agente_da_syn" ||
+                        v.id == Constants.ID_AA_AGENT_SYN ||
                         (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true)
 
                 !isRacialFree(v) &&

@@ -69,7 +69,7 @@ object Constants {
     const val EDGE_ARCANE_BACKGROUND_WEIRD_SCIENCE = "ANTECEDENTE ARCANO (CIENCIA ESTRANHA)"
 
     // IDs (lower case usually)
-    const val ID_AA_AGENT_SYN = "antecedente_arcano_agente_da_syn"
+    const val ID_AA_AGENT_SYN = "agente_da_syn"
     const val ID_AA_MIRACLES = "antecedente_arcano_milagres"
     const val ID_AA_PREFIX = "antecedente_arcano"
     const val ID_AA_DEADLANDS_PREFIX = "aa_"
