@@ -138,6 +138,8 @@ class CriadorState {
     val vantagensAutomaticasDoElemento = mutableStateListOf<String>()
 
     val fixedPowersByArcano = mapOf(
+        "ABENCOADO" to listOf("simbolo_sagrado"),
+        "MESTRE DO CHI" to listOf("deflexao"),
         "BARDO" to listOf("aumentar_reduzir_caracteristica", "som_silencio"),
         "CLERIGO" to listOf("cura", "santuario"),
         "DIABOLISTA" to listOf("banir", "devastacao", "conjurar_aliado"),
