@@ -2735,7 +2735,8 @@ class CriadorState {
     }
 
     private fun atributoBaseRacial(a: String): Int {
-        val base = racialAttrMinMap[ancestralidade]?.get(a) ?: 4
+        // Fix: Use keyified ancestry to match DataLoader map keys
+        val base = racialAttrMinMap[ancestralidade.keyify()]?.get(a.keyify()) ?: 4
 
         var modifiedBase = base
 

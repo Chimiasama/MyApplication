@@ -357,11 +357,6 @@ class CriadorViewModel : ViewModel() {
             "HUMANOS"
         }
 
-        // Specifically for Crystal Heart: Ensure state.ancestralidade is set early to help initial calculations
-        if (state.compendioCrystalHeartAtivo) {
-            state.ancestralidade = targetAncestralidade
-        }
-
         // Fix: Ensure all loaded skills are registered in the state maps to prevent crashes in rawTotal
         state.ensureAllPericiasRegistered()
 
@@ -398,8 +393,8 @@ class CriadorViewModel : ViewModel() {
         }
 
         if (state.compendioCrystalHeartAtivo) {
-            listaVantagens.firstOrNull { it.id == "agente_syn" }?.let { aa ->
-                if (state.vantagensSelecionadas.none { it.id == "agente_syn" }) {
+            listaVantagens.firstOrNull { it.id == "aa_agente_syn" }?.let { aa ->
+                if (state.vantagensSelecionadas.none { it.id == "aa_agente_syn" }) {
                     state.vantagensSelecionadas.add(aa.copy())
                 }
             }
