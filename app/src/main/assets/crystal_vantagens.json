@@ -12,7 +12,7 @@
   {
     "id": "aristocrata_ch",
     "nome": "ARISTOCRATA",
-    "categoria": "SOCIAL",
+    "categoria": "SOCIAIS",
     "origem": "CRYSTAL_HEART",
     "requisitos": { "estagio": "Novato" },
     "descricao": "Você pertence à elite cultural. +1 em Persuadir com aristocratas da sua Terra. Pode ser reduzido em outras Terras."
@@ -39,7 +39,7 @@
   {
     "id": "conexoes_ch",
     "nome": "CONEXÕES",
-    "categoria": "SOCIAL",
+    "categoria": "SOCIAIS",
     "origem": "CRYSTAL_HEART",
     "requisitos": { "estagio": "Novato" },
     "descricao": "Pode pedir favores a grupos/facções (exceto Syn). 1/sessão."
@@ -47,7 +47,7 @@
   {
     "id": "feroz",
     "nome": "FEROZ",
-    "categoria": "SOCIAL",
+    "categoria": "SOCIAIS",
     "origem": "CRYSTAL_HEART",
     "requisitos": { "estagio": "Novato", "atributos": { "Espírito": 6 } },
     "descricao": "1/dia, aumenta o Dado Selvagem (d6->d8 ou d4) por uma cena se crenças em jogo. Se recuar, Dado Selvagem reduzido por 1d6 horas."
