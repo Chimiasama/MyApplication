@@ -17,6 +17,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -52,8 +56,9 @@ fun CrystalHeartSection(
                 )
             } else {
                 val selectedHeart = state.coracaoCrystalSelecionado
+                var isSwapping by remember { mutableStateOf(false) }
 
-                if (selectedHeart != null) {
+                if (selectedHeart != null && !isSwapping) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -78,20 +83,34 @@ fun CrystalHeartSection(
                             Text(
                                 text = "Trocar Coração",
                                 color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.clickable { viewModel.desequiparCrystalHeart() }
+                                modifier = Modifier.clickable { isSwapping = true }
                             )
                         }
                     }
                 } else {
-                    Text(
-                        text = "Selecione um Coração de Cristal:",
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Selecione um Coração de Cristal:",
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        if (selectedHeart != null) {
+                             Text(
+                                text = "Cancelar",
+                                color = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.clickable { isSwapping = false }
+                            )
+                        }
+                    }
 
                     Column {
                         listaCoracoesCrystal.forEach { heart ->
                             CrystalHeartItem(heart) {
                                 viewModel.selecionarCrystalHeart(heart)
+                                isSwapping = false
                             }
                         }
                     }

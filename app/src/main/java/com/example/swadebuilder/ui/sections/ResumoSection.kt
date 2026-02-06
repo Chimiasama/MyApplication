@@ -257,16 +257,25 @@ fun SummaryContent(
         .orEmpty()
         .ifBlank { "–" }
 
+    val heartValue = state.coracaoCrystalSelecionado?.nome
+
     val monstroInfo = if (state.modoMonstroAtivo) {
         val tipoNome = com.example.swadebuilder.listaMonstroTemplates.find { it.id == state.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
         "\nTipo de Monstro: $tipoNome"
     } else ""
 
+    val ancestralidadeDisplay = buildString {
+        append("Ancestralidade: $ancestralidadeValue$monstroInfo")
+        if (heartValue != null) {
+            append("\nCoração: $heartValue")
+        }
+    }
+
     Column(Modifier.fillMaxWidth()) {
         IdentityCard(
             nome = nome,
             onNomeChange = { state.nomePersonagem = it },
-            ancestralidade = "Ancestralidade: $ancestralidadeValue$monstroInfo",
+            ancestralidade = ancestralidadeDisplay,
         activeCompendiums = if (state.mostrarIdentificadorLivro) getCompendiumIcons(state) else emptyList()
         )
 
@@ -475,6 +484,11 @@ fun BasicCharacterInfo(
         .orEmpty()
         .ifBlank { "–" }
 
+    val heartValue = identitySection?.items
+        ?.firstOrNull { it.startsWith("Coração de Cristal:") }
+        ?.substringAfter(":")
+        ?.trim()
+
     val monstroInfo = if (state.modoMonstroAtivo) {
         val tipoNome = com.example.swadebuilder.listaMonstroTemplates
             .find { it.id == state.tipoMonstroSelecionado }
@@ -485,11 +499,18 @@ fun BasicCharacterInfo(
         ""
     }
 
+    val ancestralidadeDisplay = buildString {
+        append("Ancestralidade: $ancestralidadeValue$monstroInfo")
+        if (heartValue != null) {
+            append("\nCoração: $heartValue")
+        }
+    }
+
     Column(Modifier.fillMaxWidth()) {
         IdentityCard(
             nome = nome,
             onNomeChange = { state.nomePersonagem = it },
-            ancestralidade = "Ancestralidade: $ancestralidadeValue$monstroInfo",
+            ancestralidade = ancestralidadeDisplay,
         activeCompendiums = if (state.mostrarIdentificadorLivro) getCompendiumIcons(state) else emptyList()
         )
 
