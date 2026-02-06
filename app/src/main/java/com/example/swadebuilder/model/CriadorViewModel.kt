@@ -226,6 +226,19 @@ class CriadorViewModel : ViewModel() {
         resetUiState()
         clearFeedbackMessages()
         val flags = snapshot.flags
+        val activeModules = buildSet {
+            if (flags.compendioFantasiaAtivo) add("FANTASIA")
+            if (flags.compendioHorrorAtivo) add("HORROR")
+            if (flags.compendioSciFiAtivo) add("SCI_FI")
+            if (flags.compendioPathfinderAtivo) add("PATHFINDER")
+            if (flags.compendioDeadlandsAtivo) add("DEADLANDS")
+            if (flags.compendioCrystalHeartAtivo) add("CRYSTAL_HEART")
+            if (flags.compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
+            if (flags.compendioCidadeSolVaporAtivo) add("CIDADE_SOL_VAPOR")
+            if (flags.compendioWiseguysAtivo) add("WISEGUYS")
+            if (flags.modoSupers) add("SUPER")
+        }
+        DataLoader.updateActiveModules(context, activeModules)
         resetStateParaNovoPersonagem(
             cartaSelvagem = flags.cartaSelvagem,
             maisPontosPericias = flags.maisPontosPericias,
