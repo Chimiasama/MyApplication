@@ -302,7 +302,13 @@ fun TelaInicial(
             Icons.Default.Favorite,
             optCompendioCrystalHeart,
             !isAnyBookSelected || optCompendioCrystalHeart,
-            { optCompendioCrystalHeart = !optCompendioCrystalHeart },
+            {
+                optCompendioCrystalHeart = !optCompendioCrystalHeart
+                if (optCompendioCrystalHeart) {
+                    applyRulesPreset("Básico")
+                    optMaisPontosPericias = false
+                }
+            },
             { applyRulesPreset("Básico"); showRulesDialog = true }
         ),
         ModuleItemData(
