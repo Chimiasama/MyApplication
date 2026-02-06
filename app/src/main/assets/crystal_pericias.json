@@ -50,13 +50,6 @@
       "descricao": "Com a tecnologia de comunicação ainda iniciando, as pessoas não tem muito conhecimento da maior parte de sua própria Terra, para não mencionar outras Terras. Fazer uma rolagem de Conhecimento Geral em Terras diferentes da sua natal é feito com uma penalidade de -1."
     },
     {
-      "nome": "Curar",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "CRYSTAL_HEART",
-      "descricao": "A perícia Curar é usada para todas as operações físicas envolvendo um Cristal, como encaixá-lo e entender a influência do Cristal no corpo."
-    },
-    {
       "nome": "Dirigir",
       "atributo": "Agilidade",
       "basica": false,
