@@ -351,6 +351,8 @@ class CriadorViewModel : ViewModel() {
             "Humano (Pathfinder)"
         } else if (state.compendioDeadlandsAtivo) {
             "Humano"
+        } else if (state.compendioCrystalHeartAtivo) {
+            "As Ilhas"
         } else {
             "HUMANOS"
         }

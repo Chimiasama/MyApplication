@@ -2438,18 +2438,8 @@ class CriadorState {
         // 3) Antecedente Arcano e multi-arcano
         if (key.startsWith("ANTECEDENTE ARCANO")) {
             if (compendioCrystalHeartAtivo) {
-                // Em jogos de Crystal Heart, apenas "Agente da Agência" é permitido.
-                // Ajustado para usar o ID correto (agente_syn), mas garantindo que seja o único arcano
-                // se for considerado antecedente arcano pelo sistema (via tag ou lógica).
-                // Como "agente_syn" é Profissional no JSON, mas o sistema trata Crystal Heart como tendo Power Points,
-                // devemos permitir que ele seja selecionado. O filtro aqui bloqueia "Antecedente Arcano" genérico.
-                // Se agente_syn não tiver nome começando com "Antecedente Arcano", ele passa direto.
-                // Mas aqui estamos DENTRO do if (key.startsWith("ANTECEDENTE ARCANO")).
-                // O JSON do prompt diz nome: "AGENTE DA SYN". Não começa com "Antecedente Arcano".
-                // Logo, este bloco IF não pega a vantagem agente_syn.
-                // Mas PEGARIA se o usuário tentasse pegar "Antecedente Arcano (Magia)".
-                // Então devemos bloquear QUALQUER coisa que não seja "agente_syn".
-                // Mas como "agente_syn" não entra aqui, qualquer coisa que entra aqui deve ser bloqueada.
+                // Allows only "Antecedente Arcano (Agente da SYN)" which has ID "aa_agente_syn"
+                if (v.id == "aa_agente_syn") return true
                 return false
             }
 
