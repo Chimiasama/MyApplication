@@ -393,13 +393,13 @@ class CriadorViewModel : ViewModel() {
         }
 
         if (state.compendioCrystalHeartAtivo) {
-            listaVantagens.firstOrNull { it.id.trim() == "aa_agente_syn" }?.let { aa ->
-                if (state.vantagensSelecionadas.none { it.id == "aa_agente_syn" }) {
+            listaVantagens.firstOrNull { it.id.trim() == "antecedente_arcano_agente_da_syn" }?.let { aa ->
+                if (state.vantagensSelecionadas.none { it.id == "antecedente_arcano_agente_da_syn" }) {
                     state.vantagensSelecionadas.add(aa.copy())
                 }
                 // Ensure it is marked as automatic so it is not removed by validation logic
-                if (state.vantagensAutomaticas.none { it == "aa_agente_syn" }) {
-                    state.vantagensAutomaticas.add("aa_agente_syn")
+                if (state.vantagensAutomaticas.none { it == "antecedente_arcano_agente_da_syn" }) {
+                    state.vantagensAutomaticas.add("antecedente_arcano_agente_da_syn")
                 }
             }
         }

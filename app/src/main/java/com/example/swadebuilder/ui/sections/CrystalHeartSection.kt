@@ -37,7 +37,7 @@ fun CrystalHeartSection(
         icon = Icons.Default.Favorite,
         showHeader = false
     ) {
-        val temAgenteSyn = state.vantagensSelecionadas.any { it.id == "aa_agente_syn" }
+        val temAgenteSyn = state.vantagensSelecionadas.any { it.id == "antecedente_arcano_agente_da_syn" }
 
         Column(
             modifier = Modifier

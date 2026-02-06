@@ -71,7 +71,7 @@ fun CriadorState.isVantagemVisible(
 
     // Crystal Heart Logic
     if (compendioCrystalHeartAtivo) {
-        if (vant.id == "aa_agente_syn") {
+        if (vant.id == "antecedente_arcano_agente_da_syn") {
             // Allow this specific one
         } else if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
             // Only specific Crystal Heart ABs allowed (handled by dataset, but hiding generics here)

@@ -1,6 +1,6 @@
 [
   {
-    "id": "aa_agente_syn",
+    "id": "antecedente_arcano_agente_da_syn",
     "nome": "ANTECEDENTE ARCANO (Agente da SYN)",
     "categoria": "ANTECEDENTE",
     "origem": "CRYSTAL_HEART",
@@ -206,7 +206,7 @@
     "requisitos": {
       "estagio": "Novato",
       "vantagens_previas": [
-        "aa_agente_syn"
+        "antecedente_arcano_agente_da_syn"
       ]
     },
     "descricao": "+2 nas rolagens de Canalizar para ativar poderes do Coração."
