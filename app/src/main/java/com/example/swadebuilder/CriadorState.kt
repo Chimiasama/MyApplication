@@ -3008,7 +3008,7 @@ class CriadorState {
         // Generic Logic for Edges listed in vantagesGratis strings
         getAncestralidadeDef(anc)?.vantagensGratis?.forEach { featString ->
             val featKey = featString.keyify()
-            val edge = listaVantagens.firstOrNull { it.nome.keyify() == featKey }
+            val edge = listaVantagens.firstOrNull { it.nome.keyify() == featKey || it.id == featString || it.id.keyify() == featKey }
             if (edge != null && vantagensSelecionadas.none { it.id == edge.id }) {
                 vantagensSelecionadas.add(edge)
             }
