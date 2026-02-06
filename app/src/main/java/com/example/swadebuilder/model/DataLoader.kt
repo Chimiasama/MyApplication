@@ -248,7 +248,13 @@ object DataLoader {
         mapaAtributosDisplay = atributosData.atributos.associate { it.nome.keyify() to it.nome }
 
         // 6. Pericias
-        val todasPericiasJson = skillModules.filter {
+        val skillModulesToLoad = if ("CRYSTAL_HEART" in keys) {
+            skillModules.filter { it.fileName != "basico_pericias.json" }
+        } else {
+            skillModules
+        }
+
+        val todasPericiasJson = skillModulesToLoad.filter {
             val key = it.originOverride?.uppercase() ?: "BASICO"
             key in keys
         }.flatMap { module ->

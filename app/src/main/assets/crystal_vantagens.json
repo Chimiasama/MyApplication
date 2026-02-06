@@ -4,13 +4,8 @@
     "nome": "ANTECEDENTE ARCANO (Agente da Agência)",
     "categoria": "ANTECEDENTE",
     "origem": "CRYSTAL_HEART",
-    "requisitos": {
-      "estagio": "Novato",
-      "atributos": {
-        "Espírito": 6
-      }
-    },
-    "descricao": "Permite equipar e usar Corações de Cristal. Perícia Arcana: Canalizar (Espírito). Se o cristal for removido, perde acesso aos poderes. Começa com um Coração Inicial.",
+    "requisitos": {},
+    "descricao": "Permite equipar e usar Corações de Cristal. Perícia Arcana: Canalizar Cristal (Espírito). Se o cristal for removido, perde acesso aos poderes. Começa com um Coração Inicial.",
     "subtipoArcano": "AGENTE DA SYN",
     "grupoId": "antecedente_arcano"
   },
@@ -61,7 +56,7 @@
     "requisitos": {
       "estagio": "Veterano",
       "pericias": {
-        "Canalizar": 8
+        "Canalizar Cristal": 8
       }
     },
     "descricao": "Pode gastar 2 PP extras para aumentar o efeito de um poder sem rolar o dado de Canalizar."
