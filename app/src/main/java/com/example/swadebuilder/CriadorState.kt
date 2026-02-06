@@ -16,6 +16,7 @@ import com.example.swadebuilder.model.AdvantageSnapshot
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.EquipFilter
 import com.example.swadebuilder.model.EquipSuperType
 import com.example.swadebuilder.model.EquipamentoItem
@@ -4132,6 +4133,13 @@ class CriadorState {
                 val newVant = vant.copy()
                 newVant.choice = snap.choice
                 vantagensSelecionadas.add(newVant)
+            }
+        }
+        if (compendioCrystalHeartAtivo) {
+            listaVantagens.firstOrNull { it.id == Constants.ID_AA_AGENT_SYN }?.let { vant ->
+                if (vantagensSelecionadas.none { it.id == Constants.ID_AA_AGENT_SYN }) {
+                    vantagensSelecionadas.add(vant.copy())
+                }
             }
         }
 
