@@ -1,133 +1,101 @@
 [
   {
-    "id": "anc_bogandia",
-    "nome": "Bogandense",
+    "id": "anc_bogovia",
+    "nome": "Bogovia",
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
-    "atributos": {},
+    "atributos": {
+      "Vigor": 2
+    },
     "pericias": {},
+    "vantagensGratis": [
+      "aa_agente_syn"
+    ],
+    "habilidades": [
+      {
+        "nome": "Vigoroso",
+        "descricao": "Começa com Vigor d6. Máximo d12+1."
+      }
+    ]
+  },
+  {
+    "id": "anc_fjordstad",
+    "nome": "Fjordstad",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "CRYSTAL_HEART",
+    "atributos": {
+      "Astúcia": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "aa_agente_syn"
+    ],
+    "habilidades": [
+      {
+        "nome": "Astuto",
+        "descricao": "Começa com Astúcia d6. Máximo d12+1."
+      }
+    ]
+  },
+  {
+    "id": "anc_as_ilhas",
+    "nome": "As Ilhas",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "CRYSTAL_HEART",
+    "atributos": {
+      "Vigor": 2
+    },
+    "pericias": {},
+    "vantagensGratis": [
+      "aa_agente_syn",
+      "ADAPTÁVEL"
+    ],
     "habilidades": [
       {
         "nome": "Vigoroso",
         "descricao": "Começa com Vigor d6. Máximo d12+1."
       },
       {
-        "nome": "Sangue Quente",
-        "descricao": "+4 para resistir a Frio. Reduz dano de Frio em 4."
-      },
-      {
-        "nome": "Teimoso",
-        "descricao": "Começa com a Complicação Teimoso."
+        "nome": "Adaptável",
+        "descricao": "Começam com qualquer Vantagem de nível Novato a sua escolha (devem atender aos Requisitos)."
       }
     ]
   },
   {
-    "id": "anc_dodeca",
-    "nome": "Dodeca",
+    "id": "anc_maseia",
+    "nome": "Maseia",
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
-    "atributos": {},
+    "atributos": {
+      "Agilidade": 2
+    },
     "pericias": {},
+    "vantagensGratis": [
+      "aa_agente_syn"
+    ],
     "habilidades": [
       {
-        "nome": "Astuto",
-        "descricao": "Começa com Astúcia d6. Máximo d12+1."
-      },
-      {
-        "nome": "Educação Superior",
-        "descricao": "Começa com d6 em Conhecimento Geral e +1 perícia de Conhecimento à escolha."
-      },
-      {
-        "nome": "Cético",
-        "descricao": "-2 em testes de Espírito para resistir a medo ou interações sociais emocionais."
-      }
-    ]
-  },
-  {
-    "id": "anc_mot",
-    "nome": "Mot",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "CRYSTAL_HEART",
-    "atributos": {},
-    "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Espiritual",
-        "descricao": "Começa com Espírito d6. Máximo d12+1."
-      },
-      {
-        "nome": "Destemido",
-        "descricao": "Começa com a Vantagem Corajoso."
-      },
-      {
-        "nome": "Fantasmagórico",
-        "descricao": "Aparência pálida e estranha. -1 em Persuadir com não-Mots."
-      }
-    ]
-  },
-  {
-    "id": "anc_oites",
-    "nome": "Oites",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "CRYSTAL_HEART",
-    "atributos": {},
-    "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Forte",
-        "descricao": "Começa com Força d6. Máximo d12+1."
-      },
-      {
-        "nome": "Trabalhador",
-        "descricao": "+2 em rolagens de Vigor para resistir a Fadiga por trabalho físico."
-      },
-      {
-        "nome": "Direto",
-        "descricao": "Não gostam de mentiras. -2 em Ladinagem e para mentir."
+        "nome": "Ágil",
+        "descricao": "Começa com Agilidade d6. Máximo d12+1."
       }
     ]
   },
   {
     "id": "anc_zingama",
-    "nome": "Zingamita",
+    "nome": "Zingama",
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
-    "atributos": {},
+    "atributos": {
+      "Espírito": 2
+    },
     "pericias": {},
+    "vantagensGratis": [
+      "aa_agente_syn"
+    ],
     "habilidades": [
       {
-        "nome": "Ágil",
-        "descricao": "Começa com Agilidade d6. Máximo d12+1."
-      },
-      {
-        "nome": "Aptidão Aquática",
-        "descricao": "Começa com d6 em Atletismo (Natação). Move-se velocidade normal na água."
-      },
-      {
-        "nome": "Curiosidade",
-        "descricao": "Começa com a Complicação Curioso (Maior)."
-      }
-    ]
-  },
-  {
-    "id": "anc_artificial",
-    "nome": "Artificial (Construto)",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "CRYSTAL_HEART",
-    "atributos": {},
-    "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Construto",
-        "descricao": "+2 recuperar Abalado, não respira, imune a veneno/doença."
-      },
-      {
-        "nome": "Sem Coração",
-        "descricao": "Não pode usar Corações de Cristal (usa bateria interna ou núcleo fixo)."
-      },
-      {
-        "nome": "Forasteiro",
-        "descricao": "Visto como objeto. -2 em Persuadir."
+        "nome": "Espiritual",
+        "descricao": "Começa com Espírito d6. Máximo d12+1."
       }
     ]
   }
