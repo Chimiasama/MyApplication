@@ -322,7 +322,8 @@ object DataLoader {
 
         // 7. Vantagens
         val todasVantagens = assets.loadAndMerge<Vantagem>(advantageModules, keys) { item, override ->
-             if (override != null) item.copy(origem = override) else item
+             val trimmedItem = item.copy(id = item.id.trim())
+             if (override != null) trimmedItem.copy(origem = override) else trimmedItem
         }
 
         AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
