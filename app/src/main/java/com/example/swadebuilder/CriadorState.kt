@@ -1630,6 +1630,14 @@ class CriadorState {
         listaPericias.forEach { ensurePericiaEntry(it) }
     }
 
+    fun ensureAllAtributosRegistered() {
+        listaAtributos.forEach { nome ->
+            if (!valoresAtributos.containsKey(nome)) {
+                valoresAtributos[nome] = mutableIntStateOf(4)
+            }
+        }
+    }
+
     private fun ensurePericiaEntry(per: Pericia) {
         if (!baseIncsPorPericia.containsKey(per)) baseIncsPorPericia[per] = 0
         if (!compIncsPorPericia.containsKey(per)) compIncsPorPericia[per] = 0
@@ -2243,7 +2251,9 @@ class CriadorState {
 
     var nasceUmHeroi by mutableStateOf(false)
 
-    val valoresAtributos = listaAtributos.associateWith { mutableIntStateOf(4) }
+    val valoresAtributos = mutableStateMapOf<String, androidx.compose.runtime.MutableIntState>().apply {
+        listaAtributos.forEach { put(it, mutableIntStateOf(4)) }
+    }
 
     val complicacoesSelecionadas: SnapshotStateMap<Complicacao, String?> = mutableStateMapOf()
     val reservasComplicacaoMaior: SnapshotStateMap<String, Boolean> = mutableStateMapOf()

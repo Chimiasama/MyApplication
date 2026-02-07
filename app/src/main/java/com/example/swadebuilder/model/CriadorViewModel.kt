@@ -359,6 +359,7 @@ class CriadorViewModel : ViewModel() {
 
         // Fix: Ensure all loaded skills are registered in the state maps to prevent crashes in rawTotal
         state.ensureAllPericiasRegistered()
+        state.ensureAllAtributosRegistered()
 
         state.vantagensSelecionadas.clear()
         state.complicacoesSelecionadas.clear()
