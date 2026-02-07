@@ -663,15 +663,6 @@ private fun SectionDetailPane(
 private fun availableSectionsFor(state: CriadorState): List<MainSection> {
     val sections = mutableListOf(MainSection.RESUMO)
     if (state.modoProgressaoAtivo) {
-        if (state.mostrandoAtributosProgresso) {
-            sections += MainSection.ATRIBUTOS
-        }
-        if (state.mostrandoPericiasProgresso) {
-            sections += MainSection.PERICIAS
-        }
-        if (state.mostrandoVantagensProgresso) {
-            sections += MainSection.VANTAGENS
-        }
         if (state.compendioCrystalHeartAtivo) {
             sections += MainSection.CRYSTAL_HEART
         }
@@ -842,6 +833,10 @@ private fun ProgressionDetailContent(
                 Text("Cancelar")
             }
         }
+        MainSection.CRYSTAL_HEART -> CrystalHeartSection(
+            state = state,
+            viewModel = viewModel
+        )
         MainSection.EQUIPAMENTOS -> EquipamentoSection(
             state = state,
             equipamentoCategorias = equipamentoCategorias,
