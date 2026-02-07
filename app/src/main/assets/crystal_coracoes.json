@@ -1,98 +1,503 @@
 [
   {
-    "id": "heart_starter",
-    "nome": "Coração Inicial (Padrão)",
+    "id": "heart_amigo",
+    "nome": "Amigo",
     "estagio": "Novato",
-    "pontos_poder": 10,
-    "slots": 1,
-    "habilidade_passiva": "Nenhuma.",
-    "poderes": ["Raio", "Proteção", "Luz"],
-    "complicacao_inerente": null,
+    "habilidade_passiva": "Vantagem Confiável. Quando der Suporte, ele adiciona +2 no sucesso, +3 com ampliação. Porém na falha, subtrai 3.",
+    "poderes": [
+      "Vamos Fazer! (aumentar característica, Contínuo, -1). Você aumenta sua ajuda a níveis absurdos. Escolha uma Característica: você e um aliado dentro do alcance de Astúcia aumentam seu tipo de dado em um. Enquanto ativo, a cada 10 min ou ao sacar Copas, faça rolagem de Espírito ou receba Fadiga.",
+      "Estou Indo! (teleporte, -1). Quando um amigo precisa, você pode aparecer ao lado dele. Com ampliação, traz a ferramenta certa. Amigos podem gastar Bene para forçar uso como ação livre."
+    ],
+    "complicacao_inerente": "Delirante (Maior): Todos são legais e desejam o melhor para mim.",
     "origem": "CRYSTAL_HEART",
-    "descricao": "O cristal padrão emitido para agentes novatos."
+    "descricao": "Bulbo amarelo com listras roxas. Tema: Ser realmente muito útil para seus amigos, apoio da equipe."
   },
   {
-    "id": "heart_combustion",
-    "nome": "Combustão (Combustion)",
+    "id": "heart_consciencia",
+    "nome": "Consciência",
     "estagio": "Novato",
-    "pontos_poder": 15,
-    "slots": 2,
-    "habilidade_passiva": "Resistência ao Fogo (+4). Toque causa 2d6 de dano de fogo.",
-    "poderes": ["Explosão", "Raio (Fogo)", "Voo (Jato)"],
-    "complicacao_inerente": "Inflamável (Dano de frio +4)",
+    "habilidade_passiva": "Vantagem Reflexos de Combate.",
+    "poderes": [
+      "Despertar (ajuda, -1). Força o alvo a sair do estado Abalado e voltar à plena consciência.",
+      "Detectar Consciência (detectar arcano, Contínuo, -1). Detecta fontes de consciência e diferencia tipos/tamanhos.",
+      "Acalmar (sono, -1). Envia onda disruptiva para 'calar' a consciência do alvo."
+    ],
+    "complicacao_inerente": "Sensível (Menor). As vibrações de insultos são sentidas com mais intensidade.",
     "origem": "CRYSTAL_HEART",
-    "descricao": "Um coração que queima constantemente."
+    "descricao": "Rosa e branco alongado. Tema: Perceber e criar vibrações no plano mental."
   },
   {
-    "id": "heart_granite",
-    "nome": "Granito (Granite)",
+    "id": "heart_dancarino",
+    "nome": "Dançarino",
+    "estagio": "Novato",
+    "habilidade_passiva": "Vantagem Rápido.",
+    "poderes": [
+      "Dança Graciosa (aumentar característica [Lutar e Performance], Contínuo, -2). Apenas em você. Dança contínua interfere em ações delicadas.",
+      "Na Zona (dádiva do guerreiro, Contínuo, -2). Apenas em você. Ganha Acrobata (Combatente Acrobata com ampliação) e Furioso (ativado ao ficar Abalado)."
+    ],
+    "complicacao_inerente": "Invejoso (Menor). Difícil ver alguém sendo melhor que você.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Rosa, ondulado, com respingos vermelhos. Tema: Movimentos elegantes, golpes graciosos."
+  },
+  {
+    "id": "heart_pateta",
+    "nome": "Pateta",
+    "estagio": "Novato",
+    "habilidade_passiva": "Sorte de Principiante se aplica a você. Ampliação ocorre com 3 acima do alvo (em vez de 4). Falha Crítica ocorre com duplo 1 OU um 1 e um 2.",
+    "poderes": [
+      "Má Sorte Contagiosa (reduzir características [Atletismo, Lutar ou Atirar], -1). Alvos enfrentam perturbações.",
+      "Me Erra (deflexão, Contínuo, -2). Apenas em você. Propenso a acidentes: se mover mais da metade da Movimentação, role Agilidade ou caia Prostrado."
+    ],
+    "complicacao_inerente": "Má Sorte. (Peculiaridade/Azarado)",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Plano, azul com pontas turquesa. Tema: Sorte caótica, tropeçar no sucesso."
+  },
+  {
+    "id": "heart_iluminado",
+    "nome": "Iluminado",
+    "estagio": "Novato",
+    "habilidade_passiva": "Ignora até 2 pontos de penalidade por Iluminação.",
+    "poderes": [
+      "Controle de Brilho (iluminar/obscurecer, -1). Você vê através da escuridão criada.",
+      "Visão Sombria (visão sombria, Contínuo, -1). Apenas em você. Luz forte impõe penalidade de -2 (-4 com ampliação).",
+      "Apagão (cegar, -1). Escuridão na cabeça ou luz nos olhos."
+    ],
+    "complicacao_inerente": "Hábito (Menor). Diz frases difíceis mas sem sentido.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Preto e brilhante, reflexivo. Tema: Manipular intensidade da luz."
+  },
+  {
+    "id": "heart_espirituoso",
+    "nome": "Espirituoso",
+    "estagio": "Novato",
+    "habilidade_passiva": "Alterna entre 'Esperto' (Astúcia +1 passo, Espírito -1 passo, Pau pra Toda Obra, Obrigação de escrever) e 'Corajoso' (Espírito +1 passo, Astúcia -1 passo, Obstinado, Teimoso). Mudança leva horas para reverter.",
+    "poderes": [
+      "Solução (dádiva do guerreiro, -2). Apenas em você. Somente quando 'Esperto'.",
+      "Ação Corajosa (velocidade, -3). Apenas em você. Somente quando 'Corajoso'. Sempre com Rapidez."
+    ],
+    "complicacao_inerente": "Obrigação (Menor) quando Esperto; Teimoso (Menor) quando Corajoso.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Pequena pedra preciosa amarela e cinza. Tema: Ideias inteligentes vs Comportamento tolo e corajoso."
+  },
+  {
+    "id": "heart_jingle",
+    "nome": "Jingle",
+    "estagio": "Novato",
+    "habilidade_passiva": "Performance aumentada em um dado. Pode usar Performance em Desafio contra Astúcia.",
+    "poderes": [
+      "Verme de Ouvido (confusão, -1). Música contagiosa que afeta inimigos próximos.",
+      "Pequeno Número de Dança (deflexão e ajuda, -2). Dança inspira aliados (remove Abalado/Fadiga) e dá deflexão a você."
+    ],
+    "complicacao_inerente": "Hábito (Menor): Irritante (-1 social). Em Copas, role Espírito ou fique Distraído por jingles.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Fino e enrolado, multicolorido. Tema: Músicas repetitivas e rimas."
+  },
+  {
+    "id": "heart_retalho",
+    "nome": "Retalho",
+    "estagio": "Novato",
+    "habilidade_passiva": "Vantagem Senhor Conserta Tudo.",
+    "poderes": [
+      "Encontrar Fraqueza (aumentar característica [Perceber], Contínuo, -1). +2 dano em objetos. Ignora 1 ponto de penalidade em Ataque Localizado se alvo Vulnerável.",
+      "Consertando (cura, -2). Para máquinas e criaturas. Requer ferramentas.",
+      "Modo Trabalho (aumentar característica [Engenharia e Cura], Contínuo, -1). Trata pessoas e máquinas igualmente."
+    ],
+    "complicacao_inerente": "Peculiaridade: Confunde pessoas com máquinas. Deficiente Auditivo (Menor) enquanto usa Encontrar Fraqueza.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Irregular, marrom e cinza. Tema: Entender mecanismos complexos (biológicos ou artificiais)."
+  },
+  {
+    "id": "heart_rali",
+    "nome": "Rali",
+    "estagio": "Novato",
+    "habilidade_passiva": "Vantagem Comando.",
+    "poderes": [
+      "Atrás de Mim! (deflexão, -2). Requer Modo Comando. Protege você e outros.",
+      "Modo Comando (Aumentar característica [Conhecimento Batalha], Contínuo, -1). Ganha Inspirar. Deve liderar ou poder encerra.",
+      "Palavra de Encorajamento (ajuda, -1). Requer Modo Comando. Ajuda aliado."
+    ],
+    "complicacao_inerente": "Leal (Menor/Maior).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Três esferas laranjas com crosta negra. Tema: Liderança, encorajar, estar à altura."
+  },
+  {
+    "id": "heart_rascal",
+    "nome": "Rascal",
+    "estagio": "Novato",
+    "habilidade_passiva": "Vantagem Carismático.",
+    "poderes": [
+      "Linguagem Corporal (empatia, -1). Canalizar Cristal vs Astúcia.",
+      "Sinais Conflitantes (confusão, -1). Apenas no alvo de Linguagem Corporal.",
+      "Significado Profundo (elo mental, Contínuo, -1). Comunicação por gestos. Língua Presa enquanto ativo.",
+      "Expressão Desdenhosa (reduzir característica [Espírito], -1)."
+    ],
+    "complicacao_inerente": "Peculiaridade: Paquerador excessivo.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Tubo retorcido turquesa. Tema: Linguagem corporal, sinais sutis."
+  },
+  {
+    "id": "heart_ricochete",
+    "nome": "Ricochete",
+    "estagio": "Novato",
+    "habilidade_passiva": "Vantagem Mãos Firmes.",
+    "poderes": [
+      "Modo Ricochete (aumentar característica [Atirar e Atletismo], Contínuo, -2). Ataques ricocheteiam ignorando Cobertura. Lutar reduzido em um passo.",
+      "Mira Certa (aumentar característica [Perceber], -1). Benefício de Mirar aplica a ataque único sem penalidade de Múltipla Ação."
+    ],
+    "complicacao_inerente": "Peculiaridade: Joga coisas em outras coisas constantemente.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Bronze, elegante, rachado. Tema: Tiros difíceis, mira perfeita, ricochetes."
+  },
+  {
+    "id": "heart_pensamento_silencioso",
+    "nome": "Pensamento Silencioso",
+    "estagio": "Novato",
+    "habilidade_passiva": "Vantagem Carismático (por empatia elevada).",
+    "poderes": [
+      "Conexão Profunda (empatia, -1). Resistido por Perceber. Contato visual intenso.",
+      "Antena Mental (leitura mental, -1). Alvo não sabe.",
+      "Vórtice Mental (adivinhação, -3). Recebe pensamentos e memórias do ambiente."
+    ],
+    "complicacao_inerente": "-2 em Perceber (distraído por vislumbres mentais).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Amarelo, forma de ampulheta. Tema: Antena mental, ler pensamentos superficiais."
+  },
+  {
+    "id": "heart_inclinado",
+    "nome": "Inclinado",
+    "estagio": "Novato",
+    "habilidade_passiva": "Pode andar em paredes (90 graus) como se fosse chão.",
+    "poderes": [
+      "Deflexão (deflexão, Contínuo, -2). Gravidade empurra projéteis. -1 em todas as ações.",
+      "Andar Sobre Tudo (andar nas paredes, Contínuo, -1). Anda em qualquer superfície (tetos, cordas). -1 em Agilidade."
+    ],
+    "complicacao_inerente": "Ao tirar Copas em combate, role Agilidade ou caia Prostrado (desorientação).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Laranja triangular. Tema: Manipulação subjetiva da gravidade/orientação."
+  },
+  {
+    "id": "heart_destaque",
+    "nome": "Destaque",
+    "estagio": "Novato",
+    "habilidade_passiva": "Em rolagens sociais, se sacar Copas, oponentes ficam Distraídos (intenção bombástica).",
+    "poderes": [
+      "Todos os Olhos em Mim! (aumentar característica [Provocar], -1). Ganha Humilhar, Provocador, Agitador.",
+      "Me Escuta! (aumentar característica [Intimidar], -1). Ganha Ameaçador, Obstinado.",
+      "Me Empresta Seus Ouvidos! (aumentar característica [Persuadir e Performance], -1). Ganha Carismático, Cativar o Ambiente."
+    ],
+    "complicacao_inerente": "Desagradável. Perde noção das boas maneiras.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Roxa e rosa, eruptiva. Tema: Ser o centro das atenções, brilhar, zumbido."
+  },
+  {
+    "id": "heart_forte",
+    "nome": "Forte",
+    "estagio": "Novato",
+    "habilidade_passiva": "Força aumentada em um passo.",
+    "poderes": [
+      "Arme-se (dádiva do guerreiro, Contínuo, -2 por braço). Cria braços extras (até metade do Espírito). Ganha Lutar com Duas Armas. -1 em outras ações por braço extra.",
+      "Armado e Perigoso (ferir, Contínuo, -1). Ganha Artista Marcial. Braços deixam rastro dourado.",
+      "Segure Firme (andar nas paredes, Contínuo, -1). Braços brotam para agarrar superfícies."
+    ],
+    "complicacao_inerente": "Excesso de Confiança. Acha que resolve tudo com as próprias mãos.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Dourado, cordas emaranhadas. Tema: Braços extras, força física."
+  },
+  {
+    "id": "heart_sobrevivente",
+    "nome": "Sobrevivente",
+    "estagio": "Novato",
+    "habilidade_passiva": "Vigor aumentado em um passo.",
+    "poderes": [
+      "Constituição Aprimorada (aumentar característica [Vigor], Contínuo, -1). Ganha Desconfiado.",
+      "Fortificado (proteção, Contínuo, -1). Barreira azul. Ganha Excesso de Confiança.",
+      "Sobrevivente (proteção ambiental, -1). Campo de força contra danos ambientais."
+    ],
+    "complicacao_inerente": "Teimoso.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Caixa azul. Tema: Resistência, sobrevivência em qualquer condição."
+  },
+  {
+    "id": "heart_verbalista",
+    "nome": "Verbalista",
+    "estagio": "Novato",
+    "habilidade_passiva": "Provocar aumentado em um passo. Ganha Humilhar. Usa sistema de 'cargas' (máx 3).",
+    "poderes": [
+      "Comando (fantoche, -2). Ordem incisiva (Instantânea). Consome 1 carga.",
+      "Modo Insulto (aumentar característica [Provocar], -1). Ganha Agitador (afeta todos). Requer carga, consome 1 a cada 3 turnos.",
+      "Sifão de Palavras (silêncio, Contínuo, -1). Gera cargas ao silenciar sons/conversas. Ganha Língua Presa."
+    ],
+    "complicacao_inerente": "Boca Grande.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Verde escuro, ponta torcida. Tema: Palavras como munição, silêncio como recarga."
+  },
+  {
+    "id": "heart_visao",
+    "nome": "Visão",
+    "estagio": "Novato",
+    "habilidade_passiva": "Vantagem Prontidão.",
+    "poderes": [
+      "Modo Foco (aumentar característica [Atirar e Perceber], Contínuo, -2). Visão de mira/olho fechado.",
+      "Telescópio (visão distante, -1)."
+    ],
+    "complicacao_inerente": "Peculiaridade (Vaidoso com aparência).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Pequena e achatada, bronze. Tema: Visão aguçada, foco, detalhes."
+  },
+  {
+    "id": "heart_choque",
+    "nome": "Choque",
+    "estagio": "Novato",
+    "habilidade_passiva": "Vantagem Rápido.",
+    "poderes": [
+      "Solavanco (confusão, -1). Falha Crítica causa Atordoamento no usuário.",
+      "Detectar Eletricidade (detectar arcano, Contínuo, -1). Percebe correntes/seres vivos. Fica Cego."
+    ],
+    "complicacao_inerente": "Hábito (Menor): Agitado, fala rápido.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Afiado, espinhoso, amarelo e azul. Tema: Eletricidade, picos de voltagem, estática."
+  },
+  {
+    "id": "heart_lobo",
+    "nome": "Lobo",
+    "estagio": "Novato",
+    "habilidade_passiva": "Força aumentada em um passo.",
+    "poderes": [
+      "Modo Selvagem (aumentar característica [Lutar], Contínuo, -1). Ganha Furioso e Artista Marcial. +2 escalada (garras).",
+      "Faro (aumentar característica, Contínuo, -1). +2 Perceber (olfato), -2 Perceber (visão)."
+    ],
+    "complicacao_inerente": "Sanguinário.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Vermelho e agressivo. Tema: Lobisomem, faro, garras."
+  },
+  {
+    "id": "heart_cabelo",
+    "nome": "Cabelo",
+    "estagio": "Novato",
+    "habilidade_passiva": "Controle sobre crescimento de cabelo/barba. Pode usar como chicote (1.5m).",
+    "poderes": [
+      "Uma Situação Cabeluda (enredar, -2).",
+      "Barbear e um Corte de Cabelo (deflexão, -2). Solta o cabelo para emaranhar ataque (Ação Livre antes do ataque)."
+    ],
+    "complicacao_inerente": "Atrapalhado (Tropeça no cabelo).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Bola felpuda. Tema: Cabelo preênsil e abundante."
+  },
+  {
+    "id": "heart_coracao_de_ouro",
+    "nome": "Coração de Ouro",
+    "estagio": "Novato",
+    "habilidade_passiva": "Espírito aumentado em um passo. Começa com 1 Bene extra (apenas para Elo Comum).",
+    "poderes": [
+      "Empatia (empatia, -1). Bônus em Persuadir/Performance.",
+      "Palavras de Encorajamento (aumentar característica [Performance], Contínuo, -1). Ganha Elo Comum e Inspirar. Torna-se Pacifista (Maior).",
+      "Sapatos Improváveis (velocidade, -1). Requer sapatos. Teleporte com ampliação. Se falhar, bloqueado até fim da cena."
+    ],
+    "complicacao_inerente": "Heroico. (Menos propenso a fazer algo para si).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Coração de ouro. Tema: Bondade, integridade... e sapatos."
+  },
+  {
+    "id": "heart_bolha",
+    "nome": "Bolha",
     "estagio": "Experiente",
-    "pontos_poder": 10,
-    "slots": 2,
-    "habilidade_passiva": "Armadura +4. Não pode correr.",
-    "poderes": ["Barreira", "Cavar", "Dano (Esmagar)", "Proteção"],
-    "complicacao_inerente": "Pesado (Movimentação -2)",
+    "habilidade_passiva": "Cria bolhas duras (Dureza 5). +2 Atletismo para arremessar (Dano Força).",
+    "poderes": [
+      "Bolha (proteção, -2). Prende alvo em bolha. Proteção ambiental básica, risco de sufocamento."
+    ],
+    "complicacao_inerente": "Curioso, Impulsivo, Caprichoso.",
     "origem": "CRYSTAL_HEART",
-    "descricao": "Transforma a pele do usuário em pedra."
+    "descricao": "Redondo, rosa, translúcido. Tema: Bolhas de proteção e contenção."
   },
   {
-    "id": "heart_spooky",
-    "nome": "Assombroso (Spooky)",
-    "estagio": "Novato",
-    "pontos_poder": 15,
-    "slots": 3,
-    "habilidade_passiva": "+2 em Intimidar. Pode ver fantasmas.",
-    "poderes": ["Medo", "Invisibilidade", "Intangibilidade", "Telecinese"],
-    "complicacao_inerente": "Aura Perturbadora (-2 Carisma)",
+    "id": "heart_veloz",
+    "nome": "Veloz",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Vantagens Rápido e Ligeiro.",
+    "poderes": [
+      "Instinto (deflexão, Contínuo, -2). Esquiva constante.",
+      "Veloz (velocidade, -1). Modificador Rapidez."
+    ],
+    "complicacao_inerente": "Deficiente Auditivo (Menor). Zumbido constante e movimento irritam os outros (Hábito Menor).",
     "origem": "CRYSTAL_HEART",
-    "descricao": "Cercado por sussurros e sombras."
+    "descricao": "Verde, cubo, esfumaçado. Tema: Velocidade, movimento constante."
   },
   {
-    "id": "heart_swarm",
-    "nome": "Enxame (Swarm)",
-    "estagio": "Veterano",
-    "pontos_poder": 20,
-    "slots": 3,
-    "habilidade_passiva": "Pode se dividir em um enxame de insetos (Passa por frestas, imune a armas normais em forma de enxame).",
-    "poderes": ["Invocar Aliado (Enxame)", "Voo", "Atordoar"],
-    "complicacao_inerente": "Mente de Colmeia (Dificuldade em focar, -1 Astúcia)",
+    "id": "heart_fogo",
+    "nome": "Fogo",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Vantagem Impiedoso.",
+    "poderes": [
+      "Bola de Fogo (explosão, -2).",
+      "Raio de Fogo (raio, -1)."
+    ],
+    "complicacao_inerente": "Hábito (Menor): Explosões emocionais. Ao falhar Espírito ou sacar Copas, emoção toma conta (role dado par/ímpar para adequação).",
     "origem": "CRYSTAL_HEART",
-    "descricao": "O corpo se torna uma colônia de cristais-inseto."
+    "descricao": "Bola laranja. Tema: Explosões de fogo, destruição."
   },
   {
-    "id": "heart_vector",
-    "nome": "Vetor (Vector)",
-    "estagio": "Novato",
-    "pontos_poder": 10,
-    "slots": 2,
-    "habilidade_passiva": "Pode andar em paredes e tetos. Movimentação +2.",
-    "poderes": ["Velocidade", "Deflexão", "Teleporte"],
-    "complicacao_inerente": "Impulsivo (Deve atacar se provocado)",
+    "id": "heart_sombra",
+    "nome": "Sombra",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Usa perícias à distância onde a sombra cai (-1 e dobro do tempo para delicadas).",
+    "poderes": [
+      "Golpe da Sombra (raio, -1). Ignora Alcance/Cobertura. Afetado por Iluminação.",
+      "Barreira de Sombra (barreira, Contínuo, -1)."
+    ],
+    "complicacao_inerente": "Desagradável. Fobia (Menor): Escuro (sem sombras).",
     "origem": "CRYSTAL_HEART",
-    "descricao": "Controla a própria inércia e gravidade pessoal."
+    "descricao": "Azul, gota. Tema: Sombra corpórea, extensão do ser."
+  },
+  {
+    "id": "heart_infusao",
+    "nome": "Infusão",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Vantagens Cura Rápida e Curandeiro.",
+    "poderes": [
+      "Enredar (enredar, -1). Vegetação cresce descontrolada.",
+      "Infundir Saúde (cura, -2). Ampliação cura Ferimento extra. Não neutraliza doença/veneno.",
+      "Desencadear (devastação, -1). Energia vital caótica força movimento aleatório."
+    ],
+    "complicacao_inerente": "Peculiaridade: Energético e barulhento. -1 em tarefas longas (Pesquisar).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Verde escuro, raízes. Tema: Energia vital excessiva, crescimento."
+  },
+  {
+    "id": "heart_translucido",
+    "nome": "Translucido",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Vigor aumentado em um passo. Reflexos de Combate.",
+    "poderes": [
+      "Desaparecer (invisibilidade, Contínuo, -3). Fica Mudo.",
+      "Modo Translucido (intangibilidade, continuo, -3). Imune a físico. Boca Grande e Hábito (Honestidade)."
+    ],
+    "complicacao_inerente": "-2 em Perceber (fala direta) e Atletismo (pegar objetos).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Massa cristalina. Tema: Intangibilidade, ignorar interações."
   },
   {
     "id": "heart_oasis",
-    "nome": "Oásis (Muitos Corações)",
+    "nome": "Oásis",
     "estagio": "Experiente",
-    "pontos_poder": 15,
-    "slots": 3,
-    "habilidade_passiva": "Cura Rápida. Água criada é pura.",
-    "poderes": ["Curar", "Alívio", "Barreira (Água)", "Manipular Elementos (Água)"],
-    "complicacao_inerente": "Sede Constante (Precisa do dobro de água)",
-    "origem": "CRYSTAL_HEART_EXP",
-    "descricao": "Um cristal líquido que gera vida e água."
+    "habilidade_passiva": "Obstinado.",
+    "poderes": [
+      "Renovar (ajuda, -1).",
+      "Presença Calmante (amigo das feras, especial). Pacifica animais.",
+      "Momento de Paz (proteção ambiental, Contínuo, -1). Área aconchegante."
+    ],
+    "complicacao_inerente": "Pacifista (Menor).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Manga aquecida pelo sol. Tema: Dia perfeito, calma, sol."
   },
   {
-    "id": "heart_jump",
-    "nome": "Salto (Jump)",
-    "estagio": "Novato",
-    "pontos_poder": 10,
-    "slots": 1,
-    "habilidade_passiva": "Pulo triplicado. Não sofre dano de queda.",
-    "poderes": ["Voo (Pulos)", "Guerreiro (Ataque em Salto)", "Velocidade"],
-    "complicacao_inerente": "Inquieto (Não consegue ficar parado)",
-    "origem": "CRYSTAL_HEART_EXP",
-    "descricao": "Permite saltos prodigiosos através do cenário."
+    "id": "heart_pia",
+    "nome": "Pia",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Pode sacar item aleatório (desaparece em segs). 50% chance de ser desajeitado (-2 ataque).",
+    "poderes": [
+      "Tum (atordoar, -1). Arremessa algo grande.",
+      "A Ferramenta Certa para o Trabalho? (dádiva do guerreiro, -2). Vantagem Assinatura. Copas gera item perigoso."
+    ],
+    "complicacao_inerente": "Peculiaridade (Sugere todas opções). Hesitante em ação.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Oval, cores desconexas. Tema: Coleção eclética, aleatoriedade."
+  },
+  {
+    "id": "heart_pilula",
+    "nome": "Pílula",
+    "estagio": "Experiente",
+    "habilidade_passiva": "+4 resistir veneno. Saliva venenosa.",
+    "poderes": [
+      "Conjurar Veneno (poder único, variável). Cria veneno no sangue (Desmaio, Letal, Leve, Paralisante).",
+      "Lamber a Lâmina (ferir, -1). Veneno na arma.",
+      "Cuspir nos Olhos (cegar, -1)."
+    ],
+    "complicacao_inerente": "Guiado (Menor) para envenenar mentes. Desagradável.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Bulbo verde esponjoso. Tema: Toxinas, venenos."
+  },
+  {
+    "id": "heart_salto",
+    "nome": "Salto",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Vantagem Bloquear. Dobro de Resistência a quedas.",
+    "poderes": [
+      "Pular e Quicar (poder único, Contínuo, -4). Pulo aumentado, ação livre ou atletismo. Plataforma Instável.",
+      "Quicando (proteção, Contínuo, -2). Armas quicam em você."
+    ],
+    "complicacao_inerente": "Impulsivo (Despreocupado).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Rosa e macia. Tema: Elasticidade, quicar."
+  },
+  {
+    "id": "heart_tangente_experiente",
+    "nome": "Tangente (Experiente)",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Vantagem Focado. +2 contra controle mental.",
+    "poderes": [
+      "Perder o Foco (confusão, -1).",
+      "Reconcentrar-se (ajuda, -1). Remove Fadiga não-mental e controle mental.",
+      "Onde Estávamos (limpeza mental, -3). Alvo esquece conversa."
+    ],
+    "complicacao_inerente": "Se sacar Copas, fica Distraído e Vulnerável.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Globulosa, olha para você. Tema: Mudar de assunto, distração."
+  },
+  {
+    "id": "heart_tangente_heroico",
+    "nome": "Tangente (Heroico)",
+    "estagio": "Heroico",
+    "habilidade_passiva": "Focado, Esquiva, Esquiva Aprimorada.",
+    "poderes": [
+      "Olhe para Outro Lugar (disfarce, Contínuo, -1). Ignorado por quem não está alerta.",
+      "Perder o Foco (confusão, -1).",
+      "Reconcentrar-se (ajuda, -1).",
+      "Desconexão (rajada, -1). Dano metafísico.",
+      "Onde Estávamos (limpeza mental, -3)."
+    ],
+    "complicacao_inerente": "Copas: Distraído, Vulnerável e Teleportado para cobertura. 2 Copas: Atordoado e Teleportado.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Globulosa, olha para trás de você. Tema: Evitar o ponto, tangenciar a existência."
+  },
+  {
+    "id": "heart_destino",
+    "nome": "Destino (Meta)",
+    "estagio": "Veterano",
+    "habilidade_passiva": "Metaconsciência. Dado Selvagem aumenta um passo.",
+    "poderes": [
+      "Dados Falsos (aumentar/reduzir característica, -1). Substitui dados fisicamente.",
+      "Conversa de Mesa (adivinhação, -3). Pergunta ao Mestre sobre mecânicas/dados."
+    ],
+    "complicacao_inerente": "Delirante (Maior): Sabe que é personagem de RPG.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Figuras poligonais. Tema: Metajogo, regras."
+  },
+  {
+    "id": "heart_dominio",
+    "nome": "Domínio",
+    "estagio": "Veterano",
+    "habilidade_passiva": "Comando, Presença de Comando. Todos assumem que você lidera.",
+    "poderes": [
+      "Você Sabe Quem Eu Sou? (aumentar característica [Intimidar e Provocar], Contínuo, -2). Teimoso.",
+      "Regra Justa (fantoche, -2). Comanda súditos.",
+      "Toque Real (cura, -2). Cura impõe comando."
+    ],
+    "complicacao_inerente": "Delirante (Menor): Acha que governa. Excesso de Confiança.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Irregular, roxo e afiado. Tema: Direito divino de governar."
+  },
+  {
+    "id": "heart_elegancia",
+    "nome": "Elegância",
+    "estagio": "Veterano",
+    "habilidade_passiva": "Atraente. Agilidade e Pilotar aumentados em um passo.",
+    "poderes": [
+      "Graça (aumentar Agilidade e velocidade, Contínuo, -2). Desagradável.",
+      "Bando (conjurar aliado, -3). Aves prismáticas.",
+      "Abra as Asas (voar, -2). Asas sólidas. Distraído (-2 Astúcia)."
+    ],
+    "complicacao_inerente": "Delirante (Maior): Superioridade. Peculiaridade: Comporta-se como pássaro.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Turquesa rosado. Tema: Graça, majestade, pássaros."
   }
 ]
