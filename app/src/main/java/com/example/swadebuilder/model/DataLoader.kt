@@ -179,6 +179,8 @@ object DataLoader {
         // 1. Equipamentos
         val equipmentModulesToLoad = if ("CRYSTAL_HEART" in keys) {
             equipmentModules.filter { it.fileName == "crystal_equipamentos.json" }
+        } else if ("ARTE_DA_GUERRA" in keys) {
+            equipmentModules.filter { it.fileName != "basico_equipamentos.json" }
         } else {
             equipmentModules
         }
@@ -255,7 +257,7 @@ object DataLoader {
         mapaAtributosDisplay = atributosData.atributos.associate { it.nome.keyify() to it.nome }
 
         // 6. Pericias
-        val skillModulesToLoad = if ("CRYSTAL_HEART" in keys) {
+        val skillModulesToLoad = if ("CRYSTAL_HEART" in keys || "ARTE_DA_GUERRA" in keys) {
             skillModules.filter { it.fileName != "basico_pericias.json" }
         } else {
             skillModules
@@ -313,7 +315,13 @@ object DataLoader {
         }
 
         // 7. Vantagens
-        val todasVantagens = assets.loadAndMerge<Vantagem>(advantageModules, keys) { item, override ->
+        val advantagesToLoad = if ("ARTE_DA_GUERRA" in keys) {
+            advantageModules.filter { it.fileName != "basico_vantagens.json" }
+        } else {
+            advantageModules
+        }
+
+        val todasVantagens = assets.loadAndMerge<Vantagem>(advantagesToLoad, keys) { item, override ->
              if (override != null) item.copy(origem = override) else item
         }
 
@@ -344,12 +352,18 @@ object DataLoader {
 
         listaTropos = adgTropos + chTropos
 
-        listaComplicacoes = assets.loadAndMerge<Complicacao>(complicationModules, keys) { item, override ->
+        val complicationModulesToLoad = if ("ARTE_DA_GUERRA" in keys) {
+            complicationModules.filter { it.fileName != "basico_complicacoes.json" }
+        } else {
+            complicationModules
+        }
+
+        listaComplicacoes = assets.loadAndMerge<Complicacao>(complicationModulesToLoad, keys) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
 
         // 9. Ancestralidades
-        val ancestriesToLoad = if ("DEADLANDS" in keys || "PATHFINDER" in keys || "CRYSTAL_HEART" in keys) {
+        val ancestriesToLoad = if ("DEADLANDS" in keys || "PATHFINDER" in keys || "CRYSTAL_HEART" in keys || "ARTE_DA_GUERRA" in keys) {
             ancestryModules.filter { it.fileName != "basico_ancestralidades.json" }
         } else {
             ancestryModules
