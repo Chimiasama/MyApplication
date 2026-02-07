@@ -1,167 +1,325 @@
 [
   {
     "id": "anc_humano_adg",
-    "nome": "Humano (Império do Sol)",
+    "nome": "Humano (Império San)",
     "categoria": "ANCESTRALIDADE",
     "origem": "ARTE_DA_GUERRA",
-    "atributos": {},
-    "pericias": {},
-    "vantagensGratis": [
-      "ADAPTÁVEL"
-    ],
-    "desvantagens": [],
-    "habilidades": [
-      {
-        "nome": "Versátil",
-        "descricao": "Começa com uma Vantagem Novato extra de graça."
-      },
-      {
-        "nome": "Pontos de Perícia",
-        "descricao": "Começa com 15 pontos de perícia em vez de 12."
-      },
-      {
-        "nome": "Signo de Nascença",
-        "descricao": "Escolha um Signo que concede um benefício específico (ex: Tigre: +1 em Medo e Comando; Lebre: Cura natural rápida)."
-      }
-    ]
-  },
-  {
-    "id": "anc_kemonomimi",
-    "nome": "Kemonomimi (Espírito Animal)",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Grupo diversificado e adaptável que se conforma com os valores de seus clãs. Podem nascer sob a influência de signos celestiais.",
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [],
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "Visão no Escuro",
-        "descricao": "Ignora penalidades de iluminação."
+        "nome": "Pontos de Perícia",
+        "descricao": "Começam com 15 pontos de perícia em vez dos 12 padrão."
       },
       {
-        "nome": "Sub-raça",
-        "descricao": "Deve escolher um tipo: Inumimi (Cão, +1 Resistência, Mordida), Kitsunemimi (Raposa, Cativar), Nekomimi (Gato, Sorte/Azar), etc."
+        "nome": "Adaptável ou Signo",
+        "descricao": "O jogador pode escolher entre começar com uma Vantagem gratuita de Novato (Humano Padrão) ou os benefícios de um Signo de Nascença."
+      },
+      {
+        "nome": "Signos de Nascença",
+        "descricao": "Benefícios baseados no mês de nascimento: 1-Basabasa (Atraente, +1 Provocar/Intimidar); 2-Boi (Atletismo situacional, Força d6 e limite d12+1); 3-Tigre (Comando +4, +1 Medo, -1 Tabela de Medo); 4-Lebre (Cura d6, Bene p/ tratar ferimento como Hora de Ouro); 5-Garça (+1 Aparar, Acrobacia d4, Atletismo +1 tipo dado); 6-Serpente (Jogar d6 ou Performance d6 com bônus monetário); 7-Dragão (Espírito d6 e limite d12+1, +1 Conhecimento Geral); 8-Kirin (+1 Reserva de Chi, +1 Bene por sessão); 9-Macaco (Astúcia d6 e limite d12+1, d4+1 em não treinadas de Astúcia); 10-Raposa (Vantagem Elevar o Moral, +1 Persuadir e Tabela de Reação); 11-Lobo (Vantagem Elo Comum, +1 Reação Inicial); 12-Tartaruga (+1 Resistência, -1 Ataque/Dano de Finalização contra si); 13-Urso (Vigor d6 e limite d12+1, penalidade de Exausto reduzida para -1)."
       }
     ]
   },
   {
-    "id": "anc_terracota",
+    "id": "anc_akaimimi",
+    "nome": "Akaimimi (Panda Vermelho)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Focados no desenvolvimento espiritual e filosófico, vistos como sábios iluminados.",
+    "habilidades": [
+      {
+        "nome": "Bom Conselheiro",
+        "descricao": "Possuem a Complicação Peculiaridade (Pedância)."
+      },
+      {
+        "nome": "Dicas Culturais",
+        "descricao": "Começam com d6 em Convenção e o máximo aumenta para d12+1."
+      },
+      {
+        "nome": "Conhecimento Geral",
+        "descricao": "Começam com Conhecimento Geral d6."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignoram penalidades de Penumbra e Escuridão."
+      }
+    ]
+  },
+  {
+    "id": "anc_araiguma",
+    "nome": "Araiguma (Guaxinim)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Astutos, curiosos e dotados de um apetite insaciável por viagens e sabores.",
+    "habilidades": [
+      {
+        "nome": "Brincalhão",
+        "descricao": "Recebem Provocar d4."
+      },
+      {
+        "nome": "Digestão Gloriosa",
+        "descricao": "Imunes a venenos, doenças e náuseas por ingestão."
+      },
+      {
+        "nome": "Trapalhões Travessos",
+        "descricao": "Começam com d6 em Furtividade."
+      },
+      {
+        "nome": "Esquisitices",
+        "descricao": "Possuem as Complicações Menores Hábito e Peculiaridade."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignoram penalidades de Penumbra e Escuridão."
+      }
+    ]
+  },
+  {
+    "id": "anc_inumimi",
+    "nome": "Inumimi (Cão)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Leais, diretos e robustos protetores da humanidade.",
+    "habilidades": [
+      {
+        "nome": "Vigorosos",
+        "descricao": "+1 na Resistência base."
+      },
+      {
+        "nome": "Caninos",
+        "descricao": "Mordida causa For+d4 e pode ser usada para Prender/Enredar."
+      },
+      {
+        "nome": "Cães de Guarda",
+        "descricao": "Começam com d6 em Perceber."
+      },
+      {
+        "nome": "Matilha",
+        "descricao": "Sujeitos à Complicação Leal."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignoram penalidades de Penumbra e Escuridão."
+      }
+    ]
+  },
+  {
+    "id": "anc_kitsunemimi",
+    "nome": "Kitsunemimi (Raposa)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Inteligentes e sofisticados, mestres da burocracia, intriga e artes.",
+    "habilidades": [
+      {
+        "nome": "Excessivamente Detalhistas",
+        "descricao": "Possuem a Complicação Cauteloso."
+      },
+      {
+        "nome": "Preparado",
+        "descricao": "Escolha uma perícia em d4: Conhecimento Acadêmico, Convenção, Intimidar, Pesquisar ou Provocar."
+      },
+      {
+        "nome": "Socialmente Sofisticados",
+        "descricao": "Começam com a Vantagem Cativar o Ambiente."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignoram penalidades de Penumbra e Escuridão."
+      }
+    ]
+  },
+  {
+    "id": "anc_nekomimi",
+    "nome": "Nekomimi (Gato)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Caprichosos e vaidosos, vivem em sintonia com a impermanência da sorte.",
+    "habilidades": [
+      {
+        "nome": "Brincando com o Destino",
+        "descricao": "Começam com d6 em Jogar."
+      },
+      {
+        "nome": "Sorte",
+        "descricao": "Começam com um Bene adicional por sessão."
+      },
+      {
+        "nome": "Azarado",
+        "descricao": "Possuem a Complicação Azarado."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignoram penalidades de Penumbra e Escuridão."
+      }
+    ]
+  },
+  {
+    "id": "anc_tanukimimi",
+    "nome": "Tanukimimi (Tanuki)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Camponeses resilientes, tenazes e despretensiosos.",
+    "habilidades": [
+      {
+        "nome": "Felizes por Natureza",
+        "descricao": "Começam com d6 em Espírito."
+      },
+      {
+        "nome": "Despretensiosos e Barrigudos",
+        "descricao": "-1 Aparar, Movimentação -1 e dado de corrida d4."
+      },
+      {
+        "nome": "Pensamentos Positivos",
+        "descricao": "Possuem a Vantagem Impulso."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignoram penalidades de Penumbra e Escuridão."
+      }
+    ]
+  },
+  {
+    "id": "anc_usagimimi",
+    "nome": "Usagimimi (Coelho)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Diligentes e empreendedores, valorizam o trabalho árduo e a família.",
+    "habilidades": [
+      {
+        "nome": "Definido pelo Ofício",
+        "descricao": "Começam com uma perícia de ofício em d6."
+      },
+      {
+        "nome": "Velocidade da Lebre",
+        "descricao": "+2 Movimentação e dado de corrida aumenta em um passo."
+      },
+      {
+        "nome": "Ariscos",
+        "descricao": "-2 em rolagens resistidas de Provocar e ao fazer Intimidar."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignoram penalidades de Penumbra e Escuridão."
+      }
+    ]
+  },
+  {
+    "id": "anc_terracota_adg",
     "nome": "Terracota",
     "categoria": "ANCESTRALIDADE",
     "origem": "ARTE_DA_GUERRA",
-    "atributos": {},
-    "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
+    "descricao": "Espíritos reencarnados em corpos de argila para cumprir um dever específico.",
     "habilidades": [
       {
         "nome": "Metade Construto",
-        "descricao": "+3 Resistência, não respira, imune a veneno/doença. Cura difícil (apenas Consertar)."
+        "descricao": "+3 Resistência; não respiram; imunes a venenos e doenças. Cura natural impossível após a Hora de Ouro (requer Consertar)."
+      },
+      {
+        "nome": "Metade Carne",
+        "descricao": "Requerem alimentação e meditação para recuperar Chi."
+      },
+      {
+        "nome": "Forasteiro (Menor)",
+        "descricao": "Vistos com preconceito e suspeita como seres não-naturais."
       },
       {
         "nome": "Chi Reduzido",
-        "descricao": "-1 na Reserva de Chi inicial."
+        "descricao": "Penalidade de -1 na Reserva de Chi inicial."
       },
       {
-        "nome": "Voto Maior",
-        "descricao": "Trazido de volta para uma tarefa específica. Morre se falhar ou completar."
+        "nome": "Articulações Limitadas",
+        "descricao": "Movimentação inicial 5 e dado de corrida d4."
+      },
+      {
+        "nome": "Voto ou Obrigação (Maior)",
+        "descricao": "Atados a uma tarefa específica. Desviar do pacto pode ser fatal."
       }
     ]
   },
   {
-    "id": "anc_onigem",
-    "nome": "Onigem (Sangue de Oni)",
+    "id": "anc_umvee",
+    "nome": "Umvee (Filhos da Lua)",
     "categoria": "ANCESTRALIDADE",
     "origem": "ARTE_DA_GUERRA",
-    "atributos": {},
-    "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
+    "descricao": "Verdadeiros protetores do mundo natural, ligados à luz lunar e à selva.",
+    "habilidades": [
+      {
+        "nome": "Dons da Natureza",
+        "descricao": "Escolha um: Ápice (Garras For+d4); Vínculo Bestial (Vantagem Senhor das Feras); Pele Iluminada (+1 Aparar e brilha); Gatoruja (Visão Escuro e Perceber d6); Correnteza (Mov 8, Corrida d8); Pedregoso (+1 Resistência, +2 Armadura); Ligado à Natureza (Sobrevivência d4)."
+      },
+      {
+        "nome": "Naturalmente Sobrenatural",
+        "descricao": "Começam com Ocultismo d4."
+      },
+      {
+        "nome": "Forasteiro (Menor)",
+        "descricao": "Vistos como seres alienígenas não-humanos."
+      }
+    ]
+  },
+  {
+    "id": "anc_feral",
+    "nome": "Feral",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Descendentes Umvee que mantêm a fúria animal dos berserkers em seu sangue.",
+    "habilidades": [
+      {
+        "nome": "Integrado à Natureza",
+        "descricao": "Começam com Sobrevivência d6."
+      },
+      {
+        "nome": "Insanidade",
+        "descricao": "Possuem a Vantagem Furioso e a Complicação Sanguinário."
+      },
+      {
+        "nome": "Ápice",
+        "descricao": "Possuem ataque de Garras (For+d4)."
+      },
+      {
+        "nome": "Primitivo",
+        "descricao": "Começam com d6 em Agilidade, Força ou Vigor."
+      },
+      {
+        "nome": "Mente Primitiva",
+        "descricao": "A Astúcia não pode avançar além de d6 na criação."
+      },
+      {
+        "nome": "Limitações Técnicas",
+        "descricao": "Não podem aprender ou canalizar Técnicas Chi."
+      },
+      {
+        "nome": "Forasteiro (Menor)",
+        "descricao": "Impacto em interações sociais por sua natureza alienígena."
+      }
+    ]
+  },
+  {
+    "id": "anc_onigem_adg",
+    "nome": "Onigem (Sangue Oni)",
+    "categoria": "ANCESTRALIDADE",
+    "origem": "ARTE_DA_GUERRA",
+    "descricao": "Humanoides com traços sanguíneos de Oni, marcados por chifres e grande força.",
     "habilidades": [
       {
         "nome": "Tripas Resistentes",
-        "descricao": "+1 em Medo, Absorção e resistir a venenos."
-      },
-      {
-        "nome": "Forte",
-        "descricao": "Força inicial d6, máximo d12+1."
+        "descricao": "+1 em rolagens de Medo, Absorção, resistir a venenos e náuseas não mágicas."
       },
       {
         "nome": "Ancestralidade Infame",
-        "descricao": "-2 em Persuadir com desconhecidos."
-      }
-    ]
-  },
-  {
-    "id": "anc_nezumi",
-    "nome": "Nezumi (Homem-Rato)",
-    "origem": "ARTE_DA_GUERRA",
-    "descricao": "Pequenos, ágeis e furtivos. Vivem nos esgotos ou florestas densas. Imunes a doenças.",
-    "atributos": {
-      "Agilidade": 1
-    },
-    "pericias": {
-      "Furtividade": 1
-    },
-    "vantagensGratis": [],
-    "desvantagens": [
-      "Pequeno (Tamanho -1)"
-    ],
-    "habilidades": [
-      {
-        "nome": "Imunidade a Doenças",
-        "descricao": "+4 para resistir a doenças."
+        "descricao": "Reações iniciais são Não Cooperativas; -2 em Persuadir com desconhecidos."
       },
       {
-        "nome": "Mordida",
-        "descricao": "For+d4."
+        "nome": "Forte",
+        "descricao": "Força inicial d6 e limite máximo d12+1."
       },
       {
-        "nome": "Visão no Escuro",
-        "descricao": "Ignora penalidades de iluminação."
-      }
-    ]
-  },
-  {
-    "id": "anc_basabasa",
-    "nome": "Basabasa (Tengu)",
-    "origem": "ARTE_DA_GUERRA",
-    "descricao": "Humanoides pássaro orgulhosos. Possuem asas funcionais.",
-    "atributos": {
-      "Agilidade": 1
-    },
-    "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [
-      "Ossos Fracos (-1 Resistência)"
-    ],
-    "habilidades": [
-      {
-        "nome": "Voo",
-        "descricao": "Movimentação 12 com asas. Não podem voar se sobrecarregados."
-      }
-    ]
-  },
-  {
-    "id": "anc_onigem_kuis",
-    "nome": "Onigem (Kui's Diary)",
-    "origem": "ARTE_DA_GUERRA",
-    "descricao": "Descendentes de espíritos ou construídos magicamente. Aparência exótica (chifres, pele colorida).",
-    "atributos": {
-      "Espirito": 1
-    },
-    "pericias": {},
-    "vantagensGratis": [
-      "Arcano (Chi)"
-    ],
-    "desvantagens": [
-      "Forasteiro (Menor)"
-    ],
-    "habilidades": [
-      {
-        "nome": "Toque Espiritual",
-        "descricao": "Podem interagir fisicamente com espíritos incorpóreos."
+        "nome": "Suspeitoso (Menor)",
+        "descricao": "Sofrem preconceito persistente onde quer que vão."
       }
     ]
   }
