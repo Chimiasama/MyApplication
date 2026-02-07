@@ -58,7 +58,7 @@ fun CrystalHeartSection(
                 val selectedHeart = state.coracaoCrystalSelecionado
                 var isSwapping by remember { mutableStateOf(false) }
 
-                if (selectedHeart != null && !isSwapping) {
+                if (selectedHeart != null) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -81,29 +81,20 @@ fun CrystalHeartSection(
 
                             Spacer(Modifier.height(8.dp))
                             Text(
-                                text = "Trocar Coração",
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.clickable { isSwapping = true }
+                                text = if (isSwapping) "Cancelar" else "Selecionar",
+                                color = if (isSwapping) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.clickable { isSwapping = !isSwapping }
                             )
                         }
                     }
-                } else {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
-                    ) {
+                }
+
+                if (selectedHeart == null || isSwapping) {
+                    if (selectedHeart == null) {
                         Text(
                             text = "Selecione um Coração de Cristal:",
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        if (selectedHeart != null) {
-                             Text(
-                                text = "Cancelar",
-                                color = MaterialTheme.colorScheme.error,
-                                modifier = Modifier.clickable { isSwapping = false }
-                            )
-                        }
                     }
 
                     Column {
