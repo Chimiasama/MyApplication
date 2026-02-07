@@ -1630,10 +1630,19 @@ fun VantagensContent(
                     pendingVantagem = null
                 }
             } else {
+                val displayOptions = validOptions.map { applyJutsuSkinToSkillName(it, state) }
                 ChoiceDialog(
-                    options = validOptions,
+                    options = displayOptions,
                     onConfirm = { choice ->
-                        state.comprarVantagem(vant.copy(choice = choice)) { msg ->
+                        val rawChoice = if (state.compendioArteDaGuerraAtivo &&
+                            choice.equals("Jutsu", ignoreCase = true) &&
+                            validOptions.any { it.equals("Lutar", ignoreCase = true) }
+                        ) {
+                            "Lutar"
+                        } else {
+                            choice
+                        }
+                        state.comprarVantagem(vant.copy(choice = rawChoice)) { msg ->
                             viewModel.logFeedback(msg)
                             onUserFeedback()
                         }
