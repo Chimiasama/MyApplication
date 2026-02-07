@@ -3004,7 +3004,7 @@ class CriadorState {
             val extras = ((newMin - 4).coerceAtLeast(0) / 2)
             val newMax = 12 + extras
 
-            val stack = paCostStackPorAtributo.getValue(nome)
+            val stack = paCostStackPorAtributo.getOrPut(nome) { mutableListOf() }
             var raw   = newMin
             var appliedSteps = 0
 
