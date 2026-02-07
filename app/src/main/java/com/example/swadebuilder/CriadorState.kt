@@ -79,6 +79,7 @@ class CriadorState {
     var protagonistaRollHabilidade by mutableStateOf<Int?>(null)
     var protagonistaPericiasEscolhidas by mutableStateOf<List<String>>(emptyList())
     var protagonistaPericiasPaixao by mutableStateOf<List<String>>(emptyList())
+    var protagonistaBonusPv by mutableStateOf(false)
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
@@ -212,7 +213,7 @@ class CriadorState {
             "Dragão", "Kirin", "Macaco", "Raposa", "Lobo", "Tartaruga", "Urso"
         )
         val SIGNOS_ADG_DESC = mapOf(
-            "Nenhum" to "Sem signo de nascença. Você mantém os benefícios de Humano Adaptável.",
+            "Nenhum" to "Sem signo de nascença. Você mantém os benefícios de Humano Adaptável (15 pontos de perícia e 1 PV).",
             "Basabasa" to "Aqueles que nasceram no primeiro mês sob o signo de Basabasa geralmente são indivíduos honestos e ambiciosos, conhecidos por uma beleza sobrenatural. Tal alinhamento celestial é ofuscado por uma oscilação de humores excêntricos. Começam as coisas com entusiasmo e logo perdem o interesse, tornando-se voláteis. Um Basabasa tem a Vantagem Atraente e escolhe na criação do personagem entre adicionar +1 às rolagens de Provocar ou Intimidar contra alvos que se sintam atraídos ou desprezem o Herói.",
             "Boi" to "Aqueles que nasceram sob o signo do Boi são grandes e imponentes, conhecidos por serem diretos e persistentes. Falhas comuns incluem teimosia, franqueza excessiva e inabilidade em expressar emoções. Um Boi recebe +1 em rolagens em Atletismo quando utilizado em situações que podem exigir Força (como escalar ou nadar). Caso o personagem possua a Vantagem Brutamontes, esse benefício se aplica a todas as rolagens de Atletismo. Além disso, este benefício aumenta a Força em um tipo de dado e aumenta seu limite máximo no atributo em d12+1.",
             "Tigre" to "A herança do signo do Tigre faz com que se tornem destemidos e precisos, realizando atos cavalheirescos dignos de respeito enquanto assumem a liderança. Tigres são naturalmente temperamentais. Em um papel de liderança ou posição de autoridade, tomarão decisões para obter o melhor resultado possível, sem considerar o efeito sobre os outros. Um Tigre tem um alcance de comando de +4 quadros, adiciona +1 nas rolagens de Medo e subtrai 1 dos resultados da Tabela de Medo (isso acumula com a Vantagem Corajoso).",
@@ -1079,6 +1080,11 @@ class CriadorState {
             pontosVantagem++
             rebuildAllPericiaStacks(enforcePoolLimit = true)
             onFeedback("Vantagem ${v.nome} removida.")
+            return
+        }
+
+        if (v.id in vantagensAutomaticasDoProtagonista) {
+            onFeedback("Vantagem automática do Protagonista (use a rolagem do tropo para alterar).")
             return
         }
 
@@ -2210,12 +2216,11 @@ class CriadorState {
             // PROMPT: Arte da Guerra skill points adjustment
             if (compendioArteDaGuerraAtivo) {
                 // If AdG active:
-                // Humans: 15 points
-                // Others: 12 points
+                // Base: 12 points
+                // Humans with "Nenhum" sign: +3 points (15 total)
                 // Ignore "maisPontosPericias" checkbox
-                val isHuman = ancestralidade.equals("HUMANOS", ignoreCase = true) ||
-                        ancestralidade.equals("Humano (Império do Sol)", ignoreCase = true)
-                val base = if (isHuman) 15 else 12
+                val isHuman = ancestralidade.keyify().contains("HUMANO")
+                val base = 12 + if (isHuman && signoAdgSelecionado.equals("Nenhum", ignoreCase = true)) 3 else 0
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
                 // Standard Logic
@@ -2448,6 +2453,9 @@ class CriadorState {
     }
 
     fun podeRemoverVantagem(vantagem: Vantagem): Pair<Boolean, String?> {
+        if (vantagem.id in vantagensAutomaticasDoProtagonista) {
+            return false to "Vantagem automática do Protagonista."
+        }
         if (vantagem.toArcanoKey() != null) {
             val temOutro = vantagensSelecionadas.any { it != vantagem && it.toArcanoKey() != null }
             if (!temOutro) {
@@ -3551,6 +3559,18 @@ class CriadorState {
     fun selecionarSigno(novoSigno: String?) {
         if (signoAdgSelecionado == novoSigno) return
 
+        val isHumanAdg = compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO")
+        if (compendioArteDaGuerraAtivo &&
+            signoAdgSelecionado.equals("Nenhum", ignoreCase = true) &&
+            !novoSigno.equals("Nenhum", ignoreCase = true)
+        ) {
+            if (pontosVantagem > 0) {
+                pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
+            } else {
+                removerUltimaVantagemCompradaComPv()
+            }
+        }
+
         // 1. Remove old edges from previous sign
         if (vantagensAutomaticasDoSigno.isNotEmpty()) {
             vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoSigno }
@@ -3575,6 +3595,10 @@ class CriadorState {
                     vantagensAutomaticasDoSigno.add(vant.id)
                 }
             }
+        }
+
+        if (isHumanAdg && novoSigno.equals("Nenhum", ignoreCase = true)) {
+            pontosVantagem += 1
         }
 
         recalcularPontosAtributo()
@@ -3620,6 +3644,7 @@ class CriadorState {
     fun updateProtagonistaRollHabilidade(value: Int?) {
         if (protagonistaRollHabilidade == value) return
         protagonistaRollHabilidade = value?.coerceIn(1, 12)
+        syncProtagonistaBonusPv()
     }
 
     fun updateProtagonistaPericiasEscolhidas(value: List<String>) {
@@ -3686,6 +3711,24 @@ class CriadorState {
                 vantagensSelecionadas.add(vant)
                 vantagensAutomaticasDoProtagonista.add(vant.id)
             }
+        }
+    }
+
+    private fun syncProtagonistaBonusPv() {
+        val shouldHaveBonus = compendioArteDaGuerraAtivo &&
+            tropoSelecionado?.id == "tropo_protagonista" &&
+            protagonistaRollHabilidade == 4
+
+        if (shouldHaveBonus && !protagonistaBonusPv) {
+            pontosVantagem += 1
+            protagonistaBonusPv = true
+        } else if (!shouldHaveBonus && protagonistaBonusPv) {
+            if (pontosVantagem > 0) {
+                pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
+            } else {
+                removerUltimaVantagemCompradaComPv()
+            }
+            protagonistaBonusPv = false
         }
     }
 
@@ -3785,8 +3828,10 @@ class CriadorState {
                 protagonistaPericiasEscolhidas = emptyList()
                 protagonistaPericiasPaixao = emptyList()
                 vantagensSlotProtagonista.clear()
+                syncProtagonistaBonusPv()
             } else {
                 atualizarProtagonistaAutoVantagens()
+                syncProtagonistaBonusPv()
             }
         } else {
             protagonistaRollTecnicas = null
@@ -3797,6 +3842,7 @@ class CriadorState {
             protagonistaPericiasEscolhidas = emptyList()
             protagonistaPericiasPaixao = emptyList()
             vantagensSlotProtagonista.clear()
+            syncProtagonistaBonusPv()
         }
 
         syncMestreDoChiSlots()
@@ -4425,6 +4471,8 @@ class CriadorState {
         if (tropoSelecionado?.id == "tropo_protagonista") {
             atualizarProtagonistaAutoVantagens()
         }
+        protagonistaBonusPv = tropoSelecionado?.id == "tropo_protagonista" &&
+            protagonistaRollHabilidade == 4
 
         poderSlotsPorArcano.clear()
         snapshot.selecoes.poderSlotsPorArcano.forEach { (key, slots) ->
