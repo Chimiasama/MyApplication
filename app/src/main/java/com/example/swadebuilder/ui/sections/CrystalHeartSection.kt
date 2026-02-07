@@ -16,11 +16,8 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExposedDropdownMenu
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -44,7 +41,6 @@ import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.ui.components.SectionCard
 import java.util.UUID
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CrystalHeartSection(
     state: CriadorState,
@@ -279,21 +275,17 @@ fun CrystalHeartSection(
                                     modifier = Modifier.fillMaxWidth()
                                 )
                                 Spacer(Modifier.height(8.dp))
-                                ExposedDropdownMenuBox(
-                                    expanded = stageExpanded,
-                                    onExpandedChange = { stageExpanded = !stageExpanded }
-                                ) {
+                                Column {
                                     OutlinedTextField(
                                         value = estagio,
                                         onValueChange = {},
                                         readOnly = true,
                                         label = { Text("Estágio") },
-                                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = stageExpanded) },
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .menuAnchor()
+                                            .clickable { stageExpanded = true }
                                     )
-                                    ExposedDropdownMenu(
+                                    DropdownMenu(
                                         expanded = stageExpanded,
                                         onDismissRequest = { stageExpanded = false }
                                     ) {

@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.listaComplicacoes
+import com.example.swadebuilder.listaCoracoesCrystal
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaPericias
