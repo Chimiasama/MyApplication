@@ -78,6 +78,21 @@ class CriadorState {
     var dominioClerigoSelecionado by mutableStateOf<String?>(null)
     var dominioClerigoPathfinderSelecionado by mutableStateOf<String?>(null)
 
+    fun getActiveModuleKeys(): Set<String> {
+        val keys = mutableSetOf<String>()
+        if (compendioFantasiaAtivo) keys.add("FANTASIA")
+        if (compendioHorrorAtivo) keys.add("HORROR")
+        if (compendioSciFiAtivo) keys.add("SCI_FI")
+        if (compendioPathfinderAtivo) keys.add("PATHFINDER")
+        if (compendioDeadlandsAtivo) keys.add("DEADLANDS")
+        if (compendioCrystalHeartAtivo) keys.add("CRYSTAL_HEART")
+        if (compendioArteDaGuerraAtivo) keys.add("ARTE_DA_GUERRA")
+        if (compendioCidadeSolVaporAtivo) keys.add("CIDADE_SOL_VAPOR")
+        if (compendioWiseguysAtivo) keys.add("WISEGUYS")
+        if (modoSupers) keys.add("SUPER")
+        return keys
+    }
+
     fun getMonstroSelecionado(): com.example.swadebuilder.model.MonstroTemplate? {
         if (!modoMonstroAtivo || tipoMonstroSelecionado == null) return null
         return listaMonstroTemplates.firstOrNull { it.id == tipoMonstroSelecionado }

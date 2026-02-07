@@ -398,6 +398,11 @@ class CriadorViewModel : ViewModel() {
                     state.vantagensSelecionadas.add(aa.copy())
                 }
             }
+            // Auto-select Basic Heart
+            val basicHeart = com.example.swadebuilder.listaCoracoesCrystal.firstOrNull { it.id == "heart_starter" }
+            if (basicHeart != null) {
+                state.coracaoCrystalSelecionado = basicHeart
+            }
         }
 
         state.equipamentosComprados.clear()

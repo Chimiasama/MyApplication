@@ -807,8 +807,13 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
     canvas.drawText(displayedName, rect.left + 10f, rect.top + 30f, titlePaint)
     canvas.drawText("${p.ancestralidade.titleCase()} - Novato", rect.left + 10f, rect.top + 50f, subtitlePaint)
 
+    if (p.coracaoCrystalSelecionado != null) {
+        val heartText = "Coração: ${p.coracaoCrystalSelecionado.nome}"
+        canvas.drawText(heartText, rect.left + 10f, rect.top + 70f, subtitlePaint)
+    }
+
     val trackX = rect.left + 10f
-    val trackY = rect.top + 80f
+    val trackY = if (p.coracaoCrystalSelecionado != null) rect.top + 95f else rect.top + 80f
     drawTrack(canvas, trackX, trackY, "Ferimentos", 3, -1, theme)
     drawTrack(canvas, trackX + 100f, trackY, "Fadiga", 2, -1, theme)
 }
