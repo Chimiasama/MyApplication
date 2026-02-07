@@ -11,5 +11,7 @@ data class CrystalHeart(
     val poderes: List<String> = emptyList(),
     val complicacao_inerente: String? = null,
     val origem: String? = "CRYSTAL_HEART",
-    val descricao: String? = null
+    val descricao: String? = null,
+    val custom: Boolean = false,
+    val placeholder: Boolean = false
 )

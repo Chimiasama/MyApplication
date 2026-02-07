@@ -17,6 +17,7 @@ import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
+import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
 
 // ---- OBJETOS DE RETORNO ----
@@ -859,6 +860,19 @@ class CriadorViewModel : ViewModel() {
 
     fun selecionarCrystalHeart(heart: CrystalHeart) {
         state.coracaoCrystalSelecionado = heart
+    }
+
+    fun salvarCrystalHeartPersonalizado(context: Context, heart: CrystalHeart): CrystalHeart? {
+        val saved = CustomCrystalHeartStorage.saveCustomHeart(context, heart) ?: return null
+        val updated = listaCoracoesCrystal.toMutableList()
+        val existingIndex = updated.indexOfFirst { it.id == saved.id }
+        if (existingIndex >= 0) {
+            updated[existingIndex] = saved
+        } else {
+            updated.add(saved)
+        }
+        listaCoracoesCrystal = updated
+        return saved
     }
 
     fun desequiparCrystalHeart() {

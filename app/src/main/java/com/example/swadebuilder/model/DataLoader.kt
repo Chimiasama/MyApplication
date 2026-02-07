@@ -27,6 +27,7 @@ import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.racialAttrMinMap
 import com.example.swadebuilder.racialSkillStartMap
 import com.example.swadebuilder.superequipCategorias
+import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -207,7 +208,8 @@ object DataLoader {
                         .use { input -> json.decodeFromStream<List<CrystalHeart>>(input) }
                 }.getOrElse { emptyList<CrystalHeart>() }
             } as List<CrystalHeart>
-            listaCoracoesCrystal = hearts
+            val customHearts = CustomCrystalHeartStorage.load(context)
+            listaCoracoesCrystal = (hearts + customHearts).distinctBy { it.id }
         } else {
             listaCoracoesCrystal = emptyList()
         }
