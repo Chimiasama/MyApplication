@@ -47,7 +47,11 @@
         "nome": "Visão no Escuro",
         "descricao": "Ignoram penalidades de Penumbra e Escuridão."
       }
-    ]
+    ],
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": []
   },
   {
     "id": "anc_araiguma",
@@ -76,7 +80,11 @@
         "nome": "Visão no Escuro",
         "descricao": "Ignoram penalidades de Penumbra e Escuridão."
       }
-    ]
+    ],
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": []
   },
   {
     "id": "anc_inumimi",
@@ -105,7 +113,11 @@
         "nome": "Visão no Escuro",
         "descricao": "Ignoram penalidades de Penumbra e Escuridão."
       }
-    ]
+    ],
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": []
   },
   {
     "id": "anc_kitsunemimi",
@@ -130,7 +142,11 @@
         "nome": "Visão no Escuro",
         "descricao": "Ignoram penalidades de Penumbra e Escuridão."
       }
-    ]
+    ],
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": []
   },
   {
     "id": "anc_nekomimi",
@@ -155,7 +171,11 @@
         "nome": "Visão no Escuro",
         "descricao": "Ignoram penalidades de Penumbra e Escuridão."
       }
-    ]
+    ],
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": []
   },
   {
     "id": "anc_tanukimimi",
@@ -180,7 +200,11 @@
         "nome": "Visão no Escuro",
         "descricao": "Ignoram penalidades de Penumbra e Escuridão."
       }
-    ]
+    ],
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": []
   },
   {
     "id": "anc_usagimimi",
@@ -205,7 +229,11 @@
         "nome": "Visão no Escuro",
         "descricao": "Ignoram penalidades de Penumbra e Escuridão."
       }
-    ]
+    ],
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": []
   },
   {
     "id": "anc_terracota_adg",
@@ -238,7 +266,11 @@
         "nome": "Voto ou Obrigação (Maior)",
         "descricao": "Atados a uma tarefa específica. Desviar do pacto pode ser fatal."
       }
-    ]
+    ],
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": []
   },
   {
     "id": "anc_umvee",
@@ -259,7 +291,11 @@
         "nome": "Forasteiro (Menor)",
         "descricao": "Vistos como seres alienígenas não-humanos."
       }
-    ]
+    ],
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": []
   },
   {
     "id": "anc_feral",
@@ -296,7 +332,11 @@
         "nome": "Forasteiro (Menor)",
         "descricao": "Impacto em interações sociais por sua natureza alienígena."
       }
-    ]
+    ],
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": []
   },
   {
     "id": "anc_onigem_adg",
@@ -321,6 +361,10 @@
         "nome": "Suspeitoso (Menor)",
         "descricao": "Sofrem preconceito persistente onde quer que vão."
       }
-    ]
+    ],
+    "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [],
+    "desvantagens": []
   }
 ]
