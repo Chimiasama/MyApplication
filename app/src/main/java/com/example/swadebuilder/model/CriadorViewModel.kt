@@ -402,7 +402,7 @@ class CriadorViewModel : ViewModel() {
                 }
             }
             // Auto-select Basic Heart
-            val basicHeart = com.example.swadebuilder.listaCoracoesCrystal.firstOrNull { it.id == "heart_starter" }
+            val basicHeart = listaCoracoesCrystal.firstOrNull { it.id == "heart_starter" }
             if (basicHeart != null) {
                 state.coracaoCrystalSelecionado = basicHeart
             }
@@ -887,10 +887,6 @@ class CriadorViewModel : ViewModel() {
         return true
     }
 
-    fun desequiparCrystalHeart() {
-        state.coracaoCrystalSelecionado = null
-    }
-
     /**
      * Função genérica "façade" para a UI: tenta investir e retorna mensagem pronta.
      * Use um poderId estável por alvo (ex.: "sp_pericia_LUTAR", "sp_attr_FORCA", "sp_armor").
@@ -924,19 +920,6 @@ class CriadorViewModel : ViewModel() {
         )
     }
 
-    fun gastarPontoComplicacaoEmRecursos() {
-        if (state.gastarPcParaRecursos()) {
-            val amount = if (state.compendioPathfinderAtivo) "600 de ouro" else "$500"
-            logFeedback("1 Ponto de Complicação gasto em +$amount.")
-        }
-    }
-
-    fun desfazerPontoComplicacaoEmRecursos() {
-        state.devolverPcDeRecursos()
-        val amount = if (state.compendioPathfinderAtivo) "600 de ouro" else "$500"
-        logFeedback("Gasto em recursos desfeito (-$amount).")
-    }
-
     fun startSkillAdvancement(slotIndex: Int, stageName: String) {
         if (state.progressosDisponiveis >= 1) {
             resetUiState()
@@ -952,6 +935,7 @@ class CriadorViewModel : ViewModel() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun finishSkillAdvancement() {
         if (state.skillAdvancementInProgress) {
             val skills = state.skillsForCurrentAdvancement.toList()
@@ -1042,6 +1026,7 @@ class CriadorViewModel : ViewModel() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun finishAdvantageAdvancement() {
         if (state.advantageAdvancementInProgress) {
             if (state.arcanoCompraPendente()) return
@@ -1052,19 +1037,17 @@ class CriadorViewModel : ViewModel() {
                 return
             }
 
-            if (advantageId != null) {
-                val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
-                state.advancementHistory.add(
-                    AdvancementAction.SpendOnAdvantage(
-                        advantageId = advantageId,
-                        stageName = stageName,
-                        arcanoKey = state.arcanoEmCompraViaXpKey,
-                        previousArcanoSlots = state.arcanoSnapshotAntesDaCompra
-                    )
+            val stageName = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
+            state.advancementHistory.add(
+                AdvancementAction.SpendOnAdvantage(
+                    advantageId = advantageId,
+                    stageName = stageName,
+                    arcanoKey = state.arcanoEmCompraViaXpKey,
+                    previousArcanoSlots = state.arcanoSnapshotAntesDaCompra
                 )
-                if (state.pvFromXpOutstanding > 0) {
-                    state.pvFromXpOutstanding--
-                }
+            )
+            if (state.pvFromXpOutstanding > 0) {
+                state.pvFromXpOutstanding--
             }
             state.advantageAdvancementInProgress = false
             state.advantageForCurrentAdvancement = null
@@ -1215,6 +1198,7 @@ class CriadorViewModel : ViewModel() {
         state.checkFreeze()
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun finishAttributeAdvancement() {
         if (state.attributeAdvancementInProgress) {
             val before = state.attributeStacksBeforeAdvancement ?: emptyMap()
