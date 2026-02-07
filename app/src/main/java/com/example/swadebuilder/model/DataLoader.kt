@@ -24,7 +24,6 @@ import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDescricao
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.mapaPericias
-import com.example.swadebuilder.mapaPericiasDescricao
 import com.example.swadebuilder.racialAttrMinMap
 import com.example.swadebuilder.racialSkillStartMap
 import com.example.swadebuilder.superequipCategorias
@@ -304,22 +303,7 @@ object DataLoader {
             )
         }
 
-        // Descrições
-        @Suppress("UNCHECKED_CAST")
-        val periciasDescList = dataCache.getOrPut("pericias_desc.json") {
-            runCatching {
-                assets.open("pericias_desc.json").use { input ->
-                    json.decodeFromStream<List<PericiaDescricaoJson>>(input)
-                }
-            }.getOrElse { emptyList<PericiaDescricaoJson>() }
-        } as List<PericiaDescricaoJson>
-
-        mapaPericiasDescricao = periciasDescList.associate { it.nome.keyify() to it.descricao }
-
-        listaPericias = rawPericias.map { pericia ->
-            val desc = pericia.descricao ?: mapaPericiasDescricao[pericia.nome.keyify()]
-            pericia.copy(descricao = desc)
-        }
+        listaPericias = rawPericias
         mapaPericias = listaPericias.associateBy { it.nome.keyify() }
 
         mapaAtributosDescricao = atributosData.atributos.associate {
