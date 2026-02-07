@@ -77,6 +77,7 @@ fun PericiasContent(
     onUserFeedback: () -> Unit
 ) {
     LocalContext.current
+    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
