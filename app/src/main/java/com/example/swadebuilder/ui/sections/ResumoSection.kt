@@ -484,10 +484,7 @@ fun BasicCharacterInfo(
         .orEmpty()
         .ifBlank { "–" }
 
-    val heartValue = identitySection?.items
-        ?.firstOrNull { it.startsWith("Coração de Cristal:") }
-        ?.substringAfter(":")
-        ?.trim()
+    val heartValue = state.coracaoCrystalSelecionado?.nome
 
     val monstroInfo = if (state.modoMonstroAtivo) {
         val tipoNome = com.example.swadebuilder.listaMonstroTemplates

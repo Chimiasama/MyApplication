@@ -83,6 +83,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.model.Complicacao
@@ -229,7 +230,14 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                DataLoader.loadCore(this@MainActivity)
+                val viewModel = ViewModelProvider(this@MainActivity)[CriadorViewModel::class.java]
+                val activeKeys = viewModel.state.getActiveModuleKeys()
+
+                if (activeKeys.isEmpty()) {
+                    DataLoader.loadCore(this@MainActivity)
+                } else {
+                    DataLoader.updateActiveModules(this@MainActivity, activeKeys)
+                }
                 isDataLoaded.value = LoadingState.Success
             } catch (e: Exception) {
                 Log.e("MainActivity", "Erro ao carregar dados: ${e.message}")
