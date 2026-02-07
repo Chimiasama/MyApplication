@@ -455,7 +455,7 @@ fun AncestralidadesSection(
                                     if (selectedSign.equals("Serpente", ignoreCase = true)) {
                                         Spacer(Modifier.height(8.dp))
                                         Text("Perícia Bônus:", style = MaterialTheme.typography.labelMedium)
-                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Column {
                                             com.example.swadebuilder.ui.components.RadioButtonRow(
                                                 label = "Jogar",
                                                 selected = state.signoSerpentePericiaEscolhida == "Jogar",
@@ -464,7 +464,6 @@ fun AncestralidadesSection(
                                                     state.rebuildAllPericiaStacks()
                                                 }
                                             )
-                                            Spacer(Modifier.width(16.dp))
                                             com.example.swadebuilder.ui.components.RadioButtonRow(
                                                 label = "Performance",
                                                 selected = state.signoSerpentePericiaEscolhida == "Performance",

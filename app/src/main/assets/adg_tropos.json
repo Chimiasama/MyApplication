@@ -5,8 +5,11 @@
     "categoria": "TROPO",
     "origem": "ARTE_DA_GUERRA",
     "tecnicas_iniciais": 0,
-    "descricao": "Foca no corpo físico. Começa com Vantagem Artista Marcial e Estudante de Artes Marciais. Escolhe um atributo físico para aumentar + Vantagem associada (Agilidade/Esquiva, Força/Bloquear, Vigor/Reflexos).",
-    "ganha_ao_comprar": ["artista_marcial", "estudante_artes_marciais"],
+    "descricao": "Segue o Caminho do Punho. Começa com as Vantagens Artista Marcial e Estudante de Artes Marciais, ganha Jutsu (Desarmado) d6 (ou d4 + outro Jutsu d4), escolhe Agilidade/Força/Vigor para aumentar e recebe uma Vantagem extra associada, além de opções de Treinamento Único e bônus desarmados.",
+    "ganha_ao_comprar": [
+      "artista_marcial",
+      "estudante_artes_marciais"
+    ],
     "pericias_gratuitas": {}
   },
   {
@@ -15,9 +18,12 @@
     "categoria": "TROPO",
     "origem": "ARTE_DA_GUERRA",
     "tecnicas_iniciais": 2,
-    "descricao": "Conselheiros espirituais. Ganha Ocultismo d4 e Convenção d4. Pode entrar em Transe (Mente sobre a Matéria) para ganhar bônus. Escolhe uma Seita (estilo de transe).",
+    "descricao": "Monge do Bu Xia. Pode entrar em transe (Mente sobre a Matéria), começa com Convenção d4 e Ocultismo d4 (ou aumenta um tipo de dado), e escolhe um Caminho Sagrado (Equilibrado, Círculo, Exterior, Interno, Nascente ou Torre).",
     "ganha_ao_comprar": [],
-    "pericias_gratuitas": { "Ocultismo": 4, "Convenção": 4 }
+    "pericias_gratuitas": {
+      "Ocultismo": 4,
+      "Convenção": 4
+    }
   },
   {
     "id": "tropo_elementalista",
@@ -25,9 +31,34 @@
     "categoria": "TROPO",
     "origem": "ARTE_DA_GUERRA",
     "tecnicas_iniciais": 0,
-    "descricao": "Manipula elementos. Começa com Jutsu d4 e Transição d4. Conhece Manobras Elementais de um elemento (Fogo, Água, Ar, Terra, Metal, Madeira). Usa Vigor para ativar poderes.",
-    "ganha_ao_comprar": ["estudante_artes_marciais"],
-    "pericias_gratuitas": { "Jutsu": 4, "Transição": 4 }
+    "descricao": "Manipula o Chi Exterior via Transição. Começa com Jutsu (Desarmado) d4 e Transição (Vigor) d4, conhece manobras elementais do seu elemento primário (Ar, Fogo, Metal, Rocha, Água ou Madeira).",
+    "ganha_ao_comprar": [
+      "estudante_artes_marciais"
+    ],
+    "pericias_gratuitas": {
+      "Jutsu": 4,
+      "Transição": 4
+    }
+  },
+  {
+    "id": "tropo_kui",
+    "nome": "Kui",
+    "categoria": "TROPO",
+    "origem": "ARTE_DA_GUERRA",
+    "tecnicas_iniciais": 2,
+    "descricao": "Caçador de espíritos e demônios. Ganha Exorcizar, Sentido Espiritual e escolhe Ferramentas do Ofício (Armas Abençoadas, Vínculo Espiritual ou Talismãs).",
+    "ganha_ao_comprar": [],
+    "pericias_gratuitas": {}
+  },
+  {
+    "id": "tropo_protagonista",
+    "nome": "Protagonista",
+    "categoria": "TROPO",
+    "origem": "ARTE_DA_GUERRA",
+    "tecnicas_iniciais": 0,
+    "descricao": "Herói versátil. Role nas tabelas de Técnicas de Chi, Perícia Básica, Vantagem, Qualidades de Herói e Habilidades, podendo escolher resultados conforme os dados indicarem.",
+    "ganha_ao_comprar": [],
+    "pericias_gratuitas": {}
   },
   {
     "id": "tropo_samurai",
@@ -35,9 +66,14 @@
     "categoria": "TROPO",
     "origem": "ARTE_DA_GUERRA",
     "tecnicas_iniciais": 1,
-    "descricao": "Soldado de elite. Começa com Conhecimento Batalha d6. Ganha Vantagem Comando ou de Combate. Possui um Domínio (terra). Pode assumir Posturas de combate.",
-    "ganha_ao_comprar": ["comando", "dominio"],
-    "pericias_gratuitas": { "Conhecimento Batalha": 6 }
+    "descricao": "Soldado de elite. Começa com Conhecimento Batalha d6, escolhe Jutsu ou Atirar em d6, ganha Comando (ou Vantagem de Combate) e aprende Posturas de combate.",
+    "ganha_ao_comprar": [
+      "comando",
+      "dominio"
+    ],
+    "pericias_gratuitas": {
+      "Conhecimento Batalha": 6
+    }
   },
   {
     "id": "tropo_shinobi",
@@ -45,7 +81,7 @@
     "categoria": "TROPO",
     "origem": "ARTE_DA_GUERRA",
     "tecnicas_iniciais": 2,
-    "descricao": "Espião e assassino. Escolhe um Talento Shinobi (Alteração, Pés Leves, Místico, Passo das Sombras). Escolhe um treinamento (Infiltrador, Batedor, Espião) para rerrolagens com Chi.",
+    "descricao": "Agente das sombras. Escolhe um Talento Shinobi (Alteração, Pés Leves, Místico ou Passo das Sombras) e um tipo de treinamento (Infiltrador, Batedor ou Espião) para rerrolagens com Chi.",
     "ganha_ao_comprar": [],
     "pericias_gratuitas": {}
   },
@@ -55,18 +91,23 @@
     "categoria": "TROPO",
     "origem": "ARTE_DA_GUERRA",
     "tecnicas_iniciais": 2,
-    "descricao": "Guerreiro errante. Começa com Arma Predileta (Kensai). Pode usar Chi para proteger aliados (desviar ataques). Arma ganha qualidades místicas.",
-    "ganha_ao_comprar": ["arma_predileta"],
+    "descricao": "Guerreiro errante. Ganha Arma Predileta (Kensai), pode desviar ataques com Chi e sua arma recebe uma qualidade histórica (Ancestral, Carregada, Penetrante ou Afiada).",
+    "ganha_ao_comprar": [
+      "arma_predileta"
+    ],
     "pericias_gratuitas": {}
   },
   {
     "id": "tropo_mon",
-    "nome": "Mon (Treinador)",
+    "nome": "Mon",
     "categoria": "TROPO",
     "origem": "ARTE_DA_GUERRA",
     "tecnicas_iniciais": 1,
-    "descricao": "Especialista em capturar e treinar espíritos da natureza (Mons). Começa com um companheiro Mon Novato.",
-    "ganha_ao_comprar": ["treinamento_mon", "vinculo_mon"],
+    "descricao": "Forma um vínculo com um Mon. Ganha Forma Bestial (apenas do Mon), vínculo bestial e sentidos compartilhados. O Mon é um companheiro Carta Selvagem e evolui com avanços dedicados.",
+    "ganha_ao_comprar": [
+      "treinamento_mon",
+      "vinculo_mon"
+    ],
     "pericias_gratuitas": {}
   }
 ]
