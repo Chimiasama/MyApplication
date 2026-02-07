@@ -7,8 +7,6 @@ data class CrystalHeart(
     val id: String,
     val nome: String,
     val estagio: String, // "Novato", "Experiente", etc.
-    val pontos_poder: Int = 0,
-    val slots: Int = 0,
     val habilidade_passiva: String? = null,
     val poderes: List<String> = emptyList(),
     val complicacao_inerente: String? = null,

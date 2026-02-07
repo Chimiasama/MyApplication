@@ -76,9 +76,6 @@ fun CrystalHeartSection(
                         Column(Modifier.padding(16.dp)) {
                             Text(selectedHeart.nome, fontWeight = FontWeight.Bold)
                             Text("Estágio: ${selectedHeart.estagio}")
-                            if (selectedHeart.pontos_poder > 0 || selectedHeart.slots > 0) {
-                                Text("PP: ${selectedHeart.pontos_poder} | Slots: ${selectedHeart.slots}")
-                            }
                             if (selectedHeart.habilidade_passiva != null) {
                                 Text("Passiva: ${selectedHeart.habilidade_passiva}")
                             }
@@ -140,9 +137,6 @@ fun CrystalHeartSection(
                                 )
                                 Spacer(Modifier.height(8.dp))
                                 Text("Estágio: ${previewHeart!!.estagio}")
-                                if (previewHeart!!.pontos_poder > 0 || previewHeart!!.slots > 0) {
-                                    Text("PP: ${previewHeart!!.pontos_poder} | Slots: ${previewHeart!!.slots}")
-                                }
                                 Spacer(Modifier.height(8.dp))
                                 if (previewHeart!!.habilidade_passiva != null) {
                                     Text("Passiva: ${previewHeart!!.habilidade_passiva}")
@@ -199,9 +193,6 @@ fun CrystalHeartItem(heart: CrystalHeart, onClick: () -> Unit) {
             Icon(Icons.Default.Favorite, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
             Column(modifier = Modifier.padding(start = 16.dp)) {
                 Text(text = heart.nome, fontWeight = FontWeight.Bold)
-                if (heart.pontos_poder > 0 || heart.slots > 0) {
-                    Text(text = "PP: ${heart.pontos_poder} | Slots: ${heart.slots}", style = MaterialTheme.typography.bodySmall)
-                }
                 Text(text = "Estágio: ${heart.estagio}", style = MaterialTheme.typography.bodySmall)
             }
         }
