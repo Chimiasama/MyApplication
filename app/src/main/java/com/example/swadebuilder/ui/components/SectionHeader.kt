@@ -2,6 +2,7 @@ package com.example.swadebuilder.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -57,8 +59,7 @@ fun SectionHeader(
                     }
                 }
 
-                Text(
-                    text = centerText,
+                BoxWithConstraints(
                     modifier = Modifier
                         .weight(1f)
                         .then(
@@ -68,13 +69,25 @@ fun SectionHeader(
                                 Modifier
                             }
                         )
-                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                    textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    val textStyle = if (maxWidth < 360.dp) {
+                        MaterialTheme.typography.titleSmall
+                    } else {
+                        MaterialTheme.typography.titleMedium
+                    }
+
+                    Text(
+                        text = centerText,
+                        textAlign = TextAlign.Start,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        style = textStyle.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     )
-                )
+                }
             }
 
             if (onListaCompletaClick != null && listaCompletaText.isNotEmpty()) {
