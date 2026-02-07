@@ -1,5 +1,7 @@
 package com.example.swadebuilder
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -67,6 +69,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelaInicial(
@@ -540,7 +543,7 @@ fun TelaInicial(
                         SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
                         SimpleCheckRow(
                             title = "Regra de Fama",
-                            description = "Adiciona o atributo Fama (Arte da Guerra).",
+                            description = "Adiciona o atributo Fama.",
                             checked = optRegraFama,
                             onCheckedChange = { optRegraFama = it }
                         )
