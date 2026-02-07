@@ -238,7 +238,6 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         val nomesVantagens = personagem.vantagens.mapNotNull { id ->
             val vant = definitionMap[id.keyify()] ?: return@mapNotNull null
-            if (vant.id == Constants.ID_AA_AGENT_SYN) return@mapNotNull null
 
             val escolha = vantagemChoices[vant.id]?.removeFirstOrNull()
                 ?.takeIf { it.isNotBlank() }
