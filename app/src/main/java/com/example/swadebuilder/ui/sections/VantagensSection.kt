@@ -351,10 +351,21 @@ fun VantagensContent(
 
                 if (state.compendioArteDaGuerraAtivo && state.tropoSelecionado?.id == "tropo_protagonista") {
                     val slotAvailable = state.protagonistaSlotAvailable
+
+                    val tipoVantagem = when (state.protagonistaRollVantagem) {
+                        1 -> "de Chi"
+                        2 -> "Estranha"
+                        3 -> "de Antecedente"
+                        4 -> "de Combate"
+                        5 -> "Social"
+                        else -> ""
+                    }
+                    val baseText = if (tipoVantagem.isEmpty()) "Vantagem de Protagonista Gratuita" else "Vantagem $tipoVantagem de Protagonista Gratuita"
+
                     val (color, text) = if (slotAvailable) {
-                        MaterialTheme.colorScheme.primaryContainer to "Vantagem de Protagonista Gratuita DISPONÍVEL"
+                        MaterialTheme.colorScheme.primaryContainer to "$baseText DISPONÍVEL"
                     } else {
-                        MaterialTheme.colorScheme.surfaceVariant to "Vantagem de Protagonista Gratuita UTILIZADA"
+                        MaterialTheme.colorScheme.surfaceVariant to "$baseText UTILIZADA"
                     }
 
                     Card(
@@ -1765,7 +1776,7 @@ private fun VantagemItem(
                         label = { Text("Slot de Protagonista") }
                     )
                 }
-                if (vant.descricao.isNotBlank() && vant.vinculadoPericia) {
+                if (vant.descricao.isNotBlank() && vant.vinculadoPericia && !vant.id.startsWith("arma_predileta")) {
                     AssistChip(
                         onClick = {},
                         label = { Text("Opções especiais") }

@@ -2214,7 +2214,8 @@ class CriadorState {
                 // Others: 12 points
                 // Ignore "maisPontosPericias" checkbox
                 val isHuman = ancestralidade.equals("HUMANOS", ignoreCase = true) ||
-                        ancestralidade.equals("Humano (Império do Sol)", ignoreCase = true)
+                        ancestralidade.equals("Humano (Império do Sol)", ignoreCase = true) ||
+                        ancestralidade.equals("Humano (Império San)", ignoreCase = true)
                 val base = if (isHuman) 15 else 12
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
@@ -3550,6 +3551,13 @@ class CriadorState {
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun selecionarSigno(novoSigno: String?) {
         if (signoAdgSelecionado == novoSigno) return
+
+        if (signoAdgSelecionado == "Nenhum") {
+            pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
+        }
+        if (novoSigno == "Nenhum") {
+            pontosVantagem += 1
+        }
 
         // 1. Remove old edges from previous sign
         if (vantagensAutomaticasDoSigno.isNotEmpty()) {
