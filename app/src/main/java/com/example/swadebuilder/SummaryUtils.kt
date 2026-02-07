@@ -1,6 +1,7 @@
 package com.example.swadebuilder
 
 import com.example.swadebuilder.model.Categoria
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.PowerEffect
@@ -237,6 +238,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     } else {
         val nomesVantagens = personagem.vantagens.mapNotNull { id ->
             val vant = definitionMap[id.keyify()] ?: return@mapNotNull null
+            if (vant.id == Constants.ID_AA_AGENT_SYN) return@mapNotNull null
 
             val escolha = vantagemChoices[vant.id]?.removeFirstOrNull()
                 ?.takeIf { it.isNotBlank() }
@@ -331,7 +333,9 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     }
     val habilidadesRaciais = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
     // Prioritize manual entries (habilidadesRaciais) over IDs (vantagensRaciais) to preserve formatting (e.g. "Adaptável" vs "ADAPTÁVEL")
-    val allRacialTraits = (habilidadesRaciais + personagem.vantagensRaciais).distinctBy { it.keyify() }
+    val allRacialTraits = (habilidadesRaciais + personagem.vantagensRaciais)
+        .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
+        .distinctBy { it.keyify() }
 
     if (allRacialTraits.isNotEmpty()) {
         val displayVantagensRaciais = allRacialTraits.map { trait ->

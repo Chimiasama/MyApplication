@@ -54,6 +54,7 @@ import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.util.titleCase
 import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.serialization.Serializable
@@ -599,8 +600,11 @@ fun AncestralidadesSection(
                                         }
 
                                         // Free Advantages
-                                        if (item.vantagensGratis.isNotEmpty()) {
-                                            val advsText = item.vantagensGratis.joinToString(", ") { it.titleCase() }
+                                        val vantagensGratisVisiveis = item.vantagensGratis.filterNot {
+                                            it.keyify() == Constants.ID_AA_AGENT_SYN.keyify()
+                                        }
+                                        if (vantagensGratisVisiveis.isNotEmpty()) {
+                                            val advsText = vantagensGratisVisiveis.joinToString(", ") { it.titleCase() }
                                             Text(
                                                 text = "Vantagens: $advsText",
                                                 style = MaterialTheme.typography.bodySmall,
