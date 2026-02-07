@@ -155,6 +155,9 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     if (personagem.regraFamaAtiva) {
         lines += "Fama: ${personagem.fama}"
     }
+    if (personagem.usaRequisicao) {
+        lines += "Requisição: ${personagem.requisicao}"
+    }
     if (personagem.dominio != null) {
         lines += "Domínio: ${personagem.dominio}"
     }

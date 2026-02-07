@@ -445,7 +445,7 @@ class CriadorState {
         get() = optRegraRiqueza || origemPersonagem == "WISEGUYS" || optRegraCosaNostra
 
     val usaRequisicao: Boolean
-        get() = origemPersonagem == "CRYSTAL_HEART"
+        get() = compendioCrystalHeartAtivo || origemPersonagem == "CRYSTAL_HEART"
 
     var riquezaModifier by mutableIntStateOf(0)
 
