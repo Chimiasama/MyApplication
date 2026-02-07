@@ -1,10 +1,14 @@
 import json
+from pathlib import Path
 
-with open("app/src/main/assets/poderes.json", "r") as f:
-    data = json.load(f)
+assets_dir = Path("app/src/main/assets")
+poderes_files = sorted(assets_dir.glob("*_poderes.json"))
 
 origins = set()
-for item in data:
-    origins.add(item.get("origem", "UNKNOWN"))
+for file_path in poderes_files:
+    with file_path.open("r", encoding="utf-8") as f:
+        data = json.load(f)
+    for item in data:
+        origins.add(item.get("origem", "UNKNOWN"))
 
-print("Origins found:", origins)
+print("Origins found:", sorted(origins))
