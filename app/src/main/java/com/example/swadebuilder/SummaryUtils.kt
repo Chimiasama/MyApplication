@@ -209,7 +209,9 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += ""
 
     lines += "Recursos & Equipamentos"
-    if (personagem.usaRiqueza && (personagem.dadoRiqueza != null && personagem.modoProgressaoAtivo)) {
+    if (personagem.usaRequisicao) {
+        lines += "Requisição: ${personagem.requisicao}"
+    } else if (personagem.usaRiqueza && (personagem.dadoRiqueza != null && personagem.modoProgressaoAtivo)) {
         lines += "Riqueza: d${personagem.dadoRiqueza}"
     } else {
         lines += "Dinheiro restante: ${personagem.dinheiro}"

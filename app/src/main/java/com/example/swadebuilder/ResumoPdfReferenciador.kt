@@ -58,6 +58,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
         manifestacoesPoderes = this.manifestacoesPoderes.toMap(),
         dinheiro = this.dinheiro,
+        requisicao = this.requisicao,
         dadoRiqueza = if (this.usaRiqueza) this.dadoRiqueza else null,
         pontosRestantes = this.pontosVantagem,
         naturalArmorFromRace = this.naturalArmorFromRace,
@@ -103,6 +104,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         regraFamaAtiva = this.optRegraFama,
         fama = this.valorFama(),
         usaRiqueza = this.usaRiqueza,
+        usaRequisicao = this.usaRequisicao,
         modoProgressaoAtivo = this.modoProgressaoAtivo
     )
 }

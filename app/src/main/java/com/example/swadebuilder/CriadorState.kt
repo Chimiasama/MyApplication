@@ -223,6 +223,7 @@ class CriadorState {
     var maisPontosPericias by mutableStateOf(true)
     var cartaSelvagem       by mutableStateOf(true)
     var dinheiro by mutableIntStateOf(500)
+    var requisicao by mutableIntStateOf(1)
     val carteiraPathfinder = mutableStateMapOf("PL" to 0, "PO" to 0, "PP" to 0, "PC" to 0)
 
     fun updateTotalPathfinderMoney() {
@@ -442,6 +443,9 @@ class CriadorState {
 
     val usaRiqueza: Boolean
         get() = optRegraRiqueza || origemPersonagem == "WISEGUYS" || optRegraCosaNostra
+
+    val usaRequisicao: Boolean
+        get() = origemPersonagem == "CRYSTAL_HEART"
 
     var riquezaModifier by mutableIntStateOf(0)
 
@@ -3901,6 +3905,7 @@ class CriadorState {
             ),
             recursos = SnapshotRecursos(
                 dinheiro = dinheiro,
+                requisicao = requisicao,
                 pontosVantagem = pontosVantagem,
                 pontosAtributo = pontosAtributo,
                 pontosComplicacaoGastos = pontosComplicacaoGastos,
@@ -4066,6 +4071,7 @@ class CriadorState {
         dominioClerigoPathfinderSelecionado = snapshot.selecoes.dominioClerigoPathfinderSelecionado
 
         dinheiro = snapshot.recursos.dinheiro
+        requisicao = snapshot.recursos.requisicao
         famaManual = snapshot.recursos.famaManual
         pontosVantagem = snapshot.recursos.pontosVantagem
         pontosComplicacaoGastos = snapshot.recursos.pontosComplicacaoGastos

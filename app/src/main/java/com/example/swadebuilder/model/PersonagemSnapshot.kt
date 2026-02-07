@@ -65,6 +65,7 @@ data class SnapshotFlags(
 @Serializable
 data class SnapshotRecursos(
     val dinheiro: Int,
+    val requisicao: Int = 1,
     val pontosVantagem: Int,
     val pontosAtributo: Int,
     val pontosComplicacaoGastos: Int,
