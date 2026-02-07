@@ -19,6 +19,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -292,19 +293,22 @@ fun CrystalHeartSection(
                                     modifier = Modifier.fillMaxWidth()
                                 )
                                 Spacer(Modifier.height(8.dp))
+                                Text(
+                                    text = "Estágio",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Spacer(Modifier.height(4.dp))
                                 Box {
-                                    OutlinedTextField(
-                                        value = estagio,
-                                        onValueChange = {},
-                                        readOnly = true,
-                                        label = { Text("Estágio") },
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clickable {
-                                                keyboardController?.hide()
-                                                stageExpanded = true
-                                            }
-                                    )
+                                    OutlinedButton(
+                                        onClick = {
+                                            keyboardController?.hide()
+                                            stageExpanded = true
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text(estagio)
+                                    }
                                     DropdownMenu(
                                         expanded = stageExpanded,
                                         onDismissRequest = { stageExpanded = false }
