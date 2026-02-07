@@ -349,6 +349,28 @@ fun VantagensContent(
                     Spacer(Modifier.size(8.dp))
                 }
 
+                if (state.compendioArteDaGuerraAtivo && state.tropoSelecionado?.id == "tropo_protagonista") {
+                    val slotAvailable = state.protagonistaSlotAvailable
+                    val (color, text) = if (slotAvailable) {
+                        MaterialTheme.colorScheme.primaryContainer to "Vantagem de Protagonista Gratuita DISPONÍVEL"
+                    } else {
+                        MaterialTheme.colorScheme.surfaceVariant to "Vantagem de Protagonista Gratuita UTILIZADA"
+                    }
+
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = color),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = text,
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                    Spacer(Modifier.size(8.dp))
+                }
+
                 if (usePbWalletRedesign) {
                     PbWalletBanner(
                         pcTotal = pcTotal,
@@ -1684,9 +1706,10 @@ private fun VantagemItem(
                     val conflitoMsg = state.mensagemConflitoParaVantagem(vant)
 
                     val isPathfinderFree = state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)
+                    val isProtagonistaFree = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vant)
 
                     when {
-                        !isPathfinderFree && state.pontosVantagem <= 0 -> onError("Sem PV disponível")
+                        !isPathfinderFree && !isProtagonistaFree && state.pontosVantagem <= 0 -> onError("Sem PV disponível")
                         // PROMPT 4: Check class blocking specifically for error message
                         state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
                         conflitoMsg != null -> onError(conflitoMsg)
@@ -1731,6 +1754,17 @@ private fun VantagemItem(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
+                if (state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)) {
+                    AssistChip(
+                        onClick = {},
+                        label = { Text("Slot de Classe") }
+                    )
+                } else if (state.protagonistaSlotAvailable && state.isProtagonistaEligible(vant)) {
+                    AssistChip(
+                        onClick = {},
+                        label = { Text("Slot de Protagonista") }
+                    )
+                }
                 if (vant.descricao.isNotBlank() && vant.vinculadoPericia) {
                     AssistChip(
                         onClick = {},

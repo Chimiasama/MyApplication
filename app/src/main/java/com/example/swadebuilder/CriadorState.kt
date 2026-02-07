@@ -208,10 +208,11 @@ class CriadorState {
         const val DEFAULT_HAPTIC_STRENGTH = 70
         const val DEFAULT_SOUND_VOLUME = 70
         val SIGNOS_ADG = listOf(
-            "Basabasa", "Boi", "Tigre", "Lebre", "Garça", "Serpente",
+            "Nenhum", "Basabasa", "Boi", "Tigre", "Lebre", "Garça", "Serpente",
             "Dragão", "Kirin", "Macaco", "Raposa", "Lobo", "Tartaruga", "Urso"
         )
         val SIGNOS_ADG_DESC = mapOf(
+            "Nenhum" to "Sem signo de nascença. Você mantém os benefícios de Humano Adaptável.",
             "Basabasa" to "Aqueles que nasceram no primeiro mês sob o signo de Basabasa geralmente são indivíduos honestos e ambiciosos, conhecidos por uma beleza sobrenatural. Tal alinhamento celestial é ofuscado por uma oscilação de humores excêntricos. Começam as coisas com entusiasmo e logo perdem o interesse, tornando-se voláteis. Um Basabasa tem a Vantagem Atraente e escolhe na criação do personagem entre adicionar +1 às rolagens de Provocar ou Intimidar contra alvos que se sintam atraídos ou desprezem o Herói.",
             "Boi" to "Aqueles que nasceram sob o signo do Boi são grandes e imponentes, conhecidos por serem diretos e persistentes. Falhas comuns incluem teimosia, franqueza excessiva e inabilidade em expressar emoções. Um Boi recebe +1 em rolagens em Atletismo quando utilizado em situações que podem exigir Força (como escalar ou nadar). Caso o personagem possua a Vantagem Brutamontes, esse benefício se aplica a todas as rolagens de Atletismo. Além disso, este benefício aumenta a Força em um tipo de dado e aumenta seu limite máximo no atributo em d12+1.",
             "Tigre" to "A herança do signo do Tigre faz com que se tornem destemidos e precisos, realizando atos cavalheirescos dignos de respeito enquanto assumem a liderança. Tigres são naturalmente temperamentais. Em um papel de liderança ou posição de autoridade, tomarão decisões para obter o melhor resultado possível, sem considerar o efeito sobre os outros. Um Tigre tem um alcance de comando de +4 quadros, adiciona +1 nas rolagens de Medo e subtrai 1 dos resultados da Tabela de Medo (isso acumula com a Vantagem Corajoso).",
@@ -992,9 +993,31 @@ class CriadorState {
         return key in autoKeys ||
                 v.id in autoIds ||
                 v.id in vantagensAutomaticasDoTropo ||
+                v.id in vantagensAutomaticasDoProtagonista ||
                 v.id in vantagensAutomaticasDoSigno ||
                 v.id in vantagensAutomaticasDoElemento ||
                 (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true)
+    }
+
+    fun isProtagonistaEligible(v: Vantagem): Boolean {
+        if (!compendioArteDaGuerraAtivo || tropoSelecionado?.id != "tropo_protagonista") return false
+        return when (protagonistaRollVantagem) {
+            1 -> v.categoria == Categoria.CHI
+            2 -> v.categoria == Categoria.ESTRANHAS
+            3 -> v.categoria == Categoria.ANTECEDENTE
+            4 -> v.categoria == Categoria.COMBATE
+            5 -> v.categoria == Categoria.SOCIAIS
+            6 -> true
+            8 -> true
+            else -> false
+        }
+    }
+
+    val protagonistaSlotAvailable: Boolean by derivedStateOf {
+        if (!compendioArteDaGuerraAtivo || tropoSelecionado?.id != "tropo_protagonista") false
+        else {
+            vantagensSlotProtagonista.isEmpty()
+        }
     }
 
     val pathfinderSlotAvailable: Boolean by derivedStateOf {
@@ -1025,14 +1048,18 @@ class CriadorState {
 
         // Standard Advantage
         val isFreePathfinder = pathfinderSlotAvailable && isPathfinderEligible(v)
+        val isFreeProtagonista = protagonistaSlotAvailable && isProtagonistaEligible(v)
 
-        if (!isFreePathfinder && pontosVantagem <= 0) return false // No points
+        if (!isFreePathfinder && !isFreeProtagonista && pontosVantagem <= 0) return false // No points
 
         applyVantagemDinheiro(v)
         adicionarVantagem(v)
 
         if (isFreePathfinder) {
             onFeedback("Vantagem ${v.nome} adicionada (Slot de Classe Gratuito).")
+        } else if (isFreeProtagonista) {
+            vantagensSlotProtagonista.add(v.id)
+            onFeedback("Vantagem ${v.nome} adicionada (Slot de Protagonista Gratuito).")
         } else {
             pontosVantagem--
             onFeedback("Vantagem ${v.nome} adicionada.")
@@ -1057,6 +1084,7 @@ class CriadorState {
 
         // Standard Advantage
         val wasEligible = isPathfinderEligible(v)
+        val wasProtagonistaEligible = v.id in vantagensSlotProtagonista
 
         removeVantagemDinheiro(v)
         removerVantagem(v)
@@ -1073,6 +1101,10 @@ class CriadorState {
             if (remainingEligiblePurchased == 0) {
                 shouldRefund = false
             }
+        }
+        if (wasProtagonistaEligible && compendioArteDaGuerraAtivo) {
+            vantagensSlotProtagonista.remove(v.id)
+            shouldRefund = false
         }
 
         if (shouldRefund) {
@@ -2262,6 +2294,7 @@ class CriadorState {
     var tropoSelecionado by mutableStateOf<Tropo?>(null)
     val vantagensAutomaticasDoTropo = mutableStateListOf<String>()
     val vantagensAutomaticasDoProtagonista = mutableStateListOf<String>()
+    val vantagensSlotProtagonista = mutableStateListOf<String>()
 
     val vantagensAutomaticas = mutableStateListOf<String>()
     val vantagensRaciais = mutableStateListOf<String>()
@@ -3072,7 +3105,7 @@ class CriadorState {
         ancestralidade = anc
         if (compendioArteDaGuerraAtivo && anc.keyify().contains("HUMANO")) {
             if (signoAdgSelecionado == null) {
-                selecionarSigno("Boi")
+                selecionarSigno("Nenhum")
             }
         } else if (signoAdgSelecionado != null) {
             selecionarSigno(null)
@@ -3751,6 +3784,7 @@ class CriadorState {
                 protagonistaRollHabilidade = null
                 protagonistaPericiasEscolhidas = emptyList()
                 protagonistaPericiasPaixao = emptyList()
+                vantagensSlotProtagonista.clear()
             } else {
                 atualizarProtagonistaAutoVantagens()
             }
@@ -3762,6 +3796,7 @@ class CriadorState {
             protagonistaRollHabilidade = null
             protagonistaPericiasEscolhidas = emptyList()
             protagonistaPericiasPaixao = emptyList()
+            vantagensSlotProtagonista.clear()
         }
 
         syncMestreDoChiSlots()
@@ -4138,6 +4173,7 @@ class CriadorState {
                 protagonistaRollHabilidade = protagonistaRollHabilidade,
                 protagonistaPericiasEscolhidas = protagonistaPericiasEscolhidas,
                 protagonistaPericiasPaixao = protagonistaPericiasPaixao,
+                protagonistaSlotAdvantageIds = vantagensSlotProtagonista.toList(),
                 gnomoPericiaEscolhida = gnomoPericiaEscolhida,
                 dominioClerigoSelecionado = dominioClerigoSelecionado,
                 dominioClerigoPathfinderSelecionado = dominioClerigoPathfinderSelecionado
@@ -4249,6 +4285,8 @@ class CriadorState {
         protagonistaRollHabilidade = snapshot.selecoes.protagonistaRollHabilidade
         protagonistaPericiasEscolhidas = snapshot.selecoes.protagonistaPericiasEscolhidas
         protagonistaPericiasPaixao = snapshot.selecoes.protagonistaPericiasPaixao
+        vantagensSlotProtagonista.clear()
+        vantagensSlotProtagonista.addAll(snapshot.selecoes.protagonistaSlotAdvantageIds)
         gnomoPericiaEscolhida = snapshot.selecoes.gnomoPericiaEscolhida
         dominioClerigoSelecionado = snapshot.selecoes.dominioClerigoSelecionado
         dominioClerigoPathfinderSelecionado = snapshot.selecoes.dominioClerigoPathfinderSelecionado

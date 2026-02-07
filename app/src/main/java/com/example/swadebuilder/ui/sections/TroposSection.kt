@@ -23,7 +23,6 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -35,6 +34,7 @@ import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.listaTropos
 import com.example.swadebuilder.listaVantagens
+import com.example.swadebuilder.ui.components.DropdownField
 import com.example.swadebuilder.ui.components.RadioButtonRow
 import com.example.swadebuilder.ui.components.SectionCard
 import kotlin.random.Random
@@ -170,8 +170,24 @@ fun TroposSection(
                             val qualidadeRoll = state.protagonistaRollQualidade
                             val habilidadeRoll = state.protagonistaRollHabilidade
                             val periciasPaixao = state.protagonistaPericiasPaixao
+                            val d4Options = listOf("1", "2", "3", "4")
+                            val d6Options = listOf("1", "2", "3", "4", "5", "6")
+                            val d8Options = listOf("1", "2", "3", "4", "5", "6", "7", "8")
+                            val d10Options = (1..10).map { it.toString() }
+                            val d12Options = (1..12).map { it.toString() }
 
                             fun rollDie(sides: Int): Int = random.nextInt(1, sides + 1)
+                            fun applyVantagemRoll(value: Int?) {
+                                if (value == null) {
+                                    state.updateProtagonistaRollVantagem(null)
+                                    return
+                                }
+                                var roll = value
+                                while (roll == 7) {
+                                    roll = rollDie(8)
+                                }
+                                state.updateProtagonistaRollVantagem(roll)
+                            }
 
                             Spacer(Modifier.size(8.dp))
                             Text(
@@ -191,35 +207,35 @@ fun TroposSection(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 verticalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
-                                OutlinedTextField(
-                                    value = tecnicasRoll?.toString().orEmpty(),
-                                    onValueChange = { state.updateProtagonistaRollTecnicas(it.toIntOrNull()) },
-                                    label = { Text("d4") },
-                                    singleLine = true
+                                DropdownField(
+                                    label = "d4",
+                                    options = d4Options,
+                                    selected = tecnicasRoll?.toString(),
+                                    onSelect = { state.updateProtagonistaRollTecnicas(it.toInt()) }
                                 )
-                                OutlinedTextField(
-                                    value = periciaRoll?.toString().orEmpty(),
-                                    onValueChange = { state.updateProtagonistaRollPericia(it.toIntOrNull()) },
-                                    label = { Text("d6") },
-                                    singleLine = true
+                                DropdownField(
+                                    label = "d6",
+                                    options = d6Options,
+                                    selected = periciaRoll?.toString(),
+                                    onSelect = { state.updateProtagonistaRollPericia(it.toInt()) }
                                 )
-                                OutlinedTextField(
-                                    value = vantagemRoll?.toString().orEmpty(),
-                                    onValueChange = { state.updateProtagonistaRollVantagem(it.toIntOrNull()) },
-                                    label = { Text("d8") },
-                                    singleLine = true
+                                DropdownField(
+                                    label = "d8",
+                                    options = d8Options,
+                                    selected = vantagemRoll?.toString(),
+                                    onSelect = { applyVantagemRoll(it.toInt()) }
                                 )
-                                OutlinedTextField(
-                                    value = qualidadeRoll?.toString().orEmpty(),
-                                    onValueChange = { state.updateProtagonistaRollQualidade(it.toIntOrNull()) },
-                                    label = { Text("d10") },
-                                    singleLine = true
+                                DropdownField(
+                                    label = "d10",
+                                    options = d10Options,
+                                    selected = qualidadeRoll?.toString(),
+                                    onSelect = { state.updateProtagonistaRollQualidade(it.toInt()) }
                                 )
-                                OutlinedTextField(
-                                    value = habilidadeRoll?.toString().orEmpty(),
-                                    onValueChange = { state.updateProtagonistaRollHabilidade(it.toIntOrNull()) },
-                                    label = { Text("d12") },
-                                    singleLine = true
+                                DropdownField(
+                                    label = "d12",
+                                    options = d12Options,
+                                    selected = habilidadeRoll?.toString(),
+                                    onSelect = { state.updateProtagonistaRollHabilidade(it.toInt()) }
                                 )
                             }
 
@@ -231,7 +247,7 @@ fun TroposSection(
                                     onClick = {
                                         state.updateProtagonistaRollTecnicas(rollDie(4))
                                         state.updateProtagonistaRollPericia(rollDie(6))
-                                        state.updateProtagonistaRollVantagem(rollDie(8))
+                                        applyVantagemRoll(rollDie(8))
                                         state.updateProtagonistaRollQualidade(rollDie(10))
                                         state.updateProtagonistaRollHabilidade(rollDie(12))
                                         state.updateProtagonistaPericiasEscolhidas(emptyList())
