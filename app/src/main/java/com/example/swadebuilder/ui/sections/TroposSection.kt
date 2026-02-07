@@ -229,13 +229,17 @@ fun TroposSection(
                                 4 -> "3"
                                 else -> "-"
                             }
+                            val periciaRollTexto = periciaRoll?.toString() ?: "-"
+                            val vantagemRollTexto = vantagemRoll?.toString() ?: "-"
+                            val qualidadeRollTexto = qualidadeRoll?.toString() ?: "-"
+                            val habilidadeRollTexto = habilidadeRoll?.toString() ?: "-"
                             Text(
                                 text = "Técnicas de Chi (d4): $tecnicasTexto",
                                 style = MaterialTheme.typography.bodySmall,
                                 modifier = Modifier.padding(start = 40.dp, top = 4.dp)
                             )
                             Text(
-                                text = "Perícia Básica (d6): ${periciaRoll ?: \"-\"}",
+                                text = "Perícia Básica (d6): $periciaRollTexto",
                                 style = MaterialTheme.typography.bodySmall,
                                 modifier = Modifier.padding(start = 40.dp, top = 4.dp)
                             )
@@ -283,7 +287,7 @@ fun TroposSection(
                             }
 
                             Text(
-                                text = "Vantagem (d8): ${vantagemRoll ?: \"-\"}",
+                                text = "Vantagem (d8): $vantagemRollTexto",
                                 style = MaterialTheme.typography.bodySmall,
                                 modifier = Modifier.padding(start = 40.dp, top = 4.dp)
                             )
@@ -326,6 +330,7 @@ fun TroposSection(
                                         }
                                     }
                                 }
+                                else -> Unit
                             }
 
                             val qualidadeTexto = mapOf(
@@ -341,7 +346,7 @@ fun TroposSection(
                                 10 to "Resistente: +1 Vigor e +2 contra perigos ambientais."
                             )
                             Text(
-                                text = "Qualidades de Herói (d10): ${qualidadeRoll ?: \"-\"}",
+                                text = "Qualidades de Herói (d10): $qualidadeRollTexto",
                                 style = MaterialTheme.typography.bodySmall,
                                 modifier = Modifier.padding(start = 40.dp, top = 4.dp)
                             )
@@ -368,7 +373,7 @@ fun TroposSection(
                                 12 to "Trilhando seu Próprio Caminho: escolha outro resultado."
                             )
                             Text(
-                                text = "Habilidades (d12): ${habilidadeRoll ?: \"-\"}",
+                                text = "Habilidades (d12): $habilidadeRollTexto",
                                 style = MaterialTheme.typography.bodySmall,
                                 modifier = Modifier.padding(start = 40.dp, top = 4.dp)
                             )
