@@ -12,11 +12,11 @@
     "habilidades": [
       {
         "nome": "Pontos de Perícia",
-        "descricao": "Os humanos padrão neste cenário também começam com 15 pontos de perícia, em vez dos 12 padrão."
+        "descricao": "Humanos que escolhem o signo Nenhum começam com 15 pontos de perícia, em vez dos 12 padrão."
       },
       {
         "nome": "Adaptável ou Signo",
-        "descricao": "Você pode optar por não escolher um signo de nascença. Em vez disso, você pode começar como um humano padrão com uma Vantagem gratuita."
+        "descricao": "Você pode optar por não escolher um signo de nascença. Em vez disso, você pode começar como um humano padrão com Adaptável (ganha 1 PV)."
       },
       {
         "nome": "Signos de Nascença",

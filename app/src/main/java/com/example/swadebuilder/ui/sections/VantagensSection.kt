@@ -314,6 +314,15 @@ fun VantagensContent(
 
     var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
 
+    val protagonistaSlotCategoria = when (state.protagonistaRollVantagem) {
+        1 -> "Chi"
+        2 -> "Estranhas"
+        3 -> "Antecedente"
+        4 -> "Combate"
+        5 -> "Sociais"
+        else -> null
+    }
+
     // Reusable Header Content
     val headerContent: @Composable () -> Unit = {
         Column {
@@ -330,9 +339,9 @@ fun VantagensContent(
                 if (state.compendioPathfinderAtivo) {
                     val slotAvailable = state.pathfinderSlotAvailable
                     val (color, text) = if (slotAvailable) {
-                        MaterialTheme.colorScheme.primaryContainer to "Vantagem de Classe Gratuita DISPONÍVEL"
+                        MaterialTheme.colorScheme.primaryContainer to "Vantagem de Classe/Profissional/Antecedente gratuita DISPONÍVEL"
                     } else {
-                        MaterialTheme.colorScheme.surfaceVariant to "Vantagem de Classe Gratuita UTILIZADA"
+                        MaterialTheme.colorScheme.surfaceVariant to "Vantagem de Classe/Profissional/Antecedente gratuita UTILIZADA"
                     }
 
                     Card(
@@ -351,10 +360,13 @@ fun VantagensContent(
 
                 if (state.compendioArteDaGuerraAtivo && state.tropoSelecionado?.id == "tropo_protagonista") {
                     val slotAvailable = state.protagonistaSlotAvailable
+                    val slotPrefix = protagonistaSlotCategoria?.let {
+                        "Vantagem de $it de Protagonista gratuita"
+                    } ?: "Vantagem de Protagonista gratuita"
                     val (color, text) = if (slotAvailable) {
-                        MaterialTheme.colorScheme.primaryContainer to "Vantagem de Protagonista Gratuita DISPONÍVEL"
+                        MaterialTheme.colorScheme.primaryContainer to "$slotPrefix DISPONÍVEL"
                     } else {
-                        MaterialTheme.colorScheme.surfaceVariant to "Vantagem de Protagonista Gratuita UTILIZADA"
+                        MaterialTheme.colorScheme.surfaceVariant to "$slotPrefix UTILIZADA"
                     }
 
                     Card(
@@ -1757,15 +1769,18 @@ private fun VantagemItem(
                 if (state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)) {
                     AssistChip(
                         onClick = {},
-                        label = { Text("Slot de Classe") }
+                        label = { Text("Slot de Classe/Profissional/Antecedente") }
                     )
                 } else if (state.protagonistaSlotAvailable && state.isProtagonistaEligible(vant)) {
+                    val slotSuffix = protagonistaSlotCategoria?.let { " ($it)" } ?: ""
                     AssistChip(
                         onClick = {},
-                        label = { Text("Slot de Protagonista") }
+                        label = { Text("Slot de Protagonista$slotSuffix") }
                     )
                 }
-                if (vant.descricao.isNotBlank() && vant.vinculadoPericia) {
+                if (vant.descricao.isNotBlank() && vant.vinculadoPericia &&
+                    vant.id !in setOf("arma_predileta", "arma_predileta_aprimorada")
+                ) {
                     AssistChip(
                         onClick = {},
                         label = { Text("Opções especiais") }

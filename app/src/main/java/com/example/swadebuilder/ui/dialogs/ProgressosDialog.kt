@@ -1548,7 +1548,9 @@ private fun DialogVantagemItem(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                if (vant.descricao.isNotBlank() && vant.vinculadoPericia) {
+                if (vant.descricao.isNotBlank() && vant.vinculadoPericia &&
+                    vant.id !in setOf("arma_predileta", "arma_predileta_aprimorada")
+                ) {
                     AssistChip(
                         onClick = {},
                         label = { Text("Opções especiais") }
