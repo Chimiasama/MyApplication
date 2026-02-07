@@ -2475,7 +2475,7 @@ class CriadorState {
         // 3) Antecedente Arcano e multi-arcano
         if (key.startsWith("ANTECEDENTE ARCANO")) {
             if (compendioCrystalHeartAtivo) {
-                // Allows only "Antecedente Arcano (Agente da SYN)" which has ID "aa_agente_syn"
+                // Allows only "Antecedente Arcano: Canalizar Cristal" which has ID "aa_agente_syn"
                 if (v.id == "aa_agente_syn") return true
                 return false
             }
@@ -2971,7 +2971,7 @@ class CriadorState {
             // - não raciais
             // - não são pré-requisito de outra
             // - não são vantagens de PODER (superpoderes)
-            // - não são vantagens de cenário automáticas (Superpoderes, Agente da Syn, Conexões Máfia)
+            // - não são vantagens de cenário automáticas (Superpoderes, Canalizar Cristal, Conexões Máfia)
             val candidatos = vantagensSelecionadas.filter { v ->
                 val isScenarioEdge = v.id == "superpoderes" ||
                         v.id == "agente_syn" ||

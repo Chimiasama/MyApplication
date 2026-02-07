@@ -41,7 +41,7 @@ object RequirementValidator {
         // 3) Antecedente Arcano e multi-arcano
         if (key.startsWith(Constants.EDGE_ARCANE_BACKGROUND)) {
             if (state.compendioCrystalHeartAtivo) {
-                // Em jogos de Crystal Heart, apenas "Agente da Agência" é permitido.
+                // Em jogos de Crystal Heart, apenas "Antecedente Arcano: Canalizar Cristal" é permitido.
                 if (v.id != Constants.ID_AA_AGENT_SYN) return false
             }
 

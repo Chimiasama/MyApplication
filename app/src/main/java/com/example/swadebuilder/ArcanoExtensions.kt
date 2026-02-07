@@ -38,7 +38,7 @@ fun Vantagem.toArcanoKey(): String? {
         "MESTRE DO CHI" in n -> "MESTRE DO CHI"
         "MASCATE" in n || "HUCKSTER" in n || "VIGARISTA" in n -> "MASCATE"
         "XAMA" in n -> "XAMA"
-        "AGENTE DA SYN" in n -> "AGENTE DA SYN"
+        "CANALIZAR CRISTAL" in n -> "CANALIZAR CRISTAL"
         "ALQUIMIA" in n -> "ALQUIMIA"
         "BARDO" in n -> "BARDO"
         "BRUXO" in n -> "BRUXO"
