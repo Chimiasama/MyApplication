@@ -3954,6 +3954,7 @@ class CriadorState {
                 arcanoEmCompraViaXpKey = arcanoEmCompraViaXpKey,
                 arcanoSnapshotAntesDaCompra = arcanoSnapshotAntesDaCompra,
                 equipamentosComprados = equipamentosComprados.toList(),
+                coracaoCrystalId = coracaoCrystalSelecionado?.id,
                 tropoSelecionadoId = tropoSelecionado?.id,
                 vantagensTropoAutomaticas = vantagensAutomaticasDoTropo.toList(),
                 tecnicasIniciaisTropo = tecnicasIniciaisFromTropo,

@@ -1,5 +1,18 @@
 [
   {
+    "id": "heart_starter",
+    "nome": "Coração Personalizado",
+    "estagio": "Novato",
+    "habilidade_passiva": "Preencha manualmente. Use este campo para descrever a passiva do coração criado pelo mestre/jogador.",
+    "poderes": [
+      "Preencha manualmente. Liste os poderes do coração personalizado (um por linha)."
+    ],
+    "complicacao_inerente": "Preencha manualmente. Descreva aqui a complicação inerente do coração personalizado.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Coração genérico para personalizar. Edite, salve como personalizado e use em outros personagens.",
+    "placeholder": true
+  },
+  {
     "id": "heart_amigo",
     "nome": "Amigo",
     "estagio": "Novato",
