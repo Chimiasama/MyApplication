@@ -1620,25 +1620,6 @@
     "descricao": "+2 em Intimidar usando aparência ou atitude ruim."
   },
   {
-    "id": "agitador",
-    "nome": "AGITADOR",
-    "categoria": "SOCIAIS",
-    "origem": "ARTE_DA_GUERRA",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {
-        "Espírito": 8
-      },
-      "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Uma vez por turno, Desafio social com Intimidar ou Provocar contra todos os oponentes em Modelo Médio de Explosão."
-  },
-  {
     "id": "cativar_o_ambiente",
     "nome": "CATIVAR O AMBIENTE",
     "categoria": "SOCIAIS",
