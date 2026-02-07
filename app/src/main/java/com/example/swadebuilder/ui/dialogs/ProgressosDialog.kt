@@ -833,6 +833,16 @@ fun ProgressosDialog(
                 ) {
                     Text("Concluir")
                 }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.cancelAdvancementInProgress()
+                        onDismiss()
+                    }
+                ) {
+                    Text("Cancelar")
+                }
             }
         )
     }
