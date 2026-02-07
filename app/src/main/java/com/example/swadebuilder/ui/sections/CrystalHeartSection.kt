@@ -16,6 +16,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.listaCoracoesCrystal
 import com.example.swadebuilder.model.CriadorViewModel
@@ -56,9 +58,14 @@ fun CrystalHeartSection(
                 )
             } else {
                 val selectedHeart = state.coracaoCrystalSelecionado
-                var isSwapping by remember { mutableStateOf(false) }
+                var previewHeart by remember { mutableStateOf<CrystalHeart?>(null) }
 
                 if (selectedHeart != null) {
+                    Text(
+                        text = "Coração Equipado:",
+                        style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -66,42 +73,88 @@ fun CrystalHeartSection(
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
                     ) {
                         Column(Modifier.padding(16.dp)) {
-                            Text("Coração Equipado: ${selectedHeart.nome}", fontWeight = FontWeight.Bold)
+                            Text(selectedHeart.nome, fontWeight = FontWeight.Bold)
                             Text("Estágio: ${selectedHeart.estagio}")
-                            Text("PP: ${selectedHeart.pontos_poder}")
-                            Text("Slots: ${selectedHeart.slots}")
+                            Text("PP: ${selectedHeart.pontos_poder} | Slots: ${selectedHeart.slots}")
                             if (selectedHeart.habilidade_passiva != null) {
                                 Text("Passiva: ${selectedHeart.habilidade_passiva}")
                             }
                             if (selectedHeart.complicacao_inerente != null) {
                                 Text("Complicação: ${selectedHeart.complicacao_inerente}", color = MaterialTheme.colorScheme.error)
                             }
-                            Spacer(Modifier.height(8.dp))
+                            Spacer(Modifier.height(4.dp))
                             Text("Poderes: ${selectedHeart.poderes.joinToString(", ")}")
+                        }
+                    }
+                    Spacer(Modifier.height(16.dp))
+                }
 
-                            Spacer(Modifier.height(8.dp))
-                            Text(
-                                text = if (isSwapping) "Cancelar" else "Selecionar",
-                                color = if (isSwapping) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.clickable { isSwapping = !isSwapping }
-                            )
+                Text(
+                    text = "Corações Disponíveis:",
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+
+                Column {
+                    listaCoracoesCrystal.forEach { heart ->
+                        CrystalHeartItem(heart) {
+                            previewHeart = heart
                         }
                     }
                 }
 
-                if (selectedHeart == null || isSwapping) {
-                    if (selectedHeart == null) {
-                        Text(
-                            text = "Selecione um Coração de Cristal:",
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                    }
+                if (previewHeart != null) {
+                    Dialog(onDismissRequest = { previewHeart = null }) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .verticalScroll(rememberScrollState())
+                            ) {
+                                Text(
+                                    text = previewHeart!!.nome,
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(Modifier.height(8.dp))
+                                Text("Estágio: ${previewHeart!!.estagio}")
+                                Text("PP: ${previewHeart!!.pontos_poder} | Slots: ${previewHeart!!.slots}")
+                                Spacer(Modifier.height(8.dp))
+                                if (previewHeart!!.habilidade_passiva != null) {
+                                    Text("Passiva: ${previewHeart!!.habilidade_passiva}")
+                                }
+                                if (previewHeart!!.complicacao_inerente != null) {
+                                    Text("Complicação: ${previewHeart!!.complicacao_inerente}", color = MaterialTheme.colorScheme.error)
+                                }
+                                Spacer(Modifier.height(8.dp))
+                                Text("Poderes: ${previewHeart!!.poderes.joinToString(", ")}")
 
-                    Column {
-                        listaCoracoesCrystal.forEach { heart ->
-                            CrystalHeartItem(heart) {
-                                viewModel.selecionarCrystalHeart(heart)
-                                isSwapping = false
+                                if (previewHeart!!.descricao != null) {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text("Descrição: ${previewHeart!!.descricao}", style = MaterialTheme.typography.bodySmall)
+                                }
+
+                                Spacer(Modifier.height(16.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.End
+                                ) {
+                                    TextButton(onClick = { previewHeart = null }) {
+                                        Text("Cancelar", color = MaterialTheme.colorScheme.error)
+                                    }
+                                    Spacer(Modifier.width(8.dp))
+                                    TextButton(onClick = {
+                                        viewModel.selecionarCrystalHeart(previewHeart!!)
+                                        previewHeart = null
+                                    }) {
+                                        Text("Selecionar")
+                                    }
+                                }
                             }
                         }
                     }

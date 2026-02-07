@@ -228,11 +228,11 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        val viewModel = ViewModelProvider(this)[CriadorViewModel::class.java]
+        val activeKeys = viewModel.state.getActiveModuleKeys()
+
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val viewModel = ViewModelProvider(this@MainActivity)[CriadorViewModel::class.java]
-                val activeKeys = viewModel.state.getActiveModuleKeys()
-
                 if (activeKeys.isEmpty()) {
                     DataLoader.loadCore(this@MainActivity)
                 } else {
