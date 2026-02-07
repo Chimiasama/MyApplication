@@ -634,6 +634,7 @@ fun VantagensContent(
                                  showOfficialNames = showOfficialNames,
                                  idParaNome = idParaNome,
                                  detalhesExpandidos = detalhesExpandidos,
+                                 protagonistaSlotCategoria = protagonistaSlotCategoria,
                                  onSelect = {
                                     if (vant.vinculadoPericia) {
                                         pendingVantagem = vant
@@ -738,6 +739,7 @@ fun VantagensContent(
                              showOfficialNames = showOfficialNames,
                              idParaNome = idParaNome,
                              detalhesExpandidos = detalhesExpandidos,
+                             protagonistaSlotCategoria = protagonistaSlotCategoria,
                              onSelect = {
                                 if (vant.vinculadoPericia) {
                                     pendingVantagem = vant
@@ -1647,6 +1649,7 @@ private fun VantagemItem(
     showOfficialNames: Boolean,
     idParaNome: Map<String, String>,
     detalhesExpandidos: MutableMap<String, Boolean>,
+    protagonistaSlotCategoria: String?,
     onSelect: () -> Unit,
     onError: (String) -> Unit
 ) {
