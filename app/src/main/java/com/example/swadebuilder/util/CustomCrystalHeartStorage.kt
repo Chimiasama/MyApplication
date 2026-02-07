@@ -54,6 +54,15 @@ object CustomCrystalHeartStorage {
         return sanitized
     }
 
+    fun deleteCustomHeart(context: Context, heartId: String): Boolean {
+        val current = load(context).toMutableList()
+        val removed = current.removeAll { it.id == heartId }
+        if (removed) {
+            saveAll(context, current)
+        }
+        return removed
+    }
+
     private fun saveAll(context: Context, hearts: List<CrystalHeart>) {
         val file = storageFile(context)
         file.outputStream().use { output ->

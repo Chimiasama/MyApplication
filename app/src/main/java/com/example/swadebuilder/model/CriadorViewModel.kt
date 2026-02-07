@@ -876,6 +876,17 @@ class CriadorViewModel : ViewModel() {
         return saved
     }
 
+    fun removerCrystalHeartPersonalizado(context: Context, heartId: String): Boolean {
+        val removed = CustomCrystalHeartStorage.deleteCustomHeart(context, heartId)
+        if (!removed) return false
+        listaCoracoesCrystal = listaCoracoesCrystal.filterNot { it.id == heartId }
+        if (state.coracaoCrystalSelecionado?.id == heartId) {
+            val starter = listaCoracoesCrystal.firstOrNull { it.placeholder }
+            state.coracaoCrystalSelecionado = starter
+        }
+        return true
+    }
+
     fun desequiparCrystalHeart() {
         state.coracaoCrystalSelecionado = null
     }

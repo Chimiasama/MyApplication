@@ -3,6 +3,7 @@ package com.example.swadebuilder.ui.sections
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,8 +30,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -41,6 +44,7 @@ import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.ui.components.SectionCard
 import java.util.UUID
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CrystalHeartSection(
     state: CriadorState,
@@ -223,6 +227,18 @@ fun CrystalHeartSection(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.End
                                 ) {
+                                    if (previewHeart!!.custom) {
+                                        TextButton(onClick = {
+                                            val heartName = previewHeart!!.nome
+                                            if (viewModel.removerCrystalHeartPersonalizado(context, previewHeart!!.id)) {
+                                                viewModel.logFeedback("Coração $heartName removido.")
+                                            }
+                                            previewHeart = null
+                                        }) {
+                                            Text("Excluir", color = MaterialTheme.colorScheme.error)
+                                        }
+                                        Spacer(Modifier.width(8.dp))
+                                    }
                                     TextButton(onClick = { previewHeart = null }) {
                                         Text("Cancelar", color = MaterialTheme.colorScheme.error)
                                     }
@@ -248,6 +264,7 @@ fun CrystalHeartSection(
                     var poderes by remember(starter) { mutableStateOf(starter.poderes.joinToString("\n")) }
                     var descricao by remember(starter) { mutableStateOf(starter.descricao.orEmpty()) }
                     var stageExpanded by remember { mutableStateOf(false) }
+                    val keyboardController = LocalSoftwareKeyboardController.current
 
                     Dialog(onDismissRequest = { editHeart = null }) {
                         Card(
@@ -275,7 +292,7 @@ fun CrystalHeartSection(
                                     modifier = Modifier.fillMaxWidth()
                                 )
                                 Spacer(Modifier.height(8.dp))
-                                Column {
+                                Box {
                                     OutlinedTextField(
                                         value = estagio,
                                         onValueChange = {},
@@ -283,7 +300,10 @@ fun CrystalHeartSection(
                                         label = { Text("Estágio") },
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .clickable { stageExpanded = true }
+                                            .clickable {
+                                                keyboardController?.hide()
+                                                stageExpanded = true
+                                            }
                                     )
                                     DropdownMenu(
                                         expanded = stageExpanded,
@@ -346,13 +366,6 @@ fun CrystalHeartSection(
                                     }
                                     Spacer(Modifier.width(8.dp))
                                     TextButton(onClick = {
-                                        viewModel.selecionarCrystalHeart(starter)
-                                        editHeart = null
-                                    }) {
-                                        Text("Selecionar")
-                                    }
-                                    Spacer(Modifier.width(8.dp))
-                                    TextButton(onClick = {
                                         val poderesList = poderes.lines().map { it.trim() }.filter { it.isNotBlank() }
                                         val customHeart = CrystalHeart(
                                             id = "custom_${UUID.randomUUID()}",
@@ -368,10 +381,11 @@ fun CrystalHeartSection(
                                         val saved = viewModel.salvarCrystalHeartPersonalizado(context, customHeart)
                                         if (saved != null) {
                                             viewModel.selecionarCrystalHeart(saved)
+                                            viewModel.logFeedback("Coração ${saved.nome} criado e salvo em ${saved.estagio}.")
                                         }
                                         editHeart = null
                                     }) {
-                                        Text("Salvar personalizado")
+                                        Text("Selecionar")
                                     }
                                 }
                             }
