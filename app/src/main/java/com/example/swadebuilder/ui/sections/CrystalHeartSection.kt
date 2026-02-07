@@ -53,7 +53,7 @@ fun CrystalHeartSection(
         ) {
             if (!temAgenteSyn) {
                 Text(
-                    text = "Você precisa da vantagem 'Antecedente Arcano (Agente da Agência)' para equipar um Coração de Cristal.",
+                    text = "Você precisa da vantagem 'Antecedente Arcano: Canalizar Cristal' para equipar um Coração de Cristal.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.error
                 )

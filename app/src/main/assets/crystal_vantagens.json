@@ -1,12 +1,12 @@
 [
   {
     "id": "aa_agente_syn",
-    "nome": "ANTECEDENTE ARCANO (Agente da SYN)",
+    "nome": "ANTECEDENTE ARCANO: CANALIZAR CRISTAL",
     "categoria": "ANTECEDENTE",
     "origem": "CRYSTAL_HEART",
-    "requisitos": {},
-    "descricao": "Permite equipar e usar Corações de Cristal. Perícia Arcana: Canalizar Cristal (Espírito). Se o cristal for removido, perde acesso aos poderes. Começa com um Coração Inicial.",
-    "subtipoArcano": "AGENTE DA SYN",
+    "requisitos": { "estagio": "Novato" },
+    "descricao": "Requisitos: Novato. Você está equipado com um suporte, é capaz de adquirir progressos na perícia Canalizar Cristal, que é baseada no atributo Espírito. Veja a página 56 para obter todos os detalhes. Todos os Agentes da Syn recebem esta Vantagem gratuitamente.",
+    "subtipoArcano": "CANALIZAR CRISTAL",
     "grupoId": "antecedente_arcano"
   },
   {
