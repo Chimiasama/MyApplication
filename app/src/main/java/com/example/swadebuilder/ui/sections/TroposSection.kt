@@ -193,31 +193,31 @@ fun TroposSection(
                             ) {
                                 OutlinedTextField(
                                     value = tecnicasRoll?.toString().orEmpty(),
-                                    onValueChange = { state.setProtagonistaRollTecnicas(it.toIntOrNull()) },
+                                    onValueChange = { state.updateProtagonistaRollTecnicas(it.toIntOrNull()) },
                                     label = { Text("d4") },
                                     singleLine = true
                                 )
                                 OutlinedTextField(
                                     value = periciaRoll?.toString().orEmpty(),
-                                    onValueChange = { state.setProtagonistaRollPericia(it.toIntOrNull()) },
+                                    onValueChange = { state.updateProtagonistaRollPericia(it.toIntOrNull()) },
                                     label = { Text("d6") },
                                     singleLine = true
                                 )
                                 OutlinedTextField(
                                     value = vantagemRoll?.toString().orEmpty(),
-                                    onValueChange = { state.setProtagonistaRollVantagem(it.toIntOrNull()) },
+                                    onValueChange = { state.updateProtagonistaRollVantagem(it.toIntOrNull()) },
                                     label = { Text("d8") },
                                     singleLine = true
                                 )
                                 OutlinedTextField(
                                     value = qualidadeRoll?.toString().orEmpty(),
-                                    onValueChange = { state.setProtagonistaRollQualidade(it.toIntOrNull()) },
+                                    onValueChange = { state.updateProtagonistaRollQualidade(it.toIntOrNull()) },
                                     label = { Text("d10") },
                                     singleLine = true
                                 )
                                 OutlinedTextField(
                                     value = habilidadeRoll?.toString().orEmpty(),
-                                    onValueChange = { state.setProtagonistaRollHabilidade(it.toIntOrNull()) },
+                                    onValueChange = { state.updateProtagonistaRollHabilidade(it.toIntOrNull()) },
                                     label = { Text("d12") },
                                     singleLine = true
                                 )
@@ -229,26 +229,26 @@ fun TroposSection(
                             ) {
                                 Button(
                                     onClick = {
-                                        state.setProtagonistaRollTecnicas(rollDie(4))
-                                        state.setProtagonistaRollPericia(rollDie(6))
-                                        state.setProtagonistaRollVantagem(rollDie(8))
-                                        state.setProtagonistaRollQualidade(rollDie(10))
-                                        state.setProtagonistaRollHabilidade(rollDie(12))
-                                        state.setProtagonistaPericiasEscolhidas(emptyList())
-                                        state.setProtagonistaPericiasPaixao(emptyList())
+                                        state.updateProtagonistaRollTecnicas(rollDie(4))
+                                        state.updateProtagonistaRollPericia(rollDie(6))
+                                        state.updateProtagonistaRollVantagem(rollDie(8))
+                                        state.updateProtagonistaRollQualidade(rollDie(10))
+                                        state.updateProtagonistaRollHabilidade(rollDie(12))
+                                        state.updateProtagonistaPericiasEscolhidas(emptyList())
+                                        state.updateProtagonistaPericiasPaixao(emptyList())
                                     }
                                 ) {
                                     Text("Rolar tudo")
                                 }
                                 OutlinedButton(
                                     onClick = {
-                                        state.setProtagonistaRollTecnicas(null)
-                                        state.setProtagonistaRollPericia(null)
-                                        state.setProtagonistaRollVantagem(null)
-                                        state.setProtagonistaRollQualidade(null)
-                                        state.setProtagonistaRollHabilidade(null)
-                                        state.setProtagonistaPericiasEscolhidas(emptyList())
-                                        state.setProtagonistaPericiasPaixao(emptyList())
+                                        state.updateProtagonistaRollTecnicas(null)
+                                        state.updateProtagonistaRollPericia(null)
+                                        state.updateProtagonistaRollVantagem(null)
+                                        state.updateProtagonistaRollQualidade(null)
+                                        state.updateProtagonistaRollHabilidade(null)
+                                        state.updateProtagonistaPericiasEscolhidas(emptyList())
+                                        state.updateProtagonistaPericiasPaixao(emptyList())
                                     }
                                 ) {
                                     Text("Limpar")
@@ -296,7 +296,7 @@ fun TroposSection(
                                                 } else {
                                                     periciasEscolhidas
                                                 }
-                                                state.setProtagonistaPericiasEscolhidas(updated)
+                                                state.updateProtagonistaPericiasEscolhidas(updated)
                                             },
                                             label = { Text(opcao) },
                                             colors = FilterChipDefaults.filterChipColors(
@@ -394,7 +394,7 @@ fun TroposSection(
                                                 } else {
                                                     periciasPaixao
                                                 }
-                                                state.setProtagonistaPericiasPaixao(updated)
+                                                state.updateProtagonistaPericiasPaixao(updated)
                                             },
                                             label = { Text(opcao) },
                                             colors = FilterChipDefaults.filterChipColors(

@@ -3554,13 +3554,13 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
-    fun setProtagonistaRollTecnicas(value: Int?) {
+    fun updateProtagonistaRollTecnicas(value: Int?) {
         if (protagonistaRollTecnicas == value) return
         protagonistaRollTecnicas = value?.coerceIn(1, 4)
         syncMestreDoChiSlots()
     }
 
-    fun setProtagonistaRollPericia(value: Int?) {
+    fun updateProtagonistaRollPericia(value: Int?) {
         if (protagonistaRollPericia == value) return
         protagonistaRollPericia = value?.coerceIn(1, 6)
         if (protagonistaRollPericia != 1) {
@@ -3569,12 +3569,12 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
-    fun setProtagonistaRollVantagem(value: Int?) {
+    fun updateProtagonistaRollVantagem(value: Int?) {
         if (protagonistaRollVantagem == value) return
         protagonistaRollVantagem = value?.coerceIn(1, 8)
     }
 
-    fun setProtagonistaRollQualidade(value: Int?) {
+    fun updateProtagonistaRollQualidade(value: Int?) {
         if (protagonistaRollQualidade == value) return
         protagonistaRollQualidade = value?.coerceIn(1, 10)
         if (protagonistaRollQualidade != 7) {
@@ -3584,17 +3584,17 @@ class CriadorState {
         recalcularPontosAtributo()
     }
 
-    fun setProtagonistaRollHabilidade(value: Int?) {
+    fun updateProtagonistaRollHabilidade(value: Int?) {
         if (protagonistaRollHabilidade == value) return
         protagonistaRollHabilidade = value?.coerceIn(1, 12)
     }
 
-    fun setProtagonistaPericiasEscolhidas(value: List<String>) {
+    fun updateProtagonistaPericiasEscolhidas(value: List<String>) {
         protagonistaPericiasEscolhidas = value
         rebuildAllPericiaStacks()
     }
 
-    fun setProtagonistaPericiasPaixao(value: List<String>) {
+    fun updateProtagonistaPericiasPaixao(value: List<String>) {
         protagonistaPericiasPaixao = value
         rebuildAllPericiaStacks()
     }
