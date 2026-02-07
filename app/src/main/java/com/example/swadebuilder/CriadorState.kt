@@ -79,6 +79,7 @@ class CriadorState {
     var protagonistaRollHabilidade by mutableStateOf<Int?>(null)
     var protagonistaPericiasEscolhidas by mutableStateOf<List<String>>(emptyList())
     var protagonistaPericiasPaixao by mutableStateOf<List<String>>(emptyList())
+    var protagonistaBonusPv by mutableStateOf(false)
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
@@ -1079,6 +1080,11 @@ class CriadorState {
             pontosVantagem++
             rebuildAllPericiaStacks(enforcePoolLimit = true)
             onFeedback("Vantagem ${v.nome} removida.")
+            return
+        }
+
+        if (v.id in vantagensAutomaticasDoProtagonista) {
+            onFeedback("Vantagem automática do Protagonista (use a rolagem do tropo para alterar).")
             return
         }
 
@@ -2447,6 +2453,9 @@ class CriadorState {
     }
 
     fun podeRemoverVantagem(vantagem: Vantagem): Pair<Boolean, String?> {
+        if (vantagem.id in vantagensAutomaticasDoProtagonista) {
+            return false to "Vantagem automática do Protagonista."
+        }
         if (vantagem.toArcanoKey() != null) {
             val temOutro = vantagensSelecionadas.any { it != vantagem && it.toArcanoKey() != null }
             if (!temOutro) {
@@ -3635,6 +3644,7 @@ class CriadorState {
     fun updateProtagonistaRollHabilidade(value: Int?) {
         if (protagonistaRollHabilidade == value) return
         protagonistaRollHabilidade = value?.coerceIn(1, 12)
+        syncProtagonistaBonusPv()
     }
 
     fun updateProtagonistaPericiasEscolhidas(value: List<String>) {
@@ -3701,6 +3711,24 @@ class CriadorState {
                 vantagensSelecionadas.add(vant)
                 vantagensAutomaticasDoProtagonista.add(vant.id)
             }
+        }
+    }
+
+    private fun syncProtagonistaBonusPv() {
+        val shouldHaveBonus = compendioArteDaGuerraAtivo &&
+            tropoSelecionado?.id == "tropo_protagonista" &&
+            protagonistaRollHabilidade == 4
+
+        if (shouldHaveBonus && !protagonistaBonusPv) {
+            pontosVantagem += 1
+            protagonistaBonusPv = true
+        } else if (!shouldHaveBonus && protagonistaBonusPv) {
+            if (pontosVantagem > 0) {
+                pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
+            } else {
+                removerUltimaVantagemCompradaComPv()
+            }
+            protagonistaBonusPv = false
         }
     }
 
@@ -3800,8 +3828,10 @@ class CriadorState {
                 protagonistaPericiasEscolhidas = emptyList()
                 protagonistaPericiasPaixao = emptyList()
                 vantagensSlotProtagonista.clear()
+                syncProtagonistaBonusPv()
             } else {
                 atualizarProtagonistaAutoVantagens()
+                syncProtagonistaBonusPv()
             }
         } else {
             protagonistaRollTecnicas = null
@@ -3812,6 +3842,7 @@ class CriadorState {
             protagonistaPericiasEscolhidas = emptyList()
             protagonistaPericiasPaixao = emptyList()
             vantagensSlotProtagonista.clear()
+            syncProtagonistaBonusPv()
         }
 
         syncMestreDoChiSlots()
@@ -4440,6 +4471,8 @@ class CriadorState {
         if (tropoSelecionado?.id == "tropo_protagonista") {
             atualizarProtagonistaAutoVantagens()
         }
+        protagonistaBonusPv = tropoSelecionado?.id == "tropo_protagonista" &&
+            protagonistaRollHabilidade == 4
 
         poderSlotsPorArcano.clear()
         snapshot.selecoes.poderSlotsPorArcano.forEach { (key, slots) ->

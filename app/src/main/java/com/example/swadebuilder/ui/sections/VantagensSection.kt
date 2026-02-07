@@ -504,6 +504,7 @@ fun VantagensContent(
                     val isCrystalHeartLocked = state.compendioCrystalHeartAtivo && vant.id == "aa_agente_syn"
                     val isCelestialAAMilagres = state.ancestralidade == "CELESTIAIS" &&
                             vant.id == "antecedente_arcano_milagres"
+                    val isProtagonistaAutomatic = state.vantagensAutomaticasDoProtagonista.contains(vant.id)
 
                     val baseRemovable = !locked &&
                             when (vant.id) {
@@ -518,6 +519,7 @@ fun VantagensContent(
                             index >= state.frozenAdvantageCount &&
                             !isRacialFree &&
                             !isTropoAutomatic &&
+                            !isProtagonistaAutomatic &&
                             !requiredByAnother &&
                             !isFromSuperPoder &&
                             !isSuperpoderesLocked &&
