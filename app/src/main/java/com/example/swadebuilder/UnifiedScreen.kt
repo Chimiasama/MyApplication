@@ -133,11 +133,15 @@ fun UnifiedScreen(
     val availableSections = availableSectionsFor(state)
     var activeSection by rememberSaveable { mutableStateOf(MainSection.RESUMO) }
 
-    val forcedSection = when {
-        state.mostrandoVantagensProgresso -> MainSection.VANTAGENS
-        state.mostrandoPericiasProgresso -> MainSection.PERICIAS
-        state.mostrandoAtributosProgresso -> MainSection.ATRIBUTOS
-        else -> null
+    val forcedSection = if (state.modoProgressaoAtivo) {
+        null
+    } else {
+        when {
+            state.mostrandoVantagensProgresso -> MainSection.VANTAGENS
+            state.mostrandoPericiasProgresso -> MainSection.PERICIAS
+            state.mostrandoAtributosProgresso -> MainSection.ATRIBUTOS
+            else -> null
+        }
     }
     LaunchedEffect(availableSections) {
         activeSection = resolveActiveSection(activeSection, availableSections)
@@ -468,7 +472,10 @@ fun UnifiedScreen(
             viewModel = viewModel,
             onShowMessage = onShowMessage,
             slotIndex = currentSlotIndex,
-            onDismiss = { showAllocDialog = false }
+            onDismiss = {
+                showAllocDialog = false
+                activeSection = MainSection.XP
+            }
         )
     }
 }
