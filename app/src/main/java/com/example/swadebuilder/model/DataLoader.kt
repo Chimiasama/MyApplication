@@ -177,7 +177,13 @@ object DataLoader {
         val assets = context.assets
 
         // 1. Equipamentos
-        val allEquip = assets.loadAndMerge<EquipamentoCategoria>(equipmentModules, keys) { item, override ->
+        val equipmentModulesToLoad = if ("CRYSTAL_HEART" in keys) {
+            equipmentModules.filter { it.fileName == "crystal_equipamentos.json" }
+        } else {
+            equipmentModules
+        }
+
+        val allEquip = assets.loadAndMerge<EquipamentoCategoria>(equipmentModulesToLoad, keys) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
         listaEquipamentos = allEquip.flatMap { it.itens }
