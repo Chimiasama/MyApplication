@@ -1635,6 +1635,9 @@ class CriadorState {
             if (!valoresAtributos.containsKey(nome)) {
                 valoresAtributos[nome] = mutableIntStateOf(4)
             }
+            if (!paCostStackPorAtributo.containsKey(nome)) {
+                paCostStackPorAtributo[nome] = mutableListOf()
+            }
         }
     }
 
