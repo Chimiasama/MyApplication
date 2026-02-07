@@ -176,6 +176,13 @@ fun TelaInicial(
                 optCartaSelvagem = true
                 optMaisPontosPericias = false
             }
+            "Crystal Heart" -> {
+                optCartaSelvagem = true
+                optMaisPontosPericias = false
+                optMultiAntecedenteArcano = false
+                optSemPontosPoder = false
+                optRegraRiqueza = false
+            }
             "Básico" -> {
                 optCartaSelvagem = true
                 optMaisPontosPericias = true
@@ -305,11 +312,10 @@ fun TelaInicial(
             {
                 optCompendioCrystalHeart = !optCompendioCrystalHeart
                 if (optCompendioCrystalHeart) {
-                    applyRulesPreset("Básico")
-                    optMaisPontosPericias = false
+                    applyRulesPreset("Crystal Heart")
                 }
             },
-            { applyRulesPreset("Básico"); showRulesDialog = true }
+            { applyRulesPreset("Crystal Heart"); showRulesDialog = true }
         ),
         ModuleItemData(
             "Arte da Guerra: Nova Era".toEditionDisplayName(),
@@ -512,6 +518,7 @@ fun TelaInicial(
             title = { Text("Regras de Cenário") },
             text = {
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    val isCrystalHeart = optCompendioCrystalHeart
                     if (optSuperPoderes) {
                         SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
                         SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
@@ -543,11 +550,13 @@ fun TelaInicial(
 
                         if (!optCompendioWiseguys) {
                             if (!optCompendioFantasia && !optCompendioHorror) {
-                                SimpleCheckRow(
-                                    "Múltiplos Ant. Arcanos",
-                                    "Permite combinar classes conjuradoras.",
-                                    optMultiAntecedenteArcano
-                                ) { optMultiAntecedenteArcano = it }
+                                if (!isCrystalHeart) {
+                                    SimpleCheckRow(
+                                        "Múltiplos Ant. Arcanos",
+                                        "Permite combinar classes conjuradoras.",
+                                        optMultiAntecedenteArcano
+                                    ) { optMultiAntecedenteArcano = it }
+                                }
                             }
                             SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
                             SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
@@ -555,15 +564,19 @@ fun TelaInicial(
                                 SimpleCheckRow("Múltiplos Idiomas", "Personagem inicia poliglota.", optMultiplosIdiomas) { optMultiplosIdiomas = it }
                             }
                             SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
-                            SimpleCheckRow("Sem Pontos de Poder", "Conjuradores não usam PP.", optSemPontosPoder) { optSemPontosPoder = it }
+                            if (!isCrystalHeart) {
+                                SimpleCheckRow("Sem Pontos de Poder", "Conjuradores não usam PP.", optSemPontosPoder) { optSemPontosPoder = it }
+                            }
                         }
 
-                        SimpleCheckRow(
-                            title = "Regra de Riqueza",
-                            description = "Substitui dinheiro por rolagens de Riqueza.",
-                            checked = optRegraRiqueza,
-                            onCheckedChange = { optRegraRiqueza = it }
-                        )
+                        if (!isCrystalHeart) {
+                            SimpleCheckRow(
+                                title = "Regra de Riqueza",
+                                description = "Substitui dinheiro por rolagens de Riqueza.",
+                                checked = optRegraRiqueza,
+                                onCheckedChange = { optRegraRiqueza = it }
+                            )
+                        }
 
                         if (optCompendioWiseguys) {
                             SimpleCheckRow(
