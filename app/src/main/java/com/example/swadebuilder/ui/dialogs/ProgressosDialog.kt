@@ -756,15 +756,19 @@ fun ProgressosDialog(
 
     if (showSkillSelection) {
         val spRemaining = state.spFromProgress
+        val canCancelSkillAdvancement = state.skillsForCurrentAdvancement.isEmpty()
 
         AlertDialog(
             onDismissRequest = {
-                if (spRemaining > 0) {
+                if (canCancelSkillAdvancement) {
                     viewModel.cancelAdvancementInProgress()
-                } else {
+                    onDismiss()
+                } else if (spRemaining == 0) {
                     viewModel.finishSkillAdvancement()
+                    onDismiss()
+                } else {
+                    showSnack("Use os pontos restantes ou desfaça os aumentos antes de cancelar.")
                 }
-                onDismiss()
             },
             title = {
                 Column {
@@ -839,7 +843,8 @@ fun ProgressosDialog(
                     onClick = {
                         viewModel.cancelAdvancementInProgress()
                         onDismiss()
-                    }
+                    },
+                    enabled = canCancelSkillAdvancement
                 ) {
                     Text("Cancelar")
                 }

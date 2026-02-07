@@ -28,6 +28,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,6 +43,7 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.listaCoracoesCrystal
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.CrystalHeart
+import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.SectionCard
 import java.util.UUID
 
@@ -157,6 +159,7 @@ fun CrystalHeartSection(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
+                val expandedStages = remember { mutableStateMapOf<String, Boolean>() }
                 val heartsByStage = standardHearts
                     .groupBy { it.estagio.ifBlank { "Outros" } }
                     .toSortedMap(compareBy<String> { stageOrder.indexOf(it).takeIf { idx -> idx >= 0 } ?: Int.MAX_VALUE }
@@ -164,17 +167,19 @@ fun CrystalHeartSection(
 
                 Column {
                     heartsByStage.forEach { (stage, hearts) ->
-                        Text(
-                            text = stage,
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 12.dp, bottom = 4.dp)
-                        )
-                        hearts.forEach { heart ->
-                            CrystalHeartItem(heart) {
-                                previewHeart = heart
+                        val expanded = expandedStages[stage] ?: false
+                        CollapsibleSection(
+                            title = stage,
+                            expanded = expanded,
+                            onToggle = { expandedStages[stage] = !expanded }
+                        ) {
+                            hearts.forEach { heart ->
+                                CrystalHeartItem(heart) {
+                                    previewHeart = heart
+                                }
                             }
                         }
+                        Spacer(Modifier.height(8.dp))
                     }
                 }
 
