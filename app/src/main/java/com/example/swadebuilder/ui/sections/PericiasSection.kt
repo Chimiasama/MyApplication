@@ -36,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -107,7 +108,7 @@ fun PericiasContent(
     var showIdiomaDialog by rememberSaveable { mutableStateOf(false) }
     var idiomaText by rememberSaveable { mutableStateOf("") }
     var idiomaTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
-    var idiomaPendingCost by rememberSaveable { mutableStateOf(0) }
+    var idiomaPendingCost by rememberSaveable { mutableIntStateOf(0) }
     var idiomaEditMode by rememberSaveable { mutableStateOf(false) }
 
     val idosoActive = state.idosoBonusSp > 0
@@ -376,9 +377,9 @@ fun PericiasContent(
                             }
 
                             Text(
-                                text = when {
-                                    regra.displayRaw == 0 && state.isPericiaBasicaEfetiva(per) -> "d4"
-                                    regra.displayRaw == 0 -> "-"
+                                text = when (regra.displayRaw) {
+                                    0 if state.isPericiaBasicaEfetiva(per) -> "d4"
+                                    0 -> "-"
                                     else -> regra.displayRaw.toDiceString()
                                 },
                                 modifier = Modifier.width(valorColWidthDp),
