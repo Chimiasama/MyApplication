@@ -672,6 +672,9 @@ private fun availableSectionsFor(state: CriadorState): List<MainSection> {
         if (state.mostrandoVantagensProgresso) {
             sections += MainSection.VANTAGENS
         }
+        if (state.compendioCrystalHeartAtivo) {
+            sections += MainSection.CRYSTAL_HEART
+        }
         sections += MainSection.EQUIPAMENTOS
         sections += MainSection.XP
         return sections
