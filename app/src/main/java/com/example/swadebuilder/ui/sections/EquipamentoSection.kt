@@ -236,7 +236,9 @@ fun EquipFilterDialog(
 fun EquipamentoSection(
     state: CriadorState, // Changed signature to include state
     dinheiro: Int,
+    requisicao: Int,
     usaRiqueza: Boolean,
+    usaRequisicao: Boolean,
     dadoRiqueza: Int,
     pcTotal: Int,
     pcLivres: Int,
@@ -259,6 +261,7 @@ fun EquipamentoSection(
     hasSoldado: Boolean,
     soldadoCargaAtivo: Boolean,
     onEditarDinheiro: (Int) -> Unit,
+    onEditarRequisicao: (Int) -> Unit,
     onToggleSoldadoCarga: () -> Unit,
     compendioFantasiaAtivo: Boolean = false,
     compendioHorrorAtivo: Boolean = false,
@@ -275,6 +278,8 @@ fun EquipamentoSection(
     val focusManager = LocalFocusManager.current
     var showMoneyDialog by rememberSaveable { mutableStateOf(false) }
     var dinheiroInput by rememberSaveable { mutableStateOf(dinheiro.toString()) }
+    var showRequisicaoDialog by rememberSaveable { mutableStateOf(false) }
+    var requisicaoInput by rememberSaveable { mutableStateOf(requisicao.toString()) }
 
     // Replaced local state with CriadorState properties
     val filter = state.equipFilter
@@ -377,7 +382,9 @@ fun EquipamentoSection(
 
 
             // 2. Header (Money)
-            val moneyDisplayText = if (usaRiqueza) {
+            val moneyDisplayText = if (usaRequisicao) {
+                "Requisição: $requisicao"
+            } else if (usaRiqueza) {
                 "Riqueza: d$dadoRiqueza"
             } else if (compendioPathfinderAtivo) {
                 "Dinheiro: ${state.carteiraPathfinder["PL"] ?: 0} pl  ${state.carteiraPathfinder["PO"] ?: 0} po  ${state.carteiraPathfinder["PP"] ?: 0} pp  ${state.carteiraPathfinder["PC"] ?: 0} pc"
@@ -393,7 +400,21 @@ fun EquipamentoSection(
                 listaCompletaText = ""
             )
 
-            if (!usaRiqueza && (emProgresso || modoProgressaoAtivo)) {
+            if (usaRequisicao && (emProgresso || modoProgressaoAtivo)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Button(onClick = {
+                        requisicaoInput = requisicao.toString()
+                        showRequisicaoDialog = true
+                    }) {
+                        Text("Editar requisição")
+                    }
+                }
+            } else if (!usaRiqueza && (emProgresso || modoProgressaoAtivo)) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -411,7 +432,15 @@ fun EquipamentoSection(
 
             Spacer(modifier = Modifier.size(4.dp))
 
-            if (!emProgresso) {
+            if (usaRequisicao) {
+                Text(
+                    text = "A Requisição é apenas uma referência. Combine com o mestre quais itens estão disponíveis.",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+                )
+            }
+
+            if (!emProgresso && !usaRequisicao) {
                 if (usePbWalletRedesign) {
                     PbWalletBanner(
                         pcTotal = pcTotal,
@@ -592,7 +621,7 @@ fun EquipamentoSection(
             // 5. List Content
             if (isSearching) {
                 // Flat List Mode
-                val finalFlatList = remember(mappedCategories, filter, selectedSuperTypes, searchQuery, dinheiro, usaRiqueza, compendioPathfinderAtivo) {
+                val finalFlatList = remember(mappedCategories, filter, selectedSuperTypes, searchQuery, dinheiro, usaRiqueza, usaRequisicao, compendioPathfinderAtivo) {
                     mappedCategories.filter { mapped ->
                         // Filter Check (removed Origin logic)
                         if (filter.superTipos.isNotEmpty() && mapped.superType !in filter.superTipos) return@filter false
@@ -602,7 +631,7 @@ fun EquipamentoSection(
                         mapped.original.itens.filter { item ->
                             if (filter.somenteAcessiveis) {
                                 val c = MoneyUtils.parseCostInBaseUnit(item.custo, compendioPathfinderAtivo)
-                                if (!usaRiqueza && c > dinheiro) return@filter false
+                                if (!usaRiqueza && !usaRequisicao && c > dinheiro) return@filter false
                             }
                             val q = searchQuery.semAcentos().lowercase()
                             val n = item.nomeExibicao.semAcentos().lowercase()
@@ -648,7 +677,7 @@ fun EquipamentoSection(
 
                 // --- SOLUÇÃO DEFINITIVA: Pré-calcular os dados filtrados ---
                 // Added state.compendioScifiMechasCiberneticosAtivo to keys to ensure refresh when rule is toggled
-                val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, dinheiro, compendioPathfinderAtivo, state.compendioScifiMechasCiberneticosAtivo) {
+                val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, usaRequisicao, dinheiro, compendioPathfinderAtivo, state.compendioScifiMechasCiberneticosAtivo) {
                     // Mapeia cada SuperType para seus dados filtrados
                     groupsBySuperType.mapValues { (_, categoriesInSuper) ->
                         // Process the subgroups directly to check for content
@@ -669,7 +698,7 @@ fun EquipamentoSection(
                                     .filter { entry ->
                                     val isAcessivel = if (filter.somenteAcessiveis) {
                                         val c = MoneyUtils.parseCostInBaseUnit(entry.item.custo, compendioPathfinderAtivo)
-                                        usaRiqueza || c <= dinheiro
+                                        usaRiqueza || usaRequisicao || c <= dinheiro
                                     } else {
                                         true
                                     }
@@ -903,6 +932,42 @@ fun EquipamentoSection(
                         }
                     )
                 }
+            }
+            if (showRequisicaoDialog) {
+                AlertDialog(
+                    onDismissRequest = { showRequisicaoDialog = false },
+                    title = { Text("Editar requisição") },
+                    text = {
+                        OutlinedTextField(
+                            value = requisicaoInput,
+                            onValueChange = { novo ->
+                                requisicaoInput = novo.filter { it.isDigit() || it == '-' }
+                            },
+                            label = { Text("Valor de requisição") },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            val novoValor = requisicaoInput.toIntOrNull()
+                            if (novoValor != null) {
+                                onEditarRequisicao(novoValor)
+                            }
+                            showRequisicaoDialog = false
+                        }) {
+                            Text("Salvar")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showRequisicaoDialog = false }) { Text("Cancelar") }
+                    }
+                )
             }
             if (showFilterDialog) {
                 EquipFilterDialog(

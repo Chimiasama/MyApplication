@@ -27,6 +27,7 @@ data class MeuPersonagem(
 
     // Dinheiro e PV restantes (vantagens):
     val dinheiro: Int,
+    val requisicao: Int = 0,
     val dadoRiqueza: Int? = null,
     val pontosRestantes: Int,
 
@@ -91,5 +92,6 @@ data class MeuPersonagem(
     val regraFamaAtiva: Boolean = false,
     val fama: Int = 0,
     val usaRiqueza: Boolean = false,
+    val usaRequisicao: Boolean = false,
     val modoProgressaoAtivo: Boolean = false
 )
