@@ -23,13 +23,10 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -166,13 +163,13 @@ fun TroposSection(
                                 "Qualquer Vantagem"
                             )
 
-                            var tecnicasRoll by rememberSaveable(tropo.id) { mutableStateOf<Int?>(null) }
-                            var periciaRoll by rememberSaveable(tropo.id) { mutableStateOf<Int?>(null) }
-                            var periciasEscolhidas by rememberSaveable(tropo.id) { mutableStateOf(listOf<String>()) }
-                            var vantagemRoll by rememberSaveable(tropo.id) { mutableStateOf<Int?>(null) }
-                            var vantagemEscolhida by rememberSaveable(tropo.id) { mutableStateOf<String?>(null) }
-                            var qualidadeRoll by rememberSaveable(tropo.id) { mutableStateOf<Int?>(null) }
-                            var habilidadeRoll by rememberSaveable(tropo.id) { mutableStateOf<Int?>(null) }
+                            val tecnicasRoll = state.protagonistaRollTecnicas
+                            val periciaRoll = state.protagonistaRollPericia
+                            val periciasEscolhidas = state.protagonistaPericiasEscolhidas
+                            val vantagemRoll = state.protagonistaRollVantagem
+                            val qualidadeRoll = state.protagonistaRollQualidade
+                            val habilidadeRoll = state.protagonistaRollHabilidade
+                            val periciasPaixao = state.protagonistaPericiasPaixao
 
                             fun rollDie(sides: Int): Int = random.nextInt(1, sides + 1)
 
@@ -189,32 +186,69 @@ fun TroposSection(
                                 modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
                             )
 
+                            FlowRow(
+                                modifier = Modifier.padding(start = 40.dp, top = 8.dp, end = 8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                OutlinedTextField(
+                                    value = tecnicasRoll?.toString().orEmpty(),
+                                    onValueChange = { state.setProtagonistaRollTecnicas(it.toIntOrNull()) },
+                                    label = { Text("d4") },
+                                    singleLine = true
+                                )
+                                OutlinedTextField(
+                                    value = periciaRoll?.toString().orEmpty(),
+                                    onValueChange = { state.setProtagonistaRollPericia(it.toIntOrNull()) },
+                                    label = { Text("d6") },
+                                    singleLine = true
+                                )
+                                OutlinedTextField(
+                                    value = vantagemRoll?.toString().orEmpty(),
+                                    onValueChange = { state.setProtagonistaRollVantagem(it.toIntOrNull()) },
+                                    label = { Text("d8") },
+                                    singleLine = true
+                                )
+                                OutlinedTextField(
+                                    value = qualidadeRoll?.toString().orEmpty(),
+                                    onValueChange = { state.setProtagonistaRollQualidade(it.toIntOrNull()) },
+                                    label = { Text("d10") },
+                                    singleLine = true
+                                )
+                                OutlinedTextField(
+                                    value = habilidadeRoll?.toString().orEmpty(),
+                                    onValueChange = { state.setProtagonistaRollHabilidade(it.toIntOrNull()) },
+                                    label = { Text("d12") },
+                                    singleLine = true
+                                )
+                            }
+
                             Row(
                                 modifier = Modifier.padding(start = 40.dp, top = 8.dp),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 Button(
                                     onClick = {
-                                        tecnicasRoll = rollDie(4)
-                                        periciaRoll = rollDie(6)
-                                        vantagemRoll = rollDie(8)
-                                        qualidadeRoll = rollDie(10)
-                                        habilidadeRoll = rollDie(12)
-                                        vantagemEscolhida = null
-                                        periciasEscolhidas = emptyList()
+                                        state.setProtagonistaRollTecnicas(rollDie(4))
+                                        state.setProtagonistaRollPericia(rollDie(6))
+                                        state.setProtagonistaRollVantagem(rollDie(8))
+                                        state.setProtagonistaRollQualidade(rollDie(10))
+                                        state.setProtagonistaRollHabilidade(rollDie(12))
+                                        state.setProtagonistaPericiasEscolhidas(emptyList())
+                                        state.setProtagonistaPericiasPaixao(emptyList())
                                     }
                                 ) {
                                     Text("Rolar tudo")
                                 }
                                 OutlinedButton(
                                     onClick = {
-                                        tecnicasRoll = null
-                                        periciaRoll = null
-                                        vantagemRoll = null
-                                        qualidadeRoll = null
-                                        habilidadeRoll = null
-                                        vantagemEscolhida = null
-                                        periciasEscolhidas = emptyList()
+                                        state.setProtagonistaRollTecnicas(null)
+                                        state.setProtagonistaRollPericia(null)
+                                        state.setProtagonistaRollVantagem(null)
+                                        state.setProtagonistaRollQualidade(null)
+                                        state.setProtagonistaRollHabilidade(null)
+                                        state.setProtagonistaPericiasEscolhidas(emptyList())
+                                        state.setProtagonistaPericiasPaixao(emptyList())
                                     }
                                 ) {
                                     Text("Limpar")
@@ -255,13 +289,14 @@ fun TroposSection(
                                         FilterChip(
                                             selected = selected,
                                             onClick = {
-                                                periciasEscolhidas = if (selected) {
+                                                val updated = if (selected) {
                                                     periciasEscolhidas - opcao
                                                 } else if (periciasEscolhidas.size < 2) {
                                                     periciasEscolhidas + opcao
                                                 } else {
                                                     periciasEscolhidas
                                                 }
+                                                state.setProtagonistaPericiasEscolhidas(updated)
                                             },
                                             label = { Text(opcao) },
                                             colors = FilterChipDefaults.filterChipColors(
@@ -312,23 +347,6 @@ fun TroposSection(
                                         style = MaterialTheme.typography.bodySmall,
                                         modifier = Modifier.padding(start = 40.dp, top = 4.dp)
                                     )
-                                    FlowRow(
-                                        modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp),
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                                    ) {
-                                        vantagemOpcoes.forEach { opcao ->
-                                            val selected = vantagemEscolhida == opcao
-                                            FilterChip(
-                                                selected = selected,
-                                                onClick = { vantagemEscolhida = opcao },
-                                                label = { Text(opcao) },
-                                                colors = FilterChipDefaults.filterChipColors(
-                                                    selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer
-                                                )
-                                            )
-                                        }
-                                    }
                                 }
                                 else -> Unit
                             }
@@ -356,6 +374,35 @@ fun TroposSection(
                                     style = MaterialTheme.typography.bodySmall,
                                     modifier = Modifier.padding(start = 40.dp, top = 2.dp, end = 8.dp)
                                 )
+                            }
+
+                            if (qualidadeRoll == 7) {
+                                FlowRow(
+                                    modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    periciaOpcoes.forEach { opcao ->
+                                        val selected = periciasPaixao.contains(opcao)
+                                        FilterChip(
+                                            selected = selected,
+                                            onClick = {
+                                                val updated = if (selected) {
+                                                    periciasPaixao - opcao
+                                                } else if (periciasPaixao.size < 2) {
+                                                    periciasPaixao + opcao
+                                                } else {
+                                                    periciasPaixao
+                                                }
+                                                state.setProtagonistaPericiasPaixao(updated)
+                                            },
+                                            label = { Text(opcao) },
+                                            colors = FilterChipDefaults.filterChipColors(
+                                                selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer
+                                            )
+                                        )
+                                    }
+                                }
                             }
 
                             val habilidadeTexto = mapOf(

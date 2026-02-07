@@ -72,6 +72,13 @@ class CriadorState {
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
     var grandesResponsabilidades by mutableStateOf(false)
     var signoAdgSelecionado by mutableStateOf<String?>(null)
+    var protagonistaRollTecnicas by mutableStateOf<Int?>(null)
+    var protagonistaRollPericia by mutableStateOf<Int?>(null)
+    var protagonistaRollVantagem by mutableStateOf<Int?>(null)
+    var protagonistaRollQualidade by mutableStateOf<Int?>(null)
+    var protagonistaRollHabilidade by mutableStateOf<Int?>(null)
+    var protagonistaPericiasEscolhidas by mutableStateOf<List<String>>(emptyList())
+    var protagonistaPericiasPaixao by mutableStateOf<List<String>>(emptyList())
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
@@ -1414,6 +1421,14 @@ class CriadorState {
             }
         }
 
+        // Arte da Guerra - Protagonista
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_protagonista") {
+            val pericias = protagonistaPericiasDoTropo()
+            if (perKey in pericias) {
+                modifiedBase = maxOf(modifiedBase, 6)
+            }
+        }
+
         // Arte da Guerra - Tropos
         if (compendioArteDaGuerraAtivo) {
             tropoSelecionado?.let { tropo ->
@@ -2185,7 +2200,12 @@ class CriadorState {
     }
 
     val tecnicasIniciaisFromTropo by derivedStateOf {
-        tropoSelecionado?.tecnicasIniciais ?: 0
+        val base = tropoSelecionado?.tecnicasIniciais ?: 0
+        if (tropoSelecionado?.id == "tropo_protagonista") {
+            base + tecnicasIniciaisProtagonista()
+        } else {
+            base
+        }
     }
 
     val reservaChi by derivedStateOf {
@@ -2241,6 +2261,7 @@ class CriadorState {
 
     var tropoSelecionado by mutableStateOf<Tropo?>(null)
     val vantagensAutomaticasDoTropo = mutableStateListOf<String>()
+    val vantagensAutomaticasDoProtagonista = mutableStateListOf<String>()
 
     val vantagensAutomaticas = mutableStateListOf<String>()
     val vantagensRaciais = mutableStateListOf<String>()
@@ -2831,6 +2852,18 @@ class CriadorState {
             }
         }
 
+        // Arte da Guerra - Protagonista (Qualidades de Herói)
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_protagonista") {
+            val attrKey = a.keyify()
+            when (protagonistaRollQualidade) {
+                2 -> if (attrKey == "ASTUCIA") modifiedBase = maxOf(modifiedBase, 6)
+                4 -> if (attrKey == "FORCA") modifiedBase = maxOf(modifiedBase, 6)
+                6 -> if (attrKey == "ESPIRITO") modifiedBase = maxOf(modifiedBase, 6)
+                8 -> if (attrKey == "AGILIDADE") modifiedBase = maxOf(modifiedBase, 6)
+                10 -> if (attrKey == "VIGOR") modifiedBase = maxOf(modifiedBase, 6)
+            }
+        }
+
         return modifiedBase
     }
 
@@ -3037,6 +3070,13 @@ class CriadorState {
 
         // Troca efetiva da ancestralidade
         ancestralidade = anc
+        if (compendioArteDaGuerraAtivo && anc.keyify().contains("HUMANO")) {
+            if (signoAdgSelecionado == null) {
+                selecionarSigno("Boi")
+            }
+        } else if (signoAdgSelecionado != null) {
+            selecionarSigno(null)
+        }
         celestialAAMilagresDesabilitado = (anc == "CELESTIAIS" && modoSupers)
         if (anc != "MEIO-ELFOS") {
             meioElfoAgil = false
@@ -3514,6 +3554,120 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
+    fun setProtagonistaRollTecnicas(value: Int?) {
+        if (protagonistaRollTecnicas == value) return
+        protagonistaRollTecnicas = value?.coerceIn(1, 4)
+        syncMestreDoChiSlots()
+    }
+
+    fun setProtagonistaRollPericia(value: Int?) {
+        if (protagonistaRollPericia == value) return
+        protagonistaRollPericia = value?.coerceIn(1, 6)
+        if (protagonistaRollPericia != 1) {
+            protagonistaPericiasEscolhidas = emptyList()
+        }
+        rebuildAllPericiaStacks()
+    }
+
+    fun setProtagonistaRollVantagem(value: Int?) {
+        if (protagonistaRollVantagem == value) return
+        protagonistaRollVantagem = value?.coerceIn(1, 8)
+    }
+
+    fun setProtagonistaRollQualidade(value: Int?) {
+        if (protagonistaRollQualidade == value) return
+        protagonistaRollQualidade = value?.coerceIn(1, 10)
+        if (protagonistaRollQualidade != 7) {
+            protagonistaPericiasPaixao = emptyList()
+        }
+        atualizarProtagonistaAutoVantagens()
+        recalcularPontosAtributo()
+    }
+
+    fun setProtagonistaRollHabilidade(value: Int?) {
+        if (protagonistaRollHabilidade == value) return
+        protagonistaRollHabilidade = value?.coerceIn(1, 12)
+    }
+
+    fun setProtagonistaPericiasEscolhidas(value: List<String>) {
+        protagonistaPericiasEscolhidas = value
+        rebuildAllPericiaStacks()
+    }
+
+    fun setProtagonistaPericiasPaixao(value: List<String>) {
+        protagonistaPericiasPaixao = value
+        rebuildAllPericiaStacks()
+    }
+
+    private fun tecnicasIniciaisProtagonista(): Int {
+        return when (protagonistaRollTecnicas) {
+            1 -> 1
+            2 -> 2
+            3 -> 2
+            4 -> 3
+            else -> 0
+        }
+    }
+
+    private fun protagonistaPericiasDoTropo(): Set<String> {
+        val roll = protagonistaRollPericia ?: return emptySet()
+        val paixaoAtiva = protagonistaRollQualidade == 7
+        val paixaoList = if (paixaoAtiva) protagonistaPericiasPaixao else emptyList()
+        return if (roll == 1) {
+            (protagonistaPericiasEscolhidas + paixaoList)
+                .map { it.keyify() }
+                .toSet()
+        } else {
+            val pericia = when (roll) {
+                2 -> "Atletismo"
+                3 -> "Conhecimento Geral"
+                4 -> "Perceber"
+                5 -> "Persuadir"
+                6 -> "Furtividade"
+                else -> null
+            }
+            val baseList = buildList {
+                if (pericia != null) add(pericia)
+                addAll(paixaoList)
+            }
+            baseList.map { it.keyify() }.toSet()
+        }
+    }
+
+    private fun atualizarProtagonistaAutoVantagens() {
+        if (vantagensAutomaticasDoProtagonista.isNotEmpty()) {
+            vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoProtagonista }
+            vantagensAutomaticasDoProtagonista.clear()
+        }
+
+        val qualidade = protagonistaRollQualidade ?: return
+        val edgesToAdd = when (qualidade) {
+            1 -> listOf("corajoso", "elevar_a_moral")
+            3 -> listOf("confiavel", "comando")
+            else -> emptyList()
+        }
+
+        edgesToAdd.forEach { edgeId ->
+            val vant = listaVantagens.firstOrNull { it.id == edgeId }
+            if (vant != null && vantagensSelecionadas.none { it.id == vant.id }) {
+                vantagensSelecionadas.add(vant)
+                vantagensAutomaticasDoProtagonista.add(vant.id)
+            }
+        }
+    }
+
+    private fun syncMestreDoChiSlots() {
+        rebuildAllPericiaStacks()
+        poderSlotsPorArcano["MESTRE DO CHI"]?.let { slots ->
+            val required = getSlotsCountForArcano("MESTRE DO CHI")
+            while (slots.size < required) slots.add(null)
+            while (slots.size > required && slots.lastOrNull() == null) {
+                slots.removeLast()
+            }
+            syncPoderesSelecionadosFromSlots()
+        }
+    }
+
     fun selecionarDescendenteElemental(novoElemento: String?) {
         if (descendenteElementalSelecionado == novoElemento) return
 
@@ -3556,6 +3710,10 @@ class CriadorState {
             vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoTropo }
             vantagensAutomaticasDoTropo.clear()
         }
+        if (vantagensAutomaticasDoProtagonista.isNotEmpty()) {
+            vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoProtagonista }
+            vantagensAutomaticasDoProtagonista.clear()
+        }
 
         tropoSelecionado = novoTropo
 
@@ -3585,18 +3743,28 @@ class CriadorState {
                     equipamentosComprados.add(kitItem)
                 }
             }
-        }
-
-        rebuildAllPericiaStacks()
-
-        poderSlotsPorArcano["MESTRE DO CHI"]?.let { slots ->
-            val required = getSlotsCountForArcano("MESTRE DO CHI")
-            while (slots.size < required) slots.add(null)
-            while (slots.size > required && slots.lastOrNull() == null) {
-                slots.removeLast()
+            if (novoTropo.id != "tropo_protagonista") {
+                protagonistaRollTecnicas = null
+                protagonistaRollPericia = null
+                protagonistaRollVantagem = null
+                protagonistaRollQualidade = null
+                protagonistaRollHabilidade = null
+                protagonistaPericiasEscolhidas = emptyList()
+                protagonistaPericiasPaixao = emptyList()
+            } else {
+                atualizarProtagonistaAutoVantagens()
             }
-            syncPoderesSelecionadosFromSlots()
+        } else {
+            protagonistaRollTecnicas = null
+            protagonistaRollPericia = null
+            protagonistaRollVantagem = null
+            protagonistaRollQualidade = null
+            protagonistaRollHabilidade = null
+            protagonistaPericiasEscolhidas = emptyList()
+            protagonistaPericiasPaixao = emptyList()
         }
+
+        syncMestreDoChiSlots()
     }
 
     private fun trimAttributeStacks(feedbackMessages: MutableList<String> = mutableListOf()) {
@@ -3963,6 +4131,13 @@ class CriadorState {
                 portraitScaleType = portraitScaleType,
                 portraitAlignment = portraitAlignment,
                 signoAdgSelecionado = signoAdgSelecionado,
+                protagonistaRollTecnicas = protagonistaRollTecnicas,
+                protagonistaRollPericia = protagonistaRollPericia,
+                protagonistaRollVantagem = protagonistaRollVantagem,
+                protagonistaRollQualidade = protagonistaRollQualidade,
+                protagonistaRollHabilidade = protagonistaRollHabilidade,
+                protagonistaPericiasEscolhidas = protagonistaPericiasEscolhidas,
+                protagonistaPericiasPaixao = protagonistaPericiasPaixao,
                 gnomoPericiaEscolhida = gnomoPericiaEscolhida,
                 dominioClerigoSelecionado = dominioClerigoSelecionado,
                 dominioClerigoPathfinderSelecionado = dominioClerigoPathfinderSelecionado
@@ -4067,6 +4242,13 @@ class CriadorState {
         bonusPoderExtra = flags.bonusPoderExtra
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
+        protagonistaRollTecnicas = snapshot.selecoes.protagonistaRollTecnicas
+        protagonistaRollPericia = snapshot.selecoes.protagonistaRollPericia
+        protagonistaRollVantagem = snapshot.selecoes.protagonistaRollVantagem
+        protagonistaRollQualidade = snapshot.selecoes.protagonistaRollQualidade
+        protagonistaRollHabilidade = snapshot.selecoes.protagonistaRollHabilidade
+        protagonistaPericiasEscolhidas = snapshot.selecoes.protagonistaPericiasEscolhidas
+        protagonistaPericiasPaixao = snapshot.selecoes.protagonistaPericiasPaixao
         gnomoPericiaEscolhida = snapshot.selecoes.gnomoPericiaEscolhida
         dominioClerigoSelecionado = snapshot.selecoes.dominioClerigoSelecionado
         dominioClerigoPathfinderSelecionado = snapshot.selecoes.dominioClerigoPathfinderSelecionado
@@ -4200,6 +4382,10 @@ class CriadorState {
         vantagensAutomaticasDoTropo.apply {
             clear()
             addAll(snapshot.selecoes.vantagensTropoAutomaticas)
+        }
+        vantagensAutomaticasDoProtagonista.clear()
+        if (tropoSelecionado?.id == "tropo_protagonista") {
+            atualizarProtagonistaAutoVantagens()
         }
 
         poderSlotsPorArcano.clear()
