@@ -1,8 +1,231 @@
 [
   {
-    "id": "salto_duplo",
-    "nome": "Salto Duplo",
-    "categoria": "CHI",
+    "id": "ambidestro",
+    "nome": "AMBIDESTRO",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade Mão Inábil (veja pág. 115) é ignorada. Se estiverem empunhando uma arma em cada mão, personagens com esta Vantagem podem acumular os bônus de Aparar de ambas as armas (se houverem bônus)."
+  },
+  {
+    "id": "aristocrata",
+    "nome": "ARISTOCRATA",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Este indivíduo nasceu com privilégios ou os adquiriu ao longo da vida. Pode ter dinheiro ou não (Vantagem Rico ou Podre de Rico), mas ainda anda no círculo social da elite dentro do cenário. Aristocratas adicionam +2 em Persuadir quando em uma Rede de Contatos (veja pág. 160) com a elite local, industriais, nobres ou demais aristocratas.\n\nTambém adicionam +2 em rolagens de Conhecimento Geral feitas para conhecer a etiqueta da elite, reconhecer ramos familiares e heráldica ou rumores envolvendo outros de sua posição."
+  },
+  {
+    "id": "atraente",
+    "nome": "ATRAENTE",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Vigor": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Não é segredo que as pessoas ficam mais dispostas a ajudar quem consideram fisicamente atraentes.\n\nAdicione +1 em rolagens de Performance e Persuadir se o alvo estiver atraído pelo seu tipo em geral (gênero, sexo, espécie etc.)."
+  },
+  {
+    "id": "muito_atraente",
+    "nome": "MUITO ATRAENTE",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atraente"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Sua personagem é linda de morrer. Seu bônus em Performance e Persuadir aumenta para +2."
+  },
+  {
+    "id": "brutamontes",
+    "nome": "BRUTAMONTES",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Força": 6,
+        "Vigor": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Brutamontes se focam em força e capacidade física no lugar de coordenação e flexibilidade. Tratam Atletismo como se ela estivesse ligada a Força no lugar de Agilidade para propósitos de Progresso. Também podem resistir a Desafios de Atletismo com força, se desejarem. Por fim, Brutamontes aumentam em +1 a Curta Distância de qualquer item arremessado. Dobre isso para a Média Distância ajustada e dobre novamente para a Longa Distância.\n\nSe a Distância de um item arremessado for 3/6/12, por exemplo, a Distância para o Brutamontes é 4/8/16."
+  },
+  {
+    "id": "carismatico",
+    "nome": "CARISMÁTICO",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Confere simpatia por alguma razão. Pode ser confiável, agir com bondade ou apenas transparecer confiança e boa vontade. Você tem uma rerrolagem gratuita em rolagens de Persuadir."
+  },
+  {
+    "id": "corajoso",
+    "nome": "CORAJOSO",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Quem possui esta Vantagem aprendeu a dominar seus medos ou lidou com tantos horrores que acabou se habituando. Estas figuras valentes e exploradoras adicionam +2 em Testes de Medo e subtraem 2 dos resultados da Tabela de Medo (veja pág. 140)."
+  },
+  {
+    "id": "cura_rapida",
+    "nome": "CURA RÁPIDA",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Vigor": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Personagens com esta bênção adicionam +2 ao Vigor em rolagens de cura natural e testam a cada três dias em vez de cinco (veja Cura, pág. 112)."
+  },
+  {
+    "id": "famoso",
+    "nome": "FAMOSO",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Personagens com essa vantagem são uma espécie de subcelebridade. Podem ter reconhecimento como membro popular da classe barda em um feudo em particular, uma estrela de rock menor ou ter atuado em um filme B. Ganham o dobro do cachê normal quando estiverem realizando uma performance (veja Performance, pág. 38). Também podem usar sua fama para adicionar +1 em rolagens de Persuadir se o alvo for amigável e souber quem são (rolagem de Conhecimento Geral modificada pela probabilidade do indivíduo conhecer a celebridade). A parte ruim de ser Famoso é que a personagem é geralmente reconhecida: pessoas querem algo dela com certa frequência, pode sofrer perseguição por parte de fãs ou admiradores, ou ainda não conseguir se livrar de obrigações, apresentações ou outras atividades sem se complicar."
+  },
+  {
+    "id": "muito_famoso",
+    "nome": "MUITO FAMOSO",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "famoso"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Personagens com esta Vantagem realmente têm fama. São bastante conhecidas em um círculo grande — país, grande indústria ou mídia popular (cinema, televisão, música etc.). Fazem 5× o cachê normal quando se apresentam e adicionam +2 em Persuadir ao influenciar indivíduos amigáveis que as conhecem. O preço também é mais alto: mais exigências de tempo, obrigações, rivais, escândalos e incapacidade de se misturar à multidão sem serem reconhecidas."
+  },
+  {
+    "id": "furioso",
+    "nome": "FURIOSO",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Furiosos tornam-se selvagens e quase incontroláveis quando ficam com “sangue nos olhos”, mas continuam verdadeiras máquinas de matar! Imediatamente após sofrer um Ferimento ou resultado Abalado (só por dano físico), alguém com essa Vantagem deve fazer um teste de Astúcia ou ficar Furioso. Você pode falhar voluntariamente, se desejar.\n\nFicar Furioso tem os seguintes efeitos:\n- FÚRIA: Força aumenta em um tipo de dado e todo ataque corpo a corpo deve ser Ataque Selvagem (veja pág. 115). Não é permitido usar perícias que requeiram inteligência ou concentração (critério do Mestre).\n- ENRAIVECIDO: Adrenalina e raiva fortalecem os músculos, adicionando +2 em Resistência. Ignore um nível de penalidades por Ferimentos (acumula com outras habilidades que reduzam essas penalidades).\n- IMPRUDÊNCIA: Toda vez que rolar Falha Crítica em Lutar, acerta um alvo aleatório no seu raio de ataque (amigo ou inimigo). Se não houver, o golpe erra e pode quebrar objetos próximos.\n\nDepois de cinco rodadas consecutivas de fúria, ocorre um nível de Fadiga. Com dez rodadas, outro nível de Fadiga e a fúria termina. Também é possível encerrar a fúria a qualquer momento fazendo teste de Astúcia –2 (ação livre), possivelmente evitando a Fadiga se obtiver sucesso. Se entrar em fúria de novo, comece uma nova contagem, mesmo na mesma batalha."
+  },
+  {
+    "id": "impulso",
+    "nome": "IMPULSO",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Impulso reflete energia ou espírito. Quando você gasta um Bene para rerrolar uma Característica, adicione +2 ao total da rerrolagem. Não se aplica a rolagens de dano nem a Absorção, a menos que use outro Bene para rerrolar Vigor."
+  },
+  {
+    "id": "ligeiro",
+    "nome": "LIGEIRO",
+    "categoria": "ANTECEDENTE",
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
       "estagio": "Novato",
@@ -11,197 +234,3403 @@
       },
       "pericias": {},
       "vantagens_previas": [],
-      "observacoes": "",
-      "choiceOptions": []
+      "observacoes": ""
     },
-    "limite_compra": "",
+    "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Gasta 1 Chi para saltar horizontalmente igual à Movimentação e verticalmente metade."
+    "descricao": "Sua Movimentação é aumentada em +2 e seu dado de corrida avança um passo (por ex., d6 → d8)."
   },
   {
-    "id": "explosao_exterior",
-    "nome": "Explosão Exterior",
-    "categoria": "CHI",
+    "id": "linguista",
+    "nome": "LINGUISTA",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Esta pessoa viaja o mundo e tem um ouvido apurado. Começa o jogo conhecendo um número de Idiomas igual à metade do seu dado de Astúcia, cada um em d6 (veja perícia Idiomas, pág. 35)."
+  },
+  {
+    "id": "musculoso",
+    "nome": "MUSCULOSO",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Força": 6,
+        "Vigor": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Esta pessoa é muito forte ou está em ótima forma. Seu Tamanho aumenta em +1 (e a Resistência em 1), e a Força conta como dado maior para Sobrecarga (pág. 77) e Força Mínima para usar equipamentos sem penalidade (pág. 76). Não pode elevar Tamanho acima de +3."
+  },
+  {
+    "id": "prontidao",
+    "nome": "PRONTIDÃO",
+    "categoria": "ANTECEDENTE",
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [],
-      "observacoes": "",
-      "choiceOptions": []
+      "observacoes": ""
     },
-    "limite_compra": "",
+    "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Para cada ponto de Chi gasto, adiciona +1d6 de dano a um ataque (sem limite, mas gasta Chi)."
+    "descricao": "Nada escapa a personagens com Prontidão. Adicionam +2 em Perceber para ouvir, ver ou sentir o mundo ao redor."
   },
   {
-    "id": "estudante_artes_marciais",
-    "nome": "Estudante de Artes Marciais",
+    "id": "rapido",
+    "nome": "RÁPIDO",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Reflexos ultrarrápidos: sempre que sacar Carta de Ação ≤ 5, pode descartá-la e sacar novamente até obter > 5. Personagens com Focado e Rápido sacam primeiro as cartas adicionais e escolhem qual usar; se for ≤ 5, usam a Vantagem para sacar até obter ≥ 6."
+  },
+  {
+    "id": "rico",
+    "nome": "RICO",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Nascido ou tornado rico. Inicia com 3× recursos normais; se cenário usar salário, equivale a US$ 150 000/ano."
+  },
+  {
+    "id": "podre_de_rico",
+    "nome": "PODRE DE RICO",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "rico"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "5× recursos iniciais e renda anual líquida ≈ US$ 500 000."
+  },
+  {
+    "id": "sorte",
+    "nome": "SORTE",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Quem tem Sorte parece ser abençoado pelo destino, deuses ou qualquer força externa na qual acredite (ou que acredite nesta figura!).\nReceba um Bene adicional no início de cada sessão de jogo, de modo a ser frequentemente mais bem-sucedido que a maioria em tarefas importantes e para sobreviver a perigos incríveis."
+  },
+  {
+    "id": "sorte_grande",
+    "nome": "SORTE GRANDE",
+    "categoria": "ANTECEDENTE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "sorte"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Concede dois Benes adicionais no início de cada sessão em vez de um."
+  },
+  {
+    "id": "arma_predileta",
+    "nome": "ARMA PREDILETA",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Lutar": 8,
+        "Atirar": 8,
+        "Atletismo": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Alguém com essa Vantagem conhece uma arma única (Excalibur, Old Betsy, Ferroada) como a palma da sua mão. Quando a usa, pode adicionar +1 em suas rolagens de Atletismo (arremessar), Lutar ou Atirar e +1 no Aparar quando ela está preparada (mesmo que seja arma à distância). É permitido escolher várias vezes, aplicando a uma arma diferente cada vez. Se perdida, pode substituí-la, mas benefícios entram em vigor só após alguns dias."
+  },
+  {
+    "id": "arma_predileta_aprimorada",
+    "nome": "ARMA PREDILETA APRIMORADA",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "arma_predileta"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Como acima, mas bônus ao usar a arma aumentam para +2."
+  },
+  {
+    "id": "artista_marcial",
+    "nome": "ARTISTA MARCIAL",
     "categoria": "COMBATE",
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
       "pericias": {
-        "Jutsu": 6
+        "Lutar": 6
       },
       "vantagens_previas": [],
-      "observacoes": "",
-      "choiceOptions": []
+      "observacoes": ""
     },
-    "limite_compra": "",
+    "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Reconhecido como membro de uma escola. Escolhe um estilo (ex: Garra do Tigre) e ganha bônus contra estilo rival."
+    "descricao": "Alguém com essa Vantagem tem treinamento básico em artes marciais. Sempre está com armas, causa dano com punhos e pés (Armas Naturais, pág. 114). Soma +1 quando golpeia com eles e causa Força + d4 de dano. Se já tiver dano por Garras ou Brigão, aumente o dado em um tipo. Não soma com outras Armas Naturais."
   },
   {
-    "id": "mestre_artes_marciais",
-    "nome": "Mestre em Artes Marciais",
+    "id": "guerreiro_marcial",
+    "nome": "GUERREIRO MARCIAL",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "artista_marcial"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aumente bônus de Lutar para +2 e dado de dano em um tipo adicional."
+  },
+  {
+    "id": "atacar_primeiro",
+    "nome": "ATACAR PRIMEIRO",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Uma vez por rodada, se não estiver Abalado ou Atordoado, ganha um ataque livre de Lutar contra adversário que entrar em seu Alcance (veja Ataques Livres, pág. 116)."
+  },
+  {
+    "id": "atacar_primeiro_aprimorado",
+    "nome": "ATACAR PRIMEIRO APRIMORADO",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Heroico",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atacar_primeiro"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Como acima, mas permite atacar até três oponentes por turno."
+  },
+  {
+    "id": "atirador",
+    "nome": "ATIRADOR",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Atletismo": 8,
+        "Atirar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Talento nato com armas de combate à distância. Se não se mover e não disparar acima de Cadência de Tiro 1 na primeira ação, pode adicionar +1 em uma rolagem de Atletismo ou Atirar, ou ignorar até 2 pontos em penalidades por localização, cobertura, distância, escala ou velocidade. Não se acumula com Mirar e não vale para ataques extras."
+  },
+  {
+    "id": "atirar_com_duas_armas",
+    "nome": "ATIRAR COM DUAS ARMAS",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Funciona como Lutar com Duas Armas, mas para armas à distância. Permite disparo de cada mão em duas ações sem penalidade por Ação Múltipla. Se tiver Lutar com Duas Armas, segunda ação pode ser corpo a corpo."
+  },
+  {
+    "id": "bloquear",
+    "nome": "BLOQUEAR",
     "categoria": "COMBATE",
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
       "pericias": {
-        "Jutsu": 10
+        "Lutar": 8
       },
-      "vantagens_previas": [
-        "estudante_artes_marciais"
-      ],
-      "observacoes": "",
-      "choiceOptions": []
+      "vantagens_previas": [],
+      "observacoes": ""
     },
-    "limite_compra": "",
+    "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Desbloqueia a habilidade de Mestre do estilo escolhido (ex: Garra do Tigre Mestre ganha empurrão livre)."
+    "descricao": "Aprendeu a se defender em combates corpo a corpo. Aparar +1 e bônus de Agrupar de oponentes contra ela é reduzido em 1."
   },
   {
-    "id": "matador_demonios",
-    "nome": "Matador de Demônios",
-    "categoria": "PROFISSIONAL",
+    "id": "bloquear_aprimorado",
+    "nome": "BLOQUEAR APRIMORADO",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "bloquear"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aparar +2 e redução de Agrupar contra ela em 2."
+  },
+  {
+    "id": "brigao",
+    "nome": "BRIGÃO",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Força": 8,
+        "Vigor": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Punhos como martelos ou garras cortantes. Resistência +1 e rola Força + d4 de dano com punhos ou garras. Se já tiver dano por Garras, Artista Marcial etc., aumente o dado em um tipo."
+  },
+  {
+    "id": "pugilista",
+    "nome": "PUGILISTA",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "brigao"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Resistência +1 adicional e dano por punhos/garras em mais um tipo de dado."
+  },
+  {
+    "id": "calculista",
+    "nome": "CALCULISTA",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Estuda ações do oponente e ganha vantagem. Quando Carta de Ação ≤ 5, ignore até 2 pontos de penalidades em uma ação daquele turno."
+  },
+  {
+    "id": "contra_ataque",
+    "nome": "CONTRA-ATAQUE",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Lutar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Uma vez por rodada (se não Abalado ou Atordoado), ganha um ataque livre contra quem falhar em ataque de Lutar direcionado a si."
+  },
+  {
+    "id": "contra_ataque_aprimorado",
+    "nome": "CONTRA-ATAQUE APRIMORADO",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "contra_ataque"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Como acima, mas contra até três adversários que falharem em ataques contrários por rodada."
+  },
+  {
+    "id": "corredor",
+    "nome": "CORREDOR",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {
+        "Atletismo": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pratica parkour, movendo-se em terreno acidentado com Movimentação total a pé. +2 em Atletismo para escalar e em Perseguições a pé (veja pág. 148)."
+  },
+  {
+    "id": "disparo_duplo",
+    "nome": "DISPARO DUPLO",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Atirar": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Dispara dois tiros rápidos sem prejudicar mira. Só com armas de Cadência de Tiro 1 que disparam dois tiros sem recarregar. +1 em ataque e dano, gasta bala extra. Não combina com Disparo Rápido. Com rajada de três balas (pág. 77), +2 em Atirar e dano, gasta seis balas."
+  },
+  {
+    "id": "disparo_rapido",
+    "nome": "DISPARO RÁPIDO",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Atirar": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aumenta Cadência de Tiro da arma em +1 para um ataque no turno, se tiver munição."
+  },
+  {
+    "id": "disparo_rapido_aprimorado",
+    "nome": "DISPARO RÁPIDO APRIMORADO",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "disparo_rapido"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aumenta Cadência de Tiro em +1 até duas vezes no mesmo turno via Ação Múltipla."
+  },
+  {
+    "id": "duro_de_matar",
+    "nome": "DURO DE MATAR",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ignore penalidades por Ferimentos em rolagens de Vigor para evitar Sangrar (veja pág. 111)."
+  },
+  {
+    "id": "muito_duro_de_matar",
+    "nome": "MUITO DURO DE MATAR",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "duro_de_matar"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Se “morrer”, role um dado: ímpar = morte; par = Estado Incapacitado mas sobrevive."
+  },
+  {
+    "id": "esquiva",
+    "nome": "ESQUIVA",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Subtrai 2 de todos os ataques à distância feitos contra a personagem, não cumulativo com cobertura."
+  },
+  {
+    "id": "esquiva_aprimorada",
+    "nome": "ESQUIVA APRIMORADA",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "esquiva"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Sub +2 quando Evadindo de ataques em área (veja pág. 122)."
+  },
+  {
+    "id": "finta",
+    "nome": "FINTA",
+    "categoria": "COMBATE",
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
       "pericias": {
-        "Ocultismo": 8
+        "Lutar": 8
       },
       "vantagens_previas": [],
-      "observacoes": "",
-      "choiceOptions": []
+      "observacoes": ""
     },
-    "limite_compra": "",
+    "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Sobrevivência para rastrear e +1 em ataque/dano contra Demônios, Oni ou Shamni (escolha um)."
+    "descricao": "Em Desafio de Lutar, faça o adversário resistir com Astúcia em vez de Agilidade."
   },
   {
-    "id": "foco_chi_onigem",
-    "nome": "Foco de Chi (Chifres)",
-    "categoria": "CHI",
+    "id": "focado",
+    "nome": "FOCADO",
+    "categoria": "COMBATE",
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
-      "estagio": "",
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Astúcia": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Saca uma Carta de Ação adicional em combate e escolhe qual usar."
+  },
+  {
+    "id": "extremamente_focado",
+    "nome": "EXTREMAMENTE FOCADO",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "focado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Saca duas cartas adicionais e escolhe qual usar."
+  },
+  {
+    "id": "frenesi",
+    "nome": "FRENESI",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Lutar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Como ação limitada, role um segundo dado de Lutar em ataque corpo a corpo no turno."
+  },
+  {
+    "id": "frenesi_aprimorado",
+    "nome": "FRENESI APRIMORADO",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "frenesi"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Adiciona um terceiro dado de Lutar como ataque extra na ação de Frenesi."
+  },
+  {
+    "id": "golpe_poderoso",
+    "nome": "GOLPE PODEROSO",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Lutar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Se Carta de Ação for Curinga, dobre dano do primeiro ataque bem-sucedido com Lutar no turno."
+  },
+  {
+    "id": "impiedoso",
+    "nome": "IMPIEDOSO",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [],
-      "observacoes": "Requer ancestralidade Onigem.",
-      "choiceOptions": []
+      "observacoes": ""
     },
-    "limite_compra": "",
+    "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Usa os chifres para focar Chi. Ignora requisitos de Mãos Livres/Sem Fala, mas chifres brilham."
+    "descricao": "Ao gastar Bene para rerrolar dano, adicione +2 ao total."
   },
   {
-    "id": "estilo_bebado",
-    "nome": "ESTILO DO BÊBADO",
-    "categoria": "ESTILO_MARCIAL",
+    "id": "instinto_assassino",
+    "nome": "INSTINTO ASSASSINO",
+    "categoria": "COMBATE",
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
-      "estagio": "Novato",
-      "vantagens_previas": [
-        "artista_marcial"
-      ],
-      "pericias": {
-        "Lutar": 8
-      }
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
     },
-    "descricao": "O lutador balança e trança as pernas. Recebe +1 em Aparar. Se o oponente falhar em um ataque corpo a corpo, o lutador ganha +2 no próximo ataque contra ele."
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Tem uma rerrolagem gratuita em qualquer Desafio que inicie."
   },
   {
-    "id": "estilo_tigre",
-    "nome": "ESTILO DO TIGRE",
-    "categoria": "ESTILO_MARCIAL",
+    "id": "lutador_improvisador",
+    "nome": "LUTADOR IMPROVISADOR",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Astúcia": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Ignora penalidade −2 ao usar armas improvisadas (veja pág. 114)."
+  },
+  {
+    "id": "lutar_com_duas_armas",
+    "nome": "LUTAR COM DUAS ARMAS",
+    "categoria": "COMBATE",
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
       "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Segundo ataque não sofre penalidade por Ação Múltipla; Mão Inábil ainda vale a menos que seja Ambidestro."
+  },
+  {
+    "id": "maos_firmes",
+    "nome": "MÃOS FIRMES",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ignore penalidade por Plataforma Instável (veja pág. 124) e penalidade de corrida reduzida a −1."
+  },
+  {
+    "id": "matador_de_gigantes",
+    "nome": "MATADOR DE GIGANTES",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+1d6 de dano ao atacar criaturas de Tamanho ≥ 3 maiores (veja pág. 215–216)."
+  },
+  {
+    "id": "nervos_de_aco",
+    "nome": "NERVOS DE AÇO",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Vigor": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ignore 1 ponto de penalidades por Ferimento."
+  },
+  {
+    "id": "nervos_de_aco_aprimorados",
+    "nome": "NERVOS DE AÇO APRIMORADOS",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
       "vantagens_previas": [
-        "artista_marcial"
+        "nervos_de_aco"
       ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ignore 2 pontos de penalidades por Ferimento."
+  },
+  {
+    "id": "queixo_de_ferro",
+    "nome": "QUEIXO DE FERRO",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Vigor": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Absorção e Vigor para evitar Nocaute (veja pág. 122)."
+  },
+  {
+    "id": "reflexos_de_combate",
+    "nome": "REFLEXOS DE COMBATE",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 ao rolar para recuperar de Estado Abalado ou Atordoado."
+  },
+  {
+    "id": "retirada",
+    "nome": "RETIRADA",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Oponente adjacente não recebe ataque livre ao se retirar de corpo a corpo."
+  },
+  {
+    "id": "retirada_aprimorada",
+    "nome": "RETIRADA APRIMORADA",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "retirada"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Até três adversários não recebem ataques livres ao retirar-se corpo a corpo."
+  },
+  {
+    "id": "rock_and_roll",
+    "nome": "ROCK AND ROLL!",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Atirar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Se não se movimentar, ignore penalidade por Recuo em Cadência ≥ 2 (veja pág. 126)."
+  },
+  {
+    "id": "tiro_mortal",
+    "nome": "TIRO MORTAL",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Atletismo": 8,
+        "Atirar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Se Carta de Ação for Curinga, dobre dano da primeira rolagem bem-sucedida de Atletismo ou Atirar."
+  },
+  {
+    "id": "varredura",
+    "nome": "VARREDURA",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
       "atributos": {
         "Força": 8
-      }
+      },
+      "pericias": {
+        "Lutar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
     },
-    "descricao": "Ataques agressivos e poderosos. +2 de Dano em ataques desarmados se o lutador se moveu pelo menos 2 quadros em direção ao alvo antes de atacar."
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ataque com arma de duas mãos a todos os alvos no Alcance; se sem arma de duas mãos, penalidade −2."
   },
   {
-    "id": "estilo_garca",
-    "nome": "ESTILO DA GARÇA BRANCA",
-    "categoria": "ESTILO_MARCIAL",
+    "id": "varredura_aprimorada",
+    "nome": "VARREDURA APRIMORADA",
+    "categoria": "COMBATE",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "varredura"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Como acima, mas pode evitar atingir aliados."
+  },
+  {
+    "id": "comando",
+    "nome": "COMANDO",
+    "categoria": "LIDERANCA",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Astúcia": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Extras no Raio de Comando +1 em Espírito para recuperar de Abalado e Vigor para Atordoado."
+  },
+  {
+    "id": "presenca_de_comando",
+    "nome": "PRESENÇA DE COMANDO",
+    "categoria": "LIDERANCA",
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
       "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
       "vantagens_previas": [
-        "artista_marcial"
+        "comando"
       ],
-      "pericias": {
-        "Lutar": 8
-      }
+      "observacoes": ""
     },
-    "descricao": "Foco em defesa e contra-ataque. Ignora até 2 pontos de penalidade por Ações Múltiplas se uma delas for Defender ou usar a manobra Defesa Total."
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Raio de Comando passa a 10 quadros (20 m)."
   },
   {
-    "id": "estilo_mantis",
-    "nome": "ESTILO DO LOUVA-A-DEUS",
-    "categoria": "ESTILO_MARCIAL",
+    "id": "estrategista",
+    "nome": "ESTRATEGISTA",
+    "categoria": "LIDERANCA",
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
-      "estagio": "Novato",
-      "vantagens_previas": [
-        "artista_marcial"
-      ]
-    },
-    "descricao": "+2 em testes de Agarrar. Se mantiver um oponente agarrado, causa For+d6 de dano automático no início do turno dele."
-  },
-  {
-    "id": "treinamento_mon",
-    "nome": "TREINAMENTO DE MON",
-    "categoria": "PROFISSIONAL",
-    "origem": "ARTE_DA_GUERRA",
-    "requisitos": {
-      "estagio": "Novato",
+      "estagio": "Experiente",
       "atributos": {
-        "Espirito": 6
-      }
+        "Astúcia": 8
+      },
+      "pericias": {
+        "Conhecimento Batalha": 6
+      },
+      "vantagens_previas": [
+        "comando"
+      ],
+      "observacoes": ""
     },
-    "descricao": "Concede um companheiro animal/espírito (Extra) que evolui com o herói. Se o Mon morrer, o herói sofre Fadiga até conseguir outro."
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Saca uma Carta de Ação extra por rodada para dar a um Extra no Raio de Comando."
   },
   {
-    "id": "vinculo_mon",
-    "nome": "VÍNCULO MON",
+    "id": "mestre_estrategista",
+    "nome": "MESTRE ESTRATEGISTA",
+    "categoria": "LIDERANCA",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "estrategista"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Duas Cartas de Ação extras por rodada para distribuir."
+  },
+  {
+    "id": "fervor",
+    "nome": "FERVOR",
+    "categoria": "LIDERANCA",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [
+        "comando"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Extras no Raio de Comando +1 em dano de Lutar."
+  },
+  {
+    "id": "inspirar",
+    "nome": "INSPIRAR",
+    "categoria": "LIDERANCA",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "comando"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Uma vez por turno, role Conhecimento Batalha para dar Suporte em Característica escolhida a todos os Extras no Raio de Comando."
+  },
+  {
+    "id": "lider_nato",
+    "nome": "LÍDER NATO",
+    "categoria": "LIDERANCA",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [
+        "comando"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Vantagens de Liderança aplicáveis a Extras também valem para Cartas Selvagens."
+  },
+  {
+    "id": "mantenham_a_formacao",
+    "nome": "MANTENHAM A FORMAÇÃO!",
+    "categoria": "LIDERANCA",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Astúcia": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [
+        "comando"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Extras no Raio de Comando +1 em Resistência."
+  },
+  {
+    "id": "artifice",
+    "nome": "ARTÍFICE",
+    "categoria": "PODER",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pode criar Dispositivos Arcanos temporários e itens mágicos permanentes."
+  },
+  {
+    "id": "canalizacao",
+    "nome": "CANALIZAÇÃO",
+    "categoria": "PODER",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Reduz custo de PP em 1 ao obter ampliação em rolagem arcana."
+  },
+  {
+    "id": "concentracao",
+    "nome": "CONCENTRAÇÃO",
+    "categoria": "PODER",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Dobra Duração de poderes Não Instantâneos."
+  },
+  {
+    "id": "drenar_a_alma",
+    "nome": "DRENAR A ALMA",
+    "categoria": "PODER",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Arcana": 10
+      },
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Recebe 1 Fadiga para recuperar 5 PP; pode receber mais um nível para +5 PP."
+  },
+  {
+    "id": "engenhoqueiro",
+    "nome": "ENGENHOQUEIRO",
+    "categoria": "PODER",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Ciência Estranha": 6
+      },
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Improvisa Dispositivo Arcano com custo até 3 PP de componentes, ativado com Ciência Estranha –2."
+  },
+  {
+    "id": "esforco_extra",
+    "nome": "ESFORÇO EXTRA",
+    "categoria": "PODER",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Foco": 6
+      },
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+1 Foco por 1 PP ou +2 por 3 PP em rolagens (não em Falha Crítica)."
+  },
+  {
+    "id": "guerreiro_sagrado_profano",
+    "nome": "GUERREIRO SAGRADO/PROFANO",
+    "categoria": "PODER",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Fé": 6
+      },
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Fiéis enfrentam grandes perigos à serviço de suas divindades. Para sobreviverem a tais provações, as forças do bem (ou do mal) concedem milagres e a habilidade de transformar seu favor em proteção sobrenatural.\nAdicione +1 ao total do valor final de uma rolagem de Absorção para cada Ponto de Poder gasto, até um máximo de +4."
+  },
+  {
+    "id": "mago",
+    "nome": "MAGO",
+    "categoria": "PODER",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Conjurar": 6
+      },
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Gasta 1 PP extra ao conjurar para mudar Manifestação."
+  },
+  {
+    "id": "mentalista",
+    "nome": "MENTALISTA",
+    "categoria": "PODER",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Psiônicos": 6
+      },
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em testes resistidos de Psiônicos."
+  },
+  {
+    "id": "novos_poderes",
+    "nome": "NOVOS PODERES",
     "categoria": "PODER",
     "origem": "ARTE_DA_GUERRA",
     "requisitos": {
       "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
       "vantagens_previas": [
-        "treinamento_mon"
-      ]
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
     },
-    "descricao": "O herói pode gastar seus próprios Benes nas rolagens do Mon. Podem se comunicar telepaticamente em curto alcance."
-  }
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ganha 2 novos poderes de seu Estágio ou menor; pode repetir."
+  },
+  {
+    "id": "pontos_de_poder",
+    "nome": "PONTOS DE PODER",
+    "categoria": "PODER",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez_por_estagio",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+5 PP adicionais (1 vez por Estágio, 2 pontos no Lendário)."
+  },
+  {
+    "id": "recarga_rapida",
+    "nome": "RECARGA RÁPIDA",
+    "categoria": "PODER",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Recupera 10 PP por hora de descanso."
+  },
+  {
+    "id": "recarga_rapida_aprimorada",
+    "nome": "RECARGA RÁPIDA APRIMORADA",
+    "categoria": "PODER",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "recarga_rapida"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Recupera 20 PP por hora."
+  },
+  {
+    "id": "surto_de_poder",
+    "nome": "SURTO DE PODER",
+    "categoria": "PODER",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Arcana": 8
+      },
+      "vantagens_previas": [
+        "antecedente_arcano"
+      ],
+      "observacoes": "Carta Selvagem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Recupere 10 PP quando Carta de Ação for Curinga."
+  },
+  {
+    "id": "acrobata",
+    "nome": "ACROBATA",
+    "categoria": "PROFISSIONAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {
+        "Atletismo": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Rerrolagem gratuita em Atletismo envolvendo equilíbrio ou acrobacias."
+  },
+  {
+    "id": "combatente_acrobata",
+    "nome": "COMBATENTE ACROBATA",
+    "categoria": "PROFISSIONAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "acrobata"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ataques contra ele têm −1, desde que não sofra penalidades por Sobrecarga ou Força Mínima."
+  },
+  {
+    "id": "as",
+    "nome": "ÁS",
+    "categoria": "PROFISSIONAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Ignora −2 em Navegar, Dirigir ou Pilotar e pode gastar Benes para Absorver dano em veículos que controla."
+  },
+  {
+    "id": "assassino",
+    "nome": "ASSASSINO",
+    "categoria": "PROFISSIONAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {
+        "Lutar": 6,
+        "Furtividade": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em dano contra vulneráveis ou em Finalizações."
+  },
+  {
+    "id": "erudito",
+    "nome": "ERUDITO",
+    "categoria": "PROFISSIONAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Pesquisar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Escolha Conhecimento Acadêmico, Batalha, Ocultismo, Ciência ou outra “Conhecimento” baseada em Astúcia. +2 nessas perícias (repetível para diferentes perícias)."
+  },
+  {
+    "id": "investigador",
+    "nome": "INVESTIGADOR",
+    "categoria": "PROFISSIONAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 8
+      },
+      "pericias": {
+        "Pesquisar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Pesquisar e Perceber ao buscar documentos, pistas ou itens escondidos."
+  },
+  {
+    "id": "ladrao",
+    "nome": "LADRÃO",
+    "categoria": "PROFISSIONAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Agilidade": 8
+      },
+      "pericias": {
+        "Furtividade": 6,
+        "Ladinagem": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+1 em Atletismo para escalar em áreas urbanas, +1 em Furtividade urbana e +1 em Ladinagem."
+  },
+  {
+    "id": "mateiro",
+    "nome": "MATEIRO",
+    "categoria": "PROFISSIONAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {
+        "Sobrevivência": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Sobrevivência e Furtividade na natureza."
+  },
+  {
+    "id": "mcgyver",
+    "nome": "MCGYVER",
+    "categoria": "PROFISSIONAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 6
+      },
+      "pericias": {
+        "Perceber": 8,
+        "Consertar": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Durante um turno, rola Consertar para criar dispositivo improvisado; sucesso/ampliação definem qualidade."
+  },
+  {
+    "id": "pau_pra_toda_obra",
+    "nome": "PAU PRA TODA OBRA",
+    "categoria": "PROFISSIONAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 10
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Rola Astúcia após estudar para ganhar d4 (sucesso) ou d6 (ampliação) na perícia relevante. Pode tentar novamente após 1 h de estudo."
+  },
+  {
+    "id": "senhor_conserta_tudo",
+    "nome": "SENHOR CONSERTA TUDO",
+    "categoria": "PROFISSIONAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Consertar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Consertar; ampliação reduz tempo de conserto pela metade (um quarto do tempo normal)."
+  },
+  {
+    "id": "soldado",
+    "nome": "SOLDADO",
+    "categoria": "PROFISSIONAL",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Força": 6,
+        "Vigor": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Força conta como dado maior para Sobrecarga e Força Mínima (acumula com Musculoso). Rerrolagem gratuita em Vigor para evitar perigos ambientais."
+  },
+  {
+    "id": "ameacador",
+    "nome": "AMEAÇADOR",
+    "categoria": "SOCIAIS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "sanguinario",
+        "desagradavel",
+        "sem_escrupulos",
+        "feio"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Intimidar usando aparência ou atitude ruim."
+  },
+  {
+    "id": "agitador",
+    "nome": "AGITADOR",
+    "categoria": "SOCIAIS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Uma vez por turno, Desafio social com Intimidar ou Provocar contra todos os oponentes em Modelo Médio de Explosão."
+  },
+  {
+    "id": "cativar_o_ambiente",
+    "nome": "CATIVAR O AMBIENTE",
+    "categoria": "SOCIAIS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Uma vez por turno, ao dar Suporte com Persuadir ou Performance, role um dado adicional de perícia."
+  },
+  {
+    "id": "cativar_a_multidao",
+    "nome": "CATIVAR A MULTIDÃO",
+    "categoria": "SOCIAIS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "cativar_o_ambiente"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Como acima, mas dá terceiro dado de Suporte e pode beneficiar um aliado adicional."
+  },
+  {
+    "id": "conexoes",
+    "nome": "CONEXÕES",
+    "categoria": "SOCIAIS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez_por_sessao",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Até uma vez por sessão, peça favor a uma facção ou contato; benefício a critério do Mestre."
+  },
+  {
+    "id": "confiavel",
+    "nome": "CONFIÁVEL",
+    "categoria": "SOCIAIS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Rerrolagem gratuita em rolagens de Suporte."
+  },
+  {
+    "id": "elevar_o_moral",
+    "nome": "ELEVAR O MORAL",
+    "categoria": "SOCIAIS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Após Desafio bem-sucedido, remove Distraído ou Vulnerável de um aliado."
+  },
+  {
+    "id": "elo_comum",
+    "nome": "ELO COMUM",
+    "categoria": "SOCIAIS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pode dar Benes livremente a qualquer pessoa que possa se comunicar."
+  },
+  {
+    "id": "humilhar",
+    "nome": "HUMILHAR",
+    "categoria": "SOCIAIS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Provocar": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Rerrolagem gratuita em Desafios de Provocar."
+  },
+  {
+    "id": "manha",
+    "nome": "MANHA",
+    "categoria": "SOCIAIS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Intimidar e Persuadir em Redes de Contatos criminosos; +2 em Conhecimento Geral sobre atividades ilícitas."
+  },
+  {
+    "id": "obstinado",
+    "nome": "OBSTINADO",
+    "categoria": "SOCIAIS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 ao resistir a Desafios com Astúcia ou Espírito."
+  },
+  {
+    "id": "vontade_de_ferro",
+    "nome": "VONTADE DE FERRO",
+    "categoria": "SOCIAIS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "corajoso",
+        "obstinado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Adiciona bônus de Obstinado para resistir a poderes e negar seus efeitos (não cumulativo com Corajoso)."
+  },
+  {
+    "id": "provocador",
+    "nome": "PROVOCADOR",
+    "categoria": "SOCIAIS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Provocar": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Ao obter ampliação em Desafio de Provocar, penaliza demais alvos em −2 até cartão novo, outro provocar ou fim do encontro."
+  },
+  {
+    "id": "replica",
+    "nome": "RÉPLICA",
+    "categoria": "SOCIAIS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Provocar": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Ao ampliação defendendo Provocar, adversário fica Distraído."
+  },
+  {
+    "id": "campeao",
+    "nome": "CAMPEÃO",
+    "categoria": "ESTRANHAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {
+        "Lutar": 6
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 dano a criaturas sobrenaturais malignas (ou benignas) em qualquer ataque ou poder."
+  },
+  {
+    "id": "chi",
+    "nome": "CHI",
+    "categoria": "ESTRANHAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "guerreiro_marcial"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "No início de cada encontro, recebe 1 Ponto de Chi para rerrolar ataque falho, fazer inimigo descartar e rerrolar, ou adicionar d6 de dano a ataque de Lutar com Armas Naturais."
+  },
+  {
+    "id": "coragem_liquida",
+    "nome": "CORAGEM LÍQUIDA",
+    "categoria": "ESTRANHAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Vigor": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Após beber destilado, +1 tipo de dado em Vigor (e Resistência) e ignore 1 penalidade por Ferimento. Astúcia, Agilidade e perícias sofrem −1. Dura 1 hora, depois 1 Fadiga por 4 h."
+  },
+  {
+    "id": "curandeiro",
+    "nome": "CURANDEIRO",
+    "categoria": "ESTRANHAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em todas as rolagens de Curar, natural ou mágica."
+  },
+  {
+    "id": "elo_animal",
+    "nome": "ELO ANIMAL",
+    "categoria": "ESTRANHAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pode gastar seus Benes em quaisquer animais sob controle (montarias, pets, familiares)."
+  },
+  {
+    "id": "nocao_do_perigo",
+    "nome": "NOÇÃO DO PERIGO",
+    "categoria": "ESTRANHAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "+2 em Perceber em testes de Surpresa (pág. 127); ampliação permite agir em Aguardar. Em outras situações, rolagem de Perceber com −2 (ou +2 se permitido) para detectar perigo; impede Finalização."
+  },
+  {
+    "id": "senhor_das_feras",
+    "nome": "SENHOR DAS FERAS",
+    "categoria": "ESTRANHAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Animais não atacam a menos que iniciem; atrai um companheiro animal Extra Tamanho 0 (substituível em 1d4 dias). Repetível: ganha animal adicional, aumenta uma característica em +1 dado, aumenta Tamanho máximo do animal em +1 (max +3), ou torna animal Carta Selvagem (personagem Estágio Heroico)."
+  },
+  {
+    "id": "sucateiro",
+    "nome": "SUCATEIRO",
+    "categoria": "ESTRANHAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "sorte"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez_por_encontro",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Uma vez por encontro, “lembra” equipamento, munição ou dispositivo necessário de última hora."
+  },
+  {
+    "id": "seguidores",
+    "nome": "SEGUIDORES",
+    "categoria": "LENDARIAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Cada escolha adiciona 5 Extras ao grupo; mantêm Progresso e precisam de cuidados e parte do saque."
+  },
+  {
+    "id": "profissional",
+    "nome": "PROFISSIONAL",
+    "categoria": "LENDARIAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": "tipo de dado máximo na característica"
+    },
+    "limite_compra": "infinito_por_caracteristica",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aumenta uma Característica e seu limite em 1 passo (ex: d12+1 → d12+2). Repetível para cada característica."
+  },
+  {
+    "id": "especialista",
+    "nome": "ESPECIALISTA",
+    "categoria": "LENDARIAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "profissional"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "infinito_por_caracteristica",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aumenta novamente Característica e limite em 1 passo."
+  },
+  {
+    "id": "mestre",
+    "nome": "MESTRE",
+    "categoria": "LENDARIAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "especialista",
+        "carta_selvagem"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez_por_caracteristica",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Dado Selvagem torna-se d10 na característica escolhida."
+  },
+  {
+    "id": "parceiro",
+    "nome": "PARCEIRO",
+    "categoria": "LENDARIAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {
+        "Espirito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)"
+  },
+  {
+    "id": "duro_na_queda",
+    "nome": "DURO NA QUEDA",
+    "categoria": "LENDARIAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {
+        "Vigor": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Recebe até 4 Ferimentos antes de Incapacitar (penalidade máxima −3)."
+  },
+  {
+    "id": "muito_duro_na_queda",
+    "nome": "MUITO DURO NA QUEDA",
+    "categoria": "LENDARIAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "duro_na_queda"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Até 5 Ferimentos antes de Incapacitar (penalidade máxima −3)."
+  },
+  {
+    "id": "mestre_de_arma",
+    "nome": "MESTRE DE ARMA",
+    "categoria": "LENDARIAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {
+        "Lutar": 12
+      },
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": true,
+    "ganha_ao_comprar": [],
+    "descricao": "Aparar +1 e dado bônus de dano em Lutar passa a d8 (veja Bônus de Dano, pág. 109)."
+  },
+  {
+    "id": "mestre_das_armas",
+    "nome": "MESTRE DAS ARMAS",
+    "categoria": "LENDARIAS",
+    "origem": "ARTE_DA_GUERRA",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "mestre_de_arma"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aparar +1 e dado bônus de dano em Lutar passa a d10."
+  },
+    {
+      "id": "aristocrata",
+      "nome": "ARISTOCRATA",
+      "categoria": "ANTECEDENTE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "O Herói vem de uma linhagem nobre de um Clã, uma família de alto escalão em um Ministério, descende da Família Imperial de uma dinastia anterior. Essa conexão proporciona alguma reputação e respeito, permitindo que o indivíduo transite em círculos elitistas, obtenha favores e tenha possíveis aliados nas altas esferas."
+    },
+    {
+      "id": "dominio",
+      "nome": "DOMÍNIO",
+      "categoria": "ANTECEDENTE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Possuir terras"
+      },
+      "limite_compra": "infinito",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Herança, compra ou concessão; você possui terras e pode desenvolvê-las. Supõe-se que também possua uma casa modesta, mas o tamanho e a localização podem variar. Inicialmente, esta Vantagem concede 4 PC. Essa vantagem pode ser escolhida múltiplas vezes e cada vez que escolhê-la novamente, acrescente 3 PC, simbolizando investimentos feitos na expansão das acomodações (veja a seção Domínio). Quanto maior a propriedade, mais olhos estarão sobre ela."
+    },
+    {
+      "id": "ferimento_extra",
+      "nome": "FERIMENTO EXTRA",
+      "categoria": "ANTECEDENTE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "Vigor": 8
+        },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "O que não matou um herói, o fortaleceu. Seu herói pode ter tido uma infância difícil ou um treinamento de resistência extenso; o personagem sabe que não há ganho sem dor. Vários ossos quebrados e contusões aumentaram o limiar de dor a um novo nível, criando um herói resistente. O herói ganha um -1 adicional por nível de Ferimento."
+    },
+    {
+      "id": "legado",
+      "nome": "LEGADO",
+      "categoria": "ANTECEDENTE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "O legado e as ações realizadas pelos ancestrais têm um peso que perdura por gerações. O Legado oferece alguns privilégios aos descendentes e pode ser rapidamente desperdiçado pela próxima geração. Cabe ao personagem manter a influência familiar através de boas ações ou usufruir do trabalho árduo dos mais velhos. Adicione +20 à sua Reputação na criação do personagem."
+    },
+    {
+      "id": "linhagem_temivel",
+      "nome": "LINHAGEM TEMÍVEL",
+      "categoria": "ANTECEDENTE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Requer Kemonomimi"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Você traça sua linhagem até um pequeno grupo abençoado pelo Kami Inu. Esses Kami são os criadores de ferozes lobos caçadores com dentes caninos maiores que a média. Embora isso possa ter prejudicado sua fala na juventude, isso não é mais um problema. Sua mordida causa Força+d6 de dano. Se um Kemonomimi não for um Inumimi, esta Vantagem fornece um arma natural de mordida que causa Força+d4 de dano."
+    },
+    {
+      "id": "mentor",
+      "nome": "MENTOR",
+      "categoria": "ANTECEDENTE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Desde cedo, alguém viu potencial em você para realizar grandes feitos. Seja para herdar uma tarefa específica ou para orientar você em uma causa. Este indivíduo se dedicou especialmente em transmitir sabedoria e conhecimento para guiá-lo em tempos difíceis. Este conselho pode vir de uma pessoa a quem você recorre ou pode ser lembrado em memórias. Independentemente de como se manifeste, você encontra inspiração para continuar. Quando alcançar um Estágio, um herói pode escolher apenas uma das seguintes opções:\n- Tente Mais uma Vez: Rerrole uma única rolagem de Característica sem gastar um Bene.\n- Naquela Única Vez: O Herói pode gastar um Bene para tentar uma rolagem de perícia não treinada. Esta rolagem é tratada como um se o Herói possuísse tal perícia treinada em d6 e é rolado com um Dado Selvagem, caso não o tenha.\n- Por Que Devemos Cair: Recupere-se do estado Atordoado ou Distraído a qualquer momento.\nAdicionalmente, se o mentor do Herói ainda estiver vivo, este Vantagem atua como um dispositivo narrativo. A relação entre mentor e aluno é uma via de mão dupla. Se o Herói estiver perdido e sem direção, pode procurar conselhos e orientações do mentor. Um mentor pode sempre oferecer conselhos ou ter conhecimento sobre algo que o Herói não possui. Um Herói pode ser convocado pelo mentor para realizar ações que precisam ser feitas, mesmo que o Herói acabe se tornando um peão em um esquema maior. Se um Herói chamar muita atenção de indivíduos suspeitos ou tiver problemas com a lei, é dever do mentor proteger o aluno. No entanto, se um Herói fizer isso com frequência, um mentor pode se tornar vítima (ou pior) desses personagens obscuros que seguem o Herói, apenas para ser descoberto tarde demais."
+    },
+    {
+      "id": "rico",
+      "nome": "RICO",
+      "categoria": "ANTECEDENTE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "O personagem começa com um total de 2.000 ki. Os Heróis viajam para construir seu nome. A menos que o personagem tenha aberto ou herdado um negócio, ou possua uma fonte de renda, como um ancião da família responsável pelas finanças, um salário mensal não é acumulado. Ainda que o personagem tenha acesso aos seus fundos, ele apenas precisa retornar à fonte e adquiri-los. O salário é equivalente a 100 ki ou equivalente em itens por um mês."
+    },
+    {
+      "id": "vinte_e_tres_passos",
+      "nome": "23 PASSOS",
+      "categoria": "CHI",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "Agilidade": 8
+        },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "A tradição dos 23 passos começa com passos simples que culminam em saltos longos e altos. O kata termina com o dançarino pisando suavemente com os dois pés. Mestres desses movimentos dançam sobre a água e caminham em telhados. Ao gastar um ponto de Chi o Herói se move para cima, para baixo, horizontal e verticalmente em qualquer superfície por 1 rodada."
+    },
+    {
+      "id": "absorver",
+      "nome": "ABSORVER",
+      "categoria": "CHI",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "Espírito": 6,
+          "Vigor": 6
+        },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Alguns indivíduos aprenderam a absorver golpes canalizando o chi no local do impacto. Um indivíduo pode gastar um ponto de Chi para fazer uma rolagem de Absorção, rerrolar a Absorção ou acrescentar uma ampliação a um sucesso em Absorção."
+    },
+    {
+      "id": "canalizacao",
+      "nome": "CANALIZAÇÃO",
+      "categoria": "CHI",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {
+          "Foco": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "A Vantagem tem o mesmo efeito de Savage Worlds Edição Aventura, mas a descrição é modificada da seguinte forma: \"...uma ampliação em sua rolagem de Foco para ativar uma Técnica Chi reduz seu custo em 1 até no mínimo de 0.\""
+    },
+    {
+      "id": "concentracao",
+      "nome": "CONCENTRAÇÃO",
+      "categoria": "CHI",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {
+          "Foco": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Esta Vantagem tem o mesmo efeito presente em Savage Worlds Edição Aventura, mas se aplica às Técnicas Chi."
+    },
+    {
+      "id": "espirito_de_ferro",
+      "nome": "ESPÍRITO DE FERRO",
+      "categoria": "CHI",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "Astúcia": 6,
+          "Espírito": 6
+        },
+        "pericias": {
+          "Foco": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Manter-se firme diante do perigo requer uma mente afiada e um espírito calmo. Um personagem pode gastar um ponto de Chi para se recuperar instantaneamente do estado Atordoado ou Náusea, rerrolar falhas de rolagem Medo ou um resultado na tabela de medo."
+    },
+    {
+      "id": "espirito_de_ferro_aprimorado",
+      "nome": "ESPÍRITO DE FERRO APRIMORADO",
+      "categoria": "CHI",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Veterano",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [
+          "espirito_de_ferro"
+        ],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Aqueles que testemunharam os horrores do campo de batalha aprendem a se tornar mais fortes. É necessária uma mente e vontade inabaláveis para transformar o personagem. Aqueles com esta Vantagem podem gastar um ponto de Chi para superar automaticamente Medo e efeitos paralisantes."
+    },
+    {
+      "id": "explosao_exterior",
+      "nome": "EXPLOSÃO EXTERIOR",
+      "categoria": "CHI",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Guerreiros de Chi podem derrubar o Oni mais alto com um único golpe. Para cada ponto de Chi gasto, um Herói pode adicionar 1d6 adicional a uma única rolagem de dano."
+    },
+    {
+      "id": "meditacao_chi",
+      "nome": "MEDITAÇÃO DE CHI",
+      "categoria": "CHI",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {
+          "Espírito": 6
+        },
+        "pericias": {
+          "Foco": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Você é capaz de se concentrar mais facilmente que a maioria. Você aperfeiçoou seu método de meditação ao ponto de causar inveja. Rolagens de Foco para recuperar Chi não têm penalidade."
+    },
+    {
+      "id": "musculo_gyuki",
+      "nome": "MÚSCULO GYUKI",
+      "categoria": "CHI",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "Força": 6
+        },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "O poder de um touro vindo do interior de um indivíduo expande para fora. Ao gastar um ponto de Chi, o dado de Força do Herói aumenta em um passo por uma rodada."
+    },
+    {
+      "id": "nova_tecnica",
+      "nome": "NOVA TÉCNICA",
+      "categoria": "CHI",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "infinito",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Estudando com um mentor, sendo ensinado ou descobrindo um pergaminho perdido, seu herói descobriu uma nova técnica. Isso concede uma única técnica cada vez que esta Vantagem é escolhida. Ele pode escolher qualquer técnica de seu Estágio ou menor (isso deve ser feito em colaboração com o Narrador para desenvolver uma atividade única durante a pausa). Em vez de uma nova técnica, o personagem pode aprender uma nova Manifestação para uma técnica já conhecida. Isso permite que o herói troque entre uma Grande Muralha de pedra pra uma muralha de água."
+    },
+    {
+      "id": "pontos_de_chi",
+      "nome": "PONTOS DE CHI",
+      "categoria": "CHI",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez_por_estagio",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Alguns têm mais capacidade de canalizar chi do que outros. Esta Vantagem aumenta a Reserva Máxima de Chi do herói em 4 pontos de Chi. Pontos de Chi pode ser escolhido uma vez por Estágio."
+    },
+    {
+      "id": "salto_duplo",
+      "nome": "SALTO DUPLO",
+      "categoria": "CHI",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "Agilidade": 6
+        },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Imaginar o Chi como uma pedra sólida para impulsionar-se e realizar acrobacias aéreas é um kata popular entre as crianças. Impulsionado por um ponto de Chi, a distância de salto de um personagem se torna mais impressionante. Um salto horizontal é igual à Movimentação do personagem, e um salto vertical é igual à metade de sua Movimentação. Mesmo com essa destreza extra, saltar não permite que um personagem exceda sua movimentação total na rodada. Diretrizes para usar uma ação para rolar (Acrobacias ou Atletismo) para aumentar a distância podem ser aplicadas a um salto vertical."
+    },
+    {
+      "id": "um_polegar",
+      "nome": "UM POLEGAR",
+      "categoria": "CHI",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "Força": 8
+        },
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Originando de um Herói Lendário, essa kata tem esse nome devido a distância necessária para empurrar um oponente usando Chi. Tocando um objeto ou indivíduo (Ataque de Toque), gastando um ponto de Chi, o alvo é empurrado como se o Herói tivesse obtido uma Ampliação."
+    },
+    {
+      "id": "agitador",
+      "nome": "AGITADOR",
+      "categoria": "COMBATE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {
+          "Espírito": 6
+        },
+        "pericias": {
+          "Intimidar": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Você inspira ar em seus pulmões e solta um forte grito de batalha. Seus inimigos precisam apenas ser capazes de ouvir você. Você poderá usar apenas uma rolagem de Intimidar com esta Vantagem."
+    },
+    {
+      "id": "grito_de_guerra",
+      "nome": "GRITO DE GUERRA",
+      "categoria": "COMBATE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Veterano",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [
+          "agitador"
+        ],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Ao usar Agitador, a área de cobertura se torna um Modelo Grande de Explosão."
+    },
+    {
+      "id": "abraco_esmagador",
+      "nome": "ABRAÇO ESMAGADOR",
+      "categoria": "COMBATE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {
+          "Jutsu (desarmado)": 6
+        },
+        "vantagens_previas": [
+          "pugilista"
+        ],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "O herói conta com a força de suas mãos e braços para esmagar inimigos. Quando luta segurando o alvo, ele flexiona seus músculos para esmagá-los. Ao superar um defensor em uma tentativa de escapar de seu agarrão, ele pode fazer um ataque livre para Apertar o indivíduo (veja Agarrar). O sucesso no ataque causa Força + 1d6 de dano."
+    },
+    {
+      "id": "contra_jutsu",
+      "nome": "CONTRA-JUTSU",
+      "categoria": "COMBATE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {
+          "Jutsu": 6,
+          "Perceber": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Vencer ou perder duelos e lutas em becos proporcionou ao herói experiência para se defender de certos tipos de Jutsu. Escolha uma categoria de Jutsu que você tenha enfrentado. Aumente seu Aparar em +2 ao se defender de um oponente que usa essa categoria de Jutsu."
+    },
+    {
+      "id": "estudante_artes_marciais",
+      "nome": "ESTUDANTE DE ARTES MARCIAIS",
+      "categoria": "COMBATE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {
+          "Jutsu (desarmado)": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Você é um estudante das Artes do Punho ou Palma Aberta. Aprender um estilo oficial de combate desarmado traz o benefício social de ser um membro pleno de uma comunidade de prática comum. Outros do mesmo estilo reconhecerão você como um igual, do contrário, como um rival. Você também se beneficia dos aspectos marciais do estilo desarmado aprendido. Isso vem com benefícios adicionais para superar estilos rivais. Esses benefícios podem ser encontrados na seção “Estilos de Combate”. Ao selecionar esta Vantagem, escolha um estilo de combate e ganhe um bônus contra a escola rival listada."
+    },
+    {
+      "id": "discipulo_artes_marciais",
+      "nome": "DISCÍPULO DAS ARTES MARCIAIS",
+      "categoria": "COMBATE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {
+          "Jutsu (desarmado)": 8
+        },
+        "vantagens_previas": [
+          "estudante_artes_marciais"
+        ],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Você foi mentorado por um professor. Se tornando um discípulo, aprendeu os segredos de seu estilo marcial."
+    },
+    {
+      "id": "mestre_artes_marciais",
+      "nome": "MESTRE EM ARTES MARCIAIS",
+      "categoria": "COMBATE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {
+          "Jutsu (desarmado)": 10
+        },
+        "vantagens_previas": [
+          "estudante_artes_marciais",
+          "discipulo_artes_marciais"
+        ],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Você estudou seu estilo de artes marciais por tempo suficiente para desbloquear os segredos dos mais talentosos mestres. Você se beneficia do nível de Mestre de um estilo marcial selecionado que conhece."
+    },
+    {
+      "id": "saltador_de_paredes",
+      "nome": "SALTADOR DE PAREDES",
+      "categoria": "COMBATE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {
+          "Agilidade": 8
+        },
+        "pericias": {
+          "Acrobacia": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Você ganha impulso para levá-lo a alturas maiores ao usar Acrobacia para escalar. Quando usado em combate, em uma ampliação, cada quadro gasta 1 da Movimentação (o normal gasta 2 de Movimentação)."
+    },
+    {
+      "id": "tiro_rastreador",
+      "nome": "TIRO RASTREADOR",
+      "categoria": "COMBATE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {
+          "Sobrevivência": 6
+        },
+        "periciaMinOpcional": {
+          "Atletismo": 8,
+          "Atirar": 8
+        },
+        "vantagens_previas": [
+          "atirador"
+        ],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "A movimentação é essencial enquanto rastreia a presa. Um caçador pode se mover enquanto executa uma ação de Mirar. Tal como acontece com as regras de Mirar, seu próximo ataque deve ser usado como primeira ação de seu próximo turno para receber o bônus da ação de Mirar."
+    },
+    {
+      "id": "acrobata",
+      "nome": "ACROBATA",
+      "categoria": "PROFISSIONAL",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "Agilidade": 8
+        },
+        "pericias": {},
+        "periciaMinOpcional": {
+          "Atletismo": 8,
+          "Acrobacias": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Semelhante à Vantagem Acrobata encontrada em Savage Worlds Edição Aventura, mas substitua a seção “...uma rerrolagem gratuita em Atletismo...” por “...uma rerrolagem gratuita em Atletismo ou Acrobacia...”."
+    },
+    {
+      "id": "atleta",
+      "nome": "ATLETA",
+      "categoria": "PROFISSIONAL",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "Agilidade": 8,
+          "Força": 6
+        },
+        "pericias": {
+          "Atletismo": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "O Atleta recebe uma rerrolagem gratuita em rolagens de Atletismo que envolvam escalar, puxar, empurrar, correr e nadar. Não afeta rolagens para interromper ações, quedas ou rolagens resistidas."
+    },
+    {
+      "id": "matador_demonios",
+      "nome": "MATADOR DE DEMÔNIOS",
+      "categoria": "PROFISSIONAL",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {
+          "Atletismo": 6,
+          "Perceber": 6,
+          "Ocultismo": 8,
+          "Pesquisar": 6
+        },
+        "periciaMinOpcional": {
+          "Jutsu": 6,
+          "Atirar": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "infinito",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Escolha entre demônio, oni ou shamni. O herói adiciona +2 em rolagens de Sobrevivência ao rastrear, perseguir ou caçar este tipo de criatura. As rolagens de Jutsu, Atletismo para arremessar ou Atirar e de dano contra este tipo de criatura recebem um bônus de +1. Esse bônus de +1 também se aplica a rolagens de Ocultismo para aprender informações sobre o tipo escolhido. Se a criatura for um Carta Selvagem que o personagem já enfrentou antes, o bônus se aplica a rolagens de Perceber para localizar o alvo individual e ao Aparar do herói. Você pode escolher esta Vantagem múltiplas vezes, escolhendo uma criatura diferente da lista a cada vez que a adquirir."
+    },
+    {
+      "id": "detetive",
+      "nome": "DETETIVE",
+      "categoria": "PROFISSIONAL",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {
+          "Conhecimento Acadêmico": 8,
+          "Perceber": 6,
+          "Pesquisar": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Um detetive é alguém que se dedica a desvendar mistérios não resolvidos. Eles têm uma intuição para saber se alguém está dizendo uma meia-verdade ou um pressentimento se algo estiver fora do lugar. Trabalhando de forma independente ou em uma organização oficial, talvez no Escritório H, um detetive recebe um bônus de +2 em rolagens de Perceber e Persuadir ao conversar com indivíduos que são suspeitos em um caso, a fim de notar alterações na linguagem corporal e incentivar que a verdade seja dita. Ao investigar uma cena de crime ou uma área de interesse que possa ter pistas ocultas ou ausentes para resolver o mistério, o detetive recebe um bônus de +2 em rolagens de Pesquisar."
+    },
+    {
+      "id": "embaixador_de_cla",
+      "nome": "EMBAIXADOR DE CLÃ",
+      "categoria": "PROFISSIONAL",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {
+          "Convenção": 6,
+          "Intimidar": 6,
+          "Persuadir": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": "Requer pertencer a um Clã Menor"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Clãs menores enviam membros leais para representá-los em questões de legislação, corte, conselhos burocráticos e assuntos diplomáticos. Um título de embaixador é atribuído a indivíduos selecionados para negociar contratos e tratados, facilitar tensões e hostilidades, além de trazer favor e evitar desonra em nome dos líderes do clã. Embaixadores têm autoridade para agir em nome de um clã. Um embaixador ganha +2 em rolagens de Intimidar e Persuadir ao representar o clã para fins de intermediação de contratos, empreendimentos comerciais, negociação de tratados ou alívio de tensões, em muitas situações sociais que envolvem a participação em cortes reais ou funções da alta sociedade. Se durante esses eventos o embaixador cometer um erro ou tenha um comportamento inapropriado que traga desonra a si mesmo, afetará na opinião externa sobre o clã. O clã pode decidir remover o herói como embaixador."
+    },
+    {
+      "id": "pupila",
+      "nome": "PUPILA",
+      "categoria": "PROFISSIONAL",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "Agilidade": 8,
+          "Força": 6
+        },
+        "pericias": {
+          "Conhecimento Batalha": 4,
+          "Jutsu": 6,
+          "Perceber": 6,
+          "Furtividade": 6,
+          "Sobrevivência": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": "Requer Clã Kitsune, Sexo Feminino"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "É necessário grande coragem e ações decisivas para se juntar ao Orgulho de Gion. Mesmo após fazer isso, um herói deve passar por desafios rigorosos. Um treinamento exigente, onde a heroína deve passar por uma entrevista com agentes do Daimiô ou da própria Senhora para alcançar a aceitação final. Uma pupila é um membro de recrutas selecionados que recebem tarefas individuais pelo Orgulho para demonstrar sua lealdade e provar seu valor. As Pupilas devem estar preparadas para lidar com qualquer situação, desde espionagem, entrega de mensagens por longas distâncias ou até mesmo proteger um comerciante. Uma Pupila ganha uma rerrolagem gratuita em Conhecimento Batalha para formular uma estratégia lógica para a unidade que lidera, uma rolagem de Perceber enquanto atua como guarda quando designado para evitar ser alvo de Finalização, uma rerrolagem gratuita de Furtividade para evitar ser rastreada por uma patrulha, ou uma rerrolagem gratuita de Sobrevivência ao procurar por comida em condições ambientais hostis."
+    },
+    {
+      "id": "sabotador",
+      "nome": "SABOTADOR",
+      "categoria": "PROFISSIONAL",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {
+          "Astúcia": 6,
+          "Força": 8
+        },
+        "pericias": {
+          "Consertar": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Desmontar, destruir, programar uma explosão, fazer a catapulta se romper sob seu próprio peso. Essas são as especialidades de um sabotador. Embora seja uma forma de sabotagem, um sabotador foca em destruir ou romper coisas com o que tiver ao alcance. Escudos, paredes e até portas não ficam em seu caminho. Quando um sabotador danifica ou ataca diretamente um objeto ou estrutura com força ou qualquer coisa que cause dano, sua Dureza é reduzida em 4."
+    },
+    {
+      "id": "ordem_unida",
+      "nome": "ORDEM-UNIDA",
+      "categoria": "TROPO",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [
+          "comando"
+        ],
+        "observacoes": "Requer Tropo Samurai, quaisquer duas Vantagens de Liderança"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Os esforços coordenados entre um bom comandante e soldados habilidosos envolvem comunicação e prática. Com o tempo, a execução de ordens desenvolve todos os envolvidos. Isso é alcançado através de ordens com um comando preparatório, seguido por uma ordem de execução. Um comandante escolhe uma Vantagem de Liderança, e o benefício concedido pela Vantagem é aumentado em +1."
+    },
+    {
+      "id": "dominio_de_postura",
+      "nome": "DOMÍNIO DE POSTURA",
+      "categoria": "TROPO",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Requer Tropo Samurai"
+      },
+      "limite_compra": "infinito",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Cada vez que esta Vantagem é adquirida, aumente o bônus concedido por uma única postura em +1 (excluindo Cauda de Macaco). Uma postura só pode ser aprimorada dessa maneira duas vezes. Um Samurai pode escolher uma nova postura toda vez que esta Vantagem for adquirida."
+    },
+    {
+      "id": "dupla_postura",
+      "nome": "DUPLA POSTURA",
+      "categoria": "TROPO",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [
+          "dominio_de_postura"
+        ],
+        "observacoes": "Requer Tropo Samurai"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Depois de aprimorar uma postura, o Samurai encontra maneiras de fundi-la com outras posturas. Selecione duas Posturas para fundir e criar uma nova postura. Pelo menos uma postura deve ter sido aprimorada pela Vantagem Domínio de Postura. Ao executar a nova postura, o Samurai se beneficia dos efeitos combinados."
+    },
+    {
+      "id": "especialista_em_sabotagem",
+      "nome": "ESPECIALISTA EM SABOTAGEM",
+      "categoria": "TROPO",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {
+          "Consertar": 8,
+          "Furtividade": 6
+        },
+        "vantagens_previas": [],
+        "observacoes": "Requer Tropo Shinobi"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "A infiltração leva um Shinobi às linhas inimigas, mas a sabotagem fará o serviço. Sabotadores são capazes de desativar dispositivos e causar estragos em máquinas de cerco. Ele pode analisar pontos fracos em paredes e a melhor forma de derrubá-las. Ao procurar falhas para explorar nos objetos, os shinobi recebem +1 em rolagens de Perceber e Pesquisar. Qualquer que seja o método (demolições, desativação, remoção de pregos, etc.) para sabotar qualquer estrutura ou objeto, o Shinobi recebe +2 na rolagem."
+    },
+    {
+      "id": "espirito_maior",
+      "nome": "ESPÍRITO MAIOR",
+      "categoria": "TROPO",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {
+          "Espírito": 6
+        },
+        "pericias": {
+          "Ocultismo": 8
+        },
+        "vantagens_previas": [
+          "vinculo_espiritual"
+        ],
+        "observacoes": "Requer Tropo Kui"
+      },
+      "limite_compra": "infinito",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "O espírito vinculado desenvolveu suas capacidades ao longo do tempo. O Espírito Maior pode ser adquirido mais de uma vez. Escolha um dos seguintes efeitos cada vez que for adquirido: Aumentar um Atributo de um espírito em um tipo de dado; Aumentar uma Perícia de um espírito em um tipo de dado; Aumentar o Tamanho máximo do espírito em +1, até um máximo de +3; Aprender uma nova Perícia; Ganhar uma segunda arma natural; Ganhar +1 em Resistência; Não poder ser banido."
+    },
+    {
+      "id": "historico_adicional",
+      "nome": "HISTÓRICO ADICIONAL",
+      "categoria": "TROPO",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Requer Tropo Youxia"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "A Arma Kensai do Youxia possui um legado maior. Seja descoberta através da prática ou já conhecida, ela possui um Histórico adicional."
+    },
+    {
+      "id": "maestria_na_transicao",
+      "nome": "MAESTRIA NA TRANSIÇÃO",
+      "categoria": "TROPO",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {
+          "Transição": 8
+        },
+        "vantagens_previas": [],
+        "observacoes": "Requer Tropo Elementalista"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Dominar os elementos desbloqueia manobras especiais. Um herói que escolhe esta Vantagem seleciona uma Manobra de Maestria (veja Regras de Cenário). Todos os requisitos para a manobra devem ser atendidos."
+    },
+    {
+      "id": "mente_superior",
+      "nome": "MENTE SUPERIOR",
+      "categoria": "TROPO",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Requer Tropo Bu Xista"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Usar Mente sobre a Matéria não requer mais uma rolagem de Foco, mas ainda leva um turno para ativar. A duração do transe é igual ao dado de Astúcia do Herói."
+    },
+    {
+      "id": "modelo_ideal",
+      "nome": "MODELO IDEAL",
+      "categoria": "TROPO",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Deve ser adquirido na criação. Requer Tropo Protagonista"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "A filosofia Bu Xia é de um verdadeiro herói. O Protagonista rola uma vez mais a tabela de Perícias e a tabela de Qualidades de Herói."
+    },
+    {
+      "id": "nova_postura",
+      "nome": "NOVA POSTURA",
+      "categoria": "TROPO",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Requer Tropo Samurai"
+      },
+      "limite_compra": "infinito",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Com esta Vantagem, um herói encontra um velho pergaminho ou é ensinado por um mentor um novo kata. Um Samurai escolhe uma nova postura para adicionar à lista de posturas conhecidas."
+    },
+    {
+      "id": "proeza_fisica",
+      "nome": "PROEZA FÍSICA",
+      "categoria": "TROPO",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {
+          "Agilidade": 6,
+          "Vigor": 8
+        },
+        "pericias": {},
+        "vantagens_previas": [
+          "artista_marcial"
+        ],
+        "observacoes": ""
+      },
+      "limite_compra": "infinito",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Artistas Marciais continuam a treinar e melhorar sua habilidade física. Um artista marcial aprende um Treinamento Único adicional."
+    },
+    {
+      "id": "protetor_absoluto",
+      "nome": "PROTETOR ABSOLUTO",
+      "categoria": "TROPO",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Requer Tropo Youxia"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "O Youxia precisa se esforçar além dos limites do Chi e confiar no destino. Um Youxia pode gastar um Bene, em vez de Chi, para usar Protetor uma vez a mais por rodada."
+    },
+    {
+      "id": "talento_extra",
+      "nome": "TALENTO EXTRA",
+      "categoria": "TROPO",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Requer Tropo Shinobi"
+      },
+      "limite_compra": "infinito",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Um treinamento intensivo permitiu ao herói adquirir ferramentas adicionais da profissão. Ganhe um Talento de Shinobi adicional."
+    },
+    {
+      "id": "talisma_instantaneo",
+      "nome": "TALISMÃ INSTANTÂNEO",
+      "categoria": "TROPO",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {},
+        "pericias": {
+          "Idiomas": 6
+        },
+        "vantagens_previas": [
+          "talismas"
+        ],
+        "observacoes": "Requer Tropo Kui"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Criar um talismã improvisado é intenso e consome tempo. Com prática, um Kui pode usar uma forma simplificada da língua Kami conhecida como língua Shen para acelerar esse processo. Um Kui é capaz de produzir um talismã como uma ação em vez de um minuto."
+    },
+    {
+      "id": "talisma_longevo",
+      "nome": "TALISMÃ LONGEVO",
+      "categoria": "TROPO",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Experiente",
+        "atributos": {
+          "Espírito": 8
+        },
+        "pericias": {},
+        "vantagens_previas": [
+          "talismas"
+        ],
+        "observacoes": "Requer Tropo Kui"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "A Duração de qualquer talismã criado por um Kui e carregado com Chi aumenta. Talismãs não utilizados podem durar 2d6 dias antes de perderem a energia."
+    },
+    {
+      "id": "danificar_a_roupa",
+      "nome": "DANIFICAR A ROUPA",
+      "categoria": "ESTRANHAS",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "A camisa favorita ou as meias da sorte do herói o protegem dos perigos do mundo. Uma vez por aventura, o herói pode sacrificar uma peça de roupa (ou armadura, se estiver usando) que o proteja, destruindo-a no processo, mas absorvendo automaticamente todos os Ferimentos recebidos durante o ataque (entretanto, o personagem ainda pode ficar Abalado). Esta vantagem só tem efeito se um inimigo obtém \"A Finalização\" contra o herói desprevenido ou quando lutando em combate."
+    },
+    {
+      "id": "chifres",
+      "nome": "CHIFRES",
+      "categoria": "ANTECEDENTE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Possuir chifre(s)"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Os chifres na cabeça do personagem são armas naturais com dano de For+d4."
+    },
+    {
+      "id": "chifres_grandes",
+      "nome": "CHIFRES GRANDES",
+      "categoria": "COMBATE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [
+          "chifres"
+        ],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Os chifres são maiores que o normal e causam mais dor. Aumente o dado de dano do chifre em um tipo de dado."
+    },
+    {
+      "id": "chifres_pontudos",
+      "nome": "CHIFRES PONTUDOS",
+      "categoria": "COMBATE",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [
+          "chifres"
+        ],
+        "observacoes": ""
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "Crescidos, afiadas ou pontiagudos, os chifres são bons para penetrar peles. Os chifres recebem PA 2."
+    },
+    {
+      "id": "foco_chi_chi",
+      "nome": "FOCO DE CHI (CHI)",
+      "categoria": "CHI",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [
+          "chifres"
+        ],
+        "observacoes": "Requer Onigem"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "description": "Os chifres do Onigem são a chave para canalizar o Chi. Desbloquear um talento sobrenatural leva tempo para dominar. Esta vantagem permite que o personagem ative Técnicas sem depender dos requisitos de canalização como Mãos Livres e Sem Fala, pois o foco vem do chifre. No entanto, o(s) chifre(s) brilha(m) com poder (ou qualquer cor da manifestação) ao ativar, canalizar ou manter Técnicas. Caso o(s) chifre(s) sejam removidos, o Onigem não conseguem usar as Técnicas conhecidas até que consiga uma nova maneira de usá-las (ou seja, o Jogador deve aplicar um componente para ativar uma Técnica). Isso pode ser facilmente redescoberto com um interlúdio ou atividade no tempo de pausa."
+    },
+    {
+      "id": "transformacao",
+      "nome": "TRANSFORMAÇÃO",
+      "categoria": "CHI",
+      "origem": "ARTE_DA_GUERRA",
+      "requisitos": {
+        "estagio": "Novato",
+        "atributos": {},
+        "pericias": {},
+        "vantagens_previas": [],
+        "observacoes": "Requer Akaimimi, Kitsunemimi ou Tanukimimi"
+      },
+      "limite_compra": "uma_vez",
+      "vinculado_pericia": false,
+      "ganha_ao_comprar": [],
+      "descricao": "O folclore conta histórias de antepassados com a habilidade de transformação. Ao contrário de seus ancestrais, o herói não pode se transformar em objetos inanimados, apenas criaturas do seu tamanho ou menores. Com dois pontos de Chi, esta vantagem age como o poder de Mudança de Forma, que permite que o personagem assuma as habilidades e estatísticas de uma criatura diferente."
+    }
 ]

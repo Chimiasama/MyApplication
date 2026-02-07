@@ -575,7 +575,7 @@ fun PericiasContent(
                     OutlinedTextField(
                         value = idiomaText,
                         onValueChange = { idiomaText = it },
-                        label = { Text(if (isJutsuTarget) "Ex: Dragão, Tigre, Garça..." else "Ex: Espanhol, Língua de Sinais...") },
+                        label = { Text(if (isJutsuTarget) "Ex: Espada, Leve, Desarmado..." else "Ex: Espanhol, Língua de Sinais...") },
                         singleLine = true
                     )
                 }
