@@ -1219,7 +1219,6 @@ var mapaAtributosDisplay by mutableStateOf<Map<String, String>>(emptyMap())
 
 var listaPericias by mutableStateOf<List<Pericia>>(emptyList())
 var mapaPericias by mutableStateOf<Map<String, Pericia>>(emptyMap())
-var mapaPericiasDescricao by mutableStateOf<Map<String, String>>(emptyMap())
 var mapaAtributosDescricao by mutableStateOf<Map<String, String>>(emptyMap())
 
 fun periciaStartRaw(anc: String, per: Pericia): Int {
