@@ -139,6 +139,7 @@ data class SnapshotSelecoes(
     val artistaMarcialPotencialFisico: String? = null,
     val artistaMarcialTecnicasSelecionadas: List<String> = emptyList(),
     val buXistaCaminhoSelecionado: String? = null,
+    val elementalistaElementoSelecionado: String? = null,
     val protagonistaRollTecnicas: Int? = null,
     val protagonistaRollPericia: Int? = null,
     val protagonistaRollVantagem: Int? = null,

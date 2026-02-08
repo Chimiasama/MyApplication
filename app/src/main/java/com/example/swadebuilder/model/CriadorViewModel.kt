@@ -340,6 +340,7 @@ class CriadorViewModel : ViewModel() {
         state.artistaMarcialPotencialFisico = null
         state.artistaMarcialTecnicasSelecionadas.clear()
         state.buXistaCaminhoSelecionado = null
+        state.elementalistaElementoSelecionado = null
         state.descendenteElementalSelecionado = null
         state.gnomoPericiaEscolhida = null
         state.dominioClerigoSelecionado = null

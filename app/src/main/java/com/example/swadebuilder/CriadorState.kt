@@ -84,6 +84,7 @@ class CriadorState {
     var artistaMarcialPotencialFisico by mutableStateOf<String?>(null)
     val artistaMarcialTecnicasSelecionadas = mutableStateListOf<String>()
     var buXistaCaminhoSelecionado by mutableStateOf<String?>(null)
+    var elementalistaElementoSelecionado by mutableStateOf<String?>(null)
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
@@ -3910,6 +3911,9 @@ class CriadorState {
         if (tropoSelecionado?.id != "tropo_buxista") {
             buXistaCaminhoSelecionado = null
         }
+        if (tropoSelecionado?.id != "tropo_elementalista") {
+            elementalistaElementoSelecionado = null
+        }
 
         tropoSelecionado = novoTropo
 
@@ -3963,6 +3967,9 @@ class CriadorState {
             if (novoTropo.id == "tropo_buxista" && buXistaCaminhoSelecionado == null) {
                 buXistaCaminhoSelecionado = "Equilibrado"
             }
+            if (novoTropo.id == "tropo_elementalista" && elementalistaElementoSelecionado == null) {
+                elementalistaElementoSelecionado = "Fogo"
+            }
         } else {
             protagonistaRollTecnicas = null
             protagonistaRollPericia = null
@@ -3976,6 +3983,7 @@ class CriadorState {
             syncArtistaMarcialPotencialFisico()
             artistaMarcialTecnicasSelecionadas.clear()
             buXistaCaminhoSelecionado = null
+            elementalistaElementoSelecionado = null
         }
 
         syncMestreDoChiSlots()
@@ -4351,6 +4359,7 @@ class CriadorState {
                 artistaMarcialPotencialFisico = artistaMarcialPotencialFisico,
                 artistaMarcialTecnicasSelecionadas = artistaMarcialTecnicasSelecionadas.toList(),
                 buXistaCaminhoSelecionado = buXistaCaminhoSelecionado,
+                elementalistaElementoSelecionado = elementalistaElementoSelecionado,
                 protagonistaRollTecnicas = protagonistaRollTecnicas,
                 protagonistaRollPericia = protagonistaRollPericia,
                 protagonistaRollVantagem = protagonistaRollVantagem,
@@ -4467,6 +4476,7 @@ class CriadorState {
         artistaMarcialTecnicasSelecionadas.clear()
         artistaMarcialTecnicasSelecionadas.addAll(snapshot.selecoes.artistaMarcialTecnicasSelecionadas)
         buXistaCaminhoSelecionado = snapshot.selecoes.buXistaCaminhoSelecionado
+        elementalistaElementoSelecionado = snapshot.selecoes.elementalistaElementoSelecionado
         protagonistaRollTecnicas = snapshot.selecoes.protagonistaRollTecnicas
         protagonistaRollPericia = snapshot.selecoes.protagonistaRollPericia
         protagonistaRollVantagem = snapshot.selecoes.protagonistaRollVantagem

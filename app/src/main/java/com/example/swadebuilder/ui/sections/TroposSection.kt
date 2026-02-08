@@ -184,6 +184,42 @@ fun TroposSection(
                             }
                         }
 
+                        if (selecionado && tropo.id == "tropo_elementalista") {
+                            Spacer(Modifier.size(8.dp))
+                            Text(
+                                text = "Elemento Primário",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Escolha o elemento associado ao treinamento elementalista.",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+                            val elementos = listOf(
+                                "Fogo" to "Fogo: associado à paixão e transformação. Conjura chamas e manipula calor.",
+                                "Metal" to "Metal: firmeza e determinação. Manobras com metais fabricados e minérios.",
+                                "Rocha" to "Rocha: estrutura e estabilidade. Manipula pedras, minerais e a terra.",
+                                "Água" to "Água: flexibilidade e sabedoria. Controla fluxo e temperatura da água.",
+                                "Madeira" to "Madeira: Chi vivo e crescimento. Manipula plantas e vida."
+                            )
+                            Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
+                                elementos.forEach { (nome, descricao) ->
+                                    RadioButtonRow(
+                                        selected = state.elementalistaElementoSelecionado == nome,
+                                        label = nome,
+                                        onSelect = { state.elementalistaElementoSelecionado = nome }
+                                    )
+                                    Text(
+                                        text = descricao,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
+                                    )
+                                }
+                            }
+                        }
+
                         if (selecionado && tropo.id == "tropo_artista_marcial") {
                             Spacer(Modifier.size(8.dp))
                             Text(
