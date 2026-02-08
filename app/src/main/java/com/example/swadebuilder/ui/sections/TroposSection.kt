@@ -147,6 +147,43 @@ fun TroposSection(
                             modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
                         )
 
+                        if (selecionado && tropo.id == "tropo_buxista") {
+                            Spacer(Modifier.size(8.dp))
+                            Text(
+                                text = "Caminho Sagrado",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Escolha um caminho associado à seita ou ordem do Bu Xista.",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+                            val caminhos = listOf(
+                                "Equilibrado" to "Alinhando treinamento físico e exercícios mentais, um Bu Xista equilibra ações com pensamento. Enquanto estiver em transe, o Bu Xista recebe +2 em rolagens resistidas de Intimidar, rolagens de Medo e para superar o estado Abalado.",
+                                "Círculo" to "Trilhando o caminho do círculo focado na restauração do corpo. Enquanto estiver em transe, como uma ação, um Bu Xista pode gastar um ponto de Chi para curar imediatamente um Ferimento. Isso pode acontecer após o transe, mas deve ser feito dentro da hora em que o Ferimento foi recebido.",
+                                "Exterior" to "Bu Xistas exteriores se concentram em canalizar o Chi ao seu redor. Em transe, um Bu Xista recebe +2 em rolagens de Força para empurrar ou para resistir ser empurrado. Além disso, rolagens de Atletismo ou Acrobacia envolvendo saltar, escalar, arremessar ou atividades similares recebem +1.",
+                                "Interno" to "Condições interiores do corpo podem ser conquistadas com a prática adequada. Enquanto em transe, um Bu Xista recebe +2 em rolagens de Vigor para superar o estado Atordoado e para resistir a venenos.",
+                                "Nascente" to "Nascentes são o centro da comunidade. Enquanto estiver em transe e realizando uma rolagem de Suporte, um Bu Xista recebe +1 nesta rolagem. Além disso, um Bu Xista pode gastar um ponto de Chi para fazer uma rerrolagem de Intimidar, Persuadir, Performance ou Provocar.",
+                                "Torre" to "Forte e estável, o corpo e a mente podem resistir aos elementos. Enquanto estiver em transe, um Bu Xista pode gastar um ponto de Chi para manifestar uma aura protetora. Essa aura luminosa dura enquanto o transe estiver ativo, fornecendo um bônus de +4 em Armadura (isso não se acumula com as armaduras usadas)."
+                            )
+                            Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
+                                caminhos.forEach { (nome, descricao) ->
+                                    RadioButtonRow(
+                                        selected = state.buXistaCaminhoSelecionado == nome,
+                                        label = nome,
+                                        onSelect = { state.buXistaCaminhoSelecionado = nome }
+                                    )
+                                    Text(
+                                        text = descricao,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
+                                    )
+                                }
+                            }
+                        }
+
                         if (selecionado && tropo.id == "tropo_artista_marcial") {
                             Spacer(Modifier.size(8.dp))
                             Text(

@@ -83,6 +83,7 @@ class CriadorState {
     var artistaMarcialJutsuOpcao by mutableStateOf(ARTISTA_MARCIAL_JUTSU_D6)
     var artistaMarcialPotencialFisico by mutableStateOf<String?>(null)
     val artistaMarcialTecnicasSelecionadas = mutableStateListOf<String>()
+    var buXistaCaminhoSelecionado by mutableStateOf<String?>(null)
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
@@ -1470,6 +1471,17 @@ class CriadorState {
             val pericias = protagonistaPericiasDoTropo()
             if (perKey in pericias) {
                 modifiedBase = maxOf(modifiedBase, 6)
+            }
+        }
+
+        // Arte da Guerra - Bu Xista
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_buxista") {
+            if (perKey == "CONVENCAO" || perKey == "OCULTISMO") {
+                modifiedBase = if (modifiedBase > 0) {
+                    maxOf(modifiedBase, applySuperStepsFrom(modifiedBase, 1))
+                } else {
+                    maxOf(modifiedBase, 4)
+                }
             }
         }
 
@@ -3895,6 +3907,9 @@ class CriadorState {
         if (tropoSelecionado?.id != "tropo_artista_marcial") {
             artistaMarcialTecnicasSelecionadas.clear()
         }
+        if (tropoSelecionado?.id != "tropo_buxista") {
+            buXistaCaminhoSelecionado = null
+        }
 
         tropoSelecionado = novoTropo
 
@@ -3945,6 +3960,9 @@ class CriadorState {
             if (novoTropo.id != "tropo_artista_marcial") {
                 artistaMarcialTecnicasSelecionadas.clear()
             }
+            if (novoTropo.id == "tropo_buxista" && buXistaCaminhoSelecionado == null) {
+                buXistaCaminhoSelecionado = "Equilibrado"
+            }
         } else {
             protagonistaRollTecnicas = null
             protagonistaRollPericia = null
@@ -3957,6 +3975,7 @@ class CriadorState {
             syncProtagonistaBonusPv()
             syncArtistaMarcialPotencialFisico()
             artistaMarcialTecnicasSelecionadas.clear()
+            buXistaCaminhoSelecionado = null
         }
 
         syncMestreDoChiSlots()
@@ -4331,6 +4350,7 @@ class CriadorState {
                 artistaMarcialJutsuOpcao = artistaMarcialJutsuOpcao,
                 artistaMarcialPotencialFisico = artistaMarcialPotencialFisico,
                 artistaMarcialTecnicasSelecionadas = artistaMarcialTecnicasSelecionadas.toList(),
+                buXistaCaminhoSelecionado = buXistaCaminhoSelecionado,
                 protagonistaRollTecnicas = protagonistaRollTecnicas,
                 protagonistaRollPericia = protagonistaRollPericia,
                 protagonistaRollVantagem = protagonistaRollVantagem,
@@ -4446,6 +4466,7 @@ class CriadorState {
         artistaMarcialPotencialFisico = snapshot.selecoes.artistaMarcialPotencialFisico
         artistaMarcialTecnicasSelecionadas.clear()
         artistaMarcialTecnicasSelecionadas.addAll(snapshot.selecoes.artistaMarcialTecnicasSelecionadas)
+        buXistaCaminhoSelecionado = snapshot.selecoes.buXistaCaminhoSelecionado
         protagonistaRollTecnicas = snapshot.selecoes.protagonistaRollTecnicas
         protagonistaRollPericia = snapshot.selecoes.protagonistaRollPericia
         protagonistaRollVantagem = snapshot.selecoes.protagonistaRollVantagem
