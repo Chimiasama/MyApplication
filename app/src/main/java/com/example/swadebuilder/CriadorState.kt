@@ -82,6 +82,7 @@ class CriadorState {
     var protagonistaBonusPv by mutableStateOf(false)
     var artistaMarcialJutsuOpcao by mutableStateOf(ARTISTA_MARCIAL_JUTSU_D6)
     var artistaMarcialPotencialFisico by mutableStateOf<String?>(null)
+    val artistaMarcialTecnicasSelecionadas = mutableStateListOf<String>()
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
@@ -3693,6 +3694,15 @@ class CriadorState {
         recalcularPontosAtributo()
     }
 
+    fun toggleArtistaMarcialTecnica(tecnica: String) {
+        if (artistaMarcialTecnicasSelecionadas.contains(tecnica)) {
+            artistaMarcialTecnicasSelecionadas.remove(tecnica)
+            return
+        }
+        if (artistaMarcialTecnicasSelecionadas.size >= 3) return
+        artistaMarcialTecnicasSelecionadas.add(tecnica)
+    }
+
     fun selecionarPericiaGnomo(pericia: String?) {
         if (gnomoPericiaEscolhida == pericia) return
         gnomoPericiaEscolhida = pericia
@@ -3882,6 +3892,9 @@ class CriadorState {
             vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoProtagonista }
             vantagensAutomaticasDoProtagonista.clear()
         }
+        if (tropoSelecionado?.id != "tropo_artista_marcial") {
+            artistaMarcialTecnicasSelecionadas.clear()
+        }
 
         tropoSelecionado = novoTropo
 
@@ -3929,6 +3942,9 @@ class CriadorState {
                 artistaMarcialPotencialFisico = "Agilidade"
             }
             syncArtistaMarcialPotencialFisico()
+            if (novoTropo.id != "tropo_artista_marcial") {
+                artistaMarcialTecnicasSelecionadas.clear()
+            }
         } else {
             protagonistaRollTecnicas = null
             protagonistaRollPericia = null
@@ -3940,6 +3956,7 @@ class CriadorState {
             vantagensSlotProtagonista.clear()
             syncProtagonistaBonusPv()
             syncArtistaMarcialPotencialFisico()
+            artistaMarcialTecnicasSelecionadas.clear()
         }
 
         syncMestreDoChiSlots()
@@ -4313,6 +4330,7 @@ class CriadorState {
                 signoAdgSelecionado = signoAdgSelecionado,
                 artistaMarcialJutsuOpcao = artistaMarcialJutsuOpcao,
                 artistaMarcialPotencialFisico = artistaMarcialPotencialFisico,
+                artistaMarcialTecnicasSelecionadas = artistaMarcialTecnicasSelecionadas.toList(),
                 protagonistaRollTecnicas = protagonistaRollTecnicas,
                 protagonistaRollPericia = protagonistaRollPericia,
                 protagonistaRollVantagem = protagonistaRollVantagem,
@@ -4426,6 +4444,8 @@ class CriadorState {
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
         artistaMarcialJutsuOpcao = snapshot.selecoes.artistaMarcialJutsuOpcao ?: ARTISTA_MARCIAL_JUTSU_D6
         artistaMarcialPotencialFisico = snapshot.selecoes.artistaMarcialPotencialFisico
+        artistaMarcialTecnicasSelecionadas.clear()
+        artistaMarcialTecnicasSelecionadas.addAll(snapshot.selecoes.artistaMarcialTecnicasSelecionadas)
         protagonistaRollTecnicas = snapshot.selecoes.protagonistaRollTecnicas
         protagonistaRollPericia = snapshot.selecoes.protagonistaRollPericia
         protagonistaRollVantagem = snapshot.selecoes.protagonistaRollVantagem

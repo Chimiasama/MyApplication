@@ -338,6 +338,7 @@ class CriadorViewModel : ViewModel() {
         state.signoAdgSelecionado = null
         state.artistaMarcialJutsuOpcao = CriadorState.ARTISTA_MARCIAL_JUTSU_D6
         state.artistaMarcialPotencialFisico = null
+        state.artistaMarcialTecnicasSelecionadas.clear()
         state.descendenteElementalSelecionado = null
         state.gnomoPericiaEscolhida = null
         state.dominioClerigoSelecionado = null

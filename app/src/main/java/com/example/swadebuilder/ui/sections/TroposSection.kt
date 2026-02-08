@@ -19,6 +19,7 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
@@ -219,6 +220,56 @@ fun TroposSection(
                                         }
                                     }
                                 )
+                            }
+
+                            Spacer(Modifier.size(8.dp))
+                            Text(
+                                text = "Técnicas do Artista Marcial (escolha 3)",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Selecionadas: ${state.artistaMarcialTecnicasSelecionadas.size}/3",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+                            val tecnicasArtista = listOf(
+                                "Sentido às Cegas" to "O aprimoramento de todos os sentidos ocorre se o herói estiver momentaneamente cego ou tiver alguma deficiência visual (como sujeira nos olhos, flashbangs ou até mesmo olhos vendados). O herói adiciona +1d4 nas rolagens de Perceber envolvendo sentidos auditivos e olfativos para localizar seres vivos (ou não vivos) dentro de um Modelo Médio de Explosão.",
+                                "Aparar Projéteis" to "Para desviar projéteis, deve-se saber a direção de onde estão vindo. Se o herói é o alvo de um projétil e está ciente de que está vindo, ele o desvia como se tivesse sido bem-sucedido. A exceção a esta regra são efeitos que dependem de impacto ou toque, como uma flecha explosiva ou um dardo envenenado que carrega um veneno de contato.",
+                                "Salto Duplo" to "Um herói pode realizar um salto conforme a Vantagem Duplo Salto.",
+                                "Evadir" to "O artista marcial é rápido para reagir a situações perigosas. Um herói recebe +2 em rolagens de Evasão.",
+                                "Velocista" to "A energia cinética se expande, um herói dobra sua Movimentação base e aumenta sua Corrida em um tipo de dado.",
+                                "Durão" to "Horas de treinamento contra árvores ou paredes de pedra permitem que o herói quebre objetos sólidos. Ataques desarmados podem ignorar 4 de dureza ao tentar quebrar ou partir um objeto. Este tipo de dano é sempre considerado o tipo de dano apropriado.",
+                                "Improvisador" to "Pode usar armas improvisadas sem penalidades. Itens podem ser usados defensivamente, adicionando +1 no Aparar e +1 na Armadura se forem de peso médio (ou +2 na Armadura se forem pesados).",
+                                "Empurrão" to "Trazendo a força da natureza à tona, um ataque desarmado bem-sucedido causa um Empurrão de Chi (veja Regras de Ambientação) equivalente a tamanhos Grandes ou menores. A distância percorrida é aumentada em +1d6.",
+                                "Manobras" to "Artistas Marciais usam manobras para desequilibrar e derrubar aqueles que são maiores do que eles, realizando um Desafio para derrubar ou arremessar oponentes de tamanho Grande ou menor sem sofrer penalidades por diferenças de tamanho.",
+                                "Regurgitar Veneno" to "Ao ingerir ou ser injetado por veneno, você pode puxá-lo de sua corrente sanguínea até a boca. Você pode cuspir a substância para encerrar os efeitos. Alternativamente, pode ser cuspido como uma arma, usando Atletismo (arremesso) para atingi-lo em um alvo (Alcance: 3/6/12).",
+                                "Lutar Sozinho" to "Enquanto cercada por múltiplos inimigos, uma pessoa se destaca no auge do desafio. Os oponentes não recebem bônus de Agrupamento contra o Herói.",
+                                "Forte" to "Um Artista Marcial usa Chi para realizar feitos de Força. Ela recebe uma rerrolagem em rolagens Força.",
+                                "Resistente" to "O Chi é usado para absorver golpes e manter o herói em pé. O herói recebe +2 em rolagens de Absorção.",
+                                "Golpe Vital" to "Atacar o ponto certo pode enfraquecer qualquer brutamontes. Ataques Localizados ao usar golpes desarmados recebem +2 na rolagem."
+                            )
+                            Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
+                                tecnicasArtista.forEach { (nome, descricao) ->
+                                    val selecionada = state.artistaMarcialTecnicasSelecionadas.contains(nome)
+                                    val habilitada = selecionada || state.artistaMarcialTecnicasSelecionadas.size < 3
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 4.dp)
+                                    ) {
+                                        Checkbox(
+                                            checked = selecionada,
+                                            onCheckedChange = { if (habilitada) state.toggleArtistaMarcialTecnica(nome) },
+                                            enabled = habilitada
+                                        )
+                                        Column(modifier = Modifier.padding(start = 8.dp)) {
+                                            Text(text = nome, style = MaterialTheme.typography.bodyMedium)
+                                            Text(text = descricao, style = MaterialTheme.typography.bodySmall)
+                                        }
+                                    }
+                                }
                             }
                         }
 
