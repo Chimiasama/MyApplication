@@ -2373,7 +2373,8 @@ class CriadorState {
     var vantagemEmFoco by mutableStateOf<String?>(null)
 
     fun temAntecedenteArcano(): Boolean {
-        return vantagensSelecionadas.any { it.toArcanoKey() != null }
+        return vantagensSelecionadas.any { it.toArcanoKey() != null } ||
+            (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_elementalista")
     }
 
     fun getBestPericia(nome: String): Pericia? {

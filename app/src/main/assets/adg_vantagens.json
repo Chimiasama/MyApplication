@@ -2613,6 +2613,20 @@
       "limite_compra": "uma_vez",
       "vinculado_pericia": false,
       "ganha_ao_comprar": [],
+      "choiceOptions": [
+        "Asa da Garça de Qinlang (Ar)",
+        "Cauda Vermelha (Ar)",
+        "Templo da Lua Reflexiva (Água)",
+        "Rio Divisor (Água)",
+        "Bico de Basabasa (Fogo)",
+        "Garra do Tigre (Fogo)",
+        "Pata da Pantera Caçadora (Madeira)",
+        "Pata Macia do Macaco (Madeira)",
+        "Forjado no Aço (Metal)",
+        "Escola das Três Presas (Metal)",
+        "Ferroada do Escorpião (Rocha)",
+        "Couro de Ferro (Rocha)"
+      ],
       "descricao": "Você é um estudante das Artes do Punho ou Palma Aberta. Aprender um estilo oficial de combate desarmado traz o benefício social de ser um membro pleno de uma comunidade de prática comum. Outros do mesmo estilo reconhecerão você como um igual, do contrário, como um rival. Você também se beneficia dos aspectos marciais do estilo desarmado aprendido. Isso vem com benefícios adicionais para superar estilos rivais. Esses benefícios podem ser encontrados na seção “Estilos de Combate”. Ao selecionar esta Vantagem, escolha um estilo de combate e ganhe um bônus contra a escola rival listada."
     },
     {
@@ -2634,6 +2648,20 @@
       "limite_compra": "uma_vez",
       "vinculado_pericia": false,
       "ganha_ao_comprar": [],
+      "choiceOptions": [
+        "Asa da Garça de Qinlang (Ar)",
+        "Cauda Vermelha (Ar)",
+        "Templo da Lua Reflexiva (Água)",
+        "Rio Divisor (Água)",
+        "Bico de Basabasa (Fogo)",
+        "Garra do Tigre (Fogo)",
+        "Pata da Pantera Caçadora (Madeira)",
+        "Pata Macia do Macaco (Madeira)",
+        "Forjado no Aço (Metal)",
+        "Escola das Três Presas (Metal)",
+        "Ferroada do Escorpião (Rocha)",
+        "Couro de Ferro (Rocha)"
+      ],
       "descricao": "Você foi mentorado por um professor. Se tornando um discípulo, aprendeu os segredos de seu estilo marcial."
     },
     {
@@ -2656,6 +2684,20 @@
       "limite_compra": "uma_vez",
       "vinculado_pericia": false,
       "ganha_ao_comprar": [],
+      "choiceOptions": [
+        "Asa da Garça de Qinlang (Ar)",
+        "Cauda Vermelha (Ar)",
+        "Templo da Lua Reflexiva (Água)",
+        "Rio Divisor (Água)",
+        "Bico de Basabasa (Fogo)",
+        "Garra do Tigre (Fogo)",
+        "Pata da Pantera Caçadora (Madeira)",
+        "Pata Macia do Macaco (Madeira)",
+        "Forjado no Aço (Metal)",
+        "Escola das Três Presas (Metal)",
+        "Ferroada do Escorpião (Rocha)",
+        "Couro de Ferro (Rocha)"
+      ],
       "descricao": "Você estudou seu estilo de artes marciais por tempo suficiente para desbloquear os segredos dos mais talentosos mestres. Você se beneficia do nível de Mestre de um estilo marcial selecionado que conhece."
     },
     {
