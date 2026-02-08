@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.criacaoBasicaCongelada
+import com.example.swadebuilder.keyify
 import com.example.swadebuilder.listaTropos
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.ui.components.DropdownField
@@ -144,6 +145,82 @@ fun TroposSection(
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
                         )
+
+                        if (selecionado && tropo.id == "tropo_artista_marcial") {
+                            Spacer(Modifier.size(8.dp))
+                            Text(
+                                text = "Jutsu inicial",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
+                                RadioButtonRow(
+                                    selected = state.artistaMarcialJutsuOpcao == CriadorState.ARTISTA_MARCIAL_JUTSU_D6,
+                                    label = "Jutsu (Desarmado) d6",
+                                    onSelect = { state.atualizarArtistaMarcialJutsuOpcao(CriadorState.ARTISTA_MARCIAL_JUTSU_D6) }
+                                )
+                                RadioButtonRow(
+                                    selected = state.artistaMarcialJutsuOpcao == CriadorState.ARTISTA_MARCIAL_JUTSU_D4_D4,
+                                    label = "Jutsu (Desarmado) d4 + outro Jutsu d4",
+                                    onSelect = { state.atualizarArtistaMarcialJutsuOpcao(CriadorState.ARTISTA_MARCIAL_JUTSU_D4_D4) }
+                                )
+                            }
+
+                            Spacer(Modifier.size(8.dp))
+                            Text(
+                                text = "Potencial Físico",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Escolha um atributo que ainda não esteja no máximo para receber o bônus e a vantagem.",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+                            val agiValue = state.valoresAtributos["AGILIDADE"]?.intValue ?: 0
+                            val forValue = state.valoresAtributos["FORCA"]?.intValue ?: 0
+                            val vigValue = state.valoresAtributos["VIGOR"]?.intValue ?: 0
+                            val agiMax = state.atributoMaxRaw("AGILIDADE")
+                            val forMax = state.atributoMaxRaw("FORCA")
+                            val vigMax = state.atributoMaxRaw("VIGOR")
+                            val agiSelected = state.artistaMarcialPotencialFisico?.keyify() == "AGILIDADE"
+                            val forSelected = state.artistaMarcialPotencialFisico?.keyify() == "FORCA"
+                            val vigSelected = state.artistaMarcialPotencialFisico?.keyify() == "VIGOR"
+                            val agiDisabled = agiValue >= agiMax && !agiSelected
+                            val forDisabled = forValue >= forMax && !forSelected
+                            val vigDisabled = vigValue >= vigMax && !vigSelected
+                            Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
+                                RadioButtonRow(
+                                    selected = agiSelected,
+                                    label = if (agiDisabled) "Agilidade (Esquiva) - no máximo" else "Agilidade (Esquiva)",
+                                    onSelect = {
+                                        if (!agiDisabled) {
+                                            state.atualizarArtistaMarcialPotencialFisico("Agilidade")
+                                        }
+                                    }
+                                )
+                                RadioButtonRow(
+                                    selected = forSelected,
+                                    label = if (forDisabled) "Força (Bloquear) - no máximo" else "Força (Bloquear)",
+                                    onSelect = {
+                                        if (!forDisabled) {
+                                            state.atualizarArtistaMarcialPotencialFisico("Força")
+                                        }
+                                    }
+                                )
+                                RadioButtonRow(
+                                    selected = vigSelected,
+                                    label = if (vigDisabled) "Vigor (Reflexos de Combate) - no máximo" else "Vigor (Reflexos de Combate)",
+                                    onSelect = {
+                                        if (!vigDisabled) {
+                                            state.atualizarArtistaMarcialPotencialFisico("Vigor")
+                                        }
+                                    }
+                                )
+                            }
+                        }
 
                         if (selecionado && tropo.id == "tropo_protagonista") {
                             val random = remember { Random(System.currentTimeMillis()) }

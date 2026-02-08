@@ -80,6 +80,8 @@ class CriadorState {
     var protagonistaPericiasEscolhidas by mutableStateOf<List<String>>(emptyList())
     var protagonistaPericiasPaixao by mutableStateOf<List<String>>(emptyList())
     var protagonistaBonusPv by mutableStateOf(false)
+    var artistaMarcialJutsuOpcao by mutableStateOf(ARTISTA_MARCIAL_JUTSU_D6)
+    var artistaMarcialPotencialFisico by mutableStateOf<String?>(null)
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
@@ -159,6 +161,7 @@ class CriadorState {
 
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
     val vantagensAutomaticasDoElemento = mutableStateListOf<String>()
+    val vantagensAutomaticasDoPotencialFisico = mutableStateListOf<String>()
 
     val fixedPowersByArcano = mapOf(
         "ABENCOADO" to listOf("simbolo_sagrado"),
@@ -208,6 +211,8 @@ class CriadorState {
         const val BASE_SP_POOL = 15
         const val DEFAULT_HAPTIC_STRENGTH = 70
         const val DEFAULT_SOUND_VOLUME = 70
+        const val ARTISTA_MARCIAL_JUTSU_D6 = "D6"
+        const val ARTISTA_MARCIAL_JUTSU_D4_D4 = "D4_D4"
         val SIGNOS_ADG = listOf(
             "Nenhum", "Basabasa", "Boi", "Tigre", "Lebre", "Garça", "Serpente",
             "Dragão", "Kirin", "Macaco", "Raposa", "Lobo", "Tartaruga", "Urso"
@@ -996,6 +1001,7 @@ class CriadorState {
                 v.id in vantagensAutomaticasDoProtagonista ||
                 v.id in vantagensAutomaticasDoSigno ||
                 v.id in vantagensAutomaticasDoElemento ||
+                v.id in vantagensAutomaticasDoPotencialFisico ||
                 (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true)
     }
 
@@ -1463,6 +1469,21 @@ class CriadorState {
             val pericias = protagonistaPericiasDoTropo()
             if (perKey in pericias) {
                 modifiedBase = maxOf(modifiedBase, 6)
+            }
+        }
+
+        // Arte da Guerra - Artista Marcial (Jutsu inicial)
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_artista_marcial") {
+            val slotIndex = jutsuSlotIndex(per)
+            if (slotIndex != null) {
+                when (artistaMarcialJutsuOpcao) {
+                    ARTISTA_MARCIAL_JUTSU_D6 -> if (slotIndex == 1) {
+                        modifiedBase = maxOf(modifiedBase, 6)
+                    }
+                    ARTISTA_MARCIAL_JUTSU_D4_D4 -> if (slotIndex == 2) {
+                        modifiedBase = maxOf(modifiedBase, 4)
+                    }
+                }
             }
         }
 
@@ -3505,6 +3526,9 @@ class CriadorState {
         for (nome in listaAtributos) {
             val atual = valoresAtributos[nome]!!.intValue
             val base = atributoBaseRacial(nome)
+            val stackSize = paCostStackPorAtributo[nome]?.size ?: 0
+            val valorSemBonus = applySuperStepsFrom(base, stackSize)
+            val valorParaCusto = if (atual > valorSemBonus) valorSemBonus else atual
 
             // PROMPT 1: Explicit calculation: (Current Step - Racial Base Step)
             // Steps count: d4=0, d6=1, d8=2, d10=3, d12=4
@@ -3514,7 +3538,7 @@ class CriadorState {
             // Refactoring to be clearer/more explicit if needed, but the loop is robust for d12+ handling.
 
             var cur = base
-            while (cur < atual) {
+            while (cur < valorParaCusto) {
                 cur += if (cur < 12) 2 else 1
                 usados += 1
             }
@@ -3529,6 +3553,25 @@ class CriadorState {
         val basePoints = if (isPathfinderHuman || isPathfinderHalfElf) 6 else 5
 
         return (basePoints + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
+    }
+
+    private fun artistaMarcialPotencialFisicoAttrKey(): String? {
+        if (!compendioArteDaGuerraAtivo || tropoSelecionado?.id != "tropo_artista_marcial") return null
+        return when (artistaMarcialPotencialFisico?.keyify()) {
+            "AGILIDADE" -> "AGILIDADE"
+            "FORCA" -> "FORCA"
+            "VIGOR" -> "VIGOR"
+            else -> null
+        }
+    }
+
+    private fun shouldApplyArtistaMarcialBonus(attrKey: String): Boolean {
+        val selected = artistaMarcialPotencialFisicoAttrKey() ?: return false
+        if (selected != attrKey) return false
+        val base = atributoBaseRacial(attrKey)
+        val stackSize = paCostStackPorAtributo[attrKey]?.size ?: 0
+        val valueFromStack = applySuperStepsFrom(base, stackSize)
+        return valueFromStack < atributoMaxRaw(attrKey)
     }
 
     fun recalcularPontosAtributo(feedbackMessages: MutableList<String> = mutableListOf()) {
@@ -3546,6 +3589,14 @@ class CriadorState {
 
             if (state != null) {
                 state.intValue = newValue
+            }
+        }
+
+        listaAtributos.forEach { attrKey ->
+            val state = valoresAtributos[attrKey] ?: return@forEach
+            if (shouldApplyArtistaMarcialBonus(attrKey)) {
+                val max = atributoMaxRaw(attrKey)
+                state.intValue = minOf(applySuperStepsFrom(state.intValue, 1), max)
             }
         }
 
@@ -3604,6 +3655,42 @@ class CriadorState {
 
         recalcularPontosAtributo()
         rebuildAllPericiaStacks()
+    }
+
+    private fun syncArtistaMarcialPotencialFisico() {
+        if (vantagensAutomaticasDoPotencialFisico.isNotEmpty()) {
+            vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoPotencialFisico }
+            vantagensAutomaticasDoPotencialFisico.clear()
+        }
+
+        if (tropoSelecionado?.id != "tropo_artista_marcial") return
+
+        val edgeId = when (artistaMarcialPotencialFisico?.keyify()) {
+            "AGILIDADE" -> "esquiva"
+            "FORCA" -> "bloquear"
+            "VIGOR" -> "reflexos_de_combate"
+            else -> null
+        } ?: return
+
+        val vant = listaVantagens.firstOrNull { it.id == edgeId }
+        if (vant != null && vantagensSelecionadas.none { it.id == vant.id }) {
+            vantagensSelecionadas.add(vant)
+            vantagensAutomaticasDoPotencialFisico.add(vant.id)
+        }
+    }
+
+    fun atualizarArtistaMarcialJutsuOpcao(novaOpcao: String) {
+        if (artistaMarcialJutsuOpcao == novaOpcao) return
+        artistaMarcialJutsuOpcao = novaOpcao
+        rebuildAllPericiaStacks()
+        syncJutsuSlots()
+    }
+
+    fun atualizarArtistaMarcialPotencialFisico(novoPotencial: String?) {
+        if (artistaMarcialPotencialFisico == novoPotencial) return
+        artistaMarcialPotencialFisico = novoPotencial
+        syncArtistaMarcialPotencialFisico()
+        recalcularPontosAtributo()
     }
 
     fun selecionarPericiaGnomo(pericia: String?) {
@@ -3787,6 +3874,10 @@ class CriadorState {
             vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoTropo }
             vantagensAutomaticasDoTropo.clear()
         }
+        if (vantagensAutomaticasDoPotencialFisico.isNotEmpty()) {
+            vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoPotencialFisico }
+            vantagensAutomaticasDoPotencialFisico.clear()
+        }
         if (vantagensAutomaticasDoProtagonista.isNotEmpty()) {
             vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoProtagonista }
             vantagensAutomaticasDoProtagonista.clear()
@@ -3834,6 +3925,10 @@ class CriadorState {
                 atualizarProtagonistaAutoVantagens()
                 syncProtagonistaBonusPv()
             }
+            if (novoTropo.id == "tropo_artista_marcial" && artistaMarcialPotencialFisico == null) {
+                artistaMarcialPotencialFisico = "Agilidade"
+            }
+            syncArtistaMarcialPotencialFisico()
         } else {
             protagonistaRollTecnicas = null
             protagonistaRollPericia = null
@@ -3844,9 +3939,13 @@ class CriadorState {
             protagonistaPericiasPaixao = emptyList()
             vantagensSlotProtagonista.clear()
             syncProtagonistaBonusPv()
+            syncArtistaMarcialPotencialFisico()
         }
 
         syncMestreDoChiSlots()
+        recalcularPontosAtributo()
+        rebuildAllPericiaStacks()
+        syncJutsuSlots()
     }
 
     private fun trimAttributeStacks(feedbackMessages: MutableList<String> = mutableListOf()) {
@@ -4212,6 +4311,8 @@ class CriadorState {
                 portraitScaleType = portraitScaleType,
                 portraitAlignment = portraitAlignment,
                 signoAdgSelecionado = signoAdgSelecionado,
+                artistaMarcialJutsuOpcao = artistaMarcialJutsuOpcao,
+                artistaMarcialPotencialFisico = artistaMarcialPotencialFisico,
                 protagonistaRollTecnicas = protagonistaRollTecnicas,
                 protagonistaRollPericia = protagonistaRollPericia,
                 protagonistaRollVantagem = protagonistaRollVantagem,
@@ -4323,6 +4424,8 @@ class CriadorState {
         bonusPoderExtra = flags.bonusPoderExtra
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
+        artistaMarcialJutsuOpcao = snapshot.selecoes.artistaMarcialJutsuOpcao ?: ARTISTA_MARCIAL_JUTSU_D6
+        artistaMarcialPotencialFisico = snapshot.selecoes.artistaMarcialPotencialFisico
         protagonistaRollTecnicas = snapshot.selecoes.protagonistaRollTecnicas
         protagonistaRollPericia = snapshot.selecoes.protagonistaRollPericia
         protagonistaRollVantagem = snapshot.selecoes.protagonistaRollVantagem
@@ -4472,6 +4575,7 @@ class CriadorState {
         }
         protagonistaBonusPv = tropoSelecionado?.id == "tropo_protagonista" &&
             protagonistaRollHabilidade == 4
+        syncArtistaMarcialPotencialFisico()
 
         poderSlotsPorArcano.clear()
         snapshot.selecoes.poderSlotsPorArcano.forEach { (key, slots) ->

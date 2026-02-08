@@ -5,7 +5,7 @@
     "categoria": "TROPO",
     "origem": "ARTE_DA_GUERRA",
     "tecnicas_iniciais": 0,
-    "descricao": "Segue o Caminho do Punho. Começa com as Vantagens Artista Marcial e Estudante de Artes Marciais, ganha Jutsu (Desarmado) d6 (ou d4 + outro Jutsu d4), escolhe Agilidade/Força/Vigor para aumentar e recebe uma Vantagem extra associada, além de opções de Treinamento Único e bônus desarmados.",
+    "descricao": "Artista Marcial: Todos os artistas marciais começam com a Vantagem Artista Marcial e Estudante de Artes Marciais.\nCada um começa com Jutsu (Desarmado) d6. Alternativamente, um Artista Marcial pode reduzir Jutsu (Desarmado) para d4 e adicionar outro Jutsu em d4.\n• Potencial Físico: O corpo se torna o foco do treinamento, levando-o aos seus limites. Artistas Marciais escolhem um dos Atributos listados: Agilidade, Força ou Vigor. Aumente um desses Atributos que não alcance o máximo do seu valor. Além do aumento do Atributo escolhido, você também recebe uma vantagem adicional. Agilidade concede a Vantagem Esquiva, Força concede a Vantagem Bloquear, e Vigor concede a Vantagem Reflexos de Combate.",
     "ganha_ao_comprar": [
       "artista_marcial",
       "estudante_artes_marciais"
