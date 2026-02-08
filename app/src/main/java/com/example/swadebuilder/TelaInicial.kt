@@ -88,7 +88,6 @@ fun TelaInicial(
         compendioWiseguysAtivo: Boolean,
         modoMonstroAtivo: Boolean,
         nasceUmHeroi: Boolean,
-        heroisSemArmadura: Boolean,
         especializacaoPer: Boolean,
         semPontosDePoder: Boolean,
         multiplosIdiomas: Boolean,
@@ -113,7 +112,6 @@ fun TelaInicial(
     var optMaisPontosPericias by rememberSaveable { mutableStateOf(true) }
     var optMultiAntecedenteArcano by rememberSaveable { mutableStateOf(false) }
     var optEspecializacaoPer by rememberSaveable { mutableStateOf(false) }
-    var optHeroiSemArmadura by rememberSaveable { mutableStateOf(false) }
     var optMultiplosIdiomas by rememberSaveable { mutableStateOf(false) }
     var optNasceUmHeroi by rememberSaveable { mutableStateOf(false) }
     var optSemPontosPoder by rememberSaveable { mutableStateOf(false) }
@@ -157,7 +155,6 @@ fun TelaInicial(
             "Arte da Guerra" -> {
                 optCartaSelvagem = true
                 optNasceUmHeroi = true
-                optHeroiSemArmadura = true
             }
             "Wiseguys" -> {
                 optCartaSelvagem = true
@@ -166,7 +163,6 @@ fun TelaInicial(
                 optRegraCosaNostra = true
                 optMultiAntecedenteArcano = false
                 optEspecializacaoPer = false
-                optHeroiSemArmadura = false
                 optMultiplosIdiomas = false
                 optNasceUmHeroi = false
                 optSemPontosPoder = false
@@ -190,7 +186,6 @@ fun TelaInicial(
                 optCartaSelvagem = true
                 optMaisPontosPericias = true
                 optNasceUmHeroi = false
-                optHeroiSemArmadura = false
                 optRegraRiqueza = false
                 optRegraCosaNostra = false
                 optRegraFama = false
@@ -411,7 +406,6 @@ fun TelaInicial(
                                 optCompendioWiseguys,
                                 optModoMonstro,
                                 optNasceUmHeroi,
-                                optHeroiSemArmadura,
                                 optEspecializacaoPer,
                                 optSemPontosPoder,
                                 optMultiplosIdiomas,
@@ -524,7 +518,6 @@ fun TelaInicial(
                     val isCrystalHeart = optCompendioCrystalHeart
                     if (optSuperPoderes) {
                         SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
-                        SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
                         if (!optCompendioPathfinder) {
                             SimpleCheckRow("Múltiplos Idiomas", "Personagem inicia poliglota.", optMultiplosIdiomas) { optMultiplosIdiomas = it }
                         }
@@ -540,7 +533,6 @@ fun TelaInicial(
                     } else if (optCompendioArteDaGuerra) {
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
                         SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
-                        SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
                         SimpleCheckRow(
                             title = "Regra de Fama",
                             description = "Adiciona o atributo Fama.",
@@ -562,7 +554,6 @@ fun TelaInicial(
                                 }
                             }
                             SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
-                            SimpleCheckRow("Heróis sem Armadura", "Para cenários Pulp/Cinematográficos.", optHeroiSemArmadura) { optHeroiSemArmadura = it }
                             if (!optCompendioPathfinder) {
                                 SimpleCheckRow("Múltiplos Idiomas", "Personagem inicia poliglota.", optMultiplosIdiomas) { optMultiplosIdiomas = it }
                             }

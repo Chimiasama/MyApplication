@@ -379,7 +379,6 @@ class CriadorState {
     val poderesSelecionados = mutableStateListOf<String>()
     val manifestacoesPoderes = mutableStateMapOf<String, String>()
     val equipamentosComprados = mutableStateListOf<EquipamentoItem>()
-    var heroisSemArmadura by mutableStateOf(false)
     private val _maxedTraits = mutableStateListOf<String>()
     val maxedTraits: List<String> get() = _maxedTraits
     var idAtual by mutableStateOf<String?>(null)
@@ -4137,7 +4136,6 @@ class CriadorState {
                 tipoMonstroSelecionado = tipoMonstroSelecionado,
                 usarEspecializacoesDePericia = usarEspecializacoesDePericia,
                 grandesResponsabilidades = grandesResponsabilidades,
-                heroisSemArmadura = heroisSemArmadura,
                 nasceUmHeroi = nasceUmHeroi,
                 soldadoCargaAtivo = soldadoCargaAtivo,
                 permiteMultiAntecedenteArcano = permiteMultiAntecedenteArcano,
@@ -4310,7 +4308,6 @@ class CriadorState {
         portraitAlignment = snapshot.selecoes.portraitAlignment
 
         // Flags adicionais
-        heroisSemArmadura = flags.heroisSemArmadura
         nasceUmHeroi = flags.nasceUmHeroi
         soldadoCargaAtivo = flags.soldadoCargaAtivo
         permiteMultiAntecedenteArcano = flags.permiteMultiAntecedenteArcano

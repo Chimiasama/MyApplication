@@ -125,16 +125,11 @@ fun InformacoesSection(
             val movimento = state.valorMovimentacao()
             val aparar = state.valorAparar()
 
-            val temArmaduraDeEquip =
-                state.equipamentosComprados.any { it.armadura != null }
-            val bonusSemArmadura =
-                if (state.heroisSemArmadura && !temArmaduraDeEquip) 2 else 0
-
             val baseResFinal = state.valorResistenciaFinal()
             val armaduraEfetiva = state.valorArmaduraEfetiva()
-            val totalRes = baseResFinal + armaduraEfetiva + bonusSemArmadura
+            val totalRes = baseResFinal + armaduraEfetiva
             val resistenciaTexto =
-                if ((armaduraEfetiva + bonusSemArmadura) != 0)
+                if (armaduraEfetiva != 0)
                     "$baseResFinal ($totalRes)"
                 else
                     baseResFinal.toString()

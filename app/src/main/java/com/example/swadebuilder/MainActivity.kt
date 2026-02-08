@@ -883,7 +883,6 @@ class MainActivity : ComponentActivity() {
                             val usarEspecializacoesDePericia = state.usarEspecializacoesDePericia
                             val grandesResponsabilidades = state.grandesResponsabilidades
                             val regraMultiplosIdiomas = state.regraMultiplosIdiomas
-                            val heroisSemArmadura = state.heroisSemArmadura
                             val nasceUmHeroi = state.nasceUmHeroi
                             val usarSemPontosDePoder = state.usarSemPontosDePoder
                             val compendioScifiMechasCiberneticosAtivo = state.compendioScifiMechasCiberneticosAtivo
@@ -910,7 +909,6 @@ class MainActivity : ComponentActivity() {
                             scope.launch {
                                 criadorViewModel.prepararNomeInicial(context)
                             }
-                            state.heroisSemArmadura = heroisSemArmadura
                             state.nasceUmHeroi = nasceUmHeroi
                             state.usarSemPontosDePoder = usarSemPontosDePoder
                             state.grandesResponsabilidades = grandesResponsabilidades
@@ -967,7 +965,7 @@ class MainActivity : ComponentActivity() {
                         if (mostrouTelaInicial) {
                             TelaInicial(
                                 onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioPathfinderAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo,
-                                                nasceUmHeroi, heroisSemArmadura, usarEspecializacaoPer,
+                                                nasceUmHeroi, usarEspecializacaoPer,
                                                 semPontosDePoder, multiplosIdiomas, grandesResponsabilidades,
                                                 optRegraFama, optRegraRiqueza, optRegraCosaNostra,
                                                 optRegraMechasCiberneticos ->
@@ -998,7 +996,6 @@ class MainActivity : ComponentActivity() {
                                     scope.launch {
                                         criadorViewModel.prepararNomeInicial(context)
                                     }
-                                    criadorViewModel.state.heroisSemArmadura     = heroisSemArmadura
                                     criadorViewModel.state.nasceUmHeroi          = nasceUmHeroi
 
                                     criadorViewModel.state.usarSemPontosDePoder  = semPontosDePoder

@@ -84,7 +84,6 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         modoOficialAtivo = this.modoOficialAtivo,
         compendioArteDaGuerraAtivo = this.compendioArteDaGuerraAtivo,
         compendioPathfinderAtivo = this.compendioPathfinderAtivo,
-        heroisSemArmadura = this.heroisSemArmadura,
         compendioDeadlandsAtivo = this.compendioDeadlandsAtivo,
         compendioHorrorAtivo = this.compendioHorrorAtivo,
         compendioFantasiaAtivo = this.compendioFantasiaAtivo,
@@ -887,9 +886,7 @@ fun calcAparar(personagem: MeuPersonagem): Int {
 
 fun calcResistencia(personagem: MeuPersonagem): String {
     val arm = (max(personagem.armorFromPower, personagem.armorBase) + personagem.naturalArmorFromRace).coerceAtLeast(0)
-    val equipArm = personagem.equipamentos.any { it.armadura != null }
-    val semArm = if (personagem.heroisSemArmadura && !equipArm) 2 else 0
     val res = personagem.resistencia
-    val total = res + arm + semArm
-    return if ((arm + semArm) > 0) "$res($total)" else res.toString()
+    val total = res + arm
+    return if (arm > 0) "$res($total)" else res.toString()
 }
