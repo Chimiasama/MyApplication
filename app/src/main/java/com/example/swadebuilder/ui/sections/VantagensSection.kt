@@ -302,10 +302,15 @@ fun VantagensContent(
                 if (filter.estagios.isNotEmpty() && vant.requisitos.estagio !in filter.estagios) return@filter false
                 if (filter.atributos.isNotEmpty() && filter.atributos.intersect(vant.requisitos.atributoMin.keys).isEmpty()) return@filter false
                 if (filter.pericias.isNotEmpty()) {
+                    val filterPericias = if (state.compendioArteDaGuerraAtivo) {
+                        filter.pericias + if ("Jutsu" in filter.pericias) setOf("Lutar") else emptySet()
+                    } else {
+                        filter.pericias
+                    }
                     val reqMin = vant.requisitos.periciaMin.keys
                     val reqOpt = vant.requisitos.periciaMinOpcional.keys
                     val vinc = if (vant.vinculadoPericia) vant.choiceOptions else emptyList()
-                    if (filter.pericias.intersect(reqMin + reqOpt + vinc).isEmpty()) return@filter false
+                    if (filterPericias.intersect(reqMin + reqOpt + vinc).isEmpty()) return@filter false
                 }
             }
             true
@@ -829,6 +834,8 @@ fun VantagensContent(
         val allPericias = listaPericias
             .map { it.nome }
             .filter { it in requiredPericias && it in visibleSkills }
+            .map { applyJutsuSkinToSkillName(it, state) }
+            .distinct()
 
         VantFilterDialog(
             allEstagios = allEstagios,
@@ -844,7 +851,7 @@ fun VantagensContent(
         val vantOriginal = dialogMostrandoPoderesMisticos!!
         val options = listOf(
             "Bárbaro" to "Força d8+",
-            "Guerreiro" to "Lutar d8+",
+            "Guerreiro" to "${applyJutsuSkinToSkillName("Lutar", state)} d8+",
             "Ladrão" to "Ladinagem d8+",
             "Monge" to "Atletismo d8+",
             "Paladino" to "Espírito d8+",
@@ -908,7 +915,7 @@ fun VantagensContent(
                             "Guerreiro" -> {
                                 val lut = getSkillTotal("LUTAR")
                                 if (lut >= 8) reqMet = true
-                                else failMsg = "Requer Lutar d8+"
+                                else failMsg = "Requer ${applyJutsuSkinToSkillName("Lutar", state)} d8+"
                             }
                             "Ladrão" -> {
                                 val lad = getSkillTotal("LADINAGEM")
@@ -973,7 +980,9 @@ fun VantagensContent(
 
         val formatarRequisitos = { vant: Vantagem ->
             val attrs = vant.requisitos.atributoMin.entries.map { "${it.key} d${it.value}" }
-            val skills = vant.requisitos.periciaMin.entries.map { "${it.key} d${it.value}" }
+            val skills = vant.requisitos.periciaMin.entries.map {
+                "${applyJutsuSkinToSkillName(it.key, state)} d${it.value}"
+            }
             val all = attrs + skills
             if (all.isNotEmpty()) " (${all.joinToString(", ")})" else ""
         }
@@ -1621,10 +1630,19 @@ fun VantagensContent(
                     pendingVantagem = null
                 }
             } else {
+                val displayOptions = validOptions.map { applyJutsuSkinToSkillName(it, state) }
                 ChoiceDialog(
-                    options = validOptions,
+                    options = displayOptions,
                     onConfirm = { choice ->
-                        state.comprarVantagem(vant.copy(choice = choice)) { msg ->
+                        val rawChoice = if (state.compendioArteDaGuerraAtivo &&
+                            choice.equals("Jutsu", ignoreCase = true) &&
+                            validOptions.any { it.equals("Lutar", ignoreCase = true) }
+                        ) {
+                            "Lutar"
+                        } else {
+                            choice
+                        }
+                        state.comprarVantagem(vant.copy(choice = rawChoice)) { msg ->
                             viewModel.logFeedback(msg)
                             onUserFeedback()
                         }
@@ -1666,13 +1684,13 @@ private fun VantagemItem(
             add("$a d$m")
         }
         vant.requisitos.periciaMin.forEach { (p, m) ->
-            add("$p d$m")
+            add("${applyJutsuSkinToSkillName(p, state)} d$m")
         }
 
         if (vant.requisitos.periciaMinOpcional.isNotEmpty()) {
             add(
                 vant.requisitos.periciaMinOpcional.entries.joinToString(" ou ") {
-                    "${it.key} d${it.value}"
+                    "${applyJutsuSkinToSkillName(it.key, state)} d${it.value}"
                 }
             )
         }
@@ -1831,8 +1849,13 @@ private fun VantagemItem(
                 }
 
                 AnimatedVisibility(visible = detalhesExpandidos[vant.id] == true) {
+                    val rawDescription = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) {
+                        vant.originalDescription.trim()
+                    } else {
+                        vant.descricao.trim()
+                    }
                     Text(
-                        text = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) vant.originalDescription.trim() else vant.descricao.trim(),
+                        text = applyJutsuSkinToText(rawDescription, state),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 4.dp)
@@ -1847,4 +1870,22 @@ private fun Vantagem.isBrutamontes(): Boolean {
     val idKey = id.keyify()
     val nameKey = nome.keyify()
     return idKey == "BRUTAMONTES" || idKey == "BRAWNY" || nameKey == "BRUTAMONTES" || nameKey == "BRAWNY"
+}
+
+private val lutarWordRegex = Regex("\\bLutar\\b")
+
+private fun applyJutsuSkinToSkillName(name: String, state: CriadorState): String {
+    return if (state.compendioArteDaGuerraAtivo && name.equals("Lutar", ignoreCase = true)) {
+        "Jutsu"
+    } else {
+        name
+    }
+}
+
+private fun applyJutsuSkinToText(text: String, state: CriadorState): String {
+    return if (state.compendioArteDaGuerraAtivo) {
+        text.replace(lutarWordRegex, "Jutsu")
+    } else {
+        text
+    }
 }

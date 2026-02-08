@@ -1940,9 +1940,10 @@ class CriadorState {
 
     fun applyVantagemDinheiro(v: Vantagem) {
         if (usaRiqueza) return
-        when (v.nome.trim().uppercase()) {
-            "RICO"          -> dinheiro += 1000
-            "PODRE DE RICO" -> dinheiro += 1500
+        dinheiro += when (v.nome.trim().uppercase()) {
+            "RICO" -> if (compendioArteDaGuerraAtivo) 2000 else 1000
+            "PODRE DE RICO" -> 1500
+            else -> 0
         }
     }
 
@@ -1950,9 +1951,9 @@ class CriadorState {
         if (usaRiqueza) return
         val key = vant.nome.trim().uppercase()
         val amount = when (key) {
-            "RICO"          -> 1000
+            "RICO" -> if (compendioArteDaGuerraAtivo) 2000 else 1000
             "PODRE DE RICO" -> 1500
-            else            -> 0
+            else -> 0
         }
         if (amount <= 0) return
 
