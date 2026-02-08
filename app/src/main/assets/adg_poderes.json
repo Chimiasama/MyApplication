@@ -1,1 +1,206 @@
-[]
+[
+  {
+    "id": "manobra_armadura",
+    "nome": "Armadura (Maestria)",
+    "origem": "ARTE_DA_GUERRA",
+    "estagio": "Experiente",
+    "pontosDePoder": "0",
+    "distancia": "Pessoal",
+    "duracao": "Especial",
+    "manifestacoes": [
+      "Requer: Maestria na Transição"
+    ],
+    "descricao": "Envolve o elementalista em vento forte, pedras ou elemento equivalente. Concede +2 Armadura. Se a manifestação for fogo, metal afiado ou obsidiana, qualquer contato causa 2d4 de dano.",
+    "modificadores": [
+      {
+        "nome": "Ampliação",
+        "custo": "—",
+        "descricao": "A Armadura sobe para +4."
+      }
+    ]
+  },
+  {
+    "id": "manobra_barreira",
+    "nome": "Barreira (Maestria)",
+    "origem": "ARTE_DA_GUERRA",
+    "estagio": "Experiente",
+    "pontosDePoder": "0",
+    "distancia": "Pessoal",
+    "duracao": "1d4 turnos",
+    "manifestacoes": [
+      "Requer: Maestria na Transição"
+    ],
+    "descricao": "Ergue uma parede de 0,5 quadro (1 m) de largura por 1 quadro (2 m) de altura com Dureza 6, oferecendo cobertura. Pode ser rocha, chamas, gelo, raízes ou detritos, conforme o elemento.",
+    "modificadores": [
+      {
+        "nome": "Ampliação",
+        "custo": "—",
+        "descricao": "Largura 1 quadro (2 m) e Dureza 8."
+      },
+      {
+        "nome": "Chi",
+        "custo": "1",
+        "descricao": "A barreira criada na rodada se torna permanente até ser destruída."
+      }
+    ]
+  },
+  {
+    "id": "manobra_raio",
+    "nome": "Raio (Maestria)",
+    "origem": "ARTE_DA_GUERRA",
+    "estagio": "Experiente",
+    "pontosDePoder": "0",
+    "distancia": "3/6/12",
+    "duracao": "Instantânea",
+    "manifestacoes": [
+      "Requer: Maestria na Transição"
+    ],
+    "descricao": "Lança projéteis do elemento (chamas, gelo etc.) a curta distância, causando 1d6 de dano. Ao envolver uma arma arremessada, ela causa o dano da arma +1d6.",
+    "modificadores": [
+      {
+        "nome": "Ampliação",
+        "custo": "—",
+        "descricao": "O dano elemental sobe para 2d6."
+      },
+      {
+        "nome": "Chi",
+        "custo": "1",
+        "descricao": "Aumenta o dano elemental em um tipo de dado."
+      }
+    ]
+  },
+  {
+    "id": "manobra_cavar",
+    "nome": "Cavar (Maestria)",
+    "origem": "ARTE_DA_GUERRA",
+    "estagio": "Experiente",
+    "pontosDePoder": "0",
+    "distancia": "Pessoal",
+    "duracao": "Especial",
+    "manifestacoes": [
+      "Requer: Maestria na Transição",
+      "Restrito a: Rocha"
+    ],
+    "descricao": "Permite cavar e se mover por terra macia como um vertopeira (Movimentação 12). Não atravessa pedra dura. Pode terminar o turno abaixo da terra, mas arrisca sufocamento.",
+    "modificadores": [
+      {
+        "nome": "Chi",
+        "custo": "1",
+        "descricao": "Estende a duração para 5 rodadas."
+      }
+    ]
+  },
+  {
+    "id": "manobra_planar",
+    "nome": "Planar (Maestria)",
+    "origem": "ARTE_DA_GUERRA",
+    "estagio": "Experiente",
+    "pontosDePoder": "0",
+    "distancia": "Especial",
+    "duracao": "Especial",
+    "manifestacoes": [
+      "Requer: Maestria na Transição",
+      "Restrito a: Ar, Fogo"
+    ],
+    "descricao": "Usa vácuo, catapultas de pedra ou jatos de chama para se deslocar como uma Corrida com Movimentação 12, em qualquer direção. Ao final, o elementalista está sujeito à gravidade.",
+    "modificadores": [
+      {
+        "nome": "Chi",
+        "custo": "1",
+        "descricao": "Estende a duração para 5 rodadas."
+      }
+    ]
+  },
+  {
+    "id": "manobra_cura",
+    "nome": "Cura (Maestria)",
+    "origem": "ARTE_DA_GUERRA",
+    "estagio": "Experiente",
+    "pontosDePoder": "0",
+    "distancia": "Toque",
+    "duracao": "10 minutos",
+    "manifestacoes": [
+      "Requer: Maestria na Transição",
+      "Restrito a: Água, Madeira"
+    ],
+    "descricao": "Com concentração e cuidados, cura um Nível de Ferimento ou Fadiga. Múltiplas tentativas podem curar vários ferimentos no mesmo paciente.",
+    "modificadores": [
+      {
+        "nome": "Chi (Ferimentos antigos)",
+        "custo": "1",
+        "descricao": "Permite tratar ferimentos com mais de uma hora."
+      },
+      {
+        "nome": "Chi (Instantâneo)",
+        "custo": "1",
+        "descricao": "Reduz a duração de 10 minutos para instantâneo."
+      }
+    ]
+  },
+  {
+    "id": "manobra_impacto",
+    "nome": "Impacto (Maestria)",
+    "origem": "ARTE_DA_GUERRA",
+    "estagio": "Experiente",
+    "pontosDePoder": "0",
+    "distancia": "Pessoal",
+    "duracao": "Instantânea",
+    "manifestacoes": [
+      "Requer: Maestria na Transição"
+    ],
+    "descricao": "Punhos e pés são envolvidos pelo elemento. Ao atacar com Jutsu (desarmado), adiciona +1d6 de dano.",
+    "modificadores": [
+      {
+        "nome": "Ampliação",
+        "custo": "—",
+        "descricao": "O dano adicional sobe para 2d6."
+      }
+    ]
+  },
+  {
+    "id": "manobra_nadar",
+    "nome": "Nadar (Maestria)",
+    "origem": "ARTE_DA_GUERRA",
+    "estagio": "Experiente",
+    "pontosDePoder": "0",
+    "distancia": "Pessoal",
+    "duracao": "Especial",
+    "manifestacoes": [
+      "Requer: Maestria na Transição",
+      "Restrito a: Água"
+    ],
+    "descricao": "Nada longas distâncias como uma Corrida com Movimentação 12.",
+    "modificadores": [
+      {
+        "nome": "Chi",
+        "custo": "1",
+        "descricao": "Estende a duração para 5 rodadas."
+      },
+      {
+        "nome": "Chi (Respiração)",
+        "custo": "1",
+        "descricao": "Permite respirar debaixo d'água enquanto mergulha, até emergir."
+      }
+    ]
+  },
+  {
+    "id": "manobra_desequilibrar",
+    "nome": "Desequilibrar (Maestria)",
+    "origem": "ARTE_DA_GUERRA",
+    "estagio": "Experiente",
+    "pontosDePoder": "0",
+    "distancia": "Cone",
+    "duracao": "Instantânea",
+    "manifestacoes": [
+      "Requer: Maestria na Transição"
+    ],
+    "descricao": "Cria um jato poderoso em Modelo de Cone que desequilibra alvos. As vítimas devem passar em Agilidade ou são derrubadas.",
+    "modificadores": [
+      {
+        "nome": "Ampliação",
+        "custo": "—",
+        "descricao": "As vítimas sofrem -2 na rolagem de Agilidade."
+      }
+    ]
+  }
+]

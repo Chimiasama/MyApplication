@@ -90,8 +90,12 @@ fun PoderesSection(
     val locked = state.criacaoBasicaCongeladaComXp
 
     // Identify active Arcane Backgrounds
-    val arcanosAtivos = remember(state.vantagensSelecionadas) {
-        state.vantagensSelecionadas.mapNotNull { it.toArcanoKey() }.distinct()
+    val arcanosAtivos = remember(state.vantagensSelecionadas, state.tropoSelecionado, state.compendioArteDaGuerraAtivo) {
+        val ativos = state.vantagensSelecionadas.mapNotNull { it.toArcanoKey() }.toMutableList()
+        if (state.compendioArteDaGuerraAtivo && state.tropoSelecionado?.id == "tropo_elementalista") {
+            ativos.add("ELEMENTALISTA")
+        }
+        ativos.distinct()
     }
 
     if (arcanosAtivos.isEmpty()) return
@@ -195,7 +199,8 @@ fun PoderesSection(
             val permittedSet = advantage?.poderesPermitidos?.takeIf { it.isNotEmpty() }?.toSet()
                 ?: ArcaneConfig.getPermittedPowers(arcKey)
             val blockedSet = ArcaneConfig.getBlockedPowers(arcKey)
-            val originRaw = advantage?.origem?.uppercase() ?: "BASICO"
+            val originRaw = advantage?.origem?.uppercase()
+                ?: if (state.compendioArteDaGuerraAtivo && arcKey == "ELEMENTALISTA") "ARTE DA GUERRA" else "BASICO"
             val normalizedOrigin = when (originRaw) {
                 "SCI_FI", "SCIFI" -> "SCIFI"
                 "SOL E VAPOR", "SOL_VAPOR" -> "SOL_VAPOR"

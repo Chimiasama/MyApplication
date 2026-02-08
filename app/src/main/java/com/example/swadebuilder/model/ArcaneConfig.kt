@@ -93,6 +93,18 @@ object ArcaneConfig {
 
     val DEADLANDS_BRUXA = HORROR_VODUISTA
 
+    val ARTE_GUERRA_ELEMENTALISTA = setOf(
+        "manobra_armadura",
+        "manobra_barreira",
+        "manobra_raio",
+        "manobra_cavar",
+        "manobra_planar",
+        "manobra_cura",
+        "manobra_impacto",
+        "manobra_nadar",
+        "manobra_desequilibrar"
+    )
+
     fun getPermittedPowers(arcaneKey: String): Set<String>? {
         return when (arcaneKey) {
             "aa_abencoado" -> DEADLANDS_ABENCOADO
@@ -106,6 +118,7 @@ object ArcaneConfig {
             "aa_demonologista" -> HORROR_DEMONOLOGISTA
             "aa_voduista" -> HORROR_VODUISTA
             "aa_bruxa" -> DEADLANDS_BRUXA
+            "ELEMENTALISTA" -> ARTE_GUERRA_ELEMENTALISTA
             // Mad Scientist is special, returning null here to signify "check blocked" or handle differently
             else -> null
         }
