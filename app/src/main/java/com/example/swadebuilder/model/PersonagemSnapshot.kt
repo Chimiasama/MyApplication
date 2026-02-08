@@ -44,7 +44,6 @@ data class SnapshotFlags(
     val tipoMonstroSelecionado: String?,
     val usarEspecializacoesDePericia: Boolean,
     val grandesResponsabilidades: Boolean,
-    val heroisSemArmadura: Boolean,
     val nasceUmHeroi: Boolean,
     val soldadoCargaAtivo: Boolean,
     val permiteMultiAntecedenteArcano: Boolean,

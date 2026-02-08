@@ -70,7 +70,6 @@ data class MeuPersonagem(
     val modoOficialAtivo: Boolean = false,
     val compendioArteDaGuerraAtivo: Boolean = false,
     val compendioPathfinderAtivo: Boolean = false,
-    val heroisSemArmadura: Boolean = false,
 
     // ===== NOVOS CAMPOS (PDF EXTENDIDO) =====
     val coracaoCrystalSelecionado: CrystalHeart? = null,

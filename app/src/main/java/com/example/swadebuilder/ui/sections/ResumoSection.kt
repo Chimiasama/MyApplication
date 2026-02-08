@@ -131,7 +131,6 @@ fun SummaryContent(
     val flagsTemplate = remember(state) {
         listOfNotNull(
             "Carta Selvagem".takeIf { state.cartaSelvagem },
-            "Heróis Sem Armadura".takeIf { state.heroisSemArmadura },
             "Sem Pontos de Poder".takeIf { state.usarSemPontosDePoder },
             "Mais Pontos de Perícias".takeIf { state.maisPontosPericias },
             "Especializações".takeIf { state.usarEspecializacoesDePericia },

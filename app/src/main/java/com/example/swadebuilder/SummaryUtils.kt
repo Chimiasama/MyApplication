@@ -130,13 +130,10 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     val tamanho = personagem.tamanho
     val mov = personagem.movimentacao
     val armadura = (max(personagem.armorFromPower, personagem.armorBase) + personagem.naturalArmorFromRace).coerceAtLeast(0)
-    val temArmaduraDeEquip = personagem.equipamentos.any { it.armadura != null }
-    val bonusSemArmadura =
-        if (personagem.heroisSemArmadura && !temArmaduraDeEquip) 2 else 0
     val chi = calcChi()
-    val resistenciaTotal = resFinal + armadura + bonusSemArmadura
+    val resistenciaTotal = resFinal + armadura
     val resistenciaTexto =
-        if ((armadura + bonusSemArmadura) > 0) "${resFinal}(${resistenciaTotal})" else resFinal.toString()
+        if (armadura > 0) "${resFinal}(${resistenciaTotal})" else resFinal.toString()
 
     lines += "Identidade"
     lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"
