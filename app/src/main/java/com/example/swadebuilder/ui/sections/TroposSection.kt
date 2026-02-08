@@ -220,6 +220,40 @@ fun TroposSection(
                             }
                         }
 
+                        if (selecionado && tropo.id == "tropo_kui") {
+                            Spacer(Modifier.size(8.dp))
+                            Text(
+                                text = "Ferramentas do Ofício",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Escolha a ferramenta associada ao posto do Kui.",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+                            val ferramentas = listOf(
+                                "Armas Abençoadas" to "Focando no invisível, um Kui usa a bênção do Chi para atacar seres incorpóreos. Encanta armas por 10 minutos e pode abençoar mais objetos com Chi.",
+                                "Vínculo Espiritual" to "Ritual de ligação reduz um espírito a um companheiro leal (Extra). Espíritos podem ser reconvocados após 24 horas com ritual e gasto de Chi.",
+                                "Talismãs" to "Cria talismãs empoderados pelo Chi, inclusive imitando Técnicas Chi vistas nas últimas 48 horas, com custo em Chi e uso único."
+                            )
+                            Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
+                                ferramentas.forEach { (nome, descricao) ->
+                                    RadioButtonRow(
+                                        selected = state.kuiFerramentaSelecionada == nome,
+                                        label = nome,
+                                        onSelect = { state.kuiFerramentaSelecionada = nome }
+                                    )
+                                    Text(
+                                        text = descricao,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
+                                    )
+                                }
+                            }
+                        }
+
                         if (selecionado && tropo.id == "tropo_artista_marcial") {
                             Spacer(Modifier.size(8.dp))
                             Text(
