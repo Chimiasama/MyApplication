@@ -1612,6 +1612,27 @@ fun VantagensContent(
                         .mapNotNull { it.choice }
                 }
 
+                vant.id == "discipulo_artes_marciais" -> {
+                    state.vantagensSelecionadas
+                        .filter { it.id == "estudante_artes_marciais" && !it.choice.isNullOrBlank() }
+                        .mapNotNull { it.choice }
+                        .ifEmpty { vant.choiceOptions }
+                }
+
+                vant.id == "mestre_artes_marciais" -> {
+                    val fromDiscipulo = state.vantagensSelecionadas
+                        .filter { it.id == "discipulo_artes_marciais" && !it.choice.isNullOrBlank() }
+                        .mapNotNull { it.choice }
+                    if (fromDiscipulo.isNotEmpty()) {
+                        fromDiscipulo
+                    } else {
+                        state.vantagensSelecionadas
+                            .filter { it.id == "estudante_artes_marciais" && !it.choice.isNullOrBlank() }
+                            .mapNotNull { it.choice }
+                            .ifEmpty { vant.choiceOptions }
+                    }
+                }
+
                 vant.maxSelections > 0 -> {
                     val used = state.vantagensSelecionadas
                         .filter { it.id == vant.id && it.choice != null }

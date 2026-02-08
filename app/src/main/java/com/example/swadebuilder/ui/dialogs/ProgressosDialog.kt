@@ -897,7 +897,7 @@ fun ProgressosDialog(
                     reqIdx == -1 || reqIdx <= estIndex
                 }
                 val requiresChoice = vant.requiresChoice
-                val validChoicesCount = if (requiresChoice) validChoiceOptionsFor(vant).size else 0
+                val validChoicesCount = if (requiresChoice) validChoiceOptionsFor(vant, state).size else 0
                 val choiceOk = !requiresChoice || validChoicesCount > 0
                 val temProgresso = state.progressosDisponiveis >= 1
 
@@ -1377,7 +1377,7 @@ fun ProgressosDialog(
                         )
                     } else {
                         ChoiceDialog(
-                            options = vant.choiceOptions,
+                            options = validChoiceOptionsFor(vant, state),
                             onConfirm = { finishWithChoice(it) },
                             onDismiss = {
                                 showPendingChoice = false
@@ -1387,7 +1387,7 @@ fun ProgressosDialog(
                     }
                 } else {
                     ChoiceDialog(
-                        options = vant.choiceOptions,
+                        options = validChoiceOptionsFor(vant, state),
                         onConfirm = { finishWithChoice(it) },
                         onDismiss = {
                             showPendingChoice = false
@@ -1399,7 +1399,7 @@ fun ProgressosDialog(
 
             else -> {
                 ChoiceDialog(
-                    options = vant.choiceOptions,
+                    options = validChoiceOptionsFor(vant, state),
                     onConfirm = { finishWithChoice(it) },
                     onDismiss = {
                         showPendingChoice = false
@@ -1415,7 +1415,30 @@ fun ProgressosDialog(
 private fun maxEffectiveSelections(v: Vantagem): Int? =
     if (v.maxSelections > 0) v.maxSelections else null
 
-private fun validChoiceOptionsFor(v: Vantagem): List<String> = v.choiceOptions
+private fun validChoiceOptionsFor(v: Vantagem, state: CriadorState): List<String> {
+    return when (v.id) {
+        "discipulo_artes_marciais" -> {
+            state.vantagensSelecionadas
+                .filter { it.id == "estudante_artes_marciais" && !it.choice.isNullOrBlank() }
+                .mapNotNull { it.choice }
+                .ifEmpty { v.choiceOptions }
+        }
+        "mestre_artes_marciais" -> {
+            val fromDiscipulo = state.vantagensSelecionadas
+                .filter { it.id == "discipulo_artes_marciais" && !it.choice.isNullOrBlank() }
+                .mapNotNull { it.choice }
+            if (fromDiscipulo.isNotEmpty()) {
+                fromDiscipulo
+            } else {
+                state.vantagensSelecionadas
+                    .filter { it.id == "estudante_artes_marciais" && !it.choice.isNullOrBlank() }
+                    .mapNotNull { it.choice }
+                    .ifEmpty { v.choiceOptions }
+            }
+        }
+        else -> v.choiceOptions
+    }
+}
 
 // Extracted reusable item component
 @Composable
