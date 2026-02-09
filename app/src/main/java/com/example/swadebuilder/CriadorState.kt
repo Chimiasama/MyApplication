@@ -2204,7 +2204,13 @@ class CriadorState {
     }
 
     fun getSlotsCountForArcano(arcKey: String): Int {
-        val base = arcanoInfo[arcKey]?.first ?: 0
+        val arcKeyNorm = arcKey.normAAKey()
+        val hasArcanoVantagem = vantagensSelecionadas.any { it.toArcanoKey()?.normAAKey() == arcKeyNorm }
+        val usaTecnicasTropo = compendioArteDaGuerraAtivo &&
+            arcKeyNorm == "MESTRE DO CHI" &&
+            !hasArcanoVantagem &&
+            (tropoSelecionado?.tecnicasIniciais ?: 0) > 0
+        val base = if (usaTecnicasTropo) 0 else (arcanoInfo[arcKeyNorm]?.first ?: 0)
         var bonusSlots = 0
 
         vantagensSelecionadas
@@ -2223,19 +2229,19 @@ class CriadorState {
                     if (choice.contains("&")) {
                         // Split logic: "Key1 & Key2"
                         // Normalize each part individually
-                        if (choice.split("&").any { it.normAAKey() == arcKey }) {
+                        if (choice.split("&").any { it.normAAKey() == arcKeyNorm }) {
                             bonusSlots += 1
                         }
                     } else {
                         // Single target
-                        if (choice.normAAKey() == arcKey) {
+                        if (choice.normAAKey() == arcKeyNorm) {
                             bonusSlots += 2
                         }
                     }
                 }
             }
 
-        val bonusTecnicas = if (arcKey == "MESTRE DO CHI") tecnicasIniciaisFromTropo else 0
+        val bonusTecnicas = if (arcKeyNorm == "MESTRE DO CHI") tecnicasIniciaisFromTropo else 0
         return base + bonusSlots + bonusTecnicas
     }
 

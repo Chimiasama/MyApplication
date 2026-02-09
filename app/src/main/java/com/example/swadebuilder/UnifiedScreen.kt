@@ -566,7 +566,16 @@ private fun CreatorNavigationRail(
                     },
                     label = {
                         if (tabStyle == TabStyle.TEXTO) {
-                            Text(section.tabLabel(), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            val labelText = if (
+                                section == MainSection.PODERES &&
+                                state.compendioArteDaGuerraAtivo &&
+                                (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0
+                            ) {
+                                "Técnicas"
+                            } else {
+                                section.tabLabel()
+                            }
+                            Text(labelText, maxLines = 1, overflow = TextOverflow.Ellipsis)
                         }
                     },
                     alwaysShowLabel = (tabStyle == TabStyle.TEXTO)
@@ -700,7 +709,10 @@ private fun availableSectionsFor(state: CriadorState): List<MainSection> {
 
     val hasArcano = state.temAntecedenteArcano() && !state.celestialAAMilagresDesabilitado
     val mostraPoderesArcanos = hasArcano && !state.compendioCrystalHeartAtivo
-    if (mostraPoderesArcanos || state.modoSupers) {
+    val mostraTecnicasTropo = state.compendioArteDaGuerraAtivo &&
+        (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0 &&
+        !state.compendioCrystalHeartAtivo
+    if (mostraPoderesArcanos || mostraTecnicasTropo || state.modoSupers) {
         sections += MainSection.PODERES
     }
 
