@@ -204,7 +204,8 @@ fun UnifiedScreen(
                     onUserFeedback()
                     activeSection = it
                 },
-                tabStyle = state.estiloAbas
+                tabStyle = state.estiloAbas,
+                state = state
             )
             Column(Modifier.weight(1f)) {
                 if (state.modoProgressaoAtivo) {
@@ -494,7 +495,11 @@ private fun CreatorTabRow(
     onSelectSection: (MainSection) -> Unit,
     tabStyle: TabStyle
 ) {
-    val tabs = remember(sections) { sections.map { SectionTab(it, it.tabLabel()) } }
+    val tabs = remember(
+        sections,
+        state.compendioArteDaGuerraAtivo,
+        state.tropoSelecionado?.tecnicasIniciais
+    ) { sections.map { SectionTab(it, it.tabLabel(state)) } }
     if (tabs.isEmpty()) {
         return
     }
@@ -545,7 +550,8 @@ private fun CreatorNavigationRail(
     selectedSection: MainSection,
     enabledSections: (MainSection) -> Boolean,
     onSelectSection: (MainSection) -> Unit,
-    tabStyle: TabStyle
+    tabStyle: TabStyle,
+    state: CriadorState
 ) {
     NavigationRail {
         Column(
@@ -566,16 +572,7 @@ private fun CreatorNavigationRail(
                     },
                     label = {
                         if (tabStyle == TabStyle.TEXTO) {
-                            val labelText = if (
-                                section == MainSection.PODERES &&
-                                state.compendioArteDaGuerraAtivo &&
-                                (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0
-                            ) {
-                                "Técnicas"
-                            } else {
-                                section.tabLabel()
-                            }
-                            Text(labelText, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Text(section.tabLabel(state), maxLines = 1, overflow = TextOverflow.Ellipsis)
                         }
                     },
                     alwaysShowLabel = (tabStyle == TabStyle.TEXTO)
@@ -600,7 +597,7 @@ private fun MainSection.icon(): ImageVector = when (this) {
     MainSection.CRYSTAL_HEART -> Icons.Default.Favorite
 }
 
-private fun MainSection.tabLabel(): String = when (this) {
+private fun MainSection.tabLabel(state: CriadorState): String = when (this) {
     MainSection.ANCESTRALIDADES -> "Ancestr."
     MainSection.TROPOS -> "Tropos"
     MainSection.COMPLICACOES -> "Complic."
@@ -609,7 +606,14 @@ private fun MainSection.tabLabel(): String = when (this) {
     MainSection.VANTAGENS -> "Vantagens"
     MainSection.EQUIPAMENTOS -> "Equip."
     MainSection.RESUMO -> "Resumo"
-    MainSection.PODERES -> "Poderes"
+    MainSection.PODERES -> if (
+        state.compendioArteDaGuerraAtivo &&
+        (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0
+    ) {
+        "Técnicas"
+    } else {
+        "Poderes"
+    }
     MainSection.XP -> "XP"
     MainSection.MONSTRO -> "Monstro"
     MainSection.CRYSTAL_HEART -> "Crystal Heart".toEditionDisplayName()
