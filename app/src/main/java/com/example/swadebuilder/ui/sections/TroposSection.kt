@@ -254,6 +254,104 @@ fun TroposSection(
                             }
                         }
 
+                        if (selecionado && tropo.id == "tropo_samurai") {
+                            Spacer(Modifier.size(8.dp))
+                            Text(
+                                text = "Treinamento de Elite",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Escolha a perícia adicional em d6 e a vantagem inicial.",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+                            Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
+                                Text(
+                                    text = "Perícia em d6",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                RadioButtonRow(
+                                    selected = state.samuraiPericiaEscolhida == "Jutsu",
+                                    label = "Jutsu (Lutar) d6",
+                                    onSelect = { state.atualizarSamuraiPericiaEscolhida("Jutsu") }
+                                )
+                                RadioButtonRow(
+                                    selected = state.samuraiPericiaEscolhida == "Atirar",
+                                    label = "Atirar d6",
+                                    onSelect = { state.atualizarSamuraiPericiaEscolhida("Atirar") }
+                                )
+                            }
+                            Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
+                                Text(
+                                    text = "Vantagem inicial",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                RadioButtonRow(
+                                    selected = state.samuraiVantagemEscolhida == "Comando",
+                                    label = "Comando",
+                                    onSelect = { state.atualizarSamuraiVantagemEscolhida("Comando") }
+                                )
+                                RadioButtonRow(
+                                    selected = state.samuraiVantagemEscolhida == "Combate",
+                                    label = "Vantagem de Combate (1 slot grátis)",
+                                    onSelect = { state.atualizarSamuraiVantagemEscolhida("Combate") }
+                                )
+                                Text(
+                                    text = "Com Conhecimento Batalha d8+, o Samurai ignora requisitos de Estágio para vantagens de Liderança.",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    modifier = Modifier.padding(top = 4.dp)
+                                )
+                            }
+
+                            Spacer(Modifier.size(8.dp))
+                            Text(
+                                text = "Posturas de Combate (escolha 2)",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Selecionadas: ${state.samuraiPosturasSelecionadas.size}/2",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+                            val posturas = listOf(
+                                "Asa da Garça" to "Adiciona +1 no Aparar.",
+                                "Bico do Galo" to "Concede +1 em Ataques Localizados para desarmar oponentes.",
+                                "Carapaça da Tartaruga" to "Adiciona +2 na Armadura enquanto estiver utilizando uma armadura.",
+                                "Cauda do Macaco" to "Concede Alcance +1.",
+                                "Casco do Cavalo" to "Concede +2 nas rolagens resistidas de Força para Empurrar ou ser Empurrado.",
+                                "Enxame de Ratos" to "Concede +3 (em vez de +2) em Ataques Selvagens.",
+                                "Presas de Águia" to "Concede PA 2 à arma utilizada.",
+                                "Presas do Javali" to "Adiciona +1 nas rolagens de ataque."
+                            )
+                            Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
+                                posturas.forEach { (nome, descricao) ->
+                                    val selecionada = state.samuraiPosturasSelecionadas.contains(nome)
+                                    val habilitada = selecionada || state.samuraiPosturasSelecionadas.size < 2
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 4.dp)
+                                    ) {
+                                        Checkbox(
+                                            checked = selecionada,
+                                            onCheckedChange = { if (habilitada) state.toggleSamuraiPostura(nome) },
+                                            enabled = habilitada
+                                        )
+                                        Column(modifier = Modifier.padding(start = 8.dp)) {
+                                            Text(text = nome, style = MaterialTheme.typography.bodyMedium)
+                                            Text(text = descricao, style = MaterialTheme.typography.bodySmall)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         if (selecionado && tropo.id == "tropo_artista_marcial") {
                             Spacer(Modifier.size(8.dp))
                             Text(

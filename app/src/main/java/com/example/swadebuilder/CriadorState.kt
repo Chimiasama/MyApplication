@@ -86,6 +86,10 @@ class CriadorState {
     var buXistaCaminhoSelecionado by mutableStateOf<String?>(null)
     var elementalistaElementoSelecionado by mutableStateOf<String?>(null)
     var kuiFerramentaSelecionada by mutableStateOf<String?>(null)
+    var samuraiPericiaEscolhida by mutableStateOf<String?>(null)
+    var samuraiVantagemEscolhida by mutableStateOf<String?>(null)
+    val samuraiPosturasSelecionadas = mutableStateListOf<String>()
+    val samuraiCombatSlotIds = mutableStateListOf<String>()
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
@@ -1030,6 +1034,13 @@ class CriadorState {
         }
     }
 
+    val samuraiCombatSlotAvailable: Boolean by derivedStateOf {
+        if (!compendioArteDaGuerraAtivo || tropoSelecionado?.id != "tropo_samurai") false
+        else {
+            samuraiVantagemEscolhida == "Combate" && samuraiCombatSlotIds.isEmpty()
+        }
+    }
+
     val pathfinderSlotAvailable: Boolean by derivedStateOf {
         if (!compendioPathfinderAtivo) false
         else {
@@ -1059,8 +1070,9 @@ class CriadorState {
         // Standard Advantage
         val isFreePathfinder = pathfinderSlotAvailable && isPathfinderEligible(v)
         val isFreeProtagonista = protagonistaSlotAvailable && isProtagonistaEligible(v)
+        val isFreeSamuraiCombat = samuraiCombatSlotAvailable && v.categoria == Categoria.COMBATE
 
-        if (!isFreePathfinder && !isFreeProtagonista && pontosVantagem <= 0) return false // No points
+        if (!isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && pontosVantagem <= 0) return false // No points
 
         applyVantagemDinheiro(v)
         adicionarVantagem(v)
@@ -1070,6 +1082,9 @@ class CriadorState {
         } else if (isFreeProtagonista) {
             vantagensSlotProtagonista.add(v.id)
             onFeedback("Vantagem ${v.nome} adicionada (Slot de Protagonista Gratuito).")
+        } else if (isFreeSamuraiCombat) {
+            samuraiCombatSlotIds.add(v.id)
+            onFeedback("Vantagem ${v.nome} adicionada (Slot de Combate do Samurai).")
         } else {
             pontosVantagem--
             onFeedback("Vantagem ${v.nome} adicionada.")
@@ -1100,6 +1115,7 @@ class CriadorState {
         // Standard Advantage
         val wasEligible = isPathfinderEligible(v)
         val wasProtagonistaEligible = v.id in vantagensSlotProtagonista
+        val wasSamuraiEligible = v.id in samuraiCombatSlotIds
 
         removeVantagemDinheiro(v)
         removerVantagem(v)
@@ -1119,6 +1135,10 @@ class CriadorState {
         }
         if (wasProtagonistaEligible && compendioArteDaGuerraAtivo) {
             vantagensSlotProtagonista.remove(v.id)
+            shouldRefund = false
+        }
+        if (wasSamuraiEligible && compendioArteDaGuerraAtivo) {
+            samuraiCombatSlotIds.remove(v.id)
             shouldRefund = false
         }
 
@@ -1484,6 +1504,16 @@ class CriadorState {
                 } else {
                     maxOf(modifiedBase, 4)
                 }
+            }
+        }
+
+        // Arte da Guerra - Samurai
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_samurai") {
+            val samuraiChoice = samuraiPericiaEscolhida?.keyify()
+            val isJutsuChoice = samuraiChoice == "JUTSU"
+            val chosenKey = if (isJutsuChoice) "LUTAR" else samuraiChoice
+            if (chosenKey != null && perKey == chosenKey) {
+                modifiedBase = maxOf(modifiedBase, 6)
             }
         }
 
@@ -2636,7 +2666,8 @@ class CriadorState {
 
         // 5) Estágio mínimo (respeita Nasce um Herói)
         val ignorarEstagioPorNasce = (nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0)
-        if (!ignorarEstagioPorNasce) {
+        val ignorarEstagioPorSamurai = shouldIgnoreLeadershipStage(v)
+        if (!ignorarEstagioPorNasce && !ignorarEstagioPorSamurai) {
             val estagioRequerido = listaDeEstagios.firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
             if (estagioRequerido != null) {
                 val estagioAtual = overrideStageForVantagem?.let { stageName ->
@@ -2783,6 +2814,13 @@ class CriadorState {
         ) return false
 
         return true
+    }
+
+    private fun shouldIgnoreLeadershipStage(v: Vantagem): Boolean {
+        if (!compendioArteDaGuerraAtivo || tropoSelecionado?.id != "tropo_samurai") return false
+        if (v.categoria != Categoria.LIDERANCA) return false
+        val pericia = getBestPericia("Conhecimento Batalha") ?: return false
+        return rawTotal(pericia) >= 8
     }
 
     var pontosComplicacaoGastos by mutableIntStateOf(0)
@@ -3352,7 +3390,9 @@ class CriadorState {
         val estagioRequerido = listaDeEstagios.firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
         if (estagioRequerido != null) {
             val atual = estagioAtual()
-            if (listaDeEstagios.indexOf(atual) < listaDeEstagios.indexOf(estagioRequerido)) return false
+            if (!shouldIgnoreLeadershipStage(v) &&
+                listaDeEstagios.indexOf(atual) < listaDeEstagios.indexOf(estagioRequerido)
+            ) return false
         }
 
         // Prévias
@@ -3708,6 +3748,50 @@ class CriadorState {
         recalcularPontosAtributo()
     }
 
+    private fun syncSamuraiVantagemEscolhida() {
+        if (tropoSelecionado?.id != "tropo_samurai") return
+        if (samuraiVantagemEscolhida == "Combate") {
+            val comando = listaVantagens.firstOrNull { it.id == "comando" }
+            if (comando != null) {
+                vantagensSelecionadas.removeAll { it.id == comando.id }
+            }
+            vantagensAutomaticasDoTropo.removeAll { it == "comando" }
+        } else {
+            val comando = listaVantagens.firstOrNull { it.id == "comando" }
+            if (comando != null && vantagensSelecionadas.none { it.id == comando.id }) {
+                vantagensSelecionadas.add(comando)
+            }
+            if (!vantagensAutomaticasDoTropo.contains("comando")) {
+                vantagensAutomaticasDoTropo.add("comando")
+            }
+            if (samuraiCombatSlotIds.isNotEmpty()) {
+                vantagensSelecionadas.removeAll { it.id in samuraiCombatSlotIds }
+                samuraiCombatSlotIds.clear()
+            }
+        }
+    }
+
+    fun atualizarSamuraiVantagemEscolhida(nova: String) {
+        if (samuraiVantagemEscolhida == nova) return
+        samuraiVantagemEscolhida = nova
+        syncSamuraiVantagemEscolhida()
+    }
+
+    fun atualizarSamuraiPericiaEscolhida(nova: String) {
+        if (samuraiPericiaEscolhida == nova) return
+        samuraiPericiaEscolhida = nova
+        rebuildAllPericiaStacks()
+    }
+
+    fun toggleSamuraiPostura(postura: String) {
+        if (samuraiPosturasSelecionadas.contains(postura)) {
+            samuraiPosturasSelecionadas.remove(postura)
+            return
+        }
+        if (samuraiPosturasSelecionadas.size >= 2) return
+        samuraiPosturasSelecionadas.add(postura)
+    }
+
     fun toggleArtistaMarcialTecnica(tecnica: String) {
         if (artistaMarcialTecnicasSelecionadas.contains(tecnica)) {
             artistaMarcialTecnicasSelecionadas.remove(tecnica)
@@ -3918,6 +4002,12 @@ class CriadorState {
         if (tropoSelecionado?.id != "tropo_kui") {
             kuiFerramentaSelecionada = null
         }
+        if (tropoSelecionado?.id != "tropo_samurai") {
+            samuraiPericiaEscolhida = null
+            samuraiVantagemEscolhida = null
+            samuraiPosturasSelecionadas.clear()
+            samuraiCombatSlotIds.clear()
+        }
 
         tropoSelecionado = novoTropo
 
@@ -3977,6 +4067,15 @@ class CriadorState {
             if (novoTropo.id == "tropo_kui" && kuiFerramentaSelecionada == null) {
                 kuiFerramentaSelecionada = "Armas Abençoadas"
             }
+            if (novoTropo.id == "tropo_samurai") {
+                if (samuraiPericiaEscolhida == null) {
+                    samuraiPericiaEscolhida = "Jutsu"
+                }
+                if (samuraiVantagemEscolhida == null) {
+                    samuraiVantagemEscolhida = "Comando"
+                }
+                syncSamuraiVantagemEscolhida()
+            }
         } else {
             protagonistaRollTecnicas = null
             protagonistaRollPericia = null
@@ -3992,6 +4091,10 @@ class CriadorState {
             buXistaCaminhoSelecionado = null
             elementalistaElementoSelecionado = null
             kuiFerramentaSelecionada = null
+            samuraiPericiaEscolhida = null
+            samuraiVantagemEscolhida = null
+            samuraiPosturasSelecionadas.clear()
+            samuraiCombatSlotIds.clear()
         }
 
         syncMestreDoChiSlots()
@@ -4369,6 +4472,10 @@ class CriadorState {
                 buXistaCaminhoSelecionado = buXistaCaminhoSelecionado,
                 elementalistaElementoSelecionado = elementalistaElementoSelecionado,
                 kuiFerramentaSelecionada = kuiFerramentaSelecionada,
+                samuraiPericiaEscolhida = samuraiPericiaEscolhida,
+                samuraiVantagemEscolhida = samuraiVantagemEscolhida,
+                samuraiPosturasSelecionadas = samuraiPosturasSelecionadas.toList(),
+                samuraiCombatSlotIds = samuraiCombatSlotIds.toList(),
                 protagonistaRollTecnicas = protagonistaRollTecnicas,
                 protagonistaRollPericia = protagonistaRollPericia,
                 protagonistaRollVantagem = protagonistaRollVantagem,
@@ -4487,6 +4594,12 @@ class CriadorState {
         buXistaCaminhoSelecionado = snapshot.selecoes.buXistaCaminhoSelecionado
         elementalistaElementoSelecionado = snapshot.selecoes.elementalistaElementoSelecionado
         kuiFerramentaSelecionada = snapshot.selecoes.kuiFerramentaSelecionada
+        samuraiPericiaEscolhida = snapshot.selecoes.samuraiPericiaEscolhida
+        samuraiVantagemEscolhida = snapshot.selecoes.samuraiVantagemEscolhida
+        samuraiPosturasSelecionadas.clear()
+        samuraiPosturasSelecionadas.addAll(snapshot.selecoes.samuraiPosturasSelecionadas)
+        samuraiCombatSlotIds.clear()
+        samuraiCombatSlotIds.addAll(snapshot.selecoes.samuraiCombatSlotIds)
         protagonistaRollTecnicas = snapshot.selecoes.protagonistaRollTecnicas
         protagonistaRollPericia = snapshot.selecoes.protagonistaRollPericia
         protagonistaRollVantagem = snapshot.selecoes.protagonistaRollVantagem
@@ -4629,6 +4742,9 @@ class CriadorState {
         vantagensAutomaticasDoTropo.apply {
             clear()
             addAll(snapshot.selecoes.vantagensTropoAutomaticas)
+        }
+        if (tropoSelecionado?.id == "tropo_samurai") {
+            syncSamuraiVantagemEscolhida()
         }
         vantagensAutomaticasDoProtagonista.clear()
         if (tropoSelecionado?.id == "tropo_protagonista") {
