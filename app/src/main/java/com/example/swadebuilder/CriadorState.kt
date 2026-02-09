@@ -3784,12 +3784,17 @@ class CriadorState {
             vantagensAutomaticasDoTropo.add(vant.id)
         }
 
-        youxiaJutsuSelecionado?.let { notasPericia["Lutar"] = it }
+        if (youxiaJutsuSelecionado.isNullOrBlank()) {
+            notasPericia.remove("Lutar")
+        } else {
+            notasPericia["Lutar"] = youxiaJutsuSelecionado!!
+        }
     }
 
     fun atualizarYouxiaJutsuSelecionado(novoJutsu: String) {
-        if (youxiaJutsuSelecionado == novoJutsu) return
-        youxiaJutsuSelecionado = novoJutsu
+        val normalized = novoJutsu.trim().ifBlank { null }
+        if (youxiaJutsuSelecionado == normalized) return
+        youxiaJutsuSelecionado = normalized
         syncYouxiaKensai()
         rebuildAllPericiaStacks()
     }

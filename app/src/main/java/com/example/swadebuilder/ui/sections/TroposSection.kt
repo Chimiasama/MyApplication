@@ -23,6 +23,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,12 +34,12 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.criacaoBasicaCongelada
-import com.example.swadebuilder.keyify
 import com.example.swadebuilder.listaTropos
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.ui.components.DropdownField
 import com.example.swadebuilder.ui.components.RadioButtonRow
 import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.util.keyify
 import kotlin.random.Random
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -432,25 +433,13 @@ fun TroposSection(
                                 style = MaterialTheme.typography.bodySmall,
                                 modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
                             )
-                            val jutsuTipos = listOf(
-                                "Desarmado",
-                                "Espada",
-                                "Haste",
-                                "Concussão",
-                                "Corrente",
-                                "Leve",
-                                "Massivo",
-                                "Passivo",
-                                "Samurai"
-                            )
                             Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
-                                jutsuTipos.forEach { nome ->
-                                    RadioButtonRow(
-                                        selected = state.youxiaJutsuSelecionado == nome,
-                                        label = nome,
-                                        onSelect = { state.atualizarYouxiaJutsuSelecionado(nome) }
-                                    )
-                                }
+                                OutlinedTextField(
+                                    value = state.youxiaJutsuSelecionado.orEmpty(),
+                                    onValueChange = { state.atualizarYouxiaJutsuSelecionado(it) },
+                                    label = { Text("Tipo de Jutsu (ex: Espada, Desarmado)") },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
                             }
 
                             Spacer(Modifier.size(8.dp))
