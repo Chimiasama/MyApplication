@@ -352,6 +352,73 @@ fun TroposSection(
                             }
                         }
 
+                        if (selecionado && tropo.id == "tropo_shinobi") {
+                            Spacer(Modifier.size(8.dp))
+                            Text(
+                                text = "Talento Shinobi",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Escolha um talento. Místico concede uma Técnica Chi adicional.",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+                            val talentos = listOf(
+                                "Alteração" to "Ao gastar um ponto de Chi, assume a aparência de outra pessoa como o poder Disfarce (não é Técnica Chi).",
+                                "Pés Leves" to "Caminha por lama ou neve sem deixar pegadas pesadas. Rastreadores sofrem -4 em Sobrevivência.",
+                                "Místico" to "Conhecimentos avançados do Chi. Começa com uma Técnica Chi adicional.",
+                                "Passo das Sombras" to "Gasta um ponto de Chi para ganhar uma ação de Movimentação extra silenciosa; inimigos sofrem -2 em Perceber e ataques furtivos tratam sucesso como Ampliação."
+                            )
+                            Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
+                                talentos.forEach { (nome, descricao) ->
+                                    RadioButtonRow(
+                                        selected = state.shinobiTalentoSelecionado == nome,
+                                        label = nome,
+                                        onSelect = { state.shinobiTalentoSelecionado = nome }
+                                    )
+                                    Text(
+                                        text = descricao,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
+                                    )
+                                }
+                            }
+
+                            Spacer(Modifier.size(8.dp))
+                            Text(
+                                text = "Tipo de Treinamento",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Escolha o treinamento para definir as perícias com rerrolagem de Chi.",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+                            val treinamentos = listOf(
+                                "Infiltrador" to "Gasta um Chi para rerrolar falhas em Acrobacia, Pesquisar, Furtividade ou Ladinagem.",
+                                "Batedor" to "Gasta um Chi para rerrolar falhas em Atletismo, Curar ou Sobrevivência.",
+                                "Espião" to "Gasta um Chi para rerrolar falhas em Convenção, Intimidar, Performance, Persuadir ou Idioma."
+                            )
+                            Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
+                                treinamentos.forEach { (nome, descricao) ->
+                                    RadioButtonRow(
+                                        selected = state.shinobiTreinamentoSelecionado == nome,
+                                        label = nome,
+                                        onSelect = { state.shinobiTreinamentoSelecionado = nome }
+                                    )
+                                    Text(
+                                        text = descricao,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
+                                    )
+                                }
+                            }
+                        }
+
                         if (selecionado && tropo.id == "tropo_artista_marcial") {
                             Spacer(Modifier.size(8.dp))
                             Text(

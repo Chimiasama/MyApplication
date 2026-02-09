@@ -346,6 +346,8 @@ class CriadorViewModel : ViewModel() {
         state.samuraiVantagemEscolhida = null
         state.samuraiPosturasSelecionadas.clear()
         state.samuraiCombatSlotIds.clear()
+        state.shinobiTalentoSelecionado = null
+        state.shinobiTreinamentoSelecionado = null
         state.descendenteElementalSelecionado = null
         state.gnomoPericiaEscolhida = null
         state.dominioClerigoSelecionado = null

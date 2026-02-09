@@ -90,6 +90,8 @@ class CriadorState {
     var samuraiVantagemEscolhida by mutableStateOf<String?>(null)
     val samuraiPosturasSelecionadas = mutableStateListOf<String>()
     val samuraiCombatSlotIds = mutableStateListOf<String>()
+    var shinobiTalentoSelecionado by mutableStateOf<String?>(null)
+    var shinobiTreinamentoSelecionado by mutableStateOf<String?>(null)
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
@@ -2304,11 +2306,15 @@ class CriadorState {
 
     val tecnicasIniciaisFromTropo by derivedStateOf {
         val base = tropoSelecionado?.tecnicasIniciais ?: 0
-        if (tropoSelecionado?.id == "tropo_protagonista") {
+        var total = if (tropoSelecionado?.id == "tropo_protagonista") {
             base + tecnicasIniciaisProtagonista()
         } else {
             base
         }
+        if (tropoSelecionado?.id == "tropo_shinobi" && shinobiTalentoSelecionado?.keyify() == "MISTICO") {
+            total += 1
+        }
+        total
     }
 
     val reservaChi by derivedStateOf {
@@ -4008,6 +4014,10 @@ class CriadorState {
             samuraiPosturasSelecionadas.clear()
             samuraiCombatSlotIds.clear()
         }
+        if (tropoSelecionado?.id != "tropo_shinobi") {
+            shinobiTalentoSelecionado = null
+            shinobiTreinamentoSelecionado = null
+        }
 
         tropoSelecionado = novoTropo
 
@@ -4076,6 +4086,14 @@ class CriadorState {
                 }
                 syncSamuraiVantagemEscolhida()
             }
+            if (novoTropo.id == "tropo_shinobi") {
+                if (shinobiTalentoSelecionado == null) {
+                    shinobiTalentoSelecionado = "Alteração"
+                }
+                if (shinobiTreinamentoSelecionado == null) {
+                    shinobiTreinamentoSelecionado = "Infiltrador"
+                }
+            }
         } else {
             protagonistaRollTecnicas = null
             protagonistaRollPericia = null
@@ -4095,6 +4113,8 @@ class CriadorState {
             samuraiVantagemEscolhida = null
             samuraiPosturasSelecionadas.clear()
             samuraiCombatSlotIds.clear()
+            shinobiTalentoSelecionado = null
+            shinobiTreinamentoSelecionado = null
         }
 
         syncMestreDoChiSlots()
@@ -4476,6 +4496,8 @@ class CriadorState {
                 samuraiVantagemEscolhida = samuraiVantagemEscolhida,
                 samuraiPosturasSelecionadas = samuraiPosturasSelecionadas.toList(),
                 samuraiCombatSlotIds = samuraiCombatSlotIds.toList(),
+                shinobiTalentoSelecionado = shinobiTalentoSelecionado,
+                shinobiTreinamentoSelecionado = shinobiTreinamentoSelecionado,
                 protagonistaRollTecnicas = protagonistaRollTecnicas,
                 protagonistaRollPericia = protagonistaRollPericia,
                 protagonistaRollVantagem = protagonistaRollVantagem,
@@ -4600,6 +4622,8 @@ class CriadorState {
         samuraiPosturasSelecionadas.addAll(snapshot.selecoes.samuraiPosturasSelecionadas)
         samuraiCombatSlotIds.clear()
         samuraiCombatSlotIds.addAll(snapshot.selecoes.samuraiCombatSlotIds)
+        shinobiTalentoSelecionado = snapshot.selecoes.shinobiTalentoSelecionado
+        shinobiTreinamentoSelecionado = snapshot.selecoes.shinobiTreinamentoSelecionado
         protagonistaRollTecnicas = snapshot.selecoes.protagonistaRollTecnicas
         protagonistaRollPericia = snapshot.selecoes.protagonistaRollPericia
         protagonistaRollVantagem = snapshot.selecoes.protagonistaRollVantagem
