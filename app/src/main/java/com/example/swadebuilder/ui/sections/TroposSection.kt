@@ -5,15 +5,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
@@ -26,11 +29,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.animation.AnimatedVisibility
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.criacaoBasicaCongelada
@@ -52,12 +58,14 @@ fun TroposSection(
 
     val tropos = remember { listaTropos }
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
+    val allowLongTexts = EditionConfig.isFullEdition
     val idParaNome = remember(showOfficialNames) {
         listaVantagens.associate { vant ->
             val nome = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome
             vant.id to nome
         }
     }
+    val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     SectionCard(
         title = "Tropos",
@@ -142,11 +150,32 @@ fun TroposSection(
                             )
                         }
 
-                        Text(
-                            text = tropo.descricao,
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
-                        )
+                        if (allowLongTexts && tropo.descricao.isNotBlank()) {
+                            Spacer(Modifier.height(2.dp))
+                            TextButton(
+                                onClick = {
+                                    val current = detalhesExpandidos[tropo.id] ?: false
+                                    detalhesExpandidos[tropo.id] = !current
+                                },
+                                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.primary),
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
+                            ) {
+                                Text(
+                                    if (detalhesExpandidos[tropo.id] == true) "Ocultar detalhes" else "Ver detalhes",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+
+                            AnimatedVisibility(visible = detalhesExpandidos[tropo.id] == true) {
+                                Text(
+                                    text = tropo.descricao,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp),
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
 
                         if (selecionado && tropo.id == "tropo_buxista") {
                             Spacer(Modifier.size(8.dp))
