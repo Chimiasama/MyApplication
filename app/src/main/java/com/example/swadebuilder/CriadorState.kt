@@ -92,6 +92,8 @@ class CriadorState {
     val samuraiCombatSlotIds = mutableStateListOf<String>()
     var shinobiTalentoSelecionado by mutableStateOf<String?>(null)
     var shinobiTreinamentoSelecionado by mutableStateOf<String?>(null)
+    var youxiaJutsuSelecionado by mutableStateOf<String?>(null)
+    var youxiaHistoricoSelecionado by mutableStateOf<String?>(null)
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
@@ -1519,6 +1521,13 @@ class CriadorState {
             }
         }
 
+        // Arte da Guerra - Youxia (Kensai)
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_youxia") {
+            if (perKey == "LUTAR" && !youxiaJutsuSelecionado.isNullOrBlank()) {
+                modifiedBase = maxOf(modifiedBase, 4)
+            }
+        }
+
         // Arte da Guerra - Artista Marcial (Jutsu inicial)
         if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_artista_marcial") {
             val slotIndex = jutsuSlotIndex(per)
@@ -2065,9 +2074,15 @@ class CriadorState {
 
             val fav = run {
                 val choiceSnapshot = vant.choice
+                val isYouxiaAuto =
+                    compendioArteDaGuerraAtivo &&
+                        tropoSelecionado?.id == "tropo_youxia" &&
+                        vant.id == "arma_predileta" &&
+                        vantagensAutomaticasDoTropo.contains(vant.id)
                 if (
                     vant.nome.trim().equals("Arma Predileta", ignoreCase = true)
                     && choiceSnapshot != null
+                    && !isYouxiaAuto
                 ) {
                     getBestPericia(choiceSnapshot)
                         ?.let { per -> listOf(per to 8) }
@@ -3754,6 +3769,36 @@ class CriadorState {
         recalcularPontosAtributo()
     }
 
+    private fun syncYouxiaKensai() {
+        if (tropoSelecionado?.id != "tropo_youxia") return
+        val choice = "Lutar"
+        val idx = vantagensSelecionadas.indexOfFirst { it.id == "arma_predileta" }
+        if (idx >= 0) {
+            val current = vantagensSelecionadas[idx]
+            if (current.choice != choice) {
+                vantagensSelecionadas[idx] = current.copy(choice = choice)
+            }
+        } else {
+            val vant = listaVantagens.firstOrNull { it.id == "arma_predileta" } ?: return
+            vantagensSelecionadas.add(vant.copy(choice = choice))
+            vantagensAutomaticasDoTropo.add(vant.id)
+        }
+
+        youxiaJutsuSelecionado?.let { notasPericia["Lutar"] = it }
+    }
+
+    fun atualizarYouxiaJutsuSelecionado(novoJutsu: String) {
+        if (youxiaJutsuSelecionado == novoJutsu) return
+        youxiaJutsuSelecionado = novoJutsu
+        syncYouxiaKensai()
+        rebuildAllPericiaStacks()
+    }
+
+    fun atualizarYouxiaHistoricoSelecionado(novoHistorico: String) {
+        if (youxiaHistoricoSelecionado == novoHistorico) return
+        youxiaHistoricoSelecionado = novoHistorico
+    }
+
     private fun syncSamuraiVantagemEscolhida() {
         if (tropoSelecionado?.id != "tropo_samurai") return
         if (samuraiVantagemEscolhida == "Combate") {
@@ -4018,6 +4063,13 @@ class CriadorState {
             shinobiTalentoSelecionado = null
             shinobiTreinamentoSelecionado = null
         }
+        if (tropoSelecionado?.id != "tropo_youxia") {
+            if (!youxiaJutsuSelecionado.isNullOrBlank() && notasPericia["Lutar"] == youxiaJutsuSelecionado) {
+                notasPericia.remove("Lutar")
+            }
+            youxiaJutsuSelecionado = null
+            youxiaHistoricoSelecionado = null
+        }
 
         tropoSelecionado = novoTropo
 
@@ -4094,6 +4146,15 @@ class CriadorState {
                     shinobiTreinamentoSelecionado = "Infiltrador"
                 }
             }
+            if (novoTropo.id == "tropo_youxia") {
+                if (youxiaJutsuSelecionado == null) {
+                    youxiaJutsuSelecionado = "Espada"
+                }
+                if (youxiaHistoricoSelecionado == null) {
+                    youxiaHistoricoSelecionado = "Ancestral"
+                }
+                syncYouxiaKensai()
+            }
         } else {
             protagonistaRollTecnicas = null
             protagonistaRollPericia = null
@@ -4115,6 +4176,11 @@ class CriadorState {
             samuraiCombatSlotIds.clear()
             shinobiTalentoSelecionado = null
             shinobiTreinamentoSelecionado = null
+            if (!youxiaJutsuSelecionado.isNullOrBlank() && notasPericia["Lutar"] == youxiaJutsuSelecionado) {
+                notasPericia.remove("Lutar")
+            }
+            youxiaJutsuSelecionado = null
+            youxiaHistoricoSelecionado = null
         }
 
         syncMestreDoChiSlots()
@@ -4498,6 +4564,8 @@ class CriadorState {
                 samuraiCombatSlotIds = samuraiCombatSlotIds.toList(),
                 shinobiTalentoSelecionado = shinobiTalentoSelecionado,
                 shinobiTreinamentoSelecionado = shinobiTreinamentoSelecionado,
+                youxiaJutsuSelecionado = youxiaJutsuSelecionado,
+                youxiaHistoricoSelecionado = youxiaHistoricoSelecionado,
                 protagonistaRollTecnicas = protagonistaRollTecnicas,
                 protagonistaRollPericia = protagonistaRollPericia,
                 protagonistaRollVantagem = protagonistaRollVantagem,
@@ -4624,6 +4692,8 @@ class CriadorState {
         samuraiCombatSlotIds.addAll(snapshot.selecoes.samuraiCombatSlotIds)
         shinobiTalentoSelecionado = snapshot.selecoes.shinobiTalentoSelecionado
         shinobiTreinamentoSelecionado = snapshot.selecoes.shinobiTreinamentoSelecionado
+        youxiaJutsuSelecionado = snapshot.selecoes.youxiaJutsuSelecionado
+        youxiaHistoricoSelecionado = snapshot.selecoes.youxiaHistoricoSelecionado
         protagonistaRollTecnicas = snapshot.selecoes.protagonistaRollTecnicas
         protagonistaRollPericia = snapshot.selecoes.protagonistaRollPericia
         protagonistaRollVantagem = snapshot.selecoes.protagonistaRollVantagem
@@ -4777,6 +4847,12 @@ class CriadorState {
         protagonistaBonusPv = tropoSelecionado?.id == "tropo_protagonista" &&
             protagonistaRollHabilidade == 4
         syncArtistaMarcialPotencialFisico()
+        if (tropoSelecionado?.id == "tropo_youxia") {
+            if (notasPericia["Lutar"].isNullOrBlank() && !youxiaJutsuSelecionado.isNullOrBlank()) {
+                notasPericia["Lutar"] = youxiaJutsuSelecionado!!
+            }
+            syncYouxiaKensai()
+        }
 
         poderSlotsPorArcano.clear()
         snapshot.selecoes.poderSlotsPorArcano.forEach { (key, slots) ->

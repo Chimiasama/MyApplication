@@ -348,6 +348,8 @@ class CriadorViewModel : ViewModel() {
         state.samuraiCombatSlotIds.clear()
         state.shinobiTalentoSelecionado = null
         state.shinobiTreinamentoSelecionado = null
+        state.youxiaJutsuSelecionado = null
+        state.youxiaHistoricoSelecionado = null
         state.descendenteElementalSelecionado = null
         state.gnomoPericiaEscolhida = null
         state.dominioClerigoSelecionado = null

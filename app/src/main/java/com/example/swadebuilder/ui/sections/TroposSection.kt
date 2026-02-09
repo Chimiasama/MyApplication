@@ -419,6 +419,74 @@ fun TroposSection(
                             }
                         }
 
+                        if (selecionado && tropo.id == "tropo_youxia") {
+                            Spacer(Modifier.size(8.dp))
+                            Text(
+                                text = "Kensai (Arma Predileta)",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Escolha a prática marcial associada à arma predileta.",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+                            val jutsuTipos = listOf(
+                                "Desarmado",
+                                "Espada",
+                                "Haste",
+                                "Concussão",
+                                "Corrente",
+                                "Leve",
+                                "Massivo",
+                                "Passivo",
+                                "Samurai"
+                            )
+                            Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
+                                jutsuTipos.forEach { nome ->
+                                    RadioButtonRow(
+                                        selected = state.youxiaJutsuSelecionado == nome,
+                                        label = nome,
+                                        onSelect = { state.atualizarYouxiaJutsuSelecionado(nome) }
+                                    )
+                                }
+                            }
+
+                            Spacer(Modifier.size(8.dp))
+                            Text(
+                                text = "Histórico da Arma",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Escolha a característica histórica da arma Kensai.",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+                            val historicos = listOf(
+                                "Ancestral" to "Passada a cada geração, a arma kensai é um legado e possui a qualidade Ancestral.",
+                                "Carregada" to "Gaste um ponto de Chi para carregar a arma com Alta Explosão (Modelo Médio de Explosão) sem dano ao Youxia.",
+                                "Penetrante" to "A arma kensai tem PA 4. Gastando um ponto de Chi, o PA é aumentado em 10 até o início da próxima ação.",
+                                "Afiada" to "A arma é considerada Arma Pesada. Gastando um ponto de Chi, aumenta o dado de dano em um tipo de dado até o início do próximo turno."
+                            )
+                            Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
+                                historicos.forEach { (nome, descricao) ->
+                                    RadioButtonRow(
+                                        selected = state.youxiaHistoricoSelecionado == nome,
+                                        label = nome,
+                                        onSelect = { state.atualizarYouxiaHistoricoSelecionado(nome) }
+                                    )
+                                    Text(
+                                        text = descricao,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
+                                    )
+                                }
+                            }
+                        }
+
                         if (selecionado && tropo.id == "tropo_artista_marcial") {
                             Spacer(Modifier.size(8.dp))
                             Text(

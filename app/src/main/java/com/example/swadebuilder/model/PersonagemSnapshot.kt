@@ -147,6 +147,8 @@ data class SnapshotSelecoes(
     val samuraiCombatSlotIds: List<String> = emptyList(),
     val shinobiTalentoSelecionado: String? = null,
     val shinobiTreinamentoSelecionado: String? = null,
+    val youxiaJutsuSelecionado: String? = null,
+    val youxiaHistoricoSelecionado: String? = null,
     val protagonistaRollTecnicas: Int? = null,
     val protagonistaRollPericia: Int? = null,
     val protagonistaRollVantagem: Int? = null,
