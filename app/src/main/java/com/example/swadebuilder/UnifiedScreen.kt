@@ -288,7 +288,8 @@ fun UnifiedScreen(
                     onUserFeedback()
                     activeSection = it
                 },
-                tabStyle = state.estiloAbas
+                tabStyle = state.estiloAbas,
+                state = state
             )
 
             HorizontalPager(
@@ -493,7 +494,8 @@ private fun CreatorTabRow(
     selectedSection: MainSection,
     enabledSections: (MainSection) -> Boolean,
     onSelectSection: (MainSection) -> Unit,
-    tabStyle: TabStyle
+    tabStyle: TabStyle,
+    state: CriadorState
 ) {
     val tabs = remember(
         sections,
