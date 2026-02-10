@@ -132,6 +132,44 @@ fun CriadorState.isVantagemVisible(
 
     // 3. Arcane Background UI Logic
 
+    // Cidade do Sol a Vapor: bloqueios específicos do cenário
+    if (compendioCidadeSolVaporAtivo) {
+        val blockedIdsCsv = setOf(
+            "artifice",
+            "senhor_das_feras",
+            "campeao",
+            "engenhoqueiro",
+            "guerreiro_sagrado_profano",
+            "mentalista",
+            "pontos_de_poder",
+            "surto_de_poder",
+            "recarga_rapida",
+            "recarga_rapida_aprimorada",
+            "drenar_a_alma",
+            "mago"
+        )
+        if (vant.id in blockedIdsCsv) return false
+
+        // "Novos Poderes" só para Tecnomagia.
+        if (vant.id == "novos_poderes") {
+            val temTecnomagia = vantagensSelecionadas.any { it.id == "aa_tecnomagia" }
+            if (!temTecnomagia) return false
+        }
+
+        // Bloqueia vantagens com pré-requisito de AA que não sejam as do livro Cidade do Sol a Vapor.
+        val hasArcanePrereq = vant.requisitos.vantagensPrevias.any { prevId ->
+            val p = prevId.uppercase().semAcentos().trim()
+            p == "ANTECEDENTE_ARCANO" ||
+                p == "ANTECEDENTE_ARCANO:*" ||
+                p.startsWith("ANTECEDENTE_ARCANO_") ||
+                p.startsWith("AA_")
+        }
+        val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase().semAcentos().trim()
+        if (hasArcanePrereq && origemNorm != "CIDADE_SOL_VAPOR" && origemNorm != "SOL_VAPOR") {
+            return false
+        }
+    }
+
     val isGenericAB = vant.id == "antecedente_arcano"
     val isSpecificAB = (vant.id.startsWith("antecedente_arcano_") || vant.id.startsWith("aa_"))
 
